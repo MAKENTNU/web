@@ -7,8 +7,8 @@ coverage:
       default:
         threshold: 80%
   ignore:
-    - "manage.py"
-    - "web/settings.py"
-    - "**/apps.py"
-    - "**/tests.py"
-    - "**/wsgi.py"
+    - manage.py
+    - web/settings.py
+    - **/apps.py
+    - **/tests.py
+    - **/wsgi.py
