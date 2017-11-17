@@ -42,6 +42,10 @@ class Reservation3D(models.Model):
         if self.printer.reservation3d_set.filter(start_time__gt=self.start_time, end_time__lt=self.end_time).exists():
             return False
 
+        # A reservation must have a valid time period
+        if self.start_time > self.end_time:
+            return False
+
         # Event reservations are always valid, if the time is not already reserved
         # TODO: Add check for if the user can actually create event reservations
         if self.event:
