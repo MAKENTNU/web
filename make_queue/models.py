@@ -29,11 +29,15 @@ class Reservation3D(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.validate():
-            raise ValidationError
+            raise ValidationError("Not a valid reservation")
         super(Reservation3D, self).save(*args, **kwargs)
 
     # A reservation should not be able to be moved, only extended
     def validate(self):
+        # User needs to be able to print, for it to be able to reserve the printers
+        if not self.user.quota3d.can_print:
+            return False
+
         # Check if the printer is already reserved for the given duration
         if self.printer.reservation3d_set.filter(start_time__gt=self.start_time, end_time__lt=self.end_time).exists():
             return False

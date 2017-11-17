@@ -25,4 +25,21 @@ class Reservation3DTestCase(TestCase):
             reservation.save()
         except ValidationError:
             self.fail("Could not save a valid reservation")
-            
+
+    def test_user_that_cannot_print_cannot_reserve(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        user_quota = user.quota3d
+        user_quota.can_print = False
+        user_quota.save()
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=datetime.now(), end_time=datetime.now() + timedelta(hours=2),
+                                    event=False)
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("Saving an invalid reservation should throw a ValidationError")
+        except ValidationError:
+            pass
