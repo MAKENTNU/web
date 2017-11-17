@@ -94,3 +94,31 @@ class Reservation3DTestCase(TestCase):
                 reservation.save()
             except ValidationError:
                 self.fail("Saving should be valid")
+
+    def test_make_more_than_allowed_number_of_reservations(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        for reservation_number in range(user.quota3d.max_number_of_reservations):
+            reservation = Reservation3D(user=user, printer=printer,
+                                        start_time=timezone.now() + timedelta(days=reservation_number),
+                                        end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
+                                        event=False)
+
+            self.assertTrue(reservation.validate())
+            try:
+                reservation.save()
+            except ValidationError:
+                self.fail("Saving should be valid")
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations),
+                                    end_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations,
+                                                                        hours=2))
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("User should not be able to make more reservations than allowed")
+        except ValidationError:
+            pass
