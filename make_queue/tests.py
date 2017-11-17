@@ -122,3 +122,71 @@ class Reservation3DTestCase(TestCase):
             self.fail("User should not be able to make more reservations than allowed")
         except ValidationError:
             pass
+
+    def test_disallow_overlapping_reservations(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        start_time_base = timezone.now()
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=start_time_base, end_time=start_time_base + timedelta(hours=1),
+                                    event=False)
+
+        self.assertTrue(reservation.validate())
+        try:
+            reservation.save()
+        except ValidationError:
+            self.fail("Saving should be valid")
+
+        # Start before, end inside
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=start_time_base - timedelta(minutes=10),
+                                    end_time=start_time_base + timedelta(minutes=50),
+                                    event=False)
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("Reservation should not be able to end inside another")
+        except ValidationError:
+            pass
+
+        # Start inside, end after
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=start_time_base + timedelta(minutes=10),
+                                    end_time=start_time_base + timedelta(hours=1, minutes=10),
+                                    event=False)
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("Reservation should not be able to end inside another")
+        except ValidationError:
+            pass
+
+        # Start inside, end inside
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=start_time_base + timedelta(minutes=10),
+                                    end_time=start_time_base + timedelta(minutes=50),
+                                    event=False)
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("Reservation should not be able to start and end inside another")
+        except ValidationError:
+            pass
+
+        # Start before, end after
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=start_time_base - timedelta(minutes=10),
+                                    end_time=start_time_base + timedelta(hours=1, minutes=10),
+                                    event=False)
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("Reservation should not be able to encapsulate another")
+        except ValidationError:
+            pass

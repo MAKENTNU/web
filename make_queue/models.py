@@ -19,6 +19,11 @@ class Printer3D(models.Model):
     location = models.CharField(max_length=40)
     status = models.CharField(max_length=2, choices=status_choices)
 
+    def reservations_in_period(self, start_time, end_time):
+        return self.reservation3d_set.filter(start_time__lt=start_time, end_time__gt=start_time) | \
+               self.reservation3d_set.filter(start_time__gte=start_time, end_time__lte=end_time) | \
+               self.reservation3d_set.filter(start_time__lt=end_time, start_time__gt=start_time, end_time__gte=end_time)
+
 
 class Reservation3D(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -40,7 +45,7 @@ class Reservation3D(models.Model):
             return False
 
         # Check if the printer is already reserved for the given duration
-        if self.printer.reservation3d_set.filter(start_time__gt=self.start_time, end_time__lt=self.end_time).exists():
+        if self.printer.reservations_in_period(self.start_time, self.end_time).exists():
             return False
 
         # A reservation must have a valid time period
