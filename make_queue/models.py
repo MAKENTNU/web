@@ -5,8 +5,10 @@ from datetime import datetime, timedelta
 
 
 class Printer3D(models.Model):
+    # For website status
     status_choices = (
         ("R", "Reserved"),
+        ("NS", "Free, no show"),
         ("F", "Free"),
         ("I", "In use"),
         ("O", "Out of order"),
