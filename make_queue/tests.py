@@ -2,7 +2,8 @@ from django.test import TestCase
 from make_queue.models import Printer3D, Reservation3D, Quota3D
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from datetime import datetime, timedelta
+from django.utils import timezone
+from datetime import timedelta
 
 
 class Reservation3DTestCase(TestCase):
@@ -17,7 +18,7 @@ class Reservation3DTestCase(TestCase):
         user = User.objects.get(username="User")
 
         reservation = Reservation3D(user=user, printer=printer,
-                                    start_time=datetime.now(), end_time=datetime.now() + timedelta(hours=2),
+                                    start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
 
         self.assertTrue(reservation.validate())
@@ -34,7 +35,7 @@ class Reservation3DTestCase(TestCase):
         user_quota.save()
 
         reservation = Reservation3D(user=user, printer=printer,
-                                    start_time=datetime.now(), end_time=datetime.now() + timedelta(hours=2),
+                                    start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
 
         self.assertFalse(reservation.validate())
@@ -49,8 +50,8 @@ class Reservation3DTestCase(TestCase):
         user = User.objects.get(username="User")
 
         reservation = Reservation3D(user=user, printer=printer,
-                                    start_time=datetime.now(),
-                                    end_time=datetime.now() + timedelta(hours=user.quota3d.max_time_reservation + 0.1),
+                                    start_time=timezone.now(),
+                                    end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 0.1),
                                     event=False)
 
         self.assertFalse(reservation.validate())
@@ -65,7 +66,7 @@ class Reservation3DTestCase(TestCase):
         user = User.objects.get(username="User")
 
         reservation = Reservation3D(user=user, printer=printer,
-                                    start_time=datetime.now(), end_time=datetime.now() - timedelta(hours=1),
+                                    start_time=timezone.now(), end_time=timezone.now() - timedelta(hours=1),
                                     event=False)
 
         self.assertFalse(reservation.validate())

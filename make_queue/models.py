@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from datetime import datetime, timedelta
+from django.utils import timezone
+from datetime import timedelta
 
 
 class Printer3D(models.Model):
@@ -66,7 +67,7 @@ class Quota3D(models.Model):
     max_number_of_reservations = models.IntegerField(default=0)
 
     def get_active_user_reservations(self):
-        return self.user.reservation3d_set.filter(end_time__gte=datetime.now())
+        return self.user.reservation3d_set.filter(end_time__gte=timezone.now())
 
     def can_make_new_reservation(self):
         return len(self.get_active_user_reservations().filter(event=False)) < self.max_number_of_reservations
