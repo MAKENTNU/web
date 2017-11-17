@@ -75,3 +75,22 @@ class Reservation3DTestCase(TestCase):
             self.fail("Saving a reservation with end time before start time should fail")
         except ValidationError:
             pass
+
+    def test_make_more_than_one_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        quota = user.quota3d
+        quota.max_number_of_reservations = 5
+        quota.save()
+
+        for reservation_number in range(user.quota3d.max_number_of_reservations):
+            reservation = Reservation3D(user=user, printer=printer,
+                                        start_time=timezone.now() + timedelta(days=reservation_number),
+                                        end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
+                                        event=False)
+
+            self.assertTrue(reservation.validate())
+            try:
+                reservation.save()
+            except ValidationError:
+                self.fail("Saving should be valid")
