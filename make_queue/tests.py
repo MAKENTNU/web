@@ -43,3 +43,19 @@ class Reservation3DTestCase(TestCase):
             self.fail("Saving an invalid reservation should throw a ValidationError")
         except ValidationError:
             pass
+
+    def test_reserve_longer_than_maximum_user_time(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=datetime.now(),
+                                    end_time=datetime.now() + timedelta(hours=user.quota3d.max_time_reservation + 0.1),
+                                    event=False)
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("Saving a reservation longer than the maximum allowed time for that user")
+        except ValidationError:
+            pass
