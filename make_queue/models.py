@@ -43,6 +43,7 @@ class Reservation3D(models.Model):
             return False
 
         # Event reservations are always valid, if the time is not already reserved
+        # TODO: Add check for if the user can actually create event reservations
         if self.event:
             return True
 
