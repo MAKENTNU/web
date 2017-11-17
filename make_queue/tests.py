@@ -234,3 +234,22 @@ class Reservation3DTestCase(TestCase):
             reservation.save()
         except ValidationError:
             self.fail("Event reservations should not count towards the total number of reservations")
+
+    def test_make_event_reservation_with_longer_than_user_max_time(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        event_permission = Permission.objects.get(name="Can create event reservation")
+
+        user.user_permissions.add(event_permission)
+        user.save()
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=timezone.now(),
+                                    end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 1),
+                                    event=True)
+
+        self.assertTrue(reservation.validate())
+        try:
+            reservation.save()
+        except ValidationError:
+            self.fail("User should be able to make event reservations longer than their maximum reservation time ")
