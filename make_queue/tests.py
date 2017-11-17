@@ -1,6 +1,6 @@
 from django.test import TestCase
 from make_queue.models import Printer3D, Reservation3D, Quota3D
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
@@ -205,3 +205,32 @@ class Reservation3DTestCase(TestCase):
             self.fail("Should not be able to make event reservation without correct permission")
         except ValidationError:
             pass
+
+    def test_make_event_with_event_permission(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        event_permission = Permission.objects.get(name="Can create event reservation")
+
+        user.user_permissions.add(event_permission)
+        user.quota3d.max_number_of_reservations = 1
+        user.save()
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
+                                    event=True)
+
+        self.assertTrue(reservation.validate())
+        try:
+            reservation.save()
+        except ValidationError:
+            self.fail("User with the correct permission should be allowed to create an event reservation")
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=timezone.now() + timedelta(days=1),
+                                    end_time=timezone.now() + timedelta(days=1, hours=2))
+
+        self.assertTrue(reservation.validate())
+        try:
+            reservation.save()
+        except ValidationError:
+            self.fail("Event reservations should not count towards the total number of reservations")
