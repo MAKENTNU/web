@@ -190,3 +190,18 @@ class Reservation3DTestCase(TestCase):
             self.fail("Reservation should not be able to encapsulate another")
         except ValidationError:
             pass
+
+    def test_make_event_without_event_permission(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
+                                    event=True)
+
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail("Should not be able to make event reservation without correct permission")
+        except ValidationError:
+            pass

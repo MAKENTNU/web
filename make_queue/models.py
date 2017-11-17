@@ -55,8 +55,8 @@ class Reservation3D(models.Model):
         # Event reservations are always valid, if the time is not already reserved
         # TODO: Add check for if the user can actually create event reservations
         if self.event:
-            return True
-
+            return self.user.has_perm("make_queue.can_create_event_reservation")
+        
         # Check if the reservation is shorter than the maximum duration allowed for the user
         if self.end_time - self.start_time > timedelta(hours=self.user.quota3d.max_time_reservation):
             return False
@@ -70,6 +70,11 @@ class Quota3D(models.Model):
     can_print = models.BooleanField(default=False)
     max_time_reservation = models.FloatField(default=0)
     max_number_of_reservations = models.IntegerField(default=0)
+
+    class Meta:
+        permissions = (
+            ("can_create_event_reservation", "Can create event reservation"),
+        )
 
     def get_active_user_reservations(self):
         return self.user.reservation3d_set.filter(end_time__gte=timezone.now())
