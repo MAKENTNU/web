@@ -1,0 +1,22 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+		<title>{% block title %}MAKE NTNU{% endblock title %}</title>
+		<meta charset="UTF-8">
+
+		<link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}">
+
+        <link rel="stylesheet" type="text/css" href="{% static "web/semantic-ui/semantic.min.css" %}">
+        <script src="{% static "web/js/jquery-3.1.1.min.js" %}"></script>
+        <script src="{% static "web/semantic-ui/semantic.min.js" %}"></script>
+    </head>
+
+    <body>
+        {% block body %}
+        {% endblock body %}
+    </body>
+
+</html>
