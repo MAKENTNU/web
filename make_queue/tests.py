@@ -21,11 +21,7 @@ class Reservation3DTestCase(TestCase):
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
 
-        self.assertTrue(reservation.validate())
-        try:
-            reservation.save()
-        except ValidationError:
-            self.fail("Could not save a valid reservation")
+        self.check_reservation_valid(reservation, "Reservations should be saveable")
 
     def test_user_that_cannot_print_cannot_reserve(self):
         printer = Printer3D.objects.get(name="C1")
@@ -38,12 +34,7 @@ class Reservation3DTestCase(TestCase):
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Saving an invalid reservation should throw a ValidationError")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation, "Users that cannot print, should not be able to reserve printer")
 
     def test_reserve_longer_than_maximum_user_time(self):
         printer = Printer3D.objects.get(name="C1")
@@ -54,12 +45,8 @@ class Reservation3DTestCase(TestCase):
                                     end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 0.1),
                                     event=False)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Saving a reservation longer than the maximum allowed time for that user")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation,
+                                       "Reservations should not be allowed to exceed the maximum allowed time for the user")
 
     def test_reserve_end_time_before_start_time(self):
         printer = Printer3D.objects.get(name="C1")
@@ -69,12 +56,7 @@ class Reservation3DTestCase(TestCase):
                                     start_time=timezone.now(), end_time=timezone.now() - timedelta(hours=1),
                                     event=False)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Saving a reservation with end time before start time should fail")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation, "Reservations should not be able to end before they start")
 
     def test_make_more_than_one_reservation(self):
         printer = Printer3D.objects.get(name="C1")
@@ -89,11 +71,7 @@ class Reservation3DTestCase(TestCase):
                                         end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
                                         event=False)
 
-            self.assertTrue(reservation.validate())
-            try:
-                reservation.save()
-            except ValidationError:
-                self.fail("Saving should be valid")
+            self.check_reservation_valid(reservation, "User should be able to make as many reservations as allowed")
 
     def test_make_more_than_allowed_number_of_reservations(self):
         printer = Printer3D.objects.get(name="C1")
@@ -105,23 +83,14 @@ class Reservation3DTestCase(TestCase):
                                         end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
                                         event=False)
 
-            self.assertTrue(reservation.validate())
-            try:
-                reservation.save()
-            except ValidationError:
-                self.fail("Saving should be valid")
+            self.check_reservation_valid(reservation, "User should be able to make as many reservations as allowed")
 
         reservation = Reservation3D(user=user, printer=printer,
                                     start_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations),
                                     end_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations,
                                                                         hours=2))
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("User should not be able to make more reservations than allowed")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation, "User should not be able to make more reservations than allowed")
 
     def test_disallow_overlapping_reservations(self):
         printer = Printer3D.objects.get(name="C1")
@@ -133,11 +102,7 @@ class Reservation3DTestCase(TestCase):
                                     start_time=start_time_base, end_time=start_time_base + timedelta(hours=1),
                                     event=False)
 
-        self.assertTrue(reservation.validate())
-        try:
-            reservation.save()
-        except ValidationError:
-            self.fail("Saving should be valid")
+        self.check_reservation_valid(reservation, "Saving should be valid")
 
         # Start before, end inside
         reservation = Reservation3D(user=user, printer=printer,
@@ -145,12 +110,7 @@ class Reservation3DTestCase(TestCase):
                                     end_time=start_time_base + timedelta(minutes=50),
                                     event=False)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Reservation should not be able to end inside another")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
 
         # Start inside, end after
         reservation = Reservation3D(user=user, printer=printer,
@@ -158,12 +118,7 @@ class Reservation3DTestCase(TestCase):
                                     end_time=start_time_base + timedelta(hours=1, minutes=10),
                                     event=False)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Reservation should not be able to end inside another")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
 
         # Start inside, end inside
         reservation = Reservation3D(user=user, printer=printer,
@@ -171,12 +126,7 @@ class Reservation3DTestCase(TestCase):
                                     end_time=start_time_base + timedelta(minutes=50),
                                     event=False)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Reservation should not be able to start and end inside another")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation, "Reservation should not be able to start and end inside another")
 
         # Start before, end after
         reservation = Reservation3D(user=user, printer=printer,
@@ -184,12 +134,7 @@ class Reservation3DTestCase(TestCase):
                                     end_time=start_time_base + timedelta(hours=1, minutes=10),
                                     event=False)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Reservation should not be able to encapsulate another")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation, "Reservation should not be able to encapsulate another")
 
     def test_make_event_without_event_permission(self):
         printer = Printer3D.objects.get(name="C1")
@@ -199,12 +144,8 @@ class Reservation3DTestCase(TestCase):
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=True)
 
-        self.assertFalse(reservation.validate())
-        try:
-            reservation.save()
-            self.fail("Should not be able to make event reservation without correct permission")
-        except ValidationError:
-            pass
+        self.check_reservation_invalid(reservation,
+                                       "Should not be able to make event reservation without correct permission")
 
     def test_make_event_with_event_permission(self):
         printer = Printer3D.objects.get(name="C1")
@@ -219,21 +160,15 @@ class Reservation3DTestCase(TestCase):
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=True)
 
-        self.assertTrue(reservation.validate())
-        try:
-            reservation.save()
-        except ValidationError:
-            self.fail("User with the correct permission should be allowed to create an event reservation")
+        self.check_reservation_valid(reservation,
+                                     "User with the correct permission should be allowed to create an event reservation")
 
         reservation = Reservation3D(user=user, printer=printer,
                                     start_time=timezone.now() + timedelta(days=1),
                                     end_time=timezone.now() + timedelta(days=1, hours=2))
 
-        self.assertTrue(reservation.validate())
-        try:
-            reservation.save()
-        except ValidationError:
-            self.fail("Event reservations should not count towards the total number of reservations")
+        self.check_reservation_valid(reservation,
+                                     "Event reservations should not count towards the total number of reservations")
 
     def test_make_event_reservation_with_longer_than_user_max_time(self):
         printer = Printer3D.objects.get(name="C1")
@@ -248,11 +183,8 @@ class Reservation3DTestCase(TestCase):
                                     end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 1),
                                     event=True)
 
-        self.assertTrue(reservation.validate())
-        try:
-            reservation.save()
-        except ValidationError:
-            self.fail("User should be able to make event reservations longer than their maximum reservation time ")
+        self.check_reservation_valid(reservation,
+                                     "User should be able to make event reservations longer than their maximum reservation time")
 
     def test_change_event_while_maximum_booked(self):
         printer = Printer3D.objects.get(name="C1")
@@ -266,15 +198,24 @@ class Reservation3DTestCase(TestCase):
                                     end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
 
-        self.assertTrue(reservation.validate())
-        try:
-            reservation.save()
-        except ValidationError:
-            self.fail("Reservation should be valid")
+        self.check_reservation_valid(reservation, "Reservation should be valid")
 
         reservation.end_time = timezone.now() + timedelta(hours=3)
+
+        self.check_reservation_valid(reservation,
+                                     "Changing a reservation with the maximum number of reservations should be valid")
+
+    def check_reservation_invalid(self, reservation, error_message):
+        self.assertFalse(reservation.validate())
+        try:
+            reservation.save()
+            self.fail(error_message)
+        except ValidationError:
+            pass
+
+    def check_reservation_valid(self, reservation, error_message):
         self.assertTrue(reservation.validate())
         try:
             reservation.save()
         except ValidationError:
-            self.fail("Changing reservation should be valid in this case")
+            self.fail(error_message)
