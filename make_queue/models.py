@@ -44,8 +44,8 @@ class Reservation3D(models.Model):
         if not self.user.quota3d.can_print:
             return False
 
-        # Check if the printer is already reserved for the given duration
-        if self.printer.reservations_in_period(self.start_time, self.end_time).exists():
+        # Check if the printer is already reserved by another reservation for the given duration
+        if self.printer.reservations_in_period(self.start_time, self.end_time).exclude(pk=self.pk).exists():
             return False
 
         # A reservation must have a valid time period
@@ -53,10 +53,9 @@ class Reservation3D(models.Model):
             return False
 
         # Event reservations are always valid, if the time is not already reserved
-        # TODO: Add check for if the user can actually create event reservations
         if self.event:
             return self.user.has_perm("make_queue.can_create_event_reservation")
-        
+
         # Check if the reservation is shorter than the maximum duration allowed for the user
         if self.end_time - self.start_time > timedelta(hours=self.user.quota3d.max_time_reservation):
             return False

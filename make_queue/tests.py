@@ -253,3 +253,28 @@ class Reservation3DTestCase(TestCase):
             reservation.save()
         except ValidationError:
             self.fail("User should be able to make event reservations longer than their maximum reservation time ")
+
+    def test_change_event_while_maximum_booked(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        user.quota3d.max_number_of_reservations = 1
+        user.save()
+
+        reservation = Reservation3D(user=user, printer=printer,
+                                    start_time=timezone.now(),
+                                    end_time=timezone.now() + timedelta(hours=2),
+                                    event=False)
+
+        self.assertTrue(reservation.validate())
+        try:
+            reservation.save()
+        except ValidationError:
+            self.fail("Reservation should be valid")
+
+        reservation.end_time = timezone.now() + timedelta(hours=3)
+        self.assertTrue(reservation.validate())
+        try:
+            reservation.save()
+        except ValidationError:
+            self.fail("Changing reservation should be valid in this case")
