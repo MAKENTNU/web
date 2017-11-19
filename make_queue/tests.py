@@ -205,6 +205,27 @@ class Reservation3DTestCase(TestCase):
         self.check_reservation_valid(reservation,
                                      "Changing a reservation with the maximum number of reservations should be valid")
 
+    def test_same_time_separate_printers(self):
+        printer1 = Printer3D.objects.get(name="C1")
+        printer2 = Printer3D.objects.create(name="C1", location="Printer room Mackerspace U1", status="F")
+
+        user = User.objects.get(username="User")
+
+        reservation1 = Reservation3D(user=user, printer=printer1,
+                                     start_time=timezone.now(),
+                                     end_time=timezone.now() + timedelta(hours=2),
+                                     event=False)
+
+        self.check_reservation_valid(reservation1, "Saving a single reservation should be valid")
+
+        reservation2 = Reservation3D(user=user, printer=printer2,
+                                     start_time=timezone.now(),
+                                     end_time=timezone.now() + timedelta(hours=2),
+                                     event=False)
+
+        self.check_reservation_valid(reservation2,
+                                     "Reservations on different printers should be able to overlap in time")
+
     def check_reservation_invalid(self, reservation, error_message):
         self.assertFalse(reservation.validate())
         try:
