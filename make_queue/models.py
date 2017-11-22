@@ -22,11 +22,11 @@ class Machine(models.Model):
 
     @abstractmethod
     def get_reservation_set(self):
-        return
+        pass
 
     @abstractmethod
     def can_user_use(self, user):
-        return
+        pass
 
     def reservations_in_period(self, start_time, end_time):
         return self.get_reservation_set().filter(start_time__lt=start_time, end_time__gt=start_time) | \
@@ -53,7 +53,7 @@ class Reservation(models.Model):
 
     @abstractmethod
     def get_quota(self):
-        return
+        pass
 
     def save(self, *args, **kwargs):
         if not self.validate():
@@ -100,7 +100,7 @@ class Quota(models.Model):
 
     @abstractmethod
     def get_active_user_reservations(self):
-        return
+        pass
 
     def can_make_new_reservation(self):
         return len(self.get_active_user_reservations().filter(event=False)) < self.max_number_of_reservations
