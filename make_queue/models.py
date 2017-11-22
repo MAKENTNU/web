@@ -43,6 +43,14 @@ class Printer3D(Machine):
         return self.reservation3d_set
 
 
+class SewingMachine(Machine):
+    def can_user_use(self, user):
+        return True
+
+    def get_reservation_set(self):
+        return self.reservationsewing_set
+
+
 class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
@@ -94,6 +102,11 @@ class Reservation3D(Reservation):
         return self.user.quota3d
 
 
+class ReservationSewing(Reservation):
+    def get_quota(self):
+        return self.user.quotasewing
+
+
 class Quota(models.Model):
     max_time_reservation = models.FloatField(default=0)
     max_number_of_reservations = models.IntegerField(default=0)
@@ -117,6 +130,13 @@ class Quota3D(Quota):
 
     def get_active_user_reservations(self):
         return self.user.reservation3d_set.filter(end_time__gte=timezone.now())
+
+
+class QuotaSewing(Quota):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
+    def get_active_user_reservations(self):
+        return self.user.reservationsewing_set.filter(end_time__gte=timezone.now())
 
 
 class Penalty(models.Model):
