@@ -17,7 +17,7 @@ class Reservation3DTestCase(TestCase):
         printer = Printer3D.objects.get(name="C1")
         user = User.objects.get(username="User")
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
 
@@ -30,7 +30,7 @@ class Reservation3DTestCase(TestCase):
         user_quota.can_print = False
         user_quota.save()
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
 
@@ -40,7 +40,7 @@ class Reservation3DTestCase(TestCase):
         printer = Printer3D.objects.get(name="C1")
         user = User.objects.get(username="User")
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 0.1),
                                     event=False)
@@ -52,7 +52,7 @@ class Reservation3DTestCase(TestCase):
         printer = Printer3D.objects.get(name="C1")
         user = User.objects.get(username="User")
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(), end_time=timezone.now() - timedelta(hours=1),
                                     event=False)
 
@@ -66,7 +66,7 @@ class Reservation3DTestCase(TestCase):
         quota.save()
 
         for reservation_number in range(user.quota3d.max_number_of_reservations):
-            reservation = Reservation3D(user=user, printer=printer,
+            reservation = Reservation3D(user=user, machine=printer,
                                         start_time=timezone.now() + timedelta(days=reservation_number),
                                         end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
                                         event=False)
@@ -78,14 +78,14 @@ class Reservation3DTestCase(TestCase):
         user = User.objects.get(username="User")
 
         for reservation_number in range(user.quota3d.max_number_of_reservations):
-            reservation = Reservation3D(user=user, printer=printer,
+            reservation = Reservation3D(user=user, machine=printer,
                                         start_time=timezone.now() + timedelta(days=reservation_number),
                                         end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
                                         event=False)
 
             self.check_reservation_valid(reservation, "User should be able to make as many reservations as allowed")
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations),
                                     end_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations,
                                                                         hours=2))
@@ -98,14 +98,14 @@ class Reservation3DTestCase(TestCase):
 
         start_time_base = timezone.now()
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=start_time_base, end_time=start_time_base + timedelta(hours=1),
                                     event=False)
 
         self.check_reservation_valid(reservation, "Saving should be valid")
 
         # Start before, end inside
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=start_time_base - timedelta(minutes=10),
                                     end_time=start_time_base + timedelta(minutes=50),
                                     event=False)
@@ -113,7 +113,7 @@ class Reservation3DTestCase(TestCase):
         self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
 
         # Start inside, end after
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=start_time_base + timedelta(minutes=10),
                                     end_time=start_time_base + timedelta(hours=1, minutes=10),
                                     event=False)
@@ -121,7 +121,7 @@ class Reservation3DTestCase(TestCase):
         self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
 
         # Start inside, end inside
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=start_time_base + timedelta(minutes=10),
                                     end_time=start_time_base + timedelta(minutes=50),
                                     event=False)
@@ -129,7 +129,7 @@ class Reservation3DTestCase(TestCase):
         self.check_reservation_invalid(reservation, "Reservation should not be able to start and end inside another")
 
         # Start before, end after
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=start_time_base - timedelta(minutes=10),
                                     end_time=start_time_base + timedelta(hours=1, minutes=10),
                                     event=False)
@@ -140,7 +140,7 @@ class Reservation3DTestCase(TestCase):
         printer = Printer3D.objects.get(name="C1")
         user = User.objects.get(username="User")
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=True)
 
@@ -156,14 +156,14 @@ class Reservation3DTestCase(TestCase):
         user.quota3d.max_number_of_reservations = 1
         user.save()
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
                                     event=True)
 
         self.check_reservation_valid(reservation,
                                      "User with the correct permission should be allowed to create an event reservation")
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now() + timedelta(days=1),
                                     end_time=timezone.now() + timedelta(days=1, hours=2))
 
@@ -178,7 +178,7 @@ class Reservation3DTestCase(TestCase):
         user.user_permissions.add(event_permission)
         user.save()
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 1),
                                     event=True)
@@ -193,7 +193,7 @@ class Reservation3DTestCase(TestCase):
         user.quota3d.max_number_of_reservations = 1
         user.save()
 
-        reservation = Reservation3D(user=user, printer=printer,
+        reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=2),
                                     event=False)
@@ -211,14 +211,14 @@ class Reservation3DTestCase(TestCase):
 
         user = User.objects.get(username="User")
 
-        reservation1 = Reservation3D(user=user, printer=printer1,
+        reservation1 = Reservation3D(user=user, machine=printer1,
                                      start_time=timezone.now(),
                                      end_time=timezone.now() + timedelta(hours=2),
                                      event=False)
 
         self.check_reservation_valid(reservation1, "Saving a single reservation should be valid")
 
-        reservation2 = Reservation3D(user=user, printer=printer2,
+        reservation2 = Reservation3D(user=user, machine=printer2,
                                      start_time=timezone.now(),
                                      end_time=timezone.now() + timedelta(hours=2),
                                      event=False)
