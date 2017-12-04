@@ -8,7 +8,7 @@ from web.views import IndexView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view()),
-    url(r'^login/$', RedirectView.as_view(url='login/dataporten/')),
+    url(r'^login/$', RedirectView.as_view(url='/login/dataporten/')),
     url(r'^logout/$', Logout.as_view()),
     url(r'', include('social_django.urls', namespace='social')),
 ]
