@@ -113,8 +113,8 @@ SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = (
-    'dataporten.social.DataportenFeideOAuth2',
-    'dataporten.social.DataportenEmailOAuth2',
+    #'dataporten.social.DataportenFeideOAuth2',
+    #'dataporten.social.DataportenEmailOAuth2',
     'dataporten.social.DataportenOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
