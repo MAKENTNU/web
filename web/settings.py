@@ -9,6 +9,7 @@ MEDIA_ROOT = '../media/'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
+LOGOUT_URL = '/'
 
 try:
     from .local_settings import *
