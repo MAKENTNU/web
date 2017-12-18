@@ -1,5 +1,5 @@
 from django.test import TestCase
-from make_queue.models import Printer3D, Reservation3D, Quota3D
+from make_queue.models import Printer3D, Reservation3D, Quota3D, QuotaSewing, SewingMachine, ReservationSewing
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -9,9 +9,11 @@ from datetime import timedelta
 class Reservation3DTestCase(TestCase):
     def setUp(self):
         Printer3D.objects.create(name="C1", location="Printer room Makerspace U1", status="F")
+        SewingMachine.objects.create(name="S1", location="Mackerspace U1 main room", status="F")
         user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         user.save()
         Quota3D.objects.create(user=user, can_print=True, max_time_reservation=10, max_number_of_reservations=2)
+        QuotaSewing.objects.create(user=user, max_time_reservation=10, max_number_of_reservations=2)
 
     def test_can_create_reservation(self):
         printer = Printer3D.objects.get(name="C1")
@@ -35,6 +37,20 @@ class Reservation3DTestCase(TestCase):
                                     event=False)
 
         self.check_reservation_invalid(reservation, "Users that cannot print, should not be able to reserve printer")
+
+    def test_user_can_reserve_sewing_machine(self):
+        sewing_machine = SewingMachine.objects.get(name="S1")
+        user = User.objects.get(username="User")
+
+        user_quota = user.quotasewing
+        user_quota.max_number_of_reservations = 2
+        user_quota.save()
+
+        reservation = ReservationSewing(user=user, machine=sewing_machine,
+                                        start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
+                                        event=False)
+
+        self.check_reservation_valid(reservation, "Users should be able to make a sewing reservation")
 
     def test_reserve_longer_than_maximum_user_time(self):
         printer = Printer3D.objects.get(name="C1")
