@@ -3,10 +3,12 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
-from abc import abstractmethod
+from abc import abstractmethod, ABCMeta
 
 
 class Machine(models.Model):
+    __metaclass__ = ABCMeta
+
     status_choices = (
         ("R", "Reserved"),
         ("F", "Free"),
@@ -26,13 +28,16 @@ class Machine(models.Model):
 
     @abstractmethod
     def can_user_use(self, user):
-        pass
+        """Abstract method"""
 
     def reservations_in_period(self, start_time, end_time):
         return self.get_reservation_set().filter(start_time__lt=start_time, end_time__gt=start_time) | \
                self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
+
+    def __str__(self):
+        return self.name + "-" + self.model
 
 
 class Printer3D(Machine):
@@ -53,7 +58,6 @@ class SewingMachine(Machine):
 
 class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     event = models.BooleanField(default=False)
@@ -61,6 +65,10 @@ class Reservation(models.Model):
 
     @abstractmethod
     def get_quota(self):
+        pass
+
+    @abstractmethod
+    def get_machine(self):
         pass
 
     def save(self, *args, **kwargs):
@@ -71,11 +79,11 @@ class Reservation(models.Model):
     # A reservation should not be able to be moved, only extended
     def validate(self):
         # User needs to be able to print, for it to be able to reserve the printers
-        if not self.machine.can_user_use(self.user):
+        if not self.get_machine().can_user_use(self.user):
             return False
 
         # Check if the printer is already reserved by another reservation for the given duration
-        if self.machine.reservations_in_period(self.start_time, self.end_time).exclude(pk=self.pk).exists():
+        if self.get_machine().reservations_in_period(self.start_time, self.end_time).exclude(pk=self.pk).exists():
             return False
 
         # A reservation must have a valid time period
@@ -98,11 +106,21 @@ class Reservation(models.Model):
 
 
 class Reservation3D(Reservation):
+    machine = models.ForeignKey(Printer3D, on_delete=models.CASCADE)
+
+    def get_machine(self):
+        return self.machine
+
     def get_quota(self):
         return self.user.quota3d
 
 
 class ReservationSewing(Reservation):
+    machine = models.ForeignKey(SewingMachine, on_delete=models.CASCADE)
+
+    def get_machine(self):
+        return self.machine
+
     def get_quota(self):
         return self.user.quotasewing
 
