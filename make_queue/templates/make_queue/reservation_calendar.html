@@ -1,0 +1,26 @@
+<!-- TODO: Use website templates when developed -->
+<!-- TODO: Style -->
+<!-- TODO: Make mobile friendly -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<a href="/reservation/{{ prev.0 }}/{{ prev.1 }}/{{ machine_type }}">Prev</a>
+<a href="/reservation/{{ next.0 }}/{{ next.1 }}/{{ machine_type }}">Next</a>
+<div>
+    {% for day in week_days %}<div style="display: inline-block; border: 1px solid green;vertical-align: top">
+            <div>{{ day.date }}</div>
+            {% for machine in day.machines %}<div style="display: inline-block;vertical-align: top">
+                    <div style="border:1px solid red">{{ machine.name }}</div>
+                    <div style="height:400px; border:1px solid red; width:100px;margin: 0;padding: 0">
+                        {% for reservation in machine.reservations %}<div style="position:relative;text-align:center;top:{{ reservation.start_time }}%;height:{{ reservation.length }}%;background-color: green">{{ reservation.user }}</div>{% endfor %}
+                    </div>
+                </div>{% endfor %}
+        </div>{% endfor %}
+</div>
+</body>
+</html>
