@@ -17,7 +17,7 @@
             {% for machine in day.machines %}<div style="display: inline-block;vertical-align: top">
                     <div style="border:1px solid red">{{ machine.name }}</div>
                     <div style="height:400px; border:1px solid red; width:100px;margin: 0;padding: 0">
-                        {% for reservation in machine.reservations %}<div style="position:relative;text-align:center;top:{{ reservation.start_time }}%;height:{{ reservation.length }}%;background-color: green">{{ reservation.user }}</div>{% endfor %}
+                        {% for reservation in machine.reservations %}<div style="position:relative;text-align:center;top:{{ reservation.start_percentage }}%;height:{{ reservation.length }}%;background-color: green;overflow: hidden">{{ reservation.user }}<br/>{{ reservation.start_time }}-{{ reservation.end_time }}</div>{% endfor %}
                     </div>
                 </div>{% endfor %}
         </div>{% endfor %}

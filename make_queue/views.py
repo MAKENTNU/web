@@ -41,16 +41,18 @@ class ReservationCalendarView(View):
         reservation_json = {'user': reservation.user}
 
         if reservation.start_time < date:
-            reservation_json['start_time'] = 0
+            reservation_json['start_percentage'] = 0
+            reservation_json['start_time'] = "00:00"
         else:
-            reservation_json['start_time'] = (reservation.start_time.hour / 24 + reservation.start_time.minute / 1440)*100
+            reservation_json['start_percentage'] = (reservation.start_time.hour / 24 + reservation.start_time.minute / 1440)*100
+            reservation_json['start_time'] = "{:2}:{:2}".format(reservation.start_time.hour, reservation.start_time.minute)
 
         if reservation.end_time >= date + timedelta(days=1):
-            reservation_json['end_time'] = 100
+            reservation_json['length'] = 100 - reservation_json['start_percentage']
+            reservation_json['end_time'] = "23:59"
         else:
-            reservation_json['end_time'] = (reservation.end_time.hour / 24 + reservation.end_time.minute / 1440)*100
-
-        reservation_json['length'] = reservation_json['end_time'] - reservation_json['start_time']
+            reservation_json['length'] = (reservation.end_time.hour / 24 + reservation.end_time.minute / 1440)*100 - reservation_json['start_percentage']
+            reservation_json['end_time'] = "{:2}:{:2}".format(reservation.end_time.hour, reservation.end_time.minute)
 
         return reservation_json
 
