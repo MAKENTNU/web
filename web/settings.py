@@ -29,7 +29,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'web',
     'make_queue',
-    'crispy_forms',
 ]
 
 MIDDLEWARE_CLASSES = [
