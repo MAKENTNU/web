@@ -23,7 +23,9 @@
                                         <div>{{ machine.machine.name }}</div>
                                         <div class="ui mini label">{{ machine.machine.model }}</div>
                                     </div>
-                                    <div class="make_reservation_calendar_time_table">
+                                    <div class="make_reservation_calendar_time_table"
+                                         data-date="{{ day.date.date.year }}.{{ day.date.date.month }}.{{ day.date.date.day }}"
+                                         data-machine="{{ machine.machine.pk }}">
                                         {% for reservation in machine.reservations %}
                                             {% if reservation.reservation.event %}
                                                 <div class="make_reservation_calendar_time_table_item make_reservation_calendar_time_table_event"
