@@ -5,13 +5,44 @@ main, body, html {
     padding: 0;
 }
 
-.center {
+.center_make {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
     font-size: 1.2em;
+}
+
+.make_collapsed:not(:first-child) {
+    padding-left: 0 !important;
+}
+
+.make_collapsed:not(:last-child) {
+    padding-right: 0 !important;
+}
+
+.make_reservation_calendar_time_table {
+    height: 40rem;
+    background-color: #d3d3d3;
+    border: 1px solid #808080;
+    border-right: 0;
+}
+
+.make_reservation_calendar_time_table_item {
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding-top: 0.3rem;
+    padding-bottom: 0.3rem;
+}
+
+.make_reservation_calendar_time_table_event {
+    background-color: #21ba45;
+}
+
+.make_reservation_calendar_time_table_non_event {
+    background-color: #2185d0;
 }
 
 .title {
