@@ -1,26 +1,50 @@
-<!-- TODO: Use website templates when developed -->
-<!-- TODO: Style -->
-<!-- TODO: Make mobile friendly -->
+{% extends "web/base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<a href="/reservation/{{ prev.0 }}/{{ prev.1 }}/{{ machine_type }}">Prev</a>
-<a href="/reservation/{{ next.0 }}/{{ next.1 }}/{{ machine_type }}">Next</a>
-<div>
-    {% for day in week_days %}<div style="display: inline-block; border: 1px solid green;vertical-align: top">
-            <div>{{ day.date }}</div>
-            {% for machine in day.machines %}<div style="display: inline-block;vertical-align: top">
-                    <div style="border:1px solid red">{{ machine.name }}</div>
-                    <div style="height:400px; border:1px solid red; width:100px;margin: 0;padding: 0">
-                        {% for reservation in machine.reservations %}<div style="position:relative;text-align:center;top:{{ reservation.start_percentage }}%;height:{{ reservation.length }}%;background-color: green;overflow: hidden">{{ reservation.user }}<br/>{{ reservation.start_time }}-{{ reservation.end_time }}</div>{% endfor %}
+{% block body %}
+    <div class="ui">
+        <a href="/reservation/{{ prev.0 }}/{{ prev.1 }}/{{ machine_type }}">
+            <div class="ui primary button">Forrige uke</div>
+        </a>
+        <a href="/reservation/{{ next.0 }}/{{ next.1 }}/{{ machine_type }}">
+            <div class="ui primary button">Neste uke</div>
+        </a>
+    </div>
+    <div class="ui">
+        <div class="ui equal width grid padded">
+            {% for day in week_days %}
+                <div class="ui column make_collapsed">
+                    <div class="ui primary vertical inverted segment center aligned">{{ day.date.date }}</div>
+                    <div class="ui column">
+                        <div class="ui equal width height grid">
+                            {% for machine in day.machines %}
+                                <div class="ui column make_collapsed">
+                                    <div class="ui inverted equal height grey vertical center aligned segment">
+                                        <div>{{ machine.machine.name }}</div>
+                                        <div class="ui mini label">{{ machine.machine.model }}</div>
+                                    </div>
+                                    <div class="make_reservation_calendar_time_table">
+                                        {% for reservation in machine.reservations %}
+                                            {% if reservation.reservation.event %}
+                                                <div class="make_reservation_calendar_time_table_item make_reservation_calendar_time_table_event"
+                                                     style="top:{{ reservation.start_percentage }}%;height:{{ reservation.length }}%;">
+                                                    <div>{{ reservation.reservation.event_name }}</div>
+                                                    <div>{{ reservation.start_time }}-{{ reservation.end_time }}</div>
+                                                </div>
+                                            {% else %}
+                                                <div class="make_reservation_calendar_time_table_item make_reservation_calendar_time_table_non_event"
+                                                     style="top:{{ reservation.start_percentage }}%;height:{{ reservation.length }}%;">
+                                                    <div>{{ reservation.reservation.user.first_name }} {{ reservation.reservation.user.last_name }}</div>
+                                                    <div>{{ reservation.start_time }}-{{ reservation.end_time }}</div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>{% endfor %}
-        </div>{% endfor %}
-</div>
-</body>
-</html>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

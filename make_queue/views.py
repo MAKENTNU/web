@@ -38,7 +38,7 @@ class ReservationCalendarView(View):
 
     @staticmethod
     def format_reservation(reservation, date):
-        reservation_json = {'user': reservation.user}
+        reservation_json = {'reservation': reservation}
 
         if reservation.start_time < date:
             reservation_json['start_percentage'] = 0
@@ -77,7 +77,7 @@ class ReservationCalendarView(View):
             day["machines"] = []
             for machine in machines:
                 day["machines"].append(
-                    {"name": machine.name, "reservations": list(
+                    {"name": machine.name, "machine": machine, "reservations": list(
                         map(lambda x: self.format_reservation(x, date),
                             machine.reservations_in_period(date, date + timedelta(days=1))))})
             week_days.append(day)
