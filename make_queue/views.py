@@ -1,4 +1,5 @@
 from django.views.generic.base import View
+from django.views.generic import FormView
 from django.shortcuts import render
 from django.utils.timezone import get_default_timezone_name
 from datetime import datetime, timedelta
@@ -87,3 +88,7 @@ class ReservationCalendarView(View):
         render_parameters['next'] = self.get_next_week(year, week)
         render_parameters['prev'] = self.get_prev_week(year, week)
         return render(request, self.template_name, render_parameters)
+
+
+class MakeReservationView(FormView):
+    template_name = "make_queue/make_reservation.html"
