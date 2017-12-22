@@ -1,5 +1,72 @@
 {% extends "web/base.html" %}
+{% load staticfiles %}
+{% load semantic-ui-calendar-extra %}
 
 {% block body %}
-
+    <div class="ui container">
+        <div class="ui large header">Ny reservasjon</div>
+        <form class="ui form" id="reserve_form" method="post">
+            {% csrf_token %}
+            <div class="two fields">
+                <div class="field">
+                    <label>Start tidspunkt</label>
+                    <div class="ui calendar" id="start_date">
+                        <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            <input name="start_date" type="text" placeholder="Start tidspunkt"
+                                   value="{% if start_time %}{{ start_time }}{% else %}{% set_current_date %}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Slutt tidspunkt</label>
+                    <div class="ui calendar" id="end_date">
+                        <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            <input name="end_date" type="text" placeholder="Slutt tidspunkt"
+                                   value="{% if end_time %}{{ end_time }}{% else %}{% set_current_date 2 %}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label>Utstyrs type</label>
+                    <div class="ui fluid selection dropdown" id="machine_type_dropdown">
+                        <input type="hidden" name="machine_type" value="default">
+                        <div class="default text">Velg utstyrs type</div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            {% for machine_type in machine_types %}
+                                <div class="item" data-value="{{ machine_type.literal }}">{{ machine_type.literal }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Utstyr</label>
+                    <div class="ui fluid selection dropdown disabled" id="machine_name_dropdown">
+                        <input type="hidden" name="machine_name" value="default">
+                        <div class="default text">Velg maskin</div>
+                        <i class="dropdown icon"></i>
+                        {% for machine_type in machine_types %}
+                            <div class="menu {{ machine_type.literal }}">
+                                {% for instance in machine_type.instances %}
+                                    <div class="item" data-value="{{ instance.pk }}">{{ instance.name }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            {% if perms.make_queue.can_create_event_reservation %}
+                <div class="ui checkbox">
+                    <label for="event">Event</label>
+                    <input title="event" class="hidden" type="checkbox" name="event"/>
+                </div>
+            {% endif %}
+            <div class="ui right floated button" id="submit">Reserver</div>
+        </form>
+    </div>
+    <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
 {% endblock %}
