@@ -3,7 +3,8 @@ from django.views.generic import FormView
 from django.shortcuts import render
 from django.utils.timezone import get_default_timezone_name
 from datetime import datetime, timedelta
-from make_queue.models import Printer3D, SewingMachine
+from make_queue.models import Printer3D, SewingMachine, Machine
+from make_queue.forms import ReservationForm
 import pytz
 
 
@@ -92,3 +93,11 @@ class ReservationCalendarView(View):
 
 class MakeReservationView(FormView):
     template_name = "make_queue/make_reservation.html"
+
+    def get(self, request, **kwargs):
+        render_parameters = {"form": ReservationForm(), "machine_types": [
+            {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
+            for sub_class in Machine.__subclasses__()
+        ]}
+
+        return render(request, self.template_name, render_parameters)
