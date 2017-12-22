@@ -41,6 +41,8 @@ class Machine(models.Model):
 
 
 class Printer3D(Machine):
+    literal = "3D-printer"
+
     def can_user_use(self, user):
         return user.quota3d.can_print
 
@@ -49,6 +51,8 @@ class Printer3D(Machine):
 
 
 class SewingMachine(Machine):
+    literal = "Symaskin"
+
     def can_user_use(self, user):
         return True
 
