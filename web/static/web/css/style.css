@@ -45,6 +45,10 @@ main, body, html {
     background-color: #2185d0;
 }
 
+.make_hidden {
+    display: none !important;
+}
+
 .title {
     font-size: 4.5em;
     margin: 10px;
