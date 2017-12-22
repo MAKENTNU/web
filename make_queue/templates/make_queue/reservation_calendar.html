@@ -46,8 +46,9 @@
                                 {% for machine in day.machines %}
                                     <div class="ui column make_collapsed">
                                         <div class="make_reservation_calendar_time_table"
-                                             data-date="{{ day.date.date.year }}.{{ day.date.date.month }}.{{ day.date.date.day }}"
-                                             data-machine="{{ machine.machine.pk }}">
+                                             data-date="{{ day.date.date.month }}/{{ day.date.date.day }}/{{ day.date.date.year }}"
+                                             data-machine="{{ machine.machine.pk }}"
+                                             data-machine-type="{{ machine_type }}">
                                             {% for reservation in machine.reservations %}
                                                 {% if reservation.reservation.event %}
                                                     <div class="make_reservation_calendar_time_table_item make_reservation_calendar_time_table_event"
