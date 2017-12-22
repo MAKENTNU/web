@@ -25,3 +25,6 @@ $('#machine_type_dropdown').dropdown('setting', 'onChange', function(value) {
     $('#machine_name_dropdown .'+value).toggleClass("menu", true);
     $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", false);
 });
+
+$('#machine_type_dropdown').dropdown("set selected", $('.selected_machine_type').data("value"));
+$('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name').data("value"));
