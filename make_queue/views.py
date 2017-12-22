@@ -3,7 +3,7 @@ from django.views.generic import FormView
 from django.shortcuts import render
 from django.utils.timezone import get_default_timezone_name
 from datetime import datetime, timedelta
-from make_queue.models import Printer3D, SewingMachine, Machine
+from make_queue.models import Machine
 from make_queue.forms import ReservationForm
 import pytz
 
@@ -13,81 +13,67 @@ class ReservationCalendarView(View):
 
     @staticmethod
     def is_valid_week(year, week):
-        first_day_of_week = datetime.strptime(str(year) + " " + str(week) + " 0", "%Y %W %w")
-        return first_day_of_week.year == year
+        return ReservationCalendarView.year_and_week_to_monday(year, week).year == year
 
     @staticmethod
-    def get_next_week(year, week):
-        year, week = int(year) + (week == 52), (int(week) + 1) % 53
+    def get_next_valid_week(year, week, shift_direction):
+        year, week = year + ((week - 1) // 52), (week + shift_direction) % 53
         if ReservationCalendarView.is_valid_week(year, week):
             return year, week
-        return ReservationCalendarView.get_next_week(year, week)
-
-    @staticmethod
-    def get_prev_week(year, week):
-        year, week = year - (week == 0), (week - 1) % 53
-        if ReservationCalendarView.is_valid_week(year, week):
-            return year, week
-        return ReservationCalendarView.get_prev_week(year, week)
+        return ReservationCalendarView.get_next_valid_week(year, week, shift_direction)
 
     @staticmethod
     def get_machines(machine_type):
-        if machine_type.lower() in ["3d-printer", "3dprinter", "3d_printer"]:
-            return list(Printer3D.objects.all())
-        if machine_type.lower() in ["sewing", "sewing_machine"]:
-            return list(SewingMachine.objects.all())
-        raise ValueError("Cannot find the specific type")
+        return next(filter(lambda x: x.literal.lower() == machine_type.lower(), Machine.__subclasses__())).objects.all()
+
+    @staticmethod
+    def year_and_week_to_monday(year, week):
+        return datetime.strptime(str(year) + " " + str(week) + " 1", "%Y %W %w")
+
+    @staticmethod
+    def date_to_percentage(date):
+        return (date.hour / 24 + date.minute / 1440) * 100
 
     @staticmethod
     def format_reservation(reservation, date):
-        reservation_json = {'reservation': reservation}
+        start_time = max(reservation.start_time, date)
+        end_time = min(reservation.end_time, date + timedelta(days=1, seconds=-1))
 
-        if reservation.start_time < date:
-            reservation_json['start_percentage'] = 0
-            reservation_json['start_time'] = "00:00"
-        else:
-            reservation_json['start_percentage'] = (reservation.start_time.hour / 24 + reservation.start_time.minute / 1440)*100
-            reservation_json['start_time'] = "{:2}:{:2}".format(reservation.start_time.hour, reservation.start_time.minute)
-
-        if reservation.end_time >= date + timedelta(days=1):
-            reservation_json['length'] = 100 - reservation_json['start_percentage']
-            reservation_json['end_time'] = "23:59"
-        else:
-            reservation_json['length'] = (reservation.end_time.hour / 24 + reservation.end_time.minute / 1440)*100 - reservation_json['start_percentage']
-            reservation_json['end_time'] = "{:2}:{:2}".format(reservation.end_time.hour, reservation.end_time.minute)
-
-        return reservation_json
+        return {'reservation': reservation,
+                'start_percentage': ReservationCalendarView.date_to_percentage(start_time),
+                'start_time': "{:02}:{:02}".format(start_time.hour, start_time.minute),
+                'end_time': "{:02}:{:02}".format(end_time.hour, end_time.minute),
+                'length': ReservationCalendarView.date_to_percentage(end_time) -
+                          ReservationCalendarView.date_to_percentage(start_time)}
 
     def get(self, request, year="", week="", machine_type=""):
-        year, week = map(int, [year, week])
-        render_parameters = {'year': year, 'week': week, 'machine_type': machine_type}
+        year, week = int(year), int(week)
+
+        if not self.is_valid_week(year, week):
+            year, week = self.get_next_valid_week(year, week, 1)
 
         first_date_of_week = pytz.timezone(get_default_timezone_name()).localize(
-            datetime.strptime(str(year) + " " + str(week) + " 1", "%Y %W %w"))
+            self.year_and_week_to_monday(year, week))
 
-        if first_date_of_week.year != year:
-            return self.get(request, *self.get_next_week(year, week), machine_type=machine_type)
+        render_parameters = {'year': year, 'week': week, 'machine_type': machine_type,
+                             'next': self.get_next_valid_week(year, week, 1),
+                             'prev': self.get_next_valid_week(year, week, -1)}
 
         machines = self.get_machines(machine_type)
         render_parameters['machines'] = machines
 
-        week_days = []
+        week_days = render_parameters['week_days'] = []
         for day_number in range(7):
-            day = {}
             date = first_date_of_week + timedelta(days=day_number)
-            day["date"] = date
-            day["machines"] = []
-            for machine in machines:
-                day["machines"].append(
-                    {"name": machine.name, "machine": machine, "reservations": list(
-                        map(lambda x: self.format_reservation(x, date),
-                            machine.reservations_in_period(date, date + timedelta(days=1))))})
-            week_days.append(day)
+            week_days.append({
+                "date": date,
+                "machines": [{"name": machine.name,
+                              "machine": machine,
+                              "reservations": list(map(lambda x: self.format_reservation(x, date),
+                                                       machine.reservations_in_period(date, date + timedelta(days=1))))}
+                             for machine in machines]
+            })
 
-        render_parameters['week_days'] = week_days
-
-        render_parameters['next'] = self.get_next_week(year, week)
-        render_parameters['prev'] = self.get_prev_week(year, week)
         return render(request, self.template_name, render_parameters)
 
 
