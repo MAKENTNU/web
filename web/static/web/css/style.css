@@ -22,6 +22,27 @@ main, body, html {
     padding-right: 0 !important;
 }
 
+.make_collapsed_top_bottom:not(:first-child) {
+    padding-top: 0 !important;
+}
+
+.make_collapsed_top_bottom:not(:last-child) {
+    padding-bottom: 0 !important;
+}
+
+.make_collapsed_top_bottom_all {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+.make_row_fill {
+    height: 100%;
+}
+
+.machine_information {
+    height: 100%;
+}
+
 .make_reservation_calendar_time_table {
     height: 40rem;
     background-color: #d3d3d3;
