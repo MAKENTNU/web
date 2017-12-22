@@ -16,7 +16,11 @@ $("#submit").click(function(){
 });
 
 $('.ui.dropdown').dropdown();
-$('.ui.checkbox').checkbox();
+$('#event_checkbox').checkbox({
+    onChange: function() {
+        $("#event_name_input").toggleClass("make_non_visible", !$(this).is(':checked'))
+    },
+});
 
 $('#machine_type_dropdown').dropdown('setting', 'onChange', function(value) {
     $('#machine_name_dropdown').toggleClass("disabled", false).dropdown("restore defaults");

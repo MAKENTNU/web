@@ -70,6 +70,10 @@ main, body, html {
     display: none !important;
 }
 
+.make_non_visible {
+    visibility: hidden !important;
+}
+
 .title {
     font-size: 4.5em;
     margin: 10px;
