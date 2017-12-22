@@ -63,7 +63,7 @@ class ReservationCalendarView(View):
         render_parameters = {'year': year, 'week': week, 'machine_type': machine_type}
 
         first_date_of_week = pytz.timezone(get_default_timezone_name()).localize(
-            datetime.strptime(str(year) + " " + str(week) + " 0", "%Y %W %w"))
+            datetime.strptime(str(year) + " " + str(week) + " 1", "%Y %W %w"))
 
         if first_date_of_week.year != year:
             return self.get(request, *self.get_next_week(year, week), machine_type=machine_type)
