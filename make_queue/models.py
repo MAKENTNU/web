@@ -65,6 +65,7 @@ class Reservation(models.Model):
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     event = models.BooleanField(default=False)
+    event_name = models.CharField(default="", max_length=40)
     showed = models.NullBooleanField(default=None)
 
     @abstractmethod
