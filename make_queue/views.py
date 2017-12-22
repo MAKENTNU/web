@@ -94,10 +94,11 @@ class ReservationCalendarView(View):
 class MakeReservationView(FormView):
     template_name = "make_queue/make_reservation.html"
 
-    def get(self, request, start_time="", **kwargs):
+    def get(self, request, start_time="", selected_machine_type="", selected_machine_name="", **kwargs):
         render_parameters = {"form": ReservationForm(), "machine_types": [
             {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
             for sub_class in Machine.__subclasses__()
-        ], "start_time": start_time}
+        ], "start_time": start_time, "selected_machine_type": selected_machine_type,
+                             "selected_machine_name": selected_machine_name}
 
         return render(request, self.template_name, render_parameters)
