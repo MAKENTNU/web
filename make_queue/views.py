@@ -17,7 +17,7 @@ class ReservationCalendarView(View):
 
     @staticmethod
     def get_next_valid_week(year, week, shift_direction):
-        year, week = year + ((week - 1) // 52), (week + shift_direction) % 53
+        year, week = year + ((week + shift_direction) // 53), (week + shift_direction) % 53
         if ReservationCalendarView.is_valid_week(year, week):
             return year, week
         return ReservationCalendarView.get_next_valid_week(year, week, shift_direction)
