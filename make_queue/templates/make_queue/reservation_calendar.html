@@ -40,6 +40,21 @@
                                                     <div>{{ reservation.start_time }}-{{ reservation.end_time }}</div>
                                                 </div>
                                             {% endif %}
+                                            <div class="ui fluid popup hidden inverted">
+                                                <div class="ui vertical segment center aligned">
+                                                    <div>
+                                                        {% if reservation.reservation.event %}
+                                                            {{ reservation.reservation.event_name }}
+                                                        {% else %}
+                                                            {{ reservation.reservation.user.first_name }}
+                                                            {{ reservation.reservation.user.last_name }}
+                                                        {% endif %}
+                                                    </div>
+                                                    <div>
+                                                        {{ reservation.start_time }}-{{ reservation.end_time }}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         {% endfor %}
                                     </div>
                                 </div>
