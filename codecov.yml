@@ -12,3 +12,4 @@ coverage:
     - **/apps.py
     - **/tests.py
     - **/wsgi.py
+    - **/test**.py
