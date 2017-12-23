@@ -24,7 +24,7 @@ class Machine(models.Model):
 
     @abstractmethod
     def get_reservation_set(self):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def can_user_use(self, user):
@@ -70,11 +70,11 @@ class Reservation(models.Model):
 
     @abstractmethod
     def get_quota(self):
-        pass
+        raise NotImplementedError
 
     @abstractmethod
     def get_machine(self):
-        pass
+        raise NotImplementedError
 
     def save(self, *args, **kwargs):
         if not self.validate():
@@ -136,7 +136,7 @@ class Quota(models.Model):
 
     @abstractmethod
     def get_active_user_reservations(self):
-        pass
+        raise NotImplementedError
 
     def can_make_new_reservation(self):
         return len(self.get_active_user_reservations().filter(event=False)) < self.max_number_of_reservations
