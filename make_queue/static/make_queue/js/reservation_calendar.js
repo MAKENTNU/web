@@ -15,3 +15,13 @@ $("#machine_type_dropdown").dropdown().dropdown("set selected", $('.selected_mac
     .dropdown("setting", "onChange", function (value) {
         document.location = value;
     });
+
+$("#period").calendar({
+        ampm: false,
+        initialDate: null,
+        type: 'date',
+        onChange: function (value) {
+            console.log(value);
+        }
+    }
+);

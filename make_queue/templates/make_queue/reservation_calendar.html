@@ -13,6 +13,15 @@
                 </a>
             </div>
             <div class="column">
+                <div class="ui calendar" id="period">
+                    <div class="ui input left icon">
+                        <i class="calendar icon"></i>
+                        <input name="start_date" type="text" placeholder="Periode"
+                               value="{{ week_days.0.date.date.month }}-{{ week_days.0.date.date.day }}-{{ week_days.0.date.date.year }}">
+                    </div>
+                </div>
+            </div>
+            <div class="column">
                 <div class="ui fluid selection dropdown" id="machine_type_dropdown">
                     <input type="hidden" name="machine_type" value="default">
                     <i class="dropdown icon"></i>
