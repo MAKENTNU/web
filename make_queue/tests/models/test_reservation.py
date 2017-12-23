@@ -213,7 +213,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
 class ReservationSewingTestCase(GeneralReservationTestCase):
     def setUp(self):
-        SewingMachine.objects.create(name="C1", location="Makerspace U1", status="F")
+        SewingMachine.objects.create(name="C1", location="Makerspace U1", status="F", model="Generic")
         user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         user.save()
         QuotaSewing.objects.create(user=user, max_time_reservation=10, max_number_of_reservations=2)
@@ -231,10 +231,13 @@ class ReservationSewingTestCase(GeneralReservationTestCase):
 
         self.check_reservation_valid(reservation, "Users should be able to reserve sewing machines")
 
+    def test_to_string(self):
+        self.assertEqual(str(SewingMachine.objects.get(name="C1")), "C1-Generic")
+
 
 class Reservation3DTestCase(GeneralReservationTestCase):
     def setUp(self):
-        Printer3D.objects.create(name="C1", location="Printer room Makerspace U1", status="F")
+        Printer3D.objects.create(name="C1", location="Printer room Makerspace U1", status="F", model="Ultimaker 2")
         SewingMachine.objects.create(name="S1", location="Mackerspace U1 main room", status="F")
         user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         user.save()
@@ -253,3 +256,6 @@ class Reservation3DTestCase(GeneralReservationTestCase):
                                     event=False)
 
         self.check_reservation_invalid(reservation, "Users that cannot print, should not be able to reserve printer")
+
+    def test_to_string(self):
+        self.assertEqual(str(Printer3D.objects.get(name="C1")), "C1-Ultimaker 2")
