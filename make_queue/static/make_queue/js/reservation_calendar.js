@@ -11,3 +11,7 @@ $(".make_reservation_calendar_time_table").click(function (event) {
 
 $(".make_reservation_calendar_time_table_item").popup({on: "hover", position: "right center"});
 $(".make_reservation_calendar_time_table_item").click(false);
+$("#machine_type_dropdown").dropdown().dropdown("set selected", $('.selected_machine_type').data("value"))
+    .dropdown("setting", "onChange", function (value) {
+        document.location = value;
+    });

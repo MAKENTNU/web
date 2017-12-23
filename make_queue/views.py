@@ -57,7 +57,8 @@ class ReservationCalendarView(View):
 
         render_parameters = {'year': year, 'week': week, 'machine_type': machine_type,
                              'next': self.get_next_valid_week(year, week, 1),
-                             'prev': self.get_next_valid_week(year, week, -1)}
+                             'prev': self.get_next_valid_week(year, week, -1),
+                             'machine_types': Machine.__subclasses__()}
 
         machines = self.get_machines(machine_type)
         render_parameters['machines'] = machines

@@ -2,13 +2,30 @@
 {% load staticfiles %}
 
 {% block body %}
-    <div class="ui">
-        <a href="/reservation/{{ prev.0 }}/{{ prev.1 }}/{{ machine_type }}">
-            <div class="ui primary button">Forrige uke</div>
-        </a>
-        <a href="/reservation/{{ next.0 }}/{{ next.1 }}/{{ machine_type }}">
-            <div class="ui primary button">Neste uke</div>
-        </a>
+    <div class="ui container">
+        <div class="ui grid padded equal width">
+            <div class="column">
+                <a href="/reservation/{{ prev.0 }}/{{ prev.1 }}/{{ machine_type }}">
+                    <div class="ui primary button">Forrige uke</div>
+                </a>
+                <a href="/reservation/{{ next.0 }}/{{ next.1 }}/{{ machine_type }}">
+                    <div class="ui primary button">Neste uke</div>
+                </a>
+            </div>
+            <div class="column">
+                <div class="ui fluid selection dropdown" id="machine_type_dropdown">
+                    <input type="hidden" name="machine_type" value="default">
+                    <i class="dropdown icon"></i>
+                    <div class="default text">Velg utstyrs type</div>
+                    <div class="menu">
+                        {% for machine in machine_types %}
+                            <div class="item {% if machine_type == machine.literal %}selected_machine_type{% endif %}"
+                                 data-value="{{ machine.literal }}">{{ machine.literal }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="ui">
         <div class="ui equal width grid padded">
