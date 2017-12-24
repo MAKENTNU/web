@@ -1,7 +1,7 @@
 from django.test import TestCase
 from datetime import datetime
 from make_queue.views import ReservationCalendarView
-from make_queue.models import Printer3D
+from make_queue.models import Printer3D, SewingMachine
 
 
 class ReservationCalendarViewTestCase(TestCase):
@@ -30,3 +30,23 @@ class ReservationCalendarViewTestCase(TestCase):
     def test_date_to_percentage(self):
         self.assertEqual(41.875, ReservationCalendarView.date_to_percentage(datetime(2017, 12, 24, 10, 3)))
         self.assertEqual(50, ReservationCalendarView.date_to_percentage(datetime(2017, 12, 24, 12, 0)))
+
+    def test_get_machines_simple_printer(self):
+        Printer3D.objects.create(name="S1", location="U1", model="Ultimaker", status="F")
+        self.assertEqual(list(Printer3D.objects.all()), list(ReservationCalendarView.get_machines(Printer3D.literal)))
+
+    def test_get_machines_simple_sewing_machine(self):
+        SewingMachine.objects.create(name="S1", location="U1", model="Ultimaker", status="F")
+        self.assertEqual(list(SewingMachine.objects.all()),
+                         list(ReservationCalendarView.get_machines(SewingMachine.literal)))
+
+    def test_get_machines_several(self):
+        Printer3D.objects.create(name="S1", location="U1", model="Ultimaker", status="F")
+        Printer3D.objects.create(name="S2", location="U1", model="Ultimaker", status="F")
+        self.assertEqual(list(Printer3D.objects.all()), list(ReservationCalendarView.get_machines(Printer3D.literal)))
+
+    def test_get_machines_several_types(self):
+        SewingMachine.objects.create(name="K1", location="U1", model="Generic", status="F")
+        Printer3D.objects.create(name="S1", location="U1", model="Ultimaker", status="F")
+        Printer3D.objects.create(name="S2", location="U1", model="Ultimaker", status="F")
+        self.assertEqual(list(Printer3D.objects.all()), list(ReservationCalendarView.get_machines(Printer3D.literal)))
