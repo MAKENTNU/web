@@ -17,3 +17,11 @@ class ReservationCalendarViewTestCase(TestCase):
 
     def test_is_valid_week_with_to_high_week(self):
         self.assertFalse(ReservationCalendarView.is_valid_week(2017, 53))
+
+    def test_get_next_valid_week_middle_of_year(self):
+        self.assertEqual((2017, 30), ReservationCalendarView.get_next_valid_week(2017, 29, 1))
+        self.assertEqual((2017, 28), ReservationCalendarView.get_next_valid_week(2017, 29, -1))
+
+    def test_get_next_valid_week_year_shift(self):
+        self.assertEqual((2018, 1), ReservationCalendarView.get_next_valid_week(2017, 52, 1))
+        self.assertEqual((2016, 52), ReservationCalendarView.get_next_valid_week(2017, 1, -1))
