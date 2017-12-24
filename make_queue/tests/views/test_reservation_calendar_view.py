@@ -1,6 +1,7 @@
 from django.test import TestCase
 from datetime import datetime
 from make_queue.views import ReservationCalendarView
+from make_queue.models import Printer3D
 
 
 class ReservationCalendarViewTestCase(TestCase):
@@ -25,3 +26,7 @@ class ReservationCalendarViewTestCase(TestCase):
     def test_get_next_valid_week_year_shift(self):
         self.assertEqual((2018, 1), ReservationCalendarView.get_next_valid_week(2017, 52, 1))
         self.assertEqual((2016, 52), ReservationCalendarView.get_next_valid_week(2017, 1, -1))
+
+    def test_date_to_percentage(self):
+        self.assertEqual(41.875, ReservationCalendarView.date_to_percentage(datetime(2017, 12, 24, 10, 3)))
+        self.assertEqual(50, ReservationCalendarView.date_to_percentage(datetime(2017, 12, 24, 12, 0)))
