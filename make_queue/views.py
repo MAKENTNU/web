@@ -13,11 +13,11 @@ class ReservationCalendarView(View):
 
     @staticmethod
     def is_valid_week(year, week):
-        return ReservationCalendarView.year_and_week_to_monday(year, week).year == year
+        return week != 0 and ReservationCalendarView.year_and_week_to_monday(year, week).year == year
 
     @staticmethod
     def get_next_valid_week(year, week, shift_direction):
-        year, week = year + ((week + shift_direction) // 53), (week + shift_direction) % 53
+        year, week = year + ((week + shift_direction) // 54), (week + shift_direction) % 54
         if ReservationCalendarView.is_valid_week(year, week):
             return year, week
         return ReservationCalendarView.get_next_valid_week(year, week, shift_direction)
