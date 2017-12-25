@@ -30,6 +30,10 @@ main, body, html {
     padding-bottom: 0 !important;
 }
 
+.make_collapsed_header {
+    margin-bottom: 0 !important;
+}
+
 .make_collapsed_top_bottom_all {
     padding-bottom: 0 !important;
     padding-top: 0 !important;

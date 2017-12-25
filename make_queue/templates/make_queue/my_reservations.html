@@ -3,20 +3,42 @@
 
 {% block body %}
     <div class="ui container">
+        <div class="ui huge header">
+            Mine reservasjoner
+        </div>
+        <div class="ui vertical segment">
+            <a href="{% current_calendar_url %}">
+                <div class="ui button primary">
+                    Kalender
+                </div>
+            </a>
+            <a href="{% url 'make_reservation' %}">
+                <div class="ui button primary">
+                    Ny reservasjon
+                </div>
+            </a>
+        </div>
         <table class="ui table">
             <thead>
             <tr>
                 <th>Reservasjon</th>
                 <th>Tidspunkt</th>
                 <th>Se i kalender</th>
-                <th>Slett?</th>
+                <th>Kanseller</th>
             </tr>
             </thead>
             <tbody>
             {% for reservation in reservations %}
                 <tr>
-                    <td>{{ reservation.machine.name }}</td>
-                    <td>{{ reservation.start_time }} - {{ reservation.end_time }}</td>
+                    <td>
+                        <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
+                        <div>{{ reservation.machine.model }}</div>
+                        <div><i class="location arrow icon"></i>{{ reservation.machine.location }}</div>
+                    </td>
+                    <td>
+                        <div>{{ reservation.start_time }}</div>
+                        <div>{{ reservation.end_time }}</div>
+                    </td>
                     <td>
                         <a href="{% calendar_url_reservation reservation %}">
                             <div class="ui button primary">Kalender</div>
@@ -26,7 +48,7 @@
                         {% can_delete_reservation reservation as can_delete %}
                         {% if can_delete %}
                             <a href="">
-                                <div class="ui button red">Slett</div>
+                                <div class="ui button red">Kanseller</div>
                             </a>
                         {% endif %}
                     </td>
