@@ -45,12 +45,12 @@
                         </a>
                     </td>
                     <td>
-                        {% can_delete_reservation reservation as can_delete %}
-                        {% if can_delete %}
+                        {% if reservation.can_delete %}
                             <form method="post" action="{% url 'delete_reservation' %}">
                                 {% csrf_token %}
                                 <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
-                                <input type="text" name="machine_type" class="make_hidden" value="{{ reservation.machine.literal }}"/>
+                                <input type="text" name="machine_type" class="make_hidden"
+                                       value="{{ reservation.machine.literal }}"/>
                                 <input type="submit" class="ui button red" value="Kanseller">
                             </form>
                         {% endif %}
