@@ -125,3 +125,12 @@ class DeleteReservationView(View):
             if reservations and len(reservations) == 1 and reservations.first().can_delete():
                 reservations.first().delete()
         return redirect("my_reservations")
+
+
+class ChangeReservationView(View):
+
+    def get(self, request, machine_type, pk):
+        pass
+
+    def post(self, request, machine_type, pk):
+        pass
