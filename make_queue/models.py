@@ -106,6 +106,9 @@ class Reservation(models.Model):
         # If a primary key is set, the reservation is already saved once, and does not
         return self.pk is not None or self.get_quota().can_make_new_reservation()
 
+    def can_delete(self):
+        return self.start_time > timezone.now()
+
     class Meta:
         abstract = True
 
