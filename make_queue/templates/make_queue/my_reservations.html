@@ -1,0 +1,38 @@
+{% extends 'web/base.html' %}
+{% load reservation_extra %}
+
+{% block body %}
+    <div class="ui container">
+        <table class="ui table">
+            <thead>
+            <tr>
+                <th>Reservasjon</th>
+                <th>Tidspunkt</th>
+                <th>Se i kalender</th>
+                <th>Slett?</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for reservation in reservations %}
+                <tr>
+                    <td>{{ reservation.machine.name }}</td>
+                    <td>{{ reservation.start_time }} - {{ reservation.end_time }}</td>
+                    <td>
+                        <a href="{% calendar_url_reservation reservation %}">
+                            <div class="ui button primary">Kalender</div>
+                        </a>
+                    </td>
+                    <td>
+                        {% can_delete_reservation reservation as can_delete %}
+                        {% if can_delete %}
+                            <a href="">
+                                <div class="ui button red">Slett</div>
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

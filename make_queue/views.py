@@ -3,7 +3,7 @@ from django.views.generic import FormView
 from django.shortcuts import render
 from django.utils.timezone import get_default_timezone_name
 from datetime import datetime, timedelta
-from make_queue.models import Machine
+from make_queue.models import Machine, Reservation
 from make_queue.forms import ReservationForm
 import pytz
 
@@ -94,8 +94,15 @@ class MakeReservationView(FormView):
 class MyReservationsView(View):
     template_name = "make_queue/my_reservations.html"
 
+    @staticmethod
+    def get_user_reservations(user):
+        user_reservations = []
+        for reservation_subclass in Reservation.__subclasses__():
+            user_reservations.extend(reservation_subclass.objects.filter(user=user))
+        return sorted(user_reservations, key=lambda x: x.end_time, reverse=True)
+
     def get(self, request):
-        pass
+        return render(request, self.template_name, {'reservations': self.get_user_reservations(request.user)})
 
     def post(self, request):
         pass
