@@ -55,6 +55,9 @@ class ReservationCalendarView(View):
         first_date_of_week = pytz.timezone(get_default_timezone_name()).localize(
             self.year_and_week_to_monday(year, week))
 
+        if machine_type is None:
+            machine_type = Machine.__subclasses__()[0].literal
+
         render_parameters = {'year': year, 'week': week, 'machine_type': machine_type,
                              'next': self.get_next_valid_week(year, week, 1),
                              'prev': self.get_next_valid_week(year, week, -1),
