@@ -1,6 +1,6 @@
 from django.views.generic.base import View
 from django.views.generic import FormView
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.timezone import get_default_timezone_name
 from datetime import datetime, timedelta
 from make_queue.models import Machine, Reservation
@@ -109,3 +109,19 @@ class MyReservationsView(View):
 
     def post(self, request):
         pass
+
+
+class DeleteReservationView(View):
+
+    def post(self, request):
+        if "pk" in request.POST and "machine_type" in request.POST:
+            pk = request.POST.get("pk")
+            machine_type = request.POST.get("machine_type")
+
+            # Need to find the reservation type that support the given machine type
+            reservations = next(filter(lambda res: res.machine.field.target_field.model.literal == machine_type,
+                                       Reservation.__subclasses__())).objects.filter(pk=pk, user=request.user)
+
+            if reservations and len(reservations) == 1 and reservations.first().can_delete():
+                reservations.first().delete()
+        return redirect("my_reservations")
