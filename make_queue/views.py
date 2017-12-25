@@ -89,3 +89,13 @@ class MakeReservationView(FormView):
                              "selected_machine_pk": selected_machine_pk and int(selected_machine_pk) or -1}
 
         return render(request, self.template_name, render_parameters)
+
+
+class MyReservationsView(View):
+    template_name = "make_queue/my_reservations.html"
+
+    def get(self, request):
+        pass
+
+    def post(self, request):
+        pass
