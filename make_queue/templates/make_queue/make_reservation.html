@@ -4,7 +4,13 @@
 
 {% block body %}
     <div class="ui container">
-        <div class="ui large header">Ny reservasjon</div>
+        <div class="ui large header">
+            {% if new_reservation %}
+                Ny reservasjon
+            {% else %}
+                Endre reservasjon
+            {% endif %}
+        </div>
         <form class="ui form" id="reserve_form" method="post">
             {% csrf_token %}
             <div class="two fields">
@@ -78,7 +84,7 @@
                     </div>
                 </div>
             {% endif %}
-            <div class="ui right floated button" id="submit">Reserver</div>
+            <input class="ui right floated button" type="submit" value="{% if new_reservation %}Reserver{% else %}Endre{% endif %}">
         </form>
     </div>
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>

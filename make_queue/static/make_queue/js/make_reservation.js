@@ -11,10 +11,6 @@ $("#end_date").calendar({
         startCalendar: $("#start_date")
 });
 
-$("#submit").click(function(){
-   $("#reserve_form").submit();
-});
-
 $('.ui.dropdown').dropdown();
 $('#event_checkbox').checkbox({
     onChange: function() {

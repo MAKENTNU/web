@@ -89,7 +89,8 @@ class MakeReservationView(FormView):
             {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
             for sub_class in Machine.__subclasses__()
         ], "start_time": start_time, "selected_machine_type": selected_machine_type,
-                             "selected_machine_pk": selected_machine_pk and int(selected_machine_pk) or -1}
+                             "selected_machine_pk": selected_machine_pk and int(selected_machine_pk) or -1,
+                             "new_reservation": True}
 
         return render(request, self.template_name, render_parameters)
 
@@ -118,19 +119,30 @@ class DeleteReservationView(View):
             pk = request.POST.get("pk")
             machine_type = request.POST.get("machine_type")
 
-            # Need to find the reservation type that support the given machine type
-            reservations = next(filter(lambda res: res.machine.field.target_field.model.literal == machine_type,
-                                       Reservation.__subclasses__())).objects.filter(pk=pk, user=request.user)
+            reservation = Reservation.get_reservation(machine_type, pk)
 
-            if reservations and len(reservations) == 1 and reservations.first().can_delete():
-                reservations.first().delete()
+            if reservation and reservation.user == request.user and reservation.can_delete():
+                reservation.delete()
         return redirect("my_reservations")
 
 
 class ChangeReservationView(View):
+    template_name = "make_queue/make_reservation.html"
 
     def get(self, request, machine_type, pk):
-        pass
+        reservation = Reservation.get_reservation(machine_type, pk)
+        if reservation is None or reservation.user != request.user:
+            # TODO: Implement 404
+            return None
+
+        render_parameters = {"machine_types": [{"literal": machine_type, "instances": [reservation.get_machine()]}],
+                             "selected_machine_type": machine_type,
+                             "selected_machine_pk": reservation.get_machine().pk,
+                             "start_time": reservation.start_time,
+                             "end_time": reservation.end_time,
+                             "new_reservation": False}
+
+        return render(request, self.template_name, render_parameters)
 
     def post(self, request, machine_type, pk):
         pass
