@@ -108,9 +108,6 @@ class MyReservationsView(View):
     def get(self, request):
         return render(request, self.template_name, {'reservations': self.get_user_reservations(request.user)})
 
-    def post(self, request):
-        pass
-
 
 class DeleteReservationView(View):
 
