@@ -112,6 +112,11 @@ class Reservation(models.Model):
     class Meta:
         abstract = True
 
+    @classmethod
+    def get_reservation(cls, machine_type, pk):
+        return next(filter(lambda res: res.machine.field.target_field.model.literal == machine_type,
+                                   Reservation.__subclasses__())).objects.filter(pk=pk).first()
+
 
 class Reservation3D(Reservation):
     machine = models.ForeignKey(Printer3D, on_delete=models.CASCADE)
