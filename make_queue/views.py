@@ -5,6 +5,7 @@ from django.utils.timezone import get_default_timezone_name
 from datetime import datetime, timedelta
 from make_queue.models import Machine, Reservation
 from make_queue.forms import ReservationForm
+from make_queue.templatetags.reservation_extra import calendar_url_reservation
 import pytz
 
 
@@ -85,14 +86,40 @@ class MakeReservationView(FormView):
     template_name = "make_queue/make_reservation.html"
 
     def get(self, request, start_time="", selected_machine_type="", selected_machine_pk="-1", **kwargs):
-        render_parameters = {"form": ReservationForm(), "machine_types": [
-            {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
-            for sub_class in Machine.__subclasses__()
-        ], "start_time": start_time, "selected_machine_type": selected_machine_type,
+        render_parameters = {"new_reservation": True, "start_time": start_time,
+                             "selected_machine_type": selected_machine_type,
                              "selected_machine_pk": selected_machine_pk and int(selected_machine_pk) or -1,
-                             "new_reservation": True}
+                             "machine_types": [
+                                 {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
+                                 for sub_class in Machine.__subclasses__()]}
 
         return render(request, self.template_name, render_parameters)
+
+    def post(self, request, **kwargs):
+        form = ReservationForm(request.POST)
+        if not form.is_valid():
+            print("Did not pass validation")
+            # TODO: Implement redirect to form with parameters
+            return
+
+        print("Passed validation")
+
+        reservation_type = Reservation.get_reservation_type(form.cleaned_data["machine_type"])
+
+        reservation = reservation_type(start_time=form.cleaned_data["start_time"],
+                                       end_time=form.cleaned_data["end_time"], user=request.user,
+                                       machine=form.cleaned_data["machine"])
+
+        if form.cleaned_data["event"]:
+            reservation.event = True
+            reservation.event_name = form.cleaned_data["event_name"]
+
+        if not reservation.validate():
+            # TODO: Implement redirect to form with parameters
+            return
+
+        reservation.save()
+        return redirect(calendar_url_reservation(reservation))
 
 
 class MyReservationsView(View):
@@ -133,10 +160,8 @@ class ChangeReservationView(View):
             return None
 
         render_parameters = {"machine_types": [{"literal": machine_type, "instances": [reservation.get_machine()]}],
-                             "selected_machine_type": machine_type,
-                             "selected_machine_pk": reservation.get_machine().pk,
-                             "start_time": reservation.start_time,
-                             "end_time": reservation.end_time,
+                             "selected_machine_type": machine_type, "selected_machine_pk": reservation.get_machine().pk,
+                             "start_time": reservation.start_time, "end_time": reservation.end_time,
                              "new_reservation": False}
 
         return render(request, self.template_name, render_parameters)
