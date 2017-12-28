@@ -36,6 +36,10 @@ class Machine(models.Model):
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
 
+    @staticmethod
+    def get_subclass(machine_literal):
+        return next(filter(lambda subclass: subclass.literal == machine_literal, Machine.__subclasses__()))
+
     def __str__(self):
         return self.name + "-" + self.model
 
