@@ -118,8 +118,12 @@ class Reservation(models.Model):
 
     @classmethod
     def get_reservation(cls, machine_type, pk):
+        return cls.get_reservation_type(machine_type).objects.filter(pk=pk).first()
+
+    @classmethod
+    def get_reservation_type(cls, machine_type):
         return next(filter(lambda res: res.machine.field.target_field.model.literal == machine_type,
-                                   Reservation.__subclasses__())).objects.filter(pk=pk).first()
+                           Reservation.__subclasses__()))
 
 
 class Reservation3D(Reservation):
