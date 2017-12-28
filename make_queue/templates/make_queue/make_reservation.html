@@ -16,20 +16,20 @@
             <div class="two fields">
                 <div class="field">
                     <label>Start tidspunkt</label>
-                    <div class="ui calendar" id="start_date">
+                    <div class="ui calendar" id="start_time">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="start_date" type="text" placeholder="Start tidspunkt"
+                            <input name="start_time" type="text" placeholder="Start tidspunkt"
                                    value="{% if start_time %}{{ start_time }}{% else %}{% set_current_date %}{% endif %}">
                         </div>
                     </div>
                 </div>
                 <div class="field">
                     <label>Slutt tidspunkt</label>
-                    <div class="ui calendar" id="end_date">
+                    <div class="ui calendar" id="end_time">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="end_date" type="text" placeholder="Slutt tidspunkt"
+                            <input name="end_time" type="text" placeholder="Slutt tidspunkt"
                                    value="{% if end_time %}{{ end_time }}{% else %}{% set_current_date 2 %}{% endif %}">
                         </div>
                     </div>
