@@ -1,7 +1,7 @@
 from django.views.generic.base import View
 from django.views.generic import FormView
 from django.shortcuts import render, redirect
-from django.utils.timezone import get_default_timezone_name
+from django.utils import timezone
 from datetime import datetime, timedelta
 from make_queue.models import Machine, Reservation
 from make_queue.forms import ReservationForm
@@ -53,7 +53,7 @@ class ReservationCalendarView(View):
         if not self.is_valid_week(year, week):
             year, week = self.get_next_valid_week(year, week, 1)
 
-        first_date_of_week = pytz.timezone(get_default_timezone_name()).localize(
+        first_date_of_week = pytz.timezone(timezone.get_default_timezone_name()).localize(
             self.year_and_week_to_monday(year, week))
 
         if machine_type is None:
@@ -98,11 +98,8 @@ class MakeReservationView(FormView):
     def post(self, request, **kwargs):
         form = ReservationForm(request.POST)
         if not form.is_valid():
-            print("Did not pass validation")
             # TODO: Implement redirect to form with parameters
             return
-
-        print("Passed validation")
 
         reservation_type = Reservation.get_reservation_type(form.cleaned_data["machine_type"])
 
@@ -167,4 +164,31 @@ class ChangeReservationView(View):
         return render(request, self.template_name, render_parameters)
 
     def post(self, request, machine_type, pk):
-        pass
+        reservation = Reservation.get_reservation(machine_type, pk)
+        if reservation is None or reservation.user != request.user or reservation.start_time < timezone.now():
+            # TODO: Implement redirect
+            return
+
+        form = ReservationForm(request.POST)
+
+        if not form.is_valid():
+            # TODO: Implement redirect to form with parameters
+            return
+
+        if reservation.get_machine() != form.cleaned_data["machine"]:
+            # TODO: Implement redirect
+            return
+
+        reservation.start_time = form.cleaned_data["start_time"]
+        reservation.end_time = form.cleaned_data["end_time"]
+        reservation.event = form.cleaned_data["event"]
+        if reservation.event:
+            reservation.event_name = form.cleaned_data["event_name"]
+
+        if not reservation.validate():
+            # TODO: Implement redirect
+            return
+
+        reservation.save()
+
+        return redirect(calendar_url_reservation(reservation))
