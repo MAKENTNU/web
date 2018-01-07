@@ -1,32 +1,11 @@
-main, body, html {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    padding: 0;
+.removebottommargin {
+    margin-bottom: 0 !important;
 }
 
-.center {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    font-size: 1.2em;
+.text-centered {
+    text-align: center !important;
 }
 
-.title {
-    font-size: 4.5em;
-    margin: 10px;
-}
-
-.separator {
-    height: 40px;
-}
-
-.larger {
-    font-size: 1.2em;
-}
-
-a {
-    color: blue;
+p, a, h1, h2, h3, h4, h5 {
+    font-family: 'Ubuntu', sans-serif !important;
 }
