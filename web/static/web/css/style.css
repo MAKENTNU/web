@@ -40,13 +40,13 @@ p, a, h1, h2, h3, h4, h5 {
     border-radius: 100px;
     width: 50px;
     height: 50px;
-    padding-left: 6px;
+    padding-left: 8.5px;
     padding-top: 17px;
     margin: 4px;
 }
 
 .footer .social.list i {
-    font-size: 32px;
+    font-size: 28px;
     color: rgb(12, 66, 106) !important;
 }
 
