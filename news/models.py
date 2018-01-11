@@ -1,3 +1,5 @@
+from datetime import time
+
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.utils import timezone
@@ -41,11 +43,19 @@ class Article(models.Model):
 
 
 class Event(Article):
-    start_time = models.DateTimeField(
+    start_date = models.DateField(
         default=timezone.now,
+        verbose_name='Start-dato',
+    )
+    end_date = models.DateField(
+        blank=True,
+        verbose_name='Slutt-dato'
+    )
+    start_time = models.TimeField(
+        default=time.min,
         verbose_name='Start-tidspunkt',
     )
-    end_time = models.DateTimeField(
+    end_time = models.TimeField(
         blank=True,
         verbose_name='Slutt-tidspunkt'
     )
