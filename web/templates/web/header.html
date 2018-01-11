@@ -1,0 +1,31 @@
+{% load staticfiles %}
+
+<div class="nav-grid">
+    <div class="logo">
+        <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
+        <img class="limg medium" src="{% static "web/img/logo_make.svg" %}">
+        <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
+    </div>
+    <div class="ui secondary inverted menu">
+        <a class="item">
+            Hjem
+        </a>
+        <a class="item" href="/about/">
+            Om oss
+        </a>
+        <a class="item" href="/login/">
+            Login
+        </a>
+        <!--div class="right menu">
+            <div class="item">
+                <div class="ui icon input">
+                    <input type="text" placeholder="Search...">
+                    <i class="search link icon"></i>
+                </div>
+            </div>
+            <a class="ui item">
+                Logout
+            </a>
+        </div-->
+    </div>
+</div>

@@ -17,6 +17,9 @@
     </head>
 
     <body>
+        {% block header %}
+            {% include "web/header.html" %}
+        {% endblock header %}
         {% block body %}
         {% endblock body %}
     </body>
