@@ -14,26 +14,66 @@ p, a, h1, h2, h3, h4, h5 {
     width: 100% !important;
 }
 
-.nav-grid {
+.footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    padding: 40px;
+    height: 200px;
+    background-color: rgb(12, 66, 106);
+}
+
+.footer > div {
+    justify-self: center;
+    align-self: center;
+}
+
+.footer .list {
+    margin: 0;
+}
+
+.footer .social.list .item {
+    display: inline-block;
+    padding: 0;
+    margin-bottom: -10px;
+}
+
+.footer .social.list i {
+    font-size: 32px;
+}
+
+.footer p, .footer a, .footer i {
+    color: #ffffff !important;
+}
+
+.footer .logo {
+    align-self: center;
+}
+
+.footer .logo img {
+    object-fit: contain;
+}
+
+.nav {
     display: grid;
     grid-template-columns: minmax(120px, 1fr) 3fr;
     width: 100%;
     height: 100px;
-    background-color: #000000;
+    background-color: rgb(33, 43, 52);
 }
 
-.nav-grid .menu {
+.nav .menu {
     align-self: center;
     margin: 0;
     padding: 0 30px;
 }
 
-.nav-grid .logo {
+.nav .logo {
     padding: 30px;
     align-self: center;
 }
 
-.nav-grid .logo img {
+.nav .logo img {
     object-fit: contain;
 }
 
