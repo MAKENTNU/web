@@ -19,7 +19,7 @@ p, a, h1, h2, h3, h4, h5 {
     grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
     padding: 40px;
-    height: 200px;
+    min-height: 200px;
     background-color: rgb(12, 66, 106);
 }
 
@@ -32,15 +32,18 @@ p, a, h1, h2, h3, h4, h5 {
     margin: 0;
 }
 
+.footer .social.list {
+    text-align: center;
+}
+
 .footer .social.list .item {
     display: inline-block;
     padding: 0;
-    margin-bottom: -10px;
     background-color: rgb(248, 200, 17);
     border-radius: 100px;
     width: 50px;
     height: 50px;
-    padding-left: 8.5px;
+    padding-left: 4px;
     padding-top: 17px;
     margin: 4px;
 }
@@ -60,6 +63,7 @@ p, a, h1, h2, h3, h4, h5 {
 
 .footer .logo img {
     object-fit: contain;
+    width: 150px;
 }
 
 .nav {
@@ -104,6 +108,12 @@ p, a, h1, h2, h3, h4, h5 {
 
     .limg.medium {
         display: inline;
+    }
+
+    .footer {
+        grid-template-columns: 1fr;
+        grid-gap: 30px;
+        text-align: center;
     }
 }
 
