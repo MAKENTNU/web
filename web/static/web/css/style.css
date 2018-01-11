@@ -9,3 +9,7 @@
 p, a, h1, h2, h3, h4, h5 {
     font-family: 'Ubuntu', sans-serif !important;
 }
+
+.django-ckeditor-widget, #cke_id_content {
+    width: 100% !important;
+}
