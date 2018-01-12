@@ -1,6 +1,18 @@
 {% load staticfiles %}
 
+<link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
+
 <div class="nav">
+    <div class="burger">
+        <i class="sidebar icon"></i>
+    </div>
+    <script>
+        $(function() {
+            $('.burger').click(function () {
+                $('.nav').toggleClass('active');
+            });
+        });
+    </script>
     <div class="logo">
         <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
         <img class="limg medium" src="{% static "web/img/logo_make.svg" %}">
