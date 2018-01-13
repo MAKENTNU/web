@@ -12,7 +12,7 @@
     <div class="articles">
         {% for article in articles %}
             <aimg class="img">
-                <img src="{{ article.image.url }}">
+                <img {% if article.contain %}style="object-fit: contain;" {% endif %} src="{{ article.image.url }}">
             </aimg>
             <atxt class="txt">
                 <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>

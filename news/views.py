@@ -11,6 +11,7 @@ class EditArticleView(UpdateView):
         'content',
         'clickbait',
         'image',
+        'contain',
         'hidden',
         'private',
     )
@@ -25,6 +26,7 @@ class CreateArticleView(CreateView):
         'content',
         'clickbait',
         'image',
+        'contain',
         'hidden',
         'private',
     )
@@ -39,6 +41,7 @@ class EditEventView(UpdateView):
         'content',
         'clickbait',
         'image',
+        'contain',
         'hidden',
         'private',
         'start_date',
@@ -60,6 +63,7 @@ class CreateEventView(CreateView):
         'content',
         'clickbait',
         'image',
+        'contain',
         'hidden',
         'private',
         'start_date',

@@ -20,6 +20,10 @@ class Article(models.Model):
         verbose_name='Bilde',
         blank=True,
     )
+    contain = models.BooleanField(
+        default=False,
+        verbose_name='Ikke crop bildet',
+    )
     pub_date = models.DateTimeField(
         default=timezone.now,
         verbose_name='Opprettelsesdato',
