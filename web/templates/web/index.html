@@ -6,8 +6,9 @@
 {% endblock head %}
 
 {% block body %}
-    <div class="ui container">
-        <img class="mid_logo" src="{% static "web/img/logo.svg" %}">
+    <div class="top">
+        <img class="topimg" src="{% static "web/img/topimg.jpg" %}">
+        <img class="toplogo" src="{% static "web/img/logo_black.svg" %}">
     </div>
     <div class="articles">
         {% for article in articles %}
