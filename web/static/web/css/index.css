@@ -41,9 +41,7 @@
 
 @media screen and (max-width: 900px) {
     .articles {
-        display: grid;
         grid-template-columns: 1fr 5fr 1fr;
-        grid-auto-flow: dense;
     }
 
     .articles .txt, .articles .img {
