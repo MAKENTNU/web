@@ -1,7 +1,9 @@
 {% extends 'web/base.html' %}
 {% load reservation_extra %}
 
+{% block title %}Mine reservasjoner{% endblock %}
 {% block body %}
+    <br><br>
     <div class="ui container">
         <div class="ui huge header">
             Mine reservasjoner
@@ -67,5 +69,6 @@
             {% endfor %}
             </tbody>
         </table>
+        <br><br>
     </div>
 {% endblock %}
