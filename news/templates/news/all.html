@@ -6,21 +6,26 @@
 {% endblock head %}
 
 {% block body %}
-    <div class="ui container">
-        <img class="mid_logo" src="{% static "web/img/logo.svg" %}">
-    </div>
-    <div class="articles">
+    <div class="ui items events" style="margin: 80px 0;">
         {% for article in articles %}
-            <aimg class="img">
-                <img {% if article.contain %}style="object-fit: contain;" {% endif %} src="{{ article.image.url }}">
-            </aimg>
-            <atxt class="txt">
-                <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
-                <p>{{ article.clickbait }}</p>
-            </atxt>
+            <div class="item">
+                <div class="ui small image">
+                    <img {% if article.contain %}style="object-fit: contain !important;" {% endif %} src="{{ article.image.url }}">
+                </div>
+                <div class="content">
+                    <div class="header">
+                        <a href="/news/event/{{ article.id }}/">{{ article.title }}</a>
+                    </div>
+                    <div class="meta">
+                        <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/edit/">Rediger</a>
+                        <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/delete/">Slett</a>
+                    </div>
+                    <div class="description">
+                        <p>{{ article.clickbait }}</p>
+                    </div>
+                </div>
+            </div>
         {% endfor %}
-    </div>
-    <div class="ui items events">
         {% for event in events %}
             <div class="item">
                 <div class="ui small image">
@@ -36,6 +41,9 @@
                         <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
                     </div>
                     <div class="meta">
+                        <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/edit/">Rediger</a>
+                        <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/delete/">Slett</a>
+                        <br><br>
                         <span>{{ event.place }}</span>
                     </div>
                     <div class="description">
@@ -45,5 +53,4 @@
             </div>
         {% endfor %}
     </div>
-    <div style="height: 100px;"></div>
 {% endblock body %}

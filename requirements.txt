@@ -1,2 +1,4 @@
 django>=2.0
 mock
+django-ckeditor
+Pillow
