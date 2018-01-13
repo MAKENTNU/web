@@ -1,0 +1,51 @@
+.footer {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+    padding: 40px;
+    min-height: 200px;
+    background-color: rgb(12, 66, 106);
+}
+
+.footer > div {
+    justify-self: center;
+    align-self: center;
+}
+
+.footer .list {
+    margin: 0;
+}
+
+.footer .social.list {
+    text-align: center;
+}
+
+.footer .social.list .item {
+    display: inline-block;
+    padding: 0;
+    background-color: rgb(248, 200, 17);
+    border-radius: 100px;
+    width: 50px;
+    height: 50px;
+    padding-left: 4px;
+    padding-top: 17px;
+    margin: 4px;
+}
+
+.footer .social.list i {
+    font-size: 28px;
+    color: rgb(12, 66, 106) !important;
+}
+
+.footer p, .footer a, .footer i {
+    color: #ffffff !important;
+}
+
+.footer .logo {
+    align-self: center;
+}
+
+.footer .logo img {
+    object-fit: contain;
+    width: 150px;
+}
