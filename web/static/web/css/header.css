@@ -62,12 +62,6 @@
     .limg.medium {
         display: inline;
     }
-
-    .footer {
-        grid-template-columns: 1fr;
-        grid-gap: 30px;
-        text-align: center;
-    }
 }
 
 @media screen and (max-width: 650px) {

@@ -9,4 +9,15 @@
     <div class="ui container">
         <img class="mid_logo" src="{% static "web/img/logo.svg" %}">
     </div>
+    <div class="articles">
+        {% for article in articles %}
+            <aimg class="img">
+                <img src="{{ article.image.url }}">
+            </aimg>
+            <atxt class="txt">
+                <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
+                <p>{{ article.clickbait }}</p>
+            </atxt>
+        {% endfor %}
+    </div>
 {% endblock body %}

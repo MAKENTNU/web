@@ -49,3 +49,11 @@
     object-fit: contain;
     width: 150px;
 }
+
+@media screen and (max-width: 900px) {
+    .footer {
+        grid-template-columns: 1fr;
+        grid-gap: 30px;
+        text-align: center;
+    }
+}
