@@ -1,6 +1,18 @@
-from django.views.generic import UpdateView, CreateView
+from django.views.generic import UpdateView, CreateView, TemplateView
 
 from news.models import Article, Event
+
+
+class AllView(TemplateView):
+    template_name = 'news/all.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'articles': Article.objects.filter(event=None),
+            'events': Event.objects.all(),
+        })
+        return context
 
 
 class EditArticleView(UpdateView):

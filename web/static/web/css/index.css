@@ -17,11 +17,11 @@
 }
 
 .events .item:nth-of-type(2n) {
-    grid-column: 2/3;
+    grid-column: 3/4;
 }
 
 .events .item:nth-of-type(2n+1) {
-    grid-column: 3/4;
+    grid-column: 2/3;
 }
 
 .articles {
