@@ -20,4 +20,30 @@
             </atxt>
         {% endfor %}
     </div>
+    <div class="ui items events">
+        {% for event in events %}
+            <div class="item">
+                <div class="ui small image">
+                    <p class="ui yellow make_bg_yellow ribbon label">
+                        {{ event.start_date|date:"d" }}<br>
+                        {{ event.start_date|date:"M" }}
+                    </p>
+                    <img {% if event.contain %}style="object-fit: contain !important;" {% endif %} src="{{ event.image.url }}">
+                </div>
+
+                <div class="content">
+                    <div class="header">
+                        <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                    </div>
+                    <div class="meta">
+                        <span>{{ event.place }}</span>
+                    </div>
+                    <div class="description">
+                        <p>{{ event.clickbait }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div style="height: 100px;"></div>
 {% endblock body %}

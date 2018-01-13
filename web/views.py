@@ -9,7 +9,7 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.all(),
+            'articles': Article.objects.filter(event=None),
             'events': Event.objects.all(),
         })
         return context
