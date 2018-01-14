@@ -1,127 +1,177 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load reservation_extra %}
 
 {% block body %}
-    <div class="ui container">
-        <div class="ui grid padded equal width">
-            <div class="column">
-                <a href="/reservation/{{ prev.0 }}/{{ prev.1 }}/{{ machine_type }}">
-                    <div class="ui primary button">Forrige uke</div>
-                </a>
-                <a href="/reservation/{{ next.0 }}/{{ next.1 }}/{{ machine_type }}">
-                    <div class="ui primary button">Neste uke</div>
-                </a>
-            </div>
-            <div class="column">
-                <div class="ui calendar" id="period">
-                    <div class="ui input left icon">
-                        <i class="calendar icon"></i>
-                        <input name="start_date" type="text" placeholder="Periode"
-                               value="{{ week_days.0.date.date.month }}-{{ week_days.0.date.date.day }}-{{ week_days.0.date.date.year }}">
+<br><br>
+<div class="ui container">
+    <div class="ui huge header">
+        Reservasjoner
+    </div>
+    <div class="ui grid padded equal width">
+        <div class="column">
+            <div class="ui cards">
+                <div class="ui {% card_color_from_machine_status machine %} card">
+                    <div class="content">
+                        <div class="header">
+                            {{ machine.name }}
+                        </div>
+                        <div class="meta">
+                            <div class="ui {% card_color_from_machine_status machine %} small header make_collapsed_header_all">
+                                {{ machine.get_status_display }}
+                            </div>
+                        </div>
+                        {{ machine.model }} <br>
+                        <a href="">
+                            <i class="icon location arrow"></i>{{ machine.location }}
+                        </a>
                     </div>
                 </div>
             </div>
-            <div class="column">
-                <div class="ui fluid selection dropdown" id="machine_type_dropdown">
-                    <input type="hidden" name="machine_type" value="default">
-                    <i class="dropdown icon"></i>
-                    <div class="default text">Velg utstyrs type</div>
-                    <div class="menu">
-                        {% for machine in machine_types %}
-                            <div class="item {% if machine_type == machine.literal %}selected_machine_type{% endif %}"
-                                 data-value="{{ machine.literal }}">{{ machine.literal }}</div>
-                        {% endfor %}
+        </div>
+        <div class="column">
+            <div class="ui cards">
+                <div class="ui card">
+                    <a class="ui primary button" href="{% url 'make_reservation' selected_machine_type=machine_type selected_machine_pk=pk %}">
+                        Ny reservasjon
+                    </a>
+                    <a class="ui make_bg_yellow button" href="{% url 'my_reservations' %}">
+                        Mine reservasjoner
+                    </a>
+                    <a class="ui primary button" href="{% url 'reservation_machines_overview' %}">
+                        Andre maskiner
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="column">
+            <div class="ui cards">
+                <div class="ui card">
+                    <div class="content">
+                        <div class="ui calendar" id="period">
+                            <div class="ui input left icon make_reservation_calendar_time_table_calendar_fill">
+                                <i class="ui calendar icon"></i>
+                                <input name="start_date" type="text" placeholder="Periode"
+                                       value="{{ week_days.0.date.date.month }}-{{ week_days.0.date.date.day }}-{{ week_days.0.date.date.year }}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extra content">
+                        <div class="ui two buttons">
+                            <a class="ui primary button" href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine_type=machine_type pk=pk %}">
+                                <i class="ui icon left arrow"></i>Forrige
+                            </a>
+                            <a class="ui make_bg_yellow button" href="{% url 'reservation_calendar' year=next.0 week=next.1 machine_type=machine_type pk=pk%}">
+                                Neste<i class="ui icon right arrow"></i>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    {% if week_days.0.machines %}
-        <div class="ui">
-            <div class="ui equal width grid padded">
-                <div class="row make_collapsed_top_bottom">
-                    {% for day in week_days %}
-                        <div class="ui column make_collapsed">
-                            <div class="ui primary vertical inverted segment center aligned">{{ day.date.date }}</div>
-                        </div>
-                    {% endfor %}
+    <div class="ui grid padded equal width">
+        <div class="row make_collapsed_top_bottom">
+            <div class="four wide column make_collapsed"></div>
+            <div class="two wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom make_reservation_calendar_time_table_offset_fix">
+                        <div class="column make_reservation_calendar_time_table_hour">01</div>
+                        <div class="column make_reservation_calendar_time_table_hour">02</div>
+                        <div class="column make_reservation_calendar_time_table_hour">03</div>
+                        <div class="column make_reservation_calendar_time_table_hour">04</div>
+                    </div>
                 </div>
-                <div class="row equal height width make_collapsed_top_bottom">
-                    {% for day in week_days %}
-                        <div class="ui column grid equal width equal height make_collapsed">
-                            <div class="row make_collapsed_top_bottom_all make_row_fill">
-                                {% for machine in day.machines %}
-                                    <div class="ui column make_collapsed">
-                                        <div class="ui inverted equal height grey vertical center aligned segment machine_information">
-                                            <div>{{ machine.machine.name }}</div>
-                                            <div class="ui mini label">{{ machine.machine.model }}</div>
-                                            <div class="ui mini label">
-                                                <i class="location arrow icon"></i>{{ machine.machine.location }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    {% endfor %}
+            </div>
+            <div class="two wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom">
+                        <div class="column make_reservation_calendar_time_table_hour">05</div>
+                        <div class="column make_reservation_calendar_time_table_hour">06</div>
+                        <div class="column make_reservation_calendar_time_table_hour">07</div>
+                        <div class="column make_reservation_calendar_time_table_hour">08</div>
+                    </div>
                 </div>
-                <div class="ui row make_collapsed_top_bottom">
-                    {% for day in week_days %}
-                        <div class="ui column make_collapsed">
-                            <div class="ui column">
-                                <div class="ui equal width height grid">
-                                    {% for machine in day.machines %}
-                                        <div class="ui column make_collapsed">
-                                            <div class="make_reservation_calendar_time_table"
-                                                 data-date="{{ day.date.date.month }}/{{ day.date.date.day }}/{{ day.date.date.year }}"
-                                                 data-machine="{{ machine.machine.pk }}"
-                                                 data-machine-type="{{ machine_type }}">
-                                                {% for reservation in machine.reservations %}
-                                                    {% if reservation.reservation.event %}
-                                                        <div class="make_reservation_calendar_time_table_item make_reservation_calendar_time_table_event"
-                                                             style="top:{{ reservation.start_percentage }}%;height:{{ reservation.length }}%;">
-                                                            <div>{{ reservation.reservation.event_name }}</div>
-                                                            <div>{{ reservation.start_time }}-{{ reservation.end_time }}</div>
-                                                        </div>
-                                                    {% else %}
-                                                        <div class="make_reservation_calendar_time_table_item make_reservation_calendar_time_table_non_event"
-                                                             style="top:{{ reservation.start_percentage }}%;height:{{ reservation.length }}%;">
-                                                            <div>{{ reservation.reservation.user.first_name }} {{ reservation.reservation.user.last_name }}</div>
-                                                            <div>{{ reservation.start_time }}-{{ reservation.end_time }}</div>
-                                                        </div>
-                                                    {% endif %}
-                                                    <div class="ui fluid popup hidden inverted">
-                                                        <div class="ui vertical segment center aligned">
-                                                            <div>
-                                                                {% if reservation.reservation.event %}
-                                                                    {{ reservation.reservation.event_name }}
-                                                                {% else %}
-                                                                    {{ reservation.reservation.user.first_name }}
-                                                                    {{ reservation.reservation.user.last_name }}
-                                                                {% endif %}
-                                                            </div>
-                                                            <div>
-                                                                {{ reservation.start_time }}-{{ reservation.end_time }}
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
-                                            </div>
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        </div>
-                    {% endfor %}
+            </div>
+            <div class="two wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom">
+                        <div class="column make_reservation_calendar_time_table_hour">09</div>
+                        <div class="column make_reservation_calendar_time_table_hour">10</div>
+                        <div class="column make_reservation_calendar_time_table_hour">11</div>
+                        <div class="column make_reservation_calendar_time_table_hour">12</div>
+                    </div>
+                </div>
+            </div>
+            <div class="two wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom">
+                        <div class="column make_reservation_calendar_time_table_hour">13</div>
+                        <div class="column make_reservation_calendar_time_table_hour">14</div>
+                        <div class="column make_reservation_calendar_time_table_hour">15</div>
+                        <div class="column make_reservation_calendar_time_table_hour">16</div>
+                    </div>
+                </div>
+            </div>
+            <div class="two wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom">
+                        <div class="column make_reservation_calendar_time_table_hour">17</div>
+                        <div class="column make_reservation_calendar_time_table_hour">18</div>
+                        <div class="column make_reservation_calendar_time_table_hour">19</div>
+                        <div class="column make_reservation_calendar_time_table_hour">20</div>
+                    </div>
+                </div>
+            </div>
+            <div class="two wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom equal width">
+                        <div class="column make_reservation_calendar_time_table_hour">21</div>
+                        <div class="column make_reservation_calendar_time_table_hour">22</div>
+                        <div class="column make_reservation_calendar_time_table_hour">23</div>
+                        <div class="column make_reservation_calendar_time_table_hour">24</div>
+                    </div>
                 </div>
             </div>
         </div>
-    {% else %}
-        <div class="ui container">
-            <div class="ui large header center aligned">
-                <i>Ingen maskiner av denne typen tilgjengelig</i>
+        {% for day in week_days %}
+        <div class="row make_collapsed_top_bottom_all make_reservation_calendar_time_table_full_row">
+            <div class="four wide column make_collapsed">
+                <div class="ui vertical segment center aligned">{{ day.date.date }}</div>
+            </div>
+            <div class="twelve wide column make_reservation_calendar_time_table_row"
+                 data-date="{{ day.date.date.month }}/{{ day.date.date.day }}/{{ day.date.date.year }}"
+                 data-machine="{{ pk }}" data-machine-type="{{ machine_type }}">
+                <div class="make_reservation_calendar_time_table_dashed_line left"></div>
+                <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
+                <div class="make_reservation_calendar_time_table_dashed_line right"></div>
+                {% is_current_date day.date.date as should_include_current_time %}
+                {% if should_include_current_time %}
+                    <div class="make_reservation_calendar_time_table_current_time" style="left:{% get_current_time_of_day %}%"></div>
+                {% endif %}
+                {% for reservation in day.machine.reservations %}
+                    <div class="make_reservation_calendar_time_table_item
+                                make_reservation_calendar_time_table_{% if not reservation.reservation.event %}{% if reservation.reservation.user == request.user %}my_{% endif %}non_{% endif %}event"
+                        style="margin-left:{% if reservation.start_percentage == 0 %}-100{% else %}{{ reservation.start_percentage }}{% endif %}%;width:{% if reservation.start_percentage == 0 %}{{ reservation.length|add:100 }}{% else %}{{ reservation.length }}{% endif %}%">
+                    </div>
+                {% endfor %}
             </div>
         </div>
-    {% endif %}
-    <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
+        {% endfor %}
+    </div>
+    <div class="ui vertical segment">
+        <div class="ui label" style="float:right">
+            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
+            Arrangementer
+            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
+            Andre Reservasjoner
+            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
+            Mine Reservasjoner
+        </div>
+    </div>
+</div>
+<div class="ui vertical segment">
+
+</div>
+<script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}

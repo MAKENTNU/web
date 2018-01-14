@@ -3,6 +3,7 @@
 {% load semantic_ui_calendar_extra %}
 
 {% block body %}
+    <br><br>
     <div class="ui container">
         <div class="ui large header">
             {% if new_reservation %}
@@ -86,6 +87,13 @@
             {% endif %}
             <input class="ui right floated button" type="submit" value="{% if new_reservation %}Reserver{% else %}Endre{% endif %}">
         </form>
+
+        <div id="reservation_calendar" class="ui container">
+            <div class="make_reservation_calendar">
+
+            </div>
+        </div>
     </div>
+
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
 {% endblock %}

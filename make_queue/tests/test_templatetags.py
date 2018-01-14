@@ -26,12 +26,17 @@ class ReservationExtraTestCases(TestCase):
                                                        timezone.datetime(2017, 12, 26, 19, 0)))
 
         self.assertEqual(
-            reverse('reservation_calendar', kwargs={'year': 2017, 'week': 52, 'machine_type': Printer3D.literal}),
+            reverse('reservation_calendar',
+                    kwargs={'year': 2017, 'week': 52, 'machine_type': Printer3D.literal, 'pk': printer.pk}),
             calendar_url_reservation(reservation))
 
     @mock.patch('django.utils.timezone.now')
     def test_current_calendar_url(self, now_mock):
         date = timezone.datetime(2017, 12, 26, 12, 34, 0)
         now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+        printer = Printer3D.objects.create(name="U1", location="S1", model="Ultimaker", status="F")
 
-        self.assertEqual(reverse('reservation_calendar', kwargs={'year': 2017, 'week': 52}), current_calendar_url())
+        self.assertEqual(reverse('reservation_calendar',
+                                 kwargs={'year': 2017, 'week': 52, 'machine_type': Printer3D.literal,
+                                         'pk': printer.pk}),
+                         current_calendar_url(Printer3D.literal, printer.pk))

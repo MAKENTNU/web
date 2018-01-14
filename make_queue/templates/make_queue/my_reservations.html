@@ -9,15 +9,8 @@
             Mine reservasjoner
         </div>
         <div class="ui vertical segment">
-            <a href="{% current_calendar_url %}">
-                <div class="ui button primary">
-                    Kalender
-                </div>
-            </a>
-            <a href="{% url 'make_reservation' %}">
-                <div class="ui button primary">
-                    Ny reservasjon
-                </div>
+            <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
+                Maskiner
             </a>
         </div>
         <table class="ui table">

@@ -1,0 +1,44 @@
+{% extends 'web/base.html' %}
+{% load reservation_extra %}
+
+{% block title %}Maskiner{% endblock %}
+{% block body %}
+    <br><br>
+    <div class="ui container">
+        <div class="ui huge header">
+            Maskiner
+        </div>
+        {% for machine_type in machine_types %}
+            <div class="ui large header">
+                {{ machine_type.name }}
+            </div>
+            <div class="ui cards">
+                {% for machine in machine_type.machines %}
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">
+                                {{ machine.name }}
+                            </div>
+                            <div class="meta">
+                                <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
+                                    {{ machine.get_status_display }}
+                                </div>
+                            </div>
+                            {{ machine.model }} <br>
+                            <a href="">
+                                <i class="icon location arrow"></i>{{ machine.location }}
+                            </a>
+                        </div>
+                        <a href="">
+                            <a class="ui bottom attached button {% card_color_from_machine_status machine %}"
+                                href="{% current_calendar_url machine.literal machine.pk %}">
+                                Se i kalender
+                            </a>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <br><br>
+{% endblock %}

@@ -10,11 +10,11 @@ class Machine(models.Model):
     __metaclass__ = ABCMeta
 
     status_choices = (
-        ("R", "Reserved"),
-        ("F", "Free"),
-        ("I", "In use"),
-        ("O", "Out of order"),
-        ("M", "Maintenance"),
+        ("R", "Reservert"),
+        ("F", "Ledig"),
+        ("I", "I bruk"),
+        ("O", "I ustand"),
+        ("M", "Vedlikehold"),
     )
 
     status = models.CharField(max_length=2, choices=status_choices)

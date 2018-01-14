@@ -2,6 +2,7 @@ from django.views.generic.base import View
 from django.views.generic import FormView
 from django.shortcuts import render, redirect
 from django.utils import timezone
+from django.http.response import JsonResponse
 from datetime import datetime, timedelta
 from make_queue.models import Machine, Reservation
 from make_queue.forms import ReservationForm
@@ -47,7 +48,7 @@ class ReservationCalendarView(View):
                 'length': ReservationCalendarView.date_to_percentage(end_time) -
                           ReservationCalendarView.date_to_percentage(start_time)}
 
-    def get(self, request, year="", week="", machine_type=""):
+    def get(self, request, year="", week="", machine_type="", pk=""):
         year, week = int(year), int(week)
 
         if not self.is_valid_week(year, week):
@@ -56,27 +57,24 @@ class ReservationCalendarView(View):
         first_date_of_week = pytz.timezone(timezone.get_default_timezone_name()).localize(
             self.year_and_week_to_monday(year, week))
 
-        if machine_type is None:
-            machine_type = Machine.__subclasses__()[0].literal
+        machine = Machine.get_subclass(machine_type).objects.get(pk=pk)
 
-        render_parameters = {'year': year, 'week': week, 'machine_type': machine_type,
+        render_parameters = {'year': year, 'week': week, 'machine_type': machine_type, 'pk': pk,
                              'next': self.get_next_valid_week(year, week, 1),
                              'prev': self.get_next_valid_week(year, week, -1),
-                             'machine_types': Machine.__subclasses__()}
-
-        machines = self.get_machines(machine_type)
-        render_parameters['machines'] = machines
+                             'machine_types': Machine.__subclasses__(),
+                             'machine': machine}
 
         week_days = render_parameters['week_days'] = []
         for day_number in range(7):
             date = first_date_of_week + timedelta(days=day_number)
             week_days.append({
                 "date": date,
-                "machines": [{"name": machine.name,
-                              "machine": machine,
-                              "reservations": list(map(lambda x: self.format_reservation(x, date),
-                                                       machine.reservations_in_period(date, date + timedelta(days=1))))}
-                             for machine in machines]
+                "machine": {"name": machine.name,
+                            "machine": machine,
+                            "reservations": list(map(lambda x: self.format_reservation(x, date),
+                                                     machine.reservations_in_period(date, date + timedelta(days=1))))}
+
             })
 
         return render(request, self.template_name, render_parameters)
@@ -192,3 +190,31 @@ class ChangeReservationView(View):
         reservation.save()
 
         return redirect(calendar_url_reservation(reservation))
+
+
+def get_reservations_day_and_machine(request, machine_type, pk, date):
+    date = datetime.strptime(date, "%Y/%m/%d")
+    reservations = Reservation.get_reservation_type(machine_type).objects.filter(machine__pk=pk,
+                                                                                 start_time__lt=date + timedelta(
+                                                                                     days=1)).filter(end_time__gte=date)
+    data = {
+        "reservations": reservations,
+        "date": date
+    }
+    return JsonResponse(data)
+
+
+class MachineView(View):
+    template_name = "make_queue/reservation_machines.html"
+
+    def get(self, request):
+        render_parameters = {'machine_types': [
+            {
+                'name': machine_type.literal,
+                'machines': [machine for machine in machine_type.objects.all()]
+            } for machine_type in Machine.__subclasses__() if machine_type.objects.exists()
+        ]}
+
+        print(render_parameters)
+
+        return render(request, self.template_name, render_parameters)
