@@ -58,7 +58,7 @@ atxt h2, aimg h2, .events .header a {
     right: 0;
 }
 
-atxt:first-of-type .txtborder.tr, atxt:last-of-type .txtborder.bl {
+atxt:first-of-type .txtborder.tr, atxt:last-of-type:nth-of-type(2n) .txtborder.bl, atxt:last-of-type:nth-of-type(2n+1) .txtborder.br {
     display: inline;
 }
 
