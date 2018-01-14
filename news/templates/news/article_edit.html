@@ -1,7 +1,7 @@
 {% extends 'web/base.html' %}
 {% load staticfiles %}
 
-{% block title %}Rediger Artikkel{% endblock title %}
+{% block title %}Rediger artikkel{% endblock title %}
 
 {% block head %}
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
@@ -10,7 +10,7 @@
 
 {% block body %}
     <br><br>
-    <h1 class="ui centered header">{% block form_header %}Rediger Artikkel{% endblock form_header %}</h1>
+    <h1 class="ui centered header">{% block form_header %}Rediger artikkel{% endblock form_header %}</h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="field">
