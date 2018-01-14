@@ -26,7 +26,7 @@ atxt h2, aimg h2, .events .header a {
     color: rgb(248, 200, 17);
 }
 
-.txtborder {
+.txtborder, .imgborder {
     position: absolute;
     display: none;
     width: 50px !important;
@@ -34,27 +34,31 @@ atxt h2, aimg h2, .events .header a {
     z-index: -10;
 }
 
-.txtborder.tl {
+.txtborder.tl, .imgborder.tl {
     top: 0;
     left: 0;
 }
 
-.txtborder.tr {
+.txtborder.tr, .imgborder.tr  {
     top: 0;
     right: 0;
 }
 
-.txtborder.bl {
+.txtborder.bl, .imgborder.bl  {
     bottom: 0;
     left: 0;
 }
 
-.txtborder.br {
+.txtborder.br, .imgborder.br  {
     bottom: 0;
     right: 0;
 }
 
 atxt:first-of-type .txtborder.tr, atxt:last-of-type:nth-of-type(2n) .txtborder.bl, atxt:last-of-type:nth-of-type(2n+1) .txtborder.br {
+    display: inline;
+}
+
+aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg:nth-of-type(2n) .imgborder.tr, aimg:nth-of-type(2n) .imgborder.br {
     display: inline;
 }
 
