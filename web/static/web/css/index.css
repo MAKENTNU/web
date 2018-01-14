@@ -34,32 +34,32 @@ atxt h2, aimg h2 {
 }
 
 .txtborder.tl {
-    top: -1px;
+    top: 0;
     left: 0;
 }
 
 .txtborder.tr {
-    top: -1px;
+    top: 0;
     right: 0;
 }
 
 .txtborder.bl {
-    bottom: -1px;
+    bottom: 0;
     left: 0;
 }
 
 .txtborder.br {
-    bottom: -1px;
+    bottom: 0;
     right: 0;
 }
 
 atxt:nth-of-type(2n+1) .txtborder.bl, atxt:nth-of-type(2n+1) .txtborder.tl {
     display: none;
 }
+
 atxt:nth-of-type(2n) .txtborder.tr, atxt:nth-of-type(2n) .txtborder.br {
     display: none;
 }
-
 
 .events {
     display: grid;
@@ -88,6 +88,7 @@ atxt:nth-of-type(2n) .txtborder.tr, atxt:nth-of-type(2n) .txtborder.br {
     grid-template-columns: 1fr 5fr 5fr 1fr;
     grid-auto-flow: dense;
     margin: 80px 0;
+    grid-gap: 30px;
 }
 
 .articles .img, .articles .txt {
@@ -127,6 +128,14 @@ atxt:nth-of-type(2n) .txtborder.tr, atxt:nth-of-type(2n) .txtborder.br {
 
     .articles .txt, .articles .img {
         grid-column: 2/3 !important;
+    }
+
+    .txtborder.tl, .txtborder.tr {
+        display: none !important;
+    }
+
+    .txtborder.bl, .txtborder.br {
+        display: inline !important;
     }
 }
 
