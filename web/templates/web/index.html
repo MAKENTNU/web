@@ -16,6 +16,23 @@
                 <img {% if article.contain %}style="object-fit: contain;" {% endif %} src="{{ article.image.url }}">
             </aimg>
             <atxt class="txt">
+                <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
+                <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
+                <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
+                <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
+                <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
+                <p>{{ article.clickbait }}</p>
+            </atxt>
+        {% endfor %}
+    {% for article in articles %}
+            <aimg class="img">
+                <img {% if article.contain %}style="object-fit: contain;" {% endif %} src="{{ article.image.url }}">
+            </aimg>
+            <atxt class="txt">
+                <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
+                <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
+                <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
+                <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
                 <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
                 <p>{{ article.clickbait }}</p>
             </atxt>

@@ -18,6 +18,49 @@
     height: 100%;
 }
 
+atxt, aimg {
+    position: relative;
+}
+
+atxt h2, aimg h2 {
+    color: rgb(248, 200, 17);
+}
+
+.txtborder {
+    position: absolute;
+    width: 50px !important;
+    height: 50px !important;
+    z-index: -10;
+}
+
+.txtborder.tl {
+    top: -1px;
+    left: 0;
+}
+
+.txtborder.tr {
+    top: -1px;
+    right: 0;
+}
+
+.txtborder.bl {
+    bottom: -1px;
+    left: 0;
+}
+
+.txtborder.br {
+    bottom: -1px;
+    right: 0;
+}
+
+atxt:nth-of-type(2n+1) .txtborder.bl, atxt:nth-of-type(2n+1) .txtborder.tl {
+    display: none;
+}
+atxt:nth-of-type(2n) .txtborder.tr, atxt:nth-of-type(2n) .txtborder.br {
+    display: none;
+}
+
+
 .events {
     display: grid;
     grid-template-columns: 1fr 5fr 5fr 1fr;
