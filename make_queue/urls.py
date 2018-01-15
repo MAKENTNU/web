@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from make_queue.views import ReservationCalendarView, MakeReservationView, MyReservationsView, DeleteReservationView, ChangeReservationView, get_reservations_day_and_machine, MachineView
+from make_queue.views import *
 from django.contrib.auth.decorators import login_required
 
 
@@ -12,5 +12,6 @@ urlpatterns = [
     url('^delete/$', login_required(DeleteReservationView.as_view()), name="delete_reservation"),
     url('^change/(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))/', login_required(ChangeReservationView.as_view()), name="change_reservation"),
     url('^json/(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))/(?P<date>([0-9]{4}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[01])))$', get_reservations_day_and_machine, name="reservation_json"),
+    url('^json/(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))$', get_future_reservations_machine, name="reservation_json"),
     url('^', MachineView.as_view(), name="reservation_machines_overview")
 ]
