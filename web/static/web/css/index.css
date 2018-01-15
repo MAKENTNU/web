@@ -33,8 +33,11 @@ aimg {
 atxt h2, .events .header a {
     color: rgb(248, 200, 17);
     text-transform: uppercase;
-    text-align: center;
     font-size: 32px;
+}
+
+atxt h2 {
+    text-align: center;
 }
 
 .events .header a {
@@ -54,17 +57,17 @@ atxt h2, .events .header a {
     left: 0;
 }
 
-.txtborder.tr, .imgborder.tr  {
+.txtborder.tr, .imgborder.tr {
     top: 0;
     right: 0;
 }
 
-.txtborder.bl, .imgborder.bl  {
+.txtborder.bl, .imgborder.bl {
     bottom: 0;
     left: 0;
 }
 
-.txtborder.br, .imgborder.br  {
+.txtborder.br, .imgborder.br {
     bottom: 0;
     right: 0;
 }
@@ -115,11 +118,19 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
 }
 
 .articles .txt {
-    padding: 50px;
+    overflow-wrap: break-word;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+}
+
+.articles .txt p {
+    padding: 0 50px;
+    padding-bottom: 50px;
 }
 
 .articles h2 {
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .articles .txt:nth-of-type(2n+1), .articles .img:nth-of-type(2n) {
@@ -136,7 +147,7 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
     height: 100%;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 991px) {
     .articles {
         grid-template-columns: 1fr 20fr 1fr;
     }
@@ -155,6 +166,33 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
 
     .topimg.large {
         display: none;
+    }
+
+    .articles {
+        grid-template-rows: auto;
+    }
+
+    .articles .txt {
+        align-items: flex-start;
+    }
+
+    atxt h2 {
+        text-align: left;
+        margin-top: 20px !important;
+    }
+
+    atxt p, atxt a, atxt h2 {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    atxt p {
+        padding-bottom: 50px !important;
+    }
+
+    .articles .txt {
+        height: auto;
+        max-height: 300px;
     }
 }
 

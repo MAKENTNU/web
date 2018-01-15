@@ -26,8 +26,10 @@
                     <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
-                    <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
-                    <p>{{ article.clickbait }}</p>
+                    <div>
+                        <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
+                        <p>{{ article.clickbait }}</p>
+                    </div>
                 </atxt>
             {% endfor %}
         </div>
@@ -42,7 +44,8 @@
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %} src="{{ event.image.url }}">
+                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %}
+                             src="{{ event.image.url }}">
                     </div>
 
                     <div class="content">
@@ -61,7 +64,7 @@
         </div>
     </div>
     <script>
-        $('aimg').click(function() {
+        $('aimg').click(function () {
             window.location.href = $(this).attr('href');
         });
     </script>
