@@ -2,13 +2,20 @@ html, body {
     height: 100%;
 }
 
-body {
-    display: flex;
-    flex-direction: column;
+.wrapper {
+    display: table;
+    height: 100%;
+    width: 100%;
 }
 
-.content, .footer {
-    flex: 1 0 auto;
+.content {
+    display: table-row;
+    height: 100%;
+}
+
+body {
+    display: block;
+    flex-direction: column;
 }
 
 .removebottommargin {
