@@ -6,18 +6,21 @@
     <div class="burger">
         <i class="sidebar icon"></i>
     </div>
-    <script>
-        $(function() {
-            $('.burger').click(function () {
-                $('.nav').toggleClass('active');
-            });
-        });
-    </script>
     <div class="logo">
         <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
         <img class="limg medium" src="{% static "web/img/logo_make.svg" %}">
         <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
     </div>
+    <script>
+        $(function() {
+            $('.burger').click(function () {
+                $('.nav').toggleClass('active');
+            });
+            $('.logo').click(function () {
+                 window.location.href = '/';
+            });
+        });
+    </script>
     <div class="ui secondary inverted menu">
         <a class="item" href="/">
             Hjem
