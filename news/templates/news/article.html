@@ -1,0 +1,21 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+
+{% block title %}{{ article.title }}{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "news/css/article.css" %}">
+{% endblock head %}
+
+{% block body %}
+    <div class="ui article text container">
+        <img src="{{ article.image.url }}" {% if article.contain %}style="object-fit: contain;" {% endif %}>
+        <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d/m/Y" }}</span></h1>
+        {% autoescape off %}
+            {{ article.content }}
+        {% endautoescape %}
+    </div>
+    {% block event %}
+
+    {% endblock event %}
+{% endblock body %}

@@ -1,0 +1,14 @@
+.article {
+    margin: 50px 0;
+}
+.article > img {
+    object-fit: cover;
+    width: 100%;
+    height: 400px;
+}
+
+.pub_date {
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 10px;
+}
