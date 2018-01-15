@@ -9,7 +9,12 @@ python:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+  - pip install -r requirements_codecov.txt
 
 # command to run tests
 script:
-  - python manage.py test
+  - coverage run --source='.' manage.py test
+
+# command to run after success
+after_success:
+  - codecov
