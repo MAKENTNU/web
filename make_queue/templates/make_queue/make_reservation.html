@@ -39,7 +39,7 @@
             <div class="two fields">
                 <div class="field">
                     <label>Utstyrs type</label>
-                    <div class="ui fluid selection dropdown" id="machine_type_dropdown">
+                    <div class="ui fluid selection dropdown {% if not new_reservation %}disabled{% endif %}" id="machine_type_dropdown">
                         <input type="hidden" name="machine_type" value="default">
                         <div class="default text">Velg utstyrs type</div>
                         <i class="dropdown icon"></i>
