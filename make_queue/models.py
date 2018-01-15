@@ -43,6 +43,15 @@ class Machine(models.Model):
     def __str__(self):
         return self.name + "-" + self.model
 
+    def get_status(self):
+        if self.status in "OM":
+            return self.status
+        return self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)) and "R" or "F"
+
+    def get_status_display(self):
+        current_status = self.get_status()
+        return next(full_name for short_hand, full_name in self.status_choices if short_hand == current_status)
+
 
 class Printer3D(Machine):
     literal = "3D-printer"

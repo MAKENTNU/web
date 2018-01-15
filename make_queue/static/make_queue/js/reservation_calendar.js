@@ -13,7 +13,7 @@ $(".make_reservation_calendar_time_table_row").click(function (event) {
     let date = $(this).data("date");
     let machine_type = $(this).data("machine-type");
     let machine_pk = $(this).data("machine");
-    document.location = "/reservation/make" + date + "/" + hours + ":" + minutes + "/" + machine_type + "/" + machine_pk + "/";
+    document.location = "/reservation/make/" + date + "/" + hours + ":" + minutes + "/" + machine_type + "/" + machine_pk + "/";
 });
 
 $("#period").calendar({

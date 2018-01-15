@@ -29,7 +29,7 @@ def card_color_from_machine_status(machine):
         "I": "orange",
         "M": "brown"
     }
-    return colors[machine.status]
+    return colors[machine.get_status()]
 
 
 @register.simple_tag()
