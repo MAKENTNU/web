@@ -18,6 +18,10 @@
     height: 100%;
 }
 
+.topimg.small {
+    display: none;
+}
+
 atxt, aimg {
     position: relative;
 }
@@ -139,6 +143,14 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
 
     .txtborder.tl, .txtborder.tr, .txtborder.bl, .txtborder.br {
         display: none !important;
+    }
+
+    .topimg.small {
+        display: inline;
+    }
+
+    .topimg.large {
+        display: none;
     }
 }
 
