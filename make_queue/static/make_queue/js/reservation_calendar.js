@@ -16,6 +16,10 @@ $(".make_reservation_calendar_time_table_row").click(function (event) {
     document.location = "/reservation/make/" + date + "/" + hours + ":" + minutes + "/" + machine_type + "/" + machine_pk + "/";
 });
 
+$(".make_reservation_calendar_time_table_item").click(function (event) {
+    return false;
+});
+
 $("#period").calendar({
         ampm: false,
         initialDate: null,
