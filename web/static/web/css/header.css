@@ -1,9 +1,9 @@
 .nav {
     display: grid;
     grid-template-columns: minmax(120px, 1fr) 3fr;
-    grid-template-rows: 100px;
+    grid-template-rows: 120px;
     width: 100%;
-    height: 100px;
+    height: 120px;
     background-color: rgb(33, 43, 52);
 }
 
@@ -64,23 +64,9 @@
     }
 }
 
-@media screen and (max-width: 650px) {
+@media screen and (max-width: 730px) {
     .limg.large {
-        display: none;
-    }
-
-    .limg.small {
         display: inline;
-    }
-
-    .limg.medium {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 500px) {
-    .limg.large {
-        display: none;
     }
 
     .limg.small {
@@ -88,7 +74,7 @@
     }
 
     .limg.medium {
-        display: inline;
+        display: none;
     }
 
     .nav {
@@ -97,6 +83,7 @@
 
     .nav .logo {
         padding: 0;
+        margin-right: 80px;
     }
 
     .nav .menu {
@@ -118,6 +105,20 @@
     }
 
     .burger {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .limg.large {
+        display: none;
+    }
+
+    .limg.small {
+        display: none;
+    }
+
+    .limg.medium {
         display: inline;
     }
 }
