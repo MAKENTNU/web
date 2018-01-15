@@ -3,6 +3,7 @@
 {% load reservation_extra %}
 
 {% block body %}
+{% can_use_machine machine user as can_use %}
 <br><br>
 <div class="ui container">
     <div class="ui huge header">
@@ -32,7 +33,7 @@
         <div class="column">
             <div class="ui cards">
                 <div class="ui card">
-                    <a class="ui primary button" href="{% url 'make_reservation' selected_machine_type=machine_type selected_machine_pk=pk %}">
+                    <a class="ui primary button {% if not can_use %}disabled{% endif %}" href="{% url 'make_reservation' selected_machine_type=machine_type selected_machine_pk=pk %}">
                         <i class="ui add icon"></i>Ny reservasjon
                     </a>
                     <a class="ui make_bg_yellow button" href="{% url 'my_reservations' %}">
@@ -139,7 +140,7 @@
             <div class="four wide column make_collapsed">
                 <div class="ui vertical segment center aligned">{{ day.date.date }}</div>
             </div>
-            <div class="twelve wide column make_reservation_calendar_time_table_row"
+            <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
                  data-date="{{ day.date.date.month }}/{{ day.date.date.day }}/{{ day.date.date.year }}"
                  data-machine="{{ pk }}" data-machine-type="{{ machine_type }}">
                 <div class="make_reservation_calendar_time_table_dashed_line left"></div>

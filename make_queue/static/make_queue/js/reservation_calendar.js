@@ -6,7 +6,7 @@ function getWeekNumber(date) {
     return weekNumber;
 }
 
-$(".make_reservation_calendar_time_table_row").click(function (event) {
+$(".make_reservation_calendar_time_table_row.can_make_reservation").click(function (event) {
     let clicked_ratio = (event.pageX - $(this).offset().left) / $(this).width();
     let hours = ("00" + Math.floor(clicked_ratio * 24)).substr(-2, 2);
     let minutes = ("00" + Math.floor((clicked_ratio * 24 % 1) * 60)).substr(-2, 2);
