@@ -40,6 +40,10 @@ atxt h2 {
     text-align: center;
 }
 
+atxt p, .events .description p {
+    font-size: 16px;
+}
+
 .events .header a {
     font-size: 24px;
 }
