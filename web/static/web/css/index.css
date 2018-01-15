@@ -1,3 +1,218 @@
-.logo {
-    margin: 140px 5vw;
+.toplogo {
+    position: absolute;
+    left: 50%;
+    top: calc(35% + 50px);
+    transform: translate(-50%, -50%);
+}
+
+.top {
+    position: relative;
+    z-index: -10;
+    width: 100vw;
+    height: calc(75vh - 120px);
+}
+
+.topimg {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.topimg.small {
+    display: none;
+}
+
+atxt, aimg {
+    position: relative;
+}
+
+aimg {
+    cursor: pointer;
+}
+
+atxt h2, .events .header a {
+    color: rgb(248, 200, 17);
+    text-transform: uppercase;
+    font-size: 32px;
+}
+
+atxt h2 {
+    text-align: center;
+}
+
+atxt p, .events .description p {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+.events .header a {
+    font-size: 24px;
+}
+
+.txtborder, .imgborder {
+    position: absolute;
+    display: none;
+    width: 50px !important;
+    height: 50px !important;
+    z-index: -10;
+}
+
+.txtborder.tl, .imgborder.tl {
+    top: 0;
+    left: 0;
+}
+
+.txtborder.tr, .imgborder.tr {
+    top: 0;
+    right: 0;
+}
+
+.txtborder.bl, .imgborder.bl {
+    bottom: 0;
+    left: 0;
+}
+
+.txtborder.br, .imgborder.br {
+    bottom: 0;
+    right: 0;
+}
+
+atxt:first-of-type .txtborder.tr, atxt:last-of-type:nth-of-type(2n) .txtborder.bl, atxt:last-of-type:nth-of-type(2n+1) .txtborder.br {
+    display: inline;
+}
+
+aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg:nth-of-type(2n) .imgborder.tr, aimg:nth-of-type(2n) .imgborder.br {
+    display: inline;
+}
+
+.events {
+    display: grid;
+    grid-template-columns: 1fr 10fr 10fr 1fr;
+    grid-auto-flow: dense;
+    grid-gap: 30px;
+    margin: 80px 0;
+}
+
+.events img {
+    object-fit: cover !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.events .item {
+    margin: 0 !important;
+}
+
+.events .item:nth-of-type(2n) {
+    grid-column: 3/4;
+}
+
+.events .item:nth-of-type(2n+1) {
+    grid-column: 2/3;
+}
+
+.articles {
+    display: grid;
+    grid-template-columns: 1fr 10fr 10fr 1fr;
+    grid-auto-flow: dense;
+    margin: 80px 0;
+}
+
+.articles .img, .articles .txt {
+    height: 300px;
+}
+
+.articles .img {
+    grid-column: 2/3;
+}
+
+.articles .txt {
+    overflow-wrap: break-word;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+}
+
+.articles .txt p {
+    padding: 0 50px;
+    padding-bottom: 50px;
+}
+
+.articles h2 {
+    margin-bottom: 5px;
+}
+
+.articles .txt:nth-of-type(2n+1), .articles .img:nth-of-type(2n) {
+    grid-column: 3/4;
+}
+
+.articles .txt:nth-of-type(2n), .articles .img:nth-of-type(2n+1) {
+    grid-column: 2/3;
+}
+
+.articles img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+@media screen and (max-width: 991px) {
+    .articles {
+        grid-template-columns: 1fr 20fr 1fr;
+    }
+
+    .articles .txt, .articles .img {
+        grid-column: 2/3 !important;
+    }
+
+    .txtborder.tl, .txtborder.tr, .txtborder.bl, .txtborder.br {
+        display: none !important;
+    }
+
+    .topimg.small {
+        display: inline;
+    }
+
+    .topimg.large {
+        display: none;
+    }
+
+    .articles {
+        grid-template-rows: auto;
+    }
+
+    .articles .txt {
+        align-items: flex-start;
+    }
+
+    atxt h2 {
+        text-align: left;
+        margin-top: 20px !important;
+    }
+
+    atxt p, atxt a, atxt h2 {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    atxt p {
+        padding-bottom: 80px !important;
+    }
+
+    .articles .txt {
+        height: auto;
+        max-height: 300px;
+    }
+}
+
+@media screen and (max-width: 1200px) {
+    .events {
+        grid-template-columns: 1fr 20fr 1fr;
+        grid-gap: 0;
+    }
+
+    .events .item {
+        grid-column: 2/3 !important;
+        padding-bottom: 40px !important;
+    }
 }

@@ -6,15 +6,67 @@
 {% endblock head %}
 
 {% block body %}
+    <div class="top">
+        <img class="topimg large" src="{% static "web/img/topimg_2.jpg" %}">
+        <img class="topimg small" src="{% static "web/img/topimg_small.jpg" %}">
+        <img class="toplogo" src="{% static "web/img/logo_black.svg" %}">
+    </div>
     <div class="ui container">
-        <img class="logo" src="{% static "web/img/logo.svg" %}">
+        <div class="articles">
+            {% for article in articles %}
+                <aimg class="img" href="/news/article/{{ article.id }}/">
+                    <!--img class="imgborder tl" src="{% static "web/img/top_left.svg" %}">
+                    <img class="imgborder tr" src="{% static "web/img/top_right.svg" %}">
+                    <img class="imgborder bl" src="{% static "web/img/bottom_left.svg" %}">
+                    <img class="imgborder br" src="{% static "web/img/bottom_right.svg" %}"-->
+                    <img {% if article.contain %}style="object-fit: contain;" {% endif %} src="{{ article.image.url }}">
+                </aimg>
+                <atxt class="txt">
+                    <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
+                    <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
+                    <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
+                    <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
+                    <div>
+                        <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
+                        <p>{{ article.clickbait }}</p>
+                    </div>
+                </atxt>
+            {% endfor %}
+        </div>
     </div>
-    <div class="ui text-centered text container">
-        <p><i>Nettsiden er for øybelikket under utvikling</i></p>
-        <h2 class="ui header removebottommargin">Lurer du på noe?</h2>
-        <p><a href="mailto:leder@makentnu.no">Kontakt</a>
-        eller <a href="http://s.mazemap.com/2zleDaH">besøk</a> oss</p>
-        <br>
-        <a href="https://makentnu.hoopla.no/sales">Påmelding til 3D-printerkurs</a>
+    <div style="height: 100px;"></div>
+    <div class="ui container">
+        <div class="ui items events">
+            {% for event in events %}
+                <div class="item">
+                    <div class="ui small image">
+                        <p class="ui yellow make_bg_yellow ribbon label">
+                            {{ event.start_date|date:"d" }}<br>
+                            {{ event.start_date|date:"M" }}
+                        </p>
+                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %}
+                             src="{{ event.image.url }}">
+                    </div>
+
+                    <div class="content">
+                        <div class="header">
+                            <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                        </div>
+                        <div class="meta">
+                            <span>{{ event.place }}</span>
+                        </div>
+                        <div class="description">
+                            <p>{{ event.clickbait }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
+    <script>
+        $('aimg').click(function () {
+            window.location.href = $(this).attr('href');
+        });
+    </script>
+    <div style="height: 100px;"></div>
 {% endblock body %}
