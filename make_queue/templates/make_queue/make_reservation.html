@@ -16,28 +16,6 @@
             {% csrf_token %}
             <div class="two fields">
                 <div class="field">
-                    <label>Start tidspunkt</label>
-                    <div class="ui calendar" id="start_time">
-                        <div class="ui input left icon">
-                            <i class="calendar icon"></i>
-                            <input name="start_time" type="text" placeholder="Start tidspunkt"
-                                   value="{% if start_time %}{{ start_time }}{% else %}{% set_current_date %}{% endif %}">
-                        </div>
-                    </div>
-                </div>
-                <div class="field">
-                    <label>Slutt tidspunkt</label>
-                    <div class="ui calendar" id="end_time">
-                        <div class="ui input left icon">
-                            <i class="calendar icon"></i>
-                            <input name="end_time" type="text" placeholder="Slutt tidspunkt"
-                                   value="{% if end_time %}{{ end_time }}{% else %}{% set_current_date 2 %}{% endif %}">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="two fields">
-                <div class="field">
                     <label>Utstyrs type</label>
                     <div class="ui fluid selection dropdown {% if not new_reservation %}disabled{% endif %}" id="machine_type_dropdown">
                         <input type="hidden" name="machine_type" value="default">
@@ -65,6 +43,29 @@
                                 {% endfor %}
                             </div>
                         {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>Start tidspunkt</label>
+                    <div class="ui calendar" id="start_time">
+                        <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            <input name="start_time" type="text" placeholder="Start tidspunkt"
+                                   value="{% if start_time %}{{ start_time }}{% else %}{% set_current_date %}{% endif %}">
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>Slutt tidspunkt</label>
+                    <div class="ui calendar" id="end_time">
+                        <div class="ui input left icon">
+                            <i class="calendar icon"></i>
+                            <input name="end_time" type="text" placeholder="Slutt tidspunkt"
+                                   value="{% if end_time %}{{ end_time }}{% else %}{% set_current_date 2 %}{% endif %}">
+                        </div>
                     </div>
                 </div>
             </div>

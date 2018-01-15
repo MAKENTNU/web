@@ -50,6 +50,7 @@ $("#start_time").calendar({
             return false;
         },
         onChange: function (value) {
+            if (value === undefined) return true;
             let shouldChange = isNonReservedDate(value);
             if (shouldChange) {
                 $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(value));
@@ -72,15 +73,19 @@ $('#event_checkbox').checkbox({
 });
 
 $('#machine_type_dropdown').dropdown('setting', 'onChange', function (value) {
-    $('#machine_name_dropdown').toggleClass("disabled", false).dropdown("restore defaults");
-    $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", true);
-    $('#machine_name_dropdown .menu').toggleClass("menu", false);
-    $('#machine_name_dropdown .' + value).toggleClass("menu", true);
-    $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", false);
+    if (!$('#machine_type_dropdown').is(".disabled")) {
+        $('#machine_name_dropdown').toggleClass("disabled", false).dropdown("restore defaults");
+        $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", true);
+        $('#machine_name_dropdown .menu').toggleClass("menu", false);
+        $('#machine_name_dropdown .' + value).toggleClass("menu", true);
+        $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", false);
+    }
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
 $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name').data("value")).dropdown('setting', "onChange", function (value) {
-    getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value);
+    if (value !== "default") getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value);
+    $("#start_time > div, #end_time > div").toggleClass('disabled', value === "default");
+    $("#start_time, #end_time").calendar('clear');
 });
 
 zeroPadDateElement = (val) => val < 10 ? "0" + val : val;
