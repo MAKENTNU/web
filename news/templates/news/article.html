@@ -8,14 +8,24 @@
 {% endblock head %}
 
 {% block body %}
-    <div class="ui article text container">
-        <img src="{{ article.image.url }}" {% if article.contain %}style="object-fit: contain;" {% endif %}>
-        <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d/m/Y" }}</span></h1>
-        {% autoescape off %}
-            {{ article.content }}
-        {% endautoescape %}
+    <div class="article">
+        <div class="ui text container basic segment">
+            <img src="{{ article.image.url }}" {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
+        </div>
+        <div class="ui text container basic segment">
+            {% block event %}
+            {% endblock event %}
+            <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span></h1>
+            <div id="content">
+                {% autoescape off %}
+                    {{ article.content }}
+                {% endautoescape %}
+            </div>
+        </div>
     </div>
-    {% block event %}
-
-    {% endblock event %}
+    <script>
+        $('.ui.sticky').sticky({
+            context: '#content'
+        });
+    </script>
 {% endblock body %}

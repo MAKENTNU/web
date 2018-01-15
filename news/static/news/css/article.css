@@ -1,7 +1,12 @@
 .article {
-    margin: 50px 0;
+    margin: 50px 0 !important;
 }
-.article > img {
+
+.container{
+    margin: 0 !important;
+}
+
+.article > .container > img {
     object-fit: cover;
     width: 100%;
     height: 400px;
@@ -11,4 +16,42 @@
     font-size: 12px;
     font-weight: 400;
     margin-left: 10px;
+}
+
+.normal.card {
+    display: none;
+    float: right;
+    margin-top: 34px;
+    margin-left: 20px;
+}
+
+.left.rail {
+    padding: 39px 0 !important;
+    margin-right: 20px !important;
+}
+
+.rail-content {
+    padding-top: 10px !important;
+}
+
+.card p {
+    margin: 0 16px;
+}
+
+.card p:first-of-type {
+    margin-top: 8px;
+}
+
+.card p:last-of-type {
+    margin-bottom: 8px;
+}
+
+@media screen and (max-width: 1415px) {
+    .left.rail {
+        display: none;
+    }
+
+    .normal.card {
+        display: flex;
+    }
 }
