@@ -7,7 +7,7 @@ body {
     flex-direction: column;
 }
 
-.content {
+.content, .footer {
     flex: 1 0 auto;
 }
 
