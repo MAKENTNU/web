@@ -187,7 +187,7 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
     }
 
     atxt p {
-        padding-bottom: 50px !important;
+        padding-bottom: 80px !important;
     }
 
     .articles .txt {
