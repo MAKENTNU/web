@@ -7,6 +7,11 @@
 		<title>{% block title %}MAKE NTNU{% endblock title %}</title>
 		<meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=0.8">
+        <meta property="og:title" content="MAKE NTNU" />
+        <meta property="og:site_name" content="MAKE NTNU" />
+        <meta property="og:image" content="http://dev.makentnu.no{% static "web/img/make_thumb.png" %}" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="http://dev.makentnu.no/" />
         <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
 
         <link rel="stylesheet" type="text/css" href="{% static "web/semantic-ui/semantic.min.css" %}">
@@ -19,14 +24,18 @@
     </head>
 
     <body>
-        {% block header %}
-            {% include "web/header.html" %}
-        {% endblock header %}
-        {% block body %}
-        {% endblock body %}
-        {% block footer %}
-            {% include "web/footer.html" %}
-        {% endblock %}
+        <div class="wrapper">
+            <div class="content">
+                {% block header %}
+                    {% include "web/header.html" %}
+                {% endblock header %}
+                {% block body %}
+                {% endblock body %}
+            </div>
+            {% block footer %}
+                {% include "web/footer.html" %}
+            {% endblock %}
+        </div>
     </body>
 
     <style>

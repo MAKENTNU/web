@@ -1,7 +1,11 @@
+.footer-wrapper {
+    display: table-row;
+}
+
 .footer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
     width: 100%;
+    grid-template-columns: 1fr 1fr 1fr;
     padding: 40px;
     min-height: 200px;
     background-color: rgb(12, 66, 106);

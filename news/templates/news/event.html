@@ -1,0 +1,47 @@
+{% extends 'news/article.html' %}
+{% load staticfiles %}
+
+{% block event %}
+    <div class="ui left rail">
+        <div class="ui sticky rail-content">
+            <div class="ui card">
+                {% if article.start_date == article.end_date %}
+                    <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
+                        - {{ article.end_time|time:"H:i" }}</p>
+                {% else %}
+                    <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
+                        - {{ article.end_date|date:"d. M" }}, {{ article.end_time|time:"H:i" }}</p>
+                {% endif %}
+                {% if article.place %}
+                    {% if article.place_url %}
+                        <p><a href="{{ article.place_url }}">{{ article.place }}</a></p>
+                    {% else %}
+                        <p>{{ article.place }}</p>
+                    {% endif %}
+                {% endif %}
+                {% if article.hoopla %}
+                    <a class="ui yellow button" href="{{ article.hoopla }}">Påmelding</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="ui normal card">
+        {% if article.start_date == article.end_date %}
+            <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
+                - {{ article.end_time|time:"H:i" }}</p>
+        {% else %}
+            <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
+                - {{ article.end_date|date:"d. M" }}, {{ article.end_time|time:"H:i" }}</p>
+        {% endif %}
+        {% if article.place %}
+            {% if article.place_url %}
+                <p><a href="{{ article.place_url }}">{{ article.place }}</a></p>
+            {% else %}
+                <p>{{ article.place }}</p>
+            {% endif %}
+        {% endif %}
+        {% if article.hoopla %}
+            <a class="ui yellow button" href="{{ article.hoopla }}">Påmelding</a>
+        {% endif %}
+    </div>
+{% endblock event %}

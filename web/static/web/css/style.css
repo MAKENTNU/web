@@ -1,3 +1,23 @@
+html, body {
+    height: 100%;
+}
+
+.wrapper {
+    display: table;
+    height: 100%;
+    width: 100%;
+}
+
+.content {
+    display: table-row;
+    height: 100%;
+}
+
+body {
+    display: block;
+    flex-direction: column;
+}
+
 .removebottommargin {
     margin-bottom: 0 !important;
 }
