@@ -17,9 +17,13 @@
             {% endblock event %}
             <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span></h1>
             <div id="content">
-                {% autoescape off %}
-                    {{ article.content }}
-                {% endautoescape %}
+                {% if article.content == "<p>x</p>" %}
+                    <p>{{ article.clickbait }}</p>
+                {% else %}
+                    {% autoescape off %}
+                        {{ article.content }}
+                    {% endautoescape %}
+                {% endif %}
             </div>
         </div>
     </div>
