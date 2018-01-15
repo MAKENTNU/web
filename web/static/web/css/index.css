@@ -79,7 +79,7 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
 
 .events {
     display: grid;
-    grid-template-columns: 1fr 5fr 5fr 1fr;
+    grid-template-columns: 1fr 10fr 10fr 1fr;
     grid-auto-flow: dense;
     grid-gap: 30px;
     margin: 80px 0;
@@ -101,7 +101,7 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
 
 .articles {
     display: grid;
-    grid-template-columns: 1fr 5fr 5fr 1fr;
+    grid-template-columns: 1fr 10fr 10fr 1fr;
     grid-auto-flow: dense;
     margin: 80px 0;
 }
@@ -138,7 +138,7 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
 
 @media screen and (max-width: 900px) {
     .articles {
-        grid-template-columns: 1fr 5fr 1fr;
+        grid-template-columns: 1fr 20fr 1fr;
     }
 
     .articles .txt, .articles .img {
@@ -160,7 +160,7 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
 
 @media screen and (max-width: 1200px) {
     .events {
-        grid-template-columns: 1fr 5fr 1fr;
+        grid-template-columns: 1fr 20fr 1fr;
         grid-gap: 0;
     }
 
