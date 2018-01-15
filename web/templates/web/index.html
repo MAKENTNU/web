@@ -13,7 +13,7 @@
     </div>
     <div class="articles">
         {% for article in articles %}
-            <aimg class="img">
+            <aimg class="img" href="/news/article/{{ article.id }}/">
                 <!--img class="imgborder tl" src="{% static "web/img/top_left.svg" %}">
                 <img class="imgborder tr" src="{% static "web/img/top_right.svg" %}">
                 <img class="imgborder bl" src="{% static "web/img/bottom_left.svg" %}">
@@ -55,5 +55,10 @@
             </div>
         {% endfor %}
     </div>
+    <script>
+        $('aimg').click(function() {
+            window.location.href = $(this).attr('href');
+        });
+    </script>
     <div style="height: 100px;"></div>
 {% endblock body %}
