@@ -45,3 +45,8 @@ def get_current_time_of_day():
 @register.simple_tag()
 def date_to_percentage(date):
     return (date.hour / 24 + date.minute / 1440) * 100
+
+
+@register.simple_tag()
+def can_use_machine(machine, user):
+    return machine.can_user_use(user)
