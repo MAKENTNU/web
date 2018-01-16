@@ -23,14 +23,18 @@
     </head>
 
     <body>
-        {% block header %}
-            {% include "web/header.html" %}
-        {% endblock header %}
-        {% block body %}
-        {% endblock body %}
-        {% block footer %}
-            {% include "web/footer.html" %}
-        {% endblock %}
+        <div class="wrapper">
+            <div class="content">
+                {% block header %}
+                    {% include "web/header.html" %}
+                {% endblock header %}
+                {% block body %}
+                {% endblock body %}
+            </div>
+            {% block footer %}
+                {% include "web/footer.html" %}
+            {% endblock %}
+        </div>
     </body>
 
     <style>

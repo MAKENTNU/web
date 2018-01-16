@@ -1,6 +1,29 @@
+from django.shortcuts import get_object_or_404
 from django.views.generic import UpdateView, CreateView, TemplateView
 
 from news.models import Article, Event
+
+
+class ViewEventView(TemplateView):
+    template_name = 'news/event.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'article': get_object_or_404(Event, pk=kwargs['pk']),
+        })
+        return context
+
+
+class ViewArticleView(TemplateView):
+    template_name = 'news/article.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'article': get_object_or_404(Article, pk=kwargs['pk']),
+        })
+        return context
 
 
 class AllView(TemplateView):
