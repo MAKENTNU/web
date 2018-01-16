@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'make_queue',
     'news',
     'ckeditor',
+    'contentbox',
 ]
 
 MIDDLEWARE = [
