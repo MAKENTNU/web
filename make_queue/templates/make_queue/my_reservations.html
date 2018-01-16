@@ -29,7 +29,11 @@
                     <td>
                         <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
-                        <div><i class="location arrow icon"></i>{{ reservation.machine.location }}</div>
+                        <div>
+                            <a href="{{ reservation.machine.location_url }}">
+                                <i class="location arrow icon"></i>{{ reservation.machine.location }}
+                            </a>
+                        </div>
                     </td>
                     <td>
                         <div>{{ reservation.start_time }}</div>
