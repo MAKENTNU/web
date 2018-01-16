@@ -12,9 +12,14 @@ class ReservationForm(forms.Form):
     end_time = forms.DateTimeField()
     machine_type = forms.ChoiceField(
         choices=((machine_type.literal, machine_type.literal) for machine_type in Machine.__subclasses__()))
-    machine_name = forms.ChoiceField(choices=((machine.pk, machine.name) for machine in Machine.objects.all()))
+    machine_name = []
     event = forms.BooleanField(required=False)
     event_name = forms.CharField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(ReservationForm, self).__init__(*args, **kwargs)
+
+        self.machine_name = forms.ChoiceField(choices=((machine.pk, machine.name) for machine in Machine.objects.all()))
 
     def clean_start_time(self):
         # TODO: Change the input to be of the users timezone
