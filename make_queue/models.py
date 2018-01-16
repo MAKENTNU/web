@@ -58,7 +58,7 @@ class Printer3D(Machine):
     literal = "3D-printer"
 
     def can_user_use(self, user):
-        return user.quota3d.can_print
+        return hasattr(user, "quota3d") and user.quota3d.can_print
 
     def get_reservation_set(self):
         return self.reservation3d_set
