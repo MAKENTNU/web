@@ -20,6 +20,7 @@ class Machine(models.Model):
     status = models.CharField(max_length=2, choices=status_choices)
     name = models.CharField(max_length=30)
     location = models.CharField(max_length=40)
+    location_url = models.URLField()
     model = models.CharField(max_length=40)
 
     @abstractmethod
