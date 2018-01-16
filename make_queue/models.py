@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 from abc import abstractmethod, ABCMeta
+from news.models import Event
 
 
 class Machine(models.Model):
@@ -78,8 +79,7 @@ class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    event = models.BooleanField(default=False)
-    event_name = models.CharField(default="", max_length=40)
+    event = models.ForeignKey(Event, null=True, on_delete=models.CASCADE)
     showed = models.NullBooleanField(default=None)
 
     @abstractmethod
