@@ -1,5 +1,6 @@
 from django.views.generic.base import View
 from django.views.generic import FormView
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http.response import JsonResponse
@@ -7,6 +8,7 @@ from datetime import datetime, timedelta
 from make_queue.models import Machine, Reservation
 from make_queue.forms import ReservationForm
 from make_queue.templatetags.reservation_extra import calendar_url_reservation
+from news.models import Event
 import pytz
 
 
@@ -87,6 +89,9 @@ class MakeReservationView(FormView):
         render_parameters = {"new_reservation": True, "start_time": start_time,
                              "selected_machine_type": selected_machine_type,
                              "selected_machine_pk": selected_machine_pk and int(selected_machine_pk) or -1,
+                             "events": Event.objects.filter(
+                                 Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
+                                 Q(end_date__gt=timezone.now().date())),
                              "machine_types": [
                                  {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
                                  for sub_class in Machine.__subclasses__()]}
@@ -106,8 +111,7 @@ class MakeReservationView(FormView):
                                        machine=form.cleaned_data["machine"])
 
         if form.cleaned_data["event"]:
-            reservation.event = True
-            reservation.event_name = form.cleaned_data["event_name"]
+            reservation.event = form.cleaned_data["event"]
 
         if not reservation.validate():
             # TODO: Implement redirect to form with parameters
@@ -157,7 +161,10 @@ class ChangeReservationView(View):
         render_parameters = {"machine_types": [{"literal": machine_type, "instances": [reservation.get_machine()]}],
                              "selected_machine_type": machine_type, "selected_machine_pk": reservation.get_machine().pk,
                              "start_time": reservation.start_time, "end_time": reservation.end_time,
-                             "event": reservation.event, "event_name": reservation.event_name,
+                             "event": reservation.event,
+                             "events": Event.objects.filter(
+                                 Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
+                                 Q(end_date__gt=timezone.now().date())),
                              "new_reservation": False}
 
         return render(request, self.template_name, render_parameters)
@@ -180,9 +187,8 @@ class ChangeReservationView(View):
 
         reservation.start_time = form.cleaned_data["start_time"]
         reservation.end_time = form.cleaned_data["end_time"]
-        reservation.event = form.cleaned_data["event"]
         if reservation.event:
-            reservation.event_name = form.cleaned_data["event_name"]
+            reservation.event = form.cleaned_data["event"]
 
         if not reservation.validate():
             # TODO: Implement redirect
@@ -208,7 +214,7 @@ def get_reservations_day_and_machine(request, machine_type, pk, date):
 def get_future_reservations_machine(request, machine_type, pk):
     reservations = Reservation.get_reservation_type(machine_type).objects.filter(machine__pk=pk,
                                                                                  end_time__gte=timezone.now())
-    
+
     data = {
         "reservations": [{"start_date": reservation.start_time, "end_date": reservation.end_time} for reservation in
                          reservations]
