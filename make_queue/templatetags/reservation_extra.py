@@ -14,7 +14,7 @@ def calendar_url_reservation(reservation):
 
 @register.simple_tag()
 def current_calendar_url(machine_type, machine_pk):
-    current_time = timezone.now()
+    current_time = timezone.localtime(timezone.now())
     return reverse('reservation_calendar',
                    kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1],
                            'machine_type': machine_type, 'pk': machine_pk})
@@ -34,12 +34,12 @@ def card_color_from_machine_status(machine):
 
 @register.simple_tag()
 def is_current_date(date):
-    return timezone.now().date() == date
+    return timezone.localtime(timezone.now()).date() == date
 
 
 @register.simple_tag()
 def get_current_time_of_day():
-    return date_to_percentage(timezone.now())
+    return date_to_percentage(timezone.localtime(timezone.now()))
 
 
 @register.simple_tag()
