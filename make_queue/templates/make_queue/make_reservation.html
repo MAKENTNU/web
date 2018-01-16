@@ -86,7 +86,12 @@
                             <i class="dropdown icon"></i>
                             <div class="menu">
                                 {% for event in events %}
-                                    <div class="item" data-value="{{ event.pk }}"><b>{{ event.title }}</b><br>{{ event.start_date }} - {{ event.end_date }}</div>
+                                    <div class="item" data-value="{{ event.pk }}">
+                                        <b>{{ event.title }}</b><br>
+                                        {% if event.start_date == event.end_date %}{{ event.start_date }} - {{ event.start_time }}
+                                        {% else  %}{{ event.start_date }} - {{ event.end_date }}
+                                        {% endif %}
+                                    </div>
                                 {% endfor %}
                             </div>
                         </div>
