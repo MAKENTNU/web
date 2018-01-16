@@ -14,7 +14,7 @@
     <div class="ui container">
         <div class="articles">
             {% for article in articles %}
-                <aimg class="img" href="/news/article/{{ article.id }}/">
+                <aimg class="clickable img" href="/news/article/{{ article.id }}/">
                     <!--img class="imgborder tl" src="{% static "web/img/top_left.svg" %}">
                     <img class="imgborder tr" src="{% static "web/img/top_right.svg" %}">
                     <img class="imgborder bl" src="{% static "web/img/bottom_left.svg" %}">
@@ -39,7 +39,7 @@
         <div class="ui items events">
             {% for event in events %}
                 <div class="item">
-                    <div class="ui small image">
+                    <div class="ui small clickable image" href="/news/event/{{ event.id }}/">
                         <p class="ui yellow make_bg_yellow ribbon label">
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
@@ -64,7 +64,7 @@
         </div>
     </div>
     <script>
-        $('aimg').click(function () {
+        $('.clickable').click(function () {
             window.location.href = $(this).attr('href');
         });
     </script>
