@@ -8,6 +8,7 @@ from web.views import IndexView
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^news/', include('news.urls')),
+    url(r'^contentbox/', include('contentbox.urls')),
     url(r'^$', IndexView.as_view()),
 ]
 
