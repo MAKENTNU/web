@@ -1,0 +1,23 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Rediger {{ contentbox.title }}{% endblock title %}
+
+{% block head %}
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+{% endblock head %}
+
+{% block body %}
+    <br><br>
+    <h1 class="ui centered header">{% block form_header %}Rediger {{ contentbox.title }}{% endblock form_header %}</h1>
+    <form class="ui form text container" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="field">
+            <label>Innhold</label>
+            {{ form.content }}
+        </div>
+        <input class="ui blue submit button" type="submit" value="Lagre">
+    </form>
+    <br><br>
+{% endblock body %}
