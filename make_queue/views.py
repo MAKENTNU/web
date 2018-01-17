@@ -214,13 +214,21 @@ def get_reservations_day_and_machine(request, machine_type, pk, date):
 def get_future_reservations_machine(request, machine_type, pk):
     reservations = Reservation.get_reservation_type(machine_type).objects.filter(machine__pk=pk,
                                                                                  end_time__gte=timezone.now())
+    return JsonResponse(format_reservations_for_start_end_json(reservations))
 
-    data = {
+
+def format_reservations_for_start_end_json(reservations):
+    return {
         "reservations": [{"start_date": reservation.start_time, "end_date": reservation.end_time} for reservation in
                          reservations]
     }
 
-    return JsonResponse(data)
+
+def get_future_reservations_machine_without_specific_reservation(request, machine_type, pk, reservation_pk):
+    reservations = Reservation.get_reservation_type(machine_type).objects.filter(
+        machine__pk=pk, end_time__gte=timezone.now()).exclude(pk=reservation_pk)
+
+    return JsonResponse(format_reservations_for_start_end_json(reservations))
 
 
 class MachineView(View):
