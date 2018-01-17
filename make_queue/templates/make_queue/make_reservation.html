@@ -2,6 +2,11 @@
 {% load staticfiles %}
 {% load semantic_ui_calendar_extra %}
 
+{% block head %}
+    <script type="text/javascript" src="{% static 'web/calendar/calendar.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'web/calendar/calendar.min.css' %}">
+{% endblock %}
+
 {% block body %}
     <br><br>
     <div class="ui container">

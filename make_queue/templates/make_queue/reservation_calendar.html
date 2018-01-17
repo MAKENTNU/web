@@ -2,6 +2,12 @@
 {% load staticfiles %}
 {% load reservation_extra %}
 
+{% block head %}
+    <script type="text/javascript" src="{% static 'web/calendar/calendar.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'web/calendar/calendar.min.css' %}">
+{% endblock %}
+
+
 {% block body %}
 {% can_use_machine machine user as can_use %}
 <br><br>
