@@ -77,12 +77,12 @@ body {
     position: absolute;
     text-align: center;
     height: 100%;
-    -webkit-transform: skew(-25deg);
-    -moz-transform: skew(-25deg);
-    -o-transform: skew(-25deg);
+    /* -webkit-transform: skew(-15deg);
+    -moz-transform: skew(-15deg);
+    -o-transform: skew(-15deg);*/
 }
 
-.four.wide.column.make_collapsed+.two.wide.column .make_reservation_calendar_time_table_hour:first-of-type {
+.four.wide.column.make_collapsed+.three.wide.column .make_reservation_calendar_time_table_hour:first-of-type {
     border-left: 1px solid grey;
 }
 
@@ -142,6 +142,7 @@ body {
 .make_reservation_calendar_time_table_row {
     border-left: 1px solid gray;
     overflow: hidden;
+    padding: 0 !important;
 }
 
 .make_reservation_calendar_time_table_full_row:not(:last-child) {

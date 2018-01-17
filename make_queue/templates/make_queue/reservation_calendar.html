@@ -74,29 +74,23 @@
     <div class="ui grid padded equal width">
         <div class="row make_collapsed_top_bottom">
             <div class="four wide column make_collapsed"></div>
-            <div class="two wide column">
+            <div class="three wide column">
                 <div class="ui grid equal width">
                     <div class="row make_collapsed_top_bottom make_reservation_calendar_time_table_offset_fix">
                         <div class="column make_reservation_calendar_time_table_hour">01</div>
                         <div class="column make_reservation_calendar_time_table_hour">02</div>
                         <div class="column make_reservation_calendar_time_table_hour">03</div>
                         <div class="column make_reservation_calendar_time_table_hour">04</div>
-                    </div>
-                </div>
-            </div>
-            <div class="two wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
                         <div class="column make_reservation_calendar_time_table_hour">05</div>
                         <div class="column make_reservation_calendar_time_table_hour">06</div>
-                        <div class="column make_reservation_calendar_time_table_hour">07</div>
-                        <div class="column make_reservation_calendar_time_table_hour">08</div>
                     </div>
                 </div>
             </div>
-            <div class="two wide column">
+            <div class="three wide column">
                 <div class="ui grid equal width">
                     <div class="row make_collapsed_top_bottom">
+                        <div class="column make_reservation_calendar_time_table_hour">07</div>
+                        <div class="column make_reservation_calendar_time_table_hour">08</div>
                         <div class="column make_reservation_calendar_time_table_hour">09</div>
                         <div class="column make_reservation_calendar_time_table_hour">10</div>
                         <div class="column make_reservation_calendar_time_table_hour">11</div>
@@ -104,29 +98,23 @@
                     </div>
                 </div>
             </div>
-            <div class="two wide column">
+            <div class="three wide column">
                 <div class="ui grid equal width">
                     <div class="row make_collapsed_top_bottom">
                         <div class="column make_reservation_calendar_time_table_hour">13</div>
                         <div class="column make_reservation_calendar_time_table_hour">14</div>
                         <div class="column make_reservation_calendar_time_table_hour">15</div>
                         <div class="column make_reservation_calendar_time_table_hour">16</div>
-                    </div>
-                </div>
-            </div>
-            <div class="two wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
                         <div class="column make_reservation_calendar_time_table_hour">17</div>
                         <div class="column make_reservation_calendar_time_table_hour">18</div>
-                        <div class="column make_reservation_calendar_time_table_hour">19</div>
-                        <div class="column make_reservation_calendar_time_table_hour">20</div>
                     </div>
                 </div>
             </div>
-            <div class="two wide column">
+            <div class="three wide column">
                 <div class="ui grid equal width">
                     <div class="row make_collapsed_top_bottom equal width">
+                        <div class="column make_reservation_calendar_time_table_hour">19</div>
+                        <div class="column make_reservation_calendar_time_table_hour">20</div>
                         <div class="column make_reservation_calendar_time_table_hour">21</div>
                         <div class="column make_reservation_calendar_time_table_hour">22</div>
                         <div class="column make_reservation_calendar_time_table_hour">23</div>
@@ -153,7 +141,7 @@
                 {% for reservation in day.machine.reservations %}
                     <div class="make_reservation_calendar_time_table_item
                                 make_reservation_calendar_time_table_{% if not reservation.reservation.event %}{% if reservation.reservation.user == request.user %}my_{% endif %}non_{% endif %}event"
-                        style="margin-left:{% if reservation.start_percentage == 0 %}-100{% else %}{{ reservation.start_percentage }}{% endif %}%;width:{% if reservation.start_percentage == 0 %}{{ reservation.length|add:100 }}{% else %}{{ reservation.length }}{% endif %}%">
+                        style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%">
                     </div>
                 {% endfor %}
             </div>
