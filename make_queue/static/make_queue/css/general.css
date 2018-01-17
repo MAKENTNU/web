@@ -1,0 +1,41 @@
+.make_collapsed:not(:first-child) {
+    padding-left: 0 !important;
+}
+
+.make_collapsed:not(:last-child) {
+    padding-right: 0 !important;
+}
+
+.make_collapsed_top_bottom:not(:first-child) {
+    padding-top: 0 !important;
+}
+
+.make_collapsed_top_bottom:not(:last-child) {
+    padding-bottom: 0 !important;
+}
+
+.make_collapsed_header {
+    margin-bottom: 0 !important;
+}
+
+.make_collapsed_header_all{
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+.make_collapsed_top_bottom_all {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+.make_row_fill {
+    height: 100%;
+}
+
+.make_hidden {
+    display: none !important;
+}
+
+.make_non_visible {
+    visibility: hidden !important;
+}

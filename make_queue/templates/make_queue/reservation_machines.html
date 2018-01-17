@@ -1,5 +1,10 @@
 {% extends 'web/base.html' %}
 {% load reservation_extra %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+{% endblock %}
 
 {% block title %}Maskiner{% endblock %}
 {% block body %}
