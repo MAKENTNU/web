@@ -11,164 +11,165 @@
 
 
 {% block body %}
-{% can_use_machine machine user as can_use %}
-<br><br>
-<div class="ui container">
-    <div class="ui huge header">
-        Reservasjoner
-    </div>
-    <div class="ui grid padded equal width">
-        <div class="column">
-            <div class="ui cards">
-                <div class="ui {% card_color_from_machine_status machine %} card">
-                    <div class="content">
-                        <div class="header">
-                            {{ machine.name }}
-                        </div>
-                        <div class="meta">
-                            <div class="ui {% card_color_from_machine_status machine %} small header make_collapsed_header_all">
-                                {{ machine.get_status_display }}
+    {% can_use_machine machine user as can_use %}
+    <br><br>
+    <div class="ui container">
+        <div class="ui huge header">
+            Reservasjoner
+        </div>
+        <div class="ui grid padded equal width">
+            <div class="column">
+                <div class="ui cards">
+                    <div class="ui {% card_color_from_machine_status machine %} card">
+                        <div class="content">
+                            <div class="header">
+                                {{ machine.name }}
                             </div>
+                            <div class="meta">
+                                <div class="ui {% card_color_from_machine_status machine %} small header make_collapsed_header_all">
+                                    {{ machine.get_status_display }}
+                                </div>
+                            </div>
+                            {{ machine.model }} <br>
+                            <a href="{{ machine.location_url }}">
+                                <i class="icon location arrow"></i>{{ machine.location }}
+                            </a>
                         </div>
-                        {{ machine.model }} <br>
-                        <a href="{{ machine.location_url }}">
-                            <i class="icon location arrow"></i>{{ machine.location }}
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="ui cards">
+                    <div class="ui card">
+                        <a class="ui primary button {% if not can_use %}disabled{% endif %}"
+                           href="{% url 'make_reservation' selected_machine_type=machine_type selected_machine_pk=pk %}">
+                            <i class="ui add icon"></i>Ny reservasjon
+                        </a>
+                        <a class="ui make_bg_yellow button" href="{% url 'my_reservations' %}">
+                            Mine reservasjoner
+                        </a>
+                        <a class="ui primary button" href="{% url 'reservation_machines_overview' %}">
+                            Andre maskiner
                         </a>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="column">
-            <div class="ui cards">
-                <div class="ui card">
-                    <a class="ui primary button {% if not can_use %}disabled{% endif %}" href="{% url 'make_reservation' selected_machine_type=machine_type selected_machine_pk=pk %}">
-                        <i class="ui add icon"></i>Ny reservasjon
-                    </a>
-                    <a class="ui make_bg_yellow button" href="{% url 'my_reservations' %}">
-                        Mine reservasjoner
-                    </a>
-                    <a class="ui primary button" href="{% url 'reservation_machines_overview' %}">
-                        Andre maskiner
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="column">
-            <div class="ui cards">
-                <div class="ui card">
-                    <div class="content">
-                        <div class="ui calendar" id="period">
-                            <div class="ui input left icon make_reservation_calendar_time_table_calendar_fill">
-                                <i class="ui calendar icon"></i>
-                                <input name="start_date" type="text" placeholder="Periode"
-                                       value="{{ week_days.0.date.date.month }}-{{ week_days.0.date.date.day }}-{{ week_days.0.date.date.year }}">
+            <div class="column">
+                <div class="ui cards">
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="ui calendar" id="period">
+                                <div class="ui input left icon make_reservation_calendar_time_table_calendar_fill">
+                                    <i class="ui calendar icon"></i>
+                                    <input name="start_date" type="text" placeholder="Periode"
+                                           value="{{ week_days.0.date|date:"m-d-Y" }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="extra content">
+                            <div class="ui two buttons">
+                                <a class="ui primary button"
+                                   href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine_type=machine_type pk=pk %}">
+                                    <i class="ui icon left arrow"></i>Forrige
+                                </a>
+                                <a class="ui make_bg_yellow button"
+                                   href="{% url 'reservation_calendar' year=next.0 week=next.1 machine_type=machine_type pk=pk %}">
+                                    Neste<i class="ui icon right arrow"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
-                    <div class="extra content">
-                        <div class="ui two buttons">
-                            <a class="ui primary button" href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine_type=machine_type pk=pk %}">
-                                <i class="ui icon left arrow"></i>Forrige
-                            </a>
-                            <a class="ui make_bg_yellow button" href="{% url 'reservation_calendar' year=next.0 week=next.1 machine_type=machine_type pk=pk%}">
-                                Neste<i class="ui icon right arrow"></i>
-                            </a>
+                </div>
+            </div>
+        </div>
+        <div class="ui grid padded equal width">
+            <div class="row make_collapsed_top_bottom">
+                <div class="four wide column make_collapsed"></div>
+                <div class="three wide column">
+                    <div class="ui grid equal width">
+                        <div class="row make_collapsed_top_bottom make_reservation_calendar_time_table_offset_fix">
+                            <div class="column make_reservation_calendar_time_table_hour">01</div>
+                            <div class="column make_reservation_calendar_time_table_hour">02</div>
+                            <div class="column make_reservation_calendar_time_table_hour">03</div>
+                            <div class="column make_reservation_calendar_time_table_hour">04</div>
+                            <div class="column make_reservation_calendar_time_table_hour">05</div>
+                            <div class="column make_reservation_calendar_time_table_hour">06</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div class="ui grid equal width">
+                        <div class="row make_collapsed_top_bottom">
+                            <div class="column make_reservation_calendar_time_table_hour">07</div>
+                            <div class="column make_reservation_calendar_time_table_hour">08</div>
+                            <div class="column make_reservation_calendar_time_table_hour">09</div>
+                            <div class="column make_reservation_calendar_time_table_hour">10</div>
+                            <div class="column make_reservation_calendar_time_table_hour">11</div>
+                            <div class="column make_reservation_calendar_time_table_hour">12</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div class="ui grid equal width">
+                        <div class="row make_collapsed_top_bottom">
+                            <div class="column make_reservation_calendar_time_table_hour">13</div>
+                            <div class="column make_reservation_calendar_time_table_hour">14</div>
+                            <div class="column make_reservation_calendar_time_table_hour">15</div>
+                            <div class="column make_reservation_calendar_time_table_hour">16</div>
+                            <div class="column make_reservation_calendar_time_table_hour">17</div>
+                            <div class="column make_reservation_calendar_time_table_hour">18</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div class="ui grid equal width">
+                        <div class="row make_collapsed_top_bottom equal width">
+                            <div class="column make_reservation_calendar_time_table_hour">19</div>
+                            <div class="column make_reservation_calendar_time_table_hour">20</div>
+                            <div class="column make_reservation_calendar_time_table_hour">21</div>
+                            <div class="column make_reservation_calendar_time_table_hour">22</div>
+                            <div class="column make_reservation_calendar_time_table_hour">23</div>
+                            <div class="column make_reservation_calendar_time_table_hour">24</div>
                         </div>
                     </div>
                 </div>
             </div>
+            {% for day in week_days %}
+                <div class="row make_collapsed_top_bottom_all make_reservation_calendar_time_table_full_row">
+                    <div class="four wide column make_collapsed">
+                        <div class="ui vertical segment center aligned">{{ day.date|date:"d/m/Y" }}</div>
+                    </div>
+                    <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
+                         data-date="{{ day.date|date:"n/d/Y" }}"
+                         data-machine="{{ pk }}" data-machine-type="{{ machine_type }}">
+                        <div class="make_reservation_calendar_time_table_dashed_line left"></div>
+                        <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
+                        <div class="make_reservation_calendar_time_table_dashed_line right"></div>
+                        {% is_current_date day.date.date as should_include_current_time %}
+                        {% if should_include_current_time %}
+                            <div class="make_reservation_calendar_time_table_current_time"
+                                 style="left:{% get_current_time_of_day %}%"></div>
+                        {% endif %}
+                        {% for reservation in day.machine.reservations %}
+                            <div class="make_reservation_calendar_time_table_item
+                                        make_reservation_calendar_time_table_{% if not reservation.reservation.event %}{% if reservation.reservation.user == request.user %}my_{% endif %}non_{% endif %}event"
+                                style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%">
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="ui vertical segment">
+            <div class="ui label" style="float:right">
+                <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
+                Arrangementer
+                <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
+                Andre Reservasjoner
+                <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
+                Mine Reservasjoner
+            </div>
         </div>
     </div>
-    <div class="ui grid padded equal width">
-        <div class="row make_collapsed_top_bottom">
-            <div class="four wide column make_collapsed"></div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom make_reservation_calendar_time_table_offset_fix">
-                        <div class="column make_reservation_calendar_time_table_hour">01</div>
-                        <div class="column make_reservation_calendar_time_table_hour">02</div>
-                        <div class="column make_reservation_calendar_time_table_hour">03</div>
-                        <div class="column make_reservation_calendar_time_table_hour">04</div>
-                        <div class="column make_reservation_calendar_time_table_hour">05</div>
-                        <div class="column make_reservation_calendar_time_table_hour">06</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
-                        <div class="column make_reservation_calendar_time_table_hour">07</div>
-                        <div class="column make_reservation_calendar_time_table_hour">08</div>
-                        <div class="column make_reservation_calendar_time_table_hour">09</div>
-                        <div class="column make_reservation_calendar_time_table_hour">10</div>
-                        <div class="column make_reservation_calendar_time_table_hour">11</div>
-                        <div class="column make_reservation_calendar_time_table_hour">12</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
-                        <div class="column make_reservation_calendar_time_table_hour">13</div>
-                        <div class="column make_reservation_calendar_time_table_hour">14</div>
-                        <div class="column make_reservation_calendar_time_table_hour">15</div>
-                        <div class="column make_reservation_calendar_time_table_hour">16</div>
-                        <div class="column make_reservation_calendar_time_table_hour">17</div>
-                        <div class="column make_reservation_calendar_time_table_hour">18</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom equal width">
-                        <div class="column make_reservation_calendar_time_table_hour">19</div>
-                        <div class="column make_reservation_calendar_time_table_hour">20</div>
-                        <div class="column make_reservation_calendar_time_table_hour">21</div>
-                        <div class="column make_reservation_calendar_time_table_hour">22</div>
-                        <div class="column make_reservation_calendar_time_table_hour">23</div>
-                        <div class="column make_reservation_calendar_time_table_hour">24</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% for day in week_days %}
-        <div class="row make_collapsed_top_bottom_all make_reservation_calendar_time_table_full_row">
-            <div class="four wide column make_collapsed">
-                <div class="ui vertical segment center aligned">{{ day.date.date }}</div>
-            </div>
-            <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
-                 data-date="{{ day.date.date.month }}/{{ day.date.date.day }}/{{ day.date.date.year }}"
-                 data-machine="{{ pk }}" data-machine-type="{{ machine_type }}">
-                <div class="make_reservation_calendar_time_table_dashed_line left"></div>
-                <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
-                <div class="make_reservation_calendar_time_table_dashed_line right"></div>
-                {% is_current_date day.date.date as should_include_current_time %}
-                {% if should_include_current_time %}
-                    <div class="make_reservation_calendar_time_table_current_time" style="left:{% get_current_time_of_day %}%"></div>
-                {% endif %}
-                {% for reservation in day.machine.reservations %}
-                    <div class="make_reservation_calendar_time_table_item
-                                make_reservation_calendar_time_table_{% if not reservation.reservation.event %}{% if reservation.reservation.user == request.user %}my_{% endif %}non_{% endif %}event"
-                        style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%">
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-    <div class="ui vertical segment">
-        <div class="ui label" style="float:right">
-            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
-            Arrangementer
-            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
-            Andre Reservasjoner
-            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
-            Mine Reservasjoner
-        </div>
-    </div>
-</div>
-<div class="ui vertical segment">
-
-</div>
 <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}
