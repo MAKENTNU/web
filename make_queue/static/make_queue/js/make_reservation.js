@@ -1,7 +1,12 @@
 let reservations = [];
 
 function getFutureReservations(machine_type, machine_id) {
-    $.getJSON("/reservation/json/" + machine_type + "/" + machine_id, function (data) {
+    let jsonUrl = "/reservation/json/" + machine_type + "/" + machine_id;
+    let currentUrl = document.location.href;
+    if (currentUrl.match(".+/reservation/change/[a-zA-Z0-9-]+/[0-9]+/"))
+        jsonUrl += currentUrl.slice(currentUrl.slice(0, currentUrl.length - 1).lastIndexOf("/"), currentUrl.length - 1);
+    console.log(jsonUrl);
+    $.getJSON(jsonUrl, function (data) {
         reservations.length = 0;
         $.each(data.reservations, function (index, value) {
             reservations.push({
