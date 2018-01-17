@@ -31,8 +31,6 @@ class ReservationForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
-        print(cleaned_data)
         machine_name = cleaned_data["machine_name"]
         machine_type = cleaned_data["machine_type"]
 
