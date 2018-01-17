@@ -36,8 +36,13 @@
                         </div>
                     </td>
                     <td>
-                        <div>{{ reservation.start_time }}</div>
-                        <div>{{ reservation.end_time }}</div>
+                        {% if reservation.start_time.date == reservation.end_time.date %}
+                            <div>{{ reservation.start_time|date:"d/m/y" }}</div>
+                            <div>{{ reservation.start_time|date:"H:m" }} - {{ reservation.end_time|date:"H:m" }}</div>
+                        {% else %}
+                            <div>{{ reservation.start_time|date:"d/m/Y - H:m" }}</div>
+                            <div>{{ reservation.end_time|date:"d/m/Y - H:m" }}</div>
+                        {% endif %}
                     </td>
                     <td>
                         <a href="{% calendar_url_reservation reservation %}">
