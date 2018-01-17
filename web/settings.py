@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'news',
     'ckeditor',
     'contentbox',
+    'check_in_system',
 ]
 
 MIDDLEWARE = [
