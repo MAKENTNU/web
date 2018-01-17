@@ -38,10 +38,10 @@
                     <td>
                         {% if reservation.start_time.date == reservation.end_time.date %}
                             <div>{{ reservation.start_time|date:"d/m/y" }}</div>
-                            <div>{{ reservation.start_time|date:"H:m" }} - {{ reservation.end_time|date:"H:m" }}</div>
+                            <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
                         {% else %}
-                            <div>{{ reservation.start_time|date:"d/m/Y - H:m" }}</div>
-                            <div>{{ reservation.end_time|date:"d/m/Y - H:m" }}</div>
+                            <div>{{ reservation.start_time|date:"d/m/Y - H:i" }}</div>
+                            <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
                         {% endif %}
                     </td>
                     <td>
