@@ -36,6 +36,7 @@ class ReservationCalendarView(View):
 
     @staticmethod
     def date_to_percentage(date):
+        date = timezone.localtime(date, timezone.get_default_timezone())
         return (date.hour / 24 + date.minute / 1440) * 100
 
     @staticmethod
