@@ -6,12 +6,6 @@ from ckeditor.fields import RichTextField
 from django.utils import timezone
 
 
-class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL)
-    card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
-    skill = models.ManyToManyField(Skill)
-    #TODO: imagefield
-
 class Skill(models.Model):
     level_choices = (
         (1, "Nybegynner"),
@@ -20,3 +14,10 @@ class Skill(models.Model):
     )
     title = models.CharField(max_length=100, verbose_name="Ferdighet")
     skill_level = models.IntegerField(choices=level_choices)
+
+
+class Profile(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
+    skill = models.ManyToManyField(Skill)
+    # TODO: imagefield
