@@ -246,3 +246,10 @@ class MachineView(View):
         print(render_parameters)
 
         return render(request, self.template_name, render_parameters)
+
+
+class QuotaView(View):
+    template_name = "make_queue/quota_panel.html"
+
+    def get(self, request):
+        return render(request, self.template_name, {})
