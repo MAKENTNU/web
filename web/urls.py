@@ -15,7 +15,7 @@ urlpatterns = [
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
-    url(r'^makerspace/', include('checkin.urls')),
+    url(r'^checkin/', include('checkin.urls')),
 ]
 
 if settings.DEBUG:
