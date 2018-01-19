@@ -10,6 +10,10 @@ json_urlpatterns = [
     url('^(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))/(?P<reservation_pk>[0-9]+)$', get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
 ]
 
+quota_url_patterns = [
+    url('^$', QuotaView.as_view(), name="quota_panel")
+]
+
 
 urlpatterns = [
     url('^(?P<year>[0-9]{4})/(?P<week>([0-9]|[1-4][0-9]|5[0-3]))/(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>[0-9]+)$', ReservationCalendarView.as_view(), name="reservation_calendar"),
@@ -20,6 +24,6 @@ urlpatterns = [
     url('^delete/$', login_required(DeleteReservationView.as_view()), name="delete_reservation"),
     url('^change/(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))/', login_required(ChangeReservationView.as_view()), name="change_reservation"),
     url('^json/', include(json_urlpatterns)),
-    url('^quota/$', QuotaView.as_view(), name="quota_panel"),
+    url('^quota/', include(quota_url_patterns)),
     url('^', MachineView.as_view(), name="reservation_machines_overview")
 ]
