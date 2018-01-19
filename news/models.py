@@ -19,6 +19,7 @@ class Article(models.Model):
     image = models.ImageField(
         verbose_name='Bilde',
         blank=True,
+        null=True,
     )
     contain = models.BooleanField(
         default=False,
