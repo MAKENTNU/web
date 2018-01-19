@@ -1,0 +1,75 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+{% endblock head %}
+
+{% block body %}
+    <br><br>
+    <h1 class="ui text-centered make_col_blue header">Kommende arrangementer</h1>
+    {% if future %}
+        <div class="ui items events" style="margin: 80px 0;">
+            {% for event in future %}
+                <div class="item">
+                    <div class="ui small image">
+                        <p class="ui yellow make_bg_yellow ribbon label">
+                            {{ event.start_date|date:"d" }}<br>
+                            {{ event.start_date|date:"M" }}
+                        </p>
+                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %}
+                             src="{{ event.image.url }}">
+                    </div>
+
+                    <div class="content">
+                        <div class="header">
+                            <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                        </div>
+                        <div class="meta">
+                            <span>{{ event.place }}</span>
+                        </div>
+                        <div class="description">
+                            <p>{{ event.clickbait }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p><i>Ingen kommende arrangementer</i></p><br>
+    {% endif %}
+
+
+    <h1 class="ui text-centered make_col_blue header">Tidligere arrangementer</h1>
+    {% if past %}
+        <div class="ui items events" style="margin: 80px 0;">
+            {% for event in past %}
+                <div class="item">
+                    <div class="ui small image">
+                        <p class="ui yellow make_bg_yellow ribbon label">
+                            {{ event.start_date|date:"d" }}<br>
+                            {{ event.start_date|date:"M" }}
+                        </p>
+                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %}
+                             src="{{ event.image.url }}">
+                    </div>
+
+                    <div class="content">
+                        <div class="header">
+                            <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                        </div>
+                        <div class="meta">
+                            <span>{{ event.place }}</span>
+                        </div>
+                        <div class="description">
+                            <p>{{ event.clickbait }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p><i>Ingen tidligere arrangementer</i></p><br>
+    {% endif %}
+    <div style="height: 50px;"></div>
+{% endblock body %}

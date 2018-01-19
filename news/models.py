@@ -2,10 +2,34 @@ from datetime import time
 
 from django.db import models
 from ckeditor.fields import RichTextField
+from django.db.models import Q
 from django.utils import timezone
 
 
+def time_now(): timezone.now().time()
+
+
+class ArticleManager(models.Manager):
+    def published(self):
+        return self.filter(
+            Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
+            Q(pub_date__lt=timezone.now().date()))
+
+
+class EventManager(ArticleManager):
+    def future(self):
+        return self.published().filter(
+            Q(start_date=timezone.now().date(), start_time__gt=timezone.now().time()) |
+            Q(start_date__gt=timezone.now().date()))
+
+    def past(self):
+        return self.published().filter(
+            Q(start_date=timezone.now().date(), start_time__lt=timezone.now().time()) |
+            Q(start_date__lt=timezone.now().date()))
+
+
 class Article(models.Model):
+    objects = ArticleManager()
     title = models.CharField(
         max_length=100,
         verbose_name='Tittel',
@@ -18,15 +42,20 @@ class Article(models.Model):
     )
     image = models.ImageField(
         verbose_name='Bilde',
-        blank=True,
     )
     contain = models.BooleanField(
         default=False,
         verbose_name='Ikke crop bildet',
     )
-    pub_date = models.DateTimeField(
+    pub_date = models.DateField(
         default=timezone.now,
-        verbose_name='Opprettelsesdato',
+        verbose_name='Publiseringsdato',
+    )
+    pub_time = models.TimeField(
+        default=time_now,
+        blank=True,
+        null=True,
+        verbose_name='Publiseringstid',
     )
     hidden = models.BooleanField(
         default=False,
@@ -47,12 +76,14 @@ class Article(models.Model):
 
 
 class Event(Article):
+    objects = EventManager()
     start_date = models.DateField(
         default=timezone.now,
         verbose_name='Start-dato',
     )
     end_date = models.DateField(
         blank=True,
+        null=True,
         verbose_name='Slutt-dato'
     )
     start_time = models.TimeField(
@@ -61,6 +92,7 @@ class Event(Article):
     )
     end_time = models.TimeField(
         blank=True,
+        null=True,
         verbose_name='Slutt-tidspunkt'
     )
     place = models.CharField(
