@@ -46,7 +46,7 @@ class InheritanceGroup(Group):
         subs = self.sub_groups.all()
 
         for sub in self.sub_groups.all():
-            subs.union(sub.sub_groups.all())
+            subs = subs.union(sub.get_sub_groups())
 
         return subs
 
@@ -66,4 +66,9 @@ class InheritanceGroup(Group):
         This excludes any group that inherits from this group, as that would
         cause a circular dependency.
         """
-        return InheritanceGroup.objects.exclude(pk=self.pk).difference(self.get_sub_groups())
+        parents = InheritanceGroup.objects.exclude(pk=self.pk)
+        for sub in self.get_sub_groups():
+            parents = parents.exclude(pk=sub.pk)
+
+        return parents
+
