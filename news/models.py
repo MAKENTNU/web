@@ -5,6 +5,9 @@ from ckeditor.fields import RichTextField
 from django.utils import timezone
 
 
+def time_now(): timezone.now().time()
+
+
 class Article(models.Model):
     title = models.CharField(
         max_length=100,
@@ -18,8 +21,6 @@ class Article(models.Model):
     )
     image = models.ImageField(
         verbose_name='Bilde',
-        blank=True,
-        null=True,
     )
     contain = models.BooleanField(
         default=False,
@@ -27,7 +28,13 @@ class Article(models.Model):
     )
     pub_date = models.DateTimeField(
         default=timezone.now,
-        verbose_name='Opprettelsesdato',
+        verbose_name='Publiseringsdato',
+    )
+    pub_time = models.TimeField(
+        default=time_now,
+        blank=True,
+        null=True,
+        verbose_name='Publiseringstid',
     )
     hidden = models.BooleanField(
         default=False,
