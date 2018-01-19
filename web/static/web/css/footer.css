@@ -6,7 +6,7 @@
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
-    padding: 40px;
+    padding: 65px 40px 40px;
     min-height: 200px;
     background-color: rgb(12, 66, 106);
 }
@@ -47,6 +47,7 @@
 
 .footer .logo {
     align-self: center;
+    margin-left: -5px;
 }
 
 .footer .logo img {
