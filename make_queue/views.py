@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http.response import JsonResponse
+from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from make_queue.models import Machine, Reservation
 from make_queue.forms import ReservationForm
@@ -252,4 +253,4 @@ class QuotaView(View):
     template_name = "make_queue/quota_panel.html"
 
     def get(self, request):
-        return render(request, self.template_name, {})
+        return render(request, self.template_name, {"users": User.objects.all()})
