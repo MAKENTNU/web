@@ -4,6 +4,28 @@ from django.views.generic import UpdateView, CreateView, TemplateView
 from news.models import Article, Event
 
 
+class ViewEventsView(TemplateView):
+    template_name = 'news/events.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'past': Event.objects.past(),
+            'future': Event.objects.future(),
+        })
+        return context
+
+class ViewArticlesView(TemplateView):
+    template_name = 'news/articles.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'articles': Article.objects.published().filter(event=None),
+        })
+        return context
+
+
 class ViewEventView(TemplateView):
     template_name = 'news/event.html'
 
@@ -26,8 +48,8 @@ class ViewArticleView(TemplateView):
         return context
 
 
-class AllView(TemplateView):
-    template_name = 'news/all.html'
+class AdminView(TemplateView):
+    template_name = 'news/admin.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
