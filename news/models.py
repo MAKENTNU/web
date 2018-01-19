@@ -17,7 +17,15 @@ class ArticleManager(models.Manager):
 
 
 class EventManager(ArticleManager):
-    pass
+    def future(self):
+        return self.published().filter(
+            Q(start_date=timezone.now().date(), start_time__gt=timezone.now().time()) |
+            Q(start_date__gt=timezone.now().date()))
+
+    def past(self):
+        return self.published().filter(
+            Q(start_date=timezone.now().date(), start_time__lt=timezone.now().time()) |
+            Q(start_date__lt=timezone.now().date()))
 
 
 class Article(models.Model):
