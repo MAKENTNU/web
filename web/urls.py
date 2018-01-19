@@ -12,10 +12,10 @@ urlpatterns = [
     url(r'^contentbox/', include('contentbox.urls')),
     url(r'^$', IndexView.as_view()),
     ContentBox.url('about'),
-    ContentBox.url('makerspace'),
+    #ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
-    url(r'^checkin/', include('checkin.urls')),
+    url(r'^makerspace/', include('checkin.urls')),
 ]
 
 if settings.DEBUG:

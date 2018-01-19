@@ -15,9 +15,16 @@ class Skill(models.Model):
     title = models.CharField(max_length=100, verbose_name="Ferdighet")
     skill_level = models.IntegerField(choices=level_choices)
 
+    def __str__(self):
+        return self.title + " (level: " + str(self.skill_level) + ")"
+
 
 class Profile(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
     skill = models.ManyToManyField(Skill)
-    # TODO: imagefield
+    image = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True, verbose_name="Profilbilde")
+    checked_in = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
+
+    def __str__(self):
+        return self.card_id
