@@ -2,13 +2,26 @@ from datetime import time
 
 from django.db import models
 from ckeditor.fields import RichTextField
+from django.db.models import Q
 from django.utils import timezone
 
 
 def time_now(): timezone.now().time()
 
 
+class ArticleManager(models.Manager):
+    def published(self):
+        return self.filter(
+            Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
+            Q(pub_date__lt=timezone.now().date()))
+
+
+class EventManager(ArticleManager):
+    pass
+
+
 class Article(models.Model):
+    objects = ArticleManager()
     title = models.CharField(
         max_length=100,
         verbose_name='Tittel',
@@ -55,6 +68,7 @@ class Article(models.Model):
 
 
 class Event(Article):
+    objects = EventManager()
     start_date = models.DateField(
         default=timezone.now,
         verbose_name='Start-dato',
