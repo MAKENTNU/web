@@ -54,6 +54,7 @@ class Event(Article):
     )
     end_date = models.DateField(
         blank=True,
+        null=True,
         verbose_name='Slutt-dato'
     )
     start_time = models.TimeField(
@@ -62,6 +63,7 @@ class Event(Article):
     )
     end_time = models.TimeField(
         blank=True,
+        null=True,
         verbose_name='Slutt-tidspunkt'
     )
     place = models.CharField(
