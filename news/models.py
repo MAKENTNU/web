@@ -26,7 +26,7 @@ class Article(models.Model):
         default=False,
         verbose_name='Ikke crop bildet',
     )
-    pub_date = models.DateTimeField(
+    pub_date = models.DateField(
         default=timezone.now,
         verbose_name='Publiseringsdato',
     )

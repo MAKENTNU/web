@@ -9,6 +9,7 @@
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script type="text/javascript" src="{% static "news/js/date_edit.js" %}"></script>
+    <script type="text/javascript" src="{% static "news/js/date_edit_article.js" %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -58,6 +59,16 @@
             <div class="field">
                 <label>&nbsp;</label>
                 {{ form.end_time }}
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <label>Publisering</label>
+                {{ form.pub_date }}
+            </div>
+            <div class="field">
+                <label>&nbsp;</label>
+                {{ form.pub_time }}
             </div>
         </div>
         <div class="field">
