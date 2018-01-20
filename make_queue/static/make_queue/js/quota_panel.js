@@ -7,7 +7,7 @@ function filterUsers(searchName) {
 }
 
 function isSearchEqual(search, actualValue) {
-    return actualValue.split(" ").join("").indexOf(search.split(" ").join("")) > -1;
+    return actualValue.toLowerCase().split(" ").join("").indexOf(search.toLowerCase().split(" ").join("")) > -1;
 }
 
 $("#user_search_field input").on('input', function (event) {
