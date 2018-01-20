@@ -13,15 +13,19 @@
     <div class="ui container">
         <div class="ui grid equal width">
             <div class="ui column">
-                <div class="ui header">Brukere</div>
+                <div class="ui huge header">Brukere</div>
                 <div class="ui icon input" id="user_search_field">
                     <i class="icon search"></i>
                     <input class="hidden" type="text" placeholder="Søk på bruker"/>
                 </div>
                 <div class="ui relaxed divided list users">
                     {% for user in users %}
-                        <div class="item" data-fullname="{{ user.first_name }} {{ user.last_name }}"
+                        <div class="item user_element"
+                             data-fullname="{{ user.first_name }} {{ user.last_name }}"
                              data-username="{{ user.username }}">
+                            <div class="right floated content">
+                                <div class="blue ui button user_select">Velg</div>
+                            </div>
                             <div class="content">
                                 <div class="header">
                                     {{ user.first_name }} {{ user.last_name }}
@@ -36,7 +40,10 @@
             </div>
             <div class="ui column">
                 <div class="permissions">
-
+                    <div class="ui huge header">Valgt bruker</div>
+                    <div class="ui cards" id="quota_user">
+                        {% include 'make_queue/quota/quota_user.html' %}
+                    </div>
                 </div>
             </div>
         </div>

@@ -13,3 +13,14 @@ function isSearchEqual(search, actualValue) {
 $("#user_search_field input").on('input', function (event) {
     filterUsers(event.target.value);
 });
+
+$(".user_select").each(function (index, element) {
+   $(element).on("click", function(event) {
+       let username = $(element).closest(".user_element").data("username");
+       $.ajax("/reservation/quota/" + username + "/", {
+           success: function(data, textStatus) {
+               $("#quota_user").html(data);
+           }
+       })
+   })
+});

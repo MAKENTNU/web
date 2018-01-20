@@ -1,0 +1,9 @@
+<div class="ui card">
+    <div class="content">
+        <div class="header">{{ user.first_name }} {{ user.last_name }}</div>
+        <div class="meta">{{ user.username }}</div>
+    </div>
+</div>
+<div class="ui card machine_card" id="3D-Printer_card">
+    {% include 'make_queue/quota/3d-quota.html' %}
+</div>

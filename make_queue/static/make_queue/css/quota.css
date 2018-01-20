@@ -10,3 +10,21 @@
 .users > .item {
     padding-left: 0.4em !important;
 }
+
+.full_width {
+    width: 100%;
+}
+
+.machine_card .meta {
+    padding-bottom: 0.5em !important;
+    border-bottom: 1px solid gray;
+    margin-bottom: 0.5em !important;
+}
+
+.quota_label {
+    font-weight: 700;
+}
+
+.quota_field:not(:last-child) {
+    margin-bottom: 1em;
+}
