@@ -1,7 +1,7 @@
 from django.views.generic.base import View
 from django.views.generic import FormView
 from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.http.response import JsonResponse
 from django.contrib.auth.models import User
@@ -253,4 +253,9 @@ class QuotaView(View):
     template_name = "make_queue/quota_panel.html"
 
     def get(self, request):
-        return render(request, self.template_name, {"users": User.objects.all()})
+        return render(request, self.template_name, {"users": User.objects.all(), "user": request.user})
+
+
+def get_user_quota_view(request, username):
+    user = get_object_or_404(User, username=username)
+    return render(request, "make_queue/quota/quota_user.html", {"user": user})

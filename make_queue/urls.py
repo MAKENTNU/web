@@ -11,6 +11,7 @@ json_urlpatterns = [
 ]
 
 quota_url_patterns = [
+    url('(?P<username>[a-zA-Z0-9-]+)/$', get_user_quota_view),
     url('^$', QuotaView.as_view(), name="quota_panel")
 ]
 
