@@ -4,4 +4,9 @@
 
 .users {
     max-width: 300px;
+    overflow-y: scroll;
+}
+
+.users > .item {
+    padding-left: 0.4em !important;
 }
