@@ -1,8 +1,9 @@
 from django.conf.urls import url, include
 from django.contrib import admin
 
-from checkin.views import TemporaryView
+from checkin.views import TemporaryView, CheckInView, ViewSkillsView
 
 urlpatterns = [
-    url(r'^', TemporaryView.as_view())
+    url(r'^$', ViewSkillsView.as_view()),
+    url(r'^post/$', CheckInView.as_view()),
 ]

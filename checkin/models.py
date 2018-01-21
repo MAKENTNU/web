@@ -24,7 +24,7 @@ class Profile(models.Model):
     card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
     skill = models.ManyToManyField(Skill)
     image = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True, verbose_name="Profilbilde")
-    checked_in = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
+    on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
 
     def __str__(self):
         return self.card_id

@@ -1,0 +1,9 @@
+{% extends "web/base.html" %}
+
+{% block body %}
+    <h2>Ferdigheter på makerverkstedet akkurat nå:</h2>
+    {% for skill, level in skill_dict.items %}
+    <ul>{{ skill }} (nivå: {{ level }})</ul>
+    {% endfor %}
+
+{% endblock %}

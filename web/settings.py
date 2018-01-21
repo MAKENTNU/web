@@ -64,6 +64,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'web.wsgi.application'
 
+CHECKIN_KEY = 'Private key from card reader'
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
