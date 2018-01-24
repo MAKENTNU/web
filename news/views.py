@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import UpdateView, CreateView, TemplateView
 
@@ -60,7 +61,7 @@ class AdminView(TemplateView):
         return context
 
 
-class EditArticleView(UpdateView):
+class EditArticleView(PermissionRequiredMixin, UpdateView):
     model = Article
     template_name = 'news/article_edit.html'
     fields = (
@@ -74,10 +75,13 @@ class EditArticleView(UpdateView):
         'hidden',
         'private',
     )
+    permission_required = (
+        'news.change_article',
+    )
     success_url = '/'
 
 
-class CreateArticleView(CreateView):
+class CreateArticleView(PermissionRequiredMixin, CreateView):
     model = Article
     template_name = 'news/article_create.html'
     fields = (
@@ -91,10 +95,13 @@ class CreateArticleView(CreateView):
         'hidden',
         'private',
     )
+    permission_required = (
+        'news.add_article',
+    )
     success_url = '/'
 
 
-class EditEventView(UpdateView):
+class EditEventView(PermissionRequiredMixin, UpdateView):
     model = Event
     template_name = 'news/event_edit.html'
     fields = (
@@ -115,10 +122,13 @@ class EditEventView(UpdateView):
         'place_url',
         'hoopla',
     )
+    permission_required = (
+        'news.change_event',
+    )
     success_url = '/'
 
 
-class CreateEventView(CreateView):
+class CreateEventView(PermissionRequiredMixin, CreateView):
     model = Event
     template_name = 'news/event_create.html'
     fields = (
@@ -138,5 +148,8 @@ class CreateEventView(CreateView):
         'place',
         'place_url',
         'hoopla',
+    )
+    permission_required = (
+        'news.add_event',
     )
     success_url = '/'
