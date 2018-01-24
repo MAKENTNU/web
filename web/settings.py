@@ -7,6 +7,9 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 MEDIA_ROOT = '../media/'
 MEDIA_URL = '/media/'
+SOCIAL_AUTH_DATAPORTEN_KEY = ''
+SOCIAL_AUTH_DATAPORTEN_SECRET = ''
+LOGOUT_URL = '/'
 
 try:
     from .local_settings import *
@@ -29,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'groups',
     'web',
+    'social_django',
     'news',
     'ckeditor',
     'contentbox',
@@ -105,6 +109,30 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Dataporten
+
+SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
+AUTHENTICATION_BACKENDS = (
+    #'dataporten.social.DataportenFeideOAuth2',
+    #'dataporten.social.DataportenEmailOAuth2',
+    'dataporten.social.DataportenOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['username', 'first_name', 'email']
+
+SOCIAL_AUTH_DATAPORTEN_EMAIL_KEY = SOCIAL_AUTH_DATAPORTEN_KEY
+SOCIAL_AUTH_DATAPORTEN_EMAIL_SECRET = SOCIAL_AUTH_DATAPORTEN_SECRET
+
+SOCIAL_AUTH_DATAPORTEN_FEIDE_KEY = SOCIAL_AUTH_DATAPORTEN_KEY
+SOCIAL_AUTH_DATAPORTEN_FEIDE_SECRET = SOCIAL_AUTH_DATAPORTEN_SECRET
+
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = SOCIAL_AUTH_LOGIN_REDIRECT_URL
 
 
 # Internationalization
