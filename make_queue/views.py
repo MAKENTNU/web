@@ -3,7 +3,7 @@ from django.views.generic import FormView
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from django.http.response import JsonResponse
+from django.http.response import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from make_queue.models import Machine, Reservation
@@ -259,3 +259,11 @@ class QuotaView(View):
 def get_user_quota_view(request, username):
     user = get_object_or_404(User, username=username)
     return render(request, "make_queue/quota/quota_user.html", {"user": user})
+
+
+class UpdateQuota3D(View):
+
+    def post(self, request):
+        print(request.user)
+        print(request.POST["username"])
+        return HttpResponse("")
