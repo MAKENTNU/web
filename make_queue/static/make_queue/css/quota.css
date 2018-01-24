@@ -28,3 +28,11 @@
 .quota_field:not(:last-child) {
     margin-bottom: 1em;
 }
+
+.success_submit {
+    background-color: #008000 !important;
+}
+
+.loading_submit {
+    background-color: #ffa500 !important;
+}

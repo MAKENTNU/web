@@ -170,6 +170,7 @@ class Quota(models.Model):
     class Meta:
         permissions = (
             ("can_create_event_reservation", "Can create event reservation"),
+            ("can_edit_quota", "Can edit quotas"),
         )
 
 

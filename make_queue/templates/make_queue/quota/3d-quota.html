@@ -11,7 +11,7 @@
     <div class="full_width quota_field">
         <label class="quota_label">Maksimal lengde per reservasjon</label>
         <div class="ui input full_width right labeled">
-            <input class="hidden" type="number" value="{{ quota.max_time_reservation }}"/>
+            <input id="3d-quota-len-res" name="3d-quota-len-res" class="hidden" type="number" value="{{ quota.max_time_reservation }}"/>
             <div class="ui basic label">
                 timer
             </div>
@@ -20,16 +20,16 @@
     <div class="full_width quota_field">
         <label class="quota_label">Maksimalt antall aktive reservasjoner</label>
         <div class="ui input full_width">
-            <input class="hidden" type="number" value="{{ quota.max_number_of_reservations }}">
+            <input id="3d-quota-num-res" name="3d-quota-num-res" class="hidden" type="number" value="{{ quota.max_number_of_reservations }}">
         </div>
     </div>
     <div class="full_width quota_field">
         <div class="ui checkbox">
-            <input type="checkbox" {% if quota.can_print %}checked{% endif %}/>
+            <input id="3d-quota-can-print" name="3d-quota-can-print" type="checkbox" {% if quota.can_print %}checked{% endif %}/>
             <label class="quota_label">Kan printe</label>
         </div>
     </div>
 </div>
-<a class="ui blue bottom attached button">
+<div class="ui blue bottom attached button">
     Lagre
-</a>
+</div>
