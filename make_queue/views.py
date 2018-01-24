@@ -267,3 +267,9 @@ class UpdateQuota3D(View):
         print(request.user)
         print(request.POST["username"])
         return HttpResponse("")
+
+
+class UpdateSewingQuota(View):
+
+    def post(self, request):
+        return HttpResponse("")
