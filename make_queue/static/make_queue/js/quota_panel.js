@@ -38,6 +38,17 @@ function initialize_user_handlers() {
             max_number_of_reservations: $("#3d-quota-num-res").val()
         }, () => successfulUpdateButton(button)
         )
+    });
+    $("#Sewing_card").find("> .button").on("click", function (event) {
+        let button = $(this);
+        loadingButton(button);
+        $.post("/reservation/quota/update/sewing/", {
+                csrfmiddlewaretoken: $("#csrf input").val(),
+                username: $("#current_username").data("username"),
+                max_length_reservation: $("#sewing-quota-len-res").val(),
+                max_number_of_reservations: $("#sewing-quota-num-res").val()
+            }, () => successfulUpdateButton(button)
+        )
     })
 }
 
