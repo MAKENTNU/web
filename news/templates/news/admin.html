@@ -1,0 +1,65 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+{% endblock head %}
+
+{% block body %}
+    <div class="ui items events" style="margin: 80px 0;">
+        {% for article in articles %}
+            <div class="item">
+                <div class="ui small image">
+                    <img {% if article.contain %}style="object-fit: contain !important;" {% endif %} src="{{ article.image.url }}">
+                </div>
+                <div class="content">
+                    <div class="header">
+                        <a href="/news/article/{{ article.id }}/">{{ article.title }}</a>
+                    </div>
+                    <div class="meta">
+                        {% if perms.news.change_article %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/edit/">Rediger</a>
+                        {% endif %}
+                        {% if perms.news.delete_article %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/delete/">Slett</a>
+                        {% endif %}
+                    </div>
+                    <div class="description">
+                        <p>{{ article.clickbait }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% for event in events %}
+            <div class="item">
+                <div class="ui small image">
+                    <p class="ui yellow make_bg_yellow ribbon label">
+                        {{ event.start_date|date:"d" }}<br>
+                        {{ event.start_date|date:"M" }}
+                    </p>
+                    <img {% if event.contain %}style="object-fit: contain !important;" {% endif %} src="{{ event.image.url }}">
+                </div>
+
+                <div class="content">
+                    <div class="header">
+                        <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                    </div>
+                    <div class="meta">
+                        {% if perms.news.change_event %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/edit/">Rediger</a>
+                        {% endif %}
+                        {% if perms.news.delete_event %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/delete/">Slett</a>
+                        {% endif %}
+                        <br><br>
+                        <span>{{ event.place }}</span>
+                    </div>
+                    <div class="description">
+                        <p>{{ event.clickbait }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div style="height: 50px;"></div>
+{% endblock body %}
