@@ -32,7 +32,7 @@ class CheckInView(TemplateView):
 
         return HttpResponse(status=400)
 
-
+# boi
 class ViewSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
 
