@@ -1,9 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView, CreateView, TemplateView
 
 from checkin.models import Profile, Skill
 from web import settings
+from django.views.decorators.csrf import csrf_exempt
 
 
 class TemporaryView(TemplateView):
@@ -24,6 +26,11 @@ class TemporaryView(TemplateView):
 
 class CheckInView(TemplateView):
 
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    @csrf_exempt
     def post(self, request):
         """if request.POST.get('key') == settings.CHECKIN_KEY and Profile.objects.filter(
                 card_id=request.POST.get('card_id')).update(on_make=True):"""
@@ -32,7 +39,7 @@ class CheckInView(TemplateView):
 
         return HttpResponse(status=400)
 
-# boi
+
 class ViewSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
 
