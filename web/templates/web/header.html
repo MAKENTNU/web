@@ -37,9 +37,15 @@
         <a class="item" href="/about/">
             Om oss
         </a>
-        <a class="item" href="/login/">
-            Login
-        </a>
+        {% if user.is_authenticated %}
+            <a class="item" href="/logout/">
+                Logout
+            </a>
+        {% else %}
+            <a class="item" href="/login/">
+                Login
+            </a>
+        {% endif %}
         <!--div class="right menu">
             <div class="item">
                 <div class="ui icon input">
