@@ -22,15 +22,9 @@ urlpatterns = [
     url(r'^news/', include('news.urls')),
     url(r'^contentbox/', include('contentbox.urls')),
     url(r'^$', IndexView.as_view()),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}), # local only, nginx in prod
     ContentBox.url('about'),
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', serve, {
-            'document_root': settings.MEDIA_ROOT,
-        })
-    ]
