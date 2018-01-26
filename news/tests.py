@@ -89,6 +89,10 @@ class ViewTestCase(TestCase):
             start_time=(timezone.now() + timedelta(seconds=1)).time()
         )
 
+    def test_admin(self):
+        response = self.client.get(reverse('admin'))
+        self.assertEqual(response.status_code, 200)
+
     def test_articles(self):
         response = self.client.get(reverse('articles'))
         self.assertEqual(response.status_code, 200)
