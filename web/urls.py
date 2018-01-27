@@ -15,8 +15,8 @@ extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view()),
-    url(r'^login/$', RedirectView.as_view(url='/login/dataporten/')),
-    url(r'^logout/$', Logout.as_view()),
+    url(r'^login/$', RedirectView.as_view(url='/login/dataporten/'), name='login'),
+    url(r'^logout/$', Logout.as_view(), name='logout'),
     url(r'^complete/(?P<backend>[^/]+){0}$'.format(extra), login_wrapper),
     url(r'', include('social_django.urls', namespace='social')),
     url(r'^news/', include('news.urls')),
