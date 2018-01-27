@@ -4,6 +4,7 @@ import json
 from base64 import b64encode
 
 from social_core.backends.oauth import BaseOAuth2
+from social_core.exceptions import AuthException
 
 
 class DataportenOAuth2(BaseOAuth2):
@@ -71,38 +72,3 @@ class DataportenOAuth2(BaseOAuth2):
         raise NotImplementedError(
             'Refresh tokens for Dataporten have not been implemented'
         )
-
-
-class DataportenEmailOAuth2(DataportenOAuth2):
-    name = 'dataporten_email'
-    DEFAULT_SCOPE = ['userid', 'profile', 'email']
-
-    def get_user_details(self, response):
-        """
-        Return user details from Dataporten
-
-        Set username to email address
-        """
-        user = super(DataportenEmailOAuth2, self).get_user_details(response)
-        user['username'] = user['email']
-        return user
-
-
-class DataportenFeideOAuth2(DataportenOAuth2):
-    name = 'dataporten_feide'
-    DEFAULT_SCOPE = ['userid', 'profile', 'userid-feide']
-
-    def get_user_details(self, response):
-        """
-        Return user details from Dataporten
-
-        Set username to eduPersonPrincipalName
-        """
-        user = super(DataportenFeideOAuth2, self).get_user_details(response)
-        sec_userids = user['userid_sec']
-        for userid in sec_userids:
-            usertype, username = userid.split(':')
-            if usertype == 'feide':
-                user['username'] = username
-                break
-        return user
