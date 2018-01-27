@@ -8,9 +8,9 @@ from django.utils import timezone
 
 class Skill(models.Model):
     level_choices = (
-        (1, "Nybegynner"),
-        (2, "Viderekommen"),
-        (3, "Ekspert"),
+        (1, "nybegynner"),
+        (2, "viderekommen"),
+        (3, "ekspert"),
     )
     title = models.CharField(max_length=100, verbose_name="Ferdighet")
     skill_level = models.IntegerField(choices=level_choices)

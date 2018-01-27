@@ -29,13 +29,15 @@ class ViewSkillsView(TemplateView):
 
     def get_context_data(self, **kwargs):
 
-        # Creates dict with skill titles as keys and the highest corresponding skill level as its pair value
+        """ Creates dict with skill titles as keys and
+         the highest corresponding skill level as its pair value (quick fix) """
         skill_dict = {}
+        level_list = ["nybegynner", "viderekommen", "ekspert"]
         for profile in Profile.objects.filter(on_make=True):
             for skill in profile.skill.all():
-                title, level = skill.title, skill.skill_level
-                if title not in skill_dict or level > skill_dict[title]:
-                    skill_dict[title] = level
+                title, level_int = skill.title, skill.skill_level - 1
+                if title not in skill_dict or level_int > level_list.index(skill_dict[title]):
+                    skill_dict[title] = level_list[level_int]
 
         context = super().get_context_data(**kwargs)
         context.update({
