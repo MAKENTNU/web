@@ -52,18 +52,14 @@ class ReservationCalendarView(View):
                 'length': ReservationCalendarView.date_to_percentage(end_time) -
                           ReservationCalendarView.date_to_percentage(start_time)}
 
-    def get(self, request, year="", week="", machine_type="", pk=""):
-        year, week = int(year), int(week)
-
+    def get(self, request, year, week, machine):
         if not self.is_valid_week(year, week):
             year, week = self.get_next_valid_week(year, week, 1)
 
         first_date_of_week = pytz.timezone(timezone.get_default_timezone_name()).localize(
             self.year_and_week_to_monday(year, week))
 
-        machine = Machine.get_subclass(machine_type).objects.get(pk=pk)
-
-        render_parameters = {'year': year, 'week': week, 'machine_type': machine_type, 'pk': pk,
+        render_parameters = {'year': year, 'week': week,
                              'next': self.get_next_valid_week(year, week, 1),
                              'prev': self.get_next_valid_week(year, week, -1),
                              'machine_types': Machine.__subclasses__(),
@@ -87,10 +83,9 @@ class ReservationCalendarView(View):
 class MakeReservationView(FormView):
     template_name = "make_queue/make_reservation.html"
 
-    def get(self, request, start_time="", selected_machine_type="", selected_machine_pk="-1", **kwargs):
+    def get(self, request, machine, start_time="", **kwargs):
         render_parameters = {"new_reservation": True, "start_time": start_time,
-                             "selected_machine_type": selected_machine_type,
-                             "selected_machine_pk": selected_machine_pk and int(selected_machine_pk) or -1,
+                             "selected_machine": machine,
                              "events": Event.objects.filter(
                                  Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
                                  Q(end_date__gt=timezone.now().date())),
@@ -154,20 +149,15 @@ class DeleteReservationView(View):
 class ChangeReservationView(View):
     template_name = "make_queue/make_reservation.html"
 
-    def get(self, request, machine_type, pk):
-        reservation = Reservation.get_reservation(machine_type, pk)
-        if reservation is None or reservation.user != request.user:
-            # TODO: Implement 404
-            return None
-
-        render_parameters = {"machine_types": [{"literal": machine_type, "instances": [reservation.get_machine()]}],
-                             "selected_machine_type": machine_type, "selected_machine_pk": reservation.get_machine().pk,
-                             "start_time": reservation.start_time, "end_time": reservation.end_time,
-                             "event": reservation.event,
+    def get(self, request, reservation):
+        render_parameters = {"machine_types": [{"literal": reservation.get_machine().literal,
+                                                "instances": [reservation.get_machine()]}],
+                             "selected_machine_type": reservation.get_machine().literal,
+                             "selected_machine_pk": reservation.get_machine().pk, "start_time": reservation.start_time,
+                             "end_time": reservation.end_time, "event": reservation.event, "new_reservation": False,
                              "events": Event.objects.filter(
                                  Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
-                                 Q(end_date__gt=timezone.now().date())),
-                             "new_reservation": False}
+                                 Q(end_date__gt=timezone.now().date()))}
 
         return render(request, self.template_name, render_parameters)
 
@@ -201,11 +191,10 @@ class ChangeReservationView(View):
         return redirect(calendar_url_reservation(reservation))
 
 
-def get_reservations_day_and_machine(request, machine_type, pk, date):
-    date = datetime.strptime(date, "%Y/%m/%d")
-    reservations = Reservation.get_reservation_type(machine_type).objects.filter(machine__pk=pk,
-                                                                                 start_time__lt=date + timedelta(
-                                                                                     days=1)).filter(end_time__gte=date)
+def get_reservations_day_and_machine(request, machine, date):
+    reservations = machine.get_reservation_set().filter(start_time__lt=date + timedelta(days=1)).filter(
+        end_time__gte=date)
+
     data = {
         "reservations": reservations,
         "date": date
@@ -213,9 +202,8 @@ def get_reservations_day_and_machine(request, machine_type, pk, date):
     return JsonResponse(data)
 
 
-def get_future_reservations_machine(request, machine_type, pk):
-    reservations = Reservation.get_reservation_type(machine_type).objects.filter(machine__pk=pk,
-                                                                                 end_time__gte=timezone.now())
+def get_future_reservations_machine(request, machine):
+    reservations = machine.get_reservation_set().filter(end_time__gte=timezone.now())
     return JsonResponse(format_reservations_for_start_end_json(reservations))
 
 
@@ -226,9 +214,9 @@ def format_reservations_for_start_end_json(reservations):
     }
 
 
-def get_future_reservations_machine_without_specific_reservation(request, machine_type, pk, reservation_pk):
-    reservations = Reservation.get_reservation_type(machine_type).objects.filter(
-        machine__pk=pk, end_time__gte=timezone.now()).exclude(pk=reservation_pk)
+def get_future_reservations_machine_without_specific_reservation(request, reservation_to_skip):
+    reservations = reservation_to_skip.machine.get_reservation_set().filter(end_time__gte=timezone.now()).exclude(
+        pk=reservation_to_skip.pk)
 
     return JsonResponse(format_reservations_for_start_end_json(reservations))
 
@@ -256,8 +244,7 @@ class QuotaView(View):
         return render(request, self.template_name, {"users": User.objects.all(), "user": request.user})
 
 
-def get_user_quota_view(request, username):
-    user = get_object_or_404(User, username=username)
+def get_user_quota_view(request, user):
     return render(request, "make_queue/quota/quota_user.html", {"user": user})
 
 

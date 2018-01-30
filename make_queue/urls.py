@@ -1,31 +1,41 @@
 from django.conf.urls import url
-from django.urls import include
+from django.urls import include, path, register_converter, re_path
 
-from make_queue.views import *
+from .views import *
+from . import converters
 from django.contrib.auth.decorators import login_required
 
+register_converter(converters.MachineType, "machine_type")
+register_converter(converters.MachineTypeSpecific, "machine")
+register_converter(converters.MachineReservation, "reservation")
+register_converter(converters.UserByUsername, "username")
+register_converter(converters.Date, "%Y/%m/%d")
+register_converter(converters.Year, "year")
+register_converter(converters.Week, "week")
+register_converter(converters.DateTime, "time")
+
 json_urlpatterns = [
-    url('^(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))$', get_future_reservations_machine, name="reservation_json"),
-    url('^(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))/(?P<date>([0-9]{4}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[01])))$', get_reservations_day_and_machine, name="reservation_json"),
-    url('^(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))/(?P<reservation_pk>[0-9]+)$', get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
+    path('<machine:machine>', get_future_reservations_machine, name="reservation_json"),
+    path('<machine:machine>/<%Y/%m/%d:date>', get_reservations_day_and_machine, name="reservation_json"),
+    path('<reservation:reservation>', get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
 ]
 
 quota_url_patterns = [
-    url('^update/3D-printer/$', UpdateQuota3D.as_view()),
-    url('^update/sewing/$', UpdateSewingQuota.as_view()),
-    url('(?P<username>[a-zA-Z0-9-]+)/$', get_user_quota_view),
-    url('^$', QuotaView.as_view(), name="quota_panel"),
+    path('update/3D-printer/', UpdateQuota3D.as_view()),
+    path('update/sewing/', UpdateSewingQuota.as_view()),
+    path('<username:user>/', get_user_quota_view),
+    path('', QuotaView.as_view(), name="quota_panel"),
 ]
 
 
 urlpatterns = [
-    url('^(?P<year>[0-9]{4})/(?P<week>([0-9]|[1-4][0-9]|5[0-3]))/(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>[0-9]+)$', ReservationCalendarView.as_view(), name="reservation_calendar"),
-    url('^make/(?P<start_time>([1-9]|1[0-2])/([1-9]|[12][0-9]|3[01])/([0-9]{4})/([01][0-9]|2[0-3]):([0-5][0-9]))/((?P<selected_machine_type>[a-zA-Z0-9-]+)/((?P<selected_machine_pk>[0-9]+)/)?)?$', login_required(MakeReservationView.as_view()), name="make_reservation"),
-    url('^make/(?P<selected_machine_type>[a-zA-Z0-9-]+)/(?P<selected_machine_pk>[0-9]+)/$', login_required(MakeReservationView.as_view()), name="make_reservation"),
-    url('^me/$', login_required(MyReservationsView.as_view()), name="my_reservations"),
-    url('^delete/$', login_required(DeleteReservationView.as_view()), name="delete_reservation"),
-    url('^change/(?P<machine_type>[a-zA-Z0-9-]+)/(?P<pk>([0-9]+))/', login_required(ChangeReservationView.as_view()), name="change_reservation"),
-    url('^json/', include(json_urlpatterns)),
-    url('^quota/', include(quota_url_patterns)),
-    url('^', MachineView.as_view(), name="reservation_machines_overview")
+    path('<year:year>/<week:week>/<machine:machine>', ReservationCalendarView.as_view(), name="reservation_calendar"),
+    path('make/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
+    path('make/<time:start_time>/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
+    path('me/', login_required(MyReservationsView.as_view()), name="my_reservations"),
+    path('delete/', login_required(DeleteReservationView.as_view()), name="delete_reservation"),
+    path('change/<reservation:reservation>', login_required(ChangeReservationView.as_view()), name="change_reservation"),
+    path('json/', include(json_urlpatterns)),
+    path('quota/', include(quota_url_patterns)),
+    re_path('^', MachineView.as_view(), name="reservation_machines_overview")
 ]

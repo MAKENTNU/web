@@ -56,7 +56,7 @@
                     </td>
                     <td>
                         {% if reservation.can_delete %}
-                            <a href="{% url 'change_reservation' pk=reservation.pk machine_type=reservation.machine.literal %}">
+                            <a href="{% url 'change_reservation' reservation=reservation %}">
                                 <div class="ui button primary">Endre</div>
                             </a>
                         {% endif %}

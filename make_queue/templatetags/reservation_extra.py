@@ -9,15 +9,14 @@ register = template.Library()
 def calendar_url_reservation(reservation):
     return reverse('reservation_calendar',
                    kwargs={'year': reservation.start_time.year, 'week': reservation.start_time.isocalendar()[1],
-                           'machine_type': reservation.machine.literal, 'pk': reservation.machine.pk})
+                           'machine': reservation.get_machine()})
 
 
 @register.simple_tag()
-def current_calendar_url(machine_type, machine_pk):
+def current_calendar_url(machine):
     current_time = timezone.localtime(timezone.now())
     return reverse('reservation_calendar',
-                   kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1],
-                           'machine_type': machine_type, 'pk': machine_pk})
+                   kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'machine': machine})
 
 
 @register.simple_tag()

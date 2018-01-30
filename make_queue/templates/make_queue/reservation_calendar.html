@@ -42,7 +42,7 @@
                 <div class="ui cards">
                     <div class="ui card">
                         <a class="ui primary button {% if not can_use %}disabled{% endif %}"
-                           href="{% url 'make_reservation' selected_machine_type=machine_type selected_machine_pk=pk %}">
+                           href="{% url 'make_reservation' machine=machine %}">
                             <i class="ui add icon"></i>Ny reservasjon
                         </a>
                         <a class="ui make_bg_yellow button" href="{% url 'my_reservations' %}">
@@ -69,11 +69,11 @@
                         <div class="extra content">
                             <div class="ui two buttons">
                                 <a class="ui primary button"
-                                   href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine_type=machine_type pk=pk %}">
+                                   href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine %}">
                                     <i class="ui icon left arrow"></i>Forrige
                                 </a>
                                 <a class="ui make_bg_yellow button"
-                                   href="{% url 'reservation_calendar' year=next.0 week=next.1 machine_type=machine_type pk=pk %}">
+                                   href="{% url 'reservation_calendar' year=next.0 week=next.1 machine=machine %}">
                                     Neste<i class="ui icon right arrow"></i>
                                 </a>
                             </div>
@@ -140,8 +140,8 @@
                         <div class="ui vertical segment center aligned">{{ day.date|date:"d/m/Y" }}</div>
                     </div>
                     <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
-                         data-date="{{ day.date|date:"n/d/Y" }}"
-                         data-machine="{{ pk }}" data-machine-type="{{ machine_type }}">
+                         data-date="{{ day.date|date:"Y/n/d" }}"
+                         data-machine="{{ machine.pk }}" data-machine-type="{{ machine.literal }}">
                         <div class="make_reservation_calendar_time_table_dashed_line left"></div>
                         <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
                         <div class="make_reservation_calendar_time_table_dashed_line right"></div>
