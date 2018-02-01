@@ -17,6 +17,14 @@
             <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
                 Maskiner
             </a>
+            <div class="make_right_floated make_row_fill">
+                <div class="field">
+                    <div class="ui checkbox" id="hide_old_reservations">
+                        <input type="checkbox" class="hidden"/>
+                        <label>Skjul tidligere reservasjoner</label>
+                    </div>
+                </div>
+            </div>
         </div>
         <table class="ui table">
             <thead>
@@ -30,7 +38,7 @@
             </thead>
             <tbody>
             {% for reservation in reservations %}
-                <tr>
+                <tr data-is-future-reservation="{{ reservation.can_delete }}">
                     <td>
                         <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
@@ -78,4 +86,6 @@
         </table>
         <br><br>
     </div>
+
+    <script src="{% static 'make_queue/js/my_reservations.js' %}"></script>
 {% endblock %}

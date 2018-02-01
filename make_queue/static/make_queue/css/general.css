@@ -39,3 +39,8 @@
 .make_non_visible {
     visibility: hidden !important;
 }
+
+.make_right_floated {
+    float: right;
+    display: inline-block;
+}
