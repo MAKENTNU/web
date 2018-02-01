@@ -251,8 +251,13 @@ def get_user_quota_view(request, user):
 class UpdateQuota3D(View):
 
     def post(self, request):
-        print(request.user)
-        print(request.POST["username"])
+        user = User.objects.get(username=request.POST.get("username"))
+        quota = user.quota3d
+        print(request.POST.get("can_print"))
+        quota.can_print = request.POST.get("can_print") == "true"
+        quota.max_number_of_reservations = request.POST.get("max_number_of_reservations")
+        quota.max_time_reservation = request.POST.get("max_length_reservation")
+        quota.save()
         return HttpResponse("")
 
 
