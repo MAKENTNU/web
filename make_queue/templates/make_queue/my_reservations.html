@@ -39,7 +39,7 @@
             <tbody>
             {% for reservation in reservations %}
                 <tr data-is-future-reservation="{{ reservation.can_delete }}">
-                    <td>
+                    <td class="{% if reservation.event %}make_my_reservation_event{% endif %}">
                         <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
                         <div>

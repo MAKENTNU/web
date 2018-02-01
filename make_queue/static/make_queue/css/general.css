@@ -44,3 +44,7 @@
     float: right;
     display: inline-block;
 }
+
+.make_my_reservation_event {
+    border-left: 2px solid #008000;
+}
