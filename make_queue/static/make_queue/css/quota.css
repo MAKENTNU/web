@@ -4,7 +4,6 @@
 
 .users {
     max-width: 300px;
-    overflow-y: scroll;
 }
 
 .users > .item {
