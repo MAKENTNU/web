@@ -1,4 +1,3 @@
-from django.conf.urls import url
 from django.urls import include, path, register_converter, re_path
 
 from .views import *
