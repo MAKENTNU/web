@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^news/', include('news.urls')),
     url(r'^contentbox/', include('contentbox.urls')),
+    url(r'^committees/', include('groups.committee_urls')),
     url(r'^$', IndexView.as_view()),
     ContentBox.url('about'),
     ContentBox.url('makerspace'),
