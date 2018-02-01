@@ -2,7 +2,7 @@ from django.urls import include, path, register_converter, re_path
 
 from .views import *
 from . import converters
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 register_converter(converters.MachineType, "machine_type")
 register_converter(converters.MachineTypeSpecific, "machine")
@@ -20,10 +20,10 @@ json_urlpatterns = [
 ]
 
 quota_url_patterns = [
-    path('update/3D-printer/', UpdateQuota3D.as_view()),
-    path('update/sewing/', UpdateSewingQuota.as_view()),
-    path('<username:user>/', get_user_quota_view),
-    path('', QuotaView.as_view(), name="quota_panel"),
+    path('update/3D-printer/', permission_required("can_edit_quota", raise_exception=True)(UpdateQuota3D.as_view())),
+    path('update/sewing/', permission_required("can_edit_quota", raise_exception=True)(UpdateSewingQuota.as_view())),
+    path('<username:user>/', permission_required("can_edit_quota", raise_exception=True)(get_user_quota_view)),
+    path('', permission_required("can_edit_quota", raise_exception=True)(QuotaView.as_view()), name="quota_panel"),
 ]
 
 
