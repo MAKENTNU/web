@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="full_width quota_field">
-        <div class="ui checkbox">
+        <div class="ui checkbox {% if quota.can_print %}checked{% endif%}">
             <input id="3d-quota-can-print" name="3d-quota-can-print" type="checkbox" {% if quota.can_print %}checked{% endif %}/>
             <label class="quota_label">Kan printe</label>
         </div>

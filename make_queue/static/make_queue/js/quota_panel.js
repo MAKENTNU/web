@@ -33,7 +33,7 @@ function initialize_user_handlers() {
         $.post("/reservation/quota/update/3D-printer/", {
             csrfmiddlewaretoken: $("#csrf input").val(),
             username: $("#current_username").data("username"),
-            can_print: $("#3d-quota-can-print").closest("checkbox").is(":checked"),
+            can_print: $("#3d-quota-can-print").closest(".checkbox").hasClass("checked"),
             max_length_reservation: $("#3d-quota-len-res").val(),
             max_number_of_reservations: $("#3d-quota-num-res").val()
         }, () => successfulUpdateButton(button)
