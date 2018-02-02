@@ -232,8 +232,6 @@ class MachineView(View):
             } for machine_type in Machine.__subclasses__() if machine_type.objects.exists()
         ]}
 
-        print(render_parameters)
-
         return render(request, self.template_name, render_parameters)
 
 
