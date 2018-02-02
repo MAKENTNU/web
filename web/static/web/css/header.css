@@ -1,0 +1,146 @@
+.nav {
+    display: grid;
+    grid-template-columns: minmax(120px, 1fr) 3fr;
+    grid-template-rows: 120px;
+    width: 100%;
+    height: 120px;
+    background-color: rgb(33, 43, 52);
+}
+
+.nav .menu {
+    align-self: center;
+    margin: 0;
+    padding: 0 30px;
+}
+
+.nav .logo {
+    align-self: center;
+    padding: 0 30px;
+}
+
+.nav .logo:hover {
+    cursor: pointer;
+}
+
+.nav .logo img {
+    object-fit: contain;
+    max-height: 50px;
+}
+
+.limg {
+    display: none;
+}
+
+.limg.large {
+    display: inline;
+}
+
+.burger {
+    display: none;
+    margin-bottom: -10px;
+}
+
+.burger:hover {
+    cursor: pointer;
+}
+
+.burger {
+    align-self: center;
+    justify-self: center;
+}
+
+.burger i {
+    color: #ffffff;
+    font-size: 30px;
+}
+
+.nav .ui.inverted.menu .item {
+    color: rgba(255, 255, 255, .7) !important;
+}
+
+@media screen and (max-width: 900px) {
+    .limg.large {
+        display: none;
+    }
+
+    .limg.small {
+        display: none;
+    }
+
+    .limg.medium {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 730px) {
+    .limg.large {
+        display: inline;
+    }
+
+    .limg.small {
+        display: none;
+    }
+
+    .limg.medium {
+        display: none;
+    }
+
+    .nav {
+        grid-template-columns: 1fr 3fr;
+    }
+
+    .nav .logo {
+        padding: 0;
+        margin-right: 80px;
+    }
+
+    .nav .menu {
+        display: none;
+        grid-row-start: 2;
+        grid-column-start: 1;
+        grid-column-end: 3;
+    }
+
+    .nav.active .menu {
+        display: inline;
+        padding-left: 10px;
+        padding-bottom: 20px !important;
+
+    }
+
+    .nav.active {
+        height: auto;
+    }
+
+    .burger {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .limg.large {
+        display: none;
+    }
+
+    .limg.small {
+        display: none;
+    }
+
+    .limg.medium {
+        display: inline;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .limg.medium {
+        display: none;
+    }
+
+    .limg.large {
+        display: none;
+    }
+
+    .limg.small {
+        display: inline;
+    }
+}
