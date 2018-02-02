@@ -57,6 +57,10 @@ class Article(models.Model):
         null=True,
         verbose_name='Publiseringstid',
     )
+    featured = models.BooleanField(
+        default=False,
+        verbose_name='Fremhevet',
+    )
     hidden = models.BooleanField(
         default=False,
         verbose_name='Skjult',

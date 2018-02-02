@@ -74,6 +74,7 @@ class EditArticleView(PermissionRequiredMixin, UpdateView):
         'contain',
         'hidden',
         'private',
+        'featured',
     )
     permission_required = (
         'news.change_article',
@@ -94,6 +95,7 @@ class CreateArticleView(PermissionRequiredMixin, CreateView):
         'contain',
         'hidden',
         'private',
+        'featured',
     )
     permission_required = (
         'news.add_article',
@@ -121,6 +123,7 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
         'place',
         'place_url',
         'hoopla',
+        'featured',
     )
     permission_required = (
         'news.change_event',
@@ -148,6 +151,7 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'place',
         'place_url',
         'hoopla',
+        'featured',
     )
     permission_required = (
         'news.add_event',
