@@ -15,22 +15,16 @@ extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view()),
-    url(r'^login/$', RedirectView.as_view(url='/login/dataporten/')),
-    url(r'^logout/$', Logout.as_view()),
+    url(r'^login/$', RedirectView.as_view(url='/login/dataporten/'), name='login'),
+    url(r'^logout/$', Logout.as_view(), name='logout'),
     url(r'^complete/(?P<backend>[^/]+){0}$'.format(extra), login_wrapper),
     url(r'', include('social_django.urls', namespace='social')),
     url(r'^news/', include('news.urls')),
     url(r'^contentbox/', include('contentbox.urls')),
     url(r'^$', IndexView.as_view()),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}), # local only, nginx in prod
     ContentBox.url('about'),
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', serve, {
-            'document_root': settings.MEDIA_ROOT,
-        })
-    ]
