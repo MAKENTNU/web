@@ -89,3 +89,19 @@
     -moz-transform: skew(-15deg);
     -o-transform: skew(-15deg);*/
 }
+
+@media screen and (max-device-width: 500px) {
+    .make_reservation_calendar_time_table_hour:nth-child(3n + 2) {
+        display: none !important;
+    }
+
+    .make_reservation_calendar_time_table_hour:nth-child(3n) {
+        display: none !important;
+    }
+}
+
+@media screen and (min-device-width: 500px) and (max-device-width: 1000px) {
+    .make_reservation_calendar_time_table_hour:nth-child(2n) {
+        display: none !important;
+    }
+}
