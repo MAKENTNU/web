@@ -56,7 +56,7 @@ class Date:
 
 
 class DateTime:
-    regex = Date.regex + "([0-9]{4}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[01])/([01][0-9]|2[0-3]):([0-5][0-9]))"
+    regex = "([0-9]{4}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[01])/([01][0-9]|2[0-3]):([0-5][0-9]))"
 
     def to_python(self, value):
         return datetime.strptime(value, "%Y/%m/%d/%H:%M")

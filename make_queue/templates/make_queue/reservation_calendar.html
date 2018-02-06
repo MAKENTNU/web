@@ -140,7 +140,7 @@
                         <div class="ui vertical segment center aligned">{{ day.date|date:"d/m/Y" }}</div>
                     </div>
                     <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
-                         data-date="{{ day.date|date:"Y/n/d" }}"
+                         data-date="{{ day.date|date:"Y/n/j" }}"
                          data-machine="{{ machine.pk }}" data-machine-type="{{ machine.literal }}">
                         <div class="make_reservation_calendar_time_table_dashed_line left"></div>
                         <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
