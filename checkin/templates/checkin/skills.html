@@ -3,10 +3,17 @@
 {% block body %}
     <div class="ui container">
         <h2>Ferdigheter på makerverkstedet akkurat nå:</h2>
-        <ul>
+        <div class="ui feed">
             {% for skill, level in skill_dict.items %}
-                <li>{{ skill }} (nivå: {{ level }})</li>
+                <div class="event">
+                    <div class="label">
+
+                    </div>
+                    <div class="content">
+                        <li>{{ skill }} (nivå: {{ level }})</li>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
     </div>
 {% endblock %}
