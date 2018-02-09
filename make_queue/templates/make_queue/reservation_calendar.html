@@ -20,22 +20,7 @@
         <div class="ui grid padded equal width make_reservation_calendar_control_header_large">
             <div class="column">
                 <div class="ui cards">
-                    <div class="ui {% card_color_from_machine_status machine %} card">
-                        <div class="content">
-                            <div class="header">
-                                {{ machine.name }}
-                            </div>
-                            <div class="meta">
-                                <div class="ui {% card_color_from_machine_status machine %} small header make_collapsed_header_all">
-                                    {{ machine.get_status_display }}
-                                </div>
-                            </div>
-                            {{ machine.model }} <br>
-                            <a href="{{ machine.location_url }}">
-                                <i class="icon location arrow"></i>{{ machine.location }}
-                            </a>
-                        </div>
-                    </div>
+                    {% include 'make_queue/machine_card.html' with machine=machine color_bottom=1 %}
                 </div>
             </div>
             <div class="column">

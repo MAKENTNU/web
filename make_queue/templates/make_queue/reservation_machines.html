@@ -19,28 +19,7 @@
             </div>
             <div class="ui cards">
                 {% for machine in machine_type.machines %}
-                    <div class="ui card">
-                        <div class="content">
-                            <div class="header">
-                                {{ machine.name }}
-                            </div>
-                            <div class="meta">
-                                <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
-                                    {{ machine.get_status_display }}
-                                </div>
-                            </div>
-                            {{ machine.model }} <br>
-                            <a href="{{ machine.location_url }}">
-                                <i class="icon location arrow"></i>{{ machine.location }}
-                            </a>
-                        </div>
-                        <a href="">
-                            <a class="ui bottom attached button {% card_color_from_machine_status machine %}"
-                                href="{% current_calendar_url machine %}">
-                                Se i kalender
-                            </a>
-                        </a>
-                    </div>
+                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1%}
                 {% endfor %}
             </div>
         {% endfor %}
