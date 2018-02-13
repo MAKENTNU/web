@@ -20,7 +20,7 @@ $(".make_reservation_calendar_time_table_item").click(function (event) {
     return false;
 });
 
-$("#period").calendar({
+$("#period_desktop, #period_mobile").calendar({
         ampm: false,
         initialDate: null,
         type: 'date',
