@@ -16,9 +16,8 @@ $(".make_reservation_calendar_time_table_row.can_make_reservation").click(functi
     document.location = "/reservation/make/" + date + "/" + hours + ":" + minutes + "/" + machine_type + "/" + machine_pk + "/";
 });
 
-$(".make_reservation_calendar_time_table_item").click(function (event) {
-    return false;
-});
+$(".make_reservation_calendar_time_table_item").click(() => false);
+$(".make_reservation_calendar_time_table_event").click((e) => document.location = $(e.target).data("event-url"));
 
 $("#period_desktop, #period_mobile").calendar({
         ampm: false,

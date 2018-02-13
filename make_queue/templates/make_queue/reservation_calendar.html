@@ -167,7 +167,8 @@
                                                 make_reservation_calendar_time_table_non_event
                                             {% endif %}
                                         {% endif %}"
-                                 style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%">
+                                 style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%"
+                                {% if reservation.reservation.event %}data-event-url="{% get_event_url reservation.reservation.event %}"{% endif %}>
                             </div>
                         {% endfor %}
                     </div>

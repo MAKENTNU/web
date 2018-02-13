@@ -49,3 +49,8 @@ def date_to_percentage(date):
 @register.simple_tag()
 def can_use_machine(machine, user):
     return machine.can_user_use(user)
+
+
+@register.simple_tag()
+def get_event_url(event):
+    return "/news/event/" + str(event.pk) + "/"

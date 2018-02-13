@@ -44,6 +44,10 @@
     background-color: #21ba45;
 }
 
+.make_reservation_calendar_time_table_event:hover {
+    cursor: pointer;
+}
+
 .make_reservation_calendar_time_table_non_event {
     background-color: #2185d0;
 }
