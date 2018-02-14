@@ -142,3 +142,50 @@ class PermGroupTestCase(TestCase):
         self.assertFalse(user1.has_perm(perm2_str))
         self.assertTrue(user2.has_perm(perm1_str))
         self.assertTrue(user2.has_perm(perm2_str))
+
+    def test_get_sub_group(self):
+        org = Group.objects.get(name='Org')
+        arr = Group.objects.get(name='Arrangement')
+        dev = Group.objects.get(name='Dev')
+        web = Group.objects.create(name='Web')
+        web.parents.add(dev)
+
+        self.assertIn(dev, org.get_sub_groups())
+        self.assertIn(arr, org.get_sub_groups())
+        self.assertIn(web, org.get_sub_groups())
+        self.assertIn(web, dev.get_sub_groups())
+        self.assertNotIn(arr, dev.get_sub_groups())
+        self.assertNotIn(dev, arr.get_sub_groups())
+
+    def test_get_all_parents(self):
+        org = Group.objects.get(name='Org')
+        arr = Group.objects.get(name='Arrangement')
+        dev = Group.objects.get(name='Dev')
+        web = Group.objects.create(name='Web')
+        web.parents.add(dev)
+
+        self.assertIn(dev, web.get_all_parents())
+        self.assertIn(org, web.get_all_parents())
+        self.assertNotIn(arr, web.get_all_parents())
+        self.assertNotIn(web, arr.get_all_parents())
+
+    def test_get_available_parents(self):
+        org = Group.objects.get(name='Org')
+        arr = Group.objects.get(name='Arrangement')
+        mentor = Group.objects.get(name='Mentor')
+        dev = Group.objects.get(name='Dev')
+        web = Group.objects.create(name='Web')
+        web.parents.add(dev)
+        misc = Group.objects.create(name='Misc')
+
+        self.assertEqual(org.get_available_parents().count(), 1)
+        self.assertIn(misc, org.get_available_parents().all())
+
+        self.assertEqual(dev.get_available_parents().count(), 4)
+        self.assertIn(org, dev.get_available_parents().all())
+        self.assertIn(arr, dev.get_available_parents().all())
+        self.assertIn(mentor, dev.get_available_parents().all())
+        self.assertIn(misc, dev.get_available_parents().all())
+        self.assertNotIn(web, dev.get_available_parents().all())
+
+        self.assertEqual(misc.get_available_parents().count(), 6)
