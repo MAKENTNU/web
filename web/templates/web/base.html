@@ -11,7 +11,7 @@
         <meta property="og:site_name" content="MAKE NTNU" />
         <meta property="og:image" content="http://makentnu.no{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://dev.makentnu.no/" />
+        <meta property="og:url" content="http://makentnu.no/" />
         <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
 
         <link rel="stylesheet" type="text/css" href="{% static "web/semantic-ui/semantic.min.css" %}">
@@ -19,6 +19,15 @@
         <script src="{% static "web/semantic-ui/semantic.min.js" %}"></script>
 
         <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}">
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-113882146-1');
+        </script>
+
         {% block head %}{% endblock head %}
     </head>
 
