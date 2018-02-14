@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
-    ViewEventView, AdminView, ViewEventsView, ViewArticlesView
+    ViewEventView, AdminView, ViewEventsView, ViewArticlesView, CreateTimePlaceView, EditTimePlaceView
 
 urlpatterns = [
     url('^admin/$', AdminView.as_view(), name='admin'),
@@ -13,4 +13,6 @@ urlpatterns = [
     url('^event/create/$', CreateEventView.as_view(), name='event-create'),
     url('^event/(?P<pk>[0-9]+)/edit/$', EditEventView.as_view(), name='event-edit'),
     url('^event/(?P<pk>[0-9]+)/$', ViewEventView.as_view(), name='event'),
+    url('^timeplace/create/$', CreateTimePlaceView.as_view(), name='timeplace-create'),
+    url('^timeplace/(?P<pk>[0-9]+)/edit/$', EditTimePlaceView.as_view(), name='timeplace-edit'),
 ]
