@@ -13,12 +13,12 @@
         <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
     </div>
     <script>
-        $(function() {
+        $(function () {
             $('.burger').click(function () {
                 $('.nav').toggleClass('active');
             });
             $('.logo').click(function () {
-                 window.location.href = '/';
+                window.location.href = '/';
             });
         });
     </script>
@@ -40,13 +40,13 @@
         </a>
         {% if user.is_authenticated %}
             <div class="ui dropdown item">
-              <div class="text">{{ user.first_name|first_word }}</div>
-              <i class="dropdown icon"></i>
-              <div class="menu">
-                <a class="item" href="/logout/">
-                Logout
-            </a>
-              </div>
+                <div class="text">{{ user.first_name|first_word }}</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="/logout/">
+                        Logout
+                    </a>
+                </div>
             </div>
             <script>$('.dropdown').dropdown();</script>
         {% else %}

@@ -54,6 +54,10 @@
     object-fit: contain;
     width: 150px;
 }
+.copyright{
+    text-align:center;
+    color:white;
+}
 
 @media screen and (max-width: 900px) {
     .footer {

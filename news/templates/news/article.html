@@ -3,6 +3,8 @@
 
 {% block title %}{{ article.title }}{% endblock title %}
 
+{% block og_image %}{{ article.image.url }}{% endblock og_image %}
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/article.css" %}">
 {% endblock head %}
