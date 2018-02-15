@@ -152,8 +152,7 @@ class ChangeReservationView(View):
     def get(self, request, reservation):
         render_parameters = {"machine_types": [{"literal": reservation.get_machine().literal,
                                                 "instances": [reservation.get_machine()]}],
-                             "selected_machine_type": reservation.get_machine().literal,
-                             "selected_machine_pk": reservation.get_machine().pk, "start_time": reservation.start_time,
+                             "selected_machine": reservation.get_machine(), "start_time": reservation.start_time,
                              "end_time": reservation.end_time, "event": reservation.event, "new_reservation": False,
                              "events": Event.objects.filter(
                                  Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
@@ -214,9 +213,11 @@ def format_reservations_for_start_end_json(reservations):
     }
 
 
-def get_future_reservations_machine_without_specific_reservation(request, reservation_to_skip):
-    reservations = reservation_to_skip.machine.get_reservation_set().filter(end_time__gte=timezone.now()).exclude(
-        pk=reservation_to_skip.pk)
+def get_future_reservations_machine_without_specific_reservation(request, reservation):
+    reservations = reservation.machine.get_reservation_set().filter(end_time__gte=timezone.now()).exclude(
+        pk=reservation.pk)
+
+    print(reservation.machine.pk)
 
     return JsonResponse(format_reservations_for_start_end_json(reservations))
 

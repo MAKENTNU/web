@@ -16,7 +16,7 @@ register_converter(converters.DateTime, "time")
 json_urlpatterns = [
     path('<machine:machine>', get_future_reservations_machine, name="reservation_json"),
     path('<machine:machine>/<%Y/%m/%d:date>', get_reservations_day_and_machine, name="reservation_json"),
-    path('<reservation:reservation>', get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
+    path('<reservation:reservation>/', get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
 ]
 
 quota_url_patterns = [
@@ -33,7 +33,7 @@ urlpatterns = [
     path('make/<time:start_time>/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
     path('me/', login_required(MyReservationsView.as_view()), name="my_reservations"),
     path('delete/', login_required(DeleteReservationView.as_view()), name="delete_reservation"),
-    path('change/<reservation:reservation>', login_required(ChangeReservationView.as_view()), name="change_reservation"),
+    path('change/<reservation:reservation>/', login_required(ChangeReservationView.as_view()), name="change_reservation"),
     path('json/', include(json_urlpatterns)),
     path('quota/', include(quota_url_patterns)),
     re_path('^', MachineView.as_view(), name="reservation_machines_overview")
