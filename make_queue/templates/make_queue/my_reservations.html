@@ -26,7 +26,8 @@
                 </div>
             </div>
         </div>
-        <table class="ui table">
+        <!-- Desktop table -->
+        <table class="ui table make_my_reservation_desktop">
             <thead>
             <tr>
                 <th>Reservasjon</th>
@@ -38,7 +39,7 @@
             </thead>
             <tbody>
             {% for reservation in reservations %}
-                <tr data-is-future-reservation="{{ reservation.can_delete }}">
+                <tr class="make_my_reservation_desktop" data-is-future-reservation="{{ reservation.can_delete }}">
                     <td class="{% if reservation.event %}make_my_reservation_event{% endif %}">
                         <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
@@ -51,7 +52,8 @@
                     <td>
                         {% if reservation.start_time.date == reservation.end_time.date %}
                             <div>{{ reservation.start_time|date:"d/m/y" }}</div>
-                            <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
+                            <div>{{ reservation.start_time|date:"H:i" }}
+                                - {{ reservation.end_time|date:"H:i" }}</div>
                         {% else %}
                             <div>{{ reservation.start_time|date:"d/m/Y - H:i" }}</div>
                             <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
@@ -84,7 +86,41 @@
             {% endfor %}
             </tbody>
         </table>
-        <br><br>
+        <div class="ui cards make_my_reservation_cards_padding make_my_reservation_tablet">
+            {% for reservation in reservations %}
+                <div class="card">
+                    <div class="content">
+                        <div class="header">{{ reservation.machine.name }}</div>
+                        <div class="meta">
+                            {{ reservation.machine.model }}<br/>
+                            <a class="make_my_reservation_blue_link" href="{{ reservation.machine.location_url }}">
+                                <i class="location arrow icon"></i>{{ reservation.machine.location }}
+                            </a>
+                        </div>
+                        {% if reservation.start_time.date == reservation.end_time.date %}
+                            <div>{{ reservation.start_time|date:"d/m/y" }}</div>
+                            <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
+                        {% else %}
+                            <div>{{ reservation.start_time|date:"d/m/Y - H:i" }}</div>
+                            <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
+                        {% endif %}
+                    </div>
+                    {% if reservation.can_delete %}
+                        <div class="ui three bottom attached buttons">
+                            <a class="ui primary button make_my_reservation_button_pad" href="{% calendar_url_reservation reservation %}">Kalender</a>
+                            <a class="ui primary button make_my_reservation_button_pad">Endre</a>
+                            <a class="ui red button make_my_reservation_button_pad">
+                                Kanseller
+                            </a>
+                        </div>
+                    {% else %}
+                        <a class="ui blue bottom attached button" href="{% calendar_url_reservation reservation %}">
+                            Kalender
+                        </a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 
     <script src="{% static 'make_queue/js/my_reservations.js' %}"></script>

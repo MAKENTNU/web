@@ -48,3 +48,28 @@
 .make_my_reservation_event {
     border-left: 2px solid #008000;
 }
+
+@media screen and (max-width: 800px) {
+    .make_my_reservation_desktop {
+        display: none !important;
+    }
+}
+
+.make_my_reservation_cards_padding {
+    padding: 2em 0 2em 0;
+}
+
+.make_my_reservation_button_pad {
+    margin-top: -2em;
+    padding-bottom: 1.2em !important;
+}
+
+.make_my_reservation_blue_link {
+    color: #4183c4 !important;
+}
+
+@media screen and (min-width: 800px) {
+    .make_my_reservation_tablet {
+        display: none !important;
+    }
+}
