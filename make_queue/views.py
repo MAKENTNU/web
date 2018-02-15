@@ -152,6 +152,7 @@ class ChangeReservationView(View):
     def get(self, request, reservation):
         render_parameters = {"machine_types": [{"literal": reservation.get_machine().literal,
                                                 "instances": [reservation.get_machine()]}],
+                             "quota": reservation.get_quota(),
                              "selected_machine": reservation.get_machine(), "start_time": reservation.start_time,
                              "end_time": reservation.end_time, "event": reservation.event, "new_reservation": False,
                              "events": Event.objects.filter(

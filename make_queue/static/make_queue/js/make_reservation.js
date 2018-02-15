@@ -51,7 +51,10 @@ function isReservedHour(date) {
 
 function getMaxDateReservation(date) {
     let maxDate = new Date(date.valueOf());
-    maxDate.setDate(maxDate.getDate() + 5);
+    if ($("#event_checkbox").is(':checked'))
+        maxDate.setDate(maxDate.getDate() + 3);
+    else
+        maxDate.setHours(maxDate.getHours() + parseFloat($("#reserve_form").data("max-time-reservation")));
     for (let index = 0; index < reservations.length; index++) {
         if (date <= reservations[index].start_time && reservations[index].start_time < maxDate)
             maxDate = new Date(reservations[index].start_time.valueOf());
