@@ -6,3 +6,7 @@ $("#hide_old_reservations").checkbox({
         }).toggleClass("make_hidden", $(this).is(":checked"))
     }
 });
+
+$(".reservation_calendar_delete").click(function () {
+    $(this).children("form").submit();
+});
