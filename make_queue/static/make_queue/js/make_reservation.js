@@ -5,7 +5,6 @@ function getFutureReservations(machine_type, machine_id) {
     let currentUrl = document.location.href;
     if (currentUrl.match(".+/reservation/change/[a-zA-Z0-9-]+/[0-9]+/"))
         jsonUrl += currentUrl.slice(currentUrl.slice(0, currentUrl.length - 1).lastIndexOf("/"), currentUrl.length - 1);
-    console.log(jsonUrl);
     $.getJSON(jsonUrl, function (data) {
         reservations.length = 0;
         $.each(data.reservations, function (index, value) {
@@ -14,7 +13,24 @@ function getFutureReservations(machine_type, machine_id) {
                 "end_time": new Date(Date.parse(value.end_date)),
             });
         });
+        let start_date = getFirstReservableTimeSlot(new Date());
+        $("#start_time").calendar("set date", start_date);
+        $("#end_time").calendar("set date", getMaxDateReservation(start_date));
     });
+}
+
+function getFirstReservableTimeSlot(date) {
+    let found = false;
+    while (!found) {
+        found = true;
+        for (let index = 0; index < reservations.length; index++) {
+            if (date >= reservations[index].start_time - new Date(300000) && date < reservations[index].end_time) {
+                found = false;
+                date = reservations[index].end_time;
+            }
+        }
+    }
+    return date;
 }
 
 function isNonReservedDate(date) {
@@ -92,8 +108,6 @@ $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name')
     $("#start_time, #end_time").calendar('clear');
 });
 
-getFutureReservations($("#machine_type_dropdown").dropdown("get value"), $("#machine_name_dropdown").dropdown("get value"));
-
 zeroPadDateElement = (val) => val < 10 ? "0" + val : val;
 
 function formatDate(date) {
@@ -105,3 +119,5 @@ $('form').submit(function () {
     $("#start_time input").first().val(formatDate($("#start_time").calendar("get date")));
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
+
+getFutureReservations($("#machine_type_dropdown").dropdown("get value"), $("#machine_name_dropdown").dropdown("get value"));
