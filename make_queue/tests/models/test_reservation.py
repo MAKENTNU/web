@@ -5,11 +5,13 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 
+from news.models import Event
+
 
 class GeneralReservationTestCase(TestCase):
 
     def check_reservation_invalid(self, reservation, error_message):
-        self.assertFalse(reservation.validate())
+        self.assertFalse(reservation.validate(), error_message)
         try:
             reservation.save()
             self.fail(error_message)
@@ -17,7 +19,7 @@ class GeneralReservationTestCase(TestCase):
             pass
 
     def check_reservation_valid(self, reservation, error_message):
-        self.assertTrue(reservation.validate())
+        self.assertTrue(reservation.validate(), error_message)
         try:
             reservation.save()
         except ValidationError:
@@ -26,6 +28,10 @@ class GeneralReservationTestCase(TestCase):
 
 class GeneralReservationTestCases(GeneralReservationTestCase):
     def setUp(self):
+        Event.objects.create(title="TEST EVENT",
+                             pub_date=timezone.now(),
+                             start_date=timezone.now(),
+                             start_time=(timezone.now() + timedelta(seconds=1)).time())
         Printer3D.objects.create(name="C1", location="Printer room", status="F")
         user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         user.save()
@@ -36,7 +42,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user = User.objects.get(username="User")
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=False)
+                                    end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.check_reservation_valid(reservation, "Reservations should be saveable")
 
@@ -46,7 +52,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user = User.objects.get(username="User")
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() - timedelta(hours=1), event=False)
+                                    end_time=timezone.now() - timedelta(hours=1), event=None)
 
         self.check_reservation_invalid(reservation, "Reservations should not be able to end before they start")
 
@@ -56,7 +62,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 0.1),
-                                    event=False)
+                                    event=None)
 
         self.check_reservation_invalid(reservation,
                                        "Reservations should not be allowed to exceed the maximum allowed time for the user")
@@ -72,7 +78,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
             reservation = Reservation3D(user=user, machine=printer,
                                         start_time=timezone.now() + timedelta(days=reservation_number),
                                         end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
-                                        event=False)
+                                        event=None)
 
             self.check_reservation_valid(reservation, "User should be able to make as many reservations as allowed")
 
@@ -84,7 +90,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
             reservation = Reservation3D(user=user, machine=printer,
                                         start_time=timezone.now() + timedelta(days=reservation_number),
                                         end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
-                                        event=False)
+                                        event=None)
 
             self.check_reservation_valid(reservation, "User should be able to make as many reservations as allowed")
 
@@ -102,31 +108,31 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         start_time_base = timezone.now()
 
         reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base,
-                                    end_time=start_time_base + timedelta(hours=1), event=False)
+                                    end_time=start_time_base + timedelta(hours=1), event=None)
 
         self.check_reservation_valid(reservation, "Saving should be valid")
 
         # Start before, end inside
         reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base - timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(minutes=50), event=False)
+                                    end_time=start_time_base + timedelta(minutes=50), event=None)
 
         self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
 
         # Start inside, end after
         reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base + timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(hours=1, minutes=10), event=False)
+                                    end_time=start_time_base + timedelta(hours=1, minutes=10), event=None)
 
         self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
 
         # Start inside, end inside
         reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base + timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(minutes=50), event=False)
+                                    end_time=start_time_base + timedelta(minutes=50), event=None)
 
         self.check_reservation_invalid(reservation, "Reservation should not be able to start and end inside another")
 
         # Start before, end after
         reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base - timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(hours=1, minutes=10), event=False)
+                                    end_time=start_time_base + timedelta(hours=1, minutes=10), event=None)
 
         self.check_reservation_invalid(reservation, "Reservation should not be able to encapsulate another")
 
@@ -135,7 +141,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user = User.objects.get(username="User")
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=True)
+                                    end_time=timezone.now() + timedelta(hours=2), event=Event.objects.get(title="TEST EVENT"))
 
         self.check_reservation_invalid(reservation,
                                        "Should not be able to make event reservation without correct permission")
@@ -150,13 +156,13 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user.save()
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=True)
+                                    end_time=timezone.now() + timedelta(hours=2), event=Event.objects.get(title="TEST EVENT"))
 
         self.check_reservation_valid(reservation,
                                      "User with the correct permission should be allowed to create an event reservation")
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now() + timedelta(days=1),
-                                    end_time=timezone.now() + timedelta(days=1, hours=2), event=False)
+                                    end_time=timezone.now() + timedelta(days=1, hours=2), event=None)
 
         self.check_reservation_valid(reservation,
                                      "Event reservations should not count towards the total number of reservations")
@@ -171,7 +177,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 1),
-                                    event=True)
+                                    event=Event.objects.get(title="TEST EVENT"))
 
         self.check_reservation_valid(reservation,
                                      "User should be able to make event reservations longer than their maximum reservation time")
@@ -184,7 +190,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user.quota3d.save()
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=False)
+                                    end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.check_reservation_valid(reservation, "Reservation should be valid")
 
@@ -200,12 +206,12 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user = User.objects.get(username="User")
 
         reservation1 = Reservation3D(user=user, machine=printer1, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=2), event=False)
+                                     end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.check_reservation_valid(reservation1, "Saving a single reservation should be valid")
 
         reservation2 = Reservation3D(user=user, machine=printer2, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=2), event=False)
+                                     end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.check_reservation_valid(reservation2,
                                      "Reservations on different printers should be able to overlap in time")
@@ -227,7 +233,7 @@ class ReservationSewingTestCase(GeneralReservationTestCase):
         user_quota.save()
 
         reservation = ReservationSewing(user=user, machine=sewing_machine, start_time=timezone.now(),
-                                        end_time=timezone.now() + timedelta(hours=2), event=False)
+                                        end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.check_reservation_valid(reservation, "Users should be able to reserve sewing machines")
 
@@ -253,7 +259,7 @@ class Reservation3DTestCase(GeneralReservationTestCase):
 
         reservation = Reservation3D(user=user, machine=printer,
                                     start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2),
-                                    event=False)
+                                    event=None)
 
         self.check_reservation_invalid(reservation, "Users that cannot print, should not be able to reserve printer")
 
