@@ -28,16 +28,15 @@ class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
 
     def get_context_data(self, **kwargs):
-
         """ Creates dict with skill titles as keys and
          the highest corresponding skill level as its pair value (quick fix) to show on website """
         skill_dict = {}
-        level_list = ["nybegynner", "viderekommen", "ekspert"]
+        # level_list = ["nybegynner", "viderekommen", "ekspert"]
         for profile in Profile.objects.filter(on_make=True):
             for level in profile.userskill_set.all():
-                title, level_int = level.skill.title, level.skill_level - 1
-                if title not in skill_dict or level_int > level_list.index(skill_dict[title]):
-                    skill_dict[title] = level_list[level_int]
+                title, level_int = level.skill.title, level.skill_level
+                if title not in skill_dict or level_int > skill_dict[title]:
+                    skill_dict[title] = level_int
 
         context = super().get_context_data(**kwargs)
         context.update({
@@ -52,7 +51,7 @@ class ProfilePageView(TemplateView):
     template_name = 'checkin/profile.html'
 
     def get_context_data(self, **kwargs):
-        profile = Profile.objects.first()#get(user=self.request.user)
+        profile = Profile.objects.first()  # get(user=self.request.user)
         img = profile.image
         userskill_set = profile.userskill_set.all()
 
