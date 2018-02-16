@@ -73,8 +73,8 @@ class ReservationCalendarViewTestCase(TestCase):
             timezone.get_default_timezone_name()).localize(datetime(2017, 12, 25))), {
                              'reservation': reservation,
                              'start_percentage': 50,
-                             'start_time': "12:00",
-                             'end_time': "18:00",
+                             'start_time': "11:00",
+                             'end_time': "17:00",
                              'length': 25
                          })
 
@@ -85,7 +85,7 @@ class ReservationCalendarViewTestCase(TestCase):
                              'reservation': reservation,
                              'start_percentage': 0,
                              'start_time': "00:00",
-                             'end_time': "06:00",
+                             'end_time': "05:00",
                              "length": 25
                          })
 
@@ -95,7 +95,7 @@ class ReservationCalendarViewTestCase(TestCase):
             timezone.get_default_timezone_name()).localize(datetime(2017, 12, 25))), {
                              'reservation': reservation,
                              'start_percentage': 50,
-                             'start_time': '12:00',
+                             'start_time': '11:00',
                              'end_time': "23:59",
                              'length': 50 - 100 / 1440
                          })
