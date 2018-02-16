@@ -1,3 +1,16 @@
 from django.contrib import admin
 
-# Register your models here.
+from checkin.models import Skill, Profile, UserSkill
+
+
+class ProfileAdmin(admin.ModelAdmin):
+    model = Profile
+    list_display = ('__str__', 'card_id')
+
+class UserSkillAdmin(admin.ModelAdmin):
+    model = UserSkill
+    list_display = ('profile', 'skill', 'skill_level')
+
+admin.site.register(Profile, ProfileAdmin)
+admin.site.register(Skill)
+admin.site.register(UserSkill, UserSkillAdmin)
