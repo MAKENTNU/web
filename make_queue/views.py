@@ -215,6 +215,10 @@ def format_reservations_for_start_end_json(reservations):
     }
 
 
+def get_user_quota_max_length(request, machine_type):
+    return HttpResponse(Quota.get_quota_by_machine(machine_type.literal, request.user).max_time_reservation)
+
+
 def get_future_reservations_machine_without_specific_reservation(request, reservation):
     reservations = reservation.machine.get_reservation_set().filter(end_time__gte=timezone.now()).exclude(
         pk=reservation.pk)
