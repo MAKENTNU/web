@@ -11,7 +11,6 @@ from .models import Machine, Reservation, Quota
 from .forms import ReservationForm
 from .templatetags.reservation_extra import calendar_url_reservation
 from news.models import Event
-import pytz
 
 
 class ReservationCalendarView(View):
@@ -64,6 +63,9 @@ class ReservationCalendarView(View):
                              'prev': self.get_next_valid_week(year, week, -1),
                              'machine_types': Machine.__subclasses__(),
                              'machine': machine}
+
+        if request.user.is_authenticated:
+            render_parameters["can_make_more_reservations"] = Quota.get_quota_by_machine(machine.literal, request.user).can_make_new_reservation
 
         week_days = render_parameters['week_days'] = []
         for day_number in range(7):

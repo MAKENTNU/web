@@ -27,10 +27,14 @@
             <div class="column">
                 <div class="ui cards">
                     <div class="ui card">
-                        <a class="ui primary button {% if not can_use %}disabled{% endif %}"
-                           href="{% url 'make_reservation' machine=machine %}">
-                            <i class="ui add icon"></i>Ny reservasjon
-                        </a>
+                        <div data-content="{% if not can_use %}{% get_machine_cannot_use_text machine %}
+                            {% elif not can_make_more_reservations %}Du har nådd maksimalt antall fremtidige reservasjoner{% endif %}"
+                             id="create_new_reservation" data-position="top center">
+                            <a class="ui primary button {% if not can_use or not can_make_more_reservations %}disabled{% endif %} make_reservation_calendar_button_full_width"
+                               href="{% url 'make_reservation' machine=machine %}">
+                                <i class="ui add icon"></i>Ny reservasjon
+                            </a>
+                        </div>
                         <a class="ui make_bg_yellow button" href="{% url 'my_reservations' %}">
                             Mine reservasjoner
                         </a>
@@ -75,7 +79,8 @@
                    href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine %}">
                     <i class="ui icon left arrow"></i>Forrige
                 </a>
-                <div class="ui calendar make_reservation_calendar_center make_reservation_calendar_high_z_index" id="period_mobile">
+                <div class="ui calendar make_reservation_calendar_center make_reservation_calendar_high_z_index"
+                     id="period_mobile">
                     <div class="ui input left icon">
                         <i class="ui calendar icon"></i>
                         <input name="start_date" type="text" placeholder="Periode"
@@ -168,7 +173,7 @@
                                             {% endif %}
                                         {% endif %}"
                                  style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%"
-                                {% if reservation.reservation.event %}data-event-url="{% get_event_url reservation.reservation.event %}"{% endif %}>
+                                 {% if reservation.reservation.event %}data-event-url="{% get_event_url reservation.reservation.event %}"{% endif %}>
                             </div>
                         {% endfor %}
                     </div>

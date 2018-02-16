@@ -109,6 +109,10 @@
     z-index: 100;
 }
 
+.make_reservation_calendar_button_full_width {
+    width: 100%;
+}
+
 @media screen and (max-width: 500px) {
     .make_reservation_calendar_time_table_hour:nth-child(3n + 2) {
         display: none !important;
