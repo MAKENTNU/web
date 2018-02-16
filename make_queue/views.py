@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.http.response import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
+from .helper import date_to_local, local_to_date
 from .models import Machine, Reservation, Quota
 from .forms import ReservationForm
 from .templatetags.reservation_extra import calendar_url_reservation
@@ -37,7 +38,7 @@ class ReservationCalendarView(View):
 
     @staticmethod
     def date_to_percentage(date):
-        date = timezone.localtime(date, timezone.get_default_timezone())
+        date = date_to_local(date)
         return (date.hour / 24 + date.minute / 1440) * 100
 
     @staticmethod
@@ -56,8 +57,7 @@ class ReservationCalendarView(View):
         if not self.is_valid_week(year, week):
             year, week = self.get_next_valid_week(year, week, 1)
 
-        first_date_of_week = pytz.timezone(timezone.get_default_timezone_name()).localize(
-            self.year_and_week_to_monday(year, week))
+        first_date_of_week = local_to_date(self.year_and_week_to_monday(year, week))
 
         render_parameters = {'year': year, 'week': week,
                              'next': self.get_next_valid_week(year, week, 1),
