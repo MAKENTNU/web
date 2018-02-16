@@ -1,19 +1,26 @@
 {% extends "web/base.html" %}
 
 {% block body %}
-    <div class="ui container">
+    <div class="ui text container">
         <h2>Ferdigheter på makerverkstedet akkurat nå:</h2>
         <div class="ui feed">
             {% for skill, level in skill_dict.items %}
                 <div class="event">
                     <div class="label">
-
+                        <img src=""/>
                     </div>
                     <div class="content">
-                        <li>{{ skill }} (nivå: {{ level }})</li>
+                        {{ skill }} (nivå:
+                        <div class="ui star rating" data-rating="{{ level }}" data-max-rating="3"></div>)
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('.ui.rating').rating();
+    </script>
 {% endblock %}
