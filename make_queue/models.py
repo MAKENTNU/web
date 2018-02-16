@@ -165,7 +165,7 @@ class Quota(models.Model):
         raise NotImplementedError
 
     def can_make_new_reservation(self):
-        return len(self.get_active_user_reservations().filter(event=False)) < self.max_number_of_reservations
+        return len(self.get_active_user_reservations().filter(event=None)) < self.max_number_of_reservations
 
     @staticmethod
     def get_quota_by_machine(machine_type, user):
