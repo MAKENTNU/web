@@ -1,47 +1,70 @@
 {% extends 'news/article.html' %}
 {% load staticfiles %}
 
-{% block event %}
-    <div class="ui left rail">
+{% block is_event %}event{% endblock is_event %}
+
+{% block rail %}
+    <div class="ui right attached rail">
         <div class="ui sticky rail-content">
-            <div class="ui card">
-                {% if article.start_date == article.end_date %}
-                    <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
-                        - {{ article.end_time|time:"H:i" }}</p>
-                {% else %}
-                    <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
-                        - {{ article.end_date|date:"d. M" }}, {{ article.end_time|time:"H:i" }}</p>
-                {% endif %}
-                {% if article.place %}
-                    {% if article.place_url %}
-                        <p><a href="{{ article.place_url }}">{{ article.place }}</a></p>
-                    {% else %}
-                        <p>{{ article.place }}</p>
+            {% for event in article.timeplace_set.all %}
+                <div class="ui card">
+                    <div class="content">
+                        {% if event.end_date and event.end_time %}
+                            {% if event.start_date == event.end_date %}
+                                <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                                    - {{ event.end_time|time:"H:i" }}</p>
+                            {% else %}
+                                <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                                    - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
+                            {% endif %}
+                        {% else %}
+                            <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                        {% endif %}
+                        {% if event.place %}
+                            {% if event.place_url %}
+                                <p><a href="{{ event.place_url }}">{{ event.place }}</a></p>
+                            {% else %}
+                                <p>{{ event.place }}</p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                    {% if event.hoopla %}
+                        <a class="ui yellow button bottom attached" href="{{ event.hoopla }}"
+                           target="_blank">Påmelding</a>
                     {% endif %}
-                {% endif %}
-                {% if article.hoopla %}
-                    <a class="ui yellow button" href="{{ article.hoopla }}">Påmelding</a>
-                {% endif %}
-            </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
-    <div class="ui normal card">
-        {% if article.start_date == article.end_date %}
-            <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
-                - {{ article.end_time|time:"H:i" }}</p>
-        {% else %}
-            <p>{{ article.start_date|date:"d. M" }}, {{ article.start_time|time:"H:i" }}
-                - {{ article.end_date|date:"d. M" }}, {{ article.end_time|time:"H:i" }}</p>
-        {% endif %}
-        {% if article.place %}
-            {% if article.place_url %}
-                <p><a href="{{ article.place_url }}" target="_blank">{{ article.place }}</a></p>
-            {% else %}
-                <p>{{ article.place }}</p>
-            {% endif %}
-        {% endif %}
-        {% if article.hoopla %}
-            <a class="ui yellow button" href="{{ article.hoopla }}" target="_blank">Påmelding</a>
-        {% endif %}
+{% endblock rail %}
+{% block event_cards %}
+    <div class="ui container">
+        {% for event in article.timeplace_set.all %}
+            <div class="ui normal card">
+                <div class="content">
+                    {% if event.end_date and event.end_time %}
+                        {% if event.start_date == event.end_date %}
+                            <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                                - {{ event.end_time|time:"H:i" }}</p>
+                        {% else %}
+                            <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                                - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
+                        {% endif %}
+                    {% else %}
+                        <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                    {% endif %}
+                    {% if event.place %}
+                        {% if event.place_url %}
+                            <p><a href="{{ event.place_url }}">{{ event.place }}</a></p>
+                        {% else %}
+                            <p>{{ event.place }}</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                {% if event.hoopla %}
+                    <a class="ui yellow button bottom attached" href="{{ event.hoopla }}" target="_blank">Påmelding</a>
+                {% endif %}
+            </div>
+        {% endfor %}
     </div>
-{% endblock event %}
+{% endblock event_cards %}

@@ -7,7 +7,7 @@ p {
     margin: 50px 0 !important;
 }
 
-.container{
+.container {
     margin: 0 !important;
 }
 
@@ -36,33 +36,20 @@ p {
 }
 
 .rail-content {
-    padding-top: 10px !important;
+    padding-top: 17px !important;
 }
 
-.card p {
-    margin: 0 16px;
+.event.article {
+    transform: translateX(-150px);
 }
 
-.card p:first-of-type {
-    margin-top: 8px;
-}
-
-.card p:last-of-type {
-    margin-bottom: 8px;
-}
-
-@media screen and (max-width: 1415px) {
-    .left.rail {
+@media screen and (max-width: 1000px) {
+    .right.rail {
         display: none;
     }
 
     .normal.card {
         display: flex;
-    }
-}
-
-@media screen and (max-width: 767px) {
-    .normal.card {
         float: none;
         margin-left: 0;
     }

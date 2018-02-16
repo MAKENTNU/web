@@ -11,8 +11,8 @@ class ViewEventsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'past': Event.objects.past(),
-            'future': Event.objects.future(),
+            'past': TimePlace.objects.past(),
+            'future': TimePlace.objects.future(),
         })
         return context
 

@@ -136,5 +136,5 @@ class TimePlace(models.Model):
 
     class Meta:
         ordering = (
-            '-pub_date',
+            'start_date',
         )

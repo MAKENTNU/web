@@ -11,14 +11,17 @@
 
 {% block body %}
     <div class="article">
-        <div class="ui text container basic segment">
-            <img src="{{ article.image.url }}" {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
-        </div>
-        <div class="ui text container basic segment">
-            {% block event %}
-            {% endblock event %}
+        <div id="sticky" class="ui text container basic segment">
+            <img src="{{ article.image.url }}"
+                 {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
+            {% block rail %}
+            {% endblock rail %}
+
+            {% block event_cards %}
+            {% endblock event_cards %}
+
             <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span></h1>
-            <div id="content">
+            <div>
                 {% if article.content == "<p>x</p>" %}
                     <p>{{ article.clickbait }}</p>
                 {% else %}
@@ -31,7 +34,7 @@
     </div>
     <script>
         $('.ui.sticky').sticky({
-            context: '#content'
+            context: '#sticky'
         });
     </script>
 {% endblock body %}
