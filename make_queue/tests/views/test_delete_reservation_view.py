@@ -22,7 +22,7 @@ class DeleteReservationViewTestCase(TestCase):
                                                         machine=Printer3D.objects.get(name="U1"),
                                                         start_time=timezone.now() + timezone.timedelta(hours=2),
                                                         end_time=timezone.now() + timezone.timedelta(hours=4),
-                                                        event=False)
+                                                        event=None)
 
     def test_delete_single_reservation(self):
         self.client.login(username="user1", password="weak_pass")
@@ -43,7 +43,7 @@ class DeleteReservationViewTestCase(TestCase):
                                                     machine=Printer3D.objects.get(name="U1"),
                                                     start_time=timezone.now() + timezone.timedelta(hours=6),
                                                     end_time=timezone.now() + timezone.timedelta(hours=8),
-                                                    event=False)
+                                                    event=None)
 
         self.client.login(username="user1", password="weak_pass")
         response = self.client.post(reverse('delete_reservation'),
@@ -57,7 +57,7 @@ class DeleteReservationViewTestCase(TestCase):
                                                     machine=Printer3D.objects.get(name="U1"),
                                                     start_time=timezone.now() - timezone.timedelta(hours=6),
                                                     end_time=timezone.now() - timezone.timedelta(hours=4),
-                                                    event=False)
+                                                    event=None)
 
         self.client.login(username="user1", password="weak_pass")
         response = self.client.post(reverse('delete_reservation'),

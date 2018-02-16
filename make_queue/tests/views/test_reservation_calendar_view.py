@@ -64,7 +64,7 @@ class ReservationCalendarViewTestCase(TestCase):
                                      start_time=pytz.timezone(timezone.get_default_timezone_name()).localize(
                                          start_time),
                                      end_time=pytz.timezone(timezone.get_default_timezone_name()).localize(end_time),
-                                     event=False)
+                                     event=None)
         return Reservation3D.objects.first()
 
     def test_format_reservation_start_end_same_day(self):

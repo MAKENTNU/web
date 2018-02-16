@@ -17,7 +17,7 @@ class ReservationExtraTestCases(TestCase):
         Quota3D.objects.create(user=user, max_time_reservation=10, max_number_of_reservations=2, can_print=True)
         printer = Printer3D.objects.create(name="U1", location="S1", model="Ultimaker", status="F")
 
-        reservation = Reservation3D.objects.create(user=user, machine=printer, event=False,
+        reservation = Reservation3D.objects.create(user=user, machine=printer, event=None,
                                                    start_time=pytz.timezone(
                                                        timezone.get_default_timezone_name()).localize(
                                                        timezone.datetime(2017, 12, 26, 17, 0)),
@@ -27,7 +27,7 @@ class ReservationExtraTestCases(TestCase):
 
         self.assertEqual(
             reverse('reservation_calendar',
-                    kwargs={'year': 2017, 'week': 52, 'machine_type': Printer3D.literal, 'pk': printer.pk}),
+                    kwargs={'year': 2017, 'week': 52, 'machine': printer}),
             calendar_url_reservation(reservation))
 
     @mock.patch('django.utils.timezone.now')
@@ -37,6 +37,5 @@ class ReservationExtraTestCases(TestCase):
         printer = Printer3D.objects.create(name="U1", location="S1", model="Ultimaker", status="F")
 
         self.assertEqual(reverse('reservation_calendar',
-                                 kwargs={'year': 2017, 'week': 52, 'machine_type': Printer3D.literal,
-                                         'pk': printer.pk}),
-                         current_calendar_url(Printer3D.literal, printer.pk))
+                                 kwargs={'year': 2017, 'week': 52, 'machine': printer}),
+                         current_calendar_url(printer))

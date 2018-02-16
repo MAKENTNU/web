@@ -14,7 +14,7 @@ class MyReservationsViewTestCase(TestCase):
         printer = Printer3D.objects.create(name="U1", model="Ultimaker 2", location="S1", status="F")
         Quota3D.objects.create(user=user, max_number_of_reservations=2, max_time_reservation=10, can_print=True)
 
-        Reservation3D.objects.create(user=user, machine=printer, event=False,
+        Reservation3D.objects.create(user=user, machine=printer, event=None,
                                      start_time=timezone.now(), end_time=timezone.now() + timezone.timedelta(hours=2))
 
     def test_get_user_reservations_single_reservation(self):
@@ -25,7 +25,7 @@ class MyReservationsViewTestCase(TestCase):
         Reservation3D.objects.create(user=User.objects.get(username="user"),
                                      machine=Printer3D.objects.get(name="U1"),
                                      start_time=timezone.now() - timezone.timedelta(hours=4),
-                                     end_time=timezone.now() - timezone.timedelta(hours=2), event=False)
+                                     end_time=timezone.now() - timezone.timedelta(hours=2), event=None)
 
         self.assertEqual(
             list(Reservation3D.objects.filter(user=User.objects.get(username="user")).order_by("-start_time")),
@@ -39,7 +39,7 @@ class MyReservationsViewTestCase(TestCase):
 
         ReservationSewing.objects.create(user=User.objects.get(username="user"), machine=sewing_machine,
                                          start_time=timezone.now(),
-                                         end_time=timezone.now() + timezone.timedelta(hours=2), event=False)
+                                         end_time=timezone.now() + timezone.timedelta(hours=2), event=None)
 
         self.assertEqual([ReservationSewing.objects.get(user=User.objects.get(username="user")),
                           Reservation3D.objects.get(user=User.objects.get(username="user"))],
