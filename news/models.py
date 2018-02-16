@@ -131,6 +131,9 @@ class TimePlace(models.Model):
         verbose_name='Hoopla url',
     )
 
+    def __str__(self):
+        return '%s - %s' % (self.event.title, self.start_date.strftime('%Y.%m.%d'))
+
     class Meta:
         ordering = (
             '-pub_date',
