@@ -6,9 +6,9 @@ from django.utils import timezone
 from django.http.response import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
-from make_queue.models import Machine, Reservation
-from make_queue.forms import ReservationForm
-from make_queue.templatetags.reservation_extra import calendar_url_reservation
+from .models import Machine, Reservation, Quota
+from .forms import ReservationForm
+from .templatetags.reservation_extra import calendar_url_reservation
 from news.models import Event
 import pytz
 
@@ -86,6 +86,7 @@ class MakeReservationView(FormView):
     def get(self, request, machine, start_time="", **kwargs):
         render_parameters = {"new_reservation": True, "start_time": start_time,
                              "selected_machine": machine,
+                             "quota": Quota.get_quota_by_machine(machine.literal, request.user),
                              "events": Event.objects.filter(
                                  Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
                                  Q(end_date__gt=timezone.now().date())),

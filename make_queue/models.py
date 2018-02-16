@@ -167,6 +167,10 @@ class Quota(models.Model):
     def can_make_new_reservation(self):
         return len(self.get_active_user_reservations().filter(event=False)) < self.max_number_of_reservations
 
+    @staticmethod
+    def get_quota_by_machine(machine_type, user):
+        return Reservation.get_reservation_type(machine_type)(user=user).get_quota()
+
     class Meta:
         permissions = (
             ("can_create_event_reservation", "Can create event reservation"),
