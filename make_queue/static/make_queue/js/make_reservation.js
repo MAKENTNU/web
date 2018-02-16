@@ -19,6 +19,10 @@ function getFutureReservations(machine_type, machine_id) {
     });
 }
 
+function updateMaxReservationTime(machine_type) {
+    $.get("/reservation/quota/json/" + machine_type + "/", {}, (data) => $("#reserve_form").data("max-time-reservation", data));
+}
+
 function getFirstReservableTimeSlot(date) {
     let found = false;
     while (!found) {
@@ -96,6 +100,7 @@ $('#event_checkbox').checkbox({
 });
 
 $('#machine_type_dropdown').dropdown('setting', 'onChange', function (value) {
+    updateMaxReservationTime($(this).dropdown("get value"));
     if (!$('#machine_type_dropdown').is(".disabled")) {
         $('#machine_name_dropdown').toggleClass("disabled", false).dropdown("restore defaults");
         $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", true);
