@@ -14,11 +14,15 @@
                 </div>
                 <div class="content">
                     <div class="header">
-                        <a href="/news/event/{{ article.id }}/">{{ article.title }}</a>
+                        <a href="/news/article/{{ article.id }}/">{{ article.title }}</a>
                     </div>
                     <div class="meta">
-                        <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/edit/">Rediger</a>
-                        <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/delete/">Slett</a>
+                        {% if perms.news.change_article %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/edit/">Rediger</a>
+                        {% endif %}
+                        {% if perms.news.delete_article %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/delete/">Slett</a>
+                        {% endif %}
                     </div>
                     <div class="description">
                         <p>{{ article.clickbait }}</p>
@@ -41,8 +45,12 @@
                         <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
                     </div>
                     <div class="meta">
-                        <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/edit/">Rediger</a>
-                        <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/delete/">Slett</a>
+                        {% if perms.news.change_event %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/edit/">Rediger</a>
+                        {% endif %}
+                        {% if perms.news.delete_event %}
+                            <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/delete/">Slett</a>
+                        {% endif %}
                         <br><br>
                         <span>{{ event.place }}</span>
                     </div>

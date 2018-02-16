@@ -13,3 +13,4 @@ coverage:
     - **/tests.py
     - **/wsgi.py
     - **/test**.py
+    - **/migrations
