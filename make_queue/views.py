@@ -1,7 +1,7 @@
 from django.views.generic.base import View
 from django.views.generic import FormView
 from django.db.models import Q
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.http.response import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
@@ -65,7 +65,8 @@ class ReservationCalendarView(View):
                              'machine': machine}
 
         if request.user.is_authenticated:
-            render_parameters["can_make_more_reservations"] = Quota.get_quota_by_machine(machine.literal, request.user).can_make_new_reservation
+            render_parameters["can_make_more_reservations"] = Quota.get_quota_by_machine(machine.literal,
+                                                                                         request.user).can_make_new_reservation()
 
         week_days = render_parameters['week_days'] = []
         for day_number in range(7):
@@ -94,7 +95,9 @@ class MakeReservationView(FormView):
                                  Q(end_date__gt=timezone.now().date())),
                              "machine_types": [
                                  {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
-                                 for sub_class in Machine.__subclasses__()]}
+                                 for sub_class in Machine.__subclasses__() if
+                                 Quota.get_quota_by_machine(sub_class.literal,
+                                                            request.user).can_make_new_reservation()]}
 
         return render(request, self.template_name, render_parameters)
 
