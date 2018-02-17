@@ -6,7 +6,7 @@
 {% block rail %}
     <div class="ui right attached rail">
         <div class="ui sticky rail-content">
-            {% for event in article.timeplace_set.all %}
+            {% for event in article.timeplace_set.future %}
                 <div class="ui card">
                     <div class="content">
                         {% if event.start_date == event.end_date or not event.end_date %}
