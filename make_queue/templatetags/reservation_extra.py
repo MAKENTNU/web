@@ -59,3 +59,8 @@ def get_machine_cannot_use_text(machine):
 @register.simple_tag()
 def get_event_url(event):
     return "/news/event/" + str(event.pk) + "/"
+
+
+@register.simple_tag()
+def invert(expression):
+    return ["false", "true"][not expression]

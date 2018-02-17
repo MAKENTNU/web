@@ -1,10 +1,10 @@
 let reservations = [];
 
-function getFutureReservations(machine_type, machine_id) {
+function getFutureReservations(machine_type, machine_id, force_new_time) {
     let jsonUrl = "/reservation/json/" + machine_type + "/" + machine_id;
     let currentUrl = document.location.href;
     if (currentUrl.match(".+/reservation/change/[a-zA-Z0-9-]+/[0-9]+/"))
-        jsonUrl += currentUrl.slice(currentUrl.slice(0, currentUrl.length - 1).lastIndexOf("/"), currentUrl.length - 1);
+        jsonUrl += currentUrl.slice(currentUrl.slice(0, currentUrl.length - 1).lastIndexOf("/"), currentUrl.length - 1) + "/";
     $.getJSON(jsonUrl, function (data) {
         reservations.length = 0;
         $.each(data.reservations, function (index, value) {
@@ -13,9 +13,11 @@ function getFutureReservations(machine_type, machine_id) {
                 "end_time": new Date(Date.parse(value.end_date)),
             });
         });
-        let start_date = getFirstReservableTimeSlot(new Date());
-        $("#start_time").calendar("set date", start_date);
-        $("#end_time").calendar("set date", getMaxDateReservation(start_date));
+        if (force_new_time) {
+            let start_date = getFirstReservableTimeSlot(new Date());
+            $("#start_time").calendar("set date", start_date);
+            $("#end_time").calendar("set date", getMaxDateReservation(start_date));
+        }
     });
 }
 
@@ -55,7 +57,7 @@ function isReservedHour(date) {
 
 function getMaxDateReservation(date) {
     let maxDate = new Date(date.valueOf());
-    if ($("#event_checkbox").is(':checked'))
+    if ($("#event_checkbox input").is(':checked'))
         maxDate.setDate(maxDate.getDate() + 3);
     else
         maxDate.setHours(maxDate.getHours() + parseFloat($("#reserve_form").data("max-time-reservation")));
@@ -111,7 +113,7 @@ $('#machine_type_dropdown').dropdown('setting', 'onChange', function (value) {
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
 $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name').data("value")).dropdown('setting', "onChange", function (value) {
-    if (value !== "default") getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value);
+    if (value !== "default") getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value, true);
     $("#start_time > div, #end_time > div").toggleClass('disabled', value === "default");
     $("#start_time, #end_time").calendar('clear');
 });
@@ -149,7 +151,7 @@ $('form').submit(function (event) {
     if ($("#event_checkbox input").is(':checked') && $("#event_pk").dropdown("get value") === "") {
         $("#event_pk").toggleClass("error_border", true);
         is_valid = false;
-    };
+    }
 
     if (!is_valid) return event.preventDefault();
 
