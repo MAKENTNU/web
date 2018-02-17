@@ -1,5 +1,12 @@
+from datetime import timedelta
+
+import math
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.utils import timezone
+from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView
 
 from news.models import Article, Event, TimePlace
@@ -156,11 +163,17 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
         'place',
         'place_url',
         'hoopla',
+        'hidden',
     )
     permission_required = (
         'news.change_timeplace',
     )
     success_url = '/'
+
+    def post(self, request, *args, **kwargs):
+        pk = get_object_or_404(TimePlace, pk=kwargs['pk']).event.pk
+        self.success_url = reverse('event', args=(pk,))
+        return super().post(request, *args, **kwargs)
 
 
 class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
@@ -177,8 +190,42 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
         'place',
         'place_url',
         'hoopla',
+        'hidden',
     )
     permission_required = (
         'news.add_timeplace',
     )
     success_url = '/'
+
+
+class DuplicateTimePlaceView(PermissionRequiredMixin, View):
+    permission_required = (
+        'news.add_timeplace',
+    )
+
+    def get(self, request, pk):
+        timeplace = get_object_or_404(TimePlace, pk=pk)
+        now = timezone.now()
+        if now.date() > timeplace.start_date or now.date() == timeplace.start_date and now.time() > timeplace.start_time:
+            delta_days = timezone.now().date() - timeplace.start_date
+            weeks = math.ceil(delta_days / 7)
+        else:
+            weeks = 1
+        timeplace.start_date += timedelta(weeks=weeks)
+        timeplace.end_date += timedelta(weeks=weeks)
+        timeplace.pub_date += timedelta(weeks=weeks)
+        timeplace.hidden = True
+        timeplace.pk = None
+        timeplace.save()
+        return HttpResponseRedirect(reverse('timeplace-edit', args=(timeplace.pk,)))
+
+
+class NewTimePlaceView(PermissionRequiredMixin, View):
+    permission_required = (
+        'news.add_timeplace',
+    )
+
+    def get(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        new_timeplace = TimePlace.objects.create(event=event)
+        return HttpResponseRedirect(reverse('timeplace-edit', args=(new_timeplace.pk,)))

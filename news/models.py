@@ -15,7 +15,7 @@ class ArticleManager(models.Manager):
 
 class TimePlaceManager(models.Manager):
     def published(self):
-        return self.filter(event__hidden=False).filter(
+        return self.filter(hidden=False, event__hidden=False).filter(
             Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
             Q(pub_date__lt=timezone.now().date()))
 
@@ -129,6 +129,10 @@ class TimePlace(models.Model):
         max_length=200,
         blank=True,
         verbose_name='Hoopla url',
+    )
+    hidden = models.BooleanField(
+        default=True,
+        verbose_name='Skjult',
     )
 
     def __str__(self):

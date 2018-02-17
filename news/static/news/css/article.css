@@ -22,11 +22,8 @@ a.place {
     border-radius: 0 !important;
 }
 
-.ui.card>:last-child, .ui.cards>.card>:last-child {
+.ui.card .button {
     border-radius: 0 !important;
-}
-
-.card .button {
     margin-bottom: -1px !important;
 }
 
