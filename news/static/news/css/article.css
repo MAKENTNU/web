@@ -3,8 +3,39 @@ p {
     line-height: 26px;
 }
 
+a.place {
+    color: #0C426A !important;
+    line-height: 16px !important;
+}
+
+.ui.icon {
+    color: #F8C700 !important;
+}
+
+.accordion p, .card p {
+    margin: 0 !important;
+}
+
+.card {
+    border: none !important;
+    box-shadow: 0 0 0 0 #000000, 0 0 0 1px #EEEEEE !important;
+    border-radius: 0 !important;
+}
+
+.ui.card>:last-child, .ui.cards>.card>:last-child {
+    border-radius: 0 !important;
+}
+
+.card .button {
+    margin-bottom: -1px !important;
+}
+
 .article {
     margin: 50px 0 !important;
+}
+
+.lalign {
+    width: calc(100% - 315px);
 }
 
 .container {
@@ -43,14 +74,36 @@ p {
     transform: translateX(-150px);
 }
 
-@media screen and (max-width: 1000px) {
+.attend {
+    position: absolute;
+    right: 10px;
+    top: 2px;
+}
+
+.accordion {
+    display: none;
+}
+
+.accordion .content {
+    position: relative;
+}
+
+@media screen and (max-width: 1024px) {
     .right.rail {
         display: none;
+    }
+
+    .lalign {
+        width: 100%;
     }
 
     .normal.card {
         display: flex;
         float: none;
         margin-left: 0;
+    }
+
+    .accordion {
+        display: inline;
     }
 }

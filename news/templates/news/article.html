@@ -10,15 +10,12 @@
 {% endblock head %}
 
 {% block body %}
-    <div class="article">
+    <div class="article{% block event_classes %}{% endblock event_classes %}">
         <div id="sticky" class="ui text container basic segment">
             <img src="{{ article.image.url }}"
                  {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
             {% block rail %}
             {% endblock rail %}
-
-            {% block event_cards %}
-            {% endblock event_cards %}
 
             <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span></h1>
             <div>
@@ -30,6 +27,9 @@
                     {% endautoescape %}
                 {% endif %}
             </div>
+            <br><br>
+            {% block event_accordian %}
+            {% endblock event_accordian %}
         </div>
     </div>
     <script>

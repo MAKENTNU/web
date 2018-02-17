@@ -46,6 +46,14 @@ p, a, h1, h2, h3, h4, h5 {
     background-color: rgb(0, 235, 179) !important;
 }
 
+.make_bg_dkgray {
+    background-color: rgb(74, 75, 76) !important;
+}
+
+.make_bg_ligray {
+    background-color: rgb(220, 221, 222) !important;
+}
+
 .make_col_yellow {
     color: rgb(248, 200, 17) !important;
 }
@@ -58,3 +66,10 @@ p, a, h1, h2, h3, h4, h5 {
     color: rgb(0, 235, 179) !important;
 }
 
+.make_col_dkgray {
+    color: rgb(74, 75, 76) !important;
+}
+
+.make_col_ligray {
+    color: rgb(220, 221, 222) !important;
+}

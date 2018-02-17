@@ -1,7 +1,7 @@
 {% extends 'news/article.html' %}
 {% load staticfiles %}
 
-{% block is_event %}event{% endblock is_event %}
+{% block event_classes %} lalign{% endblock event_classes %}
 
 {% block rail %}
     <div class="ui right attached rail">
@@ -9,62 +9,90 @@
             {% for event in article.timeplace_set.all %}
                 <div class="ui card">
                     <div class="content">
-                        {% if event.end_date and event.end_time %}
-                            {% if event.start_date == event.end_date %}
-                                <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
-                                    - {{ event.end_time|time:"H:i" }}</p>
-                            {% else %}
-                                <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
-                                    - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
-                            {% endif %}
+                        {% if event.start_date == event.end_date or not event.end_date %}
+                            <p>
+                                <i class="ui wait icon"></i>
+                                {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                                {% if event.end_time %}
+                                    - {{ event.end_time|time:"H:i" }}
+                                {% endif %}
+                            </p>
                         {% else %}
-                            <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                            <p>
+                                <i class="ui wait icon"></i>
+                                {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                                - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
                         {% endif %}
                         {% if event.place %}
                             {% if event.place_url %}
-                                <p><a href="{{ event.place_url }}">{{ event.place }}</a></p>
+                                <p>
+                                    <i class="ui marker icon"></i>
+                                    <a class="place" href="{{ event.place_url }}">{{ event.place }}</a>
+                                </p>
                             {% else %}
-                                <p>{{ event.place }}</p>
+                                <p>
+                                    <i class="ui marker icon"></i>
+                                    {{ event.place }}
+                                </p>
                             {% endif %}
                         {% endif %}
                     </div>
                     {% if event.hoopla %}
-                        <a class="ui yellow button bottom attached" href="{{ event.hoopla }}"
+                        <a class="ui make_bg_yellow black button" href="{{ event.hoopla }}"
                            target="_blank">Påmelding</a>
+                    {% else %}
+                        <p class="ui disabled button">Ingen påmelding</p>
                     {% endif %}
                 </div>
             {% endfor %}
         </div>
     </div>
 {% endblock rail %}
-{% block event_cards %}
-    <div class="ui container">
+
+{% block event_accordian %}
+    <div class="ui styled accordion">
         {% for event in article.timeplace_set.all %}
-            <div class="ui normal card">
-                <div class="content">
-                    {% if event.end_date and event.end_time %}
-                        {% if event.start_date == event.end_date %}
-                            <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
-                                - {{ event.end_time|time:"H:i" }}</p>
-                        {% else %}
-                            <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
-                                - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
-                        {% endif %}
+            <div class="title">
+                <i class="dropdown icon"></i>
+                {{ event.start_date|date:"d. M" }}
+            </div>
+            <div class="content">
+                <div class="transition hidden">
+                    {% if event.start_date == event.end_date or not event.end_date %}
+                        <p>
+                            <i class="ui wait icon"></i>
+                            {{ event.start_time|time:"H:i" }}
+                            {% if event.end_time %}
+                                - {{ event.end_time|time:"H:i" }}
+                            {% endif %}
+                        </p>
                     {% else %}
-                        <p>{{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                        <p>
+                            <i class="ui wait icon"></i>
+                            {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
+                            - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
                     {% endif %}
                     {% if event.place %}
                         {% if event.place_url %}
-                            <p><a href="{{ event.place_url }}">{{ event.place }}</a></p>
+                            <p>
+                                <i class="ui marker icon"></i>
+                                <a class="place" href="{{ event.place_url }}">{{ event.place }}</a>
+                            </p>
                         {% else %}
-                            <p>{{ event.place }}</p>
+                            <p>
+                                <i class="ui marker icon"></i>
+                                {{ event.place }}
+                            </p>
                         {% endif %}
                     {% endif %}
+                    {% if event.hoopla %}
+                        <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">Påmelding</a>
+                    {% else %}
+                        <p class="make_col_ligray attend"><i>Ingen påmelding</i></p>
+                    {% endif %}
                 </div>
-                {% if event.hoopla %}
-                    <a class="ui yellow button bottom attached" href="{{ event.hoopla }}" target="_blank">Påmelding</a>
-                {% endif %}
             </div>
         {% endfor %}
     </div>
-{% endblock event_cards %}
+    <script>$('.ui.accordion').accordion();</script>
+{% endblock event_accordian %}
