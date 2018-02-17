@@ -68,6 +68,10 @@
     color: #4183c4 !important;
 }
 
+.error_border {
+    border-color: #ff0000 !important;
+}
+
 @media screen and (min-width: 800px) {
     .make_my_reservation_tablet {
         display: none !important;

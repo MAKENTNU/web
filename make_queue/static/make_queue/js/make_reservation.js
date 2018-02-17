@@ -123,7 +123,38 @@ function formatDate(date) {
         + " " + zeroPadDateElement(date.getHours()) + ":" + zeroPadDateElement(date.getMinutes())
 }
 
-$('form').submit(function () {
+$('form').submit(function (event) {
+    let is_valid = true;
+    $("#machine_name_dropdown").toggleClass("error_border", false);
+    $("#start_time").find("input").toggleClass("error_border", false);
+    $("#end_time").find("input").toggleClass("error_border", false);
+    $("#event_pk").toggleClass("error_border", false);
+
+
+    if ($("#machine_name_dropdown").dropdown("get value") === "default") {
+        $("#machine_name_dropdown").toggleClass("error_border", true);
+        is_valid = false;
+    }
+
+    if ($("#start_time").calendar("get date") === null) {
+        $("#start_time").find("input").toggleClass("error_border", true);
+        is_valid = false;
+    }
+
+    if ($("#end_time").calendar("get date") === null) {
+        $("#end_time").find("input").toggleClass("error_border", true);
+        is_valid = false;
+    }
+
+    console.log($("#event_pk").dropdown("get value").length);
+    console.log($("#event_checkbox").is(':checked'));
+    if ($("#event_checkbox").is(':checked') && $("#event_pk").dropdown("get value") === "") {
+        $("#event_pk").toggleClass("error_border", true);
+        is_valid = false;
+    }
+
+    if (!is_valid) return event.preventDefault();
+
     $("#start_time input").first().val(formatDate($("#start_time").calendar("get date")));
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
