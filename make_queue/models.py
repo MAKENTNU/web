@@ -160,7 +160,7 @@ class Reservation3D(Reservation):
         return self.machine
 
     def get_quota(self):
-        return self.user.quota3d
+        return Quota3D.get_quota(self.user)
 
 
 class ReservationSewing(Reservation):
@@ -171,7 +171,7 @@ class ReservationSewing(Reservation):
         return self.machine
 
     def get_quota(self):
-        return self.user.quotasewing
+        return QuotaSewing.get_quota(self.user)
 
 
 class Quota(models.Model):
@@ -203,12 +203,20 @@ class Quota3D(Quota):
     def get_active_user_reservations(self):
         return self.user.reservation3d_set.filter(end_time__gte=timezone.now())
 
+    @staticmethod
+    def get_quota(user):
+        return user.quota3d if hasattr(user, "quota3d") else Quota3D.objects.create(user=user)
+
 
 class QuotaSewing(Quota):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def get_active_user_reservations(self):
         return self.user.reservationsewing_set.filter(end_time__gte=timezone.now())
+
+    @staticmethod
+    def get_quota(user):
+        return user.quotasewing if hasattr(user, "quotasewing") else QuotaSewing.objects.create(user=user)
 
 
 class Penalty(models.Model):
