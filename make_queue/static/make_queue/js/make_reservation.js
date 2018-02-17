@@ -146,12 +146,10 @@ $('form').submit(function (event) {
         is_valid = false;
     }
 
-    console.log($("#event_pk").dropdown("get value").length);
-    console.log($("#event_checkbox").is(':checked'));
-    if ($("#event_checkbox").is(':checked') && $("#event_pk").dropdown("get value") === "") {
+    if ($("#event_checkbox input").is(':checked') && $("#event_pk").dropdown("get value") === "") {
         $("#event_pk").toggleClass("error_border", true);
         is_valid = false;
-    }
+    };
 
     if (!is_valid) return event.preventDefault();
 
