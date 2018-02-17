@@ -129,7 +129,7 @@ class Reservation(models.Model):
                                                                                                event=None).exists()
 
         # Check if user has more than x% of reservations
-        if (num_reservations_in_period + 1) > ceil(
+        if (num_reservations_in_period + (self.pk is None)) > ceil(
                 self.get_machine().__class__.objects.all().count() * self.percentage_of_machines_at_the_same_time):
             return False
 
