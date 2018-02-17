@@ -141,7 +141,8 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user = User.objects.get(username="User")
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=Event.objects.get(title="TEST EVENT"))
+                                    end_time=timezone.now() + timedelta(hours=2),
+                                    event=Event.objects.get(title="TEST EVENT"))
 
         self.check_reservation_invalid(reservation,
                                        "Should not be able to make event reservation without correct permission")
@@ -156,7 +157,8 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         user.save()
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=Event.objects.get(title="TEST EVENT"))
+                                    end_time=timezone.now() + timedelta(hours=2),
+                                    event=Event.objects.get(title="TEST EVENT"))
 
         self.check_reservation_valid(reservation,
                                      "User with the correct permission should be allowed to create an event reservation")
@@ -201,7 +203,8 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_same_time_separate_machines(self):
         printer1 = Printer3D.objects.get(name="C1")
-        printer2 = Printer3D.objects.create(name="C1", location="Printer room Mackerspace U1", status="F")
+        printer2 = Printer3D.objects.create(name="C2", location="Printer room Mackerspace U1", status="F")
+        Printer3D.objects.create(name="C3", location="Printer room Mackerspace U1", status="F")
 
         user = User.objects.get(username="User")
 
@@ -214,7 +217,24 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                      end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.check_reservation_valid(reservation2,
-                                     "Reservations on different printers should be able to overlap in time")
+                                       "Reservations on different printers should be able to overlap in time")
+
+    def test_same_time_separate_machines_more_than_allowed(self):
+        printer1 = Printer3D.objects.get(name="C1")
+        printer2 = Printer3D.objects.create(name="C1", location="Printer room Mackerspace U1", status="F")
+
+        user = User.objects.get(username="User")
+
+        reservation1 = Reservation3D(user=user, machine=printer1, start_time=timezone.now(),
+                                     end_time=timezone.now() + timedelta(hours=2), event=None)
+
+        self.check_reservation_valid(reservation1, "Saving a single reservation should be valid")
+
+        reservation2 = Reservation3D(user=user, machine=printer2, start_time=timezone.now(),
+                                     end_time=timezone.now() + timedelta(hours=2), event=None)
+
+        self.check_reservation_invalid(reservation2,
+                                       "Reservations on different printers should be able to overlap in time")
 
 
 class ReservationSewingTestCase(GeneralReservationTestCase):
