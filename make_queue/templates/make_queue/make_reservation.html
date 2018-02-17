@@ -119,4 +119,9 @@
     </div>
 
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
+    {% if not start_time %}
+        <script>
+            getFutureReservations($("#machine_type_dropdown").dropdown("get value"), $("#machine_name_dropdown").dropdown("get value"));
+        </script>
+    {% endif %}
 {% endblock %}

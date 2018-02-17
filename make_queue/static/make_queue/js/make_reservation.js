@@ -156,5 +156,3 @@ $('form').submit(function (event) {
     $("#start_time input").first().val(formatDate($("#start_time").calendar("get date")));
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
-
-getFutureReservations($("#machine_type_dropdown").dropdown("get value"), $("#machine_name_dropdown").dropdown("get value"));
