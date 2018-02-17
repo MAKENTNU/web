@@ -1,3 +1,5 @@
+from math import ceil
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -119,6 +121,18 @@ class Reservation(models.Model):
         if self.end_time - self.start_time > timedelta(hours=self.get_quota().max_time_reservation):
             return False
 
+        # Calculate the number of reservations the user has in the given period
+        num_reservations_in_period = 0
+        for machine in self.get_machine().__class__.objects.all():
+            num_reservations_in_period += machine.reservations_in_period(self.start_time,
+                                                                         self.end_time).filter(user=self.user,
+                                                                                               event=None).exists()
+
+        # Check if user has more than x% of reservations
+        if (num_reservations_in_period + 1) > ceil(
+                self.get_machine().__class__.objects.all().count() * self.percentage_of_machines_at_the_same_time):
+            return False
+
         # If a primary key is set, the reservation is already saved once, and does not
         return self.pk is not None or self.get_quota().can_make_new_reservation()
 
@@ -140,6 +154,7 @@ class Reservation(models.Model):
 
 class Reservation3D(Reservation):
     machine = models.ForeignKey(Printer3D, on_delete=models.CASCADE)
+    percentage_of_machines_at_the_same_time = 0.5
 
     def get_machine(self):
         return self.machine
@@ -150,6 +165,7 @@ class Reservation3D(Reservation):
 
 class ReservationSewing(Reservation):
     machine = models.ForeignKey(SewingMachine, on_delete=models.CASCADE)
+    percentage_of_machines_at_the_same_time = 1
 
     def get_machine(self):
         return self.machine
