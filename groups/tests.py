@@ -2,14 +2,25 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.admin.sites import AdminSite
 
-from .models import InheritanceGroup as Group
+from .admin import InheritanceGroupAdmin
+from .models import InheritanceGroup as Group, Committee
 from news.models import Article
 
 
 def permission_to_perm(permission):
     """Find the <app_label>.<codename> string for a permission object"""
     return '.'.join([permission.content_type.app_label, permission.codename])
+
+
+class MockRequest:
+    pass
+
+
+class MockSuperUser:
+    def has_perm(self, *args, **kwargs):
+        return True
 
 
 class PermGroupTestCase(TestCase):
@@ -189,3 +200,70 @@ class PermGroupTestCase(TestCase):
         self.assertNotIn(web, dev.get_available_parents().all())
 
         self.assertEqual(misc.get_available_parents().count(), 6)
+
+    def test_inherited_permissions(self):
+        dev = Group.objects.get(name='Dev')
+        permissions = dev.permissions.all()
+        own_permissions = dev.own_permissions.all()
+        inherited_permissions = dev.inherited_permissions
+        for perm in permissions:
+            if perm in own_permissions:
+                self.assertNotIn(inherited_permissions)
+            else:
+                self.assertIn(inherited_permissions)
+
+
+class InheritanceGroupAdminTestCase(TestCase):
+    def setUp(self):
+        self.site = AdminSite()
+        self.request = MockRequest()
+        self.request.user = MockSuperUser()
+        org = Group.objects.create(name='Org')
+        mentor = Group.objects.create(name='Mentor')
+        mentor.parents.add(org)
+        dev = Group.objects.create(name='Dev')
+        dev.parents.add(org)
+        arr = Group.objects.create(name='Arrangement')
+        arr.parents.add(org)
+        Group.objects.create(name='Leder').parents.add(mentor, dev, arr)
+
+    def test_get_form(self):
+        admin = InheritanceGroupAdmin(Group, self.site)
+        expected_fields = ['name', 'parents', 'own_permissions']
+        form = admin.get_form(self.request)
+        self.assertEqual(list(form.base_fields), expected_fields)
+
+        expected_parents = Group.objects.all()
+        self.assertEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+
+        form = admin.get_form(self.request, obj=Group.objects.get(name='Dev'))
+        expected_parents = Group.objects.get(name='Dev').get_available_parents()
+        self.assertEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+
+    def test_inherited_permissions(self):
+        admin = InheritanceGroupAdmin(Group, self.site)
+        dev = Group.objects.get(name='Dev')
+        permissions = set(admin.inherited_permissions(dev))
+        for perm in dev.inherited_permissions:
+            self.assertIn(str(perm), permissions)
+
+
+class CommitteeTestCase(TestCase):
+    def setUp(self):
+        org = Group.objects.create(name='Org')
+        mentor = Group.objects.create(name='Mentor')
+        mentor.parents.add(org)
+        dev = Group.objects.create(name='Dev')
+        dev.parents.add(org)
+        arr = Group.objects.create(name='Arrangement')
+        arr.parents.add(org)
+        Group.objects.create(name='Leder').parents.add(mentor, dev, arr)
+
+    def test_name(self):
+        dev = Committee.objects.create(
+            group=Group.objects.get(name='Dev'),
+            description='Website and stuff',
+            email='dev@makentnu.no',
+        )
+        self.assertEqual(dev.name, 'Dev')
+        self.assertEqual(str(dev), 'Dev')
