@@ -1,15 +1,15 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView, CreateView, TemplateView
 
-from checkin.models import Profile, Skill
+from checkin.models import Profile, Skill, UserSkill
 from web import settings
 from django.views.decorators.csrf import csrf_exempt
 
 
 class CheckInView(TemplateView):
-
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -50,17 +50,38 @@ class ShowSkillsView(TemplateView):
 class ProfilePageView(TemplateView):
     template_name = 'checkin/profile.html'
 
+    def post(self, request):
+        try:
+            rating = int(request.POST.get('rating'))
+            skill_id = int(request.POST.get('skill'))
+        except ValueError:
+            return HttpResponseRedirect(reverse('profile'))
+
+        profile = request.user.profile_set.first()
+        skill = get_object_or_404(Skill, id=skill_id)
+
+        if rating == int(rating) and 0 <= rating <= 3:
+            if UserSkill.objects.filter(skill=skill, profile=profile).exists():
+                if rating == 0:
+                    UserSkill.objects.filter(skill=skill, profile=profile).delete()
+                else:
+                    UserSkill.objects.filter(skill=skill, profile=profile).update(skill_level=rating)
+            elif rating != 0:
+                UserSkill.objects.create(skill=skill, profile=profile, skill_level=rating)
+
+        return HttpResponseRedirect(reverse('profile'))
+
     def get_context_data(self, **kwargs):
-        profile = Profile.objects.first()  # get(user=self.request.user)
+        profile = Profile.objects.get(user=self.request.user)
         img = profile.image
         userskill_set = profile.userskill_set.all()
 
         skill_dict = {}
-        level_list = ["nybegynner", "viderekommen", "ekspert"]
+        # level_list = ["nybegynner", "viderekommen", "ekspert"]
         for us in userskill_set:
-            title, level_int = us.skill.title, us.skill_level - 1
-            if title not in skill_dict or level_int > level_list.index(skill_dict[title]):
-                skill_dict[title] = level_list[level_int]
+            title, level_int = us.skill.title, us.skill_level
+            if title not in skill_dict or level_int > skill_dict[title]:
+                skill_dict[title] = level_int
 
         context = super().get_context_data(**kwargs)
         context.update({
@@ -71,3 +92,8 @@ class ProfilePageView(TemplateView):
             'all_skills': Skill.objects.all()
         })
         return context
+
+
+class EditProfilePageView(TemplateView):
+    model = Profile
+    template_name = "checkin/profile_edit.html"

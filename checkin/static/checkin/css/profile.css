@@ -1,5 +1,10 @@
-.profile_pic{
+.profile_pic {
     width: 150px;
     height: 150px;
     border-radius: 10px;
 }
+
+.dropdown {
+    width: 100% !important;
+}
+

@@ -1,5 +1,3 @@
-from datetime import time
-
 from django.contrib.auth.models import User
 from django.db import models
 from ckeditor.fields import RichTextField
@@ -20,7 +18,9 @@ class Profile(models.Model):
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
 
     def __str__(self):
-        return self.user.username
+        if self.user:
+            return self.user.username
+        return "None"
 
 
 class UserSkill(models.Model):
@@ -32,6 +32,11 @@ class UserSkill(models.Model):
     profile = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL)
     skill = models.ForeignKey(Skill, null=True, on_delete=models.SET_NULL)
     skill_level = models.IntegerField(choices=level_choices)
+
+    class Meta:
+        ordering = (
+            "skill__title",
+        )
 
     def __str__(self):
         return str(self.profile) + " - " + str(self.skill)
