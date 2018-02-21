@@ -41,6 +41,10 @@ class InheritanceGroup(Group):
         for sub in self.sub_groups.all():
             sub.update_permissions()
 
+    @property
+    def inherited_permissions(self):
+        return set(self.permissions.all()) - set(self.own_permissions.all())
+
     def get_sub_groups(self):
         """Return a queryset of all groups that inherits from this group."""
         subs = self.sub_groups.all()
