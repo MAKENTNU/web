@@ -1,1 +1,0 @@
---$-- List of users that should have 3d printer permissions --$--
