@@ -32,7 +32,6 @@ class PrinterHandler(LoginHandler):
         response = post(self.data_url, {"token": web.settings.queue_token})
         try:
             self.allowed_users = response.json()["allowed"]
-            print(self.allowed_users)
         except JSONDecodeError:
             pass
 
@@ -40,4 +39,4 @@ class PrinterHandler(LoginHandler):
         self.update()
 
 
-register_handler(PrinterHandler())
+register_handler(PrinterHandler(), "printer_allowed")

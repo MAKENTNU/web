@@ -1,15 +1,19 @@
 from abc import abstractclassmethod
 
-handlers = []
+handlers = {}
 
 
 def run_handlers(user):
-    for handler in handlers:
+    for handler in handlers.keys():
         handler.handle(user)
 
 
-def register_handler(handler):
-    handlers.append(handler)
+def register_handler(handler, name):
+    handlers[name] = handler
+
+
+def get_handler(name):
+    return handlers[name]
 
 
 class LoginHandler:
@@ -33,4 +37,4 @@ class GetDataHandler(LoginHandler):
                 pass
 
 
-register_handler(GetDataHandler())
+register_handler(GetDataHandler(), "dataporten")
