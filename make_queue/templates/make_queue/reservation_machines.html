@@ -13,6 +13,9 @@
         <div class="ui huge header">
             Maskiner
         </div>
+        <a href="{% url 'my_reservations' %}" class="ui primary button">
+            Mine reservasjoner
+        </a>
         {% for machine_type in machine_types %}
             <div class="ui large header">
                 {{ machine_type.name }}
