@@ -22,7 +22,12 @@ function getFutureReservations(machine_type, machine_id, force_new_time) {
 }
 
 function updateMaxReservationTime(machine_type) {
-    $.get("/reservation/quota/json/" + machine_type + "/", {}, (data) => $("#reserve_form").data("max-time-reservation", data));
+    $.get("/reservation/quota/json/" + machine_type + "/", {}, (data) => {
+        $("#reserve_form").data("max-time-reservation", data);
+        let start_date = $("#start_time").calendar("get date");
+        if (start_date)
+            $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(start_date));
+    });
 }
 
 function getFirstReservableTimeSlot(date) {
@@ -113,7 +118,7 @@ $('#machine_type_dropdown').dropdown('setting', 'onChange', function (value) {
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
 $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name').data("value")).dropdown('setting', "onChange", function (value) {
-    if (value !== "default") getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value, true);
+    if (value !== "default" && value !== "") getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value, true);
     $("#start_time > div, #end_time > div").toggleClass('disabled', value === "default");
     $("#start_time, #end_time").calendar('clear');
 });
