@@ -167,8 +167,7 @@ class ChangeReservationView(View):
 
         return render(request, self.template_name, render_parameters)
 
-    def post(self, request, machine_type, pk):
-        reservation = Reservation.get_reservation(machine_type, pk)
+    def post(self, request, reservation):
         if reservation is None or reservation.user != request.user or reservation.start_time < timezone.now():
             # TODO: Implement redirect
             return
