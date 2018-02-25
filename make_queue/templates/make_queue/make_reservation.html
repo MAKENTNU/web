@@ -94,7 +94,7 @@
                             <label for="event">Arrangement</label>
                         </div>
                     </div>
-                    <div class="ui field {% if new_reservation or not event %}make_non_visible{% endif %}" id="event_name_input">
+                    <div class="ui field {% if not event %}make_non_visible{% endif %}" id="event_name_input">
                         <label>Arrangement</label>
                         <div class="ui field selection dropdown" id="event_pk">
                             <input type="hidden" name="event_pk" value="{% if event %}{{ event.pk }}{% endif %}">
