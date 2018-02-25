@@ -214,8 +214,7 @@ class ChangeReservationView(View):
             # The errors may be the time being taken or if the user can make event reservations and this
             # is an event reservation the event being deleted
             render_parameters["error"] = "Tidspunktet" + " eller eventen," * (request.user.has_perm(
-                "can_create_event_reservation") * (not (
-                not form.cleaned_data["event"]))) + " er ikke lengre tilgjengelig"
+                "can_create_event_reservation") * bool(not form.cleaned_data["event"])) + " er ikke lengre tilgjengelig"
             return render(request, self.template_name, render_parameters)
 
         reservation.save()
@@ -253,8 +252,6 @@ def get_user_quota_max_length(request, machine_type):
 def get_future_reservations_machine_without_specific_reservation(request, reservation):
     reservations = reservation.machine.get_reservation_set().filter(end_time__gte=timezone.now()).exclude(
         pk=reservation.pk)
-
-    print(reservation.machine.pk)
 
     return JsonResponse(format_reservations_for_start_end_json(reservations))
 
