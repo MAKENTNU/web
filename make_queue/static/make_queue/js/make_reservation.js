@@ -163,3 +163,7 @@ $('form').submit(function (event) {
     $("#start_time input").first().val(formatDate($("#start_time").calendar("get date")));
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
+
+$('.message .close').on('click', function () {
+    $(this).closest('.message').transition('fade');
+});
