@@ -1,4 +1,5 @@
 let reservations = [];
+let reservationCalendarDate = new Date();
 
 function getFutureReservations(machine_type, machine_id, force_new_time) {
     let jsonUrl = "/reservation/json/" + machine_type + "/" + machine_id;
@@ -19,6 +20,23 @@ function getFutureReservations(machine_type, machine_id, force_new_time) {
             $("#end_time").calendar("set date", getMaxDateReservation(start_date));
         }
     });
+}
+
+function getWeekNumber(date) {
+    date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
+    let yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+}
+
+function updateReservationCalendar() {
+    let weekNumber = getWeekNumber(reservationCalendarDate);
+    let year = reservationCalendarDate.getFullYear();
+    let machine_type = $("#machine_type_dropdown").dropdown("get value");
+    let machine_pk = $("#machine_name_dropdown").dropdown("get value");
+    $.get("/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_type + "/" + machine_pk + "/", {}, (data) => {
+        $("#reservation_calendar").html(data);
+    })
 }
 
 function updateMaxReservationTime(machine_type) {
@@ -118,7 +136,10 @@ $('#machine_type_dropdown').dropdown('setting', 'onChange', function (value) {
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
 $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name').data("value")).dropdown('setting', "onChange", function (value) {
-    if (value !== "default" && value !== "") getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value, true);
+    if (value !== "default" && value !== "") {
+        getFutureReservations($('#machine_type_dropdown').dropdown('get value'), value, true);
+        updateReservationCalendar();
+    }
     $("#start_time > div, #end_time > div").toggleClass('disabled', value === "default");
     $("#start_time, #end_time").calendar('clear');
 });
@@ -164,6 +185,22 @@ $('form').submit(function (event) {
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
 
+$("#previous_week").click(() => {
+    reservationCalendarDate.setDate(reservationCalendarDate.getDate() - 7);
+    updateReservationCalendar();
+});
+
+
+$("#next_week").click(() => {
+    reservationCalendarDate.setDate(reservationCalendarDate.getDate() + 7);
+    updateReservationCalendar();
+});
+
 $('.message .close').on('click', function () {
     $(this).closest('.message').transition('fade');
 });
+
+if($("#start_time").calendar("get date") !== null) {
+    reservationCalendarDate = $("#start_time").calendar("get date");
+}
+updateReservationCalendar();

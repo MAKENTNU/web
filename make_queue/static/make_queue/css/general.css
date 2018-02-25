@@ -72,6 +72,13 @@
     border-color: #ff0000 !important;
 }
 
+.float_fix::after {
+    content: "";
+    display: block;
+    clear: both;
+    padding-bottom: 1em;
+}
+
 @media screen and (min-width: 800px) {
     .make_my_reservation_tablet {
         display: none !important;

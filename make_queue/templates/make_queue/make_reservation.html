@@ -115,13 +115,23 @@
                     </div>
                 </div>
             {% endif %}
-            <input class="ui right floated button" type="submit" value="{% if new_reservation %}Reserver{% else %}Endre{% endif %}">
+            <div class="float_fix">
+                <input class="ui right floated button" type="submit" value="{% if new_reservation %}Reserver{% else %}Endre{% endif %}">
+            </div>
         </form>
 
-        <div id="reservation_calendar" class="ui container">
-            <div class="make_reservation_calendar">
-
+        <div class="float_fix">
+            <div id="previous_week" class="ui primary left floated button">
+                <i class="icon left arrow"></i>
+                Vis forrige uke
             </div>
+            <div id="next_week" class="ui primary right floated button">
+                Vis neste uke
+                <i class="icon right arrow"></i>
+            </div>
+        </div>
+        <div id="reservation_calendar">
+
         </div>
     </div>
 
