@@ -12,6 +12,11 @@
 {% block body %}
     <br><br>
     <div class="ui container">
+        {% if error %}
+            <div class="ui red message">
+                {{ error }}
+            </div>
+        {% endif %}
         <div class="ui large header">
             {% if new_reservation %}
                 Ny reservasjon
