@@ -30,6 +30,7 @@ quota_url_patterns = [
 
 urlpatterns = [
     path('<year:year>/<week:week>/<machine:machine>', ReservationCalendarView.as_view(), name="reservation_calendar"),
+    path('calendar/<year:year>/<week:week>/<machine:machine>/', ReservationCalendarComponentView.as_view(), name="reservation_calendar_component"),
     path('make/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
     path('make/<time:start_time>/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
     path('me/', login_required(MyReservationsView.as_view()), name="my_reservations"),

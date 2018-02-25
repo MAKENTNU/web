@@ -52,35 +52,46 @@ class ReservationCalendarView(View):
                 'length': ReservationCalendarView.date_to_percentage(end_time) -
                           ReservationCalendarView.date_to_percentage(start_time)}
 
-    def get(self, request, year, week, machine):
-        if not self.is_valid_week(year, week):
-            year, week = self.get_next_valid_week(year, week, 1)
-
-        first_date_of_week = local_to_date(self.year_and_week_to_monday(year, week))
-
-        render_parameters = {'year': year, 'week': week,
-                             'next': self.get_next_valid_week(year, week, 1),
-                             'prev': self.get_next_valid_week(year, week, -1),
-                             'machine_types': Machine.__subclasses__(),
-                             'machine': machine}
-
-        if request.user.is_authenticated:
-            render_parameters["can_make_more_reservations"] = Quota.get_quota_by_machine(machine.literal,
-                                                                                         request.user).can_make_new_reservation()
-
-        week_days = render_parameters['week_days'] = []
+    @staticmethod
+    def get_week_days_with_reservations(year, week, machine):
+        first_date_of_week = local_to_date(ReservationCalendarView.year_and_week_to_monday(year, week))
+        week_days = []
         for day_number in range(7):
             date = first_date_of_week + timedelta(days=day_number)
             week_days.append({
                 "date": date,
-                "machine": {"name": machine.name,
-                            "machine": machine,
-                            "reservations": list(map(lambda x: self.format_reservation(x, date),
+                "machine": {"name": machine.name, "machine": machine,
+                            "reservations": list(map(lambda x: ReservationCalendarView.format_reservation(x, date),
                                                      machine.reservations_in_period(date, date + timedelta(days=1))))}
-
             })
 
+        return week_days
+
+    def get(self, request, year, week, machine):
+        if not self.is_valid_week(year, week):
+            year, week = self.get_next_valid_week(year, week, 1)
+
+        render_parameters = {'year': year, 'week': week, 'next': self.get_next_valid_week(year, week, 1),
+                             'prev': self.get_next_valid_week(year, week, -1),
+                             'machine_types': Machine.__subclasses__(),
+                             'machine': machine, 'week_days': self.get_week_days_with_reservations(year, week, machine)}
+
+        if request.user.is_authenticated:
+            render_parameters["can_make_more_reservations"] = Quota.get_quota_by_machine(machine.literal, request.user) \
+                .can_make_new_reservation()
+
         return render(request, self.template_name, render_parameters)
+
+
+class ReservationCalendarComponentView(View):
+    template_name = "make_queue/reservation_calendar.html"
+
+    def get(self, request, machine, year, week):
+        if not ReservationCalendarView.is_valid_week(year, week):
+            year, week = ReservationCalendarView.get_next_valid_week(year, week, 1)
+
+        return render(request, self.template_name,
+                      {'week_days': ReservationCalendarView.get_week_days_with_reservations(year, week, machine)})
 
 
 class MakeReservationView(FormView):
