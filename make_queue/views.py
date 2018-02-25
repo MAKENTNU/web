@@ -14,7 +14,7 @@ from news.models import Event
 
 
 class ReservationCalendarView(View):
-    template_name = "make_queue/reservation_calendar.html"
+    template_name = "make_queue/reservation_overview.html"
 
     @staticmethod
     def is_valid_week(year, week):
