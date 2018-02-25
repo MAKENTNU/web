@@ -109,10 +109,6 @@
     z-index: 100;
 }
 
-.make_reservation_calendar_button_full_width {
-    width: 100%;
-}
-
 @media screen and (max-width: 500px) {
     .make_reservation_calendar_time_table_hour:nth-child(3n + 2) {
         display: none !important;
@@ -125,18 +121,6 @@
 
 @media screen and (min-width: 500px) and (max-width: 1200px) {
     .make_reservation_calendar_time_table_hour:nth-child(2n) {
-        display: none !important;
-    }
-}
-
-@media screen and (max-width: 1000px) {
-    .make_reservation_calendar_control_header_large {
-        display: none !important;
-    }
-}
-
-@media screen and (min-width: 1000px) {
-    .make_reservation_calendar_control_header_small {
         display: none !important;
     }
 }
