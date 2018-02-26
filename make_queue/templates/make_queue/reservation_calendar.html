@@ -76,7 +76,7 @@
                                         {% if reservation.reservation.event %}
                                             make_reservation_calendar_time_table_event
                                         {% else %}
-                                            {% if reservation.reservation.user %}
+                                            {% if reservation.reservation.user == request.user %}
                                                 make_reservation_calendar_time_table_my_non_event
                                             {% else %}
                                                 make_reservation_calendar_time_table_non_event
