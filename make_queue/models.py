@@ -45,7 +45,7 @@ class Machine(models.Model):
         return next(filter(lambda subclass: subclass.literal == machine_literal, Machine.__subclasses__()))
 
     def __str__(self):
-        return self.name + "-" + self.model
+        return self.name + " - " + self.model
 
     def get_status(self):
         if self.status in "OM":
@@ -206,6 +206,9 @@ class Quota3D(Quota):
     @staticmethod
     def get_quota(user):
         return user.quota3d if hasattr(user, "quota3d") else Quota3D.objects.create(user=user)
+
+    def __str__(self):
+        return "User " + self.user.username + ", can " + "not "*(not self.can_print) + "print"
 
 
 class QuotaSewing(Quota):
