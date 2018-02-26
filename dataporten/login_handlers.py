@@ -4,7 +4,7 @@ handlers = {}
 
 
 def run_handlers(user):
-    for handler in handlers.keys():
+    for handler in handlers.values():
         handler.handle(user)
 
 
