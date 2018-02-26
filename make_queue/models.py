@@ -175,8 +175,8 @@ class ReservationSewing(Reservation):
 
 
 class Quota(models.Model):
-    max_time_reservation = models.FloatField(default=0)
-    max_number_of_reservations = models.IntegerField(default=0)
+    max_time_reservation = models.FloatField(default=16)
+    max_number_of_reservations = models.IntegerField(default=3)
 
     @abstractmethod
     def get_active_user_reservations(self):
