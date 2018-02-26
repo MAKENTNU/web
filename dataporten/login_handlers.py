@@ -4,7 +4,7 @@ handlers = {}
 
 
 def run_handlers(user):
-    for handler in handlers.values():
+    for handler in sorted(handlers.values(), key=lambda h: -h.priority):
         handler.handle(user)
 
 
@@ -17,6 +17,7 @@ def get_handler(name):
 
 
 class LoginHandler:
+    priority = 0
 
     @abstractclassmethod
     def handle(self, user):
@@ -24,6 +25,7 @@ class LoginHandler:
 
 
 class GetDataHandler(LoginHandler):
+    priority = float("inf")
 
     def handle(self, user):
         if not user.first_name:
