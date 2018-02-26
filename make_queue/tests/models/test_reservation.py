@@ -257,9 +257,6 @@ class ReservationSewingTestCase(GeneralReservationTestCase):
 
         self.check_reservation_valid(reservation, "Users should be able to reserve sewing machines")
 
-    def test_to_string(self):
-        self.assertEqual(str(SewingMachine.objects.get(name="C1")), "C1 - Generic")
-
 
 class Reservation3DTestCase(GeneralReservationTestCase):
     def setUp(self):
@@ -282,6 +279,3 @@ class Reservation3DTestCase(GeneralReservationTestCase):
                                     event=None)
 
         self.check_reservation_invalid(reservation, "Users that cannot print, should not be able to reserve printer")
-
-    def test_to_string(self):
-        self.assertEqual(str(Printer3D.objects.get(name="C1")), "C1 - Ultimaker 2")
