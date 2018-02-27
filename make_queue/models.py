@@ -60,7 +60,7 @@ class Machine(models.Model):
 class Printer3D(Machine):
     literal = "3D-printer"
     cannot_use_text = "Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt kurset, men ikke " \
-                      "har tilgang, ta kontakt med styre@makentnu.no "
+                      "har tilgang, ta kontakt med styret@makentnu.no "
 
     def can_user_use(self, user):
         return hasattr(user, "quota3d") and user.quota3d.can_print
