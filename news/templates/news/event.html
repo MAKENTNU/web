@@ -41,25 +41,14 @@
                         <div class="ui two buttons">
                             <a class="ui make_bg_yellow black button" href="{{ event.hoopla }}"
                                target="_blank">Påmelding</a>
-                            {% if perms.news.create_timeplace %}
-                                <a class="ui make_bg_blue black button" href="/news/timeplace/{{ event.id }}/duplicate/">Kopier</a>
-                            {% endif %}
                         </div>
                     {% else %}
                         <div class="ui two buttons">
                             <p class="ui disabled button">-</p>
-                            {% if perms.news.create_timeplace %}
-                                <a class="ui make_bg_blue black button" href="/news/timeplace/{{ event.id }}/duplicate/">Kopier</a>
-                            {% endif %}
                         </div>
                     {% endif %}
                 </div>
             {% endfor %}
-            {% if perms.news.create_timeplace %}
-                <div class="ui card">
-                    <a class="ui make_bg_blue black button" href="/news/timeplace/{{ article.id }}/new/">Ny</a>
-                </div>
-            {% endif %}
         </div>
     </div>
 {% endblock rail %}

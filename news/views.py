@@ -212,8 +212,9 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
         else:
             weeks = 1
         timeplace.start_date += timedelta(weeks=weeks)
-        timeplace.end_date += timedelta(weeks=weeks)
         timeplace.pub_date += timedelta(weeks=weeks)
+        if timeplace.end_date:
+            timeplace.end_date += timedelta(weeks=weeks)
         timeplace.hidden = True
         timeplace.pk = None
         timeplace.save()
