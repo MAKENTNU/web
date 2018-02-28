@@ -8,3 +8,17 @@
     margin-left: 0;
     margin-right: 0;
 }
+
+.accordion .title {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+}
+
+.item {
+    position: relative;
+}
+
+.accordion, .accordion .content {
+    padding: 0 !important;
+}

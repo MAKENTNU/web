@@ -15,7 +15,7 @@
         <div class="ui divided list">
             {% for event in events %}
                 <div class="item">
-                    <i class="ui icon"><img class="inline square_20" src="{{ event.image.url }}"></i>
+                    <i class="ui icon"><img class="inline square_36" src="{{ event.image.url }}"></i>
                     <div class="content">
                         <div class="header">
                             <a class="inline-block make_col_blue header"
@@ -44,40 +44,45 @@
                         <div class="description">
                             {{ event.clickbait }}
                         </div>
-                        <div class="list">
-                            {% for timeplace in event.timeplace_set.all %}
-                                <div class="item">
-                                    <i class="icon"></i>
-                                    <div class="content">
-                                        <div class="header">
-                                            {{ timeplace.start_date|date:"d. M" }}
-                                            <span>
+                        <div class="ui accordion list">
+                            <div class="title">
+                                <i class="dropdown icon"></i>
+                            </div>
+                            <div class="content">
+                                {% for timeplace in event.timeplace_set.all %}
+                                    <div class="item">
+                                        <i class="icon"></i>
+                                        <div class="content">
+                                            <div class="header">
+                                                {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}
+                                                <span>
                                                 {% if perms.news.change_timeplace %}
                                                     <a class="make_col_blue"
                                                        href="/news/timeplace/{{ timeplace.id }}/edit/">
                                                         <i class="ui edit icon"></i>
                                                     </a>
                                                 {% endif %}
-                                                {% if perms.news.delete_timeplace %}
-                                                    <a class="make_col_blue"
-                                                       href="/news/timeplace/{{ timeplace.id }}/delete/">
+                                                    {% if perms.news.delete_timeplace %}
+                                                        <a class="make_col_blue"
+                                                           href="/news/timeplace/{{ timeplace.id }}/delete/">
                                                         <i class="ui delete icon"></i>
                                                     </a>
-                                                {% endif %}
-                                                {% if perms.news.add_timeplace %}
-                                                    <a class="make_col_blue"
-                                                       href="/news/timeplace/{{ timeplace.id }}/duplicate/">
+                                                    {% endif %}
+                                                    {% if perms.news.add_timeplace %}
+                                                        <a class="make_col_blue"
+                                                           href="/news/timeplace/{{ timeplace.id }}/duplicate/">
                                                         <i class="ui copy icon"></i>
                                                     </a>
-                                                {% endif %}
+                                                    {% endif %}
                                             </span>
-                                        </div>
-                                        <div class="description">
-                                            {{ timeplace.place }}
+                                            </div>
+                                            <div class="description">
+                                                {{ timeplace.place }}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            {% endfor %}
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -91,7 +96,7 @@
         <div class="ui divided list">
             {% for article in articles %}
                 <div class="item">
-                    <i class="ui icon"><img class="inline square_20" src="{{ article.image.url }}"></i>
+                    <i class="ui icon"><img class="inline square_36" src="{{ article.image.url }}"></i>
                     <div class="content">
                         <div class="header">
                             <a class="inline-block make_col_blue header"
@@ -117,6 +122,10 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        $('.ui.accordion').accordion();
+    </script>
 
     <div style="height: 50px;"></div>
 {% endblock body %}
