@@ -44,46 +44,48 @@
                         <div class="description">
                             {{ event.clickbait }}
                         </div>
-                        <div class="ui accordion list">
-                            <div class="title">
-                                <i class="dropdown icon"></i>
-                            </div>
-                            <div class="content">
-                                {% for timeplace in event.timeplace_set.all %}
-                                    <div class="item">
-                                        <i class="icon"></i>
-                                        <div class="content">
-                                            <div class="header">
-                                                {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}
-                                                <span>
-                                                {% if perms.news.change_timeplace %}
-                                                    <a class="make_col_blue"
-                                                       href="/news/timeplace/{{ timeplace.id }}/edit/">
-                                                        <i class="ui edit icon"></i>
-                                                    </a>
-                                                {% endif %}
-                                                    {% if perms.news.delete_timeplace %}
+                        {% if event.timeplace_set.exists %}
+                            <div class="ui accordion list">
+                                <div class="title">
+                                    <i class="dropdown icon"></i>
+                                </div>
+                                <div class="content">
+                                    {% for timeplace in event.timeplace_set.all %}
+                                        <div class="item">
+                                            <i class="icon"></i>
+                                            <div class="content">
+                                                <div class="header">
+                                                    {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}
+                                                    <span>
+                                                    {% if perms.news.change_timeplace %}
                                                         <a class="make_col_blue"
-                                                           href="/news/timeplace/{{ timeplace.id }}/delete/">
-                                                        <i class="ui delete icon"></i>
-                                                    </a>
+                                                           href="/news/timeplace/{{ timeplace.id }}/edit/">
+                                                            <i class="ui edit icon"></i>
+                                                        </a>
                                                     {% endif %}
-                                                    {% if perms.news.add_timeplace %}
-                                                        <a class="make_col_blue"
-                                                           href="/news/timeplace/{{ timeplace.id }}/duplicate/">
-                                                        <i class="ui copy icon"></i>
-                                                    </a>
-                                                    {% endif %}
-                                            </span>
-                                            </div>
-                                            <div class="description">
-                                                {{ timeplace.place }}
+                                                        {% if perms.news.delete_timeplace %}
+                                                            <a class="make_col_blue"
+                                                               href="/news/timeplace/{{ timeplace.id }}/delete/">
+                                                            <i class="ui delete icon"></i>
+                                                        </a>
+                                                        {% endif %}
+                                                        {% if perms.news.add_timeplace %}
+                                                            <a class="make_col_blue"
+                                                               href="/news/timeplace/{{ timeplace.id }}/duplicate/">
+                                                            <i class="ui copy icon"></i>
+                                                        </a>
+                                                        {% endif %}
+                                                </span>
+                                                </div>
+                                                <div class="description">
+                                                    {{ timeplace.place }}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                {% endfor %}
+                                    {% endfor %}
+                                </div>
                             </div>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
