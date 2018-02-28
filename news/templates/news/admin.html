@@ -2,58 +2,77 @@
 {% load staticfiles %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin.css" %}">
 {% endblock head %}
 
 {% block body %}
     <div style="height: 50px;"></div>
-    <h1 class="ui text-centered make_col_blue header">Arrangementer</h1>
+    <h1 class="ui text-centered make_col_yellow header">
+        Arrangementer
+        <a class="make_col_blue" href="/news/event/create/"><i class="ui add icon"></i></a>
+    </h1>
     <div class="ui text container">
-        <div class="ui list">
+        <div class="ui divided list">
             {% for event in events %}
                 <div class="item">
                     <i class="ui icon"><img class="inline square_20" src="{{ event.image.url }}"></i>
                     <div class="content">
-                        <a class="make_col_blue header" href="/news/event/{{ event.id }}/">{{ event.title }}</a>
-                        <div class="description">
-                            {{ event.clickbait }}
-                            <div>
+                        <div class="header">
+                            <a class="inline-block make_col_blue header" href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                            <span>
                                 {% if perms.news.change_event %}
-                                    <a class="ui inverted button make_bg_yellow"
-                                       href="/news/event/{{ event.id }}/edit/">Rediger</a>
+                                    <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/edit/">
+                                        <i class="ui edit icon"></i>
+                                    </a>
                                 {% endif %}
                                 {% if perms.news.delete_event %}
-                                    <a class="ui inverted button make_bg_yellow"
-                                       href="/news/event/{{ event.id }}/delete/">Slett</a>
+                                    <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/delete/">
+                                        <i class="ui delete icon"></i>
+                                    </a>
                                 {% endif %}
                                 {% if perms.news.create_timeplace %}
-                                    <a class="ui inverted button make_bg_yellow"
-                                       href="/news/timeplace/{{ article.id }}/new/">Nytt tidspunkt</a>
+                                    <a class="inline-block make_col_blue" href="/news/timeplace/{{ article.id }}/new/">
+                                        <i class="icons">
+                                            <i class="time icon"></i>
+                                            <i class="noshadow bottom right corner add icon"></i>
+                                        </i>
+                                    </a>
                                 {% endif %}
-                            </div>
+                            </span>
+                        </div>
+                        <div class="description">
+                            {{ event.clickbait }}
                         </div>
                         <div class="list">
                             {% for timeplace in event.timeplace_set.all %}
                                 <div class="item">
-                                    <i class="clock icon"></i>
+                                    <i class="icon"></i>
                                     <div class="content">
-                                        <div class="header">{{ timeplace.start_date|date:"d. M" }}</div>
-                                        <div class="description">
-                                            {{ timeplace.place }}
-                                            <div>
+                                        <div class="header">
+                                            {{ timeplace.start_date|date:"d. M" }}
+                                            <span>
                                                 {% if perms.news.change_timeplace %}
-                                                    <a class="ui inverted button make_bg_yellow"
-                                                       href="/news/timeplace/{{ timeplace.id }}/edit/">Rediger</a>
+                                                    <a class="make_col_blue"
+                                                       href="/news/timeplace/{{ timeplace.id }}/edit/">
+                                                        <i class="ui edit icon"></i>
+                                                    </a>
                                                 {% endif %}
                                                 {% if perms.news.delete_timeplace %}
-                                                    <a class="ui inverted button make_bg_yellow"
-                                                       href="/news/timeplace/{{ timeplace.id }}/delete/">Slett</a>
+                                                    <a class="make_col_blue"
+                                                       href="/news/timeplace/{{ timeplace.id }}/delete/">
+                                                        <i class="ui delete icon"></i>
+                                                    </a>
                                                 {% endif %}
                                                 {% if perms.news.add_timeplace %}
-                                                    <a class="ui inverted button make_bg_yellow"
-                                                       href="/news/timeplace/{{ event.id }}/duplicate/">Kopier</a>
+                                                    <a class="make_col_blue"
+                                                       href="/news/timeplace/{{ timeplace.id }}/duplicate/">
+                                                        <i class="ui copy icon"></i>
+                                                    </a>
                                                 {% endif %}
-                                            </div>
+                                            </span>
+                                        </div>
+                                        <div class="description">
+                                            {{ timeplace.place }}
                                         </div>
                                     </div>
                                 </div>
@@ -64,25 +83,31 @@
             {% endfor %}
         </div>
 
-        <h1 class="ui text-centered make_col_blue header">Artikler</h1>
-        <div class="ui list">
+        <h1 class="ui text-centered make_col_yellow header">
+            Artikler
+            <a class="make_col_blue" href="/news/article/create/"><i class="ui add icon"></i></a>
+        </h1>
+        <div class="ui divided list">
             {% for article in articles %}
                 <div class="item">
                     <i class="ui icon"><img class="inline square_20" src="{{ article.image.url }}"></i>
                     <div class="content">
-                        <a class="make_col_blue header" href="/news/article/{{ article.id }}/">{{ article.title }}</a>
+                        <div class="header">
+                            <a class="inline-block make_col_blue header"
+                               href="/news/article/{{ article.id }}/">{{ article.title }}</a>
+                            {% if perms.news.change_article %}
+                                <a class="inline-block  make_col_blue" href="/news/article/{{ article.id }}/edit/">
+                                    <i class="ui edit icon"></i>
+                                </a>
+                            {% endif %}
+                            {% if perms.news.delete_article %}
+                                <a class="inline-block make_col_blue" href="/news/article/{{ article.id }}/delete/">
+                                    <i class="ui delete icon"></i>
+                                </a>
+                            {% endif %}
+                        </div>
                         <div class="description">
                             {{ article.clickbait }}
-                            <div>
-                                {% if perms.news.change_article %}
-                                    <a class="ui inverted button make_bg_yellow"
-                                       href="/news/article/{{ article.id }}/edit/">Rediger</a>
-                                {% endif %}
-                                {% if perms.news.delete_article %}
-                                    <a class="ui inverted button make_bg_yellow"
-                                       href="/news/article/{{ article.id }}/delete/">Slett</a>
-                                {% endif %}
-                            </div>
                         </div>
                     </div>
                 </div>

@@ -31,6 +31,14 @@ body {
     height: 20px;
 }
 
+.noshadow {
+    text-shadow: 0 0 0 #fff, 0 0 0 #fff, 0 0 0 #fff, 0 0 0 #fff !important;
+}
+
+.inline-block {
+    display: inline-block !important;
+}
+
 p, a, h1, h2, h3, h4, h5 {
     font-family: 'Ubuntu', sans-serif !important;
 }
