@@ -6,13 +6,9 @@ register = template.Library()
 
 @register.simple_tag()
 def get_3d_quota(user):
-    if hasattr(user, "quota3d"):
-        return user.quota3d
-    return Quota3D.objects.create(user=user)
+    return Quota3D.get_quota(user)
 
 
 @register.simple_tag()
 def get_sewing_quota(user):
-    if hasattr(user, "quotasewing"):
-        return user.quotasewing
-    return QuotaSewing.objects.create(user=user)
+    return QuotaSewing.get_quota(user)
