@@ -23,6 +23,7 @@ quota_url_patterns = [
     path('json/<machine_type:machine_type>/', login_required(get_user_quota_max_length)),
     path('update/3D-printer/', permission_required("can_edit_quota", raise_exception=True)(UpdateQuota3D.as_view())),
     path('update/sewing/', permission_required("can_edit_quota", raise_exception=True)(UpdateSewingQuota.as_view())),
+    path('update/', permission_required("can_edit_quota", raise_exception=True)(update_printer_handler)),
     path('<username:user>/', permission_required("can_edit_quota", raise_exception=True)(get_user_quota_view)),
     path('', permission_required("can_edit_quota", raise_exception=True)(QuotaView.as_view()), name="quota_panel"),
 ]

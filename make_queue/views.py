@@ -11,6 +11,7 @@ from .models import Machine, Reservation, Quota
 from .forms import ReservationForm
 from .templatetags.reservation_extra import calendar_url_reservation
 from news.models import Event
+from dataporten.login_handlers import get_handler
 
 
 class ReservationCalendarView(View):
@@ -290,6 +291,11 @@ class QuotaView(View):
 
 def get_user_quota_view(request, user):
     return render(request, "make_queue/quota/quota_user.html", {"user": user})
+
+
+def update_printer_handler(request):
+    get_handler("printer_allowed").update()
+    return redirect("quota_panel")
 
 
 class UpdateQuota3D(View):
