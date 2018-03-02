@@ -18,3 +18,8 @@
 .accordion, .accordion .content {
     padding: 0 !important;
 }
+
+.makeicon {
+    width: 20px;
+    margin-bottom: -2px;
+}

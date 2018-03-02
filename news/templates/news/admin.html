@@ -26,7 +26,13 @@
                                     &nbsp;&nbsp;
                                     <i class="ui {{ event.featured|color }} star icon"></i>
                                     <i class="ui {{ event.hidden|color }} eye slash icon"></i>
-                                    <i class="ui {{ event.private|color }} lock icon"></i>
+                                    <img class="makeicon" src="
+                                        {% if event.private %}
+                                            {% static "web/img/m_yellow.svg" %}
+                                        {% else %}
+                                            {% static "web/img/m_grey.svg" %}
+                                        {% endif %}
+                                    ">
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_event %}
                                         <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/edit/">
@@ -122,7 +128,13 @@
                                     &nbsp;&nbsp;
                                     <i class="ui {{ article.featured|color }} star icon"></i>
                                     <i class="ui {{ article.hidden|color }} eye slash icon"></i>
-                                    <i class="ui {{ article.private|color }} lock icon"></i>
+                                    <img class="makeicon" src="
+                                        {% if article.private %}
+                                            {% static "web/img/m_yellow.svg" %}
+                                        {% else %}
+                                            {% static "web/img/m_grey.svg" %}
+                                        {% endif %}
+                                    ">
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_article %}
                                         <a class="inline-block  make_col_blue"
