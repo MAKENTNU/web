@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load news_tags %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/admin.css" %}">
@@ -22,6 +23,11 @@
                                 <a class="inline-block make_col_blue header"
                                    href="/news/event/{{ event.id }}/">{{ event.title }}</a>
                                 <span>
+                                    &nbsp;&nbsp;
+                                    <i class="ui {{ event.featured|color }} star icon"></i>
+                                    <i class="ui {{ event.hidden|color }} eye slash icon"></i>
+                                    <i class="ui {{ event.private|color }} lock icon"></i>
+                                    &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_event %}
                                         <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/edit/">
                                             <i class="ui edit icon"></i>
@@ -33,7 +39,8 @@
                                         </a>
                                     {% endif %}
                                     {% if perms.news.create_timeplace %}
-                                        <a class="inline-block make_col_blue" href="/news/timeplace/{{ event.id }}/new/">
+                                        <a class="inline-block make_col_blue"
+                                           href="/news/timeplace/{{ event.id }}/new/">
                                             <i class="icons">
                                                 <i class="time icon"></i>
                                                 <i class="noshadow bottom right corner add icon"></i>
@@ -58,24 +65,27 @@
                                                     <div class="header">
                                                         {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}
                                                         <span>
+                                                        &nbsp;&nbsp;
+                                                        <i class="ui {{ timeplace.hidden|color }} eye slash icon"></i>
+                                                        &nbsp;&nbsp;&nbsp;
                                                         {% if perms.news.change_timeplace %}
                                                             <a class="make_col_blue"
                                                                href="/news/timeplace/{{ timeplace.id }}/edit/">
                                                                 <i class="ui edit icon"></i>
                                                             </a>
                                                         {% endif %}
-                                                            {% if perms.news.delete_timeplace %}
-                                                                <a class="make_col_blue"
-                                                                   href="/news/timeplace/{{ timeplace.id }}/delete/">
+                                                        {% if perms.news.delete_timeplace %}
+                                                            <a class="make_col_blue"
+                                                               href="/news/timeplace/{{ timeplace.id }}/delete/">
                                                                 <i class="ui delete icon"></i>
                                                             </a>
-                                                            {% endif %}
-                                                            {% if perms.news.add_timeplace %}
-                                                                <a class="make_col_blue"
-                                                                   href="/news/timeplace/{{ timeplace.id }}/duplicate/">
+                                                        {% endif %}
+                                                        {% if perms.news.add_timeplace %}
+                                                            <a class="make_col_blue"
+                                                               href="/news/timeplace/{{ timeplace.id }}/duplicate/">
                                                                 <i class="ui copy icon"></i>
                                                             </a>
-                                                            {% endif %}
+                                                        {% endif %}
                                                     </span>
                                                     </div>
                                                     <div class="description">
@@ -109,13 +119,20 @@
                                 <a class="inline-block make_col_blue header"
                                    href="/news/article/{{ article.id }}/">{{ article.title }}</a>
                                 <span>
+                                    &nbsp;&nbsp;
+                                    <i class="ui {{ article.featured|color }} star icon"></i>
+                                    <i class="ui {{ article.hidden|color }} eye slash icon"></i>
+                                    <i class="ui {{ article.private|color }} lock icon"></i>
+                                    &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_article %}
-                                        <a class="inline-block  make_col_blue" href="/news/article/{{ article.id }}/edit/">
+                                        <a class="inline-block  make_col_blue"
+                                           href="/news/article/{{ article.id }}/edit/">
                                             <i class="ui edit icon"></i>
                                         </a>
                                     {% endif %}
                                     {% if perms.news.delete_article %}
-                                        <a class="inline-block make_col_blue" href="/news/article/{{ article.id }}/delete/">
+                                        <a class="inline-block make_col_blue"
+                                           href="/news/article/{{ article.id }}/delete/">
                                         <i class="ui delete icon"></i>
                                     </a>
                                     {% endif %}

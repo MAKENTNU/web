@@ -63,7 +63,7 @@ class AdminView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.filter(),
+            'articles': Article.objects.all(),
             'events': Event.objects.all(),
         })
         return context
