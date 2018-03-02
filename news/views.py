@@ -87,7 +87,7 @@ class EditArticleView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_article',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
@@ -108,7 +108,7 @@ class CreateArticleView(PermissionRequiredMixin, CreateView):
     permission_required = (
         'news.add_article',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class EditEventView(PermissionRequiredMixin, UpdateView):
@@ -127,7 +127,7 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_event',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
@@ -146,7 +146,7 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
     permission_required = (
         'news.add_event',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
@@ -168,12 +168,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_timeplace',
     )
-    success_url = '/'
-
-    def post(self, request, *args, **kwargs):
-        pk = get_object_or_404(TimePlace, pk=kwargs['pk']).event.pk
-        self.success_url = reverse('event', args=(pk,))
-        return super().post(request, *args, **kwargs)
+    success_url = '/news/admin'
 
 
 class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
@@ -195,7 +190,7 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
     permission_required = (
         'news.add_timeplace',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, View):
