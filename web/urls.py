@@ -8,11 +8,14 @@ from social_core.utils import setting_name
 from contentbox.models import ContentBox
 from dataporten.views import Logout, login_wrapper
 
-from web.views import IndexView
+from web.views import IndexView,AdminPanelView
+
+
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 urlpatterns = [
+    url(r'^adminpanel/',AdminPanelView.as_view()),
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view()),
     url(r'^login/$', RedirectView.as_view(url='/login/dataporten/'), name='login'),

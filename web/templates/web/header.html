@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load string_tags %}
+{% load permission_tags %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 
@@ -28,7 +29,13 @@
         <a class="item" href="/about/">
             Om oss
         </a>
+
         {% if user.is_authenticated %}
+            {% if user|has_any_permissions or user.is_superuser %}
+                <a class = "item" href="/adminpanel/">
+                    Administrasjon
+                </a>
+            {% endif %}
             <div class="ui dropdown item">
                 <div class="text">{{ user.first_name|first_word }}</div>
                 <i class="dropdown icon"></i>
