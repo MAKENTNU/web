@@ -25,6 +25,8 @@ function fix_time(element) {
 }
 
 $(function() {
-    fix_time($('#id_pub_time'));
-    fix_date($('#id_pub_date'));
+    fix_time($('#id_start_time'));
+    fix_time($('#id_end_time'));
+    fix_date($('#id_start_date'));
+    fix_date($('#id_end_date'));
 });
