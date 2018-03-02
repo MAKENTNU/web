@@ -13,3 +13,7 @@ class IndexView(TemplateView):
             'events': Event.objects.published().filter(featured=True)[:4],
         })
         return context
+
+class AdminPanelView(TemplateView):
+    template_name = 'web/admin_panel.html'
+
