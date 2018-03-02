@@ -2,10 +2,12 @@
 
 {% block body %}
     <div class="ui text container" style="position: relative; margin: 100px 0;">
-        <a class="ui yellow button"
-           href="/contentbox/{{ contentbox.id }}/edit/"
-           style="position: absolute; top: -50px; left: 0px;"
-        >Rediger</a>
+        {% if perms.contentbox.change_contentbox %}
+            <a class="ui yellow button"
+               href="/contentbox/{{ contentbox.id }}/edit/"
+               style="position: absolute; top: -50px; left: 0px;"
+            >Rediger</a>
+        {% endif %}
         {% autoescape off %}
             {{ contentbox.content }}
         {% endautoescape %}

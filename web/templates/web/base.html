@@ -2,23 +2,47 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>{% block title %}MAKE NTNU{% endblock title %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <meta property="og:title" content="MAKE NTNU"/>
     <meta property="og:site_name" content="MAKE NTNU"/>
-    <meta property="og:image" content="http://dev.makentnu.no{% static "web/img/make_thumb.png" %}"/>
+    <meta property="og:image"
+          content="http://makentnu.no{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="http://dev.makentnu.no/"/>
+    <meta property="og:url" content="http://makentnu.no/"/>
     <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
 
     <link rel="stylesheet" type="text/css" href="{% static "web/semantic-ui/semantic.min.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}">
     <script src="{% static "web/js/jquery-3.1.1.min.js" %}"></script>
     <script src="{% static "web/semantic-ui/semantic.min.js" %}"></script>
+    <style>
+        @font-face {
+            font-family: Ubuntu;
+            src: url({% static "web/font/Ubuntu-L.ttf" %});
+            font-weight: 300;
+        }
 
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}">
+        @font-face {
+            font-family: Ubuntu;
+            src: url({% static "web/font/Ubuntu-R.ttf" %});
+            font-weight: 400;
+        }
+
+        @font-face {
+            font-family: Ubuntu;
+            src: url({% static "web/font/Ubuntu-M.ttf" %});
+            font-weight: 600;
+        }
+
+        @font-face {
+            font-family: Ubuntu;
+            src: url({% static "web/font/Ubuntu-B.ttf" %});
+            font-weight: 700;
+        }
+    </style>
     {% block head %}{% endblock head %}
 </head>
 
@@ -35,34 +59,21 @@
         {% include "web/footer.html" %}
     {% endblock %}
 </div>
-</body>
 
-<style>
-    @font-face {
-        font-family: Ubuntu;
-        src: url({% static "web/font/Ubuntu-L.ttf" %});
-        font-weight: 300;
+<script src="{% static "web/js/dropdown.js" %}"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
     }
 
-    @font-face {
-        font-family: Ubuntu;
-        src: url({% static "web/font/Ubuntu-R.ttf" %});
-        font-weight: 400;
-    }
-
-    @font-face {
-        font-family: Ubuntu;
-        src: url({% static "web/font/Ubuntu-M.ttf" %});
-        font-weight: 600;
-    }
-
-    @font-face {
-        font-family: Ubuntu;
-        src: url({% static "web/font/Ubuntu-B.ttf" %});
-        font-weight: 700;
-    }
-</style>
+    gtag('js', new Date());
+    gtag('config', 'UA-113882146-1');
+</script>
 
 {% block scripts %}
 {% endblock %}
+</body>
 </html>
