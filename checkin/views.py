@@ -31,7 +31,6 @@ class ShowSkillsView(TemplateView):
         """ Creates dict with skill titles as keys and
          the highest corresponding skill level as its pair value (quick fix) to show on website """
         skill_dict = {}
-        # level_list = ["nybegynner", "viderekommen", "ekspert"]
         for profile in Profile.objects.filter(on_make=True):
             for level in profile.userskill_set.all():
                 title, level_int = level.skill.title, level.skill_level
@@ -46,7 +45,6 @@ class ShowSkillsView(TemplateView):
         return context
 
 
-# TODO: create profile page, display profile picture, add and edit skills, multiple dropdown with search,
 class ProfilePageView(TemplateView):
     template_name = 'checkin/profile.html'
 
@@ -77,7 +75,6 @@ class ProfilePageView(TemplateView):
         userskill_set = profile.userskill_set.all()
 
         skill_dict = {}
-        # level_list = ["nybegynner", "viderekommen", "ekspert"]
         for us in userskill_set:
             title, level_int = us.skill.title, us.skill_level
             if title not in skill_dict or level_int > skill_dict[title]:
@@ -92,8 +89,3 @@ class ProfilePageView(TemplateView):
             'all_skills': Skill.objects.all()
         })
         return context
-
-
-class EditProfilePageView(TemplateView):
-    model = Profile
-    template_name = "checkin/profile_edit.html"

@@ -10,8 +10,8 @@
                         <img src=""/>
                     </div>
                     <div class="content">
-                        {{ skill }} (nivå:
-                        <div class="ui star rating" data-rating="{{ level }}" data-max-rating="3"></div>)
+                        {{ skill }}
+                        <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
                     </div>
                 </div>
             {% endfor %}
@@ -22,5 +22,6 @@
 {% block scripts %}
     <script>
         $('.ui.rating').rating();
+        $('.rating.skill-lvl').rating('disable');
     </script>
 {% endblock %}
