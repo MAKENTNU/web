@@ -42,7 +42,7 @@
 
         {% if user.is_authenticated %}
             {% if user|has_any_permissions or user.is_superuser %}
-                <a class = "item" href="/news/admin/">
+                <a class = "item" href="/adminpanel/">
                     Administrasjon
                 </a>
             {% endif %}
