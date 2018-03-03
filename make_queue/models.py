@@ -35,7 +35,7 @@ class Machine(models.Model):
         """Abstract method"""
 
     def reservations_in_period(self, start_time, end_time):
-        return self.get_reservation_set().filter(start_time__lt=start_time, end_time__gt=start_time) | \
+        return self.get_reservation_set().filter(start_time__lte=start_time, end_time__gte=start_time) | \
                self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
