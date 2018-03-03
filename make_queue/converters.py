@@ -78,7 +78,7 @@ class MachineReservation:
 
 
 class UserByUsername:
-    regex = "(" + "|".join(user.username.replace("-", "\-") for user in User.objects.all()) + ")"
+    regex = "([-0-9A-Za-z.]*)"
 
     def to_python(self, value):
         return get_object_or_404(User, username=value)
