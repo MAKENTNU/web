@@ -1,8 +1,15 @@
+from datetime import timedelta
+
+import math
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.utils import timezone
+from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView
 
-from news.models import Article, Event
+from news.models import Article, Event, TimePlace
 
 
 class ViewEventsView(TemplateView):
@@ -11,10 +18,11 @@ class ViewEventsView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'past': Event.objects.past(),
-            'future': Event.objects.future(),
+            'past': TimePlace.objects.past(),
+            'future': TimePlace.objects.future(),
         })
         return context
+
 
 class ViewArticlesView(TemplateView):
     template_name = 'news/articles.html'
@@ -22,7 +30,7 @@ class ViewArticlesView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.published().filter(event=None),
+            'articles': Article.objects.published().filter(),
         })
         return context
 
@@ -55,7 +63,7 @@ class AdminView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.filter(event=None),
+            'articles': Article.objects.all(),
             'events': Event.objects.all(),
         })
         return context
@@ -79,7 +87,7 @@ class EditArticleView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_article',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
@@ -100,7 +108,7 @@ class CreateArticleView(PermissionRequiredMixin, CreateView):
     permission_required = (
         'news.add_article',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class EditEventView(PermissionRequiredMixin, UpdateView):
@@ -111,24 +119,15 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
         'content',
         'clickbait',
         'image',
-        'pub_date',
-        'pub_time',
         'contain',
         'hidden',
         'private',
-        'start_date',
-        'end_date',
-        'start_time',
-        'end_time',
-        'place',
-        'place_url',
-        'hoopla',
         'featured',
     )
     permission_required = (
         'news.change_event',
     )
-    success_url = '/'
+    success_url = '/news/admin'
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
@@ -139,11 +138,24 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'content',
         'clickbait',
         'image',
-        'pub_date',
-        'pub_time',
         'contain',
         'hidden',
         'private',
+        'featured',
+    )
+    permission_required = (
+        'news.add_event',
+    )
+    success_url = '/news/admin'
+
+
+class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
+    model = TimePlace
+    template_name = 'news/timeplace_edit.html'
+    fields = (
+        'event',
+        'pub_date',
+        'pub_time',
         'start_date',
         'end_date',
         'start_time',
@@ -151,9 +163,65 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'place',
         'place_url',
         'hoopla',
-        'featured',
+        'hidden',
     )
     permission_required = (
-        'news.add_event',
+        'news.change_timeplace',
     )
-    success_url = '/'
+    success_url = '/news/admin'
+
+
+class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
+    model = TimePlace
+    template_name = 'news/timeplace_create.html'
+    fields = (
+        'event',
+        'pub_date',
+        'pub_time',
+        'start_date',
+        'end_date',
+        'start_time',
+        'end_time',
+        'place',
+        'place_url',
+        'hoopla',
+        'hidden',
+    )
+    permission_required = (
+        'news.add_timeplace',
+    )
+    success_url = '/news/admin'
+
+
+class DuplicateTimePlaceView(PermissionRequiredMixin, View):
+    permission_required = (
+        'news.add_timeplace',
+    )
+
+    def get(self, request, pk):
+        timeplace = get_object_or_404(TimePlace, pk=pk)
+        now = timezone.now()
+        if now.date() > timeplace.start_date or now.date() == timeplace.start_date and now.time() > timeplace.start_time:
+            delta_days = timezone.now().date() - timeplace.start_date
+            weeks = math.ceil(delta_days / 7)
+        else:
+            weeks = 1
+        timeplace.start_date += timedelta(weeks=weeks)
+        timeplace.pub_date += timedelta(weeks=weeks)
+        if timeplace.end_date:
+            timeplace.end_date += timedelta(weeks=weeks)
+        timeplace.hidden = True
+        timeplace.pk = None
+        timeplace.save()
+        return HttpResponseRedirect(reverse('timeplace-edit', args=(timeplace.pk,)))
+
+
+class NewTimePlaceView(PermissionRequiredMixin, View):
+    permission_required = (
+        'news.add_timeplace',
+    )
+
+    def get(self, request, pk):
+        event = get_object_or_404(Event, pk=pk)
+        new_timeplace = TimePlace.objects.create(event=event)
+        return HttpResponseRedirect(reverse('timeplace-edit', args=(new_timeplace.pk,)))

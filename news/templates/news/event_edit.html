@@ -8,7 +8,6 @@
     <script type="text/javascript" src="{% static "web/calendar/calendar.min.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-    <script type="text/javascript" src="{% static "news/js/date_edit.js" %}"></script>
     <script type="text/javascript" src="{% static "news/js/date_edit_article.js" %}"></script>
 {% endblock head %}
 
@@ -27,48 +26,6 @@
         <div class="field">
             <label>{{ form.clickbait.label }}</label>
             {{ form.clickbait }}
-        </div>
-        <div class="field">
-            <label>{{ form.place.label }}</label>
-            {{ form.place }}
-        </div>
-        <div class="field">
-            <label>{{ form.place_url.label }}</label>
-            {{ form.place_url }}
-        </div>
-        <div class="field">
-            <label>{{ form.hoopla.label }}</label>
-            {{ form.hoopla }}
-        </div>
-        <div class="two fields">
-            <div class="field">
-                <label>Fra</label>
-                {{ form.start_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.start_time }}
-            </div>
-        </div>
-        <div class="two fields">
-            <div class="field">
-                <label>Til</label>
-                {{ form.end_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.end_time }}
-            </div>
-        </div>
-        <div class="two fields">
-            <div class="field">
-                <label>Publisering</label>
-                {{ form.pub_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.pub_time }}
-            </div>
         </div>
         <div class="field">
             <label>{{ form.image.label }}</label>
