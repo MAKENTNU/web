@@ -12,3 +12,7 @@ class IndexView(TemplateView):
             'events': TimePlace.objects.future().filter(event__featured=True)[:4],
         })
         return context
+
+class AdminPanelView(TemplateView):
+    template_name = 'web/admin_panel.html'
+

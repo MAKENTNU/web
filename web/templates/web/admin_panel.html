@@ -1,0 +1,12 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load permission_tags %}
+
+
+{% block body %}
+     <div class="ui text container">
+        {% if user|has_any_news_permissions or user.is_superuser %}
+            <a class="ui yellow button" href="/news/admin/">Artikler og arrangementer</a>
+        {% endif %}
+    </div>
+{% endblock body %}

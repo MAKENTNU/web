@@ -91,3 +91,7 @@ p, a, h1, h2, h3, h4, h5 {
 .make_col_ligray {
     color: rgb(220, 221, 222) !important;
 }
+
+.make_content_padding {
+    height: 3em;
+}
