@@ -57,8 +57,7 @@
 }
 
 .make_reservation_calendar_time_table_make {
-    background-color: rgb(33, 43, 52);
-    color: white;
+    background-color: #dcddde;
     z-index: 200;
 
 }
