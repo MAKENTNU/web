@@ -83,8 +83,10 @@ class Reservation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    event = models.ForeignKey(Event, null=True, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, null=True, blank=True, on_delete=models.CASCADE)
     showed = models.NullBooleanField(default=None)
+    special = models.BooleanField(default=False)
+    special_text = models.CharField(max_length=20)
 
     @abstractmethod
     def get_quota(self):
@@ -116,6 +118,9 @@ class Reservation(models.Model):
         # Event reservations are always valid, if the time is not already reserved
         if self.event:
             return self.user.has_perm("make_queue.can_create_event_reservation")
+
+        if self.special:
+            return self.user.has_perm("")
 
         # Check if the reservation is shorter than the maximum duration allowed for the user
         if self.end_time - self.start_time > timedelta(hours=self.get_quota().max_time_reservation):
@@ -183,7 +188,8 @@ class Quota(models.Model):
         raise NotImplementedError
 
     def can_make_new_reservation(self):
-        return len(self.get_active_user_reservations().filter(event=None)) < self.max_number_of_reservations
+        return len(
+            self.get_active_user_reservations().filter(event=None, special=False)) < self.max_number_of_reservations
 
     @staticmethod
     def get_quota_by_machine(machine_type, user):
@@ -193,6 +199,7 @@ class Quota(models.Model):
         permissions = (
             ("can_create_event_reservation", "Can create event reservation"),
             ("can_edit_quota", "Can edit quotas"),
+            ("can_create_special_reservation", "Can create special reservation"),
         )
 
 
@@ -208,7 +215,7 @@ class Quota3D(Quota):
         return user.quota3d if hasattr(user, "quota3d") else Quota3D.objects.create(user=user)
 
     def __str__(self):
-        return "User " + self.user.username + ", can " + "not "*(not self.can_print) + "print"
+        return "User " + self.user.username + ", can " + "not " * (not self.can_print) + "print"
 
 
 class QuotaSewing(Quota):
