@@ -116,11 +116,8 @@ class Reservation(models.Model):
             return False
 
         # Event reservations are always valid, if the time is not already reserved
-        if self.event:
+        if self.event or self.special:
             return self.user.has_perm("make_queue.can_create_event_reservation")
-
-        if self.special:
-            return self.user.has_perm("")
 
         # Check if the reservation is shorter than the maximum duration allowed for the user
         if self.end_time - self.start_time > timedelta(hours=self.get_quota().max_time_reservation):
@@ -199,7 +196,6 @@ class Quota(models.Model):
         permissions = (
             ("can_create_event_reservation", "Can create event reservation"),
             ("can_edit_quota", "Can edit quotas"),
-            ("can_create_special_reservation", "Can create special reservation"),
         )
 
 
