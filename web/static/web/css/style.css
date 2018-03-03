@@ -57,3 +57,7 @@ p, a, h1, h2, h3, h4, h5 {
 .make_col_turquoise {
     color: rgb(0, 235, 179) !important;
 }
+
+.make_content_padding {
+    height: 3em;
+}
