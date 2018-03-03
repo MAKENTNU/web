@@ -28,6 +28,10 @@
     padding-top: 0 !important;
 }
 
+.large-text {
+    font-size: 1.2em;
+}
+
 .make_row_fill {
     height: 100%;
 }

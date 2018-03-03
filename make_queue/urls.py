@@ -35,6 +35,7 @@ urlpatterns = [
     path('make/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
     path('make/<time:start_time>/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
     path('me/', login_required(MyReservationsView.as_view()), name="my_reservations"),
+    path('admin/', permission_required('can_create_event_reservation')(AdminReservationView.as_view()), name="admin_reservation"),
     path('delete/', login_required(DeleteReservationView.as_view()), name="delete_reservation"),
     path('change/<reservation:reservation>/', login_required(ChangeReservationView.as_view()), name="change_reservation"),
     path('json/', include(json_urlpatterns)),
