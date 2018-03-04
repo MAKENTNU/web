@@ -217,7 +217,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                      end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.check_reservation_valid(reservation2,
-                                       "Reservations on different printers should be able to overlap in time")
+                                     "Reservations on different printers should be able to overlap in time")
 
     def test_same_time_separate_machines_more_than_allowed(self):
         printer1 = Printer3D.objects.get(name="C1")
@@ -235,6 +235,127 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         self.check_reservation_invalid(reservation2,
                                        "Reservations on different printers should be able to overlap in time")
+
+    def test_can_owner_change_future_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+
+        self.assertTrue(reservation.can_change(user))
+
+    def test_can_owner_change_started_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+
+        self.assertFalse(reservation.can_change(user))
+
+    def test_can_owner_change_started_event_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
+                                                   event=Event.objects.get(title="TEST EVENT"))
+
+        self.assertFalse(reservation.can_change(user))
+
+    def test_can_owner_change_started_special_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
+                                                   special=True, special_text="Test")
+
+        self.assertFalse(reservation.can_change(user))
+
+    def test_can_other_user_change_future_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+
+        self.assertTrue(reservation.can_change(user))
+        self.assertFalse(reservation.can_change(user2))
+
+    def test_can_user_with_event_reservation_change_other_user_non_event_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user1 = User.objects.get(username="User")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+
+        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+
+        self.assertTrue(reservation.can_change(user1))
+        self.assertFalse(reservation.can_change(user2))
+
+    def test_can_user_with_event_reservation_change_other_user_event_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user1 = User.objects.get(username="User")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+
+        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+
+        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
+                                                   event=Event.objects.get(title="TEST EVENT"))
+
+        self.assertTrue(reservation.can_change(user1))
+        self.assertTrue(reservation.can_change(user2))
+
+    def test_can_user_with_event_reservation_change_other_user_special_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user1 = User.objects.get(username="User")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+
+        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+
+        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
+                                                  special=True, special_text="Test")
+
+        self.assertTrue(reservation.can_change(user1))
+        self.assertTrue(reservation.can_change(user2))
+
+    def test_can_user_without_event_reservation_change_other_user_special_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user1 = User.objects.get(username="User")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+
+        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+
+        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
+                                                   special=True, special_text="Test")
+
+        self.assertTrue(reservation.can_change(user1))
+        self.assertFalse(reservation.can_change(user2))
+
+    def test_can_user_without_event_reservation_change_other_user_event_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user1 = User.objects.get(username="User")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+
+        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+
+        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
+                                                   event=Event.objects.get(title="TEST EVENT"))
+
+        self.assertTrue(reservation.can_change(user1))
+        self.assertFalse(reservation.can_change(user2))
 
 
 class ReservationSewingTestCase(GeneralReservationTestCase):
