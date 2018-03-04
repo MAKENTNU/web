@@ -15,6 +15,8 @@ class ReservationForm(forms.Form):
         choices=((machine_type.literal, machine_type.literal) for machine_type in Machine.__subclasses__()))
     event = forms.BooleanField(required=False)
     event_pk = forms.CharField(required=False)
+    special = forms.BooleanField(required=False)
+    special_text = forms.CharField(required=False, max_length=20)
 
     def __init__(self, *args, **kwargs):
         super(ReservationForm, self).__init__(*args, **kwargs)
@@ -53,5 +55,8 @@ class ReservationForm(forms.Form):
             if not event_query.exists():
                 raise ValidationError("Event must exist")
             cleaned_data["event"] = event_query.first()
+
+        if cleaned_data["event"] and cleaned_data["special"]:
+            raise ValidationError("Cannot be both special and event")
 
         return cleaned_data
