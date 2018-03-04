@@ -3,7 +3,7 @@ from django.views.generic import FormView
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.http.response import JsonResponse, HttpResponse
+from django.http.response import JsonResponse, HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from .helper import date_to_local, local_to_date
@@ -187,8 +187,10 @@ class DeleteReservationView(View):
 
             reservation = Reservation.get_reservation(machine_type, pk)
 
-            if reservation and reservation.user == request.user and reservation.can_delete():
+            if reservation and reservation.can_change(request.user):
                 reservation.delete()
+        if "next" in request.POST:
+            return HttpResponseRedirect(request.POST.get("next"))
         return redirect("my_reservations")
 
 
@@ -208,14 +210,14 @@ class ChangeReservationView(View):
 
     def get(self, request, reservation):
         # Users should not be able to see the edit page for other users reservations or their own old reservations
-        if reservation.user != request.user or reservation.start_time < timezone.now():
+        if not reservation.can_change(request.user):
             return redirect("my_reservations")
 
         return render(request, self.template_name, self.build_parameters(reservation))
 
     def post(self, request, reservation):
         # The reservation must be valid, for the same user as the one sending the request and not have started
-        if reservation is None or reservation.user != request.user or reservation.start_time < timezone.now():
+        if reservation is None or not reservation.can_change(request.user):
             return redirect("my_reservations")
 
         try:

@@ -141,6 +141,12 @@ class Reservation(models.Model):
     def can_delete(self):
         return self.start_time > timezone.now()
 
+    def can_change(self, user):
+        if user.has_perm("make_queue.can_create_event_reservation") and (
+                self.special or (self.event is not None)):
+            return True
+        return self.user == user and self.start_time >= timezone.now()
+
     class Meta:
         abstract = True
 

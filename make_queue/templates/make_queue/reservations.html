@@ -11,7 +11,11 @@
     <br><br>
     <div class="ui container">
         <div class="ui huge header">
+            {% if admin %}
+                MAKE NTNU reservasjoner
+            {% else %}
             Mine reservasjoner
+            {% endif %}
         </div>
         <div class="ui vertical segment">
             <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
@@ -94,6 +98,10 @@
                                 <input type="text" name="machine_type" class="make_hidden"
                                        value="{{ reservation.machine.literal }}"/>
                                 <input type="submit" class="ui button red" value="Kanseller">
+                                {% if admin %}
+                                    <input type="text" name="next" class="make_hidden"
+                                           value="{% url 'admin_reservation' %}"/>
+                                {% endif %}
                             </form>
                         {% endif %}
                     </td>
@@ -134,6 +142,10 @@
                                            value="{{ reservation.pk }}"/>
                                     <input type="text" name="machine_type" class="make_hidden"
                                            value="{{ reservation.machine.literal }}"/>
+                                    {% if admin %}
+                                        <input type="text" name="next" class="make_hidden"
+                                               value="{% url 'admin_reservation' %}"/>
+                                    {% endif %}
                                 </form>
                             </div>
                         </div>
