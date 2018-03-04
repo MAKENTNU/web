@@ -25,12 +25,14 @@
                 Endre reservasjon
             {% endif %}
         </div>
-        <form class="ui form" id="reserve_form" method="post" data-max-time-reservation="{{ quota.max_time_reservation }}">
+        <form class="ui form" id="reserve_form" method="post"
+              data-max-time-reservation="{{ quota.max_time_reservation }}">
             {% csrf_token %}
             <div class="two fields">
                 <div class="field">
                     <label>Utstyrs type</label>
-                    <div class="ui fluid selection dropdown {% if not new_reservation %}disabled{% endif %}" id="machine_type_dropdown">
+                    <div class="ui fluid selection dropdown {% if not new_reservation %}disabled{% endif %}"
+                         id="machine_type_dropdown">
                         <input type="hidden" name="machine_type" value="default">
                         <div class="default text">Velg utstyrs type</div>
                         <i class="dropdown icon"></i>
@@ -71,7 +73,8 @@
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
                             <input name="start_time" type="text" placeholder="Start tidspunkt"
-                                   value="{% if start_time %}{{ start_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date %}{% endif %}">
+                                   value="
+                                           {% if start_time %}{{ start_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date %}{% endif %}">
                         </div>
                     </div>
                 </div>
@@ -81,7 +84,8 @@
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
                             <input name="end_time" type="text" placeholder="Slutt tidspunkt"
-                                   value="{% if end_time %}{{ end_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date 2 %}{% endif %}">
+                                   value="
+                                           {% if end_time %}{{ end_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date 2 %}{% endif %}">
                         </div>
                     </div>
                 </div>
@@ -89,13 +93,26 @@
 
             {% if perms.make_queue.can_create_event_reservation %}
                 <div class="two fields">
-                    <div class="field">
-                        <div class="ui checkbox {% if not new_reservation %}disabled{% endif %}" id="event_checkbox">
-                            <input type="checkbox" name="event" id="event" {% if not is_new_reservation and event %}checked{% endif %}/>
-                            <label for="event">Arrangement</label>
+                    <div class="ui field">
+                        <div class="two fields">
+                            <div class="field">
+                                <div class="ui checkbox {% if not new_reservation %}disabled{% endif %}"
+                                     id="event_checkbox">
+                                    <input type="checkbox" name="event" id="event"
+                                           {% if not is_new_reservation and event %}checked{% endif %}/>
+                                    <label for="event">Arrangement</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="ui checkbox {% if not new_reservation %}disabled{% endif %}" id="special_checkbox">
+                                    <input type="checkbox" name="special" id="special"
+                                           {% if not is_new_reservation and special %}checked{% endif %}/>
+                                    <label for="event">MAKE NTNU</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="ui field {% if not event %}make_non_visible{% endif %}" id="event_name_input">
+                    <div class="ui field {% if not event %}make_hidden{% endif %}" id="event_name_input">
                         <label>Arrangement</label>
                         <div class="ui field selection dropdown" id="event_pk">
                             <input type="hidden" name="event_pk" value="{% if event %}{{ event.pk }}{% endif %}">
@@ -105,18 +122,27 @@
                                 {% for event in events %}
                                     <div class="item" data-value="{{ event.pk }}">
                                         <b>{{ event.title }}</b><br>
-                                        {% if event.start_date == event.end_date %}{{ event.start_date|date:"d/m/Y" }} - {{ event.start_time|time:"H:i" }}
-                                        {% else  %}{{ event.start_date|date:"d/m/Y" }} - {{ event.end_date|date:"d/m/Y" }}
+                                        {% if event.start_date == event.end_date %}{{ event.start_date|date:"d/m/Y" }} -
+                                            {{ event.start_time|time:"H:i" }}
+                                            {% else %}{{ event.start_date|date:"d/m/Y" }} -
+                                            {{ event.end_date|date:"d/m/Y" }}
                                         {% endif %}
                                     </div>
                                 {% endfor %}
                             </div>
                         </div>
                     </div>
+                    <div class="ui field {% if not special %}make_hidden{% endif %}" id="special_input">
+                        <label>Reservasjons tekst</label>
+                        <div class="ui input" id="special_text">
+                            <input type="text" placeholder="Reservasjons tekst" maxlength=20 name="special_text" value="{% if special %}{{ special_text }}{% endif %}">
+                        </div>
+                    </div>
                 </div>
             {% endif %}
             <div class="float_fix">
-                <input class="ui right floated button" type="submit" value="{% if new_reservation %}Reserver{% else %}Endre{% endif %}">
+                <input class="ui right floated button" type="submit"
+                       value="{% if new_reservation %}Reserver{% else %}Endre{% endif %}">
             </div>
         </form>
 

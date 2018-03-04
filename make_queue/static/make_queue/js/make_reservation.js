@@ -120,7 +120,18 @@ $("#end_time").calendar({
 $('.ui.dropdown').dropdown();
 $('#event_checkbox').checkbox({
     onChange: function () {
-        $("#event_name_input").toggleClass("make_non_visible", !$(this).is(':checked'))
+        $("#event_name_input").toggleClass("make_hidden", !$(this).is(':checked'));
+        if ($(this).is(':checked')) {
+            $('#special_checkbox').checkbox("uncheck");
+        }
+    },
+});
+$('#special_checkbox').checkbox({
+    onChange: function () {
+        $("#special_input").toggleClass("make_hidden", !$(this).is(':checked'));
+        if ($(this).is(':checked')) {
+            $('#event_checkbox').checkbox("uncheck");
+        }
     },
 });
 

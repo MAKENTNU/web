@@ -197,6 +197,7 @@ class ChangeReservationView(View):
                                    "instances": [reservation.get_machine()]}], "new_reservation": False,
                 "quota": reservation.get_quota(), "selected_machine": reservation.get_machine(),
                 "event": reservation.event, "start_time": reservation.start_time, "end_time": reservation.end_time,
+                "special": reservation.special, "special_text": reservation.special_text,
                 "events": Event.objects.filter(
                     Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
                     Q(end_date__gt=timezone.now().date()))}
