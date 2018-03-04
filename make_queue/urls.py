@@ -21,11 +21,11 @@ json_urlpatterns = [
 
 quota_url_patterns = [
     path('json/<machine_type:machine_type>/', login_required(get_user_quota_max_length)),
-    path('update/3D-printer/', permission_required("can_edit_quota", raise_exception=True)(UpdateQuota3D.as_view())),
-    path('update/sewing/', permission_required("can_edit_quota", raise_exception=True)(UpdateSewingQuota.as_view())),
-    path('update/', permission_required("can_edit_quota", raise_exception=True)(update_printer_handler)),
-    path('<username:user>/', permission_required("can_edit_quota", raise_exception=True)(get_user_quota_view)),
-    path('', permission_required("can_edit_quota", raise_exception=True)(QuotaView.as_view()), name="quota_panel"),
+    path('update/3D-printer/', permission_required("make_queue.can_edit_quota", raise_exception=True)(UpdateQuota3D.as_view())),
+    path('update/sewing/', permission_required("make_queue.can_edit_quota", raise_exception=True)(UpdateSewingQuota.as_view())),
+    path('update/', permission_required("make_queue.can_edit_quota", raise_exception=True)(update_printer_handler)),
+    path('<username:user>/', permission_required("make_queue.can_edit_quota", raise_exception=True)(get_user_quota_view)),
+    path('', permission_required("make_queue.can_edit_quota", raise_exception=True)(QuotaView.as_view()), name="quota_panel"),
 ]
 
 
@@ -35,7 +35,7 @@ urlpatterns = [
     path('make/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
     path('make/<time:start_time>/<machine:machine>/', login_required(MakeReservationView.as_view()), name="make_reservation"),
     path('me/', login_required(MyReservationsView.as_view()), name="my_reservations"),
-    path('admin/', permission_required('can_create_event_reservation')(AdminReservationView.as_view()), name="admin_reservation"),
+    path('admin/', permission_required('make_queue.can_create_event_reservation', raise_exception=True)(AdminReservationView.as_view()), name="admin_reservation"),
     path('delete/', login_required(DeleteReservationView.as_view()), name="delete_reservation"),
     path('change/<reservation:reservation>/', login_required(ChangeReservationView.as_view()), name="change_reservation"),
     path('json/', include(json_urlpatterns)),

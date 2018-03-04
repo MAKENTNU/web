@@ -9,10 +9,10 @@
             <a class="ui yellow button" href="/news/admin/">Artikler og arrangementer</a>
         {% endif %}
         {% if perms.make_queue.can_create_event_reservation %}
-            <a class="ui yellow button" href="/reservation/admin/">Reservasjoner</a>
+            <a class="ui yellow button" href="{% url 'admin_reservation' %}">Reservasjoner</a>
         {% endif %}
         {% if perms.make_queue.can_edit_quota %}
-            <a class="ui yellow button" href="/reservation/quota/">Kvote</a>
+            <a class="ui yellow button" href="{% url 'quota_panel' %}">Kvote</a>
         {% endif %}
     </div>
 {% endblock body %}
