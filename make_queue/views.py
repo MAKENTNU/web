@@ -143,6 +143,10 @@ class MakeReservationView(FormView):
         if form.cleaned_data["event"]:
             reservation.event = form.cleaned_data["event"]
 
+        if form.cleaned_data["special"]:
+            reservation.special = True
+            reservation.special_text = form.cleaned_data["special_text"]
+
         if not reservation.validate():
             render_parameters = self.build_parameters(form.cleaned_data["machine"], request.user,
                                                       start_time=form.cleaned_data["start_time"],
@@ -231,6 +235,9 @@ class ChangeReservationView(View):
         reservation.end_time = form.cleaned_data["end_time"]
         if reservation.event:
             reservation.event = form.cleaned_data["event"]
+
+        if reservation.special:
+            reservation.special_text = form.cleaned_data["special_text"]
 
         if not reservation.validate():
             render_parameters = self.build_parameters(reservation)
