@@ -51,7 +51,7 @@ class ReservationForm(forms.Form):
             event_pk = cleaned_data["event_pk"]
             event_query = Event.objects.filter(pk=event_pk)
             if not event_query.exists():
-                raise ValidationError("Event must hav")
+                raise ValidationError("Event must exist")
             cleaned_data["event"] = event_query.first()
 
         return cleaned_data
