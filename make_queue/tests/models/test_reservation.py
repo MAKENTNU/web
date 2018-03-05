@@ -324,7 +324,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
                                                    machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                  special=True, special_text="Test")
+                                                   special=True, special_text="Test")
 
         self.assertTrue(reservation.can_change(user1))
         self.assertTrue(reservation.can_change(user2))
@@ -356,6 +356,24 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         self.assertTrue(reservation.can_change(user1))
         self.assertFalse(reservation.can_change(user2))
+
+    def test_can_delete_future_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+
+        self.assertTrue(reservation.can_delete())
+
+    def test_cannot_delete_started_reservation(self):
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+
+        self.assertFalse(reservation.can_delete())
 
 
 class ReservationSewingTestCase(GeneralReservationTestCase):
