@@ -85,7 +85,7 @@
                                             {% endif %}
                                         {% endif %}"
                          style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%"
-                         {% if reservation.reservation.event %}data-event-url="{% get_event_url reservation.reservation.event %}"{% endif %}>
+                         {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.pk %}"{% endif %}>
                         {% if reservation.reservation.special %}
                             <div>{{ reservation.reservation.special_text }}</div>
                         {% endif %}
