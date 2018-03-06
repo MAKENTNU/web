@@ -40,3 +40,11 @@ class UserSkill(models.Model):
 
     def __str__(self):
         return str(self.profile) + " - " + str(self.skill)
+
+
+class SuggestSkill(models.Model):
+    title = models.CharField(max_length=100, unique=True, verbose_name="Foreslått ferdighet")
+    voters = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return str(self.title)

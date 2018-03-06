@@ -89,3 +89,11 @@ class ProfilePageView(TemplateView):
             'all_skills': Skill.objects.all()
         })
         return context
+
+
+class SuggestSkillView(TemplateView):
+    template_name = "checkin/suggest_skill.html"
+
+    def post(self, request):
+        pass
+
