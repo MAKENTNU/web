@@ -114,3 +114,8 @@ class Event(Article):
         blank=True,
         verbose_name='Hoopla url',
     )
+
+    class Meta:
+        ordering = (
+            'start_date',
+        )
