@@ -208,12 +208,11 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
         timeplace = get_object_or_404(TimePlace, pk=pk)
         now = timezone.now()
         if now.date() > timeplace.start_date or now.date() == timeplace.start_date and now.time() > timeplace.start_time:
-            delta_days = timezone.now().date() - timeplace.start_date
+            delta_days = (timezone.now().date() - timeplace.start_date).days
             weeks = math.ceil(delta_days / 7)
         else:
             weeks = 1
         timeplace.start_date += timedelta(weeks=weeks)
-        timeplace.pub_date += timedelta(weeks=weeks)
         if timeplace.end_date:
             timeplace.end_date += timedelta(weeks=weeks)
         timeplace.hidden = True
