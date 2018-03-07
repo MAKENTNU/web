@@ -24,15 +24,17 @@
                                    href="/news/event/{{ event.id }}/">{{ event.title }}</a>
                                 <span>
                                     &nbsp;&nbsp;
-                                    <i class="ui {{ event.featured|color }} star icon"></i>
-                                    <i class="ui {{ event.hidden|color }} eye slash icon"></i>
-                                    <img class="makeicon" src="
+                                    <i class="ui {{ event.featured|color }} star icon toggle"
+                                       pk="{{ event.pk }}" toggle="featured" model="event"></i>
+                                    <i class="ui {{ event.hidden|color }} eye slash icon toggle"
+                                       pk="{{ event.pk }}" toggle="hidden" model="event"></i>
+                                    <img class="makeicon toggle" src="
                                         {% if event.private %}
                                             {% static "web/img/m_yellow.svg" %}
                                         {% else %}
                                             {% static "web/img/m_grey.svg" %}
                                         {% endif %}
-                                    ">
+                                    " pk="{{ event.pk }}" toggle="private" model="event">
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_event %}
                                         <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/edit/">
@@ -72,26 +74,28 @@
                                                         {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}
                                                         <span>
                                                         &nbsp;&nbsp;
-                                                        <i class="ui {{ timeplace.hidden|color }} eye slash icon"></i>
+                                                        <i class="ui {{ timeplace.hidden|color }} eye slash icon toggle"
+                                                           pk="{{ timeplace.pk }}" toggle="hidden"
+                                                           model="timeplace"></i>
                                                         &nbsp;&nbsp;&nbsp;
-                                                        {% if perms.news.change_timeplace %}
-                                                            <a class="make_col_blue"
-                                                               href="/news/timeplace/{{ timeplace.id }}/edit/">
+                                                            {% if perms.news.change_timeplace %}
+                                                                <a class="make_col_blue"
+                                                                   href="/news/timeplace/{{ timeplace.id }}/edit/">
                                                                 <i class="ui edit icon"></i>
                                                             </a>
-                                                        {% endif %}
-                                                        {% if perms.news.delete_timeplace %}
-                                                            <a class="make_col_blue"
-                                                               href="/news/timeplace/{{ timeplace.id }}/delete/">
+                                                            {% endif %}
+                                                            {% if perms.news.delete_timeplace %}
+                                                                <a class="make_col_blue"
+                                                                   href="/news/timeplace/{{ timeplace.id }}/delete/">
                                                                 <i class="ui delete icon"></i>
                                                             </a>
-                                                        {% endif %}
-                                                        {% if perms.news.add_timeplace %}
-                                                            <a class="make_col_blue"
-                                                               href="/news/timeplace/{{ timeplace.id }}/duplicate/">
+                                                            {% endif %}
+                                                            {% if perms.news.add_timeplace %}
+                                                                <a class="make_col_blue"
+                                                                   href="/news/timeplace/{{ timeplace.id }}/duplicate/">
                                                                 <i class="ui copy icon"></i>
                                                             </a>
-                                                        {% endif %}
+                                                            {% endif %}
                                                     </span>
                                                     </div>
                                                     <div class="description">
@@ -126,15 +130,17 @@
                                    href="/news/article/{{ article.id }}/">{{ article.title }}</a>
                                 <span>
                                     &nbsp;&nbsp;
-                                    <i class="ui {{ article.featured|color }} star icon"></i>
-                                    <i class="ui {{ article.hidden|color }} eye slash icon"></i>
-                                    <img class="makeicon" src="
+                                    <i class="ui {{ article.featured|color }} star icon toggle"
+                                       pk="{{ article.pk }}" toggle="featured" model="article"></i>
+                                    <i class="ui {{ article.hidden|color }} eye slash icon toggle"
+                                       pk="{{ article.pk }}" toggle="hidden" model="article"></i>
+                                    <img class="makeicon toggle" src="
                                         {% if article.private %}
                                             {% static "web/img/m_yellow.svg" %}
                                         {% else %}
                                             {% static "web/img/m_grey.svg" %}
                                         {% endif %}
-                                    ">
+                                    " pk="{{ article.pk }}" toggle="private" model="article">
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_article %}
                                         <a class="inline-block  make_col_blue"
@@ -164,6 +170,40 @@
 
     <script>
         $('.ui.accordion').accordion();
+
+        $('.toggle').click(function () {
+            toggle_post($(this), $(this).attr('pk'), $(this).attr('model'), $(this).attr('toggle'));
+        });
+
+        function toggle_post(element, pk, model, toggle) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/news/admin/toggle/' + model + '/',
+                data: {
+                    'pk': pk,
+                    'toggle': toggle,
+                },
+                success: function (data) {
+                    if (!data['color']) {
+                        return;
+                    }
+                    if (toggle == 'private') {
+                        if (data['color'] == 'yellow') {
+                            element.attr('src', '{% static "web/img/m_yellow.svg" %}');
+                        } else {
+                            element.attr('src', '{% static "web/img/m_grey.svg" %}');
+                        }
+                    } else {
+                        element.removeClass('yellow grey').addClass(data['color']);
+                    }
+                }
+            });
+        }
     </script>
 
     <div style="height: 50px;"></div>

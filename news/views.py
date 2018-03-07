@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import math
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -225,3 +225,39 @@ class NewTimePlaceView(PermissionRequiredMixin, View):
         event = get_object_or_404(Event, pk=pk)
         new_timeplace = TimePlace.objects.create(event=event)
         return HttpResponseRedirect(reverse('timeplace-edit', args=(new_timeplace.pk,)))
+
+
+class AdminArticleToggleView(PermissionRequiredMixin, View):
+    model = Article
+    permission_required = (
+        'news.edit_article',
+    )
+
+    def post(self, request):
+        pk, toggle = request.POST.get('pk'), request.POST.get('toggle')
+        try:
+            object = self.model.objects.get(pk=pk)
+            val = not getattr(object, toggle)
+            setattr(object, toggle, val)
+            object.save()
+            color = 'yellow' if val else 'grey'
+        except (self.model.DoesNotExist, AttributeError):
+            return JsonResponse({})
+
+        return JsonResponse({
+            'color': color,
+        })
+
+
+class AdminEventToggleView(AdminArticleToggleView):
+    model = Event
+    permission_required = (
+        'news.edit_event',
+    )
+
+
+class AdminTimeplaceToggleView(AdminArticleToggleView):
+    model = TimePlace
+    permission_required = (
+        'news.edit_timeplace',
+    )
