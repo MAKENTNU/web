@@ -80,8 +80,8 @@ function isReservedHour(date) {
 
 function getMaxDateReservation(date) {
     let maxDate = new Date(date.valueOf());
-    if ($("#event_checkbox input").is(':checked'))
-        maxDate.setDate(maxDate.getDate() + 3);
+    if ($("#event_checkbox input").is(':checked') || $("#special_checkbox input").is(":checked"))
+        maxDate.setDate(maxDate.getDate() + 7);
     else
         maxDate.setHours(maxDate.getHours() + parseFloat($("#reserve_form").data("max-time-reservation")));
     for (let index = 0; index < reservations.length; index++) {
@@ -89,6 +89,14 @@ function getMaxDateReservation(date) {
             maxDate = new Date(reservations[index].start_time.valueOf());
     }
     return maxDate;
+}
+
+function setEndDate() {
+    let currentStartDate = $("#start_time").calendar("get date");
+    console.log(currentStartDate);
+    if (currentStartDate !== null) {
+        $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(currentStartDate));
+    }
 }
 
 $("#start_time").calendar({
@@ -124,6 +132,7 @@ $('#event_checkbox').checkbox({
         if ($(this).is(':checked')) {
             $('#special_checkbox').checkbox("uncheck");
         }
+        setEndDate();
     },
 });
 $('#special_checkbox').checkbox({
@@ -132,6 +141,7 @@ $('#special_checkbox').checkbox({
         if ($(this).is(':checked')) {
             $('#event_checkbox').checkbox("uncheck");
         }
+        setEndDate();
     },
 });
 
