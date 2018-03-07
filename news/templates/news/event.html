@@ -6,7 +6,7 @@
 {% block rail %}
     <div class="ui right attached rail">
         <div class="ui sticky rail-content">
-            {% for event in article.timeplace_set.future %}
+            {% for event in timeplaces %}
                 <div class="ui card">
                     <div class="content">
                         {% if event.start_date == event.end_date or not event.end_date %}
@@ -70,7 +70,7 @@
         {% endif %}
     </div>
     <div class="ui styled accordion">
-        {% for event in article.timeplace_set.future %}
+        {% for event in timeplaces %}
             <div class="title">
                 <i class="dropdown icon"></i>
                 {{ event.start_date|date:"d. M" }}

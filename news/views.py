@@ -40,8 +40,10 @@ class ViewEventView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        event = get_object_or_404(Event, pk=kwargs['pk'])
         context.update({
-            'article': get_object_or_404(Event, pk=kwargs['pk']),
+            'article': event,
+            'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future()
         })
         return context
 
