@@ -15,4 +15,3 @@ class IndexView(TemplateView):
 
 class AdminPanelView(TemplateView):
     template_name = 'web/admin_panel.html'
-
