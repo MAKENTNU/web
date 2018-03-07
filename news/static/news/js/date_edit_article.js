@@ -1,17 +1,8 @@
-$(function() {
-    var pub_date = $('#id_pub_date');
-    var pub_time = $('#id_pub_time');
+var wrapper = '<div class="ui calendar"></div>';
 
-    var wrapper = '<div class="ui calendar"></div>';
-
-    pub_date.wrap(wrapper);
-    pub_time.wrap(wrapper);
-
-    pub_time.parent().calendar({
-        ampm: false,
-        type: 'time'
-    });
-    pub_date.parent().calendar({
+function fix_date(element) {
+    element.wrap(wrapper);
+    element.parent().calendar({
         type: 'date',
         formatter: {
             date: function (date, settings) {
@@ -19,8 +10,21 @@ $(function() {
                 var day = ("0" + date.getDate()).slice(-2);
                 var month = ("0" + (date.getMonth() + 1)).slice(-2);
                 var year = date.getFullYear();
-                return year + '-' + month + '-' + day;
+                return day + '.' + month + '.' + year;
             }
         }
     });
+}
+
+function fix_time(element) {
+    element.wrap(wrapper);
+    element.parent().calendar({
+        ampm: false,
+        type: 'time'
+    });
+}
+
+$(function() {
+    fix_time($('#id_pub_time'));
+    fix_date($('#id_pub_date'));
 });

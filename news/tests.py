@@ -6,7 +6,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from news.models import Article, Event
+from news.models import Article, Event, TimePlace
 
 
 class ModelTestCase(TestCase):
@@ -40,28 +40,58 @@ class ModelTestCase(TestCase):
         self.assertEqual(list(Article.objects.published().values_list('title', flat=True)), ['PUBLISHED'] * 2)
 
     def test_event_manager(self):
-        Event.objects.create(
-            title='NOT PUBLISHED',
+        event = Event.objects.create(title='', hidden=False)
+        hidden_event = Event.objects.create(title='', hidden=True)
+        not_published = TimePlace.objects.create(
+            event=event,
             pub_date=timezone.now() + timedelta(days=1),
             start_date=timezone.now(),
             start_time=(timezone.now() + timedelta(seconds=1)).time()
         )
-        Event.objects.create(
-            title='FUTURE',
+        future = TimePlace.objects.create(
+            event=event,
+            pub_date=timezone.now() - timedelta(days=1),
+            start_date=timezone.now(),
+            start_time=(timezone.now() + timedelta(seconds=1)).time(),
+            hidden=False,
+        )
+        past = TimePlace.objects.create(
+            event=event,
+            pub_date=timezone.now() - timedelta(days=1),
+            start_date=timezone.now(),
+            start_time=(timezone.now() - timedelta(seconds=1)).time(),
+            hidden=False,
+        )
+        TimePlace.objects.create(
+            event=hidden_event,
             pub_date=timezone.now() - timedelta(days=1),
             start_date=timezone.now(),
             start_time=(timezone.now() + timedelta(seconds=1)).time()
         )
-        Event.objects.create(
-            title='PAST',
+        TimePlace.objects.create(
+            event=hidden_event,
             pub_date=timezone.now() - timedelta(days=1),
             start_date=timezone.now(),
             start_time=(timezone.now() - timedelta(seconds=1)).time()
         )
-        self.assertEqual(Event.objects.future().count(), 1)
-        self.assertEqual(Event.objects.past().count(), 1)
-        self.assertEqual(Event.objects.future().first().title, 'FUTURE')
-        self.assertEqual(Event.objects.past().first().title, 'PAST')
+        TimePlace.objects.create(
+            event=hidden_event,
+            pub_date=timezone.now() - timedelta(days=1),
+            start_date=timezone.now(),
+            start_time=(timezone.now() + timedelta(seconds=1)).time(),
+            hidden=False,
+        )
+        TimePlace.objects.create(
+            event=hidden_event,
+            pub_date=timezone.now() - timedelta(days=1),
+            start_date=timezone.now(),
+            start_time=(timezone.now() - timedelta(seconds=1)).time(),
+            hidden=False,
+        )
+        self.assertEqual(TimePlace.objects.future().count(), 1)
+        self.assertEqual(TimePlace.objects.past().count(), 1)
+        self.assertEqual(TimePlace.objects.future().first(), future)
+        self.assertEqual(TimePlace.objects.past().first(), past)
 
 
 class ViewTestCase(TestCase):
@@ -84,9 +114,6 @@ class ViewTestCase(TestCase):
         self.event = Event.objects.create(
             title='FUTURE',
             image=SimpleUploadedFile(name='img.jpg', content='', content_type='image/jpeg'),
-            pub_date=timezone.now() - timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() + timedelta(seconds=1)).time()
         )
 
     def test_admin(self):

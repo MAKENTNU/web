@@ -6,17 +6,19 @@ from django.db.models import Q
 from django.utils import timezone
 
 
-def time_now(): timezone.now().time()
-
-
 class ArticleManager(models.Manager):
     def published(self):
-        return self.filter(
+        return self.filter(hidden=False).filter(
             Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
             Q(pub_date__lt=timezone.now().date()))
 
 
-class EventManager(ArticleManager):
+class TimePlaceManager(models.Manager):
+    def published(self):
+        return self.filter(hidden=False, event__hidden=False).filter(
+            Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
+            Q(pub_date__lt=timezone.now().date()))
+
     def future(self):
         return self.published().filter(
             Q(start_date=timezone.now().date(), start_time__gt=timezone.now().time()) |
@@ -28,8 +30,7 @@ class EventManager(ArticleManager):
             Q(start_date__lt=timezone.now().date()))
 
 
-class Article(models.Model):
-    objects = ArticleManager()
+class NewsBase(models.Model):
     title = models.CharField(
         max_length=100,
         verbose_name='Tittel',
@@ -47,16 +48,6 @@ class Article(models.Model):
         default=False,
         verbose_name='Ikke crop bildet',
     )
-    pub_date = models.DateField(
-        default=timezone.now,
-        verbose_name='Publiseringsdato',
-    )
-    pub_time = models.TimeField(
-        default=time_now,
-        blank=True,
-        null=True,
-        verbose_name='Publiseringstid',
-    )
     featured = models.BooleanField(
         default=False,
         verbose_name='Fremhevet',
@@ -67,7 +58,22 @@ class Article(models.Model):
     )
     private = models.BooleanField(
         default=False,
-        verbose_name='Privat',
+        verbose_name='MAKE intern',
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class Article(NewsBase):
+    objects = ArticleManager()
+    pub_date = models.DateField(
+        default=timezone.now,
+        verbose_name='Publiseringsdato',
+    )
+    pub_time = models.TimeField(
+        default=time.min,
+        verbose_name='Publiseringstid',
     )
 
     class Meta:
@@ -75,12 +81,27 @@ class Article(models.Model):
             '-pub_date',
         )
 
-    def __str__(self):
-        return self.title
+
+class Event(NewsBase):
+    multiday = models.BooleanField(default=False, verbose_name='Én påmelding')
+    hoopla = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Hoopla url',
+    )
 
 
-class Event(Article):
-    objects = EventManager()
+class TimePlace(models.Model):
+    objects = TimePlaceManager()
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    pub_date = models.DateField(
+        default=timezone.now,
+        verbose_name='Publiseringsdato',
+    )
+    pub_time = models.TimeField(
+        default=time.min,
+        verbose_name='Publiseringstid',
+    )
     start_date = models.DateField(
         default=timezone.now,
         verbose_name='Start-dato',
@@ -114,6 +135,13 @@ class Event(Article):
         blank=True,
         verbose_name='Hoopla url',
     )
+    hidden = models.BooleanField(
+        default=True,
+        verbose_name='Skjult',
+    )
+
+    def __str__(self):
+        return '%s - %s' % (self.event.title, self.start_date.strftime('%Y.%m.%d'))
 
     class Meta:
         ordering = (

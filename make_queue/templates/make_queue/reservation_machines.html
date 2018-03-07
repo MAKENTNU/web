@@ -1,0 +1,33 @@
+{% extends 'web/base.html' %}
+{% load reservation_extra %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+{% endblock %}
+
+{% block title %}Maskiner{% endblock %}
+{% block body %}
+    <br><br>
+    <div class="ui container">
+        <div class="ui huge header">
+            Maskiner
+        </div>
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'my_reservations' %}" class="ui primary button">
+                Mine reservasjoner
+            </a>
+        {% endif %}
+        {% for machine_type in machine_types %}
+            <div class="ui large header">
+                {{ machine_type.name }}
+            </div>
+            <div class="ui cards">
+                {% for machine in machine_type.machines %}
+                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1%}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+    <br><br>
+{% endblock %}
