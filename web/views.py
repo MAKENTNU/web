@@ -10,7 +10,7 @@ class IndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'articles': Article.objects.published().filter(featured=True, event=None)[:4],
-            'events': Event.objects.published().filter(featured=True)[:4],
+            'events': Event.objects.future().filter(featured=True)[:4],
         })
         return context
 
