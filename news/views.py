@@ -123,6 +123,8 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
         'hidden',
         'private',
         'featured',
+        'multiday',
+        'hoopla',
     )
     permission_required = (
         'news.change_event',
@@ -142,6 +144,8 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'hidden',
         'private',
         'featured',
+        'multiday',
+        'hoopla',
     )
     permission_required = (
         'news.add_event',

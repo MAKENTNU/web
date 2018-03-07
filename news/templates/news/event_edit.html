@@ -9,6 +9,7 @@
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script type="text/javascript" src="{% static "news/js/date_edit_article.js" %}"></script>
+    <script type="text/javascript" src="{% static "news/js/multiday.js" %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -31,7 +32,11 @@
             <label>{{ form.image.label }}</label>
             {{ form.image }}
         </div>
-        <div class="ui four fields">
+        <div class="field">
+            <label>{{ form.hoopla.label }}</label>
+            {{ form.hoopla }}
+        </div>
+        <div class="ui five fields">
             <div class="field">
                 <label>{{ form.contain.label }}</label>
                 {{ form.contain }}
@@ -47,6 +52,10 @@
             <div class="field">
                 <label>{{ form.private.label }}</label>
                 {{ form.private }}
+            </div>
+            <div class="field">
+                <label>{{ form.multiday.label }}</label>
+                {{ form.multiday }}
             </div>
         </div>
         <input class="ui blue submit button" type="submit" value="Lagre">

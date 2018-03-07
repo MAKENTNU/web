@@ -37,25 +37,40 @@
                             {% endif %}
                         {% endif %}
                     </div>
-                    {% if event.hoopla %}
-                        <div class="ui two buttons">
-                            <a class="ui make_bg_yellow black button" href="{{ event.hoopla }}"
-                               target="_blank">Påmelding</a>
-                        </div>
-                    {% else %}
-                        <div class="ui two buttons">
-                            <p class="ui disabled button">-</p>
-                        </div>
+                    {% if not event.event.multiday %}
+                        {% if event.hoopla %}
+                            <div class="ui two buttons">
+                                <a class="ui make_bg_yellow black button" href="{{ event.hoopla }}"
+                                   target="_blank">Påmelding</a>
+                            </div>
+                        {% else %}
+                            <div class="ui two buttons">
+                                <p class="ui disabled button">-</p>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             {% endfor %}
+            {% if article.multiday and article.hoopla %}
+                <div class="ui card">
+                    <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
+                       target="_blank">Påmelding</a>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock rail %}
 
+
 {% block event_accordian %}
+    <div class="accordion">
+        {% if article.multiday and article.hoopla %}
+            <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
+               target="_blank">Påmelding</a>
+        {% endif %}
+    </div>
     <div class="ui styled accordion">
-        {% for event in article.timeplace_set.all %}
+        {% for event in article.timeplace_set.future %}
             <div class="title">
                 <i class="dropdown icon"></i>
                 {{ event.start_date|date:"d. M" }}
@@ -89,10 +104,12 @@
                             </p>
                         {% endif %}
                     {% endif %}
-                    {% if event.hoopla %}
-                        <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">Påmelding</a>
-                    {% else %}
-                        <p class="make_col_ligray attend"><i>Ingen påmelding</i></p>
+                    {% if not event.event.multiday %}
+                        {% if event.hoopla %}
+                            <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">Påmelding</a>
+                        {% else %}
+                            <p class="make_col_ligray attend"><i>Ingen påmelding</i></p>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

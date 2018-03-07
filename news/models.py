@@ -83,7 +83,12 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
-    pass
+    multiday = models.BooleanField(default=False, verbose_name='Én påmelding')
+    hoopla = models.CharField(
+        max_length=200,
+        blank=True,
+        verbose_name='Hoopla url',
+    )
 
 
 class TimePlace(models.Model):
