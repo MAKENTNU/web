@@ -1,65 +1,210 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load news_tags %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin.css" %}">
 {% endblock head %}
 
 {% block body %}
-    <div class="ui items events" style="margin: 80px 0;">
-        {% for article in articles %}
-            <div class="item">
-                <div class="ui small image">
-                    <img {% if article.contain %}style="object-fit: contain !important;" {% endif %} src="{{ article.image.url }}">
-                </div>
-                <div class="content">
-                    <div class="header">
-                        <a href="/news/article/{{ article.id }}/">{{ article.title }}</a>
+    <div style="height: 50px;"></div>
+    <h1 class="ui text-centered make_col_yellow header">
+        Arrangementer
+        <a class="make_col_blue" href="/news/event/create/"><i class="ui add icon"></i></a>
+    </h1>
+    <div class="ui text container">
+        {% if events %}
+            <div class="ui divided list">
+                {% for event in events %}
+                    <div class="item">
+                        <i class="ui icon"><img class="inline square_36" src="{{ event.image.url }}"></i>
+                        <div class="content">
+                            <div class="header">
+                                <a class="inline-block make_col_blue header"
+                                   href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                                <span>
+                                    &nbsp;&nbsp;
+                                    <i class="ui {{ event.featured|color }} star icon toggle"
+                                       pk="{{ event.pk }}" toggle="featured" model="event"></i>
+                                    <i class="ui {{ event.hidden|color }} eye slash icon toggle"
+                                       pk="{{ event.pk }}" toggle="hidden" model="event"></i>
+                                    <img class="makeicon toggle" src="
+                                        {% if event.private %}
+                                            {% static "web/img/m_yellow.svg" %}
+                                        {% else %}
+                                            {% static "web/img/m_grey.svg" %}
+                                        {% endif %}
+                                    " pk="{{ event.pk }}" toggle="private" model="event">
+                                    &nbsp;&nbsp;&nbsp;
+                                    {% if perms.news.change_event %}
+                                        <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/edit/">
+                                            <i class="ui edit icon"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.news.delete_event %}
+                                        <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/delete/">
+                                            <i class="ui delete icon"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.news.create_timeplace %}
+                                        <a class="inline-block make_col_blue"
+                                           href="/news/timeplace/{{ event.id }}/new/">
+                                            <i class="icons">
+                                                <i class="time icon"></i>
+                                                <i class="noshadow bottom right corner add icon"></i>
+                                            </i>
+                                        </a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="description">
+                                {{ event.clickbait }}
+                            </div>
+                            {% if event.timeplace_set.exists %}
+                                <div class="ui accordion list">
+                                    <div class="title">
+                                        <i class="dropdown icon"></i>
+                                    </div>
+                                    <div class="content">
+                                        {% for timeplace in event.timeplace_set.all %}
+                                            <div class="item">
+                                                <i class="icon"></i>
+                                                <div class="content">
+                                                    <div class="header">
+                                                        {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}
+                                                        <span>
+                                                        &nbsp;&nbsp;
+                                                        <i class="ui {{ timeplace.hidden|color }} eye slash icon toggle"
+                                                           pk="{{ timeplace.pk }}" toggle="hidden"
+                                                           model="timeplace"></i>
+                                                        &nbsp;&nbsp;&nbsp;
+                                                            {% if perms.news.change_timeplace %}
+                                                                <a class="make_col_blue"
+                                                                   href="/news/timeplace/{{ timeplace.id }}/edit/">
+                                                                <i class="ui edit icon"></i>
+                                                            </a>
+                                                            {% endif %}
+                                                            {% if perms.news.delete_timeplace %}
+                                                                <a class="make_col_blue"
+                                                                   href="/news/timeplace/{{ timeplace.id }}/delete/">
+                                                                <i class="ui delete icon"></i>
+                                                            </a>
+                                                            {% endif %}
+                                                            {% if perms.news.add_timeplace %}
+                                                                <a class="make_col_blue"
+                                                                   href="/news/timeplace/{{ timeplace.id }}/duplicate/">
+                                                                <i class="ui copy icon"></i>
+                                                            </a>
+                                                            {% endif %}
+                                                    </span>
+                                                    </div>
+                                                    <div class="description">
+                                                        {{ timeplace.place }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="meta">
-                        {% if perms.news.change_article %}
-                            <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/edit/">Rediger</a>
-                        {% endif %}
-                        {% if perms.news.delete_article %}
-                            <a class="ui inverted button make_bg_yellow" href="/news/article/{{ article.id }}/delete/">Slett</a>
-                        {% endif %}
-                    </div>
-                    <div class="description">
-                        <p>{{ article.clickbait }}</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
-        {% for event in events %}
-            <div class="item">
-                <div class="ui small image">
-                    <p class="ui yellow make_bg_yellow ribbon label">
-                        {{ event.start_date|date:"d" }}<br>
-                        {{ event.start_date|date:"M" }}
-                    </p>
-                    <img {% if event.contain %}style="object-fit: contain !important;" {% endif %} src="{{ event.image.url }}">
-                </div>
+        {% else %}
+            <p class="text-centered"><i>Ingen arrangementer</i></p>
+        {% endif %}
 
-                <div class="content">
-                    <div class="header">
-                        <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+        <h1 class="ui text-centered make_col_yellow header">
+            Artikler
+            <a class="make_col_blue" href="/news/article/create/"><i class="ui add icon"></i></a>
+        </h1>
+        {% if articles %}
+            <div class="ui divided list">
+                {% for article in articles %}
+                    <div class="item">
+                        <i class="ui icon"><img class="inline square_36" src="{{ article.image.url }}"></i>
+                        <div class="content">
+                            <div class="header">
+                                <a class="inline-block make_col_blue header"
+                                   href="/news/article/{{ article.id }}/">{{ article.title }}</a>
+                                <span>
+                                    &nbsp;&nbsp;
+                                    <i class="ui {{ article.featured|color }} star icon toggle"
+                                       pk="{{ article.pk }}" toggle="featured" model="article"></i>
+                                    <i class="ui {{ article.hidden|color }} eye slash icon toggle"
+                                       pk="{{ article.pk }}" toggle="hidden" model="article"></i>
+                                    <img class="makeicon toggle" src="
+                                        {% if article.private %}
+                                            {% static "web/img/m_yellow.svg" %}
+                                        {% else %}
+                                            {% static "web/img/m_grey.svg" %}
+                                        {% endif %}
+                                    " pk="{{ article.pk }}" toggle="private" model="article">
+                                    &nbsp;&nbsp;&nbsp;
+                                    {% if perms.news.change_article %}
+                                        <a class="inline-block  make_col_blue"
+                                           href="/news/article/{{ article.id }}/edit/">
+                                            <i class="ui edit icon"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if perms.news.delete_article %}
+                                        <a class="inline-block make_col_blue"
+                                           href="/news/article/{{ article.id }}/delete/">
+                                        <i class="ui delete icon"></i>
+                                    </a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                            <div class="description">
+                                {{ article.clickbait }}
+                            </div>
+                        </div>
                     </div>
-                    <div class="meta">
-                        {% if perms.news.change_event %}
-                            <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/edit/">Rediger</a>
-                        {% endif %}
-                        {% if perms.news.delete_event %}
-                            <a class="ui inverted button make_bg_yellow" href="/news/event/{{ event.id }}/delete/">Slett</a>
-                        {% endif %}
-                        <br><br>
-                        <span>{{ event.place }}</span>
-                    </div>
-                    <div class="description">
-                        <p>{{ event.clickbait }}</p>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+        {% else %}
+            <p class="text-centered"><i>Ingen artikler</i></p>
+        {% endif %}
     </div>
+
+    <script>
+        $('.ui.accordion').accordion();
+
+        $('.toggle').click(function () {
+            toggle_post($(this), $(this).attr('pk'), $(this).attr('model'), $(this).attr('toggle'));
+        });
+
+        function toggle_post(element, pk, model, toggle) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/news/admin/toggle/' + model + '/',
+                data: {
+                    'pk': pk,
+                    'toggle': toggle,
+                },
+                success: function (data) {
+                    if (!data['color']) {
+                        return;
+                    }
+                    if (toggle == 'private') {
+                        if (data['color'] == 'yellow') {
+                            element.attr('src', '{% static "web/img/m_yellow.svg" %}');
+                        } else {
+                            element.attr('src', '{% static "web/img/m_grey.svg" %}');
+                        }
+                    } else {
+                        element.removeClass('yellow grey').addClass(data['color']);
+                    }
+                }
+            });
+        }
+    </script>
+
     <div style="height: 50px;"></div>
 {% endblock body %}
