@@ -140,38 +140,7 @@ TIME_ZONE = 'CET'
 
 USE_I18N = True
 
-USE_L10N = False
-
-DATETIME_INPUT_FORMATS = [
-    '%d.%m.%Y %H:%M:%S',
-    '%d.%m.%Y %H:%M:%S.%f',
-    '%d.%m.%Y %H:%M',
-    '%d.%m.%Y',
-    '%d-%m-%Y %H:%M:%S',
-    '%d-%m-%Y %H:%M:%S.%f',
-    '%d-%m-%Y %H:%M',
-    '%d-%m-%Y',
-    '%d/%m/%Y %H:%M:%S',
-    '%d/%m/%Y %H:%M:%S.%f',
-    '%d/%m/%Y %H:%M',
-    '%d/%m/%Y',
-    '%d/%m/%y %H:%M:%S',
-    '%d/%m/%y %H:%M:%S.%f',
-    '%d/%m/%y %H:%M',
-    '%d/%m/%y',
-    '%Y-%m-%d %H:%M:%S',
-    '%Y-%m-%d %H:%M:%S.%f',
-    '%Y-%m-%d %H:%M',
-    '%Y-%m-%d',
-]
-
-DATE_INPUT_FORMATS = [
-    '%d.%m.%Y',
-    '%d-%m-%Y',
-    '%d/%m/%Y',
-    '%d/%m/%y',
-    '%Y-%m-%d',
-]
+USE_L10N = True
 
 USE_TZ = True
 
