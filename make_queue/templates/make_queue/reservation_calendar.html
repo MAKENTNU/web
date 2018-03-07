@@ -72,7 +72,8 @@
                          style="left:{% get_current_time_of_day %}%"></div>
                 {% endif %}
                 {% for reservation in day.machine.reservations %}
-                    <div class="make_reservation_calendar_time_table_item
+                    {% if reservation.length %}
+                        <div class="make_reservation_calendar_time_table_item
                                         {% if reservation.reservation.special %}
                                             make_reservation_calendar_time_table_make
                                         {% elif reservation.reservation.event %}
@@ -84,12 +85,13 @@
                                                 make_reservation_calendar_time_table_non_event
                                             {% endif %}
                                         {% endif %}"
-                         style="margin-left:{{ reservation.start_percentage }}%;width:{% if reservation.reservation.end_time.date != day.date.date %}100{% else %}{{ reservation.length }}{% endif %}%"
-                         {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.pk %}"{% endif %}>
-                        {% if reservation.reservation.special %}
-                            <div>{{ reservation.reservation.special_text }}</div>
-                        {% endif %}
-                    </div>
+                             style="margin-left:{{ reservation.start_percentage }}%;width:{{ reservation.length }}%"
+                             {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.pk %}"{% endif %}>
+                            {% if reservation.reservation.special %}
+                                <div>{{ reservation.reservation.special_text }}</div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         </div>
