@@ -12,7 +12,6 @@
 {% endblock head %}
 
 {% block body %}
-    <br><br>
     <h1 class="ui centered header">{% block form_header %}Rediger artikkel{% endblock form_header %}</h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -62,5 +61,4 @@
         </div>
         <input class="ui blue submit button" type="submit" value="Lagre">
     </form>
-    <br><br>
 {% endblock body %}

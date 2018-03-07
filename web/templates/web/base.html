@@ -52,8 +52,14 @@
         {% block header %}
             {% include "web/header.html" %}
         {% endblock header %}
+        {% block padding-top %}
+            <div class="make_content_padding"></div>
+        {% endblock %}
         {% block body %}
         {% endblock body %}
+        {% block padding-bottom %}
+            <div class="make_content_padding"></div>
+        {% endblock padding-bottom %}
     </div>
     {% block footer %}
         {% include "web/footer.html" %}
@@ -72,7 +78,6 @@
     gtag('js', new Date());
     gtag('config', 'UA-113882146-1');
 </script>
-
 {% block scripts %}
 {% endblock %}
 </body>
