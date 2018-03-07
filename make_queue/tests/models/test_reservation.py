@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 
-from news.models import Event
+from news.models import Event, TimePlace
 
 
 class GeneralReservationTestCase(TestCase):
@@ -28,10 +28,8 @@ class GeneralReservationTestCase(TestCase):
 
 class GeneralReservationTestCases(GeneralReservationTestCase):
     def setUp(self):
-        Event.objects.create(title="TEST EVENT",
-                             pub_date=timezone.now(),
-                             start_date=timezone.now(),
-                             start_time=(timezone.now() + timedelta(seconds=1)).time())
+        event = Event.objects.create(title="TEST EVENT")
+        self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(), start_time=(timezone.now() + timedelta(seconds=1)).time(), event=event)
         Printer3D.objects.create(name="C1", location="Printer room", status="F")
         user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         user.save()
@@ -142,7 +140,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=2),
-                                    event=Event.objects.get(title="TEST EVENT"))
+                                    event=self.timeplace)
 
         self.check_reservation_invalid(reservation,
                                        "Should not be able to make event reservation without correct permission")
@@ -158,7 +156,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=2),
-                                    event=Event.objects.get(title="TEST EVENT"))
+                                    event=self.timeplace)
 
         self.check_reservation_valid(reservation,
                                      "User with the correct permission should be allowed to create an event reservation")
@@ -179,7 +177,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
                                     end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 1),
-                                    event=Event.objects.get(title="TEST EVENT"))
+                                    event=self.timeplace)
 
         self.check_reservation_valid(reservation,
                                      "User should be able to make event reservations longer than their maximum reservation time")
@@ -261,7 +259,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
                                                    machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   event=Event.objects.get(title="TEST EVENT"))
+                                                   event=self.timeplace)
 
         self.assertFalse(reservation.can_change(user))
 
@@ -309,7 +307,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
                                                    machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   event=Event.objects.get(title="TEST EVENT"))
+                                                   event=self.timeplace)
 
         self.assertTrue(reservation.can_change(user1))
         self.assertTrue(reservation.can_change(user2))
@@ -352,7 +350,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
                                                    machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   event=Event.objects.get(title="TEST EVENT"))
+                                                   event=self.timeplace)
 
         self.assertTrue(reservation.can_change(user1))
         self.assertFalse(reservation.can_change(user2))

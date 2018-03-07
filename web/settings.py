@@ -16,10 +16,8 @@ try:
 except ImportError:
     pass
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Application definition
 
@@ -69,7 +67,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'web.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -91,7 +88,6 @@ else:
             'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
@@ -119,8 +115,8 @@ SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = (
-    #'dataporten.social.DataportenFeideOAuth2',
-    #'dataporten.social.DataportenEmailOAuth2',
+    # 'dataporten.social.DataportenFeideOAuth2',
+    # 'dataporten.social.DataportenEmailOAuth2',
     'dataporten.social.DataportenOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
@@ -135,7 +131,6 @@ SOCIAL_AUTH_DATAPORTEN_FEIDE_SECRET = SOCIAL_AUTH_DATAPORTEN_SECRET
 
 SOCIAL_AUTH_NEW_USER_REDIRECT_URL = SOCIAL_AUTH_LOGIN_REDIRECT_URL
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -145,23 +140,54 @@ TIME_ZONE = 'CET'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
+
+DATETIME_INPUT_FORMATS = [
+    '%d.%m.%Y %H:%M:%S',
+    '%d.%m.%Y %H:%M:%S.%f',
+    '%d.%m.%Y %H:%M',
+    '%d.%m.%Y',
+    '%d-%m-%Y %H:%M:%S',
+    '%d-%m-%Y %H:%M:%S.%f',
+    '%d-%m-%Y %H:%M',
+    '%d-%m-%Y',
+    '%d/%m/%Y %H:%M:%S',
+    '%d/%m/%Y %H:%M:%S.%f',
+    '%d/%m/%Y %H:%M',
+    '%d/%m/%Y',
+    '%d/%m/%y %H:%M:%S',
+    '%d/%m/%y %H:%M:%S.%f',
+    '%d/%m/%y %H:%M',
+    '%d/%m/%y',
+    '%Y-%m-%d %H:%M:%S',
+    '%Y-%m-%d %H:%M:%S.%f',
+    '%Y-%m-%d %H:%M',
+    '%Y-%m-%d',
+]
+
+DATE_INPUT_FORMATS = [
+    '%d.%m.%Y',
+    '%d-%m-%Y',
+    '%d/%m/%Y',
+    '%d/%m/%y',
+    '%Y-%m-%d',
+]
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
 
-
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
         'toolbar_main': [
             {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']},
-            {'name': 'paragraph', 'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter',
+                       'JustifyRight', 'JustifyBlock']},
             {'name': 'links', 'items': ['Link', 'Unlink']},
             {'name': 'format', 'items': ['Format', 'RemoveFormat']},
         ],

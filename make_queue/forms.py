@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from make_queue.models import Machine
-from news.models import Event
+from news.models import TimePlace
 import pytz
 
 
@@ -51,7 +51,7 @@ class ReservationForm(forms.Form):
 
         if cleaned_data["event"]:
             event_pk = cleaned_data["event_pk"]
-            event_query = Event.objects.filter(pk=event_pk)
+            event_query = TimePlace.objects.filter(pk=event_pk)
             if not event_query.exists():
                 raise ValidationError("Event must exist")
             cleaned_data["event"] = event_query.first()
