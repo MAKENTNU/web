@@ -32,3 +32,7 @@
 .toggle {
     cursor: pointer;
 }
+
+span::selection, span img::selection {
+    background-color: rgba(0, 0, 0, 0);
+}
