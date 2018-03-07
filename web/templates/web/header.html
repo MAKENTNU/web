@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load string_tags %}
+{% load permission_tags %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 
@@ -13,12 +14,12 @@
         <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
     </div>
     <script>
-        $(function() {
+        $(function () {
             $('.burger').click(function () {
                 $('.nav').toggleClass('active');
             });
             $('.logo').click(function () {
-                 window.location.href = '/';
+                window.location.href = '/';
             });
         });
     </script>
@@ -35,18 +36,27 @@
         <a class="item" href="/makerspace/">
             Makerverkstedet
         </a>
+        <a class="item" href="{% url 'reservation_machines_overview' %}">
+            Reservasjoner
+        </a>
         <a class="item" href="/about/">
             Om oss
         </a>
+
         {% if user.is_authenticated %}
+            {% if user|has_any_permissions or user.is_superuser %}
+                <a class = "item" href="/adminpanel/">
+                    Administrasjon
+                </a>
+            {% endif %}
             <div class="ui dropdown item">
-              <div class="text">{{ user.first_name|first_word }}</div>
-              <i class="dropdown icon"></i>
-              <div class="menu">
-                <a class="item" href="/logout/">
-                Logout
-            </a>
-              </div>
+                <div class="text">{{ user.first_name|first_word }}</div>
+                <i class="dropdown icon"></i>
+                <div class="menu">
+                    <a class="item" href="/logout/">
+                        Logout
+                    </a>
+                </div>
             </div>
             <script>$('.dropdown').dropdown();</script>
         {% else %}

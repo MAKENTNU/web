@@ -6,7 +6,6 @@
 {% endblock head %}
 
 {% block body %}
-    <br><br>
     <h1 class="ui text-centered make_col_blue header">Kommende arrangementer</h1>
     {% if future %}
         <div class="ui items events" style="margin: 80px 0;">
@@ -17,26 +16,26 @@
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.image.url }}">
+                        <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
+                             src="{{ event.event.image.url }}">
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                            <a href="/news/event/{{ event.event.id }}/">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
                         </div>
                         <div class="description">
-                            <p>{{ event.clickbait }}</p>
+                            <p>{{ event.event.clickbait }}</p>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <p><i>Ingen kommende arrangementer</i></p><br>
+        <div class="noevents">Ingen kommende arrangementer</div><br>
     {% endif %}
 
 
@@ -50,26 +49,25 @@
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.image.url }}">
+                        <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
+                             src="{{ event.event.image.url }}">
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                            <a href="/news/event/{{ event..eventid }}/">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
                         </div>
                         <div class="description">
-                            <p>{{ event.clickbait }}</p>
+                            <p>{{ event.event.clickbait }}</p>
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
     {% else %}
-        <p><i>Ingen tidligere arrangementer</i></p><br>
+        <div class="noevents">Ingen tidligere arrangementer</div><br>
     {% endif %}
-    <div style="height: 50px;"></div>
 {% endblock body %}

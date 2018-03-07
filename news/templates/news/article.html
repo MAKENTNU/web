@@ -3,20 +3,22 @@
 
 {% block title %}{{ article.title }}{% endblock title %}
 
+{% block og_image %}{{ article.image.url }}{% endblock og_image %}
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/article.css" %}">
 {% endblock head %}
 
 {% block body %}
-    <div class="article">
-        <div class="ui text container basic segment">
-            <img src="{{ article.image.url }}" {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
-        </div>
-        <div class="ui text container basic segment">
-            {% block event %}
-            {% endblock event %}
+    <div class="article{% block event_classes %}{% endblock event_classes %}">
+        <div id="sticky" class="ui text container basic segment">
+            <img src="{{ article.image.url }}"
+                 {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
+            {% block rail %}
+            {% endblock rail %}
+
             <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span></h1>
-            <div id="content">
+            <div>
                 {% if article.content == "<p>x</p>" %}
                     <p>{{ article.clickbait }}</p>
                 {% else %}
@@ -25,11 +27,14 @@
                     {% endautoescape %}
                 {% endif %}
             </div>
+            <br><br>
+            {% block event_accordian %}
+            {% endblock event_accordian %}
         </div>
     </div>
     <script>
         $('.ui.sticky').sticky({
-            context: '#content'
+            context: '#sticky'
         });
     </script>
 {% endblock body %}
