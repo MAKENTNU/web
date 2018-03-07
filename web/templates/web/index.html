@@ -41,24 +41,24 @@
         <div class="ui items events">
             {% for event in events %}
                 <div class="item">
-                    <div class="ui small clickable image" href="/news/event/{{ event.id }}/">
+                    <div class="ui small clickable image" href="/news/event/{{ event.event.id }}/">
                         <p class="ui yellow make_bg_yellow ribbon label">
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{% if event.image %}{{ event.image.url }}{% endif %}">
+                        <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
+                             src="{% if event.event.image %}{{ event.event.image.url }}{% endif %}">
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                            <a href="/news/event/{{ event.event.id }}/">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
                         </div>
                         <div class="description">
-                            <p>{{ event.clickbait }}</p>
+                            <p>{{ event.event.clickbait }}</p>
                         </div>
                     </div>
                 </div>

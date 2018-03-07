@@ -47,8 +47,10 @@
             </div>
             {% block footer %}
                 {% include "web/footer.html" %}
-            {% endblock %}
+            {% endblock footer %}
         </div>
+        {% block scripts %}
+        {% endblock scripts %}
     </body>
 
     <style>

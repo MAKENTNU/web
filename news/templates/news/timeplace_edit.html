@@ -1,0 +1,82 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Rediger tidspunkt{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "web/calendar/calendar.min.css" %}">
+{% endblock head %}
+
+{% block scripts %}
+    <script type="text/javascript" src="{% static "web/calendar/calendar.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static "news/js/date_edit_event.js" %}"></script>
+    <script type="text/javascript" src="{% static "news/js/date_edit_article.js" %}"></script>
+{% endblock scripts %}
+
+{% block body %}
+    <br><br>
+    <h1 class="ui centered header">{% block form_header %}Rediger tidspunkt{% endblock form_header %}</h1>
+    <form class="ui form text container" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="field">
+            <label>{{ form.event.label }}</label>
+            {{ form.event }}
+            <script>
+                $('#id_event').ready(function () {
+                    $('#id_event').addClass('ui select search dropdown');
+                    $('.dropdown').dropdown();
+                });
+            </script>
+        </div>
+        <div class="field">
+            <label>{{ form.place.label }}</label>
+            {{ form.place }}
+        </div>
+        <div class="field">
+            <label>{{ form.place_url.label }}</label>
+            {{ form.place_url }}
+        </div>
+        <div class="field">
+            <label>{{ form.hoopla.label }}</label>
+            {{ form.hoopla }}
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <label>Fra</label>
+                {{ form.start_date }}
+            </div>
+            <div class="field">
+                <label>&nbsp;</label>
+                {{ form.start_time }}
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <label>Til</label>
+                {{ form.end_date }}
+            </div>
+            <div class="field">
+                <label>&nbsp;</label>
+                {{ form.end_time }}
+            </div>
+        </div>
+        <div class="two fields">
+            <div class="field">
+                <label>Publisering</label>
+                {{ form.pub_date }}
+            </div>
+            <div class="field">
+                <label>&nbsp;</label>
+                {{ form.pub_time }}
+            </div>
+        </div>
+        <div class="field">
+            <label>{{ form.hidden.label }}</label>
+            {{ form.hidden }}
+        </div>
+        <input class="ui blue submit button" type="submit" value="Lagre">
+    </form>
+    <br><br>
+{% endblock body %}
