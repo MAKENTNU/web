@@ -6,6 +6,9 @@ register = template.Library()
 
 @register.filter(name='has_any_permissions')
 def has_any_permissions(user):
+    for group in user.groups.all():
+        if Permission.objects.filter(group=group).exists():
+            return True
     return Permission.objects.filter(user=user).exists()
 
 
