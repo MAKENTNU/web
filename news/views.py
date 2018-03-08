@@ -43,7 +43,7 @@ class ViewEventView(TemplateView):
         event = get_object_or_404(Event, pk=kwargs['pk'])
         context.update({
             'article': event,
-            'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future()
+            'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')) \
             or (event.private and not self.request.user.has_perm('news.can_view_private')):

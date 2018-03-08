@@ -17,7 +17,11 @@
             {% block rail %}
             {% endblock rail %}
 
-            <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span></h1>
+            <h1>
+                {{ article.title }}
+                {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
+                <span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span>
+            </h1>
             <div>
                 {% if article.content == "<p>x</p>" %}
                     <p>{{ article.clickbait }}</p>
