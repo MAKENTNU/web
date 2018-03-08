@@ -1,0 +1,15 @@
+@media screen and (max-width: 1000px) {
+    .make_reservation_calendar_control_header_large {
+        display: none !important;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .make_reservation_calendar_control_header_small {
+        display: none !important;
+    }
+}
+
+.make_reservation_calendar_button_full_width {
+    width: 100%;
+}
