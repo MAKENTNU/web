@@ -3,7 +3,9 @@
 
 {% block title %}{{ article.title }}{% endblock title %}
 
+{% block og_title %}{{ article.title }}{% endblock og_title %}
 {% block og_image %}{{ article.image.url }}{% endblock og_image %}
+{% block og_description %}{{ article.clickbait }}{% endblock og_description %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/article.css" %}">
@@ -17,7 +19,11 @@
             {% block rail %}
             {% endblock rail %}
 
-            <h1>{{ article.title }}<span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span></h1>
+            <h1>
+                {{ article.title }}
+                {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
+                <span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span>
+            </h1>
             <div>
                 {% if article.content == "<p>x</p>" %}
                     <p>{{ article.clickbait }}</p>
