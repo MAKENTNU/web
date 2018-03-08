@@ -46,7 +46,7 @@ class ViewEventView(TemplateView):
             'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')) \
-            or (event.private and not self.request.user.has_perm('news.can_view_private')):
+                or (event.private and not self.request.user.has_perm('news.can_view_private')):
             raise Http404()
         return context
 
@@ -61,7 +61,7 @@ class ViewArticleView(TemplateView):
             'article': article,
         })
         if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')) \
-        or (article.private and not self.request.user.has_perm('news.can_view_private')):
+                or (article.private and not self.request.user.has_perm('news.can_view_private')):
             raise Http404()
         return context
 
