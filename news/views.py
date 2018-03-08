@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import math
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -45,6 +45,8 @@ class ViewEventView(TemplateView):
             'article': event,
             'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future()
         })
+        if event.hidden or (event.private and not self.request.user.has_perm('news.can_view_private')):
+            raise Http404()
         return context
 
 
@@ -53,9 +55,12 @@ class ViewArticleView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        article = get_object_or_404(Article, pk=kwargs['pk'])
         context.update({
-            'article': get_object_or_404(Article, pk=kwargs['pk']),
+            'article': article,
         })
+        if article.hidden or (article.private and not self.request.user.has_perm('news.can_view_private')):
+            raise Http404()
         return context
 
 
