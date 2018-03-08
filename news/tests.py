@@ -118,7 +118,10 @@ class ViewTestCase(TestCase):
 
     def test_admin(self):
         response = self.client.get(reverse('admin'))
-        self.assertEqual(response.status_code, 200)
+        self.assertNotEqual(response.status_code, 200)
+        self.add_permission('change_article')
+        response = self.client.get(reverse('admin'))
+        self.assertNotEqual(response.status_code, 200)
 
     def test_articles(self):
         response = self.client.get(reverse('articles'))
@@ -194,14 +197,14 @@ class HiddenPrivateTestCase(TestCase):
         def test_hidden_event(self):
             response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
             self.assertEqual(response.status_code, 404)
-            self.add_permission('news.change_event')
+            self.add_permission('change_event')
             response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
             self.assertEqual(response.status_code, 200)
 
         def test_hidden_article(self):
             response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
             self.assertEqual(response.status_code, 404)
-            self.add_permission('news.change_article')
+            self.add_permission('change_article')
             response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
             self.assertEqual(response.status_code, 200)
 
@@ -235,6 +238,6 @@ class HiddenPrivateTestCase(TestCase):
             self.article.pub_date = timezone.now() + timedelta(days=1)
             response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
             self.assertEqual(response.status_code, 404)
-            self.add_permission('news.change_article')
+            self.add_permission('change_article')
             response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
             self.assertEqual(response.status_code, 200)
