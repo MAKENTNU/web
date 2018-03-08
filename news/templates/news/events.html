@@ -42,7 +42,7 @@
     <h1 class="ui text-centered make_col_blue header">Tidligere arrangementer</h1>
     {% if past %}
         <div class="ui items events" style="margin: 80px 0;">
-            {% for event in past %}
+            {% for event in past reversed %}
                 <div class="item">
                     <div class="ui small image">
                         <p class="ui yellow make_bg_yellow ribbon label">

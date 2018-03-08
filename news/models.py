@@ -64,6 +64,11 @@ class NewsBase(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        permissions = (
+            ("can_view_private", "Can view private news"),
+        )
+
 
 class Article(NewsBase):
     objects = ArticleManager()
