@@ -2,7 +2,7 @@ from datetime import timedelta
 
 import math
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -10,6 +10,7 @@ from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView
 
 from news.models import Article, Event, TimePlace
+from web.templatetags.permission_tags import has_any_news_permissions
 
 
 class ViewEventsView(TemplateView):
@@ -43,8 +44,11 @@ class ViewEventView(TemplateView):
         event = get_object_or_404(Event, pk=kwargs['pk'])
         context.update({
             'article': event,
-            'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future()
+            'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future(),
         })
+        if (event.hidden and not self.request.user.has_perm('news.change_event')) \
+                or (event.private and not self.request.user.has_perm('news.can_view_private')):
+            raise Http404()
         return context
 
 
@@ -53,9 +57,13 @@ class ViewArticleView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        article = get_object_or_404(Article, pk=kwargs['pk'])
         context.update({
-            'article': get_object_or_404(Article, pk=kwargs['pk']),
+            'article': article,
         })
+        if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')) \
+                or (article.private and not self.request.user.has_perm('news.can_view_private')):
+            raise Http404()
         return context
 
 
@@ -63,6 +71,8 @@ class AdminView(TemplateView):
     template_name = 'news/admin.html'
 
     def get_context_data(self, **kwargs):
+        if not has_any_news_permissions(self.request.user) and not self.request.user.is_superuser:
+            raise Http404()
         context = super().get_context_data(**kwargs)
         context.update({
             'articles': Article.objects.all(),
