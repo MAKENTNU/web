@@ -10,6 +10,7 @@ from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView
 
 from news.models import Article, Event, TimePlace
+from web.templatetags.permission_tags import has_any_news_permissions
 
 
 class ViewEventsView(TemplateView):
@@ -70,6 +71,8 @@ class AdminView(TemplateView):
     template_name = 'news/admin.html'
 
     def get_context_data(self, **kwargs):
+        if not has_any_news_permissions(self.request.user) and not self.request.user.is_superuser:
+            raise Http404()
         context = super().get_context_data(**kwargs)
         context.update({
             'articles': Article.objects.all(),
