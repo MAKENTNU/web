@@ -1,17 +1,23 @@
 {% extends "web/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/checkin.css" %}" />
+{% endblock %}
 
 {% block body %}
     <div class="ui text container">
-        <h2>Ferdigheter på makerverkstedet akkurat nå:</h2>
+        <h2 class="make_col_blue">Ferdigheter på makerverkstedet akkurat nå:</h2>
         <div class="ui feed">
             {% for skill, level in skill_dict.items %}
                 <div class="event">
-                    <div class="label">
-                        <img src=""/>
+                    <div class="label blackbox">
+{#                        <img src=""/>#}
                     </div>
                     <div class="content">
-                        {{ skill }}
+                        <div class="skill-text">{{ skill }}</div>
                         <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
+                        <div class="date">timer siden</div>
                     </div>
                 </div>
             {% endfor %}
