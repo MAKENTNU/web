@@ -1,5 +1,5 @@
 from django.contrib.auth.models import Group, Permission
-from django.db.models import ManyToManyField
+from django.db import models
 
 
 class InheritanceGroup(Group):
@@ -17,14 +17,14 @@ class InheritanceGroup(Group):
     be altered, as any change will get overwritten.
     """
 
-    parents = ManyToManyField(
+    parents = models.ManyToManyField(
         'self',
         related_name='sub_groups',
         symmetrical=False,
         blank=True,
     )
 
-    own_permissions = ManyToManyField(
+    own_permissions = models.ManyToManyField(
         Permission,
         blank=True,
     )
@@ -40,6 +40,10 @@ class InheritanceGroup(Group):
 
         for sub in self.sub_groups.all():
             sub.update_permissions()
+
+    @property
+    def inherited_permissions(self):
+        return set(self.permissions.all()) - set(self.own_permissions.all())
 
     def get_sub_groups(self):
         """Return a queryset of all groups that inherits from this group."""
@@ -72,3 +76,26 @@ class InheritanceGroup(Group):
 
         return parents
 
+
+class Committee(models.Model):
+    """
+    A committee in the organization.
+
+    A committee gets its name and members through the:model:`groups.InheritanceGroup`
+    given in the `group` field.
+    """
+
+    group = models.OneToOneField(
+        InheritanceGroup,
+        on_delete=models.CASCADE,
+    )
+    description = models.TextField()
+    email = models.EmailField()
+    image = models.ImageField(blank=True)
+
+    @property
+    def name(self):
+        return self.group.name
+
+    def __str__(self):
+        return self.name

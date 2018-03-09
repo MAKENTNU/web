@@ -1,6 +1,9 @@
 from django.contrib import admin
 
-from .models import InheritanceGroup
+from .models import InheritanceGroup, Committee
+
+
+admin.site.register(Committee)
 
 
 @admin.register(InheritanceGroup)
@@ -30,8 +33,7 @@ class InheritanceGroupAdmin(admin.ModelAdmin):
 
         return form
 
-    def inherited_permissions(self, instance):
-        permissions = set(instance.permissions.all()) - set(instance.own_permissions.all())
-        return '\n'.join(map(lambda x: str(x), permissions))
+    def inherited_permissions(self, obj):
+        return '\n'.join(map(str, obj.inherited_permissions))
 
     inherited_permissions.short_description = 'Inherited permissions'

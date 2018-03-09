@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'', include('social_django.urls', namespace='social')),
     url(r'^news/', include('news.urls')),
     url(r'^contentbox/', include('contentbox.urls')),
+    url(r'^committees/', include('groups.committee_urls')),
     url(r'^$', IndexView.as_view()),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     ContentBox.url('about'),
