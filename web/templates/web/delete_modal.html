@@ -1,0 +1,31 @@
+<div id="delete-modal" class="ui basic small modal">
+    <div class="ui icon header">
+        <i class="trash icon"></i>
+        Er du sikker på at du vil slette?
+    </div>
+    <form id="delete-form" method="post">{% csrf_token %}</form>
+    <div class="actions">
+        <div class="ui red inverted delete button">
+            <i class="trash icon"></i>
+            Slett
+        </div>
+        <div class="ui white ok inverted button">
+            <i class="cancel icon"></i>
+            Avbryt
+        </div>
+    </div>
+</div>
+<script>
+    /*$('#delete-modal').modal({
+      'closable': false
+    });*/
+    $('.delete.confirm').click(function (e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        $('#delete-form').attr('action', url);
+        $('#delete-modal .delete.button').click(function (e) {
+            $('#delete-form').submit();
+        });
+        $('#delete-modal').modal('show');
+    });
+</script>
