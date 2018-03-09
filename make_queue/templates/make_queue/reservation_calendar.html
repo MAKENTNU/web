@@ -1,0 +1,116 @@
+{% load reservation_extra %}
+{% load staticfiles %}
+{% load l10n %}
+
+{% localize off %}
+
+    <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}">
+
+    <div class="ui grid padded equal width">
+        <div class="row make_collapsed_top_bottom">
+            <div class="four wide column make_collapsed"></div>
+            <div class="three wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom make_reservation_calendar_time_table_offset_fix">
+                        <div class="column make_reservation_calendar_time_table_hour">01</div>
+                        <div class="column make_reservation_calendar_time_table_hour">02</div>
+                        <div class="column make_reservation_calendar_time_table_hour">03</div>
+                        <div class="column make_reservation_calendar_time_table_hour">04</div>
+                        <div class="column make_reservation_calendar_time_table_hour">05</div>
+                        <div class="column make_reservation_calendar_time_table_hour">06</div>
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom">
+                        <div class="column make_reservation_calendar_time_table_hour">07</div>
+                        <div class="column make_reservation_calendar_time_table_hour">08</div>
+                        <div class="column make_reservation_calendar_time_table_hour">09</div>
+                        <div class="column make_reservation_calendar_time_table_hour">10</div>
+                        <div class="column make_reservation_calendar_time_table_hour">11</div>
+                        <div class="column make_reservation_calendar_time_table_hour">12</div>
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom">
+                        <div class="column make_reservation_calendar_time_table_hour">13</div>
+                        <div class="column make_reservation_calendar_time_table_hour">14</div>
+                        <div class="column make_reservation_calendar_time_table_hour">15</div>
+                        <div class="column make_reservation_calendar_time_table_hour">16</div>
+                        <div class="column make_reservation_calendar_time_table_hour">17</div>
+                        <div class="column make_reservation_calendar_time_table_hour">18</div>
+                    </div>
+                </div>
+            </div>
+            <div class="three wide column">
+                <div class="ui grid equal width">
+                    <div class="row make_collapsed_top_bottom equal width">
+                        <div class="column make_reservation_calendar_time_table_hour">19</div>
+                        <div class="column make_reservation_calendar_time_table_hour">20</div>
+                        <div class="column make_reservation_calendar_time_table_hour">21</div>
+                        <div class="column make_reservation_calendar_time_table_hour">22</div>
+                        <div class="column make_reservation_calendar_time_table_hour">23</div>
+                        <div class="column make_reservation_calendar_time_table_hour">24</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% for day in week_days %}
+            <div class="row make_collapsed_top_bottom_all make_reservation_calendar_time_table_full_row">
+                <div class="four wide column make_collapsed">
+                    <div class="ui vertical segment center aligned">{{ day.date|date:"d/m/Y" }}</div>
+                </div>
+                <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
+                     data-date="{{ day.date|date:"Y/n/j" }}"
+                     data-machine="{{ machine.pk }}" data-machine-type="{{ machine.literal }}">
+                    <div class="make_reservation_calendar_time_table_dashed_line left"></div>
+                    <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
+                    <div class="make_reservation_calendar_time_table_dashed_line right"></div>
+                    {% is_current_date day.date.date as should_include_current_time %}
+                    {% if should_include_current_time %}
+                        <div class="make_reservation_calendar_time_table_current_time"
+                             style="left:{% get_current_time_of_day %}%"></div>
+                    {% endif %}
+                    {% for reservation in day.machine.reservations %}
+                        {% if reservation.length %}
+                            <div class="make_reservation_calendar_time_table_item
+                                        {% if reservation.reservation.special %}
+                                            make_reservation_calendar_time_table_make
+                                        {% elif reservation.reservation.event %}
+                                            make_reservation_calendar_time_table_event
+                                        {% else %}
+                                            {% if reservation.reservation.user == request.user %}
+                                                make_reservation_calendar_time_table_my_non_event
+                                            {% else %}
+                                                make_reservation_calendar_time_table_non_event
+                                            {% endif %}
+                                        {% endif %}"
+                                 style="margin-left:{{ reservation.start_percentage }}%;width:{{ reservation.length }}%"
+                                 {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"{% endif %}>
+                                {% if reservation.reservation.special %}
+                                    <div>{{ reservation.reservation.special_text }}</div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="ui vertical segment">
+        <div class="ui label" style="float:right">
+            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
+            MAKE NTNU
+            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
+            Arrangementer
+            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
+            Andre Reservasjoner
+            <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
+            Mine Reservasjoner
+        </div>
+    </div>
+
+{% endlocalize %}

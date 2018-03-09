@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User, Permission
 from django.test import TestCase
 
 from contentbox.models import ContentBox, DisplayContentBoxView
@@ -26,7 +27,18 @@ class ModelTestCase(TestCase):
         self.assertTrue('contentbox' in context)
         self.assertEqual(context['contentbox'].title, 'TEST_TITLE')
 
-    def test_edit(self):
+    def test_edit_without_permission(self):
+        ContentBox.get(title='TEST_TITLE')
+        response = self.client.get('/contentbox/1/edit/')
+        self.assertNotEqual(response.status_code, 200)
+
+    def test_edit_with_permission(self):
+        username = 'TEST_USER'
+        password = 'TEST_PASS'
+        user = User.objects.create_user(username=username, password=password)
+        permission = Permission.objects.get(codename='change_contentbox')
+        user.user_permissions.add(permission)
+        self.client.login(username=username, password=password)
         ContentBox.get(title='TEST_TITLE')
         response = self.client.get('/contentbox/1/edit/')
         self.assertEqual(response.status_code, 200)

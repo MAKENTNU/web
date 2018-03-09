@@ -1,7 +1,6 @@
 from django.views.generic import TemplateView
 
-from news.models import Article, Event
-
+from news.models import Article, TimePlace
 
 class IndexView(TemplateView):
     template_name = 'web/index.html'
@@ -9,7 +8,10 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.filter(event=None),
-            'events': Event.objects.all(),
+            'articles': Article.objects.published().filter(featured=True)[:4],
+            'events': TimePlace.objects.future().filter(event__featured=True)[:4],
         })
         return context
+
+class AdminPanelView(TemplateView):
+    template_name = 'web/admin_panel.html'

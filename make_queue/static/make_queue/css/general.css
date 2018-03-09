@@ -1,0 +1,90 @@
+.make_collapsed:not(:first-child) {
+    padding-left: 0 !important;
+}
+
+.make_collapsed:not(:last-child) {
+    padding-right: 0 !important;
+}
+
+.make_collapsed_top_bottom:not(:first-child) {
+    padding-top: 0 !important;
+}
+
+.make_collapsed_top_bottom:not(:last-child) {
+    padding-bottom: 0 !important;
+}
+
+.make_collapsed_header {
+    margin-bottom: 0 !important;
+}
+
+.make_collapsed_header_all{
+    margin-bottom: 0 !important;
+    margin-top: 0 !important;
+}
+
+.make_collapsed_top_bottom_all {
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+}
+
+.large-text {
+    font-size: 1.2em;
+}
+
+.make_row_fill {
+    height: 100%;
+}
+
+.make_hidden {
+    display: none !important;
+}
+
+.make_non_visible {
+    visibility: hidden !important;
+}
+
+.make_right_floated {
+    float: right;
+    display: inline-block;
+}
+
+.make_my_reservation_event {
+    border-left: 2px solid #008000;
+}
+
+@media screen and (max-width: 800px) {
+    .make_my_reservation_desktop {
+        display: none !important;
+    }
+}
+
+.make_my_reservation_cards_padding {
+    padding: 2em 0 2em 0;
+}
+
+.make_my_reservation_button_pad {
+    margin-top: -2em;
+    padding-bottom: 1.2em !important;
+}
+
+.make_my_reservation_blue_link {
+    color: #4183c4 !important;
+}
+
+.error_border {
+    border-color: #ff0000 !important;
+}
+
+.float_fix::after {
+    content: "";
+    display: block;
+    clear: both;
+    padding-bottom: 1em;
+}
+
+@media screen and (min-width: 800px) {
+    .make_my_reservation_tablet {
+        display: none !important;
+    }
+}

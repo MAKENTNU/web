@@ -7,18 +7,27 @@
 		<title>{% block title %}MAKE NTNU{% endblock title %}</title>
 		<meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=0.8">
-        <meta property="og:title" content="MAKE NTNU" />
+        <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}" />
         <meta property="og:site_name" content="MAKE NTNU" />
-        <meta property="og:image" content="http://dev.makentnu.no{% static "web/img/make_thumb.png" %}" />
+        <meta property="og:image" content="http://makentnu.no{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}" />
+        <meta property="og:description" content="{% block og_description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock og_description %}" />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="http://dev.makentnu.no/" />
+        <meta property="og:url" content="http://makentnu.no/" />
         <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
 
         <link rel="stylesheet" type="text/css" href="{% static "web/semantic-ui/semantic.min.css" %}">
         <script src="{% static "web/js/jquery-3.1.1.min.js" %}"></script>
         <script src="{% static "web/semantic-ui/semantic.min.js" %}"></script>
-
         <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}">
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'UA-113882146-1');
+        </script>
+
         {% block head %}{% endblock head %}
     </head>
 
@@ -28,13 +37,21 @@
                 {% block header %}
                     {% include "web/header.html" %}
                 {% endblock header %}
+                {% block padding-top %}
+                    <div class="make_content_padding"></div>
+                {% endblock %}
                 {% block body %}
                 {% endblock body %}
+                {% block padding-bottom %}
+                    <div class="make_content_padding"></div>
+                {% endblock padding-bottom %}
             </div>
             {% block footer %}
                 {% include "web/footer.html" %}
-            {% endblock %}
+            {% endblock footer %}
         </div>
+        {% block scripts %}
+        {% endblock scripts %}
     </body>
 
     <style>
