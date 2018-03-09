@@ -21,7 +21,7 @@
     margin-left: -1px;
     border-left: 2px solid #ff0000;
     height: 100%;
-    z-index: 10;
+    z-index: 1000;
 }
 
 .make_reservation_calendar_time_table_offset_fix {
@@ -102,6 +102,11 @@
     margin-right: 5px;
 }
 
+.make_reservation_calendar_legend_item {
+    display: inline-block;
+    padding-right: 0.5em;
+}
+
 .make_reservation_calendar_legend_box:not(:first-child) {
     margin-left: 20px;
 }
@@ -130,6 +135,11 @@
 
     .make_reservation_calendar_time_table_hour:nth-child(3n) {
         display: none !important;
+    }
+
+    .make_reservation_calendar_legend {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
