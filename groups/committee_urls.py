@@ -4,5 +4,5 @@ from .views import CommitteeList
 
 
 urlpatterns = [
-    url('^$', CommitteeList.as_view()),
+    url('^$', CommitteeList.as_view(), name='committee_list'),
 ]
