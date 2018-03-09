@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 from .helper import date_to_local, local_to_date
 from .models import Machine, Reservation, Quota
 from .forms import ReservationForm
-from .templatetags.reservation_extra import calendar_url_reservation
+from .templatetags.reservation_extra import calendar_url_reservation, date_to_percentage
 from news.models import TimePlace
 from dataporten.login_handlers import get_handler
 
@@ -30,28 +30,21 @@ class ReservationCalendarView(View):
 
     @staticmethod
     def get_machines(machine_type):
-        return next(filter(lambda x: x.literal.lower() == machine_type.lower(), Machine.__subclasses__())).objects.all()
+        return Machine.get_subclass(machine_type).objects.all()
 
     @staticmethod
     def year_and_week_to_monday(year, week):
         return datetime.strptime(str(year) + " " + str(week) + " 1", "%Y %W %w")
 
     @staticmethod
-    def date_to_percentage(date):
-        date = date_to_local(date)
-        return (date.hour / 24 + date.minute / 1440) * 100
-
-    @staticmethod
     def format_reservation(reservation, date):
         start_time = max(reservation.start_time, date)
         end_time = min(reservation.end_time, date + timedelta(days=1, seconds=-1))
 
-        return {'reservation': reservation,
-                'start_percentage': ReservationCalendarView.date_to_percentage(start_time),
+        return {'reservation': reservation, 'start_percentage': date_to_percentage(start_time),
                 'start_time': "{:02}:{:02}".format(start_time.hour, start_time.minute),
                 'end_time': "{:02}:{:02}".format(end_time.hour, end_time.minute),
-                'length': ReservationCalendarView.date_to_percentage(end_time) -
-                          ReservationCalendarView.date_to_percentage(start_time)}
+                'length': date_to_percentage(end_time) - date_to_percentage(start_time)}
 
     @staticmethod
     def get_week_days_with_reservations(year, week, machine):
