@@ -4,9 +4,10 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import UpdateView, CreateView, TemplateView
 
-from checkin.models import Profile, Skill, UserSkill
+from checkin.models import Profile, Skill, UserSkill, SuggestSkill
 from web import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 
 
 class CheckInView(TemplateView):
@@ -95,5 +96,26 @@ class SuggestSkillView(TemplateView):
     template_name = "checkin/suggest_skill.html"
 
     def post(self, request):
-        pass
+        suggestion = request.POST.get('suggested-skill')
+        profile = request.user.profile
+
+        # TODO: check for whitespace input and other nonsense
+
+        if not suggestion:
+            return HttpResponseRedirect(reverse('suggest'))
+
+        if Skill.objects.filter(title=suggestion).exists():
+            messages.error(request, "Ferdigheten eksisterer allerede!")
+            return HttpResponseRedirect(reverse('suggest'))
+        else:
+            if SuggestSkill.objects.filter(title=suggestion).exists():
+                SuggestSkill.objects.get(title=suggestion).voters.add(profile)
+            else:
+                sug = SuggestSkill.objects.create(creator=profile, title=suggestion)
+                sug.voters.add(profile)
+
+            if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5 or SuggestSkill.objects.get(title=suggestion).approved:
+                Skill.objects.create(title=suggestion)
+
+        return HttpResponseRedirect(reverse('suggest'))
 

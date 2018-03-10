@@ -12,7 +12,7 @@ class Skill(models.Model):
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
     image = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
@@ -43,8 +43,13 @@ class UserSkill(models.Model):
 
 
 class SuggestSkill(models.Model):
+    creator = models.ForeignKey(Profile, related_name="suggestions", null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100, unique=True, verbose_name="Foreslått ferdighet")
-    voters = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    approved = models.BooleanField(default=False)
+    voters = models.ManyToManyField(Profile, related_name="votes")
 
     def __str__(self):
         return str(self.title)
+
+    class Meta:
+        ordering = ('title',)

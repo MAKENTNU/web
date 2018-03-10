@@ -1,12 +1,25 @@
 {% extends "web/base.html" %}
-
+{% load staticfiles %}
 
 {% block body %}
 
+    <br>
     <div class="ui text container">
-
-
-
+        <form class="ui form" action="" method="post">
+            {% csrf_token %}
+            <div class="inline fields">
+                <div class="ten wide field">
+                    <label>Legg til ferdighet</label>
+                    <input type="text" name="suggested-skill" placeholder="Ferdighet">
+                </div>
+                <div class="three wide field">
+                    <button class="ui button" type="submit">Submit</button>
+                </div>
+            </div>
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </form>
     </div>
 
 {% endblock body %}
