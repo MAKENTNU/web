@@ -332,3 +332,10 @@ class UpdateSewingQuota(View):
         quota.max_time_reservation = request.POST.get("max_length_reservation")
         quota.save()
         return HttpResponse("")
+
+
+class UpdateAllowed(View):
+
+    def post(self, request):
+        if get_handler("printer_allowed").is_correct_token(request.POST.get("token", "")):
+            update_printer_handler(request)
