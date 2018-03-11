@@ -15,5 +15,5 @@ class MachineView(TemplateView):
                 type
         """
         return {"machine_types": [{
-            "name": machine_type.literal, "machines": [list(machine_type.objects.all())]
+            "name": machine_type.literal, "machines": list(machine_type.objects.all())
         } for machine_type in Machine.__subclasses__() if machine_type.objects.exists()]}
