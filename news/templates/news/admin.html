@@ -42,7 +42,7 @@
                                         </a>
                                     {% endif %}
                                     {% if perms.news.delete_event %}
-                                        <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/delete/">
+                                        <a class="delete confirm inline-block make_col_blue" href="/news/event/{{ event.id }}/delete/">
                                             <i class="ui delete icon"></i>
                                         </a>
                                     {% endif %}
@@ -85,10 +85,10 @@
                                                             </a>
                                                             {% endif %}
                                                             {% if perms.news.delete_timeplace %}
-                                                                <a class="make_col_blue"
+                                                                <a class="delete confirm make_col_blue"
                                                                    href="/news/timeplace/{{ timeplace.id }}/delete/">
-                                                                <i class="ui delete icon"></i>
-                                                            </a>
+                                                                    <i class="ui delete icon"></i>
+                                                                </a>
                                                             {% endif %}
                                                             {% if perms.news.add_timeplace %}
                                                                 <a class="make_col_blue"
@@ -149,10 +149,10 @@
                                         </a>
                                     {% endif %}
                                     {% if perms.news.delete_article %}
-                                        <a class="inline-block make_col_blue"
+                                        <a class="delete confirm inline-block make_col_blue"
                                            href="/news/article/{{ article.id }}/delete/">
-                                        <i class="ui delete icon"></i>
-                                    </a>
+                                            <i class="ui delete icon"></i>
+                                        </a>
                                     {% endif %}
                                 </span>
                             </div>
