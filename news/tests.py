@@ -10,6 +10,16 @@ from news.models import Article, Event, TimePlace
 
 
 class ModelTestCase(TestCase):
+    @staticmethod
+    def create_time_place(event, pub_date_adjust_days, start_time_adjust_seconds, hidden=TimePlace.hidden.default):
+        return TimePlace.objects.create(
+            event=event,
+            pub_date=(timezone.now() - timedelta(days=pub_date_adjust_days)).date(),
+            start_date=timezone.now().date(),
+            start_time=(timezone.now() + timedelta(seconds=start_time_adjust_seconds)).time(),
+            hidden=hidden,
+        )
+
     def test_str(self):
         article = Article.objects.create(title='TEST_TITLE')
         self.assertEqual(article.title, 'TEST_TITLE')
@@ -18,22 +28,22 @@ class ModelTestCase(TestCase):
     def test_article_manager(self):
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=timezone.now() + timedelta(days=1),
+            pub_date=(timezone.now() + timedelta(days=1)).date(),
             pub_time=timezone.now().time()
         )
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=timezone.now(),
+            pub_date=timezone.now().date(),
             pub_time=(timezone.now() + timedelta(seconds=1)).time()
         )
         Article.objects.create(
             title='PUBLISHED',
-            pub_date=timezone.now() - timedelta(days=1),
+            pub_date=(timezone.now() - timedelta(days=1)).date(),
             pub_time=timezone.now().time()
         )
         Article.objects.create(
             title='PUBLISHED',
-            pub_date=timezone.now(),
+            pub_date=timezone.now().date(),
             pub_time=(timezone.now() - timedelta(seconds=1)).time()
         )
         self.assertEqual(Article.objects.published().count(), 2)
@@ -42,52 +52,16 @@ class ModelTestCase(TestCase):
     def test_event_manager(self):
         event = Event.objects.create(title='', hidden=False)
         hidden_event = Event.objects.create(title='', hidden=True)
-        not_published = TimePlace.objects.create(
-            event=event,
-            pub_date=timezone.now() + timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() + timedelta(seconds=1)).time()
-        )
-        future = TimePlace.objects.create(
-            event=event,
-            pub_date=timezone.now() - timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() + timedelta(seconds=1)).time(),
-            hidden=False,
-        )
-        past = TimePlace.objects.create(
-            event=event,
-            pub_date=timezone.now() - timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() - timedelta(seconds=1)).time(),
-            hidden=False,
-        )
-        TimePlace.objects.create(
-            event=hidden_event,
-            pub_date=timezone.now() - timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() + timedelta(seconds=1)).time()
-        )
-        TimePlace.objects.create(
-            event=hidden_event,
-            pub_date=timezone.now() - timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() - timedelta(seconds=1)).time()
-        )
-        TimePlace.objects.create(
-            event=hidden_event,
-            pub_date=timezone.now() - timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() + timedelta(seconds=1)).time(),
-            hidden=False,
-        )
-        TimePlace.objects.create(
-            event=hidden_event,
-            pub_date=timezone.now() - timedelta(days=1),
-            start_date=timezone.now(),
-            start_time=(timezone.now() - timedelta(seconds=1)).time(),
-            hidden=False,
-        )
+
+        not_published = self.create_time_place(event, 1, 1, False)
+        future = self.create_time_place(event, -1, 1, False)
+        past = self.create_time_place(event, -1, -1, False)
+
+        self.create_time_place(hidden_event, -1, 1)
+        self.create_time_place(hidden_event, -1, -1)
+        self.create_time_place(hidden_event, -1, 1, False)
+        self.create_time_place(hidden_event, -1, -1, False)
+
         self.assertEqual(TimePlace.objects.future().count(), 1)
         self.assertEqual(TimePlace.objects.past().count(), 1)
         self.assertEqual(TimePlace.objects.future().first(), future)
