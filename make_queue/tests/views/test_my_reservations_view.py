@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
 from make_queue.models import Quota3D, Reservation3D, Printer3D, SewingMachine, QuotaSewing, ReservationSewing
-from make_queue.views import MyReservationsView
+from make_queue.views.reservation.overview import MyReservationsView
 
 
 class MyReservationsViewTestCase(TestCase):

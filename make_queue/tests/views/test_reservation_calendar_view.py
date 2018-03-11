@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
 import pytz
-from make_queue.views import ReservationCalendarView
+from make_queue.views.reservation.calendar import ReservationCalendarView
 from make_queue.models import Printer3D, SewingMachine, Reservation3D, Quota3D
 
 
