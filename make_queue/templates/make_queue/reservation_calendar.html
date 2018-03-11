@@ -74,7 +74,7 @@
                         <div class="make_reservation_calendar_time_table_current_time"
                              style="left:{% get_current_time_of_day %}%"></div>
                     {% endif %}
-                    {% for reservation in day.machine.reservations %}
+                    {% for reservation in day.reservations %}
                         {% if reservation.length %}
                             <div class="make_reservation_calendar_time_table_item
                                         {% if reservation.reservation.special %}
