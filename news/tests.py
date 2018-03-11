@@ -11,10 +11,11 @@ from news.models import Article, Event, TimePlace
 
 class ModelTestCase(TestCase):
     @staticmethod
-    def create_time_place(event, pub_date_adjust_days, start_time_adjust_seconds, hidden=TimePlace.hidden.default):
+    def create_time_place(event, pub_date_adjust_days, start_time_adjust_seconds,
+                          hidden=TimePlace._meta.get_field("hidden").default):
         return TimePlace.objects.create(
             event=event,
-            pub_date=(timezone.now() - timedelta(days=pub_date_adjust_days)).date(),
+            pub_date=(timezone.now() + timedelta(days=pub_date_adjust_days)).date(),
             start_date=timezone.now().date(),
             start_time=(timezone.now() + timedelta(seconds=start_time_adjust_seconds)).time(),
             hidden=hidden,
