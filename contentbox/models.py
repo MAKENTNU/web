@@ -24,7 +24,7 @@ class ContentBox(models.Model):
 
     @staticmethod
     def url(title):
-        return durl(r'%s/$' % title, DisplayContentBoxView.as_view(title=title))
+        return durl(r'%s/$' % title, DisplayContentBoxView.as_view(title=title), name=title)
 
 
 class DisplayContentBoxView(TemplateView):
