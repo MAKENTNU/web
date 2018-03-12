@@ -1,4 +1,5 @@
 from django.urls import include, path, register_converter, re_path
+from django.views.decorators.csrf import csrf_exempt
 
 from .views import *
 from . import converters
@@ -22,7 +23,7 @@ json_urlpatterns = [
 quota_url_patterns = [
     path('json/<machine_type:machine_type>/', login_required(get_user_quota_max_length)),
     path('update/3D-printer/', permission_required("make_queue.can_edit_quota", raise_exception=True)(UpdateQuota3D.as_view())),
-    path('update/allowed/', UpdateAllowed.as_view()),
+    path('update/allowed/', csrf_exempt(UpdateAllowed.as_view())),
     path('update/sewing/', permission_required("make_queue.can_edit_quota", raise_exception=True)(UpdateSewingQuota.as_view())),
     path('update/', permission_required("make_queue.can_edit_quota", raise_exception=True)(update_printer_handler)),
     path('<username:user>/', permission_required("make_queue.can_edit_quota", raise_exception=True)(get_user_quota_view)),
