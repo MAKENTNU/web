@@ -1,18 +1,19 @@
-from django.shortcuts import render
-from django.views import View
+from django.views.generic import TemplateView
 
 from make_queue.models import Reservation
 
 
-class MyReservationsView(View):
+class MyReservationsView(TemplateView):
+    """View for seeing the users reservations"""
     template_name = "make_queue/reservations.html"
 
-    @staticmethod
-    def get_user_reservations(user):
-        user_reservations = []
-        for reservation_subclass in Reservation.__subclasses__():
-            user_reservations.extend(reservation_subclass.objects.filter(user=user, event=None, special=False))
-        return sorted(user_reservations, key=lambda x: x.end_time, reverse=True)
+    def get_context_data(self):
+        """
+        Creates a list of the user's reservations, that are not event reservations or MAKE NTNU reservations
 
-    def get(self, request):
-        return render(request, self.template_name, {'reservations': self.get_user_reservations(request.user)})
+        :return: A list of the user's reservations
+        """
+        return {"reservations": sorted(
+            [reservation for reservation_subclass in Reservation.__subclasses__() for reservation in
+             reservation_subclass.objects.filter(user=self.request.user, event=None, special=False)],
+            key=lambda x: x.end_time, reverse=True)}
