@@ -14,7 +14,7 @@ extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 urlpatterns = [
     url(r'^reservation/', include('make_queue.urls')),
-    url(r'^adminpanel/', AdminPanelView.as_view()),
+    url(r'^adminpanel/', AdminPanelView.as_view(), name='adminpanel'),
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view()),
     url(r'^login/$', RedirectView.as_view(url='/login/dataporten/'), name='login'),
