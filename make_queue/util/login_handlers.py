@@ -1,6 +1,6 @@
 from json import JSONDecodeError
 
-from dataporten.login_handlers import LoginHandler, register_handler
+from dataporten.login_handlers import LoginHandler
 from make_queue.models import Quota3D
 from requests import post
 import web.settings
@@ -34,6 +34,3 @@ class PrinterHandler(LoginHandler):
             self.allowed_users = response.json()["allowed"]
         except JSONDecodeError:
             pass
-
-
-register_handler(PrinterHandler(), "printer_allowed")
