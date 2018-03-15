@@ -2,7 +2,7 @@ from django import template
 from django.utils import timezone
 from django.urls import reverse
 
-from make_queue.helper import date_to_local
+from make_queue.util.time import date_to_local
 
 register = template.Library()
 

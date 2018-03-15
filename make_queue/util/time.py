@@ -1,3 +1,5 @@
+import pytz
+from django.utils import timezone
 from django.utils.datetime_safe import datetime
 
 
@@ -36,3 +38,23 @@ def get_next_week(year, week, shift_direction):
     if is_valid_week(year, week):
         return year, week
     return get_next_week(year, week, shift_direction)
+
+
+def date_to_local(date):
+    """
+    Converts a localized date to an unlocalized date in the default server timezone
+
+    :param date: The date to convert to the default server timezone
+    :return: The unlocalized date in the default server timezone
+    """
+    return timezone.localtime(date, timezone.get_default_timezone())
+
+
+def local_to_date(date):
+    """
+    Converts an unlocalized date to a localized date by assuming it is in the default server timezone
+
+    :param date: The date to localize
+    :return: The localized date
+    """
+    return pytz.timezone(timezone.get_default_timezone_name()).localize(date)

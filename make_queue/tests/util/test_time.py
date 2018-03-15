@@ -1,7 +1,9 @@
+import pytz
 from django.test import TestCase
+from django.utils import timezone
 from django.utils.datetime_safe import datetime
 
-from make_queue.util.time import year_and_week_to_monday, is_valid_week, get_next_week
+from make_queue.util.time import year_and_week_to_monday, is_valid_week, get_next_week, local_to_date, date_to_local
 
 
 class WeekUtilTest(TestCase):
@@ -26,3 +28,17 @@ class WeekUtilTest(TestCase):
     def test_get_next_valid_week_year_shift(self):
         self.assertEqual((2018, 1), get_next_week(2017, 52, 1))
         self.assertEqual((2016, 52), get_next_week(2017, 1, -1))
+
+
+class LocalizationTest(TestCase):
+    # Assumes the default timezone of the server is CET.
+    # If the default timezone changes, so must the values in this test
+
+    def test_local_to_date(self):
+        local_date = datetime(2018, 3, 12, 11, 20, 20)
+        self.assertEqual(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC")),
+                         local_to_date(local_date))
+
+    def test_date_to_local(self):
+        self.assertEqual(datetime(2018, 3, 12, 11, 20, 20),
+                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))))

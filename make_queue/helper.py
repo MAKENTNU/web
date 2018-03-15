@@ -1,19 +1,9 @@
 from json import JSONDecodeError
 
-import pytz
-from django.utils import timezone
 from dataporten.login_handlers import LoginHandler, register_handler
 from make_queue.models import Quota3D
 from requests import post
 import web.settings
-
-
-def date_to_local(date):
-    return timezone.localtime(date, timezone.get_default_timezone())
-
-
-def local_to_date(date):
-    return pytz.timezone(timezone.get_default_timezone_name()).localize(date)
 
 
 class PrinterHandler(LoginHandler):

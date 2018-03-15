@@ -2,10 +2,9 @@ from datetime import timedelta
 
 from django.views.generic import TemplateView
 
-from make_queue.helper import local_to_date
 from make_queue.models import Machine, Quota
 from make_queue.templatetags.reservation_extra import date_to_percentage
-from make_queue.util.time import is_valid_week, get_next_week, year_and_week_to_monday
+from make_queue.util.time import is_valid_week, get_next_week, year_and_week_to_monday, local_to_date
 
 
 class ReservationCalendarComponentView(TemplateView):
