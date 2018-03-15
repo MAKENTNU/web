@@ -40,5 +40,7 @@ class LocalizationTest(TestCase):
                          local_to_date(local_date))
 
     def test_date_to_local(self):
-        self.assertEqual(datetime(2018, 3, 12, 11, 20, 20),
-                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))))
+        self.assertEqual(datetime(2018, 3, 12, 11, 20, 20).date(),
+                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))).date())
+        self.assertEqual(datetime(2018, 3, 12, 11, 20, 20).time(),
+                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))).time())
