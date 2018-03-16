@@ -27,7 +27,7 @@ class UpdateQuotaView(View):
     def post(self, request):
         """
         Update the quota with the specified fields on a post request
-        :param request: The post request
+        :param request: The POST request
         """
         quota = self.get_quota(request.POST.get("username"))
         for attribute_name, field_name, cast_function in self.fields:
@@ -56,7 +56,14 @@ class UpdateSewingQuota(UpdateQuotaView):
 
 
 class UpdateAllowed(View):
+    """API endpoint to force update of the login handler responsible for printer booking permissions"""
 
     def post(self, request):
+        """
+        Force update to the printer booking permissions login handler if the given token is correct
+        :param request: The POST request
+        """
         if get_handler("printer_allowed").is_correct_token(request.POST.get("token", "")):
             get_handler("printer_allowed").update()
+            return HttpResponse("Successful update")
+        return HttpResponse("Invalid token")
