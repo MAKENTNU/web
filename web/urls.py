@@ -14,7 +14,7 @@ extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 urlpatterns = [
     url(r'^reservation/', include('make_queue.urls')),
-    url(r'^adminpanel/', AdminPanelView.as_view()),
+    url(r'^adminpanel/', AdminPanelView.as_view(), name='adminpanel'),
     url(r'^admin/', admin.site.urls),
     url(r'^$', IndexView.as_view()),
     url(r'^login/$', RedirectView.as_view(url='/login/dataporten/'), name='login'),
@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'', include('social_django.urls', namespace='social')),
     url(r'^news/', include('news.urls')),
     url(r'^contentbox/', include('contentbox.urls')),
+    url(r'^committees/', include('groups.committee_urls')),
     url(r'^$', IndexView.as_view()),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     ContentBox.url('about'),
