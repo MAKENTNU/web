@@ -1,9 +1,10 @@
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils import timezone
 from django.views import View
-from django.views.generic import FormView
+from django.views.generic import FormView, RedirectView
 
 from make_queue.forms import ReservationForm
 from make_queue.models import Quota, Machine, Reservation
@@ -70,9 +71,24 @@ class MakeReservationView(FormView):
         return redirect(calendar_url_reservation(reservation))
 
 
-class DeleteReservationView(View):
+class DeleteReservationView(RedirectView):
+    """View for deleting a reservation"""
+    http_method_names = ["post"]
 
-    def post(self, request):
+    def get_redirect_url(self, *args, **kwargs):
+        """
+        Gives the redirect url for when the reservation is deleted
+        :return: The redirect url
+        """
+        if "next" in self.request.POST:
+            return self.request.POST.get("next")
+        return reverse("my_reservations")
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Delete the reservation if it can be deleted by the current user and exists
+        :param request: The HTTP POST request
+        """
         if "pk" in request.POST and "machine_type" in request.POST:
             pk = request.POST.get("pk")
             machine_type = request.POST.get("machine_type")
@@ -81,9 +97,8 @@ class DeleteReservationView(View):
 
             if reservation and reservation.can_change(request.user):
                 reservation.delete()
-        if "next" in request.POST:
-            return HttpResponseRedirect(request.POST.get("next"))
-        return redirect("my_reservations")
+
+        return super().dispatch(request, *args, **kwargs)
 
 
 class ChangeReservationView(View):
