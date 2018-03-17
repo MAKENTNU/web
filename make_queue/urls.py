@@ -26,7 +26,7 @@ quota_url_patterns = [
     path('update/allowed/', csrf_exempt(api.quota.UpdateAllowed.as_view()), name="update_allowed_3D_printer"),
     path('update/sewing/', permission_required("make_queue.can_edit_quota", raise_exception=True)(api.quota.UpdateSewingQuota.as_view())),
     path('update/', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.UpdatePrinterHandlerView.as_view())),
-    path('<username:user>/', permission_required("make_queue.can_edit_quota", raise_exception=True)(quota.user.get_user_quota_view)),
+    path('<username:user>/', permission_required("make_queue.can_edit_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view())),
     path('', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
 
