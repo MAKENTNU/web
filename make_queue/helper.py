@@ -39,4 +39,4 @@ class PrinterHandler(LoginHandler):
         self.update()
 
 
-register_handler(PrinterHandler(), "printer_allowed")
+register_handler(PrinterHandler, "printer_allowed")
