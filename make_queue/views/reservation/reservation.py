@@ -23,8 +23,8 @@ class ReservationCreateOrChangeView(TemplateView):
         :param form: The form to generate an error message
         :return: The error message
         """
-        if self.request.user.has_perm("can_create_event_reservation") and form.cleaned_data["event"]:
-            return "Tidspunktet eller eventen, er ikke lengre tilgjenglig"
+        if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
+            return "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
         return "Tidspunktet er ikke lengre tilgjengelig"
 
     def validate_and_save(self, reservation, form):
@@ -53,13 +53,15 @@ class ReservationCreateOrChangeView(TemplateView):
 
         # Always include a list of events and machines to populate the dropdown lists
         context_data = {
-            "new_reservation": self.new_reservation, "events": TimePlace.objects.filter(
+            "new_reservation": self.new_reservation, "events": list(TimePlace.objects.filter(
                 Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
-                Q(end_date__gt=timezone.now().date())),
+                Q(end_date__gt=timezone.now().date()))),
             "machine_types": [
                 {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
                 for sub_class in Machine.__subclasses__() if
-                Quota.get_quota_by_machine(sub_class.literal, self.request.user).can_make_new_reservation()]
+                Quota.get_quota_by_machine(sub_class.literal, self.request.user).can_make_new_reservation() and
+                sub_class.objects.exists()
+            ]
         }
 
         # If we are given a reservation, populate the information relevant to that reservation
@@ -99,7 +101,7 @@ class MakeReservationView(ReservationCreateOrChangeView):
     """View for creating a new reservation"""
     new_reservation = True
 
-    def form_valid(self, form):
+    def form_valid(self, form, **kwargs):
         """
         Creates a reservation from a valid ReservationForm
         :param form: The valid reservation form
