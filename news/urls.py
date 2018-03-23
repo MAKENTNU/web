@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required
 
 from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
     ViewEventView, AdminView, ViewEventsView, ViewArticlesView, CreateTimePlaceView, EditTimePlaceView, \
-    DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView
+    DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
+    DeleteArticleView, DeleteTimePlaceView, DeleteEventView
 
 urlpatterns = [
     path('admin/', login_required(AdminView.as_view()), name='admin'),
@@ -13,14 +14,17 @@ urlpatterns = [
     path('articles/', ViewArticlesView.as_view(), name='articles'),
     path('article/create/', login_required(CreateArticleView.as_view()), name='article-create'),
     path('article/<int:pk>/edit/', login_required(EditArticleView.as_view()), name='article-edit'),
+    path('article/<int:pk>/delete/', login_required(DeleteArticleView.as_view()), name='article-delete'),
     path('article/<int:pk>/', ViewArticleView.as_view(), name='article'),
     path('events/', ViewEventsView.as_view(), name='events'),
     path('event/create/', login_required(CreateEventView.as_view()), name='event-create'),
     path('event/<int:pk>/edit/', login_required(EditEventView.as_view()), name='event-edit'),
+    path('event/<int:pk>/delete/', login_required(DeleteEventView.as_view()), name='event-delete'),
     path('event/<int:pk>/', ViewEventView.as_view(), name='event'),
     path('timeplace/create/', login_required(CreateTimePlaceView.as_view()), name='timeplace-create'),
     path('timeplace/<int:pk>/edit/', login_required(EditTimePlaceView.as_view()), name='timeplace-edit'),
     path('timeplace/<int:pk>/duplicate/', login_required(DuplicateTimePlaceView.as_view()),
          name='timeplace-duplicate'),
     path('timeplace/<int:pk>/new/', login_required(NewTimePlaceView.as_view()), name='timeplace-new'),
+    path('timeplace/<int:pk>/delete/', login_required(DeleteTimePlaceView.as_view()), name='timeplace-delete'),
 ]

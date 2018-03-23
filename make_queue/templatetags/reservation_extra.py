@@ -2,6 +2,8 @@ from django import template
 from django.utils import timezone
 from django.urls import reverse
 
+from make_queue.helper import date_to_local
+
 register = template.Library()
 
 
@@ -43,6 +45,10 @@ def get_current_time_of_day():
 
 @register.simple_tag()
 def date_to_percentage(date):
+    try:
+        date = date_to_local(date)
+    except ValueError:
+        pass
     return (date.hour / 24 + date.minute / 1440) * 100
 
 

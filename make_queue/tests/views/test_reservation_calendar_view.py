@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from datetime import datetime
 from django.utils import timezone
 import pytz
-from make_queue.helper import local_to_date
 from make_queue.views import ReservationCalendarView
 from make_queue.models import Printer3D, SewingMachine, Reservation3D, Quota3D
 
@@ -30,10 +29,6 @@ class ReservationCalendarViewTestCase(TestCase):
     def test_get_next_valid_week_year_shift(self):
         self.assertEqual((2018, 1), ReservationCalendarView.get_next_valid_week(2017, 52, 1))
         self.assertEqual((2016, 52), ReservationCalendarView.get_next_valid_week(2017, 1, -1))
-
-    def test_date_to_percentage(self):
-        self.assertEqual(41.875, ReservationCalendarView.date_to_percentage(local_to_date(datetime(2017, 12, 24, 10, 3))))
-        self.assertEqual(50, ReservationCalendarView.date_to_percentage(local_to_date(datetime(2017, 12, 24, 12, 0))))
 
     def test_get_machines_simple_printer(self):
         Printer3D.objects.create(name="S1", location="U1", model="Ultimaker", status="F")

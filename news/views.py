@@ -4,10 +4,10 @@ import math
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView
+from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView
 
 from news.models import Article, Event, TimePlace
 from web.templatetags.permission_tags import has_any_news_permissions
@@ -275,4 +275,28 @@ class AdminTimeplaceToggleView(AdminArticleToggleView):
     model = TimePlace
     permission_required = (
         'news.edit_timeplace',
+    )
+
+
+class DeleteArticleView(PermissionRequiredMixin, DeleteView):
+    model = Article
+    success_url = reverse_lazy('admin')
+    permission_required = (
+        'news.delete_article',
+    )
+
+
+class DeleteEventView(PermissionRequiredMixin, DeleteView):
+    model = Event
+    success_url = reverse_lazy('admin')
+    permission_required = (
+        'news.delete_event',
+    )
+
+
+class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
+    model = TimePlace
+    success_url = reverse_lazy('admin')
+    permission_required = (
+        'news.delete_timeplace',
     )
