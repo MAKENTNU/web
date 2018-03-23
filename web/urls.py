@@ -16,7 +16,7 @@ urlpatterns = [
     path('reservation/', include('make_queue.urls')),
     path('adminpanel/', AdminPanelView.as_view(), name='adminpanel'),
     path('admin/', admin.site.urls),
-    path('', IndexView.as_view(), name='front_page'),
+    path('', IndexView.as_view(), name='front-page'),
     path('login/', RedirectView.as_view(url='/login/dataporten/'), name='login'),
     path('logout/', Logout.as_view(), name='logout'),
     re_path(r'^complete/(?P<backend>[^/]+){0}$'.format(extra), login_wrapper),
