@@ -76,7 +76,7 @@
                     {% endif %}
                     {% for reservation in day.reservations %}
                         {% if reservation.length %}
-                            <div class="make_reservation_calendar_time_table_item
+                            <div class="ui make_reservation_calendar_time_table_item
                                         {% if reservation.reservation.special %}
                                             make_reservation_calendar_time_table_make
                                         {% elif reservation.reservation.event %}
@@ -89,10 +89,8 @@
                                             {% endif %}
                                         {% endif %}"
                                  style="margin-left:{{ reservation.start_percentage }}%;width:{{ reservation.length }}%"
-                                 {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"{% endif %}>
-                                {% if reservation.reservation.special %}
-                                    <div>{{ reservation.reservation.special_text }}</div>
-                                {% endif %}
+                                 {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"{% endif %}
+                                    {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"{% endif %}>
                             </div>
                         {% endif %}
                     {% endfor %}
@@ -122,5 +120,9 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(".make_reservation_calendar_time_table_item").popup({"variation": "inverted"});
+    </script>
 
 {% endlocalize %}
