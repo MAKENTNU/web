@@ -83,7 +83,18 @@ class ReservationCreateOrChangeView(TemplateView):
 
         return context_data
 
-    def post(self, request, **kwargs):
+    def dispatch(self, request, *args, **kwargs):
+        """
+        If the request is a post request use the handle_post method, otherwise use the default method of the template
+        view
+        :param request: The HTTP request
+        :return: HTTP response
+        """
+        if request.method == "POST":
+            return self.handle_post(request, **kwargs)
+        return super().dispatch(request, *args, **kwargs)
+
+    def handle_post(self, request, **kwargs):
         """
         Handles and validates update requests
         :param request: The HTTP request
