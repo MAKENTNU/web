@@ -16,7 +16,6 @@
         <div class="ui huge header">
             Reservasjoner
         </div>
-        <!-- Controls desktop -->
         <div class="ui grid padded equal width ">
             <div class="column">
                 <div class="ui cards">
@@ -26,7 +25,8 @@
             <div class="column">
                 <div class="ui cards">
                     <div class="ui card">
-                        <div data-content="{% if not can_use %}{% get_machine_cannot_use_text machine %}
+                        <div data-content="{% if not user.is_authenticated %}Du må være logget inn for å kunne lage ny reservasjoner
+                            {% elif not can_use %}{% get_machine_cannot_use_text machine %}
                             {% elif not can_make_more_reservations %}Du har nådd maksimalt antall fremtidige reservasjoner{% endif %}"
                              id="create_new_reservation" data-position="top center">
                             <a class="ui primary button {% if not can_use or not can_make_more_reservations %}disabled{% endif %} make_reservation_calendar_button_full_width"
@@ -45,6 +45,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Controls desktop -->
             <div class="column make_reservation_calendar_control_header_large">
                 <div class="ui cards">
                     <div class="ui card">
