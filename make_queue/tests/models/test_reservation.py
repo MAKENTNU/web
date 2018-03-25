@@ -29,7 +29,9 @@ class GeneralReservationTestCase(TestCase):
 class GeneralReservationTestCases(GeneralReservationTestCase):
     def setUp(self):
         event = Event.objects.create(title="TEST EVENT")
-        self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(), start_time=(timezone.now() + timedelta(seconds=1)).time(), event=event)
+        self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),
+                                                  start_time=(timezone.now() + timedelta(seconds=1)).time(),
+                                                  event=event)
         Printer3D.objects.create(name="C1", location="Printer room", status="F")
         user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         user.save()
@@ -372,6 +374,18 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                                    machine=printer, end_time=timezone.now() + timedelta(hours=2))
 
         self.assertFalse(reservation.can_delete())
+
+    def test_has_reached_maximum_number_of_reservations(self):
+        printer = Printer3D.objects.get(name="C1")
+        printer2 = Printer3D.objects.create(name="C2")
+        user = User.objects.get(username="User")
+        Reservation3D.percentage_of_machines_at_the_same_time = 0.4
+        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+        self.assertFalse(reservation.has_reached_maximum_number_of_reservations())
+        reservation2 = Reservation3D(user=user, start_time=timezone.now() + timedelta(hours=1),
+                                     machine=printer2, end_time=timezone.now() + timedelta(hours=2))
+        self.assertTrue(reservation2.has_reached_maximum_number_of_reservations())
 
 
 class ReservationSewingTestCase(GeneralReservationTestCase):

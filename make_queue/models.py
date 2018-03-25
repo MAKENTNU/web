@@ -123,20 +123,21 @@ class Reservation(models.Model):
         if self.end_time - self.start_time > timedelta(hours=self.get_quota().max_time_reservation):
             return False
 
-        # Calculate the number of reservations the user has in the given period
+        # Check if user has more than x% of reservations
+        if self.has_reached_maximum_number_of_reservations():
+            return False
+
+        # If a primary key is set, the reservation is already saved once, and does not
+        return self.pk is not None or self.get_quota().can_make_new_reservation()
+
+    def has_reached_maximum_number_of_reservations(self):
         num_reservations_in_period = 0
         for machine in self.get_machine().__class__.objects.all():
             num_reservations_in_period += machine.reservations_in_period(self.start_time,
                                                                          self.end_time).filter(user=self.user,
                                                                                                event=None).exists()
-
-        # Check if user has more than x% of reservations
-        if (num_reservations_in_period + (self.pk is None)) > ceil(
-                self.get_machine().__class__.objects.all().count() * self.percentage_of_machines_at_the_same_time):
-            return False
-
-        # If a primary key is set, the reservation is already saved once, and does not
-        return self.pk is not None or self.get_quota().can_make_new_reservation()
+        return (num_reservations_in_period + (self.pk is None)) > ceil(
+            self.get_machine().__class__.objects.all().count() * self.percentage_of_machines_at_the_same_time)
 
     def can_delete(self):
         return self.start_time > timezone.now()

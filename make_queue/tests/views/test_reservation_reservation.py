@@ -19,6 +19,7 @@ from news.models import Event, TimePlace
 class BaseReservationCreateOrChangeViewTest(TestCase):
 
     def setUp(self):
+        ReservationSewing.percentage_of_machines_at_the_same_time = 1
         self.user = User.objects.create_user(username="test")
         self.machine = SewingMachine.objects.create(model="Test")
         self.event = Event.objects.create(title="Test_event")
@@ -50,14 +51,30 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
     def test_get_error_message_non_event(self):
         view = self.get_view()
         form = self.create_form(1, 2)
-        self.assertEqual(view.get_error_message(form), "Tidspunktet er ikke lengre tilgjengelig")
+        self.assertTrue(form.is_valid())
+        reservation = ReservationSewing(user=self.user, start_time=form.cleaned_data["start_time"],
+                                        end_time=form.cleaned_data["end_time"], machine=self.machine)
+        self.assertEqual(view.get_error_message(form, reservation), "Tidspunktet er ikke lengre tilgjengelig")
 
     def test_get_error_message_event(self):
         view = self.get_view()
         form = self.create_form(1, 2, event=self.event)
         self.assertTrue(form.is_valid())
+        reservation = ReservationSewing(user=self.user, start_time=form.cleaned_data["start_time"],
+                                        end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
-        self.assertEqual(view.get_error_message(form), "Tidspunktet eller eventen, er ikke lengre tilgjengelig")
+        self.assertEqual(view.get_error_message(form, reservation),
+                         "Tidspunktet eller eventen, er ikke lengre tilgjengelig")
+
+    def test_get_error_message_maximum_reached(self):
+        ReservationSewing.percentage_of_machines_at_the_same_time = 0
+        view = self.get_view()
+        form = self.create_form(1, 2)
+        self.assertTrue(form.is_valid())
+        reservation = ReservationSewing(user=self.user, start_time=form.cleaned_data["start_time"],
+                                        end_time=form.cleaned_data["end_time"], machine=self.machine)
+        self.assertEqual(view.get_error_message(form, reservation),
+                         "Du har booket maksimalt antall reservasjoner for denne tidsperioden, prøv et annet tidspunkt")
 
     def test_validate_and_save_valid_reservation(self):
         view = self.get_view()

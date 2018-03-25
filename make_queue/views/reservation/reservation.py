@@ -17,12 +17,14 @@ class ReservationCreateOrChangeView(TemplateView):
     __metaclass__ = ABCMeta
     template_name = "make_queue/make_reservation.html"
 
-    def get_error_message(self, form):
+    def get_error_message(self, form, reservation):
         """
         Generates the correct error message for the given form
         :param form: The form to generate an error message
         :return: The error message
         """
+        if reservation.has_reached_maximum_number_of_reservations():
+            return "Du har booket maksimalt antall reservasjoner for denne tidsperioden, prøv et annet tidspunkt"
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
         return "Tidspunktet er ikke lengre tilgjengelig"
@@ -37,7 +39,7 @@ class ReservationCreateOrChangeView(TemplateView):
         """
         if not reservation.validate():
             context_data = self.get_context_data(reservation=reservation)
-            context_data["error"] = self.get_error_message(form)
+            context_data["error"] = self.get_error_message(form, reservation)
             return render(self.request, self.template_name, context_data)
 
         reservation.save()
