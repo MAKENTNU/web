@@ -1,11 +1,14 @@
 from django.test import TestCase
+from mock import patch
+
 from make_queue.models import Printer3D, Reservation3D, Quota3D, QuotaSewing, SewingMachine, ReservationSewing, \
     Reservation
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 
+from make_queue.util.time import local_to_date
 from news.models import Event, TimePlace
 
 
@@ -33,167 +36,125 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),
                                                   start_time=(timezone.now() + timedelta(seconds=1)).time(),
                                                   event=event)
-        Printer3D.objects.create(name="C1", location="Printer room", status="F")
-        user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
-        user.save()
-        Quota3D.objects.create(user=user, can_print=True, max_time_reservation=10, max_number_of_reservations=2)
+        self.machine = Printer3D.objects.create(name="C1", location="Printer room", status="F")
+        self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
+        self.user_quota = Quota3D.objects.create(user=self.user, can_print=True, max_time_reservation=10,
+                                                 max_number_of_reservations=2)
+
+    def create_reservation(self, timedelta_start, timedelta_end, event=None, user=None, machine=None, special=False,
+                           special_text=""):
+        machine = self.machine if machine is None else machine
+        user = self.user if user is None else user
+        return Reservation3D(user=user, machine=machine, event=event, start_time=timezone.now() + timedelta_start,
+                             end_time=timezone.now() + timedelta_end, special=special, special_text=special_text)
+
+    def set_percentage_of_maximum_machines(self, percentage):
+        self.max_percentage = Reservation3D.percentage_of_machines_at_the_same_time
+        Reservation3D.percentage_of_machines_at_the_same_time = percentage
+
+    def reset_percentage_of_maximum_machines(self):
+        Reservation3D.percentage_of_machines_at_the_same_time = self.max_percentage
+
+    def set_reservation_future_limit_days(self, days):
+        self.reservation_future_limit_days = Reservation.reservation_future_limit_days
+        Reservation.reservation_future_limit_days = days
+
+    def reset_reservation_future_limit_days(self):
+        Reservation.reservation_future_limit_days = self.reservation_future_limit_days
+
+    def give_user_event_permission(self):
+        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
 
     def test_can_create_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=None)
-
-        self.check_reservation_valid(reservation, "Reservations should be saveable")
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                     "Reservations should be saveable")
 
     def test_reserve_end_time_before_start_time(self):
-
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() - timedelta(hours=1), event=None)
-
-        self.check_reservation_invalid(reservation, "Reservations should not be able to end before they start")
+        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(minutes=30)),
+                                       "Reservations should not be able to end before they start")
 
     def test_reserve_longer_than_maximum_user_time(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 0.1),
-                                    event=None)
-
-        self.check_reservation_invalid(reservation,
-                                       "Reservations should not be allowed to exceed the maximum allowed time for the user")
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=self.user_quota.max_time_reservation + 1.1)),
+            "Reservations should not be allowed to exceed the maximum allowed time for the user")
 
     def test_make_more_than_one_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        quota = user.quota3d
-        quota.max_number_of_reservations = 5
-        quota.save()
+        self.user_quota.max_number_of_reservations = 5
+        self.user_quota.save()
 
-        for reservation_number in range(user.quota3d.max_number_of_reservations):
-            reservation = Reservation3D(user=user, machine=printer,
-                                        start_time=timezone.now() + timedelta(days=reservation_number),
-                                        end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
-                                        event=None)
-
-            self.check_reservation_valid(reservation, "User should be able to make as many reservations as allowed")
+        for reservation_number in range(5):
+            self.check_reservation_valid(self.create_reservation(timedelta(days=reservation_number, hours=1),
+                                                                 timedelta(days=reservation_number, hours=2)),
+                                         "User should be able to make as many reservations as allowed")
 
     def test_make_more_than_allowed_number_of_reservations(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
+        self.user_quota.max_number_of_reservations = 5
+        self.user_quota.save()
 
-        for reservation_number in range(user.quota3d.max_number_of_reservations):
-            reservation = Reservation3D(user=user, machine=printer,
-                                        start_time=timezone.now() + timedelta(days=reservation_number),
-                                        end_time=timezone.now() + timedelta(days=reservation_number, hours=2),
-                                        event=None)
+        for reservation_number in range(5):
+            self.check_reservation_valid(self.create_reservation(timedelta(days=reservation_number, hours=1),
+                                                                 timedelta(days=reservation_number, hours=2)),
+                                         "User should be able to make as many reservations as allowed")
 
-            self.check_reservation_valid(reservation, "User should be able to make as many reservations as allowed")
+        self.check_reservation_invalid(self.create_reservation(timedelta(days=5, hours=1), timedelta(days=5, hours=2)),
+                                       "User should not be able to make more reservations than allowed")
 
-        reservation = Reservation3D(user=user, machine=printer,
-                                    start_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations),
-                                    end_time=timezone.now() + timedelta(days=user.quota3d.max_number_of_reservations,
-                                                                        hours=2))
+    @patch("django.utils.timezone.now")
+    def test_disallow_overlapping_reservations(self, now_mock):
+        now_mock.return_value = local_to_date(datetime(2018, 3, 12, 12, 0, 0))
 
-        self.check_reservation_invalid(reservation, "User should not be able to make more reservations than allowed")
-
-    def test_disallow_overlapping_reservations(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        start_time_base = timezone.now()
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base,
-                                    end_time=start_time_base + timedelta(hours=1), event=None)
-
-        self.check_reservation_valid(reservation, "Saving should be valid")
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                     "Saving should be valid")
 
         # Start before, end inside
-        reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base - timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(minutes=50), event=None)
-
-        self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
+        self.check_reservation_invalid(self.create_reservation(timedelta(minutes=50), timedelta(hours=1, minutes=50)),
+                                       "Reservation should not be able to end inside another")
 
         # Start inside, end after
-        reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base + timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(hours=1, minutes=10), event=None)
-
-        self.check_reservation_invalid(reservation, "Reservation should not be able to end inside another")
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=1, minutes=10), timedelta(hours=2, minutes=10)),
+            "Reservation should not be able to end inside another")
 
         # Start inside, end inside
-        reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base + timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(minutes=50), event=None)
-
-        self.check_reservation_invalid(reservation, "Reservation should not be able to start and end inside another")
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=1, minutes=10), timedelta(hours=1, minutes=50)),
+            "Reservation should not be able to start and end inside another")
 
         # Start before, end after
-        reservation = Reservation3D(user=user, machine=printer, start_time=start_time_base - timedelta(minutes=10),
-                                    end_time=start_time_base + timedelta(hours=1, minutes=10), event=None)
-
-        self.check_reservation_invalid(reservation, "Reservation should not be able to encapsulate another")
+        self.check_reservation_invalid(self.create_reservation(timedelta(minutes=50), timedelta(hours=2, minutes=10)),
+                                       "Reservation should not be able to encapsulate another")
 
     def test_make_event_without_event_permission(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2),
-                                    event=self.timeplace)
-
-        self.check_reservation_invalid(reservation,
-                                       "Should not be able to make event reservation without correct permission")
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace),
+            "Should not be able to make event reservation without correct permission")
 
     def test_make_event_with_event_permission(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        event_permission = Permission.objects.get(name="Can create event reservation")
+        self.give_user_event_permission()
+        self.user_quota.max_number_of_reservations = 1
+        self.user_quota.save()
 
-        user.user_permissions.add(event_permission)
-        user.quota3d.max_number_of_reservations = 1
-        user.save()
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace),
+            "User with the correct permission should be allowed to create an event reservation")
 
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2),
-                                    event=self.timeplace)
-
-        self.check_reservation_valid(reservation,
-                                     "User with the correct permission should be allowed to create an event reservation")
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now() + timedelta(days=1),
-                                    end_time=timezone.now() + timedelta(days=1, hours=2), event=None)
-
-        self.check_reservation_valid(reservation,
-                                     "Event reservations should not count towards the total number of reservations")
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(days=1, hours=1), timedelta(days=1, hours=2), event=self.timeplace),
+            "Event reservations should not count towards the total number of reservations")
 
     def test_make_event_reservation_with_longer_than_user_max_time(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        event_permission = Permission.objects.get(name="Can create event reservation")
+        self.give_user_event_permission()
 
-        user.user_permissions.add(event_permission)
-        user.save()
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=user.quota3d.max_time_reservation + 1),
-                                    event=self.timeplace)
-
-        self.check_reservation_valid(reservation,
-                                     "User should be able to make event reservations longer than their maximum reservation time")
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=self.user_quota.max_time_reservation + 2),
+                                    event=self.timeplace),
+            "User should be able to make event reservations longer than their maximum reservation time")
 
     def test_change_event_while_maximum_booked(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
+        self.user_quota.max_number_of_reservations = 1
+        self.user_quota.save()
 
-        user.quota3d.max_number_of_reservations = 1
-        user.quota3d.save()
-
-        reservation = Reservation3D(user=user, machine=printer, start_time=timezone.now(),
-                                    end_time=timezone.now() + timedelta(hours=2), event=None)
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
         self.check_reservation_valid(reservation, "Reservation should be valid")
 
@@ -203,227 +164,142 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                      "Changing a reservation with the maximum number of reservations should be valid")
 
     def test_same_time_separate_machines(self):
-        printer1 = Printer3D.objects.get(name="C1")
-        printer2 = Printer3D.objects.create(name="C2", location="Printer room Mackerspace U1", status="F")
+        additional_printer = Printer3D.objects.create(name="C2", location="Printer room Mackerspace U1", status="F")
+        self.set_percentage_of_maximum_machines(1)
         Printer3D.objects.create(name="C3", location="Printer room Mackerspace U1", status="F")
 
-        user = User.objects.get(username="User")
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                     "Saving a single reservation should be valid")
 
-        reservation1 = Reservation3D(user=user, machine=printer1, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=2), event=None)
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=2), machine=additional_printer),
+            "Reservations on different printers should be able to overlap in time")
 
-        self.check_reservation_valid(reservation1, "Saving a single reservation should be valid")
-
-        reservation2 = Reservation3D(user=user, machine=printer2, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=2), event=None)
-
-        self.check_reservation_valid(reservation2,
-                                     "Reservations on different printers should be able to overlap in time")
+        self.reset_percentage_of_maximum_machines()
 
     def test_same_time_separate_machines_more_than_allowed(self):
-        printer1 = Printer3D.objects.get(name="C1")
-        printer2 = Printer3D.objects.create(name="C1", location="Printer room Mackerspace U1", status="F")
+        additional_printer = Printer3D.objects.create(name="C1", location="Printer room Mackerspace U1", status="F")
+        self.set_percentage_of_maximum_machines(0.5)
 
-        user = User.objects.get(username="User")
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                     "Saving a single reservation should be valid")
 
-        reservation1 = Reservation3D(user=user, machine=printer1, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=2), event=None)
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=2), machine=additional_printer),
+            "User should not be able to reserve more than 50% of the printers")
 
-        self.check_reservation_valid(reservation1, "Saving a single reservation should be valid")
-
-        reservation2 = Reservation3D(user=user, machine=printer2, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=2), event=None)
-
-        self.check_reservation_invalid(reservation2,
-                                       "Reservations on different printers should be able to overlap in time")
+        self.reset_percentage_of_maximum_machines()
 
     def test_can_owner_change_future_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
-
-        self.assertTrue(reservation.can_change(user))
+        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_change(self.user))
 
     def test_can_owner_change_started_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
-
-        self.assertFalse(reservation.can_change(user))
+        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_change(self.user))
 
     def test_can_owner_change_started_event_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.give_user_event_permission()
 
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   event=self.timeplace)
-
-        self.assertFalse(reservation.can_change(user))
+        self.assertFalse(
+            self.create_reservation(timedelta(hours=-1), timedelta(hours=2), event=self.timeplace).can_change(
+                self.user))
 
     def test_can_owner_change_started_special_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.give_user_event_permission()
 
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   special=True, special_text="Test")
-
-        self.assertFalse(reservation.can_change(user))
+        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2), special=True,
+                                                 special_text="Test").can_change(self.user))
 
     def test_can_other_user_change_future_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
-
-        self.assertTrue(reservation.can_change(user))
+        self.assertTrue(reservation.can_change(self.user))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_user_with_event_reservation_change_other_user_non_event_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user1 = User.objects.get(username="User")
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
 
-        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
-        self.assertTrue(reservation.can_change(user1))
+        self.assertTrue(reservation.can_change(self.user))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_user_with_event_reservation_change_other_user_event_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user1 = User.objects.get(username="User")
+        self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-
-        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
 
-        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   event=self.timeplace)
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
-        self.assertTrue(reservation.can_change(user1))
+        self.assertTrue(reservation.can_change(self.user))
         self.assertTrue(reservation.can_change(user2))
 
     def test_can_user_with_event_reservation_change_other_user_special_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user1 = User.objects.get(username="User")
+        self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-
-        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
 
-        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   special=True, special_text="Test")
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
-        self.assertTrue(reservation.can_change(user1))
+        self.assertTrue(reservation.can_change(self.user))
         self.assertTrue(reservation.can_change(user2))
 
     def test_can_user_without_event_reservation_change_other_user_special_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user1 = User.objects.get(username="User")
+        self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
 
-        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
-        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   special=True, special_text="Test")
-
-        self.assertTrue(reservation.can_change(user1))
+        self.assertTrue(reservation.can_change(self.user))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_user_without_event_reservation_change_other_user_event_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user1 = User.objects.get(username="User")
+        self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
 
-        user1.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
-        reservation = Reservation3D.objects.create(user=user1, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2),
-                                                   event=self.timeplace)
-
-        self.assertTrue(reservation.can_change(user1))
+        self.assertTrue(reservation.can_change(self.user))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_delete_future_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
-
-        self.assertTrue(reservation.can_delete())
+        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_delete())
 
     def test_cannot_delete_started_reservation(self):
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=-1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
-
-        self.assertFalse(reservation.can_delete())
+        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_delete())
 
     def test_has_reached_maximum_number_of_reservations(self):
-        printer = Printer3D.objects.get(name="C1")
-        printer2 = Printer3D.objects.create(name="C2")
-        user = User.objects.get(username="User")
-        Reservation3D.percentage_of_machines_at_the_same_time = 0.4
-        reservation = Reservation3D.objects.create(user=user, start_time=timezone.now() + timedelta(hours=1),
-                                                   machine=printer, end_time=timezone.now() + timedelta(hours=2))
+        additional_printer = Printer3D.objects.create(name="C2")
+        self.set_percentage_of_maximum_machines(0.4)
+        reservation = Reservation3D.objects.create(user=self.user, start_time=timezone.now() + timedelta(hours=1),
+                                                   machine=self.machine, end_time=timezone.now() + timedelta(hours=2))
         self.assertFalse(reservation.has_reached_maximum_number_of_reservations())
-        reservation2 = Reservation3D(user=user, start_time=timezone.now() + timedelta(hours=1),
-                                     machine=printer2, end_time=timezone.now() + timedelta(hours=2))
+        reservation2 = self.create_reservation(timedelta(hours=1), timedelta(hours=2), machine=additional_printer)
         self.assertTrue(reservation2.has_reached_maximum_number_of_reservations())
+        self.reset_percentage_of_maximum_machines()
 
     def test_is_within_allowed_period_for_reservation(self):
-        old_future_limit_days = Reservation.reservation_future_limit_days
-        Reservation.reservation_future_limit_days = 7
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        reservation = Reservation3D(user=user, start_time=timezone.now() + timedelta(hours=1), machine=printer,
-                                    end_time=timezone.now() + timedelta(hours=2))
+        self.set_reservation_future_limit_days(7)
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
         self.assertTrue(reservation.is_within_allowed_period_for_reservation())
         reservation.end_time = timezone.now() + timedelta(days=7, minutes=2)
         self.assertFalse(reservation.is_within_allowed_period_for_reservation())
-
-        Reservation.reservation_future_limit_days = old_future_limit_days
+        self.reset_reservation_future_limit_days()
 
     def test_make_reservation_too_far_in_the_future(self):
-        old_future_limit_days = Reservation.reservation_future_limit_days
-        Reservation.reservation_future_limit_days = 7
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        reservation = Reservation3D(user=user, start_time=timezone.now() + timedelta(days=7), machine=printer,
-                                    end_time=timezone.now() + timedelta(days=7, hours=1))
-        self.check_reservation_invalid(reservation, "Reservation is too far in the future and should not be valid")
-
-        Reservation.reservation_future_limit_days = old_future_limit_days
+        self.set_reservation_future_limit_days(7)
+        self.check_reservation_invalid(self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1)),
+                                       "Reservation is too far in the future and should not be valid")
+        self.reset_reservation_future_limit_days()
 
     def test_make_event_reservation_too_far_in_the_future(self):
-        old_future_limit_days = Reservation.reservation_future_limit_days
-        Reservation.reservation_future_limit_days = 7
-        printer = Printer3D.objects.get(name="C1")
-        user = User.objects.get(username="User")
-        user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
-        reservation = Reservation3D(user=user, start_time=timezone.now() + timedelta(days=7), machine=printer,
-                                    end_time=timezone.now() + timedelta(days=7, hours=1), event=self.timeplace)
-        self.check_reservation_valid(reservation,
-                                     "Event reservations are always valid no matter how far in the future they are")
-
-        Reservation.reservation_future_limit_days = old_future_limit_days
+        self.set_reservation_future_limit_days(7)
+        self.give_user_event_permission()
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1), event=self.timeplace),
+            "Event reservations are always valid no matter how far in the future they are")
+        self.reset_reservation_future_limit_days()
 
 
 class ReservationSewingTestCase(GeneralReservationTestCase):
