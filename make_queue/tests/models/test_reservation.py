@@ -1,5 +1,6 @@
 from django.test import TestCase
-from make_queue.models import Printer3D, Reservation3D, Quota3D, QuotaSewing, SewingMachine, ReservationSewing
+from make_queue.models import Printer3D, Reservation3D, Quota3D, QuotaSewing, SewingMachine, ReservationSewing, \
+    Reservation
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -386,6 +387,20 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         reservation2 = Reservation3D(user=user, start_time=timezone.now() + timedelta(hours=1),
                                      machine=printer2, end_time=timezone.now() + timedelta(hours=2))
         self.assertTrue(reservation2.has_reached_maximum_number_of_reservations())
+
+    def test_is_within_allowed_period_for_reservation(self):
+        old_future_limit_days = Reservation.reservation_future_limit_days
+        Reservation.reservation_future_limit_days = 7
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        reservation = Reservation3D(user=user, start_time=timezone.now() + timedelta(hours=1), machine=printer,
+                                    end_time=timezone.now() + timedelta(hours=2))
+        self.assertTrue(reservation.is_within_allowed_period_for_reservation())
+        reservation.end_time = timezone.now() + timedelta(days=7, minutes=2)
+        self.assertFalse(reservation.is_within_allowed_period_for_reservation())
+
+        Reservation.reservation_future_limit_days = old_future_limit_days
+
 
 
 class ReservationSewingTestCase(GeneralReservationTestCase):
