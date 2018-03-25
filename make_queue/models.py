@@ -151,6 +151,9 @@ class Reservation(models.Model):
 
     class Meta:
         abstract = True
+        permissions = (
+            ("can_view_reservation_user", "Can view reservation user"),
+        )
 
     @classmethod
     def get_reservation(cls, machine_type, pk):

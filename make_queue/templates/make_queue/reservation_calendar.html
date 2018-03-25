@@ -90,7 +90,9 @@
                                         {% endif %}"
                                  style="margin-left:{{ reservation.start_percentage }}%;width:{{ reservation.length }}%"
                                  {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"{% endif %}
-                                    {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"{% endif %}>
+                                 {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"
+                                 {% elif perms.make_queue.can_view_reservation_user %}data-content="{{ reservation.reservation.user.get_full_name }}"
+                                 {% endif %}>
                             </div>
                         {% endif %}
                     {% endfor %}
