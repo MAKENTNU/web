@@ -401,6 +401,29 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
         Reservation.reservation_future_limit_days = old_future_limit_days
 
+    def test_make_reservation_too_far_in_the_future(self):
+        old_future_limit_days = Reservation.reservation_future_limit_days
+        Reservation.reservation_future_limit_days = 7
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        reservation = Reservation3D(user=user, start_time=timezone.now() + timedelta(days=7), machine=printer,
+                                    end_time=timezone.now() + timedelta(days=7, hours=1))
+        self.check_reservation_invalid(reservation, "Reservation is too far in the future and should not be valid")
+
+        Reservation.reservation_future_limit_days = old_future_limit_days
+
+    def test_make_event_reservation_too_far_in_the_future(self):
+        old_future_limit_days = Reservation.reservation_future_limit_days
+        Reservation.reservation_future_limit_days = 7
+        printer = Printer3D.objects.get(name="C1")
+        user = User.objects.get(username="User")
+        user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        reservation = Reservation3D(user=user, start_time=timezone.now() + timedelta(days=7), machine=printer,
+                                    end_time=timezone.now() + timedelta(days=7, hours=1), event=self.timeplace)
+        self.check_reservation_valid(reservation,
+                                     "Event reservations are always valid no matter how far in the future they are")
+
+        Reservation.reservation_future_limit_days = old_future_limit_days
 
 
 class ReservationSewingTestCase(GeneralReservationTestCase):
