@@ -73,6 +73,7 @@
                             <i class="calendar icon"></i>
                             <input name="start_time" type="text" placeholder="Start tidspunkt"
                                    value="
+
                                            {% if start_time %}{{ start_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date %}{% endif %}">
                         </div>
                     </div>
@@ -84,6 +85,7 @@
                             <i class="calendar icon"></i>
                             <input name="end_time" type="text" placeholder="Slutt tidspunkt"
                                    value="
+
                                            {% if end_time %}{{ end_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date 2 %}{% endif %}">
                         </div>
                     </div>
@@ -103,7 +105,8 @@
                                 </div>
                             </div>
                             <div class="field">
-                                <div class="ui checkbox {% if not new_reservation %}disabled{% endif %}" id="special_checkbox">
+                                <div class="ui checkbox {% if not new_reservation %}disabled{% endif %}"
+                                     id="special_checkbox">
                                     <input type="checkbox" name="special" id="special"
                                            {% if not is_new_reservation and special %}checked{% endif %}/>
                                     <label for="event">MAKE NTNU</label>
@@ -134,7 +137,8 @@
                     <div class="ui field {% if not special %}make_hidden{% endif %}" id="special_input">
                         <label>Reservasjons tekst</label>
                         <div class="ui input" id="special_text">
-                            <input type="text" placeholder="Reservasjons tekst" maxlength=20 name="special_text" value="{% if special %}{{ special_text }}{% endif %}">
+                            <input type="text" placeholder="Reservasjons tekst" maxlength=20 name="special_text"
+                                   value="{% if special %}{{ special_text }}{% endif %}">
                         </div>
                     </div>
                 </div>
@@ -160,6 +164,10 @@
         </div>
     </div>
 
+    <script>
+        let maximum_day = new Date();
+        maximum_day.setDate(maximum_day.getDate() + {{ maximum_days_in_advance }});
+    </script>
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
     <script>
         getFutureReservations($('#machine_type_dropdown').dropdown('get value'), $('#machine_name_dropdown').dropdown('get value'), {% invert start_time %});

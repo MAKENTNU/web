@@ -8,7 +8,7 @@ from django.utils import timezone
 from mock import patch
 
 from make_queue.forms import ReservationForm
-from make_queue.models import SewingMachine, ReservationSewing, QuotaSewing
+from make_queue.models import SewingMachine, ReservationSewing, QuotaSewing, Reservation
 from make_queue.tests.utility import request_with_user, post_request_with_user
 from make_queue.util.time import date_to_local, local_to_date
 from make_queue.views.reservation.reservation import ReservationCreateOrChangeView, MakeReservationView, \
@@ -130,6 +130,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
                                                                                      "instances": [self.machine]}],
             "start_time": reservation.start_time, "end_time": reservation.end_time, "selected_machine": self.machine,
             "event": self.timeplace, "special": False, "special_text": "", "quota": QuotaSewing.get_quota(self.user),
+            "maximum_days_in_advance": Reservation.reservation_future_limit_days
         })
 
     def test_get_context_data_non_reservation(self):
@@ -141,7 +142,8 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(context_data, {
             "events": [self.timeplace], "new_reservation": True, "machine_types": [{"literal": SewingMachine.literal,
                                                                                     "instances": [self.machine]}],
-            "start_time": start_time, "selected_machine": self.machine, "quota": QuotaSewing.get_quota(self.user)
+            "start_time": start_time, "selected_machine": self.machine, "quota": QuotaSewing.get_quota(self.user),
+            "maximum_days_in_advance": Reservation.reservation_future_limit_days
         })
 
     def test_post_valid_form(self):

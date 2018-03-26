@@ -67,7 +67,8 @@ class ReservationCreateOrChangeView(TemplateView):
                 for sub_class in Machine.__subclasses__() if
                 Quota.get_quota_by_machine(sub_class.literal, self.request.user).can_make_new_reservation() and
                 sub_class.objects.exists()
-            ]
+            ],
+            "maximum_days_in_advance": Reservation.reservation_future_limit_days
         }
 
         # If we are given a reservation, populate the information relevant to that reservation

@@ -82,8 +82,10 @@ function getMaxDateReservation(date) {
     let maxDate = new Date(date.valueOf());
     if ($("#event_checkbox input").is(':checked') || $("#special_checkbox input").is(":checked"))
         maxDate.setDate(maxDate.getDate() + 7);
-    else
+    else {
         maxDate.setHours(maxDate.getHours() + parseFloat($("#reserve_form").data("max-time-reservation")));
+        if (maxDate > maximum_day) maxDate = maximum_day;
+    }
     for (let index = 0; index < reservations.length; index++) {
         if (date <= reservations[index].start_time && reservations[index].start_time < maxDate)
             maxDate = new Date(reservations[index].start_time.valueOf());
@@ -93,7 +95,6 @@ function getMaxDateReservation(date) {
 
 function setEndDate() {
     let currentStartDate = $("#start_time").calendar("get date");
-    console.log(currentStartDate);
     if (currentStartDate !== null) {
         $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(currentStartDate));
     }
@@ -101,6 +102,7 @@ function setEndDate() {
 
 $("#start_time").calendar({
         minDate: new Date(),
+        maxDate: maximum_day,
         ampm: false,
         endCalendar: $("#end_time"),
         initialDate: null,
@@ -131,6 +133,9 @@ $('#event_checkbox').checkbox({
         $("#event_name_input").toggleClass("make_hidden", !$(this).is(':checked'));
         if ($(this).is(':checked')) {
             $('#special_checkbox').checkbox("uncheck");
+            $("#start_time").calendar("setting", "maxDate", null);
+        } else {
+            $("#start_time").calendar("setting", "maxDate", maximum_day);
         }
         setEndDate();
     },
@@ -140,6 +145,9 @@ $('#special_checkbox').checkbox({
         $("#special_input").toggleClass("make_hidden", !$(this).is(':checked'));
         if ($(this).is(':checked')) {
             $('#event_checkbox').checkbox("uncheck");
+            $("#start_time").calendar("setting", "maxDate", null);
+        } else {
+            $("#start_time").calendar("setting", "maxDate", maximum_day);
         }
         setEndDate();
     },
@@ -221,7 +229,7 @@ $('.message .close').on('click', function () {
     $(this).closest('.message').transition('fade');
 });
 
-if($("#start_time").calendar("get date") !== null) {
+if ($("#start_time").calendar("get date") !== null) {
     reservationCalendarDate = $("#start_time").calendar("get date");
 }
 updateReservationCalendar();
