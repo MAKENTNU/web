@@ -20,9 +20,13 @@ class ReservationCreateOrChangeView(TemplateView):
     def get_error_message(self, form, reservation):
         """
         Generates the correct error message for the given form
-        :param form: The form to generate an error message
+        :param reservation: The reservation to generate an error message for
+        :param form: The form to generate an error message for
         :return: The error message
         """
+        if not reservation.is_within_allowed_period_for_reservation() and not (
+                reservation.special or reservation.event):
+            return "Reservasjoner kan bare lages {:} dager frem i tid".format(reservation.reservation_future_limit_days)
         if reservation.has_reached_maximum_number_of_reservations():
             return "Du har booket maksimalt antall reservasjoner for denne tidsperioden, prøv et annet tidspunkt"
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:

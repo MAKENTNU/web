@@ -20,6 +20,7 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
 
     def setUp(self):
         ReservationSewing.percentage_of_machines_at_the_same_time = 1
+        ReservationSewing.reservation_future_limit_days = 7
         self.user = User.objects.create_user(username="test")
         self.machine = SewingMachine.objects.create(model="Test")
         self.event = Event.objects.create(title="Test_event")
@@ -75,6 +76,16 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
                                         end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.assertEqual(view.get_error_message(form, reservation),
                          "Du har booket maksimalt antall reservasjoner for denne tidsperioden, prøv et annet tidspunkt")
+
+    def test_get_error_message_too_far_in_the_future(self):
+        view = self.get_view()
+        form = self.create_form(24*7, 24*7+1)
+        self.assertTrue(form.is_valid())
+        reservation = ReservationSewing(user=self.user, start_time=form.cleaned_data["start_time"],
+                                        end_time=form.cleaned_data["end_time"], machine=self.machine)
+        self.assertEqual(view.get_error_message(form, reservation),
+                         "Reservasjoner kan bare lages 7 dager frem i tid")
+
 
     def test_validate_and_save_valid_reservation(self):
         view = self.get_view()
