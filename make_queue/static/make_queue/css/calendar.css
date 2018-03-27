@@ -37,8 +37,7 @@
 
 .make_reservation_calendar_time_table_item {
     position: absolute;
-    text-align: center;
-    height: 100%;
+    width: 100%;
 }
 
 .make_reservation_calendar_high_z_index {
@@ -62,6 +61,36 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
     }
+}
+
+.title_large {
+    font-size: 1.2em;
+    text-align: center !important;
+}
+
+.title_medium {
+    font-size: 1.1em;
+    font-weight: normal;
+    text-align: center !important;;
+}
+
+.title_small {
+    font-size: 0.9em;
+    font-weight: normal;
+    text-align: center !important;;
+}
+
+.fill {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.hour_indication_line {
+    width: 100%;
+    height: 12.5%;
+    border-bottom: 1px solid lightgrey;
+    z-index: 0;
 }
 
 .half_height {

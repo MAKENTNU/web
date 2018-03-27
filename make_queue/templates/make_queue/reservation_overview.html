@@ -22,24 +22,24 @@
                     {% include 'make_queue/machine_card.html' with machine=machine color_bottom=1 %}
                 </div>
             </div>
-            <div class="column">
-                <div class="ui yellow vertical buttons">
+            <div class="column no padding">
+                <div class="ui vertical buttons make_right_floated">
                     <div class="enable_popup"
                          {% if not user.is_authenticated %}data-content="Du må være logget inn for å kunne lage nye reservasjoner"
                          {% elif not can_use %}data-content="{% get_machine_cannot_use_text machine %}"
                          {% elif not can_make_more_reservations %}data-content="Du har nådd maksimalt antall fremtidige reservasjoner"
                          {% endif %}>
-                        <a class="ui labeled icon wrapped button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
+                        <a class="ui labeled icon wrapped make_yellow button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
                            href="{% url 'make_reservation' machine=machine %}">
                             <i class="add icon"></i>
                             Ny reservasjon
                         </a>
                     </div>
-                    <a class="ui labeled icon button" href="{% url 'my_reservations' %}">
+                    <a class="ui labeled icon make_yellow button" href="{% url 'my_reservations' %}">
                         <i class="list icon"></i>
                         Mine reservasjoner
                     </a>
-                    <a class="ui labeled icon button" href="{% url 'reservation_machines_overview' %}">
+                    <a class="ui labeled icon make_yellow button" href="{% url 'reservation_machines_overview' %}">
                         <i class="cogs icon"></i>
                         Andre maskiner
                     </a>

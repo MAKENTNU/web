@@ -6,17 +6,18 @@
 
     <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}">
 
-    <div class="attached yellow ui buttons">
-        <a class="ui labeled icon button" id="prev_week_button" {% if link_prev %}href="{{ link_prev }}"{% endif %}>
+    <div class="attached ui buttons">
+        <a class="ui labeled icon make_yellow button" id="prev_week_button"
+           {% if link_prev %}href="{{ link_prev }}"{% endif %}>
             <i class="left chevron icon"></i>
             Forrige
         </a>
-        <a class="ui button bordered" style="border-right: 1px solid #b8940d; border-left: 1px solid #b8940d"
+        <a class="ui make_yellow button bordered"
            id="now_button" {% if link_now %}href="{{ link_now }}"{% endif %}>
             <i class="calendar icon"></i>
             Nå (Uke {{ now.date|date:"W" }})
         </a>
-        <a class="ui right labeled icon button" id="next_week_button"
+        <a class="ui right labeled icon make_yellow button" id="next_week_button"
            {% if link_next %}href="{{ link_next }}"{% endif %}>
             <i class="right chevron icon"></i>
             Neste
@@ -24,19 +25,19 @@
     </div>
     <table class="ui celled fixed very compact unstackable table">
         <thead>
-        <tr style="text-align: center">
-            <th style="font-size: 1.2em;"
-                class="make_reservation_calendar_short_month">{{ week_days.0.date|date:"b"|title }}
-                <div style="font-weight: normal; font-size: 0.9em;">{{ week_days.0.date|date:"W" }}</div>
+        <tr>
+            <th class="make_reservation_calendar_short_month title_large">
+                <div>{{ week_days.0.date|date:"b"|title }}</div>
+                <div class="title_small">{{ week_days.0.date|date:"W" }}</div>
             </th>
-            <th style="font-size: 1.2em;"
-                class="make_reservation_calendar_long_month">{{ week_days.0.date|date:"F"|title }}
-                <div style="font-weight: normal; font-size: 0.9em;">Uke {{ week_days.0.date|date:"W" }}</div>
+            <th class="make_reservation_calendar_long_month title_large">
+                <div>{{ week_days.0.date|date:"F"|title }}</div>
+                <div class="title_small">Uke {{ week_days.0.date|date:"W" }}</div>
             </th>
             {% for day in week_days %}
                 <th>
-                    <div style="font-size: 1.2em;">{{ day.date|date:"D"|title }}</div>
-                    <div style="font-size: 1.1em; font-weight: normal">{{ day.date|date:"j" }}</div>
+                    <div class="title_large">{{ day.date|date:"D"|title }}</div>
+                    <div class="title_medium">{{ day.date|date:"j" }}</div>
                 </th>
             {% endfor %}
         </tr>
@@ -44,44 +45,23 @@
         <tr>
             <td class="wrapping">
                 <div class="half_height"></div>
-                <div>01:00</div>
-                <div>02:00</div>
-                <div>03:00</div>
-                <div>04:00</div>
-                <div>05:00</div>
-                <div>06:00</div>
-                <div>07:00</div>
-                <div>08:00</div>
-                <div>09:00</div>
-                <div>10:00</div>
-                <div>11:00</div>
-                <div>12:00</div>
-                <div>13:00</div>
-                <div>14:00</div>
-                <div>15:00</div>
-                <div>16:00</div>
-                <div>17:00</div>
-                <div>18:00</div>
-                <div>19:00</div>
-                <div>20:00</div>
-                <div>21:00</div>
-                <div>22:00</div>
-                <div>23:00</div>
+                {% numeric_range 1 24 as hours %}
+                {% for hour in hours %}
+                    <div>{{ hour|stringformat:"02d" }}:00</div>
+                {% endfor %}
                 <div class="half_height"></div>
             </td>
             {% for day in week_days %}
                 <td class="wrapping">
-                    <div style="width: 100%; height: 100%;position: relative;">
-                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 12.5%; position: absolute;"></div>
-                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 25%; position: absolute;"></div>
-                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 37.5%; position: absolute;"></div>
-                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 50%; position: absolute;"></div>
-                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 62.5%; position: absolute;"></div>
-                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 75%; position: absolute;"></div>
-                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 87.5%; position: absolute;"></div>
+                    <div class="fill">
+                        {% numeric_range 0 7 as num_indication_lines %}
+                        {% for line in num_indication_lines %}
+                            <div class="hour_indication_line"></div>
+                        {% endfor %}
                         {% for reservation in day.reservations %}
                             {% if reservation.length %}
-                                <div class="{% if reservation.reservation.special %}
+                                <div class="make_reservation_calendar_time_table_item
+                                            {% if reservation.reservation.special %}
                                                 make_reservation_calendar_time_table_make
                                             {% elif reservation.reservation.event %}
                                                 make_reservation_calendar_time_table_event
@@ -91,8 +71,8 @@
                                                 {% else %}
                                                     make_reservation_calendar_time_table_non_event
                                                 {% endif %}
-                                            {% endif %} enable_popup"
-                                     style="top: {{ reservation.start_percentage }}%; height: {{ reservation.length }}%; position:absolute;width: 100%;"
+                                            {% endif %}"
+                                     style="top: {{ reservation.start_percentage }}%; height: {{ reservation.length }}%;"
                                      {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"
                                      {% elif perms.make_queue.can_view_reservation_user %}data-content="{{ reservation.reservation.user.get_full_name }}"
                                      {% endif %}
@@ -108,7 +88,7 @@
         <tfoot>
         <tr>
             <th colspan="8">
-                <div class="make_reservation_calendar_legend" style="float:right">
+                <div class="make_reservation_calendar_legend make_right_floated">
                     <div class="make_reservation_calendar_legend_item">
                         <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
                         MAKE NTNU
@@ -131,9 +111,8 @@
         </tfoot>
     </table>
 
-
     <script>
-        $(".make_reservation_calendar_time_table_item").popup({"variation": "inverted"});
+        $(".make_reservation_calendar_time_table_item").popup();
     </script>
 
 {% endlocalize %}

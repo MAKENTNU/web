@@ -18,3 +18,7 @@ a.wrapped.button {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
+
+.column.no.padding {
+    padding: 0 !important;
+}
