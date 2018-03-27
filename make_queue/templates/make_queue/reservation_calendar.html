@@ -73,11 +73,19 @@
                                                 {% endif %}
                                             {% endif %}"
                                      style="top: {{ reservation.start_percentage }}%; height: {{ reservation.length }}%;"
-                                     {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"
-                                     {% elif perms.make_queue.can_view_reservation_user %}data-content="{{ reservation.reservation.user.get_full_name }}"
-                                     {% endif %}
-                                     data-position="top center"
-                                >
+                                        {% if reservation.reservation.special %}
+                                     data-content="{{ reservation.reservation.special_text }}"
+                                        {% elif perms.make_queue.can_view_reservation_user and not reservation.reservation.special %}
+                                     data-html="<div class='header'>
+                                                    Reservasjon
+                                                </div>
+                                                <div>
+                                                    <b>Navn:</b> {{ reservation.reservation.user.get_full_name }}
+                                                </div>
+                                                <div>
+                                                    <b>Epost:</b> {{ reservation.reservation.user.email }}
+                                                </div>"
+                                        {% endif %}>
                                 </div>
                             {% endif %}
                         {% endfor %}

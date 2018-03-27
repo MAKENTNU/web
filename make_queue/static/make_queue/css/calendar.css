@@ -63,6 +63,10 @@
     }
 }
 
+.popup {
+    position: absolute;
+}
+
 .title_large {
     font-size: 1.2em;
     text-align: center !important;
