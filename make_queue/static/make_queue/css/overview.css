@@ -13,3 +13,8 @@
 .make_reservation_calendar_button_full_width {
     width: 100%;
 }
+
+a.wrapped.button {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}

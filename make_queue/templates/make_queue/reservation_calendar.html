@@ -7,15 +7,15 @@
     <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}">
 
     <div class="attached yellow ui buttons">
-        <a class="ui labeled icon button" id="prev_week_button">
+        <a class="ui labeled icon button" id="prev_week_button" {% if link_prev %}href="{{ link_prev }}"{% endif %}>
             <i class="left chevron icon"></i>
             Forrige
         </a>
-        <a class="ui button bordered" style="border-right: 1px solid #b8940d; border-left: 1px solid #b8940d" id="now_button">
+        <a class="ui button bordered" style="border-right: 1px solid #b8940d; border-left: 1px solid #b8940d" id="now_button" {% if link_now %}href="{{ link_now }}"{% endif %}>
             <i class="calendar icon"></i>
             Nå (Uke {{ now.date|date:"W" }})
         </a>
-        <a class="ui right labeled icon button" id="next_week_button">
+        <a class="ui right labeled icon button" id="next_week_button" {% if link_next %}href="{{ link_next }}"{% endif %}>
             <i class="right chevron icon"></i>
             Neste
         </a>

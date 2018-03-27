@@ -24,10 +24,12 @@
             </div>
             <div class="column">
                 <div class="ui yellow vertical buttons">
-                    <div class="enable_popup" data-content="{% if not user.is_authenticated %}Du må være logget inn for å kunne lage nye reservasjoner
-                    {% elif not can_use %}{% get_machine_cannot_use_text machine %}
-                {% elif not can_make_more_reservations %}Du har nådd maksimalt antall fremtidige reservasjoner{% endif %}">
-                        <a class="ui enable_popup labeled icon button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
+                    <div class="enable_popup"
+                         {% if not user.is_authenticated %}data-content="Du må være logget inn for å kunne lage nye reservasjoner"
+                         {% elif not can_use %}data-content="{% get_machine_cannot_use_text machine %}"
+                         {% elif not can_make_more_reservations %}data-content="Du har nådd maksimalt antall fremtidige reservasjoner"
+                         {% endif %}>
+                        <a class="ui labeled icon wrapped button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
                            href="{% url 'make_reservation' machine=machine %}">
                             <i class="add icon"></i>
                             Ny reservasjon
@@ -44,7 +46,10 @@
                 </div>
             </div>
         </div>
-        {% include 'make_queue/reservation_calendar.html' with week_days=week_days %}
+        {% url 'reservation_calendar' year=next.0 week=next.1 machine=machine as link_next %}
+        {% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine as link_prev %}
+        {% current_calendar_url machine as link_now %}
+        {% include 'make_queue/reservation_calendar.html' with week_days=week_days link_prev=link_prev link_next=link_next %}
     </div>
     <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}
