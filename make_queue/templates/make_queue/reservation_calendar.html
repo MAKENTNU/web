@@ -11,11 +11,13 @@
             <i class="left chevron icon"></i>
             Forrige
         </a>
-        <a class="ui button bordered" style="border-right: 1px solid #b8940d; border-left: 1px solid #b8940d" id="now_button" {% if link_now %}href="{{ link_now }}"{% endif %}>
+        <a class="ui button bordered" style="border-right: 1px solid #b8940d; border-left: 1px solid #b8940d"
+           id="now_button" {% if link_now %}href="{{ link_now }}"{% endif %}>
             <i class="calendar icon"></i>
             Nå (Uke {{ now.date|date:"W" }})
         </a>
-        <a class="ui right labeled icon button" id="next_week_button" {% if link_next %}href="{{ link_next }}"{% endif %}>
+        <a class="ui right labeled icon button" id="next_week_button"
+           {% if link_next %}href="{{ link_next }}"{% endif %}>
             <i class="right chevron icon"></i>
             Neste
         </a>
@@ -89,8 +91,13 @@
                                                 {% else %}
                                                     make_reservation_calendar_time_table_non_event
                                                 {% endif %}
-                                            {% endif %}"
-                                     style="top: {{ reservation.start_percentage }}%; height: {{ reservation.length }}%; position:absolute;width: 100%;">
+                                            {% endif %} enable_popup"
+                                     style="top: {{ reservation.start_percentage }}%; height: {{ reservation.length }}%; position:absolute;width: 100%;"
+                                     {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"
+                                     {% elif perms.make_queue.can_view_reservation_user %}data-content="{{ reservation.reservation.user.get_full_name }}"
+                                     {% endif %}
+                                     data-position="top center"
+                                >
                                 </div>
                             {% endif %}
                         {% endfor %}
