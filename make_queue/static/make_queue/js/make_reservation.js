@@ -36,6 +36,7 @@ function updateReservationCalendar() {
     let machine_pk = $("#machine_name_dropdown").dropdown("get value");
     $.get("/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_type + "/" + machine_pk + "/", {}, (data) => {
         $("#reservation_calendar").html(data);
+        setupReservationCalendar();
     })
 }
 
@@ -214,16 +215,26 @@ $('form').submit(function (event) {
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
 
-$("#previous_week").click(() => {
-    reservationCalendarDate.setDate(reservationCalendarDate.getDate() - 7);
-    updateReservationCalendar();
-});
+function setupReservationCalendar() {
 
+    $("#now_button").click(() => {
+        reservationCalendarDate = new Date();
+        updateReservationCalendar();
+    });
 
-$("#next_week").click(() => {
-    reservationCalendarDate.setDate(reservationCalendarDate.getDate() + 7);
-    updateReservationCalendar();
-});
+    $("#prev_week_button").click(() => {
+        reservationCalendarDate.setDate(reservationCalendarDate.getDate() - 7);
+        updateReservationCalendar();
+    });
+
+    $("#next_week_button").click(() => {
+        reservationCalendarDate.setDate(reservationCalendarDate.getDate() + 7);
+        updateReservationCalendar();
+    });
+
+}
+
+setupReservationCalendar();
 
 $('.message .close').on('click', function () {
     $(this).closest('.message').transition('fade');

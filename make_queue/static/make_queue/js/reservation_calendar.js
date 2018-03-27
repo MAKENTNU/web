@@ -32,4 +32,4 @@ $("#period_desktop, #period_mobile").calendar({
     }
 );
 
-$("#create_new_reservation").popup();
+$(".enable_popup").popup();

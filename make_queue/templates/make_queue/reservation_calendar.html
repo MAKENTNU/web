@@ -6,122 +6,124 @@
 
     <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}">
 
-    <div class="ui grid padded equal width">
-        <div class="row make_collapsed_top_bottom">
-            <div class="four wide column make_collapsed"></div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom make_reservation_calendar_time_table_offset_fix">
-                        <div class="column make_reservation_calendar_time_table_hour">01</div>
-                        <div class="column make_reservation_calendar_time_table_hour">02</div>
-                        <div class="column make_reservation_calendar_time_table_hour">03</div>
-                        <div class="column make_reservation_calendar_time_table_hour">04</div>
-                        <div class="column make_reservation_calendar_time_table_hour">05</div>
-                        <div class="column make_reservation_calendar_time_table_hour">06</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
-                        <div class="column make_reservation_calendar_time_table_hour">07</div>
-                        <div class="column make_reservation_calendar_time_table_hour">08</div>
-                        <div class="column make_reservation_calendar_time_table_hour">09</div>
-                        <div class="column make_reservation_calendar_time_table_hour">10</div>
-                        <div class="column make_reservation_calendar_time_table_hour">11</div>
-                        <div class="column make_reservation_calendar_time_table_hour">12</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
-                        <div class="column make_reservation_calendar_time_table_hour">13</div>
-                        <div class="column make_reservation_calendar_time_table_hour">14</div>
-                        <div class="column make_reservation_calendar_time_table_hour">15</div>
-                        <div class="column make_reservation_calendar_time_table_hour">16</div>
-                        <div class="column make_reservation_calendar_time_table_hour">17</div>
-                        <div class="column make_reservation_calendar_time_table_hour">18</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom equal width">
-                        <div class="column make_reservation_calendar_time_table_hour">19</div>
-                        <div class="column make_reservation_calendar_time_table_hour">20</div>
-                        <div class="column make_reservation_calendar_time_table_hour">21</div>
-                        <div class="column make_reservation_calendar_time_table_hour">22</div>
-                        <div class="column make_reservation_calendar_time_table_hour">23</div>
-                        <div class="column make_reservation_calendar_time_table_hour">24</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% for day in week_days %}
-            <div class="row make_collapsed_top_bottom_all make_reservation_calendar_time_table_full_row">
-                <div class="four wide column make_collapsed">
-                    <div class="ui vertical segment center aligned">{{ day.date|date:"d/m/Y" }}</div>
-                </div>
-                <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
-                     data-date="{{ day.date|date:"Y/n/j" }}"
-                     data-machine="{{ machine.pk }}" data-machine-type="{{ machine.literal }}">
-                    <div class="make_reservation_calendar_time_table_dashed_line left"></div>
-                    <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
-                    <div class="make_reservation_calendar_time_table_dashed_line right"></div>
-                    {% is_current_date day.date.date as should_include_current_time %}
-                    {% if should_include_current_time %}
-                        <div class="make_reservation_calendar_time_table_current_time"
-                             style="left:{% get_current_time_of_day %}%"></div>
-                    {% endif %}
-                    {% for reservation in day.reservations %}
-                        {% if reservation.length %}
-                            <div class="ui make_reservation_calendar_time_table_item
-                                        {% if reservation.reservation.special %}
-                                            make_reservation_calendar_time_table_make
-                                        {% elif reservation.reservation.event %}
-                                            make_reservation_calendar_time_table_event
-                                        {% else %}
-                                            {% if reservation.reservation.user == request.user %}
-                                                make_reservation_calendar_time_table_my_non_event
+    <div class="attached yellow ui buttons">
+        <a class="ui labeled icon button" id="prev_week_button">
+            <i class="left chevron icon"></i>
+            Forrige
+        </a>
+        <a class="ui button bordered" style="border-right: 1px solid #b8940d; border-left: 1px solid #b8940d" id="now_button">
+            <i class="calendar icon"></i>
+            Nå (Uke {{ now.date|date:"W" }})
+        </a>
+        <a class="ui right labeled icon button" id="next_week_button">
+            <i class="right chevron icon"></i>
+            Neste
+        </a>
+    </div>
+    <table class="ui celled fixed very compact unstackable table">
+        <thead>
+        <tr style="text-align: center">
+            <th style="font-size: 1.2em;"
+                class="make_reservation_calendar_short_month">{{ week_days.0.date|date:"b"|title }}
+                <div style="font-weight: normal; font-size: 0.9em;">{{ week_days.0.date|date:"W" }}</div>
+            </th>
+            <th style="font-size: 1.2em;"
+                class="make_reservation_calendar_long_month">{{ week_days.0.date|date:"F"|title }}
+                <div style="font-weight: normal; font-size: 0.9em;">Uke {{ week_days.0.date|date:"W" }}</div>
+            </th>
+            {% for day in week_days %}
+                <th>
+                    <div style="font-size: 1.2em;">{{ day.date|date:"D"|title }}</div>
+                    <div style="font-size: 1.1em; font-weight: normal">{{ day.date|date:"j" }}</div>
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tr>
+            <td class="wrapping">
+                <div class="half_height"></div>
+                <div>01:00</div>
+                <div>02:00</div>
+                <div>03:00</div>
+                <div>04:00</div>
+                <div>05:00</div>
+                <div>06:00</div>
+                <div>07:00</div>
+                <div>08:00</div>
+                <div>09:00</div>
+                <div>10:00</div>
+                <div>11:00</div>
+                <div>12:00</div>
+                <div>13:00</div>
+                <div>14:00</div>
+                <div>15:00</div>
+                <div>16:00</div>
+                <div>17:00</div>
+                <div>18:00</div>
+                <div>19:00</div>
+                <div>20:00</div>
+                <div>21:00</div>
+                <div>22:00</div>
+                <div>23:00</div>
+                <div class="half_height"></div>
+            </td>
+            {% for day in week_days %}
+                <td class="wrapping">
+                    <div style="width: 100%; height: 100%;position: relative;">
+                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 12.5%; position: absolute;"></div>
+                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 25%; position: absolute;"></div>
+                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 37.5%; position: absolute;"></div>
+                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 50%; position: absolute;"></div>
+                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 62.5%; position: absolute;"></div>
+                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 75%; position: absolute;"></div>
+                        <div style="width: 100%; height: 0; border-top: 1px solid lightgrey; z-index: 0; top: 87.5%; position: absolute;"></div>
+                        {% for reservation in day.reservations %}
+                            {% if reservation.length %}
+                                <div class="{% if reservation.reservation.special %}
+                                                make_reservation_calendar_time_table_make
+                                            {% elif reservation.reservation.event %}
+                                                make_reservation_calendar_time_table_event
                                             {% else %}
-                                                make_reservation_calendar_time_table_non_event
-                                            {% endif %}
-                                        {% endif %}"
-                                 style="margin-left:{{ reservation.start_percentage }}%;width:{{ reservation.length }}%"
-                                 {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"{% endif %}
-                                 {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"
-                                 {% elif perms.make_queue.can_view_reservation_user %}data-content="{{ reservation.reservation.user.get_full_name }}"
-                                 {% endif %}>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                                                {% if reservation.reservation.user == request.user %}
+                                                    make_reservation_calendar_time_table_my_non_event
+                                                {% else %}
+                                                    make_reservation_calendar_time_table_non_event
+                                                {% endif %}
+                                            {% endif %}"
+                                     style="top: {{ reservation.start_percentage }}%; height: {{ reservation.length }}%; position:absolute;width: 100%;">
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
+        <tfoot>
+        <tr>
+            <th colspan="8">
+                <div class="make_reservation_calendar_legend" style="float:right">
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
+                        MAKE NTNU
+                    </div>
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
+                        Andre Reservasjoner
+                    </div>
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
+                        Arrangementer
+                    </div>
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
+                        Mine Reservasjoner
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="ui vertical segment">
-        <div class="ui label" style="float:right">
-            <div class="make_reservation_calendar_legend">
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
-                    MAKE NTNU
-                </div>
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
-                    Andre Reservasjoner
-                </div>
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
-                    Arrangementer
-                </div>
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
-                    Mine Reservasjoner
-                </div>
-            </div>
-        </div>
-    </div>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+
 
     <script>
         $(".make_reservation_calendar_time_table_item").popup({"variation": "inverted"});
