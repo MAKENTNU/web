@@ -53,7 +53,7 @@
             </td>
             {% for day in week_days %}
                 <td class="wrapping">
-                    <div class="day" data-date="{{ day.date|date:"j.m.Y" }}">
+                    <div class="day" data-date="{{ day.date|date:"j.m.Y" }}" data-machine="{{ machine }}">
                         {% numeric_range 0 7 as num_indication_lines %}
                         {% for line in num_indication_lines %}
                             <div class="hour_indication_line"></div>
@@ -129,9 +129,18 @@
         let onLetGoFunc = (event) => {
             if (clickedDay === event.target && !selected) {
                 selected = true;
-                $(".time_selection").popup({
-                    html: typeof timeSelectionPopupHTML !== "undefined" ? timeSelectionPopupHTML() : () => "",
-                    position: "right center"
+                let time_selection_element = $(".time_selection");
+                let day = time_selection_element.closest(".day");
+                let zeroPadClock = (number) => ("00" + number).substr(-2, 2);
+                let timeToClock = (time) => zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
+                let startTime = parseFloat(time_selection_element.css("top")) / day.height() * 24;
+                let endTime = (parseFloat(time_selection_element.css("top")) + time_selection_element.height()) / day.height() * 24;
+
+                time_selection_element.popup({
+                    html: typeof timeSelectionPopupHTML !== "undefined"
+                        ? timeSelectionPopupHTML(day.data("date"), timeToClock(startTime), timeToClock(endTime), day.date("machine"))
+                        : () => "",
+                    position: "right center",
                 }).popup("show");
                 $("body").mousedown((event) => {
                     if (!$(".popup").find(($(event.target))).length) {
