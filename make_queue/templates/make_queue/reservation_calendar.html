@@ -126,19 +126,29 @@
         let clickedPoint = 0;
         let selected = false;
 
+        let zeroPadClock = (number) => ("00" + number).substr(-2, 2);
+        let timeToClock = (time) =>
+            time <= 0
+                ? "00:00"
+                : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
+
+        let getStartTime = () => {
+            return parseFloat($(".time_selection").css("top")) / $(".time_selection").closest(".day").height() * 24;
+        };
+
+        let getEndTime = () => {
+            return (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
+        };
+
         let onLetGoFunc = (event) => {
             if (clickedDay === event.target && !selected) {
                 selected = true;
                 let time_selection_element = $(".time_selection");
                 let day = time_selection_element.closest(".day");
-                let zeroPadClock = (number) => ("00" + number).substr(-2, 2);
-                let timeToClock = (time) => zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
-                let startTime = parseFloat(time_selection_element.css("top")) / day.height() * 24;
-                let endTime = (parseFloat(time_selection_element.css("top")) + time_selection_element.height()) / day.height() * 24;
 
                 time_selection_element.popup({
                     html: typeof timeSelectionPopupHTML !== "undefined"
-                        ? timeSelectionPopupHTML(day.data("date"), timeToClock(startTime), timeToClock(endTime), day.date("machine"))
+                        ? timeSelectionPopupHTML(day.data("date"), timeToClock(getStartTime()), timeToClock(getEndTime()), day.data("machine"))
                         : () => "",
                     position: "right center",
                 }).popup("show");
@@ -159,7 +169,19 @@
                 event.preventDefault();
                 clickedPoint = positionCalculation(event);
                 clickedDay = event.target;
-                $(event.target).append("<div class='time_selection' style='top: " + clickedPoint + "px;'></div>");
+                let time_selection = $("<div>")
+                    .addClass("time_selection")
+                    .css("top", clickedPoint + "px")
+                    .css("height", "1px")
+                    .appendTo($(event.target));
+                $("<div>")
+                    .addClass("start_time")
+                    .html(timeToClock(getStartTime()))
+                    .appendTo(time_selection);
+                $("<div>")
+                    .addClass("end_time")
+                    .html(timeToClock(getEndTime()))
+                    .appendTo(time_selection);
                 return false;
             }
         };
@@ -172,6 +194,8 @@
                 } else {
                     $(".time_selection").css("top", clickedPoint + "px").css("height", (currentY - clickedPoint) + "px");
                 }
+                $(".time_selection > .start_time").html(timeToClock(getStartTime()));
+                $(".time_selection > .end_time").html(timeToClock(getEndTime()));
             }
         };
 
