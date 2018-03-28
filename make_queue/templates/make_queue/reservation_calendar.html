@@ -53,7 +53,7 @@
             </td>
             {% for day in week_days %}
                 <td class="wrapping">
-                    <div class="fill">
+                    <div class="day" data-date="{{ day.date|date:"j.m.Y" }}">
                         {% numeric_range 0 7 as num_indication_lines %}
                         {% for line in num_indication_lines %}
                             <div class="hour_indication_line"></div>
@@ -121,6 +121,62 @@
 
     <script>
         $(".make_reservation_calendar_time_table_item").popup();
+
+        let clickedDay = null;
+        let clickedPoint = 0;
+        let selected = false;
+
+        let onLetGoFunc = (event) => {
+            if (clickedDay === event.target && !selected) {
+                selected = true;
+                $(".time_selection").popup({
+                    html: typeof timeSelectionPopupHTML !== "undefined" ? timeSelectionPopupHTML() : () => "",
+                    position: "right center"
+                }).popup("show");
+                $("body").mousedown((event) => {
+                    if (!$(".popup").find(($(event.target))).length) {
+                        $(".time_selection").remove();
+                        clickedDay = null;
+                        selected = false;
+                        $("body").unbind("click");
+                    }
+                });
+                return false;
+            }
+        };
+
+        let onMouseDownFunc = (event) => {
+            if (clickedDay === null) {
+                event.preventDefault();
+                clickedPoint = positionCalculation(event);
+                clickedDay = event.target;
+                $(event.target).append("<div class='time_selection' style='top: " + clickedPoint + "px;'></div>");
+                return false;
+            }
+        };
+
+        let onMouseMoveFunc = (event) => {
+            if (clickedDay === event.target && !selected) {
+                let currentY = positionCalculation(event);
+                if (currentY < clickedPoint) {
+                    $(".time_selection").css("top", currentY + "px").css("height", (clickedPoint - currentY) + "px");
+                } else {
+                    $(".time_selection").css("top", clickedPoint + "px").css("height", (currentY - clickedPoint) + "px");
+                }
+            }
+        };
+
+        let positionCalculation = (event) => {
+            if (event.touches === undefined) {
+                return event.pageY - $(event.target).offset().top;
+            }
+            return event.touches[0].pageY - $(event.target).offset().top;
+        };
+
+        $(".day").on({
+            "touchstart": onMouseDownFunc, "touchend": onLetGoFunc, "touchmove": onMouseMoveFunc,
+            "mousedown": onMouseDownFunc, "mouseup": onLetGoFunc, "mousemove": onMouseMoveFunc,
+        });
     </script>
 
 {% endlocalize %}

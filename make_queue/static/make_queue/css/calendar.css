@@ -84,7 +84,7 @@
     text-align: center !important;;
 }
 
-.fill {
+.day {
     width: 100%;
     height: 100%;
     position: relative;
@@ -95,6 +95,14 @@
     height: 12.5%;
     border-bottom: 1px solid lightgrey;
     z-index: 0;
+    pointer-events: none;
+}
+
+.time_selection {
+    position: absolute;
+    width: 100%;
+    background-color: #38caff;
+    pointer-events: none;
 }
 
 .half_height {
