@@ -123,17 +123,30 @@
         {# The calendar is sometimes loaded through AJAX, as such the Javascript cannot be loaded asynchronously #}
         $(".make_reservation_calendar_time_table_item").popup();
 
-        let clickedDay = null;
-        let clickedPoint = 0;
-        let selected = false;
+        var clickedDay = null;
+        var clickedPoint = 0;
+        var selected = false;
 
-        let zeroPadClock = (number) => ("00" + number).substr(-2, 2);
-        let timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
+        var zeroPadClock = (number) => ("00" + number).substr(-2, 2);
+        var timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
 
-        let getStartTime = () => parseFloat($(".time_selection").css("top")) / $(".time_selection").closest(".day").height() * 24;
-        let getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
+        var getStartTime = () => parseFloat($(".time_selection").css("top")) / $(".time_selection").closest(".day").height() * 24;
+        var getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
 
-        let onLetGoFunc = (event) => {
+        var currentDate = () => {
+            let dateText = $(event.target).data("date").split(".");
+            let startTime = timeToClock(getStartTime()).split(":");
+            return new Date(dateText[2], parseInt(dateText[1]) - 1, dateText[0], startTime[0], startTime[1])
+        };
+
+        var resetSelection = () => {
+            clickedDay = null;
+            selected = false;
+            clickedPoint = 0;
+            $(".time_selection").remove();
+        }
+
+        var onLetGoFunc = (event) => {
             {# We do not care about the situations where another day is clicked #}
             if (clickedDay !== event.target || selected) return false;
 
@@ -151,9 +164,7 @@
 
             $("body").mousedown((event) => {
                 if (!$(".popup").find($(event.target)).length && !$(clickedDay).find($(event.target)).length) {
-                    $(".time_selection").remove();
-                    clickedDay = null;
-                    selected = false;
+                    resetSelection();
                     $("body").unbind("mousedown");
                 }
             });
@@ -162,7 +173,7 @@
             $("<div>").addClass("extend bottom").appendTo(time_selection_element);
         };
 
-        let onMouseDownFunc = (event) => {
+        var onMouseDownFunc = (event) => {
             if (clickedDay !== null) return clickedDay !== event.target;
 
             event.preventDefault();
@@ -173,6 +184,12 @@
                 .css("top", clickedPoint + "px")
                 .css("height", "1px")
                 .appendTo($(event.target));
+
+            if (new Date() > currentDate()) {
+                resetSelection();
+                return;
+            }
+
             $("<div>")
                 .addClass("start_time")
                 .html(timeToClock(getStartTime()))
@@ -183,17 +200,21 @@
                 .appendTo(time_selection);
         };
 
-        let onMouseMoveFunc = (event) => {
-            if (clickedDay !== event.target || selected) return false;
+        var onMouseMoveFunc = (event) => {
+            if (clickedDay !== event.target || selected) return;
 
             let currentY = positionCalculation(event);
             $(".time_selection").css("top", Math.min(currentY, clickedPoint) + "px").css("height", Math.abs(currentY - clickedPoint) + "px");
+            if (new Date() > currentDate()) {
+                currentY = (new Date().getHours() / 24 + (new Date().getMinutes() + 1) / (24*60) + new Date().getSeconds() / (24*60*60)) * $(clickedDay).height();
+                $(".time_selection").css("top", currentY + "px").css("height", clickedPoint - currentY + "px");
+            }
             $(".time_selection > .start_time").html(timeToClock(getStartTime()));
             $(".time_selection > .end_time").html(timeToClock(getEndTime()));
         };
 
         {# The position calculation differs between touch and mouse events #}
-        let positionCalculation = (event) =>
+        var positionCalculation = (event) =>
             (event.touches === undefined ? event.pageY : event.touches[0].pageY) - $(event.target).offset().top;
 
 
