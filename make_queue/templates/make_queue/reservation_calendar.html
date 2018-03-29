@@ -213,6 +213,7 @@
             $(".time_selection")
                 .css("height", Math.max(bottomPosition - currentY, 1) + "px")
                 .css("top", currentY + "px");
+            if (new Date() > currentDate()) setLimitTop();
             $(".time_selection > .start_time").html(timeToClock(getStartTime()));
         };
 
@@ -221,6 +222,13 @@
             let currentY = Math.max(positionCalculation(event), topHeight);
             $(".time_selection").css("height", Math.max(currentY - topHeight, 1) + "px");
             $(".time_selection > .end_time").html(timeToClock(getEndTime()));
+        };
+
+        var setLimitTop = () => {
+            let topLimit = (new Date().getHours() / 24 + (new Date().getMinutes() + 1) / (24 * 60) + new Date().getSeconds() / (24 * 60 * 60)) * $(clickedDay).height();
+            $(".time_selection")
+                .css("height", parseFloat($(".time_selection").css("height")) + parseFloat($(".time_selection").css("top")) - topLimit + "px")
+                .css("top", topLimit + "px");
         };
 
         var onMouseMoveFunc = (event) => {
@@ -233,10 +241,8 @@
             let currentY = positionCalculation(event);
             $(".time_selection").css("top", Math.min(currentY, clickedPoint) + "px").css("height", Math.abs(currentY - clickedPoint) + "px");
             {# Do not allow the selection of an area earlier than the current time #}
-            if (new Date() > currentDate()) {
-                currentY = (new Date().getHours() / 24 + (new Date().getMinutes() + 1) / (24 * 60) + new Date().getSeconds() / (24 * 60 * 60)) * $(clickedDay).height();
-                $(".time_selection").css("top", currentY + "px").css("height", clickedPoint - currentY + "px");
-            }
+            if (new Date() > currentDate()) setLimitTop();
+
             $(".time_selection > .start_time").html(timeToClock(getStartTime()));
             $(".time_selection > .end_time").html(timeToClock(getEndTime()));
         };
