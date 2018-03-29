@@ -107,12 +107,12 @@
 }
 
 .time_selection > .start_time {
-    right: 0;
+    left: 0;
     top: -0.7em;
 }
 
 .time_selection > .end_time {
-    left: 0;
+    right: 0;
     bottom: -0.7em;
 }
 
