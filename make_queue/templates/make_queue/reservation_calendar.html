@@ -120,6 +120,7 @@
     </table>
 
     <script>
+        {# The calendar is sometimes loaded through AJAX, as such the Javascript cannot be loaded asynchronously #}
         $(".make_reservation_calendar_time_table_item").popup();
 
         let clickedDay = null;
@@ -133,14 +134,14 @@
         let getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
 
         let onLetGoFunc = (event) => {
-            {# We do not care about #}
+            {# We do not care about the situations where another day is clicked #}
             if (clickedDay !== event.target || selected) return false;
 
             selected = true;
             let time_selection_element = $(".time_selection");
             let day = time_selection_element.closest(".day");
 
-            {# If there exists a function name timeSelectionPopupHTML create a popup with this as content  #}
+            {# If there exists a function name timeSelectionPopupHTML create a popup with this as content #}
             if (typeof timeSelectionPopupHTML !== "undefined") {
                 time_selection_element.popup({
                     html: timeSelectionPopupHTML(day.data("date"), timeToClock(getStartTime()), timeToClock(getEndTime()), day.data("machine")),
@@ -153,45 +154,42 @@
                     $(".time_selection").remove();
                     clickedDay = null;
                     selected = false;
-                    $("body").unbind("click");
+                    $("body").unbind("mousedown");
                 }
             });
+
             $("<div>").addClass("extend top").appendTo(time_selection_element);
             $("<div>").addClass("extend bottom").appendTo(time_selection_element);
         };
 
         let onMouseDownFunc = (event) => {
-            if (clickedDay === null) {
-                event.preventDefault();
-                clickedPoint = positionCalculation(event);
-                clickedDay = event.target;
-                let time_selection = $("<div>")
-                    .addClass("time_selection")
-                    .css("top", clickedPoint + "px")
-                    .css("height", "1px")
-                    .appendTo($(event.target));
-                $("<div>")
-                    .addClass("start_time")
-                    .html(timeToClock(getStartTime()))
-                    .appendTo(time_selection);
-                $("<div>")
-                    .addClass("end_time")
-                    .html(timeToClock(getEndTime()))
-                    .appendTo(time_selection);
-            }
+            if (clickedDay !== null) return clickedDay !== event.target;
+
+            event.preventDefault();
+            clickedPoint = positionCalculation(event);
+            clickedDay = event.target;
+            let time_selection = $("<div>")
+                .addClass("time_selection")
+                .css("top", clickedPoint + "px")
+                .css("height", "1px")
+                .appendTo($(event.target));
+            $("<div>")
+                .addClass("start_time")
+                .html(timeToClock(getStartTime()))
+                .appendTo(time_selection);
+            $("<div>")
+                .addClass("end_time")
+                .html(timeToClock(getEndTime()))
+                .appendTo(time_selection);
         };
 
         let onMouseMoveFunc = (event) => {
-            if (clickedDay === event.target && !selected) {
-                let currentY = positionCalculation(event);
-                if (currentY < clickedPoint) {
-                    $(".time_selection").css("top", currentY + "px").css("height", (clickedPoint - currentY) + "px");
-                } else {
-                    $(".time_selection").css("top", clickedPoint + "px").css("height", (currentY - clickedPoint) + "px");
-                }
-                $(".time_selection > .start_time").html(timeToClock(getStartTime()));
-                $(".time_selection > .end_time").html(timeToClock(getEndTime()));
-            }
+            if (clickedDay !== event.target || selected) return false;
+
+            let currentY = positionCalculation(event);
+            $(".time_selection").css("top", Math.min(currentY, clickedPoint) + "px").css("height", Math.abs(currentY - clickedPoint) + "px");
+            $(".time_selection > .start_time").html(timeToClock(getStartTime()));
+            $(".time_selection > .end_time").html(timeToClock(getEndTime()));
         };
 
         {# The position calculation differs between touch and mouse events #}
@@ -203,6 +201,7 @@
             "touchstart": onMouseDownFunc, "touchend": onLetGoFunc, "touchmove": onMouseMoveFunc,
             "mousedown": onMouseDownFunc, "mouseup": onLetGoFunc, "mousemove": onMouseMoveFunc,
         });
+
     </script>
 
 {% endlocalize %}
