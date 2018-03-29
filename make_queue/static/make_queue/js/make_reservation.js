@@ -244,3 +244,11 @@ if ($("#start_time").calendar("get date") !== null) {
     reservationCalendarDate = $("#start_time").calendar("get date");
 }
 updateReservationCalendar();
+
+function timeSelectionPopupHTML(date, startTime, endTime, machine) {
+    return $("<div>").addClass("ui make_yellow button").html("Velg tid").click(() => {
+        $("#start_time").calendar("set date", date + " " + startTime);
+        $("#end_time").calendar("set date", date + " " + endTime);
+        $("body").mousedown();
+    });
+}
