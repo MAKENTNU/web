@@ -247,8 +247,8 @@ updateReservationCalendar();
 
 function timeSelectionPopupHTML(date, startTime, endTime, machine) {
     return $("<div>").addClass("ui make_yellow button").html("Velg tid").click(() => {
-        $("#start_time").calendar("set date", date + " " + startTime);
-        $("#end_time").calendar("set date", date + " " + endTime);
+        $("#start_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + startTime);
+        $("#end_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + endTime);
         $("body").mousedown();
     });
 }
