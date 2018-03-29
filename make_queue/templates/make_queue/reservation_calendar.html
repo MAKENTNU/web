@@ -53,7 +53,7 @@
             </td>
             {% for day in week_days %}
                 <td class="wrapping">
-                    <div class="day" data-date="{{ day.date|date:"j.m.Y" }}" data-machine-type="{{ machine.literal }}" data-machine-pk="{{ machine.pk }}">
+                    <div class="day" data-date="{{ day.date|date:"d.m.Y" }}" data-machine-type="{{ machine.literal }}" data-machine-pk="{{ machine.pk }}">
                         {% numeric_range 0 7 as num_indication_lines %}
                         {% for line in num_indication_lines %}
                             <div class="hour_indication_line"></div>
