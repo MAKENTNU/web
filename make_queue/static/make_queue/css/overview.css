@@ -22,3 +22,8 @@ a.wrapped.button {
 .column.no.padding {
     padding: 0 !important;
 }
+
+.time_selection_button.make_yellow.button {
+    width: 100% !important;
+    margin-top: 0.75em;
+}
