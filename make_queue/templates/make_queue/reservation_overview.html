@@ -9,10 +9,14 @@
     <link rel="stylesheet" href="{% static 'make_queue/css/overview.css' %}">
 {% endblock %}
 
+{% block title %}
+    {{ machine.name }} - {{ machine.model }}
+{% endblock %}
 
 {% block body %}
     {% can_use_machine machine user as can_use %}
     <div class="ui container">
+        {% csrf_token %}
         <div class="ui huge header">
             Reservasjoner
         </div>
@@ -22,80 +26,34 @@
                     {% include 'make_queue/machine_card.html' with machine=machine color_bottom=1 %}
                 </div>
             </div>
-            <div class="column">
-                <div class="ui cards">
-                    <div class="ui card">
-                        <div data-content="{% if not user.is_authenticated %}Du må være logget inn for å kunne lage ny reservasjoner
-                            {% elif not can_use %}{% get_machine_cannot_use_text machine %}
-                            {% elif not can_make_more_reservations %}Du har nådd maksimalt antall fremtidige reservasjoner{% endif %}"
-                             id="create_new_reservation" data-position="top center">
-                            <a class="ui primary button {% if not can_use or not can_make_more_reservations %}disabled{% endif %} make_reservation_calendar_button_full_width"
-                               href="{% url 'make_reservation' machine=machine %}">
-                                <i class="ui add icon"></i>Ny reservasjon
-                            </a>
-                        </div>
-                        {% if request.user.is_authenticated %}
-                            <a class="ui make_bg_yellow button" href="{% url 'my_reservations' %}">
-                                Mine reservasjoner
-                            </a>
-                        {% endif %}
-                        <a class="ui primary button" href="{% url 'reservation_machines_overview' %}">
-                            Andre maskiner
+            <div class="column no padding">
+                <div class="ui vertical buttons make_right_floated">
+                    <div class="enable_popup"
+                         {% if not user.is_authenticated %}data-content="Du må være logget inn for å kunne lage nye reservasjoner"
+                         {% elif not can_use %}data-content="{% get_machine_cannot_use_text machine %}"
+                         {% elif not can_make_more_reservations %}data-content="Du har nådd maksimalt antall fremtidige reservasjoner"
+                         {% endif %}>
+                        <a class="ui labeled icon wrapped make_yellow button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
+                           href="{% url 'make_reservation' machine=machine %}">
+                            <i class="add icon"></i>
+                            Ny reservasjon
                         </a>
                     </div>
-                </div>
-            </div>
-            <!-- Controls desktop -->
-            <div class="column make_reservation_calendar_control_header_large">
-                <div class="ui cards">
-                    <div class="ui card">
-                        <div class="content">
-                            <div class="ui calendar" id="period_desktop">
-                                <div class="ui input left icon make_reservation_calendar_time_table_calendar_fill">
-                                    <i class="ui calendar icon"></i>
-                                    <input name="start_date" type="text" placeholder="Periode"
-                                           value="{{ week_days.0.date|date:"m-d-Y" }}">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="extra content">
-                            <div class="ui two buttons">
-                                <a class="ui primary button"
-                                   href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine %}">
-                                    <i class="ui icon left arrow"></i>Forrige
-                                </a>
-                                <a class="ui make_bg_yellow button"
-                                   href="{% url 'reservation_calendar' year=next.0 week=next.1 machine=machine %}">
-                                    Neste<i class="ui icon right arrow"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+                    <a class="ui labeled icon make_yellow button" href="{% url 'my_reservations' %}">
+                        <i class="list icon"></i>
+                        Mine reservasjoner
+                    </a>
+                    <a class="ui labeled icon make_yellow button" href="{% url 'reservation_machines_overview' %}">
+                        <i class="cogs icon"></i>
+                        Andre maskiner
+                    </a>
                 </div>
             </div>
         </div>
-        <!-- Controls mobile -->
-        <div class="make_reservation_calendar_control_header_small">
-            <div class="make_reservation_calendar_full_width_controller">
-                <a class="ui primary button"
-                   href="{% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine %}">
-                    <i class="ui icon left arrow"></i>Forrige
-                </a>
-                <div class="ui calendar make_reservation_calendar_center make_reservation_calendar_high_z_index"
-                     id="period_mobile">
-                    <div class="ui input left icon">
-                        <i class="ui calendar icon"></i>
-                        <input name="start_date" type="text" placeholder="Periode"
-                               value="{{ week_days.0.date|date:"m-d-Y" }}">
-                    </div>
-                </div>
-                <a class="ui make_bg_yellow right floated button"
-                   href="{% url 'reservation_calendar' year=next.0 week=next.1 machine=machine %}">
-                    Neste<i class="ui icon right arrow"></i>
-                </a>
-            </div>
-        </div>
-        {% include 'make_queue/reservation_calendar.html' with week_days=week_days %}
+        {% url 'reservation_calendar' year=next.0 week=next.1 machine=machine as link_next %}
+        {% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine as link_prev %}
+        {% current_calendar_url machine as link_now %}
+        {% include 'make_queue/reservation_calendar.html' with week_days=week_days link_prev=link_prev link_next=link_next %}
     </div>
     <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}

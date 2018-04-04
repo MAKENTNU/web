@@ -36,6 +36,7 @@ function updateReservationCalendar() {
     let machine_pk = $("#machine_name_dropdown").dropdown("get value");
     $.get("/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_type + "/" + machine_pk + "/", {}, (data) => {
         $("#reservation_calendar").html(data);
+        setupReservationCalendar();
     })
 }
 
@@ -214,16 +215,26 @@ $('form').submit(function (event) {
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
 
-$("#previous_week").click(() => {
-    reservationCalendarDate.setDate(reservationCalendarDate.getDate() - 7);
-    updateReservationCalendar();
-});
+function setupReservationCalendar() {
 
+    $("#now_button").click(() => {
+        reservationCalendarDate = new Date();
+        updateReservationCalendar();
+    });
 
-$("#next_week").click(() => {
-    reservationCalendarDate.setDate(reservationCalendarDate.getDate() + 7);
-    updateReservationCalendar();
-});
+    $("#prev_week_button").click(() => {
+        reservationCalendarDate.setDate(reservationCalendarDate.getDate() - 7);
+        updateReservationCalendar();
+    });
+
+    $("#next_week_button").click(() => {
+        reservationCalendarDate.setDate(reservationCalendarDate.getDate() + 7);
+        updateReservationCalendar();
+    });
+
+}
+
+setupReservationCalendar();
 
 $('.message .close').on('click', function () {
     $(this).closest('.message').transition('fade');
@@ -233,3 +244,11 @@ if ($("#start_time").calendar("get date") !== null) {
     reservationCalendarDate = $("#start_time").calendar("get date");
 }
 updateReservationCalendar();
+
+function timeSelectionPopupHTML(date, startTime, endTime, machine) {
+    return $("<div>").addClass("ui make_yellow button").html("Velg tid").click(() => {
+        $("#start_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + startTime);
+        $("#end_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + endTime);
+        $("body").mousedown();
+    });
+}

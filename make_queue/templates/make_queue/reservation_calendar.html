@@ -6,125 +6,281 @@
 
     <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}">
 
-    <div class="ui grid padded equal width">
-        <div class="row make_collapsed_top_bottom">
-            <div class="four wide column make_collapsed"></div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom make_reservation_calendar_time_table_offset_fix">
-                        <div class="column make_reservation_calendar_time_table_hour">01</div>
-                        <div class="column make_reservation_calendar_time_table_hour">02</div>
-                        <div class="column make_reservation_calendar_time_table_hour">03</div>
-                        <div class="column make_reservation_calendar_time_table_hour">04</div>
-                        <div class="column make_reservation_calendar_time_table_hour">05</div>
-                        <div class="column make_reservation_calendar_time_table_hour">06</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
-                        <div class="column make_reservation_calendar_time_table_hour">07</div>
-                        <div class="column make_reservation_calendar_time_table_hour">08</div>
-                        <div class="column make_reservation_calendar_time_table_hour">09</div>
-                        <div class="column make_reservation_calendar_time_table_hour">10</div>
-                        <div class="column make_reservation_calendar_time_table_hour">11</div>
-                        <div class="column make_reservation_calendar_time_table_hour">12</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom">
-                        <div class="column make_reservation_calendar_time_table_hour">13</div>
-                        <div class="column make_reservation_calendar_time_table_hour">14</div>
-                        <div class="column make_reservation_calendar_time_table_hour">15</div>
-                        <div class="column make_reservation_calendar_time_table_hour">16</div>
-                        <div class="column make_reservation_calendar_time_table_hour">17</div>
-                        <div class="column make_reservation_calendar_time_table_hour">18</div>
-                    </div>
-                </div>
-            </div>
-            <div class="three wide column">
-                <div class="ui grid equal width">
-                    <div class="row make_collapsed_top_bottom equal width">
-                        <div class="column make_reservation_calendar_time_table_hour">19</div>
-                        <div class="column make_reservation_calendar_time_table_hour">20</div>
-                        <div class="column make_reservation_calendar_time_table_hour">21</div>
-                        <div class="column make_reservation_calendar_time_table_hour">22</div>
-                        <div class="column make_reservation_calendar_time_table_hour">23</div>
-                        <div class="column make_reservation_calendar_time_table_hour">24</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% for day in week_days %}
-            <div class="row make_collapsed_top_bottom_all make_reservation_calendar_time_table_full_row">
-                <div class="four wide column make_collapsed">
-                    <div class="ui vertical segment center aligned">{{ day.date|date:"d/m/Y" }}</div>
-                </div>
-                <div class="twelve wide column make_reservation_calendar_time_table_row {% if can_use %}can_make_reservation{% endif %}"
-                     data-date="{{ day.date|date:"Y/n/j" }}"
-                     data-machine="{{ machine.pk }}" data-machine-type="{{ machine.literal }}">
-                    <div class="make_reservation_calendar_time_table_dashed_line left"></div>
-                    <div class="make_reservation_calendar_time_table_dashed_line middle"></div>
-                    <div class="make_reservation_calendar_time_table_dashed_line right"></div>
-                    {% is_current_date day.date.date as should_include_current_time %}
-                    {% if should_include_current_time %}
-                        <div class="make_reservation_calendar_time_table_current_time"
-                             style="left:{% get_current_time_of_day %}%"></div>
-                    {% endif %}
-                    {% for reservation in day.reservations %}
-                        {% if reservation.length %}
-                            <div class="ui make_reservation_calendar_time_table_item
-                                        {% if reservation.reservation.special %}
-                                            make_reservation_calendar_time_table_make
-                                        {% elif reservation.reservation.event %}
-                                            make_reservation_calendar_time_table_event
-                                        {% else %}
-                                            {% if reservation.reservation.user == request.user %}
-                                                make_reservation_calendar_time_table_my_non_event
+    <div class="attached ui buttons">
+        <a class="ui labeled icon make_yellow button" id="prev_week_button"
+           {% if link_prev %}href="{{ link_prev }}"{% endif %}>
+            <i class="left chevron icon"></i>
+            Forrige
+        </a>
+        <a class="ui make_yellow button bordered"
+           id="now_button" {% if link_now %}href="{{ link_now }}"{% endif %}>
+            <i class="calendar icon"></i>
+            Nå (Uke {{ now.date|date:"W" }})
+        </a>
+        <a class="ui right labeled icon make_yellow button" id="next_week_button"
+           {% if link_next %}href="{{ link_next }}"{% endif %}>
+            <i class="right chevron icon"></i>
+            Neste
+        </a>
+    </div>
+    <table class="ui celled fixed very compact unstackable table">
+        <thead>
+        <tr>
+            <th class="make_reservation_calendar_short_month title_large">
+                <div>{{ week_days.0.date|date:"b"|title }}</div>
+                <div class="title_small">{{ week_days.0.date|date:"W" }}</div>
+            </th>
+            <th class="make_reservation_calendar_long_month title_large">
+                <div>{{ week_days.0.date|date:"F"|title }}</div>
+                <div class="title_small">Uke {{ week_days.0.date|date:"W" }}</div>
+            </th>
+            {% for day in week_days %}
+                <th>
+                    <div class="title_large">{{ day.date|date:"D"|title }}</div>
+                    <div class="title_medium">{{ day.date|date:"j" }}</div>
+                </th>
+            {% endfor %}
+        </tr>
+        </thead>
+        <tr>
+            <td class="wrapping">
+                <div class="half_height"></div>
+                {% numeric_range 1 24 as hours %}
+                {% for hour in hours %}
+                    <div>{{ hour|stringformat:"02d" }}:00</div>
+                {% endfor %}
+                <div class="half_height"></div>
+            </td>
+            {% for day in week_days %}
+                <td class="wrapping">
+                    <div class="day" data-date="{{ day.date|date:"d.m.Y" }}" data-machine-type="{{ machine.literal }}"
+                         data-machine-pk="{{ machine.pk }}">
+                        {% numeric_range 0 7 as num_indication_lines %}
+                        {% for line in num_indication_lines %}
+                            <div class="hour_indication_line"></div>
+                        {% endfor %}
+                        {% for reservation in day.reservations %}
+                            {% if reservation.length %}
+                                <div class="make_reservation_calendar_time_table_item
+                                            {% if reservation.reservation.special %}
+                                                make_reservation_calendar_time_table_make
+                                            {% elif reservation.reservation.event %}
+                                                make_reservation_calendar_time_table_event
                                             {% else %}
-                                                make_reservation_calendar_time_table_non_event
-                                            {% endif %}
-                                        {% endif %}"
-                                 style="margin-left:{{ reservation.start_percentage }}%;width:{{ reservation.length }}%"
-                                 {% if reservation.reservation.event %}data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"{% endif %}
-                                 {% if reservation.reservation.special %}data-content="{{ reservation.reservation.special_text }}"
-                                 {% elif perms.make_queue.can_view_reservation_user %}data-content="{{ reservation.reservation.user.get_full_name }}"
-                                 {% endif %}>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
+                                                {% if reservation.reservation.user == request.user %}
+                                                    make_reservation_calendar_time_table_my_non_event
+                                                {% else %}
+                                                    make_reservation_calendar_time_table_non_event
+                                                {% endif %}
+                                            {% endif %}"
+                                     style="top: {{ reservation.start_percentage }}%; height: {{ reservation.length }}%;"
+                                        {% if reservation.reservation.special %}
+                                     data-content="{{ reservation.reservation.special_text }}"
+                                        {% elif perms.make_queue.can_view_reservation_user and not reservation.reservation.special %}
+                                     data-html="<div class='header'>
+                                                    Reservasjon
+                                                </div>
+                                                <div>
+                                                    <b>Navn:</b> {{ reservation.reservation.user.get_full_name }}
+                                                </div>
+                                                <div>
+                                                    <b>Epost:</b> {{ reservation.reservation.user.email }}
+                                                </div>"
+                                        {% endif %}>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </td>
+            {% endfor %}
+        </tr>
+        <tfoot>
+        <tr>
+            <th colspan="8">
+                <div class="make_reservation_calendar_legend make_right_floated">
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
+                        MAKE NTNU
+                    </div>
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
+                        Andre Reservasjoner
+                    </div>
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
+                        Arrangementer
+                    </div>
+                    <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
+                        Mine Reservasjoner
+                    </div>
                 </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="ui vertical segment">
-        <div class="ui label" style="float:right">
-            <div class="make_reservation_calendar_legend">
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
-                    MAKE NTNU
-                </div>
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
-                    Andre Reservasjoner
-                </div>
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
-                    Arrangementer
-                </div>
-                <div class="make_reservation_calendar_legend_item">
-                    <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
-                    Mine Reservasjoner
-                </div>
-            </div>
-        </div>
-    </div>
+            </th>
+        </tr>
+        </tfoot>
+    </table>
 
     <script>
-        $(".make_reservation_calendar_time_table_item").popup({"variation": "inverted"});
+        {# The calendar is sometimes loaded through AJAX, as such the Javascript cannot be loaded asynchronously #}
+        $(".make_reservation_calendar_time_table_item").popup();
+
+        {% if request.user.is_authenticated %}
+            var maximumReservationTime = {{ max_reservation_time }};
+
+            var zeroPadClock = (number) => ("00" + number).substr(-2, 2);
+            var timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
+
+            var getStartTime = () => parseFloat($(".time_selection").css("top")) / $(".time_selection").closest(".day").height() * 24;
+            var getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
+
+            var currentDate = () => {
+                let dateText = $(clickedDay).data("date").split(".");
+                let startTime = timeToClock(getStartTime()).split(":");
+                return new Date(dateText[2], parseInt(dateText[1]) - 1, dateText[0], startTime[0], startTime[1])
+            };
+
+            var resetSelection = () => {
+                clickedDay = null;
+                selected = false;
+                clickedPoint = 0;
+                resizingDirection = null;
+                $(".time_selection").remove();
+            };
+
+            var clickedDay, clickedPoint, selected, resizingDirection;
+            resetSelection();
+
+            var onLetGoFunc = (event) => {
+                if ($(clickedDay).find($(event.target)) && (event.type === "mouseout" || event.type === "touchout")) return;
+                resizingDirection = null;
+                {# We do not care about the situations where another day is clicked #}
+                if (clickedDay == null || clickedDay !== event.target && !$(clickedDay).find($(event.target))) return false;
+
+                selected = true;
+                let time_selection_element = $(".time_selection");
+                let day = time_selection_element.closest(".day");
+
+                {# If there exists a function name timeSelectionPopupHTML create a popup with this as content #}
+                if (typeof timeSelectionPopupHTML !== "undefined") {
+                    time_selection_element.popup({
+                        html: timeSelectionPopupHTML(day.data("date"), timeToClock(getStartTime()), timeToClock(getEndTime()), {
+                            type: day.data("machine-type"),
+                            pk: day.data("machine-pk")
+                        }),
+                        position: "right center", on: "onload",
+                    }).popup("show");
+                }
+
+                $("body").mousedown((event) => {
+                    if (!$(".popup").find($(event.target)).length && !$(clickedDay).find($(event.target)).length) {
+                        resetSelection();
+                        $("body").unbind("mousedown");
+                    }
+                });
+
+                $("<div>").addClass("extend top").on({
+                    "mousedown": () => resizingDirection = -1,
+                    "touchstart": () => resizingDirection = -1,
+                }).appendTo(time_selection_element);
+                $("<div>").addClass("extend bottom").on({
+                    "mousedown": () => resizingDirection = 1,
+                    "touchstart": () => resizingDirection = 1,
+                }).appendTo(time_selection_element);
+            };
+
+            var onMouseDownFunc = (event) => {
+                if (clickedDay !== null) return;
+
+                event.preventDefault();
+                clickedDay = event.target;
+                clickedPoint = positionCalculation(event);
+                let time_selection = $("<div>")
+                    .addClass("time_selection")
+                    .css("top", clickedPoint + "px")
+                    .css("height", "1px")
+                    .appendTo($(event.target));
+
+                if (new Date() > currentDate()) {
+                    resetSelection();
+                    return;
+                }
+
+                $("<div>")
+                    .addClass("start_time")
+                    .html(timeToClock(getStartTime()))
+                    .appendTo(time_selection);
+                $("<div>")
+                    .addClass("end_time")
+                    .html(timeToClock(getEndTime()))
+                    .appendTo(time_selection);
+            };
+
+            var limitTimeSelection = (direction) => {
+                let currentTimeDiff = getEndTime() - getStartTime();
+                if (currentTimeDiff < maximumReservationTime) return;
+                let requiredChange = ((currentTimeDiff - maximumReservationTime) / 24) * $(".time_selection").closest(".day").height();
+                if (direction === "top")
+                    $(".time_selection")
+                        .css("top", parseFloat($(".time_selection").css("top")) + requiredChange + "px")
+                        .css("height", parseFloat($(".time_selection").css("height")) - requiredChange + "px");
+                else
+                    $(".time_selection")
+                        .css("height", parseFloat($(".time_selection").css("height")) - requiredChange + "px");
+            };
+
+            var resizeTop = (event) => {
+                let bottomPosition = parseFloat($(".time_selection").css("top")) + parseFloat($(".time_selection").css("height"));
+                let currentY = Math.min(positionCalculation(event), bottomPosition - 1);
+                $(".time_selection")
+                    .css("height", Math.max(bottomPosition - currentY, 1) + "px")
+                    .css("top", currentY + "px");
+                if (new Date() > currentDate()) setLimitTop();
+                limitTimeSelection("top");
+                $(".time_selection > .start_time").html(timeToClock(getStartTime()));
+            };
+
+            var resizeBottom = (event) => {
+                let topHeight = parseFloat($(".time_selection").css("top"));
+                let currentY = Math.max(positionCalculation(event), topHeight);
+                $(".time_selection").css("height", Math.max(currentY - topHeight, 1) + "px");
+                limitTimeSelection("bottom");
+                $(".time_selection > .end_time").html(timeToClock(getEndTime()));
+            };
+
+            var setLimitTop = () => {
+                let topLimit = (new Date().getHours() / 24 + (new Date().getMinutes() + 1) / (24 * 60) + new Date().getSeconds() / (24 * 60 * 60)) * $(clickedDay).height();
+                $(".time_selection")
+                    .css("height", parseFloat($(".time_selection").css("height")) + parseFloat($(".time_selection").css("top")) - topLimit + "px")
+                    .css("top", topLimit + "px");
+            };
+
+            var onMouseMoveFunc = (event) => {
+                if (clickedDay !== event.target || selected) {
+                    if (resizingDirection === 1) resizeBottom(event);
+                    if (resizingDirection === -1) resizeTop(event);
+                    return;
+                }
+
+                let currentY = positionCalculation(event);
+                $(".time_selection").css("top", Math.min(currentY, clickedPoint) + "px").css("height", Math.abs(currentY - clickedPoint) + "px");
+                {# Do not allow the selection of an area earlier than the current time #}
+                if (new Date() > currentDate()) setLimitTop();
+                if (currentY > clickedPoint) limitTimeSelection("bottom");
+                else limitTimeSelection("top");
+                $(".time_selection > .start_time").html(timeToClock(getStartTime()));
+                $(".time_selection > .end_time").html(timeToClock(getEndTime()));
+            };
+
+            {# The position calculation differs between touch and mouse events #}
+            var positionCalculation = (event) =>
+                (event.touches === undefined ? event.pageY : event.touches[0].pageY) - $(clickedDay).offset().top;
+
+
+            $(".day").on({
+                "touchstart": onMouseDownFunc, "touchend": onLetGoFunc, "touchmove": onMouseMoveFunc, "touchout": onLetGoFunc,
+                "mousedown": onMouseDownFunc, "mouseup": onLetGoFunc, "mousemove": onMouseMoveFunc, "mouseout": onLetGoFunc,
+            });
+        {% endif %}
     </script>
 
 {% endlocalize %}

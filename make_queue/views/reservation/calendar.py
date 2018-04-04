@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.utils import timezone
 from django.views.generic import TemplateView
 
 from make_queue.models import Machine, Quota
@@ -63,7 +64,9 @@ class ReservationCalendarComponentView(TemplateView):
             year, week = get_next_week(year, week, 1)
 
         return {'week_days': self.get_week_days_with_reservations(year, week, machine), "week": week, "year": year,
-                "machine": machine}
+                "machine": machine, "now": timezone.now(),
+                "max_reservation_time": self.request.user.is_authenticated and Quota.get_quota_by_machine(
+                    machine.literal, self.request.user).max_time_reservation or 0}
 
 
 class ReservationCalendarView(ReservationCalendarComponentView):
