@@ -5,3 +5,4 @@ Pillow
 python-social-auth
 python-dataporten-auth
 social-auth-app-django
+sorl-thumbnail

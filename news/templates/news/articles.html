@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
@@ -14,7 +15,10 @@
                     <img class="imgborder tr" src="{% static "web/img/top_right.svg" %}">
                     <img class="imgborder bl" src="{% static "web/img/bottom_left.svg" %}">
                     <img class="imgborder br" src="{% static "web/img/bottom_right.svg" %}"-->
-                    <img {% if article.contain %}style="object-fit: contain;" {% endif %} src="{% if article.image %}{{ article.image.url }}{% endif %}">
+
+                    {% thumbnail article.image "600" crop="center" as im %}
+                        <img src="{{ im.url }}" {% if article.contain %}style="object-fit: contain;" {% endif %}">
+                    {% endthumbnail %}
                 </aimg>
                 <atxt class="txt">
                     <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
