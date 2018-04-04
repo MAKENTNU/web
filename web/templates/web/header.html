@@ -24,43 +24,39 @@
         });
     </script>
     <div class="ui secondary inverted menu">
-        <a class="item" href="/">
+        <a class="item" href="{% url 'front-page' %}">
             Hjem
         </a>
-        <a class="item" href="/news/events/">
+        <a class="item" href="{% url 'events' %}">
             Arrangementer
         </a>
-        <a class="item" href="/news/articles/">
+        <a class="item" href="{% url 'articles' %}">
             Artikler
         </a>
-        <a class="item" href="/makerspace/">
+        <a class="item" href="{% url 'makerspace' %}">
             Makerverkstedet
         </a>
         <a class="item" href="{% url 'reservation_machines_overview' %}">
             Reservasjoner
         </a>
-        <a class="item" href="/about/">
-            Om oss
-        </a>
-
         {% if user.is_authenticated %}
-            {% if user|has_any_permissions or user.is_superuser %}
-                <a class = "item" href="/adminpanel/">
-                    Administrasjon
-                </a>
-            {% endif %}
             <div class="ui dropdown item">
                 <div class="text">{{ user.first_name|first_word }}</div>
                 <i class="dropdown icon"></i>
                 <div class="menu">
-                    <a class="item" href="/logout/">
+                    {% if user|has_any_permissions or user.is_superuser %}
+                        <a class="item" href="{% url 'adminpanel' %}">
+                            Administrasjon
+                        </a>
+                    {% endif %}
+                    <a class="item" href="{% url 'logout' %}">
                         Logout
                     </a>
                 </div>
             </div>
             <script>$('.dropdown').dropdown();</script>
         {% else %}
-            <a class="item" href="/login/">
+            <a class="item" href="{% url 'login' %}">
                 Login
             </a>
         {% endif %}

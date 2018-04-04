@@ -22,7 +22,7 @@
 
                     <div class="content">
                         <div class="header">
-                            <a href="/news/event/{{ event.event.id }}/">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
@@ -55,7 +55,7 @@
 
                     <div class="content">
                         <div class="header">
-                            <a href="/news/event/{{ event.event.id }}/">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>

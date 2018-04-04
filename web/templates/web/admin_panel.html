@@ -6,7 +6,7 @@
 {% block body %}
     <div class="ui text container">
         {% if user|has_any_news_permissions or user.is_superuser %}
-            <a class="ui yellow button" href="/news/admin/">Artikler og arrangementer</a>
+            <a class="ui yellow button" href="{% url 'admin' %}">Artikler og arrangementer</a>
         {% endif %}
         {% if perms.make_queue.can_create_event_reservation %}
             <a class="ui yellow button" href="{% url 'admin_reservation' %}">Reservasjoner</a>
