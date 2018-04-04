@@ -1,7 +1,7 @@
-from django.conf.urls import url
+from django.urls import path
 
 from contentbox.views import EditContentBoxView
 
 urlpatterns = [
-    url('^(?P<pk>[0-9]+)/edit/$', EditContentBoxView.as_view()),
+    path('<int:pk>/edit/', EditContentBoxView.as_view(), name='contentbox_edit'),
 ]

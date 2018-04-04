@@ -10,7 +10,7 @@
     <div style="height: 50px;"></div>
     <h1 class="ui text-centered make_col_yellow header">
         Arrangementer
-        <a class="make_col_blue" href="/news/event/create/"><i class="ui add icon"></i></a>
+        <a class="make_col_blue" href="{% url 'event-create' %}"><i class="ui add icon"></i></a>
     </h1>
     <div class="ui text container">
         {% if events %}
@@ -21,7 +21,7 @@
                         <div class="content">
                             <div class="header">
                                 <a class="inline-block make_col_blue header"
-                                   href="/news/event/{{ event.id }}/">{{ event.title }}</a>
+                                   href="{% url 'event' event.id %}">{{ event.title }}</a>
                                 <span>
                                     &nbsp;&nbsp;
                                     <i class="ui {{ event.featured|color }} star icon toggle"
@@ -37,18 +37,18 @@
                                     " pk="{{ event.pk }}" toggle="private" model="event">
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_event %}
-                                        <a class="inline-block make_col_blue" href="/news/event/{{ event.id }}/edit/">
+                                        <a class="inline-block make_col_blue" href="{% url 'event-edit' event.id %}">
                                             <i class="ui edit icon"></i>
                                         </a>
                                     {% endif %}
                                     {% if perms.news.delete_event %}
-                                        <a class="delete confirm inline-block make_col_blue" href="/news/event/{{ event.id }}/delete/">
+                                        <a class="delete confirm inline-block make_col_blue" href="{% url 'event-delete' event.id %}">
                                             <i class="ui delete icon"></i>
                                         </a>
                                     {% endif %}
                                     {% if perms.news.add_timeplace %}
                                         <a class="inline-block make_col_blue"
-                                           href="/news/timeplace/{{ event.id }}/new/">
+                                           href="{% url 'timeplace-new' event.id %}">
                                             <i class="icons">
                                                 <i class="time icon"></i>
                                                 <i class="noshadow bottom right corner add icon"></i>
@@ -80,19 +80,19 @@
                                                         &nbsp;&nbsp;&nbsp;
                                                             {% if perms.news.change_timeplace %}
                                                                 <a class="make_col_blue"
-                                                                   href="/news/timeplace/{{ timeplace.id }}/edit/">
+                                                                   href="{% url 'timeplace-edit' timeplace.id %}">
                                                                 <i class="ui edit icon"></i>
                                                             </a>
                                                             {% endif %}
                                                             {% if perms.news.delete_timeplace %}
                                                                 <a class="delete confirm make_col_blue"
-                                                                   href="/news/timeplace/{{ timeplace.id }}/delete/">
+                                                                   href="{% url 'timeplace-delete' timeplace.id %}">
                                                                     <i class="ui delete icon"></i>
                                                                 </a>
                                                             {% endif %}
                                                             {% if perms.news.add_timeplace %}
                                                                 <a class="make_col_blue"
-                                                                   href="/news/timeplace/{{ timeplace.id }}/duplicate/">
+                                                                   href="{% url 'timeplace-duplicate' timeplace.id %}">
                                                                 <i class="ui copy icon"></i>
                                                             </a>
                                                             {% endif %}
@@ -117,7 +117,7 @@
 
         <h1 class="ui text-centered make_col_yellow header">
             Artikler
-            <a class="make_col_blue" href="/news/article/create/"><i class="ui add icon"></i></a>
+            <a class="make_col_blue" href="{% url 'article-create' %}"><i class="ui add icon"></i></a>
         </h1>
         {% if articles %}
             <div class="ui divided list">
@@ -127,7 +127,7 @@
                         <div class="content">
                             <div class="header">
                                 <a class="inline-block make_col_blue header"
-                                   href="/news/article/{{ article.id }}/">{{ article.title }}</a>
+                                   href="{% url 'article' article.id %}">{{ article.title }}</a>
                                 <span>
                                     &nbsp;&nbsp;
                                     <i class="ui {{ article.featured|color }} star icon toggle"
@@ -144,13 +144,13 @@
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_article %}
                                         <a class="inline-block  make_col_blue"
-                                           href="/news/article/{{ article.id }}/edit/">
+                                           href="{% url 'article-edit' article.id %}">
                                             <i class="ui edit icon"></i>
                                         </a>
                                     {% endif %}
                                     {% if perms.news.delete_article %}
                                         <a class="delete confirm inline-block make_col_blue"
-                                           href="/news/article/{{ article.id }}/delete/">
+                                           href="{% url 'article-delete' article.id %}">
                                             <i class="ui delete icon"></i>
                                         </a>
                                     {% endif %}
