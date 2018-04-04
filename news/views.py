@@ -217,7 +217,7 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
     def get(self, request, pk):
         timeplace = get_object_or_404(TimePlace, pk=pk)
         now = timezone.now()
-        if now.date() > timeplace.start_date or now.date() == timeplace.start_date and now.time() > timeplace.start_time:
+        if now.date() > timeplace.start_date:
             delta_days = (timezone.now().date() - timeplace.start_date).days
             weeks = math.ceil(delta_days / 7)
         else:
@@ -237,6 +237,7 @@ class NewTimePlaceView(PermissionRequiredMixin, View):
     )
 
     def get(self, request, pk):
+        print("hey")
         event = get_object_or_404(Event, pk=pk)
         new_timeplace = TimePlace.objects.create(event=event)
         return HttpResponseRedirect(reverse('timeplace-edit', args=(new_timeplace.pk,)))
