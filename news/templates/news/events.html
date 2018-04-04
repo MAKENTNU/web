@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
@@ -16,8 +17,11 @@
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.event.image.url }}">
+
+                        {% thumbnail event.event.image "300" crop="center" as im %}
+                            <img src="{{ im.url }}"
+                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                        {% endthumbnail %}
                     </div>
 
                     <div class="content">
@@ -49,8 +53,10 @@
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.event.image.url }}">
+                        {% thumbnail event.event.image "300" crop="center" as im %}
+                            <img src="{{ im.url }}"
+                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                        {% endthumbnail %}
                     </div>
 
                     <div class="content">

@@ -52,7 +52,7 @@
                         <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
                         <div>
-                            <a href="{{ reservation.machine.location_url }}">
+                            <a href="{{ reservation.machine.location_url }}" target="_blank">
                                 <i class="location arrow icon"></i>{{ reservation.machine.location }}
                             </a>
                         </div>
@@ -115,7 +115,7 @@
                         <div class="header">{{ reservation.machine.name }}</div>
                         <div class="meta">
                             {{ reservation.machine.model }}<br/>
-                            <a class="make_my_reservation_blue_link" href="{{ reservation.machine.location_url }}">
+                            <a class="make_my_reservation_blue_link" href="{{ reservation.machine.location_url }}" target="_blank">
                                 <i class="location arrow icon"></i>{{ reservation.machine.location }}
                             </a>
                         </div>

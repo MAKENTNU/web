@@ -1,5 +1,6 @@
 {% extends 'web/base.html' %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block title %}{{ article.title }}{% endblock title %}
 
@@ -14,8 +15,10 @@
 {% block body %}
     <div class="article{% block event_classes %}{% endblock event_classes %}">
         <div id="sticky" class="ui text container basic segment">
-            <img src="{{ article.image.url }}"
-                 {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
+            {% thumbnail article.image "800" crop="center" as im %}
+                <img src="{{ im.url }}" {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
+            {% endthumbnail %}
+
             {% block rail %}
             {% endblock rail %}
 
