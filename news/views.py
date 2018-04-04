@@ -237,7 +237,6 @@ class NewTimePlaceView(PermissionRequiredMixin, View):
     )
 
     def get(self, request, pk):
-        print("hey")
         event = get_object_or_404(Event, pk=pk)
         new_timeplace = TimePlace.objects.create(event=event)
         return HttpResponseRedirect(reverse('timeplace-edit', args=(new_timeplace.pk,)))
