@@ -4,7 +4,7 @@
     <div class="ui text container" style="position: relative; margin: 100px 0;">
         {% if perms.contentbox.change_contentbox %}
             <a class="ui yellow button"
-               href="{{ url 'contentbox_edit' contentbox.id }}"
+               href="{% url 'contentbox_edit' contentbox.id %}"
                style="position: absolute; top: -50px; left: 0px;"
             >Rediger</a>
         {% endif %}
