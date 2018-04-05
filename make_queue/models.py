@@ -113,7 +113,7 @@ class Reservation(models.Model):
             return False
 
         # A reservation must have a valid time period
-        if self.start_time > self.end_time:
+        if self.start_time >= self.end_time:
             return False
 
         # Event reservations are always valid, if the time is not already reserved
