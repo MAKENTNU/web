@@ -55,5 +55,6 @@
         {% current_calendar_url machine as link_now %}
         {% include 'make_queue/reservation_calendar.html' with week_days=week_days link_prev=link_prev link_next=link_next %}
     </div>
+    <script>let allowed = {% if can_make_more_reservations %}true{% else %}false{% endif %};</script>
     <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}
