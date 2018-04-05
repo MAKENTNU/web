@@ -46,4 +46,4 @@ class PrinterHandler(LoginHandler):
             pass
 
 
-register_handler(PrinterHandler(), "printer_allowed")
+register_handler(PrinterHandler, "printer_allowed")
