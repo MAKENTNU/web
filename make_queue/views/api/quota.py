@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.views import View
 
-from dataporten.login_handlers import get_handler
+from dataporten.login_handlers import update_handler, get_handler
 from make_queue.models import Quota, Quota3D, QuotaSewing
 
 
@@ -64,6 +64,6 @@ class UpdateAllowed(View):
         :param request: The POST request
         """
         if get_handler("printer_allowed").is_correct_token(request.POST.get("token", "")):
-            get_handler("printer_allowed").update()
+            update_handler("printer_allowed")
             return HttpResponse("Successful update")
         return HttpResponse("Invalid token")
