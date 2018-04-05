@@ -107,6 +107,7 @@ $("#start_time").calendar({
         ampm: false,
         endCalendar: $("#end_time"),
         initialDate: null,
+        firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
             if (mode === "minute") return !isNonReservedDate(date);
             if (mode === "hour") return isReservedHour(date);
@@ -125,6 +126,7 @@ $("#start_time").calendar({
 
 $("#end_time").calendar({
     ampm: false,
+    firstDayOfWeek: 1,
     startCalendar: $("#start_time"),
 });
 
