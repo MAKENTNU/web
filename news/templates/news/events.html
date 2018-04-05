@@ -17,7 +17,8 @@
                             {{ event.start_date|date:"M" }}
                         </p>
                         <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.event.image.url }}">
+			     class="clickable"
+                             src="{{ event.event.image.url }}" href="{% url 'event' event.event.id %}">
                     </div>
 
                     <div class="content">
@@ -50,7 +51,8 @@
                             {{ event.start_date|date:"M" }}
                         </p>
                         <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.event.image.url }}">
+			     class="clickable"
+                             src="{{ event.event.image.url }}" href="{% url 'event' event.event.id %}">
                     </div>
 
                     <div class="content">
