@@ -24,7 +24,7 @@
         });
     </script>
     <div class="ui secondary inverted menu">
-        <a class="item" href="/">
+        <a class="item" href="{% url 'front-page' %}">
             Hjem
         </a>
         <a class="item" href="{% url 'events' %}">
@@ -50,14 +50,14 @@
                         </a>
                     {% endif %}
                     <a class="item" href="{% url 'logout' %}">
-                        Logout
+                        Logg ut
                     </a>
                 </div>
             </div>
             <script>$('.dropdown').dropdown();</script>
         {% else %}
-            <a class="item" href="/login/">
-                Login
+            <a class="item" href="{% url 'login' %}">
+                Logg inn
             </a>
         {% endif %}
         <!--div class="right menu">

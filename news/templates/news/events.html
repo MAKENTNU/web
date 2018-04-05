@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
@@ -16,13 +17,16 @@
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.event.image.url }}">
+
+                        {% thumbnail event.event.image "300" crop="center" as im %}
+                            <img src="{{ im.url }}"
+                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                        {% endthumbnail %}
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="/news/event/{{ event.event.id }}/">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
@@ -49,13 +53,15 @@
                             {{ event.start_date|date:"d" }}<br>
                             {{ event.start_date|date:"M" }}
                         </p>
-                        <img {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}
-                             src="{{ event.event.image.url }}">
+                        {% thumbnail event.event.image "300" crop="center" as im %}
+                            <img src="{{ im.url }}"
+                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                        {% endthumbnail %}
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="/news/event/{{ event.event.id }}/">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>

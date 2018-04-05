@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load thumbnail %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
@@ -9,12 +10,15 @@
     <div class="ui container">
         <div class="articles">
             {% for article in articles %}
-                <aimg class="clickable img" href="/news/article/{{ article.id }}/">
+                <aimg class="clickable img" href="{% url 'article' article.id %}">
                     <!--img class="imgborder tl" src="{% static "web/img/top_left.svg" %}">
                     <img class="imgborder tr" src="{% static "web/img/top_right.svg" %}">
                     <img class="imgborder bl" src="{% static "web/img/bottom_left.svg" %}">
                     <img class="imgborder br" src="{% static "web/img/bottom_right.svg" %}"-->
-                    <img {% if article.contain %}style="object-fit: contain;" {% endif %} src="{% if article.image %}{{ article.image.url }}{% endif %}">
+
+                    {% thumbnail article.image "600" crop="center" as im %}
+                        <img src="{{ im.url }}" {% if article.contain %}style="object-fit: contain;" {% endif %}">
+                    {% endthumbnail %}
                 </aimg>
                 <atxt class="txt">
                     <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
@@ -22,7 +26,7 @@
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
                     <div>
-                        <a href="/news/article/{{ article.id }}/"><h2>{{ article.title }}</h2></a>
+                        <a href="{% url 'article' article.id %}"><h2>{{ article.title }}</h2></a>
                         <p>{{ article.clickbait }}</p>
                     </div>
                 </atxt>
