@@ -49,7 +49,7 @@ class NewsBase(models.Model):
         verbose_name='Ikke crop bildet',
     )
     featured = models.BooleanField(
-        default=False,
+        default=True,
         verbose_name='Fremhevet',
     )
     hidden = models.BooleanField(
