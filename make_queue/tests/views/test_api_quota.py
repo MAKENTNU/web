@@ -3,7 +3,7 @@ from django.urls import reverse
 from mock import patch
 
 import web
-from dataporten.login_handlers import register_handler
+from dataporten.login_handlers import register_handler, set_cache
 from make_queue.util.login_handlers import PrinterHandler
 
 
@@ -19,8 +19,8 @@ class UpdateAllowedTest(TestCase):
     def test_incorrect_token(self, post_mock):
         post_mock.return_value = self.PostRequestMock()
         web.settings.queue_token = "Random token"
-        printer_handler = PrinterHandler()
-        register_handler(printer_handler, "printer_allowed")
+        set_cache({})
+        register_handler(PrinterHandler, "printer_allowed")
         self.assertEqual(post_mock.call_count, 1)
         response = Client().post(reverse("update_allowed_3D_printer"), data={"token": "Invalid token"})
         self.assertEqual(200, response.status_code)
@@ -29,8 +29,8 @@ class UpdateAllowedTest(TestCase):
     def test_correct_token(self, post_mock):
         post_mock.return_value = self.PostRequestMock()
         web.settings.queue_token = "Random token"
-        printer_handler = PrinterHandler()
-        register_handler(printer_handler, "printer_allowed")
+        set_cache({})
+        register_handler(PrinterHandler, "printer_allowed")
         self.assertEqual(post_mock.call_count, 1)
         response = Client().post(reverse("update_allowed_3D_printer"), data={"token": "Random token"})
         self.assertEqual(200, response.status_code)
