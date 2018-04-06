@@ -245,7 +245,7 @@ class NewTimePlaceView(PermissionRequiredMixin, View):
 class AdminArticleToggleView(PermissionRequiredMixin, View):
     model = Article
     permission_required = (
-        'news.edit_article',
+        'news.change_article',
     )
 
     def post(self, request):
