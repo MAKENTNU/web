@@ -267,14 +267,14 @@ class AdminArticleToggleView(PermissionRequiredMixin, View):
 class AdminEventToggleView(AdminArticleToggleView):
     model = Event
     permission_required = (
-        'news.edit_event',
+        'news.change_event',
     )
 
 
 class AdminTimeplaceToggleView(AdminArticleToggleView):
     model = TimePlace
     permission_required = (
-        'news.edit_timeplace',
+        'news.change_timeplace',
     )
 
 
