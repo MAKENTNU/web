@@ -75,6 +75,8 @@
                 <i class="dropdown icon"></i>
                 {{ event.start_date|date:"d. M" }}
             </div>
+
+
             <div class="content">
                 <div class="transition hidden">
                     {% if event.start_date == event.end_date or not event.end_date %}
@@ -114,6 +116,9 @@
                 </div>
             </div>
         {% endfor %}
+        <script>
+            $('.ui.accordion').accordion('open', 0);
+        </script>
     </div>
     <script>$('.ui.accordion').accordion();</script>
 {% endblock event_accordion %}
