@@ -32,4 +32,25 @@ $("#period_desktop, #period_mobile").calendar({
     }
 );
 
-$("#create_new_reservation").popup();
+$(".enable_popup").popup();
+
+if (allowed) {
+    function timeSelectionPopupHTML(date, startTime, endTime, machine) {
+        let container = $("<div>");
+        $("<div>").addClass("header").html("Ny reservasjon").appendTo(container);
+        $("<div>").html(date).appendTo(container);
+        $("<div>").html(startTime + " - " + endTime).appendTo(container);
+        let form = $("<form>").attr("method", "POST").attr("action", "/reservation/make/" + machine.type + "/" + machine.pk + "/").addClass("ui form").appendTo(container);
+        $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
+        $("<input>").addClass("make_hidden").val(date + " " + startTime).attr("name", "start_time").appendTo(form);
+        $("<input>").addClass("make_hidden").val(date + " " + endTime).attr("name", "end_time").appendTo(form);
+        $("<input>").addClass("make_hidden").val(machine.type).attr("name", "machine_type").appendTo(form);
+        $("<input>").addClass("make_hidden").val(machine.pk).attr("name", "machine_name").appendTo(form);
+        $("<input>").attr("type", "submit").addClass("ui time_selection_button make_yellow button").val("Reserver").appendTo(form);
+        return container.children();
+    }
+} else {
+    function timeSelectionPopupHTML(date, startTime, endTime, machine) {
+        return $("<div>").html("Kan ikke lage flere reservasjoner")
+    }
+}
