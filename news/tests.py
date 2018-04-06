@@ -26,6 +26,12 @@ class ModelTestCase(TestCase):
         self.assertEqual(article.title, 'TEST_TITLE')
         self.assertEqual(article.title, str(article))
 
+        title = 'Test event'
+        event = Event.objects.create(title=title)
+        time_place = self.create_time_place(event, 0, 0)
+        date_str = timezone.now().date().strftime('%Y.%m.%d')
+        self.assertEqual(str(time_place), "{} - {}".format(title, date_str))
+
     def test_article_manager(self):
         Article.objects.create(
             title='NOT PUBLISHED',
