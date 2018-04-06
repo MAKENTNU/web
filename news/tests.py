@@ -175,50 +175,50 @@ class HiddenPrivateTestCase(TestCase):
             private=False,
         )
 
-        def test_hidden_event(self):
-            response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-            self.assertEqual(response.status_code, 404)
-            self.add_permission('change_event')
-            response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-            self.assertEqual(response.status_code, 200)
+    def test_hidden_event(self):
+        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        self.assertEqual(response.status_code, 404)
+        self.add_permission('change_event')
+        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        self.assertEqual(response.status_code, 200)
 
-        def test_hidden_article(self):
-            response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
-            self.assertEqual(response.status_code, 404)
-            self.add_permission('change_article')
-            response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
-            self.assertEqual(response.status_code, 200)
+    def test_hidden_article(self):
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 404)
+        self.add_permission('change_article')
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 200)
 
-        def test_private_event(self):
-            self.event.hidden = False
-            self.event.save()
-            response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-            self.assertEqual(response.status_code, 200)
-            self.event.private = True
-            self.event.save()
-            response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-            self.assertEqual(response.status_code, 404)
-            self.add_permission('news.can_view_private')
-            response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-            self.assertEqual(response.status_code, 200)
+    def test_private_event(self):
+        self.event.hidden = False
+        self.event.save()
+        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.event.private = True
+        self.event.save()
+        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        self.assertEqual(response.status_code, 404)
+        self.add_permission('can_view_private')
+        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        self.assertEqual(response.status_code, 200)
 
-        def test_private_article(self):
-            self.article.hidden = False
-            self.article.save()
-            response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
-            self.assertEqual(response.status_code, 200)
-            self.article.private = True
-            self.article.save()
-            response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
-            self.assertEqual(response.status_code, 404)
-            self.add_permission('news.can_view_private')
-            response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
-            self.assertEqual(response.status_code, 200)
+    def test_private_article(self):
+        self.article.hidden = False
+        self.article.save()
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 200)
+        self.article.private = True
+        self.article.save()
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 404)
+        self.add_permission('can_view_private')
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 200)
 
-        def test_not_published_article(self):
-            self.article.pub_date = timezone.now() + timedelta(days=1)
-            response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
-            self.assertEqual(response.status_code, 404)
-            self.add_permission('change_article')
-            response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
-            self.assertEqual(response.status_code, 200)
+    def test_not_published_article(self):
+        self.article.pub_date = timezone.now() + timedelta(days=1)
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 404)
+        self.add_permission('change_article')
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 200)
