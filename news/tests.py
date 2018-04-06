@@ -1,4 +1,5 @@
 from datetime import timedelta
+import json
 
 from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -172,6 +173,20 @@ class ViewTestCase(TestCase):
         new = TimePlace.objects.latest('pk')
         self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
         self.assertEquals(new.event, self.event)
+
+    def test_admin_article_toggle_view(self):
+        def toggle(pk, attr):
+            response = self.client.post(reverse('article-toggle'), {'pk': pk, 'toggle': attr})
+            self.assertEqual(response.status_code, 200)
+            return json.loads(response.content)
+
+        self.add_permission('change_article')
+        self.assertEquals(toggle(-1, 'hidden'), {})
+        self.assertEquals(toggle(self.article.pk, 'ajfal'), {})
+
+        hidden = self.article.hidden
+        self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
+        self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
 
 class HiddenPrivateTestCase(TestCase):
