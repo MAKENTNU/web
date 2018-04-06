@@ -148,6 +148,31 @@ class ViewTestCase(TestCase):
         response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
+    def test_timeplace_duplicate(self):
+        tp = TimePlace.objects.create(event=self.event)
+        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        self.assertNotEqual(response.status_code, 200)
+        self.add_permission('add_timeplace')
+        self.add_permission('change_timeplace')
+        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+
+        new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
+        self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
+
+        new_start_date = (tp.start_date + timedelta(weeks=1)).date()
+        new_end_date = (tp.end_date + timedelta(weeks=1)).date() if tp.end_date else None
+        self.assertTrue(new.hidden)
+        self.assertEqual(new.start_date, new_start_date)
+        self.assertEqual(new.end_date, new_end_date)
+
+    def test_timeplace_new(self):
+        self.add_permission('add_timeplace')
+        self.add_permission('change_timeplace')
+        response = self.client.get(reverse('timeplace-new', args=[self.event.pk]))
+        new = TimePlace.objects.latest('pk')
+        self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
+        self.assertEquals(new.event, self.event)
+
 
 class HiddenPrivateTestCase(TestCase):
     def add_permission(self, codename):
