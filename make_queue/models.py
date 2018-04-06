@@ -60,7 +60,7 @@ class Machine(models.Model):
 class Printer3D(Machine):
     literal = "3D-printer"
     cannot_use_text = "Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt kurset, men ikke " \
-                      "har tilgang, ta kontakt med styret@makentnu.no "
+                      "har tilgang, ta kontakt med 3dprint@makentnu.no "
 
     def can_user_use(self, user):
         return hasattr(user, "quota3d") and user.quota3d.can_print
@@ -87,6 +87,7 @@ class Reservation(models.Model):
     showed = models.NullBooleanField(default=None)
     special = models.BooleanField(default=False)
     special_text = models.CharField(max_length=20)
+    reservation_future_limit_days = 28
 
     @abstractmethod
     def get_quota(self):
@@ -112,31 +113,39 @@ class Reservation(models.Model):
             return False
 
         # A reservation must have a valid time period
-        if self.start_time > self.end_time:
+        if self.start_time >= self.end_time:
             return False
 
         # Event reservations are always valid, if the time is not already reserved
         if self.event or self.special:
             return self.user.has_perm("make_queue.can_create_event_reservation")
 
+        # Limit the amount of time forward in time a reservation can be made
+        if not self.is_within_allowed_period_for_reservation():
+            return False
+
         # Check if the reservation is shorter than the maximum duration allowed for the user
         if self.end_time - self.start_time > timedelta(hours=self.get_quota().max_time_reservation):
             return False
 
-        # Calculate the number of reservations the user has in the given period
+        # Check if user has more than x% of reservations
+        if self.has_reached_maximum_number_of_reservations():
+            return False
+
+        # If a primary key is set, the reservation is already saved once, and does not
+        return self.pk is not None or self.get_quota().can_make_new_reservation()
+
+    def is_within_allowed_period_for_reservation(self):
+        return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
+
+    def has_reached_maximum_number_of_reservations(self):
         num_reservations_in_period = 0
         for machine in self.get_machine().__class__.objects.all():
             num_reservations_in_period += machine.reservations_in_period(self.start_time,
                                                                          self.end_time).filter(user=self.user,
                                                                                                event=None).exists()
-
-        # Check if user has more than x% of reservations
-        if (num_reservations_in_period + (self.pk is None)) > ceil(
-                self.get_machine().__class__.objects.all().count() * self.percentage_of_machines_at_the_same_time):
-            return False
-
-        # If a primary key is set, the reservation is already saved once, and does not
-        return self.pk is not None or self.get_quota().can_make_new_reservation()
+        return (num_reservations_in_period + (self.pk is None)) > ceil(
+            self.get_machine().__class__.objects.all().count() * self.percentage_of_machines_at_the_same_time)
 
     def can_delete(self):
         return self.start_time > timezone.now()
@@ -150,6 +159,9 @@ class Reservation(models.Model):
 
     class Meta:
         abstract = True
+        permissions = (
+            ("can_view_reservation_user", "Can view reservation user"),
+        )
 
     @classmethod
     def get_reservation(cls, machine_type, pk):

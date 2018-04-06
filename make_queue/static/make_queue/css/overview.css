@@ -13,3 +13,17 @@
 .make_reservation_calendar_button_full_width {
     width: 100%;
 }
+
+a.wrapped.button {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.column.no.padding {
+    padding: 0 !important;
+}
+
+.time_selection_button.make_yellow.button {
+    width: 100% !important;
+    margin-top: 0.75em;
+}

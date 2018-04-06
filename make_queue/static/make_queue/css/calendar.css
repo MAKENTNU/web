@@ -1,45 +1,3 @@
-.four.wide.column.make_collapsed+.three.wide.column .make_reservation_calendar_time_table_hour:first-of-type {
-    border-left: 1px solid grey;
-}
-
-
-.make_reservation_calendar_time_table_hour {
-    border-top: 1px solid grey;
-    border-right: 1px solid grey;
-}
-
-.make_reservation_calendar_time_table_dashed_line {
-    position: absolute;
-    margin-left: -1px;
-    border-left: 1px dashed #3e3e3e;
-    height: 100%;
-    z-index: 5;
-}
-
-.make_reservation_calendar_time_table_current_time {
-    position: absolute;
-    margin-left: -1px;
-    border-left: 2px solid #ff0000;
-    height: 100%;
-    z-index: 1000;
-}
-
-.make_reservation_calendar_time_table_offset_fix {
-    margin-left: 1px !important;
-}
-
-.make_reservation_calendar_time_table_dashed_line.left {
-    left: 25%;
-}
-
-.make_reservation_calendar_time_table_dashed_line.middle {
-    left: 50%;
-}
-
-.make_reservation_calendar_time_table_dashed_line.right {
-    left: 75%;
-}
-
 .make_reservation_calendar_time_table_event {
     background-color: #21ba45;
 }
@@ -59,40 +17,6 @@
 .make_reservation_calendar_time_table_make {
     background-color: #dcddde;
     z-index: 200;
-
-}
-
-.make_reservation_calendar_time_table_make > div {
-    display: inline-block;
-    padding-top: 0.66em;
-    padding-bottom: 0.66em;
-    font-size: 1.5em;
-    z-index: 300;
-}
-
-.make_reservation_calendar_time_table_full_row {
-    border: 1px solid gray;
-}
-
-.make_reservation_calendar_time_table_row {
-    border-left: 1px solid gray;
-    overflow: hidden;
-    padding: 0 !important;
-}
-
-.make_reservation_calendar_full_width_controller {
-    width: 100%;
-}
-
-.make_reservation_calendar_center {
-    display: inline-block;
-    position: absolute;
-    left: 50%;
-    transform: translate(-50%, 0);
-}
-
-.make_reservation_calendar_time_table_full_row:not(:last-child) {
-    border-bottom: 0;
 }
 
 .make_reservation_calendar_legend_box {
@@ -107,44 +31,133 @@
     padding-right: 0.5em;
 }
 
-.make_reservation_calendar_legend_box:not(:first-child) {
-    margin-left: 20px;
-}
-
 .make_reservation_calendar_time_table_calendar_fill {
     width: 100%;
 }
 
 .make_reservation_calendar_time_table_item {
     position: absolute;
-    text-align: center;
-    height: 100%;
-    /* -webkit-transform: skew(-15deg);
-    -moz-transform: skew(-15deg);
-    -o-transform: skew(-15deg);*/
+    width: 100%;
 }
 
 .make_reservation_calendar_high_z_index {
     z-index: 100;
 }
 
+@media screen and (max-width: 1000px) {
+    .make_reservation_calendar_long_month {
+        display: none;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .make_reservation_calendar_short_month {
+        display: none;
+    }
+}
+
 @media screen and (max-width: 600px) {
-    .make_reservation_calendar_time_table_hour:nth-child(3n + 2) {
-        display: none !important;
-    }
-
-    .make_reservation_calendar_time_table_hour:nth-child(3n) {
-        display: none !important;
-    }
-
     .make_reservation_calendar_legend {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media screen and (min-width: 600px) and (max-width: 1200px) {
-    .make_reservation_calendar_time_table_hour:nth-child(2n) {
-        display: none !important;
-    }
+.popup {
+    position: absolute;
+}
+
+.title_large {
+    font-size: 1.2em;
+    text-align: center !important;
+}
+
+.title_medium {
+    font-size: 1.1em;
+    font-weight: normal;
+    text-align: center !important;;
+}
+
+.title_small {
+    font-size: 0.9em;
+    font-weight: normal;
+    text-align: center !important;;
+}
+
+.day {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+
+.hour_indication_line {
+    width: 100%;
+    height: 12.5%;
+    border-bottom: 1px solid lightgrey;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.time_selection {
+    position: absolute;
+    width: 100%;
+    background-color: #38caff;
+    pointer-events: none;
+    border-radius: 0.3em;
+}
+
+.time_selection > .start_time {
+    left: 0;
+    top: -0.7em;
+}
+
+.time_selection > .end_time {
+    right: 0;
+    bottom: -0.7em;
+}
+
+.time_selection > .end_time, .time_selection > .start_time {
+    position: absolute;
+    border: 1px solid lightgrey;
+    font-size: 0.8em;
+    background-color: white;
+    border-radius: 1em;
+    width: 3em;
+    z-index: 200;
+}
+
+.time_selection > .extend {
+    height: 10px;
+    position: absolute;
+    width: 100%;
+    pointer-events: all;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.time_selection > .extend:hover {
+    cursor: ns-resize;
+}
+
+.time_selection > .extend.top {
+    top: 0;
+    border-radius: 0.3em 0.3em 0 0;
+}
+
+.time_selection > .extend.bottom {
+    bottom: 0;
+    border-radius: 0 0 0.3em 0.3em;
+}
+
+.half_height {
+    height: 0.5em;
+}
+
+td.wrapping {
+    text-align: center !important;
+    height: 1px !important;
+    padding: 0 !important;
 }

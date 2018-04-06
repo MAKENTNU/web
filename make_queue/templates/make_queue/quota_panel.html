@@ -45,7 +45,7 @@
                 <div class="permissions">
                     <div class="ui huge header">Valgt bruker</div>
                     <div class="ui cards" id="quota_user">
-                        {% include 'make_queue/quota/quota_user.html' %}
+                        {% include 'make_queue/quota/quota_user.html' with user=request.user %}
                     </div>
                 </div>
             </div>
