@@ -166,6 +166,29 @@ class ViewTestCase(TestCase):
         self.assertEqual(new.start_date, new_start_date)
         self.assertEqual(new.end_date, new_end_date)
 
+    def test_timplace_duplicate_old(self):
+        self.add_permission('add_timeplace')
+        self.add_permission('change_timeplace')
+
+        start_date = timezone.now().date() - timedelta(weeks=2, days=3)
+        end_date = start_date + timedelta(days=1)
+        new_start_date = start_date + timedelta(weeks=3)
+        new_end_date = end_date + timedelta(weeks=3)
+
+        tp = TimePlace.objects.create(
+            event=self.event,
+            start_date=start_date,
+            end_date=end_date,
+            hidden=False,
+        )
+
+        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        self.assertNotEqual(response.status_code, 200)
+        new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
+
+        self.assertEqual(new.start_date, new_start_date)
+        self.assertEqual(new.end_date, new_end_date)
+
     def test_timeplace_new(self):
         self.add_permission('add_timeplace')
         self.add_permission('change_timeplace')
