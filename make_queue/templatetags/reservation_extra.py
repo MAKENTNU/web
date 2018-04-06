@@ -2,7 +2,7 @@ from django import template
 from django.utils import timezone
 from django.urls import reverse
 
-from make_queue.helper import date_to_local
+from make_queue.util.time import date_to_local
 
 register = template.Library()
 
@@ -19,6 +19,11 @@ def current_calendar_url(machine):
     current_time = timezone.localtime(timezone.now())
     return reverse('reservation_calendar',
                    kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'machine': machine})
+
+
+@register.simple_tag()
+def numeric_range(start, end, step=1):
+    return list(range(start, end, step))
 
 
 @register.simple_tag()
