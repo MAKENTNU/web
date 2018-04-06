@@ -19,7 +19,7 @@
                         </p>
 
                         {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}"
+                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
                                  {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
                         {% endthumbnail %}
                     </div>
@@ -54,7 +54,7 @@
                             {{ event.start_date|date:"M" }}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}"
+                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
                                  {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
                         {% endthumbnail %}
                     </div>
