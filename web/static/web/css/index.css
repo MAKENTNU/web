@@ -23,7 +23,7 @@
     display: none;
 }
 
-atxt, aimg {
+.article-text, .article-img {
     position: relative;
 }
 
@@ -31,17 +31,17 @@ atxt, aimg {
     cursor: pointer;
 }
 
-atxt h2, .events .header a {
+.article-text h2, .events .header a {
     color: rgb(248, 200, 17);
     text-transform: uppercase;
     font-size: 32px;
 }
 
-atxt h2 {
+.article-text h2 {
     text-align: center;
 }
 
-atxt p, .events .description p {
+.article-text p, .events .description p {
     font-size: 16px;
     line-height: 26px;
 }
@@ -50,7 +50,7 @@ atxt p, .events .description p {
     font-size: 24px;
 }
 
-.txtborder, .imgborder {
+.txtborder {
     position: absolute;
     display: none;
     width: 50px !important;
@@ -58,31 +58,29 @@ atxt p, .events .description p {
     z-index: -10;
 }
 
-.txtborder.tl, .imgborder.tl {
+.txtborder.tl {
     top: 0;
     left: 0;
 }
 
-.txtborder.tr, .imgborder.tr {
+.txtborder.tr {
     top: 0;
     right: 0;
 }
 
-.txtborder.bl, .imgborder.bl {
+.txtborder.bl {
     bottom: 0;
     left: 0;
 }
 
-.txtborder.br, .imgborder.br {
+.txtborder.br {
     bottom: 0;
     right: 0;
 }
 
-atxt:first-of-type .txtborder.tr, atxt:last-of-type:nth-of-type(2n) .txtborder.bl, atxt:last-of-type:nth-of-type(2n+1) .txtborder.br {
-    display: inline;
-}
-
-aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg:nth-of-type(2n) .imgborder.tr, aimg:nth-of-type(2n) .imgborder.br {
+.article-text.article-first .txtborder.tr,
+.article-text.article-last.float-right .txtborder.bl,
+.article-text.article-last.float-left .txtborder.br {
     display: inline;
 }
 
@@ -119,22 +117,22 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
     margin: 80px 0;
 }
 
-.articles .img, .articles .txt {
+.articles .article-img, .articles .article-text {
     height: 300px;
 }
 
-.articles .img {
+.articles .article-img {
     grid-column: 2/3;
 }
 
-.articles .txt {
+.articles .article-text {
     overflow-wrap: break-word;
     overflow: hidden;
     display: grid;
     align-items: center;
 }
 
-.articles .txt p {
+.articles .article-text p {
     padding: 0 50px;
     padding-bottom: 50px;
 }
@@ -143,15 +141,15 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
     margin-bottom: 5px;
 }
 
-.articles .txt:nth-of-type(2n+1), .articles .img:nth-of-type(2n) {
+.articles .float-left {
     grid-column: 3/4;
 }
 
-.articles .txt:nth-of-type(2n), .articles .img:nth-of-type(2n+1) {
+.articles .float-right {
     grid-column: 2/3;
 }
 
-.articles img {
+.articles .article-img {
     object-fit: cover;
     width: 100%;
     height: 100%;
@@ -167,7 +165,7 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
         grid-template-columns: 1fr 20fr 1fr;
     }
 
-    .articles .txt, .articles .img {
+    .articles .article-text, .articles .article-img {
         grid-column: 2/3 !important;
     }
 
@@ -187,25 +185,25 @@ aimg:nth-of-type(2n+1) .imgborder.tl, aimg:nth-of-type(2n+1) .imgborder.bl, aimg
         grid-template-rows: auto;
     }
 
-    .articles .txt {
+    .articles .article-text {
         align-items: flex-start;
     }
 
-    atxt h2 {
+    .article-text h2 {
         text-align: left;
         margin-top: 20px !important;
     }
 
-    atxt p, atxt a, atxt h2 {
+    .article-text p, .article-text a, .article-text h2 {
         margin-left: 0 !important;
         padding: 0 !important;
     }
 
-    atxt p {
+    .article-text p {
         padding-bottom: 80px !important;
     }
 
-    .articles .txt {
+    .articles .article-text {
         height: auto;
         max-height: 300px;
     }
