@@ -62,7 +62,7 @@
 {% endblock rail %}
 
 
-{% block event_accordian %}
+{% block event_accordion %}
     <div class="accordion">
         {% if article.multiday and article.hoopla %}
             <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
@@ -116,4 +116,4 @@
         {% endfor %}
     </div>
     <script>$('.ui.accordion').accordion();</script>
-{% endblock event_accordian %}
+{% endblock event_accordion %}
