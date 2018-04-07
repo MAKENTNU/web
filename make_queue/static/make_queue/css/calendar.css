@@ -1,22 +1,30 @@
 .make_reservation_calendar_time_table_event {
     background-color: #21ba45;
-}
-
-.make_reservation_calendar_time_table_event:hover {
-    cursor: pointer;
+    border-top: 1px solid #1b8f3a;
+    border-bottom: 1px solid #1b8f3a;
 }
 
 .make_reservation_calendar_time_table_non_event {
     background-color: #2185d0;
+    border-top: 1px solid #1b629d;
+    border-bottom: 1px solid #1b629d;
 }
 
 .make_reservation_calendar_time_table_my_non_event {
-    background-color: rgb(248, 200, 17);
+    background-color: #f8c811;
+    border-top: 1px solid #d7ab0f;
+    border-bottom: 1px solid #d7ab0f;
 }
 
 .make_reservation_calendar_time_table_make {
     background-color: #dcddde;
+    border-top: 1px solid #babbbc;
+    border-bottom: 1px solid #babbbc;
     z-index: 200;
+}
+
+.make_reservation_calendar_time_table_event:hover {
+    cursor: pointer;
 }
 
 .make_reservation_calendar_legend_box {

@@ -85,6 +85,9 @@
                                                 </div>
                                                 <div>
                                                     <b>Epost:</b> {{ reservation.reservation.user.email }}
+                                                </div>
+                                                <div>
+                                                    <b>Tidspunkt:</b> {{ reservation.reservation.start_time|date:"D H:i"|title }} - {{ reservation.reservation.end_time|date:"D H:i"|title }}
                                                 </div>"
                                         {% endif %}>
                                 </div>
