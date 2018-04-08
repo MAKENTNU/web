@@ -102,6 +102,8 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     @patch("django.utils.timezone.now")
     def test_disallow_overlapping_reservations(self, now_mock):
         now_mock.return_value = local_to_date(datetime(2018, 3, 12, 12, 0, 0))
+        self.user_quota.max_number_of_reservations = 3
+        self.user_quota.save()
 
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
                                      "Saving should be valid")
@@ -123,6 +125,14 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         # Start before, end after
         self.check_reservation_invalid(self.create_reservation(timedelta(minutes=50), timedelta(hours=2, minutes=10)),
                                        "Reservation should not be able to encapsulate another")
+
+        # End at the start time of other
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=0), timedelta(hours=1)),
+                                     "A reservation should be allowed to end at the same time another one starts")
+
+        # Start at the end time of other
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=2), timedelta(hours=3)),
+                                     "A reservation should be allowed to start at the same time another one ends")
 
     def test_make_event_without_event_permission(self):
         self.check_reservation_invalid(
