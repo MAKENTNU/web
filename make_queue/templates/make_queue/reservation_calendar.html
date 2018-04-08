@@ -85,7 +85,13 @@
                                                 </div>
                                                 <div>
                                                     <b>Epost:</b> {{ reservation.reservation.user.email }}
-                                                </div>"
+                                                </div>
+                                                {% if reservation.reservation.comment %}
+                                                    <div>
+                                                        <div><b>Kommentar:</b></div>
+                                                        <div>{{ reservation.reservation.comment }}</div>
+                                                    </div>
+                                                {% endif %}"
                                         {% endif %}>
                                 </div>
                             {% endif %}
