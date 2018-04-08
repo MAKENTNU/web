@@ -59,6 +59,10 @@
                         {% for line in num_indication_lines %}
                             <div class="hour_indication_line"></div>
                         {% endfor %}
+                        {% is_current_date day.date.date as should_include_current_time_indicator %}
+                        {% if should_include_current_time_indicator %}
+                            <div class="current_time_indicator" style="top: {% get_current_time_of_day %}%"></div>
+                        {% endif %}
                         {% for reservation in day.reservations %}
                             {% if reservation.length %}
                                 <div class="make_reservation_calendar_time_table_item
