@@ -88,6 +88,7 @@ class Reservation(models.Model):
     special = models.BooleanField(default=False)
     special_text = models.CharField(max_length=20)
     reservation_future_limit_days = 28
+    comment = models.TextField(max_length=2000, default="")
 
     @abstractmethod
     def get_quota(self):
