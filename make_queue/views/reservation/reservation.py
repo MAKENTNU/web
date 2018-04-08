@@ -81,6 +81,7 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
             context_data["quota"] = reservation.get_quota()
+            context_data["comment"] = reservation.comment
         # Otherwise populate with default information given to the view
         else:
             context_data["selected_machine"] = kwargs["machine"]
@@ -129,7 +130,7 @@ class MakeReservationView(ReservationCreateOrChangeView):
 
         reservation = reservation_type(start_time=form.cleaned_data["start_time"],
                                        end_time=form.cleaned_data["end_time"], user=self.request.user,
-                                       machine=form.cleaned_data["machine"])
+                                       machine=form.cleaned_data["machine"], comment=form.cleaned_data["comment"])
 
         if form.cleaned_data["event"]:
             reservation.event = form.cleaned_data["event"]
@@ -195,6 +196,8 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         # The user is not allowed to change the machine for a reservation
         if reservation.get_machine() != form.cleaned_data["machine"]:
             return redirect("my_reservations")
+
+        reservation.comment = form.cleaned_data["comment"]
 
         reservation.start_time = form.cleaned_data["start_time"]
         reservation.end_time = form.cleaned_data["end_time"]
