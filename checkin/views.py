@@ -99,9 +99,7 @@ class SuggestSkillView(TemplateView):
         suggestion = request.POST.get('suggested-skill')
         profile = request.user.profile
 
-        # TODO: check for whitespace input and other nonsense
-
-        if not suggestion:
+        if not suggestion.strip():
             return HttpResponseRedirect(reverse('suggest'))
 
         if Skill.objects.filter(title=suggestion).exists():
@@ -116,6 +114,8 @@ class SuggestSkillView(TemplateView):
 
             if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5 or SuggestSkill.objects.get(title=suggestion).approved:
                 Skill.objects.create(title=suggestion)
+                SuggestSkill.objects.get(title=suggestion).delete()
+                messages.error(request, "Ferdighet lagt til!")
 
         return HttpResponseRedirect(reverse('suggest'))
 
