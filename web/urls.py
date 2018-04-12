@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.urls import path, re_path, include
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 from django.views.static import serve
@@ -13,6 +14,10 @@ from web.views import IndexView, AdminPanelView
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 urlpatterns = [
+    path('i18n/', include('django.conf.urls.i18n')),
+]
+
+urlpatterns += i18n_patterns(
     path('reservation/', include('make_queue.urls')),
     path('adminpanel/', AdminPanelView.as_view(), name='adminpanel'),
     path('admin/', admin.site.urls),
@@ -29,4 +34,5 @@ urlpatterns = [
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
-]
+    prefix_default_language=False,
+)

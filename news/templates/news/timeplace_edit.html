@@ -1,7 +1,8 @@
 {% extends 'web/base.html' %}
 {% load staticfiles %}
+{% load i18n %}
 
-{% block title %}Rediger tidspunkt{% endblock title %}
+{% block title %}{% trans "Edit time" %}{% endblock title %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/calendar/calendar.min.css" %}">
@@ -17,7 +18,7 @@
 
 {% block body %}
     <br><br>
-    <h1 class="ui centered header">{% block form_header %}Rediger tidspunkt{% endblock form_header %}</h1>
+    <h1 class="ui centered header">{% block form_header %}{% trans "Edit time" %}{% endblock form_header %}</h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="field">

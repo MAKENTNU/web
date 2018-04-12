@@ -9,7 +9,7 @@
 {% block body %}
     <div style="height: 50px;"></div>
     <h1 class="ui text-centered make_col_yellow header">
-        Arrangementer
+        {% trans "Events" %}
         <a class="make_col_blue" href="{% url 'event-create' %}"><i class="ui add icon"></i></a>
     </h1>
     <div class="ui text container">
@@ -112,11 +112,11 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class="text-centered"><i>Ingen arrangementer</i></p>
+            <p class="text-centered"><i>{% trans "No events" %}</i></p>
         {% endif %}
 
         <h1 class="ui text-centered make_col_yellow header">
-            Artikler
+            {% trans "Articles" %}
             <a class="make_col_blue" href="{% url 'article-create' %}"><i class="ui add icon"></i></a>
         </h1>
         {% if articles %}
@@ -164,7 +164,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            <p class="text-centered"><i>Ingen artikler</i></p>
+            <p class="text-centered"><i>{% trans "No articles" %}</i></p>
         {% endif %}
     </div>
 

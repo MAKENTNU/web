@@ -1,27 +1,32 @@
 {% load quota %}
+{% load i18n %}
 {% load l10n %}
 {% get_3d_quota user as quota %}
 
 {% localize off %}
     <div class="content">
-        <div class="header">3D Printer</div>
+        <div class="header">{% trans "3D Printer" %}</div>
         <div class="meta">
         <span>{{ quota.get_active_user_reservations|length }}
-            {% if quota.get_active_user_reservations|length == 1 %}aktiv reservasjon
-            {% else %}aktive reservasjoner{% endif %}</span>
+	    {% blocktrans trimmed count counter=quota.get_active_user_reservations|length %}
+	        active reservation
+            {% plural %}
+	        active reservations
+	    {% endblocktrans %}
+	</span>
         </div>
         <div class="full_width quota_field">
-            <label class="quota_label">Maksimal lengde per reservasjon</label>
+            <label class="quota_label">{% trans "Maximum length per reservation" %}</label>
             <div class="ui input full_width right labeled">
                 <input id="3d-quota-len-res" name="3d-quota-len-res" class="hidden" type="number"
                        value="{{ quota.max_time_reservation }}"/>
                 <div class="ui basic label">
-                    timer
+                    {% trans "hours" %}
                 </div>
             </div>
         </div>
         <div class="full_width quota_field">
-            <label class="quota_label">Maksimalt antall aktive reservasjoner</label>
+            <label class="quota_label">{% trans "Maximum number of active reservations" %}</label>
             <div class="ui input full_width">
                 <input id="3d-quota-num-res" name="3d-quota-num-res" class="hidden" type="number"
                        value="{{ quota.max_number_of_reservations }}">
@@ -30,12 +35,12 @@
         <div class="full_width quota_field">
             <div class="ui checkbox {% if quota.can_print %}checked{% endif %}">
                 <input id="3d-quota-can-print" name="3d-quota-can-print" type="checkbox"
-                       {% if quota.can_print %}checked{% endif %}/>
-                <label class="quota_label">Kan printe</label>
+                       {% if quota.can_print %} "checked" {% endif %}/>
+                <label class="quota_label">{% trans "Can print" %}</label>
             </div>
         </div>
     </div>
     <div class="ui blue bottom attached button">
-        Lagre
+        {% trans "Save" %}
     </div>
 {% endlocalize %}

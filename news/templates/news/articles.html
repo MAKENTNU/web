@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 {% load thumbnail %}
 
 {% block head %}
@@ -8,7 +9,7 @@
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui text-centered make_col_blue header">Artikler</h1>
+    <h1 class="ui text-centered make_col_blue header">{% trans "Articles" %}</h1>
     <div class="ui container">
         <div class="articles">
             {% for article in articles %}
