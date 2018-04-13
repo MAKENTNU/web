@@ -30,8 +30,8 @@ class UserSkill(models.Model):
         (2, "Viderekommen"),
         (3, "Ekspert"),
     )
-    profile = models.ForeignKey(Profile, null=True, on_delete=models.SET_NULL)
-    skill = models.ForeignKey(Skill, null=True, on_delete=models.SET_NULL)
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     skill_level = models.IntegerField(choices=level_choices)
 
     class Meta:

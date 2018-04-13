@@ -21,6 +21,30 @@
                 <p>{{ message }}</p>
             {% endfor %}
         </form>
+
+        <h3>Foreslåtte ferdigheter</h3>
+        <table class="ui very basic collapsing celled table">
+            <thead>
+            <tr>
+                <th>Ferdighet</th>
+                <th>Antall stemmer</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for suggestion in suggestions %}
+                <tr>
+                    <td>
+                        <h5 class="ui header">
+                            <div class="content">{{ suggestion.title }}</div>
+                        </h5>
+                    </td>
+                    <td class="center">{{ suggestion.voters.count }}</td>
+                    <td><button class="ui button">Stem</button></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 
 {% endblock body %}

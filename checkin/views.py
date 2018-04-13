@@ -119,3 +119,18 @@ class SuggestSkillView(TemplateView):
 
         return HttpResponseRedirect(reverse('suggest'))
 
+    def get_context_data(self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'suggestions': SuggestSkill.objects.all(),
+
+        })
+        return context
+
+
+class CreateProfileView(TemplateView):
+    template_name = "checkin/create_profile.html"
+
+    def post(self, request):
+        pass
