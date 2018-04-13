@@ -15,7 +15,7 @@
         <a class="ui make_yellow button bordered"
            id="now_button" {% if link_now %}href="{{ link_now }}"{% endif %}>
             <i class="calendar icon"></i>
-            Nå (Uke {{ now.date|date:"W" }})
+            I dag
         </a>
         <a class="ui right labeled icon make_yellow button" id="next_week_button"
            {% if link_next %}href="{{ link_next }}"{% endif %}>
@@ -42,7 +42,7 @@
             {% endfor %}
         </tr>
         </thead>
-        <tr>
+        <tr class="wrapping">
             <td class="wrapping">
                 <div class="half_height"></div>
                 {% numeric_range 1 24 as hours %}
@@ -59,6 +59,10 @@
                         {% for line in num_indication_lines %}
                             <div class="hour_indication_line"></div>
                         {% endfor %}
+                        {% is_current_date day.date.date as should_include_current_time_indicator %}
+                        {% if should_include_current_time_indicator %}
+                            <div class="current_time_indicator" style="top: {% get_current_time_of_day %}%"></div>
+                        {% endif %}
                         {% for reservation in day.reservations %}
                             {% if reservation.length %}
                                 <div class="make_reservation_calendar_time_table_item
@@ -85,6 +89,9 @@
                                                 </div>
                                                 <div>
                                                     <b>Epost:</b> {{ reservation.reservation.user.email }}
+                                                </div>
+                                                <div>
+                                                    <b>Tidspunkt:</b> {{ reservation.reservation.start_time|date:"D H:i"|title }} - {{ reservation.reservation.end_time|date:"D H:i"|title }}
                                                 </div>"
                                         {% endif %}>
                                 </div>
