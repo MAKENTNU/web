@@ -16,6 +16,7 @@ class Profile(models.Model):
     card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
     image = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
+    last_checkin = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         if self.user:
