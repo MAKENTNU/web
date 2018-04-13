@@ -86,6 +86,9 @@
                                                 <div>
                                                     <b>Epost:</b> {{ reservation.reservation.user.email }}
                                                 </div>"
+                                        {% endif %}
+                                        {% if reservation.reservation.event %}
+                                            data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"
                                         {% endif %}>
                                 </div>
                             {% endif %}
