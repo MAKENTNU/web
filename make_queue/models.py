@@ -54,7 +54,7 @@ class Machine(models.Model):
 
     def get_status_display(self):
         current_status = self.get_status()
-        return next(full_name for short_hand, full_name in self.status_choices if short_hand == current_status)
+        return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
 
 
 class Printer3D(Machine):
