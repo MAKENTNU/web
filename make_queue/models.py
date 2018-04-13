@@ -35,7 +35,7 @@ class Machine(models.Model):
         """Abstract method"""
 
     def reservations_in_period(self, start_time, end_time):
-        return self.get_reservation_set().filter(start_time__lte=start_time, end_time__gte=start_time) | \
+        return self.get_reservation_set().filter(start_time__lte=start_time, end_time__gt=start_time) | \
                self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
@@ -54,7 +54,7 @@ class Machine(models.Model):
 
     def get_status_display(self):
         current_status = self.get_status()
-        return next(full_name for short_hand, full_name in self.status_choices if short_hand == current_status)
+        return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
 
 
 class Printer3D(Machine):
@@ -88,6 +88,7 @@ class Reservation(models.Model):
     special = models.BooleanField(default=False)
     special_text = models.CharField(max_length=20)
     reservation_future_limit_days = 28
+    comment = models.TextField(max_length=2000, default="")
 
     @abstractmethod
     def get_quota(self):
