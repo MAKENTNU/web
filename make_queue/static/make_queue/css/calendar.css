@@ -170,10 +170,20 @@ td.wrapping {
     padding: 0 !important;
 }
 
+tr.wrapping {
+    height: 100% !important;
+}
+
 .current_time_indicator {
     width: 100%;
     height: 2px;
     background-color: #ff0000;
     position: absolute;
     z-index: 300;
+}
+
+@-moz-document url-prefix() {
+    td.wrapping {
+        height: 100% !important;
+    }
 }
