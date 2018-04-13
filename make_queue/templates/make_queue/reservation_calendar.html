@@ -92,7 +92,13 @@
                                                 </div>
                                                 <div>
                                                     <b>Tidspunkt:</b> {{ reservation.reservation.start_time|date:"D H:i"|title }} - {{ reservation.reservation.end_time|date:"D H:i"|title }}
-                                                </div>"
+                                                </div>
+                                                {% if reservation.reservation.comment %}
+                                                    <div>
+                                                        <div><b>Kommentar:</b></div>
+                                                        <div>{{ reservation.reservation.comment }}</div>
+                                                    </div>
+                                                {% endif %}"
                                         {% endif %}>
                                 </div>
                             {% endif %}

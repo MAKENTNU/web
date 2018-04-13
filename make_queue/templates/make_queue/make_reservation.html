@@ -72,10 +72,11 @@
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
                             <input name="start_time" type="text" placeholder="Start tidspunkt"
-                                   value="
-
-
-                                           {% if start_time %}{{ start_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date %}{% endif %}">
+                                   value="{% if start_time %}
+                                               {{ start_time|date:"Y-m-d H:i" }}
+                                          {% else %}
+                                               {% set_current_date %}
+                                          {% endif %}">
                         </div>
                     </div>
                 </div>
@@ -85,13 +86,19 @@
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
                             <input name="end_time" type="text" placeholder="Slutt tidspunkt"
-                                   value="
-
-
-                                           {% if end_time %}{{ end_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date 2 %}{% endif %}">
+                                   value="{% if end_time %}
+                                               {{ end_time|date:"Y-m-d H:i" }}
+                                          {% else %}
+                                               {% set_current_date 2 %}
+                                          {% endif %}">
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="field">
+                <label for="comment">Kommentar</label>
+                <textarea rows="2" maxlength="2000" name="comment" id="comment"
+                          placeholder="Eventuell kommentar">{{ comment }}</textarea>
             </div>
 
             {% if perms.make_queue.can_create_event_reservation %}
