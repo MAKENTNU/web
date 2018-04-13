@@ -1,0 +1,13 @@
+<div class="ui card">
+    <div class="make_hidden" data-username="{{ user.username }}" id="current_username"></div>
+    <div class="content">
+        <div class="header" data-user>{{ user.first_name }} {{ user.last_name }}</div>
+        <div class="meta">{{ user.username }}</div>
+    </div>
+</div>
+<div class="ui card machine_card" id="3D-Printer_card">
+    {% include 'make_queue/quota/3d-quota.html' %}
+</div>
+<div class="ui card machine_card" id="Sewing_card">
+    {% include 'make_queue/quota/sewing-quota.html' %}
+</div>

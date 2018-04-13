@@ -1,6 +1,8 @@
 django>=2.0
+mock
 django-ckeditor==5.4.0
 Pillow
 python-social-auth
 python-dataporten-auth
 social-auth-app-django
+sorl-thumbnail

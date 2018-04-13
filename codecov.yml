@@ -12,4 +12,6 @@ coverage:
     - **/apps.py
     - **/tests.py
     - **/wsgi.py
+    - **/test**.py
     - **/migrations
+    - **/__init__.py

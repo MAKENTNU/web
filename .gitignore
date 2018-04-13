@@ -1,4 +1,5 @@
 .idea/
+*.iml
 *.sqlite3
 
 # Byte-compiled / optimized / DLL files
@@ -56,6 +57,7 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+media/
 
 # Flask stuff:
 instance/

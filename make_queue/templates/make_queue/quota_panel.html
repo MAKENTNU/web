@@ -1,0 +1,55 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/quota.css' %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+{% endblock %}
+
+{% block title %}Tilgang{% endblock %}
+
+{% block body %}
+    <div class="ui container">
+        <div class="ui grid equal width">
+            <div class="ui column">
+                <a href="/reservation/quota/update/" class="ui primary button">
+                    Hente nye 3D printer kurs deltagere
+                </a>
+                <div class="ui huge header">Brukere</div>
+                <div class="ui icon input" id="user_search_field">
+                    <i class="icon search"></i>
+                    <input class="hidden" type="text" placeholder="Søk på bruker"/>
+                </div>
+                <div class="ui relaxed divided list users">
+                    {% for user in users %}
+                        <div class="item user_element"
+                             data-fullname="{{ user.first_name }} {{ user.last_name }}"
+                             data-username="{{ user.username }}">
+                            <div class="right floated content">
+                                <div class="blue ui button user_select">Velg</div>
+                            </div>
+                            <div class="content">
+                                <div class="header">
+                                    {{ user.first_name }} {{ user.last_name }}
+                                </div>
+                                <div class="username">
+                                    {{ user.username }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="make_hidden" id="csrf">{% csrf_token %}</div>
+            <div class="ui column">
+                <div class="permissions">
+                    <div class="ui huge header">Valgt bruker</div>
+                    <div class="ui cards" id="quota_user">
+                        {% include 'make_queue/quota/quota_user.html' with user=request.user %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'make_queue/js/quota_panel.js' %}"></script>
+{% endblock %}
