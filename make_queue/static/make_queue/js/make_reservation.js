@@ -89,7 +89,7 @@ function reservationsInPeriod(start, end) {
         let reservation = reservations[index];
         if ((reservation.start_time <= start && reservation.end_time > start) ||
             (reservation.start_time > start && reservation.end_time < end) ||
-            (reservation.start_time > start && reservation.start_time < end && reservation.end_time > end))
+            (reservation.start_time < end && reservation.end_time > end))
             reservationsPeriod.push(reservation);
     }
     return reservationsPeriod;
