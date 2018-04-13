@@ -54,7 +54,7 @@ class Machine(models.Model):
 
     def get_status_display(self):
         current_status = self.get_status()
-        return next(full_name for short_hand, full_name in self.status_choices if short_hand == current_status)
+        return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
 
 
 class Printer3D(Machine):
@@ -88,6 +88,7 @@ class Reservation(models.Model):
     special = models.BooleanField(default=False)
     special_text = models.CharField(max_length=20)
     reservation_future_limit_days = 28
+    comment = models.TextField(max_length=2000, default="")
 
     @abstractmethod
     def get_quota(self):
