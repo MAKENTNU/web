@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-18 20:58+0200\n"
-"PO-Revision-Date: 2018-04-18 21:13+0200\n"
+"POT-Creation-Date: 2018-04-25 15:47+0200\n"
+"PO-Revision-Date: 2018-04-25 15:49+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
 "Language: nb\n"
@@ -63,7 +63,7 @@ msgstr "I ustand"
 msgid "Maintenance"
 msgstr "Vedlikehold"
 
-#: make_queue/models.py:63
+#: make_queue/models.py:64
 msgid ""
 "You must have taken a 3D printer course to reserve the printers. If you have "
 "had the course, but don't have access, contact 3dprint@makentnu.no"
@@ -71,7 +71,7 @@ msgstr ""
 "Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt "
 "kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
 
-#: make_queue/templates/make_queue/machine_card.html:21
+#: make_queue/templates/make_queue/machine_card.html:34
 #: make_queue/templates/make_queue/reservations.html:44
 msgid "View in calendar"
 msgstr "Se i kalender"
@@ -106,35 +106,40 @@ msgstr "Velg maskin"
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/templates/make_queue/make_reservation.html:84
-#: make_queue/templates/make_queue/make_reservation.html:88 news/models.py:127
+#: make_queue/templates/make_queue/make_reservation.html:85
+#: make_queue/templates/make_queue/make_reservation.html:89 news/models.py:127
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/templates/make_queue/make_reservation.html:107
-#: make_queue/templates/make_queue/make_reservation.html:121
+#: make_queue/templates/make_queue/make_reservation.html:100
+#: make_queue/templates/make_queue/reservation_calendar.html:99
+msgid "Comment"
+msgstr "Kommentar"
+
+#: make_queue/templates/make_queue/make_reservation.html:114
+#: make_queue/templates/make_queue/make_reservation.html:128
 msgid "Event"
 msgstr "Arrangement"
 
-#: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/reservation_calendar.html:104
+#: make_queue/templates/make_queue/make_reservation.html:122
+#: make_queue/templates/make_queue/reservation_calendar.html:120
 #: web/templates/web/base.html:8
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
 
-#: make_queue/templates/make_queue/make_reservation.html:124
+#: make_queue/templates/make_queue/make_reservation.html:131
 msgid "Select event"
 msgstr "Velg event"
 
-#: make_queue/templates/make_queue/make_reservation.html:141
+#: make_queue/templates/make_queue/make_reservation.html:148
 msgid "Reservation text"
 msgstr "Reservasjonstekst"
 
-#: make_queue/templates/make_queue/make_reservation.html:151
+#: make_queue/templates/make_queue/make_reservation.html:158
 msgid "Reserve"
 msgstr "Reserver"
 
-#: make_queue/templates/make_queue/make_reservation.html:151
+#: make_queue/templates/make_queue/make_reservation.html:158
 #: make_queue/templates/make_queue/reservations.html:45
 #: make_queue/templates/make_queue/reservations.html:89
 #: make_queue/templates/make_queue/reservations.html:137
@@ -200,41 +205,45 @@ msgid "Previous"
 msgstr "Forrige"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:19
-msgid "Now"
-msgstr "Nå"
-
-#: make_queue/templates/make_queue/reservation_calendar.html:19
-#: make_queue/templates/make_queue/reservation_calendar.html:36
-msgid "Week"
-msgstr "Uke"
+msgid "Today"
+msgstr "I dag"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:24
 msgid "Next"
 msgstr "Neste"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:82
+#: make_queue/templates/make_queue/reservation_calendar.html:36
+msgid "Week"
+msgstr "Uke"
+
+#: make_queue/templates/make_queue/reservation_calendar.html:86
 #: make_queue/templates/make_queue/reservations.html:37
 msgid "Reservation"
 msgstr "Reservasjon"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:85
+#: make_queue/templates/make_queue/reservation_calendar.html:89
 msgid "Name"
 msgstr "Navn"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:88
+#: make_queue/templates/make_queue/reservation_calendar.html:92
 msgid "Email"
 msgstr "Epost"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:108
+#: make_queue/templates/make_queue/reservation_calendar.html:95
+#: make_queue/templates/make_queue/reservations.html:38
+msgid "Time"
+msgstr "Tidspunkt"
+
+#: make_queue/templates/make_queue/reservation_calendar.html:124
 msgid "Other reservations"
 msgstr "Andre Reservasjoner"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:112
+#: make_queue/templates/make_queue/reservation_calendar.html:128
 #: news/templates/news/admin.html:13 web/templates/web/header.html:32
 msgid "Events"
 msgstr "Arrangementer"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:116
+#: make_queue/templates/make_queue/reservation_calendar.html:132
 #: make_queue/templates/make_queue/reservation_machines.html:19
 #: make_queue/templates/make_queue/reservation_overview.html:48
 #: make_queue/templates/make_queue/reservations.html:10
@@ -253,6 +262,10 @@ msgstr "Maskiner"
 msgid "Reservations"
 msgstr "Reservasjoner"
 
+#: make_queue/templates/make_queue/reservation_overview.html:34
+msgid "You must be logged in to make new reservations"
+msgstr "Du må være logget inn for å kunne lage nye reservasjoner"
+
 #: make_queue/templates/make_queue/reservation_overview.html:38
 msgid "You have reached the maximum number of future reservations"
 msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
@@ -268,10 +281,6 @@ msgstr "MAKE NTNU reservasjoner"
 #: make_queue/templates/make_queue/reservations.html:28
 msgid "Hide previous reservations"
 msgstr "Skjul tidligere reservasjoner"
-
-#: make_queue/templates/make_queue/reservations.html:38
-msgid "Time"
-msgstr "Tidspunkt"
 
 #: make_queue/templates/make_queue/reservations.html:41
 msgid "Information"

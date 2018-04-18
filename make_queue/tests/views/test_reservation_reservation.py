@@ -79,13 +79,12 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
 
     def test_get_error_message_too_far_in_the_future(self):
         view = self.get_view()
-        form = self.create_form(24*7, 24*7+1)
+        form = self.create_form(24 * 7, 24 * 7 + 1)
         self.assertTrue(form.is_valid())
         reservation = ReservationSewing(user=self.user, start_time=form.cleaned_data["start_time"],
                                         end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.assertEqual(view.get_error_message(form, reservation),
                          "Reservasjoner kan bare lages 7 dager frem i tid")
-
 
     def test_validate_and_save_valid_reservation(self):
         view = self.get_view()
@@ -122,7 +121,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         reservation = ReservationSewing.objects.create(user=self.user, start_time=timezone.now() + timedelta(hours=1),
                                                        end_time=timezone.now() + timedelta(hours=2),
-                                                       event=self.timeplace, machine=self.machine)
+                                                       event=self.timeplace, machine=self.machine, comment="Comment")
         context_data = view.get_context_data(reservation=reservation)
 
         self.assertEqual(context_data, {
@@ -130,7 +129,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
                                                                                      "instances": [self.machine]}],
             "start_time": reservation.start_time, "end_time": reservation.end_time, "selected_machine": self.machine,
             "event": self.timeplace, "special": False, "special_text": "", "quota": QuotaSewing.get_quota(self.user),
-            "maximum_days_in_advance": Reservation.reservation_future_limit_days
+            "maximum_days_in_advance": Reservation.reservation_future_limit_days, "comment": "Comment"
         })
 
     def test_get_context_data_non_reservation(self):

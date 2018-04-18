@@ -25,10 +25,14 @@
             </div>
             <div class="ui cards">
                 {% for machine in machine_type.machines %}
-                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1%}
+                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
                 {% endfor %}
             </div>
         {% endfor %}
     </div>
     <br><br>
+
+    <div id="fader"></div>
+    <i id="closefullscreen" class="ui times icon"></i>
+    <script src="{% static "make_queue/js/stream.js" %}"></script>
 {% endblock %}

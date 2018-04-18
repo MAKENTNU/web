@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('make_queue', '0002_auto_20180406_1800'),
+        ('make_queue', '0003_machine_stream_url'),
     ]
 
     operations = [

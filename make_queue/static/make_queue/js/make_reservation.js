@@ -70,13 +70,29 @@ function isNonReservedDate(date) {
     return true;
 }
 
-function isReservedHour(date) {
-    let endHour = new Date(date.valueOf());
-    endHour.setHours(endHour.getHours() + 1);
-    for (let index = 0; index < reservations.length; index++) {
-        if (date >= reservations[index].start_time && endHour <= reservations[index].end_time) return true;
+function isCompletelyReserved(start, end) {
+    let maxDifference = 5*60*1000;
+    let reservationsPeriod = reservationsInPeriod(start, end);
+    if (!reservationsPeriod.length) return false;
+    reservationsPeriod.sort((a,b) => a.start_time - b.start_time);
+    let currentTime = start;
+    for (let index = 0; index < reservationsPeriod.length; index++) {
+        if (reservationsPeriod[index].start_time > new Date(currentTime.valueOf() + maxDifference)) return false;
+        currentTime = reservationsPeriod[index].end_time;
     }
-    return false;
+    return currentTime >= new Date(end.valueOf() - maxDifference);
+}
+
+function reservationsInPeriod(start, end) {
+    let reservationsPeriod = [];
+    for (let index = 0; index < reservations.length; index++) {
+        let reservation = reservations[index];
+        if ((reservation.start_time <= start && reservation.end_time > start) ||
+            (reservation.start_time > start && reservation.end_time < end) ||
+            (reservation.start_time < end && reservation.end_time > end))
+            reservationsPeriod.push(reservation);
+    }
+    return reservationsPeriod;
 }
 
 function getMaxDateReservation(date) {
@@ -110,7 +126,14 @@ $("#start_time").calendar({
         firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
             if (mode === "minute") return !isNonReservedDate(date);
-            if (mode === "hour") return isReservedHour(date);
+            if (mode === "hour") {
+                date.setMinutes(0, 0, 0);
+                return isCompletelyReserved(date, new Date(date.valueOf() + 60*60*1000));
+            }
+            if (mode === "day") {
+                date.setHours(0, 0, 0, 0);
+                return isCompletelyReserved(date, new Date(date.valueOf() + 24*60*60*1000));
+            }
             return false;
         },
         onChange: function (value) {

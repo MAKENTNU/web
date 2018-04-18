@@ -15,6 +15,7 @@ class ReservationForm(forms.Form):
     event_pk = forms.CharField(required=False)
     special = forms.BooleanField(required=False)
     special_text = forms.CharField(required=False, max_length=20)
+    comment = forms.CharField(required=False, max_length=2000, initial="")
 
     def __init__(self, *args, **kwargs):
         super(ReservationForm, self).__init__(*args, **kwargs)

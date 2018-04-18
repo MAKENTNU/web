@@ -18,7 +18,7 @@
     margin-bottom: 0 !important;
 }
 
-.make_collapsed_header_all{
+.make_collapsed_header_all {
     margin-bottom: 0 !important;
     margin-top: 0 !important;
 }
@@ -87,4 +87,56 @@
     .make_my_reservation_tablet {
         display: none !important;
     }
+}
+
+.stream.image {
+    width: 100%;
+}
+
+.stream.image:hover {
+    cursor: pointer;
+}
+
+.stream.image.fullscreen {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto !important;
+    min-height: 95vh !important;
+    object-fit: cover;
+    z-index: 1000;
+}
+
+#fader {
+    display: none;
+}
+
+#fader.fullscreen {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 990;
+    background-color: rgba(0, 0, 0, 1);
+}
+
+#closefullscreen {
+    display: none;
+}
+
+#closefullscreen.fullscreen {
+    display: block;
+    color: #ffffff;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    font-size: 32px;
+    z-index: 1010;
+}
+
+#closefullscreen:hover {
+    cursor: pointer;
 }

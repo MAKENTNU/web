@@ -1,6 +1,18 @@
+{% load staticfiles %}
 {% load reservation_extra %}
 {% load i18n %}
+
 <div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
+    <div class="image">
+        {% if machine.stream_url %}
+            <img class="stream image"
+                 onError="src='{% static "make_queue/img/no_stream.jpg" %}';"
+                 url="{{ machine.stream_url }}"
+                 src="{{ machine.stream_url }}">
+        {% else %}
+            <img style="width: 100%;" src="{% static "make_queue/img/no_stream.jpg" %}">
+        {% endif %}
+    </div>
     <div class="content">
         <div class="header">
             {{ machine.name }}
@@ -16,9 +28,11 @@
         </a>
     </div>
     {% if calendar_link %}
-        <a class="ui bottom attached button {% card_color_from_machine_status machine %}"
-           href="{% current_calendar_url machine %}">
-            {% trans "View in calendar" %}
-        </a>
+        <div>
+            <a class="ui bottom attached button {% card_color_from_machine_status machine %}"
+               href="{% current_calendar_url machine %}">
+		{% trans "View in calendar" %}
+            </a>
+        </div>
     {% endif %}
 </div>

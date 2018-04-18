@@ -31,7 +31,7 @@
                 <div class="ui vertical buttons make_right_floated">
                     <div class="enable_popup"
                          {% if not user.is_authenticated %}
-			     data-content="{% trans "Du må være logget inn for å kunne lage nye reservasjoner"}"
+			     data-content="{% trans "You must be logged in to make new reservations" %}"
                          {% elif not can_use %}
 			     data-content="{% get_machine_cannot_use_text machine %}"
                          {% elif not can_make_more_reservations %}
