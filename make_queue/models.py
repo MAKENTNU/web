@@ -24,6 +24,7 @@ class Machine(models.Model):
     name = models.CharField(max_length=30)
     location = models.CharField(max_length=40)
     location_url = models.URLField()
+    stream_url = models.URLField(default='')
     model = models.CharField(max_length=40)
 
     @abstractmethod
