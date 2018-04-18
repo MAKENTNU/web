@@ -31,6 +31,9 @@
             gtag('config', 'UA-113882146-1');
         </script>
 
+	{% get_current_language as LANGUAGE_CODE %}
+	<script>let langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
+
         {% block head %}{% endblock head %}
     </head>
 

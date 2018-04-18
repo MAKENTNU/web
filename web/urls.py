@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.urls import path, re_path, include
 from django.conf.urls.i18n import i18n_patterns
+from django.views.i18n import JavaScriptCatalog
 from django.contrib import admin
 from django.views.generic.base import RedirectView
 from django.views.static import serve
@@ -34,5 +35,6 @@ urlpatterns += i18n_patterns(
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
+    path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
 )
