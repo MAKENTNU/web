@@ -1,6 +1,10 @@
+from django.http import HttpResponse, HttpResponseNotFound
+from django.shortcuts import render
+from django.template.loader import get_template
 from django.views.generic import TemplateView
 
 from news.models import Article, TimePlace
+
 
 class IndexView(TemplateView):
     template_name = 'web/index.html'
@@ -13,5 +17,8 @@ class IndexView(TemplateView):
         })
         return context
 
+
 class AdminPanelView(TemplateView):
     template_name = 'web/admin_panel.html'
+
+
