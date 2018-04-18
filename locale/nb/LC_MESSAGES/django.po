@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-04-11 18:19+0200\n"
-"PO-Revision-Date: 2018-04-12 15:04+0200\n"
+"POT-Creation-Date: 2018-04-18 20:58+0200\n"
+"PO-Revision-Date: 2018-04-18 21:13+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
 "Language: nb\n"
@@ -13,29 +13,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: contentbox/models.py:12
-#: news/models.py:37
+#: contentbox/models.py:12 news/models.py:37
 msgid "Title"
 msgstr "Tittel"
 
-#: contentbox/templates/contentbox/display.html:9
-#: contentbox/templates/contentbox/edit.html:4
-#: contentbox/templates/contentbox/edit.html:14
+#: contentbox/templates/contentbox/display.html:10
+#: contentbox/templates/contentbox/edit.html:5
+#: contentbox/templates/contentbox/edit.html:15
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:20
+#: contentbox/templates/contentbox/edit.html:22
+#: news/templates/news/article_edit.html:24
+#: news/templates/news/event_edit.html:25
 msgid "Content"
 msgstr "Innhold"
 
-#: contentbox/templates/contentbox/edit.html:23
+#: contentbox/templates/contentbox/edit.html:25
 #: make_queue/templates/make_queue/quota/3d-quota.html:44
-#: make_queue/templates/make_queue/quota/sewing-quota.html:36
+#: make_queue/templates/make_queue/quota/sewing-quota.html:37
+#: news/templates/news/article_edit.html:63
+#: news/templates/news/event_edit.html:62
+#: news/templates/news/timeplace_edit.html:80
 msgid "Save"
 msgstr "Lagre"
 
-#: groups/templates/groups/committee_list.html:4
-#: web/templates/web/footer.html:35
+#: groups/templates/groups/committee_list.html:5
+#: web/templates/web/footer.html:36
 msgid "Committees"
 msgstr "Komiteer"
 
@@ -59,117 +63,107 @@ msgstr "I ustand"
 msgid "Maintenance"
 msgstr "Vedlikehold"
 
-#: make_queue/models.py:62
-msgid "3D printer"
-msgstr "3D-printer"
-
 #: make_queue/models.py:63
 msgid ""
-"You must have taken a 3D printer course to reserve the printers. If you "
-"have had the course, but don't have access, contact 3dprint@makentnu.no"
+"You must have taken a 3D printer course to reserve the printers. If you have "
+"had the course, but don't have access, contact 3dprint@makentnu.no"
 msgstr ""
-"Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har "
-"hatt kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
+"Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt "
+"kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
 
-#: make_queue/models.py:74
-msgid "Sewing machine"
-msgstr "Symaskin"
-
-#: make_queue/templates/make_queue/machine_card.html:20
-#: make_queue/templates/make_queue/reservations.html:43
+#: make_queue/templates/make_queue/machine_card.html:21
+#: make_queue/templates/make_queue/reservations.html:44
 msgid "View in calendar"
 msgstr "Se i kalender"
 
-#: make_queue/templates/make_queue/make_reservation.html:22
-#: make_queue/templates/make_queue/reservation_overview.html:42
+#: make_queue/templates/make_queue/make_reservation.html:23
+#: make_queue/templates/make_queue/reservation_overview.html:43
 msgid "New reservation"
 msgstr "Ny reservasjon"
 
-#: make_queue/templates/make_queue/make_reservation.html:24
+#: make_queue/templates/make_queue/make_reservation.html:25
 msgid "Edit reservation"
 msgstr "Endre reservasjon"
 
-#: make_queue/templates/make_queue/make_reservation.html:32
+#: make_queue/templates/make_queue/make_reservation.html:33
 msgid "Equipment type"
 msgstr "Utstyrs type"
 
-#: make_queue/templates/make_queue/make_reservation.html:36
+#: make_queue/templates/make_queue/make_reservation.html:37
 msgid "Select equipment type"
 msgstr "Velg utstyrs type"
 
-#: make_queue/templates/make_queue/make_reservation.html:49
+#: make_queue/templates/make_queue/make_reservation.html:50
 msgid "Equipment"
 msgstr "Utstyr"
 
-#: make_queue/templates/make_queue/make_reservation.html:52
+#: make_queue/templates/make_queue/make_reservation.html:53
 msgid "Select machine"
 msgstr "Velg maskin"
 
-#: make_queue/templates/make_queue/make_reservation.html:70
-#: make_queue/templates/make_queue/make_reservation.html:74
-#: news/models.py:122
+#: make_queue/templates/make_queue/make_reservation.html:71
+#: make_queue/templates/make_queue/make_reservation.html:75 news/models.py:122
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/templates/make_queue/make_reservation.html:83
-#: make_queue/templates/make_queue/make_reservation.html:87
-#: news/models.py:127
+#: make_queue/templates/make_queue/make_reservation.html:84
+#: make_queue/templates/make_queue/make_reservation.html:88 news/models.py:127
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/templates/make_queue/make_reservation.html:106
-#: make_queue/templates/make_queue/make_reservation.html:120
+#: make_queue/templates/make_queue/make_reservation.html:107
+#: make_queue/templates/make_queue/make_reservation.html:121
 msgid "Event"
 msgstr "Arrangement"
 
-#: make_queue/templates/make_queue/make_reservation.html:114
-#: make_queue/templates/make_queue/reservation_calendar.html:103
-#: web/templates/web/base.html:7
+#: make_queue/templates/make_queue/make_reservation.html:115
+#: make_queue/templates/make_queue/reservation_calendar.html:104
+#: web/templates/web/base.html:8
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
 
-#: make_queue/templates/make_queue/make_reservation.html:123
+#: make_queue/templates/make_queue/make_reservation.html:124
 msgid "Select event"
 msgstr "Velg event"
 
-#: make_queue/templates/make_queue/make_reservation.html:140
+#: make_queue/templates/make_queue/make_reservation.html:141
 msgid "Reservation text"
-msgstr "Reservasjons tekst"
+msgstr "Reservasjonstekst"
 
-#: make_queue/templates/make_queue/make_reservation.html:150
+#: make_queue/templates/make_queue/make_reservation.html:151
 msgid "Reserve"
 msgstr "Reserver"
 
-#: make_queue/templates/make_queue/make_reservation.html:150
-#: make_queue/templates/make_queue/reservations.html:44
-#: make_queue/templates/make_queue/reservations.html:88
-#: make_queue/templates/make_queue/reservations.html:136
+#: make_queue/templates/make_queue/make_reservation.html:151
+#: make_queue/templates/make_queue/reservations.html:45
+#: make_queue/templates/make_queue/reservations.html:89
+#: make_queue/templates/make_queue/reservations.html:137
 msgid "Change"
 msgstr "Endre"
 
-#: make_queue/templates/make_queue/quota/3d-quota.html:7
+#: make_queue/templates/make_queue/quota/3d-quota.html:8
 msgid "3D Printer"
-msgstr "3D Printer"
+msgstr "3D-Printer"
 
 #: make_queue/templates/make_queue/quota/3d-quota.html:11
-#: make_queue/templates/make_queue/quota/sewing-quota.html:10
+#: make_queue/templates/make_queue/quota/sewing-quota.html:11
 msgid "active reservation"
 msgid_plural "active reservations"
 msgstr[0] "aktiv reservasjon"
 msgstr[1] "aktive reservasjoner"
 
-#: make_queue/templates/make_queue/quota/3d-quota.html:17
-#: make_queue/templates/make_queue/quota/sewing-quota.html:18
+#: make_queue/templates/make_queue/quota/3d-quota.html:19
+#: make_queue/templates/make_queue/quota/sewing-quota.html:19
 msgid "Maximum length per reservation"
 msgstr "Maksimal lengde per reservasjon"
 
-#: make_queue/templates/make_queue/quota/3d-quota.html:22
-#: make_queue/templates/make_queue/quota/sewing-quota.html:23
+#: make_queue/templates/make_queue/quota/3d-quota.html:24
+#: make_queue/templates/make_queue/quota/sewing-quota.html:24
 msgid "hours"
 msgstr "timer"
 
-#: make_queue/templates/make_queue/quota/3d-quota.html:27
-#: make_queue/templates/make_queue/quota/sewing-quota.html:28
+#: make_queue/templates/make_queue/quota/3d-quota.html:29
+#: make_queue/templates/make_queue/quota/sewing-quota.html:29
 msgid "Maximum number of active reservations"
 msgstr "Maksimalt antall aktive reservasjoner"
 
@@ -177,114 +171,122 @@ msgstr "Maksimalt antall aktive reservasjoner"
 msgid "Can print"
 msgstr "Kan printe"
 
-#: make_queue/templates/make_queue/quota/sewing-quota.html:7
+#: make_queue/templates/make_queue/quota/sewing-quota.html:8
 msgid "Sewing"
 msgstr "Sying"
 
-#: make_queue/templates/make_queue/quota_panel.html:9
+#: make_queue/templates/make_queue/quota_panel.html:10
 msgid "Access"
 msgstr "Tilgang"
 
-#: make_queue/templates/make_queue/quota_panel.html:16
+#: make_queue/templates/make_queue/quota_panel.html:17
 msgid "Get new 3D printer cource participants"
-msgstr "Hente nye 3D printer kurs deltagere"
+msgstr "Hente nye 3D-printer kursdeltagere"
 
-#: make_queue/templates/make_queue/quota_panel.html:18
+#: make_queue/templates/make_queue/quota_panel.html:19
 msgid "Users"
 msgstr "Brukere"
 
-#: make_queue/templates/make_queue/quota_panel.html:29
+#: make_queue/templates/make_queue/quota_panel.html:30
 msgid "Select"
 msgstr "Velg"
 
-#: make_queue/templates/make_queue/quota_panel.html:46
+#: make_queue/templates/make_queue/quota_panel.html:47
 msgid "Selected user"
 msgstr "Valgt bruker"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:13
+#: make_queue/templates/make_queue/reservation_calendar.html:14
 msgid "Previous"
 msgstr "Forrige"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:18
+#: make_queue/templates/make_queue/reservation_calendar.html:19
 msgid "Now"
 msgstr "Nå"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:18
-#: make_queue/templates/make_queue/reservation_calendar.html:35
+#: make_queue/templates/make_queue/reservation_calendar.html:19
+#: make_queue/templates/make_queue/reservation_calendar.html:36
 msgid "Week"
 msgstr "Uke"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:23
+#: make_queue/templates/make_queue/reservation_calendar.html:24
 msgid "Next"
 msgstr "Neste"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:107
-msgid "Other reservations"
-msgstr "Andre Reservasjoner"
-
-#: make_queue/templates/make_queue/reservation_calendar.html:111
-#: news/templates/news/admin.html:12
-#: web/templates/web/header.html:31
-msgid "Events"
-msgstr "Arrangementer"
-
-#: make_queue/templates/make_queue/reservation_calendar.html:115
-#: make_queue/templates/make_queue/reservation_machines.html:18
-#: make_queue/templates/make_queue/reservation_overview.html:47
-#: make_queue/templates/make_queue/reservations.html:9
-#: make_queue/templates/make_queue/reservations.html:16
-msgid "My reservations"
-msgstr "Mine reservasjoner"
-
-#: make_queue/templates/make_queue/reservation_machines.html:9
-#: make_queue/templates/make_queue/reservation_machines.html:14
-#: make_queue/templates/make_queue/reservations.html:21
-msgid "Machines"
-msgstr "Maskiner"
-
-#: make_queue/templates/make_queue/reservation_overview.html:21
-#: web/templates/web/admin_panel.html:12
-#: web/templates/web/header.html:40
-msgid "Reservations"
-msgstr "Reservasjoner"
-
-#: make_queue/templates/make_queue/reservation_overview.html:37
-msgid "You have reached the maximum number of future reservations"
-msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
-
-#: make_queue/templates/make_queue/reservation_overview.html:51
-msgid "Other machines"
-msgstr "Andre maskiner"
-
-#: make_queue/templates/make_queue/reservations.html:14
-msgid "MAKE NTNU reservations"
-msgstr "MAKE NTNU reservasjoner"
-
-#: make_queue/templates/make_queue/reservations.html:27
-msgid "Hide previous reservations"
-msgstr "Skjul tidligere reservasjoner"
-
-#: make_queue/templates/make_queue/reservations.html:36
+#: make_queue/templates/make_queue/reservation_calendar.html:82
+#: make_queue/templates/make_queue/reservations.html:37
 msgid "Reservation"
 msgstr "Reservasjon"
 
-#: make_queue/templates/make_queue/reservations.html:37
+#: make_queue/templates/make_queue/reservation_calendar.html:85
+msgid "Name"
+msgstr "Navn"
+
+#: make_queue/templates/make_queue/reservation_calendar.html:88
+msgid "Email"
+msgstr "Epost"
+
+#: make_queue/templates/make_queue/reservation_calendar.html:108
+msgid "Other reservations"
+msgstr "Andre Reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_calendar.html:112
+#: news/templates/news/admin.html:13 web/templates/web/header.html:32
+msgid "Events"
+msgstr "Arrangementer"
+
+#: make_queue/templates/make_queue/reservation_calendar.html:116
+#: make_queue/templates/make_queue/reservation_machines.html:19
+#: make_queue/templates/make_queue/reservation_overview.html:48
+#: make_queue/templates/make_queue/reservations.html:10
+#: make_queue/templates/make_queue/reservations.html:17
+msgid "My reservations"
+msgstr "Mine reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_machines.html:10
+#: make_queue/templates/make_queue/reservation_machines.html:15
+#: make_queue/templates/make_queue/reservations.html:22
+msgid "Machines"
+msgstr "Maskiner"
+
+#: make_queue/templates/make_queue/reservation_overview.html:22
+#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:41
+msgid "Reservations"
+msgstr "Reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_overview.html:38
+msgid "You have reached the maximum number of future reservations"
+msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_overview.html:52
+msgid "Other machines"
+msgstr "Andre maskiner"
+
+#: make_queue/templates/make_queue/reservations.html:15
+msgid "MAKE NTNU reservations"
+msgstr "MAKE NTNU reservasjoner"
+
+#: make_queue/templates/make_queue/reservations.html:28
+msgid "Hide previous reservations"
+msgstr "Skjul tidligere reservasjoner"
+
+#: make_queue/templates/make_queue/reservations.html:38
 msgid "Time"
 msgstr "Tidspunkt"
 
-#: make_queue/templates/make_queue/reservations.html:40
+#: make_queue/templates/make_queue/reservations.html:41
 msgid "Information"
 msgstr "Informasjon"
 
-#: make_queue/templates/make_queue/reservations.html:45
-#: make_queue/templates/make_queue/reservations.html:137
-#: web/templates/web/delete_modal.html:14
+#: make_queue/templates/make_queue/reservations.html:46
+#: make_queue/templates/make_queue/reservations.html:100
+#: make_queue/templates/make_queue/reservations.html:138
+msgctxt "cancel reservation"
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Kanseller"
 
-#: make_queue/templates/make_queue/reservations.html:82
-#: make_queue/templates/make_queue/reservations.html:134
-#: make_queue/templates/make_queue/reservations.html:153
+#: make_queue/templates/make_queue/reservations.html:83
+#: make_queue/templates/make_queue/reservations.html:135
+#: make_queue/templates/make_queue/reservations.html:154
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -304,8 +306,7 @@ msgstr "Ikke crop bildet"
 msgid "Highlighted"
 msgstr "Fremhevet"
 
-#: news/models.py:58
-#: news/models.py:146
+#: news/models.py:58 news/models.py:146
 msgid "Hidden"
 msgstr "Skjult"
 
@@ -313,13 +314,11 @@ msgstr "Skjult"
 msgid "MAKE internal"
 msgstr "MAKE intern"
 
-#: news/models.py:78
-#: news/models.py:105
+#: news/models.py:78 news/models.py:105
 msgid "Publishing date"
 msgstr "Publiseringsdato"
 
-#: news/models.py:82
-#: news/models.py:109
+#: news/models.py:82 news/models.py:109
 msgid "Publishing time"
 msgstr "Publiseringstid"
 
@@ -327,18 +326,17 @@ msgstr "Publiseringstid"
 msgid "One registration"
 msgstr "Én påmelding"
 
-#: news/models.py:96
-#: news/models.py:142
+#: news/models.py:96 news/models.py:142
 msgid "Hoopla url"
 msgstr "Hoopla url"
 
 #: news/models.py:113
 msgid "Start date"
-msgstr "Start-dato"
+msgstr "Startdato"
 
 #: news/models.py:118
 msgid "End date"
-msgstr "Slutt-dato"
+msgstr "Sluttdato"
 
 #: news/models.py:132
 msgid "Location"
@@ -348,121 +346,127 @@ msgstr "Sted"
 msgid "Location URL"
 msgstr "Sted URL"
 
-#: news/templates/news/admin.html:115
+#: news/templates/news/admin.html:116
 msgid "No events"
 msgstr "Ingen arrangementer"
 
-#: news/templates/news/admin.html:119
-#: news/templates/news/articles.html:11
-#: web/templates/web/header.html:34
+#: news/templates/news/admin.html:120 news/templates/news/articles.html:12
+#: web/templates/web/header.html:35
 msgid "Articles"
 msgstr "Artikler"
 
-#: news/templates/news/admin.html:167
+#: news/templates/news/admin.html:168
 msgid "No articles"
 msgstr "Ingen artikler"
 
-#: news/templates/news/article_create.html:3
 #: news/templates/news/article_create.html:4
+#: news/templates/news/article_create.html:5
 msgid "New article"
 msgstr "Ny artikkel"
 
-#: news/templates/news/article_edit.html:4
-#: news/templates/news/article_edit.html:15
+#: news/templates/news/article_edit.html:5
+#: news/templates/news/article_edit.html:16
 msgid "Edit article"
 msgstr "Rediger artikkel"
 
-#: news/templates/news/event.html:44
-#: news/templates/news/event.html:57
-#: news/templates/news/event.html:69
-#: news/templates/news/event.html:109
+#: news/templates/news/article_edit.html:33
+#: news/templates/news/timeplace_edit.html:68
+msgid "Publishing"
+msgstr "Publisering"
+
+#: news/templates/news/event.html:45 news/templates/news/event.html:58
+#: news/templates/news/event.html:70 news/templates/news/event.html:110
 msgid "Registration"
 msgstr "Påmelding"
 
-#: news/templates/news/event.html:111
+#: news/templates/news/event.html:112
 msgid "No registrations"
 msgstr "Ingen påmelding"
 
-#: news/templates/news/event_create.html:3
 #: news/templates/news/event_create.html:4
+#: news/templates/news/event_create.html:5
 msgid "New event"
 msgstr "Ny event"
 
-#: news/templates/news/event_edit.html:4
-#: news/templates/news/event_edit.html:16
+#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:17
 msgid "Edit event"
 msgstr "Rediger event"
 
-#: news/templates/news/events.html:10
+#: news/templates/news/events.html:11
 msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
-#: news/templates/news/events.html:42
+#: news/templates/news/events.html:43
 msgid "No upcoming events"
 msgstr "Ingen kommende arrangementer"
 
-#: news/templates/news/events.html:46
+#: news/templates/news/events.html:47
 msgid "Previous events"
 msgstr "Tidligere arrangementer"
 
-#: news/templates/news/events.html:77
+#: news/templates/news/events.html:78
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
 
-#: news/templates/news/timeplace_create.html:3
 #: news/templates/news/timeplace_create.html:4
+#: news/templates/news/timeplace_create.html:5
 msgid "New time"
 msgstr "Nytt tidspunkt"
 
-#: news/templates/news/timeplace_edit.html:4
-#: news/templates/news/timeplace_edit.html:20
+#: news/templates/news/timeplace_edit.html:5
+#: news/templates/news/timeplace_edit.html:21
 msgid "Edit time"
 msgstr "Rediger tidspunkt"
 
-#: web/templates/web/admin_panel.html:9
+#: web/templates/web/admin_panel.html:10
 msgid "Articles and events"
 msgstr "Artikler og arrangementer"
 
-#: web/templates/web/admin_panel.html:15
+#: web/templates/web/admin_panel.html:16
 msgid "Quota"
 msgstr "Kvote"
 
-#: web/templates/web/delete_modal.html:4
+#: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
 msgstr "Er du sikker på at du vil slette?"
 
-#: web/templates/web/delete_modal.html:10
+#: web/templates/web/delete_modal.html:11
 msgid "Delete"
 msgstr "Slett"
 
-#: web/templates/web/footer.html:11
+#: web/templates/web/delete_modal.html:15
+msgctxt "abort action"
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: web/templates/web/footer.html:12
 msgid "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 msgstr "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 
-#: web/templates/web/footer.html:30
+#: web/templates/web/footer.html:31
 msgid "About"
 msgstr "Om oss"
 
-#: web/templates/web/footer.html:40
+#: web/templates/web/footer.html:41
 msgid "Cookies"
 msgstr "Cookies"
 
-#: web/templates/web/header.html:28
+#: web/templates/web/header.html:29
 msgid "Home"
 msgstr "Hjem"
 
-#: web/templates/web/header.html:37
+#: web/templates/web/header.html:38
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 
-#: web/templates/web/header.html:49
+#: web/templates/web/header.html:50
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:53
+#: web/templates/web/header.html:54
 msgid "Logout"
 msgstr "Logg ut"
 
-#: web/templates/web/header.html:60
+#: web/templates/web/header.html:61
 msgid "Login"
 msgstr "Logg inn"

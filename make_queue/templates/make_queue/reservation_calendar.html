@@ -79,13 +79,13 @@
                                      data-content="{{ reservation.reservation.special_text }}"
                                         {% elif perms.make_queue.can_view_reservation_user and not reservation.reservation.special %}
                                      data-html="<div class='header'>
-                                                    Reservasjon
+                                                    {% trans "Reservation" %}
                                                 </div>
                                                 <div>
-                                                    <b>Navn:</b> {{ reservation.reservation.user.get_full_name }}
+                                                    <b>{% trans "Name" %}:</b> {{ reservation.reservation.user.get_full_name }}
                                                 </div>
                                                 <div>
-                                                    <b>Epost:</b> {{ reservation.reservation.user.email }}
+                                                    <b>{% trans "Email" %}:</b> {{ reservation.reservation.user.email }}
                                                 </div>"
                                         {% endif %}>
                                 </div>

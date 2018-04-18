@@ -22,7 +22,7 @@
             {{ form.title }}
         </div>
         <div class="field">
-            <label>Innhold</label>
+            <label>{% trans "Content" %}</label>
             {{ form.content }}
         </div>
         <div class="field">
@@ -59,6 +59,6 @@
                 {{ form.multiday }}
             </div>
         </div>
-        <input class="ui blue submit button" type="submit" value="Lagre">
+        <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
     </form>
 {% endblock body %}

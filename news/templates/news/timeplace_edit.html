@@ -65,7 +65,7 @@
         </div>
         <div class="two fields">
             <div class="field">
-                <label>Publisering</label>
+                <label>{% trans "Publishing" %}</label>
                 {{ form.pub_date }}
             </div>
             <div class="field">
@@ -77,7 +77,7 @@
             <label>{{ form.hidden.label }}</label>
             {{ form.hidden }}
         </div>
-        <input class="ui blue submit button" type="submit" value="Lagre">
+        <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
     </form>
     <br><br>
 {% endblock body %}

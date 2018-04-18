@@ -40,7 +40,7 @@
                         <a class="ui labeled icon wrapped make_yellow button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
                            href="{% url 'make_reservation' machine=machine %}">
                             <i class="add icon"></i>
-                            {% trans "Ny reservasjon" %}
+                            {% trans "New reservation" %}
                         </a>
                     </div>
                     <a class="ui labeled icon make_yellow button" href="{% url 'my_reservations' %}">
