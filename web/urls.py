@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.urls import path, re_path, include
 from django.contrib import admin
-from django.views.generic.base import RedirectView
+from django.views.generic.base import RedirectView, TemplateView
 from django.views.static import serve
 from social_core.utils import setting_name
 
@@ -30,3 +30,5 @@ urlpatterns = [
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
 ]
+
+handler404 = TemplateView.as_view(template_name='web/404.html')
