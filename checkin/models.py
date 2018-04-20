@@ -54,3 +54,11 @@ class SuggestSkill(models.Model):
 
     class Meta:
         ordering = ('title',)
+
+
+class RegisterProfile(models.Model):
+    card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
+    last_scan = models.DateTimeField()
+
+    def __str__(self):
+        return str(self.card_id)

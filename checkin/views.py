@@ -1,16 +1,19 @@
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.decorators import method_decorator
+from django.utils import timezone
+from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView
 
-from checkin.models import Profile, Skill, UserSkill, SuggestSkill
+from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from web import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from datetime import datetime, timedelta
 
 
-class CheckInView(TemplateView):
+class CheckInView(View):
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
@@ -87,7 +90,8 @@ class ProfilePageView(TemplateView):
             'image': img,
             'userskill': userskill_set,
             'skill_dict': skill_dict,
-            'all_skills': Skill.objects.all()
+            'all_skills': Skill.objects.all(),
+            'make_member': self.request.user.groups.filter(name="MAKE NTNU").exists(),
         })
         return context
 
@@ -129,8 +133,48 @@ class SuggestSkillView(TemplateView):
         return context
 
 
-class CreateProfileView(TemplateView):
-    template_name = "checkin/create_profile.html"
+class VoteSuggestionView(TemplateView):
+    template_name = "checkin/suggest_skill.html"
 
     def post(self, request):
-        pass
+        data = {
+            'user_exists': SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).voters.filter(user=request.user).exists(),
+        }
+
+        SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).voters.add(request.user.profile)
+
+        return JsonResponse(data)
+
+
+class RegisterCardView(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    @csrf_exempt
+    def post(self, request):
+        card_id = request.POST.get('card_id')
+        if not Profile.objects.filter(card_id=card_id).exists():
+            RegisterProfile.objects.all().delete()
+            RegisterProfile.objects.create(card_id=card_id, last_scan=datetime.now(timezone.get_current_timezone()))
+            return HttpResponse()
+
+        return HttpResponse(400)
+
+
+class RegisterProfileView(TemplateView):
+
+    def post(self, request):
+        scan_exists = RegisterProfile.objects.exists()
+        data = {
+            'scan_exists': scan_exists,
+            'scan_is_recent': True,
+        }
+        if scan_exists:
+            print((datetime.now(timezone.get_current_timezone()) - RegisterProfile.objects.first().last_scan).total_seconds())
+            scan_is_recent = (datetime.now(timezone.get_current_timezone()) - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
+            data['scan_is_recent'] = scan_is_recent
+            if scan_is_recent:
+                Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
+
+        return JsonResponse(data)

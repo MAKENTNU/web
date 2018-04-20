@@ -1,11 +1,12 @@
 from django.contrib import admin
 
-from checkin.models import Skill, Profile, UserSkill
+from checkin.models import Skill, Profile, UserSkill, SuggestSkill
 
 
 class ProfileAdmin(admin.ModelAdmin):
     model = Profile
     list_display = ('__str__', 'card_id')
+
 
 class UserSkillAdmin(admin.ModelAdmin):
     model = UserSkill

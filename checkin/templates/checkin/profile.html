@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}" />
+    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -12,44 +12,57 @@
 
         <img class="profile_pic" src="{{ image.url }}"/>
 
-        <div class="ui feed">
-            {% for skill, level in skill_dict.items %}
-                <div class="event">
-                    <div class="label">
-                        <img src=""/>
+
+        {% if not make_member %}
+
+            <div class="ui feed">
+                {% for skill, level in skill_dict.items %}
+                    <div class="event">
+                        <div class="label">
+                            <img src=""/>
+                        </div>
+                        <div class="content">
+                            {{ skill }}
+                            <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
+                        </div>
                     </div>
-                    <div class="content">
-                        {{ skill }}
-                        <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+                {% endfor %}
+            </div>
 
 
-        <div class="container">
-            <form class="ui form" action="" method="post">
-                {% csrf_token %}
-                <input name="rating" type="number" id="rating-input" value="1" hidden>
-                <div class="inline fields">
-                    <div class="ten wide field">
-                        <label>Ferdigheter</label>
-                        <select class="ui fluid dropdown search" name="skill" required>
-                            <option value="">Velg/søk</option>
-                            {% for skill in all_skills %}
-                                <option value="{{ skill.id }}">{{ skill.title }}</option>
-                            {% endfor %}
-                        </select>
+            <div class="container">
+                <form class="ui form" action="" method="post">
+                    {% csrf_token %}
+                    <input name="rating" type="number" id="rating-input" value="1" hidden>
+                    <div class="inline fields">
+                        <div class="ten wide field">
+                            <label>Ferdigheter</label>
+                            <select class="ui fluid dropdown search" name="skill" required>
+                                <option value="">Velg/søk</option>
+                                {% for skill in all_skills %}
+                                    <option value="{{ skill.id }}">{{ skill.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="three wide field">
+                            <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
+                        </div>
+                        <div class="three wide field">
+                            <button class="ui button" type="submit">Submit</button>
+                        </div>
                     </div>
-                    <div class="three wide field">
-                        <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
-                    </div>
-                    <div class="three wide field">
-                        <button class="ui button" type="submit">Submit</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+
+        {% endif %}
+
+        {% if profile.card_id %}
+            <div class="card-register">
+                <p>Legg kortet på kortskanneren og trykk på knappen for å registrere kortet</p>
+                <button class="ui button register-profile">Registrer</button>
+            </div>
+        {% endif %}
+
     </div>
 {% endblock body %}
 
@@ -69,6 +82,47 @@
                 $('#rating-input').val(rating);
             }
         });
+
+        $('.register-profile').click(function () {
+            register_profile_post($(this));
+        });
+
+        function register_profile_post(element) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/checkin/register/profile/',
+                data: {},
+                success: function (data) {
+                    if (data['scan_exists']) {
+                        console.log((data['scan_is_recent']));
+                        if (data['scan_is_recent']) {
+                            element.removeClass('red');
+                            element.removeAttr('data-tooltip');
+                            element.removeAttr('data-position');
+                            element.addClass('green');
+                            element.addClass('disabled');
+                            element.html('Registrert!');
+                        }
+                        else {
+                            element.addClass('red');
+                            element.attr('data-tooltip', 'Skann kortet igjen!');
+                            element.attr('data-position', 'right center');
+                        }
+                    }
+                    else {
+                        element.addClass('red');
+                        element.attr('data-tooltip', 'Skann kortet!');
+                        element.attr('data-position', 'right center');
+                    }
+
+                }
+            });
+        }
 
 
     </script>

@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load checkin_tags %}
 
 {% block body %}
 
@@ -39,8 +40,14 @@
                             <div class="content">{{ suggestion.title }}</div>
                         </h5>
                     </td>
-                    <td class="center">{{ suggestion.voters.count }}</td>
-                    <td><button class="ui button">Stem</button></td>
+
+                    <td id="vote-count" class="center">{{ suggestion.voters.count }}</td>
+                    <td>
+                        <button class="ui {% if suggestion|has_voter:request.user %}green{% endif %} button add-voter"
+                                pk="{{ suggestion.pk }}">
+                            Stem
+                        </button>
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -48,3 +55,34 @@
     </div>
 
 {% endblock body %}
+
+{% block scripts %}
+    <script>
+
+        $('.add-voter').click(function () {
+            add_voter_post($(this), $(this).attr('pk'));
+        });
+
+        function add_voter_post(element, pk) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/checkin/suggest/vote/',
+                data: {
+                    'pk': pk,
+                },
+                success: function (data) {
+                    element.addClass('green');
+                    if (!data['user_exists']) {
+                        var incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
+                        element.parent().siblings('#vote-count').html(incrementedCount);
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock scripts %}
