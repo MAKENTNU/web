@@ -1,14 +1,13 @@
 from django.conf import settings
-from django.urls import path, re_path, include
 from django.contrib import admin
+from django.urls import path, re_path, include
 from django.views.generic.base import RedirectView
 from django.views.static import serve
 from social_core.utils import setting_name
 
 from contentbox.models import ContentBox
 from dataporten.views import Logout, login_wrapper
-
-from web.views import IndexView, AdminPanelView
+from web.views import IndexView, AdminPanelView, View404
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
@@ -30,3 +29,4 @@ urlpatterns = [
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
 ]
+handler404 = View404.as_view()
