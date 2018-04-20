@@ -29,4 +29,5 @@ urlpatterns = [
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
 ]
+
 handler404 = View404.as_view()
