@@ -23,7 +23,7 @@ class Machine(models.Model):
     status = models.CharField(max_length=2, choices=status_choices)
     name = models.CharField(max_length=30, unique=True)
     location = models.CharField(max_length=40)
-    stream_url = models.URLField(default='')
+    location_url = models.URLField()
     model = models.CharField(max_length=40)
 
     @abstractmethod

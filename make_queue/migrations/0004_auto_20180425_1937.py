@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='machine',
-            name='location_url',
+            name='stream_url',
         ),
         migrations.AlterField(
             model_name='machine',
