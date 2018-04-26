@@ -1,21 +1,30 @@
-function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 5; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
+count = 0;
 
-setInterval(function () {
-    $('.stream.image').each(function () {
-        if (!$(this).attr('nostream')) {
-            $(this).attr("src", $(this).attr("url") + "?" + makeid());
+$('.stream.image').each(function () {
+    var chatSocket = new WebSocket(
+        'ws://' + window.location.host +
+        '/stream/' + $(this).attr("name") + '/');
+
+    chatSocket.onmessage = function (e) {
+        console.log('img');
+        var data = JSON.parse(e.data);
+        var blob = new Blob([data], {type: 'image/jpg'});
+        var url = URL.createObjectURL(blob);
+        var image = $(this);
+        var img = new Image();
+        img.onload = function () {
+            var ctx = image.getContext("2d");
+            ctx.drawImage(img, 0, 0);
         }
-    });
-}, 1000);
+        img.src = url;
+    };
 
-$('.stream.image').click(function() {
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+});
+
+$('.stream.image').click(function () {
     $(this).toggleClass('fullscreen');
     $('#fader').toggleClass('fullscreen');
     $('#closefullscreen').toggleClass('fullscreen');
@@ -23,6 +32,6 @@ $('.stream.image').click(function() {
 
 $('#closefullscreen').click(function () {
     $('.fullscreen').each(function () {
-       $(this).removeClass('fullscreen');
+        $(this).removeClass('fullscreen');
     });
 });

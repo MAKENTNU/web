@@ -21,9 +21,8 @@ class Machine(models.Model):
     )
 
     status = models.CharField(max_length=2, choices=status_choices)
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     location = models.CharField(max_length=40)
-    location_url = models.URLField()
     stream_url = models.URLField(default='')
     model = models.CharField(max_length=40)
 
