@@ -1,26 +1,20 @@
-count = 0;
-
 $('.stream.image').each(function () {
     var chatSocket = new WebSocket(
-        'ws://' + window.location.host +
-        '/stream/' + $(this).attr("name") + '/');
+        'wss://' + window.location.host +
+        '/ws/stream/' + $(this).attr("name") + '/');
+
+    chatSocket.image = $(this);
 
     chatSocket.onmessage = function (e) {
-        console.log('img');
         var data = JSON.parse(e.data);
-        var blob = new Blob([data], {type: 'image/jpg'});
-        var url = URL.createObjectURL(blob);
-        var image = $(this);
-        var img = new Image();
-        img.onload = function () {
-            var ctx = image.getContext("2d");
-            ctx.drawImage(img, 0, 0);
-        }
-        img.src = url;
+        var image = new Image();
+        image.src = 'data:image/jpeg;base64,' + data['image'];
+        chatSocket.image.html('');
+        chatSocket.image.append(image);
     };
 
     chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
+        console.error('Socket closed unexpectedly');
     };
 });
 

@@ -1,6 +1,7 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
+
 class StreamConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['stream_name']
@@ -31,6 +32,15 @@ class StreamConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 'type': 'image',
-                'message': image
+                'image': image
             }
         )
+
+    # Receive message from room group
+    async def image(self, event):
+        image = event['image']
+
+        # Send message to WebSocket
+        await self.send(text_data=json.dumps({
+            'image': image
+        }))
