@@ -89,7 +89,7 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
-    multiday = models.BooleanField(default=False, verbose_name=_('One registration'))
+    multiday = models.BooleanField(default=False, verbose_name=_('Single registration'))
     hoopla = models.CharField(
         max_length=200,
         blank=True,
