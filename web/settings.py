@@ -13,6 +13,7 @@ LOGOUT_URL = '/'
 LOGIN_URL = '/login'
 REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
+STREAM_KEY = ''
 
 try:
     from .local_settings import *

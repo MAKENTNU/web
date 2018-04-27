@@ -1,6 +1,8 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
+from django.conf import settings
+
 
 class StreamConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -26,15 +28,17 @@ class StreamConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         image = text_data_json['image']
+        key = text_data_json['key']
 
-        # Send message to room group
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'image',
-                'image': image
-            }
-        )
+        if key == settings.STREAM_KEY:
+            # Send message to room group
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'image',
+                    'image': image
+                }
+            )
 
     # Receive message from room group
     async def image(self, event):

@@ -1,7 +1,7 @@
 {% load staticfiles %}
 {% load reservation_extra %}
 
-<div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
+<div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %} {% endif %}card">
     <div class="stream image" name="{{ machine.name }}">
         <img src="{% static "make_queue/img/no_stream.jpg" %}">
     </div>

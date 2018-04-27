@@ -5,7 +5,7 @@ from django.urls import path
 from make_queue.views.stream.stream import StreamConsumer
 
 websocket_urlpatterns = [
-    path('stream/<str:stream_name>/', StreamConsumer),
+    path('ws/stream/<str:stream_name>/', StreamConsumer),
 ]
 
 application = ProtocolTypeRouter({

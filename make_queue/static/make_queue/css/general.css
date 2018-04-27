@@ -89,15 +89,15 @@
     }
 }
 
-.stream.image {
-    width: 100%;
+.stream.image img {
+    width: 100% !important;
 }
 
-.stream.image:hover {
+.stream.image img:hover {
     cursor: pointer;
 }
 
-.stream.image.fullscreen {
+.stream.image.fullscreen img {
     position: fixed;
     left: 50%;
     top: 50%;
