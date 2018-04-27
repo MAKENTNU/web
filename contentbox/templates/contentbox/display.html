@@ -1,4 +1,5 @@
 {% extends 'web/base.html' %}
+{% load i18n %}
 
 {% block body %}
     <div class="ui text container" style="position: relative; margin: 100px 0;">
@@ -6,7 +7,7 @@
             <a class="ui yellow button"
                href="{% url 'contentbox_edit' contentbox.id %}"
                style="position: absolute; top: -50px; left: 0px;"
-            >Rediger</a>
+            >{% trans "Edit" %}</a>
         {% endif %}
         {% autoescape off %}
             {{ contentbox.content }}

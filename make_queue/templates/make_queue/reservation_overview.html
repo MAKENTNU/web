@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 {% load reservation_extra %}
 
 {% block head %}
@@ -18,7 +19,7 @@
     <div class="ui container">
         {% csrf_token %}
         <div class="ui huge header">
-            Reservasjoner
+            {% trans "Reservations" %}
         </div>
         <div class="ui grid padded equal width ">
             <div class="column">
@@ -29,23 +30,26 @@
             <div class="column no padding">
                 <div class="ui vertical buttons make_right_floated">
                     <div class="enable_popup"
-                         {% if not user.is_authenticated %}data-content="Du må være logget inn for å kunne lage nye reservasjoner"
-                         {% elif not can_use %}data-content="{% get_machine_cannot_use_text machine %}"
-                         {% elif not can_make_more_reservations %}data-content="Du har nådd maksimalt antall fremtidige reservasjoner"
+                         {% if not user.is_authenticated %}
+			     data-content="{% trans "You must be logged in to make new reservations" %}"
+                         {% elif not can_use %}
+			     data-content="{% get_machine_cannot_use_text machine %}"
+                         {% elif not can_make_more_reservations %}
+			     data-content="{% trans "You have reached the maximum number of future reservations" %}"
                          {% endif %}>
                         <a class="ui labeled icon wrapped make_yellow button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
                            href="{% url 'make_reservation' machine=machine %}">
                             <i class="add icon"></i>
-                            Ny reservasjon
+                            {% trans "New reservation" %}
                         </a>
                     </div>
                     <a class="ui labeled icon make_yellow button" href="{% url 'my_reservations' %}">
                         <i class="list icon"></i>
-                        Mine reservasjoner
+                        {% trans "My reservations" %}
                     </a>
                     <a class="ui labeled icon make_yellow button" href="{% url 'reservation_machines_overview' %}">
                         <i class="cogs icon"></i>
-                        Andre maskiner
+                        {% trans "Other machines" %}
                     </a>
                 </div>
             </div>
@@ -56,5 +60,6 @@
         {% include 'make_queue/reservation_calendar.html' with week_days=week_days link_prev=link_prev link_next=link_next %}
     </div>
     <script>let allowed = {% if can_make_more_reservations %}true{% else %}false{% endif %};</script>
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}

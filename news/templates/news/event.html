@@ -1,5 +1,6 @@
 {% extends 'news/article.html' %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block event_classes %} lalign{% endblock event_classes %}
 
@@ -41,7 +42,7 @@
                         {% if event.hoopla %}
                             <div class="ui two buttons">
                                 <a class="ui make_bg_yellow black button" href="{{ event.hoopla }}"
-                                   target="_blank">Påmelding</a>
+                                   target="_blank">{% trans "Registration" %}</a>
                             </div>
                         {% else %}
                             <div class="ui two buttons">
@@ -54,7 +55,7 @@
             {% if article.multiday and article.hoopla %}
                 <div class="ui card">
                     <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
-                       target="_blank">Påmelding</a>
+                       target="_blank">{% trans "Registration" %}</a>
                 </div>
             {% endif %}
         </div>
@@ -66,7 +67,7 @@
     <div class="accordion">
         {% if article.multiday and article.hoopla %}
             <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
-               target="_blank">Påmelding</a>
+               target="_blank">{% trans "Registration" %}</a>
         {% endif %}
     </div>
     <div class="ui styled accordion">
@@ -106,9 +107,9 @@
                     {% endif %}
                     {% if not event.event.multiday %}
                         {% if event.hoopla %}
-                            <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">Påmelding</a>
+                            <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">{% trans "Registration" %}</a>
                         {% else %}
-                            <p class="make_col_ligray attend"><i>Ingen påmelding</i></p>
+                            <p class="make_col_ligray attend"><i>{% trans "No registrations" %}</i></p>
                         {% endif %}
                     {% endif %}
                 </div>

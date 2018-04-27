@@ -1,5 +1,6 @@
 {% load staticfiles %}
 {% load reservation_extra %}
+{% load i18n %}
 
 <div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
     <div class="image">
@@ -30,7 +31,7 @@
         <div>
             <a class="ui bottom attached button {% card_color_from_machine_status machine %}"
                href="{% current_calendar_url machine %}">
-                Se i kalender
+		{% trans "View in calendar" %}
             </a>
         </div>
     {% endif %}

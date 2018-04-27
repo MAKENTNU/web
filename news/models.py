@@ -1,5 +1,6 @@
 from datetime import time
 
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 from ckeditor.fields import RichTextField
 from django.db.models import Q
@@ -33,32 +34,32 @@ class TimePlaceManager(models.Manager):
 class NewsBase(models.Model):
     title = models.CharField(
         max_length=100,
-        verbose_name='Tittel',
+        verbose_name=_('Title'),
     )
     content = RichTextField()
     clickbait = models.TextField(
         max_length=300,
-        verbose_name='Clickbait',
+        verbose_name=_('Clickbait'),
         blank=True,
     )
     image = models.ImageField(
-        verbose_name='Bilde',
+        verbose_name=_('Image'),
     )
     contain = models.BooleanField(
         default=False,
-        verbose_name='Ikke crop bildet',
+        verbose_name=_("Don't crop the image"),
     )
     featured = models.BooleanField(
         default=True,
-        verbose_name='Fremhevet',
+        verbose_name=_('Highlighted'),
     )
     hidden = models.BooleanField(
         default=False,
-        verbose_name='Skjult',
+        verbose_name=_('Hidden'),
     )
     private = models.BooleanField(
         default=False,
-        verbose_name='MAKE intern',
+        verbose_name=_('MAKE internal'),
     )
 
     def __str__(self):
@@ -74,11 +75,11 @@ class Article(NewsBase):
     objects = ArticleManager()
     pub_date = models.DateField(
         default=timezone.now,
-        verbose_name='Publiseringsdato',
+        verbose_name=_('Publishing date'),
     )
     pub_time = models.TimeField(
         default=time.min,
-        verbose_name='Publiseringstid',
+        verbose_name=_('Publishing time'),
     )
 
     class Meta:
@@ -88,11 +89,11 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
-    multiday = models.BooleanField(default=False, verbose_name='Én påmelding')
+    multiday = models.BooleanField(default=False, verbose_name=_('Single registration'))
     hoopla = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name='Hoopla url',
+        verbose_name=_('Hoopla url'),
     )
 
 
@@ -101,48 +102,48 @@ class TimePlace(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     pub_date = models.DateField(
         default=timezone.now,
-        verbose_name='Publiseringsdato',
+        verbose_name=_('Publishing date'),
     )
     pub_time = models.TimeField(
         default=time.min,
-        verbose_name='Publiseringstid',
+        verbose_name=_('Publishing time'),
     )
     start_date = models.DateField(
         default=timezone.now,
-        verbose_name='Start-dato',
+        verbose_name=_('Start date'),
     )
     end_date = models.DateField(
         blank=True,
         null=True,
-        verbose_name='Slutt-dato'
+        verbose_name=_('End date')
     )
     start_time = models.TimeField(
         default=time.min,
-        verbose_name='Start-tidspunkt',
+        verbose_name=_('Start time'),
     )
     end_time = models.TimeField(
         blank=True,
         null=True,
-        verbose_name='Slutt-tidspunkt'
+        verbose_name=_('End time')
     )
     place = models.CharField(
         max_length=100,
         blank=True,
-        verbose_name='Sted',
+        verbose_name=_('Location'),
     )
     place_url = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name='Sted URL',
+        verbose_name=_('Location URL'),
     )
     hoopla = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name='Hoopla url',
+        verbose_name=_('Hoopla url'),
     )
     hidden = models.BooleanField(
         default=True,
-        verbose_name='Skjult',
+        verbose_name=_('Hidden'),
     )
 
     def __str__(self):
