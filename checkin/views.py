@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils import timezone
 from django.views import View
@@ -31,20 +32,32 @@ class CheckInView(View):
 class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
 
+    def expired_checkin(self, profile):
+        """1. This means that people only get automatically checked out if someone checks the feed.
+        Should have something that runs every 5 mins or so and checks people out of the system."""
+        hours = timezone.now().hour - profile.last_checkin.hour
+        if hours > 2 or not profile.on_make:
+            profile.on_make = False # See 1. above
+            return True
+        else:
+            return False
+
     def get_context_data(self, **kwargs):
         """ Creates dict with skill titles as keys and
          the highest corresponding skill level as its pair value (quick fix) to show on website """
         skill_dict = {}
+
         for profile in Profile.objects.filter(on_make=True):
             for level in profile.userskill_set.all():
                 title, level_int = level.skill.title, level.skill_level
-                if title not in skill_dict or level_int > skill_dict[title]:
-                    skill_dict[title] = level_int
+
+                if (title not in skill_dict or level_int > skill_dict[title][0]) \
+                        and not self.expired_checkin(profile):
+                    skill_dict[title] = (level_int, profile.last_checkin)
 
         context = super().get_context_data(**kwargs)
         context.update({
-            'skill_dict': skill_dict,
-
+            'skill_dict': sorted(skill_dict.items(), key=lambda x: x[1][1], reverse=True),
         })
         return context
 

@@ -9,15 +9,15 @@
     <div class="ui text container">
         <h2 class="make_col_blue">Ferdigheter på makerverkstedet akkurat nå:</h2>
         <div class="ui feed">
-            {% for skill, level in skill_dict.items %}
+            {% for skill, leveltime in skill_dict %}
                 <div class="event">
                     <div class="label blackbox"> {# blackbox er for debugging #}
 {#                        <img src=""/>#}
                     </div>
                     <div class="content">
                         <div class="skill-text">{{ skill }}</div>
-                        <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
-                        <div class="date"> timer siden</div>
+                        <div class="ui star rating skill-lvl" data-rating="{{ leveltime.0 }}" data-max-rating="3"></div>
+                        <div class="date">{{ leveltime.1|timesince }}</div>
                     </div>
                 </div>
             {% endfor %}
