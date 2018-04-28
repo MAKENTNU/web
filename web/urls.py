@@ -28,7 +28,6 @@ urlpatterns += i18n_patterns(
     path('', include('social_django.urls', namespace='social')),
     path('news/', include('news.urls')),
     path('contentbox/', include('contentbox.urls')),
-    path('committees/', include('groups.committee_urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     ContentBox.About.url(),
     ContentBox.url('makerspace'),

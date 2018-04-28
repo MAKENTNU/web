@@ -39,8 +39,7 @@ msgstr "Innhold"
 msgid "Save"
 msgstr "Lagre"
 
-#: groups/templates/groups/committee_list.html:5
-#: web/templates/web/footer.html:36
+#: groups/templates/groups/committee_list.html:6
 msgid "Committees"
 msgstr "Komiteer"
 
