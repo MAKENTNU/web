@@ -30,7 +30,7 @@ urlpatterns += i18n_patterns(
     path('contentbox/', include('contentbox.urls')),
     path('committees/', include('groups.committee_urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
-    ContentBox.url('about'),
+    ContentBox.About.url(),
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
