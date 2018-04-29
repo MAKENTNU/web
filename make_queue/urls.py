@@ -25,11 +25,10 @@ quota_url_patterns = [
     path('update/3D-printer/', permission_required("make_queue.can_edit_quota", raise_exception=True)(api.quota.UpdateQuota3D.as_view())),
     path('update/allowed/', csrf_exempt(api.quota.UpdateAllowed.as_view()), name="update_allowed_3D_printer"),
     path('update/sewing/', permission_required("make_queue.can_edit_quota", raise_exception=True)(api.quota.UpdateSewingQuota.as_view())),
-    path('update/', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.UpdatePrinterHandlerView.as_view())),
+    path('update/', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.UpdatePrinterHandlerView.as_view()), name="update_printer_handler"),
     path('<username:user>/', permission_required("make_queue.can_edit_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view())),
     path('', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
-
 
 urlpatterns = [
     path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),

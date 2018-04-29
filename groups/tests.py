@@ -208,9 +208,9 @@ class PermGroupTestCase(TestCase):
         inherited_permissions = dev.inherited_permissions
         for perm in permissions:
             if perm in own_permissions:
-                self.assertNotIn(inherited_permissions)
+                self.assertNotIn(perm, inherited_permissions)
             else:
-                self.assertIn(inherited_permissions)
+                self.assertIn(perm, inherited_permissions)
 
 
 class InheritanceGroupAdminTestCase(TestCase):
