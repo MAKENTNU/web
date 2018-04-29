@@ -47,7 +47,7 @@
 
 .footer .logo {
     align-self: center;
-    margin-left: -5px;
+    margin-left: -4px;
 }
 
 .footer .logo img {
@@ -65,6 +65,10 @@
         grid-template-columns: 1fr;
         grid-gap: 30px;
         text-align: center;
+    }
+
+    .footer .logo {
+        margin-left: 0;
     }
 
     .copyright {
