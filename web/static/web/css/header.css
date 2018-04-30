@@ -50,7 +50,7 @@
 }
 
 .burger i {
-    color: #ffffff;
+    color: #FFFFFF;
     font-size: 30px;
 }
 
@@ -72,7 +72,7 @@
 
 .nav .languages .lang-button.item:hover {
     background: rgba(255, 255, 255, .08);
-    color: #fff !important;
+    color: #FFF !important;
 }
 
 @media screen and (max-width: 900px) {

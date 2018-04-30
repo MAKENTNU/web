@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from .models import InheritanceGroup, Committee
 
-
 admin.site.register(Committee)
 
 

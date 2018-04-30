@@ -69,11 +69,11 @@
 }
 
 .make_my_reservation_blue_link {
-    color: #4183c4 !important;
+    color: #4183C4 !important;
 }
 
 .error_border {
-    border-color: #ff0000 !important;
+    border-color: #FF0000 !important;
 }
 
 .float_fix::after {
@@ -129,7 +129,7 @@
 
 #closefullscreen.fullscreen {
     display: block;
-    color: #ffffff;
+    color: #FFFFFF;
     position: fixed;
     top: 20px;
     right: 20px;

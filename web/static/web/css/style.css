@@ -52,7 +52,7 @@ body {
 }
 
 .noshadow {
-    text-shadow: 0 0 0 #fff, 0 0 0 #fff, 0 0 0 #fff, 0 0 0 #fff !important;
+    text-shadow: 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF !important;
 }
 
 .inline-block {

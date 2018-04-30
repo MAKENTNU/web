@@ -65,8 +65,8 @@ msgstr "Vedlikehold"
 
 #: make_queue/models.py:64
 msgid ""
-"You must have taken a 3D printer course to reserve the printers. If you have "
-"had the course, but don't have access, contact 3dprint@makentnu.no"
+"You must have completed a 3D printer course to reserve the printers. If you have "
+"taken the course, but don't have access, contact 3dprint@makentnu.no"
 msgstr ""
 "Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt "
 "kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
@@ -184,8 +184,8 @@ msgid "Access"
 msgstr "Tilgang"
 
 #: make_queue/templates/make_queue/quota_panel.html:17
-msgid "Get new 3D printer cource participants"
-msgstr "Hente nye 3D-printer kursdeltagere"
+msgid "Get new 3D printer course participants"
+msgstr "Hente nye 3D-printer-kursdeltagere"
 
 #: make_queue/templates/make_queue/quota_panel.html:19
 msgid "Users"
@@ -240,7 +240,7 @@ msgstr "Kommentar"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:124
 msgid "Other reservations"
-msgstr "Andre Reservasjoner"
+msgstr "Andre reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:128
 #: news/templates/news/admin.html:13 web/templates/web/header.html:32

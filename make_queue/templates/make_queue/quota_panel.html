@@ -13,8 +13,8 @@
     <div class="ui container">
         <div class="ui grid equal width">
             <div class="ui column">
-                <a href="/reservation/quota/update/" class="ui primary button">
-                    {% trans "Get new 3D printer cource participants" %}
+                <a href="{% url 'update_printer_handler' %}" class="ui primary button">
+                    {% trans "Get new 3D printer course participants" %}
                 </a>
                 <div class="ui huge header">{% trans "Users" %}</div>
                 <div class="ui icon input" id="user_search_field">

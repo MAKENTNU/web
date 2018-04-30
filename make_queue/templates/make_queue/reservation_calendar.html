@@ -100,10 +100,10 @@
                                                         <div>{{ reservation.reservation.comment }}</div>
                                                     </div>
                                                 {% endif %}"
-                                    {% endif %}
-                                    {% if reservation.reservation.event %}
-                                        data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"
-                                    {% endif %}>
+                                        {% endif %}
+                                        {% if reservation.reservation.event %}
+                                     data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"
+                                        {% endif %}>
                                 </div>
                             {% endif %}
                         {% endfor %}
