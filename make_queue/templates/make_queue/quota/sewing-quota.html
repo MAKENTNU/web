@@ -8,11 +8,11 @@
         <div class="header">{% trans "Sewing" %}</div>
         <div class="meta">
         <span>{{ quota.get_active_user_reservations|length }}
-	    {% blocktrans trimmed count counter=quota.get_active_user_reservations|length %}
-	        active reservation
+            {% blocktrans trimmed count counter=quota.get_active_user_reservations|length %}
+                active reservation
             {% plural %}
-	        active reservations
-	    {% endblocktrans %}
+                active reservations
+            {% endblocktrans %}
 	</span>
         </div>
         <div class="full_width quota_field">

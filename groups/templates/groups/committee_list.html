@@ -6,24 +6,24 @@
 
 {% block body %}
     <div class="committees ui divided items text container basic segment">
-	{% for committee in committees %}
-	    <div class="ui item">
-		<div class="image">
-		    {% if committee.image %}
-			<img src="{{ committee.image.url }}" />
-		    {% endif %}
-		</div>
-		<div class="content">
-		    <div class="header">{{ committee.name }}</div>
-		    <div class="meta">
-			<a href="mailto:{{ committee.email }}">{{ committee.email }}</a>
-		    </div>
-		    <div class="description">
-			<p>{{ committee.description }}</p>
-		    </div>
-		</div>
-	    </div>
-	{% endfor %}
+        {% for committee in committees %}
+            <div class="ui item">
+                <div class="image">
+                    {% if committee.image %}
+                        <img src="{{ committee.image.url }}"/>
+                    {% endif %}
+                </div>
+                <div class="content">
+                    <div class="header">{{ committee.name }}</div>
+                    <div class="meta">
+                        <a href="mailto:{{ committee.email }}">{{ committee.email }}</a>
+                    </div>
+                    <div class="description">
+                        <p>{{ committee.description }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
     <script>
         $('.ui.sticky').sticky({
