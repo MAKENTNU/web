@@ -42,7 +42,7 @@
 }
 
 .footer p, .footer a, .footer i {
-    color: #ffffff !important;
+    color: #FFFFFF !important;
 }
 
 .footer .logo {
@@ -57,7 +57,7 @@
 
 .copyright {
     grid-column-start: 2;
-    color: #ffffff;
+    color: #FFFFFF;
 }
 
 @media screen and (max-width: 900px) {
