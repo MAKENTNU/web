@@ -60,6 +60,18 @@
     color: #ffffff;
 }
 
+.two-cols {
+    width: 80%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: center;
+}
+
+.sit {
+    width: 100px;
+}
+
 @media screen and (max-width: 900px) {
     .footer {
         grid-template-columns: 1fr;
