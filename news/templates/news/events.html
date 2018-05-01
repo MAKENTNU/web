@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 {% load thumbnail %}
 
 {% block head %}
@@ -7,7 +8,7 @@
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui text-centered make_col_blue header">Kommende arrangementer</h1>
+    <h1 class="ui text-centered make_col_blue header">{% trans "Upcoming events" %}</h1>
     {% if future %}
         <div class="ui items events" style="margin: 80px 0;">
             {% for event in future %}
@@ -39,11 +40,11 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="noevents">Ingen kommende arrangementer</div><br>
+        <div class="noevents">{% trans "No upcoming events" %}</div><br>
     {% endif %}
 
 
-    <h1 class="ui text-centered make_col_blue header">Tidligere arrangementer</h1>
+    <h1 class="ui text-centered make_col_blue header">{% trans "Previous events" %}</h1>
     {% if past %}
         <div class="ui items events" style="margin: 80px 0;">
             {% for event in past reversed %}
@@ -74,6 +75,6 @@
             {% endfor %}
         </div>
     {% else %}
-        <div class="noevents">Ingen tidligere arrangementer</div><br>
+        <div class="noevents">{% trans "No previous events" %}</div><br>
     {% endif %}
 {% endblock body %}

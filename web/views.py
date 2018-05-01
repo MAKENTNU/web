@@ -2,6 +2,7 @@ from django.views.generic import TemplateView
 
 from news.models import Article, TimePlace
 
+
 class IndexView(TemplateView):
     template_name = 'web/index.html'
 
@@ -13,5 +14,14 @@ class IndexView(TemplateView):
         })
         return context
 
+
 class AdminPanelView(TemplateView):
     template_name = 'web/admin_panel.html'
+
+
+class View404(TemplateView):
+    template_name = 'web/404.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context, status=404)

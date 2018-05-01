@@ -1,5 +1,6 @@
 from math import ceil
 
+from django.utils.translation import gettext_lazy as _
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -13,11 +14,11 @@ class Machine(models.Model):
     __metaclass__ = ABCMeta
 
     status_choices = (
-        ("R", "Reservert"),
-        ("F", "Ledig"),
-        ("I", "I bruk"),
-        ("O", "I ustand"),
-        ("M", "Vedlikehold"),
+        ("R", _("Reserved")),
+        ("F", _("Available")),
+        ("I", _("In use")),
+        ("O", _("Out of order")),
+        ("M", _("Maintenance")),
     )
 
     status = models.CharField(max_length=2, choices=status_choices)
@@ -59,8 +60,8 @@ class Machine(models.Model):
 
 class Printer3D(Machine):
     literal = "3D-printer"
-    cannot_use_text = "Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt kurset, men ikke " \
-                      "har tilgang, ta kontakt med 3dprint@makentnu.no "
+    cannot_use_text = _("You must have taken a 3D printer course to reserve the printers. If you "
+                        "have had the course, but don't have access, contact 3dprint@makentnu.no")
 
     def can_user_use(self, user):
         return hasattr(user, "quota3d") and user.quota3d.can_print

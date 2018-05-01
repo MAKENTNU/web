@@ -50,12 +50,29 @@
 }
 
 .burger i {
-    color: #ffffff;
+    color: #FFFFFF;
     font-size: 30px;
 }
 
 .nav .ui.inverted.menu .item {
     color: rgba(255, 255, 255, .7) !important;
+}
+
+.nav .languages {
+    margin-left: 2em;
+}
+
+.nav .languages .lang-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+}
+
+.nav .languages .lang-button.item:hover {
+    background: rgba(255, 255, 255, .08);
+    color: #FFF !important;
 }
 
 @media screen and (max-width: 900px) {

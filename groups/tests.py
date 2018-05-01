@@ -133,7 +133,7 @@ class PermGroupTestCase(TestCase):
         self.assertIn(perm2, new_group.permissions.all())
 
     def test_user(self):
-        UserModel = get_user_model()
+        user_model = get_user_model()
 
         org = Group.objects.get(name='Org')
         dev = Group.objects.get(name='Dev')
@@ -143,8 +143,8 @@ class PermGroupTestCase(TestCase):
         perm2_str = permission_to_perm(perm2)
         org.own_permissions.add(perm1)
 
-        user1 = UserModel.objects.create_user('Test1', 'test1@test.com', '1234')
-        user2 = UserModel.objects.create_user('Test2', 'test2@test.com', '1234')
+        user1 = user_model.objects.create_user('Test1', 'test1@test.com', '1234')
+        user2 = user_model.objects.create_user('Test2', 'test2@test.com', '1234')
 
         user1.groups.add(org)
         user2.groups.add(dev)
@@ -208,9 +208,9 @@ class PermGroupTestCase(TestCase):
         inherited_permissions = dev.inherited_permissions
         for perm in permissions:
             if perm in own_permissions:
-                self.assertNotIn(inherited_permissions)
+                self.assertNotIn(perm, inherited_permissions)
             else:
-                self.assertIn(inherited_permissions)
+                self.assertIn(perm, inherited_permissions)
 
 
 class InheritanceGroupAdminTestCase(TestCase):

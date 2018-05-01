@@ -1,4 +1,5 @@
 {% load staticfiles %}
+{% load i18n %}
 {% load string_tags %}
 {% load permission_tags %}
 
@@ -25,19 +26,19 @@
     </script>
     <div class="ui secondary inverted menu">
         <a class="item" href="{% url 'front-page' %}">
-            Hjem
+            {% trans "Home" %}
         </a>
         <a class="item" href="{% url 'events' %}">
-            Arrangementer
+            {% trans "Events" %}
         </a>
         <a class="item" href="{% url 'articles' %}">
-            Artikler
+            {% trans "Articles" %}
         </a>
         <a class="item" href="{% url 'makerspace' %}">
-            Makerverkstedet
+            {% trans "Makerverkstedet" %}
         </a>
         <a class="item" href="{% url 'reservation_machines_overview' %}">
-            Reservasjoner
+            {% trans "Reservations" %}
         </a>
         {% if user.is_authenticated %}
             <div class="ui dropdown item">
@@ -46,18 +47,18 @@
                 <div class="menu">
                     {% if user|has_any_permissions or user.is_superuser %}
                         <a class="item" href="{% url 'adminpanel' %}">
-                            Administrasjon
+                            {% trans "Administration" %}
                         </a>
                     {% endif %}
                     <a class="item" href="{% url 'logout' %}">
-                        Logg ut
+                        {% trans "Logout" %}
                     </a>
                 </div>
             </div>
             <script>$('.dropdown').dropdown();</script>
         {% else %}
             <a class="item" href="{% url 'login' %}">
-                Logg inn
+                {% trans "Login" %}
             </a>
         {% endif %}
         <!--div class="right menu">
@@ -71,5 +72,24 @@
                 Logout
             </a>
         </div-->
+        <div class="languages">
+            <form action="{% url 'set_language' %}" method="POST">
+                {% csrf_token %}
+                {% get_current_language as LANGUAGE_CODE %}
+                {% if LANGUAGE_CODE == "en" %}
+                    <input name="language" type="hidden" value="nb"/>
+                    <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
+                    <button class="lang-button item" type="submit">
+                        Norsk
+                    </button>
+                {% else %}
+                    <input name="language" type="hidden" value="en"/>
+                    <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
+                    <button class="lang-button item" type="submit">
+                        English
+                    </button>
+                {% endif %}
+            </form>
+        </div>
     </div>
 </div>
