@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'contentbox',
     'sorl.thumbnail',
+    'inventory',
 ]
 
 MIDDLEWARE = [
