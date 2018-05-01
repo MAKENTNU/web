@@ -1,19 +1,20 @@
-.stream.image img {
-    width: 100% !important;
+.stream.image {
+    position: absolute;
+    width: 100%;
 }
 
-.stream.image img:hover {
+.stream.image:hover {
     cursor: pointer;
 }
 
-.stream.image.fullscreen img {
-    position: fixed;
+.stream.image.fullscreen {
+    position: fixed !important;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    width: auto !important;
-    min-height: 95vh !important;
-    object-fit: cover;
+    width: 95vw;
+    height: 95vh;
+    object-fit: contain;
     z-index: 1000;
 }
 

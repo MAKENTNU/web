@@ -7,10 +7,7 @@ $('.stream.image').each(function () {
 
     chatSocket.onmessage = function (e) {
         var data = JSON.parse(e.data);
-        var image = new Image();
-        image.src = 'data:image/jpeg;base64,' + data['image'];
-        chatSocket.image.html('');
-        chatSocket.image.append(image);
+        chatSocket.image.attr('src', 'data:image/jpeg;base64,' + data['image']);
     };
 
     chatSocket.onclose = function (e) {
