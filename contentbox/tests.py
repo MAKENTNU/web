@@ -1,8 +1,7 @@
 from django.contrib.auth.models import User, Permission
 from django.test import TestCase
 
-from contentbox.models import ContentBox, DisplayContentBoxView, AboutView
-from groups.views import CommitteeList
+from contentbox.models import ContentBox, DisplayContentBoxView
 
 
 class ModelTestCase(TestCase):
@@ -43,9 +42,3 @@ class ModelTestCase(TestCase):
         ContentBox.get(title='TEST_TITLE')
         response = self.client.get('/contentbox/1/edit/')
         self.assertEqual(response.status_code, 200)
-
-    def test_about_view(self):
-        view = AboutView()
-        context = view.get_context_data()
-        self.assertTrue('contentbox' in context)
-        self.assertTrue(CommitteeList.context_object_name in context)
