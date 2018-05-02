@@ -7,6 +7,7 @@ from django.utils import timezone
 
 class Skill(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
+    image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):
         return self.title
@@ -15,7 +16,7 @@ class Skill(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
-    image = models.ImageField(upload_to='photos/%Y/%m/%d', blank=True, verbose_name="Profilbilde")
+    image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
     last_checkin = models.DateTimeField(auto_now=True, verbose_name="Sist sjekket inn")
 
@@ -49,6 +50,7 @@ class SuggestSkill(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name="Foreslått ferdighet")
     approved = models.BooleanField(default=False)
     voters = models.ManyToManyField(Profile, related_name="votes")
+    image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):
         return str(self.title)

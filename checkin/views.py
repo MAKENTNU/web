@@ -45,6 +45,8 @@ class ShowSkillsView(TemplateView):
     def get_context_data(self, **kwargs):
         """ Creates dict with skill titles as keys and
          the highest corresponding skill level as its pair value (quick fix) to show on website """
+        # skill_dict = UserSkill.objects.filter(profile__on_make=True).order_by("-skill_level")
+
         skill_dict = {}
 
         for profile in Profile.objects.filter(on_make=True):
@@ -72,7 +74,7 @@ class ProfilePageView(TemplateView):
         except ValueError:
             return HttpResponseRedirect(reverse('profile'))
 
-        profile = request.user.profile_set.first()
+        profile = request.user.profile
         skill = get_object_or_404(Skill, id=skill_id)
 
         if rating == int(rating) and 0 <= rating <= 3:
@@ -115,6 +117,8 @@ class SuggestSkillView(TemplateView):
     def post(self, request):
         suggestion = request.POST.get('suggested-skill')
         profile = request.user.profile
+        image = request.FILES.get('image')
+        print(image)
 
         if not suggestion.strip():
             return HttpResponseRedirect(reverse('suggest'))
@@ -126,11 +130,11 @@ class SuggestSkillView(TemplateView):
             if SuggestSkill.objects.filter(title=suggestion).exists():
                 SuggestSkill.objects.get(title=suggestion).voters.add(profile)
             else:
-                sug = SuggestSkill.objects.create(creator=profile, title=suggestion)
+                sug = SuggestSkill.objects.create(creator=profile, title=suggestion, image=image)
                 sug.voters.add(profile)
 
             if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5 or SuggestSkill.objects.get(title=suggestion).approved:
-                Skill.objects.create(title=suggestion)
+                Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.error(request, "Ferdighet lagt til!")
 
@@ -141,7 +145,6 @@ class SuggestSkillView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update({
             'suggestions': SuggestSkill.objects.all(),
-
         })
         return context
 
@@ -150,11 +153,15 @@ class VoteSuggestionView(TemplateView):
     template_name = "checkin/suggest_skill.html"
 
     def post(self, request):
+        suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
         data = {
-            'user_exists': SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).voters.filter(user=request.user).exists(),
+            'user_exists': suggestion.voters.filter(user=request.user).exists(),
         }
-
-        SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).voters.add(request.user.profile)
+        suggestion.voters.add(request.user.profile)
+        data['skill_passed'] = suggestion.voters.count() >= 5 or suggestion.approved
+        if data['skill_passed']:
+            Skill.objects.create(title=SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).title)
+            SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).delete()
 
         return JsonResponse(data)
 
@@ -181,13 +188,24 @@ class RegisterProfileView(TemplateView):
         scan_exists = RegisterProfile.objects.exists()
         data = {
             'scan_exists': scan_exists,
-            'scan_is_recent': True,
+            'scan_is_recent': False,
         }
         if scan_exists:
-            print((datetime.now(timezone.get_current_timezone()) - RegisterProfile.objects.first().last_scan).total_seconds())
             scan_is_recent = (datetime.now(timezone.get_current_timezone()) - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
 
         return JsonResponse(data)
+
+
+class EditProfilePictureView(View):
+
+    def post(self, request):
+        image = request.FILES.get('image')
+        profile = request.user.profile
+        profile.image = image
+        profile.save()
+        return HttpResponseRedirect(reverse('profile'))
+
+

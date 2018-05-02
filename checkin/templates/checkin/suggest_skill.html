@@ -5,14 +5,17 @@
 {% block body %}
 
     <div class="ui text container">
-        <h1>Foreslå ny ferdighet</h1>
+        <h1>Foreslå ferdigheter</h1>
 
-        <form class="ui form" action="" method="post">
+        <form class="ui form" action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="inline fields">
                 <div class="ten wide field">
                     <label>Legg til ferdighet</label>
                     <input type="text" name="suggested-skill" placeholder="Ferdighet">
+                </div>
+                <div class="five wide field">
+                    <input id="skill-image" type="file" name="image" accept="image/jpeg, image/png, image/svg">
                 </div>
                 <div class="three wide field">
                     <button class="ui button" type="submit">Submit</button>
@@ -22,6 +25,8 @@
                 <p>{{ message }}</p>
             {% endfor %}
         </form>
+
+        <br>
 
         <h3>Foreslåtte ferdigheter</h3>
         <table class="ui very basic collapsing celled table">
@@ -36,16 +41,23 @@
             {% for suggestion in suggestions %}
                 <tr>
                     <td>
-                        <h5 class="ui header">
+                        <h5 class="ui header image">
+                            <img src="{% if suggestion.image %}{{ suggestion.image.url }}
+                                      {% else %}{% static "checkin/img/placeholder_skill.svg" %}{% endif %}"
+                                 class="ui mini rounded image">
                             <div class="content">{{ suggestion.title }}</div>
                         </h5>
                     </td>
 
                     <td id="vote-count" class="center">{{ suggestion.voters.count }}</td>
                     <td>
-                        <button class="ui {% if suggestion|has_voter:request.user %}green{% endif %} button add-voter"
+                        <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
                                 pk="{{ suggestion.pk }}">
-                            Stem
+                            {% if suggestion|has_voter:request.user %}
+                                Stemt!
+                            {% else %}
+                                Stem
+                            {% endif %}
                         </button>
                     </td>
                 </tr>
@@ -77,9 +89,14 @@
                 },
                 success: function (data) {
                     element.addClass('green');
+                    element.addClass('disabled');
+                    element.html('Stemt!');
                     if (!data['user_exists']) {
                         var incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
                         element.parent().siblings('#vote-count').html(incrementedCount);
+                    }
+                    if (data['skill_passed']) {
+                        element.parents('tr').remove();
                     }
                 }
             });

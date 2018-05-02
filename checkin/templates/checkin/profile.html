@@ -8,27 +8,40 @@
 {% block body %}
     <div class="ui text container">
         <h1>Min Side</h1>
+        <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
 
+        <div class="ui container">
+            <img id="profile-pic"
+                 src="{% if image %}{{ image.url }}{% else %}{% static "checkin/img/placeholder.png" %}{% endif %}"/>
+            <br>
+            <div class="ui container">
+                <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="post"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden>
+                </form>
+            </div>
+        </div>
 
-        <img class="profile_pic" src="{{ image.url }}"/>
-
+        <br>
 
         {% if not make_member %}
 
-            <div class="ui feed">
+            <div class="ui container">
+                <h4>Mine ferdigheter</h4>
                 {% for skill, level in skill_dict.items %}
-                    <div class="event">
-                        <div class="label">
-                            <img src=""/>
-                        </div>
-                        <div class="content">
-                            {{ skill }}
+                    <div class="ui basic image label">
+                        <img class="skill-image" src="{% if skill.image %}{{ skill.image.url }}{% else %}
+                                  {% static "checkin/img/placeholder_skill.svg" %}{% endif %}">
+                        <span>{{ skill }}</span>
+                        <span class="detail make_bg_blue">
                             <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
-                        </div>
+                        </span>
                     </div>
                 {% endfor %}
             </div>
 
+            <br>
 
             <div class="container">
                 <form class="ui form" action="" method="post">
@@ -36,7 +49,7 @@
                     <input name="rating" type="number" id="rating-input" value="1" hidden>
                     <div class="inline fields">
                         <div class="ten wide field">
-                            <label>Ferdigheter</label>
+                            <label>Legg til ferdigheter</label>
                             <select class="ui fluid dropdown search" name="skill" required>
                                 <option value="">Velg/søk</option>
                                 {% for skill in all_skills %}
@@ -44,7 +57,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="three wide field">
+                        <div class="two wide field">
                             <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
                         </div>
                         <div class="three wide field">
@@ -56,7 +69,7 @@
 
         {% endif %}
 
-        {% if profile.card_id %}
+        {% if not profile.card_id %}
             <div class="card-register">
                 <p>Legg kortet på kortskanneren og trykk på knappen for å registrere kortet</p>
                 <button class="ui button register-profile">Registrer</button>
@@ -99,7 +112,6 @@
                 data: {},
                 success: function (data) {
                     if (data['scan_exists']) {
-                        console.log((data['scan_is_recent']));
                         if (data['scan_is_recent']) {
                             element.removeClass('red');
                             element.removeAttr('data-tooltip');
@@ -123,6 +135,18 @@
                 }
             });
         }
+
+        $('#profile-pic').click(function () {
+            $('#input-image').click();
+        });
+
+        $('#profile-pic').hover(function () {
+            $(this).css('cursor', 'pointer');
+        });
+
+        $('#input-image').change(function () {
+            $('#image-form').submit()
+        });
 
 
     </script>
