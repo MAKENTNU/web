@@ -9,7 +9,7 @@ from social_core.utils import setting_name
 
 from contentbox.models import ContentBox
 from dataporten.views import Logout, login_wrapper
-from web.views import IndexView, AdminPanelView, View404
+from web.views import IndexView, AdminPanelView, View404, AboutView
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
@@ -28,9 +28,8 @@ urlpatterns += i18n_patterns(
     path('', include('social_django.urls', namespace='social')),
     path('news/', include('news.urls')),
     path('contentbox/', include('contentbox.urls')),
-    path('committees/', include('groups.committee_urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
-    ContentBox.url('about'),
+    path('about/', AboutView.as_view(), name='about'),
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),

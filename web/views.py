@@ -1,5 +1,7 @@
 from django.views.generic import TemplateView
 
+from contentbox.models import ContentBox
+from groups.models import Committee
 from news.models import Article, TimePlace
 
 
@@ -25,3 +27,15 @@ class View404(TemplateView):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context, status=404)
+
+
+class AboutView(TemplateView):
+    template_name = 'contentbox/about.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'contentbox': ContentBox.get('about'),
+            'committees': Committee.objects.all(),
+        })
+        return context
