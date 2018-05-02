@@ -27,7 +27,7 @@
 
         <br>
 
-        {% if not make_member %}
+        {% if make_member %}
 
             <div class="ui container">
                 <h4>Mine ferdigheter</h4>
@@ -71,9 +71,11 @@
 
         {% endif %}
 
+        <br>
+
         {% if not profile.card_id %}
             <div class="card-register">
-                <p>Legg kortet på kortskanneren og trykk på knappen for å registrere kortet</p>
+                <p>Legg kortet på kortskanneren og trykk på knappen under for å registrere kortet</p>
                 <button class="ui button register-profile">Registrer</button>
             </div>
         {% endif %}

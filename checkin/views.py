@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -21,9 +22,8 @@ class CheckInView(View):
 
     @csrf_exempt
     def post(self, request):
-        """if request.POST.get('key') == settings.CHECKIN_KEY and Profile.objects.filter(
-                card_id=request.POST.get('card_id')).update(on_make=True):"""
-        if Profile.objects.filter(card_id=request.POST.get('card_id')).update(on_make=True):
+        if request.POST.get('key') == settings.CHECKIN_KEY and Profile.objects.filter(
+                card_id=request.POST.get('card_id')).update(on_make=True):
             return HttpResponse()
 
         return HttpResponse(status=400)
@@ -89,7 +89,11 @@ class ProfilePageView(TemplateView):
         return HttpResponseRedirect(reverse('profile'))
 
     def get_context_data(self, **kwargs):
-        profile = Profile.objects.get(user=self.request.user)
+
+        if Profile.objects.filter(user=self.request.user).exists():
+            profile = Profile.objects.get(user=self.request.user)
+        else:
+            profile = Profile.objects.create(user=self.request.user)
         img = profile.image
         userskill_set = profile.userskill_set.all()
 
@@ -111,14 +115,14 @@ class ProfilePageView(TemplateView):
         return context
 
 
-class SuggestSkillView(TemplateView):
+class SuggestSkillView(PermissionRequiredMixin, TemplateView):
     template_name = "checkin/suggest_skill.html"
+    permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
         suggestion = request.POST.get('suggested-skill')
         profile = request.user.profile
         image = request.FILES.get('image')
-        print(image)
 
         if not suggestion.strip():
             return HttpResponseRedirect(reverse('suggest'))
@@ -130,7 +134,8 @@ class SuggestSkillView(TemplateView):
             if SuggestSkill.objects.filter(title=suggestion).exists():
                 s = SuggestSkill.objects.get(title=suggestion)
                 s.voters.add(profile)
-                s.image = image
+                if s.creator == profile or not s.image:
+                    s.image = image
                 s.save()
             else:
                 sug = SuggestSkill.objects.create(creator=profile, title=suggestion, image=image)
@@ -152,8 +157,9 @@ class SuggestSkillView(TemplateView):
         return context
 
 
-class VoteSuggestionView(TemplateView):
+class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
     template_name = "checkin/suggest_skill.html"
+    permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
