@@ -6,3 +6,5 @@ python-social-auth
 python-dataporten-auth
 social-auth-app-django
 sorl-thumbnail
+channels
+channels_redis

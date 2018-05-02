@@ -13,7 +13,7 @@ $(".make_reservation_calendar_time_table_row.can_make_reservation").click(functi
     let date = $(this).data("date");
     let machine_type = $(this).data("machine-type");
     let machine_pk = $(this).data("machine");
-    document.location = "/reservation/make/" + date + "/" + hours + ":" + minutes + "/" + machine_type + "/" + machine_pk + "/";
+    document.location = langPrefix + "/reservation/make/" + date + "/" + hours + ":" + minutes + "/" + machine_type + "/" + machine_pk + "/";
 });
 
 $(".make_reservation_calendar_time_table_item").click(() => false);
@@ -37,20 +37,20 @@ $(".enable_popup").popup();
 if (allowed) {
     function timeSelectionPopupHTML(date, startTime, endTime, machine) {
         let container = $("<div>");
-        $("<div>").addClass("header").html("Ny reservasjon").appendTo(container);
+        $("<div>").addClass("header").html(gettext("New reservation")).appendTo(container);
         $("<div>").html(date).appendTo(container);
         $("<div>").html(startTime + " - " + endTime).appendTo(container);
-        let form = $("<form>").attr("method", "POST").attr("action", "/reservation/make/" + machine.type + "/" + machine.pk + "/").addClass("ui form").appendTo(container);
+        let form = $("<form>").attr("method", "POST").attr("action", langPrefix + "/reservation/make/" + machine.type + "/" + machine.pk + "/").addClass("ui form").appendTo(container);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
         $("<input>").addClass("make_hidden").val(date + " " + startTime).attr("name", "start_time").appendTo(form);
         $("<input>").addClass("make_hidden").val(date + " " + endTime).attr("name", "end_time").appendTo(form);
         $("<input>").addClass("make_hidden").val(machine.type).attr("name", "machine_type").appendTo(form);
         $("<input>").addClass("make_hidden").val(machine.pk).attr("name", "machine_name").appendTo(form);
-        $("<input>").attr("type", "submit").addClass("ui time_selection_button make_yellow button").val("Reserver").appendTo(form);
+        $("<input>").attr("type", "submit").addClass("ui time_selection_button make_yellow button").val(gettext("Reserve")).appendTo(form);
         return container.children();
     }
 } else {
     function timeSelectionPopupHTML(date, startTime, endTime, machine) {
-        return $("<div>").html("Kan ikke lage flere reservasjoner")
+        return $("<div>").html(gettext("Can't add more reservations"))
     }
 }
