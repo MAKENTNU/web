@@ -11,8 +11,10 @@
         <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
 
         <div class="ui container">
-            <img id="profile-pic"
-                 src="{% if image %}{{ image.url }}{% else %}{% static "checkin/img/placeholder.png" %}{% endif %}"/>
+            <div class="ui image" data-tooltip="Endre bilde" data-position="right center">
+                <img id="profile-pic"
+                     src="{% if image %}{{ image.url }}{% else %}{% static "checkin/img/placeholder_profile.png" %}{% endif %}"/>
+            </div>
             <br>
             <div class="ui container">
                 <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="post"
@@ -34,9 +36,9 @@
                         <img class="skill-image" src="{% if skill.image %}{{ skill.image.url }}{% else %}
                                   {% static "checkin/img/placeholder_skill.svg" %}{% endif %}">
                         <span>{{ skill }}</span>
-                        <span class="detail make_bg_blue">
+                        <div class="detail make_bg_blue">
                             <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
-                        </span>
+                        </div>
                     </div>
                 {% endfor %}
             </div>

@@ -128,7 +128,10 @@ class SuggestSkillView(TemplateView):
             return HttpResponseRedirect(reverse('suggest'))
         else:
             if SuggestSkill.objects.filter(title=suggestion).exists():
-                SuggestSkill.objects.get(title=suggestion).voters.add(profile)
+                s = SuggestSkill.objects.get(title=suggestion)
+                s.voters.add(profile)
+                s.image = image
+                s.save()
             else:
                 sug = SuggestSkill.objects.create(creator=profile, title=suggestion, image=image)
                 sug.voters.add(profile)
