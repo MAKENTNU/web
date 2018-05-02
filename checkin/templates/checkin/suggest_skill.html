@@ -49,7 +49,7 @@
                         </h5>
                     </td>
 
-                    <td id="vote-count" class="center">{{ suggestion.voters.count }}</td>
+                    <td id="vote-count">{{ suggestion.voters.count }}</td>
                     <td>
                         <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
                                 pk="{{ suggestion.pk }}">

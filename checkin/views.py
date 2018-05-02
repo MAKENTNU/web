@@ -37,7 +37,7 @@ class ShowSkillsView(TemplateView):
         Should have something that runs every 5 mins or so and checks people out of the system."""
         hours = timezone.now().hour - profile.last_checkin.hour
         if hours > 2 or not profile.on_make:
-            profile.on_make = False # See 1. above
+            profile.on_make = False  # See 1. above
             return True
         else:
             return False
