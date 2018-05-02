@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load string_tags %}
 {% load permission_tags %}
+{% get_current_language as LANGUAGE_CODE %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 
@@ -72,24 +73,32 @@
                 Logout
             </a>
         </div-->
-        <div class="languages">
-            <form action="{% url 'set_language' %}" method="POST">
-                {% csrf_token %}
-                {% get_current_language as LANGUAGE_CODE %}
-                {% if LANGUAGE_CODE == "en" %}
-                    <input name="language" type="hidden" value="nb"/>
-                    <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
-                    <button class="lang-button item" type="submit">
-                        Norsk
-                    </button>
-                {% else %}
-                    <input name="language" type="hidden" value="en"/>
-                    <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
-                    <button class="lang-button item" type="submit">
-                        English
-                    </button>
-                {% endif %}
-            </form>
-        </div>
+        <a class="item lang-link" href="">
+	    {% if LANGUAGE_CODE == "en" %}
+		Norsk
+	    {% else %}
+		English
+	    {% endif %}
+        </a>
     </div>
 </div>
+
+{# This form is hidden, but is submitted through JQuery #}
+<form class="lang-form" action="{% url 'set_language' %}" method="POST">
+    {% csrf_token %}
+    {% if LANGUAGE_CODE == "en" %}
+	<input name="language" type="hidden" value="nb"/>
+	<input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
+    {% else %}
+	<input name="language" type="hidden" value="en"/>
+	<input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
+    {% endif %}
+    <input type="submit" />
+</form>
+
+<script>
+    $(".lang-link").click(function(event) {
+        event.preventDefault();
+	$(".lang-form").submit();
+    })
+</script>
