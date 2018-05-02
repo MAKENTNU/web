@@ -2,17 +2,8 @@
 {% load reservation_extra %}
 {% load i18n %}
 
-<div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
-    <div class="image">
-        {% if machine.stream_url %}
-            <img class="stream image"
-                 onError="src='{% static "make_queue/img/no_stream.jpg" %}';"
-                 url="{{ machine.stream_url }}"
-                 src="{{ machine.stream_url }}">
-        {% else %}
-            <img style="width: 100%;" src="{% static "make_queue/img/no_stream.jpg" %}">
-        {% endif %}
-    </div>
+<div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %} {% endif %}card">
+    <img class="stream image" name="{{ machine.name }}" src="{% static "make_queue/img/no_stream.jpg" %}">
     <div class="content">
         <div class="header">
             {{ machine.name }}

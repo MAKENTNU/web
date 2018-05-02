@@ -11,6 +11,9 @@ SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
 LOGOUT_URL = '/'
 LOGIN_URL = '/login'
+REDIS_IP = '127.0.0.1'
+REDIS_PORT = 6379
+STREAM_KEY = ''
 
 try:
     from .local_settings import *
@@ -37,6 +40,7 @@ INSTALLED_APPS = [
     'ckeditor',
     'contentbox',
     'sorl.thumbnail',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -68,7 +72,15 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'web.wsgi.application'
+ASGI_APPLICATION = 'web.routing.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [(REDIS_IP, REDIS_PORT)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
