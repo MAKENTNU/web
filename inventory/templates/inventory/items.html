@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div class = 'ui input'>
+        <input type="text" placeholder="Søkeord">
+        <button class="ui button">Søk</button>
+    </div>
+
+{% for item in items %}
+    <div>
+        {{ item.name|add:" hey" }}
+    </div>
+{% endfor %}
+</body>
+</html>

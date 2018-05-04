@@ -8,19 +8,27 @@ class Item(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=256)
 
+    def __str__(self):
+        return "Item: "+self.name
+
 class Room(models.Model):
     name = models.CharField(max_length=128)
+    def __str__(self):
+        return "Room: self.name"
 
 
 class Container(models.Model):
     name = models.CharField(max_length=128)
     room = models.ForeignKey(Room,on_delete=models.CASCADE)
-
+    def __str__(self):
+        return "Container: "+self.name+" in "+self.room.name
 
 class SubContainer(models.Model):
     name = models.CharField(max_length=128)
     items = models.ManyToManyField(Item, through='ItemInSubContainer')
     container = models.ForeignKey(Container, on_delete=models.CASCADE)
+    def __str__(self):
+        return "Subcontainer "+self.name+ " in container "+self.container.name
 
 class ItemInSubContainer(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)

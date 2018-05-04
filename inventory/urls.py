@@ -1,7 +1,7 @@
-from django.urls import path
+from django.urls import re_path
 
-from . import views
+from inventory.views import IndexView
 
 urlpatterns = [
-    path('',views.index,name='index')
+    re_path('(?P<search_word>.*)', IndexView.as_view())
 ]
