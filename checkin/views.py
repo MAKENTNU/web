@@ -27,9 +27,9 @@ class CheckInView(View):
                 return HttpResponse('check out'.encode(), status=200)
             else:
                 Profile.objects.filter(card_id=request.POST.get('card_id')).update(on_make=True, last_checkin=timezone.now())
-                return HttpResponse()
+                return HttpResponse('check in'.encode(), status=200)
 
-        return HttpResponse(status=400)
+        return HttpResponse(status=401)
 
 
 class ShowSkillsView(TemplateView):
