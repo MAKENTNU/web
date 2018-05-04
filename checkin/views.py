@@ -22,7 +22,7 @@ class CheckInView(View):
     @csrf_exempt
     def post(self, request):
         if request.POST.get('secret') == settings.CHECKIN_KEY and Profile.objects.filter(
-                card_id=request.POST.get('card_id')).update(on_make=True):
+                card_id=request.POST.get('card_id')).update(on_make=True, last_checkin=timezone.now()):
             return HttpResponse()
 
         return HttpResponse(status=400)
