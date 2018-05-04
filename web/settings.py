@@ -11,6 +11,7 @@ SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
 LOGOUT_URL = '/'
 LOGIN_URL = '/login'
+CHECKIN_KEY = ''
 REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'news',
     'ckeditor',
     'contentbox',
+    'checkin',
     'sorl.thumbnail',
     'channels',
 ]

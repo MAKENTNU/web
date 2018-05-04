@@ -1,0 +1,34 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/checkin.css" %}" />
+{% endblock %}
+
+{% block body %}
+    <div class="ui text container">
+        <h2 class="make_col_blue">Ferdigheter på Makerverkstedet akkurat nå:</h2>
+        <div class="ui feed">
+            {% for skill, leveltime in skill_dict %}
+                <div class="event">
+                    <div class="label"> {# blackbox er for debugging #}
+                        <img src="{% if suggestion.image %}{{ suggestion.image.url }}
+                                      {% else %}{% static "checkin/img/placeholder_skill.svg" %}{% endif %}"/>
+                    </div>
+                    <div class="content">
+                        <div class="skill-text">{{ skill }}</div>
+                        <div class="ui star rating skill-lvl" data-rating="{{ leveltime.0 }}" data-max-rating="3"></div>
+                        <div class="date">{{ leveltime.1|timesince }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $('.ui.rating').rating();
+        $('.rating.skill-lvl').rating('disable');
+    </script>
+{% endblock %}
