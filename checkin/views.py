@@ -21,7 +21,7 @@ class CheckInView(View):
 
     @csrf_exempt
     def post(self, request):
-        if request.POST.get('key') == settings.CHECKIN_KEY and Profile.objects.filter(
+        if request.POST.get('secret') == settings.CHECKIN_KEY and Profile.objects.filter(
                 card_id=request.POST.get('card_id')).update(on_make=True):
             return HttpResponse()
 
