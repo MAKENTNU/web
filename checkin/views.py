@@ -2,9 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.utils import timezone
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView
 
@@ -33,7 +31,7 @@ class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
 
     def is_checkin_expired(self, profile):
-        return (timezone.now() - profile.last_checkin).seconds >= 3600*3
+        return (datetime.now() - profile.last_checkin).seconds >= 3600*3
 
     def check_out_expired(self, profile):
         if self.is_checkin_expired(profile):
@@ -184,7 +182,7 @@ class RegisterCardView(View):
         card_id = request.POST.get('card_id')
         if not Profile.objects.filter(card_id=card_id).exists():
             RegisterProfile.objects.all().delete()
-            RegisterProfile.objects.create(card_id=card_id, last_scan=datetime.now(timezone.get_current_timezone()))
+            RegisterProfile.objects.create(card_id=card_id, last_scan=datetime.now())
             return HttpResponse()
 
         return HttpResponse(400)
@@ -199,7 +197,7 @@ class RegisterProfileView(TemplateView):
             'scan_is_recent': False,
         }
         if scan_exists:
-            scan_is_recent = (datetime.now(timezone.get_current_timezone()) - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
+            scan_is_recent = (datetime.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
