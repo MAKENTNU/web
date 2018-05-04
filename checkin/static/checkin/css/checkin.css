@@ -1,0 +1,13 @@
+.blackbox {
+    background-color: black;
+}
+
+.skill-lvl {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.skill-text {
+    display: inline-block;
+    min-width: 15%;
+}

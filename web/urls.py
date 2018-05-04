@@ -29,6 +29,7 @@ urlpatterns += i18n_patterns(
     path('news/', include('news.urls')),
     path('contentbox/', include('contentbox.urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
+    path('checkin/', include('checkin.urls')),
     path('about/', AboutView.as_view(), name='about'),
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
