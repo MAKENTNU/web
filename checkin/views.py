@@ -30,9 +30,10 @@ class CheckInView(View):
 
 class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
+    expiry_time = 3600 * 3
 
     def is_checkin_expired(self, profile):
-        return (datetime.now() - profile.last_checkin).seconds >= 3600*3
+        return (timezone.now() - profile.last_checkin).seconds >= self.expiry_time
 
     def check_out_expired(self, profile):
         if self.is_checkin_expired(profile):
