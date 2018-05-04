@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView
+from django.utils import timezone
 
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from web import settings
@@ -182,7 +183,7 @@ class RegisterCardView(View):
         card_id = request.POST.get('card_id')
         if not Profile.objects.filter(card_id=card_id).exists():
             RegisterProfile.objects.delete()
-            RegisterProfile.objects.create(card_id=card_id, last_scan=datetime.now())
+            RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
             return HttpResponse()
 
         return HttpResponse(400)
@@ -197,7 +198,7 @@ class RegisterProfileView(TemplateView):
             'scan_is_recent': False,
         }
         if scan_exists:
-            scan_is_recent = (datetime.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
+            scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
