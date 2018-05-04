@@ -155,9 +155,9 @@
     height: 100%;
 }
 
-.noevents{
-    text-align:center;
-    font-style:italic;
+.noevents {
+    text-align: center;
+    font-style: italic;
 }
 
 @media screen and (max-width: 991px) {

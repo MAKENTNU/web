@@ -50,12 +50,16 @@
 }
 
 .burger i {
-    color: #ffffff;
+    color: #FFFFFF;
     font-size: 30px;
 }
 
 .nav .ui.inverted.menu .item {
     color: rgba(255, 255, 255, .7) !important;
+}
+
+.lang-form {
+    display: none;
 }
 
 @media screen and (max-width: 900px) {

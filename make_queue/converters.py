@@ -65,7 +65,6 @@ class DateTime:
         return date.strftime(date, "%Y/%m/%d/%H:%M")
 
 
-
 class MachineReservation:
     regex = MachineTypeSpecific.regex + "/([0-9]+)"
 

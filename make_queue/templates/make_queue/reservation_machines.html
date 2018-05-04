@@ -1,21 +1,23 @@
 {% extends 'web/base.html' %}
 {% load reservation_extra %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
 {% endblock %}
 
-{% block title %}Maskiner{% endblock %}
+{% block title %}{% trans "Machines" %}{% endblock %}
 {% block body %}
     <br><br>
     <div class="ui container">
         <div class="ui huge header">
-            Maskiner
+            {% trans "Machines" %}
         </div>
         {% if request.user.is_authenticated %}
             <a href="{% url 'my_reservations' %}" class="ui primary button">
-                Mine reservasjoner
+                {% trans "My reservations" %}
             </a>
         {% endif %}
         {% for machine_type in machine_types %}
@@ -24,10 +26,14 @@
             </div>
             <div class="ui cards">
                 {% for machine in machine_type.machines %}
-                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1%}
+                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
                 {% endfor %}
             </div>
         {% endfor %}
     </div>
     <br><br>
+
+    <div id="fader"></div>
+    <i id="closefullscreen" class="ui times icon"></i>
+    <script src="{% static "make_queue/js/stream.js" %}"></script>
 {% endblock %}

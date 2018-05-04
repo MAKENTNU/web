@@ -1,6 +1,8 @@
 {% load staticfiles %}
+{% load i18n %}
 {% load string_tags %}
 {% load permission_tags %}
+{% get_current_language as LANGUAGE_CODE %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 
@@ -15,19 +17,19 @@
     </div>
     <div class="ui secondary inverted menu">
         <a class="item" href="{% url 'front-page' %}">
-            Hjem
+            {% trans "Home" %}
         </a>
         <a class="item" href="{% url 'events' %}">
-            Arrangementer
+            {% trans "Events" %}
         </a>
         <a class="item" href="{% url 'articles' %}">
-            Artikler
+            {% trans "Articles" %}
         </a>
         <a class="item" href="{% url 'makerspace' %}">
-            Makerverkstedet
+            {% trans "Makerverkstedet" %}
         </a>
         <a class="item" href="{% url 'reservation_machines_overview' %}">
-            Reservasjoner
+            {% trans "Reservations" %}
         </a>
         {% if user.is_authenticated %}
             <div class="ui dropdown item">
@@ -36,11 +38,11 @@
                 <div class="menu">
                     {% if user|has_any_permissions or user.is_superuser %}
                         <a class="item" href="{% url 'adminpanel' %}">
-                            Administrasjon
+                            {% trans "Administration" %}
                         </a>
                     {% endif %}
                     <a class="item" href="{% url 'logout' %}">
-                        Logg ut
+                        {% trans "Logout" %}
                     </a>
                 </div>
             </div>
@@ -49,7 +51,7 @@
             {% endblock scripts %}
         {% else %}
             <a class="item" href="{% url 'login' %}">
-                Logg inn
+                {% trans "Login" %}
             </a>
         {% endif %}
         <!--div class="right menu">
@@ -63,5 +65,32 @@
                 Logout
             </a>
         </div-->
+        <a class="item lang-link" href="">
+	    {% if LANGUAGE_CODE == "en" %}
+		Norsk
+	    {% else %}
+		English
+	    {% endif %}
+        </a>
     </div>
 </div>
+
+{# This form is hidden, but is submitted through JQuery #}
+<form class="lang-form" action="{% url 'set_language' %}" method="POST">
+    {% csrf_token %}
+    {% if LANGUAGE_CODE == "en" %}
+	<input name="language" type="hidden" value="nb"/>
+	<input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
+    {% else %}
+	<input name="language" type="hidden" value="en"/>
+	<input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
+    {% endif %}
+    <input type="submit" />
+</form>
+
+<script>
+    $(".lang-link").click(function(event) {
+        event.preventDefault();
+	$(".lang-form").submit();
+    })
+</script>

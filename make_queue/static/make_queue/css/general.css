@@ -18,7 +18,7 @@
     margin-bottom: 0 !important;
 }
 
-.make_collapsed_header_all{
+.make_collapsed_header_all {
     margin-bottom: 0 !important;
     margin-top: 0 !important;
 }
@@ -69,11 +69,11 @@
 }
 
 .make_my_reservation_blue_link {
-    color: #4183c4 !important;
+    color: #4183C4 !important;
 }
 
 .error_border {
-    border-color: #ff0000 !important;
+    border-color: #FF0000 !important;
 }
 
 .float_fix::after {

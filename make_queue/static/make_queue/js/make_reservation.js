@@ -2,7 +2,7 @@ let reservations = [];
 let reservationCalendarDate = new Date();
 
 function getFutureReservations(machine_type, machine_id, force_new_time) {
-    let jsonUrl = "/reservation/json/" + machine_type + "/" + machine_id;
+    let jsonUrl = langPrefix + "/reservation/json/" + machine_type + "/" + machine_id;
     let currentUrl = document.location.href;
     if (currentUrl.match(".+/reservation/change/[a-zA-Z0-9-]+/[0-9]+/"))
         jsonUrl += currentUrl.slice(currentUrl.slice(0, currentUrl.length - 1).lastIndexOf("/"), currentUrl.length - 1) + "/";
@@ -34,14 +34,14 @@ function updateReservationCalendar() {
     let year = reservationCalendarDate.getFullYear();
     let machine_type = $("#machine_type_dropdown").dropdown("get value");
     let machine_pk = $("#machine_name_dropdown").dropdown("get value");
-    $.get("/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_type + "/" + machine_pk + "/", {}, (data) => {
+    $.get(langPrefix + "/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_type + "/" + machine_pk + "/", {}, (data) => {
         $("#reservation_calendar").html(data);
         setupReservationCalendar();
     })
 }
 
 function updateMaxReservationTime(machine_type) {
-    $.get("/reservation/quota/json/" + machine_type + "/", {}, (data) => {
+    $.get(langPrefix + "/reservation/quota/json/" + machine_type + "/", {}, (data) => {
         $("#reserve_form").data("max-time-reservation", data);
         let start_date = $("#start_time").calendar("get date");
         if (start_date)
@@ -271,7 +271,7 @@ if ($("#start_time").calendar("get date") !== null) {
 updateReservationCalendar();
 
 function timeSelectionPopupHTML(date, startTime, endTime, machine) {
-    return $("<div>").addClass("ui make_yellow button").html("Velg tid").click(() => {
+    return $("<div>").addClass("ui make_yellow button").html(gettext("Choose time")).click(() => {
         $("#start_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + startTime);
         $("#end_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + endTime);
         $("body").mousedown();

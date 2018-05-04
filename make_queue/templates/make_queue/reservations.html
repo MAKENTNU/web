@@ -1,4 +1,5 @@
 {% extends 'web/base.html' %}
+{% load i18n %}
 {% load reservation_extra %}
 {% load staticfiles %}
 
@@ -6,25 +7,25 @@
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
 {% endblock %}
 
-{% block title %}Mine reservasjoner{% endblock %}
+{% block title %}{% trans "My reservations" %}{% endblock %}
 {% block body %}
     <div class="ui container">
         <div class="ui huge header">
             {% if admin %}
-                MAKE NTNU reservasjoner
+                {% trans "MAKE NTNU reservations" %}
             {% else %}
-                Mine reservasjoner
+                {% trans "My reservations" %}
             {% endif %}
         </div>
         <div class="ui vertical segment">
             <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
-                Maskiner
+                {% trans "Machines" %}
             </a>
             <div class="make_right_floated make_row_fill">
                 <div class="field">
                     <div class="ui checkbox" id="hide_old_reservations">
                         <input type="checkbox" class="hidden"/>
-                        <label>Skjul tidligere reservasjoner</label>
+                        <label>{% trans "Hide previous reservations" %}</label>
                     </div>
                 </div>
             </div>
@@ -33,16 +34,16 @@
         <table class="ui table make_my_reservation_desktop">
             <thead>
             <tr>
-                <th>Reservasjon</th>
-                <th>Tidspunkt</th>
+                <th>{% trans "Reservation" %}</th>
+                <th>{% trans "Time" %}</th>
                 {% if admin %}
                     <th>
-                        Informasjon
+                        {% trans "Information" %}
                     </th>
                 {% endif %}
-                <th>Se i kalender</th>
-                <th>Endre</th>
-                <th>Kanseller</th>
+                <th>{% trans "View in calendar" %}</th>
+                <th>{% trans "Change" %}</th>
+                <th>{% trans "Cancel" context "cancel reservation" %}</th>
             </tr>
             </thead>
             <tbody>
@@ -79,13 +80,13 @@
                     {% endif %}
                     <td>
                         <a href="{% calendar_url_reservation reservation %}">
-                            <div class="ui button primary">Kalender</div>
+                            <div class="ui button primary">{% trans "Calendar" %}</div>
                         </a>
                     </td>
                     <td>
                         {% if reservation.can_delete %}
                             <a href="{% url 'change_reservation' reservation=reservation %}">
-                                <div class="ui button primary">Endre</div>
+                                <div class="ui button primary">{% trans "Change" %}</div>
                             </a>
                         {% endif %}
                     </td>
@@ -96,7 +97,7 @@
                                 <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
                                 <input type="text" name="machine_type" class="make_hidden"
                                        value="{{ reservation.machine.literal }}"/>
-                                <input type="submit" class="ui button red" value="Kanseller">
+                                <input type="submit" class="ui button red" value="{% trans "Cancel" context "cancel reservation" %}">
                                 {% if admin %}
                                     <input type="text" name="next" class="make_hidden"
                                            value="{% url 'admin_reservation' %}"/>
@@ -131,10 +132,10 @@
                     {% if reservation.can_delete %}
                         <div class="ui three bottom attached buttons">
                             <a class="ui primary button make_my_reservation_button_pad"
-                               href="{% calendar_url_reservation reservation %}">Kalender</a>
+                               href="{% calendar_url_reservation reservation %}">{% trans "Calendar" %}</a>
                             <a class="ui make_bg_yellow button make_my_reservation_button_pad"
-                               href="{% url 'change_reservation' reservation=reservation %}">Endre</a>
-                            <div class="ui button red reservation_calendar_delete">Kanseller
+                               href="{% url 'change_reservation' reservation=reservation %}">{% trans "Change" %}</a>
+                            <div class="ui button red reservation_calendar_delete">{% trans "Cancel" context "cancel reservation" %}
                                 <form method="post" action="{% url 'delete_reservation' %}">
                                     {% csrf_token %}
                                     <input type="number" name="pk" class="make_hidden"
@@ -150,7 +151,7 @@
                         </div>
                     {% else %}
                         <a class="ui blue bottom attached button" href="{% calendar_url_reservation reservation %}">
-                            Kalender
+                            {% trans "Calendar" %}
                         </a>
                     {% endif %}
                 </div>

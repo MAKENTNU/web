@@ -1,13 +1,13 @@
 {% load staticfiles %}
+{% load i18n %}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% block title %}MAKE NTNU{% endblock title %}</title>
+    <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
     <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
-    <meta property="og:site_name" content="MAKE NTNU"/>
     <meta property="og:site_name" content="MAKE NTNU"/>
     <meta property="og:image"
           content="http://makentnu.no{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}"/>
@@ -24,10 +24,8 @@
     <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
     <script src="{% static "web/js/jquery-3.1.1.min.js" %}"></script>
     <script src="{% static "web/semantic-ui/semantic.min.js" %}"></script>
-
     {% block head %}{% endblock head %}
 </head>
-
 <body>
 <div class="wrapper">
     <div class="content">
@@ -49,7 +47,8 @@
     {% endblock %}
 </div>
 
-<script src="{% static "web/js/dropdown.js" %}"></script>
+{% get_current_language as LANGUAGE_CODE %}
+<script>let langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
 <script>
     window.dataLayer = window.dataLayer || [];

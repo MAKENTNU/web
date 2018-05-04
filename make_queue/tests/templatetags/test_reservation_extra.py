@@ -86,4 +86,3 @@ class ReservationExtraTestCases(TestCase):
         self.assertEqual("false", invert("test"))
         self.assertEqual("true", invert(False))
         self.assertEqual("false", invert(True))
-

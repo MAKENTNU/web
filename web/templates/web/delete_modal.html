@@ -1,17 +1,18 @@
+{% load i18n %}
 <div id="delete-modal" class="ui basic small modal">
     <div class="ui icon header">
         <i class="trash icon"></i>
-        Er du sikker på at du vil slette?
+        {% trans "Are sure you want to delete?" %}
     </div>
     <form id="delete-form" method="post">{% csrf_token %}</form>
     <div class="actions">
         <div class="ui red inverted delete button">
             <i class="trash icon"></i>
-            Slett
+            {% trans "Delete" %}
         </div>
         <div class="ui white ok inverted button">
             <i class="cancel icon"></i>
-            Avbryt
+            {% trans "Cancel" context "abort action" %}
         </div>
     </div>
 </div>

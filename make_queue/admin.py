@@ -11,5 +11,4 @@ admin.site.register(Reservation3D)
 admin.site.register(Printer3D)
 admin.site.register(SewingMachine)
 
-
 register_handler(PrinterHandler, "printer_allowed")
