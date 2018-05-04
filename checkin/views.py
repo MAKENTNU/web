@@ -182,7 +182,7 @@ class RegisterCardView(View):
     def post(self, request):
         card_id = request.POST.get('card_id')
         if not Profile.objects.filter(card_id=card_id).exists():
-            RegisterProfile.objects.delete()
+            RegisterProfile.objects.all().delete()
             RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
             return HttpResponse()
 
@@ -202,7 +202,7 @@ class RegisterProfileView(TemplateView):
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
-        Profile.objects.delete()
+        Profile.objects.all().delete()
         return JsonResponse(data)
 
 
