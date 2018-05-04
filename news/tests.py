@@ -1,5 +1,5 @@
-from datetime import timedelta
 import json
+from datetime import timedelta
 
 from django.contrib.auth.models import User, Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -160,8 +160,8 @@ class ViewTestCase(TestCase):
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
         self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
 
-        new_start_date = (tp.start_date + timedelta(weeks=1)).date()
-        new_end_date = (tp.end_date + timedelta(weeks=1)).date() if tp.end_date else None
+        new_start_date = tp.start_date + timedelta(weeks=1)
+        new_end_date = (tp.end_date + timedelta(weeks=1)) if tp.end_date else None
         self.assertTrue(new.hidden)
         self.assertEqual(new.start_date, new_start_date)
         self.assertEqual(new.end_date, new_end_date)
