@@ -32,15 +32,13 @@ class CheckInView(View):
 class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
 
-    def expired_checkin(self, profile):
-        """1. This means that people only get automatically checked out if someone checks the feed.
-        Should have something that runs every 5 mins or so and checks people out of the system."""
-        hours = timezone.now().hour - profile.last_checkin.hour
-        if hours > 2 or not profile.on_make:
-            profile.on_make = False  # See 1. above
-            return True
-        else:
-            return False
+    def is_checkin_expired(self, profile):
+        return (timezone.now() - profile.last_checkin).seconds >= 3600*3
+
+    def check_out_expired(self, profile):
+        if self.is_checkin_expired(profile):
+            profile.on_make = False
+            profile.save()
 
     def get_context_data(self, **kwargs):
         """ Creates dict with skill titles as keys and
@@ -50,11 +48,12 @@ class ShowSkillsView(TemplateView):
         skill_dict = {}
 
         for profile in Profile.objects.filter(on_make=True):
+            self.check_out_expired(profile)
             for level in profile.userskill_set.all():
                 title, level_int = level.skill.title, level.skill_level
 
                 if (title not in skill_dict or level_int > skill_dict[title][0]) \
-                        and not self.expired_checkin(profile):
+                        and not self.is_checkin_expired(profile):
                     skill_dict[title] = (level_int, profile.last_checkin)
 
         context = super().get_context_data(**kwargs)
