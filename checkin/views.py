@@ -185,13 +185,14 @@ class RegisterCardView(View):
 
     @csrf_exempt
     def post(self, request):
-        card_id = request.POST.get('card_id')
-        if not Profile.objects.filter(card_id=card_id).exists():
-            RegisterProfile.objects.all().delete()
-            RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
-            return HttpResponse()
+        if request.POST.get('secret') == settings.CHECKIN_KEY:
+            card_id = request.POST.get('card_id')
+            if not Profile.objects.filter(card_id=card_id).exists():
+                RegisterProfile.objects.all().delete()
+                RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
+                return HttpResponse('card scanned', status=200)
 
-        return HttpResponse(400)
+        return HttpResponse(status=400)
 
 
 class RegisterProfileView(TemplateView):
