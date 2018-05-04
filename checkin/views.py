@@ -202,7 +202,7 @@ class RegisterProfileView(TemplateView):
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
-        Profile.objects.all().delete()
+        RegisterProfile.objects.all().delete()
         return JsonResponse(data)
 
 
