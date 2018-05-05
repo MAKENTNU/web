@@ -243,7 +243,7 @@ msgid "Other reservations"
 msgstr "Andre reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:128
-#: news/templates/news/admin.html:13 web/templates/web/header.html:32
+#: news/templates/news/admin.html:13 web/templates/web/header.html:23
 msgid "Events"
 msgstr "Arrangementer"
 
@@ -262,7 +262,7 @@ msgid "Machines"
 msgstr "Maskiner"
 
 #: make_queue/templates/make_queue/reservation_overview.html:22
-#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:41
+#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:32
 msgid "Reservations"
 msgstr "Reservasjoner"
 
@@ -364,7 +364,7 @@ msgid "No events"
 msgstr "Ingen arrangementer"
 
 #: news/templates/news/admin.html:120 news/templates/news/articles.html:12
-#: web/templates/web/header.html:35
+#: web/templates/web/header.html:26
 msgid "Articles"
 msgstr "Artikler"
 
@@ -476,22 +476,26 @@ msgstr "Om oss"
 msgid "Cookies"
 msgstr "Cookies"
 
-#: web/templates/web/header.html:29
+#: web/templates/web/header.html:20
 msgid "Home"
 msgstr "Hjem"
 
-#: web/templates/web/header.html:38
+#: web/templates/web/header.html:29
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 
-#: web/templates/web/header.html:50
+#: web/templates/web/header.html:41
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:54
+#: web/templates/web/header.html:45
+msgid "Profile"
+msgstr "Profil"
+
+#: web/templates/web/header.html:48
 msgid "Logout"
 msgstr "Logg ut"
 
-#: web/templates/web/header.html:61
+#: web/templates/web/header.html:57
 msgid "Login"
 msgstr "Logg inn"
