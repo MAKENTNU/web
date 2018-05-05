@@ -11,9 +11,11 @@
         <i class="sidebar icon"></i>
     </div>
     <div class="logo">
-        <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
-        <img class="limg medium" src="{% static "web/img/logo_make.svg" %}">
-        <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
+        <a href="{% url 'front-page' %}">
+            <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
+            <img class="limg medium" src="{% static "web/img/logo_make.svg" %}">
+            <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
+        </a>
     </div>
     <div class="ui secondary inverted menu">
         <a class="item" href="{% url 'front-page' %}">
