@@ -13,6 +13,7 @@ class UserSkillAdmin(admin.ModelAdmin):
     model = UserSkill
     list_display = ('profile', 'skill', 'skill_level')
 
+
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Skill)
 admin.site.register(UserSkill, UserSkillAdmin)

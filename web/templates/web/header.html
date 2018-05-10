@@ -71,11 +71,11 @@
             </a>
         </div-->
         <a class="item lang-link" href="">
-	    {% if LANGUAGE_CODE == "en" %}
-		Norsk
-	    {% else %}
-		English
-	    {% endif %}
+            {% if LANGUAGE_CODE == "en" %}
+                Norsk
+            {% else %}
+                English
+            {% endif %}
         </a>
     </div>
 </div>
@@ -84,21 +84,21 @@
 <form class="lang-form" action="{% url 'set_language' %}" method="POST">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
-	<input name="language" type="hidden" value="nb"/>
-	<input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
+        <input name="language" type="hidden" value="nb"/>
+        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
     {% else %}
-	<input name="language" type="hidden" value="en"/>
-	<input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
+        <input name="language" type="hidden" value="en"/>
+        <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
     {% endif %}
-    <input type="submit" />
+    <input type="submit"/>
 </form>
 
 <script>
-    $(".lang-link").click(function(event) {
+    $(".lang-link").click(function (event) {
         event.preventDefault();
-	$(".lang-form").submit();
+        $(".lang-form").submit();
     })
     $('.burger').click(function () {
-	$('.nav').toggleClass('active');
+        $('.nav').toggleClass('active');
     });
 </script>
