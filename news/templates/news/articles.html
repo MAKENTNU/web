@@ -9,7 +9,9 @@
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui text-centered make_col_blue header">{% trans "Articles" %}</h1>
+    <h1 class="ui text-centered make_col_blue header">
+        {% trans "Articles" %}
+    </h1>
     <div class="ui container">
         <div class="articles">
             {% for article in articles %}

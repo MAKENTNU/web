@@ -14,7 +14,9 @@
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui centered header">{% block form_header %}{% trans "Edit event" %}{% endblock form_header %}</h1>
+    <h1 class="ui centered header">
+        {% block form_header %}{% trans "Edit event" %}{% endblock form_header %}
+    </h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="field">

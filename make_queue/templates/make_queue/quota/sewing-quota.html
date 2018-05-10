@@ -5,7 +5,9 @@
 
 {% localize off %}
     <div class="content">
-        <div class="header">{% trans "Sewing" %}</div>
+        <div class="header">
+            {% trans "Sewing" %}
+        </div>
         <div class="meta">
         <span>{{ quota.get_active_user_reservations|length }}
             {% blocktrans trimmed count counter=quota.get_active_user_reservations|length %}
