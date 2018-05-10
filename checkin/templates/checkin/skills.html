@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "checkin/css/checkin.css" %}"/>
@@ -7,7 +8,9 @@
 
 {% block body %}
     <div class="ui text container">
-        <h2 class="make_col_blue">Ferdigheter på Makerverkstedet akkurat nå:</h2>
+        <h2 class="make_col_blue">
+            {% trans "People with these skills are at<br>Makerverkstedet right now:" %}
+        </h2>
         <div class="ui feed">
             {% for skill, leveltime in skill_dict %}
                 <div class="event">
