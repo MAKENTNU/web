@@ -34,7 +34,9 @@
             </th>
             <th class="make_reservation_calendar_long_month title_large">
                 <div>{{ week_days.0.date|date:"F"|title }}</div>
-                <div class="title_small">{% trans "Week" %} {{ week_days.0.date|date:"W" }}</div>
+                <div class="title_small">
+                    {% trans "Week" %} {{ week_days.0.date|date:"W" }}
+                </div>
             </th>
             {% for day in week_days %}
                 <th>
@@ -97,7 +99,9 @@
                                                 </div>
                                                 {% if reservation.reservation.comment %}
                                                     <div>
-                                                        <div><b>{% trans "Comment" context "A comment" %}:</b></div>
+                                                        <div>
+                                                            <b>{% trans "Comment" context "A comment" %}:</b>
+                                                        </div>
                                                         <div>{{ reservation.reservation.comment }}</div>
                                                     </div>
                                                 {% endif %}"

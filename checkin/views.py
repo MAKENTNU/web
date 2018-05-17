@@ -220,5 +220,3 @@ class EditProfilePictureView(View):
         profile.image = image
         profile.save()
         return HttpResponseRedirect(reverse('profile'))
-
-

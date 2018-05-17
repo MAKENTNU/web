@@ -60,8 +60,8 @@ class Machine(models.Model):
 
 class Printer3D(Machine):
     literal = "3D-printer"
-    cannot_use_text = _("You must have taken a 3D printer course to reserve the printers. If you "
-                        "have had the course, but don't have access, contact 3dprint@makentnu.no")
+    cannot_use_text = _("You must have completed a 3D printer course to reserve the printers. If you "
+                        "have taken the course, but don't have access, contact 3dprint@makentnu.no")
 
     def can_user_use(self, user):
         return hasattr(user, "quota3d") and user.quota3d.can_print

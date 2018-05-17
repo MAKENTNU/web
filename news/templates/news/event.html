@@ -107,9 +107,13 @@
                     {% endif %}
                     {% if not event.event.multiday %}
                         {% if event.hoopla %}
-                            <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">{% trans "Registration" %}</a>
+                            <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">
+                                {% trans "Registration" %}
+                            </a>
                         {% else %}
-                            <p class="make_col_ligray attend"><i>{% trans "No registrations" %}</i></p>
+                            <p class="make_col_ligray attend">
+                                <i>{% trans "No registrations" %}</i>
+                            </p>
                         {% endif %}
                     {% endif %}
                 </div>

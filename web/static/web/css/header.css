@@ -18,10 +18,6 @@
     padding: 0 30px;
 }
 
-.nav .logo:hover {
-    cursor: pointer;
-}
-
 .nav .logo img {
     object-fit: contain;
     max-height: 50px;
