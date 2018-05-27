@@ -1,4 +1,5 @@
 from ckeditor.fields import RichTextField
+from django.utils.translation import gettext_lazy as _
 from django.conf.urls import url as durl
 from django.db import models
 from django.views.generic import TemplateView
@@ -8,7 +9,7 @@ class ContentBox(models.Model):
     title = models.CharField(
         max_length=100,
         unique=True,
-        verbose_name='Tittel',
+        verbose_name=_('Title'),
     )
     content = RichTextField()
 

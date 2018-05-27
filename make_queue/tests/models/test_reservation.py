@@ -188,7 +188,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.reset_percentage_of_maximum_machines()
 
     def test_same_time_separate_machines_more_than_allowed(self):
-        additional_printer = Printer3D.objects.create(name="C1", location="Printer room Mackerspace U1", status="F")
+        additional_printer = Printer3D.objects.create(name="C2", location="Printer room Mackerspace U1", status="F")
         self.set_percentage_of_maximum_machines(0.5)
 
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),

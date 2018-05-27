@@ -1,0 +1,164 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui text container">
+        <h1>
+            {% trans "My profile" %}
+        </h1>
+        <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+
+        <div class="ui container">
+            <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
+                <img id="profile-pic"
+                     src="{% if image %}{{ image.url }}{% else %}{% static "checkin/img/placeholder_profile.png" %}{% endif %}"/>
+            </div>
+            <br>
+            <div class="ui container">
+                <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="post"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden>
+                </form>
+            </div>
+        </div>
+
+        <br>
+
+        {% if make_member %}
+
+            <div class="ui container">
+                <h4>
+                    {% trans "My skills" %}
+                </h4>
+                {% for skill, level in skill_dict.items %}
+                    <div class="ui basic image label">
+                        <img class="skill-image" src="{% if skill.image %}{{ skill.image.url }}{% else %}
+                                  {% static "checkin/img/placeholder_skill.svg" %}{% endif %}">
+                        <span>{{ skill }}</span>
+                        <div class="detail make_bg_blue">
+                            <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <br>
+
+            <div class="container">
+                <form class="ui form" action="" method="post">
+                    {% csrf_token %}
+                    <input name="rating" type="number" id="rating-input" value="1" hidden>
+                    <div class="inline fields">
+                        <div class="ten wide field">
+                            <label>{% trans "Add skills" %}</label>
+                            <select class="ui fluid dropdown search" name="skill" required>
+                                <option value="">{% trans "Select/search" %}</option>
+                                {% for skill in all_skills %}
+                                    <option value="{{ skill.id }}">{{ skill.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="two wide field">
+                            <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
+                        </div>
+                        <div class="three wide field">
+                            <button class="ui button" type="submit">{% trans "Add" %}</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        {% endif %}
+
+        <br>
+
+        {% if not profile.card_id %}
+            <div class="card-register">
+                <p>
+                    {% trans "Place the card on the card reader and press the button below to register the card" %}
+                </p>
+                <button class="ui button register-profile">{% trans "Register" %}</button>
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script>
+        $('.ui.rating').rating();
+        $('.ui.dropdown').dropdown();
+        $('.rating.skill-lvl').rating('disable');
+
+        $('#star-rating').click(function () {
+            var rating = $(this).rating('get rating');
+            if (rating == $('#rating-input').val()) {
+                $('#rating-input').val(0);
+                $(this).rating('set rating', 0);
+            }
+            else {
+                $('#rating-input').val(rating);
+            }
+        });
+
+        $('.register-profile').click(function () {
+            register_profile_post($(this));
+        });
+
+        function register_profile_post(element) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/checkin/register/profile/',
+                data: {},
+                success: function (data) {
+                    if (data['scan_exists']) {
+                        if (data['scan_is_recent']) {
+                            element.removeClass('red');
+                            element.removeAttr('data-tooltip');
+                            element.removeAttr('data-position');
+                            element.addClass('green');
+                            element.addClass('disabled');
+                            element.html('Registrert!');
+                        }
+                        else {
+                            element.addClass('red');
+                            element.attr('data-tooltip', 'Skann kortet igjen!');
+                            element.attr('data-position', 'right center');
+                        }
+                    }
+                    else {
+                        element.addClass('red');
+                        element.attr('data-tooltip', 'Skann kortet!');
+                        element.attr('data-position', 'right center');
+                    }
+
+                }
+            });
+        }
+
+        $('#profile-pic').click(function () {
+            $('#input-image').click();
+        });
+
+        $('#profile-pic').hover(function () {
+            $(this).css('cursor', 'pointer');
+        });
+
+        $('#input-image').change(function () {
+            $('#image-form').submit()
+        });
+
+
+    </script>
+{% endblock scripts %}

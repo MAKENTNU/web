@@ -268,7 +268,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         view = self.get_view()
         reservation = self.create_reservation(self.create_form(1, 2))
         old_machine = self.machine
-        self.machine = SewingMachine.objects.create(model="Generic")
+        self.machine = SewingMachine.objects.create(name="M1", model="Generic")
         form = self.create_form(1, 3)
         self.assertTrue(form.is_valid())
         response = view.form_valid(form, reservation=reservation)

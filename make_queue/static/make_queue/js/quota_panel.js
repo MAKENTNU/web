@@ -13,16 +13,16 @@ function isSearchEqual(search, actualValue) {
 function successfulUpdateButton(element) {
     element.toggleClass("success_submit", true);
     element.toggleClass("loading_submit", false);
-    element.text("Endring lagret");
+    element.text(gettext("Change saved"));
     setTimeout(() => {
         element.toggleClass("success_submit", false);
-        element.text("Lagre")
+        element.text(gettext("Save"))
     }, 5000);
 }
 
 function loadingButton(element) {
     element.toggleClass("loading_submit", true);
-    element.text("Lagrer")
+    element.text(gettext("Saving"))
 }
 
 function initialize_user_handlers() {
@@ -30,7 +30,7 @@ function initialize_user_handlers() {
     $("#3D-Printer_card").find("> .button").on("click", function (event) {
         let button = $(this);
         loadingButton(button);
-        $.post("/reservation/quota/update/3D-printer/", {
+        $.post(langPrefix + "/reservation/quota/update/3D-printer/", {
             csrfmiddlewaretoken: $("#csrf input").val(),
             username: $("#current_username").data("username"),
             can_print: $("#3d-quota-can-print").closest(".checkbox").hasClass("checked"),
@@ -42,7 +42,7 @@ function initialize_user_handlers() {
     $("#Sewing_card").find("> .button").on("click", function (event) {
         let button = $(this);
         loadingButton(button);
-        $.post("/reservation/quota/update/sewing/", {
+        $.post(langPrefix + "/reservation/quota/update/sewing/", {
                 csrfmiddlewaretoken: $("#csrf input").val(),
                 username: $("#current_username").data("username"),
                 max_length_reservation: $("#sewing-quota-len-res").val(),
@@ -59,7 +59,7 @@ $("#user_search_field input").on('input', function (event) {
 $(".user_select").each(function (index, element) {
     $(element).on("click", function (event) {
         let username = $(element).closest(".user_element").data("username");
-        $.ajax("/reservation/quota/" + username + "/", {
+        $.ajax(langPrefix + "/reservation/quota/" + username + "/", {
             success: function (data, textStatus) {
                 $("#quota_user").html(data);
                 initialize_user_handlers();

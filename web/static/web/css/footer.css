@@ -42,12 +42,12 @@
 }
 
 .footer p, .footer a, .footer i {
-    color: #ffffff !important;
+    color: #FFFFFF !important;
 }
 
 .footer .logo {
     align-self: center;
-    margin-left: -5px;
+    margin-left: -4px;
 }
 
 .footer .logo img {
@@ -57,7 +57,7 @@
 
 .copyright {
     grid-column-start: 2;
-    color: #ffffff;
+    color: #FFFFFF;
 }
 
 .two-cols {
@@ -77,6 +77,10 @@
         grid-template-columns: 1fr;
         grid-gap: 30px;
         text-align: center;
+    }
+
+    .footer .logo {
+        margin-left: 0;
     }
 
     .copyright {

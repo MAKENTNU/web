@@ -24,7 +24,7 @@ function fix_time(element) {
     });
 }
 
-$(function() {
+$(function () {
     fix_time($('#id_pub_time'));
     fix_date($('#id_pub_date'));
 });

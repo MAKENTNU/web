@@ -51,7 +51,7 @@ class DataportenOAuth2(BaseOAuth2):
         return user
 
     def check_correct_audience(self, audience):
-        "Assert that Dataporten sends back our own client id as audience"
+        """Assert that Dataporten sends back our own client ID as audience"""
         client_id, _ = self.get_key_and_secret()
         if audience != client_id:
             raise AuthException('Wrong audience')

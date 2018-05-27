@@ -1,21 +1,21 @@
-function makeid() {
-    var text = "";
-    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    for (var i = 0; i < 5; i++) {
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-    }
-    return text;
-}
+$('.stream.image').each(function () {
+    var chatSocket = new WebSocket(
+        'wss://' + window.location.host +
+        '/ws/stream/' + $(this).attr("name") + '/');
 
-setInterval(function () {
-    $('.stream.image').each(function () {
-        if (!$(this).attr('nostream')) {
-            $(this).attr("src", $(this).attr("url") + "?" + makeid());
-        }
-    });
-}, 1000);
+    chatSocket.image = $(this);
 
-$('.stream.image').click(function() {
+    chatSocket.onmessage = function (e) {
+        var data = JSON.parse(e.data);
+        chatSocket.image.attr('src', 'data:image/jpeg;base64,' + data['image']);
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Socket closed unexpectedly');
+    };
+});
+
+$('.stream.image').click(function () {
     $(this).toggleClass('fullscreen');
     $('#fader').toggleClass('fullscreen');
     $('#closefullscreen').toggleClass('fullscreen');
@@ -23,6 +23,6 @@ $('.stream.image').click(function() {
 
 $('#closefullscreen').click(function () {
     $('.fullscreen').each(function () {
-       $(this).removeClass('fullscreen');
+        $(this).removeClass('fullscreen');
     });
 });

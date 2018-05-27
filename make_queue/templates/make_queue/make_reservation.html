@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 {% load semantic_ui_calendar_extra %}
 {% load reservation_extra %}
 
@@ -19,9 +20,9 @@
         {% endif %}
         <div class="ui large header">
             {% if new_reservation %}
-                Ny reservasjon
+                {% trans "New reservation" %}
             {% else %}
-                Endre reservasjon
+                {% trans "Edit reservation" %}
             {% endif %}
         </div>
         <form class="ui form" id="reserve_form" method="post"
@@ -29,11 +30,13 @@
             {% csrf_token %}
             <div class="two fields">
                 <div class="field">
-                    <label>Utstyrs type</label>
+                    <label>{% trans "Equipment type" %}</label>
                     <div class="ui fluid selection dropdown {% if not new_reservation %}disabled{% endif %}"
                          id="machine_type_dropdown">
                         <input type="hidden" name="machine_type" value="default">
-                        <div class="default text">Velg utstyrs type</div>
+                        <div class="default text">
+                            {% trans "Select equipment type" %}
+                        </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
                             {% for machine_type in machine_types %}
@@ -46,10 +49,12 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label>Utstyr</label>
+                    <label>{% trans "Equipment" %}</label>
                     <div class="ui fluid selection dropdown disabled" id="machine_name_dropdown">
                         <input type="hidden" name="machine_name" value="default">
-                        <div class="default text">Velg maskin</div>
+                        <div class="default text">
+                            {% trans "Select machine" %}
+                        </div>
                         <i class="dropdown icon"></i>
                         {% for machine_type in machine_types %}
                             {% if machine_type.instances %}
@@ -67,11 +72,11 @@
 
             <div class="two fields">
                 <div class="field">
-                    <label>Start tidspunkt</label>
+                    <label>{% trans "Start time" %}</label>
                     <div class="ui calendar" id="start_time">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="start_time" type="text" placeholder="Start tidspunkt"
+                            <input name="start_time" type="text" placeholder="{% trans "Start time" %}"
                                    value="{% if start_time %}
                                                {{ start_time|date:"Y-m-d H:i" }}
                                           {% else %}
@@ -81,11 +86,11 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label>Slutt tidspunkt</label>
+                    <label>{% trans "End time" %}</label>
                     <div class="ui calendar" id="end_time">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="end_time" type="text" placeholder="Slutt tidspunkt"
+                            <input name="end_time" type="text" placeholder="{% trans "End time" %}"
                                    value="{% if end_time %}
                                                {{ end_time|date:"Y-m-d H:i" }}
                                           {% else %}
@@ -96,7 +101,7 @@
                 </div>
             </div>
             <div class="field">
-                <label for="comment">Kommentar</label>
+                <label for="comment">{% trans "Comment" %}</label>
                 <textarea rows="2" maxlength="2000" name="comment" id="comment"
                           placeholder="Eventuell kommentar">{{ comment }}</textarea>
             </div>
@@ -110,7 +115,7 @@
                                      id="event_checkbox">
                                     <input type="checkbox" name="event" id="event"
                                            {% if not is_new_reservation and event %}checked{% endif %}/>
-                                    <label for="event">Arrangement</label>
+                                    <label for="event">{% trans "Event" %}</label>
                                 </div>
                             </div>
                             <div class="field">
@@ -118,16 +123,18 @@
                                      id="special_checkbox">
                                     <input type="checkbox" name="special" id="special"
                                            {% if not is_new_reservation and special %}checked{% endif %}/>
-                                    <label for="event">MAKE NTNU</label>
+                                    <label for="event">{% trans "MAKE NTNU" %}</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="ui field {% if not event %}make_hidden{% endif %}" id="event_name_input">
-                        <label>Arrangement</label>
+                        <label>{% trans "Event" %}</label>
                         <div class="ui field selection dropdown" id="event_pk">
                             <input type="hidden" name="event_pk" value="{% if event %}{{ event.pk }}{% endif %}">
-                            <div class="default text">Velg event</div>
+                            <div class="default text">
+                                {% trans "Select event" %}
+                            </div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
                                 {% for event in events %}
@@ -144,7 +151,7 @@
                         </div>
                     </div>
                     <div class="ui field {% if not special %}make_hidden{% endif %}" id="special_input">
-                        <label>Reservasjons tekst</label>
+                        <label>{% trans "Reservation text" %}</label>
                         <div class="ui input" id="special_text">
                             <input type="text" placeholder="Reservasjons tekst" maxlength=20 name="special_text"
                                    value="{% if special %}{{ special_text }}{% endif %}">
@@ -154,7 +161,7 @@
             {% endif %}
             <div class="float_fix">
                 <input class="ui right floated button" type="submit"
-                       value="{% if new_reservation %}Reserver{% else %}Endre{% endif %}">
+                       value="{% if new_reservation %}{% trans "Reserve" %}{% else %}{% trans "Change" %}{% endif %}">
             </div>
         </form>
 
@@ -167,6 +174,7 @@
         let maximum_day = new Date();
         maximum_day.setDate(maximum_day.getDate() + {{ maximum_days_in_advance }});
     </script>
+    <script src="{% url 'javascript-catalog' %}"></script>
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
     <script>
         getFutureReservations($('#machine_type_dropdown').dropdown('get value'), $('#machine_name_dropdown').dropdown('get value'), {% invert start_time %});

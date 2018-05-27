@@ -1,25 +1,25 @@
 .make_reservation_calendar_time_table_event {
-    background-color: #21ba45;
-    border-top: 1px solid #1b8f3a;
-    border-bottom: 1px solid #1b8f3a;
+    background-color: #21BA45;
+    border-top: 1px solid #1B8F3A;
+    border-bottom: 1px solid #1B8F3A;
 }
 
 .make_reservation_calendar_time_table_non_event {
-    background-color: #2185d0;
-    border-top: 1px solid #1b629d;
-    border-bottom: 1px solid #1b629d;
+    background-color: #2185D0;
+    border-top: 1px solid #1B629D;
+    border-bottom: 1px solid #1B629D;
 }
 
 .make_reservation_calendar_time_table_my_non_event {
-    background-color: #f8c811;
-    border-top: 1px solid #d7ab0f;
-    border-bottom: 1px solid #d7ab0f;
+    background-color: #F8C811;
+    border-top: 1px solid #D7AB0F;
+    border-bottom: 1px solid #D7AB0F;
 }
 
 .make_reservation_calendar_time_table_make {
-    background-color: #dcddde;
-    border-top: 1px solid #babbbc;
-    border-bottom: 1px solid #babbbc;
+    background-color: #DCDDDE;
+    border-top: 1px solid #BABBBC;
+    border-bottom: 1px solid #BABBBC;
     z-index: 200;
 }
 
@@ -109,7 +109,7 @@
 .time_selection {
     position: absolute;
     width: 100%;
-    background-color: #38caff;
+    background-color: #38CAFF;
     pointer-events: none;
     border-radius: 0.3em;
 }
@@ -177,7 +177,7 @@ tr.wrapping {
 .current_time_indicator {
     width: 100%;
     height: 2px;
-    background-color: #ff0000;
+    background-color: #FF0000;
     position: absolute;
     z-index: 300;
 }

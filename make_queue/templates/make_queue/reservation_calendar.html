@@ -1,26 +1,28 @@
 {% load reservation_extra %}
 {% load staticfiles %}
+{% load i18n %}
 {% load l10n %}
 
 {% localize off %}
 
     <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
 
     <div class="attached ui buttons">
         <a class="ui labeled icon make_yellow button" id="prev_week_button"
            {% if link_prev %}href="{{ link_prev }}"{% endif %}>
             <i class="left chevron icon"></i>
-            Forrige
+            {% trans "Previous" %}
         </a>
         <a class="ui make_yellow button bordered"
            id="now_button" {% if link_now %}href="{{ link_now }}"{% endif %}>
             <i class="calendar icon"></i>
-            I dag
+            {% trans "Today" %}
         </a>
         <a class="ui right labeled icon make_yellow button" id="next_week_button"
            {% if link_next %}href="{{ link_next }}"{% endif %}>
             <i class="right chevron icon"></i>
-            Neste
+            {% trans "Next" %}
         </a>
     </div>
     <table class="ui celled fixed very compact unstackable table">
@@ -32,7 +34,9 @@
             </th>
             <th class="make_reservation_calendar_long_month title_large">
                 <div>{{ week_days.0.date|date:"F"|title }}</div>
-                <div class="title_small">Uke {{ week_days.0.date|date:"W" }}</div>
+                <div class="title_small">
+                    {% trans "Week" %} {{ week_days.0.date|date:"W" }}
+                </div>
             </th>
             {% for day in week_days %}
                 <th>
@@ -82,27 +86,29 @@
                                      data-content="{{ reservation.reservation.special_text }}"
                                         {% elif perms.make_queue.can_view_reservation_user and not reservation.reservation.special %}
                                      data-html="<div class='header'>
-                                                    Reservasjon
+                                                    {% trans "Reservation" %}
                                                 </div>
                                                 <div>
-                                                    <b>Navn:</b> {{ reservation.reservation.user.get_full_name }}
+                                                    <b>{% trans "Name" %}:</b> {{ reservation.reservation.user.get_full_name }}
                                                 </div>
                                                 <div>
-                                                    <b>Epost:</b> {{ reservation.reservation.user.email }}
+                                                    <b>{% trans "Email" %}:</b> {{ reservation.reservation.user.email }}
                                                 </div>
                                                 <div>
-                                                    <b>Tidspunkt:</b> {{ reservation.reservation.start_time|date:"D H:i"|title }} - {{ reservation.reservation.end_time|date:"D H:i"|title }}
+                                                    <b>{% trans "Time" %}:</b> {{ reservation.reservation.start_time|date:"D H:i"|title }} - {{ reservation.reservation.end_time|date:"D H:i"|title }}
                                                 </div>
                                                 {% if reservation.reservation.comment %}
                                                     <div>
-                                                        <div><b>Kommentar:</b></div>
+                                                        <div>
+                                                            <b>{% trans "Comment" context "A comment" %}:</b>
+                                                        </div>
                                                         <div>{{ reservation.reservation.comment }}</div>
                                                     </div>
                                                 {% endif %}"
-                                    {% endif %}
-                                    {% if reservation.reservation.event %}
-                                        data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"
-                                    {% endif %}>
+                                        {% endif %}
+                                        {% if reservation.reservation.event %}
+                                     data-event-url="{% url 'event' pk=reservation.reservation.event.event.pk %}"
+                                        {% endif %}>
                                 </div>
                             {% endif %}
                         {% endfor %}
@@ -116,19 +122,19 @@
                 <div class="make_reservation_calendar_legend make_right_floated">
                     <div class="make_reservation_calendar_legend_item">
                         <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
-                        MAKE NTNU
+                        {% trans "MAKE NTNU" %}
                     </div>
                     <div class="make_reservation_calendar_legend_item">
                         <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_non_event"></div>
-                        Andre Reservasjoner
+                        {% trans "Other reservations" %}
                     </div>
                     <div class="make_reservation_calendar_legend_item">
                         <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_event"></div>
-                        Arrangementer
+                        {% trans "Events" %}
                     </div>
                     <div class="make_reservation_calendar_legend_item">
                         <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_my_non_event"></div>
-                        Mine Reservasjoner
+                        {% trans "My reservations" %}
                     </div>
                 </div>
             </th>

@@ -1,7 +1,8 @@
 {% extends 'web/base.html' %}
 {% load staticfiles %}
+{% load i18n %}
 
-{% block title %}Rediger event{% endblock title %}
+{% block title %}{% trans "Edit event" %}{% endblock title %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/calendar/calendar.min.css" %}">
@@ -13,7 +14,9 @@
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui centered header">{% block form_header %}Rediger event{% endblock form_header %}</h1>
+    <h1 class="ui centered header">
+        {% block form_header %}{% trans "Edit event" %}{% endblock form_header %}
+    </h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="field">
@@ -21,7 +24,7 @@
             {{ form.title }}
         </div>
         <div class="field">
-            <label>Innhold</label>
+            <label>{% trans "Content" %}</label>
             {{ form.content }}
         </div>
         <div class="field">
@@ -58,6 +61,6 @@
                 {{ form.multiday }}
             </div>
         </div>
-        <input class="ui blue submit button" type="submit" value="Lagre">
+        <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
     </form>
 {% endblock body %}
