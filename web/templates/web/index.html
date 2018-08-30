@@ -5,13 +5,14 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
     <script src="{% static "web/js/image-link.js" %}"></script>
+    <script src="https://cdn.jsdelivr.net/parallax.js/1.4.2/parallax.min.js"></script>
 {% endblock head %}
 
 {% block padding-top %}{% endblock %}
 
 {% block body %}
     <div class="top">
-        <img class="topimg large" src="{% static "web/img/topimg_2.jpg" %}">
+        <div class="topimg large parallax-window" data-parallax="scroll" data-image-src="{% static "web/img/topimg_2.jpg" %}"></div>
         <img class="topimg small" src="{% static "web/img/topimg_small.jpg" %}">
         <img class="toplogo" src="{% static "web/img/logo_black.svg" %}">
     </div>
@@ -75,6 +76,7 @@
         $('.clickable').click(function () {
             window.location.href = $(this).attr('href');
         });
+        $('.parallax-window').parallax({'speed': 0.5});
     </script>
     <div style="height: 100px;"></div>
 {% endblock body %}
