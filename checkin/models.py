@@ -7,10 +7,16 @@ from django.utils import timezone
 
 class Skill(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
+    title_en = models.CharField(max_length=100, unique=True, verbose_name="Skill (english)")
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):
-        return self.title
+        return str(self.title_en)
+
+    def locale_title(self, language_code):
+        if language_code == "nb":
+            return self.title
+        return self.title_en
 
 
 class Profile(models.Model):
@@ -48,12 +54,18 @@ class UserSkill(models.Model):
 class SuggestSkill(models.Model):
     creator = models.ForeignKey(Profile, related_name="suggestions", null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100, unique=True, verbose_name="Foreslått ferdighet")
+    title_en = models.CharField(max_length=100, unique=True, verbose_name="Suggested skill")
     approved = models.BooleanField(default=False)
     voters = models.ManyToManyField(Profile, related_name="votes")
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):
-        return str(self.title)
+        return str(self.title_en)
+
+    def locale_title(self, language_code):
+        if language_code == "nb":
+            return self.title
+        return self.title_en
 
     class Meta:
         ordering = ('title',)

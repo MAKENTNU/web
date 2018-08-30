@@ -6,4 +6,9 @@ register = template.Library()
 
 @register.filter(name='has_voter')
 def has_voter(suggestion, user):
-    return SuggestSkill.objects.get(title=suggestion).voters.filter(user=user).exists()
+    return suggestion.voters.filter(user=user).exists()
+
+
+@register.filter(name='locale_title')
+def locale_title(suggestion_skill, language_code):
+    return suggestion_skill.locale_title(language_code)

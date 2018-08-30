@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
 {% load staticfiles %}
 {% load thumbnail %}
+{% load checkin_tags %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
@@ -41,7 +42,7 @@
                     <div class="ui basic image label">
                         <img class="skill-image" src="{% if skill.image %}{{ skill.image.url }}{% else %}
                                   {% static "checkin/img/placeholder_skill.svg" %}{% endif %}">
-                        <span>{{ skill }}</span>
+                        <span>{{ skill|locale_title:request.LANGUAGE_CODE }}</span>
                         <div class="detail make_bg_blue">
                             <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
                         </div>
@@ -61,7 +62,7 @@
                             <select class="ui fluid dropdown search" name="skill" required>
                                 <option value="">Velg/søk</option>
                                 {% for skill in all_skills %}
-                                    <option value="{{ skill.id }}">{{ skill.title }}</option>
+                                    <option value="{{ skill.id }}">{{ skill|locale_title:request.LANGUAGE_CODE }}</option>
                                 {% endfor %}
                             </select>
                         </div>
