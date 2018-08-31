@@ -174,6 +174,11 @@ class Reservation(models.Model):
         return next(filter(lambda res: res.machine.field.target_field.model.literal == machine_type,
                            Reservation.__subclasses__()))
 
+    def __str__(self):
+        return "{:} har reservert {:} fra {:} til {:}".format(self.user.get_full_name(), self.get_machine().name,
+                                                              self.start_time.strftime("%d/%m/%Y - %H:%M"),
+                                                              self.end_time.strftime("%d/%m/%Y - %H:%M"))
+
 
 class Reservation3D(Reservation):
     machine = models.ForeignKey(Printer3D, on_delete=models.CASCADE)
