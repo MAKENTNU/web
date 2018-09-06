@@ -154,7 +154,7 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
                                                   image=image)
                 sug.voters.add(profile)
 
-            if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5 or SuggestSkill.objects.get(title=suggestion).approved:
+            if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
                 Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.error(request, "Ferdighet lagt til!")
@@ -189,7 +189,7 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
             return JsonResponse(data)
 
         suggestion.voters.add(request.user.profile)
-        data['skill_passed'] = suggestion.voters.count() >= 5 or suggestion.approved
+        data['skill_passed'] = suggestion.voters.count() >= 5
         if data['skill_passed']:
             Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
             suggestion.delete()
