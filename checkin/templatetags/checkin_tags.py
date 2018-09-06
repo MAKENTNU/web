@@ -10,5 +10,12 @@ def has_voter(suggestion, user):
 
 
 @register.filter(name='locale_title')
-def locale_title(suggestion_skill, language_code):
-    return suggestion_skill.locale_title(language_code)
+def locale_title(skill, language_code):
+    # if isinstance(skill, str):
+    #     skill = Skill.objects.get(title=skill)
+    return skill.locale_title(language_code)
+
+
+@register.filter(name='is_admin')
+def is_admin(user):
+    return user.has_perm("checkin.can_force_suggestion")

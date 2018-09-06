@@ -13,7 +13,7 @@
             {% for skill, leveltime in skill_dict %}
                 <div class="event">
                     <div class="label"> {# blackbox er for debugging #}
-                        <img src="{% if suggestion.image %}{{ suggestion.image.url }}
+                        <img src="{% if skill.image %}{{ skill.image.url }}
                                       {% else %}{% static "checkin/img/placeholder_skill.svg" %}{% endif %}"/>
                     </div>
                     <div class="content">

@@ -11,14 +11,22 @@
             {% csrf_token %}
             <div class="inline fields">
                 <div class="ten wide field">
-                    <label>Legg til ferdighet</label>
+                    <label>Tittel (norsk)</label>
                     <input type="text" name="suggested-skill" placeholder="Ferdighet">
                 </div>
                 <div class="five wide field">
-                    <input id="skill-image" type="file" name="image" accept="image/jpeg, image/png, image/svg, image/gif">
+                    <input id="skill-image" type="file" name="image"
+                           accept="image/jpeg, image/png, image/svg, image/gif">
                 </div>
                 <div class="three wide field">
                     <button class="ui button" type="submit">Legg til</button>
+                </div>
+            </div>
+
+            <div class="inline fields">
+                <div class="nine wide field">
+                    <label>Title (english)</label>
+                    <input type="text" name="suggested-skill-english" placeholder="Skill">
                 </div>
             </div>
             {% for message in messages %}
@@ -45,20 +53,26 @@
                             <img src="{% if suggestion.image %}{{ suggestion.image.url }}
                                       {% else %}{% static "checkin/img/placeholder_skill.svg" %}{% endif %}"
                                  class="ui mini rounded image">
-                            <div class="content">{{ suggestion|locale_title:request.LANGUAGE_CODE }}</div>
+                            <div class="content">{{ suggestion.title }}/{{ suggestion.title_en }}</div>
                         </h5>
                     </td>
 
                     <td id="vote-count">{{ suggestion.voters.count }}</td>
                     <td>
+                    {% if request.user|is_admin %}
+                        <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
+                        Tving gjennom
+                        </button>
+                    {% else %}
                         <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
-                                pk="{{ suggestion.pk }}">
+                                pk="{{ suggestion.pk }}" forced="false">
                             {% if suggestion|has_voter:request.user %}
                                 Stemt!
                             {% else %}
                                 Stem
                             {% endif %}
                         </button>
+                    {% endif %}
                     </td>
                 </tr>
             {% endfor %}
@@ -72,10 +86,10 @@
     <script>
 
         $('.add-voter').click(function () {
-            add_voter_post($(this), $(this).attr('pk'));
+            add_voter_post($(this), $(this).attr('pk'), $(this).attr('forced'));
         });
 
-        function add_voter_post(element, pk) {
+        function add_voter_post(element, pk, forced) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
@@ -86,11 +100,16 @@
                 url: '/checkin/suggest/vote/',
                 data: {
                     'pk': pk,
+                    'forced': forced,
                 },
                 success: function (data) {
+                    if (data['is_forced']){
+                        element.parents('tr').remove();
+                    }
                     element.addClass('green');
                     element.addClass('disabled');
                     element.html('Stemt!');
+
                     if (!data['user_exists']) {
                         var incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
                         element.parent().siblings('#vote-count').html(incrementedCount);

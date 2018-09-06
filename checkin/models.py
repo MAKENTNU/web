@@ -11,12 +11,12 @@ class Skill(models.Model):
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):
-        return str(self.title_en)
+        return self.title
 
     def locale_title(self, language_code):
         if language_code == "nb":
             return self.title
-        return self.title_en
+        return self.title_en  # change to title_en
 
 
 class Profile(models.Model):
@@ -60,15 +60,18 @@ class SuggestSkill(models.Model):
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):
-        return str(self.title_en)
+        return self.title
 
     def locale_title(self, language_code):
         if language_code == "nb":
             return self.title
-        return self.title_en
+        return self.title_en  # change to title_en
 
     class Meta:
         ordering = ('title',)
+        permissions = (
+            ("can_force_suggestion", "Can force suggestion"),
+        )
 
 
 class RegisterProfile(models.Model):
