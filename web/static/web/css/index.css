@@ -1,7 +1,7 @@
 .toplogo {
     position: absolute;
     left: 50%;
-    top: calc(35% + 50px);
+    top: calc(25% + 50px);
     transform: translate(-50%, -50%);
 }
 
@@ -9,11 +9,11 @@
     position: relative;
     z-index: -10;
     width: 100vw;
-    height: calc(75vh - 120px);
+    height: calc(50vh - 120px);
+    transform: translate(0, -10px);
 }
 
 .topimg {
-    min-height: 330px;
     object-fit: cover;
     width: 100%;
     height: 100%;
