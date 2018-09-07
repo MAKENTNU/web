@@ -10,7 +10,7 @@
         </div>
         <div class="meta">
             <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
-                {{ machine.get_status_display }}
+				{% card_text_from_machine_status machine %}
             </div>
         </div>
         {{ machine.model }} <br>
