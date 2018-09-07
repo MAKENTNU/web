@@ -44,6 +44,11 @@ def is_current_date(date):
 
 
 @register.simple_tag()
+def card_text_from_machine_status(machine):
+    return dict(machine.status_choices)[machine.get_status()]
+
+
+@register.simple_tag()
 def get_current_time_of_day():
     return date_to_percentage(timezone.localtime(timezone.now()))
 
