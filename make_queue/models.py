@@ -7,6 +7,8 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from datetime import timedelta
 from abc import abstractmethod, ABCMeta
+
+from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 
 
@@ -255,3 +257,94 @@ class Penalty(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     from_date = models.DateTimeField(auto_now_add=True)
     removed_date = models.DateTimeField()
+
+
+class ReservationRule(models.Model):
+    start_time = models.TimeField(verbose_name="Start time")
+    end_time = models.TimeField(verbose_name="End time")
+    # Number of times passed by midnight between start and end time
+    days_changed = models.IntegerField(verbose_name="Days")
+    start_days = models.IntegerField(default=0, verbose_name="Start days")
+    max_hours = models.FloatField(verbose_name="Hours inside")
+    max_inside_border_crossed = models.FloatField(verbose_name="Hours across borders")
+    machine_type = models.CharField(max_length=30, choices=[(machine.literal, machine.literal) for machine in
+                                                            Machine.__subclasses__()], verbose_name="Machine type")
+
+    def save(self, **kwargs):
+        if not self.is_valid_rule():
+            raise ValidationError("Rule is not valid")
+        return super().save(**kwargs)
+
+    @staticmethod
+    def valid_time(start_time, end_time, machine_type):
+        rules = [rule for rule in ReservationRule.objects.filter(machine_type=machine_type) if
+                 rule.hours_inside(start_time, end_time)]
+        if timedelta_to_hours(end_time - start_time) > max(rule.max_hours for rule in rules):
+            return False
+
+        return any(rule.valid_time_in_rule(start_time, end_time, len(rules) > 1) for rule in rules)
+
+    class Period:
+        def __init__(self, start_day, rule):
+            self.start_time = self.__to_inner_rep(start_day, rule.start_time)
+            self.end_time = self.__to_inner_rep(start_day + rule.days_changed, rule.end_time)
+            self.rule = rule
+
+        def hours_inside(self, start_time, end_time):
+            return self.hours_overlap(self.start_time, self.end_time,
+                                      self.__to_inner_rep(start_time.weekday(), start_time.time.time),
+                                      self.__to_inner_rep(end_time.weekday(), end_time.time.time))
+
+        @staticmethod
+        def hours_overlap(a, b, c, d):
+            b, c, d = (b - a) % 7, (c - a) % 7, (d - a) % 7
+
+            if c > d:
+                return min(b, d) * 24
+            return (min(b, d) - min(b, c)) * 24
+
+        @staticmethod
+        def __to_inner_rep(day, time):
+            return day + time.hour / 24 + time.minute / 1440 + time.second / 86400
+
+        def overlap(self, other):
+            return self.hours_overlap(self.start_time, self.end_time, other.start_time, other.end_time) > 0
+
+    def is_valid_rule(self, raise_error=False):
+        # Check if the time period is a valid time period (within a week)
+        if self.start_time > self.end_time and not self.days_changed or self.days_changed > 7:
+            if raise_error:
+                raise ValidationError("Period is either too long (7+ days) or start time is earlier than end time.")
+            return False
+
+        # Check for internal overlap
+        time_periods = self.time_periods()
+        if any(t1.overlap(t2) for t1 in time_periods for t2 in time_periods if
+               t1.end_time != t2.end_time and t1.start_time != t2.end_time):
+            if raise_error:
+                raise ValidationError("Rule has internal overlap of time periods.")
+            return False
+
+        # Check for overlap with other time periods
+        other_time_periods = [time_period for rule in
+                              ReservationRule.objects.filter(machine_type=self.machine_type).exclude(pk=self.pk) for
+                              time_period in rule.time_periods()]
+
+        other_overlap = any(t1.overlap(t2) for t1 in time_periods for t2 in other_time_periods)
+
+        if raise_error and other_overlap:
+            raise ValidationError("Rule time periods overlap with time periods of other rules.")
+
+        return not other_overlap
+
+    def valid_time_in_rule(self, start_time, end_time, border_cross):
+        if border_cross:
+            return self.hours_inside(start_time, end_time) <= self.max_inside_border_crossed
+        return timedelta_to_hours(end_time - start_time) <= self.max_hours
+
+    def hours_inside(self, start_time, end_time):
+        return sum(period.hours_inside(start_time, end_time) for period in self.time_periods())
+
+    def time_periods(self):
+        return [self.Period(day_index, self) for day_index, _ in
+                filter(lambda enumerate_obj: enumerate_obj[1] == "1", enumerate(format(self.start_days, "07b")[::-1]))]

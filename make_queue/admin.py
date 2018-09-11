@@ -10,5 +10,6 @@ admin.site.register(Quota3D)
 admin.site.register(Reservation3D)
 admin.site.register(Printer3D)
 admin.site.register(SewingMachine)
+admin.site.register(ReservationRule)
 
 register_handler(PrinterHandler, "printer_allowed")
