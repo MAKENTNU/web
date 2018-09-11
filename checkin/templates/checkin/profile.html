@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load thumbnail %}
 {% load checkin_tags %}
+{% load i18n %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
@@ -9,11 +10,13 @@
 
 {% block body %}
     <div class="ui text container">
-        <h1>Min Side</h1>
+        <h1>
+            {% trans "My profile" %}
+        </h1>
         <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
 
         <div class="ui container">
-            <div class="ui image" data-tooltip="Endre bilde" data-position="right center">
+            <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
             {% if image %}
                 {% thumbnail image "150x150" crop="center" as im %}
                     <img id="profile-pic" src="{{ im.url }}">
@@ -37,7 +40,9 @@
         {% if make_member %}
 
             <div class="ui container">
-                <h4>Mine ferdigheter</h4>
+                <h4>
+                    {% trans "My skills" %}
+                </h4>
                 {% for skill, level in skill_dict.items %}
                     <div class="ui basic image label">
                         <img class="skill-image" src="{% if skill.image %}{{ skill.image.url }}{% else %}
@@ -58,9 +63,9 @@
                     <input name="rating" type="number" id="rating-input" value="1" hidden>
                     <div class="inline fields">
                         <div class="ten wide field">
-                            <label>Legg til ferdigheter</label>
+                            <label>{% trans "Add skills" %}</label>
                             <select class="ui fluid dropdown search" name="skill" required>
-                                <option value="">Velg/søk</option>
+                                <option value="">{% trans "Select/search" %}</option>
                                 {% for skill in all_skills %}
                                     <option value="{{ skill.id }}">{{ skill|locale_title:request.LANGUAGE_CODE }}</option>
                                 {% endfor %}
@@ -70,7 +75,7 @@
                             <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
                         </div>
                         <div class="three wide field">
-                            <button class="ui button" type="submit">Submit</button>
+                            <button class="ui button" type="submit">{% trans "Add" %}</button>
                         </div>
                     </div>
                 </form>
@@ -82,8 +87,10 @@
 
         {% if not profile.card_id %}
             <div class="card-register">
-                <p>Legg kortet på kortskanneren og trykk på knappen under for å registrere kortet</p>
-                <button class="ui button register-profile">Registrer</button>
+                <p>
+                    {% trans "Place the card on the card reader and press the button below to register the card" %}
+                </p>
+                <button class="ui button register-profile">{% trans "Register" %}</button>
             </div>
         {% endif %}
 

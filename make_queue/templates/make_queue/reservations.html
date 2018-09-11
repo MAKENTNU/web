@@ -37,9 +37,7 @@
                 <th>{% trans "Reservation" %}</th>
                 <th>{% trans "Time" %}</th>
                 {% if admin %}
-                    <th>
-                        {% trans "Information" %}
-                    </th>
+                    <th>{% trans "Information" %}</th>
                 {% endif %}
                 <th>{% trans "View in calendar" %}</th>
                 <th>{% trans "Change" %}</th>
@@ -80,13 +78,17 @@
                     {% endif %}
                     <td>
                         <a href="{% calendar_url_reservation reservation %}">
-                            <div class="ui button primary">{% trans "Calendar" %}</div>
+                            <div class="ui button primary">
+                                {% trans "Calendar" %}
+                            </div>
                         </a>
                     </td>
                     <td>
                         {% if reservation.can_delete %}
                             <a href="{% url 'change_reservation' reservation=reservation %}">
-                                <div class="ui button primary">{% trans "Change" %}</div>
+                                <div class="ui button primary">
+                                    {% trans "Change" %}
+                                </div>
                             </a>
                         {% endif %}
                     </td>
@@ -132,10 +134,15 @@
                     {% if reservation.can_delete %}
                         <div class="ui three bottom attached buttons">
                             <a class="ui primary button make_my_reservation_button_pad"
-                               href="{% calendar_url_reservation reservation %}">{% trans "Calendar" %}</a>
+                               href="{% calendar_url_reservation reservation %}">
+                                {% trans "Calendar" %}
+                            </a>
                             <a class="ui make_bg_yellow button make_my_reservation_button_pad"
-                               href="{% url 'change_reservation' reservation=reservation %}">{% trans "Change" %}</a>
-                            <div class="ui button red reservation_calendar_delete">{% trans "Cancel" context "cancel reservation" %}
+                               href="{% url 'change_reservation' reservation=reservation %}">
+                                {% trans "Change" %}
+                            </a>
+                            <div class="ui button red reservation_calendar_delete">
+                                {% trans "Cancel" context "cancel reservation" %}
                                 <form method="post" action="{% url 'delete_reservation' %}">
                                     {% csrf_token %}
                                     <input type="number" name="pk" class="make_hidden"

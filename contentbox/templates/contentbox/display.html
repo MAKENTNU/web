@@ -6,8 +6,9 @@
         {% if perms.contentbox.change_contentbox %}
             <a class="ui yellow button"
                href="{% url 'contentbox_edit' contentbox.id %}"
-               style="position: absolute; top: -50px; left: 0;"
-            >{% trans "Edit" %}</a>
+               style="position: absolute; top: -50px; left: 0;">
+                {% trans "Edit" %}
+            </a>
         {% endif %}
         {% autoescape off %}
             {{ contentbox.content }}

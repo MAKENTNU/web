@@ -16,7 +16,9 @@
                 <a href="{% url 'update_printer_handler' %}" class="ui primary button">
                     {% trans "Get new 3D printer course participants" %}
                 </a>
-                <div class="ui huge header">{% trans "Users" %}</div>
+                <div class="ui huge header">
+                    {% trans "Users" %}
+                </div>
                 <div class="ui icon input" id="user_search_field">
                     <i class="icon search"></i>
                     <input class="hidden" type="text" placeholder="Søk på bruker"/>
@@ -27,7 +29,9 @@
                              data-fullname="{{ user.first_name }} {{ user.last_name }}"
                              data-username="{{ user.username }}">
                             <div class="right floated content">
-                                <div class="blue ui button user_select">{% trans "Select" %}</div>
+                                <div class="blue ui button user_select">
+                                    {% trans "Select" %}
+                                </div>
                             </div>
                             <div class="content">
                                 <div class="header">
@@ -44,7 +48,9 @@
             <div class="make_hidden" id="csrf">{% csrf_token %}</div>
             <div class="ui column">
                 <div class="permissions">
-                    <div class="ui huge header">{% trans "Selected user" %}</div>
+                    <div class="ui huge header">
+                        {% trans "Selected user" %}
+                    </div>
                     <div class="ui cards" id="quota_user">
                         {% include 'make_queue/quota/quota_user.html' with user=request.user %}
                     </div>

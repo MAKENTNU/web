@@ -1,10 +1,10 @@
-from datetime import time
+from datetime import date, time
 
-from django.utils.translation import gettext_lazy as _
-from django.db import models
 from ckeditor.fields import RichTextField
+from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 
 class ArticleManager(models.Manager):
@@ -74,7 +74,7 @@ class NewsBase(models.Model):
 class Article(NewsBase):
     objects = ArticleManager()
     pub_date = models.DateField(
-        default=timezone.now,
+        default=date.today,
         verbose_name=_('Publishing date'),
     )
     pub_time = models.TimeField(
@@ -101,7 +101,7 @@ class TimePlace(models.Model):
     objects = TimePlaceManager()
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     pub_date = models.DateField(
-        default=timezone.now,
+        default=date.today,
         verbose_name=_('Publishing date'),
     )
     pub_time = models.TimeField(
@@ -109,7 +109,7 @@ class TimePlace(models.Model):
         verbose_name=_('Publishing time'),
     )
     start_date = models.DateField(
-        default=timezone.now,
+        default=date.today,
         verbose_name=_('Start date'),
     )
     end_date = models.DateField(

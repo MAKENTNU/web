@@ -24,7 +24,7 @@ function fix_time(element) {
     });
 }
 
-$(function() {
+$(function () {
     fix_time($('#id_start_time'));
     fix_time($('#id_end_time'));
     fix_date($('#id_start_date'));
