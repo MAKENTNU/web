@@ -79,6 +79,7 @@
                         </div>
                     </div>
                 </form>
+                <a href="/checkin/suggest">{% trans "Suggest new skills" %}</a>
             </div>
 
         {% endif %}
@@ -87,6 +88,7 @@
 
         {% if not profile.card_id %}
             <div class="card-register">
+                <h3>{% trans "No registered card" %}</h3>
                 <p>
                     {% trans "Place the card on the card reader and press the button below to register the card" %}
                 </p>
