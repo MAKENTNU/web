@@ -30,6 +30,13 @@ quota_url_patterns = [
     path('', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
 
+rules_url_patterns = [
+    path('<machine_type:machine_type>/', reservation.rules.RulesOverviewView.as_view(), name="machine_rules"),
+    path('delete/<int:pk>/', reservation.rules.DeleteReservationRules.as_view(), name="delete_machine_rule"),
+    path('create/', reservation.rules.CreateReservationRuleView.as_view(), name="create_machine_rule"),
+    path('edit/<int:pk>/', reservation.rules.EditReservationRuleView.as_view(), name="edit_machine_rule"),
+]
+
 urlpatterns = [
     path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
     path('calendar/<year:year>/<week:week>/<machine:machine>/', reservation.calendar.ReservationCalendarComponentView.as_view(), name="reservation_calendar_component"),
@@ -39,6 +46,7 @@ urlpatterns = [
     path('admin/', permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.AdminReservationView.as_view()), name="admin_reservation"),
     path('delete/', login_required(reservation.reservation.DeleteReservationView.as_view()), name="delete_reservation"),
     path('change/<reservation:reservation>/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
+    path('rules/', include(rules_url_patterns)),
     path('json/', include(json_urlpatterns)),
     path('quota/', include(quota_url_patterns)),
     re_path('^', reservation.machine.MachineView.as_view(), name="reservation_machines_overview")

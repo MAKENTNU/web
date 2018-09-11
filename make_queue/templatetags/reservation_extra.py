@@ -2,7 +2,7 @@ from django import template
 from django.utils import timezone
 from django.urls import reverse
 
-from make_queue.util.time import date_to_local
+from make_queue.util.time import date_to_local, get_day_name
 
 register = template.Library()
 
@@ -70,3 +70,13 @@ def get_machine_cannot_use_text(machine):
 @register.simple_tag()
 def invert(expression):
     return ["false", "true"][not expression]
+
+
+@register.simple_tag()
+def rule_period_start_text(period, locale):
+    return get_day_name(int(period.start_time // 1), locale) + " " + period.rule.start_time.strftime("%H:%M")
+
+
+@register.simple_tag()
+def rule_period_end_text(period, locale):
+    return get_day_name(int(period.end_time // 1) % 7, locale) + " " + period.rule.end_time.strftime("%H:%M")

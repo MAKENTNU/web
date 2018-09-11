@@ -1,6 +1,8 @@
 import pytz
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.utils.datetime_safe import datetime
+from django.utils.translation import ugettext
+from calendar import day_name
 
 
 def is_valid_week(year, week):
@@ -58,3 +60,18 @@ def local_to_date(date):
     :return: The localized date
     """
     return pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+
+
+def timedelta_to_hours(timedelta_obj):
+    """
+    Converts a timedelta object into a float indicating the number of hours the timedelta covers
+
+    :param timedelta_obj: The timedelta object
+    :return: The number of hours it covers
+    """
+    return timedelta_obj.days * 24 + timedelta_obj.seconds / 3600
+
+
+def get_day_name(day_no, locale):
+    translation.activate(locale)
+    return ugettext(day_name[day_no])

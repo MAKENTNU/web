@@ -1,0 +1,42 @@
+{% extends "web/base.html" %}
+{% load reservation_extra %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>Rules {% if perms.make_queue.add_reservation_rule %}
+            <a href="{% url "create_machine_rule" %}"><i class="ui green plus icon"></i></a>{% endif %}</h1>
+        <div class="ui cards">
+            {% for rule in rules %}
+                <div class="ui card">
+                    <div class="content">
+                        <div class="meta">
+                            {% if perms.change_reservation_rule %}
+                                <a href="{% url "edit_machine_rule" rule.pk %}"><i class="ui yellow icon pencil"></i></a>
+                            {% endif %}
+                            {% if perms.delete_reservation_rule %}
+                                <a class="delete confirm" href="{% url "delete_machine_rule" rule.pk %}"><i class="ui red icon trash"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="description">
+                            <b>Max {{ rule.max_hours|floatformat:0 }} hours</b>, or max
+                            <b>{{ rule.max_inside_border_crossed|floatformat:0 }} hours</b> inside rule timeperiods, if reservation is in
+                            multiple rules.
+                        </div>
+                        <h4 class="subheader">
+                            Periods
+                        </h4>
+                        {% for period in rule.time_periods %}
+                            <div>
+                                {% rule_period_start_text period LANGUAGE_CODE as start %}
+                                {% rule_period_end_text period LANGUAGE_CODE as end %}
+                                {{ start|capfirst }} - {{ end|capfirst }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
