@@ -53,12 +53,12 @@ class ShowSkillsView(TemplateView):
 
         for profile in Profile.objects.filter(on_make=True):
             self.check_out_expired(profile)
-            for level in profile.userskill_set.all():
-                title, level_int = level.skill.title, level.skill_level
+            for userskill in profile.userskill_set.all():
+                skill = userskill.skill
 
-                if (title not in skill_dict or level_int > skill_dict[title][0]) \
+                if (skill not in skill_dict or skill.skill_level > skill_dict[skill][0]) \
                         and not self.is_checkin_expired(profile):
-                    skill_dict[title] = (level_int, profile.last_checkin)
+                    skill_dict[skill] = (userskill.skill_level, profile.last_checkin)
 
         context = super().get_context_data(**kwargs)
         context.update({
@@ -101,10 +101,11 @@ class ProfilePageView(TemplateView):
         userskill_set = profile.userskill_set.all()
 
         skill_dict = {}
-        for us in userskill_set:
-            title, level_int = us.skill.title, us.skill_level
-            if title not in skill_dict or level_int > skill_dict[title]:
-                skill_dict[title] = level_int
+        for userskill in profile.userskill_set.all():
+            skill = userskill.skill
+
+            if skill not in skill_dict or skill.skill_level > skill_dict[skill][0]:
+                skill_dict[skill] = userskill.skill_level
 
         context = super().get_context_data(**kwargs)
         context.update({
@@ -124,13 +125,20 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
     def post(self, request):
         suggestion = request.POST.get('suggested-skill')
+        suggestion_english = request.POST.get('suggested-skill-english')
         profile = request.user.profile
         image = request.FILES.get('image')
 
-        if not suggestion.strip():
+        if suggestion.strip() and not suggestion_english.strip():
+            messages.error(request, "Skriv både norsk og engelsk ferdighetsnavn")
+            return HttpResponseRedirect(reverse('suggest'))
+        elif not suggestion.strip() and suggestion_english.strip():
+            messages.error(request, "Skriv både norsk og engelsk ferdighetsnavn")
+            return HttpResponseRedirect(reverse('suggest'))
+        elif not suggestion.strip() and not suggestion_english.strip():
             return HttpResponseRedirect(reverse('suggest'))
 
-        if Skill.objects.filter(title=suggestion).exists():
+        if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(title_en=suggestion_english).exists():
             messages.error(request, "Ferdigheten eksisterer allerede!")
             return HttpResponseRedirect(reverse('suggest'))
         else:
@@ -141,10 +149,12 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
                     s.image = image
                 s.save()
             else:
-                sug = SuggestSkill.objects.create(creator=profile, title=suggestion, image=image)
+                # does not work for some reason
+                sug = SuggestSkill.objects.create(creator=profile, title=suggestion, title_en=suggestion_english,
+                                                  image=image)
                 sug.voters.add(profile)
 
-            if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5 or SuggestSkill.objects.get(title=suggestion).approved:
+            if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
                 Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.error(request, "Ferdighet lagt til!")
@@ -165,15 +175,24 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
     permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
+        # TODO: complete force vote
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
+        forced = request.POST.get('forced') == "true"
         data = {
+            'skill_passed': False,
             'user_exists': suggestion.voters.filter(user=request.user).exists(),
+            'is_forced': forced,
         }
+        if forced:
+            Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
+            suggestion.delete()
+            return JsonResponse(data)
+
         suggestion.voters.add(request.user.profile)
-        data['skill_passed'] = suggestion.voters.count() >= 5 or suggestion.approved
+        data['skill_passed'] = suggestion.voters.count() >= 5
         if data['skill_passed']:
-            Skill.objects.create(title=SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).title)
-            SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).delete()
+            Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
+            suggestion.delete()
 
         return JsonResponse(data)
 
