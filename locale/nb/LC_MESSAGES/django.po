@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-05-10 16:27+0200\n"
+"POT-Creation-Date: 2018-09-14 09:01+0200\n"
 "PO-Revision-Date: 2018-04-27 17:38+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -82,27 +82,27 @@ msgstr "Lagre"
 msgid "Committees"
 msgstr "Komiteer"
 
-#: make_queue/models.py:17
+#: make_queue/models.py:19
 msgid "Reserved"
 msgstr "Reservert"
 
-#: make_queue/models.py:18
+#: make_queue/models.py:20
 msgid "Available"
 msgstr "Ledig"
 
-#: make_queue/models.py:19
+#: make_queue/models.py:21
 msgid "In use"
 msgstr "I bruk"
 
-#: make_queue/models.py:20
+#: make_queue/models.py:22
 msgid "Out of order"
 msgstr "I ustand"
 
-#: make_queue/models.py:21
+#: make_queue/models.py:23
 msgid "Maintenance"
 msgstr "Vedlikehold"
 
-#: make_queue/models.py:63
+#: make_queue/models.py:65
 msgid ""
 "You must have completed a 3D printer course to reserve the printers. If you "
 "have taken the course, but don't have access, contact 3dprint@makentnu.no"
@@ -141,14 +141,12 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:75
-#: make_queue/templates/make_queue/make_reservation.html:79
-#: news/models.py:122
+#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:122
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/templates/make_queue/make_reservation.html:89
-#: make_queue/templates/make_queue/make_reservation.html:93
-#: news/models.py:127
+#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:127
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -204,6 +202,8 @@ msgstr "Maksimal lengde per reservasjon"
 
 #: make_queue/templates/make_queue/quota/3d-quota.html:26
 #: make_queue/templates/make_queue/quota/sewing-quota.html:26
+#: make_queue/templates/make_queue/rules.html:52
+#: make_queue/templates/make_queue/rules.html:53
 msgid "hours"
 msgstr "timer"
 
@@ -289,7 +289,7 @@ msgid "Events"
 msgstr "Arrangementer"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:137
-#: make_queue/templates/make_queue/reservation_machines.html:20
+#: make_queue/templates/make_queue/reservation_machines.html:19
 #: make_queue/templates/make_queue/reservation_overview.html:48
 #: make_queue/templates/make_queue/reservations.html:10
 #: make_queue/templates/make_queue/reservations.html:17
@@ -297,7 +297,7 @@ msgid "My reservations"
 msgstr "Mine reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_machines.html:11
-#: make_queue/templates/make_queue/reservation_machines.html:16
+#: make_queue/templates/make_queue/reservation_machines.html:15
 #: make_queue/templates/make_queue/reservations.html:22
 msgid "Machines"
 msgstr "Maskiner"
@@ -343,6 +343,58 @@ msgstr "Kanseller"
 #: make_queue/templates/make_queue/reservations.html:161
 msgid "Calendar"
 msgstr "Kalender"
+
+#: make_queue/templates/make_queue/rules.html:8
+msgid "Rules"
+msgstr "Regler"
+
+#: make_queue/templates/make_queue/rules.html:13
+msgid "Future reservations"
+msgstr "Fremtidige reservasjoner"
+
+#: make_queue/templates/make_queue/rules.html:17
+msgid "Concurrent reservations"
+msgstr "Samtidige reservasjoner"
+
+#: make_queue/templates/make_queue/rules.html:21
+msgid "Reservation duration single period"
+msgstr "Reservasjon lengde i en periode"
+
+#: make_queue/templates/make_queue/rules.html:23
+msgid "Card \"single period\" value, see cards below"
+msgstr "Kortet sin \"enkelt periode\" verdi, see kortene under"
+
+#: make_queue/templates/make_queue/rules.html:27
+msgid "Reservation duration multiperiod"
+msgstr "Reservasjons lengde fler-periode"
+
+#: make_queue/templates/make_queue/rules.html:30
+msgid "Total time"
+msgstr "Total tid"
+
+#: make_queue/templates/make_queue/rules.html:30
+msgid "Largest \"single period\" value"
+msgstr "Største \"enkelt periode\" verdi"
+
+#: make_queue/templates/make_queue/rules.html:31
+msgid "For each time period"
+msgstr "For hver tids periode"
+
+#: make_queue/templates/make_queue/rules.html:31
+msgid "Card \"multiperiod\" value"
+msgstr "Kortet sin \"fler-periode\" verdi"
+
+#: make_queue/templates/make_queue/rules.html:52
+msgid "Single period"
+msgstr "Enkelt period"
+
+#: make_queue/templates/make_queue/rules.html:53
+msgid "Multiperiod"
+msgstr "Fler-periode"
+
+#: make_queue/templates/make_queue/rules.html:56
+msgid "Periods"
+msgstr "Perioder"
 
 #: news/models.py:42
 msgid "Clickbait"
@@ -442,8 +494,7 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Ny event"
 
-#: news/templates/news/event_edit.html:5
-#: news/templates/news/event_edit.html:18
+#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:18
 msgid "Edit event"
 msgstr "Rediger event"
 
@@ -510,11 +561,11 @@ msgstr "Avbryt"
 msgid "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 msgstr "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 
-#: web/templates/web/footer.html:31
+#: web/templates/web/footer.html:39
 msgid "About"
 msgstr "Om oss"
 
-#: web/templates/web/footer.html:36
+#: web/templates/web/footer.html:44
 msgid "Cookies"
 msgstr "Cookies"
 

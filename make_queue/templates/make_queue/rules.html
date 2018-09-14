@@ -5,30 +5,30 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>Rules {{ rules.0.machine_type }} {% if perms.make_queue.add_reservation_rule %}
+        <h1>{% trans "Rules" %} {{ rules.0.machine_type }} {% if perms.make_queue.add_reservation_rule %}
             <a href="{% url "create_machine_rule" %}"><i class="ui green plus icon"></i></a>{% endif %}</h1>
         <table class="ui definition table">
             <tbody>
             <tr>
-                <td class="four wide column">Future reservations</td>
+                <td class="four wide column">{% trans "Future reservations" %}</td>
                 <td>3</td>
             </tr>
             <tr>
-                <td>Concurrent reservations</td>
+                <td>{% trans "Concurrent reservations" %}</td>
                 <td>1</td>
             </tr>
             <tr>
-                <td>Reservation duration single period</td>
+                <td>{% trans "Reservation duration single period" %}</td>
                 <td>
-                    Card "single period" value, see cards below.
+                    {% trans 'Card "single period" value, see cards below' %}
                 </td>
             </tr>
             <tr>
-                <td>Reservation duration multiperiod</td>
+                <td>{% trans "Reservation duration multiperiod" %}</td>
                 <td>
                     <ul>
-                        <li><b>Total time:</b> Largest "single period" value</li>
-                        <li><b>For each time period:</b> Card "multiperiod" value</li>
+                        <li><b>{% trans "Total time" %}:</b> {% trans 'Largest "single period" value' %}</li>
+                        <li><b>{% trans "For each time period" %}:</b> {% trans 'Card "multiperiod" value' %}</li>
                     </ul>
                 </td>
             </tr>
@@ -49,11 +49,11 @@
                             {% endif %}
                         </div>
                         <div class="description">
-                            Single period: <b>{{ rule.max_hours|floatformat:0 }} hours</b> <br/>
-                            Multiperiod: <b>{{ rule.max_inside_border_crossed|floatformat:0 }} hours</b>
+                            {% trans "Single period" %}: <b>{{ rule.max_hours|floatformat:0 }} {% trans "hours" %}</b> <br/>
+                            {% trans "Multiperiod" %}: <b>{{ rule.max_inside_border_crossed|floatformat:0 }} {% trans "hours" %}</b>
                         </div>
                         <h4 class="subheader">
-                            Periods
+                            {% trans "Periods" %}
                         </h4>
                         {% for period in rule.time_periods %}
                             <div>
