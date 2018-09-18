@@ -1,3 +1,4 @@
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group, Permission
 from django.db import models
 
@@ -88,10 +89,11 @@ class Committee(models.Model):
     group = models.OneToOneField(
         InheritanceGroup,
         on_delete=models.CASCADE,
+        verbose_name=_('group'),
     )
-    description = models.TextField()
-    email = models.EmailField()
-    image = models.ImageField(blank=True)
+    description = models.TextField(_('description'))
+    email = models.EmailField(_('email'))
+    image = models.ImageField(_('image'), blank=True)
 
     @property
     def name(self):
