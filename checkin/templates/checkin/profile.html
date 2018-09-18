@@ -143,17 +143,17 @@
                             element.removeAttr('data-position');
                             element.addClass('green');
                             element.addClass('disabled');
-                            element.html({% trans Registered %});
+                            element.html({% trans "Registered" %});
                         }
                         else {
                             element.addClass('red');
-                            element.attr('data-tooltip', {% trans Scan card again! %});
+                            element.attr('data-tooltip', {% trans "Scan card again!" %});
                             element.attr('data-position', 'right center');
                         }
                     }
                     else {
                         element.addClass('red');
-                        element.attr('data-tooltip', {% trans Scan card %});
+                        element.attr('data-tooltip', {% trans "Scan card" %});
                         element.attr('data-position', 'right center');
                     }
 

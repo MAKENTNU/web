@@ -12,6 +12,7 @@ from web import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from datetime import datetime, timedelta
+from django.utils.translation import ugettext_lazy as _
 
 
 class CheckInView(View):
@@ -130,16 +131,16 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
         image = request.FILES.get('image')
 
         if suggestion.strip() and not suggestion_english.strip():
-            messages.error(request, "Skriv både norsk og engelsk ferdighetsnavn")
+            messages.error(request, _("Enter both norwegian and english skill name"))
             return HttpResponseRedirect(reverse('suggest'))
         elif not suggestion.strip() and suggestion_english.strip():
-            messages.error(request, "Skriv både norsk og engelsk ferdighetsnavn")
+            messages.error(request, _("Enter both norwegian and english skill name"))
             return HttpResponseRedirect(reverse('suggest'))
         elif not suggestion.strip() and not suggestion_english.strip():
             return HttpResponseRedirect(reverse('suggest'))
 
         if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(title_en=suggestion_english).exists():
-            messages.error(request, "Ferdigheten eksisterer allerede!")
+            messages.error(request, _("Skill already exists!"))
             return HttpResponseRedirect(reverse('suggest'))
         else:
             if SuggestSkill.objects.filter(title=suggestion).exists():
@@ -157,7 +158,7 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
             if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
                 Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
-                messages.error(request, "Ferdighet lagt til!")
+                messages.error(request, _("Skill added!"))
 
         return HttpResponseRedirect(reverse('suggest'))
 
