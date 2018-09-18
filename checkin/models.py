@@ -16,7 +16,7 @@ class Skill(models.Model):
     def locale_title(self, language_code):
         if language_code == "nb":
             return self.title
-        return self.title_en  # change to title_en
+        return self.title_en
 
 
 class Profile(models.Model):
@@ -64,7 +64,7 @@ class SuggestSkill(models.Model):
     def locale_title(self, language_code):
         if language_code == "nb":
             return self.title
-        return self.title_en  # change to title_en
+        return self.title_en
 
     class Meta:
         ordering = ('title',)

@@ -175,7 +175,6 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
     permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
-        # TODO: complete force vote
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
         forced = request.POST.get('forced') == "true"
         data = {
@@ -193,6 +192,19 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
         if data['skill_passed']:
             Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
             suggestion.delete()
+
+        return JsonResponse(data)
+
+
+class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
+    template_name = "checkin/suggest_skill.html"
+    permission_required = 'checkin.delete_suggestskill'
+
+    def post(self, request):
+        data = {"suggestion_deleted": False, }
+        SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).delete()
+        if not SuggestSkill.objects.filter(pk=int(request.POST.get('pk'))).exists():
+            data["suggestion_deleted"] = True
 
         return JsonResponse(data)
 

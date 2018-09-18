@@ -17,13 +17,13 @@
 
         <div class="ui container">
             <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
-            {% if image %}
-                {% thumbnail image "150x150" crop="center" as im %}
-                    <img id="profile-pic" src="{{ im.url }}">
-                {% endthumbnail %}
-            {% else %}
-                <img id="profile-pic" src="{% static "checkin/img/placeholder_profile.png" %}"/>
-            {% endif %}
+                {% if image %}
+                    {% thumbnail image "150x150" crop="center" as im %}
+                        <img id="profile-pic" src="{{ im.url }}">
+                    {% endthumbnail %}
+                {% else %}
+                    <img id="profile-pic" src="{% static "checkin/img/placeholder_profile.png" %}"/>
+                {% endif %}
             </div>
             <br>
             <div class="ui container">
@@ -45,8 +45,13 @@
                 </h4>
                 {% for skill, level in skill_dict.items %}
                     <div class="ui basic image label">
-                        <img class="skill-image" src="{% if skill.image %}{{ skill.image.url }}{% else %}
-                                  {% static "checkin/img/placeholder_skill.svg" %}{% endif %}">
+                        {% if skill.image %}
+                            {% thumbnail skill.image "64x64" crop="center" as im %}
+                                <img class="skill-image" src="{{ im.url }}">
+                            {% endthumbnail %}
+                        {% else %}
+                            <img class="skill-image" src="{% static "checkin/img/placeholder_skill.svg" %}"/>
+                        {% endif %}
                         <span>{{ skill|locale_title:request.LANGUAGE_CODE }}</span>
                         <div class="detail make_bg_blue">
                             <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>

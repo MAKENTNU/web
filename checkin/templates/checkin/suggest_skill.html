@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
 {% load checkin_tags %}
+{% load thumbnail %}
 
 {% block body %}
 
@@ -43,6 +44,7 @@
                 <th>Ferdighet</th>
                 <th>Antall stemmer</th>
                 <th></th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -50,28 +52,41 @@
                 <tr>
                     <td>
                         <h5 class="ui header image">
-                            <img src="{% if suggestion.image %}{{ suggestion.image.url }}
-                                      {% else %}{% static "checkin/img/placeholder_skill.svg" %}{% endif %}"
-                                 class="ui mini rounded image">
+                            {% if suggestion.image %}
+                                {% thumbnail suggestion.image "64x64" crop="center" as im %}
+                                    <img src="{{ im.url }}" class="ui mini rounded image">
+                                {% endthumbnail %}
+                            {% else %}
+                                <img src="{% static "checkin/img/placeholder_skill.svg" %}" class="ui mini rounded image"/>
+                            {% endif %}
                             <div class="content">{{ suggestion.title }}/{{ suggestion.title_en }}</div>
                         </h5>
                     </td>
 
                     <td id="vote-count">{{ suggestion.voters.count }}</td>
                     <td>
-                    {% if request.user|is_admin %}
-                        <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
-                        Tving gjennom
-                        </button>
-                    {% else %}
-                        <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
-                                pk="{{ suggestion.pk }}" forced="false">
-                            {% if suggestion|has_voter:request.user %}
-                                Stemt!
-                            {% else %}
-                                Stem
-                            {% endif %}
-                        </button>
+                        {% if request.user|can_force_suggestion %}
+                            <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
+                                Lagre
+                            </button>
+                        {% else %}
+                            <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
+                                    pk="{{ suggestion.pk }}" forced="false">
+                                {% if suggestion|has_voter:request.user %}
+                                    Stemt!
+                                {% else %}
+                                    Stem
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    </td>
+                    <td>
+                    {% if request.user|can_delete_suggestion %}
+
+                            <button class="ui red button delete-suggestion" pk="{{ suggestion.pk }}">
+                                Slett
+                            </button>
+
                     {% endif %}
                     </td>
                 </tr>
@@ -89,6 +104,10 @@
             add_voter_post($(this), $(this).attr('pk'), $(this).attr('forced'));
         });
 
+        $('.delete-suggestion').click(function () {
+            delete_suggestion_post($(this), $(this).attr('pk'));
+        });
+
         function add_voter_post(element, pk, forced) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
@@ -103,7 +122,7 @@
                     'forced': forced,
                 },
                 success: function (data) {
-                    if (data['is_forced']){
+                    if (data['is_forced']) {
                         element.parents('tr').remove();
                     }
                     element.addClass('green');
@@ -117,6 +136,28 @@
                     if (data['skill_passed']) {
                         element.parents('tr').remove();
                     }
+                }
+            });
+        }
+
+        function delete_suggestion_post(element, pk) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '/checkin/suggest/delete/',
+                data: {
+                    'pk': pk,
+                },
+                success: function (data) {
+                    if (data["suggestion_deleted"]){
+                        element.parents('tr').remove();  // TODO: remove netire row!!
+                    }
+
                 }
             });
         }
