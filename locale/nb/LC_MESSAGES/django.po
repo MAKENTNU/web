@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-13 17:21+0200\n"
+"POT-Creation-Date: 2018-09-18 19:50+0200\n"
 "PO-Revision-Date: 2018-04-27 17:38+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -26,40 +26,116 @@ msgstr "Endre bilde"
 msgid "My skills"
 msgstr "Mine ferdigheter"
 
-#: checkin/templates/checkin/profile.html:66
+#: checkin/templates/checkin/profile.html:71
 msgid "Add skills"
 msgstr "Legg til ferdigheter"
 
-#: checkin/templates/checkin/profile.html:68
+#: checkin/templates/checkin/profile.html:73
 msgid "Select/search"
 msgstr "Velg/søk"
 
-#: checkin/templates/checkin/profile.html:78
+#: checkin/templates/checkin/profile.html:83
 msgid "Add"
 msgstr "Legg til"
 
-#: checkin/templates/checkin/profile.html:82
+#: checkin/templates/checkin/profile.html:87
 msgid "Suggest new skills"
 msgstr "Foreslå nye ferdigheter"
 
-#: checkin/templates/checkin/profile.html:91
+#: checkin/templates/checkin/profile.html:96
 msgid "No registered card"
 msgstr "Kort ikke registrert"
 
-#: checkin/templates/checkin/profile.html:93
+#: checkin/templates/checkin/profile.html:98
 msgid ""
 "Place the card on the card reader and press the button below to register the "
 "card"
 msgstr ""
 "Legg kortet på kortleseren og trykk på knappen under for å registrere kortet"
 
-#: checkin/templates/checkin/profile.html:95
+#: checkin/templates/checkin/profile.html:100
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/skills.html:13
+#: checkin/templates/checkin/profile.html:146
+#, fuzzy
+#| msgid "Register"
+msgid "Registered"
+msgstr "Registrer"
+
+#: checkin/templates/checkin/profile.html:150
+msgid "Scan card again!"
+msgstr "Skann kortet igjen!"
+
+#: checkin/templates/checkin/profile.html:156
+msgid "Scan card"
+msgstr "Skann kort"
+
+#: checkin/templates/checkin/skills.html:15
 msgid "People with these skills are at<br>Makerverkstedet right now:"
 msgstr "Folk med disse ferdighetene er på<br>Makerverkstedet akkurat nå:"
+
+#: checkin/templates/checkin/suggest_skill.html:10
+#, fuzzy
+#| msgid "Suggest new skills"
+msgid "Suggest new skills at Makerverkstedet"
+msgstr "Foreslå nye ferdigheter"
+
+#: checkin/templates/checkin/suggest_skill.html:16
+msgid "Title (norwegian)"
+msgstr "Tittel (norsk)"
+
+#: checkin/templates/checkin/suggest_skill.html:24
+msgid "Submit"
+msgstr "Legg til"
+
+#: checkin/templates/checkin/suggest_skill.html:30
+msgid "Title (english)"
+msgstr "Tittel (engelsk)"
+
+#: checkin/templates/checkin/suggest_skill.html:41
+#, fuzzy
+#| msgid "Suggest new skills"
+msgid "Suggested skills"
+msgstr "Foreslå nye ferdigheter"
+
+#: checkin/templates/checkin/suggest_skill.html:45
+msgid "Skill"
+msgstr "Ferdighet"
+
+#: checkin/templates/checkin/suggest_skill.html:46
+msgid "Number of votes"
+msgstr "Antall stemmer"
+
+#: checkin/templates/checkin/suggest_skill.html:71
+msgid "Approve"
+msgstr "Godkjenn"
+
+#: checkin/templates/checkin/suggest_skill.html:77
+#: checkin/templates/checkin/suggest_skill.html:132
+msgid "Voted!"
+msgstr "Stemt!"
+
+#: checkin/templates/checkin/suggest_skill.html:79
+msgid "Vote"
+msgstr "Stem"
+
+#: checkin/templates/checkin/suggest_skill.html:88
+#: web/templates/web/delete_modal.html:11
+msgid "Delete"
+msgstr "Slett"
+
+#: checkin/views.py:134 checkin/views.py:137
+msgid "Enter both norwegian and english skill name"
+msgstr "Skriv inn tittel på både norsk og engelsk"
+
+#: checkin/views.py:143
+msgid "Skill already exists!"
+msgstr "Ferdigheten finnes allerede!"
+
+#: checkin/views.py:161
+msgid "Skill added!"
+msgstr "Ferdighet lagt til!"
 
 #: contentbox/models.py:12 news/models.py:37
 msgid "Title"
@@ -501,10 +577,6 @@ msgstr "Kvote"
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
 msgstr "Er du sikker på at du vil slette?"
-
-#: web/templates/web/delete_modal.html:11
-msgid "Delete"
-msgstr "Slett"
 
 #: web/templates/web/delete_modal.html:15
 msgctxt "abort action"
