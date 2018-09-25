@@ -129,7 +129,7 @@
                     }
                     element.addClass('green');
                     element.addClass('disabled');
-                    element.html({% trans "Voted!" %});
+                    element.html('{% trans "Voted!" %}');
 
                     if (!data['user_exists']) {
                         var incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
