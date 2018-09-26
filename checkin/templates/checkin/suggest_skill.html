@@ -1,24 +1,34 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
 {% load checkin_tags %}
+{% load thumbnail %}
+{% load i18n %}
 
 {% block body %}
 
     <div class="ui text container">
-        <h1>Foreslå nye ferdigheter på Makerverkstedet</h1>
+        <h1>{% trans "Suggest new skills at Makerverkstedet" %}</h1>
 
         <form class="ui form" action="" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="inline fields">
                 <div class="ten wide field">
-                    <label>Legg til ferdighet</label>
-                    <input type="text" name="suggested-skill" placeholder="Ferdighet">
+                    <label>{% trans "Title (norwegian)" %}</label>
+                    <input required type="text" name="suggested-skill" placeholder="Ferdighet">
                 </div>
                 <div class="five wide field">
-                    <input id="skill-image" type="file" name="image" accept="image/jpeg, image/png, image/svg, image/gif">
+                    <input required id="skill-image" type="file" name="image"
+                           accept="image/jpeg, image/png, image/svg, image/gif">
                 </div>
                 <div class="three wide field">
-                    <button class="ui button" type="submit">Legg til</button>
+                    <button class="ui button" type="submit">{% trans "Submit" %}</button>
+                </div>
+            </div>
+
+            <div class="inline fields">
+                <div class="nine wide field">
+                    <label>{% trans "Title (english)" %}</label>
+                    <input required type="text" name="suggested-skill-english" placeholder="Skill">
                 </div>
             </div>
             {% for message in messages %}
@@ -27,13 +37,14 @@
         </form>
 
         <br>
-
-        <h3>Foreslåtte ferdigheter</h3>
+        {% if suggestions %}
+        <h3>{% trans "Suggested skills" %}</h3>
         <table class="ui very basic collapsing celled table">
             <thead>
             <tr>
-                <th>Ferdighet</th>
-                <th>Antall stemmer</th>
+                <th>{% trans "Skill" %}</th>
+                <th>{% trans "Number of votes" %}</th>
+                <th></th>
                 <th></th>
             </tr>
             </thead>
@@ -42,28 +53,48 @@
                 <tr>
                     <td>
                         <h5 class="ui header image">
-                            <img src="{% if suggestion.image %}{{ suggestion.image.url }}
-                                      {% else %}{% static "checkin/img/placeholder_skill.svg" %}{% endif %}"
-                                 class="ui mini rounded image">
-                            <div class="content">{{ suggestion.title }}</div>
+                            {% if suggestion.image %}
+                                {% thumbnail suggestion.image "64x64" crop="center" as im %}
+                                    <img src="{{ im.url }}" class="ui mini rounded image">
+                                {% endthumbnail %}
+                            {% else %}
+                                <img src="{% static "checkin/img/placeholder_skill.svg" %}" class="ui mini rounded image"/>
+                            {% endif %}
+                            <div class="content">{{ suggestion.title }}/{{ suggestion.title_en }}</div>
                         </h5>
                     </td>
 
                     <td id="vote-count">{{ suggestion.voters.count }}</td>
                     <td>
-                        <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
-                                pk="{{ suggestion.pk }}">
-                            {% if suggestion|has_voter:request.user %}
-                                Stemt!
-                            {% else %}
-                                Stem
-                            {% endif %}
-                        </button>
+                        {% if request.user|can_force_suggestion %}
+                            <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
+                                {% trans "Approve" %}
+                            </button>
+                        {% else %}
+                            <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
+                                    pk="{{ suggestion.pk }}" forced="false">
+                                {% if suggestion|has_voter:request.user %}
+                                    {% trans "Voted!" %}
+                                {% else %}
+                                    {% trans "Vote" %}
+                                {% endif %}
+                            </button>
+                        {% endif %}
+                    </td>
+                    <td>
+                    {% if request.user|can_delete_suggestion %}
+
+                            <button class="ui red button delete-suggestion" pk="{{ suggestion.pk }}">
+                                {% trans  "Delete" %}
+                            </button>
+
+                    {% endif %}
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+        {% endif %}
     </div>
 
 {% endblock body %}
@@ -72,10 +103,14 @@
     <script>
 
         $('.add-voter').click(function () {
-            add_voter_post($(this), $(this).attr('pk'));
+            add_voter_post($(this), $(this).attr('pk'), $(this).attr('forced'));
         });
 
-        function add_voter_post(element, pk) {
+        $('.delete-suggestion').click(function () {
+            delete_suggestion_post($(this), $(this).attr('pk'));
+        });
+
+        function add_voter_post(element, pk, forced) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
@@ -86,11 +121,16 @@
                 url: '/checkin/suggest/vote/',
                 data: {
                     'pk': pk,
+                    'forced': forced,
                 },
                 success: function (data) {
+                    if (data['is_forced']) {
+                        element.parents('tr').remove();
+                    }
                     element.addClass('green');
                     element.addClass('disabled');
-                    element.html('Stemt!');
+                    element.html('{% trans "Voted!" %}');
+
                     if (!data['user_exists']) {
                         var incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
                         element.parent().siblings('#vote-count').html(incrementedCount);
@@ -98,6 +138,28 @@
                     if (data['skill_passed']) {
                         element.parents('tr').remove();
                     }
+                }
+            });
+        }
+
+        function delete_suggestion_post(element, pk) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: '/checkin/suggest/delete/',
+                data: {
+                    'pk': pk,
+                },
+                success: function (data) {
+                    if (data["suggestion_deleted"]){
+                        element.parents('tr').remove();
+                    }
+
                 }
             });
         }
