@@ -27,6 +27,7 @@ urlpatterns += i18n_patterns(
     re_path(r'^complete/(?P<backend>[^/]+){0}$'.format(extra), login_wrapper),
     path('', include('social_django.urls', namespace='social')),
     path('news/', include('news.urls')),
+    path('makerspace/tools/', include('tools.urls')),
     path('contentbox/', include('contentbox.urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),

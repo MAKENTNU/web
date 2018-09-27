@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'checkin',
     'sorl.thumbnail',
     'channels',
+    'tools',
 ]
 
 MIDDLEWARE = [
