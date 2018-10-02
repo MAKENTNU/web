@@ -6,7 +6,7 @@ from . import converters
 from django.contrib.auth.decorators import login_required, permission_required
 
 register_converter(converters.MachineType, "machine_type")
-register_converter(converters.MachineTypeSpecific, "machine")
+register_converter(converters.SpecificMachine, "machine")
 register_converter(converters.MachineReservation, "reservation")
 register_converter(converters.UserByUsername, "username")
 register_converter(converters.Date, "%Y/%m/%d")

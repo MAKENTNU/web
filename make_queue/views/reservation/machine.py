@@ -1,5 +1,6 @@
 from django.views.generic import TemplateView
 
+from make_queue.fields import MachineTypeField
 from make_queue.models import Machine
 
 
@@ -15,5 +16,8 @@ class MachineView(TemplateView):
                 type
         """
         return {"machine_types": [{
-            "name": machine_type.literal, "class": machine_type,"machines": list(machine_type.objects.all())
-        } for machine_type in Machine.__subclasses__() if machine_type.objects.exists()]}
+            "name": machine_type.name,
+            "machines": list(Machine.objects.filter(machine_type=machine_type)),
+            "type": machine_type,
+        } for machine_type in MachineTypeField.possible_machine_types if
+            Machine.objects.filter(machine_type=machine_type).exists()]}

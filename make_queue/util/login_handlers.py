@@ -1,7 +1,6 @@
 from json import JSONDecodeError
 
 from dataporten.login_handlers import LoginHandler
-from make_queue.models import Quota3D
 from requests import post
 import web.settings
 
@@ -25,10 +24,12 @@ class PrinterHandler(LoginHandler):
         current system permissions. If the user is allowed remote, but not locally the local settings are changed
         :param user: The user to check permissions for
         """
+        pass
+        """
         if user.username in self.allowed_users and not Quota3D.get_quota(user).can_print:
             quota = Quota3D.get_quota(user)
             quota.can_print = True
-            quota.save()
+            quota.save()"""
 
     def is_correct_token(self, token):
         """

@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load i18n %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/calendar/calendar.min.css" %}">
@@ -12,7 +13,7 @@
     <div class="ui container">
         <h1>
             {% block form_title %}
-                Rule
+                {% trans "Rule" %}
             {% endblock %}
         </h1>
         {% for error in form.non_field_errors %}
@@ -25,78 +26,78 @@
             {% csrf_token %}
             <div class="ui three fields">
                 <div class="ui field">
-                    <label>Start time</label>
+                    <label>{{ form.start_time.label }}</label>
                     {{ form.start_time }}
                 </div>
                 <div class="ui field">
-                    <label>Days</label>
+                    <label>{{ form.days_changed.label }}</label>
                     {{ form.days_changed }}
                 </div>
                 <div class="ui field">
-                    <label>End time</label>
+                    <label>{{ form.end_time.label }}</label>
                     {{ form.end_time }}
                 </div>
             </div>
-            <h4>Start days</h4>
+            <h4>{% trans "Start days"%}</h4>
             <div class="ui seven fields">
                 <div class="ui field">
                     <div class="ui checkbox">
                         {{ form.monday }}
-                        <label>Monday</label>
+                        <label>{% trans "Monday" %}</label>
                     </div>
                 </div>
                 <div class="ui field">
                     <div class="ui checkbox">
                         {{ form.tuesday }}
-                        <label>Tuesday</label>
+                        <label>{% trans "Tuesday" %}</label>
                     </div>
                 </div>
                 <div class="ui field">
                     <div class="ui checkbox">
                         {{ form.wednesday }}
-                        <label>Wednesday</label>
+                        <label>{% trans "Wednesday" %}</label>
                     </div>
                 </div>
                 <div class="ui field">
                     <div class="ui checkbox">
                         {{ form.thursday }}
-                        <label>Thursday</label>
+                        <label>{% trans "Thursday" %}</label>
                     </div>
                 </div>
                 <div class="ui field">
                     <div class="ui checkbox">
                         {{ form.friday }}
-                        <label>Friday</label>
+                        <label>{% trans "Friday" %}</label>
                     </div>
                 </div>
                 <div class="ui field">
                     <div class="ui checkbox">
                         {{ form.saturday }}
-                        <label>Saturday</label>
+                        <label>{% trans "Saturday" %}</label>
                     </div>
                 </div>
                 <div class="ui field">
                     <div class="ui checkbox">
                         {{ form.sunday }}
-                        <label>Sunday</label>
+                        <label>{% trans "Sunday" %}</label>
                     </div>
                 </div>
             </div>
             <div class="ui three fields">
                 <div class="ui field">
-                    <label>Hours inside</label>
+                    <label>{{ form.max_hours.label }}</label>
                     {{ form.max_hours }}
                 </div>
                 <div class="ui field">
-                    <label>Hours across borders</label>
+                    <label>{{ form.max_inside_border_crossed.label }}</label>
                     {{ form.max_inside_border_crossed }}
                 </div>
                 <div class="ui field">
-                    <label>Machine type</label>
+                    <label>{{ form.machine_type.label }}</label>
                     {{ form.machine_type }}
                 </div>
             </div>
-            <button type="submit" class="ui blue button right floated">Submit</button>
+            <button type="submit" class="ui blue button right floated">{% trans "Submit" %}</button>
         </form>
 
     </div>

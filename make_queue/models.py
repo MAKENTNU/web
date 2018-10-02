@@ -1,20 +1,19 @@
 from math import ceil
 
-from django.utils.translation import gettext_lazy as _
-from django.db import models
+from abc import abstractmethod, ABCMeta
+from datetime import timedelta
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db import models
 from django.utils import timezone
-from datetime import timedelta
-from abc import abstractmethod, ABCMeta
+from django.utils.translation import gettext_lazy as _
 
+from make_queue.fields import MachineTypeField
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 
 
 class Machine(models.Model):
-    __metaclass__ = ABCMeta
-
     status_choices = (
         ("R", _("Reserved")),
         ("F", _("Available")),
@@ -27,15 +26,16 @@ class Machine(models.Model):
     name = models.CharField(max_length=30, unique=True)
     location = models.CharField(max_length=40)
     location_url = models.URLField()
-    model = models.CharField(max_length=40)
+    machine_model = models.CharField(max_length=40)
+    machine_type = MachineTypeField(null=True)
 
     @abstractmethod
     def get_reservation_set(self):
-        raise NotImplementedError
+        return Reservation.objects.filter(machine=self)
 
     @abstractmethod
     def can_user_use(self, user):
-        """Abstract method"""
+        return self.machine_type.can_user_use(user)
 
     def reservations_in_period(self, start_time, end_time):
         return self.get_reservation_set().filter(start_time__lte=start_time, end_time__gt=start_time) | \
@@ -43,12 +43,8 @@ class Machine(models.Model):
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
 
-    @staticmethod
-    def get_subclass(machine_literal):
-        return next(filter(lambda subclass: subclass.literal == machine_literal, Machine.__subclasses__()))
-
     def __str__(self):
-        return self.name + " - " + self.model
+        return self.name + " - " + self.machine_model
 
     def get_status(self):
         if self.status in "OM":
@@ -60,26 +56,31 @@ class Machine(models.Model):
         return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
 
 
-class Printer3D(Machine):
-    literal = "3D-printer"
-    cannot_use_text = _("You must have completed a 3D printer course to reserve the printers. If you "
-                        "have taken the course, but don't have access, contact 3dprint@makentnu.no")
+class Quota(models.Model):
+    number_of_reservations = models.IntegerField(default=3)
+    diminishing = models.BooleanField(default=False)
+    ignore_rules = models.BooleanField(default=False)
+    all = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    machine_type = MachineTypeField(null=True)
 
-    def can_user_use(self, user):
-        return hasattr(user, "quota3d") and user.quota3d.can_print
+    @staticmethod
+    def can_make_new_reservation(user, machine_type):
+        pass
 
-    def get_reservation_set(self):
-        return self.reservation3d_set
+    @abstractmethod
+    def get_active_user_reservations(self):
+        raise NotImplementedError
 
+    def can_make_new_reservation(self):
+        return len(
+            self.get_active_user_reservations().filter(event=None, special=False)) < self.max_number_of_reservations
 
-class SewingMachine(Machine):
-    literal = "Symaskin"
-
-    def can_user_use(self, user):
-        return True
-
-    def get_reservation_set(self):
-        return self.reservationsewing_set
+    class Meta:
+        permissions = (
+            ("can_create_event_reservation", "Can create event reservation"),
+            ("can_edit_quota", "Can edit quotas"),
+        )
 
 
 class Reservation(models.Model):
@@ -92,28 +93,23 @@ class Reservation(models.Model):
     special_text = models.CharField(max_length=20)
     reservation_future_limit_days = 28
     comment = models.TextField(max_length=2000, default="")
-
-    @abstractmethod
-    def get_quota(self):
-        raise NotImplementedError
-
-    @abstractmethod
-    def get_machine(self):
-        raise NotImplementedError
+    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
+    quota = models.ForeignKey(Quota, on_delete=models.CASCADE, null=True)
 
     def save(self, *args, **kwargs):
         if not self.validate():
             raise ValidationError("Not a valid reservation")
+
         super(Reservation, self).save(*args, **kwargs)
 
     # A reservation should not be able to be moved, only extended
     def validate(self):
         # User needs to be able to print, for it to be able to reserve the printers
-        if not self.get_machine().can_user_use(self.user):
+        if not self.machine.can_user_use(self.user):
             return False
 
         # Check if the printer is already reserved by another reservation for the given duration
-        if self.get_machine().reservations_in_period(self.start_time, self.end_time).exclude(pk=self.pk).exists():
+        if self.machine.reservations_in_period(self.start_time, self.end_time).exclude(pk=self.pk).exists():
             return False
 
         # A reservation must have a valid time period
@@ -162,7 +158,6 @@ class Reservation(models.Model):
         return self.user == user
 
     class Meta:
-        abstract = True
         permissions = (
             ("can_view_reservation_user", "Can view reservation user"),
         )
@@ -182,93 +177,16 @@ class Reservation(models.Model):
                                                               self.end_time.strftime("%d/%m/%Y - %H:%M"))
 
 
-class Reservation3D(Reservation):
-    machine = models.ForeignKey(Printer3D, on_delete=models.CASCADE)
-    percentage_of_machines_at_the_same_time = 0.5
-
-    def get_machine(self):
-        return self.machine
-
-    def get_quota(self):
-        return Quota3D.get_quota(self.user)
-
-
-class ReservationSewing(Reservation):
-    machine = models.ForeignKey(SewingMachine, on_delete=models.CASCADE)
-    percentage_of_machines_at_the_same_time = 1
-
-    def get_machine(self):
-        return self.machine
-
-    def get_quota(self):
-        return QuotaSewing.get_quota(self.user)
-
-
-class Quota(models.Model):
-    max_time_reservation = models.FloatField(default=16)
-    max_number_of_reservations = models.IntegerField(default=3)
-
-    @abstractmethod
-    def get_active_user_reservations(self):
-        raise NotImplementedError
-
-    def can_make_new_reservation(self):
-        return len(
-            self.get_active_user_reservations().filter(event=None, special=False)) < self.max_number_of_reservations
-
-    @staticmethod
-    def get_quota_by_machine(machine_type, user):
-        return Reservation.get_reservation_type(machine_type)(user=user).get_quota()
-
-    class Meta:
-        permissions = (
-            ("can_create_event_reservation", "Can create event reservation"),
-            ("can_edit_quota", "Can edit quotas"),
-        )
-
-
-class Quota3D(Quota):
-    can_print = models.BooleanField(default=False)
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def get_active_user_reservations(self):
-        return self.user.reservation3d_set.filter(end_time__gte=timezone.now())
-
-    @staticmethod
-    def get_quota(user):
-        return user.quota3d if hasattr(user, "quota3d") else Quota3D.objects.create(user=user)
-
-    def __str__(self):
-        return "User " + self.user.username + ", can " + "not " * (not self.can_print) + "print"
-
-
-class QuotaSewing(Quota):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-
-    def get_active_user_reservations(self):
-        return self.user.reservationsewing_set.filter(end_time__gte=timezone.now())
-
-    @staticmethod
-    def get_quota(user):
-        return user.quotasewing if hasattr(user, "quotasewing") else QuotaSewing.objects.create(user=user)
-
-
-class Penalty(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    from_date = models.DateTimeField(auto_now_add=True)
-    removed_date = models.DateTimeField()
-
-
 class ReservationRule(models.Model):
-    start_time = models.TimeField(verbose_name="Start time")
-    end_time = models.TimeField(verbose_name="End time")
+    start_time = models.TimeField(verbose_name=_("Start time"))
+    end_time = models.TimeField(verbose_name=_("End time"))
     # Number of times passed by midnight between start and end time
-    days_changed = models.IntegerField(verbose_name="Days")
-    start_days = models.IntegerField(default=0, verbose_name="Start days")
-    max_hours = models.FloatField(verbose_name="Hours inside")
-    max_inside_border_crossed = models.FloatField(verbose_name="Hours across borders")
+    days_changed = models.IntegerField(verbose_name=_("Days"))
+    start_days = models.IntegerField(default=0, verbose_name=_("Start days"))
+    max_hours = models.FloatField(verbose_name=_("Hours single period"))
+    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multiperiod"))
     machine_type = models.CharField(max_length=30, choices=[(machine.literal, machine.literal) for machine in
-                                                            Machine.__subclasses__()], verbose_name="Machine type")
+                                                            Machine.__subclasses__()], verbose_name=_("Machine type"))
 
     def save(self, **kwargs):
         if not self.is_valid_rule():

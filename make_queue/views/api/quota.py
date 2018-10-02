@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views import View
 
 from dataporten.login_handlers import update_handler, get_handler
-from make_queue.models import Quota, Quota3D, QuotaSewing
+from make_queue.models import Quota
 
 
 def get_user_quota_max_length(request, machine_type):
@@ -38,7 +38,7 @@ class UpdateQuotaView(View):
 
 class UpdateQuota3D(UpdateQuotaView):
     """API endpoint for changing a users 3D printing quota"""
-    quota_class = Quota3D
+    quota_class = Quota
     fields = (
         ("can_print", "can_print", lambda x: x == "true"),
         ("max_number_of_reservations", "max_number_of_reservations", float),
@@ -48,7 +48,7 @@ class UpdateQuota3D(UpdateQuotaView):
 
 class UpdateSewingQuota(UpdateQuotaView):
     """API endpoint for changing a users sewing quota"""
-    quota_class = QuotaSewing
+    quota_class = Quota
     fields = (
         ("max_number_of_reservations", "max_number_of_reservations", float),
         ("max_time_reservation", "max_length_reservation", float),
