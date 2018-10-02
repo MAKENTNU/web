@@ -84,6 +84,11 @@ class MachineTypeField(models.IntegerField):
             return value
         return value.id
 
+    def from_db_value(self, value, expression, connection):
+        if value is None:
+            return value
+        return self.get_machine_type(value)
+
     def formfield(self, **kwargs):
         defaults = {"choices_form_class": MachineTypeForm}
         defaults.update(kwargs)

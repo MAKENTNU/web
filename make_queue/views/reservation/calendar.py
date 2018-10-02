@@ -65,8 +65,8 @@ class ReservationCalendarComponentView(TemplateView):
 
         return {'week_days': self.get_week_days_with_reservations(year, week, machine), "week": week, "year": year,
                 "machine": machine, "now": timezone.now(),
-                "max_reservation_time": self.request.user.is_authenticated and Quota.get_quota_by_machine(
-                    machine.literal, self.request.user).max_time_reservation or 0}
+                # TODO: Fix this in relation to rules
+                "max_reservation_time": 1}
 
 
 class ReservationCalendarView(ReservationCalendarComponentView):
@@ -88,7 +88,7 @@ class ReservationCalendarView(ReservationCalendarComponentView):
         context["machine_types"] = Machine.__subclasses__()
 
         if self.request.user.is_authenticated:
-            context["can_make_more_reservations"] = Quota.get_quota_by_machine(machine.literal, self.request.user) \
-                .can_make_new_reservation()
+            context["can_make_more_reservations"] = Quota.can_make_new_reservation(self.request.user,
+                                                                                   machine.machine_type)
 
         return context

@@ -64,7 +64,7 @@ def can_use_machine(machine, user):
 
 @register.simple_tag()
 def get_machine_cannot_use_text(machine):
-    return machine.cannot_use_text
+    return machine.machine_type.cannot_use_text
 
 
 @register.simple_tag()

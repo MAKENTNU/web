@@ -66,15 +66,12 @@ class Quota(models.Model):
 
     @staticmethod
     def can_make_new_reservation(user, machine_type):
-        pass
+        # TODO: Implement
+        return True
 
     @abstractmethod
     def get_active_user_reservations(self):
         raise NotImplementedError
-
-    def can_make_new_reservation(self):
-        return len(
-            self.get_active_user_reservations().filter(event=None, special=False)) < self.max_number_of_reservations
 
     class Meta:
         permissions = (
