@@ -194,7 +194,9 @@ class Reservation(models.Model):
         return (num_reservations_in_period + (self.pk is None)) > ceil(
             self.get_machine().__class__.objects.all().count() * self.percentage_of_machines_at_the_same_time)
 
-    def can_delete(self):
+    def can_delete(self, user):
+        if user.has_perm("make_queue.delete_reservation"):
+            return True
         return self.start_time > timezone.now()
 
     def can_change(self, user):

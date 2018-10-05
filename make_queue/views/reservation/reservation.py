@@ -159,14 +159,15 @@ class DeleteReservationView(RedirectView):
         Delete the reservation if it can be deleted by the current user and exists
         :param request: The HTTP POST request
         """
-        if "pk" in request.POST and "machine_type" in request.POST:
+        if "pk" in request.POST:
             pk = request.POST.get("pk")
-            machine_type = request.POST.get("machine_type")
 
-            reservation = Reservation.get_reservation(machine_type, pk)
-
-            if reservation and reservation.can_change(request.user):
-                reservation.delete()
+            try:
+                reservation = Reservation.objects.get(pk=pk)
+                if reservation.can_delete(request.user):
+                    reservation.delete()
+            except Reservation.DoesNotExist:
+                pass
 
         return super().dispatch(request, *args, **kwargs)
 
