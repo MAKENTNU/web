@@ -11,7 +11,7 @@ register = template.Library()
 def calendar_url_reservation(reservation):
     return reverse('reservation_calendar',
                    kwargs={'year': reservation.start_time.year, 'week': reservation.start_time.isocalendar()[1],
-                           'machine': reservation.get_machine()})
+                           'machine': reservation.machine})
 
 
 @register.simple_tag()

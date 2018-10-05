@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from make_queue.models.course import Printer3DCourse
 from web.widgets import SemanticChoiceInput
 
 
@@ -40,7 +41,7 @@ class MachineTypeField(models.IntegerField):
             _("3D-printer"),
             _("You must have completed a 3D printer course to reserve the printers. If you "
               "have taken the course, but don't have access, contact 3dprint@makentnu.no"),
-            lambda user: False
+            lambda user: Printer3DCourse.objects.filter(user=user).exists()
         ),
         MachineType(
             2,
@@ -55,7 +56,7 @@ class MachineTypeField(models.IntegerField):
         types = list(filter(lambda y: y.id == id, MachineTypeField.possible_machine_types))
         if types:
             return types[0]
-        raise ValueError("Not a valid id")
+        return None
 
     def __init__(self, *args, **kwargs):
         kwargs.update({
@@ -82,6 +83,8 @@ class MachineTypeField(models.IntegerField):
     def get_prep_value(self, value):
         if value is None:
             return value
+        if type(value) is list:
+            return value[0].id
         return value.id
 
     def from_db_value(self, value, expression, connection):

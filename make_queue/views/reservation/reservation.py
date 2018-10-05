@@ -6,8 +6,9 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import RedirectView, TemplateView
 
+from make_queue.fields import MachineTypeField
 from make_queue.forms import ReservationForm
-from make_queue.models import Quota, Machine, Reservation
+from make_queue.models.models import Quota, Machine, Reservation
 from make_queue.templatetags.reservation_extra import calendar_url_reservation
 from news.models import TimePlace
 
@@ -63,10 +64,8 @@ class ReservationCreateOrChangeView(TemplateView):
                 Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
                 Q(end_date__gt=timezone.now().date()))),
             "machine_types": [
-                {"literal": sub_class.literal, "instances": list(sub_class.objects.all())}
-                for sub_class in Machine.__subclasses__() if
-                Quota.get_quota_by_machine(sub_class.literal, self.request.user).can_make_new_reservation() and
-                sub_class.objects.exists()
+                {"literal": machine_type.name, "instances": Machine.objects.filter(machine_type=machine_type)}
+                for machine_type in MachineTypeField.possible_machine_types if True
             ],
             "maximum_days_in_advance": Reservation.reservation_future_limit_days
         }
@@ -76,18 +75,18 @@ class ReservationCreateOrChangeView(TemplateView):
             reservation = kwargs["reservation"]
             context_data["start_time"] = reservation.start_time
             context_data["end_time"] = reservation.end_time
-            context_data["selected_machine"] = reservation.get_machine()
+            context_data["selected_machine"] = reservation.machine
             context_data["event"] = reservation.event
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
-            context_data["quota"] = reservation.get_quota()
+            #context_data["quota"] = reservation.get_quota()
             context_data["comment"] = reservation.comment
         # Otherwise populate with default information given to the view
         else:
             context_data["selected_machine"] = kwargs["machine"]
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
-            context_data["quota"] = Quota.get_quota_by_machine(kwargs["machine"].literal, self.request.user)
+            #context_data["quota"] = Quota.get_quota_by_machine(kwargs["machine"].literal, self.request.user)
 
         return context_data
 

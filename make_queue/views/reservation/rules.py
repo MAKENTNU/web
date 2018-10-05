@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from django.views.generic import TemplateView, DeleteView, CreateView, UpdateView
 
 from make_queue.forms import RuleForm
-from make_queue.models import ReservationRule, Machine
+from make_queue.models.models import ReservationRule, Quota
 
 
 class RulesOverviewView(TemplateView):
@@ -11,8 +11,10 @@ class RulesOverviewView(TemplateView):
 
     def get_context_data(self, machine_type, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        print(machine_type)
         context_data.update({
-            "rules": ReservationRule.objects.filter(machine_type=machine_type.literal)
+            "rules": ReservationRule.objects.filter(machine_type=machine_type),
+            "quotas": Quota.get_user_quotas(self.request.user, machine_type),
         })
         return context_data
 
@@ -26,7 +28,7 @@ class CreateReservationRuleView(PermissionRequiredMixin, CreateView):
     )
 
     def get_success_url(self):
-        return reverse("machine_rules", args=[Machine.get_subclass(self.object.machine_type)])
+        return reverse("machine_rules", args=[self.object.machine_type])
 
 
 class EditReservationRuleView(PermissionRequiredMixin, UpdateView):
@@ -38,7 +40,7 @@ class EditReservationRuleView(PermissionRequiredMixin, UpdateView):
     )
 
     def get_success_url(self):
-        return reverse("machine_rules", args=[Machine.get_subclass(self.object.machine_type)])
+        return reverse("machine_rules", args=[self.object.machine_type])
 
 
 class DeleteReservationRules(PermissionRequiredMixin, DeleteView):
@@ -48,4 +50,4 @@ class DeleteReservationRules(PermissionRequiredMixin, DeleteView):
     )
 
     def get_success_url(self):
-        return reverse("machine_rules", args=[Machine.get_subclass(self.object.machine_type)])
+        return reverse("machine_rules", args=[self.object.machine_type])

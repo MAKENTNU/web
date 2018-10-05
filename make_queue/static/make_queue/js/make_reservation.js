@@ -34,7 +34,7 @@ function updateReservationCalendar() {
     let year = reservationCalendarDate.getFullYear();
     let machine_type = $("#machine_type_dropdown").dropdown("get value");
     let machine_pk = $("#machine_name_dropdown").dropdown("get value");
-    $.get(langPrefix + "/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_type + "/" + machine_pk + "/", {}, (data) => {
+    $.get(langPrefix + "/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_pk + "/", {}, (data) => {
         $("#reservation_calendar").html(data);
         setupReservationCalendar();
     })

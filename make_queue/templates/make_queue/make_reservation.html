@@ -26,7 +26,8 @@
             {% endif %}
         </div>
         <form class="ui form" id="reserve_form" method="post"
-              data-max-time-reservation="{{ quota.max_time_reservation }}">
+              {# TODO: FIX #}
+              data-max-time-reservation="16">
             {% csrf_token %}
             <div class="two fields">
                 <div class="field">
@@ -41,7 +42,7 @@
                         <div class="menu">
                             {% for machine_type in machine_types %}
                                 {% if machine_type.instances %}
-                                    <div class="item {% if selected_machine.literal == machine_type.literal %}selected_machine_type{% endif %}"
+                                    <div class="item {% if selected_machine.machine_type.name == machine_type.literal %}selected_machine_type{% endif %}"
                                          data-value="{{ machine_type.literal }}">{{ machine_type.literal }}</div>
                                 {% endif %}
                             {% endfor %}

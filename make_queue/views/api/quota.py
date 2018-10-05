@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views import View
 
 from dataporten.login_handlers import update_handler, get_handler
-from make_queue.models import Quota
+from make_queue.models.models import Quota
 
 
 def get_user_quota_max_length(request, machine_type):

@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView
 
 from make_queue.fields import MachineTypeField
-from make_queue.models import Machine
+from make_queue.models.models import Machine
 
 
 class MachineView(TemplateView):

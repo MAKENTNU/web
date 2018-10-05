@@ -1,7 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
-from make_queue.models import Machine, ReservationRule
+from make_queue.models.models import Machine, ReservationRule
 from news.models import TimePlace
 from web.widgets import SemanticTimeInput, SemanticChoiceInput
 

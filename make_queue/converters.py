@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.utils.datetime_safe import datetime
 
 from make_queue.fields import MachineTypeField
-from make_queue.models import Machine, Reservation
+from make_queue.models.models import Machine, Reservation
 
 
 class MachineType:
