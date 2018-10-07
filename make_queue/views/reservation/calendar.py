@@ -86,7 +86,7 @@ class ReservationCalendarView(ReservationCalendarComponentView):
         context["next"] = get_next_week(context["year"], context["week"], 1)
         context["prev"] = get_next_week(context["year"], context["week"], -1)
         context["machine_types"] = Machine.__subclasses__()
-        context["can_make_more_reservations"] = "false"
+        context["can_make_more_reservations"] = False
         context["can_ignore_rules"] = "false"
         context["rules"] = [
             {
@@ -103,8 +103,8 @@ class ReservationCalendarView(ReservationCalendarComponentView):
         ]
 
         if self.request.user.is_authenticated:
-            context["can_make_more_reservations"] = str(Quota.can_make_new_reservation(self.request.user,
-                                                                                       machine.machine_type)).lower()
+            context["can_make_more_reservations"] = Quota.can_make_new_reservation(self.request.user,
+                                                                                   machine.machine_type)
             context["can_ignore_rules"] = str(any(
                 quota.can_make_more_reservations(self.request.user) for quota in
                 Quota.get_user_quotas(self.request.user, machine.machine_type).filter(ignore_rules=True))).lower()

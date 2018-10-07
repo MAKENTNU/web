@@ -108,10 +108,7 @@ class ReservationCreateOrChangeView(TemplateView):
         """
         try:
             form = ReservationForm(request.POST)
-            print("Created Form")
-            print(form.errors)
             if form.is_valid():
-                print("Form valid")
                 return self.form_valid(form, **kwargs)
         except Exception:
             pass

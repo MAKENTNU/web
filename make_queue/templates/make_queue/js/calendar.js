@@ -1,4 +1,4 @@
-var canMakeReservation = {{ can_make_more_reservations }};
+var canMakeReservation = {{ can_make_more_reservations|lower }};
 var canIgnoreRules = {{ can_ignore_rules }};
 var rules = [
     {% for rule in rules %}
@@ -114,20 +114,40 @@ var hoursInside = (rule) => {
     let endTime = getDay() + getEndTime()/24;
     let hours = 0;
     rule.periods.forEach(function(period) {
-        let periodStartTime = period[0];
-        let periodEndTime = (period[1] - periodStartTime + 7) % 7;
-        let shiftedStartTime = (startTime - periodStartTime + 7) % 7;
-        let shiftedEndTime = (endTime - periodStartTime + 7) % 7;
-        if (shiftedStartTime > shiftedEndTime) {
-            hours += Math.min(periodEndTime, shiftedEndTime) * 24;
-        } else {
-            hours += (Math.min(periodEndTime, shiftedEndTime) - Math.min(periodEndTime, shiftedStartTime)) * 24;
-        }
+        hours += overlap(period[0], period[1], startTime, endTime, 7) * 24;
     });
     return hours;
 };
 
+var overlap = (a, b, c, d, mod) => {
+    b = (b - a + mod) % mod;
+    c = (c - a + mod) % mod;
+    d = (d - a + mod) % mod;
+    if (c > d) {
+        return Math.min(b, d);
+    } else {
+        return Math.min(b, d) - Math.min(b, c);
+    }
+};
+
+var isOverlapping = () => {
+    let top = parseFloat($(".time_selection").css("top"));
+    let bottom = top + parseFloat($(".time_selection").css("height"));
+    let parentHeight = parseFloat($(".time_selection").closest(".day").height());
+    let isOverlapping = false;
+
+    $(".time_selection").closest(".day").children(".make_reservation_calendar_time_table_item").each(function (index, element) {
+        let elementTop = parseFloat($(element).css("top"));
+        if (overlap(top, bottom, elementTop, elementTop + parseFloat($(element).css("height")), parentHeight) > 0) {
+            isOverlapping = true;
+        }
+    });
+
+    return isOverlapping;
+};
+
 var isValid = () => {
+    if (isOverlapping()) return false;
     let coveredRules = getRulesCovered();
     if (coveredRules.length === 1) {
         return coveredRules[0].max_inside >= hoursInside(coveredRules[0]);
