@@ -41,8 +41,8 @@ class ReservationForm(forms.Form):
 
         cleaned_data["machine"] = machine_query.first()
 
-        # Cannot create reservations in the past
-        if cleaned_data["start_time"] < timezone.now():
+        # Cannot create reservations in the past (Up to 5 minutes are allowed as a grace period for the reservation form)
+        if cleaned_data["start_time"] < timezone.now() - timezone.timedelta(minutes=5):
             raise ValidationError("Reservation starts in the past")
 
         # If the reservation is an event, check that it exists

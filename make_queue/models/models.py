@@ -167,7 +167,7 @@ class Reservation(models.Model):
             return False
 
         # Check if the user can change the reservation
-        if not self.can_change(self.user):
+        if self.pk and not self.can_change(self.user):
             return False
 
         # Check if the user can make the given reservation/edit
