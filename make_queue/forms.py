@@ -11,7 +11,8 @@ class ReservationForm(forms.Form):
     start_time = forms.DateTimeField()
     end_time = forms.DateTimeField()
     machine_type = forms.ChoiceField(
-        choices=((machine_type.literal, machine_type.literal) for machine_type in Machine.__subclasses__()))
+        choices=((machine_type.literal, machine_type.literal) for machine_type in Machine.__subclasses__()),
+        required=False)
     event = forms.BooleanField(required=False)
     event_pk = forms.CharField(required=False)
     special = forms.BooleanField(required=False)
@@ -33,8 +34,7 @@ class ReservationForm(forms.Form):
         cleaned_data = super().clean()
 
         # Check that the given machine exists
-        machine_query = Machine.get_subclass(cleaned_data["machine_type"]).objects.filter(
-            pk=cleaned_data["machine_name"])
+        machine_query = Machine.objects.filter(pk=cleaned_data["machine_name"])
 
         if not machine_query.exists():
             raise ValidationError("Machine name and machine type does not match")

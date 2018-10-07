@@ -79,14 +79,14 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["event"] = reservation.event
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
-            #context_data["quota"] = reservation.get_quota()
+            # context_data["quota"] = reservation.get_quota()
             context_data["comment"] = reservation.comment
         # Otherwise populate with default information given to the view
         else:
             context_data["selected_machine"] = kwargs["machine"]
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
-            #context_data["quota"] = Quota.get_quota_by_machine(kwargs["machine"].literal, self.request.user)
+            # context_data["quota"] = Quota.get_quota_by_machine(kwargs["machine"].literal, self.request.user)
 
         return context_data
 
@@ -108,7 +108,10 @@ class ReservationCreateOrChangeView(TemplateView):
         """
         try:
             form = ReservationForm(request.POST)
+            print("Created Form")
+            print(form.errors)
             if form.is_valid():
+                print("Form valid")
                 return self.form_valid(form, **kwargs)
         except Exception:
             pass
@@ -125,11 +128,9 @@ class MakeReservationView(ReservationCreateOrChangeView):
         :param form: The valid reservation form
         :return: HTTP response
         """
-        reservation_type = Reservation.get_reservation_type(form.cleaned_data["machine_type"])
-
-        reservation = reservation_type(start_time=form.cleaned_data["start_time"],
-                                       end_time=form.cleaned_data["end_time"], user=self.request.user,
-                                       machine=form.cleaned_data["machine"], comment=form.cleaned_data["comment"])
+        reservation = Reservation(start_time=form.cleaned_data["start_time"],
+                                  end_time=form.cleaned_data["end_time"], user=self.request.user,
+                                  machine=form.cleaned_data["machine"], comment=form.cleaned_data["comment"])
 
         if form.cleaned_data["event"]:
             reservation.event = form.cleaned_data["event"]

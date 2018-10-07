@@ -1,10 +1,21 @@
-var maximumReservationTime = {{ max_reservation_time }};
+var canMakeReservation = {{ can_make_more_reservations }};
+var canIgnoreRules = {{ can_ignore_rules }};
+var rules = [
+    {% for rule in rules %}
+    {
+        periods:  {{ rule.periods }},
+        max_inside: {{ rule.max_hours }},
+        max_crossed: {{ rule.max_hours_crossed }},
+    },
+    {% endfor %}
+]
 
 var zeroPadClock = (number) => ("00" + number).substr(-2, 2);
 var timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
 
 var getStartTime = () => parseFloat($(".time_selection").css("top")) / $(".time_selection").closest(".day").height() * 24;
 var getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
+var getDay = () => parseInt($(".time_selection").closest(".day").data("week-index"));
 
 var currentDate = () => {
     let dateText = $(clickedDay).data("date").split(".");
@@ -88,17 +99,57 @@ var onMouseDownFunc = (event) => {
         .appendTo(time_selection);
 };
 
+var getRulesCovered = () => {
+    let insideRules = [];
+    rules.forEach(function(rule) {
+        if (hoursInside(rule)) {
+            insideRules.push(rule);
+        }
+    });
+    return insideRules;
+};
+
+var hoursInside = (rule) => {
+    let startTime = getDay() + getStartTime()/24;
+    let endTime = getDay() + getEndTime()/24;
+    let hours = 0;
+    rule.periods.forEach(function(period) {
+        let periodStartTime = period[0];
+        let periodEndTime = (period[1] - periodStartTime + 7) % 7;
+        let shiftedStartTime = (startTime - periodStartTime + 7) % 7;
+        let shiftedEndTime = (endTime - periodStartTime + 7) % 7;
+        if (shiftedStartTime > shiftedEndTime) {
+            hours += Math.min(periodEndTime, shiftedEndTime) * 24;
+        } else {
+            hours += (Math.min(periodEndTime, shiftedEndTime) - Math.min(periodEndTime, shiftedStartTime)) * 24;
+        }
+    });
+    return hours;
+};
+
+var isValid = () => {
+    let coveredRules = getRulesCovered();
+    if (coveredRules.length === 1) {
+        return coveredRules[0].max_inside >= hoursInside(coveredRules[0]);
+    }
+    for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
+        if (coveredRules[ruleIndex].max_crossed < hoursInside(coveredRules[ruleIndex])) {
+            return false;
+        }
+    }
+    return true;
+};
+
 var limitTimeSelection = (direction) => {
-    let currentTimeDiff = getEndTime() - getStartTime();
-    if (currentTimeDiff < maximumReservationTime) return;
-    let requiredChange = ((currentTimeDiff - maximumReservationTime) / 24) * $(".time_selection").closest(".day").height();
-    if (direction === "top")
-        $(".time_selection")
-            .css("top", parseFloat($(".time_selection").css("top")) + requiredChange + "px")
-            .css("height", parseFloat($(".time_selection").css("height")) - requiredChange + "px");
-    else
-        $(".time_selection")
-            .css("height", parseFloat($(".time_selection").css("height")) - requiredChange + "px");
+    while (!isValid()) {
+        if (direction === "top")
+            $(".time_selection")
+                .css("top", parseFloat($(".time_selection").css("top")) + 1 + "px")
+                .css("height", parseFloat($(".time_selection").css("height")) - 1 + "px");
+        else
+            $(".time_selection")
+                .css("height", parseFloat($(".time_selection").css("height")) - 1 + "px");
+    }
 };
 
 var resizeTop = (event) => {
