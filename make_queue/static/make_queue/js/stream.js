@@ -13,16 +13,22 @@ $('.stream.image').each(function () {
     chatSocket.onclose = function (e) {
         console.error('Socket closed unexpectedly');
     };
-});
-
-$('.stream.image').click(function () {
+}).click(function () {
     $(this).toggleClass('fullscreen');
     $('#fader').toggleClass('fullscreen');
     $('#closefullscreen').toggleClass('fullscreen');
 });
 
-$('#closefullscreen').click(function () {
+$("html").keydown(function (event) {
+    if (event.key === "Escape") {
+        closeFullscreen();
+    }
+});
+
+let closeFullscreen = function () {
     $('.fullscreen').each(function () {
         $(this).removeClass('fullscreen');
     });
-});
+};
+
+$('#closefullscreen').click(closeFullscreen);
