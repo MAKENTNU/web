@@ -12,6 +12,7 @@ class ContentBox(models.Model):
         verbose_name=_('Title'),
     )
     content = RichTextField()
+    content_en = RichTextField(default='')
 
     def __str__(self):
         return self.title
