@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-10-09 14:00+0200\n"
-"PO-Revision-Date: 2018-04-27 17:38+0200\n"
+"PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
 "Language: nb\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: checkin/templates/checkin/profile.html:14
 msgid "My profile"
@@ -169,10 +169,8 @@ msgid "group"
 msgstr "gruppe"
 
 #: groups/models.py:95
-#, fuzzy
-#| msgid "description"
 msgid "Description"
-msgstr "beskrivelse"
+msgstr "Beskrivelse"
 
 #: groups/models.py:96
 #: make_queue/templates/make_queue/reservation_calendar.html:95
