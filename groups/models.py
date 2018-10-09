@@ -92,17 +92,14 @@ class Committee(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_('group'),
     )
-    description = models.TextField(_('description'))
-    email = models.EmailField(_('email'))
-    image = models.ImageField(_('image'), blank=True)
+    description = models.TextField(_('Description'))
+    email = models.EmailField(_('Email'))
+    image = models.ImageField(_('Image'), blank=True)
     clickbait = models.TextField(
         max_length=300,
-        verbose_name=_('clickbait'),
+        verbose_name=_('Clickbait'),
         blank=True,
     )
-    description = RichTextField(_('description'))
-    email = models.EmailField(_('email'))
-    image = models.ImageField(_('image'), blank=True)
 
     @property
     def name(self):
