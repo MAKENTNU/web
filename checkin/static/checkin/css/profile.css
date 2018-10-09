@@ -18,3 +18,8 @@
     color: #000000;
     opacity: 0.7;
 }
+
+.basic.image.label img.skill-image {
+    height: 29px !important;
+    width: 29px !important;
+}
