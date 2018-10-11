@@ -279,8 +279,8 @@ updateReservationCalendar();
 
 function timeSelectionPopupHTML(date, startTime, endTime, machine) {
     return $("<div>").addClass("ui make_yellow button").html(gettext("Choose time")).click(() => {
-        $("#start_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + startTime);
-        $("#end_time").calendar("set date", date.slice(3, 6) + date.slice(0, 3) + date.slice(6) + " " + endTime);
+        $("#start_time").calendar("set date", new Date(date + " " + startTime));
+        $("#end_time").calendar("set date", new Date(date + " " + endTime));
         $("body").mousedown();
     });
 }
