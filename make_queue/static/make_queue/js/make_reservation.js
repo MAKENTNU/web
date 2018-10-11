@@ -32,7 +32,6 @@ function getWeekNumber(date) {
 function updateReservationCalendar() {
     let weekNumber = getWeekNumber(reservationCalendarDate);
     let year = reservationCalendarDate.getFullYear();
-    let machine_type = $("#machine_type_dropdown").dropdown("get value");
     let machine_pk = $("#machine_name_dropdown").dropdown("get value");
     $.get(langPrefix + "/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_pk + "/", {}, (data) => {
         $("#reservation_calendar").html(data);
@@ -41,12 +40,13 @@ function updateReservationCalendar() {
 }
 
 function updateMaxReservationTime(machine_type) {
-    $.get(langPrefix + "/reservation/quota/json/" + machine_type + "/", {}, (data) => {
+    return 2;
+    /*$.get(langPrefix + "/reservation/quota/json/" + machine_type + "/", {}, (data) => {
         $("#reserve_form").data("max-time-reservation", data);
         let start_date = $("#start_time").calendar("get date");
         if (start_date)
             $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(start_date));
-    });
+    });*/
 }
 
 function getFirstReservableTimeSlot(date) {
@@ -117,20 +117,29 @@ function setEndDate() {
     }
 }
 
+let minDateStartTime = new Date();
+if ($("#start_time").children("div").hasClass("disabled")) {
+    minDateStartTime = new Date(new Date($("#start_time").find("input").val()) - new Date(5*60*1000));
+}
+console.log(minDateStartTime);
+let startDate = new Date($("#start_time").find("input").val());
 $("#start_time").calendar({
-        minDate: new Date(),
+        minDate: minDateStartTime,
         maxDate: maximum_day,
         ampm: false,
+        mode: "minute",
         endCalendar: $("#end_time"),
-        initialDate: null,
+        initialDate: startDate,
         firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
             if (mode === "minute") return !isNonReservedDate(date);
             if (mode === "hour") {
+                date = new Date(date.valueOf());
                 date.setMinutes(0, 0, 0);
                 return isCompletelyReserved(date, new Date(date.valueOf() + 60*60*1000));
             }
             if (mode === "day") {
+                date = new Date(date.valueOf());
                 date.setHours(0, 0, 0, 0);
                 return isCompletelyReserved(date, new Date(date.valueOf() + 24*60*60*1000));
             }
@@ -139,6 +148,7 @@ $("#start_time").calendar({
         onChange: function (value) {
             if (value === undefined) return true;
             let shouldChange = isNonReservedDate(value);
+            console.log(shouldChange)
             if (shouldChange) {
                 $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(value));
             }

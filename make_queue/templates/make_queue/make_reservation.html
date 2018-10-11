@@ -75,7 +75,7 @@
                 <div class="field">
                     <label>{% trans "Start time" %}</label>
                     <div class="ui calendar" id="start_time">
-                        <div class="ui input left icon">
+                        <div class="ui input {% if not can_change_start_time %}disabled{% endif %} left icon">
                             <i class="calendar icon"></i>
                             <input name="start_time" type="text" placeholder="{% trans "Start time" %}"
                                    value="{% if start_time %}

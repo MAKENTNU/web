@@ -63,10 +63,30 @@ class ReservationCalendarComponentView(TemplateView):
         if not is_valid_week(year, week):
             year, week = get_next_week(year, week, 1)
 
-        return {'week_days': self.get_week_days_with_reservations(year, week, machine), "week": week, "year": year,
-                "machine": machine, "now": timezone.now(),
-                # TODO: Fix this in relation to rules
-                "max_reservation_time": 1}
+        context = {'week_days': self.get_week_days_with_reservations(year, week, machine), "week": week, "year": year,
+                   "machine": machine, "now": timezone.now(), "max_reservation_time": 1,
+                   "can_make_more_reservations": False, "can_ignore_rules": "false", "rules": [
+                {
+                    "periods": [
+                        [
+                            day + rule.start_time.hour / 24 + rule.start_time.minute / 1440,
+                            (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / 1440) % 7
+                        ]
+                        for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
+                    ],
+                    "max_hours": rule.max_hours,
+                    "max_hours_crossed": rule.max_inside_border_crossed,
+                } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)
+            ]}
+
+        if self.request.user.is_authenticated:
+            context["can_make_more_reservations"] = Quota.can_make_new_reservation(self.request.user,
+                                                                                   machine.machine_type)
+            context["can_ignore_rules"] = str(any(
+                quota.can_make_more_reservations(self.request.user) for quota in
+                Quota.get_user_quotas(self.request.user, machine.machine_type).filter(ignore_rules=True))).lower()
+
+        return context
 
 
 class ReservationCalendarView(ReservationCalendarComponentView):
@@ -86,27 +106,5 @@ class ReservationCalendarView(ReservationCalendarComponentView):
         context["next"] = get_next_week(context["year"], context["week"], 1)
         context["prev"] = get_next_week(context["year"], context["week"], -1)
         context["machine_types"] = Machine.__subclasses__()
-        context["can_make_more_reservations"] = False
-        context["can_ignore_rules"] = "false"
-        context["rules"] = [
-            {
-                "periods": [
-                    [
-                        day + rule.start_time.hour / 24 + rule.start_time.minute / 1440,
-                        (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / 1440) % 7
-                    ]
-                    for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
-                ],
-                "max_hours": rule.max_hours,
-                "max_hours_crossed": rule.max_inside_border_crossed,
-            } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)
-        ]
-
-        if self.request.user.is_authenticated:
-            context["can_make_more_reservations"] = Quota.can_make_new_reservation(self.request.user,
-                                                                                   machine.machine_type)
-            context["can_ignore_rules"] = str(any(
-                quota.can_make_more_reservations(self.request.user) for quota in
-                Quota.get_user_quotas(self.request.user, machine.machine_type).filter(ignore_rules=True))).lower()
 
         return context

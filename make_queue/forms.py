@@ -1,6 +1,8 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.utils import timezone
+
+from make_queue.fields import MachineTypeField
 from make_queue.models.models import Machine, ReservationRule
 from news.models import TimePlace
 from web.widgets import SemanticTimeInput, SemanticChoiceInput
@@ -11,7 +13,7 @@ class ReservationForm(forms.Form):
     start_time = forms.DateTimeField()
     end_time = forms.DateTimeField()
     machine_type = forms.ChoiceField(
-        choices=((machine_type.literal, machine_type.literal) for machine_type in Machine.__subclasses__()),
+        choices=((machine_type.name, machine_type.name) for machine_type in MachineTypeField.possible_machine_types),
         required=False)
     event = forms.BooleanField(required=False)
     event_pk = forms.CharField(required=False)
@@ -40,10 +42,6 @@ class ReservationForm(forms.Form):
             raise ValidationError("Machine name and machine type does not match")
 
         cleaned_data["machine"] = machine_query.first()
-
-        # Cannot create reservations in the past (Up to 5 minutes are allowed as a grace period for the reservation form)
-        if cleaned_data["start_time"] < timezone.now() - timezone.timedelta(minutes=5):
-            raise ValidationError("Reservation starts in the past")
 
         # If the reservation is an event, check that it exists
         if cleaned_data["event"]:

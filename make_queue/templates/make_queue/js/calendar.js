@@ -18,9 +18,9 @@ var getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_s
 var getDay = () => parseInt($(".time_selection").closest(".day").data("week-index"));
 
 var currentDate = () => {
-    let dateText = $(clickedDay).data("date").split(".");
+    let dateText = $(clickedDay).data("date").split("-");
     let startTime = timeToClock(getStartTime()).split(":");
-    return new Date(dateText[2], parseInt(dateText[1]) - 1, dateText[0], startTime[0], startTime[1])
+    return new Date(dateText[0], parseInt(dateText[1]) - 1, dateText[2], startTime[0], startTime[1])
 };
 
 var resetSelection = () => {

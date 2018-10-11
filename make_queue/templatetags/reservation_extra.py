@@ -80,3 +80,18 @@ def rule_period_start_text(period, locale):
 @register.simple_tag()
 def rule_period_end_text(period, locale):
     return get_day_name(int(period.end_time // 1) % 7, locale) + " " + period.rule.end_time.strftime("%H:%M")
+
+
+@register.simple_tag()
+def can_change_reservation(reservation, user):
+    return reservation.can_change(user) or reservation.can_change_end_time(user)
+
+
+@register.simple_tag()
+def can_change_reservation_end_time(reservation, user):
+    return reservation.can_change_end_time(user)
+
+
+@register.simple_tag()
+def can_delete_reservation(reservation, user):
+    return reservation.can_delete(user)

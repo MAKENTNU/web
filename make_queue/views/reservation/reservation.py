@@ -81,11 +81,13 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["special_text"] = reservation.special_text
             # context_data["quota"] = reservation.get_quota()
             context_data["comment"] = reservation.comment
+            context_data["can_change_start_time"] = reservation.can_change(self.request.user)
         # Otherwise populate with default information given to the view
         else:
             context_data["selected_machine"] = kwargs["machine"]
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
+            context_data["can_change_start_time"] = True
             # context_data["quota"] = Quota.get_quota_by_machine(kwargs["machine"].literal, self.request.user)
 
         return context_data
@@ -180,7 +182,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
-        if not kwargs["reservation"].can_change(request.user):
+        if not kwargs["reservation"].can_change(request.user) and not kwargs["reservation"].can_change_end_time(request.user):
             return redirect("my_reservations")
         return super().dispatch(request, *args, **kwargs)
 
@@ -192,7 +194,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         """
         reservation = kwargs["reservation"]
         # The user is not allowed to change the machine for a reservation
-        if reservation.get_machine() != form.cleaned_data["machine"]:
+        if reservation.machine != form.cleaned_data["machine"]:
             return redirect("my_reservations")
 
         reservation.comment = form.cleaned_data["comment"]

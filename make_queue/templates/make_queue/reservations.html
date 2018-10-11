@@ -84,7 +84,8 @@
                         </a>
                     </td>
                     <td>
-                        {% if reservation.can_delete %}
+                        {% can_change_reservation reservation user as can_change %}
+                        {% if can_change %}
                             <a href="{% url 'change_reservation' reservation=reservation %}">
                                 <div class="ui button primary">
                                     {% trans "Change" %}
@@ -93,7 +94,8 @@
                         {% endif %}
                     </td>
                     <td>
-                        {% if reservation.can_delete %}
+                        {% can_delete_reservation reservation user as can_delete %}
+                        {% if can_delete %}
                             <form method="post" action="{% url 'delete_reservation' %}">
                                 {% csrf_token %}
                                 <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>

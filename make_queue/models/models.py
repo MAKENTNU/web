@@ -167,7 +167,12 @@ class Reservation(models.Model):
             return False
 
         # Check if the user can change the reservation
-        if self.pk and not self.can_change(self.user):
+        if self.pk and not self.can_change(self.user) and not (
+                self.can_change_end_time(self.user) and Reservation.objects.get(
+                pk=self.pk).start_time == self.start_time):
+            return False
+
+        if not self.pk and self.start_time < timezone.now() - timedelta(minutes=5):
             return False
 
         # Check if the user can make the given reservation/edit
@@ -179,14 +184,17 @@ class Reservation(models.Model):
     def can_delete(self, user):
         if user.has_perm("make_queue.delete_reservation"):
             return True
-        return self.start_time > timezone.now()
+        return self.user == user and self.start_time > timezone.now()
 
     def can_change(self, user):
-        if self.start_time < timezone.now():
-            return False
         if user.has_perm("make_queue.can_create_event_reservation") and (self.special or (self.event is not None)):
             return True
+        if self.start_time < timezone.now():
+            return False
         return self.user == user
+
+    def can_change_end_time(self, user):
+        return self.end_time > timezone.now() and self.user == user
 
     class Meta:
         permissions = (
