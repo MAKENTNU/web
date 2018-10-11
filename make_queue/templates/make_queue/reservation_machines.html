@@ -5,7 +5,6 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
 {% endblock %}
 
 {% block title %}{% trans "Machines" %}{% endblock %}
@@ -33,8 +32,4 @@
             </div>
         {% endfor %}
     </div>
-
-    <div id="fader"></div>
-    <i id="closefullscreen" class="ui times icon"></i>
-    <script src="{% static "make_queue/js/stream.js" %}"></script>
 {% endblock %}

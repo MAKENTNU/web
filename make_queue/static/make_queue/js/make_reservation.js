@@ -121,15 +121,13 @@ let minDateStartTime = new Date();
 if ($("#start_time").children("div").hasClass("disabled")) {
     minDateStartTime = new Date(new Date($("#start_time").find("input").val()) - new Date(5*60*1000));
 }
-console.log(minDateStartTime);
-let startDate = new Date($("#start_time").find("input").val());
 $("#start_time").calendar({
         minDate: minDateStartTime,
         maxDate: maximum_day,
         ampm: false,
         mode: "minute",
         endCalendar: $("#end_time"),
-        initialDate: startDate,
+        initialDate: new Date($("#start_time").find("input").val()),
         firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
             if (mode === "minute") return !isNonReservedDate(date);
@@ -148,7 +146,6 @@ $("#start_time").calendar({
         onChange: function (value) {
             if (value === undefined) return true;
             let shouldChange = isNonReservedDate(value);
-            console.log(shouldChange)
             if (shouldChange) {
                 $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(value));
             }

@@ -25,7 +25,7 @@ $("html").keydown(function (event) {
     }
 });
 
-let closeFullscreen = function () {
+var closeFullscreen = function () {
     $('.fullscreen').each(function () {
         $(this).removeClass('fullscreen');
     });
