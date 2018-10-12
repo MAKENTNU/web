@@ -20,7 +20,6 @@
 
 .nav .logo img {
     object-fit: contain;
-    max-height: 50px;
 }
 
 .limg {
@@ -90,7 +89,6 @@
     }
 
     .nav .logo {
-        padding: 0;
         margin-right: 80px;
     }
 
