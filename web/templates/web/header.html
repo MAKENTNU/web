@@ -36,7 +36,7 @@
         {% if user.is_authenticated %}
             <div class="ui dropdown item">
                 {{ user.first_name|first_word }} <i class="dropdown icon"></i>
-                <div class="menu">
+                <div class="menu transition hidden">
                     {% if user|has_any_permissions or user.is_superuser %}
                         <a class="item" href="{% url 'adminpanel' %}">
                             {% trans "Administration" %}
