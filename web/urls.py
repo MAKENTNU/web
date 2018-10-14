@@ -43,8 +43,8 @@ urlpatterns += i18n_patterns(
 
 # CKEditor URLs
 urlpatterns += [
-    path('upload/', permission_required("contentbox.can_upload_image")(ckeditor_views.upload), name='ckeditor_upload'),
-    path('browse/', never_cache(permission_required("contentbox.can_browse_image")(ckeditor_views.browse)), name='ckeditor_browse'),
+    path('ckeditor/upload/', permission_required("contentbox.can_upload_image")(ckeditor_views.upload), name='ckeditor_upload'),
+    path('ckeditor/browse/', never_cache(permission_required("contentbox.can_browse_image")(ckeditor_views.browse)), name='ckeditor_browse'),
 ]
 
 handler404 = View404.as_view()
