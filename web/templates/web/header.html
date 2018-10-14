@@ -34,7 +34,7 @@
             {% trans "Reservations" %}
         </a>
         {% if user.is_authenticated %}
-            <div class="ui dropdown item">
+            <div class="ui dropdown item" id="nav-user-dropdown">
                 {{ user.first_name|first_word }} <i class="dropdown icon"></i>
                 <div class="menu transition hidden">
                     {% if user|has_any_permissions or user.is_superuser %}
@@ -50,9 +50,6 @@
                     </a>
                 </div>
             </div>
-            {% block scripts %}
-                <script>$('.ui.dropdown').dropdown();</script>
-            {% endblock scripts %}
         {% else %}
             <a class="item" href="{% url 'login' %}">
                 {% trans "Login" %}
@@ -93,10 +90,11 @@
 </form>
 
 <script>
+    $('#nav-user-dropdown').dropdown();
     $(".lang-link").click(function (event) {
         event.preventDefault();
         $(".lang-form").submit();
-    })
+    });
     $('.burger').click(function () {
         $('.nav').toggleClass('active');
     });
