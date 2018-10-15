@@ -29,7 +29,7 @@
                                 <span>
                                     &nbsp;&nbsp;
                                     <i class="ui {{ event.featured|color }} star icon toggle explanation-popup"
-                                       data-title="{% trans "Featured" %}"
+                                       data-title="{% trans "Feature" %}"
                                        data-content="{% trans "If selected, the event is shown on the front page." %}"
                                        pk="{{ event.pk }}" toggle="featured" model="event"></i>
                                     <i class="ui {{ event.hidden|color }} eye slash icon toggle explanation-popup"
@@ -64,7 +64,7 @@
                                     {% endif %}
                                     {% if perms.news.add_timeplace %}
                                         <a class="inline-block make_col_blue explanation-popup"
-                                           data-title="{% trans "Occurence" %}"
+                                           data-title="{% trans "Occurrence" %}"
                                            data-content="{% trans "If clicked, creates a new occurrence of the event" %}"
                                            href="{% url 'timeplace-new' event.id %}">
                                             <i class="icons">
