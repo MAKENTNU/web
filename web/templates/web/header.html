@@ -90,7 +90,7 @@
 </form>
 
 <script>
-    $('#nav-user-dropdown').dropdown(action="select");
+    $('#nav-user-dropdown').dropdown({action: "nothing"});
     $(".lang-link").click(function (event) {
         event.preventDefault();
         $(".lang-form").submit();
