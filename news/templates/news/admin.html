@@ -29,13 +29,13 @@
                                        pk="{{ event.pk }}" toggle="featured" model="event"></i>
                                     <i class="ui {{ event.hidden|color }} eye slash icon toggle"
                                        pk="{{ event.pk }}" toggle="hidden" model="event"></i>
-                                    <img class="makeicon toggle" src="
+                                    <img class="makeicon toggle"
                                         {% if event.private %}
-                                            {% static "web/img/m_yellow.svg" %}
+                                            src="{% static "web/img/m_yellow.svg" %}"
                                         {% else %}
-                                            {% static "web/img/m_grey.svg" %}
+                                            src="{% static "web/img/m_grey.svg" %}"
                                         {% endif %}
-                                    " pk="{{ event.pk }}" toggle="private" model="event">
+                                    pk="{{ event.pk }}" toggle="private" model="event">
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_event %}
                                         <a class="inline-block make_col_blue" href="{% url 'event-edit' event.id %}">
@@ -135,13 +135,13 @@
                                        pk="{{ article.pk }}" toggle="featured" model="article"></i>
                                     <i class="ui {{ article.hidden|color }} eye slash icon toggle"
                                        pk="{{ article.pk }}" toggle="hidden" model="article"></i>
-                                    <img class="makeicon toggle" src="
+                                    <img class="makeicon toggle"
                                         {% if article.private %}
-                                            {% static "web/img/m_yellow.svg" %}
+                                            src="{% static "web/img/m_yellow.svg" %}"
                                         {% else %}
-                                            {% static "web/img/m_grey.svg" %}
+                                            src="{% static "web/img/m_grey.svg" %}"
                                         {% endif %}
-                                    " pk="{{ article.pk }}" toggle="private" model="article">
+                                    pk="{{ article.pk }}" toggle="private" model="article">
                                     &nbsp;&nbsp;&nbsp;
                                     {% if perms.news.change_article %}
                                         <a class="inline-block  make_col_blue"
@@ -171,6 +171,8 @@
 
     <script>
         $('.ui.accordion').accordion();
+
+        $(".toggle").popup();
 
         $('.toggle').click(function () {
             toggle_post($(this), $(this).attr('pk'), $(this).attr('model'), $(this).attr('toggle'));
