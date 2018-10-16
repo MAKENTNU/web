@@ -1,0 +1,30 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+    <script src="{% static "web/js/image-link.js" %}"></script>
+{% endblock head %}
+
+
+{% block body %}
+    <h1 class="ui text-centered make_col_blue header">
+        {% trans "Available Tools at Makerverkstedet" %}
+    </h1>
+    <div class="ui container">
+        <div class="articles">
+            {% for tool in tools_list %}
+                {% thumbnail tool.image "600" crop="center" as im %}
+                    <img class="article-img clickable {% cycle 'float-right' 'float-left' %}
+                    			    {% if forloop.first %}article-first{% endif %}
+			                        {% if forloop.last %}article-last{% endif %}"
+                         src="{{ im.url }}" href="{% url 'article' tool.id %}"
+                         {% if article.contain %}style="object-fit: contain;" {% endif %}>
+                {% endthumbnail %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock body %}

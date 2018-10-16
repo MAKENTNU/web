@@ -1,0 +1,35 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block title %}{{ tool.title }}{% endblock title %}
+
+{% block og_title %}{{ title.title }}{% endblock og_title %}
+{% block og_image %}{{ title.image.url }}{% endblock og_image %}
+{% block og_description %} En utstyrsside {% endblock og_description %} {# FIXME: descriptin of tool in model #}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "tools/css/tools.css" %}">
+{% endblock head %}
+
+
+{% block body %}
+    <div class="article">
+        <div class="ui container">
+            <div class="ui text container basic segment">
+                {% thumbnail tool.image "800" crop="center" as im %}
+                    <img class="ui image center" src="{{ im.url }}">
+                {% endthumbnail %}
+                <h1>
+                    {{ tool.title }}
+                </h1>
+                <div>
+                    {% autoescape off %}
+                        {{ tool.content }}
+                    {% endautoescape %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

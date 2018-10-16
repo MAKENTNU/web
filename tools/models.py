@@ -7,4 +7,3 @@ class Tool(models.Model):
     content = RichTextField()
 
 # Create your models here.
-
