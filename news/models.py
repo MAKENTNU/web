@@ -1,6 +1,6 @@
 from datetime import date, time
 
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -36,7 +36,7 @@ class NewsBase(models.Model):
         max_length=100,
         verbose_name=_('Title'),
     )
-    content = RichTextField()
+    content = RichTextUploadingField()
     clickbait = models.TextField(
         max_length=300,
         verbose_name=_('Clickbait'),

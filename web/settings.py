@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'social_django',
     'news',
     'ckeditor',
+    'ckeditor_uploader',
     'contentbox',
     'checkin',
     'sorl.thumbnail',
@@ -175,6 +176,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
+CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
@@ -185,8 +188,13 @@ CKEDITOR_CONFIGS = {
                        'JustifyRight', 'JustifyBlock']},
             {'name': 'links', 'items': ['Link', 'Unlink']},
             {'name': 'format', 'items': ['Format', 'RemoveFormat']},
+            {'name': 'insert', 'items': ['Image']},
         ],
         'toolbar': 'main',
         'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            'uploadimage',
+            'image2',
+        ])
     }
 }
