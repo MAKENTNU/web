@@ -1,9 +1,8 @@
-from django.conf.urls import url, include
-from django.contrib import admin
-from django.contrib.auth.decorators import login_required
+from django.urls import path, register_converter
 
-from tools.views import ToolView
+from tools.views import ToolView, ViewToolsView, ViewToolView
 
 urlpatterns = [
-    url(r'^$', ToolView.as_view()),
+    path(r'', ViewToolsView.as_view(), name='tools'),
+    path(r'<int:pk>/', ViewToolView.as_view(), name='tools'),
 ]
