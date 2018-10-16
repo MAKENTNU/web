@@ -1,5 +1,7 @@
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group, Permission
 from django.db import models
+from ckeditor.fields import RichTextField
 
 
 class InheritanceGroup(Group):
@@ -88,10 +90,16 @@ class Committee(models.Model):
     group = models.OneToOneField(
         InheritanceGroup,
         on_delete=models.CASCADE,
+        verbose_name=_('group'),
     )
-    description = models.TextField()
-    email = models.EmailField()
-    image = models.ImageField(blank=True)
+    description = models.TextField(_('Description'))
+    email = models.EmailField(_('Email'))
+    image = models.ImageField(_('Image'), blank=True)
+    clickbait = models.TextField(
+        max_length=300,
+        verbose_name=_('Clickbait'),
+        blank=True,
+    )
 
     @property
     def name(self):
