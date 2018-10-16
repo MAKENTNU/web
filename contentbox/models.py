@@ -12,6 +12,7 @@ class ContentBox(models.Model):
         verbose_name=_('Title'),
     )
     content = RichTextUploadingField()
+    content_en = RichTextUploadingField(default='')
 
     def __str__(self):
         return self.title

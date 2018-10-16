@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-15 17:37+0200\n"
-"PO-Revision-Date: 2018-10-09 14:05+0200\n"
+"POT-Creation-Date: 2018-10-16 19:09+0200\n"
+"PO-Revision-Date: 2018-04-27 17:38+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
 "Language: nb\n"
@@ -150,13 +150,15 @@ msgstr "Tittel"
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:22
-#: news/templates/news/article_edit.html:26
-#: news/templates/news/event_edit.html:27
-msgid "Content"
-msgstr "Innhold"
+#: contentbox/templates/contentbox/edit.html:23
+msgid "Norwegian"
+msgstr "Norsk"
 
-#: contentbox/templates/contentbox/edit.html:25
+#: contentbox/templates/contentbox/edit.html:24
+msgid "English"
+msgstr "Engelsk"
+
+#: contentbox/templates/contentbox/edit.html:33
 #: groups/templates/groups/committee_form.html:30
 #: make_queue/templates/make_queue/quota/3d-quota.html:46
 #: make_queue/templates/make_queue/quota/sewing-quota.html:39
@@ -521,7 +523,8 @@ msgstr "Hvis valgt vil arrangementet bli vist på forsiden."
 
 #: news/templates/news/admin.html:37
 msgid "If selected, the event is hidden for non-admin users."
-msgstr "Hvis valgt vil arrangementet være skjult for ikke administrator brukere."
+msgstr ""
+"Hvis valgt vil arrangementet være skjult for ikke administrator brukere."
 
 #: news/templates/news/admin.html:40 news/templates/news/admin.html:171
 msgid "Internal"
@@ -529,7 +532,9 @@ msgstr "Intern"
 
 #: news/templates/news/admin.html:41
 msgid "If selected, the event is only available for MAKE members."
-msgstr "Hvis valgt vil arrangementet bare være tilgjengelig for medlemmer av MAKE NTNU."
+msgstr ""
+"Hvis valgt vil arrangementet bare være tilgjengelig for medlemmer av MAKE "
+"NTNU."
 
 #: news/templates/news/admin.html:52
 msgid "If clicked, a form for editing the event is shown."
@@ -590,7 +595,8 @@ msgstr "Hvis valgt vil artikkelen være skjult for ikke administrator brukere."
 
 #: news/templates/news/admin.html:172
 msgid "If selected, the article is only available for MAKE members."
-msgstr "Hvis valgt vil artikkelen bare være tilgjengelig for medlemmer av MAKE NTNU."
+msgstr ""
+"Hvis valgt vil artikkelen bare være tilgjengelig for medlemmer av MAKE NTNU."
 
 #: news/templates/news/admin.html:183
 msgid "If clicked, a form for editing the article is shown."
@@ -613,6 +619,11 @@ msgstr "Ny artikkel"
 #: news/templates/news/article_edit.html:17
 msgid "Edit article"
 msgstr "Rediger artikkel"
+
+#: news/templates/news/article_edit.html:26
+#: news/templates/news/event_edit.html:27
+msgid "Content"
+msgstr "Innhold"
 
 #: news/templates/news/article_edit.html:35
 #: news/templates/news/timeplace_edit.html:68
@@ -704,19 +715,19 @@ msgstr "Hjem"
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 
-#: web/templates/web/header.html:43
+#: web/templates/web/header.html:42
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:47
+#: web/templates/web/header.html:46
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:50
+#: web/templates/web/header.html:49
 msgid "Logout"
 msgstr "Logg ut"
 
-#: web/templates/web/header.html:59
+#: web/templates/web/header.html:55
 msgid "Login"
 msgstr "Logg inn"
 
