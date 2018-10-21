@@ -182,7 +182,7 @@ tr.wrapping {
     z-index: 300;
 }
 
-@-moz-document url-prefix() {
+@supports (-moz-appearance:none) {
     td.wrapping {
         height: 100% !important;
     }

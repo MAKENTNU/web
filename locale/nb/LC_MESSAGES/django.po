@@ -150,13 +150,15 @@ msgstr "Tittel"
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:22
-#: news/templates/news/article_edit.html:26
-#: news/templates/news/event_edit.html:27
-msgid "Content"
-msgstr "Innhold"
+#: contentbox/templates/contentbox/edit.html:23
+msgid "Norwegian"
+msgstr "Norsk"
 
-#: contentbox/templates/contentbox/edit.html:25
+#: contentbox/templates/contentbox/edit.html:24
+msgid "English"
+msgstr "Engelsk"
+
+#: contentbox/templates/contentbox/edit.html:33
 #: groups/templates/groups/committee_form.html:30
 #: make_queue/templates/make_queue/quota/3d-quota.html:46
 #: make_queue/templates/make_queue/quota/sewing-quota.html:39
@@ -617,6 +619,11 @@ msgstr "Ny artikkel"
 #: news/templates/news/article_edit.html:17
 msgid "Edit article"
 msgstr "Rediger artikkel"
+
+#: news/templates/news/article_edit.html:26
+#: news/templates/news/event_edit.html:27
+msgid "Content"
+msgstr "Innhold"
 
 #: news/templates/news/article_edit.html:35
 #: news/templates/news/timeplace_edit.html:68
