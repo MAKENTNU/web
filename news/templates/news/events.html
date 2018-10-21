@@ -19,7 +19,7 @@
                         <p class="ui yellow make_bg_yellow ribbon label">
                             {{ event.first_occurrence.start_date|date:"d M" }}
                             {% if event.number_of_occurrences > 1 %}
-                                <br><span>+{{ event.number_of_occurrences|add:-1 }} {% trans "more" %}</span>
+                                <br><span>+{{ event.number_of_occurrences|add:-1 }} {% if event.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
                             {% endif %}
                         </p>
 
@@ -61,7 +61,7 @@
                         <p class="ui yellow make_bg_yellow ribbon label">
                             {{ event.last_occurrence.start_date|date:"d M" }}
                             {% if event.number_of_occurrences > 1 %}
-                                <br><span>+{{ event.number_of_occurrences|add:-1 }} {% trans "more" %}</span>
+                                <br><span>+{{ event.number_of_occurrences|add:-1 }} {% if event.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
                             {% endif %}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
