@@ -96,6 +96,12 @@ class Event(NewsBase):
         verbose_name=_('Hoopla url'),
     )
 
+    def get_future_occurrences(self):
+        return TimePlace.objects.future().filter(event=self).order_by("start_date", "start_time")
+
+    def get_past_occurrences(self):
+        return TimePlace.objects.past().filter(event=self).order_by("-start_date", "-start_time")
+
 
 class TimePlace(models.Model):
     objects = TimePlaceManager()
