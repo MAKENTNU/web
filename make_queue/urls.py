@@ -15,9 +15,10 @@ register_converter(converters.Week, "week")
 register_converter(converters.DateTime, "time")
 
 json_urlpatterns = [
-    path('<machine:machine>', api.reservation.get_future_reservations_machine, name="reservation_json"),
-    path('<machine:machine>/<%Y/%m/%d:date>', api.reservation.get_reservations_day_and_machine, name="reservation_json"),
-    path('<reservation:reservation>/', api.reservation.get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
+    path('<machine:machine>', login_required(api.reservation.get_machine_data), name="reservation_json"),
+    path('<machine:machine>/<reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
+    #path('<machine:machine>/<%Y/%m/%d:date>', api.reservation.get_reservations_day_and_machine, name="reservation_json"),
+    #path('<reservation:reservation>/', api.reservation.get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
 ]
 
 quota_url_patterns = [

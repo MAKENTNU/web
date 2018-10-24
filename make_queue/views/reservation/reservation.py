@@ -74,6 +74,7 @@ class ReservationCreateOrChangeView(TemplateView):
         if "reservation" in kwargs:
             reservation = kwargs["reservation"]
             context_data["start_time"] = reservation.start_time
+            context_data["reservation_pk"] = reservation.pk
             context_data["end_time"] = reservation.end_time
             context_data["selected_machine"] = reservation.machine
             context_data["event"] = reservation.event
