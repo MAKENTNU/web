@@ -11,11 +11,13 @@ class RulesOverviewView(TemplateView):
 
     def get_context_data(self, machine_type, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        print(machine_type)
         context_data.update({
             "rules": ReservationRule.objects.filter(machine_type=machine_type),
-            "quotas": Quota.get_user_quotas(self.request.user, machine_type),
         })
+        if not self.request.user.is_anonymous:
+            context_data.update({
+                "quotas": Quota.get_user_quotas(self.request.user, machine_type),
+            })
         return context_data
 
 
