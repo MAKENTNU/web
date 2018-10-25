@@ -8,6 +8,11 @@
     <div class="ui container">
         <h1>{% trans "Rules" %} {{ rules.0.machine_type.name }} {% if perms.make_queue.add_reservation_rule %}
             <a href="{% url "create_machine_rule" %}"><i class="ui green plus icon"></i></a>{% endif %}</h1>
+        <div>
+            <a class="ui blue button" href="{% url "machine_usage_rules" rules.0.machine_type %}">
+                {% trans "Rules for usage" %}
+            </a>
+        </div>
         <table class="ui definition table">
             <tbody>
             <tr>

@@ -1,6 +1,7 @@
 from math import ceil
 
 from abc import abstractmethod
+from ckeditor_uploader.fields import RichTextUploadingField
 from datetime import timedelta
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -55,6 +56,15 @@ class Machine(models.Model):
     def get_status_display(self):
         current_status = self.get_status()
         return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
+
+
+class MachineUsageRule(models.Model):
+    """
+    Allows for specification of rules for each type of machine
+    """
+    machine_type = MachineTypeField(unique=True)
+    content = RichTextUploadingField()
+    content_en = RichTextUploadingField()
 
 
 class Quota(models.Model):

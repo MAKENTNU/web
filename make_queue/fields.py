@@ -38,14 +38,14 @@ class MachineTypeField(models.IntegerField):
     possible_machine_types = (
         MachineType(
             1,
-            _("3D-printer"),
+            _("3D-printers"),
             _("You must have completed a 3D printer course to reserve the printers. If you "
               "have taken the course, but don't have access, contact 3dprint@makentnu.no"),
             lambda user: user.is_authenticated and Printer3DCourse.objects.filter(user=user).exists()
         ),
         MachineType(
             2,
-            _("Symaskin"),
+            _("Sewing machines"),
             "",
             lambda user: user.is_authenticated
         )

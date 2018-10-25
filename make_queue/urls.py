@@ -33,6 +33,8 @@ quota_url_patterns = [
 
 rules_url_patterns = [
     path('<machine_type:machine_type>/', reservation.rules.RulesOverviewView.as_view(), name="machine_rules"),
+    path('usage/edit/<int:pk>/', reservation.rules.EditUsageRulesView.as_view(), name="edit_machine_usage_rules"),
+    path('usage/<machine_type:machine_type>/', reservation.rules.MachineUsageRulesView.as_view(), name="machine_usage_rules"),
     path('delete/<int:pk>/', reservation.rules.DeleteReservationRules.as_view(), name="delete_machine_rule"),
     path('create/', reservation.rules.CreateReservationRuleView.as_view(), name="create_machine_rule"),
     path('edit/<int:pk>/', reservation.rules.EditReservationRuleView.as_view(), name="edit_machine_rule"),

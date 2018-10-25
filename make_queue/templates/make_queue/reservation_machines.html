@@ -23,7 +23,7 @@
                 <div class="ui large header machine-title">
                     {{ machine_type.name }}
                 </div>
-                <a href="{% url "machine_rules" machine_type.type %}">(Rules)</a>
+                <a href="{% url "machine_usage_rules" machine_type.type %}">(Rules)</a>
             </div>
             <div class="ui cards">
                 {% for machine in machine_type.machines %}

@@ -13,6 +13,8 @@ class MachineType:
         return [machine_type for machine_type in MachineTypeField.possible_machine_types if machine_type.name == value]
 
     def to_url(self, machine_type):
+        if type(machine_type) is list and machine_type:
+            return machine_type[0].name
         return machine_type.name
 
 
