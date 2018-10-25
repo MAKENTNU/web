@@ -18,8 +18,11 @@
     {% can_use_machine machine user as can_use %}
     <div class="ui container">
         {% csrf_token %}
-        <div class="ui huge header">
-            {% trans "Reservations" %}
+        <div class="ui machine-title-field">
+            <div class="ui huge header machine-title">
+                {% trans "Reservations" %}
+            </div>
+            <a href="{% url "machine_rules" machine.machine_type %}">(Rules)</a>
         </div>
         <div class="ui grid padded equal width ">
             <div class="column">
