@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 import math
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -18,9 +18,40 @@ class ViewEventsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        past, future = [], []
+        for event in Event.objects.filter(hidden=False):
+            if not event.get_future_occurrences().exists() and not event.get_past_occurrences().exists():
+                continue
+            if event.multiday:
+                if event.get_future_occurrences().exists():
+                    future.append({
+                        "first_occurrence": event.get_future_occurrences().first(),
+                        "event": event,
+                        "number_of_occurrences": event.timeplace_set.count(),
+                    })
+                else:
+                    past.append({
+                        "last_occurrence": event.get_past_occurrences().first(),
+                        "event": event,
+                        "number_of_occurrences": event.timeplace_set.count(),
+                    })
+            else:
+                for occurrence in event.get_future_occurrences():
+                    future.append({
+                        "first_occurrence": occurrence,
+                        "event": event,
+                        "number_of_occurrences": 1,
+                    })
+                if event.get_past_occurrences().exists():
+                    past.append({
+                        "last_occurrence": event.get_past_occurrences().first(),
+                        "event": event,
+                        "number_of_occurrences": event.get_past_occurrences().count(),
+                    })
+
         context.update({
-            'past': TimePlace.objects.past(),
-            'future': TimePlace.objects.future(),
+            'past': sorted(past, key=lambda event: event["last_occurrence"].start_date, reverse=True),
+            'future': sorted(future, key=lambda event: event["first_occurrence"].start_date),
         })
         return context
 

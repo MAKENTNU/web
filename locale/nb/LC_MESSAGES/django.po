@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-14 09:21+0200\n"
-"PO-Revision-Date: 2018-04-27 17:38+0200\n"
+"POT-Creation-Date: 2018-10-21 21:47+0200\n"
+"PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
 "Language: nb\n"
@@ -12,46 +12,131 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.1.1\n"
 
-#: checkin/templates/checkin/profile.html:12
+#: checkin/templates/checkin/profile.html:14
 msgid "My profile"
 msgstr "Min profil"
 
-#: checkin/templates/checkin/profile.html:17
+#: checkin/templates/checkin/profile.html:19
 msgid "Change picture"
 msgstr "Endre bilde"
 
-#: checkin/templates/checkin/profile.html:37
+#: checkin/templates/checkin/profile.html:44
 msgid "My skills"
 msgstr "Mine ferdigheter"
 
-#: checkin/templates/checkin/profile.html:59
+#: checkin/templates/checkin/profile.html:71
 msgid "Add skills"
 msgstr "Legg til ferdigheter"
 
-#: checkin/templates/checkin/profile.html:61
+#: checkin/templates/checkin/profile.html:73
 msgid "Select/search"
 msgstr "Velg/søk"
 
-#: checkin/templates/checkin/profile.html:71
+#: checkin/templates/checkin/profile.html:83
 msgid "Add"
 msgstr "Legg til"
 
-#: checkin/templates/checkin/profile.html:84
+#: checkin/templates/checkin/profile.html:87
+msgid "Suggest new skills"
+msgstr "Foreslå nye ferdigheter"
+
+#: checkin/templates/checkin/profile.html:96
+msgid "No registered card"
+msgstr "Kort ikke registrert"
+
+#: checkin/templates/checkin/profile.html:98
 msgid ""
 "Place the card on the card reader and press the button below to register the "
 "card"
 msgstr ""
 "Legg kortet på kortleseren og trykk på knappen under for å registrere kortet"
 
-#: checkin/templates/checkin/profile.html:86
+#: checkin/templates/checkin/profile.html:100
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/skills.html:12
+#: checkin/templates/checkin/profile.html:146
+#, fuzzy
+#| msgid "Register"
+msgid "Registered"
+msgstr "Registrer"
+
+#: checkin/templates/checkin/profile.html:150
+msgid "Scan card again!"
+msgstr "Skann kortet igjen!"
+
+#: checkin/templates/checkin/profile.html:156
+msgid "Scan card"
+msgstr "Skann kort"
+
+#: checkin/templates/checkin/skills.html:15
 msgid "People with these skills are at<br>Makerverkstedet right now:"
 msgstr "Folk med disse ferdighetene er på<br>Makerverkstedet akkurat nå:"
+
+#: checkin/templates/checkin/suggest_skill.html:10
+#, fuzzy
+#| msgid "Suggest new skills"
+msgid "Suggest new skills at Makerverkstedet"
+msgstr "Foreslå nye ferdigheter"
+
+#: checkin/templates/checkin/suggest_skill.html:16
+msgid "Title (norwegian)"
+msgstr "Tittel (norsk)"
+
+#: checkin/templates/checkin/suggest_skill.html:24
+msgid "Submit"
+msgstr "Legg til"
+
+#: checkin/templates/checkin/suggest_skill.html:30
+msgid "Title (english)"
+msgstr "Tittel (engelsk)"
+
+#: checkin/templates/checkin/suggest_skill.html:41
+#, fuzzy
+#| msgid "Suggest new skills"
+msgid "Suggested skills"
+msgstr "Foreslå nye ferdigheter"
+
+#: checkin/templates/checkin/suggest_skill.html:45
+msgid "Skill"
+msgstr "Ferdighet"
+
+#: checkin/templates/checkin/suggest_skill.html:46
+msgid "Number of votes"
+msgstr "Antall stemmer"
+
+#: checkin/templates/checkin/suggest_skill.html:71
+msgid "Approve"
+msgstr "Godkjenn"
+
+#: checkin/templates/checkin/suggest_skill.html:77
+#: checkin/templates/checkin/suggest_skill.html:132
+msgid "Voted!"
+msgstr "Stemt!"
+
+#: checkin/templates/checkin/suggest_skill.html:79
+msgid "Vote"
+msgstr "Stem"
+
+#: checkin/templates/checkin/suggest_skill.html:88
+#: news/templates/news/admin.html:59 news/templates/news/admin.html:111
+#: news/templates/news/admin.html:190 web/templates/web/delete_modal.html:11
+msgid "Delete"
+msgstr "Slett"
+
+#: checkin/views.py:134 checkin/views.py:137
+msgid "Enter both norwegian and english skill name"
+msgstr "Skriv inn tittel på både norsk og engelsk"
+
+#: checkin/views.py:143
+msgid "Skill already exists!"
+msgstr "Ferdigheten finnes allerede!"
+
+#: checkin/views.py:161
+msgid "Skill added!"
+msgstr "Ferdighet lagt til!"
 
 #: contentbox/models.py:12 news/models.py:37
 msgid "Title"
@@ -60,16 +145,21 @@ msgstr "Tittel"
 #: contentbox/templates/contentbox/display.html:10
 #: contentbox/templates/contentbox/edit.html:5
 #: contentbox/templates/contentbox/edit.html:15
+#: groups/templates/groups/committee_form.html:14
+#: news/templates/news/admin.html:51 news/templates/news/admin.html:103
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:22
-#: news/templates/news/article_edit.html:26
-#: news/templates/news/event_edit.html:27
-msgid "Content"
-msgstr "Innhold"
+#: contentbox/templates/contentbox/edit.html:23
+msgid "Norwegian"
+msgstr "Norsk"
 
-#: contentbox/templates/contentbox/edit.html:25
+#: contentbox/templates/contentbox/edit.html:24
+msgid "English"
+msgstr "Engelsk"
+
+#: contentbox/templates/contentbox/edit.html:33
+#: groups/templates/groups/committee_form.html:30
 #: make_queue/templates/make_queue/quota/3d-quota.html:46
 #: make_queue/templates/make_queue/quota/sewing-quota.html:39
 #: news/templates/news/article_edit.html:65
@@ -78,11 +168,38 @@ msgstr "Innhold"
 msgid "Save"
 msgstr "Lagre"
 
-#: groups/templates/groups/committee_list.html:7
+#: groups/models.py:93
+msgid "group"
+msgstr "gruppe"
+
+#: groups/models.py:95
+msgid "Description"
+msgstr "Beskrivelse"
+
+#: groups/models.py:96
+#: make_queue/templates/make_queue/reservation_calendar.html:95
+msgid "Email"
+msgstr "Epost"
+
+#: groups/models.py:97 news/models.py:46
+msgid "Image"
+msgstr "Bilde"
+
+#: groups/models.py:100 news/models.py:42
+msgid "Clickbait"
+msgstr "Clickbait"
+
+#: groups/templates/groups/committee_admin.html:13
+#: groups/templates/groups/committee_list.html:8
+#: web/templates/web/admin_panel.html:19
 msgid "Committees"
 msgstr "Komiteer"
 
-#: make_queue/models.py:19
+#: groups/templates/groups/committee_form.html:5
+msgid "Edit committee"
+msgstr "Rediger komité"
+
+#: make_queue/models.py:17
 msgid "Reserved"
 msgstr "Reservert"
 
@@ -203,6 +320,7 @@ msgstr "Reserver"
 #: make_queue/templates/make_queue/reservations.html:43
 #: make_queue/templates/make_queue/reservations.html:90
 #: make_queue/templates/make_queue/reservations.html:142
+#: news/templates/news/admin.html:182
 msgid "Change"
 msgstr "Endre"
 
@@ -286,10 +404,6 @@ msgstr "Reservasjon"
 #: make_queue/templates/make_queue/reservation_calendar.html:92
 msgid "Name"
 msgstr "Navn"
-
-#: make_queue/templates/make_queue/reservation_calendar.html:95
-msgid "Email"
-msgstr "Epost"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:98
 #: make_queue/templates/make_queue/reservations.html:38
@@ -399,6 +513,7 @@ msgid "Sunday"
 msgstr "Søndag"
 
 #: make_queue/templates/make_queue/rule_edit.html:100
+msgctxt "edit"
 msgid "Submit"
 msgstr "Lagre"
 
@@ -454,14 +569,6 @@ msgstr "Fler-periode"
 msgid "Periods"
 msgstr "Perioder"
 
-#: news/models.py:42
-msgid "Clickbait"
-msgstr "Clickbait"
-
-#: news/models.py:46
-msgid "Image"
-msgstr "Bilde"
-
 #: news/models.py:50
 msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
@@ -470,7 +577,8 @@ msgstr "Ikke crop bildet"
 msgid "Highlighted"
 msgstr "Fremhevet"
 
-#: news/models.py:58 news/models.py:146
+#: news/models.py:58 news/models.py:152 news/templates/news/admin.html:36
+#: news/templates/news/admin.html:96 news/templates/news/admin.html:168
 msgid "Hidden"
 msgstr "Skjult"
 
@@ -478,11 +586,11 @@ msgstr "Skjult"
 msgid "MAKE internal"
 msgstr "MAKE intern"
 
-#: news/models.py:78 news/models.py:105
+#: news/models.py:78 news/models.py:111
 msgid "Publishing date"
 msgstr "Publiseringsdato"
 
-#: news/models.py:82 news/models.py:109
+#: news/models.py:82 news/models.py:115
 msgid "Publishing time"
 msgstr "Publiseringstid"
 
@@ -490,36 +598,128 @@ msgstr "Publiseringstid"
 msgid "Single registration"
 msgstr "Én påmelding"
 
-#: news/models.py:96 news/models.py:142
+#: news/models.py:96 news/models.py:148
 msgid "Hoopla url"
 msgstr "Hoopla url"
 
-#: news/models.py:113
+#: news/models.py:119
 msgid "Start date"
 msgstr "Startdato"
 
-#: news/models.py:118
+#: news/models.py:124
 msgid "End date"
 msgstr "Sluttdato"
 
-#: news/models.py:132
+#: news/models.py:138
 msgid "Location"
 msgstr "Sted"
 
-#: news/models.py:137
+#: news/models.py:143
 msgid "Location URL"
 msgstr "Sted URL"
 
-#: news/templates/news/admin.html:116
-msgid "No events"
-msgstr "Ingen arrangementer"
+#: news/templates/news/admin.html:14 news/templates/news/admin.html:146
+msgid "Create"
+msgstr "Legg til"
 
-#: news/templates/news/admin.html:120 news/templates/news/articles.html:13
+#: news/templates/news/admin.html:15
+msgid "If clicked, a new event will be created."
+msgstr "Lager et nytt arrangement."
+
+#: news/templates/news/admin.html:32 news/templates/news/admin.html:164
+msgid "Feature"
+msgstr "Fremhev"
+
+#: news/templates/news/admin.html:33
+msgid "If selected, the event is shown on the front page."
+msgstr "Hvis valgt vil arrangementet bli vist på forsiden."
+
+#: news/templates/news/admin.html:37
+msgid "If selected, the event is hidden for non-admin users."
+msgstr ""
+"Hvis valgt vil arrangementet være skjult for ikke administrator brukere."
+
+#: news/templates/news/admin.html:40 news/templates/news/admin.html:171
+msgid "Internal"
+msgstr "Intern"
+
+#: news/templates/news/admin.html:41
+msgid "If selected, the event is only available for MAKE members."
+msgstr ""
+"Hvis valgt vil arrangementet bare være tilgjengelig for medlemmer av MAKE "
+"NTNU."
+
+#: news/templates/news/admin.html:52
+msgid "If clicked, a form for editing the event is shown."
+msgstr "Klikk for endre arrangementet."
+
+#: news/templates/news/admin.html:60
+msgid "If clicked, the event will be deleted."
+msgstr "Klikk for å slette arrangementet."
+
+#: news/templates/news/admin.html:67
+msgid "Occurrence"
+msgstr "Forekomst"
+
+#: news/templates/news/admin.html:68
+msgid "If clicked, creates a new occurrence of the event"
+msgstr "Lager en ny forekomst av arrangementet."
+
+#: news/templates/news/admin.html:97
+msgid "If selected, the occurrence is hidden for non-admin users."
+msgstr "Hvis valgt vil forekomsten være skjult for ikke administrator brukere."
+
+#: news/templates/news/admin.html:104
+msgid "If clicked, a form for editing the occurrence is shown."
+msgstr "Klikk for å endre forekomsten."
+
+#: news/templates/news/admin.html:112
+msgid "If clicked, the occurrence will be deleted."
+msgstr "Klikk for å slette forekomsten."
+
+#: news/templates/news/admin.html:119
+msgid "Duplicate"
+msgstr "Dupliser"
+
+#: news/templates/news/admin.html:120
+msgid "If clicked, the occurrence is duplicated."
+msgstr "Klikk for å duplisere forekomsten."
+
+#: news/templates/news/admin.html:141
+msgid "No events"
+msgstr "Ingen arrangementer."
+
+#: news/templates/news/admin.html:145 news/templates/news/articles.html:13
 #: web/templates/web/header.html:28
 msgid "Articles"
 msgstr "Artikler"
 
-#: news/templates/news/admin.html:168
+#: news/templates/news/admin.html:147
+msgid "If clicked, a new article will be created."
+msgstr "Lager en ny artikkel."
+
+#: news/templates/news/admin.html:165
+msgid "If selected, the article is shown on the front page."
+msgstr "Hvis valgt vil artikkelen vises på forsiden."
+
+#: news/templates/news/admin.html:169
+msgid "If selected, the article is hidden for non-admin users."
+msgstr "Hvis valgt vil artikkelen være skjult for ikke administrator brukere."
+
+#: news/templates/news/admin.html:172
+msgid "If selected, the article is only available for MAKE members."
+msgstr ""
+"Hvis valgt vil artikkelen bare være tilgjengelig for medlemmer av MAKE NTNU."
+
+#: news/templates/news/admin.html:183
+msgid "If clicked, a form for editing the article is shown."
+msgstr "Klikk for å endre artikkelen."
+
+#: news/templates/news/admin.html:191
+msgid "If clicked, the article will be deleted."
+msgstr "Klikk for å slette artikkelen."
+
+#: news/templates/news/admin.html:206
 msgid "No articles"
 msgstr "Ingen artikler"
 
@@ -532,6 +732,11 @@ msgstr "Ny artikkel"
 #: news/templates/news/article_edit.html:17
 msgid "Edit article"
 msgstr "Rediger artikkel"
+
+#: news/templates/news/article_edit.html:26
+#: news/templates/news/event_edit.html:27
+msgid "Content"
+msgstr "Innhold"
 
 #: news/templates/news/article_edit.html:35
 #: news/templates/news/timeplace_edit.html:68
@@ -560,15 +765,23 @@ msgstr "Rediger event"
 msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
-#: news/templates/news/events.html:46
+#: news/templates/news/events.html:22 news/templates/news/events.html:64
+msgid "dates"
+msgstr "datoer"
+
+#: news/templates/news/events.html:22 news/templates/news/events.html:64
+msgid "date"
+msgstr "dato"
+
+#: news/templates/news/events.html:48
 msgid "No upcoming events"
 msgstr "Ingen kommende arrangementer"
 
-#: news/templates/news/events.html:52
+#: news/templates/news/events.html:54
 msgid "Previous events"
 msgstr "Tidligere arrangementer"
 
-#: news/templates/news/events.html:85
+#: news/templates/news/events.html:89
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
 
@@ -606,10 +819,6 @@ msgstr "Kvote"
 msgid "Are sure you want to delete?"
 msgstr "Er du sikker på at du vil slette?"
 
-#: web/templates/web/delete_modal.html:11
-msgid "Delete"
-msgstr "Slett"
-
 #: web/templates/web/delete_modal.html:15
 msgctxt "abort action"
 msgid "Cancel"
@@ -635,18 +844,18 @@ msgstr "Hjem"
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 
-#: web/templates/web/header.html:43
+#: web/templates/web/header.html:42
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:47
+#: web/templates/web/header.html:46
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:50
+#: web/templates/web/header.html:49
 msgid "Logout"
 msgstr "Logg ut"
 
-#: web/templates/web/header.html:59
+#: web/templates/web/header.html:55
 msgid "Login"
 msgstr "Logg inn"

@@ -1,4 +1,4 @@
-from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.utils.translation import gettext_lazy as _
 from django.conf.urls import url as durl
 from django.db import models
@@ -11,7 +11,8 @@ class ContentBox(models.Model):
         unique=True,
         verbose_name=_('Title'),
     )
-    content = RichTextField()
+    content = RichTextUploadingField()
+    content_en = RichTextUploadingField(default='')
 
     def __str__(self):
         return self.title
@@ -26,6 +27,12 @@ class ContentBox(models.Model):
     @staticmethod
     def url(title):
         return durl(r'%s/$' % title, DisplayContentBoxView.as_view(title=title), name=title)
+
+    class Meta:
+        permissions = (
+            ("can_upload_image", "Can upload image for CKEditor"),
+            ("can_browse_image", "Can brows image in CKEditor"),
+        )
 
 
 class DisplayContentBoxView(TemplateView):

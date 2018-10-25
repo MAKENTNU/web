@@ -1,6 +1,9 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
+{% load checkin_tags %}
 {% load i18n %}
+{% load thumbnail %}
+
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "checkin/css/checkin.css" %}"/>
@@ -14,12 +17,18 @@
         <div class="ui feed">
             {% for skill, leveltime in skill_dict %}
                 <div class="event">
-                    <div class="label"> {# blackbox er for debugging #}
-                        <img src="{% if suggestion.image %}{{ suggestion.image.url }}
-                                      {% else %}{% static "checkin/img/placeholder_skill.svg" %}{% endif %}"/>
+                    <div class="label">
+                        {% if skill.image %}
+                            {% thumbnail skill.image "64x64" crop="center" as im %}
+                                <img src="{{ im.url }}"/>
+                            {% endthumbnail %}
+                        {% else %}
+                            <img src="{% static "checkin/img/placeholder_skill.svg" %}"/>
+                        {% endif %}
+
                     </div>
                     <div class="content">
-                        <div class="skill-text">{{ skill }}</div>
+                        <div class="skill-text">{{ skill|locale_title:request.LANGUAGE_CODE }}</div>
                         <div class="ui star rating skill-lvl" data-rating="{{ leveltime.0 }}" data-max-rating="3"></div>
                         <div class="date">{{ leveltime.1|timesince }}</div>
                     </div>
