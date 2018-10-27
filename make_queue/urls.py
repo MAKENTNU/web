@@ -49,5 +49,6 @@ urlpatterns = [
     path('rules/', include(rules_url_patterns)),
     path('json/', include(json_urlpatterns)),
     path('quota/', include(quota_url_patterns)),
+    path('course/', admin.course.CourseXLSXView.as_view(), name="qwerty"),
     re_path('^', reservation.machine.MachineView.as_view(), name="reservation_machines_overview")
 ]
