@@ -1,16 +1,32 @@
 import io
 import xlsxwriter
-from django import views
 from django.http import HttpResponse
+from django.views.generic import TemplateView, View
+from django.db.models import Q
 
 from make_queue.models.course import Printer3DCourse
 
 
-class CourseXLSXView(views.View):
+class CourseView(TemplateView):
+    template_name = "make_queue/course/course_panel.html"
 
-    def get(self, request):
-        # TODO: Fix filtering on course registrations and permissions
-        course_registrations = Printer3DCourse.objects.all()
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({
+            "registrations": Printer3DCourse.objects.order_by("name"),
+            "possible_statuses": Printer3DCourse.STATUS_CHOICES,
+        })
+        return context_data
+
+
+class CourseXLSXView(View):
+
+    def post(self, request):
+        search_string = request.POST.get("search_text")
+        status_filter = request.POST.get("status_filter")
+
+        course_registrations = Printer3DCourse.objects.filter(
+            Q(username__icontains=search_string) | Q(name__icontains=search_string), status__icontains=status_filter)
 
         # Use an in-memory output file, to avoid having to clean up the disk
         output_file = io.BytesIO()
@@ -53,7 +69,8 @@ class CourseXLSXView(views.View):
         for index, registration in enumerate(course_registrations):
             worksheet.write(index + 1, 0, registration.name, format_row)
             worksheet.write(index + 1, 1, registration.username, format_row)
-            worksheet.write_number(index + 1, 2, registration.card_number, format_row)
+            worksheet.write(index + 1, 2, registration.card_number if registration.card_number is not None else "",
+                            format_row)
             worksheet.write(index + 1, 3, registration.date.strftime("%Y-%m-%d"), format_row)
 
         workbook.close()

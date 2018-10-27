@@ -28,6 +28,11 @@ quota_url_patterns = [
     path('', permission_required("make_queue.update_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
 
+course_url_patterns = [
+    path('download/', admin.course.CourseXLSXView.as_view(), name="download_course_registrations"),
+    path('', admin.course.CourseView.as_view(), name="course_panel")
+]
+
 rules_url_patterns = [
     path('<machine_type:machine_type>/', reservation.rules.RulesOverviewView.as_view(), name="machine_rules"),
     path('usage/edit/<int:pk>/', reservation.rules.EditUsageRulesView.as_view(), name="edit_machine_usage_rules"),
@@ -49,6 +54,6 @@ urlpatterns = [
     path('rules/', include(rules_url_patterns)),
     path('json/', include(json_urlpatterns)),
     path('quota/', include(quota_url_patterns)),
-    path('course/', admin.course.CourseXLSXView.as_view(), name="qwerty"),
+    path('course/', include(course_url_patterns)),
     re_path('^', reservation.machine.MachineView.as_view(), name="reservation_machines_overview")
 ]
