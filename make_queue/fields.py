@@ -4,7 +4,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from make_queue.models.course import Printer3DCourse
-from web.widgets import SemanticChoiceInput
+from web.widgets import SemanticSearchableChoiceInput
 
 
 class MachineType:
@@ -19,20 +19,9 @@ class MachineType:
         return self.can_user_use_func(user)
 
 
-class MachineTypeForm(forms.TypedChoiceField):
-    widget = SemanticChoiceInput
-
-    def __init__(self, *args, **kwargs):
-        kwargs.update({"coerce": self.coerce})
-        super().__init__(*args, **kwargs)
-
-    @staticmethod
-    def coerce(value):
-        return MachineTypeField.get_machine_type(int(value))
-
-
 class MachineTypeField(models.IntegerField):
     description = "A machine type"
+    verbose_name = _("Select machine type")
 
     # ID, name, cannot use text
     possible_machine_types = (
@@ -62,7 +51,7 @@ class MachineTypeField(models.IntegerField):
         kwargs.update({
             "choices": (
                 (machine_type.id, machine_type.name) for machine_type in MachineTypeField.possible_machine_types
-            )
+            ),
         })
         super().__init__(*args, **kwargs)
 
@@ -105,3 +94,20 @@ class MachineTypeField(models.IntegerField):
             super(MachineTypeField, self).validate(self.get_prep_value(value), model_instance)
         else:
             super(MachineTypeField, self).validate(value, model_instance)
+
+
+class MachineTypeForm(forms.TypedChoiceField):
+    widget = SemanticSearchableChoiceInput(prompt_text=MachineTypeField.verbose_name)
+
+    def __init__(self, *args, **kwargs):
+        kwargs.update({"coerce": self.coerce})
+        super().__init__(*args, **kwargs)
+
+    @staticmethod
+    def coerce(value):
+        return MachineTypeField.get_machine_type(int(value))
+
+    def prepare_value(self, value):
+        if type(value) is MachineType:
+            return value.id
+        return value

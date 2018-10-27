@@ -11,53 +11,60 @@
 
 {% block body %}
     <div class="ui container">
-        <div class="ui grid equal width">
-            <div class="ui column">
-                <a href="{% url 'update_printer_handler' %}" class="ui primary button">
-                    {% trans "Get new 3D printer course participants" %}
-                </a>
-                <div class="ui huge header">
-                    {% trans "Users" %}
-                </div>
-                <div class="ui icon input" id="user_search_field">
-                    <i class="icon search"></i>
-                    <input class="hidden" type="text" placeholder="Søk på bruker"/>
-                </div>
-                <div class="ui relaxed divided list users">
-                    {% for user in users %}
-                        <div class="item user_element"
-                             data-fullname="{{ user.first_name }} {{ user.last_name }}"
-                             data-username="{{ user.username }}">
-                            <div class="right floated content">
-                                <div class="blue ui button user_select">
-                                    {% trans "Select" %}
-                                </div>
-                            </div>
-                            <div class="content">
-                                <div class="header">
-                                    {{ user.first_name }} {{ user.last_name }}
-                                </div>
-                                <div class="username">
-                                    {{ user.username }}
-                                </div>
-                            </div>
+        <a class="ui yellow button" href="{% url "create_quota" %}">
+            <i class="ui icon plus"></i>{% trans "New quota" %}
+        </a>
+        <div class="ui tabular pointing secondary menu">
+            <a class="{% if not requested_user %}active{% endif %} item" data-tab="global">{% trans "Global" %}</a>
+            <a class="{% if requested_user %}active{% endif %} item" data-tab="users">{% trans "Users" %}</a>
+        </div>
+        <div class="ui tab {% if not requested_user %}active{% endif %}" data-tab="global">
+            {% for quota in global_quotas %}
+                <div class="ui card">
+                    <div class="content">
+                        <div class="header">
+                            {% if quota.dimishing %}
+                                {% trans "One-time quota" %}
+                            {% else %}
+                                {% trans "Replenishing quota" %}
+                            {% endif %}
+                            <a href="{% url "edit_quota" quota.pk %}"><i class="ui yellow icon pencil"></i></a>
+                            {% if perms.delete_quota %}
+                                <a class="delete confirm" href="{% url "delete_quota" quota.pk %}"><i class="ui red icon trash"></i></a>
+                            {% endif %}
                         </div>
+                        <div class="meta">{{ quota.machine_type.name }}</div>
+                        <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
+                        {% if quota.ignore_rules %}
+                            <b>{% trans "Ignores rules" %}</b>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="ui {% if requested_user %}active{% endif %} tab" data-tab="users">
+            <div class="ui fluid search selection dropdown">
+                <input type="hidden" name="user" id="user">
+                <i class="ui dropdown icon"></i>
+                <div class="default text">{% trans "Select user" %}</div>
+                <div class="menu">
+                    {% for user in users %}
+                        <div class="item" data-value="{{ user.username }}">{{ user.get_full_name }}</div>
                     {% endfor %}
                 </div>
             </div>
-            <div class="make_hidden" id="csrf">{% csrf_token %}</div>
-            <div class="ui column">
-                <div class="permissions">
-                    <div class="ui huge header">
-                        {% trans "Selected user" %}
-                    </div>
-                    <div class="ui cards" id="quota_user">
-                        {% include 'make_queue/quota/quota_user.html' with user=request.user %}
-                    </div>
-                </div>
+            <div class="make_content_padding"></div>
+            <div id="user-quotas">
+
             </div>
         </div>
     </div>
     <script src="{% url 'javascript-catalog' %}"></script>
     <script src="{% static 'make_queue/js/quota_panel.js' %}"></script>
+    <script>
+        $('.tabular.menu .item').tab();
+        {% if requested_user %}
+            $("#user").parent().dropdown("set selected", "{{ requested_user.username }}");
+        {% endif %}
+    </script>
 {% endblock %}

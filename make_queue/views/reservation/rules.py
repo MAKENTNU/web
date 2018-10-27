@@ -13,7 +13,6 @@ class RulesOverviewView(TemplateView):
         context_data = super().get_context_data(**kwargs)
         context_data.update({
             "rules": ReservationRule.objects.filter(machine_type=machine_type),
-            "usage_rules": MachineUsageRule.objects.get_or_create(machine_type=machine_type)[0],
         })
         if not self.request.user.is_anonymous:
             context_data.update({

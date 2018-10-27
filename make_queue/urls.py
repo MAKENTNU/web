@@ -17,18 +17,15 @@ register_converter(converters.DateTime, "time")
 json_urlpatterns = [
     path('<machine:machine>', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<machine:machine>/<reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
-    #path('<machine:machine>/<%Y/%m/%d:date>', api.reservation.get_reservations_day_and_machine, name="reservation_json"),
-    #path('<reservation:reservation>/', api.reservation.get_future_reservations_machine_without_specific_reservation, name="reservation_json"),
 ]
 
 quota_url_patterns = [
-    path('json/<machine_type:machine_type>/', login_required(api.quota.get_user_quota_max_length)),
-    path('update/3D-printer/', permission_required("make_queue.can_edit_quota", raise_exception=True)(api.quota.UpdateQuota3D.as_view())),
-    path('update/allowed/', csrf_exempt(api.quota.UpdateAllowed.as_view()), name="update_allowed_3D_printer"),
-    path('update/sewing/', permission_required("make_queue.can_edit_quota", raise_exception=True)(api.quota.UpdateSewingQuota.as_view())),
-    path('update/', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.UpdatePrinterHandlerView.as_view()), name="update_printer_handler"),
-    path('<username:user>/', permission_required("make_queue.can_edit_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view())),
-    path('', permission_required("make_queue.can_edit_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
+    path('create/', permission_required("make_queue.add_quota")(admin.quota.CreateQuotaView.as_view()), name="create_quota"),
+    path('update/<int:pk>/', permission_required("make_queue.update_quota")(admin.quota.EditQuotaView.as_view()), name="edit_quota"),
+    path('delete/<int:pk>/', permission_required("make_queue.delete_quota")(admin.quota.DeleteQuotaView.as_view()), name="delete_quota"),
+    path('user/<username:user>/', permission_required("make_queue.update_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view()), name="quotas_user"),
+    path('<username:user>/', permission_required("make_queue.update_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
+    path('', permission_required("make_queue.update_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
 
 rules_url_patterns = [

@@ -1,11 +1,13 @@
 from django import forms
+from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
-from django.utils import timezone
+from django.forms import ModelChoiceField, IntegerField
+from django.utils.translation import gettext_lazy as _
 
 from make_queue.fields import MachineTypeField
-from make_queue.models.models import Machine, ReservationRule
+from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
-from web.widgets import SemanticTimeInput, SemanticChoiceInput
+from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput
 
 
 class ReservationForm(forms.Form):
@@ -97,3 +99,27 @@ class RuleForm(forms.ModelForm):
             "end_time": SemanticTimeInput(),
             "machine_type": SemanticChoiceInput(),
         }
+
+
+class QuotaForm(forms.ModelForm):
+    class UserModelChoiceField(ModelChoiceField):
+        def label_from_instance(self, obj):
+            return f'{obj.get_full_name()} - {obj.username}'
+
+    user = UserModelChoiceField(queryset=User.objects.all(),
+                                widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
+                                required=False)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        user = cleaned_data["user"]
+        all_users = cleaned_data["all"]
+        if user is None and not all_users:
+            raise ValueError("User cannot be None when the quota is not for all users")
+        if user is not None and all_users:
+            raise ValueError("User cannot be set when the all users is set")
+        return cleaned_data
+
+    class Meta:
+        model = Quota
+        exclude = []

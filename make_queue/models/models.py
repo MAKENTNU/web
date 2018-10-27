@@ -71,8 +71,8 @@ class Quota(models.Model):
     number_of_reservations = models.IntegerField(default=3)
     diminishing = models.BooleanField(default=False)
     ignore_rules = models.BooleanField(default=False)
-    all = models.BooleanField(default=False)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    all = models.BooleanField(default=False, verbose_name=_("All users"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
     machine_type = MachineTypeField(null=True)
 
     class Meta:
@@ -83,9 +83,9 @@ class Quota(models.Model):
 
     def get_active_reservations(self, user):
         if self.diminishing:
-            return self.reservation_set
+            return self.reservation_set.all()
         reservation_set = self.reservation_set if not self.all else self.reservation_set.filter(user=user)
-        return reservation_set.filter(end_time__gte=timezone.now())
+        return reservation_set.all().filter(end_time__gte=timezone.now())
 
     def can_make_more_reservations(self, user):
         return self.number_of_reservations != self.get_active_reservations(user).count()
