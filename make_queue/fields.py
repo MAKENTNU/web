@@ -9,11 +9,12 @@ from web.widgets import SemanticSearchableChoiceInput
 
 class MachineType:
 
-    def __init__(self, id, name, cannot_use_text, can_user_use):
+    def __init__(self, id, name, cannot_use_text, can_user_use, has_stream):
         self.id = id
         self.name = name
         self.cannot_use_text = cannot_use_text
         self.can_user_use_func = can_user_use
+        self.has_stream = has_stream
 
     def can_user_use(self, user):
         return self.can_user_use_func(user)
@@ -30,13 +31,15 @@ class MachineTypeField(models.IntegerField):
             _("3D-printers"),
             _("You must have completed a 3D printer course to reserve the printers. If you "
               "have taken the course, but don't have access, contact 3dprint@makentnu.no"),
-            lambda user: user.is_authenticated and Printer3DCourse.objects.filter(user=user).exists()
+            lambda user: user.is_authenticated and Printer3DCourse.objects.filter(user=user).exists(),
+            True,
         ),
         MachineType(
             2,
             _("Sewing machines"),
             "",
-            lambda user: user.is_authenticated
+            lambda user: user.is_authenticated,
+            False,
         )
     )
 
