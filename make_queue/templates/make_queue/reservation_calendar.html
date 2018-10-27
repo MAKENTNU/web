@@ -145,7 +145,7 @@
         {# The calendar is sometimes loaded through AJAX, as such the Javascript cannot be loaded asynchronously #}
         $(".make_reservation_calendar_time_table_item").popup();
     </script>
-    {% if request.user.is_authenticated %}
+    {% if can_make_reservations %}
         {% include 'make_queue/js/calendar.html' %}
     {% endif %}
 {% endlocalize %}

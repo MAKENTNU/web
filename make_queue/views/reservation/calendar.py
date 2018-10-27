@@ -65,23 +65,25 @@ class ReservationCalendarComponentView(TemplateView):
 
         context = {'week_days': self.get_week_days_with_reservations(year, week, machine), "week": week, "year": year,
                    "machine": machine, "now": timezone.now(), "max_reservation_time": 1,
-                   "can_make_more_reservations": False, "can_ignore_rules": "false", "rules": [
-                {
-                    "periods": [
-                        [
-                            day + rule.start_time.hour / 24 + rule.start_time.minute / 1440,
-                            (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / 1440) % 7
-                        ]
-                        for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
-                    ],
-                    "max_hours": rule.max_hours,
-                    "max_hours_crossed": rule.max_inside_border_crossed,
-                } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)
-            ]}
+                   "can_make_reservations": False, "can_make_more_reservations": False, "can_ignore_rules": "false",
+                   "rules": [
+                       {
+                           "periods": [
+                               [
+                                   day + rule.start_time.hour / 24 + rule.start_time.minute / 1440,
+                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / 1440) % 7
+                               ]
+                               for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
+                           ],
+                           "max_hours": rule.max_hours,
+                           "max_hours_crossed": rule.max_inside_border_crossed,
+                       } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)
+                   ]}
 
         if self.request.user.is_authenticated:
             context["can_make_more_reservations"] = Quota.can_make_new_reservation(self.request.user,
                                                                                    machine.machine_type)
+            context["can_make_reservations"] = machine.machine_type.can_user_use(self.request.user)
             context["can_ignore_rules"] = str(any(
                 quota.can_make_more_reservations(self.request.user) for quota in
                 Quota.get_user_quotas(self.request.user, machine.machine_type).filter(ignore_rules=True))).lower()
