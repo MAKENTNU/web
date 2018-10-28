@@ -20,3 +20,7 @@ class SemanticSearchableChoiceInput(forms.Select):
             self.attrs["prompt_text"] = kwargs["prompt_text"]
         else:
             self.attrs["prompt_text"] = self.prompt_text
+
+
+class SemanticDateInput(forms.DateInput):
+    template_name = "web/forms/widgets/semantic_date.html"
