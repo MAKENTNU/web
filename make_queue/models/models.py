@@ -245,6 +245,9 @@ class ReservationRule(models.Model):
 
     @staticmethod
     def valid_time(start_time, end_time, machine_type):
+        # Normal non rule ignoring reservations will not be longer than 1 week
+        if timedelta_to_hours(end_time - start_time) > 168:
+            return False
         rules = [rule for rule in ReservationRule.objects.filter(machine_type=machine_type) if
                  rule.hours_inside(start_time, end_time)]
         if timedelta_to_hours(end_time - start_time) > max(rule.max_hours for rule in rules):
