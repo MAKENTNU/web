@@ -20,6 +20,19 @@ class MachineType:
         return self.can_user_use_func(user)
 
 
+def can_use_3d_printer(user):
+    if not user.is_authenticated:
+        return False
+    if Printer3DCourse.objects.filter(user=user).exists():
+        return True
+    if Printer3DCourse.objects.filter(username=user.username).exists():
+        course_registration = Printer3DCourse.objects.get(username=user.username)
+        course_registration.user = user
+        course_registration.save()
+        return True
+    return False
+
+
 class MachineTypeField(models.IntegerField):
     description = "A machine type"
     verbose_name = _("Select machine type")
@@ -31,7 +44,7 @@ class MachineTypeField(models.IntegerField):
             _("3D-printers"),
             _("You must have completed a 3D printer course to reserve the printers. If you "
               "have taken the course, but don't have access, contact 3dprint@makentnu.no"),
-            lambda user: user.is_authenticated and Printer3DCourse.objects.filter(user=user).exists(),
+            can_use_3d_printer,
             True,
         ),
         MachineType(
