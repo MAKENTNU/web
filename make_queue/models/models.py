@@ -150,7 +150,9 @@ class Reservation(models.Model):
         if not self.validate():
             raise ValidationError("Not a valid reservation")
 
-        self.quota = Quota.get_best_quota(self)
+        # Do not connect the reservation to a quota if it is not a personal reservation
+        if not (self.event or self.special):
+            self.quota = Quota.get_best_quota(self)
 
         super(Reservation, self).save(*args, **kwargs)
 
