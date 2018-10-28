@@ -5,9 +5,10 @@ from django.forms import ModelChoiceField, IntegerField
 from django.utils.translation import gettext_lazy as _
 
 from make_queue.fields import MachineTypeField
+from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
-from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput
+from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput
 
 
 class ReservationForm(forms.Form):
@@ -123,3 +124,18 @@ class QuotaForm(forms.ModelForm):
     class Meta:
         model = Quota
         exclude = []
+
+
+class Printer3DCourseForm(forms.ModelForm):
+    user = ModelChoiceField(queryset=User.objects.filter(printer3dcourse=None),
+                            widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
+                            required=False)
+    card_number = IntegerField(required=False)
+
+    class Meta:
+        model = Printer3DCourse
+        exclude = []
+        widgets = {
+            "status": SemanticChoiceInput(),
+            "date": SemanticDateInput(),
+        }

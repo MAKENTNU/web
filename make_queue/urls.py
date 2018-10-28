@@ -1,5 +1,4 @@
 from django.urls import include, path, register_converter, re_path
-from django.views.decorators.csrf import csrf_exempt
 
 from make_queue.views import api, admin, quota, reservation
 from . import converters
@@ -30,7 +29,11 @@ quota_url_patterns = [
 
 course_url_patterns = [
     path('download/', admin.course.CourseXLSXView.as_view(), name="download_course_registrations"),
-    path('', admin.course.CourseView.as_view(), name="course_panel")
+    path('create/', admin.course.CreateRegistrationView.as_view(), name="create_course_registration"),
+    path('create/success/', admin.course.CreateRegistrationView.as_view(is_next=True), name="create_course_registration_success"),
+    path('edit/<int:pk>/', admin.course.EditRegistrationView.as_view(), name="edit_course_registration"),
+    path('delete/<int:pk>/', admin.course.DeleteRegistrationView.as_view(), name="delete_course_registration"),
+    path('', admin.course.CourseView.as_view(), name="course_panel"),
 ]
 
 rules_url_patterns = [

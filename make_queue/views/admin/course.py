@@ -1,9 +1,12 @@
 import io
 import xlsxwriter
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse
-from django.views.generic import TemplateView, View
+from django.urls import reverse
+from django.views.generic import TemplateView, View, CreateView, UpdateView, DeleteView
 from django.db.models import Q
 
+from make_queue.forms import Printer3DCourseForm
 from make_queue.models.course import Printer3DCourse
 
 
@@ -17,6 +20,47 @@ class CourseView(TemplateView):
             "possible_statuses": Printer3DCourse.STATUS_CHOICES,
         })
         return context_data
+
+
+class CreateRegistrationView(PermissionRequiredMixin, CreateView):
+    is_next = False
+    model = Printer3DCourse
+    form_class = Printer3DCourseForm
+    template_name = "make_queue/course/registration_create.html"
+    permission_required = (
+        "make_queue.add_printer3dcourse",
+    )
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if self.is_next:
+            context_data["is_next"] = True
+        return context_data
+
+    def get_success_url(self):
+        return reverse("create_course_registration_success")
+
+
+class EditRegistrationView(PermissionRequiredMixin, UpdateView):
+    model = Printer3DCourse
+    form_class = Printer3DCourseForm
+    template_name = "make_queue/course/registration_edit.html"
+    permission_required = (
+        "make_queue.change_printer3dcourse",
+    )
+
+    def get_success_url(self):
+        return reverse("course_panel")
+
+
+class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
+    model = Printer3DCourse
+    permission_required = (
+        "make_queue.delete_printer3d_course",
+    )
+
+    def get_success_url(self):
+        return reverse("course_panel")
 
 
 class CourseXLSXView(View):

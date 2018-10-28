@@ -4,12 +4,17 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{% trans "Course registrations" %}</h1>
+        <h1>
+            {% trans "Course registrations" %}
+            <a href="{% url "create_course_registration" %}" data-tooltip="{% trans "Add" %}">
+                <i class="ui green plus icon"></i>
+            </a>
+        </h1>
 
         <form class="ui form" method="POST" action="download/">
             {% csrf_token %}
             <div class="ui fields">
-                <div class="ui nine wide field">
+                <div class="ui six wide field">
                     <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
                            name="search_text">
                 </div>
@@ -27,7 +32,7 @@
                     </div>
                 </div>
                 <button class="ui right floated yellow button">
-                    {% trans "Download selected" %}
+                    {% trans "Download displayed users" %}
                 </button>
             </div>
         </form>
@@ -40,9 +45,11 @@
         </div>
 
         <div>
-            {% trans "Displaying" %}
-            <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
-            {% trans "registrations" %}
+            <span>
+                {% trans "Displaying" %}
+                <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
+                {% trans "registrations" %}
+            </span>
         </div>
         <table class="ui very simple selectable celled table">
             <thead>
@@ -59,6 +66,14 @@
                 <tr>
                     <td data-value="{{ registration.name }}" class="name">
                         {{ registration.name }}
+                        <a href="{% url "edit_course_registration" registration.pk %}">
+                            <i class="ui yellow pencil icon"></i>
+                        </a>
+                        {% if perms.delete_printer3dcourse %}
+                            <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
+                                <i class="ui red trash icon"></i>
+                            </a>
+                        {% endif %}
                         {% if registration.user %}
                             <span data-tooltip="Connected to user">
                                 <i class="ui icon user"></i>
