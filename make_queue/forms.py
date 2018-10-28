@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
 from django.utils.translation import gettext_lazy as _
 
@@ -127,10 +128,13 @@ class QuotaForm(forms.ModelForm):
 
 
 class Printer3DCourseForm(forms.ModelForm):
-    user = ModelChoiceField(queryset=User.objects.filter(printer3dcourse=None),
-                            widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
-                            required=False)
     card_number = IntegerField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(**kwargs)
+        self.fields["user"] = ModelChoiceField(
+            queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
+            required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")))
 
     class Meta:
         model = Printer3DCourse
