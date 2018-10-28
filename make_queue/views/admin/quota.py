@@ -9,7 +9,7 @@ from make_queue.models.models import Quota
 
 class QuotaView(TemplateView):
     """View for the quota admin panel that allows users to control the quotas of people"""
-    template_name = "make_queue/quota_panel.html"
+    template_name = "make_queue/quota/quota_panel.html"
 
     def get_context_data(self, user=None, **kwargs):
         """
