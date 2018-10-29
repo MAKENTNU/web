@@ -28,12 +28,12 @@ quota_url_patterns = [
 ]
 
 course_url_patterns = [
-    path('download/', admin.course.CourseXLSXView.as_view(), name="download_course_registrations"),
-    path('create/', admin.course.CreateRegistrationView.as_view(), name="create_course_registration"),
-    path('create/success/', admin.course.CreateRegistrationView.as_view(is_next=True), name="create_course_registration_success"),
-    path('edit/<int:pk>/', admin.course.EditRegistrationView.as_view(), name="edit_course_registration"),
-    path('delete/<int:pk>/', admin.course.DeleteRegistrationView.as_view(), name="delete_course_registration"),
-    path('', admin.course.CourseView.as_view(), name="course_panel"),
+    path('download/', permission_required("make_queue.update_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
+    path('create/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
+    path('create/success/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
+    path('edit/<int:pk>/', permission_required("make_queue.update_printer3dcourse")(admin.course.EditRegistrationView.as_view()), name="edit_course_registration"),
+    path('delete/<int:pk>/', permission_required("make_queue.delete_printer3dcourse")(admin.course.DeleteRegistrationView.as_view()), name="delete_course_registration"),
+    path('', permission_required("make_queue.update_printer3dcourse")(admin.course.CourseView.as_view()), name="course_panel"),
 ]
 
 rules_url_patterns = [

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-29 08:39+0100\n"
+"POT-Creation-Date: 2018-10-29 12:32+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -219,7 +219,7 @@ msgstr ""
 msgid "Sewing machines"
 msgstr "Symaskiner"
 
-#: make_queue/forms.py:112 make_queue/forms.py:137
+#: make_queue/forms.py:112 make_queue/forms.py:135
 #: make_queue/templates/make_queue/quota/quota_panel.html:49
 msgid "Select user"
 msgstr "Velg bruker"
@@ -965,6 +965,10 @@ msgstr "Artikler og arrangementer"
 #: web/templates/web/admin_panel.html:16
 msgid "Quota"
 msgstr "Kvote"
+
+#: web/templates/web/admin_panel.html:22
+msgid "Course registration"
+msgstr "Kurs registreringer"
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
