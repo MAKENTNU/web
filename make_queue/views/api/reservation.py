@@ -6,10 +6,11 @@ from make_queue.models.models import Reservation, Quota, ReservationRule
 
 def get_machine_data(request, machine, reservation=None):
     return JsonResponse({
-        "reservations": [{"start_date": c_reservation.start_time, "end_date": c_reservation.end_time} for c_reservation in
-                         Reservation.objects.filter(end_time__gte=timezone.now()) if c_reservation != reservation],
+        "reservations": [{"start_date": c_reservation.start_time, "end_date": c_reservation.end_time} for c_reservation
+                         in Reservation.objects.filter(end_time__gte=timezone.now(), machine=machine)
+                         if c_reservation != reservation],
         "canIgnoreRules": any(quota.ignore_rules and quota.can_make_more_reservations(request.user) for quota in
-                               Quota.get_user_quotas(request.user, machine.machine_type)),
+                              Quota.get_user_quotas(request.user, machine.machine_type)),
         "rules": [
             {
                 "periods": [
