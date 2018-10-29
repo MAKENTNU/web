@@ -140,7 +140,7 @@ class Reservation(models.Model):
     event = models.ForeignKey(TimePlace, null=True, blank=True, on_delete=models.CASCADE)
     showed = models.NullBooleanField(default=None)
     special = models.BooleanField(default=False)
-    special_text = models.CharField(max_length=20)
+    special_text = models.CharField(max_length=64)
     reservation_future_limit_days = 28
     comment = models.TextField(max_length=2000, default="")
     machine = models.ForeignKey(Machine, on_delete=models.CASCADE)

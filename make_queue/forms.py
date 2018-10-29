@@ -128,13 +128,13 @@ class QuotaForm(forms.ModelForm):
 
 
 class Printer3DCourseForm(forms.ModelForm):
-    card_number = IntegerField(required=False)
-
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
             queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
-            required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")))
+            required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
+            label=Printer3DCourse._meta.get_field('user').verbose_name)
+        self.fields["card_number"].required = False
 
     class Meta:
         model = Printer3DCourse

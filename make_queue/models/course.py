@@ -10,9 +10,9 @@ class Printer3DCourse(models.Model):
                          ("access", _("Access granted")),
                      )
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    username = models.CharField(max_length=32)
-    date = models.DateField()
-    card_number = models.IntegerField(null=True)
-    name = models.CharField(max_length=256)
-    status = models.CharField(choices=STATUS_CHOICES, default="registered", max_length = 20)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
+    username = models.CharField(max_length=32, verbose_name=_("Username"))
+    date = models.DateField(verbose_name=_("Course date"))
+    card_number = models.IntegerField(null=True, verbose_name=_("Card number (EM)"))
+    name = models.CharField(max_length=256, verbose_name=_("Full name"))
+    status = models.CharField(choices=STATUS_CHOICES, default="registered", max_length=20, verbose_name=_("Status"))
