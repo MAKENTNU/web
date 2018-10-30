@@ -1,8 +1,8 @@
 from django.test import TestCase
 from mock import patch
 
-from make_queue.models import Printer3D, Reservation3D, Quota3D, QuotaSewing, SewingMachine, ReservationSewing, \
-    Reservation
+from make_queue.fields import MachineTypeField
+from make_queue.models.models import Machine, Quota, Reservation
 from django.contrib.auth.models import User, Permission
 from django.core.exceptions import ValidationError
 from django.utils import timezone
@@ -11,7 +11,7 @@ from datetime import timedelta, datetime
 from make_queue.util.time import local_to_date
 from news.models import Event, TimePlace
 
-
+"""
 class GeneralReservationTestCase(TestCase):
 
     def check_reservation_invalid(self, reservation, error_message):
@@ -36,10 +36,12 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),
                                                   start_time=(timezone.now() + timedelta(seconds=1)).time(),
                                                   event=event)
-        self.machine = Printer3D.objects.create(name="C1", location="Printer room", status="F")
+        self.machine_type = MachineTypeField.get_machine_type(1)
+        self.machine = Machine.objects.create(name="C1", location="Printer room", status="F",
+                                              machine_type=self.machine_type)
         self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
-        self.user_quota = Quota3D.objects.create(user=self.user, can_print=True, max_time_reservation=10,
-                                                 max_number_of_reservations=2)
+        self.user_quota = Quota.objects.create(user=self.user, can_print=True, ignore_rules=False,
+                                               max_number_of_reservations=2, machine_type=self.machine_type)
 
     def create_reservation(self, timedelta_start, timedelta_end, event=None, user=None, machine=None, special=False,
                            special_text=""):
@@ -354,3 +356,4 @@ class Reservation3DTestCase(GeneralReservationTestCase):
                                     event=None)
 
         self.check_reservation_invalid(reservation, "Users that cannot print, should not be able to reserve printer")
+"""

@@ -4,83 +4,44 @@ from django.test import TestCase
 from django.utils import timezone
 from django.contrib.auth.models import User
 
-from make_queue.models import Printer3D, SewingMachine, Machine, Reservation3D, Quota3D
+from make_queue.fields import MachineTypeField
+from make_queue.models.course import Printer3DCourse
+from make_queue.models.models import Machine, Quota, Reservation
 
 
 class TestGenericMachine(TestCase):
 
-    def test_get_subclass(self):
-        self.assertEquals(Machine.get_subclass(Printer3D.literal), Printer3D)
-        self.assertEquals(Machine.get_subclass(SewingMachine.literal), SewingMachine)
-        try:
-            Machine.get_subclass("")
-            self.fail("Getting a subclass that does not exist, should throw a StopIteration exception")
-        except StopIteration:
-            pass
-
     def test_status(self):
-        printer = Printer3D.objects.create(name="C1", location="Printer room", status="F", model="Ultimaker 2 Extended")
+        machine_type = MachineTypeField.get_machine_type(1)
+        printer = Machine.objects.create(name="C1", location="Printer room", status="F",
+                                         machine_model="Ultimaker 2 Extended", machine_type=machine_type)
         user = User.objects.create_user("test")
-        Quota3D.objects.create(user=user, can_print=True)
+        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
+        Quota.objects.create(machine_type=machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
         self.assertEquals(printer.get_status(), "F")
+        self.assertEquals(printer.get_status_display(), "Ledig")
         printer.status = "O"
         self.assertEquals(printer.get_status(), "O")
+        self.assertEquals(printer.get_status_display(), "I ustand")
         printer.status = "M"
         self.assertEquals(printer.get_status(), "M")
+        self.assertEquals(printer.get_status_display(), "Vedlikehold")
         printer.status = "R"
         self.assertEquals(printer.get_status(), "F")
+        self.assertEquals(printer.get_status_display(), "Ledig")
 
-        Reservation3D.objects.create(machine=printer, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=1), user=user)
+        Reservation.objects.create(machine=printer, start_time=timezone.now(),
+                                   end_time=timezone.now() + timedelta(hours=1), user=user)
 
         self.assertEquals(printer.get_status(), "R")
+        self.assertEquals(printer.get_status_display(), "Reservert")
         printer.status = "F"
         self.assertEquals(printer.get_status(), "R")
+        self.assertEquals(printer.get_status_display(), "Reservert")
         printer.status = "O"
         self.assertEquals(printer.get_status(), "O")
+        self.assertEquals(printer.get_status_display(), "I ustand")
         printer.status = "M"
         self.assertEquals(printer.get_status(), "M")
-
-    def test_get_status_display(self):
-        printer = Printer3D.objects.create(name="C1", location="Printer room", status="F", model="Ultimaker 2 Extended")
-        user = User.objects.create_user("test")
-        Quota3D.objects.create(user=user, can_print=True)
-
-        self.assertEquals(printer.get_status_display(), "Ledig")
-        printer.status = "O"
-        self.assertEquals(printer.get_status_display(), "I ustand")
-        printer.status = "M"
         self.assertEquals(printer.get_status_display(), "Vedlikehold")
-        printer.status = "R"
-        self.assertEquals(printer.get_status_display(), "Ledig")
-
-        Reservation3D.objects.create(machine=printer, start_time=timezone.now(),
-                                     end_time=timezone.now() + timedelta(hours=1), user=user)
-
-        self.assertEquals(printer.get_status_display(), "Reservert")
-        printer.status = "F"
-        self.assertEquals(printer.get_status_display(), "Reservert")
-        printer.status = "O"
-        self.assertEquals(printer.get_status_display(), "I ustand")
-        printer.status = "M"
-        self.assertEquals(printer.get_status_display(), "Vedlikehold")
-
-
-class Printer3DTest(TestCase):
-
-    def setUp(self):
-        self.printer = Printer3D.objects.create(name="C1", location="Printer room", status="F",
-                                                model="Ultimaker 2 Extended")
-
-    def test_to_string(self):
-        self.assertEqual(str(self.printer), "C1 - Ultimaker 2 Extended")
-
-
-class SewingTest(TestCase):
-
-    def setUp(self):
-        self.sewing = SewingMachine.objects.create(name="C1", location="Makerspace U1", status="F", model="Generic")
-
-    def test_to_string(self):
-        self.assertEqual(str(self.sewing), "C1 - Generic")

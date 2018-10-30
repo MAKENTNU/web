@@ -4,8 +4,11 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 import pytz
 import mock
+
+from make_queue.fields import MachineTypeField
+from make_queue.models.course import Printer3DCourse
 from make_queue.templatetags.reservation_extra import *
-from make_queue.models import Printer3D, Quota3D, Reservation3D
+from make_queue.models.models import Machine, Quota, Reservation
 
 
 class ReservationExtraTestCases(TestCase):
@@ -14,27 +17,27 @@ class ReservationExtraTestCases(TestCase):
         user = User.objects.create_user("user", "user@makentnu.no", "weak_pass")
         user.save()
 
-        Quota3D.objects.create(user=user, max_time_reservation=10, max_number_of_reservations=2, can_print=True)
-        printer = Printer3D.objects.create(name="U1", location="S1", model="Ultimaker", status="F")
+        machine_type_printer = MachineTypeField.get_machine_type(1)
+        Quota.objects.create(user=user, number_of_reservations=2, ignore_rules=True,
+                             machine_type=machine_type_printer)
+        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status="F",
+                                         machine_type=machine_type_printer)
+        Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
+                                       date=timezone.now())
 
-        reservation = Reservation3D.objects.create(user=user, machine=printer, event=None,
-                                                   start_time=pytz.timezone(
-                                                       timezone.get_default_timezone_name()).localize(
-                                                       timezone.datetime(2017, 12, 26, 17, 0)),
-                                                   end_time=pytz.timezone(
-                                                       timezone.get_default_timezone_name()).localize(
-                                                       timezone.datetime(2017, 12, 26, 19, 0)))
+        reservation = Reservation.objects.create(user=user, machine=printer, event=None,
+                                                 start_time=timezone.now(),
+                                                 end_time=timezone.now() + timedelta(hours=2))
 
         self.assertEqual(
-            reverse('reservation_calendar',
-                    kwargs={'year': 2017, 'week': 52, 'machine': printer}),
+            current_calendar_url(printer),
             calendar_url_reservation(reservation))
 
     @mock.patch('django.utils.timezone.now')
     def test_current_calendar_url(self, now_mock):
         date = timezone.datetime(2017, 12, 26, 12, 34, 0)
         now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
-        printer = Printer3D.objects.create(name="U1", location="S1", model="Ultimaker", status="F")
+        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status="F")
 
         self.assertEqual(reverse('reservation_calendar',
                                  kwargs={'year': 2017, 'week': 52, 'machine': printer}),
@@ -63,7 +66,7 @@ class ReservationExtraTestCases(TestCase):
         self.assertEqual(0, get_current_time_of_day())
 
         set_mock_value(13, 0)
-        self.assertEqual((13/24)*100, get_current_time_of_day())
+        self.assertEqual((13 / 24) * 100, get_current_time_of_day())
 
     def test_date_to_percentage(self):
         date = timezone.datetime(2017, 3, 5, 12, 0, 0)
@@ -73,10 +76,10 @@ class ReservationExtraTestCases(TestCase):
         self.assertEqual(0, date_to_percentage(date))
 
         date = timezone.datetime(2017, 3, 5, 17, 0, 0)
-        self.assertEqual((17/24)*100, date_to_percentage(date))
+        self.assertEqual((17 / 24) * 100, date_to_percentage(date))
 
         date = timezone.datetime(2017, 3, 5, 17, 25, 0)
-        self.assertEqual((17/24 + 25/1440)*100, date_to_percentage(date))
+        self.assertEqual((17 / 24 + 25 / 1440) * 100, date_to_percentage(date))
 
     def test_invert(self):
         self.assertEqual("true", invert(0))
