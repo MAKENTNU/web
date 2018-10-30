@@ -1,11 +1,11 @@
 .toplogo {
     position: absolute;
-    left: 50%;
-    right: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     max-width: 80%;
     max-height: 40%;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .top {
@@ -137,8 +137,7 @@
 }
 
 .articles .article-text p {
-    padding: 0 50px;
-    padding-bottom: 50px;
+    padding: 0 50px 50px;
 }
 
 .articles h2 {
