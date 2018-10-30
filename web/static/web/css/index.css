@@ -11,9 +11,10 @@
 .top {
     position: relative;
     z-index: -10;
-    width: 100vw;
+    width: 100%;
     height: calc(50vh - 120px);
-    transform: translate(0, -10px);
+    min-height: 150px;
+    max-height: 300px;
 }
 
 .topimg {
