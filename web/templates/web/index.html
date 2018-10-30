@@ -34,7 +34,7 @@
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
                     <div>
-                        <a href="{% url 'article' article.id %}"><h2>{{ article.title }}</h2></a>
+                        <h2><a href="{% url 'article' article.id %}">{{ article.title }}</a></h2>
                         <p>{{ article.clickbait }}</p>
                     </div>
                 </div>
