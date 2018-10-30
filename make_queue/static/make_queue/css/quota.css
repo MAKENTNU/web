@@ -10,6 +10,14 @@
     padding-left: 0.4em !important;
 }
 
+.permissions {
+    --sidebar-top-offset: 20px;
+
+    position: sticky;
+    position: -webkit-sticky; /* Safari */
+    top: var(--sidebar-top-offset);
+}
+
 .full_width {
     width: 100%;
 }
@@ -34,4 +42,17 @@
 
 .loading_submit {
     background-color: #FFA500 !important;
+}
+
+/* Scroll overflow of sidebar when screen is shorter than the sidebar's height + 20px (--sidebar-top-offset) */
+@media screen and (max-height: 720px) {
+    .permissions {
+        height: calc(100vh - var(--sidebar-top-offset));
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    .permissions > #quota_user {
+        margin-left: 0;
+    }
 }
