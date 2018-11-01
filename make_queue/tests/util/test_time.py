@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.utils.datetime_safe import datetime
 
 from make_queue.util.time import year_and_week_to_monday, is_valid_week, get_next_week, local_to_date, date_to_local, \
-    get_day_name
+    get_day_name, timedelta_to_hours
 
 
 class WeekUtilTest(TestCase):
@@ -29,6 +29,15 @@ class WeekUtilTest(TestCase):
     def test_get_next_valid_week_year_shift(self):
         self.assertEqual((2018, 1), get_next_week(2017, 52, 1))
         self.assertEqual((2016, 52), get_next_week(2017, 1, -1))
+
+
+class TimedeltaTest(TestCase):
+
+    def test_hour_conversion(self):
+        self.assertEqual(1, timedelta_to_hours(timezone.timedelta(hours=1)))
+        self.assertEqual(1.25, timedelta_to_hours(timezone.timedelta(minutes=75)))
+        self.assertEqual(0.05, timedelta_to_hours(timezone.timedelta(seconds=180)))
+        self.assertEqual(28.25, timedelta_to_hours(timezone.timedelta(days=1, hours=3, minutes=60, seconds=900)))
 
 
 class LocalizationTest(TestCase):
