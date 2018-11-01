@@ -3,15 +3,21 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+class UsernameField(models.CharField):
+
+    def get_prep_value(self, value):
+        return super().get_prep_value(value).lower()
+
+
 class Printer3DCourse(models.Model):
     STATUS_CHOICES = (
-                         ("registered", _("Registered")),
-                         ("sent", _("Sent to Byggsikring")),
-                         ("access", _("Access granted")),
-                     )
+        ("registered", _("Registered")),
+        ("sent", _("Sent to Byggsikring")),
+        ("access", _("Access granted")),
+    )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
-    username = models.CharField(max_length=32, verbose_name=_("Username"))
+    username = UsernameField(max_length=32, verbose_name=_("Username"))
     date = models.DateField(verbose_name=_("Course date"))
     card_number = models.IntegerField(null=True, verbose_name=_("Card number (EM)"))
     name = models.CharField(max_length=256, verbose_name=_("Full name"))
