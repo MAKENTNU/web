@@ -29,9 +29,7 @@ class ReservationExtraTestCases(TestCase):
                                                  start_time=timezone.now(),
                                                  end_time=timezone.now() + timedelta(hours=2))
 
-        self.assertEqual(
-            current_calendar_url(printer),
-            calendar_url_reservation(reservation))
+        self.assertEqual(current_calendar_url(printer), calendar_url_reservation(reservation))
 
     @mock.patch('django.utils.timezone.now')
     def test_current_calendar_url(self, now_mock):

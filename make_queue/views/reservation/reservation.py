@@ -28,8 +28,6 @@ class ReservationCreateOrChangeView(TemplateView):
         if not reservation.is_within_allowed_period_for_reservation() and not (
                 reservation.special or reservation.event):
             return "Reservasjoner kan bare lages {:} dager frem i tid".format(reservation.reservation_future_limit_days)
-        if reservation.has_reached_maximum_number_of_reservations():
-            return "Du har booket maksimalt antall reservasjoner for denne tidsperioden, prøv et annet tidspunkt"
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
         return "Tidspunktet er ikke lengre tilgjengelig"
@@ -65,7 +63,8 @@ class ReservationCreateOrChangeView(TemplateView):
                 Q(end_date__gt=timezone.now().date()))),
             "machine_types": [
                 {"literal": machine_type.name, "instances": Machine.objects.filter(machine_type=machine_type)}
-                for machine_type in MachineTypeField.possible_machine_types if True
+                for machine_type in MachineTypeField.possible_machine_types if
+                machine_type.can_user_use(self.request.user)
             ],
             "maximum_days_in_advance": Reservation.reservation_future_limit_days
         }
@@ -80,7 +79,6 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["event"] = reservation.event
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
-            # context_data["quota"] = reservation.get_quota()
             context_data["comment"] = reservation.comment
             context_data["can_change_start_time"] = reservation.can_change(self.request.user)
         # Otherwise populate with default information given to the view
@@ -89,7 +87,6 @@ class ReservationCreateOrChangeView(TemplateView):
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
             context_data["can_change_start_time"] = True
-            # context_data["quota"] = Quota.get_quota_by_machine(kwargs["machine"].literal, self.request.user)
 
         return context_data
 
@@ -183,7 +180,8 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
-        if not kwargs["reservation"].can_change(request.user) and not kwargs["reservation"].can_change_end_time(request.user):
+        if not kwargs["reservation"].can_change(request.user) and not kwargs["reservation"].can_change_end_time(
+                request.user):
             return redirect("my_reservations")
         return super().dispatch(request, *args, **kwargs)
 
