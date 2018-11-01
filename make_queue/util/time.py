@@ -74,4 +74,6 @@ def timedelta_to_hours(timedelta_obj):
 
 def get_day_name(day_no, locale):
     translation.activate(locale)
-    return ugettext(day_name[day_no])
+    locale_day_name = ugettext(day_name[day_no])
+    translation.deactivate()
+    return locale_day_name

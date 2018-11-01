@@ -3,7 +3,8 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
 
-from make_queue.util.time import year_and_week_to_monday, is_valid_week, get_next_week, local_to_date, date_to_local
+from make_queue.util.time import year_and_week_to_monday, is_valid_week, get_next_week, local_to_date, date_to_local, \
+    get_day_name
 
 
 class WeekUtilTest(TestCase):
@@ -44,3 +45,11 @@ class LocalizationTest(TestCase):
                          date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))).date())
         self.assertEqual(datetime(2018, 3, 12, 11, 20, 20).time(),
                          date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))).time())
+
+    def test_get_day_name(self):
+        english_day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        norwegian_day_names = ["Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"]
+
+        for day_number in range(7):
+            self.assertEqual(get_day_name(day_number, "no"), norwegian_day_names[day_number])
+            self.assertEqual(get_day_name(day_number, "en"), english_day_names[day_number])
