@@ -9,9 +9,11 @@ from mock import patch
 
 from make_queue.fields import MachineTypeField
 from make_queue.forms import ReservationForm
+from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, Quota, Reservation
-from make_queue.tests.utility import request_with_user, post_request_with_user
+from make_queue.tests.utility import request_with_user, post_request_with_user, template_view_get_context_data
 from make_queue.util.time import date_to_local, local_to_date
+from make_queue.views.admin.reservation import AdminReservationView
 from make_queue.views.reservation.reservation import ReservationCreateOrChangeView, MakeReservationView, \
     ChangeReservationView
 from news.models import Event, TimePlace
@@ -305,3 +307,33 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(Reservation.objects.count(), 1)
         self.assertTrue(response.status_code, 302)
         self.assertEqual(Reservation.objects.first().special_text, "Test2")
+
+
+class ReservationAdminViewTest(TestCase):
+
+    def test_get_admin_reservation(self):
+        user = User.objects.create_user("test")
+        machine_type = MachineTypeField.get_machine_type(1)
+        Quota.objects.create(machine_type=machine_type, number_of_reservations=10, ignore_rules=True, user=user)
+        permission = Permission.objects.get(codename="can_create_event_reservation")
+        user.user_permissions.add(permission)
+        event = Event.objects.create(title="Test_event")
+        timeplace = TimePlace.objects.create(event=event, start_time=(timezone.now() + timedelta(hours=1)).time(),
+                                             start_date=(timezone.now() + timedelta(hours=1)).date(),
+                                             end_time=(timezone.now() + timedelta(hours=2)).time(),
+                                             end_date=(timezone.now() + timedelta(hours=2)).date())
+        printer = Machine.objects.create(machine_type=machine_type, machine_model="Ultimaker")
+        Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
+                                       date=timezone.now())
+        special_reservation = Reservation.objects.create(start_time=timezone.now() + timedelta(hours=1),
+                                                         special_text="Test", special=True, user=user,
+                                                         machine=printer, end_time=timezone.now() + timedelta(hours=2))
+        normal_reservation = Reservation.objects.create(start_time=timezone.now() + timedelta(hours=2), user=user,
+                                                        machine=printer, end_time=timezone.now() + timedelta(hours=3))
+        event_reservation = Reservation.objects.create(start_time=timezone.now() + timedelta(hours=3), event=timeplace,
+                                                       user=user, machine=printer,
+                                                       end_time=timezone.now() + timedelta(hours=4))
+
+        context_data = template_view_get_context_data(AdminReservationView, request_user=user)
+        self.assertEqual(context_data["admin"], True)
+        self.assertEqual(list(context_data["reservations"]), [special_reservation, event_reservation])
