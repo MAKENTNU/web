@@ -196,6 +196,7 @@ $("#end_time").calendar({
     ampm: false,
     firstDayOfWeek: 1,
     startCalendar: $("#start_time"),
+    minDate: new Date(),
 });
 
 $('.ui.dropdown').dropdown();

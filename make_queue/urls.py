@@ -53,6 +53,7 @@ urlpatterns = [
     path('me/', login_required(reservation.overview.MyReservationsView.as_view()), name="my_reservations"),
     path('admin/', permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.AdminReservationView.as_view()), name="admin_reservation"),
     path('delete/', login_required(reservation.reservation.DeleteReservationView.as_view()), name="delete_reservation"),
+    path('finish/', login_required(reservation.reservation.MarkReservationAsDone.as_view()), name="mark_reservation_done"),
     path('change/<reservation:reservation>/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
     path('rules/', include(rules_url_patterns)),
     path('json/', include(json_urlpatterns)),

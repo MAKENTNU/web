@@ -7,6 +7,6 @@ $("#hide_old_reservations").checkbox({
     }
 });
 
-$(".reservation_calendar_delete").click(function () {
+$(".reservation_calendar_delete, .reservation_mark_done").click(function () {
     $(this).children("form").submit();
 });

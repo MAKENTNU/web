@@ -7,15 +7,15 @@ from make_queue.models.models import Machine, Reservation
 
 
 class MachineType:
-    regex = "(" + "|".join(machine_type.name.replace("-", "\-") for machine_type in MachineTypeField.possible_machine_types) + ")"
+    regex = "([0-9]+)"
 
     def to_python(self, value):
-        return [machine_type for machine_type in MachineTypeField.possible_machine_types if machine_type.name == value]
+        return MachineTypeField.get_machine_type(int(value))
 
     def to_url(self, machine_type):
         if type(machine_type) is list and machine_type:
-            return machine_type[0].name
-        return machine_type.name
+            return machine_type[0].id
+        return machine_type.id
 
 
 class SpecificMachine:

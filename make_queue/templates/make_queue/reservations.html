@@ -95,19 +95,30 @@
                     </td>
                     <td>
                         {% can_delete_reservation reservation user as can_delete %}
-                        {% if can_delete %}
+                        {% can_mark_reservation_as_finished reservation as can_mark_finished %}
+                        {% if can_mark_finished %}
+                            <form method="post" action="{% url 'mark_reservation_done' %}">
+                                {% csrf_token %}
+                                <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
+                                <input type="submit" class="ui button green" value="{% trans "Mark as done" %}"/>
+                                {% if admin %}
+                                    <input type="text" name="next" class="make_hidden"
+                                           value="{% url 'admin_reservation' %}"/>
+                                {% endif %}
+                            </form>
+                        {% elif can_delete %}
                             <form method="post" action="{% url 'delete_reservation' %}">
                                 {% csrf_token %}
                                 <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
-                                <input type="text" name="machine_type" class="make_hidden"
-                                       value="{{ reservation.machine.literal }}"/>
-                                <input type="submit" class="ui button red" value="{% trans "Cancel" context "cancel reservation" %}">
+                                <input type="submit" class="ui button red"
+                                       value="{% trans "Cancel" context "cancel reservation" %}">
                                 {% if admin %}
                                     <input type="text" name="next" class="make_hidden"
                                            value="{% url 'admin_reservation' %}"/>
                                 {% endif %}
                             </form>
                         {% endif %}
+
                     </td>
                 </tr>
             {% endfor %}
@@ -120,7 +131,8 @@
                         <div class="header">{{ reservation.machine.name }}</div>
                         <div class="meta">
                             {{ reservation.machine.model }}<br/>
-                            <a class="make_my_reservation_blue_link" href="{{ reservation.machine.location_url }}" target="_blank">
+                            <a class="make_my_reservation_blue_link" href="{{ reservation.machine.location_url }}"
+                               target="_blank">
                                 <i class="location arrow icon"></i>{{ reservation.machine.location }}
                             </a>
                         </div>
@@ -133,36 +145,46 @@
                             <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
                         {% endif %}
                     </div>
-                    {% if reservation.can_delete %}
-                        <div class="ui three bottom attached buttons">
-                            <a class="ui primary button make_my_reservation_button_pad"
-                               href="{% calendar_url_reservation reservation %}">
-                                {% trans "Calendar" %}
-                            </a>
+                    <div class="ui bottom attached buttons">
+                        <a class="ui primary button make_my_reservation_button_pad"
+                           href="{% calendar_url_reservation reservation %}">
+                            {% trans "Calendar" %}
+                        </a>
+                        {% can_change_reservation reservation user as can_change %}
+                        {% if can_change %}
                             <a class="ui make_bg_yellow button make_my_reservation_button_pad"
                                href="{% url 'change_reservation' reservation=reservation %}">
                                 {% trans "Change" %}
                             </a>
-                            <div class="ui button red reservation_calendar_delete">
-                                {% trans "Cancel" context "cancel reservation" %}
-                                <form method="post" action="{% url 'delete_reservation' %}">
+                        {% endif %}
+                        {% can_mark_reservation_as_finished reservation as can_mark_finished %}
+                        {% can_delete_reservation reservation user as can_delete %}
+                        {% if can_mark_finished %}
+                            <div class="ui green button reservation_mark_done">
+                                {% trans "Done" %}
+                                <form method="post" action="{% url 'mark_reservation_done' %}">
                                     {% csrf_token %}
-                                    <input type="number" name="pk" class="make_hidden"
-                                           value="{{ reservation.pk }}"/>
-                                    <input type="text" name="machine_type" class="make_hidden"
-                                           value="{{ reservation.machine.literal }}"/>
+                                    <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
                                     {% if admin %}
                                         <input type="text" name="next" class="make_hidden"
                                                value="{% url 'admin_reservation' %}"/>
                                     {% endif %}
                                 </form>
                             </div>
-                        </div>
-                    {% else %}
-                        <a class="ui blue bottom attached button" href="{% calendar_url_reservation reservation %}">
-                            {% trans "Calendar" %}
-                        </a>
-                    {% endif %}
+                        {% elif can_delete %}
+                            <div class="ui button red reservation_calendar_delete">
+                                {% trans "Cancel" context "cancel reservation" %}
+                                <form method="post" action="{% url 'delete_reservation' %}">
+                                    {% csrf_token %}
+                                    <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
+                                    {% if admin %}
+                                        <input type="text" name="next" class="make_hidden"
+                                               value="{% url 'admin_reservation' %}"/>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
             {% endfor %}
         </div>

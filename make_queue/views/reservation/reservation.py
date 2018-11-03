@@ -1,14 +1,13 @@
 from abc import ABCMeta
-
 from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import RedirectView, TemplateView
 
 from make_queue.fields import MachineTypeField
 from make_queue.forms import ReservationForm
-from make_queue.models.models import Quota, Machine, Reservation
+from make_queue.models.models import Machine, Reservation
 from make_queue.templatetags.reservation_extra import calendar_url_reservation
 from news.models import TimePlace
 
@@ -207,3 +206,28 @@ class ChangeReservationView(ReservationCreateOrChangeView):
             reservation.special_text = form.cleaned_data["special_text"]
 
         return self.validate_and_save(reservation, form)
+
+
+class MarkReservationAsDone(RedirectView):
+    url = reverse_lazy("my_reservations")
+
+    def get_redirect_url(self, *args, next_url=None, **kwargs):
+        if next_url is not None:
+            return next_url
+        return super().get_redirect_url(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        pk = request.POST.get("pk", default=0)
+        reservations = Reservation.objects.filter(pk=pk)
+        if not reservations.exists():
+            return self.get(request, *args, **kwargs)
+
+        reservation = reservations.first()
+        if not reservation.can_change_end_time(request.user) or reservation.start_time >= timezone.now():
+            return self.get(request, *args, **kwargs)
+
+        reservation.end_time = timezone.now()
+        reservation.save()
+
+        return self.get(request, *args, **kwargs)
+

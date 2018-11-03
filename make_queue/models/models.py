@@ -179,10 +179,14 @@ class Reservation(models.Model):
             return False
 
         # Check if the user can change the reservation
-        if self.pk and not self.can_change(self.user) and not (
-                self.can_change_end_time(self.user) and Reservation.objects.get(
-                pk=self.pk).start_time == self.start_time):
-            return False
+        if self.pk:
+            old_reservation = Reservation.objects.get(pk=self.pk)
+            can_change = self.can_change(self.user)
+            can_change_end_time = old_reservation.can_change_end_time(self.user)
+            valid_end_time_change = old_reservation.start_time == self.start_time and \
+                                    self.end_time >= timezone.now() - timedelta(minutes=5)
+            if not can_change and not (can_change_end_time and valid_end_time_change):
+                return False
 
         if not self.pk and self.start_time < timezone.now() - timedelta(minutes=5):
             return False
@@ -212,15 +216,6 @@ class Reservation(models.Model):
         permissions = (
             ("can_view_reservation_user", "Can view reservation user"),
         )
-
-    @classmethod
-    def get_reservation(cls, machine_type, pk):
-        return cls.get_reservation_type(machine_type).objects.filter(pk=pk).first()
-
-    @classmethod
-    def get_reservation_type(cls, machine_type):
-        return next(filter(lambda res: res.machine.field.target_field.model.literal == machine_type,
-                           Reservation.__subclasses__()))
 
     def __str__(self):
         return "{:} har reservert {:} fra {:} til {:}".format(self.user.get_full_name(), self.machine.name,
