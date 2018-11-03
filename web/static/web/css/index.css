@@ -1,19 +1,20 @@
 .toplogo {
     position: absolute;
-    left: 50%;
-    right: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
     max-width: 80%;
     max-height: 40%;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .top {
     position: relative;
     z-index: -10;
-    width: 100vw;
+    width: 100%;
     height: calc(50vh - 120px);
-    transform: translate(0, -10px);
+    min-height: 150px;
+    max-height: 300px;
 }
 
 .topimg {
@@ -34,7 +35,7 @@
     cursor: pointer;
 }
 
-.article-text h2, .events .header a {
+.article-text h2 a, .events .header a {
     color: rgb(248, 200, 17);
     text-transform: uppercase;
     font-size: 32px;
@@ -136,8 +137,7 @@
 }
 
 .articles .article-text p {
-    padding: 0 50px;
-    padding-bottom: 50px;
+    padding: 0 50px 50px;
 }
 
 .articles h2 {

@@ -3,6 +3,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.decorators import permission_required
 from django.views.decorators.cache import never_cache
 from django.views.i18n import JavaScriptCatalog
+from django.views.generic import TemplateView
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.generic.base import RedirectView
@@ -18,6 +19,7 @@ extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
+    path('robots.txt', TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
 ]
 
 urlpatterns += i18n_patterns(
