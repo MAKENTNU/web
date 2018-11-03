@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-03 14:40+0100\n"
+"POT-Creation-Date: 2018-11-03 15:36+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -463,8 +463,8 @@ msgstr "Reserver"
 
 #: make_queue/templates/make_queue/make_reservation.html:164
 #: make_queue/templates/make_queue/reservations.html:43
-#: make_queue/templates/make_queue/reservations.html:91
-#: make_queue/templates/make_queue/reservations.html:157
+#: make_queue/templates/make_queue/reservations.html:93
+#: make_queue/templates/make_queue/reservations.html:161
 #: news/templates/news/admin.html:182
 msgid "Change"
 msgstr "Endre"
@@ -609,24 +609,28 @@ msgid "Information"
 msgstr "Informasjon"
 
 #: make_queue/templates/make_queue/reservations.html:44
-#: make_queue/templates/make_queue/reservations.html:114
-#: make_queue/templates/make_queue/reservations.html:176
+#: make_queue/templates/make_queue/reservations.html:116
+#: make_queue/templates/make_queue/reservations.html:180
 msgctxt "cancel reservation"
 msgid "Cancel"
 msgstr "Kanseller"
 
-#: make_queue/templates/make_queue/reservations.html:82
-#: make_queue/templates/make_queue/reservations.html:151
+#: make_queue/templates/make_queue/reservations.html:84
+#: make_queue/templates/make_queue/reservations.html:155
 msgid "Calendar"
 msgstr "Kalender"
 
-#: make_queue/templates/make_queue/reservations.html:103
+#: make_queue/templates/make_queue/reservations.html:105
 msgid "Mark as done"
 msgstr "Marker som ferdig"
 
-#: make_queue/templates/make_queue/reservations.html:164
+#: make_queue/templates/make_queue/reservations.html:168
 msgid "Done"
 msgstr "Ferdig"
+
+#: make_queue/templates/make_queue/rule_create.html:4
+msgid "New rule"
+msgstr "Ny regel"
 
 #: make_queue/templates/make_queue/rule_edit.html:16
 msgid "Rule"
