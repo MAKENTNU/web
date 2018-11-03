@@ -110,6 +110,7 @@ class QuotaForm(forms.ModelForm):
 
     user = UserModelChoiceField(queryset=User.objects.all(),
                                 widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
+                                label=_("User"),
                                 required=False)
 
     def clean(self):

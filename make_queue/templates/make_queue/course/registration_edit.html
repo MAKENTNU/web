@@ -81,6 +81,9 @@
                 ;
             })
         ;
+        $(".clear-dropdown").click(function() {
+            $(this).closest("div.ui.field").find("div.dropdown").dropdown("clear");
+        });
     </script>
 
 {% endblock %}

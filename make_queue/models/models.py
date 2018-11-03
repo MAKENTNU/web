@@ -68,12 +68,12 @@ class MachineUsageRule(models.Model):
 
 
 class Quota(models.Model):
-    number_of_reservations = models.IntegerField(default=3)
-    diminishing = models.BooleanField(default=False)
-    ignore_rules = models.BooleanField(default=False)
+    number_of_reservations = models.IntegerField(default=3, verbose_name=_("Number of reservations"))
+    diminishing = models.BooleanField(default=False, verbose_name=_("Diminishing"))
+    ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
     all = models.BooleanField(default=False, verbose_name=_("All users"))
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
-    machine_type = MachineTypeField(null=True)
+    machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
 
     class Meta:
         permissions = (
