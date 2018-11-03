@@ -1,7 +1,6 @@
 $("#hide_old_reservations").checkbox({
     onChange: function () {
-        $("tr").filter(function () {
-            console.log();
+        $("tr, .card").filter(function () {
             return $(this).data("is-future-reservation") === "False";
         }).toggleClass("make_hidden", $(this).is(":checked"))
     }

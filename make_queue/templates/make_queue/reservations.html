@@ -24,7 +24,7 @@
             <div class="make_right_floated make_row_fill">
                 <div class="field">
                     <div class="ui checkbox" id="hide_old_reservations">
-                        <input type="checkbox" class="hidden"/>
+                        <input type="checkbox" class="hidden" checked/>
                         <label>{% trans "Hide previous reservations" %}</label>
                     </div>
                 </div>
@@ -46,7 +46,9 @@
             </thead>
             <tbody>
             {% for reservation in reservations %}
-                <tr class="make_my_reservation_desktop" data-is-future-reservation="{{ reservation.can_delete }}">
+                {% is_future_reservation reservation as future_reservation %}
+                <tr class="make_my_reservation_desktop {% if not future_reservation %}make_hidden{% endif %}"
+                    data-is-future-reservation="{{ future_reservation }}">
                     <td>
                         <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
@@ -126,7 +128,9 @@
         </table>
         <div class="ui cards make_my_reservation_cards_padding make_my_reservation_tablet">
             {% for reservation in reservations %}
-                <div class="card">
+                {% is_future_reservation reservation as future_reservation %}
+                <div class="card {% if not future_reservation %}make_hidden{% endif %}"
+                     data-is-future-reservation="{{ future_reservation }}">
                     <div class="content">
                         <div class="header">{{ reservation.machine.name }}</div>
                         <div class="meta">
