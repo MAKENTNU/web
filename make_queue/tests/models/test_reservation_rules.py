@@ -107,6 +107,16 @@ class ReservationRuleTests(TestCase):
         except ValidationError:
             pass
 
+        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(12, 0), days_changed=7,
+                               start_days=1, max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
+
+        self.assertFalse(rule.is_valid_rule(), "A rule cannot cover more than a week")
+        try:
+            rule.is_valid_rule(raise_error=True)
+            self.fail("An exception should have been raised for a check on a non valid rule with raise_error set")
+        except ValidationError:
+            pass
+
     def test_is_valid_rule_external(self):
         ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
                         start_days=53, max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0).save()

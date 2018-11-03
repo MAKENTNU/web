@@ -278,7 +278,8 @@ class ReservationRule(models.Model):
 
     def is_valid_rule(self, raise_error=False):
         # Check if the time period is a valid time period (within a week)
-        if self.start_time > self.end_time and not self.days_changed or self.days_changed > 7:
+        if self.start_time > self.end_time and not self.days_changed or self.days_changed > 7 or \
+                self.days_changed == 7 and self.start_time < self.end_time:
             if raise_error:
                 raise ValidationError("Period is either too long (7+ days) or start time is earlier than end time.")
             return False
