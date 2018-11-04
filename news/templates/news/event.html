@@ -37,6 +37,10 @@
                                 </p>
                             {% endif %}
                         {% endif %}
+
+			<a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
+			    <i class="ui large calendar outline icon"></i>
+			</a>
                     </div>
                     {% if not event.event.multiday %}
                         {% if event.hoopla %}
@@ -105,17 +109,24 @@
                             </p>
                         {% endif %}
                     {% endif %}
-                    {% if not event.event.multiday %}
-                        {% if event.hoopla %}
-                            <a class="ui yellow button attend" href="{{ event.hoopla }}" target="_blank">
-                                {% trans "Registration" %}
-                            </a>
-                        {% else %}
-                            <p class="make_col_ligray attend">
-                                <i>{% trans "No registrations" %}</i>
-                            </p>
-                        {% endif %}
-                    {% endif %}
+
+		    <div class="attend">
+			<a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
+			    <i class="ui large calendar outline icon"></i>
+			</a>
+
+			{% if not event.event.multiday %}
+			    {% if event.hoopla %}
+				<a class="ui yellow button" href="{{ event.hoopla }}" target="_blank">
+				    {% trans "Registration" %}
+				</a>
+			    {% else %}
+				<p class="make_col_ligray">
+				    <i>{% trans "No registrations" %}</i>
+				</p>
+			    {% endif %}
+			{% endif %}
+		    </div>
                 </div>
             </div>
         {% endfor %}

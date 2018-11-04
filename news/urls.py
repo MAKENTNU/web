@@ -6,6 +6,8 @@ from news.views import EditArticleView, CreateArticleView, EditEventView, Create
     DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView
 
+from news.ical import SingleTimePlaceFeed
+
 urlpatterns = [
     path('admin/', login_required(AdminView.as_view()), name='admin'),
     path('admin/toggle/article/', login_required(AdminArticleToggleView.as_view()), name='article-toggle'),
@@ -27,4 +29,5 @@ urlpatterns = [
          name='timeplace-duplicate'),
     path('timeplace/<int:pk>/new/', login_required(NewTimePlaceView.as_view()), name='timeplace-new'),
     path('timeplace/<int:pk>/delete/', login_required(DeleteTimePlaceView.as_view()), name='timeplace-delete'),
+    path('timeplace/<int:pk>/ical/', SingleTimePlaceFeed(), name='timeplace-ical'),
 ]

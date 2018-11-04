@@ -8,3 +8,4 @@ social-auth-app-django
 sorl-thumbnail
 channels
 channels_redis
+django_ical
