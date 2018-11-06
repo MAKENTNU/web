@@ -40,7 +40,7 @@ if (allowed) {
         $("<div>").addClass("header").html(gettext("New reservation")).appendTo(container);
         $("<div>").html(date).appendTo(container);
         $("<div>").html(startTime + " - " + endTime).appendTo(container);
-        let form = $("<form>").attr("method", "POST").attr("action", langPrefix + "/reservation/make/" + machine.type + "/" + machine.pk + "/").addClass("ui form").appendTo(container);
+        let form = $("<form>").attr("method", "POST").attr("action", langPrefix + "/reservation/make/" + machine.pk + "/").addClass("ui form").appendTo(container);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
         $("<input>").addClass("make_hidden").val(date + " " + startTime).attr("name", "start_time").appendTo(form);
         $("<input>").addClass("make_hidden").val(date + " " + endTime).attr("name", "end_time").appendTo(form);
