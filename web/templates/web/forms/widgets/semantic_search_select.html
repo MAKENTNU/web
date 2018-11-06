@@ -1,0 +1,27 @@
+<div class="ui search selection dropdown">
+    <input type="hidden" name="{{ widget.name }}" id="{{ widget.name }}"
+            {% for group_name, group_choices, group_index in widget.optgroups %}
+                {% for option in group_choices %}
+                    {% if option.selected %}
+                        value="{{ option.value }}"
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+    >
+    <i class="ui dropdown icon"></i>
+    <div class="default text">{{ widget.attrs.prompt_text }}</div>
+    <div class="menu">
+        {% for group_name, group_choices, group_index in widget.optgroups %}
+            {% for option in group_choices %}
+                {% if option.value %}
+                    <div class="item" data-value="{{ option.value }}">
+                        {{ option.label }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<script>
+    $("#{{ widget.name }}").parent().dropdown({fullTextSearch: true});
+</script>

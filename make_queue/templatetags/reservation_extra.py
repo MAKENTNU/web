@@ -2,7 +2,8 @@ from django import template
 from django.utils import timezone
 from django.urls import reverse
 
-from make_queue.util.time import date_to_local
+from make_queue.util.time import date_to_local, get_day_name
+from urllib.parse import quote
 
 register = template.Library()
 
@@ -11,7 +12,7 @@ register = template.Library()
 def calendar_url_reservation(reservation):
     return reverse('reservation_calendar',
                    kwargs={'year': reservation.start_time.year, 'week': reservation.start_time.isocalendar()[1],
-                           'machine': reservation.get_machine()})
+                           'machine': reservation.machine})
 
 
 @register.simple_tag()
@@ -69,9 +70,56 @@ def can_use_machine(machine, user):
 
 @register.simple_tag()
 def get_machine_cannot_use_text(machine):
-    return machine.cannot_use_text
+    return machine.machine_type.cannot_use_text
 
 
 @register.simple_tag()
 def invert(expression):
     return ["false", "true"][not expression]
+
+
+@register.simple_tag()
+def rule_period_start_text(period, locale):
+    return get_day_name(int(period.start_time // 1), locale) + " " + period.rule.start_time.strftime("%H:%M")
+
+
+@register.simple_tag()
+def rule_period_end_text(period, locale):
+    return get_day_name(int(period.end_time // 1) % 7, locale) + " " + period.rule.end_time.strftime("%H:%M")
+
+
+@register.simple_tag()
+def can_change_reservation(reservation, user):
+    return reservation.can_change(user) or reservation.can_change_end_time(user)
+
+
+@register.simple_tag()
+def can_change_reservation_end_time(reservation, user):
+    return reservation.can_change_end_time(user)
+
+
+@register.simple_tag()
+def can_delete_reservation(reservation, user):
+    return reservation.can_delete(user)
+
+
+@register.simple_tag()
+def can_mark_reservation_as_finished(reservation):
+    return reservation.start_time < timezone.now() < reservation.end_time
+
+
+@register.simple_tag()
+def is_future_reservation(reservation):
+    return reservation.end_time >= timezone.now()
+
+
+@register.simple_tag()
+def sanitize_stream_name(machine):
+    values = (
+        (" ", "-"),
+        ("ö", "o"),
+    )
+    name = machine.name
+    for original, new in values:
+        name = name.replace(original, new)
+    return name

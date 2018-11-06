@@ -1,0 +1,89 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block head %}
+    {{ block.super }}
+    <style>
+        .clear-dropdown {
+            color: #0E6EB8;
+            float: right;
+        }
+
+        .clear-dropdown:hover {
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>
+            {% block form_title %}
+                {% trans "Edit course registration" %}
+            {% endblock %}
+        </h1>
+
+        {% block messages %}
+        {% endblock %}
+
+
+        <form class="ui form" action="{% block form_action %}{% endblock %}" method="post">
+            {% csrf_token %}
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.username.label }}</label>
+                    {{ form.username }}
+                </div>
+                <div class="ui field">
+                    <label>
+                        {{ form.user.label }}
+                        <span class="clear-dropdown">{% trans "Clear selection" %}</span>
+                    </label>
+                    {{ form.user }}
+                </div>
+            </div>
+            <div class="ui four fields">
+                <div class="ui field">
+                    <label>{{ form.name.label }}</label>
+                    {{ form.name }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.card_number.label }}</label>
+                    {{ form.card_number }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.date.label }}</label>
+                    {{ form.date }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.status.label }}</label>
+                    {{ form.status }}
+                </div>
+            </div>
+            <button class="ui right floated yellow button">
+                {% block submit_button %}
+                    {% trans "Submit" context "edit" %}
+                {% endblock %}
+            </button>
+            <a href="{% url "course_panel" %}" class="ui right floated yellow button">
+                {% trans "Cancel" %}
+            </a>
+        </form>
+    </div>
+
+    <script>
+        $('.message .close')
+            .on('click', function () {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                ;
+            })
+        ;
+        $(".clear-dropdown").click(function() {
+            $(this).closest("div.ui.field").find("div.dropdown").dropdown("clear");
+        });
+    </script>
+
+{% endblock %}

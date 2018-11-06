@@ -3,15 +3,18 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
+from make_queue.fields import MachineTypeField
 from make_queue.forms import ReservationForm
-from make_queue.models import Printer3D, SewingMachine
+from make_queue.models.models import Machine
 from news.models import Event, TimePlace
 
 
 class ReservationFormTest(TestCase):
 
     def setUp(self):
-        self.machine = Printer3D.objects.create(name="Test", model="Ultimaker 2+")
+        machine_type_printer = MachineTypeField.get_machine_type(1)
+        self.machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+",
+                                              machine_type=machine_type_printer)
         self.event = Event.objects.create(title="Test_Event")
         self.timeplace = TimePlace.objects.create(event=self.event)
 
@@ -19,42 +22,15 @@ class ReservationFormTest(TestCase):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
             "machine_name": self.machine.pk,
         }
         form = ReservationForm(data=form_data)
         self.assertTrue(form.is_valid())
 
-    def test_reservation_starting_before_current_time(self):
-        form_data = {
-            "start_time": timezone.now() - timedelta(hours=1),
-            "end_time": timezone.now() + timedelta(hours=1),
-            "machine_type": Printer3D.literal,
-            "machine_name": self.machine.pk,
-        }
-        form = ReservationForm(data=form_data)
-        self.assertFalse(form.is_valid())
-
-    def test_invalid_machine_type(self):
-        form_data = {
-            "start_time": timezone.now() + timedelta(hours=1),
-            "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": "this_will_never_be_a_valid_machine_type",
-            "machine_name": self.machine.pk,
-        }
-
-        form = ReservationForm(data=form_data)
-        try:
-            form.is_valid()
-            self.fail("Reservations with invalid machine types should not be possible")
-        except KeyError:
-            pass
-
     def test_invalid_machine_name(self):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
             # Since there is only one machine we can get an invalid primary key by just negating the current one
             "machine_name": not self.machine.pk
         }
@@ -66,23 +42,10 @@ class ReservationFormTest(TestCase):
         except KeyError:
             pass
 
-    def test_machine_of_other_type(self):
-        sewing_machine = SewingMachine.objects.create(name="Sewing Machine", model="Generic")
-        form_data = {
-            "start_time": timezone.now() + timedelta(hours=1),
-            "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
-            "machine_name": sewing_machine.pk
-        }
-
-        form = ReservationForm(data=form_data)
-        self.assertFalse(form.is_valid())
-
     def test_event_reservation(self):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
             "machine_name": self.machine.pk,
             "event": True,
             "event_pk": self.timeplace.pk,
@@ -95,7 +58,6 @@ class ReservationFormTest(TestCase):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
             "machine_name": self.machine.pk,
             "event": True,
             # Since there is only one timeplace object we can invert its pk to get an invalid pk
@@ -109,7 +71,6 @@ class ReservationFormTest(TestCase):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
             "machine_name": self.machine.pk,
             "special": True,
             "special_text": "Test text",
@@ -122,7 +83,6 @@ class ReservationFormTest(TestCase):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
             "machine_name": self.machine.pk,
             "special": True,
             "special_text": "23 characters is enough"
@@ -135,7 +95,6 @@ class ReservationFormTest(TestCase):
         form_data = {
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
-            "machine_type": Printer3D.literal,
             "machine_name": self.machine.pk,
             "event": True,
             "event_pk": self.timeplace.pk,
