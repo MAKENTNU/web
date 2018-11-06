@@ -5,7 +5,7 @@
 <div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %} {% endif %}card">
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
     {% if machine.machine_type.has_stream %}
-        <img class="stream image" name="{{ machine.name }}" src="{% static "make_queue/img/no_stream.jpg" %}">
+        <img class="stream image" name="{% sanitize_stream_name machine %}" src="{% static "make_queue/img/no_stream.jpg" %}">
     {% endif %}
     <div class="content">
         <div class="header">

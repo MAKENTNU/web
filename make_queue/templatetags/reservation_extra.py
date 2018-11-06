@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.urls import reverse
 
 from make_queue.util.time import date_to_local, get_day_name
+from urllib.parse import quote
 
 register = template.Library()
 
@@ -110,3 +111,15 @@ def can_mark_reservation_as_finished(reservation):
 @register.simple_tag()
 def is_future_reservation(reservation):
     return reservation.end_time >= timezone.now()
+
+
+@register.simple_tag()
+def sanitize_stream_name(machine):
+    values = (
+        (" ", "-"),
+        ("ö", "o"),
+    )
+    name = machine.name
+    for original, new in values:
+        name = name.replace(original, new)
+    return name
