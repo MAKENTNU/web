@@ -1,4 +1,4 @@
-$('.stream.image').each(function () {
+$('#' + streamID).each(function () {
     var chatSocket = new WebSocket(
         'wss://' + window.location.host +
         '/ws/stream/' + $(this).attr("name").replace(/ /g, "-").replace(/ö/g, "o") + '/');
