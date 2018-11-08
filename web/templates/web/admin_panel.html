@@ -19,7 +19,7 @@
             <a class="ui yellow button" href="{% url 'committee_admin' %}">{% trans "Committees" %}</a>
         {% endif %}
         {% if perms.make_queue.edit_printer3dcourse %}
-            <a class="ui yellow button" href="{% url 'course_panel' %}">{% trans "Course registration" %}</a>
+            <a class="ui yellow button" href="{% url 'course_panel' %}">{% trans "Course registrations" %}</a>
         {% endif %}
     </div>
 {% endblock body %}
