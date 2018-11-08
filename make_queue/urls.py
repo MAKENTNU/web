@@ -20,20 +20,20 @@ json_urlpatterns = [
 
 quota_url_patterns = [
     path('create/', permission_required("make_queue.add_quota")(admin.quota.CreateQuotaView.as_view()), name="create_quota"),
-    path('update/<int:pk>/', permission_required("make_queue.update_quota")(admin.quota.EditQuotaView.as_view()), name="edit_quota"),
+    path('update/<int:pk>/', permission_required("make_queue.change_quota")(admin.quota.EditQuotaView.as_view()), name="edit_quota"),
     path('delete/<int:pk>/', permission_required("make_queue.delete_quota")(admin.quota.DeleteQuotaView.as_view()), name="delete_quota"),
-    path('user/<username:user>/', permission_required("make_queue.update_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view()), name="quotas_user"),
-    path('<username:user>/', permission_required("make_queue.update_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
-    path('', permission_required("make_queue.update_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
+    path('user/<username:user>/', permission_required("make_queue.change_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view()), name="quotas_user"),
+    path('<username:user>/', permission_required("make_queue.change_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
+    path('', permission_required("make_queue.change_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
 
 course_url_patterns = [
-    path('download/', permission_required("make_queue.update_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
+    path('download/', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
     path('create/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
     path('create/success/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
-    path('edit/<int:pk>/', permission_required("make_queue.update_printer3dcourse")(admin.course.EditRegistrationView.as_view()), name="edit_course_registration"),
+    path('edit/<int:pk>/', permission_required("make_queue.change_printer3dcourse")(admin.course.EditRegistrationView.as_view()), name="edit_course_registration"),
     path('delete/<int:pk>/', permission_required("make_queue.delete_printer3dcourse")(admin.course.DeleteRegistrationView.as_view()), name="delete_course_registration"),
-    path('', permission_required("make_queue.update_printer3dcourse")(admin.course.CourseView.as_view()), name="course_panel"),
+    path('', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseView.as_view()), name="course_panel"),
 ]
 
 rules_url_patterns = [
