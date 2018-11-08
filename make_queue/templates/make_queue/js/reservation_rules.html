@@ -77,12 +77,12 @@
          */
         let coveredRules = getRulesCovered(rules, startTime, endTime);
         if (coveredRules.length === 1) {
-            return coveredRules[0].max_inside >= hoursInsideRule(coveredRules[0], startTime, endTime);
+            return coveredRules[0].max_inside >= hoursInsideRule(coveredRules[0], startTime, endTime).toPrecision(2);
         }
         let maxTime = 0;
         for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
             maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
-            if (coveredRules[ruleIndex].max_crossed < hoursInsideRule(coveredRules[ruleIndex], startTime, endTime)) {
+            if (coveredRules[ruleIndex].max_crossed < hoursInsideRule(coveredRules[ruleIndex], startTime, endTime).toPrecision(2)) {
                 return false;
             }
         }

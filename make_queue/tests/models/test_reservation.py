@@ -1,5 +1,5 @@
 from django.test import TestCase
-from mock import patch
+from unittest.mock import patch
 
 from make_queue.fields import MachineTypeField
 from make_queue.models.models import Machine, Quota, Reservation

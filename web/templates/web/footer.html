@@ -1,4 +1,4 @@
-{% load staticfiles %}
+﻿{% load staticfiles %}
 {% load i18n %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/footer.css" %}">
@@ -13,7 +13,7 @@
         </div>
         <div class="ui social list">
             <div class="item">
-                <a href="http://www.facebook.com/MAKENTNU/" target="_blank"><i class="facebook f icon"></i></a>
+                <a href="http://www.facebook.com/MAKENTNU/" title="Lik oss på Facebook!" target="_blank"><i class="facebook f icon"></i></a>
             </div>
             <div class="item">
                 <a href="http://makentnu.slack.com/" target="_blank"><i class="slack icon"></i></a>
@@ -23,6 +23,9 @@
             </div>
             <div class="item">
                 <a href="mailto:styret@makentnu.no"><i class="mail icon"></i></a>
+            </div>
+            <div class="item">
+                <a href="https://www.instagram.com/make_ntnu/" title="{% trans "Follow us on Instagram!" %}" target="_blank"><i class ="instagram icon"></i></a>
             </div>
         </div>
         <div class="two-cols">
