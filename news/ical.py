@@ -3,7 +3,6 @@ from datetime import datetime
 from django.urls import reverse
 from django_ical.views import ICalFeed
 
-from web import settings
 from .models import TimePlace
 
 
@@ -46,6 +45,9 @@ class EventFeed(ICalFeed):
 
     def item_location(self, item):
         return item.place
+
+    def product_id(self):
+        return "MAKE NTNU"
 
 
 class SingleEventFeed(EventFeed):
