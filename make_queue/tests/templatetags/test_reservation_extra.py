@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.contrib.auth.models import User
 import pytz
-import mock
+from unittest import mock
 
 from make_queue.fields import MachineTypeField
 from make_queue.models.course import Printer3DCourse
