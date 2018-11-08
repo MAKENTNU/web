@@ -6,7 +6,6 @@
 {% localize off %}
 
     <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}">
-    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
 
     <div class="attached ui buttons">
         <a class="ui labeled icon make_yellow button" id="prev_week_button"
@@ -57,8 +56,8 @@
             </td>
             {% for day in week_days %}
                 <td class="wrapping">
-                    <div class="day" data-date="{{ day.date|date:"d.m.Y" }}" data-machine-type="{{ machine.literal }}"
-                         data-machine-pk="{{ machine.pk }}">
+                    <div class="day" data-date="{{ day.date|date:"Y-m-d" }}" data-machine-pk="{{ machine.pk }}"
+                         data-week-index="{{ day.date.weekday }}">
                         {% numeric_range 0 7 as num_indication_lines %}
                         {% for line in num_indication_lines %}
                             <div class="hour_indication_line"></div>
@@ -145,13 +144,8 @@
     <script>
         {# The calendar is sometimes loaded through AJAX, as such the Javascript cannot be loaded asynchronously #}
         $(".make_reservation_calendar_time_table_item").popup();
-
-        {% if request.user.is_authenticated %}
-            {% include 'make_queue/js/calendar.js' %}
-        {% endif %}
     </script>
-
-    <div id="fader"></div>
-    <i id="closefullscreen" class="ui times icon"></i>
-    <script src="{% static "make_queue/js/stream.js" %}"></script>
+    {% if can_make_reservations %}
+        {% include 'make_queue/js/calendar.html' %}
+    {% endif %}
 {% endlocalize %}

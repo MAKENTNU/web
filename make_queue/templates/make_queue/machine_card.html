@@ -3,17 +3,21 @@
 {% load i18n %}
 
 <div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %} {% endif %}card">
-    <img class="stream image" name="{{ machine.name }}" src="{% static "make_queue/img/no_stream.jpg" %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
+    {% if machine.machine_type.has_stream %}
+        <img class="stream image" name="{% sanitize_stream_name machine %}"
+             src="{% static "make_queue/img/no_stream.jpg" %}" id="stream-{% sanitize_stream_name machine %}">
+    {% endif %}
     <div class="content">
         <div class="header">
             {{ machine.name }}
         </div>
         <div class="meta">
             <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
-                {{ machine.get_status_display }}
+                {% card_text_from_machine_status machine %}
             </div>
         </div>
-        {{ machine.model }} <br>
+        {{ machine.machine_model }} <br>
         <a href="{{ machine.location_url }}" target="_blank">
             <i class="icon location arrow"></i>{{ machine.location }}
         </a>
@@ -25,5 +29,11 @@
                 {% trans "View in calendar" %}
             </a>
         </div>
+    {% endif %}
+    {% if machine.machine_type.has_stream %}
+        <div id="fader"></div>
+        <i id="closefullscreen" class="ui times icon"></i>
+        <script>var streamID = "stream-{% sanitize_stream_name machine %}"</script>
+        <script src="{% static "make_queue/js/stream.js" %}"></script>
     {% endif %}
 </div>

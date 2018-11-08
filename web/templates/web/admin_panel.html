@@ -12,8 +12,14 @@
         {% if perms.make_queue.can_create_event_reservation %}
             <a class="ui yellow button" href="{% url 'admin_reservation' %}">{% trans "Reservations" %}</a>
         {% endif %}
-        {% if perms.make_queue.can_edit_quota %}
+        {% if perms.make_queue.edit_quota %}
             <a class="ui yellow button" href="{% url 'quota_panel' %}">{% trans "Quota" %}</a>
+        {% endif %}
+        {% if perms.groups.can_edit_group %}
+            <a class="ui yellow button" href="{% url 'committee_admin' %}">{% trans "Committees" %}</a>
+        {% endif %}
+        {% if perms.make_queue.edit_printer3dcourse %}
+            <a class="ui yellow button" href="{% url 'course_panel' %}">{% trans "Course registrations" %}</a>
         {% endif %}
     </div>
 {% endblock body %}

@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.utils import timezone
 from django.views.generic import TemplateView
 
-from make_queue.models import Machine, Quota
+from make_queue.models.models import Machine, Quota, ReservationRule
 from make_queue.templatetags.reservation_extra import date_to_percentage
 from make_queue.util.time import is_valid_week, get_next_week, year_and_week_to_monday, local_to_date
 
@@ -63,10 +63,32 @@ class ReservationCalendarComponentView(TemplateView):
         if not is_valid_week(year, week):
             year, week = get_next_week(year, week, 1)
 
-        return {'week_days': self.get_week_days_with_reservations(year, week, machine), "week": week, "year": year,
-                "machine": machine, "now": timezone.now(),
-                "max_reservation_time": self.request.user.is_authenticated and Quota.get_quota_by_machine(
-                    machine.literal, self.request.user).max_time_reservation or 0}
+        context = {'week_days': self.get_week_days_with_reservations(year, week, machine), "week": week, "year": year,
+                   "machine": machine, "now": timezone.now(), "max_reservation_time": 1,
+                   "can_make_reservations": False, "can_make_more_reservations": False, "can_ignore_rules": "false",
+                   "rules": [
+                       {
+                           "periods": [
+                               [
+                                   day + rule.start_time.hour / 24 + rule.start_time.minute / 1440,
+                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / 1440) % 7
+                               ]
+                               for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
+                           ],
+                           "max_hours": rule.max_hours,
+                           "max_hours_crossed": rule.max_inside_border_crossed,
+                       } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)
+                   ]}
+
+        if self.request.user.is_authenticated:
+            context["can_make_more_reservations"] = Quota.can_make_new_reservation(self.request.user,
+                                                                                   machine.machine_type)
+            context["can_make_reservations"] = machine.machine_type.can_user_use(self.request.user)
+            context["can_ignore_rules"] = str(any(
+                quota.can_make_more_reservations(self.request.user) for quota in
+                Quota.get_user_quotas(self.request.user, machine.machine_type).filter(ignore_rules=True))).lower()
+
+        return context
 
 
 class ReservationCalendarView(ReservationCalendarComponentView):
@@ -86,9 +108,5 @@ class ReservationCalendarView(ReservationCalendarComponentView):
         context["next"] = get_next_week(context["year"], context["week"], 1)
         context["prev"] = get_next_week(context["year"], context["week"], -1)
         context["machine_types"] = Machine.__subclasses__()
-
-        if self.request.user.is_authenticated:
-            context["can_make_more_reservations"] = Quota.get_quota_by_machine(machine.literal, self.request.user) \
-                .can_make_new_reservation()
 
         return context

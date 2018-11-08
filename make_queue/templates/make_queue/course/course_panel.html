@@ -1,0 +1,167 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>
+            {% trans "Course registrations" %}
+            <a href="{% url "create_course_registration" %}" data-tooltip="{% trans "Add" %}">
+                <i class="ui green plus icon"></i>
+            </a>
+        </h1>
+
+        <form class="ui form" method="POST" action="download/">
+            {% csrf_token %}
+            <div class="ui fields">
+                <div class="ui six wide field">
+                    <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
+                           name="search_text">
+                </div>
+                <div class="ui four wide field">
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="status_filter" value="">
+                        <i class="ui dropdown icon"></i>
+                        <div class="default text"></div>
+                        <div class="menu">
+                            <div class="item" data-value="">{% trans "All" %}</div>
+                            {% for choice in possible_statuses %}
+                                <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <button class="ui right floated yellow button">
+                    {% trans "Download displayed users" %}
+                </button>
+            </div>
+        </form>
+
+        <div>
+            <div class="ui inverted dimmer" id="loader">
+                <div class="ui text loader">{% trans "Sorting" %}</div>
+            </div>
+            <p></p>
+        </div>
+
+        <div>
+            <span>
+                {% trans "Displaying" %}
+                <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
+                {% trans "registrations" %}
+            </span>
+        </div>
+        <table class="ui very simple selectable celled table">
+            <thead>
+            <tr>
+                <th data-column-name="name">{% trans "Name" %}<i class="ui icon sort down"></i></th>
+                <th data-column-name="username">{% trans "Username" %}</th>
+                <th data-column-name="card_number">{% trans "Card number" %}</th>
+                <th data-column-name="date">{% trans "Date" %}</th>
+                <th data-column-name="status">{% trans "Status" %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for registration in registrations %}
+                <tr>
+                    <td data-value="{{ registration.name }}" class="name">
+                        {{ registration.name }}
+                        <a href="{% url "edit_course_registration" registration.pk %}">
+                            <i class="ui yellow pencil icon"></i>
+                        </a>
+                        {% if perms.delete_printer3dcourse %}
+                            <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
+                                <i class="ui red trash icon"></i>
+                            </a>
+                        {% endif %}
+                        {% if registration.user %}
+                            <span data-tooltip="Connected to user">
+                                <i class="ui icon user"></i>
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td data-value="{{ registration.username }}" class="username">
+                        {{ registration.username }}
+                    </td>
+                    {% if registration.card_number %}
+                        <td data-value="{{ registration.card_number }}" class="card_number">
+                            {{ registration.card_number }}
+                        </td>
+                    {% else %}
+                        <td class="error card_number" data-value=""></td>
+                    {% endif %}
+                    <td class="date"
+                        data-value="{{ registration.date|date:"Y-m-d" }}<">{{ registration.date|date:"Y-m-d" }}</td>
+                    <td class="status {% if registration.status != "access" %}warning{% endif %}"
+                        data-value="{{ registration.status }}">
+                        {{ registration.get_status_display }}
+                    </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <style>
+        .make_hidden {
+            display: none;
+        }
+    </style>
+
+    <script>
+        let search_value = "";
+        let status_value = "";
+        let order = 1;
+        let sortBy = "name";
+
+        function filter() {
+            let displayedCount = 0;
+            $("tbody tr").each(function () {
+                let shouldDisplay =
+                    $(this).find(".status").data("value").toLowerCase().includes(status_value) &&
+                    ($(this).find(".name").data("value").toLowerCase().includes(search_value) ||
+                        $(this).find(".username").data("value").toLowerCase().includes(search_value));
+                $(this).toggleClass("make_hidden", !shouldDisplay);
+                displayedCount += shouldDisplay;
+            });
+            $("#number-displayed").text(displayedCount);
+        }
+
+        function sort() {
+            $("tbody").find("tr:not(.make_hidden)").sort(function (a, b) {
+                let valueA = $(a).find("." + sortBy).data("value").toString();
+                let valueB = $(b).find("." + sortBy).data("value").toString();
+
+                return valueA.localeCompare(valueB, "nb", {sensitivity: "base"}) * order;
+            }).appendTo("tbody");
+            $("#loader").toggleClass("active", false);
+        }
+
+        $("div.dropdown").dropdown({
+            onChange: function (value) {
+                status_value = value;
+                filter();
+            }
+        });
+        $("#search").on("input", function () {
+            search_value = $(this).val().toLowerCase();
+            filter();
+        });
+
+        $("th").click(function () {
+            $("#loader").toggleClass("active", true);
+            let columnName = $(this).data("column-name");
+            $("th i").remove();
+            if (sortBy === columnName) {
+                order *= -1;
+            } else {
+                order = 1;
+                sortBy = columnName;
+            }
+            $(this).append(order === 1 ? $("<i class=\"ui icon sort down\"></i>") : $("<i class=\"ui icon sort up\"></i>"));
+            // Run sort async to allow loader to actually be shown
+            setTimeout(sort, 0);
+        });
+    </script>
+{% endblock %}

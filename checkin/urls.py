@@ -3,7 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 
 from checkin.views import CheckInView, ShowSkillsView, ProfilePageView, SuggestSkillView, RegisterProfileView, \
-    VoteSuggestionView, RegisterCardView, EditProfilePictureView
+    VoteSuggestionView, RegisterCardView, EditProfilePictureView, DeleteSuggestionView
 
 urlpatterns = [
     url(r'^$', ShowSkillsView.as_view()),
@@ -14,4 +14,6 @@ urlpatterns = [
     url(r'^register/profile/$', login_required(RegisterProfileView.as_view()), name="register_profile"),
     url(r'^suggest/$', login_required(SuggestSkillView.as_view()), name="suggest"),
     url(r'^suggest/vote/$', login_required(VoteSuggestionView.as_view()), name="vote"),
+    url(r'^suggest/delete/$', login_required(DeleteSuggestionView.as_view()), name="delete"),
 ]
+

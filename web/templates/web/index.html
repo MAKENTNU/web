@@ -5,13 +5,14 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
     <script src="{% static "web/js/image-link.js" %}"></script>
+    <script src="{% static "web/js/parallax.min.js" %}"></script>
 {% endblock head %}
 
 {% block padding-top %}{% endblock %}
 
 {% block body %}
     <div class="top">
-        <img class="topimg large" src="{% static "web/img/topimg_2.jpg" %}">
+        <div class="topimg large parallax-window" data-parallax="scroll" data-image-src="{% static "web/img/topimg_2.jpg" %}"></div>
         <img class="topimg small" src="{% static "web/img/topimg_small.jpg" %}">
         <img class="toplogo" src="{% static "web/img/logo_black.svg" %}">
     </div>
@@ -33,7 +34,7 @@
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
                     <div>
-                        <a href="{% url 'article' article.id %}"><h2>{{ article.title }}</h2></a>
+                        <h2><a href="{% url 'article' article.id %}">{{ article.title }}</a></h2>
                         <p>{{ article.clickbait }}</p>
                     </div>
                 </div>
@@ -75,6 +76,7 @@
         $('.clickable').click(function () {
             window.location.href = $(this).attr('href');
         });
+        $('.parallax-window').parallax({'speed': 0.5});
     </script>
     <div style="height: 100px;"></div>
 {% endblock body %}
