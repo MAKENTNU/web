@@ -332,8 +332,9 @@ msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
 #: make_queue/templates/make_queue/course/course_panel.html:8
+#: web/templates/web/admin_panel.html:22
 msgid "Course registrations"
-msgstr "Kurs registreringer"
+msgstr "Kursregistreringer"
 
 #: make_queue/templates/make_queue/course/course_panel.html:18
 msgid "Search name and username"
@@ -555,7 +556,7 @@ msgid "Other reservations"
 msgstr "Andre reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:132
-#: news/templates/news/admin.html:13 web/templates/web/header.html:25
+#: news/templates/news/admin.html:13 web/templates/web/header.html:27
 msgid "Events"
 msgstr "Arrangementer"
 
@@ -575,12 +576,11 @@ msgstr "Maskiner"
 
 #: make_queue/templates/make_queue/reservation_machines.html:26
 #: make_queue/templates/make_queue/reservation_overview.html:25
-#: make_queue/templates/make_queue/rules.html:9
 msgid "Rules"
 msgstr "Regler"
 
 #: make_queue/templates/make_queue/reservation_overview.html:23
-#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:34
+#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:35
 msgid "Reservations"
 msgstr "Reservasjoner"
 
@@ -628,7 +628,7 @@ msgstr "Marker som ferdig"
 msgid "Done"
 msgstr "Ferdig"
 
-#: make_queue/templates/make_queue/rule_create.html:4
+#: make_queue/templates/make_queue/rule_create.html:5
 msgid "New rule"
 msgstr "Ny regel"
 
@@ -664,41 +664,45 @@ msgstr "Lørdag"
 msgid "Sunday"
 msgstr "Søndag"
 
+#: make_queue/templates/make_queue/rules.html:9
+msgid "Rules for"
+msgstr "Regler for"
+
 #: make_queue/templates/make_queue/rules.html:13
 msgid "Rules for usage"
 msgstr "Regler for bruk"
 
 #: make_queue/templates/make_queue/rules.html:19
-msgid "Reservation duration single period"
-msgstr "Reservasjon lengde i en periode"
+msgid "Reservation duration within a single period"
+msgstr "Reservasjonslengde innenfor én periode"
 
 #: make_queue/templates/make_queue/rules.html:21
-msgid "Card \"single period\" value, see cards below"
-msgstr "Kortet sin \"enkelt periode\" verdi, see kortene under"
+msgid "Card's &quot;single period&quot; value, see cards below"
+msgstr "Kortet sin &quot;enkelt-periode&quot;-verdi, se kortene under"
 
 #: make_queue/templates/make_queue/rules.html:25
-msgid "Reservation duration multiperiod"
-msgstr "Reservasjons lengde fler-periode"
+msgid "Reservation duration spanning multiple periods"
+msgstr "Reservasjonslengde på tvers av perioder"
 
 #: make_queue/templates/make_queue/rules.html:28
 msgid "Total time"
 msgstr "Total tid"
 
 #: make_queue/templates/make_queue/rules.html:28
-msgid "Largest \"single period\" value"
-msgstr "Største \"enkelt periode\" verdi"
+msgid "Largest &quot;single period&quot; value"
+msgstr "Største &quot;enkelt-periode&quot;-verdi"
 
 #: make_queue/templates/make_queue/rules.html:29
 msgid "For each time period"
-msgstr "For hver tids periode"
+msgstr "For hver tidsperiode"
 
 #: make_queue/templates/make_queue/rules.html:29
-msgid "Card \"multiperiod\" value"
-msgstr "Kortet sin \"fler-periode\" verdi"
+msgid "Card's &quot;multiperiod&quot; value"
+msgstr "Kortet sin &quot;fler-periode&quot;-verdi"
 
 #: make_queue/templates/make_queue/rules.html:50
 msgid "Single period"
-msgstr "Enkelt period"
+msgstr "Enkelt-periode"
 
 #: make_queue/templates/make_queue/rules.html:50
 #: make_queue/templates/make_queue/rules.html:53
@@ -714,7 +718,7 @@ msgid "Periods"
 msgstr "Perioder"
 
 #: make_queue/templates/make_queue/rules.html:70
-msgid "My Quotas"
+msgid "My quotas"
 msgstr "Mine kvoter"
 
 #: make_queue/templates/make_queue/rules.html:86
@@ -986,10 +990,6 @@ msgstr "Artikler og arrangementer"
 #: web/templates/web/admin_panel.html:16
 msgid "Quota"
 msgstr "Kvote"
-
-#: web/templates/web/admin_panel.html:22
-msgid "Course registration"
-msgstr "Kurs registreringer"
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
