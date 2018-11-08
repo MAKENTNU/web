@@ -5,12 +5,10 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
 {% endblock %}
 
 {% block title %}{% trans "Machines" %}{% endblock %}
 {% block body %}
-    <br><br>
     <div class="ui container">
         <div class="ui huge header">
             {% trans "Machines" %}
@@ -21,8 +19,11 @@
             </a>
         {% endif %}
         {% for machine_type in machine_types %}
-            <div class="ui large header">
-                {{ machine_type.name }}
+            <div class="ui machine-title-field">
+                <div class="ui large header machine-title">
+                    {{ machine_type.name }}
+                </div>
+                <a href="{% url "machine_usage_rules" machine_type.type %}">({% trans "Rules" %})</a>
             </div>
             <div class="ui cards">
                 {% for machine in machine_type.machines %}
@@ -31,9 +32,4 @@
             </div>
         {% endfor %}
     </div>
-    <br><br>
-
-    <div id="fader"></div>
-    <i id="closefullscreen" class="ui times icon"></i>
-    <script src="{% static "make_queue/js/stream.js" %}"></script>
 {% endblock %}

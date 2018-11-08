@@ -88,3 +88,12 @@
         display: none !important;
     }
 }
+
+.machine-title {
+    display: inline-block !important;
+    vertical-align: sub;
+}
+
+.machine-title-field {
+    padding-top: 2em;
+}

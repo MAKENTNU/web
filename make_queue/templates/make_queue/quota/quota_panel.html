@@ -1,0 +1,69 @@
+{% extends 'web/base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+{% endblock %}
+
+{% block title %}{% trans "Access" %}{% endblock %}
+
+{% block body %}
+    <div class="ui container">
+        <a class="ui yellow button" href="{% url "create_quota" %}">
+            <i class="ui icon plus"></i>{% trans "New quota" %}
+        </a>
+        <div class="ui tabular pointing secondary menu">
+            <a class="{% if not requested_user %}active{% endif %} item" data-tab="global">{% trans "Global" %}</a>
+            <a class="{% if requested_user %}active{% endif %} item" data-tab="users">{% trans "Users" %}</a>
+        </div>
+        <div class="ui tab {% if not requested_user %}active{% endif %}" data-tab="global">
+            {% for quota in global_quotas %}
+                <div class="ui card">
+                    <div class="content">
+                        <div class="header">
+                            {% if quota.dimishing %}
+                                {% trans "One-time quota" %}
+                            {% else %}
+                                {% trans "Replenishing quota" %}
+                            {% endif %}
+                            <a href="{% url "edit_quota" quota.pk %}"><i class="ui yellow icon pencil"></i></a>
+                            {% if perms.delete_quota %}
+                                <a class="delete confirm" href="{% url "delete_quota" quota.pk %}"><i class="ui red icon trash"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="meta">{{ quota.machine_type.name }}</div>
+                        <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
+                        {% if quota.ignore_rules %}
+                            <b>{% trans "Ignores rules" %}</b>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="ui {% if requested_user %}active{% endif %} tab" data-tab="users">
+            <div class="ui fluid search selection dropdown">
+                <input type="hidden" name="user" id="user">
+                <i class="ui dropdown icon"></i>
+                <div class="default text">{% trans "Select user" %}</div>
+                <div class="menu">
+                    {% for user in users %}
+                        <div class="item" data-value="{{ user.username }}">{{ user.get_full_name }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="make_content_padding"></div>
+            <div id="user-quotas">
+
+            </div>
+        </div>
+    </div>
+    <script src="{% url 'javascript-catalog' %}"></script>
+    <script src="{% static 'make_queue/js/quota_panel.js' %}"></script>
+    <script>
+        $('.tabular.menu .item').tab();
+        {% if requested_user %}
+            $("#user").parent().dropdown("set selected", "{{ requested_user.username }}");
+        {% endif %}
+    </script>
+{% endblock %}
