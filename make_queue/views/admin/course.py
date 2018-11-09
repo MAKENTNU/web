@@ -66,6 +66,9 @@ class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
 
 
 class BulkStatusUpdate(View):
+    """
+    Provides a method for bulk updating the status of course registrations
+    """
 
     def post(self, request):
         status = request.POST.get("status")

@@ -1,3 +1,4 @@
+// Global state to reduce the number of DOM operations required
 let state = {
     page: 0,
     elements: [],
@@ -12,7 +13,9 @@ let state = {
     onlyShowSelectedUsers: false,
 };
 
+// Make each row selectable
 $("tbody tr").click(function () {
+    // Uses the active class to keep track of selected users
     let hasClass = $(this).hasClass("active");
 
     state.selectedCount += Math.pow(-1, hasClass);
@@ -22,6 +25,7 @@ $("tbody tr").click(function () {
     $("#selected-actions").toggleClass("make_hidden", state.selectedCount === 0);
 });
 
+// Filters which registrations that fit the current state
 function filter() {
     let numberOfShown = 0;
     for (let elementIndex = 0; elementIndex < state.elements.length; elementIndex++) {
@@ -46,6 +50,7 @@ function filter() {
     sort();
 }
 
+// Sorts the elements based on the column to sort and its order
 function sort() {
     state.elements.sort(function (a, b) {
         return a[state.sortBy].localeCompare(b[state.sortBy])
@@ -55,9 +60,10 @@ function sort() {
         state.elements.reverse();
     }
 
-    toggle_display();
+    updateDisplay();
 }
 
+// Status filter element
 $("#status_filter").parent().dropdown({
     onChange: function (value) {
         state.status_value = value;
@@ -65,11 +71,13 @@ $("#status_filter").parent().dropdown({
     }
 });
 
+// Button to toggle if only selected users should be shown
 $("#show-selected-users").click(function () {
     state.onlyShowSelectedUsers = !state.onlyShowSelectedUsers;
     filter();
 });
 
+// Button to clear all selection of users
 $("#clear-selected-users").click(function () {
     state.onlyShowSelectedUsers = false;
     state.selectedCount = 0;
@@ -80,6 +88,7 @@ $("#clear-selected-users").click(function () {
     filter();
 });
 
+// The bulk status change dropdown
 $("#status_set").parent().dropdown({
     onChange: function (value, statusText) {
         let modal = $("#set-status-modal");
@@ -102,10 +111,10 @@ $("#status_set").parent().dropdown({
         $("#selected-users").text(selectedUsers.join(", "));
 
 
-        modal.find(".cancel.button").click(function() {
+        modal.find(".cancel.button").click(function () {
             $("#status_set").parent().dropdown("clear");
         });
-        modal.find(".ok.button").click(function() {
+        modal.find(".ok.button").click(function () {
             form.submit();
         });
 
@@ -113,11 +122,13 @@ $("#status_set").parent().dropdown({
     }
 });
 
+// The search field for usernames
 $("#search").on("input", function () {
     state.search_value = $(this).val().toLowerCase();
     filter();
 });
 
+// Each table header element can be clicked to change the sorting of the table
 $("th").click(function () {
     let columnName = $(this).data("column-name");
     $("th i").remove();
@@ -132,10 +143,12 @@ $("th").click(function () {
 });
 
 
+// Calculates the range of numbers to show in the pagination bar of the table
 function calculate_range_pagination() {
     let start = Math.max(0, state.page - state.paginationElements);
     let end = Math.min(state.numPages - 1, state.page + state.paginationElements);
 
+    // Special handling of edges to make sure that the correct number of elements are shown in the pagination bar
     if (start === 0) {
         end = Math.min(state.numPages - 1, end + state.paginationElements - (state.page - start));
     }
@@ -150,7 +163,8 @@ function calculate_range_pagination() {
     }
 }
 
-function toggle_display() {
+// Toggles which rows to show based on the current state
+function updateDisplay() {
     let start_index = state.page * state.elementPerPage;
     let end_index = (state.page + 1) * state.elementPerPage;
 
@@ -166,6 +180,7 @@ function toggle_display() {
             element.element.toggleClass("make_hidden", false);
 
             if (lastInsertedElement != null) {
+                // Elements are sorted in an array, as to update the DOM only when necessary
                 lastInsertedElement.after(element.element);
             }
 
@@ -177,6 +192,7 @@ function toggle_display() {
         filteredElements++;
     }
 
+    // Removes old numbers in pagination bar and adds new ones
     let pagination_element = $("#pagination-bar");
     pagination_element.children().slice(2, -2).remove();
 
@@ -187,7 +203,6 @@ function toggle_display() {
     rightChangeElement.toggleClass("disabled", state.page === state.numPages - 1);
     rightSkipElement.toggleClass("disabled", state.page === state.numPages - 1);
 
-
     for (let page = page_range.start; page <= page_range.end; page++) {
         let page_element = $("<a class='item'>" + (page + 1) + "</a>");
         if (page === state.page) {
@@ -195,7 +210,7 @@ function toggle_display() {
         }
         page_element.click(function () {
             state.page = page;
-            toggle_display();
+            updateDisplay();
         });
         rightChangeElement.before(page_element);
     }
@@ -206,7 +221,8 @@ let rightChangeElement = $("#right-change");
 let leftChangeElement = $("#left-change");
 let leftSkipElement = $("#left-skip");
 
-function setup_pagination() {
+// Setup the initial state
+function setupState() {
 
     $("tbody tr").each(function () {
             state.elements.push({
@@ -224,27 +240,28 @@ function setup_pagination() {
 
     state.numPages = Math.ceil(state.elements.length / state.elementPerPage);
 
+    // Setup the action of each of the default buttons in the pagination bar
     rightChangeElement.click(function () {
         state.page = Math.min(state.page + 1, state.numPages - 1);
-        toggle_display();
+        updateDisplay();
     });
 
     rightSkipElement.click(function () {
         state.page = state.numPages - 1;
-        toggle_display();
+        updateDisplay();
     });
 
     leftChangeElement.click(function () {
         state.page = Math.max(0, state.page - 1);
-        toggle_display();
+        updateDisplay();
     });
 
     leftSkipElement.click(function () {
         state.page = 0;
-        toggle_display();
+        updateDisplay();
     });
 
-    toggle_display();
+    updateDisplay();
 }
 
-setup_pagination();
+setupState();
