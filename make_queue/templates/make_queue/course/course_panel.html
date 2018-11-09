@@ -18,16 +18,18 @@
             </a>
         </h1>
 
-        <form class="ui form" method="POST" action="download/">
+        <form class="ui form" method="POST" action="{% url "download_course_registrations" %}">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
+                    <label>{% trans "Filter users based on name" %}</label>
                     <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
                            name="search_text">
                 </div>
                 <div class="ui four wide field">
+                    <label>{% trans "Filter users based on status" %}</label>
                     <div class="ui selection dropdown">
-                        <input type="hidden" name="status_filter" value="">
+                        <input type="hidden" name="status_filter" value="" id="status_filter">
                         <i class="ui dropdown icon"></i>
                         <div class="default text"></div>
                         <div class="menu">
@@ -38,26 +40,39 @@
                         </div>
                     </div>
                 </div>
-                <button class="ui right floated yellow button">
-                    {% trans "Download displayed users" %}
-                </button>
+                <div class="ui six wide field">
+                    {# Using label with non-blocking space to keep the download button further down #}
+                    <label>&nbsp;</label>
+                    <button class="ui right floated yellow button">
+                        {% trans "Download filtered users" %}
+                    </button>
+                </div>
             </div>
         </form>
 
-        <div>
-            <div class="ui inverted dimmer" id="loader">
-                <div class="ui text loader">{% trans "Sorting" %}</div>
+        {# Prepopulated area to be shown when one or more rows are selected #}
+        <div id="selected-actions" class="make_hidden ui secondary segment">
+            <h4>
+                <span id="num-selected"></span> {% trans "user(s) selected" %}
+            </h4>
+            <div class="ui form">
+                <div class="ui six wide field">
+                    <label>{% trans "Set status for all selected users" %}</label>
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="status_set" value="" id="status_set">
+                        <i class="ui dropdown icon"></i>
+                        <div class="default text">{% trans "Select status" %}</div>
+                        <div class="menu">
+                            {% for choice in possible_statuses %}
+                                <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p></p>
         </div>
 
-        <div>
-            <span>
-                {% trans "Displaying" %}
-                <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
-                {% trans "registrations" %}
-            </span>
-        </div>
+        {# Table of registrations #}
         <table class="ui very simple selectable celled table">
             <thead>
             <tr>
@@ -72,7 +87,7 @@
             {% for registration in registrations %}
                 <tr data-name="{{ registration.name }}" data-username="{{ registration.username }}"
                     data-card-number="{{ registration.card_number|default:"" }}"
-                    data-date="{{ registration.date|date:"Y-m-d" }}"
+                    data-date="{{ registration.date|date:"Y-m-d" }}" data-pk="{{ registration.pk }}"
                     data-status="{{ registration.status }}" class="make_hidden">
                     <td>
                         {{ registration.name }}
@@ -85,7 +100,7 @@
                             </a>
                         {% endif %}
                         {% if registration.user %}
-                            <span data-tooltip="Connected to user">
+                            <span data-tooltip="{% trans "Connected to user" %}">
                                 <i class="ui icon user"></i>
                             </span>
                         {% endif %}
@@ -109,6 +124,7 @@
             {% endfor %}
             </tbody>
         </table>
+
         <div class="ui right floated pagination menu" id="pagination-bar">
             <a class="item" id="left-skip">
                 <i class="ui icon double angle left"></i>
@@ -123,8 +139,39 @@
                 <i class="ui icon double angle right"></i>
             </a>
         </div>
+        <span>
+            {% trans "Displaying" %}
+            <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
+            {% trans "registrations" %}
+        </span>
     </div>
 
+    <div class="ui modal" id="set-status-modal">
+        <div class="ui icon header">
+            <i class="yellow exclamation icon"></i>
+            {% trans "Set status of users to" %} &quot;<i><span id="set-status-text"></span></i>&quot;
+        </div>
+
+        <form method="POST" action="{% url "bulk_status_update" %}">
+            {% csrf_token %}
+            <input type="hidden" value="" name="status" id="status">
+        </form>
+
+        <div class="content">
+            <p><b>{% trans "You are changing the status for the following users:" %}</b></p>
+            <p id="selected-users"></p>
+            <p><b>{% trans "Are you sure you want to do this?" %}</b></p>
+        </div>
+
+        <div class="actions">
+            <div class="ui green ok button">
+                {% trans "Set status" %}
+            </div>
+            <div class="ui red cancel button">
+                {% trans "Cancel" %}
+            </div>
+        </div>
+    </div>
 
     <script src="{% static "make_queue/js/course_panel.js" %}"></script>
 {% endblock %}

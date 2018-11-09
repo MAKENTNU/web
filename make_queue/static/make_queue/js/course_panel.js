@@ -8,7 +8,18 @@ let state = {
     sortOrder: true,
     search_value: "",
     status_value: "",
+    selectedCount: 0,
 };
+
+$("tbody tr").click(function () {
+    let hasClass = $(this).hasClass("active");
+
+    state.selectedCount += Math.pow(-1, hasClass);
+    $(this).toggleClass("active", !hasClass);
+
+    $("#num-selected").text(state.selectedCount);
+    $("#selected-actions").toggleClass("make_hidden", state.selectedCount === 0);
+});
 
 function filter() {
     let numberOfShown = 0;
@@ -25,6 +36,7 @@ function filter() {
         }
     }
     state.numPages = Math.ceil(numberOfShown / state.elementPerPage);
+    state.page = 0;
     sort();
 }
 
@@ -40,10 +52,43 @@ function sort() {
     toggle_display();
 }
 
-$("div.dropdown").dropdown({
+$("#status_filter").parent().dropdown({
     onChange: function (value) {
         state.status_value = value;
         filter();
+    }
+});
+
+$("#status_set").parent().dropdown({
+    onChange: function (value, statusText) {
+        let modal = $("#set-status-modal");
+
+        $("#set-status-text").text(statusText);
+
+        $("#status").val(value);
+        let form = modal.find("form");
+        // Keep the status input field and csrf token, but clear the rest (in the case that cancel has been clicked)
+        form.children().slice(2).remove();
+
+        let selectedUsers = [];
+        state.elements.forEach(function (element) {
+            if (element.element.hasClass("active")) {
+                form.append($("<input type='hidden' value='" + element.pk + "' name='users'>"));
+                selectedUsers.push(element.element.data("name"));
+            }
+        });
+
+        $("#selected-users").text(selectedUsers.join(", "));
+
+
+        modal.find(".cancel.button").click(function() {
+            $("#status_set").parent().dropdown("clear");
+        });
+        modal.find(".ok.button").click(function() {
+            form.submit();
+        });
+
+        modal.modal("show");
     }
 });
 
@@ -144,6 +189,7 @@ function setup_pagination() {
 
     $("tbody tr").each(function () {
             state.elements.push({
+                pk: $(this).data("pk"),
                 name: $(this).data("name").toLowerCase(),
                 username: $(this).data("username").toLowerCase(),
                 cardNumber: ("0000000000" + $(this).data("card-number").toString()).slice(-10),

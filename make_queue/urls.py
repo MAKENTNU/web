@@ -28,6 +28,7 @@ quota_url_patterns = [
 ]
 
 course_url_patterns = [
+    path('status/', permission_required("make_queue.change_printer3dcourse")(admin.course.BulkStatusUpdate.as_view()), name="bulk_status_update"),
     path('download/', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
     path('create/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
     path('create/success/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
