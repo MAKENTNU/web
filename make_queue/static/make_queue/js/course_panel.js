@@ -23,6 +23,10 @@ $("tbody tr").click(function () {
 
     $("#num-selected").text(state.selectedCount);
     $("#selected-actions").toggleClass("make_hidden", state.selectedCount === 0);
+    if (state.onlyShowSelectedUsers || state.selectedCount === 0) {
+        state.onlyShowSelectedUsers = state.onlyShowSelectedUsers && state.selectedCount;
+        filter();
+    }
 });
 
 // Filters which registrations that fit the current state
