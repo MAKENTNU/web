@@ -9,6 +9,7 @@ let state = {
     search_value: "",
     status_value: "",
     selectedCount: 0,
+    onlyShowSelectedUsers: false,
 };
 
 $("tbody tr").click(function () {
@@ -26,15 +27,20 @@ function filter() {
     for (let elementIndex = 0; elementIndex < state.elements.length; elementIndex++) {
         let element = state.elements[elementIndex];
 
-        element.display =
-            (element.name.includes(state.search_value) || element.username.includes(state.search_value)) &&
-            element.status.includes(state.status_value);
+        if (state.onlyShowSelectedUsers) {
+            element.display = element.element.hasClass("active");
+        } else {
+            element.display =
+                (element.name.includes(state.search_value) || element.username.includes(state.search_value)) &&
+                element.status.includes(state.status_value);
+        }
 
         numberOfShown += element.display;
         if (!element.display) {
             element.element.toggleClass("make_hidden", true);
         }
     }
+    $("#number-displayed").text(numberOfShown);
     state.numPages = Math.ceil(numberOfShown / state.elementPerPage);
     state.page = 0;
     sort();
@@ -57,6 +63,21 @@ $("#status_filter").parent().dropdown({
         state.status_value = value;
         filter();
     }
+});
+
+$("#show-selected-users").click(function () {
+    state.onlyShowSelectedUsers = !state.onlyShowSelectedUsers;
+    filter();
+});
+
+$("#clear-selected-users").click(function () {
+    state.onlyShowSelectedUsers = false;
+    state.selectedCount = 0;
+    state.elements.forEach(function (element) {
+        element.element.toggleClass("active", false);
+    });
+    $("#selected-actions").toggleClass("make_hidden", true);
+    filter();
 });
 
 $("#status_set").parent().dropdown({

@@ -43,7 +43,7 @@
                 <div class="ui six wide field">
                     {# Using label with non-blocking space to keep the download button further down #}
                     <label>&nbsp;</label>
-                    <button class="ui right floated yellow button">
+                    <button class="ui right floated make_yellow button">
                         {% trans "Download filtered users" %}
                     </button>
                 </div>
@@ -56,17 +56,28 @@
                 <span id="num-selected"></span> {% trans "user(s) selected" %}
             </h4>
             <div class="ui form">
-                <div class="ui six wide field">
-                    <label>{% trans "Set status for all selected users" %}</label>
-                    <div class="ui selection dropdown">
-                        <input type="hidden" name="status_set" value="" id="status_set">
-                        <i class="ui dropdown icon"></i>
-                        <div class="default text">{% trans "Select status" %}</div>
-                        <div class="menu">
-                            {% for choice in possible_statuses %}
-                                <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
-                            {% endfor %}
+                <div class="ui fields">
+                    <div class="ui six wide field">
+                        <label>{% trans "Set status for all selected users" %}</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="status_set" value="" id="status_set">
+                            <i class="ui dropdown icon"></i>
+                            <div class="default text">{% trans "Select status" %}</div>
+                            <div class="menu">
+                                {% for choice in possible_statuses %}
+                                    <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                                {% endfor %}
+                            </div>
                         </div>
+                    </div>
+                    <div class="ui ten wide field">
+                        <label>&nbsp;</label>
+                        <button class="ui right floated make_yellow button" id="clear-selected-users">
+                            {% trans "Clear selected users" %}
+                        </button>
+                        <button class="ui right floated make_yellow button" id="show-selected-users">
+                            {% trans "Only show selected users" %}
+                        </button>
                     </div>
                 </div>
             </div>
