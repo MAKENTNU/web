@@ -2,7 +2,12 @@
     cursor: pointer;
 }
 
-.stream.image:not(.fullscreen) {
+.stream.image:not(.ui) {
+    position: absolute;
+    width: 100%;
+}
+
+.ui.stream.image:not(.fullscreen) {
     border: 1px solid #A5BBC9;
     border-radius: .28571429rem;
 }
