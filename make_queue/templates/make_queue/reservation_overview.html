@@ -68,12 +68,15 @@
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
                     <img class="ui right floated stream medium image" name="{{ machine.name }}"
-                         style="border: 1px solid #A5BBC9;border-radius: .28571429rem;"
                          src="{% static "make_queue/img/no_stream.jpg" %}">
                 </div>
+                <div id="fader"></div>
+                <i id="closefullscreen" class="ui times icon"></i>
+                <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
+                <script src="{% static "make_queue/js/stream.js" %}"></script>
             {% endif %}
 
-            <div class="ui {% if not machine.machine_type.has_stream %}right floated{% endif %} {% if machine.machine_type.has_stream %}sixteen{% else %}ten{% endif %} wide mobile only no padding column">
+            <div class="ui right floated {% if machine.machine_type.has_stream %}sixteen{% else %}ten{% endif %} wide mobile only no padding column">
                 {% include "make_queue/reservation_actions.html" %}
             </div>
 

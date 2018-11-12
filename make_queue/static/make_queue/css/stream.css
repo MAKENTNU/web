@@ -1,11 +1,10 @@
-.stream.image {
-    position: absolute;
-    width: 100%;
-    margin-right: 0;
-}
-
 .stream.image:hover {
     cursor: pointer;
+}
+
+.stream.image:not(.fullscreen) {
+    border: 1px solid #A5BBC9;
+    border-radius: .28571429rem;
 }
 
 .stream.image.fullscreen {
@@ -17,6 +16,11 @@
     height: 95vh;
     object-fit: contain;
     z-index: 1000;
+}
+
+.stream.image.fullscreen.floated {
+    float: none;
+    margin: 0;
 }
 
 #fader {
