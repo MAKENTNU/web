@@ -5,7 +5,7 @@ from django.contrib.auth.models import User, Permission
 from django.http import HttpResponse
 from django.test import TestCase
 from django.utils import timezone
-from mock import patch
+from unittest.mock import patch
 
 from make_queue.fields import MachineTypeField
 from make_queue.forms import ReservationForm

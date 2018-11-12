@@ -1,5 +1,4 @@
 django>=2.1.2
-mock
 django-ckeditor==5.6.1
 Pillow
 python-social-auth
@@ -8,4 +7,5 @@ social-auth-app-django
 sorl-thumbnail
 channels
 channels_redis
+django_ical
 xlsxwriter

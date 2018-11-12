@@ -1,5 +1,5 @@
 from django.test import TestCase
-import mock
+from unittest import mock
 from django.utils import timezone
 from datetime import datetime
 import pytz

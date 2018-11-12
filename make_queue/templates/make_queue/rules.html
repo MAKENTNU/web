@@ -6,7 +6,7 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "Rules" %} {{ machine_type.name }} {% if perms.make_queue.add_reservation_rule %}
+        <h1>{% trans "Rules for" %} {{ machine_type.name }} {% if perms.make_queue.add_reservation_rule %}
             <a href="{% url "create_machine_rule" %}"><i class="ui green plus icon"></i></a>{% endif %}</h1>
         <div>
             <a class="ui blue button" href="{% url "machine_usage_rules" machine_type %}">
@@ -16,17 +16,17 @@
         <table class="ui definition table">
             <tbody>
             <tr>
-                <td>{% trans "Reservation duration single period" %}</td>
+                <td>{% trans "Reservation duration within a single period" %}</td>
                 <td>
-                    {% trans 'Card "single period" value, see cards below' %}
+                    {% trans "Card's &quot;single period&quot; value, see cards below" %}
                 </td>
             </tr>
             <tr>
-                <td>{% trans "Reservation duration multiperiod" %}</td>
+                <td>{% trans "Reservation duration spanning multiple periods" %}</td>
                 <td>
                     <ul>
-                        <li><b>{% trans "Total time" %}:</b> {% trans 'Largest "single period" value' %}</li>
-                        <li><b>{% trans "For each time period" %}:</b> {% trans 'Card "multiperiod" value' %}</li>
+                        <li><b>{% trans "Total time" %}:</b> {% trans "Largest &quot;single period&quot; value" %}</li>
+                        <li><b>{% trans "For each time period" %}:</b> {% trans "Card's &quot;multiperiod&quot; value" %}</li>
                     </ul>
                 </td>
             </tr>
@@ -67,7 +67,7 @@
             {% endfor %}
         </div>
         {% if quotas %}
-            <h3>{% trans "My Quotas" %}</h3>
+            <h3>{% trans "My quotas" %}</h3>
             <div class="ui cards">
                 {% for quota in quotas %}
                     <div class="ui card">
