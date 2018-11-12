@@ -19,11 +19,22 @@ a.wrapped.button {
     border-bottom-right-radius: 0 !important;
 }
 
-.column.no.padding {
-    padding: 0 !important;
+.ui.grid > .column.no.padding {
+    padding: 0;
 }
 
 .time_selection_button.make_yellow.button {
     width: 100% !important;
     margin-top: 0.75em;
+}
+
+.ui.grid.vpad > .column, .ui.grid.vpad > .column.no.padding {
+    padding-bottom: 1em;
+
+}
+
+/* Dropdown should not be overlapped by reservations, which have a maximum z-index of 200 */
+.ui.action.list .menu {
+    z-index: 201;
+    width: 100%;
 }

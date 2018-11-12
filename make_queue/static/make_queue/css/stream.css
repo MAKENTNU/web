@@ -1,6 +1,7 @@
 .stream.image {
     position: absolute;
     width: 100%;
+    margin-right: 0;
 }
 
 .stream.image:hover {
