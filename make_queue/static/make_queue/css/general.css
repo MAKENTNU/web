@@ -90,13 +90,13 @@
 }
 
 .machine-title {
-    padding-bottom: 0 !important;
-    margin-bottom: 0 !important;
     vertical-align: sub;
+    display: inline;
 }
 
 .machine-title-field {
-    padding-top: 2em;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
 }
 
 .action.list > .item {

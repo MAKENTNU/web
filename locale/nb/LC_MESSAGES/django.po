@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-08 08:50+0100\n"
+"POT-Creation-Date: 2018-11-12 12:38+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -256,6 +256,7 @@ msgstr "Fullt navn"
 
 #: make_queue/models/course.py:24
 #: make_queue/templates/make_queue/course/course_panel.html:61
+#: make_queue/templates/make_queue/reservation_overview.html:55
 msgid "Status"
 msgstr "Status"
 
@@ -299,6 +300,7 @@ msgid "All users"
 msgstr "Alle brukere"
 
 #: make_queue/models/models.py:76 make_queue/models/models.py:234
+#: make_queue/templates/make_queue/reservation_overview.html:41
 msgid "Machine type"
 msgstr "Maskintype"
 
@@ -411,7 +413,7 @@ msgid "View in calendar"
 msgstr "Se i kalender"
 
 #: make_queue/templates/make_queue/make_reservation.html:23
-#: make_queue/templates/make_queue/reservation_overview.html:46
+#: make_queue/templates/make_queue/reservation_actions.html:17
 msgid "New reservation"
 msgstr "Ny reservasjon"
 
@@ -520,6 +522,44 @@ msgstr "Gjenbrukbar kvote"
 msgid "Maximum number of reservations"
 msgstr "Maksimalt antall aktive reservasjoner"
 
+#: make_queue/templates/make_queue/reservation_actions.html:8
+msgid "You must be logged in to make new reservations"
+msgstr "Du må være logget inn for å kunne lage nye reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_actions.html:12
+msgid "You have reached the maximum number of future reservations"
+msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_actions.html:18
+msgid "Click to create a new reservation"
+msgstr "Klikk for å lage en ny reservasjon"
+
+#: make_queue/templates/make_queue/reservation_actions.html:24
+#: make_queue/templates/make_queue/reservation_calendar.html:136
+#: make_queue/templates/make_queue/reservation_machines.html:19
+#: make_queue/templates/make_queue/reservations.html:10
+#: make_queue/templates/make_queue/reservations.html:17
+msgid "My reservations"
+msgstr "Mine reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_actions.html:25
+msgid "Click to see your reservations"
+msgstr "Klikk for å se dine reservasjoner"
+
+#: make_queue/templates/make_queue/reservation_actions.html:35
+#: make_queue/templates/make_queue/reservation_actions.html:55
+msgid "Other machines"
+msgstr "Andre maskiner"
+
+#: make_queue/templates/make_queue/reservation_actions.html:36
+#: make_queue/templates/make_queue/reservation_actions.html:56
+msgid "Click to see other machines"
+msgstr "Klikk for å se andre maskiner"
+
+#: make_queue/templates/make_queue/reservation_actions.html:40
+msgid "Overview"
+msgstr "Oversikt"
+
 #: make_queue/templates/make_queue/reservation_calendar.html:14
 msgid "Previous"
 msgstr "Forrige"
@@ -560,41 +600,29 @@ msgstr "Andre reservasjoner"
 msgid "Events"
 msgstr "Arrangementer"
 
-#: make_queue/templates/make_queue/reservation_calendar.html:136
-#: make_queue/templates/make_queue/reservation_machines.html:18
-#: make_queue/templates/make_queue/reservation_overview.html:51
-#: make_queue/templates/make_queue/reservations.html:10
-#: make_queue/templates/make_queue/reservations.html:17
-msgid "My reservations"
-msgstr "Mine reservasjoner"
-
-#: make_queue/templates/make_queue/reservation_machines.html:10
-#: make_queue/templates/make_queue/reservation_machines.html:14
+#: make_queue/templates/make_queue/reservation_machines.html:11
+#: make_queue/templates/make_queue/reservation_machines.html:15
 #: make_queue/templates/make_queue/reservations.html:22
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/templates/make_queue/reservation_machines.html:26
+#: make_queue/templates/make_queue/reservation_machines.html:27
 #: make_queue/templates/make_queue/reservation_overview.html:25
 msgid "Rules"
 msgstr "Regler"
 
-#: make_queue/templates/make_queue/reservation_overview.html:23
-#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:34
-msgid "Reservations"
-msgstr "Reservasjoner"
+#: make_queue/templates/make_queue/reservation_overview.html:29
+msgid "About the machine"
+msgstr "Om maskinen"
 
-#: make_queue/templates/make_queue/reservation_overview.html:37
-msgid "You must be logged in to make new reservations"
-msgstr "Du må være logget inn for å kunne lage nye reservasjoner"
+#: make_queue/templates/make_queue/reservation_overview.html:34
+#: news/models.py:138
+msgid "Location"
+msgstr "Sted"
 
-#: make_queue/templates/make_queue/reservation_overview.html:41
-msgid "You have reached the maximum number of future reservations"
-msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
-
-#: make_queue/templates/make_queue/reservation_overview.html:55
-msgid "Other machines"
-msgstr "Andre maskiner"
+#: make_queue/templates/make_queue/reservation_overview.html:48
+msgid "Model"
+msgstr "Model"
 
 #: make_queue/templates/make_queue/reservations.html:15
 msgid "MAKE NTNU reservations"
@@ -786,10 +814,6 @@ msgstr "Startdato"
 msgid "End date"
 msgstr "Sluttdato"
 
-#: news/models.py:138
-msgid "Location"
-msgstr "Sted"
-
 #: news/models.py:143
 msgid "Location URL"
 msgstr "Sted URL"
@@ -919,12 +943,12 @@ msgstr "Innhold"
 msgid "Publishing"
 msgstr "Publisering"
 
-#: news/templates/news/event.html:45 news/templates/news/event.html:58
-#: news/templates/news/event.html:70 news/templates/news/event.html:111
+#: news/templates/news/event.html:49 news/templates/news/event.html:62
+#: news/templates/news/event.html:74 news/templates/news/event.html:121
 msgid "Registration"
 msgstr "Påmelding"
 
-#: news/templates/news/event.html:115
+#: news/templates/news/event.html:125
 msgid "No registrations"
 msgstr "Ingen påmelding"
 
@@ -986,6 +1010,10 @@ msgstr ""
 #: web/templates/web/admin_panel.html:10
 msgid "Articles and events"
 msgstr "Artikler og arrangementer"
+
+#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:34
+msgid "Reservations"
+msgstr "Reservasjoner"
 
 #: web/templates/web/admin_panel.html:16
 msgid "Quota"
