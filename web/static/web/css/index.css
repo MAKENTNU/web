@@ -59,7 +59,6 @@
     display: none;
     width: 50px !important;
     height: 50px !important;
-    z-index: -10;
 }
 
 .txtborder.tl {
