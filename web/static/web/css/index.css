@@ -120,10 +120,6 @@
     margin: 80px 0;
 }
 
-.articles .article-img, .articles .article-text {
-    height: 300px;
-}
-
 .articles .article-img {
     grid-column: 2/3;
 }
