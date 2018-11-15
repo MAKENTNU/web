@@ -79,6 +79,18 @@
         if (coveredRules.length === 1) {
             return coveredRules[0].max_inside >= hoursInsideRule(coveredRules[0], startTime, endTime).toPrecision(2);
         }
+
+        // If the reservation is shorter than the maximum inside for any of the rules, it should also be valid for
+        // the whole duration, even though it breaks with one or more of the max_crossed rules.
+        let minTime = 168;
+        for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
+            minTime = Math.min(minTime, coveredRules[ruleIndex].max_inside);
+        }
+
+        if (minTime >= (endTime.valueOf() - startTime.valueOf()) / (60 * 60 * 1000)) {
+            return true;
+        }
+
         let maxTime = 0;
         for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
             maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
@@ -101,8 +113,10 @@
 
             // Check if the total time of the reservation is greater than what is allowed by the covered rules
             let maxTime = 0;
+            let minTime = 168;
             for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
                 maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
+                minTime = Math.min(minTime, coveredRules[ruleIndex].max_inside);
             }
 
             // Modify the start/end time based on the maximum allowed time for the covered rules
@@ -127,7 +141,10 @@
                 } else if (currentOverlap > period.max_crossed) {
                     // If the overlap with the current time period is greater than the maximum allowed when multiple
                     // time periods are selected, then shrink till it is equal to that.
-                    endTime = new Date(endTime.valueOf() - (currentOverlap - period.max_crossed) * 60 * 60 * 1000);
+                    endTime = new Date(Math.max(
+                        new Date(endTime.valueOf() - (currentOverlap - period.max_crossed) * 60 * 60 * 1000),
+                        new Date(startTime.valueOf() + minTime * 60 * 60 * 1000)
+                    ));
                 } else {
                     // If the overlap is smaller than both the allowed inside when single- and multi-period, shrink till
                     // there is no overlap between the periods.
@@ -142,7 +159,10 @@
                 } else if (currentOverlap > period.max_crossed) {
                     // If the overlap with the current time period is greater than the maximum allowed when multiple
                     // time periods are selected, then shrink till it is equal to that.
-                    startTime = new Date(startTime.valueOf() + (currentOverlap - period.max_crossed) * 60 * 60 * 1000);
+                    startTime = new Date(Math.min(
+                        new Date(startTime.valueOf() + (currentOverlap - period.max_crossed) * 60 * 60 * 1000),
+                        new Date(endTime.valueOf() - minTime * 60 * 60 * 1000)
+                    ));
                 } else {
                     // If the overlap is smaller than both the allowed inside when single- and multi-period, shrink till
                     // there is no overlap between the periods.
