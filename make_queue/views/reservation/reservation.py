@@ -1,14 +1,17 @@
+from math import ceil
+
 from abc import ABCMeta
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic import RedirectView, TemplateView
+from django.views.generic import RedirectView, TemplateView, FormView
 
 from make_queue.fields import MachineTypeField
-from make_queue.forms import ReservationForm
+from make_queue.forms import ReservationForm, FreeSlotForm
 from make_queue.models.models import Machine, Reservation
 from make_queue.templatetags.reservation_extra import calendar_url_reservation
+from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 
 
@@ -231,3 +234,53 @@ class MarkReservationAsDone(RedirectView):
 
         return self.get(request, *args, **kwargs)
 
+
+class FindFreeSlot(FormView):
+    """
+    View to find free time slots for reservations
+    """
+    template_name = "make_queue/find_free_slot.html"
+    form_class = FreeSlotForm
+
+    @staticmethod
+    def format_period(machine, start_time, end_time):
+        return {
+            "machine": machine,
+            "start_time": start_time,
+            "end_time": end_time,
+            "duration": ceil(timedelta_to_hours(end_time - start_time))
+        }
+
+    def get_periods(self, machine, required_time):
+        periods = []
+        reservations = list(
+            Reservation.objects.filter(end_time__gte=timezone.now(), machine__pk=machine.pk).order_by("start_time"))
+        for period_start, period_end in zip(reservations, reservations[1:]):
+            duration = timedelta_to_hours(period_end.start_time - period_start.end_time)
+            if duration >= required_time:
+                periods.append(self.format_period(machine, period_start.end_time, period_end.start_time))
+        if reservations:
+            periods.append(self.format_period(
+                machine, reservations[-1].end_time,
+                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)))
+        else:
+            periods.append(self.format_period(
+                machine, timezone.now(),
+                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)))
+        return periods
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+
+        required_time = form.cleaned_data["hours"] + form.cleaned_data["minutes"] / 60
+
+        periods = []
+        for machine in Machine.objects.filter(machine_type=form.cleaned_data["machine_type"]):
+            periods += self.get_periods(machine, required_time)
+
+        periods.sort(key=lambda period: period["start_time"])
+
+        context.update({
+            "free_slots": periods,
+        })
+        return self.render_to_response(context)
