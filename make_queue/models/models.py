@@ -248,6 +248,9 @@ class ReservationRule(models.Model):
         if timedelta_to_hours(end_time - start_time) > max(rule.max_hours for rule in rules):
             return False
 
+        if timedelta_to_hours(end_time - start_time) <= min(rule.max_hours for rule in rules):
+            return True
+
         return all(rule.valid_time_in_rule(start_time, end_time, len(rules) > 1) for rule in rules)
 
     class Period:
