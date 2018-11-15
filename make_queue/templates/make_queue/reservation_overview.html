@@ -67,12 +67,13 @@
 
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
-                    <img class="ui right floated stream medium image" name="{{ machine.name }}"
+                    <img class="ui right floated stream medium image" id="{{ machine.name }}" name="{{ machine.name }}"
                          src="{% static "make_queue/img/no_stream.jpg" %}">
                 </div>
                 <div id="fader"></div>
                 <i id="closefullscreen" class="ui times icon"></i>
                 <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
+                <script>let streamID = "{{ machine.name }}"</script>
                 <script src="{% static "make_queue/js/stream.js" %}"></script>
             {% endif %}
 
