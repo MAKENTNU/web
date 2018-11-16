@@ -10,7 +10,7 @@
                     {% trans "Replenishing quota" %}
                 {% endif %}
                 <a href="{% url "edit_quota" quota.pk %}"><i class="ui yellow icon pencil"></i></a>
-                {% if perms.delete_quota %}
+                {% if perms.make_queue.delete_quota %}
                     <a class="delete confirm" href="{% url "delete_quota" quota.pk %}">
                         <i class="ui red icon trash"></i>
                     </a>
