@@ -23,11 +23,8 @@
             {% endif %}
         </div>
     </div>
+{% empty %}
+	<div class="text-centered">
+		<i>{% trans 'User has no personal quotas' %}</i>
+	</div>
 {% endfor %}
-
-{% if user_quotas|length == 0 %}
-	<div class="noquota">
-		{% trans 'No quotas' %}
-	</div><br>
-{% endif %}
-
