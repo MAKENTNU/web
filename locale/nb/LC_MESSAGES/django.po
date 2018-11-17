@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-12 12:38+0100\n"
+"POT-Creation-Date: 2018-11-16 22:56+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -35,7 +35,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile.html:83
-#: make_queue/templates/make_queue/course/course_panel.html:9
+#: make_queue/templates/make_queue/course/course_panel.html:16
 msgid "Add"
 msgstr "Legg til"
 
@@ -238,7 +238,7 @@ msgid "Access granted"
 msgstr "Tilgang gitt"
 
 #: make_queue/models/course.py:20
-#: make_queue/templates/make_queue/course/course_panel.html:58
+#: make_queue/templates/make_queue/course/course_panel.html:91
 msgid "Username"
 msgstr "Brukernavn"
 
@@ -255,8 +255,8 @@ msgid "Full name"
 msgstr "Fullt navn"
 
 #: make_queue/models/course.py:24
-#: make_queue/templates/make_queue/course/course_panel.html:61
 #: make_queue/templates/make_queue/reservation_overview.html:55
+#: make_queue/templates/make_queue/course/course_panel.html:94
 msgid "Status"
 msgstr "Status"
 
@@ -333,48 +333,97 @@ msgstr "Timer enkelt periode"
 msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
-#: make_queue/templates/make_queue/course/course_panel.html:8
+#: make_queue/templates/make_queue/course/course_panel.html:15
 #: web/templates/web/admin_panel.html:22
 msgid "Course registrations"
 msgstr "Kursregistreringer"
 
-#: make_queue/templates/make_queue/course/course_panel.html:18
+#: make_queue/templates/make_queue/course/course_panel.html:25
+msgid "Filter users based on name"
+msgstr "Filtrer brukere basert på navn"
+
+#: make_queue/templates/make_queue/course/course_panel.html:26
 msgid "Search name and username"
 msgstr "Søk på navn og brukernavn"
 
-#: make_queue/templates/make_queue/course/course_panel.html:27
+#: make_queue/templates/make_queue/course/course_panel.html:30
+msgid "Filter users based on status"
+msgstr "Filtrer brukere basert på status"
+
+#: make_queue/templates/make_queue/course/course_panel.html:36
 msgid "All"
 msgstr "Alle"
 
-#: make_queue/templates/make_queue/course/course_panel.html:35
-msgid "Download displayed users"
-msgstr "Last ned viste brukere"
+#: make_queue/templates/make_queue/course/course_panel.html:47
+msgid "Download filtered users"
+msgstr "Last ned filtrerte brukere"
 
-#: make_queue/templates/make_queue/course/course_panel.html:42
-msgid "Sorting"
-msgstr "Sorterer"
+#: make_queue/templates/make_queue/course/course_panel.html:56
+msgid "user(s) selected"
+msgstr "bruker(e) valgt"
 
-#: make_queue/templates/make_queue/course/course_panel.html:49
-msgid "Displaying"
-msgstr "Viser"
+#: make_queue/templates/make_queue/course/course_panel.html:61
+msgid "Set status for all selected users"
+msgstr "Sett status for alle valgte brukere"
 
-#: make_queue/templates/make_queue/course/course_panel.html:51
-msgid "registrations"
-msgstr "registreringer"
+#: make_queue/templates/make_queue/course/course_panel.html:65
+msgid "Select status"
+msgstr "Velg status"
 
-#: make_queue/templates/make_queue/course/course_panel.html:57
+#: make_queue/templates/make_queue/course/course_panel.html:76
+msgid "Clear selected users"
+msgstr "Nullstill valg av brukere"
+
+#: make_queue/templates/make_queue/course/course_panel.html:79
+msgid "Toggle non-selected users"
+msgstr "Veksle visning av ikke valgte brukere"
+
+#: make_queue/templates/make_queue/course/course_panel.html:90
 #: make_queue/templates/make_queue/reservation_calendar.html:91
 msgid "Name"
 msgstr "Navn"
 
-#: make_queue/templates/make_queue/course/course_panel.html:59
+#: make_queue/templates/make_queue/course/course_panel.html:92
 msgid "Card number"
 msgstr "Kortnummer"
 
-#: make_queue/templates/make_queue/course/course_panel.html:60
+#: make_queue/templates/make_queue/course/course_panel.html:93
 #: web/templates/web/forms/widgets/semantic_date.html:11
 msgid "Date"
 msgstr "Dato"
+
+#: make_queue/templates/make_queue/course/course_panel.html:114
+msgid "Connected to user"
+msgstr "Koblet til bruker"
+
+#: make_queue/templates/make_queue/course/course_panel.html:154
+msgid "Displaying"
+msgstr "Viser"
+
+#: make_queue/templates/make_queue/course/course_panel.html:156
+msgid "registrations"
+msgstr "registreringer"
+
+#: make_queue/templates/make_queue/course/course_panel.html:163
+msgid "Set status of users to"
+msgstr "Sett status for brukere til"
+
+#: make_queue/templates/make_queue/course/course_panel.html:172
+msgid "You are changing the status for the following users:"
+msgstr "Du vil endre status for følgende brukere:"
+
+#: make_queue/templates/make_queue/course/course_panel.html:174
+msgid "Are you sure you want to do this?"
+msgstr "Er du sikker på at du vil gjøre dette?"
+
+#: make_queue/templates/make_queue/course/course_panel.html:179
+msgid "Set status"
+msgstr "Sett status"
+
+#: make_queue/templates/make_queue/course/course_panel.html:182
+#: make_queue/templates/make_queue/course/registration_edit.html:70
+msgid "Cancel"
+msgstr "Kanseller"
 
 #: make_queue/templates/make_queue/course/registration_create.html:5
 #, fuzzy
@@ -402,10 +451,6 @@ msgstr "Nullstill valg"
 msgctxt "edit"
 msgid "Submit"
 msgstr "Lagre"
-
-#: make_queue/templates/make_queue/course/registration_edit.html:70
-msgid "Cancel"
-msgstr "Kanseller"
 
 #: make_queue/templates/make_queue/machine_card.html:29
 #: make_queue/templates/make_queue/reservations.html:42
@@ -559,6 +604,10 @@ msgstr "Klikk for å se andre maskiner"
 #: make_queue/templates/make_queue/reservation_actions.html:40
 msgid "Overview"
 msgstr "Oversikt"
+
+#: make_queue/templates/make_queue/quota/quota_user.html:28
+msgid "User has no personal quotas"
+msgstr "Brukeren har ingen personlige kvoter"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:14
 msgid "Previous"
