@@ -2,9 +2,11 @@ import io
 import xlsxwriter
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse
+from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView, View, CreateView, UpdateView, DeleteView
 from django.db.models import Q
+from django.views.generic.edit import ProcessFormView, FormMixin
 
 from make_queue.forms import Printer3DCourseForm
 from make_queue.models.course import Printer3DCourse
@@ -61,6 +63,19 @@ class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse("course_panel")
+
+
+class BulkStatusUpdate(View):
+    """
+    Provides a method for bulk updating the status of course registrations
+    """
+
+    def post(self, request):
+        status = request.POST.get("status")
+        registrations = list(map(int, request.POST.getlist("users")))
+        Printer3DCourse.objects.filter(pk__in=registrations).update(status=status)
+
+        return redirect("course_panel")
 
 
 class CourseXLSXView(View):

@@ -73,7 +73,15 @@ def timedelta_to_hours(timedelta_obj):
 
 
 def get_day_name(day_no, locale):
+    """
+    Gets the name of the given day [0, 6] in the given locale
+    
+    :param day_no: The day in the week in the range [0, 6], with Monday being 0
+    :param locale: The language code
+    :return: The name of the given day in the given locale
+    """
+    previous_lang = translation.get_language()
     translation.activate(locale)
     locale_day_name = ugettext(day_name[day_no])
-    translation.deactivate()
+    translation.activate(previous_lang)
     return locale_day_name
