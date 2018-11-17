@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-08 08:50+0100\n"
+"POT-Creation-Date: 2018-11-17 20:17+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -405,7 +405,11 @@ msgstr "Lagre"
 msgid "Cancel"
 msgstr "Kanseller"
 
-#: make_queue/templates/make_queue/machine_card.html:29
+#: make_queue/templates/make_queue/machine_card.html:22
+msgid "for"
+msgstr "i"
+
+#: make_queue/templates/make_queue/machine_card.html:35
 #: make_queue/templates/make_queue/reservations.html:42
 msgid "View in calendar"
 msgstr "Se i kalender"
@@ -919,12 +923,12 @@ msgstr "Innhold"
 msgid "Publishing"
 msgstr "Publisering"
 
-#: news/templates/news/event.html:45 news/templates/news/event.html:58
-#: news/templates/news/event.html:70 news/templates/news/event.html:111
+#: news/templates/news/event.html:49 news/templates/news/event.html:62
+#: news/templates/news/event.html:74 news/templates/news/event.html:121
 msgid "Registration"
 msgstr "Påmelding"
 
-#: news/templates/news/event.html:115
+#: news/templates/news/event.html:125
 msgid "No registrations"
 msgstr "Ingen påmelding"
 

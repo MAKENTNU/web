@@ -4,6 +4,7 @@ from django.urls import reverse
 
 from make_queue.util.time import date_to_local, get_day_name
 from urllib.parse import quote
+from make_queue.models.models import Reservation, Machine
 
 register = template.Library()
 
@@ -123,3 +124,11 @@ def sanitize_stream_name(machine):
     for original, new in values:
         name = name.replace(original, new)
     return name
+
+@register.simple_tag()
+def get_next_reservation_datetime(machine):
+    next_reservation = machine.get_reservation_set().filter(start_time__gt=timezone.now()).order_by('start_time').first()
+    if next_reservation is not None:
+        return next_reservation.start_time
+    # If no future reservations, return the time farthest in the future a reservation can be made
+    return timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)

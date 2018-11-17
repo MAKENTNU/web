@@ -1,6 +1,7 @@
 {% load staticfiles %}
 {% load reservation_extra %}
 {% load i18n %}
+{% load tz %}
 
 <div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %} {% endif %}card">
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
@@ -15,6 +16,10 @@
         <div class="meta">
             <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
                 {% card_text_from_machine_status machine %}
+                {% if machine.get_status == "F" %}
+                    {% get_next_reservation_datetime machine as next_reservation_datetime%}
+                    {% trans "for" %} {{ next_reservation_datetime|localtime|timeuntil }}
+                {% endif %}
             </div>
         </div>
         {{ machine.machine_model }} <br>
