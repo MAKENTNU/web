@@ -126,9 +126,9 @@ def sanitize_stream_name(machine):
     return name
 
 @register.simple_tag()
-def get_next_reservation_datetime(machine):
-    next_reservation = machine.get_reservation_set().filter(start_time__gt=timezone.now()).order_by('start_time').first()
-    if next_reservation is not None:
-        return next_reservation.start_time
-    # If no future reservations, return the time farthest in the future a reservation can be made
-    return timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)
+def get_next_reservation(machine):
+    return machine.get_reservation_set().filter(start_time__gt=timezone.now()).order_by('start_time').first()
+
+@register.simple_tag()
+def number_of_seconds_in_the_future(datetime):
+    return (timezone.localtime(datetime) - timezone.now()).total_seconds()
