@@ -126,9 +126,5 @@ def sanitize_stream_name(machine):
     return name
 
 @register.simple_tag()
-def get_next_reservation(machine):
-    return machine.get_reservation_set().filter(start_time__gt=timezone.now()).order_by('start_time').first()
-
-@register.simple_tag()
 def number_of_seconds_in_the_future(datetime):
     return (timezone.localtime(datetime) - timezone.now()).total_seconds()
