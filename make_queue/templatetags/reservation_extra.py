@@ -4,7 +4,6 @@ from django.urls import reverse
 
 from make_queue.util.time import date_to_local, get_day_name
 from urllib.parse import quote
-from make_queue.models.models import Reservation, Machine
 
 register = template.Library()
 
@@ -124,10 +123,6 @@ def sanitize_stream_name(machine):
     for original, new in values:
         name = name.replace(original, new)
     return name
-
-@register.simple_tag()
-def get_next_reservation(machine):
-    return machine.get_reservation_set().filter(start_time__gt=timezone.now()).order_by('start_time').first()
 
 @register.simple_tag()
 def number_of_seconds_in_the_future(datetime):
