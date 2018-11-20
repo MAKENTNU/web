@@ -16,13 +16,15 @@
     <div class="ui container">
         <div class="articles">
             {% for tool in tools_list %}
-                {% thumbnail tool.image "600" crop="center" as im %}
+
+                {% thumbnail tool.image "600" c as im %}
                     <img class="article-img clickable {% cycle 'float-right' 'float-left' %}
                     			    {% if forloop.first %}article-first{% endif %}
 			                        {% if forloop.last %}article-last{% endif %}"
                          src="{{ im.url }}" href="{% url 'article' tool.id %}"
                          {% if article.contain %}style="object-fit: contain;" {% endif %}>
                 {% endthumbnail %}
+
             {% endfor %}
         </div>
     </div>
