@@ -23,6 +23,7 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
+    path('inventory/', include('inventory.urls')),
     path('reservation/', include('make_queue.urls')),
     path('adminpanel/', AdminPanelView.as_view(), name='adminpanel'),
     path('admin/', admin.site.urls),
