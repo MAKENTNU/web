@@ -7,9 +7,6 @@
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 
 <header id="header">
-    <div class="burger">
-        <i class="sidebar icon"></i>
-    </div>
     <div class="logo">
         <a href="{% url 'front-page' %}">
             <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
@@ -17,6 +14,11 @@
             <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
         </a>
     </div>
+
+    <div id="burger">
+        <i class="sidebar icon"></i>
+    </div>
+
     <nav id="nav" class="ui secondary inverted menu">
         <a class="item" href="{% url 'events' %}">
             {% trans "Events" %}
@@ -90,7 +92,7 @@
         event.preventDefault();
         $(".lang-form").submit();
     });
-    $('.burger').click(function () {
+    $('#burger').click(function () {
         $('#header').toggleClass('active');
     });
 </script>

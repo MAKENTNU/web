@@ -1,4 +1,6 @@
 #header {
+    --burger-margin: 2em;
+
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     grid-template-rows: 120px;
@@ -41,21 +43,19 @@
     display: none;
 }
 
-.burger {
+#header #burger {
     display: none;
+    align-self: center;
+    justify-self: end;
+    margin-right: var(--burger-margin);
     margin-bottom: -10px;
 }
 
-.burger:hover {
+#header #burger:hover {
     cursor: pointer;
 }
 
-.burger {
-    align-self: center;
-    justify-self: center;
-}
-
-.burger i {
+#header #burger i {
     color: #FFFFFF;
     font-size: 30px;
 }
@@ -141,7 +141,7 @@
         height: auto;
     }
 
-    .burger {
+    #header #burger {
         display: inline;
     }
 
