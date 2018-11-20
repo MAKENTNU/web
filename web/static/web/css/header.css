@@ -203,7 +203,8 @@
     display: none;
 }
 
-@media screen and (max-width: 900px) {
+/* Switch to medium logo */
+@media screen and (max-width: 1200px) {
     #header .logo .limg.large {
         display: none;
     }
@@ -217,12 +218,16 @@
     }
 }
 
-@media screen and (max-width: 730px) {
+/* Narrower space between elements in navbar */
+@media screen and (max-width: 1100px) {
     #header {
         --logo-padding: 1em;
         --nav-space-between: 1em;
     }
+}
 
+/* Switch to mobile layout with burger */
+@media screen and (max-width: 991px) {
     #header {
         --burger-space: minmax(calc(4em + var(--burger-margin)), 1fr);
 
@@ -300,6 +305,7 @@
     }
 }
 
+/* Switch to medium logo */
 @media screen and (max-width: 600px) {
     #header .logo .limg.large {
         display: none;
@@ -314,6 +320,7 @@
     }
 }
 
+/* Switch to small logo */
 @media screen and (max-width: 340px) {
     #header .logo .limg.large {
         display: none;
