@@ -16,10 +16,12 @@
     display: none;
 }
 
+#nav-user-dropdown .dropdown-item .dropdown-item-text,
 .lang-link .item .text {
     color: #DCDDDE;
 }
 
+#nav-user-dropdown .dropdown-item:hover .dropdown-item-text,
 .lang-link .item:hover .text {
     color: #FFF;
 }
@@ -70,23 +72,56 @@
     font-size: 30px;
 }
 
-#header #nav .lang-link {
+#nav-user-dropdown.active {
+    /* Disables property from Semantic UI */
+    background-color: transparent;
+}
+
+#header #side-nav {
+    --estimated-max-name-length: 10em;
+
+    margin: 0;
+    justify-self: end;
+    display: grid;
+    grid-template-columns: var(--estimated-max-name-length) calc(var(--logo-padding) + 10px);
+    justify-items: end;
+}
+
+#header #side-nav #nav-user-dropdown .menu {
+    background-color: rgb(34, 43, 52);
+    border-radius: 7px;
+    /* For some reason doesn't work with `border: 2px rgb(220, 221, 222)` */
+    border-width: 2px;
+    border-color: rgb(220, 221, 222);
+}
+
+#header #side-nav #nav-user-dropdown .menu .dropdown-item {
+    /* Fixes weird centering of dropdown items, caused by Semantic UI setting dropdown menu to `display: flex !important`
+       when it's too close to the right window edge */
+    align-self: auto;
+}
+
+#header #side-nav #nav-user-dropdown .menu .dropdown-item:hover {
+    background-color: rgba(255, 255, 255, .08) !important; /* Overrides Semantic UI */
+}
+
+#header #side-nav .lang-link {
     position: absolute;
     margin: 0;
     top: 0;
     right: 0;
 }
 
-#header #nav .lang-link .link.item {
+#header #side-nav .lang-link .link.item {
     margin: 0;
     align-self: start;
 }
 
-#header #nav .lang-link .link.item div.text {
+#header #side-nav .lang-link .link.item div.text {
     margin-right: 0.5em;
 }
 
-#header #nav .lang-link .link.item .globe.icon {
+#header #side-nav .lang-link .link.item .globe.icon {
     margin: 0;
 }
 
@@ -154,14 +189,36 @@
         display: inline;
         padding-left: 10px;
         padding-bottom: 20px !important;
+    }
 
+    #header #side-nav {
+        display: none;
+    }
+
+    #header.active #side-nav {
+        display: inline;
     }
 
     #header #burger {
         display: inline;
     }
 
-    #header #nav .lang-link {
+    #header #side-nav {
+        align-self: end;
+        justify-self: center;
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-column-end: 5;
+        margin-top: 2em;
+        margin-bottom: 1em;
+    }
+
+    #header.active #side-nav #nav-user-dropdown .menu {
+        /* Fixes Semantic UI de-centering the dropdown menu */
+        left: initial;
+    }
+
+    #header #side-nav .lang-link {
         position: static;
     }
 }
