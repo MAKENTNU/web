@@ -56,13 +56,18 @@
             </a>
         {% endif %}
 
-        <a class="item lang-link" href="">
-            {% if LANGUAGE_CODE == "en" %}
-                Norsk
-            {% else %}
-                English
-            {% endif %}
-        </a>
+        <div class="lang-link ui inverted secondary menu">
+            <div class="ui language link item">
+                <div class="text">
+                    {% if LANGUAGE_CODE == "en" %}
+                        Norsk
+                    {% else %}
+                        English
+                    {% endif %}
+                </div>
+                <i class="globe icon text"></i>
+            </div>
+        </div>
     </nav>
 </header>
 

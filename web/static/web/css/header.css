@@ -7,10 +7,17 @@
     background-color: rgb(33, 43, 52);
 }
 
+.lang-link .item .text {
+    color: #DCDDDE;
+}
+
+.lang-link .item:hover .text {
+    color: #FFF;
+}
+
 #header .menu {
     align-self: center;
     margin: 0;
-    padding: 0 30px;
 }
 
 #header .logo {
@@ -47,6 +54,26 @@
 .burger i {
     color: #FFFFFF;
     font-size: 30px;
+}
+
+#header #nav .lang-link {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    right: 0;
+}
+
+#header #nav .lang-link .link.item {
+    margin: 0;
+    align-self: start;
+}
+
+#header #nav .lang-link .link.item div.text {
+    margin-right: 0.5em;
+}
+
+#header #nav .lang-link .link.item .globe.icon {
+    margin: 0;
 }
 
 #header .ui.inverted.menu .item {
@@ -112,6 +139,10 @@
 
     .burger {
         display: inline;
+    }
+
+    #header #nav .lang-link {
+        position: static;
     }
 }
 
