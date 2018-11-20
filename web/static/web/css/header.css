@@ -1,4 +1,7 @@
 #header {
+    --logo-padding: 30px;
+    --logo-space: minmax(120px, 360px);
+
     --burger-margin: 2em;
 
     display: grid;
@@ -7,6 +10,10 @@
     width: 100%;
     height: 120px;
     background-color: rgb(33, 43, 52);
+}
+
+#header div.logo-centering {
+    display: none;
 }
 
 .lang-link .item .text {
@@ -23,11 +30,14 @@
 }
 
 #header .logo {
+    display: grid;
+    grid-template-columns: var(--logo-padding) var(--logo-space) minmax(2em, var(--logo-padding));
     align-self: center;
-    padding: 0 30px;
 }
 
 #header .logo img {
+    margin: auto;
+    max-height: 50px;
     object-fit: contain;
 }
 
@@ -104,11 +114,21 @@
 
 @media screen and (max-width: 730px) {
     #header {
-        grid-template-columns: 1fr 3fr;
+        --burger-space: minmax(calc(4em + var(--burger-margin)), 1fr);
+
+        grid-template-columns: var(--burger-space) auto var(--burger-space);
+    }
+
+    #header.active {
+        height: auto;
+    }
+
+    #header div.logo-centering {
+        display: inline;
     }
 
     #header .logo {
-        margin-right: 80px;
+        grid-template-columns: 1em var(--logo-space) 1em;
     }
 
     #header .logo .limg.large {
@@ -135,10 +155,6 @@
         padding-left: 10px;
         padding-bottom: 20px !important;
 
-    }
-
-    #header.active {
-        height: auto;
     }
 
     #header #burger {
