@@ -29,12 +29,16 @@
     object-fit: contain;
 }
 
-.limg {
+#header .logo .limg.large {
+    display: block;
+}
+
+#header .logo .limg.medium {
     display: none;
 }
 
-.limg.large {
-    display: inline;
+#header .logo .limg.small {
+    display: none;
 }
 
 .burger {
@@ -85,38 +89,38 @@
 }
 
 @media screen and (max-width: 900px) {
-    .limg.large {
+    #header .logo .limg.large {
         display: none;
     }
 
-    .limg.small {
-        display: none;
+    #header .logo .limg.medium {
+        display: block;
     }
 
-    .limg.medium {
-        display: inline;
+    #header .logo .limg.small {
+        display: none;
     }
 }
 
 @media screen and (max-width: 730px) {
-    .limg.large {
-        display: inline;
-    }
-
-    .limg.small {
-        display: none;
-    }
-
-    .limg.medium {
-        display: none;
-    }
-
     #header {
         grid-template-columns: 1fr 3fr;
     }
 
     #header .logo {
         margin-right: 80px;
+    }
+
+    #header .logo .limg.large {
+        display: block;
+    }
+
+    #header .logo .limg.medium {
+        display: none;
+    }
+
+    #header .logo .limg.small {
+        display: none;
     }
 
     #header .menu {
@@ -147,29 +151,29 @@
 }
 
 @media screen and (max-width: 600px) {
-    .limg.large {
+    #header .logo .limg.large {
         display: none;
     }
 
-    .limg.small {
-        display: none;
+    #header .logo .limg.medium {
+        display: block;
     }
 
-    .limg.medium {
-        display: inline;
+    #header .logo .limg.small {
+        display: none;
     }
 }
 
 @media screen and (max-width: 340px) {
-    .limg.medium {
+    #header .logo .limg.large {
         display: none;
     }
 
-    .limg.large {
+    #header .logo .limg.medium {
         display: none;
     }
 
-    .limg.small {
-        display: inline;
+    #header .logo .limg.small {
+        display: block;
     }
 }
