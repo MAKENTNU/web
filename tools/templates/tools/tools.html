@@ -20,9 +20,24 @@
                     <img class="article-img clickable {% cycle 'float-right' 'float-left' %}
                     			    {% if forloop.first %}article-first{% endif %}
 			                        {% if forloop.last %}article-last{% endif %}"
-                         src="{{ im.url }}" href="{% url 'article' tool.id %}"
-                         {% if article.contain %}style="object-fit: contain;" {% endif %}>
+                         src="{{ im.url }}" href="{% url 'tools' tool.id %}">
                 {% endthumbnail %}
+                <div class="article-text {% cycle 'float-left' 'float-right' %}
+			    {% if forloop.first %}article-first{% endif %}
+			    {% if forloop.last %}article-last{% endif %}">
+                    <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
+                    <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
+                    <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
+                    <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
+                    <div>
+                        <h2>
+                            <a href="{% url 'tools' tool.id %}"><h2>{{ tool.title }}</a>
+                            {% if perms.tools.add_reservation_rule %}
+                                <i class="ui green plus icon"></i>
+                            {% endif %}
+                        </h2>
+                    </div>
+                </div>
             {% endfor %}
         </div>
     </div>
