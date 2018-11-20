@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 
-<div class="nav">
+<header id="header">
     <div class="burger">
         <i class="sidebar icon"></i>
     </div>
@@ -17,7 +17,7 @@
             <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
         </a>
     </div>
-    <div class="ui secondary inverted menu">
+    <nav id="nav" class="ui secondary inverted menu">
         <a class="item" href="{% url 'events' %}">
             {% trans "Events" %}
         </a>
@@ -63,8 +63,8 @@
                 English
             {% endif %}
         </a>
-    </div>
-</div>
+    </nav>
+</header>
 
 {# This form is hidden, but is submitted through JQuery #}
 <form class="lang-form" action="{% url 'set_language' %}" method="POST">
@@ -86,6 +86,6 @@
         $(".lang-form").submit();
     });
     $('.burger').click(function () {
-        $('.nav').toggleClass('active');
+        $('#header').toggleClass('active');
     });
 </script>

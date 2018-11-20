@@ -1,6 +1,6 @@
 $(function () {
     $('.burger').click(function () {
-        $('.nav').toggleClass('active');
+        $('#header').toggleClass('active');
     });
     $('.logo').click(function () {
         window.location.href = '/';
