@@ -18,7 +18,7 @@
     grid-template-columns: 1fr auto 1fr;
     width: 100%;
     height: var(--header-height);
-    background-color: rgb(33, 43, 52);
+    background-color: rgb(34, 43, 52);
 }
 
 #header .nav-item .nav-item-text,
@@ -197,10 +197,6 @@
 
 #header #side-nav .lang-link .link.item .globe.icon {
     margin: 0;
-}
-
-.lang-form {
-    display: none;
 }
 
 /* Switch to medium logo */

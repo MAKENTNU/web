@@ -90,8 +90,8 @@
     </div>
 </header>
 
-{# This form is hidden, but is submitted through JQuery #}
-<form class="lang-form" action="{% url 'set_language' %}" method="POST">
+{# This form is hidden, but is submitted through jQuery #}
+<form id="lang-form" action="{% url 'set_language' %}" method="POST" style="display:none">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>
@@ -105,10 +105,12 @@
 
 <script>
     $('#nav-user-dropdown').dropdown({action: "nothing"});
+
     $(".lang-link").click(function (event) {
         event.preventDefault();
-        $(".lang-form").submit();
+        $("#lang-form").submit();
     });
+
     $('#burger').click(function () {
         $('#header').toggleClass('active');
     });
