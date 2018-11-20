@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-16 22:56+0100\n"
+"POT-Creation-Date: 2018-11-20 23:34+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -58,7 +58,8 @@ msgstr ""
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile.html:146 make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:146
+#: make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
@@ -123,7 +124,8 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: news/templates/news/admin.html:59 news/templates/news/admin.html:111
-#: news/templates/news/admin.html:190 web/templates/web/delete_modal.html:11
+#: news/templates/news/admin.html:190
+#: web/templates/web/delete_modal.html:11
 msgid "Delete"
 msgstr "Slett"
 
@@ -304,13 +306,15 @@ msgstr "Maskintype"
 
 #: make_queue/models/models.py:227
 #: make_queue/templates/make_queue/make_reservation.html:75
-#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:128
+#: make_queue/templates/make_queue/make_reservation.html:79
+#: news/models.py:128
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:228
 #: make_queue/templates/make_queue/make_reservation.html:89
-#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:133
+#: make_queue/templates/make_queue/make_reservation.html:93
+#: news/models.py:133
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -402,23 +406,23 @@ msgstr "Viser"
 msgid "registrations"
 msgstr "registreringer"
 
-#: make_queue/templates/make_queue/course/course_panel.html:163
+#: make_queue/templates/make_queue/course/course_panel.html:164
 msgid "Set status of users to"
 msgstr "Sett status for brukere til"
 
-#: make_queue/templates/make_queue/course/course_panel.html:172
+#: make_queue/templates/make_queue/course/course_panel.html:173
 msgid "You are changing the status for the following users:"
 msgstr "Du vil endre status for følgende brukere:"
 
-#: make_queue/templates/make_queue/course/course_panel.html:174
+#: make_queue/templates/make_queue/course/course_panel.html:175
 msgid "Are you sure you want to do this?"
 msgstr "Er du sikker på at du vil gjøre dette?"
 
-#: make_queue/templates/make_queue/course/course_panel.html:179
+#: make_queue/templates/make_queue/course/course_panel.html:180
 msgid "Set status"
 msgstr "Sett status"
 
-#: make_queue/templates/make_queue/course/course_panel.html:182
+#: make_queue/templates/make_queue/course/course_panel.html:183
 #: make_queue/templates/make_queue/course/registration_edit.html:70
 msgid "Cancel"
 msgstr "Kanseller"
@@ -605,7 +609,7 @@ msgid "Other reservations"
 msgstr "Andre reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:132
-#: news/templates/news/admin.html:13 web/templates/web/header.html:25
+#: news/templates/news/admin.html:13 web/templates/web/header.html:27
 msgid "Events"
 msgstr "Arrangementer"
 
@@ -629,7 +633,7 @@ msgid "Rules"
 msgstr "Regler"
 
 #: make_queue/templates/make_queue/reservation_overview.html:23
-#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:34
+#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:35
 msgid "Reservations"
 msgstr "Reservasjoner"
 
@@ -915,7 +919,7 @@ msgid "No events"
 msgstr "Ingen arrangementer."
 
 #: news/templates/news/admin.html:145 news/templates/news/articles.html:13
-#: web/templates/web/header.html:28
+#: web/templates/web/header.html:31
 msgid "Articles"
 msgstr "Artikler"
 
@@ -982,7 +986,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Ny event"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:18
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:18
 msgid "Edit event"
 msgstr "Rediger event"
 
@@ -1058,34 +1063,30 @@ msgid "Follow us on Instagram!"
 msgstr "Følg oss på Instagram!"
 
 #: web/templates/web/footer.html:42
-msgid "About"
-msgstr "Om oss"
-
-#: web/templates/web/footer.html:47
 msgid "Cookies"
 msgstr "Cookies"
 
-#: web/templates/web/header.html:22
-msgid "Home"
-msgstr "Hjem"
-
-#: web/templates/web/header.html:31
+#: web/templates/web/header.html:39
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 
-#: web/templates/web/header.html:42
+#: web/templates/web/header.html:43
+msgid "About us"
+msgstr "Om oss"
+
+#: web/templates/web/header.html:58
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:46
+#: web/templates/web/header.html:63
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:49
+#: web/templates/web/header.html:66
 msgid "Logout"
 msgstr "Logg ut"
 
-#: web/templates/web/header.html:55
+#: web/templates/web/header.html:73
 msgid "Login"
 msgstr "Logg inn"
 
