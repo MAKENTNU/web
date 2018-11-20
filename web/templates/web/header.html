@@ -23,28 +23,28 @@
     </div>
 
     <nav id="nav" class="ui secondary inverted menu">
-        <a class="item" href="{% url 'events' %}">
-            {% trans "Events" %}
+        <a class="nav-item item" href="{% url 'events' %}">
+            <div class="nav-item-text">{% trans "Events" %}</div>
         </a>
-        <a class="item" href="{% url 'articles' %}">
-            {% trans "Articles" %}
+        <a class="nav-item item" href="{% url 'articles' %}">
+            <div class="nav-item-text">{% trans "Articles" %}</div>
         </a>
-        <a class="item" href="{% url 'reservation_machines_overview' %}">
-            {% trans "Reservations" %}
+        <a class="nav-item item" href="{% url 'reservation_machines_overview' %}">
+            <div class="nav-item-text">{% trans "Reservations" %}</div>
         </a>
-        <a class="item" href="{% url 'makerspace' %}">
-            {% trans "Makerverkstedet" %}
+        <a class="nav-item item" href="{% url 'makerspace' %}">
+            <div class="nav-item-text">{% trans "Makerverkstedet" %}</div>
         </a>
-        <a class="item" href="{% url 'about' %}">
-            {% trans "About us" %}
+        <a class="nav-item item" href="{% url 'about' %}">
+            <div class="nav-item-text">{% trans "About us" %}</div>
         </a>
     </nav>
 
     <div id="side-nav" class="ui secondary menu">
         {% if user.is_authenticated %}
-            <div id="nav-user-dropdown" class="ui dropdown item">
-                {{ user.first_name|first_word }}
-                <i class="dropdown icon" tabindex{# For disabling focus on click #}></i>
+            <div id="nav-user-dropdown" class="nav-item ui dropdown item">
+                <div class="nav-item-text">{{ user.first_name|first_word }}</div>
+                <i class="dropdown icon nav-item-text" tabindex{# For disabling focus on click #}></i>
 
                 <div class="menu transition hidden">
                     {% if user|has_any_permissions or user.is_superuser %}
@@ -62,8 +62,8 @@
 
             </div>
         {% else %}
-            <a class="item" href="{% url 'login' %}">
-                {% trans "Login" %}
+            <a class="nav-item item" href="{% url 'login' %}">
+                <div class="nav-item-text">{% trans "Login" %}</div>
             </a>
         {% endif %}
 
