@@ -6,8 +6,8 @@ from django.views.generic import TemplateView
 from inventory.models import ItemInSubContainer, Room, Item
 
 
-class IndexView(TemplateView):
-    template_name = 'inventory/items.html'
+class InventoryView(TemplateView):
+    template_name = 'inventory/inventory.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -35,7 +35,7 @@ def items(request):
     context = {
         'items': items
     }
-    template = loader.get_template('inventory/items.html')
+    template = loader.get_template('inventory/inventory.html')
     return HttpResponse(template.render(context, request))
 
 

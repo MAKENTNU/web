@@ -1,0 +1,24 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load thumbnail %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "inventory/css/inventory.css" %}">
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container text-centered">
+        <div class='ui search'>
+            <div class="ui icon input" id="inventory-search">
+                <input class="prompt" type="text" placeholder="Søkeord"  oninput="myFunction()">
+                <i class="search icon"></i>
+{#                <button class="ui button">Søk</button>#}
+            </div>
+        </div>
+        {% for item in items %}
+            <div>
+                {{ item.name|add:" hey" }}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
