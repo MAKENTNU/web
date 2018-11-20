@@ -18,20 +18,20 @@
         </a>
     </div>
     <div class="ui secondary inverted menu">
-        <a class="item" href="{% url 'front-page' %}">
-            {% trans "Home" %}
-        </a>
         <a class="item" href="{% url 'events' %}">
             {% trans "Events" %}
         </a>
         <a class="item" href="{% url 'articles' %}">
             {% trans "Articles" %}
         </a>
+        <a class="item" href="{% url 'reservation_machines_overview' %}">
+            {% trans "Reservations" %}
+        </a>
         <a class="item" href="{% url 'makerspace' %}">
             {% trans "Makerverkstedet" %}
         </a>
-        <a class="item" href="{% url 'reservation_machines_overview' %}">
-            {% trans "Reservations" %}
+        <a class="item" href="{% url 'about' %}">
+            {% trans "About us" %}
         </a>
         {% if user.is_authenticated %}
             <div class="ui dropdown item" id="nav-user-dropdown">
@@ -55,17 +55,7 @@
                 {% trans "Login" %}
             </a>
         {% endif %}
-        <!--div class="right menu">
-            <div class="item">
-                <div class="ui icon input">
-                    <input type="text" placeholder="Search...">
-                    <i class="search link icon"></i>
-                </div>
-            </div>
-            <a class="ui item">
-                Logout
-            </a>
-        </div-->
+
         <a class="item lang-link" href="">
             {% if LANGUAGE_CODE == "en" %}
                 Norsk
