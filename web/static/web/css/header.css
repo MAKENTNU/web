@@ -10,6 +10,7 @@
 
     /* nav */
     --nav-space-between: 2em;
+    --bubble-background-extra-width: calc(1.5 * var(--nav-space-between));
     --dur: 0.15s;
     --font-size: 1.25em;
 
@@ -98,9 +99,51 @@
     background-color: transparent;
 }
 
+#header #nav .nav-item .bubble-background,
+#header #side-nav .nav-item .bubble-background {
+    position: absolute;
+    width: 100%;
+    height: var(--font-size);
+    border-radius: 2em;
+    z-index: 1;
+    transition: width var(--dur) linear, height var(--dur) linear, background-color var(--dur) ease-out;
+}
+
+#header #nav .nav-item:hover .bubble-background,
+#header #side-nav .nav-item:hover .bubble-background {
+    width: calc(100% + var(--bubble-background-extra-width));
+    height: calc(var(--font-size) + 2em);
+    z-index: 2;
+}
+
 #header #nav .nav-item .nav-item-text,
 #header #side-nav .nav-item .nav-item-text {
+    z-index: 3;
     transition: color var(--dur) ease;
+}
+
+#header #nav .nav-item:nth-child(1):hover .bubble-background {
+    background-color: rgba(239, 184, 14, 0.9);
+}
+
+#header #nav .nav-item:nth-child(2):hover .bubble-background {
+    background-color: rgba(0, 235, 179, 0.8);
+}
+
+#header #nav .nav-item:nth-child(3):hover .bubble-background {
+    background-color: rgba(12, 100, 141, 1); /* MAKE's blue primary color (12, 66, 106), with brightness turned up from 149 to 114 */
+}
+
+#header #nav .nav-item:nth-child(4):hover .bubble-background {
+    background-color: rgba(0, 235, 179, 0.8);
+}
+
+#header #nav .nav-item:nth-child(5):hover .bubble-background {
+    background-color: rgba(239, 184, 14, 0.9);
+}
+
+#header #side-nav .nav-item:nth-child(1):hover .bubble-background {
+    background-color: rgba(12, 100, 141, 1);
 }
 
 #header #side-nav {
