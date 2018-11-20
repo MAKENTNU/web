@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load reservation_extra %}
+{% load tz %}
 
 {% block head %}
     <script type="text/javascript" src="{% static 'web/calendar/calendar.min.js' %}"></script>
@@ -55,6 +56,14 @@
                             <div class="header">{% trans "Status" %}</div>
                             <span class="ui {% card_color_from_machine_status machine %} text tiny header">
                                 {% card_text_from_machine_status machine %}
+                                {% with machine.get_next_reservation as next_reservation %}
+                                    {% if machine.get_status == "F" and next_reservation is not None%}
+                                        {% number_of_seconds_in_the_future next_reservation.start_time as next_reservation_timedelta %}
+                                        {%  if next_reservation_timedelta < 86400 %}
+                                            {% trans "for" %} {{ next_reservation.start_time|localtime|timeuntil }}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endwith %}
                             </span>
                         </div>
                     </div>
