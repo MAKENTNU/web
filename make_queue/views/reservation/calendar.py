@@ -105,8 +105,10 @@ class ReservationCalendarView(ReservationCalendarComponentView):
         :return: context required to show the reservation calendar with controls
         """
         context = super().get_context_data(year, week, machine)
-        context["next"] = get_next_week(context["year"], context["week"], 1)
-        context["prev"] = get_next_week(context["year"], context["week"], -1)
-        context["machine_types"] = Machine.__subclasses__()
+        context.update({
+            "next": get_next_week(context["year"], context["week"], 1),
+            "prev": get_next_week(context["year"], context["week"], -1),
+            "other_machines": Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type),
+        })
 
         return context
