@@ -3,6 +3,7 @@ django-ckeditor==5.6.1
 Pillow
 python-social-auth
 python-dataporten-auth
+pytz
 social-auth-app-django
 sorl-thumbnail
 channels
