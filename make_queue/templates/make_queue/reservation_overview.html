@@ -73,14 +73,13 @@
                 <div id="fader"></div>
                 <i id="closefullscreen" class="ui times icon"></i>
                 <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
-                <script>let streamID = "{{ machine.name }}"</script>
+                <script>let streamID = "{{ machine.name }}";</script>
                 <script src="{% static "make_queue/js/stream.js" %}"></script>
             {% endif %}
 
             <div class="ui right floated {% if machine.machine_type.has_stream %}sixteen{% else %}ten{% endif %} wide mobile only no padding column">
                 {% include "make_queue/reservation_actions.html" %}
             </div>
-
 
         </div>
         {% url 'reservation_calendar' year=next.0 week=next.1 machine=machine as link_next %}

@@ -33,8 +33,8 @@ a.wrapped.button {
 
 }
 
-/* Dropdown should not be overlapped by reservations, which have a maximum z-index of 200 */
+/* Dropdown should not be overlapped by reservations, which have a maximum z-index of 200 (300 for current_time_indicator) */
 .ui.action.list .menu {
-    z-index: 201;
+    z-index: 301;
     width: 100%;
 }
