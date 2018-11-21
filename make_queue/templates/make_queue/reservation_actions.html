@@ -1,7 +1,7 @@
 {% load i18n %}
 {% load reservation_extra %}
 
-<h3>Actions</h3>
+<h3>{% trans "Actions" %}</h3>
 <div class="ui relaxed divided selection action list">
     <a class="item {% if not can_use or not can_make_more_reservations %}disable{% endif %} enable_popup"
             {% if not user.is_authenticated %}
