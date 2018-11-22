@@ -7,7 +7,13 @@
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
 {% endblock %}
 
-{% block title %}{% trans "My reservations" %}{% endblock %}
+{% block title %}
+    {% if admin %}
+        MAKE NTNU {% trans "reservations" %}
+    {% else %}
+        {% trans "My reservations" %}
+    {% endif %}
+{% endblock %}
 {% block body %}
     <div class="ui container">
         <div class="ui huge header">
