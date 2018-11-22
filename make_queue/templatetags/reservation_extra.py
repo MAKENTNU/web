@@ -124,6 +124,7 @@ def sanitize_stream_name(machine):
         name = name.replace(original, new)
     return name
 
+
 @register.simple_tag()
 def number_of_seconds_in_the_future(datetime):
     return (timezone.localtime(datetime) - timezone.now()).total_seconds()

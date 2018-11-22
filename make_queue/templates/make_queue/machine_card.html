@@ -17,9 +17,9 @@
             <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
                 {% card_text_from_machine_status machine %}
                 {% with machine.get_next_reservation as next_reservation %}
-                    {% if machine.get_status == "F" and next_reservation is not None%}
+                    {% if machine.get_status == "F" and next_reservation is not None %}
                         {% number_of_seconds_in_the_future next_reservation.start_time as next_reservation_timedelta %}
-                        {%  if next_reservation_timedelta < 86400 %}
+                        {% if next_reservation_timedelta < 86400 %}
                             {% trans "for" %} {{ next_reservation.start_time|localtime|timeuntil }}
                         {% endif %}
                     {% endif %}
