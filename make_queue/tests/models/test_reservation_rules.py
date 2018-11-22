@@ -215,3 +215,8 @@ class ReservationRuleTests(TestCase):
         self.assertFalse(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 0, 0),
                                                     datetime.datetime(2018, 11, 6, 12, 0), self.machine_type),
                          "A period may not be valid in one of the rules is covers")
+
+        self.assertTrue(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 0, 0),
+                                                   datetime.datetime(2018, 11, 6, 10, 0), self.machine_type),
+                        "A period may be valid, even though not all of its rules are valid, if it is still less than"
+                        "the shortest maximum length of any of its rules.")
