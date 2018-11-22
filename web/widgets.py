@@ -16,10 +16,8 @@ class SemanticSearchableChoiceInput(forms.Select):
 
     def __init__(self, *args, **kwargs):
         super().__init__()
-        if "prompt_text" in kwargs:
-            self.attrs["prompt_text"] = kwargs["prompt_text"]
-        else:
-            self.attrs["prompt_text"] = self.prompt_text
+        self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
+        self.attrs["force_selection"] = kwargs.pop("force_selection", False)
 
 
 class SemanticDateInput(forms.DateInput):
