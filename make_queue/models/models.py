@@ -35,6 +35,9 @@ class Machine(models.Model):
     def get_reservation_set(self):
         return Reservation.objects.filter(machine=self)
 
+    def get_next_reservation(self):
+        return self.get_reservation_set().filter(start_time__gt=timezone.now()).order_by('start_time').first()
+
     @abstractmethod
     def can_user_use(self, user):
         return self.machine_type.can_user_use(user)
@@ -44,7 +47,6 @@ class Machine(models.Model):
                self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
-
     def __str__(self):
         return self.name + " - " + self.machine_model
 
@@ -247,6 +249,9 @@ class ReservationRule(models.Model):
                  rule.hours_inside(start_time, end_time)]
         if timedelta_to_hours(end_time - start_time) > max(rule.max_hours for rule in rules):
             return False
+
+        if timedelta_to_hours(end_time - start_time) <= min(rule.max_hours for rule in rules):
+            return True
 
         return all(rule.valid_time_in_rule(start_time, end_time, len(rules) > 1) for rule in rules)
 
