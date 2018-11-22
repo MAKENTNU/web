@@ -67,7 +67,7 @@
 
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
-                    <img class="ui right floated stream medium image" id="{{ machine.name }}" name="{{ machine.name }}"
+                    <img class="ui right floated stream medium image" id="{% sanitize_stream_name machine %}" name="{{ machine.name }}"
                          src="{% static "make_queue/img/no_stream.jpg" %}">
                 </div>
                 <div id="fader"></div>
