@@ -44,21 +44,10 @@
 }
 
 #header .logo img {
+    display: none; /* Logo size changes at the bottom of this stylesheet */
     margin: auto;
     max-height: 50px;
     object-fit: contain;
-}
-
-#header .logo img.large {
-    display: block;
-}
-
-#header .logo img.medium {
-    display: none;
-}
-
-#header .logo img.small {
-    display: none;
 }
 
 #header #burger {
@@ -179,21 +168,6 @@
     margin: 0;
 }
 
-/* Switch to medium logo */
-@media screen and (max-width: 1200px) {
-    #header .logo img.large {
-        display: none;
-    }
-
-    #header .logo img.medium {
-        display: block;
-    }
-
-    #header .logo img.small {
-        display: none;
-    }
-}
-
 /* Narrower space between elements in navbar */
 @media screen and (max-width: 1100px) {
     #header {
@@ -221,18 +195,6 @@
 
     #header .logo {
         grid-template-columns: 1em var(--logo-space) 1em;
-    }
-
-    #header .logo img.large {
-        display: block;
-    }
-
-    #header .logo img.medium {
-        display: none;
-    }
-
-    #header .logo img.small {
-        display: none;
     }
 
     #header #burger {
@@ -282,31 +244,34 @@
     }
 }
 
-/* Switch to medium logo */
-@media screen and (max-width: 600px) {
+/*** Logo size changes ***/
+
+@media screen and (min-width: 1201px) {
     #header .logo img.large {
-        display: none;
-    }
-
-    #header .logo img.medium {
         display: block;
-    }
-
-    #header .logo img.small {
-        display: none;
     }
 }
 
-/* Switch to small logo */
-@media screen and (max-width: 340px) {
-    #header .logo img.large {
-        display: none;
-    }
-
+@media screen and (max-width: 1200px) and (min-width: 993px) {
     #header .logo img.medium {
-        display: none;
+        display: block;
     }
+}
 
+/* Switch to mobile layout */
+@media screen and (max-width: 992px) and (min-width: 601px) {
+    #header .logo img.large {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) and (min-width: 341px) {
+    #header .logo img.medium {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 340px) {
     #header .logo img.small {
         display: block;
     }
