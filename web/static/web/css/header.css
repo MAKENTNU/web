@@ -106,7 +106,8 @@
     height: var(--font-size);
     border-radius: 2em;
     z-index: 1;
-    transition: width var(--dur) linear, height var(--dur) linear, background-color var(--dur) ease-out;
+    opacity: 0;
+    transition: width var(--dur) linear, height var(--dur) linear, opacity var(--dur) ease-out;
 }
 
 #header #nav > .item:hover .bubble-background,
@@ -114,6 +115,7 @@
     width: calc(100% + var(--bubble-background-extra-width));
     height: calc(var(--font-size) + 2em);
     z-index: 2;
+    opacity: 1;
 }
 
 #header #nav > .item > .text,
@@ -122,28 +124,17 @@
     transition: color var(--dur) ease;
 }
 
-#header #nav > .item:nth-child(1):hover .bubble-background {
-    background-color: rgba(239, 184, 14, 0.9);
+#header #nav > .item .make_bg_yellow.bubble-background {
+    filter: brightness(90%);
 }
 
-#header #nav > .item:nth-child(2):hover .bubble-background {
-    background-color: rgba(0, 235, 179, 0.8);
+#header #nav > .item .make_bg_turquoise.bubble-background {
+    filter: brightness(90%);
 }
 
-#header #nav > .item:nth-child(3):hover .bubble-background {
-    background-color: rgba(12, 100, 141, 1); /* MAKE's blue primary color (12, 66, 106), with brightness turned up from 149 to 114 */
-}
-
-#header #nav >.item:nth-child(4):hover .bubble-background {
-    background-color: rgba(0, 235, 179, 0.8);
-}
-
-#header #nav > .item:nth-child(5):hover .bubble-background {
-    background-color: rgba(239, 184, 14, 0.9);
-}
-
-#header #side-nav > .item:nth-child(1):hover .bubble-background {
-    background-color: rgba(12, 100, 141, 1);
+#header #nav > .item .make_bg_blue.bubble-background,
+#header #side-nav > .item .make_bg_blue.bubble-background {
+    filter: brightness(130%);
 }
 
 #header #side-nav {
