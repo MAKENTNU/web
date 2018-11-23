@@ -4,7 +4,7 @@
     --logo-min-width: 120px;
     --logo-space: minmax(var(--logo-min-width), var(--logo-width));
 
-    --burger-margin: 2em;
+    --burger-margin: 1em;
 
     --header-height: 120px;
 
@@ -49,15 +49,15 @@
     object-fit: contain;
 }
 
-#header .logo .limg.large {
+#header .logo img.large {
     display: block;
 }
 
-#header .logo .limg.medium {
+#header .logo img.medium {
     display: none;
 }
 
-#header .logo .limg.small {
+#header .logo img.small {
     display: none;
 }
 
@@ -66,20 +66,13 @@
     align-self: center;
     justify-self: end;
     margin-right: var(--burger-margin);
-    margin-bottom: -10px;
 }
 
 #header #burger:hover {
     cursor: pointer;
 }
 
-#header #burger i {
-    color: #FFFFFF;
-    font-size: 30px;
-}
-
 #header #nav {
-    justify-self: center;
     font-size: var(--font-size);
 }
 
@@ -88,7 +81,6 @@
     height: calc(var(--font-size) + 2em);
     margin: calc(var(--nav-space-between) / 2);
     padding: 0;
-    border-radius: 0;
     justify-content: center;
 }
 
@@ -105,7 +97,6 @@
     width: 100%;
     height: var(--font-size);
     border-radius: 2em;
-    z-index: 1;
     opacity: 0;
     transition: width var(--dur) linear, height var(--dur) linear, opacity var(--dur) ease-out;
 }
@@ -114,13 +105,12 @@
 #header #side-nav > .item:hover .bubble-background {
     width: calc(100% + var(--bubble-background-extra-width));
     height: calc(var(--font-size) + 2em);
-    z-index: 2;
     opacity: 1;
 }
 
 #header #nav > .item > .text,
 #header #side-nav > .item > .text {
-    z-index: 3;
+    z-index: 1;
     transition: color var(--dur) ease;
 }
 
@@ -156,8 +146,7 @@
     background-color: rgb(34, 43, 52);
     border-radius: 7px;
     /* For some reason doesn't work with `border: 2px rgb(220, 221, 222)` */
-    border-width: 2px;
-    border-color: rgb(220, 221, 222);
+    border: 2px solid rgb(220, 221, 222);
 }
 
 #header #side-nav #nav-user-dropdown .menu > .item {
@@ -192,15 +181,15 @@
 
 /* Switch to medium logo */
 @media screen and (max-width: 1200px) {
-    #header .logo .limg.large {
+    #header .logo img.large {
         display: none;
     }
 
-    #header .logo .limg.medium {
+    #header .logo img.medium {
         display: block;
     }
 
-    #header .logo .limg.small {
+    #header .logo img.small {
         display: none;
     }
 }
@@ -234,15 +223,15 @@
         grid-template-columns: 1em var(--logo-space) 1em;
     }
 
-    #header .logo .limg.large {
+    #header .logo img.large {
         display: block;
     }
 
-    #header .logo .limg.medium {
+    #header .logo img.medium {
         display: none;
     }
 
-    #header .logo .limg.small {
+    #header .logo img.small {
         display: none;
     }
 
@@ -255,6 +244,7 @@
         grid-column-start: 1;
         grid-column-end: 4;
         margin: 0;
+        justify-self: center; /* Makes the navbar not take up the entire width of its parent, which most noticably applies to the buttons inside */
     }
 
     #header #nav,
@@ -294,30 +284,30 @@
 
 /* Switch to medium logo */
 @media screen and (max-width: 600px) {
-    #header .logo .limg.large {
+    #header .logo img.large {
         display: none;
     }
 
-    #header .logo .limg.medium {
+    #header .logo img.medium {
         display: block;
     }
 
-    #header .logo .limg.small {
+    #header .logo img.small {
         display: none;
     }
 }
 
 /* Switch to small logo */
 @media screen and (max-width: 340px) {
-    #header .logo .limg.large {
+    #header .logo img.large {
         display: none;
     }
 
-    #header .logo .limg.medium {
+    #header .logo img.medium {
         display: none;
     }
 
-    #header .logo .limg.small {
+    #header .logo img.small {
         display: block;
     }
 }

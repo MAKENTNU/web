@@ -12,15 +12,13 @@
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% url 'front-page' %}">
-            <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
-            <img class="limg medium" src="{% static "web/img/logo_make.svg" %}">
-            <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
+            <img class="large" src="{% static "web/img/logo_white.svg" %}">
+            <img class="medium" src="{% static "web/img/logo_make.svg" %}">
+            <img class="small" src="{% static "web/img/logo_m.svg" %}">
         </a>
     </div>
 
-    <div id="burger">
-        <i class="sidebar icon"></i>
-    </div>
+    <i id="burger" class="big inverted sidebar icon"></i>
 
     <nav id="nav" class="ui secondary inverted menu">
         <a class="item" href="{% url 'events' %}">
@@ -91,7 +89,7 @@
 </header>
 
 {# This form is hidden, but is submitted through jQuery #}
-<form id="lang-form" action="{% url 'set_language' %}" method="POST" style="display:none">
+<form id="lang-form" action="{% url 'set_language' %}" method="POST">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>
@@ -100,7 +98,6 @@
         <input name="language" type="hidden" value="en"/>
         <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
     {% endif %}
-    <input type="submit"/>
 </form>
 
 <script>
