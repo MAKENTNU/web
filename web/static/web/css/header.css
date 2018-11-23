@@ -21,15 +21,15 @@
     background-color: rgb(34, 43, 52);
 }
 
-#header .nav-item .nav-item-text,
-#nav-user-dropdown .dropdown-item .dropdown-item-text,
-.lang-link .item .text {
+#header .item > .text,
+#nav-user-dropdown .menu > .item > .text,
+.lang-link .item > .text {
     color: #DCDDDE;
 }
 
-#header .nav-item:hover .nav-item-text,
-#nav-user-dropdown .dropdown-item:hover .dropdown-item-text,
-.lang-link .item:hover .text {
+#header .item:hover > .text,
+#nav-user-dropdown .menu > .item:hover > .text,
+.lang-link .item:hover > .text {
     color: #FFF;
 }
 
@@ -83,8 +83,8 @@
     font-size: var(--font-size);
 }
 
-#header #nav .nav-item,
-#header #side-nav .nav-item {
+#header #nav > .item,
+#header #side-nav > .item {
     height: calc(var(--font-size) + 2em);
     margin: calc(var(--nav-space-between) / 2);
     padding: 0;
@@ -92,15 +92,15 @@
     justify-content: center;
 }
 
-#header #nav .nav-item:hover,
-#header #side-nav .nav-item:hover,
+#header #nav > .item:hover,
+#header #side-nav > .item:hover,
 #nav-user-dropdown.active {
     /* Disables property from Semantic UI */
     background-color: transparent;
 }
 
-#header #nav .nav-item .bubble-background,
-#header #side-nav .nav-item .bubble-background {
+#header #nav > .item .bubble-background,
+#header #side-nav > .item .bubble-background {
     position: absolute;
     width: 100%;
     height: var(--font-size);
@@ -109,40 +109,40 @@
     transition: width var(--dur) linear, height var(--dur) linear, background-color var(--dur) ease-out;
 }
 
-#header #nav .nav-item:hover .bubble-background,
-#header #side-nav .nav-item:hover .bubble-background {
+#header #nav > .item:hover .bubble-background,
+#header #side-nav > .item:hover .bubble-background {
     width: calc(100% + var(--bubble-background-extra-width));
     height: calc(var(--font-size) + 2em);
     z-index: 2;
 }
 
-#header #nav .nav-item .nav-item-text,
-#header #side-nav .nav-item .nav-item-text {
+#header #nav > .item > .text,
+#header #side-nav > .item > .text {
     z-index: 3;
     transition: color var(--dur) ease;
 }
 
-#header #nav .nav-item:nth-child(1):hover .bubble-background {
+#header #nav > .item:nth-child(1):hover .bubble-background {
     background-color: rgba(239, 184, 14, 0.9);
 }
 
-#header #nav .nav-item:nth-child(2):hover .bubble-background {
+#header #nav > .item:nth-child(2):hover .bubble-background {
     background-color: rgba(0, 235, 179, 0.8);
 }
 
-#header #nav .nav-item:nth-child(3):hover .bubble-background {
+#header #nav > .item:nth-child(3):hover .bubble-background {
     background-color: rgba(12, 100, 141, 1); /* MAKE's blue primary color (12, 66, 106), with brightness turned up from 149 to 114 */
 }
 
-#header #nav .nav-item:nth-child(4):hover .bubble-background {
+#header #nav >.item:nth-child(4):hover .bubble-background {
     background-color: rgba(0, 235, 179, 0.8);
 }
 
-#header #nav .nav-item:nth-child(5):hover .bubble-background {
+#header #nav > .item:nth-child(5):hover .bubble-background {
     background-color: rgba(239, 184, 14, 0.9);
 }
 
-#header #side-nav .nav-item:nth-child(1):hover .bubble-background {
+#header #side-nav > .item:nth-child(1):hover .bubble-background {
     background-color: rgba(12, 100, 141, 1);
 }
 
@@ -157,7 +157,7 @@
     font-size: var(--font-size);
 }
 
-#header #side-nav .nav-item {
+#header #side-nav > .item {
     margin-right: 0;
 }
 
@@ -169,13 +169,13 @@
     border-color: rgb(220, 221, 222);
 }
 
-#header #side-nav #nav-user-dropdown .menu .dropdown-item {
+#header #side-nav #nav-user-dropdown .menu > .item {
     /* Fixes weird centering of dropdown items, caused by Semantic UI setting dropdown menu to `display: flex !important`
        when it's too close to the right window edge */
     align-self: auto;
 }
 
-#header #side-nav #nav-user-dropdown .menu .dropdown-item:hover {
+#header #side-nav #nav-user-dropdown .menu > .item:hover {
     background-color: rgba(255, 255, 255, .08) !important; /* Overrides Semantic UI */
 }
 
@@ -276,8 +276,8 @@
         display: inline;
     }
 
-    #header #nav .nav-item,
-    #header #side-nav .nav-item {
+    #header #nav > .item,
+    #header #side-nav > .item {
         margin: 0;
     }
 
