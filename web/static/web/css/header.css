@@ -203,7 +203,7 @@
 }
 
 /* Switch to mobile layout with burger */
-@media screen and (max-width: 991px) {
+@media screen and (max-width: 992px) {
     #header {
         --burger-space: minmax(calc(4em + var(--burger-margin)), 1fr);
 

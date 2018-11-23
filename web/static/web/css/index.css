@@ -170,7 +170,8 @@
     }
 }
 
-@media screen and (max-width: 991px) {
+/* Switch to mobile layout */
+@media screen and (max-width: 992px) {
     .articles {
         grid-template-columns: 1fr 20fr 1fr;
     }
