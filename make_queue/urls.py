@@ -16,6 +16,7 @@ register_converter(converters.DateTime, "time")
 json_urlpatterns = [
     path('<machine:machine>', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<machine:machine>/<reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
+    path('<str:username>/',  permission_required("make_queue.add_printer3dcourse")(api.course.get_full_name_from_username), name="user_json"),
 ]
 
 quota_url_patterns = [

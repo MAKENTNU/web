@@ -81,9 +81,18 @@
                 ;
             })
         ;
-        $(".clear-dropdown").click(function() {
+        $(".clear-dropdown").click(function () {
             $(this).closest("div.ui.field").find("div.dropdown").dropdown("clear");
         });
+
+        $("input[name='username']").focusout(function () {
+                $.ajax(langPrefix + "/reservation/json/" +  $("input[name='username']").val() + "/", {
+                    success: function (data) {
+                        $("input[name='name']").val(JSON.parse(JSON.stringify(data))["full_name"]);
+                    }
+                })
+            }
+        );
     </script>
 
 {% endblock %}
