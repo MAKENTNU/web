@@ -1,10 +1,11 @@
 from django.http import JsonResponse
-import subprocess
+import ldap
 
-LDAP_HOST = 'at.ntnu.no'
+LDAP_HOST = 'ldap://at.ntnu.no'
+LDAP_BASE = 'dc=ntnu, dc=no'
 
 fields = {
-    'full_name': 'gecos',
+    'full_name': 'cn',
     'surname': 'sn',
     'group_id': 'gidNumber',
     'id': 'uidNumber',
@@ -13,15 +14,19 @@ fields = {
 
 
 def LDAP_search(field, value):
-    return subprocess.check_output(["ldapsearch", "-h", LDAP_HOST, '-x', '{}={}'.format(field, value)]).decode()
+    l = ldap.initialize(LDAP_HOST)
+    l.simple_bind()
+    query = "({}={})".format(field, value)
+    return l.search_s(LDAP_BASE, ldap.SCOPE_SUBTREE, query)
 
 
 def get_LDAP_field(ldapData, field):
-    name_start = ldapData.find(field + ': ') + len(field + ': ')
-    return ldapData[name_start:ldapData.find('\n', name_start)]
+    if len(ldapData) == 0: # No results
+        return ""
+    return ldapData[0][1][field][0].decode()
 
 
-def get_full_name_from_username(request, username):
+def get_user_details_from_username(request, username):
     return JsonResponse({
         "full_name": get_LDAP_field(LDAP_search(fields['username'], username), fields['full_name']),
         "username": username,
