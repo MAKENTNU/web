@@ -24,8 +24,9 @@ def LDAP_search(field, value):
 
 
 def get_LDAP_field(ldapData, field):
-    return ldapData[0][1].get(fields[field], [""])[0].decode()
-    # list<tuple<str, dict<str, list<str>>>>
+    return ldapData[0][1].get(fields[field], [b''])[0].decode()
+    # list<tuple<str, dict<str, list<bstr>>>>
+
 
 def get_user_details_from_username(request, username):
     user = User.objects.filter(username=username).first()
@@ -41,6 +42,7 @@ def get_user_details_from_username(request, username):
         user_details["email"] = get_LDAP_field(ldap_results, "mail")
 
     return JsonResponse(user_details)
+
 
 def get_user_details_from_email(request, email):
     user = User.objects.filter(email=email).first()

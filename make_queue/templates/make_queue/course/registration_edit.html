@@ -86,9 +86,9 @@
         });
 
         $("input[name='username']").focusout(function () {
-                $.ajax(langPrefix + "/reservation/json/" +  $("input[name='username']").val() + "/", {
+                $.ajax(langPrefix + "/reservation/json/" + $("input[name='username']").val() + "/", {
                     success: function (data) {
-                        $("input[name='name']").val(JSON.parse(JSON.stringify(data))["full_name"]);
+                        $("input[name='name']").val(data["full_name"]);
                     }
                 })
             }
