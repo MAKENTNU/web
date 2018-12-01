@@ -5,8 +5,11 @@ $('.ui.search')
                 let response = {results: []};
                 $.each(mazemap_response.result, function (index, item) {
                     response.results.push({
-                        title: item.poiNames[1] + " (" + item.poiNames[0] + ")",
-                        description: item.dispBldNames + " " + item.zName,
+                        title: (
+                            item.dispPoiNames[0] +
+                            (item.dispBldNames[0] ? ", " + item.dispBldNames[0] : "")
+                        ).replace(/<[/]?em>/g, ""),
+                        description: item.dispPoiNames[1] ? item.dispPoiNames[1] : "",
                         id: item.poiId,
                     });
                 });
