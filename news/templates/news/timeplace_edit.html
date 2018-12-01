@@ -14,7 +14,6 @@
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script type="text/javascript" src="{% static "news/js/date_edit_event.js" %}"></script>
     <script type="text/javascript" src="{% static "news/js/date_edit_article.js" %}"></script>
-    <script type='text/javascript' src='https://api.mazemap.com/js/v1.2.5/mazemap.min.js'></script>
     <script type="text/javascript" src="{% static "news/js/mazemap.js" %}"></script>
 {% endblock scripts %}
 
@@ -36,10 +35,9 @@
         <div class="field">
             <label>{{ form.place.label }}</label>
             <div class="ui search">
-                <input class="prompt" type="text" placeholder="{% trans "Search places" %}" name="place">
+                <input class="prompt" type="text" placeholder="{% trans "Search places" %}" name="place" value="{{ timeplace.place }}">
                 <div class="results"></div>
             </div>
-            <div id="mazemap_results"></div>
         </div>
         <div class="field">
             <label>{{ form.place_url.label }}</label>
