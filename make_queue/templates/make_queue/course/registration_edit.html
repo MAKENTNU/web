@@ -25,6 +25,15 @@
         </h1>
 
         {% block messages %}
+            <div id="messages" style="margin-bottom:20px; display: none;">
+                <div class="ui red message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        {% trans "Could not find the user in the NTNU database" %}
+                    </div>
+                    <p> {% trans "Are you sure you entered the correct username?" %} </p>
+                </div>
+            </div>
         {% endblock %}
 
 
@@ -73,26 +82,24 @@
     </div>
 
     <script>
-        $('.message .close')
-            .on('click', function () {
-                $(this)
-                    .closest('.message')
-                    .transition('fade')
-                ;
-            })
-        ;
+        $('#messages').click(function () {
+            $(this).fadeOut();
+        });
+
         $(".clear-dropdown").click(function () {
             $(this).closest("div.ui.field").find("div.dropdown").dropdown("clear");
         });
 
         $("input[name='username']").focusout(function () {
-                $.ajax(langPrefix + "/reservation/json/" + $("input[name='username']").val() + "/", {
-                    success: function (data) {
-                        $("input[name='name']").val(data["full_name"]);
-                    }
-                })
-            }
-        );
+            $.ajax(langPrefix + "/reservation/json/" + $("input[name='username']").val() + "/", {
+                success: function (data) {
+                    $("input[name='name']").val(data["full_name"]);
+                    $('#messages').fadeOut();
+                },
+                error: function () {
+                    $('#messages').fadeIn();
+                },
+            });
+        });
     </script>
-
 {% endblock %}
