@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.http import HttpResponseNotFound
-from make_queue.util.user_info import get_user_details_from_username
+from dataporten.ldap_utils import get_user_details_from_username
 
 
 def get_user_info_from_username(request, username):
