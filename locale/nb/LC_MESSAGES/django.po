@@ -1129,6 +1129,3 @@ msgstr "Logg inn"
 #: web/widgets.py:15
 msgid "Choose value"
 msgstr "Velg verdi"
-
-#~ msgid "reservations"
-#~ msgstr "reservasjoner"
