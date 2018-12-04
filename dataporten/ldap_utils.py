@@ -10,7 +10,7 @@ LDAP_FIELDS = {
     'group_id': 'gidNumber',
     'id': 'uidNumber',
     'username': 'uid',
-    'mail': 'mail',
+    'email': 'mail',
 }
 
 
@@ -26,28 +26,32 @@ def get_LDAP_field(ldapData, field):
     # list<tuple<str, dict<str, list<bstr>>>>
 
 
-def get_user_details_from_username(username):
-    user_details = {"username": username}
-    user = User.objects.filter(username=username).first()
-    if user:
-        user_details["full_name"] = user.get_full_name()
-        user_details["email"] = user.email
-    else:
-        ldap_results = LDAP_search("username", username)
-        if len(ldap_results) == 0:
-            return None
-        user_details["full_name"] = get_LDAP_field(ldap_results, "full_name")
-        user_details["email"] = get_LDAP_field(ldap_results, "mail")
-
-    return user_details
+def get_user_details_from_LDAP(search_field, search_value):
+    ldap_data = LDAP_search(search_field, search_value)
+    if ldap_data:
+        return {field: get_LDAP_field(ldap_data, field) for field in ("full_name", "username", "email")}
+    return {}
 
 
-def get_user_details_from_email(email):
-    user = User.objects.filter(email=email).first()
-    if user:
-        return get_user_details_from_username(username=user.username)
+def get_user_details_from_username(username, use_cached=True):
+    if use_cached:
+        user = User.objects.filter(username=username).first()
+        if user:
+            return {
+                "username": username,
+                "full_name": user.get_full_name(),
+                "email": user.email,
+            }
+    return get_user_details_from_LDAP("username", username)
 
-    ldap_results = LDAP_search("mail", email)
-    if len(ldap_results) == 0:
-        return None
-    return get_user_details_from_username(get_LDAP_field(ldap_results, "username"))
+
+def get_user_details_from_email(email, use_cached=True):
+    if use_cached:
+        user = User.objects.filter(email=email).first()
+        if user:
+            return {
+                "username": user.username,
+                "full_name": user.get_full_name(),
+                "email": email,
+            }
+    return get_user_details_from_LDAP("mail", email)
