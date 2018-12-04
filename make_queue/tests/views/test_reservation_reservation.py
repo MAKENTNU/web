@@ -336,4 +336,4 @@ class ReservationAdminViewTest(TestCase):
 
         context_data = template_view_get_context_data(AdminReservationView, request_user=user)
         self.assertEqual(context_data["admin"], True)
-        self.assertEqual(list(context_data["reservations"]), [special_reservation, event_reservation])
+        self.assertEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
