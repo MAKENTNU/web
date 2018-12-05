@@ -81,4 +81,4 @@ def get_user_details_from_email(email, use_cached=True):
                 "full_name": user.get_full_name(),
                 "email": email,
             }
-    return get_user_details_from_LDAP("mail", email)
+    return get_user_details_from_LDAP("email", email)
