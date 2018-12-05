@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-04 22:46+0100\n"
+"POT-Creation-Date: 2018-12-05 21:23+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -417,7 +417,7 @@ msgid "Set status"
 msgstr "Sett status"
 
 #: make_queue/templates/make_queue/course/course_panel.html:183
-#: make_queue/templates/make_queue/course/registration_edit.html:79
+#: make_queue/templates/make_queue/course/registration_edit.html:77
 msgid "Cancel"
 msgstr "Kanseller"
 
@@ -433,19 +433,19 @@ msgstr "Registrering av kursdeltakelse suksessfull"
 msgid "Edit course registration"
 msgstr "Endre kursregistrering"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:32
+#: make_queue/templates/make_queue/course/registration_edit.html:31
 msgid "Could not find the user in the NTNU database"
 msgstr "Kunne ikke finne brukeren i NTNUs database"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:34
+#: make_queue/templates/make_queue/course/registration_edit.html:33
 msgid "Are you sure you entered the correct username?"
 msgstr "Er du sikker på at du har skrevet inn riktig brukernavn?"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:50
+#: make_queue/templates/make_queue/course/registration_edit.html:48
 msgid "Clear selection"
 msgstr "Nullstill valg"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:75
+#: make_queue/templates/make_queue/course/registration_edit.html:73
 #: make_queue/templates/make_queue/quota/quota_edit.html:61
 #: make_queue/templates/make_queue/rule_edit.html:100
 msgctxt "edit"
