@@ -25,14 +25,12 @@
         </h1>
 
         {% block messages %}
-            <div id="messages" style="margin-bottom:20px; display: none;">
-                <div class="ui red message">
-                    <i class="close icon"></i>
-                    <div class="header">
-                        {% trans "Could not find the user in the NTNU database" %}
-                    </div>
-                    <p> {% trans "Are you sure you entered the correct username?" %} </p>
+            <div class="ui warning message hidden" id="username_not_found_warning">
+                <i class="close icon"></i>
+                <div class="header">
+                    {% trans "Could not find the user in the NTNU database" %}
                 </div>
+                <p> {% trans "Are you sure you entered the correct username?" %} </p>
             </div>
         {% endblock %}
 
@@ -82,10 +80,13 @@
     </div>
 
     <script>
-        $('#messages').click(function () {
-            $(this).fadeOut();
-        });
-
+        $('.message .close').click(function () {
+            $(this)
+                .closest('.message')
+                .transition('fade')
+            ;
+        })
+        ;
         $(".clear-dropdown").click(function () {
             $(this).closest("div.ui.field").find("div.dropdown").dropdown("clear");
         });
@@ -94,10 +95,10 @@
             $.ajax(langPrefix + "/reservation/json/" + $("input[name='username']").val() + "/", {
                 success: function (data) {
                     $("input[name='name']").val(data["full_name"]);
-                    $('#messages').fadeOut();
+                    $('#username_not_found_warning').fadeOut();
                 },
                 error: function () {
-                    $('#messages').fadeIn();
+                    $('#username_not_found_warning').fadeIn();
                 },
             });
         });
