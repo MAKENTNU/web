@@ -130,7 +130,6 @@
 #nav-user-dropdown .menu {
     background-color: rgb(34, 43, 52);
     border-radius: 7px;
-    /* For some reason doesn't work with `border: 2px rgb(220, 221, 222)` */
     border: 2px solid rgb(220, 221, 222);
 }
 
@@ -165,9 +164,8 @@
 }
 
 /* Narrower space between elements in navbar */
-@media screen and (max-width: 1100px) {
+@media screen and (max-width: 1200px) {
     #header {
-        --logo-padding: 1em;
         --nav-space-between: 1em;
     }
 }
@@ -190,7 +188,7 @@
     }
 
     #header .logo {
-        grid-template-columns: 1em var(--logo-space) 1em;
+        grid-template-columns: var(--logo-padding) var(--logo-space) var(--logo-padding);
     }
 
     #burger {
