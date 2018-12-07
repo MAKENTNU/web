@@ -14,6 +14,14 @@ class Logout(View):
 
 
 def login_wrapper(request, backend, *args, **kwargs):
+    """
+    Handles the callback from the social django login. Updating the full name of the user, and possibly their username.
+    Usernames are found in NTNUs LDAP server using the email to search. For some reason, some users do not have their
+    email in the NTNU LDAP system. For these users we derive their username from the local part of their email. This
+    will be the correct NTNU username for all students. We have yet to find an employee without their email in LDAP.
+
+    :return: The landing page after login, as defined by the social django configuration.
+    """
     response = complete(request, backend, *args, **kwargs)
     user = request.user
     data = user.social_auth.first().extra_data
