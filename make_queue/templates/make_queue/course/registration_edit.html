@@ -85,8 +85,8 @@
                 .closest('.message')
                 .transition('fade')
             ;
-        })
-        ;
+        });
+
         $(".clear-dropdown").click(function () {
             $(this).closest("div.ui.field").find("div.dropdown").dropdown("clear");
         });
@@ -101,6 +101,10 @@
                     $('#username_not_found_warning').fadeIn();
                 },
             });
+        });
+
+        $("input[name='username']").ready(function () {
+            $("input[name='username']").focus();
         });
     </script>
 {% endblock %}
