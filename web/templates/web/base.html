@@ -34,15 +34,19 @@
             {% block header %}
                 {% include "web/header.html" %}
             {% endblock header %}
+
             {% block padding-top %}
                 <div class="make_content_padding"></div>
             {% endblock %}
+
             {% block body %}
             {% endblock body %}
+
             {% block padding-bottom %}
                 <div class="make_content_padding"></div>
             {% endblock padding-bottom %}
         </div>
+
         {% include "web/delete_modal.html" %}
         {% block footer %}
             {% include "web/footer.html" %}
