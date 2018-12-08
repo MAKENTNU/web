@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-07 15:32+0100\n"
+"POT-Creation-Date: 2018-12-08 18:31+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -58,8 +58,7 @@ msgstr ""
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile.html:146
-#: make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:146 make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
@@ -120,8 +119,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: news/templates/news/admin.html:59 news/templates/news/admin.html:111
-#: news/templates/news/admin.html:190
-#: web/templates/web/delete_modal.html:11
+#: news/templates/news/admin.html:190 web/templates/web/delete_modal.html:11
 msgid "Delete"
 msgstr "Slett"
 
@@ -162,7 +160,7 @@ msgstr "Engelsk"
 #: groups/templates/groups/committee_form.html:30
 #: news/templates/news/article_edit.html:65
 #: news/templates/news/event_edit.html:64
-#: news/templates/news/timeplace_edit.html:80
+#: news/templates/news/timeplace_edit.html:84
 msgid "Save"
 msgstr "Lagre"
 
@@ -304,15 +302,13 @@ msgstr "Maskintype"
 
 #: make_queue/models/models.py:229
 #: make_queue/templates/make_queue/make_reservation.html:75
-#: make_queue/templates/make_queue/make_reservation.html:79
-#: news/models.py:128
+#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:128
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:230
 #: make_queue/templates/make_queue/make_reservation.html:89
-#: make_queue/templates/make_queue/make_reservation.html:93
-#: news/models.py:133
+#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:133
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -999,7 +995,7 @@ msgid "Content"
 msgstr "Innhold"
 
 #: news/templates/news/article_edit.html:35
-#: news/templates/news/timeplace_edit.html:68
+#: news/templates/news/timeplace_edit.html:72
 msgid "Publishing"
 msgstr "Publisering"
 
@@ -1017,8 +1013,7 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Ny event"
 
-#: news/templates/news/event_edit.html:5
-#: news/templates/news/event_edit.html:18
+#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:18
 msgid "Edit event"
 msgstr "Rediger event"
 
@@ -1052,9 +1047,13 @@ msgid "New time"
 msgstr "Nytt tidspunkt"
 
 #: news/templates/news/timeplace_edit.html:5
-#: news/templates/news/timeplace_edit.html:21
+#: news/templates/news/timeplace_edit.html:22
 msgid "Edit time"
 msgstr "Rediger tidspunkt"
+
+#: news/templates/news/timeplace_edit.html:38
+msgid "Search places"
+msgstr "Søk etter steder"
 
 #: web/templates/web/404.html:8
 msgid "The page doesn't exist"
