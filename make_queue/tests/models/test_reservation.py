@@ -51,6 +51,12 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                        days_changed=6, start_days=1, max_hours=self.max_time_reservation,
                                        max_inside_border_crossed=self.max_time_reservation)
 
+    def save_past_reservation(self, reservation):
+        validate_function = reservation.validate
+        reservation.validate = lambda: True
+        reservation.save()
+        reservation.validate = validate_function
+
     def create_reservation(self, timedelta_start, timedelta_end, event=None, user=None, machine=None, special=False,
                            special_text=""):
         machine = self.machine if machine is None else machine
@@ -72,6 +78,14 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
                                      "Reservations should be saveable")
 
+    def test_not_allowed_user_cannot_create_reservation(self):
+        self.course_registration.delete()
+        self.assertFalse(self.machine_type.can_user_use(self.user))
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+            "Uses that cannot use a machine, should not be able to reserve it"
+        )
+
     def test_reserve_end_time_before_start_time(self):
         self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(minutes=30)),
                                        "Reservations should not be able to end before they start")
@@ -81,14 +95,29 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
             self.create_reservation(timedelta(hours=1), timedelta(hours=self.max_time_reservation + 1.1)),
             "Reservations should not be allowed to exceed the maximum allowed time for the user")
 
+    def test_reserve_in_the_past(self):
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=-1), timedelta(hours=1)),
+            "A reservation is invalid if it starts in the past, even though it ends in the future"
+        )
+
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=-1), timedelta(hours=-0.5)),
+            "A reservation is invalid if it is completely in the past"
+        )
+
     def test_make_more_than_one_reservation(self):
         self.user_quota.number_of_reservations = 5
         self.user_quota.save()
+
+        self.assertTrue(Quota.can_make_new_reservation(self.user, self.machine_type))
 
         for reservation_number in range(5):
             self.check_reservation_valid(self.create_reservation(timedelta(days=reservation_number, hours=1),
                                                                  timedelta(days=reservation_number, hours=2)),
                                          "User should be able to make as many reservations as allowed")
+
+        self.assertFalse(Quota.can_make_new_reservation(self.user, self.machine_type))
 
     def test_make_more_than_allowed_number_of_reservations(self):
         self.user_quota.number_of_reservations = 5
@@ -194,6 +223,20 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_can_owner_change_started_reservation(self):
         self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_change(self.user))
+
+    def test_can_owner_change_end_time_of_started_reservation(self):
+        reservation = self.create_reservation(timedelta(hours=-2), timedelta(hours=2))
+        self.save_past_reservation(reservation)
+        self.assertTrue(reservation.can_change_end_time(self.user))
+        reservation.end_time = timezone.now() + timedelta(hours=1)
+        self.check_reservation_valid(reservation, "Should be able to change end time of started reservation")
+        reservation.end_time = timezone.now() + timedelta(hours=-1)
+        self.check_reservation_invalid(reservation,
+                                       "Should not be able to change end time of started reservation to before the current time")
+
+    def test_can_owner_change_end_time_of_ended_reservation(self):
+        self.assertFalse(
+            self.create_reservation(timedelta(hours=-3), timedelta(hours=-1)).can_change_end_time(self.user))
 
     def test_can_owner_change_started_event_reservation(self):
         self.give_user_event_permission()
