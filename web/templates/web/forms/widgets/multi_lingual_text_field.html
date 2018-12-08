@@ -1,0 +1,20 @@
+{% load language_tags %}
+
+<div class="ui top attached tabular pointing secondary menu">
+    {% for widget in widget.subwidgets %}
+        <a class="{% if forloop.first %}active {% endif %}item" data-tab="{{ widget.name }}{{ widget.attrs.language }}">
+            <i class="{% get_semantic_flag_code_from_language_code widget.attrs.language %} flag"></i>
+            {% get_local_name_from_language_code widget.attrs.language %}
+        </a>
+    {% endfor %}
+</div>
+
+{% for widget in widget.subwidgets %}
+    <div class="ui tab{% if forloop.first %} active{% endif %}" data-tab="{{ widget.name }}{{ widget.attrs.language }}">
+        {% include widget.template_name %}
+    </div>
+{% endfor %}
+
+<script>
+    $('.tabular.menu .item').tab();
+</script>

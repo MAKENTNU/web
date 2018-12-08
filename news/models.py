@@ -6,6 +6,8 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from web.fields import MultiLingualTextField, MultiLingualTextarea
+
 
 class ArticleManager(models.Manager):
     def published(self):
@@ -32,15 +34,16 @@ class TimePlaceManager(models.Manager):
 
 
 class NewsBase(models.Model):
-    title = models.CharField(
+    title = MultiLingualTextField(
         max_length=100,
         verbose_name=_('Title'),
     )
     content = RichTextUploadingField()
-    clickbait = models.TextField(
+    clickbait = MultiLingualTextField(
         max_length=300,
         verbose_name=_('Clickbait'),
         blank=True,
+        widget=MultiLingualTextarea
     )
     image = models.ImageField(
         verbose_name=_('Image'),
