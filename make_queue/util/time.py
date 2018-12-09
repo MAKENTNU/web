@@ -1,4 +1,3 @@
-import pytz
 from django.utils import timezone, translation
 from django.utils.datetime_safe import datetime
 from django.utils.translation import ugettext
@@ -59,7 +58,7 @@ def local_to_date(date):
     :param date: The date to localize
     :return: The localized date
     """
-    return pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+    return timezone.make_aware(date, timezone.get_default_timezone())
 
 
 def timedelta_to_hours(timedelta_obj):

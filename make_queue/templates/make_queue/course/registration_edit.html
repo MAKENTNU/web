@@ -25,6 +25,13 @@
         </h1>
 
         {% block messages %}
+            <div class="ui warning message hidden" id="username_not_found_warning">
+                <i class="close icon"></i>
+                <div class="header">
+                    {% trans "Could not find the user in the NTNU database" %}
+                </div>
+                <p> {% trans "Are you sure you entered the correct username?" %} </p>
+            </div>
         {% endblock %}
 
 
@@ -73,7 +80,7 @@
     </div>
 
     <script>
-        $(".message .close").on("click", function () {
+        $(".message .close").click(function () {
             $(this)
                 .closest(".message")
                 .transition("fade");
@@ -84,6 +91,17 @@
                 .dropdown("clear")
                 .find("input.search").val("");
         });
-    </script>
 
+        $("input[name='username']").focusout(function () {
+            $.ajax(langPrefix + "/reservation/json/" + $("input[name='username']").val() + "/", {
+                success: function (data) {
+                    $("input[name='name']").val(data["full_name"]);
+                    $('#username_not_found_warning').fadeOut();
+                },
+                error: function () {
+                    $('#username_not_found_warning').fadeIn();
+                },
+            });
+        });
+    </script>
 {% endblock %}
