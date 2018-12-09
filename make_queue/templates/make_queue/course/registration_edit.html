@@ -73,16 +73,16 @@
     </div>
 
     <script>
-        $('.message .close')
-            .on('click', function () {
-                $(this)
-                    .closest('.message')
-                    .transition('fade')
-                ;
-            })
-        ;
-        $(".clear-dropdown").click(function() {
-            $(this).closest("div.ui.field").find("div.dropdown").dropdown("clear");
+        $(".message .close").on("click", function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
+
+        $(".clear-dropdown").click(function () {
+            $(this).closest("div.ui.field").find("div.dropdown")
+                .dropdown("clear")
+                .find("input.search").val("");
         });
     </script>
 
