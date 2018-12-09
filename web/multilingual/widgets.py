@@ -22,6 +22,8 @@ class MultiLingualTextEdit(forms.MultiWidget):
         return self.widget(attrs=attributes)
 
     def decompress(self, value):
+        if value is None:
+            return [""] * len(MultiLingualTextStructure.supported_languages)
         return [value[language] for language in MultiLingualTextStructure.supported_languages]
 
     def get_context(self, name, value, attrs):
