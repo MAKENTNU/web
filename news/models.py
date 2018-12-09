@@ -1,12 +1,11 @@
 from datetime import date, time
-
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from web.fields import MultiLingualTextField, MultiLingualTextarea
+from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
+from web.multilingual.widgets import MultiLingualTextarea
 
 
 class ArticleManager(models.Manager):
@@ -38,7 +37,7 @@ class NewsBase(models.Model):
         max_length=100,
         verbose_name=_('Title'),
     )
-    content = RichTextUploadingField()
+    content = MultiLingualRichTextUploadingField()
     clickbait = MultiLingualTextField(
         max_length=300,
         verbose_name=_('Clickbait'),
