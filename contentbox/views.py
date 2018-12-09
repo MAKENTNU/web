@@ -9,7 +9,6 @@ class EditContentBoxView(PermissionRequiredMixin, UpdateView):
     template_name = 'contentbox/edit.html'
     fields = (
         'content',
-        'content_en',
     )
     permission_required = (
         'contentbox.change_contentbox',
