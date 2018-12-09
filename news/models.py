@@ -65,7 +65,7 @@ class NewsBase(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return self.title.__str__()
 
     class Meta:
         permissions = (
