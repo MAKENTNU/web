@@ -20,56 +20,47 @@
 
     <script>
         $('.menu .item').tab();
-        {# If there was a CSS predecessor element selector, this could have been solved in pure CSS (there will be one in CSS4) #}
+        {# If there was a CSS predecessor element selector (there will be one in CSS4), this could have been solved in pure CSS #}
         $("#{{ widget.attrs.id }}").prev("label").toggleClass("multilingual-label", true);
 
-        
-        var checkFilled = function (element, value) {
-            let isFilled;
-            if (value !== undefined) {
-                isFilled = value !== "";
-            } else {
-                isFilled = $(element).val() !== "";
-            }
-            let tabValue = $(element).closest(".ui.tab").data("tab");
-            $(".menu > .item[data-tab=" + tabValue + "]").toggleClass("language-not-filled", !isFilled);
-        };
 
-        var tabs = $("#{{ widget.attrs.id }}").find(".ui.tab");
+        {% if widget.attrs.required %}
+            var checkFilled = function (element, value) {
+                /**
+                 * Checks if the given element has content or not. If there is no content (and value is empty), the
+                 * menu element connected to the current tab is tagged as not filled.
+                 *
+                 * @value Used to explicitly pass the value of the element, e.g. in the case of CKEDITOR
+                 */
+                let isFilled;
+                if (value !== undefined) {
+                    isFilled = value !== "";
+                } else {
+                    isFilled = $(element).val() !== "";
+                }
+                let tabValue = $(element).closest(".ui.tab").data("tab");
+                $(".menu > .item[data-tab=" + tabValue + "]").toggleClass("language-not-filled", !isFilled);
+            };
 
-        tabs.find("input, textarea").each(function () {
-            checkFilled(this);
-            $(this).keyup(function () {
+            var tabs = $("#{{ widget.attrs.id }}").find(".ui.tab");
+
+            tabs.find("input, textarea").each(function () {
                 checkFilled(this);
-            }.bind(this));
-        });
-
-        $(document).ready(function () {
-            $("#{{ widget.attrs.id }}").find(".ui.tab").find(".django-ckeditor-widget > textarea").each(function () {
-                CKEDITOR.instances[this.id].on("change", function () {
-                    checkFilled(this.element.$, this.getData());
-                });
+                $(this).keyup(function () {
+                    checkFilled(this);
+                }.bind(this));
             });
-        })
-        ;
+
+            {# CKEDITOR is setup first after the DOM has loaded #}
+            tabs.find(".django-ckeditor-widget").each(function () {
+               $(document).ready(function () {
+                    $(this).find("textarea").each(function () {
+                        CKEDITOR.instances[this.id].on("change", function () {
+                            checkFilled(this.element.$, this.getData());
+                        });
+                    });
+               }.bind(this))
+            });
+        {% endif %}
     </script>
-
-    <style>
-        .multilingual-input {
-            display: inline;
-        }
-
-        .multilingual-input .ui.pointing.secondary.menu .item.language-not-filled {
-            border-bottom-color: #ffa5a2;
-        }
-
-        .multilingual-input .ui.pointing.secondary.menu .item.active.language-not-filled {
-            border-bottom-color: red;
-        }
-
-        .ui.form .field > label.multilingual-label {
-            display: inline;
-            vertical-align: sub;
-        }
-    </style>
 </div>
