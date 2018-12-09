@@ -1,7 +1,7 @@
 {% load language_tags %}
 
-<div id="{{ widget.attrs.id }}">
-    <div class="ui right floated compact pointing secondary menu inline">
+<div id="{{ widget.attrs.id }}" class="multilingual-input">
+    <div class="ui right floated pointing secondary menu inline">
         {% for widget in widget.subwidgets %}
             <a class="{% if forloop.first %}active {% endif %}item"
                data-tab="{{ widget.name }}{{ widget.attrs.language }}">
@@ -22,11 +22,49 @@
         $('.menu .item').tab();
         {# If there was a CSS predecessor element selector, this could have been solved in pure CSS (there will be one in CSS4) #}
         $("#{{ widget.attrs.id }}").prev("label").toggleClass("multilingual-label", true);
+
+        
+        var checkFilled = function (element, value) {
+            let isFilled;
+            if (value !== undefined) {
+                isFilled = value !== "";
+            } else {
+                isFilled = $(element).val() !== "";
+            }
+            let tabValue = $(element).closest(".ui.tab").data("tab");
+            $(".menu > .item[data-tab=" + tabValue + "]").toggleClass("language-not-filled", !isFilled);
+        };
+
+        var tabs = $("#{{ widget.attrs.id }}").find(".ui.tab");
+
+        tabs.find("input, textarea").each(function () {
+            checkFilled(this);
+            $(this).keyup(function () {
+                checkFilled(this);
+            }.bind(this));
+        });
+
+        $(document).ready(function () {
+            $("#{{ widget.attrs.id }}").find(".ui.tab").find(".django-ckeditor-widget > textarea").each(function () {
+                CKEDITOR.instances[this.id].on("change", function () {
+                    checkFilled(this.element.$, this.getData());
+                });
+            });
+        })
+        ;
     </script>
 
     <style>
-        #{{ widget.attrs.id }} {
+        .multilingual-input {
             display: inline;
+        }
+
+        .multilingual-input .ui.pointing.secondary.menu .item.language-not-filled {
+            border-bottom-color: #ffa5a2;
+        }
+
+        .multilingual-input .ui.pointing.secondary.menu .item.active.language-not-filled {
+            border-bottom-color: red;
         }
 
         .ui.form .field > label.multilingual-label {
