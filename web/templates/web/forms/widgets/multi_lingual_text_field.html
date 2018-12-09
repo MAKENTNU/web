@@ -1,20 +1,37 @@
 {% load language_tags %}
 
-<div class="ui top attached tabular pointing secondary menu">
-    {% for widget in widget.subwidgets %}
-        <a class="{% if forloop.first %}active {% endif %}item" data-tab="{{ widget.name }}{{ widget.attrs.language }}">
-            <i class="{% get_semantic_flag_code_from_language_code widget.attrs.language %} flag"></i>
-            {% get_local_name_from_language_code widget.attrs.language %}
-        </a>
-    {% endfor %}
-</div>
-
-{% for widget in widget.subwidgets %}
-    <div class="ui tab{% if forloop.first %} active{% endif %}" data-tab="{{ widget.name }}{{ widget.attrs.language }}">
-        {% render widget %}
+<div id="{{ widget.attrs.id }}">
+    <div class="ui right floated compact pointing secondary menu inline">
+        {% for widget in widget.subwidgets %}
+            <a class="{% if forloop.first %}active {% endif %}item"
+               data-tab="{{ widget.name }}{{ widget.attrs.language }}">
+                <i class="{% get_semantic_flag_code_from_language_code widget.attrs.language %} flag"></i>
+                {% get_local_name_from_language_code widget.attrs.language %}
+            </a>
+        {% endfor %}
     </div>
-{% endfor %}
 
-<script>
-    $('.tabular.menu .item').tab();
-</script>
+    {% for widget in widget.subwidgets %}
+        <div class="ui tab{% if forloop.first %} active{% endif %}"
+             data-tab="{{ widget.name }}{{ widget.attrs.language }}">
+            {% render widget %}
+        </div>
+    {% endfor %}
+
+    <script>
+        $('.menu .item').tab();
+        {# If there was a CSS predecessor element selector, this could have been solved in pure CSS (there will be one in CSS4) #}
+        $("#{{ widget.attrs.id }}").prev("label").toggleClass("multilingual-label", true);
+    </script>
+
+    <style>
+        #{{ widget.attrs.id }} {
+            display: inline;
+        }
+
+        .ui.form .field > label.multilingual-label {
+            display: inline;
+            vertical-align: sub;
+        }
+    </style>
+</div>
