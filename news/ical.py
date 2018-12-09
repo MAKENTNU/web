@@ -9,6 +9,7 @@ from .models import TimePlace
 class EventFeed(ICalFeed):
     """An iCal feed of all the events available to the user"""
     file_name = 'events.ics'
+    timezone = "CET"
 
     def get_object(self, request, *args, **kwargs):
         return {
