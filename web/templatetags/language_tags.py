@@ -18,3 +18,8 @@ def get_local_name_from_language_code(language_code):
         "nb": _("Norwegian"),
         "en": _("English"),
     }[language_code]
+
+
+@register.simple_tag()
+def render(widget):
+    return widget["render"](widget["name"], widget["value"], widget["attrs"])

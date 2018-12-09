@@ -11,7 +11,7 @@
 
 {% for widget in widget.subwidgets %}
     <div class="ui tab{% if forloop.first %} active{% endif %}" data-tab="{{ widget.name }}{{ widget.attrs.language }}">
-        {% include widget.template_name %}
+        {% render widget %}
     </div>
 {% endfor %}
 
