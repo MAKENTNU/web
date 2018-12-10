@@ -7,9 +7,18 @@ from web.multilingual.data_structures import MultiLingualTextStructure
 
 
 class MultiLingualFormField(forms.MultiValueField):
+    """
+    A multi value field for a multilingual database field
+    """
     field_class = forms.CharField
 
     def compress(self, data_list):
+        """
+        Merges the input from the different form fields into a single value
+
+        :param data_list: A list of the inputs of the different fields
+        :return: A MultiLingualTextStructure element
+        """
         structure = MultiLingualTextStructure("", True)
         for index, language in enumerate(structure.supported_languages):
             structure[language] = data_list[index]
@@ -33,8 +42,10 @@ class MultiLingualFormField(forms.MultiValueField):
 
 
 class MultiLingualRichTextFormField(MultiLingualFormField):
+    # Unless we want to emulate the CKEditor code, it requires a different field class for its subfields
     field_class = RichTextFormField
 
 
 class MultiLingualRichTextUploadingFormField(MultiLingualFormField):
+    # Unless we want to emulate the CKEditor code, it requires a different field class for its subfields
     field_class = RichTextUploadingFormField
