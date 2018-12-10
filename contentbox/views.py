@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.urls import reverse
 from django.views.generic import UpdateView
 
 from contentbox.models import ContentBox
@@ -13,4 +14,6 @@ class EditContentBoxView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'contentbox.change_contentbox',
     )
-    success_url = '/'
+
+    def get_success_url(self):
+        return reverse(self.object.title)
