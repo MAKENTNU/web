@@ -4,12 +4,26 @@ from django.utils import translation
 
 from web import settings
 from web.multilingual.data_structures import MultiLingualTextStructure
+from web.multilingual.database import MultiLingualTextField
 
 
 class TestMultiLingualTextStructure(TestCase):
     """
     Tests for the MultiLingualTextStructure class
     """
+
+    def setUp(self):
+        self.original_languages = settings.LANGUAGES
+        self.original_language_code = settings.LANGUAGE_CODE
+        settings.LANGUAGES = (
+            ("nb", "Norsk"),
+            ("en", "English"),
+        )
+        settings.LANGUAGE_CODE = "nb"
+
+    def tearDown(self):
+        settings.LANGUAGES = self.original_languages
+        settings.LANGUAGE_CODE = self.original_language_code
 
     def test_constructor_serialized_json(self):
         """
@@ -29,12 +43,17 @@ class TestMultiLingualTextStructure(TestCase):
         Tests if the constructor handles corrupt data (i.e. a string) correctly. That is, set the content of the
         default language to this string
         """
-        original_language_code = settings.LANGUAGE_CODE
-        settings.LANGUAGE_CODE = "nb"
         structure = MultiLingualTextStructure("test-nb", True)
         self.assertEqual(structure["nb"], "test-nb")
         self.assertEqual(structure["en"], "test-nb")
-        settings.LANGUAGE_CODE = original_language_code
+
+    def test_constructor_None(self):
+        """
+        Tests if the constructor handles the none value correctly. That is the same as if the structure is empty
+        """
+        structure = MultiLingualTextStructure(None, True)
+        self.assertEqual(structure["nb"], "")
+        self.assertEqual(structure["en"], "")
 
     def test_str(self):
         """

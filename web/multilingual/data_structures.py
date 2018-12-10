@@ -22,6 +22,9 @@ class MultiLingualTextStructure:
             # If for some reason (i.e. old or corrupt data) the content given is not JSON,
             # use it as content for the default language.
             self.languages[settings.LANGUAGE_CODE] = linear_content
+        except TypeError:
+            # If none or other incompatible type is passed
+            pass
 
     def __str__(self):
         """
