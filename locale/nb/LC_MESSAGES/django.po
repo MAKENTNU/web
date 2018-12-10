@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-07 15:32+0100\n"
+"POT-Creation-Date: 2018-12-10 12:19+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -58,8 +58,7 @@ msgstr ""
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile.html:146
-#: make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:146 make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
@@ -120,8 +119,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: news/templates/news/admin.html:59 news/templates/news/admin.html:111
-#: news/templates/news/admin.html:190
-#: web/templates/web/delete_modal.html:11
+#: news/templates/news/admin.html:190 web/templates/web/delete_modal.html:11
 msgid "Delete"
 msgstr "Slett"
 
@@ -137,28 +135,28 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:12 news/models.py:37
+#: contentbox/models.py:13 news/models.py:38
 msgid "Title"
 msgstr "Tittel"
 
 #: contentbox/templates/contentbox/display.html:10
 #: contentbox/templates/contentbox/edit.html:5
-#: contentbox/templates/contentbox/edit.html:15
+#: contentbox/templates/contentbox/edit.html:16
 #: groups/templates/groups/committee_form.html:14
 #: make_queue/templates/make_queue/usage_rules.html:17
 #: news/templates/news/admin.html:51 news/templates/news/admin.html:103
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:23
-msgid "Norwegian"
-msgstr "Norsk"
-
 #: contentbox/templates/contentbox/edit.html:24
-msgid "English"
-msgstr "Engelsk"
+msgid "Missing language"
+msgstr "Manglende språk"
 
-#: contentbox/templates/contentbox/edit.html:33
+#: contentbox/templates/contentbox/edit.html:25
+msgid "One or more languages has no content"
+msgstr "Et eller flere språk mangler innhold"
+
+#: contentbox/templates/contentbox/edit.html:39
 #: groups/templates/groups/committee_form.html:30
 #: news/templates/news/article_edit.html:65
 #: news/templates/news/event_edit.html:64
@@ -179,11 +177,11 @@ msgstr "Beskrivelse"
 msgid "Email"
 msgstr "Epost"
 
-#: groups/models.py:97 news/models.py:46
+#: groups/models.py:97 news/models.py:48
 msgid "Image"
 msgstr "Bilde"
 
-#: groups/models.py:100 news/models.py:42
+#: groups/models.py:100 news/models.py:43
 msgid "Clickbait"
 msgstr "Clickbait"
 
@@ -304,15 +302,13 @@ msgstr "Maskintype"
 
 #: make_queue/models/models.py:229
 #: make_queue/templates/make_queue/make_reservation.html:75
-#: make_queue/templates/make_queue/make_reservation.html:79
-#: news/models.py:128
+#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:130
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:230
 #: make_queue/templates/make_queue/make_reservation.html:89
-#: make_queue/templates/make_queue/make_reservation.html:93
-#: news/models.py:133
+#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:135
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -671,7 +667,7 @@ msgid "About the machine"
 msgstr "Om maskinen"
 
 #: make_queue/templates/make_queue/reservation_overview.html:34
-#: news/models.py:138
+#: news/models.py:140
 msgid "Location"
 msgstr "Sted"
 
@@ -833,48 +829,48 @@ msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 msgid "for"
 msgstr "i"
 
-#: news/models.py:50
+#: news/models.py:52
 msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
 
-#: news/models.py:54
+#: news/models.py:56
 msgid "Highlighted"
 msgstr "Fremhevet"
 
-#: news/models.py:58 news/models.py:152 news/templates/news/admin.html:36
+#: news/models.py:60 news/models.py:154 news/templates/news/admin.html:36
 #: news/templates/news/admin.html:96 news/templates/news/admin.html:168
 msgid "Hidden"
 msgstr "Skjult"
 
-#: news/models.py:62
+#: news/models.py:64
 msgid "MAKE internal"
 msgstr "MAKE intern"
 
-#: news/models.py:78 news/models.py:111
+#: news/models.py:80 news/models.py:113
 msgid "Publishing date"
 msgstr "Publiseringsdato"
 
-#: news/models.py:82 news/models.py:115
+#: news/models.py:84 news/models.py:117
 msgid "Publishing time"
 msgstr "Publiseringstid"
 
-#: news/models.py:92
+#: news/models.py:94
 msgid "Single registration"
 msgstr "Én påmelding"
 
-#: news/models.py:96 news/models.py:148
+#: news/models.py:98 news/models.py:150
 msgid "Hoopla url"
 msgstr "Hoopla url"
 
-#: news/models.py:119
+#: news/models.py:121
 msgid "Start date"
 msgstr "Startdato"
 
-#: news/models.py:124
+#: news/models.py:126
 msgid "End date"
 msgstr "Sluttdato"
 
-#: news/models.py:143
+#: news/models.py:145
 msgid "Location URL"
 msgstr "Sted URL"
 
@@ -1017,8 +1013,7 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Ny event"
 
-#: news/templates/news/event_edit.html:5
-#: news/templates/news/event_edit.html:18
+#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:18
 msgid "Edit event"
 msgstr "Rediger event"
 
@@ -1124,6 +1119,14 @@ msgstr "Logg ut"
 #: web/templates/web/header.html:70
 msgid "Login"
 msgstr "Logg inn"
+
+#: web/templatetags/language_tags.py:18
+msgid "Norwegian"
+msgstr "Norsk"
+
+#: web/templatetags/language_tags.py:19
+msgid "English"
+msgstr "Engelsk"
 
 #: web/widgets.py:15
 msgid "Choose value"
