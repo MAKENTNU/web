@@ -5,6 +5,7 @@ from django.utils import translation
 from web import settings
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.database import MultiLingualTextField
+from web.multilingual.form import MultiLingualFormField
 
 
 class TestMultiLingualTextStructure(TestCase):
@@ -166,3 +167,33 @@ class TestMultiLingualTextField(TestCase):
                          "from_db_value should always be of type MultiLingualTextStructure")
         self.assertEqual(result_json["nb"], "test-nb")
         self.assertEqual(result_json["en"], "test-en")
+
+
+class TestMultiLingualFormField(TestCase):
+    """
+    Tests for the MultiLingualFormField class. Tests assumes that the MultiLingualTextStructure class works correctly.
+    """
+
+    def setUp(self):
+        self.original_languages = settings.LANGUAGES
+        # Want to set languages as their order defines the order in which the fields will be given
+        settings.LANGUAGES = (
+            ("en", "English"),
+            ("nb", "Norsk"),
+        )
+
+    def tearDown(self):
+        settings.LANGUAGES = self.original_languages
+
+    def test_compress(self):
+        """
+        Tests the compress method. We can assume that the data passed is valid data, as the data is cleaned for each
+        individual field before being passed to the method.
+        """
+        form_field = MultiLingualFormField()
+        compressed_data = form_field.compress(["test-en", "test-nb"])
+        self.assertEqual(MultiLingualTextStructure, type(compressed_data))
+        self.assertEqual(compressed_data["nb"], "test-nb")
+        self.assertEqual(compressed_data["en"], "test-en")
+
+
