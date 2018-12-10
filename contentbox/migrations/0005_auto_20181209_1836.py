@@ -14,13 +14,23 @@ def merge_content_box_fields(apps, schema_editor):
         content_box.save()
 
 
+def reverse_merge_content_box_fields(apps, schema_editor):
+    ContentBox = apps.get_model("contentbox", "ContentBox")
+    for content_box in ContentBox.objects.all():
+        content_dict = json.loads(content_box.content)
+        content_box.content = content_dict["nb"]
+        content_box.content_en = content_dict["en"]
+        content_box.save()
+
+
 class Migration(migrations.Migration):
+
     dependencies = [
         ('contentbox', '0004_contentbox_content_en'),
     ]
 
     operations = [
-        migrations.RunPython(merge_content_box_fields),
+        migrations.RunPython(merge_content_box_fields, reverse_merge_content_box_fields),
         migrations.RemoveField(
             model_name='contentbox',
             name='content_en',
