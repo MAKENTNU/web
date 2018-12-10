@@ -14,7 +14,6 @@
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
     <script type="text/javascript" src="{% static "news/js/date_edit_event.js" %}"></script>
     <script type="text/javascript" src="{% static "news/js/date_edit_article.js" %}"></script>
-    <script type="text/javascript" src="{% static "news/js/mazemap.js" %}"></script>
 {% endblock scripts %}
 
 {% block body %}
@@ -34,10 +33,7 @@
         </div>
         <div class="field">
             <label>{{ form.place.label }}</label>
-            <div class="ui search">
-                <input class="prompt" type="text" placeholder="{% trans "Search places" %}" name="place" value="{{ timeplace.place }}">
-                <div class="results" style="width: 100%;"></div>
-            </div>
+            {{ form.place }}
         </div>
         <div class="field">
             <label>{{ form.place_url.label }}</label>
