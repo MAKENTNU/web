@@ -110,3 +110,23 @@ p, a, h1, h2, h3, h4, h5 {
 .make_content_padding {
     height: 3em;
 }
+
+/*
+ * Style for multilingual input
+ */
+.multilingual-input {
+    display: inline;
+}
+
+.multilingual-input .ui.pointing.secondary.menu .item.language-not-filled {
+    border-bottom-color: #ffa5a2;
+}
+
+.multilingual-input .ui.pointing.secondary.menu .item.active.language-not-filled {
+    border-bottom-color: red;
+}
+
+.ui.form .field > label.multilingual-label {
+    display: inline;
+    vertical-align: sub;
+}

@@ -9,11 +9,14 @@ from make_queue.fields import MachineTypeField
 from make_queue.models.course import Printer3DCourse
 from make_queue.templatetags.reservation_extra import *
 from make_queue.models.models import Machine, Quota, Reservation
+from make_queue.util.time import local_to_date
 
 
 class ReservationExtraTestCases(TestCase):
 
-    def test_calendar_reservation_url(self):
+    @mock.patch('django.utils.timezone.now')
+    def test_calendar_reservation_url(self, now_mock):
+        now_mock.return_value = local_to_date(timezone.datetime(2018, 12, 9, 12, 24))
         user = User.objects.create_user("user", "user@makentnu.no", "weak_pass")
         user.save()
 
