@@ -29,11 +29,17 @@ class SemanticDateInput(forms.DateInput):
 class MazemapSearchInput(forms.TextInput):
     template_name = "web/forms/widgets/mazemap_search.html"
 
-    def __init__(self, *args, **kwargs):
-        super().__init__()
-        # self.attrs = kwargs["attrs"]
-        self.attrs["campus_id"] = kwargs.pop("campus_id", 1)
-        self.attrs["max_results"] = kwargs.pop("max_results", 5)
-        self.attrs["name"] = kwargs.pop("name", "place")
-        self.attrs["url_field"] = kwargs.pop("url_field", None)
-        self.attrs["initial"] = kwargs.pop("initial", None)
+    def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
+        super().__init__(attrs=attrs)
+        self.campus_id = campus_id
+        self.max_results = max_results
+        self.url_field = url_field
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context["widget"].update({
+            "campus_id": self.campus_id,
+            "max_results": self.max_results,
+            "url_field": self.url_field,
+        })
+        return context

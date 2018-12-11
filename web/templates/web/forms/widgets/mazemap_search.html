@@ -1,21 +1,21 @@
 {% load i18n %}
 
 <div class="ui search">
-    <input class="prompt" type="text" name="{{ widget.attrs.name }}" id="{{ widget.attrs.name }}"
+    <input class="prompt" type="text" name="{{ widget.name }}" id="id_{{ widget.name }}"
            placeholder="{% trans "Search places" %}"
-            {% if widget.attrs.initial %} value="{{ widget.attrs.initial }}" {% endif %} >
+            {% if widget.value %} value="{{ widget.value }}" {% endif %} >
     <div class="results" style="width: 100%;"></div>
 </div>
 
 <script>
-    $('#{{ widget.attrs.name }}').parent().search({
+    $('input[name={{ widget.name }}]').parent().search({
         searchDelay: 0,
         fullTextSearch: true,
         apiSettings: {
             // Search for points of interest at given campus
             url: 'https://api.mazemap.com/search/equery/?q={query}&withpois=true' +
-                '&rows={{ widget.attrs.max_results }}' +
-                '&campusid={{ widget.attrs.campus_id }}',
+                '&rows={{ widget.max_results }}' +
+                '&campusid={{ widget.campus_id }}',
 
             // Convert mazemap search results to fit semantic ui search format
             onResponse: (mazemap_response => ({
@@ -29,10 +29,10 @@
                 }))
             })),
         },
-        {% if widget.attrs.url_field %}
+        {% if widget.url_field %}
             onSelect: function (result, response) {
-                $("input[name={{ widget.attrs.url_field }}]").val(
-                    `https://use.mazemap.com/?campusid={{ widget.attrs.campus_id }}&desttype=poi&dest=${result.id}`
+                $("input[name={{ widget.url_field }}]").val(
+                    `https://use.mazemap.com/?campusid={{ widget.campus_id }}&desttype=poi&dest=${result.id}`
                 );
             },
         {% endif %}
