@@ -1,8 +1,9 @@
-from ckeditor_uploader.fields import RichTextUploadingField
-from django.utils.translation import gettext_lazy as _
 from django.conf.urls import url as durl
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
+
+from web.multilingual.database import MultiLingualRichTextUploadingField
 
 
 class ContentBox(models.Model):
@@ -11,8 +12,7 @@ class ContentBox(models.Model):
         unique=True,
         verbose_name=_('Title'),
     )
-    content = RichTextUploadingField()
-    content_en = RichTextUploadingField(default='')
+    content = MultiLingualRichTextUploadingField()
 
     def __str__(self):
         return self.title
