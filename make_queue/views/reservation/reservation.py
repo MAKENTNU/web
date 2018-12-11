@@ -244,6 +244,9 @@ class FindFreeSlot(FormView):
 
     @staticmethod
     def format_period(machine, start_time, end_time):
+        """
+        Formats a time period for the context
+        """
         return {
             "machine": machine,
             "start_time": start_time,
@@ -252,17 +255,29 @@ class FindFreeSlot(FormView):
         }
 
     def get_periods(self, machine, required_time):
+        """
+        Finds all future periods for the given machine with a minimum length
+
+        :param machine: The machine to get periods for
+        :param required_time: The minimum required time for the period
+        :return: A list of periods
+        """
         periods = []
         reservations = list(
             Reservation.objects.filter(end_time__gte=timezone.now(), machine__pk=machine.pk).order_by("start_time"))
+
+        # Find all periods between reservations
         for period_start, period_end in zip(reservations, reservations[1:]):
             duration = timedelta_to_hours(period_end.start_time - period_start.end_time)
             if duration >= required_time:
                 periods.append(self.format_period(machine, period_start.end_time, period_end.start_time))
+
+        # Add remaining time after last reservation
         if reservations:
             periods.append(self.format_period(
                 machine, reservations[-1].end_time,
                 timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)))
+        # If the machine is not reserved anytime in the future, we include the whole allowed period
         else:
             periods.append(self.format_period(
                 machine, timezone.now(),
@@ -270,14 +285,22 @@ class FindFreeSlot(FormView):
         return periods
 
     def form_valid(self, form):
+        """
+        Renders the page with free slots in respect to the valid form
+
+        :param form: A valid FreeSlotForm form
+        :return: A HTTP response rendering the page with the found free slots
+        """
         context = self.get_context_data()
 
+        # Time should be expressed in hours
         required_time = form.cleaned_data["hours"] + form.cleaned_data["minutes"] / 60
 
         periods = []
         for machine in Machine.objects.filter(machine_type=form.cleaned_data["machine_type"]):
             periods += self.get_periods(machine, required_time)
 
+        # Periods in the near future is more interesting than in the distant future
         periods.sort(key=lambda period: period["start_time"])
 
         context.update({
