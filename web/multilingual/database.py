@@ -6,8 +6,7 @@ from django.db import models
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.form import MultiLingualFormField, MultiLingualRichTextFormField, \
     MultiLingualRichTextUploadingFormField
-from web.multilingual.widgets import MultiLingualTextInput, MultiLingualRichText, MultiLingualRichTextUploading, \
-    MultiLingualTextEdit
+from web.multilingual.widgets import MultiLingualTextInput, MultiLingualRichText, MultiLingualRichTextUploading
 
 
 class MultiLingualTextField(models.TextField):
