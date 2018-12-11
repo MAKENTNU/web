@@ -5,7 +5,6 @@ from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from make_queue.util.time import date_to_local, get_day_name
-from urllib.parse import quote
 
 register = template.Library()
 
@@ -22,6 +21,12 @@ def current_calendar_url(machine):
     current_time = timezone.localtime(timezone.now())
     return reverse('reservation_calendar',
                    kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'machine': machine})
+
+
+@register.simple_tag()
+def calendar_url_timestamp(machine, time):
+    return reverse("reservation_calendar",
+                   kwargs={"year": time.year, "week": time.isocalendar()[1], "machine": machine})
 
 
 @register.simple_tag()
