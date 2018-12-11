@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-11 13:29+0100\n"
+"POT-Creation-Date: 2018-12-11 18:52+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -58,7 +58,8 @@ msgstr ""
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile.html:146 make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:146
+#: make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
@@ -119,7 +120,8 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: news/templates/news/admin.html:59 news/templates/news/admin.html:111
-#: news/templates/news/admin.html:190 web/templates/web/delete_modal.html:11
+#: news/templates/news/admin.html:190
+#: web/templates/web/delete_modal.html:11
 msgid "Delete"
 msgstr "Slett"
 
@@ -311,13 +313,15 @@ msgstr "Alle brukere"
 
 #: make_queue/models/models.py:229
 #: make_queue/templates/make_queue/make_reservation.html:75
-#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:130
+#: make_queue/templates/make_queue/make_reservation.html:79
+#: news/models.py:130
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:230
 #: make_queue/templates/make_queue/make_reservation.html:89
-#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:135
+#: make_queue/templates/make_queue/make_reservation.html:93
+#: news/models.py:135
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -436,7 +440,7 @@ msgstr "Legg til kursregistrering"
 
 #: make_queue/templates/make_queue/course/registration_create.html:17
 msgid "Registration of course participation successful"
-msgstr "Registrering av kursdeltakelse suksessfull"
+msgstr "Registrering av kursdeltakelse vellykket"
 
 #: make_queue/templates/make_queue/course/registration_edit.html:23
 msgid "Edit course registration"
@@ -464,7 +468,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/find_free_slot.html:17
 #: make_queue/templates/make_queue/reservation_machines.html:22
 msgid "Find free reservation slots"
-msgstr "Finn ledige reservasjons tidspunkt"
+msgstr "Finn ledige reservasjonstidspunkter"
 
 #: make_queue/templates/make_queue/find_free_slot.html:35
 msgid "Search"
@@ -472,7 +476,7 @@ msgstr "Søk"
 
 #: make_queue/templates/make_queue/find_free_slot.html:41
 msgid "Free reservation slots"
-msgstr "Ledige reservasjons tidspunkt"
+msgstr "Ledige reservasjonstidspunkter"
 
 #: make_queue/templates/make_queue/find_free_slot.html:46
 msgid "h"
@@ -1039,7 +1043,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Ny event"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:18
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:18
 msgid "Edit event"
 msgstr "Rediger event"
 
