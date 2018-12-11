@@ -1,0 +1,10 @@
+{% load language_tags %}
+
+<div style="display: inline-block">
+    {% for widget in widget.subwidgets %}
+        <div style="width: 100%">
+            <label for="{{ widget.name }}">{% get_local_name_from_language_code widget.attrs.language %}</label>
+            {% render widget %}
+        </div>
+    {% endfor %}
+</div>
