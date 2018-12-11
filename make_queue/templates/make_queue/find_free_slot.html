@@ -14,7 +14,7 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{% trans "Find free slot" %}</h1>
+        <h1>{% trans "Find free reservation slots" %}</h1>
         <form class="ui form" action="" method="POST">
             {% csrf_token %}
             <div class="ui fields">
@@ -22,23 +22,23 @@
                     <label>{{ form.machine_type.label }}</label>
                     {{ form.machine_type }}
                 </div>
-                <div class="ui two wide field" id="hour-field">
+                <div class="ui three wide field" id="hour-field">
                     <label>{{ form.hours.label }}</label>
                     {{ form.hours }}
                 </div>
-                <div class="ui two wide field">
+                <div class="ui three wide field">
                     <label>{{ form.minutes.label }}</label>
                     {{ form.minutes }}
                 </div>
-                <div class="ui four wide field">
+                <div class="ui two wide field">
                     <label>&nbsp;</label>
-                    <button class="ui make_bg_yellow button">{% trans "Find free slots" %}</button>
+                    <button class="ui primary button">{% trans "Search" %}</button>
                 </div>
             </div>
         </form>
         {% if free_slots %}
             <div class="ui divider"></div>
-            <h2>{% trans "Free slots" %}</h2>
+            <h2>{% trans "Free reservation slots" %}</h2>
             <div class="ui selection relaxed divided list">
                 {% for slot in free_slots %}
                     <a class="ui item" href="{% calendar_url_timestamp machine=slot.machine time=slot.start_time %}">

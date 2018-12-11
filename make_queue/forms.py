@@ -149,6 +149,6 @@ class Printer3DCourseForm(forms.ModelForm):
 class FreeSlotForm(forms.Form):
     machine_type = MachineTypeForm(
         choices=((machine_type.id, machine_type.name) for machine_type in MachineTypeField.possible_machine_types),
-        initial=1)
-    hours = IntegerField(min_value=0, initial=1)
-    minutes = IntegerField(min_value=0, max_value=59, initial=0)
+        initial=1, label=_("Machine type"))
+    hours = IntegerField(min_value=0, initial=1, label=_("Duration in hours"))
+    minutes = IntegerField(min_value=0, max_value=59, initial=0, label=_("Duration in minutes"))

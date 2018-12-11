@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-08 08:50+0100\n"
+"POT-Creation-Date: 2018-12-11 13:08+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -229,6 +229,19 @@ msgstr "Velg bruker"
 msgid "User"
 msgstr "Bruker"
 
+#: make_queue/forms.py:152 make_queue/models/models.py:76
+#: make_queue/models/models.py:234
+msgid "Machine type"
+msgstr "Maskintype"
+
+#: make_queue/forms.py:153
+msgid "Duration in hours"
+msgstr "Varighet i timer"
+
+#: make_queue/forms.py:154
+msgid "Duration in minutes"
+msgstr "Varighet i minutter"
+
 #: make_queue/models/course.py:15
 msgid "Sent to Byggsikring"
 msgstr "Sendt til Byggsikring"
@@ -297,10 +310,6 @@ msgstr "Ignorerer regler"
 #: make_queue/models/models.py:74
 msgid "All users"
 msgstr "Alle brukere"
-
-#: make_queue/models/models.py:76 make_queue/models/models.py:234
-msgid "Machine type"
-msgstr "Maskintype"
 
 #: make_queue/models/models.py:227
 #: make_queue/templates/make_queue/make_reservation.html:75
@@ -404,6 +413,23 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/registration_edit.html:70
 msgid "Cancel"
 msgstr "Kanseller"
+
+#: make_queue/templates/make_queue/find_free_slot.html:17
+#: make_queue/templates/make_queue/reservation_machines.html:21
+msgid "Find free reservation slots"
+msgstr "Finn ledige reservasjons tidspunkt"
+
+#: make_queue/templates/make_queue/find_free_slot.html:35
+msgid "Search"
+msgstr "Søk"
+
+#: make_queue/templates/make_queue/find_free_slot.html:41
+msgid "Free reservation slots"
+msgstr "Ledige reservasjons tidspunkt"
+
+#: make_queue/templates/make_queue/find_free_slot.html:46
+msgid "h"
+msgstr "t"
 
 #: make_queue/templates/make_queue/machine_card.html:29
 #: make_queue/templates/make_queue/reservations.html:42
@@ -574,7 +600,7 @@ msgstr "Mine reservasjoner"
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/templates/make_queue/reservation_machines.html:26
+#: make_queue/templates/make_queue/reservation_machines.html:29
 #: make_queue/templates/make_queue/reservation_overview.html:25
 msgid "Rules"
 msgstr "Regler"
@@ -919,12 +945,12 @@ msgstr "Innhold"
 msgid "Publishing"
 msgstr "Publisering"
 
-#: news/templates/news/event.html:45 news/templates/news/event.html:58
-#: news/templates/news/event.html:70 news/templates/news/event.html:111
+#: news/templates/news/event.html:49 news/templates/news/event.html:62
+#: news/templates/news/event.html:74 news/templates/news/event.html:121
 msgid "Registration"
 msgstr "Påmelding"
 
-#: news/templates/news/event.html:115
+#: news/templates/news/event.html:125
 msgid "No registrations"
 msgstr "Ingen påmelding"
 
