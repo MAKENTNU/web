@@ -16,6 +16,7 @@ register_converter(converters.DateTime, "time")
 json_urlpatterns = [
     path('<machine:machine>', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<machine:machine>/<reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
+    path('<str:username>/', permission_required("make_queue.add_printer3dcourse")(api.user_info.get_user_info_from_username), name="user_json"),
 ]
 
 quota_url_patterns = [
@@ -28,9 +29,10 @@ quota_url_patterns = [
 ]
 
 course_url_patterns = [
+    path('status/', permission_required("make_queue.change_printer3dcourse")(admin.course.BulkStatusUpdate.as_view()), name="bulk_status_update"),
     path('download/', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
-    path('create/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
-    path('create/success/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
+    path('create/', permission_required("make_queue.add_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
+    path('create/success/', permission_required("make_queue.add_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
     path('edit/<int:pk>/', permission_required("make_queue.change_printer3dcourse")(admin.course.EditRegistrationView.as_view()), name="edit_course_registration"),
     path('delete/<int:pk>/', permission_required("make_queue.delete_printer3dcourse")(admin.course.DeleteRegistrationView.as_view()), name="delete_course_registration"),
     path('', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseView.as_view()), name="course_panel"),

@@ -1,7 +1,14 @@
 {% extends "web/base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block body %}
+
+    <style>
+        .make_hidden {
+            display: none;
+        }
+    </style>
 
     <div class="ui container">
         <h1>
@@ -11,16 +18,18 @@
             </a>
         </h1>
 
-        <form class="ui form" method="POST" action="download/">
+        <form class="ui form" method="POST" action="{% url "download_course_registrations" %}">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
+                    <label>{% trans "Filter users based on name" %}</label>
                     <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
                            name="search_text">
                 </div>
                 <div class="ui four wide field">
+                    <label>{% trans "Filter users based on status" %}</label>
                     <div class="ui selection dropdown">
-                        <input type="hidden" name="status_filter" value="">
+                        <input type="hidden" name="status_filter" value="" id="status_filter">
                         <i class="ui dropdown icon"></i>
                         <div class="default text"></div>
                         <div class="menu">
@@ -31,40 +40,67 @@
                         </div>
                     </div>
                 </div>
-                <button class="ui right floated yellow button">
-                    {% trans "Download displayed users" %}
-                </button>
+                <div class="ui six wide field">
+                    {# Using label with non-blocking space to keep the download button further down #}
+                    <label>&nbsp;</label>
+                    <button class="ui right floated make_yellow button">
+                        {% trans "Download filtered users" %}
+                    </button>
+                </div>
             </div>
         </form>
 
-        <div>
-            <div class="ui inverted dimmer" id="loader">
-                <div class="ui text loader">{% trans "Sorting" %}</div>
+        {# Prepopulated area to be shown when one or more rows are selected #}
+        <div id="selected-actions" class="make_hidden ui secondary segment">
+            <h4>
+                <span id="num-selected"></span> {% trans "user(s) selected" %}
+            </h4>
+            <div class="ui form">
+                <div class="ui fields">
+                    <div class="ui six wide field">
+                        <label>{% trans "Set status for all selected users" %}</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="status_set" value="" id="status_set">
+                            <i class="ui dropdown icon"></i>
+                            <div class="default text">{% trans "Select status" %}</div>
+                            <div class="menu">
+                                {% for choice in possible_statuses %}
+                                    <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui ten wide field">
+                        <label>&nbsp;</label>
+                        <button class="ui right floated make_yellow button" id="clear-selected-users">
+                            {% trans "Clear selected users" %}
+                        </button>
+                        <button class="ui right floated make_yellow button" id="show-selected-users">
+                            {% trans "Toggle non-selected users" %}
+                        </button>
+                    </div>
+                </div>
             </div>
-            <p></p>
         </div>
 
-        <div>
-            <span>
-                {% trans "Displaying" %}
-                <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
-                {% trans "registrations" %}
-            </span>
-        </div>
+        {# Table of registrations #}
         <table class="ui very simple selectable celled table">
             <thead>
             <tr>
                 <th data-column-name="name">{% trans "Name" %}<i class="ui icon sort down"></i></th>
                 <th data-column-name="username">{% trans "Username" %}</th>
-                <th data-column-name="card_number">{% trans "Card number" %}</th>
+                <th data-column-name="cardNumber">{% trans "Card number" %}</th>
                 <th data-column-name="date">{% trans "Date" %}</th>
                 <th data-column-name="status">{% trans "Status" %}</th>
             </tr>
             </thead>
             <tbody>
             {% for registration in registrations %}
-                <tr>
-                    <td data-value="{{ registration.name }}" class="name">
+                <tr data-name="{{ registration.name }}" data-username="{{ registration.username }}"
+                    data-card-number="{{ registration.card_number|default:"" }}"
+                    data-date="{{ registration.date|date:"Y-m-d" }}" data-pk="{{ registration.pk }}"
+                    data-status="{{ registration.status }}" class="make_hidden">
+                    <td>
                         {{ registration.name }}
                         <a href="{% url "edit_course_registration" registration.pk %}">
                             <i class="ui yellow pencil icon"></i>
@@ -75,25 +111,23 @@
                             </a>
                         {% endif %}
                         {% if registration.user %}
-                            <span data-tooltip="Connected to user">
+                            <span data-tooltip="{% trans "Connected to user" %}">
                                 <i class="ui icon user"></i>
                             </span>
                         {% endif %}
                     </td>
-                    <td data-value="{{ registration.username }}" class="username">
+                    <td>
                         {{ registration.username }}
                     </td>
                     {% if registration.card_number %}
-                        <td data-value="{{ registration.card_number }}" class="card_number">
+                        <td class="right aligned">
                             {{ registration.card_number }}
                         </td>
                     {% else %}
-                        <td class="error card_number" data-value=""></td>
+                        <td class="error"></td>
                     {% endif %}
-                    <td class="date"
-                        data-value="{{ registration.date|date:"Y-m-d" }}<">{{ registration.date|date:"Y-m-d" }}</td>
-                    <td class="status {% if registration.status != "access" %}warning{% endif %}"
-                        data-value="{{ registration.status }}">
+                    <td>{{ registration.date|date:"Y-m-d" }}</td>
+                    <td class="{% if registration.status != "access" %}warning{% endif %}">
                         {{ registration.get_status_display }}
                     </td>
                 </tr>
@@ -101,67 +135,55 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="ui right floated pagination menu" id="pagination-bar">
+            <a class="item" id="left-skip">
+                <i class="ui icon double angle left"></i>
+            </a>
+            <a class="item" id="left-change">
+                <i class="ui icon angle left"></i>
+            </a>
+            <a class="item" id="right-change">
+                <i class="ui icon angle right"></i>
+            </a>
+            <a class="item" id="right-skip">
+                <i class="ui icon double angle right"></i>
+            </a>
+        </div>
+        <span>
+            {% trans "Displaying" %}
+            <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
+            {% trans "registrations" %}
+        </span>
     </div>
 
-    <style>
-        .make_hidden {
-            display: none;
-        }
-    </style>
+    {# Modal for confirmation of bulk status update on selected users #}
+    <div class="ui modal" id="set-status-modal">
+        <div class="ui icon header">
+            <i class="yellow exclamation icon"></i>
+            {% trans "Set status of users to" %} &quot;<i><span id="set-status-text"></span></i>&quot;
+        </div>
 
-    <script>
-        let search_value = "";
-        let status_value = "";
-        let order = 1;
-        let sortBy = "name";
+        <form method="POST" action="{% url "bulk_status_update" %}">
+            {% csrf_token %}
+            <input type="hidden" value="" name="status" id="status">
+        </form>
 
-        function filter() {
-            let displayedCount = 0;
-            $("tbody tr").each(function () {
-                let shouldDisplay =
-                    $(this).find(".status").data("value").toLowerCase().includes(status_value) &&
-                    ($(this).find(".name").data("value").toLowerCase().includes(search_value) ||
-                        $(this).find(".username").data("value").toLowerCase().includes(search_value));
-                $(this).toggleClass("make_hidden", !shouldDisplay);
-                displayedCount += shouldDisplay;
-            });
-            $("#number-displayed").text(displayedCount);
-        }
+        <div class="content">
+            <p><b>{% trans "You are changing the status for the following users:" %}</b></p>
+            <p id="selected-users"></p>
+            <p><b>{% trans "Are you sure you want to do this?" %}</b></p>
+        </div>
 
-        function sort() {
-            $("tbody").find("tr:not(.make_hidden)").sort(function (a, b) {
-                let valueA = $(a).find("." + sortBy).data("value").toString();
-                let valueB = $(b).find("." + sortBy).data("value").toString();
+        <div class="actions">
+            <div class="ui green ok button">
+                {% trans "Set status" %}
+            </div>
+            <div class="ui red cancel button">
+                {% trans "Cancel" %}
+            </div>
+        </div>
+    </div>
 
-                return valueA.localeCompare(valueB, "nb", {sensitivity: "base"}) * order;
-            }).appendTo("tbody");
-            $("#loader").toggleClass("active", false);
-        }
-
-        $("div.dropdown").dropdown({
-            onChange: function (value) {
-                status_value = value;
-                filter();
-            }
-        });
-        $("#search").on("input", function () {
-            search_value = $(this).val().toLowerCase();
-            filter();
-        });
-
-        $("th").click(function () {
-            $("#loader").toggleClass("active", true);
-            let columnName = $(this).data("column-name");
-            $("th i").remove();
-            if (sortBy === columnName) {
-                order *= -1;
-            } else {
-                order = 1;
-                sortBy = columnName;
-            }
-            $(this).append(order === 1 ? $("<i class=\"ui icon sort down\"></i>") : $("<i class=\"ui icon sort up\"></i>"));
-            // Run sort async to allow loader to actually be shown
-            setTimeout(sort, 0);
-        });
-    </script>
+    <script src="{% static "make_queue/js/course_panel.js" %}"></script>
 {% endblock %}

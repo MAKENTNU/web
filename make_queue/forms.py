@@ -143,6 +143,7 @@ class Printer3DCourseForm(forms.ModelForm):
         widgets = {
             "status": SemanticChoiceInput(),
             "date": SemanticDateInput(),
+            "username": forms.TextInput(attrs={"autofocus": "autofocus"}),
         }
 
 
