@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-11-22 08:31+0100\n"
+"POT-Creation-Date: 2018-12-11 18:52+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -58,7 +58,8 @@ msgstr ""
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile.html:146 make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:146
+#: make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
@@ -75,8 +76,6 @@ msgid "People with these skills are at<br>Makerverkstedet right now:"
 msgstr "Folk med disse ferdighetene er på<br>Makerverkstedet akkurat nå:"
 
 #: checkin/templates/checkin/suggest_skill.html:10
-#, fuzzy
-#| msgid "Suggest new skills"
 msgid "Suggest new skills at Makerverkstedet"
 msgstr "Foreslå nye ferdigheter"
 
@@ -95,10 +94,8 @@ msgid "Title (english)"
 msgstr "Tittel (engelsk)"
 
 #: checkin/templates/checkin/suggest_skill.html:41
-#, fuzzy
-#| msgid "Suggest new skills"
 msgid "Suggested skills"
-msgstr "Foreslå nye ferdigheter"
+msgstr "Foreslåtte ferdigheter"
 
 #: checkin/templates/checkin/suggest_skill.html:45
 msgid "Skill"
@@ -123,7 +120,8 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: news/templates/news/admin.html:59 news/templates/news/admin.html:111
-#: news/templates/news/admin.html:190 web/templates/web/delete_modal.html:11
+#: news/templates/news/admin.html:190
+#: web/templates/web/delete_modal.html:11
 msgid "Delete"
 msgstr "Slett"
 
@@ -139,28 +137,28 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:12 news/models.py:37
+#: contentbox/models.py:13 news/models.py:38
 msgid "Title"
 msgstr "Tittel"
 
 #: contentbox/templates/contentbox/display.html:10
 #: contentbox/templates/contentbox/edit.html:5
-#: contentbox/templates/contentbox/edit.html:15
+#: contentbox/templates/contentbox/edit.html:16
 #: groups/templates/groups/committee_form.html:14
 #: make_queue/templates/make_queue/usage_rules.html:17
 #: news/templates/news/admin.html:51 news/templates/news/admin.html:103
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:23
-msgid "Norwegian"
-msgstr "Norsk"
-
 #: contentbox/templates/contentbox/edit.html:24
-msgid "English"
-msgstr "Engelsk"
+msgid "Missing language"
+msgstr "Manglende språk"
 
-#: contentbox/templates/contentbox/edit.html:33
+#: contentbox/templates/contentbox/edit.html:25
+msgid "One or more languages has no content"
+msgstr "Et eller flere språk mangler innhold"
+
+#: contentbox/templates/contentbox/edit.html:39
 #: groups/templates/groups/committee_form.html:30
 #: news/templates/news/article_edit.html:65
 #: news/templates/news/event_edit.html:64
@@ -181,11 +179,11 @@ msgstr "Beskrivelse"
 msgid "Email"
 msgstr "Epost"
 
-#: groups/models.py:97 news/models.py:46
+#: groups/models.py:97 news/models.py:48
 msgid "Image"
 msgstr "Bilde"
 
-#: groups/models.py:100 news/models.py:42
+#: groups/models.py:100 news/models.py:43
 msgid "Clickbait"
 msgstr "Clickbait"
 
@@ -229,6 +227,20 @@ msgstr "Velg bruker"
 msgid "User"
 msgstr "Bruker"
 
+#: make_queue/forms.py:153 make_queue/models/models.py:78
+#: make_queue/models/models.py:236
+#: make_queue/templates/make_queue/reservation_overview.html:41
+msgid "Machine type"
+msgstr "Maskintype"
+
+#: make_queue/forms.py:154
+msgid "Duration in hours"
+msgstr "Varighet i timer"
+
+#: make_queue/forms.py:155
+msgid "Duration in minutes"
+msgstr "Varighet i minutter"
+
 #: make_queue/models/course.py:15
 msgid "Sent to Byggsikring"
 msgstr "Sendt til Byggsikring"
@@ -256,7 +268,7 @@ msgstr "Fullt navn"
 
 #: make_queue/models/course.py:24
 #: make_queue/templates/make_queue/course/course_panel.html:94
-#: make_queue/templates/make_queue/reservation_overview.html:56
+#: make_queue/templates/make_queue/reservation_overview.html:55
 msgid "Status"
 msgstr "Status"
 
@@ -299,20 +311,17 @@ msgstr "Ignorerer regler"
 msgid "All users"
 msgstr "Alle brukere"
 
-#: make_queue/models/models.py:78 make_queue/models/models.py:236
-#: make_queue/templates/make_queue/reservation_overview.html:42
-msgid "Machine type"
-msgstr "Maskintype"
-
 #: make_queue/models/models.py:229
 #: make_queue/templates/make_queue/make_reservation.html:75
-#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:128
+#: make_queue/templates/make_queue/make_reservation.html:79
+#: news/models.py:130
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:230
 #: make_queue/templates/make_queue/make_reservation.html:89
-#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:133
+#: make_queue/templates/make_queue/make_reservation.html:93
+#: news/models.py:135
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -421,39 +430,60 @@ msgid "Set status"
 msgstr "Sett status"
 
 #: make_queue/templates/make_queue/course/course_panel.html:183
-#: make_queue/templates/make_queue/course/registration_edit.html:70
+#: make_queue/templates/make_queue/course/registration_edit.html:77
 msgid "Cancel"
 msgstr "Kanseller"
 
 #: make_queue/templates/make_queue/course/registration_create.html:5
-#, fuzzy
-#| msgid "No registrations"
 msgid "Add course registration"
-msgstr "Ingen påmelding"
+msgstr "Legg til kursregistrering"
 
 #: make_queue/templates/make_queue/course/registration_create.html:17
 msgid "Registration of course participation successful"
-msgstr "Registrering av kursdeltakelse suksessfull"
+msgstr "Registrering av kursdeltakelse vellykket"
 
 #: make_queue/templates/make_queue/course/registration_edit.html:23
-#, fuzzy
-#| msgid "No registrations"
 msgid "Edit course registration"
-msgstr "Ingen påmelding"
+msgstr "Endre kursregistrering"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:41
+#: make_queue/templates/make_queue/course/registration_edit.html:31
+msgid "Could not find the user in the NTNU database"
+msgstr "Kunne ikke finne brukeren i NTNUs database"
+
+#: make_queue/templates/make_queue/course/registration_edit.html:33
+msgid "Are you sure you entered the correct username?"
+msgstr "Er du sikker på at du har skrevet inn riktig brukernavn?"
+
+#: make_queue/templates/make_queue/course/registration_edit.html:48
 msgid "Clear selection"
 msgstr "Nullstill valg"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:66
+#: make_queue/templates/make_queue/course/registration_edit.html:73
 #: make_queue/templates/make_queue/quota/quota_edit.html:61
 #: make_queue/templates/make_queue/rule_edit.html:100
 msgctxt "edit"
 msgid "Submit"
 msgstr "Lagre"
 
-#: make_queue/templates/make_queue/machine_card.html:30
-#: make_queue/templates/make_queue/reservations.html:42
+#: make_queue/templates/make_queue/find_free_slot.html:17
+#: make_queue/templates/make_queue/reservation_machines.html:22
+msgid "Find free reservation slots"
+msgstr "Finn ledige reservasjonstidspunkter"
+
+#: make_queue/templates/make_queue/find_free_slot.html:35
+msgid "Search"
+msgstr "Søk"
+
+#: make_queue/templates/make_queue/find_free_slot.html:41
+msgid "Free reservation slots"
+msgstr "Ledige reservasjonstidspunkter"
+
+#: make_queue/templates/make_queue/find_free_slot.html:46
+msgid "h"
+msgstr "t"
+
+#: make_queue/templates/make_queue/machine_card.html:29
+#: make_queue/templates/make_queue/reservations.html:48
 msgid "View in calendar"
 msgstr "Se i kalender"
 
@@ -510,9 +540,9 @@ msgid "Reserve"
 msgstr "Reserver"
 
 #: make_queue/templates/make_queue/make_reservation.html:164
-#: make_queue/templates/make_queue/reservations.html:43
-#: make_queue/templates/make_queue/reservations.html:93
-#: make_queue/templates/make_queue/reservations.html:161
+#: make_queue/templates/make_queue/reservations.html:49
+#: make_queue/templates/make_queue/reservations.html:99
+#: make_queue/templates/make_queue/reservations.html:167
 #: news/templates/news/admin.html:182
 msgid "Change"
 msgstr "Endre"
@@ -523,10 +553,8 @@ msgid "New quota"
 msgstr "Ny kvote"
 
 #: make_queue/templates/make_queue/quota/quota_edit.html:9
-#, fuzzy
-#| msgid "Change"
 msgid "Change quota"
-msgstr "Endre"
+msgstr "Endre kvote"
 
 #: make_queue/templates/make_queue/quota/quota_edit.html:15
 msgid "Missing required fields."
@@ -590,8 +618,8 @@ msgstr "Klikk for å lage en ny reservasjon"
 #: make_queue/templates/make_queue/reservation_actions.html:24
 #: make_queue/templates/make_queue/reservation_calendar.html:136
 #: make_queue/templates/make_queue/reservation_machines.html:19
-#: make_queue/templates/make_queue/reservations.html:10
-#: make_queue/templates/make_queue/reservations.html:17
+#: make_queue/templates/make_queue/reservations.html:14
+#: make_queue/templates/make_queue/reservations.html:23
 msgid "My reservations"
 msgstr "Mine reservasjoner"
 
@@ -630,12 +658,12 @@ msgid "Week"
 msgstr "Uke"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:88
-#: make_queue/templates/make_queue/reservations.html:37
+#: make_queue/templates/make_queue/reservations.html:43
 msgid "Reservation"
 msgstr "Reservasjon"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:97
-#: make_queue/templates/make_queue/reservations.html:38
+#: make_queue/templates/make_queue/reservations.html:44
 msgid "Time"
 msgstr "Tidspunkt"
 
@@ -655,57 +683,58 @@ msgstr "Arrangementer"
 
 #: make_queue/templates/make_queue/reservation_machines.html:11
 #: make_queue/templates/make_queue/reservation_machines.html:15
-#: make_queue/templates/make_queue/reservations.html:22
+#: make_queue/templates/make_queue/reservations.html:28
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/templates/make_queue/reservation_machines.html:27
-#: make_queue/templates/make_queue/reservation_overview.html:26
+#: make_queue/templates/make_queue/reservation_machines.html:30
+#: make_queue/templates/make_queue/reservation_overview.html:25
 msgid "Rules"
 msgstr "Regler"
 
-#: make_queue/templates/make_queue/reservation_overview.html:30
+#: make_queue/templates/make_queue/reservation_overview.html:29
 msgid "About the machine"
 msgstr "Om maskinen"
 
-#: make_queue/templates/make_queue/reservation_overview.html:35
-#: news/models.py:138
+#: make_queue/templates/make_queue/reservation_overview.html:34
+#: news/models.py:140
 msgid "Location"
 msgstr "Sted"
 
-#: make_queue/templates/make_queue/reservation_overview.html:49
+#: make_queue/templates/make_queue/reservation_overview.html:48
 msgid "Model"
 msgstr "Model"
 
-#: make_queue/templates/make_queue/reservations.html:15
+#: make_queue/templates/make_queue/reservations.html:12
+#: make_queue/templates/make_queue/reservations.html:21
 msgid "MAKE NTNU reservations"
 msgstr "MAKE NTNU reservasjoner"
 
-#: make_queue/templates/make_queue/reservations.html:28
+#: make_queue/templates/make_queue/reservations.html:34
 msgid "Hide previous reservations"
 msgstr "Skjul tidligere reservasjoner"
 
-#: make_queue/templates/make_queue/reservations.html:40
+#: make_queue/templates/make_queue/reservations.html:46
 msgid "Information"
 msgstr "Informasjon"
 
-#: make_queue/templates/make_queue/reservations.html:44
-#: make_queue/templates/make_queue/reservations.html:116
-#: make_queue/templates/make_queue/reservations.html:180
+#: make_queue/templates/make_queue/reservations.html:50
+#: make_queue/templates/make_queue/reservations.html:122
+#: make_queue/templates/make_queue/reservations.html:186
 msgctxt "cancel reservation"
 msgid "Cancel"
 msgstr "Kanseller"
 
-#: make_queue/templates/make_queue/reservations.html:84
-#: make_queue/templates/make_queue/reservations.html:155
+#: make_queue/templates/make_queue/reservations.html:90
+#: make_queue/templates/make_queue/reservations.html:161
 msgid "Calendar"
 msgstr "Kalender"
 
-#: make_queue/templates/make_queue/reservations.html:105
+#: make_queue/templates/make_queue/reservations.html:111
 msgid "Mark as done"
 msgstr "Marker som ferdig"
 
-#: make_queue/templates/make_queue/reservations.html:168
+#: make_queue/templates/make_queue/reservations.html:174
 msgid "Done"
 msgstr "Ferdig"
 
@@ -826,52 +855,52 @@ msgstr "Regler for bruk av "
 msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
-#: make_queue/templatetags/reservation_extra.py:57
+#: make_queue/templatetags/reservation_extra.py:62
 msgid "for"
 msgstr "i"
 
-#: news/models.py:50
+#: news/models.py:52
 msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
 
-#: news/models.py:54
+#: news/models.py:56
 msgid "Highlighted"
 msgstr "Fremhevet"
 
-#: news/models.py:58 news/models.py:152 news/templates/news/admin.html:36
+#: news/models.py:60 news/models.py:154 news/templates/news/admin.html:36
 #: news/templates/news/admin.html:96 news/templates/news/admin.html:168
 msgid "Hidden"
 msgstr "Skjult"
 
-#: news/models.py:62
+#: news/models.py:64
 msgid "MAKE internal"
 msgstr "MAKE intern"
 
-#: news/models.py:78 news/models.py:111
+#: news/models.py:80 news/models.py:113
 msgid "Publishing date"
 msgstr "Publiseringsdato"
 
-#: news/models.py:82 news/models.py:115
+#: news/models.py:84 news/models.py:117
 msgid "Publishing time"
 msgstr "Publiseringstid"
 
-#: news/models.py:92
+#: news/models.py:94
 msgid "Single registration"
 msgstr "Én påmelding"
 
-#: news/models.py:96 news/models.py:148
+#: news/models.py:98 news/models.py:150
 msgid "Hoopla url"
 msgstr "Hoopla url"
 
-#: news/models.py:119
+#: news/models.py:121
 msgid "Start date"
 msgstr "Startdato"
 
-#: news/models.py:124
+#: news/models.py:126
 msgid "End date"
 msgstr "Sluttdato"
 
-#: news/models.py:143
+#: news/models.py:145
 msgid "Location URL"
 msgstr "Sted URL"
 
@@ -947,7 +976,7 @@ msgid "No events"
 msgstr "Ingen arrangementer."
 
 #: news/templates/news/admin.html:145 news/templates/news/articles.html:13
-#: web/templates/web/header.html:28
+#: web/templates/web/header.html:29
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1014,7 +1043,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Ny event"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:18
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:18
 msgid "Edit event"
 msgstr "Rediger event"
 
@@ -1068,7 +1098,7 @@ msgstr ""
 msgid "Articles and events"
 msgstr "Artikler og arrangementer"
 
-#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:34
+#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:33
 msgid "Reservations"
 msgstr "Reservasjoner"
 
@@ -1094,36 +1124,40 @@ msgid "Follow us on Instagram!"
 msgstr "Følg oss på Instagram!"
 
 #: web/templates/web/footer.html:42
-msgid "About"
-msgstr "Om oss"
-
-#: web/templates/web/footer.html:47
 msgid "Cookies"
 msgstr "Cookies"
 
-#: web/templates/web/header.html:22
-msgid "Home"
-msgstr "Hjem"
-
-#: web/templates/web/header.html:31
+#: web/templates/web/header.html:37
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 
-#: web/templates/web/header.html:42
+#: web/templates/web/header.html:41
+msgid "About us"
+msgstr "Om oss"
+
+#: web/templates/web/header.html:56
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:46
+#: web/templates/web/header.html:60
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:49
+#: web/templates/web/header.html:63
 msgid "Logout"
 msgstr "Logg ut"
 
-#: web/templates/web/header.html:55
+#: web/templates/web/header.html:70
 msgid "Login"
 msgstr "Logg inn"
+
+#: web/templatetags/language_tags.py:18
+msgid "Norwegian"
+msgstr "Norsk"
+
+#: web/templatetags/language_tags.py:19
+msgid "English"
+msgstr "Engelsk"
 
 #: web/widgets.py:15
 msgid "Choose value"

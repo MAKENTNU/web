@@ -44,18 +44,18 @@ class ModelTestCase(TestCase):
             pub_date=timezone.now().date(),
             pub_time=(timezone.now() + timedelta(seconds=1)).time()
         )
-        Article.objects.create(
+        published1 = Article.objects.create(
             title='PUBLISHED',
             pub_date=(timezone.now() - timedelta(days=1)).date(),
             pub_time=timezone.now().time()
         )
-        Article.objects.create(
+        published2 = Article.objects.create(
             title='PUBLISHED',
             pub_date=timezone.now().date(),
             pub_time=(timezone.now() - timedelta(seconds=1)).time()
         )
         self.assertEqual(Article.objects.published().count(), 2)
-        self.assertEqual(list(Article.objects.published().values_list('title', flat=True)), ['PUBLISHED'] * 2)
+        self.assertEqual(set(Article.objects.published()), {published1, published2})
 
     def test_event_manager(self):
         event = Event.objects.create(title='', hidden=False)

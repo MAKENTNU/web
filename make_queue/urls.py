@@ -16,6 +16,7 @@ register_converter(converters.DateTime, "time")
 json_urlpatterns = [
     path('<machine:machine>', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<machine:machine>/<reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
+    path('<str:username>/', permission_required("make_queue.add_printer3dcourse")(api.user_info.get_user_info_from_username), name="user_json"),
 ]
 
 quota_url_patterns = [
@@ -57,6 +58,7 @@ urlpatterns = [
     path('finish/', login_required(reservation.reservation.MarkReservationAsDone.as_view()), name="mark_reservation_done"),
     path('change/<reservation:reservation>/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
     path('rules/', include(rules_url_patterns)),
+    path('slot/', reservation.reservation.FindFreeSlot.as_view(), name="find_free_slot"),
     path('json/', include(json_urlpatterns)),
     path('quota/', include(quota_url_patterns)),
     path('course/', include(course_url_patterns)),
