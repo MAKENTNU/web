@@ -32,6 +32,20 @@
                 }))
             })),
         },
+        templates: {
+            message: (type, message) => (
+               //`Type: ${type}<br>Message: ${message}`
+                `<div class="message empty">
+                    <div class="header">
+                        {% trans "No Results" %}
+                    </div>
+                    <div class="description">
+                        {% trans "Your search returned no results"%}
+                    </div>
+                </div>`
+            ),
+        },
+
         {% if widget.url_field %}
             onSelect: function (result, response) {
                 $("input[name={{ widget.url_field }}]").val(
