@@ -16,7 +16,8 @@
         fullTextSearch: true,
         apiSettings: {
             // Search for points of interest at given campus
-            url: 'https://api.mazemap.com/search/equery/?q={query}&withpois=true' +
+            url: 'https://api.mazemap.com/search/equery/?q={query}' +
+                '&withpois=true&withbuilding=false&withtype=false&withcampus=false' +
                 '&rows={{ widget.max_results }}' +
                 '&campusid={{ widget.campus_id }}',
 
@@ -34,7 +35,6 @@
         },
         templates: {
             message: (type, message) => (
-               //`Type: ${type}<br>Message: ${message}`
                 `<div class="message empty">
                     <div class="header">
                         {% trans "No Results" %}
