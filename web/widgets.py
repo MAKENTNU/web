@@ -27,9 +27,18 @@ class SemanticDateInput(forms.DateInput):
 
 
 class MazemapSearchInput(forms.TextInput):
+    """
+    Widget that enables mazemap search functionality, including autofill of url to mazemap
+    """
     template_name = "web/forms/widgets/mazemap_search.html"
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
+        """
+        :param campus_id: Campus to search for points of interest on. Default: NTNU Gløshaugen
+        :param max_results: Maximum number of search results to return
+        :param url_field: Field to autofill with mazemap url. If None, autofill functionality is turned off
+        :param attrs: HTML attributes for the <input> element
+        """
         self.campus_id = campus_id
         self.max_results = max_results
         self.url_field = url_field

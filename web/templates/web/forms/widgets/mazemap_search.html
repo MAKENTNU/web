@@ -29,6 +29,7 @@
             })),
         },
         templates: {
+            // Template for error messages. Default provided by semantic ui but with translations
             message: (type, message) => (
                 `<div class="message empty">
                     <div class="header">
@@ -40,7 +41,7 @@
                 </div>`
             ),
         },
-
+        // Autofill of mazemap-url if url_field is given
         {% if widget.url_field %}
             onSelect: function (result, response) {
                 $("input[name={{ widget.url_field }}]").val(
