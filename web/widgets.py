@@ -30,10 +30,20 @@ class MazemapSearchInput(forms.TextInput):
     template_name = "web/forms/widgets/mazemap_search.html"
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
-        super().__init__(attrs=attrs)
         self.campus_id = campus_id
         self.max_results = max_results
         self.url_field = url_field
+        default_attrs = {
+            "placeholder": _("Search places"),
+        }
+        required_class_attr = "prompt"
+
+        if attrs:
+            default_attrs.update(attrs)
+
+        default_attrs["class"] = default_attrs.get("class", "") + " " + required_class_attr
+
+        super().__init__(attrs=default_attrs)
 
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)

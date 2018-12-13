@@ -1,12 +1,7 @@
 {% load i18n %}
 
 <div class="ui search">
-    <input class="prompt" placeholder="{% trans "Search places" %}"
-        type="{{ widget.type }}" name="{{ widget.name }}"
-        {% if widget.value != None %} value="{{ widget.value|stringformat:'s' }}" {% endif %}
-        {% for name, value in widget.attrs.items %}{% if value is not False %}
-            {{ name }}{% if value is not True %}="{{ value|stringformat:'s' }}"{% endif %}{% endif %}{% endfor %}>
-        {# Could not find how to include django default widget template that does this #}
+    {% include "django/forms/widgets/text.html" %}
     <div class="results" style="width: 100%;"></div>
 </div>
 
