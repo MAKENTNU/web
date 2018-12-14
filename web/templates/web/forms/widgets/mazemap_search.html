@@ -1,8 +1,8 @@
 {% load i18n %}
 
-<div class="ui search">
+<div class="ui search fluid">
     {% include "django/forms/widgets/text.html" %}
-    <div class="results" style="width: 100%;"></div>
+    <div class="results"></div>
 </div>
 
 <script>
@@ -17,13 +17,13 @@
                 '&campusid={{ widget.campus_id }}',
 
             // Convert mazemap search results to fit semantic ui search format
-            onResponse: (mazemap_response => ({
-                results: mazemap_response.result.map(item => ({
+            onResponse: (mazemapResponse => ({
+                results: mazemapResponse.result.map(item => ({
                     title: (
                         item.dispPoiNames[0] +
                         (item.dispBldNames[0] ? ", " + item.dispBldNames[0] : "")
-                    ).replace(/<[/]?em>/g, ""),
-                    description: (item.dispPoiNames[1] ? item.dispPoiNames[1] : "").replace(/<[/]?em>/g, ""),
+                    ).replace(/<[^>]*>/g, ""),
+                    description: (item.dispPoiNames[1] ? item.dispPoiNames[1] : "").replace(/<[^>]*>/g, ""),
                     id: item.poiId,
                 }))
             })),
