@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-12 18:45+0100\n"
+"POT-Creation-Date: 2018-12-14 19:20+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -160,7 +160,7 @@ msgstr "Engelsk"
 #: groups/templates/groups/committee_form.html:30
 #: news/templates/news/article_edit.html:65
 #: news/templates/news/event_edit.html:64
-#: news/templates/news/timeplace_edit.html:80
+#: news/templates/news/timeplace_edit.html:74
 msgid "Save"
 msgstr "Lagre"
 
@@ -995,7 +995,7 @@ msgid "Content"
 msgstr "Innhold"
 
 #: news/templates/news/article_edit.html:35
-#: news/templates/news/timeplace_edit.html:68
+#: news/templates/news/timeplace_edit.html:62
 msgid "Publishing"
 msgstr "Publisering"
 
@@ -1051,6 +1051,14 @@ msgstr "Nytt tidspunkt"
 msgid "Edit time"
 msgstr "Rediger tidspunkt"
 
+#: news/templates/news/timeplace_edit.html:42
+msgid "From"
+msgstr "Fra"
+
+#: news/templates/news/timeplace_edit.html:52
+msgid "To"
+msgstr "Til"
+
 #: web/templates/web/404.html:8
 msgid "The page doesn't exist"
 msgstr "Siden finnes ikke"
@@ -1096,15 +1104,11 @@ msgstr "Følg oss på Instagram!"
 msgid "Cookies"
 msgstr "Cookies"
 
-#: web/templates/web/forms/widgets/mazemap_search.html:4
-msgid "Search places"
-msgstr "Søk etter steder"
-
-#: web/templates/web/forms/widgets/mazemap_search.html:40
+#: web/templates/web/forms/widgets/mazemap_search.html:36
 msgid "No Results"
 msgstr "Ingen resultater"
 
-#: web/templates/web/forms/widgets/mazemap_search.html:43
+#: web/templates/web/forms/widgets/mazemap_search.html:39
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"
 
@@ -1135,3 +1139,7 @@ msgstr "Logg inn"
 #: web/widgets.py:15
 msgid "Choose value"
 msgstr "Velg verdi"
+
+#: web/widgets.py:46
+msgid "Search places"
+msgstr "Søk etter steder"
