@@ -32,6 +32,8 @@ class MazemapSearchInput(forms.TextInput):
     Widget that enables mazemap search functionality, including autofill of url to mazemap
     """
     template_name = "web/forms/widgets/mazemap_search.html"
+    required_class_attr = "prompt"
+    placeholder = _("Search places")
 
     class Media:
         js = ('web/js/mazemap-search.js', reverse_lazy("javascript-catalog"))
@@ -45,16 +47,14 @@ class MazemapSearchInput(forms.TextInput):
         """
 
         default_attrs = {
-            "placeholder": _("Search places"),
+            "placeholder": self.placeholder,
             "data-campusId": campus_id,
             "data-maxResults": max_results,
             "data-urlField": url_field,
         }
-        required_class_attr = "prompt"
-
         if attrs:
             default_attrs.update(attrs)
 
-        default_attrs["class"] = default_attrs.get("class", "") + " " + required_class_attr
+        default_attrs["class"] = default_attrs.get("class", "") + " " + self.required_class_attr
 
         super().__init__(attrs=default_attrs)
