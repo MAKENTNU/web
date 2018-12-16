@@ -12,7 +12,7 @@ from social_core.utils import setting_name
 
 from contentbox.models import ContentBox
 from dataporten.views import Logout, login_wrapper
-from web.views import IndexView, AdminPanelView, View404, AboutView
+from web.views import IndexView, AdminPanelView, View404
 from ckeditor_uploader import views as ckeditor_views
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
@@ -36,7 +36,7 @@ urlpatterns += i18n_patterns(
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
-    path('about/', AboutView.as_view(), name='about'),
+    ContentBox.url('about'),
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),

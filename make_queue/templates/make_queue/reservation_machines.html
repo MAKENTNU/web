@@ -18,6 +18,9 @@
             <a href="{% url 'my_reservations' %}" class="ui primary button">
                 {% trans "My reservations" %}
             </a>
+            <a href="{% url "find_free_slot" %}" class="ui primary button">
+                {% trans "Find free reservation slots" %}
+            </a>
         {% endif %}
         {% for machine_type in machine_types %}
             <div class="ui machine-title-field">
