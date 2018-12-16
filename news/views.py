@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView
 
+from news.forms import TimePlaceForm
 from news.models import Article, Event, TimePlace
 from web.templatetags.permission_tags import has_any_news_permissions
 
@@ -199,19 +200,7 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
     model = TimePlace
     template_name = 'news/timeplace_edit.html'
-    fields = (
-        'event',
-        'pub_date',
-        'pub_time',
-        'start_date',
-        'end_date',
-        'start_time',
-        'end_time',
-        'place',
-        'place_url',
-        'hoopla',
-        'hidden',
-    )
+    form_class = TimePlaceForm
     permission_required = (
         'news.change_timeplace',
     )
@@ -221,19 +210,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
 class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
     model = TimePlace
     template_name = 'news/timeplace_create.html'
-    fields = (
-        'event',
-        'pub_date',
-        'pub_time',
-        'start_date',
-        'end_date',
-        'start_time',
-        'end_time',
-        'place',
-        'place_url',
-        'hoopla',
-        'hidden',
-    )
+    form_class = TimePlaceForm
     permission_required = (
         'news.add_timeplace',
     )
