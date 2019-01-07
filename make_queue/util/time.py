@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.utils import timezone, translation
 from django.utils.datetime_safe import datetime
 from django.utils.translation import ugettext
@@ -12,7 +14,7 @@ def is_valid_week(year, week):
     :param week: The week to check
     :return: A boolean indicating if the given year and week is a valid combination
     """
-    return 0 < week < 54 and year_and_week_to_monday(year, week).year == year
+    return 0 < week < 54 and (year_and_week_to_monday(year, week) + timedelta(days=3)).year == year
 
 
 def year_and_week_to_monday(year, week):
@@ -23,7 +25,7 @@ def year_and_week_to_monday(year, week):
     :param week: The week to get the date for
     :return: The monday in the given week of the given year
     """
-    return datetime.strptime(str(year) + " " + str(week) + " 1", "%Y %W %w")
+    return datetime.strptime("{:04d} {:02d} 1".format(year, week), "%G %V %w")
 
 
 def get_next_week(year, week, shift_direction):
