@@ -6,6 +6,7 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/calendar/calendar.min.css" %}">
+    {{ form.media }}
 {% endblock head %}
 
 {% block scripts %}
@@ -24,12 +25,6 @@
         <div class="field">
             <label>{{ form.event.label }}</label>
             {{ form.event }}
-            <script>
-                $('#id_event').ready(function () {
-                    $('#id_event').addClass('ui select search dropdown');
-                    $('.dropdown').dropdown();
-                });
-            </script>
         </div>
         <div class="field">
             <label>{{ form.place.label }}</label>
@@ -45,7 +40,7 @@
         </div>
         <div class="two fields">
             <div class="field">
-                <label>Fra</label>
+                <label>{% trans "From" %}</label>
                 {{ form.start_date }}
             </div>
             <div class="field">
@@ -55,7 +50,7 @@
         </div>
         <div class="two fields">
             <div class="field">
-                <label>Til</label>
+                <label>{% trans "To" %}</label>
                 {{ form.end_date }}
             </div>
             <div class="field">
