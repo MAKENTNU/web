@@ -1,4 +1,5 @@
 from datetime import date, time
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -97,6 +98,7 @@ class Event(NewsBase):
         blank=True,
         verbose_name=_('Hoopla url'),
     )
+    number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def get_future_occurrences(self):
         return TimePlace.objects.future().filter(event=self).order_by("start_date", "start_time")
@@ -153,6 +155,7 @@ class TimePlace(models.Model):
         default=True,
         verbose_name=_('Hidden'),
     )
+    number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def __str__(self):
         return '%s - %s' % (self.event.title, self.start_date.strftime('%Y.%m.%d'))
@@ -161,3 +164,12 @@ class TimePlace(models.Model):
         ordering = (
             'start_date',
         )
+
+
+class EventTicket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
+    name = models.CharField(max_length=128, verbose_name=_("Name"))
+    email = models.EmailField(verbose_name=_("Email"))
+    active = models.BooleanField(verbose_name=_("Active"))
+    comment = models.TextField(verbose_name=_("Comment"))
+    event = models.ManyToManyField(TimePlace)
