@@ -1,13 +1,13 @@
-from datetime import timedelta, datetime
-
 import math
+
+from datetime import timedelta
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView
+from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView
 
 from news.forms import TimePlaceForm
 from news.models import Article, Event, TimePlace
@@ -113,6 +113,11 @@ class AdminView(TemplateView):
         return context
 
 
+class AdminEventView(DetailView):
+    template_name = 'news/admin_event.html'
+    model = Event
+
+
 class EditArticleView(PermissionRequiredMixin, UpdateView):
     model = Article
     template_name = 'news/article_edit.html'
@@ -195,6 +200,9 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'news.add_event',
     )
     success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.id,))
 
 
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):

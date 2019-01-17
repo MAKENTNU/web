@@ -1,10 +1,10 @@
 from django.urls import path
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 
 from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
     ViewEventView, AdminView, ViewEventsView, ViewArticlesView, CreateTimePlaceView, EditTimePlaceView, \
     DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
-    DeleteArticleView, DeleteTimePlaceView, DeleteEventView
+    DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView
 
 from news.ical import SingleTimePlaceFeed
 
@@ -13,6 +13,7 @@ urlpatterns = [
     path('admin/toggle/article/', login_required(AdminArticleToggleView.as_view()), name='article-toggle'),
     path('admin/toggle/event/', login_required(AdminEventToggleView.as_view()), name='event-toggle'),
     path('admin/toggle/timeplace/', login_required(AdminTimeplaceToggleView.as_view()), name='timeplace-toggle'),
+    path('admin/event/<int:pk>/', permission_required("news.change_event")(AdminEventView.as_view()), name='admin-event'),
     path('articles/', ViewArticlesView.as_view(), name='articles'),
     path('article/create/', login_required(CreateArticleView.as_view()), name='article-create'),
     path('article/<int:pk>/edit/', login_required(EditArticleView.as_view()), name='article-edit'),
