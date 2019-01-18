@@ -10,3 +10,4 @@ channels_redis
 django_ical
 xlsxwriter
 python_ldap==3.1.0
+uuid
