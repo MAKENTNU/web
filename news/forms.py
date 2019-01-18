@@ -8,7 +8,7 @@ class TimePlaceForm(ModelForm):
     class Meta:
         model = TimePlace
         fields = '__all__'
-        exclude = []
+        exclude = ["hoopla"]
         widgets = {
             "place": MazemapSearchInput(url_field="place_url"),
             "event": SemanticSearchableChoiceInput(),

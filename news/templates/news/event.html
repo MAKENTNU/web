@@ -38,9 +38,9 @@
                             {% endif %}
                         {% endif %}
 
-			<a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
-			    <i class="ui large calendar outline icon"></i>
-			</a>
+                        <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
+                            <i class="ui large calendar outline icon"></i>
+                        </a>
                     </div>
                     {% if not event.event.multiday %}
                         {% if event.hoopla %}
@@ -48,6 +48,18 @@
                                 <a class="ui make_bg_yellow black button" href="{{ event.hoopla }}"
                                    target="_blank">{% trans "Registration" %}</a>
                             </div>
+                        {% elif event.number_of_tickets %}
+                            {% if event.number_of_registered_tickets < event.number_of_tickets %}
+                                <div class="ui two buttons">
+                                    <a class="ui make_bg_yellow black button" href="">
+                                        {% trans "Registration" %}
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="ui two buttons">
+                                    <p class="ui disabled button">{% trans "Sold out" %}</p>
+                                </div>
+                            {% endif %}
                         {% else %}
                             <div class="ui two buttons">
                                 <p class="ui disabled button">-</p>
@@ -56,10 +68,25 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            {% if article.multiday and article.hoopla %}
+            <!-- TODO: Check if event has ended -->
+            {% if article.multiday %}
                 <div class="ui card">
-                    <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
-                       target="_blank">{% trans "Registration" %}</a>
+                    {% if article.hoopla %}
+                        <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
+                           target="_blank">{% trans "Registration" %}</a>
+                    {% elif article.number_of_tickets %}
+                        {% if article.number_of_registered_tickets < article.number_of_tickets %}
+                            <a class="ui make_bg_yellow black button" href="">
+                                {% trans "Registration" %}
+                            </a>
+                        {% else %}
+                            <p class="ui disabled button">{% trans "Sold out" %}</p>
+                        {% endif %}
+                    {% else %}
+                        <p class="ui disabled button">
+                            {% trans "No registration" %}
+                        </p>
+                    {% endif %}
                 </div>
             {% endif %}
         </div>
@@ -110,23 +137,33 @@
                         {% endif %}
                     {% endif %}
 
-		    <div class="attend">
-			<a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
-			    <i class="ui large calendar outline icon"></i>
-			</a>
+                    <div class="attend">
+                        <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
+                            <i class="ui large calendar outline icon"></i>
+                        </a>
 
-			{% if not event.event.multiday %}
-			    {% if event.hoopla %}
-				<a class="ui yellow button" href="{{ event.hoopla }}" target="_blank">
-				    {% trans "Registration" %}
-				</a>
-			    {% else %}
-				<p class="make_col_ligray">
-				    <i>{% trans "No registrations" %}</i>
-				</p>
-			    {% endif %}
-			{% endif %}
-		    </div>
+                        {% if not event.event.multiday %}
+                            {% if event.hoopla %}
+                                <a class="ui yellow button" href="{{ event.hoopla }}" target="_blank">
+                                    {% trans "Registration" %}
+                                </a>
+                            {% elif event.number_of_tickets %}
+                                {% if event.number_of_registered_tickets < event.number_of_tickets %}
+                                    <a class="ui yellow button" href="">
+                                        {% trans "Registration" %}
+                                    </a>
+                                {% else %}
+                                    <p class="ui disabled button">
+                                        {% trans "Sold out" %}
+                                    </p>
+                                {% endif %}
+                            {% else %}
+                                <p class="make_col_ligray">
+                                    <i>{% trans "No registrations" %}</i>
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         {% endfor %}

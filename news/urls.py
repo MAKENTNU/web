@@ -1,12 +1,11 @@
-from django.urls import path
 from django.contrib.auth.decorators import login_required, permission_required
-
-from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
-    ViewEventView, AdminView, ViewEventsView, ViewArticlesView, CreateTimePlaceView, EditTimePlaceView, \
-    DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
-    DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView
+from django.urls import path
 
 from news.ical import SingleTimePlaceFeed
+from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
+    ViewEventView, AdminView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
+    DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
+    DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView
 
 urlpatterns = [
     path('admin/', login_required(AdminView.as_view()), name='admin'),
@@ -24,7 +23,6 @@ urlpatterns = [
     path('event/<int:pk>/edit/', login_required(EditEventView.as_view()), name='event-edit'),
     path('event/<int:pk>/delete/', login_required(DeleteEventView.as_view()), name='event-delete'),
     path('event/<int:pk>/', ViewEventView.as_view(), name='event'),
-    path('timeplace/create/', login_required(CreateTimePlaceView.as_view()), name='timeplace-create'),
     path('timeplace/<int:pk>/edit/', login_required(EditTimePlaceView.as_view()), name='timeplace-edit'),
     path('timeplace/<int:pk>/duplicate/', login_required(DuplicateTimePlaceView.as_view()),
          name='timeplace-duplicate'),

@@ -2,6 +2,16 @@
 {% load news_tags %}
 
 <div class="item">
+    {% if not timeplace.event.multiday %}
+        <span class="ui right floated">
+            {% if timeplace.number_of_tickets %}
+                <!-- TODO: Add overview page for tickets -->
+                <a href="">{{ timeplace.number_of_registered_tickets }}/{{ timeplace.number_of_tickets }} {% trans "tickets reserved" %}</a>
+            {% else %}
+                <b>{% trans "No registration required" %}</b>
+            {% endif %}
+        </span>
+    {% endif %}
     <div class="content">
         <div class="header">
             {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}

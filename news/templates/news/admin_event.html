@@ -32,6 +32,7 @@
         </div>
 
         <div>
+            <h2>{% trans "Tools" %}</h2>
             <h1>
                 <i class="ui {{ object.featured|color }} star icon toggle explanation-popup"
                    data-title="{% trans "Feature" %}"
@@ -80,6 +81,16 @@
             </h1>
         </div>
 
+        {% if event.multiday %}
+            <h2>Tickets</h2>
+            {% if event.number_of_tickets %}
+                <!-- TODO: Add overview page for tickets -->
+                <b><a href="">{{ event.number_of_registered_tickets }}/{{ event.number_of_tickets }} {% trans "tickets reserved" %}</a></b>
+            {% else %}
+                <b>{% trans "No registration required" %}</b>
+            {% endif %}
+        {% endif %}
+
         <h2>{% trans "Occurrences" %}</h2>
         <div class="ui tabular pointing secondary menu">
             <a class="active item" data-tab="future">{% trans "Future" %}
@@ -91,7 +102,7 @@
         </div>
 
         <div class="ui active tab segment" data-tab="future">
-            <div class="ui list">
+            <div class="ui relaxed divided list">
                 {% for timeplace in object.timeplace_set|future %}
                     {% include "news/admin_timeplace_listing.html" %}
                 {% empty %}
@@ -100,7 +111,7 @@
             </div>
         </div>
         <div class="ui bottom attached tab segment" data-tab="past">
-            <div class="ui list">
+            <div class="ui relaxed divided list">
                 {% for timeplace in object.timeplace_set|past %}
                     {% include "news/admin_timeplace_listing.html" %}
                 {% empty %}

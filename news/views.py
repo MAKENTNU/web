@@ -173,12 +173,13 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
         'private',
         'featured',
         'multiday',
-        'hoopla',
     )
     permission_required = (
         'news.change_event',
     )
-    success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.id,))
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
@@ -194,12 +195,10 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'private',
         'featured',
         'multiday',
-        'hoopla',
     )
     permission_required = (
         'news.add_event',
     )
-    success_url = '/news/admin'
 
     def get_success_url(self):
         return reverse_lazy("admin-event", args=(self.object.id,))
@@ -212,17 +211,15 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_timeplace',
     )
-    success_url = '/news/admin'
 
+    def get_form(self, form_class=None):
+        form = self.form_class(**self.get_form_kwargs())
+        if self.object.event.multiday:
+            del form.fields["number_of_tickets"]
+        return form
 
-class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
-    model = TimePlace
-    template_name = 'news/timeplace_create.html'
-    form_class = TimePlaceForm
-    permission_required = (
-        'news.add_timeplace',
-    )
-    success_url = '/news/admin'
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.event.id,))
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, View):
@@ -316,3 +313,6 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
     permission_required = (
         'news.delete_timeplace',
     )
+
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.event.id,))

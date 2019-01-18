@@ -106,6 +106,9 @@ class Event(NewsBase):
     def get_past_occurrences(self):
         return TimePlace.objects.past().filter(event=self).order_by("-start_date", "-start_time")
 
+    def number_of_registered_tickets(self):
+        return self.eventticket_set.filter(active=True).count()
+
 
 class TimePlace(models.Model):
     objects = TimePlaceManager()
@@ -132,9 +135,8 @@ class TimePlace(models.Model):
         verbose_name=_('Start time'),
     )
     end_time = models.TimeField(
-        blank=True,
-        null=True,
-        verbose_name=_('End time')
+        default=time.min,
+        verbose_name=_('End time'),
     )
     place = models.CharField(
         max_length=100,
@@ -165,6 +167,9 @@ class TimePlace(models.Model):
             'start_date',
         )
 
+    def number_of_registered_tickets(self):
+        return self.eventticket_set.filter(active=True).count()
+
 
 class EventTicket(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
@@ -172,4 +177,8 @@ class EventTicket(models.Model):
     email = models.EmailField(verbose_name=_("Email"))
     active = models.BooleanField(verbose_name=_("Active"))
     comment = models.TextField(verbose_name=_("Comment"))
-    event = models.ManyToManyField(TimePlace)
+    # Since timeplaces can be added/removed from multiday events, it is easier to use two foreign keys, instead of
+    # using a many-to-many field for timeplaces
+    timeplace = models.ForeignKey(TimePlace, on_delete=models.CASCADE, blank=True, null=True,
+                                  verbose_name=_("Timeplace"))
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_("Event"))
