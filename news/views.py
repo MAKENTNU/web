@@ -6,11 +6,12 @@ from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.translation import get_language
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView
 
-from news.forms import TimePlaceForm
-from news.models import Article, Event, TimePlace
+from news.forms import TimePlaceForm, EventRegistrationForm
+from news.models import Article, Event, TimePlace, EventTicket
 from web.templatetags.permission_tags import has_any_news_permissions
 
 
@@ -316,3 +317,55 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse_lazy("admin-event", args=(self.object.event.id,))
+
+
+class EventRegistrationView(CreateView):
+    model = EventTicket
+    template_name = "news/event_registration.html"
+    form_class = EventRegistrationForm
+
+    @property
+    def timeplace(self):
+        if "timeplace_pk" in self.kwargs:
+            return get_object_or_404(TimePlace, pk=self.kwargs["timeplace_pk"])
+        return None
+
+    @property
+    def event(self):
+        if "event_pk" in self.kwargs:
+            return get_object_or_404(Event, pk=self.kwargs["event_pk"])
+        return None
+
+    def form_valid(self, form):
+        ticket = form.save()
+        if self.request.user.is_authenticated:
+            ticket.user = self.request.user
+
+        ticket.event = self.event
+        ticket.timeplace = self.timeplace
+        ticket.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({
+            "timeplace": self.timeplace,
+            "event": self.event,
+        })
+        return context_data
+
+    def get_success_url(self):
+        # TODO: Link to a page where the user can see their ticket
+        return reverse_lazy("admin")
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.user.is_authenticated:
+            kwargs["initial"].update({
+                "name": self.request.user.get_full_name(),
+                "email": self.request.user.email,
+            })
+        kwargs["initial"].update({
+            "language": get_language()
+        })
+        return kwargs

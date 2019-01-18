@@ -109,6 +109,15 @@ class Event(NewsBase):
     def number_of_registered_tickets(self):
         return self.eventticket_set.filter(active=True).count()
 
+    def can_register(self, user):
+        if self.hidden:
+            return False
+        if self.private and not user.has_permission("news.can_view_private"):
+            return False
+        if self.multiday:
+            return self.number_of_tickets > self.number_of_registered_tickets()
+        return True
+
 
 class TimePlace(models.Model):
     objects = TimePlaceManager()
@@ -170,15 +179,26 @@ class TimePlace(models.Model):
     def number_of_registered_tickets(self):
         return self.eventticket_set.filter(active=True).count()
 
+    def can_register(self, user):
+        if not self.event.can_register(user):
+            return False
+        return not self.hidden and self.number_of_registered_tickets() < self.number_of_tickets
+
 
 class EventTicket(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
     name = models.CharField(max_length=128, verbose_name=_("Name"))
     email = models.EmailField(verbose_name=_("Email"))
-    active = models.BooleanField(verbose_name=_("Active"))
-    comment = models.TextField(verbose_name=_("Comment"))
+    active = models.BooleanField(verbose_name=_("Active"), default=True)
+    comment = models.TextField(verbose_name=_("Comment"), blank=True)
+    language = models.CharField(max_length=2, choices=(("en", _("English")), ("nb", _("Norwegian"))), default="en",
+                                verbose_name=_("Preferred language"))
+
     # Since timeplaces can be added/removed from multiday events, it is easier to use two foreign keys, instead of
     # using a many-to-many field for timeplaces
     timeplace = models.ForeignKey(TimePlace, on_delete=models.CASCADE, blank=True, null=True,
                                   verbose_name=_("Timeplace"))
     event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_("Event"))
+
+    def __str__(self):
+        return f"{self.name} - {self.event if self.event is not None else self.timeplace}"

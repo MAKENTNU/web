@@ -51,7 +51,8 @@
                         {% elif event.number_of_tickets %}
                             {% if event.number_of_registered_tickets < event.number_of_tickets %}
                                 <div class="ui two buttons">
-                                    <a class="ui make_bg_yellow black button" href="">
+                                    <!-- TODO: If the user has a ticket, link to the ticket instead -->
+                                    <a class="ui make_bg_yellow black button" href="{% url "register-timeplace" event.id %}">
                                         {% trans "Registration" %}
                                     </a>
                                 </div>
@@ -76,7 +77,7 @@
                            target="_blank">{% trans "Registration" %}</a>
                     {% elif article.number_of_tickets %}
                         {% if article.number_of_registered_tickets < article.number_of_tickets %}
-                            <a class="ui make_bg_yellow black button" href="">
+                            <a class="ui make_bg_yellow black button" href="{% url "register-event" article.id %}">
                                 {% trans "Registration" %}
                             </a>
                         {% else %}
@@ -149,7 +150,8 @@
                                 </a>
                             {% elif event.number_of_tickets %}
                                 {% if event.number_of_registered_tickets < event.number_of_tickets %}
-                                    <a class="ui yellow button" href="">
+                                    <!-- TODO: If the user has a ticket, link to the ticket instead -->
+                                    <a class="ui yellow button" href="{% url "register-timeplace" event.id %}">
                                         {% trans "Registration" %}
                                     </a>
                                 {% else %}
