@@ -5,7 +5,7 @@ from news.ical import SingleTimePlaceFeed
 from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
     ViewEventView, AdminView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
     DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
-    DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView
+    DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView
 
 urlpatterns = [
     path('admin/', login_required(AdminView.as_view()), name='admin'),
@@ -30,5 +30,6 @@ urlpatterns = [
     path('timeplace/<int:pk>/new/', login_required(NewTimePlaceView.as_view()), name='timeplace-new'),
     path('timeplace/<int:pk>/delete/', login_required(DeleteTimePlaceView.as_view()), name='timeplace-delete'),
     path('timeplace/<int:pk>/ical/', SingleTimePlaceFeed(), name='timeplace-ical'),
-    path('timeplace/<int:timeplace_pk>/register/', EventRegistrationView.as_view(), name="register-timeplace")
+    path('timeplace/<int:timeplace_pk>/register/', EventRegistrationView.as_view(), name="register-timeplace"),
+    path('ticket/<uuid:pk>/', TicketView.as_view(), name="ticket"),
 ]

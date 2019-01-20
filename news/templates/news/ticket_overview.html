@@ -1,0 +1,13 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>{% trans "Ticket for" %}: "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
+        <div>
+            <b>{% trans "Registered to" %}:</b> {{ object.name }},
+            <a href="mailto:{{ object.email }}">{{ object.email }}</a>
+        </div>
+        {% include "news/ticket.html" with ticket=object %}
+    </div>
+{% endblock %}

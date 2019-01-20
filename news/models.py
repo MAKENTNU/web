@@ -194,7 +194,7 @@ class EventTicket(models.Model):
     comment = models.TextField(verbose_name=_("Comment"), blank=True)
     language = models.CharField(max_length=2, choices=(("en", _("English")), ("nb", _("Norwegian"))), default="en",
                                 verbose_name=_("Preferred language"))
-    uuid = models.UUIDField(default=uuid.uuid4)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
 
     # Since timeplaces can be added/removed from multiday events, it is easier to use two foreign keys, instead of
     # using a many-to-many field for timeplaces

@@ -344,6 +344,7 @@ class EventRegistrationView(CreateView):
         ticket.event = self.event
         ticket.timeplace = self.timeplace
         ticket.save()
+        self.object = ticket
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
@@ -355,8 +356,7 @@ class EventRegistrationView(CreateView):
         return context_data
 
     def get_success_url(self):
-        # TODO: Link to a page where the user can see their ticket
-        return reverse_lazy("admin")
+        return reverse_lazy("ticket", args=(self.object.uuid,))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -369,3 +369,11 @@ class EventRegistrationView(CreateView):
             "language": get_language()
         })
         return kwargs
+
+
+class TicketView(DetailView):
+    model = EventTicket
+    template_name = "news/ticket_overview.html"
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
