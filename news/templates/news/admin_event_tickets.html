@@ -1,0 +1,36 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>{{ event.title }}</h1>
+        <a href="{% url "admin-event" event.pk %}">
+            <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
+        </a>
+
+        <h3>{% trans "Tickets" %}</h3>
+        <b>{{ object.number_of_registered_tickets }}/{{ object.number_of_tickets }} {% trans "tickets reserved" %}</b>
+        <div class="ui relaxed divided list">
+            {% for ticket in tickets %}
+                <div class="item">
+                    <span class="right floated ">
+                        {% if ticket.active %}
+                            <span class="ui green label">{% trans "Active" %}</span>
+                        {% else %}
+                            <span class="ui red label">{% trans "Canceled" %}</span>
+                        {% endif %}
+                    </span>
+                    <i class="ui very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
+                    <div class="ui content">
+                        <div class="header">{{ ticket.name }}</div>
+                        <div class="description"><a href="mailto:{{ ticket.email }}">{{ ticket.email }}</a></div>
+                    </div>
+                </div>
+            {% empty %}
+                {% trans "No tickets have been registered for the event" %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

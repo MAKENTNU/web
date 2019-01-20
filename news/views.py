@@ -389,3 +389,35 @@ class ClaimTicketView(RedirectView):
         ticket.user = self.request.user
         ticket.save()
         return super().get_redirect_url(*args, **kwargs)
+
+
+class AdminEventTicketView(TemplateView):
+    template_name = "news/admin_event_tickets.html"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data()
+        event = get_object_or_404(Event, pk=kwargs.pop("pk", 0))
+        if not event.number_of_tickets:
+            raise Http404()
+        context_data.update({
+            "tickets": event.eventticket_set.order_by("-active").all(),
+            "object": event,
+            "event": event,
+        })
+        return context_data
+
+
+class AdminTimeplaceTicketView(TemplateView):
+    template_name = "news/admin_event_tickets.html"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data()
+        timeplace = get_object_or_404(TimePlace, pk=kwargs.pop("pk", 0))
+        if not timeplace.number_of_tickets:
+            raise Http404()
+        context_data.update({
+            "tickets": timeplace.eventticket_set.order_by("-active").all(),
+            "event": timeplace.event,
+            "object": timeplace
+        })
+        return context_data

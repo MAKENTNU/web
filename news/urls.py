@@ -6,7 +6,7 @@ from news.views import EditArticleView, CreateArticleView, EditEventView, Create
     ViewEventView, AdminView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
     DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView, \
-    ClaimTicketView
+    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView
 
 urlpatterns = [
     path('admin/', login_required(AdminView.as_view()), name='admin'),
@@ -22,13 +22,14 @@ urlpatterns = [
     path('events/', ViewEventsView.as_view(), name='events'),
     path('event/create/', login_required(CreateEventView.as_view()), name='event-create'),
     path('event/<int:pk>/edit/', login_required(EditEventView.as_view()), name='event-edit'),
+    path('event/<int:pk>/tickets/', permission_required("news.change_event")(AdminEventTicketView.as_view()), name="event-tickets"),
     path('event/<int:pk>/delete/', login_required(DeleteEventView.as_view()), name='event-delete'),
     path('event/<int:pk>/', ViewEventView.as_view(), name='event'),
     path('event/<int:event_pk>/register/', EventRegistrationView.as_view(), name="register-event"),
     path('timeplace/<int:pk>/edit/', login_required(EditTimePlaceView.as_view()), name='timeplace-edit'),
-    path('timeplace/<int:pk>/duplicate/', login_required(DuplicateTimePlaceView.as_view()),
-         name='timeplace-duplicate'),
+    path('timeplace/<int:pk>/duplicate/', login_required(DuplicateTimePlaceView.as_view()), name='timeplace-duplicate'),
     path('timeplace/<int:pk>/new/', login_required(NewTimePlaceView.as_view()), name='timeplace-new'),
+    path('timeplace/<int:pk>/tickets/', permission_required("news.change_event")(AdminTimeplaceTicketView.as_view()), name="timeplace-tickets"),
     path('timeplace/<int:pk>/delete/', login_required(DeleteTimePlaceView.as_view()), name='timeplace-delete'),
     path('timeplace/<int:pk>/ical/', SingleTimePlaceFeed(), name='timeplace-ical'),
     path('timeplace/<int:timeplace_pk>/register/', EventRegistrationView.as_view(), name="register-timeplace"),

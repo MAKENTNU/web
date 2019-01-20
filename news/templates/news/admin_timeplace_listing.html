@@ -5,8 +5,9 @@
     {% if not timeplace.event.multiday %}
         <span class="ui right floated">
             {% if timeplace.number_of_tickets %}
-                <!-- TODO: Add overview page for tickets -->
-                <a href="">{{ timeplace.number_of_registered_tickets }}/{{ timeplace.number_of_tickets }} {% trans "tickets reserved" %}</a>
+                <a href="{% url "timeplace-tickets" pk=timeplace.pk %}">
+                    {{ timeplace.number_of_registered_tickets }}/{{ timeplace.number_of_tickets }} {% trans "tickets reserved" %}
+                </a>
             {% else %}
                 <b>{% trans "No registration required" %}</b>
             {% endif %}

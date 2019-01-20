@@ -84,8 +84,9 @@
         {% if event.multiday %}
             <h2>Tickets</h2>
             {% if event.number_of_tickets %}
-                <!-- TODO: Add overview page for tickets -->
-                <b><a href="">{{ event.number_of_registered_tickets }}/{{ event.number_of_tickets }} {% trans "tickets reserved" %}</a></b>
+                <b><a href="{% url "event-tickets" pk=event.pk %}">
+                    {{ event.number_of_registered_tickets }}/{{ event.number_of_tickets }} {% trans "tickets reserved" %}
+                </a></b>
             {% else %}
                 <b>{% trans "No registration required" %}</b>
             {% endif %}
