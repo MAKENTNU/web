@@ -3,11 +3,34 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "Ticket for" %}: "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
-        <div>
-            <b>{% trans "Registered to" %}:</b> {{ object.name }},
-            <a href="mailto:{{ object.email }}">{{ object.email }}</a>
-        </div>
-        {% include "news/ticket.html" with ticket=object %}
+        {% if not object.user or object.user == request.user %}
+            <h1>{% trans "Ticket for" %}: "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
+            <div>
+                <b>{% trans "Registered to" %}:</b> {{ object.name }},
+                <a href="mailto:{{ object.email }}">{{ object.email }}</a>
+            </div>
+
+            {# Allow a user to register the ticket to their account if the ticket is not registered to an account #}
+            {% if not object.user %}
+                <div class="ui yellow message">
+                    {% trans "This ticket is not registered to any account." %}
+                    {% url "claim-ticket" pk=object.uuid as claim_url %}
+                    {% if request.user.is_authenticated %}
+                        {% trans "Click" %} <a href="{{ claim_url }}">{% trans "here" %}</a>
+                    {% else %}
+                        <a href="{% url "login" %}?next={{ claim_url }}">{% trans "Login" %}</a>
+                    {% endif %}
+                    {% trans "to register the ticket to your account." %}
+                </div>
+            {% endif %}
+
+            {% include "news/ticket.html" with ticket=object %}
+        {% else %}
+            <div class="ui error message">
+            {% trans "This ticket is registered to an account owned by another account. Please" %}
+                <a href="{% url "login" %}?next{% url "ticket" pk=object.uuid %}">{% trans "login" %}</a>
+            {% trans "to the correct account to see your ticket." %}
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

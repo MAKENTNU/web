@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language
 from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView
+from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
 
 from news.forms import TimePlaceForm, EventRegistrationForm
 from news.models import Article, Event, TimePlace, EventTicket
@@ -377,3 +377,15 @@ class TicketView(DetailView):
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
+
+
+class ClaimTicketView(RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = "ticket"
+
+    def get_redirect_url(self, *args, **kwargs):
+        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0), user=None)
+        ticket.user = self.request.user
+        ticket.save()
+        return super().get_redirect_url(*args, **kwargs)
