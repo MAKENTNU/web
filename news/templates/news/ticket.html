@@ -1,12 +1,9 @@
 {% load i18n %}
 
-<div class="ui card" style="overflow: hidden">
+<div class="ui ticket card">
     {% if not ticket.active %}
-        <div class="ui red label"
-             style="width: 200%; line-height: 2; position: absolute; top: 50%; left: -50%; transform: translate(0, -50%) rotate(-25deg); z-index: 2;">
-            <div style="text-align: center; font-size: 1.2em;">
-                {% trans "Canceled" %}
-            </div>
+        <div class="ui red cancel label">
+            {% trans "Canceled" %}
         </div>
     {% endif %}
 
@@ -58,7 +55,7 @@
             {% endif %}
         </div>
     </div>
-    <div class="extra content" style="font-size: 0.8em;">
+    <div class="extra content">
         <div class="right floated">
             <b>{% trans "Ref #: " %}</b>
             <a href="{% url "ticket" pk=ticket.uuid %}">
@@ -68,7 +65,8 @@
     </div>
     {% if ticket.active %}
         {% if ticket.user == request.user or ticket.user == None or perms.news.cancel_ticket %}
-            <a class="ui red bottom attached button" href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
+            <a class="ui red bottom attached button"
+               href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
                 {% trans "Cancel ticket" %}
             </a>
         {% endif %}

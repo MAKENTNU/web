@@ -51,7 +51,6 @@
                         {% elif event.number_of_tickets %}
                             {% if event.number_of_registered_tickets < event.number_of_tickets %}
                                 <div class="ui two buttons">
-                                    <!-- TODO: If the user has a ticket, link to the ticket instead -->
                                     <a class="ui make_bg_yellow black button" href="{% url "register-timeplace" event.id %}">
                                         {% trans "Registration" %}
                                     </a>
@@ -69,8 +68,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            <!-- TODO: Check if event has ended -->
-            {% if article.multiday %}
+            {% if article.multiday and article.timeplace_set.future %}
                 <div class="ui card">
                     {% if article.hoopla %}
                         <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
@@ -150,7 +148,6 @@
                                 </a>
                             {% elif event.number_of_tickets %}
                                 {% if event.number_of_registered_tickets < event.number_of_tickets %}
-                                    <!-- TODO: If the user has a ticket, link to the ticket instead -->
                                     <a class="ui yellow button" href="{% url "register-timeplace" event.id %}">
                                         {% trans "Registration" %}
                                     </a>
@@ -161,7 +158,7 @@
                                 {% endif %}
                             {% else %}
                                 <p class="make_col_ligray">
-                                    <i>{% trans "No registrations" %}</i>
+                                    <i>{% trans "No registration" %}</i>
                                 </p>
                             {% endif %}
                         {% endif %}
