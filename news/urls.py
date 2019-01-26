@@ -6,7 +6,7 @@ from news.views import EditArticleView, CreateArticleView, EditEventView, Create
     ViewEventView, AdminView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
     DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView, \
-    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView
+    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView
 
 urlpatterns = [
     path('admin/', login_required(AdminView.as_view()), name='admin'),
@@ -35,4 +35,6 @@ urlpatterns = [
     path('timeplace/<int:timeplace_pk>/register/', EventRegistrationView.as_view(), name="register-timeplace"),
     path('ticket/<uuid:pk>/', TicketView.as_view(), name="ticket"),
     path('ticket/<uuid:pk>/claim/', login_required(ClaimTicketView.as_view()), name="claim-ticket"),
+    path('ticket/<uuid:pk>/cancel/', CancelTicketView.as_view(), name="cancel-ticket"),
+    path('ticket/me/', login_required(MyTicketsView.as_view()), name="my-tickets"),
 ]

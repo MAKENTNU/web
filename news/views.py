@@ -2,6 +2,7 @@ import math
 
 from datetime import timedelta
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.mail import send_mail
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -12,6 +13,7 @@ from django.views.generic import UpdateView, CreateView, TemplateView, DeleteVie
 
 from news.forms import TimePlaceForm, EventRegistrationForm
 from news.models import Article, Event, TimePlace, EventTicket
+from web import settings
 from web.templatetags.permission_tags import has_any_news_permissions
 
 
@@ -379,6 +381,17 @@ class TicketView(DetailView):
         return super().get_context_data(**kwargs)
 
 
+class MyTicketsView(TemplateView):
+    template_name = "news/my_tickets.html"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({
+            "tickets": EventTicket.objects.filter(user=self.request.user),
+        })
+        return context_data
+
+
 class ClaimTicketView(RedirectView):
     permanent = False
     query_string = True
@@ -421,3 +434,24 @@ class AdminTimeplaceTicketView(TemplateView):
             "object": timeplace
         })
         return context_data
+
+
+class CancelTicketView(RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = "ticket"
+
+    def get_redirect_url(self, *args, **kwargs):
+        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0))
+
+        # Allow for toggling if a ticket is canceled or not
+        if self.request.user.has_perm("news.cancel_ticket"):
+            ticket.active = not ticket.active
+        elif self.request.user == ticket.user or ticket.user is None:
+            ticket.active = False
+        ticket.save()
+
+        next_page = self.request.GET.get("next")
+        if next_page is None:
+            return super().get_redirect_url(*args, **kwargs)
+        return next_page

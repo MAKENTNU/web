@@ -204,3 +204,8 @@ class EventTicket(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.event if self.event is not None else self.timeplace}"
+
+    class Meta:
+        permissions = (
+            ("cancel_ticket", "Can cancel and reactivate all event tickets"),
+        )
