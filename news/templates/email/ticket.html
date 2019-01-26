@@ -1,0 +1,20 @@
+{% load staticfiles %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html style="width: 100%; padding: 0; margin: 0;">
+<body style="width: 100%; padding: 0; margin: 0;">
+<header style="width: 100%; background-color: rgb(34, 43, 52); padding: 20px; position: relative;">
+    <img src="{{ site }}{% static "web/img/logo_white.svg" %}" alt="MAKE NTNU logo"
+         style="width: 500px; max-width: 100%;">
+</header>
+<main style="padding: 30px;">
+    <h1>{% trans "Your ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
+    <div>
+        {% trans "You recently registered for the above event on our website. You can view your ticket" %} <a
+            href="{{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>. {% trans "If you want to cancel your registration, you can do it by clicking " %}
+        <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+    </div>
+</main>
+</body>
+</html>

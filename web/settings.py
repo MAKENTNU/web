@@ -16,6 +16,9 @@ REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
 
+EVENT_TICKET_EMAIL = "ticket@makentnu.no"
+EMAIL_SITE_URL = "https://makentnu.no"
+
 try:
     from .local_settings import *
 except ImportError:
