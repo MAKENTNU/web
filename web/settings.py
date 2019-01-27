@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'make_queue',
     'social_django',
     'news',
+    'mail',
     'ckeditor',
     'ckeditor_uploader',
     'contentbox',

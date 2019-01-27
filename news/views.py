@@ -1,18 +1,20 @@
 import math
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from datetime import timedelta
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
-from django.template.loader import get_template
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext as __
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
 
+from mail import email
 from news.forms import TimePlaceForm, EventRegistrationForm
 from news.models import Article, Event, TimePlace, EventTicket
 from web import settings
@@ -349,13 +351,16 @@ class EventRegistrationView(CreateView):
         ticket.timeplace = self.timeplace
         ticket.save()
 
-        context = {"ticket": ticket, "site": settings.EMAIL_SITE_URL}
-        htmly = get_template("email/ticket.html")
-
-        msg = EmailMultiAlternatives(_("Test"), _("Test"), settings.EVENT_TICKET_EMAIL, [ticket.email])
-        msg.attach_alternative(htmly.render(context), "text/html")
-        # Should probably set up some kind of async email service later
-        msg.send(fail_silently=True)
+        async_to_sync(get_channel_layer().send)(
+            "email", {
+                "type": "send_html",
+                "html_render": email.render_html({"ticket": ticket}, "email/ticket.html"),
+                "text": __("Test"),
+                "subject": __("Test"),
+                "from": settings.EVENT_TICKET_EMAIL,
+                "to": ticket.email,
+            }
+        )
 
         self.object = ticket
         return HttpResponseRedirect(self.get_success_url())
