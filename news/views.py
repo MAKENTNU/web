@@ -9,7 +9,6 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language
-from django.utils.translation import gettext_lazy as _
 from django.utils.translation import gettext as __
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
