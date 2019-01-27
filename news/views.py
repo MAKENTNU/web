@@ -355,8 +355,8 @@ class EventRegistrationView(CreateView):
             "email", {
                 "type": "send_html",
                 "html_render": email.render_html({"ticket": ticket}, "email/ticket.html"),
-                "text": __("Test"),
-                "subject": __("Test"),
+                "text": email.render_text({"ticket": ticket}, text_template_name="email/ticket.txt"),
+                "subject": __("Your ticket!"),
                 "from": settings.EVENT_TICKET_EMAIL,
                 "to": ticket.email,
             }

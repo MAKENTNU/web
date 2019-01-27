@@ -8,12 +8,18 @@
     <img src="{{ site }}{% static "web/img/logo_white.svg" %}" alt="MAKE NTNU logo"
          style="width: 500px; max-width: 100%;">
 </header>
-<main style="padding: 30px;">
-    <h1>{% trans "Your ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
+<main style="position: relative; width: 100%; padding: 30px;">
     <div>
-        {% trans "You recently registered for the above event on our website. You can view your ticket" %} <a
-            href="{{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>. {% trans "If you want to cancel your registration, you can do it by clicking " %}
-        <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+        <h1>{% trans "Your ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
+        <div>
+            {% trans "Thank you for your recently registration for the above event. You can view your ticket" %} <a
+                href="
+                        {{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>. {% trans "If you want to cancel your registration, you can do so by clicking " %}
+            <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+        </div>
+        <div style="margin-top: 30px;">
+            {% trans "The reference number for your ticket is: " %} <b>"{{ ticket.uuid }}"</b>
+        </div>
     </div>
 </main>
 </body>

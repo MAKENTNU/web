@@ -7,7 +7,7 @@ from web import settings
 
 class EmailConsumer(SyncConsumer):
 
-    def send(self, message):
+    def send_text(self, message):
         send_mail(message["subject"], message["text"], message["from"], [message["to"]], fail_silently=True)
 
     def send_html(self, message):
@@ -22,7 +22,7 @@ def render_html(context, html_template_name):
 
 
 def render_text(context, text="", text_template_name=None):
-    if "text_template_name" is not None:
+    if text_template_name is not None:
         context.update({"site": settings.EMAIL_SITE_URL})
 
         return get_template(text_template_name).render(context)
