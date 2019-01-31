@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
 {% load thumbnail %}
+{% load i18n %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "inventory/css/inventory.css" %}">
@@ -8,13 +9,21 @@
 
 {% block body %}
     <div class="ui container text-centered">
-        <div class='ui search'>
+        <div class="five wide field">
+            <select class="ui fluid dropdown search" name="items">
+                <option value="">{% trans "Select/search" %}</option>
+                {% for item in items %}
+                    <option value="{{ item.name }}">{{ item.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        {% comment %}<div class='ui search'>
             <div class="ui icon input" id="inventory-search">
                 <input class="prompt" type="text" placeholder="Søkeord"  oninput="myFunction()">
                 <i class="search icon"></i>
-{#                <button class="ui button">Søk</button>#}
+                <button class="ui button">Søk</button>
             </div>
-        </div>
+        </div>{% endcomment %}
         {% for item in items %}
             <div>
                 {{ item.name|add:" hey" }}
@@ -22,3 +31,9 @@
         {% endfor %}
     </div>
 {% endblock %}
+
+{% block scripts %}
+    <script>
+        $('.ui.dropdown').dropdown();
+    </script>
+{% endblock scripts %}
