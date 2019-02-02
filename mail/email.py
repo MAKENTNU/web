@@ -1,3 +1,5 @@
+import logging
+import smtplib
 from channels.consumer import SyncConsumer
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import get_template
@@ -8,12 +10,19 @@ from web import settings
 class EmailConsumer(SyncConsumer):
 
     def send_text(self, message):
-        send_mail(message["subject"], message["text"], message["from"], [message["to"]], fail_silently=True)
+        try:
+            send_mail(message["subject"], message["text"], message["from"], [message["to"]], fail_silently=False)
+        except smtplib.SMTPException as e:
+            logging.error(
+                f"Failed sending plain text email from {message['from']} to {message['to']} with exception: {e}")
 
     def send_html(self, message):
         msg = EmailMultiAlternatives(message["subject"], message["text"], message["from"], [message["to"]])
         msg.attach_alternative(message["html_render"], "text/html")
-        msg.send(fail_silently=True)
+        try:
+            msg.send(fail_silently=False)
+        except smtplib.SMTPException as e:
+            logging.error(f"Failed sending HTML email from {message['from']} to {message['to']} with exception: {e}")
 
 
 def render_html(context, html_template_name):
