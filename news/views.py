@@ -10,6 +10,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language
 from django.utils.translation import gettext as __
+from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
 
@@ -341,7 +342,15 @@ class EventRegistrationView(CreateView):
             return get_object_or_404(Event, pk=self.kwargs["event_pk"])
         return None
 
+    def is_registration_allowed(self):
+        return self.timeplace and self.timeplace.can_register(self.request.user) \
+               or self.event and self.event.can_register(self.request.user)
+
     def form_valid(self, form):
+        if not self.is_registration_allowed():
+            form.add_error(None, _("Could not register you for the event, please try again later."))
+            return self.form_invalid(form)
+
         ticket = form.save()
         if self.request.user.is_authenticated:
             ticket.user = self.request.user

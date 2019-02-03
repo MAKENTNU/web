@@ -5,6 +5,12 @@
     <div class="ui container">
         <h2>{% trans "Register for the event" %}: "{{ event.title }}{{ timeplace.event.title }}"</h2>
 
+        {% for error in form.non_field_errors %}
+            <div class="ui error message">
+                {{ error }}
+            </div>
+        {% endfor %}
+
         <form class="ui form" action="" method="POST">
             {% csrf_token %}
             <div class="ui three fields">

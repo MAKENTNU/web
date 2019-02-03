@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-01-27 12:47+0100\n"
+"POT-Creation-Date: 2019-02-03 10:39+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -55,7 +55,7 @@ msgstr ""
 "Legg kortet på kortleseren og trykk på knappen under for å registrere kortet"
 
 #: checkin/templates/checkin/profile.html:100
-#: news/templates/news/event_registration.html:28
+#: news/templates/news/event_registration.html:34
 msgid "Register"
 msgstr "Registrer"
 
@@ -1324,9 +1324,9 @@ msgstr "Fra"
 msgid "To"
 msgstr "Til"
 
-#: news/views.py:358
-msgid "Your ticket!"
-msgstr "Din billett!"
+#: news/views.py:351
+msgid "Could not register you for the event, please try again later."
+msgstr "Det var ikke mulig å registrere deg for arrangementet på dette tidspunktet. Vennligst prøv igjen ved en senere anledning."
 
 #: web/templates/web/404.html:8
 msgid "The page doesn't exist"
@@ -1400,3 +1400,6 @@ msgstr "Velg verdi"
 #: web/widgets.py:34
 msgid "Search places"
 msgstr "Søk etter steder"
+
+#~ msgid "Your ticket!"
+#~ msgstr "Din billett!"
