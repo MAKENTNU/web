@@ -180,6 +180,7 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
         'private',
         'featured',
         'multiday',
+        'number_of_tickets',
     )
     permission_required = (
         'news.change_event',
