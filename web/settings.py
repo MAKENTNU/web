@@ -16,6 +16,11 @@ REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
 
+# When using more than one sub-domain, the session cookie domain has to be set so
+# that the sub-domains can use the same session. Currently points to "local.test.pe"
+# which has a DNS address of 127.0.0.1. Should be changed in production.
+SESSION_COOKIE_DOMAIN = "local.test.pe"
+
 try:
     from .local_settings import *
 except ImportError:
@@ -33,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_hosts',
     'groups',
     'web',
     'make_queue',
@@ -47,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -55,9 +62,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'web.urls'
+ROOT_HOSTCONF = "web.hosts"
+DEFAULT_HOST = "main"
 
 TEMPLATES = [
     {
