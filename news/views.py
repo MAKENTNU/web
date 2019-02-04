@@ -203,6 +203,7 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'private',
         'featured',
         'multiday',
+        'number_of_tickets',
     )
     permission_required = (
         'news.add_event',
