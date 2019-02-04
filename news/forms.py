@@ -2,7 +2,7 @@ from django.forms import ModelForm, Textarea
 from django.utils.translation import gettext_lazy as _
 
 from news.models import TimePlace, EventTicket
-from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput
+from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticTimeInput, SemanticDateInput
 
 
 class TimePlaceForm(ModelForm):
@@ -13,6 +13,12 @@ class TimePlaceForm(ModelForm):
         widgets = {
             "place": MazemapSearchInput(url_field="place_url"),
             "event": SemanticSearchableChoiceInput(),
+            "start_time": SemanticTimeInput(),
+            "start_date": SemanticDateInput(),
+            "end_time": SemanticTimeInput(),
+            "end_date": SemanticDateInput(),
+            "pub_time": SemanticTimeInput(),
+            "pub_date": SemanticDateInput(),
         }
 
 
