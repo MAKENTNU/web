@@ -82,6 +82,10 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             'hosts': [(REDIS_IP, REDIS_PORT)],
+            # The maximum resend time of a message in seconds
+            'expiry': 30,
+            # The number of seconds before a connection expires
+            'group_expiry': 900,
         },
     },
 }
