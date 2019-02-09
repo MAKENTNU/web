@@ -16,6 +16,9 @@ REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
 
+EVENT_TICKET_EMAIL = "ticket@makentnu.no"
+EMAIL_SITE_URL = "https://makentnu.no"
+
 try:
     from .local_settings import *
 except ImportError:
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'make_queue',
     'social_django',
     'news',
+    'mail',
     'ckeditor',
     'ckeditor_uploader',
     'contentbox',
@@ -81,6 +85,10 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             'hosts': [(REDIS_IP, REDIS_PORT)],
+            # The maximum resend time of a message in seconds
+            'expiry': 30,
+            # The number of seconds before a connection expires
+            'group_expiry': 900,
         },
     },
 }
