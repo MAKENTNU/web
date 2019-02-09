@@ -113,7 +113,7 @@ class Event(NewsBase):
     def can_register(self, user):
         if self.hidden:
             return False
-        if self.private and not user.has_permission("news.can_view_private"):
+        if self.private and not user.has_perm("news.can_view_private"):
             return False
         if self.multiday:
             return self.number_of_tickets > self.number_of_registered_tickets()
