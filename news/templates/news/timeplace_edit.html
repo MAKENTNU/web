@@ -22,7 +22,7 @@
     <h1 class="ui centered header">{% block form_header %}{% trans "Edit time" %}{% endblock form_header %}</h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="field">
+        <div class="field disabled">
             <label>{{ form.event.label }}</label>
             {{ form.event }}
         </div>
@@ -34,10 +34,13 @@
             <label>{{ form.place_url.label }}</label>
             {{ form.place_url }}
         </div>
-        <div class="field">
-            <label>{{ form.hoopla.label }}</label>
-            {{ form.hoopla }}
-        </div>
+        {% if form.number_of_tickets %}
+            <div class="field">
+                <label>{{ form.number_of_tickets.label }}</label>
+                {{ form.number_of_tickets }}
+                <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}</div>
+            </div>
+        {% endif %}
         <div class="two fields">
             <div class="field">
                 <label>{% trans "From" %}</label>
