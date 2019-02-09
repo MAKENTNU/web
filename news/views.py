@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language
-from django.utils.translation import gettext as __
+from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
@@ -366,7 +366,7 @@ class EventRegistrationView(CreateView):
                 "type": "send_html",
                 "html_render": email.render_html({"ticket": ticket}, "email/ticket.html"),
                 "text": email.render_text({"ticket": ticket}, text_template_name="email/ticket.txt"),
-                "subject": __("Your ticket!"),
+                "subject": gettext("Your ticket!"),
                 "from": settings.EVENT_TICKET_EMAIL,
                 "to": ticket.email,
             }
