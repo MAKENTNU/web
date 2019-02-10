@@ -27,9 +27,9 @@ class DataportenOAuth2(BaseOAuth2):
 
     def get_user_details(self, response):
         """
-        Return user details from Dataporten
+        Return user details from Dataporten.
 
-        Set fullname and fetch photoprofile url
+        Set full name and fetch profile photo URL.
         """
         user = response
 
@@ -39,7 +39,7 @@ class DataportenOAuth2(BaseOAuth2):
             user['fullname'] = fullname
             user.pop('name')
 
-        # Get profile photo url if any
+        # Get profile photo URL, if any
         profilephoto_id = user.get('profilephoto', None)
         if profilephoto_id:
             profilephoto_url = '{}/userinfo/v1/user/media/{}'.format(self.API_URL, profilephoto_id)

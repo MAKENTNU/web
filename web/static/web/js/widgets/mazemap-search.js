@@ -11,7 +11,7 @@ jQuery.fn.extend({
                     `&rows=${data.maxresults}` +
                     `&campusid=${data.campusid}`,
 
-                // Convert mazemap search results to fit semantic ui search format
+                // Convert MazeMap search results to fit Semantic UI search format
                 onResponse: (mazemapResponse => ({
                     results: mazemapResponse.result.map(item => ({
                         title: (
@@ -24,7 +24,7 @@ jQuery.fn.extend({
                 })),
             },
             templates: {
-                // Template for error messages. Default provided by semantic ui but with translations
+                // Template for error messages. Default provided by Semantic UI but with translations
                 message: (type, message) => (
                     `<div class="message empty">
                     <div class="header">
@@ -36,11 +36,11 @@ jQuery.fn.extend({
                 </div>`
                 ),
             },
-            // Autofill of mazemap-url if url_field is given
+            // Autofill of MazeMap-URL if url_field is given
             onSelect: function (result, response) {
                 if (data.urlfield) {
                     $(`input[name=${data.urlfield}]`).val(
-                        `https://use.mazemap.com/?campusid=${data.campusid}&desttype=poi&dest=${result.id}`,
+                        `https://use.mazemap.com/?campusid=${data.campusid}&desttype=poi&dest=${result.id}`
                     );
                 }
             },

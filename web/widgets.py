@@ -27,7 +27,7 @@ class SemanticDateInput(forms.DateInput):
 
 class MazemapSearchInput(forms.TextInput):
     """
-    Widget that enables mazemap search functionality, including autofill of url to mazemap
+    Widget that enables MazeMap search functionality, including autofill of URL to MazeMap.
     """
     template_name = "web/forms/widgets/mazemap_search.html"
     required_class_attr = "prompt"
@@ -40,7 +40,7 @@ class MazemapSearchInput(forms.TextInput):
         """
         :param campus_id: Campus to search for points of interest on. Default: NTNU Gløshaugen
         :param max_results: Maximum number of search results to return
-        :param url_field: Field to autofill with mazemap url. If None, autofill functionality is turned off
+        :param url_field: Field to autofill with MazeMap URL. If None, autofill functionality is turned off
         :param attrs: HTML attributes for the <input> element
         """
 
