@@ -3,6 +3,8 @@ from django.forms import Select
 
 from make_queue.models.course import *
 from make_queue.models.models import *
+
+
 # Register your models here.
 
 

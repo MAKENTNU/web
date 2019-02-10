@@ -53,13 +53,13 @@
 
             {# CKEDITOR is setup first after the DOM has loaded #}
             tabs.find(".django-ckeditor-widget").each(function () {
-               $(document).ready(function () {
+                $(document).ready(function () {
                     $(this).find("textarea").each(function () {
                         CKEDITOR.instances[this.id].on("change", function () {
                             checkFilled(this.element.$, this.getData());
                         });
                     });
-               }.bind(this))
+                }.bind(this))
             });
         {% endif %}
     </script>

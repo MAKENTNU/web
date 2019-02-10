@@ -12,7 +12,7 @@ function setupSocket($elem) {
 
     chatSocket.onclose = function (e) {
         console.error('Socket closed unexpectedly. Restarting');
-	setupSocket($elem)
+        setupSocket($elem)
     };
 }
 

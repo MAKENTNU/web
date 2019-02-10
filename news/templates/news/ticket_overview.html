@@ -32,9 +32,9 @@
             {% include "news/ticket.html" with ticket=object %}
         {% else %}
             <div class="ui error message">
-            {% trans "This ticket is registered to another account. Please" %}
+                {% trans "This ticket is registered to another account. Please" %}
                 <a href="{% url "social:begin" "dataporten" %}?next={% url "ticket" pk=object.uuid %}">{% trans "login" %}</a>
-            {% trans "to the correct account to see your ticket." %}
+                {% trans "to the correct account to see your ticket." %}
             </div>
         {% endif %}
     </div>

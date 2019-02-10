@@ -38,62 +38,62 @@
 
         <br>
         {% if suggestions %}
-        <h3>{% trans "Suggested skills" %}</h3>
-        <table class="ui very basic collapsing celled table">
-            <thead>
-            <tr>
-                <th>{% trans "Skill" %}</th>
-                <th>{% trans "Number of votes" %}</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for suggestion in suggestions %}
+            <h3>{% trans "Suggested skills" %}</h3>
+            <table class="ui very basic collapsing celled table">
+                <thead>
                 <tr>
-                    <td>
-                        <h5 class="ui header image">
-                            {% if suggestion.image %}
-                                {% thumbnail suggestion.image "64x64" crop="center" as im %}
-                                    <img src="{{ im.url }}" class="ui mini rounded image">
-                                {% endthumbnail %}
-                            {% else %}
-                                <img src="{% static "checkin/img/placeholder_skill.svg" %}" class="ui mini rounded image"/>
-                            {% endif %}
-                            <div class="content">{{ suggestion.title }}/{{ suggestion.title_en }}</div>
-                        </h5>
-                    </td>
-
-                    <td id="vote-count">{{ suggestion.voters.count }}</td>
-                    <td>
-                        {% if request.user|can_force_suggestion %}
-                            <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
-                                {% trans "Approve" %}
-                            </button>
-                        {% else %}
-                            <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
-                                    pk="{{ suggestion.pk }}" forced="false">
-                                {% if suggestion|has_voter:request.user %}
-                                    {% trans "Voted!" %}
-                                {% else %}
-                                    {% trans "Vote" %}
-                                {% endif %}
-                            </button>
-                        {% endif %}
-                    </td>
-                    <td>
-                    {% if request.user|can_delete_suggestion %}
-
-                            <button class="ui red button delete-suggestion" pk="{{ suggestion.pk }}">
-                                {% trans  "Delete" %}
-                            </button>
-
-                    {% endif %}
-                    </td>
+                    <th>{% trans "Skill" %}</th>
+                    <th>{% trans "Number of votes" %}</th>
+                    <th></th>
+                    <th></th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for suggestion in suggestions %}
+                    <tr>
+                        <td>
+                            <h5 class="ui header image">
+                                {% if suggestion.image %}
+                                    {% thumbnail suggestion.image "64x64" crop="center" as im %}
+                                        <img src="{{ im.url }}" class="ui mini rounded image">
+                                    {% endthumbnail %}
+                                {% else %}
+                                    <img src="{% static "checkin/img/placeholder_skill.svg" %}" class="ui mini rounded image"/>
+                                {% endif %}
+                                <div class="content">{{ suggestion.title }}/{{ suggestion.title_en }}</div>
+                            </h5>
+                        </td>
+
+                        <td id="vote-count">{{ suggestion.voters.count }}</td>
+                        <td>
+                            {% if request.user|can_force_suggestion %}
+                                <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
+                                    {% trans "Approve" %}
+                                </button>
+                            {% else %}
+                                <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
+                                        pk="{{ suggestion.pk }}" forced="false">
+                                    {% if suggestion|has_voter:request.user %}
+                                        {% trans "Voted!" %}
+                                    {% else %}
+                                        {% trans "Vote" %}
+                                    {% endif %}
+                                </button>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if request.user|can_delete_suggestion %}
+
+                                <button class="ui red button delete-suggestion" pk="{{ suggestion.pk }}">
+                                    {% trans "Delete" %}
+                                </button>
+
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
         {% endif %}
     </div>
 

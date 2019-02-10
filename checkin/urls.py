@@ -16,4 +16,3 @@ urlpatterns = [
     url(r'^suggest/vote/$', login_required(VoteSuggestionView.as_view()), name="vote"),
     url(r'^suggest/delete/$', login_required(DeleteSuggestionView.as_view()), name="delete"),
 ]
-

@@ -195,5 +195,3 @@ class TestMultiLingualFormField(TestCase):
         self.assertEqual(MultiLingualTextStructure, type(compressed_data))
         self.assertEqual(compressed_data["nb"], "test-nb")
         self.assertEqual(compressed_data["en"], "test-en")
-
-
