@@ -25,17 +25,17 @@ $('#' + streamID).each(function () {
 });
 
 {
-let closeFullscreen = function () {
-    $('.fullscreen').each(function () {
-        $(this).removeClass('fullscreen');
+    let closeFullscreen = function () {
+        $('.fullscreen').each(function () {
+            $(this).removeClass('fullscreen');
+        });
+    };
+
+    $("html").keydown(function (event) {
+        if (event.key === "Escape") {
+            closeFullscreen();
+        }
     });
-};
 
-$("html").keydown(function (event) {
-    if (event.key === "Escape") {
-        closeFullscreen();
-    }
-});
-
-$('#closefullscreen').click(closeFullscreen);
+    $('#closefullscreen').click(closeFullscreen);
 }
