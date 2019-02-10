@@ -1,3 +1,7 @@
+"""
+Note: querying NTNU's LDAP server requires connection to NTNU's VPN.
+"""
+
 import ldap
 from django.contrib.auth.models import User
 
@@ -29,9 +33,9 @@ def LDAP_search(search_field, search_value):
 
 def get_LDAP_field(ldap_data, field):
     """
-    Retrieves tha value of a field in LDAP data
+    Retrieves the value of a field in ldap_data
 
-    :param ldap_data: Results from LDAP_search. List of tuples with distinguished name and dictionary of attributes.
+    :param ldap_data: Results from LDAP_search(). List of tuples with distinguished name and dictionary of attributes.
     :param field: Field in ldap_data whose value is to be returned.
     :return: Value of field in ldap_data. Empty string if the field does not exist.
     """
@@ -56,7 +60,7 @@ def get_user_details_from_username(username, use_cached=True):
     Retrieves details for user given by username, either from database or LDAP server
 
     :param username: username of user to find
-    :param use_cached: Whether to search datebase before performing a LDAP search
+    :param use_cached: Whether to search database before performing an LDAP search
     :return: Dictionary with user details. (full name, username, email)
     """
     if use_cached:
@@ -75,7 +79,7 @@ def get_user_details_from_email(email, use_cached=True):
     Retrieves details for user given by email, either from database or LDAP server
 
     :param email: email of user to find
-    :param use_cached: Whether to search datebase before performing a LDAP search
+    :param use_cached: Whether to search database before performing an LDAP search
     :return: Dictionary with user details. (full name, username, email)
     """
     if use_cached:
