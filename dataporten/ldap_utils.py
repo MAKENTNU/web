@@ -1,5 +1,5 @@
-from django.contrib.auth.models import User
 import ldap
+from django.contrib.auth.models import User
 
 LDAP_HOST = 'ldap://at.ntnu.no'
 LDAP_BASE = 'dc=ntnu, dc=no'

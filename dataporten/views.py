@@ -1,7 +1,7 @@
-from django.views import View
-from django.http import HttpResponseRedirect
-from django.contrib.auth import logout
 from django.conf import settings
+from django.contrib.auth import logout
+from django.http import HttpResponseRedirect
+from django.views import View
 from social_django.views import complete
 
 from dataporten.ldap_utils import get_user_details_from_email
