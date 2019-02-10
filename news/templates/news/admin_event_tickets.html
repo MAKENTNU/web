@@ -28,7 +28,7 @@
                         </div>
                         <div class="description">
                             <div>
-                                <b>{% trans "Ref #:" %}</b>
+                                <b>{% trans "Ref #" %}:</b>
                                 <a href="{% url "ticket" ticket.uuid %}">{{ ticket.uuid }}</a>
                             </div>
                             <div>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             {% empty %}
-                {% trans "No tickets have been registered for the event" %}
+                {% trans "No tickets have been registered for this event" %}
             {% endfor %}
         </div>
     </div>

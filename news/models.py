@@ -98,7 +98,7 @@ class Event(NewsBase):
     hoopla = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name=_("Hoopla url"),
+        verbose_name=_("Hoopla URL"),
     )
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
@@ -162,7 +162,7 @@ class TimePlace(models.Model):
     hoopla = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name=_("Hoopla url"),
+        verbose_name=_("Hoopla URL"),
     )
     hidden = models.BooleanField(
         default=True,
