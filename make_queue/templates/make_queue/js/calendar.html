@@ -1,7 +1,8 @@
 {% include 'make_queue/js/reservation_rules.html' %}
 <script>
+    var canIgnoreRules = {{ can_ignore_rules }}; // Used in make_reservation.js
+    {
     let canMakeReservation = {{ can_make_more_reservations|lower }};
-    let canIgnoreRules = {{ can_ignore_rules }};
     let rules = [
         {% for rule in rules %}
             {
@@ -189,4 +190,5 @@
         "touchstart": onMouseDownFunc, "touchend": onLetGoFunc, "touchmove": onMouseMoveFunc, "touchout": onLetGoFunc,
         "mousedown": onMouseDownFunc, "mouseup": onLetGoFunc, "mousemove": onMouseMoveFunc, "mouseout": onLetGoFunc,
     });
+    }
 </script>

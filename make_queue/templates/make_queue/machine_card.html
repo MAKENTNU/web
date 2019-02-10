@@ -33,7 +33,7 @@
     {% if machine.machine_type.has_stream %}
         <div id="fader"></div>
         <i id="closefullscreen" class="ui times icon"></i>
-        <script>let streamID = "stream-{% sanitize_stream_name machine %}";</script>
+        <script>var streamID = "stream-{% sanitize_stream_name machine %}";</script>
         <script src="{% static "make_queue/js/stream.js" %}"></script>
     {% endif %}
 </div>
