@@ -25,7 +25,7 @@
 
 
         {% if widget.attrs.required %}
-            var checkFilled = function (element, value) {
+            let checkFilled = function (element, value) {
                 /**
                  * Checks if the given element has content or not. If there is no content (and value is empty), the
                  * menu element connected to the current tab is tagged as not filled.
@@ -42,7 +42,7 @@
                 $(".menu > .item[data-tab=" + tabValue + "]").toggleClass("language-not-filled", !isFilled);
             };
 
-            var tabs = $("#{{ widget.attrs.id }}").find(".ui.tab");
+            let tabs = $("#{{ widget.attrs.id }}").find(".ui.tab");
 
             tabs.find("input, textarea").each(function () {
                 checkFilled(this);
@@ -59,7 +59,7 @@
                             checkFilled(this.element.$, this.getData());
                         });
                     });
-                }.bind(this))
+                }.bind(this));
             });
         {% endif %}
     </script>

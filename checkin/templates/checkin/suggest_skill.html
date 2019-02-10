@@ -114,7 +114,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
             $.ajax({
                 type: "POST",
@@ -132,13 +132,13 @@
                     element.html('{% trans "Voted!" %}');
 
                     if (!data['user_exists']) {
-                        var incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
+                        let incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
                         element.parent().siblings('#vote-count').html(incrementedCount);
                     }
                     if (data['skill_passed']) {
                         element.parents('tr').remove();
                     }
-                }
+                },
             });
         }
 
@@ -146,7 +146,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
 
             $.ajax({
@@ -156,11 +156,11 @@
                     'pk': pk,
                 },
                 success: function (data) {
-                    if (data["suggestion_deleted"]){
+                    if (data["suggestion_deleted"]) {
                         element.parents('tr').remove();
                     }
 
-                }
+                },
             });
         }
     </script>

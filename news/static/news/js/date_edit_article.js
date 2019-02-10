@@ -1,4 +1,4 @@
-var wrapper = '<div class="ui calendar"></div>';
+let wrapper = '<div class="ui calendar"></div>';
 
 function fix_date(element) {
     element.wrap(wrapper);
@@ -7,12 +7,12 @@ function fix_date(element) {
         formatter: {
             date: function (date, settings) {
                 if (!date) return '';
-                var day = ("0" + date.getDate()).slice(-2);
-                var month = ("0" + (date.getMonth() + 1)).slice(-2);
-                var year = date.getFullYear();
+                let day = ("0" + date.getDate()).slice(-2);
+                let month = ("0" + (date.getMonth() + 1)).slice(-2);
+                let year = date.getFullYear();
                 return day + '.' + month + '.' + year;
-            }
-        }
+            },
+        },
     });
 }
 
@@ -20,7 +20,7 @@ function fix_time(element) {
     element.wrap(wrapper);
     element.parent().calendar({
         ampm: false,
-        type: 'time'
+        type: 'time',
     });
 }
 

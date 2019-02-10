@@ -20,7 +20,7 @@ jQuery.fn.extend({
                         ).replace(/<[^>]*>/g, ""),
                         description: (item.dispPoiNames[1] ? item.dispPoiNames[1] : "").replace(/<[^>]*>/g, ""),
                         id: item.poiId,
-                    }))
+                    })),
                 })),
             },
             templates: {
@@ -40,10 +40,10 @@ jQuery.fn.extend({
             onSelect: function (result, response) {
                 if (data.urlfield) {
                     $(`input[name=${data.urlfield}]`).val(
-                        `https://use.mazemap.com/?campusid=${data.campusid}&desttype=poi&dest=${result.id}`
+                        `https://use.mazemap.com/?campusid=${data.campusid}&desttype=poi&dest=${result.id}`,
                     );
                 }
             },
         });
-    }
+    },
 });

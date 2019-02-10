@@ -61,7 +61,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
             $.ajax({
                 type: "POST",
@@ -74,7 +74,7 @@
                     if (!data['color']) {
                         return;
                     }
-                    if (toggle == 'private') {
+                    if (toggle === 'private') {
                         if (data['color'] == 'yellow') {
                             element.attr('src', '{% static "web/img/m_yellow.svg" %}');
                         } else {
@@ -83,7 +83,7 @@
                     } else {
                         element.removeClass('yellow grey').addClass(data['color']);
                     }
-                }
+                },
             });
         }
     </script>

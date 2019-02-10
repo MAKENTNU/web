@@ -2,7 +2,9 @@ from django.test import TestCase
 from unittest import mock
 from django.utils import timezone
 from datetime import datetime
+
 import pytz
+
 from web.templatetags.semantic_ui_calendar_extra import set_current_date
 
 

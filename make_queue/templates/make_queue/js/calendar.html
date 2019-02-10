@@ -1,8 +1,8 @@
 {% include 'make_queue/js/reservation_rules.html' %}
 <script>
-    var canMakeReservation = {{ can_make_more_reservations|lower }};
-    var canIgnoreRules = {{ can_ignore_rules }};
-    var rules = [
+    let canMakeReservation = {{ can_make_more_reservations|lower }};
+    let canIgnoreRules = {{ can_ignore_rules }};
+    let rules = [
         {% for rule in rules %}
             {
                 periods: {{ rule.periods }},
@@ -12,20 +12,20 @@
         {% endfor %}
     ];
 
-    var zeroPadClock = (number) => ("00" + number).substr(-2, 2);
-    var timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
+    let zeroPadClock = (number) => ("00" + number).substr(-2, 2);
+    let timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
 
-    var getStartTime = () => parseFloat($(".time_selection").css("top")) / $(".time_selection").closest(".day").height() * 24;
-    var getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
-    var getDay = () => parseInt($(".time_selection").closest(".day").data("week-index"));
+    let getStartTime = () => parseFloat($(".time_selection").css("top")) / $(".time_selection").closest(".day").height() * 24;
+    let getEndTime = () => (parseFloat($(".time_selection").css("top")) + $(".time_selection").height()) / $(".time_selection").closest(".day").height() * 24;
+    let getDay = () => parseInt($(".time_selection").closest(".day").data("week-index"));
 
-    var currentDate = () => {
+    let currentDate = () => {
         let dateText = $(clickedDay).data("date").split("-");
         let startTime = timeToClock(getStartTime()).split(":");
-        return new Date(dateText[0], parseInt(dateText[1]) - 1, dateText[2], startTime[0], startTime[1])
+        return new Date(dateText[0], parseInt(dateText[1]) - 1, dateText[2], startTime[0], startTime[1]);
     };
 
-    var resetSelection = () => {
+    let resetSelection = () => {
         clickedDay = null;
         selected = false;
         clickedPoint = 0;
@@ -33,10 +33,10 @@
         $(".time_selection").remove();
     };
 
-    var clickedDay, clickedPoint, selected, resizingDirection;
+    let clickedDay, clickedPoint, selected, resizingDirection;
     resetSelection();
 
-    var onLetGoFunc = (event) => {
+    let onLetGoFunc = (event) => {
         if ($(clickedDay).find($(event.target)) && (event.type === "mouseout" || event.type === "touchout")) return;
         resizingDirection = null;
         {# We do not care about the situations where another day is clicked #}
@@ -51,7 +51,7 @@
             time_selection_element.popup({
                 html: timeSelectionPopupHTML(day.data("date"), timeToClock(getStartTime()), timeToClock(getEndTime()), {
                     type: day.data("machine-type"),
-                    pk: day.data("machine-pk")
+                    pk: day.data("machine-pk"),
                 }),
                 position: "right center", on: "onload",
             }).popup("show");
@@ -74,7 +74,7 @@
         }).appendTo(time_selection_element);
     };
 
-    var onMouseDownFunc = (event) => {
+    let onMouseDownFunc = (event) => {
         if (clickedDay !== null) return;
 
         event.preventDefault();
@@ -101,7 +101,7 @@
             .appendTo(time_selection);
     };
 
-    var isOverlapping = () => {
+    let isOverlapping = () => {
         let top = parseFloat($(".time_selection").css("top"));
         let bottom = top + parseFloat($(".time_selection").css("height"));
         let parentHeight = parseFloat($(".time_selection").closest(".day").height());
@@ -117,7 +117,7 @@
         return isOverlapping;
     };
 
-    var isValid = () => {
+    let isValid = () => {
         if (isOverlapping()) return false;
         let startTime = currentDate();
         let endTime = new Date(startTime.valueOf());
@@ -125,7 +125,7 @@
         return isValidForRules(rules, startTime, endTime);
     };
 
-    var limitTimeSelection = (direction) => {
+    let limitTimeSelection = (direction) => {
         while (!isValid()) {
             if (direction === "top")
                 $(".time_selection")
@@ -137,7 +137,7 @@
         }
     };
 
-    var resizeTop = (event) => {
+    let resizeTop = (event) => {
         let bottomPosition = parseFloat($(".time_selection").css("top")) + parseFloat($(".time_selection").css("height"));
         let currentY = Math.min(positionCalculation(event), bottomPosition - 1);
         $(".time_selection")
@@ -148,7 +148,7 @@
         $(".time_selection > .start_time").html(timeToClock(getStartTime()));
     };
 
-    var resizeBottom = (event) => {
+    let resizeBottom = (event) => {
         let topHeight = parseFloat($(".time_selection").css("top"));
         let currentY = Math.max(positionCalculation(event), topHeight);
         $(".time_selection").css("height", Math.max(currentY - topHeight, 1) + "px");
@@ -156,14 +156,14 @@
         $(".time_selection > .end_time").html(timeToClock(getEndTime()));
     };
 
-    var setLimitTop = () => {
+    let setLimitTop = () => {
         let topLimit = (new Date().getHours() / 24 + (new Date().getMinutes() + 1) / (24 * 60) + new Date().getSeconds() / (24 * 60 * 60)) * $(clickedDay).height();
         $(".time_selection")
             .css("height", parseFloat($(".time_selection").css("height")) + parseFloat($(".time_selection").css("top")) - topLimit + "px")
             .css("top", topLimit + "px");
     };
 
-    var onMouseMoveFunc = (event) => {
+    let onMouseMoveFunc = (event) => {
         if (clickedDay !== event.target || selected) {
             if (resizingDirection === 1) resizeBottom(event);
             if (resizingDirection === -1) resizeTop(event);
@@ -181,7 +181,7 @@
     };
 
     {# The position calculation differs between touch and mouse events #}
-    var positionCalculation = (event) =>
+    let positionCalculation = (event) =>
         (event.touches === undefined ? event.pageY : event.touches[0].pageY) - $(clickedDay).offset().top;
 
 

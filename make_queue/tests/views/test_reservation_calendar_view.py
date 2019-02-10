@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from datetime import datetime, timedelta
 from django.utils import timezone
+
 import pytz
 
 from make_queue.fields import MachineTypeField
