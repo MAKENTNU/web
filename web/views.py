@@ -22,7 +22,6 @@ class AdminPanelView(TemplateView):
 class View404(TemplateView):
     template_name = 'web/404.html'
 
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        return self.render_to_response(context, status=404)
 
+class View500(TemplateView):
+    template_name = "web/500.html"
