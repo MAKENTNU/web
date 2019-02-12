@@ -101,20 +101,20 @@
     <div class="accordion">
         {% if article.multiday %}
             {% if article.hoopla %}
-                <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
+                <a class="ui make_bg_yellow black fluid button" href="{{ article.hoopla }}"
                    target="_blank">{% trans "Registration" %}</a>
             {% elif article.number_of_tickets %}
                 {% if article.number_of_registered_tickets < article.number_of_tickets %}
-                    <a class="ui make_bg_yellow black button" href="{% url "register-event" article.id %}" target="_blank">
+                    <a class="ui make_bg_yellow black fluid button" href="{% url "register-event" article.id %}" target="_blank">
                         {% trans "Registration" %}
                     </a>
                 {% else %}
-                    <p class="ui disabled button">
+                    <p class="ui disabled fluid button">
                         {% trans "Sold out" %}
                     </p>
                 {% endif %}
             {% elif timeplaces %}
-                <p class="ui disabled button">
+                <p class="ui disabled fluid button">
                     {% trans "No registration" %}
                 </p>
             {% endif %}
