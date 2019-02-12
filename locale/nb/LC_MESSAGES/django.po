@@ -1357,8 +1357,8 @@ msgid ""
 "Sorry, something went terribly wrong while handling your request. One of our "
 "developers will have a look at the issue as soon as possible. Please try "
 "again later."
-msgstr "Beklager, noe gikk galt mens vi håndterte forespørselsen din. En av "
-"utviklerene våre vil se på problemet så fort som mulig. Vennligst prøv "
+msgstr "Beklager, noe gikk galt mens vi håndterte forespørselen din. En av "
+"våre utviklere vil se på problemet så fort som mulig. Vennligst prøv "
 "igjen senere."
 
 #: web/templates/web/admin_panel.html:10
