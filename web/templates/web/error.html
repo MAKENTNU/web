@@ -1,0 +1,16 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static "web/css/error.css" %}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="ui text container">
+        <h1 class="text-centered make_col_blue">{% block error-title %}{% endblock %}</h1>
+        <div class="error-text">{% block error-text %}{% endblock %}</div>
+    </div>
+
+{% endblock %}
