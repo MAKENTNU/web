@@ -11,6 +11,16 @@
     <div class="content">
         <div class="header">
             {{ machine.name }}
+            {% if perms.edit_machine %}
+                <a href="{% url "edit_machine" machine.pk %}">
+                    <i class="ui yellow pencil icon"></i>
+                </a>
+            {% endif %}
+            {% if perms.delete_machine %}
+                <a class="delete confirm" href="{% url "delete_machine" machine.pk %}">
+                    <i class="ui red trash icon"></i>
+                </a>
+            {% endif %}
         </div>
         <div class="meta">
             <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">

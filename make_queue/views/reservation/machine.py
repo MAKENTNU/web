@@ -1,4 +1,5 @@
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
 from make_queue.fields import MachineTypeField
 from make_queue.models.models import Machine
@@ -21,3 +22,20 @@ class MachineView(TemplateView):
             "type": machine_type,
         } for machine_type in MachineTypeField.possible_machine_types if
             Machine.objects.filter(machine_type=machine_type).exists()]}
+
+
+class CreateMachineView(CreateView):
+    template_name = "make_queue/machine/machine_create.html"
+    model = Machine
+    fields = '__all__'
+
+
+class EditMachineView(UpdateView):
+    template_name = "make_queue/machine/machine_edit.html"
+    model = Machine
+    fields = '__all__'
+
+
+class DeleteMachineView(DeleteView):
+    model = Machine
+    success_url = reverse_lazy("reservation_machines_overview")

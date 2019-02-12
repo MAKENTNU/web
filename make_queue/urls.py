@@ -28,6 +28,12 @@ quota_url_patterns = [
     path('', permission_required("make_queue.change_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
 
+machine_url_patterns = [
+    path('create/', permission_required("make_queue.add_machine")(reservation.machine.CreateMachineView.as_view()), name="create_machine"),
+    path('edit/<int:pk>/', permission_required("make_queue.change_machine")(reservation.machine.EditMachineView.as_view()), name="edit_machine"),
+    path('delete/<int:pk>/', permission_required("make_queue.delete_machine")(reservation.machine.DeleteMachineView.as_view()), name="delete_machine"),
+]
+
 course_url_patterns = [
     path('status/', permission_required("make_queue.change_printer3dcourse")(admin.course.BulkStatusUpdate.as_view()), name="bulk_status_update"),
     path('download/', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
@@ -62,5 +68,6 @@ urlpatterns = [
     path('json/', include(json_urlpatterns)),
     path('quota/', include(quota_url_patterns)),
     path('course/', include(course_url_patterns)),
+    path('machine/', include(machine_url_patterns)),
     re_path('^', reservation.machine.MachineView.as_view(), name="reservation_machines_overview")
 ]
