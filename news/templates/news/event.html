@@ -81,7 +81,9 @@
                                 {% trans "Registration" %}
                             </a>
                         {% else %}
-                            <p class="ui disabled button">{% trans "Sold out" %}</p>
+                            <p class="ui disabled button">
+                                {% trans "Sold out" %}
+                            </p>
                         {% endif %}
                     {% else %}
                         <p class="ui disabled button">
@@ -107,7 +109,9 @@
                         {% trans "Registration" %}
                     </a>
                 {% else %}
-                    <p class="ui disabled button">{% trans "Sold out" %}</p>
+                    <p class="ui disabled button">
+                        {% trans "Sold out" %}
+                    </p>
                 {% endif %}
             {% elif timeplaces %}
                 <p class="ui disabled button">
@@ -173,8 +177,8 @@
                                     </p>
                                 {% endif %}
                             {% else %}
-                                <p class="make_col_ligray">
-                                    <i>{% trans "No registration" %}</i>
+                                <p class="ui disabled button">
+                                    {% trans "No registration" %}
                                 </p>
                             {% endif %}
                         {% endif %}
