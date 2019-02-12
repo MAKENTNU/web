@@ -97,16 +97,22 @@
 
 {% block event_accordion %}
     <div class="accordion">
-        {% if article.multiday and article.hoopla %}
-            <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
-               target="_blank">{% trans "Registration" %}</a>
-        {% elif article.multiday and article.number_of_tickets %}
-            {% if article.number_of_registered_tickets < article.number_of_tickets %}
-                <a class="ui make_bg_yellow black button" href="{% url "register-event" article.id %}" target="_blank">
-                    {% trans "Registration" %}
-                </a>
-            {% else %}
-                <p class="ui disabled button">{% trans "Sold out" %}</p>
+        {% if article.multiday %}
+            {% if article.hoopla %}
+                <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}"
+                   target="_blank">{% trans "Registration" %}</a>
+            {% elif article.number_of_tickets %}
+                {% if article.number_of_registered_tickets < article.number_of_tickets %}
+                    <a class="ui make_bg_yellow black button" href="{% url "register-event" article.id %}" target="_blank">
+                        {% trans "Registration" %}
+                    </a>
+                {% else %}
+                    <p class="ui disabled button">{% trans "Sold out" %}</p>
+                {% endif %}
+            {% elif timeplaces %}
+                <p class="ui disabled button">
+                    {% trans "No registration" %}
+                </p>
             {% endif %}
         {% endif %}
     </div>
