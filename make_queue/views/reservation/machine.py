@@ -36,10 +36,6 @@ class CreateMachineView(PermissionRequiredMixin, CreateView):
         'make_queue.add_machine',
     )
 
-    def form_valid(self, form):
-        form.instance.status = "F"
-        return super().form_valid(form)
-
 
 class EditMachineView(PermissionRequiredMixin, UpdateView):
     template_name = "make_queue/machine/machine_edit.html"
