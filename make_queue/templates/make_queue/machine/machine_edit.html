@@ -1,6 +1,10 @@
 {% extends "web/base.html" %}
 {% load i18n %}
 
+{% block head %}
+    {{ form.media }}
+{% endblock %}
+
 {% block body %}
     <div class="ui container">
         <h1 class="ui centered header">
@@ -15,18 +19,24 @@
                 <label>{{ form.name.label }}</label>
                 {{ form.name }}
             </div>
-            <div class="ui field">
-                <label>{{ form.machine_type.label }}</label>
-                {{ form.machine_type }}
-            </div>
-            <div class="ui field">
-                <label>{{ form.machine_model.label }}</label>
-                {{ form.machine_model }}
-            </div>
-            <div class="ui field">
-                <label>{{ form.status.label }}</label>
-                {{ form.status }}
-            </div>
+            {% if form.machine_type %}
+                <div class="ui field">
+                    <label>{{ form.machine_type.label }}</label>
+                    {{ form.machine_type }}
+                </div>
+            {% endif %}
+            {% if form.machine_model %}
+                <div class="ui field">
+                    <label>{{ form.machine_model.label }}</label>
+                    {{ form.machine_model }}
+                </div>
+            {% endif %}
+            {% if form.status %}
+                <div class="ui field">
+                    <label>{{ form.status.label }}</label>
+                    {{ form.status }}
+                </div>
+            {% endif %}
             <div class="ui field">
                 <label>{{ form.location.label }}</label>
                 {{ form.location }}
@@ -41,7 +51,5 @@
                 {% trans "Cancel" %}
             </a>
         </form>
-    </div>
-
     </div>
 {% endblock %}
