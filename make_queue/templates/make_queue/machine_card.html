@@ -11,12 +11,12 @@
     <div class="content">
         <div class="header">
             {{ machine.name }}
-            {% if perms.edit_machine %}
+            {% if perms.make_queue.change_machine %}
                 <a href="{% url "edit_machine" machine.pk %}">
                     <i class="ui yellow pencil icon"></i>
                 </a>
             {% endif %}
-            {% if perms.delete_machine %}
+            {% if perms.make_queue.delete_machine %}
                 <a class="delete confirm" href="{% url "delete_machine" machine.pk %}">
                     <i class="ui red trash icon"></i>
                 </a>

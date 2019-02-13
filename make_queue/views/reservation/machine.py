@@ -48,7 +48,7 @@ class EditMachineView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy("reservation_machines_overview")
 
     permission_required = (
-        'make_queue.edit_machine',
+        'make_queue.change_machine',
     )
 
 
