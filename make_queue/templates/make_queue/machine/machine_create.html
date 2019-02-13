@@ -1,13 +1,6 @@
-{% extends "web/base.html" %}
+{% extends "make_queue/machine/machine_edit.html" %}
 {% load i18n %}
 
-{% block body %}
-
-    <div class="ui container">
-        <h1>
-            {% block form_title %}
-                {% trans "Create machine" %}
-            {% endblock %}
-        </h1>
-    </div>
+{% block form_title %}
+        {% trans "Create machine" %}
 {% endblock %}

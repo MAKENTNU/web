@@ -2,12 +2,46 @@
 {% load i18n %}
 
 {% block body %}
-
     <div class="ui container">
-        <h1>
+        <h1 class="ui centered header">
             {% block form_title %}
                 {% trans "Edit machine" %}
             {% endblock %}
         </h1>
+
+        <form class="ui form text container" method="post">
+            {% csrf_token %}
+            <div class="ui field">
+                <label>{{ form.name.label }}</label>
+                {{ form.name }}
+            </div>
+            <div class="ui field">
+                <label>{{ form.machine_type.label }}</label>
+                {{ form.machine_type }}
+            </div>
+            <div class="ui field">
+                <label>{{ form.machine_model.label }}</label>
+                {{ form.machine_model }}
+            </div>
+            <div class="ui field">
+                <label>{{ form.status.label }}</label>
+                {{ form.status }}
+            </div>
+            <div class="ui field">
+                <label>{{ form.location.label }}</label>
+                {{ form.location }}
+            </div>
+            <div class="ui field">
+                <label>{{ form.location_url.label }}</label>
+                {{ form.location_url }}
+            </div>
+            <input class="ui blue submit right floated button" type="submit" value="{% trans "Save" %}">
+
+            <a href="{% url "reservation_machines_overview" %}" class="ui right floated blue button">
+                {% trans "Cancel" %}
+            </a>
+        </form>
+    </div>
+
     </div>
 {% endblock %}

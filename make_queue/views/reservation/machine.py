@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
@@ -24,18 +25,32 @@ class MachineView(TemplateView):
             Machine.objects.filter(machine_type=machine_type).exists()]}
 
 
-class CreateMachineView(CreateView):
+class CreateMachineView(PermissionRequiredMixin, CreateView):
     template_name = "make_queue/machine/machine_create.html"
     model = Machine
     fields = '__all__'
+    success_url = reverse_lazy("reservation_machines_overview")
+
+    permission_required = (
+        'make_queue.add_machine',
+    )
 
 
-class EditMachineView(UpdateView):
+class EditMachineView(PermissionRequiredMixin, UpdateView):
     template_name = "make_queue/machine/machine_edit.html"
     model = Machine
     fields = '__all__'
+    success_url = reverse_lazy("reservation_machines_overview")
+
+    permission_required = (
+        'make_queue.edit_machine',
+    )
 
 
-class DeleteMachineView(DeleteView):
+class DeleteMachineView(PermissionRequiredMixin, DeleteView):
     model = Machine
     success_url = reverse_lazy("reservation_machines_overview")
+
+    permission_required = (
+            'make_queue.delete_machine',
+        )
