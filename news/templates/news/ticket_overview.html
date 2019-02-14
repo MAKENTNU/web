@@ -8,7 +8,7 @@
 
 {% block body %}
     <div class="ui container">
-        {% if not object.user or object.user == request.user or perms.news.view_ticket %}
+        {% if not object.user or object.user == request.user or perms.news.view_eventticket %}
             <h1>{% trans "Ticket for" %}: "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
             <div>
                 <b>{% trans "Registered to" %}:</b> {{ object.name }},
