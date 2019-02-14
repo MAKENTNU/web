@@ -173,5 +173,13 @@ class CreateMachineForm(BaseMachineForm):
 
 
 class EditMachineForm(BaseMachineForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["status"] = forms.ChoiceField(choices=(
+            ("F", _("Available")),
+            ("O", _("Out of order")),
+            ("M", _("Maintenance")),
+        ))
+
     class Meta(BaseMachineForm.Meta):
         exclude = ["machine_type", "machine_model"]
