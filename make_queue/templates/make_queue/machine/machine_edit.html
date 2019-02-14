@@ -12,8 +12,17 @@
                 {% trans "Edit machine" %}
             {% endblock %}
         </h1>
-
         <form class="ui form text container" method="post">
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error|escape }}</b>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
             {% csrf_token %}
             <div class="ui field">
                 <label>{{ form.name.label }}</label>
@@ -52,4 +61,12 @@
             </a>
         </form>
     </div>
+
+    <script>
+        $(".message .close").click(function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
+    </script>
 {% endblock %}
