@@ -127,7 +127,7 @@ class AdminEventsView(TemplateView):
             raise Http404()
         context = super().get_context_data(**kwargs)
         context.update({
-            'articles': Article.objects.all(),
+            'events': Event.objects.all(),
         })
         return context
 

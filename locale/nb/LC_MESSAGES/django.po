@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-14 18:50+0100\n"
+"POT-Creation-Date: 2019-02-14 19:40+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -194,7 +194,7 @@ msgstr "Clickbait"
 
 #: groups/templates/groups/committee_admin.html:13
 #: groups/templates/groups/committee_list.html:8
-#: web/templates/web/admin_panel.html:22
+#: web/templates/web/admin_panel.html:63
 msgid "Committees"
 msgstr "Komiteer"
 
@@ -346,7 +346,7 @@ msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
 #: make_queue/templates/make_queue/course/course_panel.html:15
-#: web/templates/web/admin_panel.html:25
+#: web/templates/web/admin_panel.html:75
 msgid "Course registrations"
 msgstr "Kursregistreringer"
 
@@ -683,7 +683,7 @@ msgstr "Andre reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_calendar.html:132
 #: news/templates/news/admin_events.html:12
-#: web/templates/web/admin_panel.html:13 web/templates/web/header.html:25
+#: web/templates/web/admin_panel.html:27 web/templates/web/header.html:25
 msgid "Events"
 msgstr "Arrangementer"
 
@@ -988,7 +988,7 @@ msgstr ""
 "besøke følgende addresse:"
 
 #: news/templates/news/admin_articles.html:13
-#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:10
+#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
 #: web/templates/web/header.html:29
 msgid "Articles"
 msgstr "Artikler"
@@ -1342,13 +1342,13 @@ msgstr "Fra"
 msgid "To"
 msgstr "Til"
 
-#: news/views.py:365
+#: news/views.py:369
 msgid "Could not register you for the event, please try again later."
 msgstr ""
 "Det var ikke mulig å registrere deg for arrangementet på dette tidspunktet. "
 "Vennligst prøv igjen ved en senere anledning."
 
-#: news/views.py:381
+#: news/views.py:385
 msgid "Your ticket!"
 msgstr "Din billett!"
 
@@ -1364,13 +1364,65 @@ msgstr ""
 "<em>Ikke alle som vandrer har gått vill</em> <br/> -Bilbo Lommelun <br/><br/"
 "> Men det har du."
 
-#: web/templates/web/admin_panel.html:16 web/templates/web/header.html:33
+#: web/templates/web/admin_panel.html:9
+msgid "Admin panel"
+msgstr "Administrasjonspanel"
+
+#: web/templates/web/admin_panel.html:18
+msgid ""
+"Click here to go to the admin panel for articles. There you can create, edit "
+"and delete articles."
+msgstr ""
+"Klikk her for å gå til adminpanelet for artikler. Der kan du lage, endre og "
+"slette artikler."
+
+#: web/templates/web/admin_panel.html:30
+msgid ""
+"Click here to go to the admin panel for events. There you can create, edit "
+"and delete events and their occurrences."
+msgstr ""
+"Klikk her for å gå til adminpanelet for arrangmenter. Der kan du lage, endre "
+"og slette arrangementer og deres forekomster."
+
+#: web/templates/web/admin_panel.html:39 web/templates/web/header.html:33
 msgid "Reservations"
 msgstr "Reservasjoner"
 
-#: web/templates/web/admin_panel.html:19
+#: web/templates/web/admin_panel.html:42
+msgid ""
+"Click here to view machine reservations for events and other MAKE NTNU "
+"causes."
+msgstr ""
+"Klikk her for å se reservasjoner av maskiner for arrangementer og andre MAKE "
+"NTNU sammenhenger."
+
+#: web/templates/web/admin_panel.html:51
 msgid "Quota"
 msgstr "Kvote"
+
+#: web/templates/web/admin_panel.html:54
+msgid ""
+"Click here to go to the admin panel for quotas. There you can create and "
+"edit both global and personal quotas for reservations of machines."
+msgstr ""
+"Klikk her for å gå til adminpanelet for kvoter. Der kan du lage og endre "
+"både globale og personlige kvoter for reservasjoner av maskiner."
+
+#: web/templates/web/admin_panel.html:66
+msgid ""
+"Click here to go to the admin panel for committees. There you can edit the "
+"description, image and email for the committees."
+msgstr ""
+"Klikk her for å gå til adminpanelet for komitteer. Der kan du endre "
+"beskrivelsen , bildet og epost-addressen til komitteene."
+
+#: web/templates/web/admin_panel.html:78
+msgid ""
+"Click here to go to the admin panel for course registrations. There you can "
+"add and edit information about persons that have taken the 3D-printer course."
+msgstr ""
+"Klikk her for å gå til adminpanelet for kursregistrering. Der kan du legge "
+"til og endre informasjon om personer som har tatt 3D-printerkurset."
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
