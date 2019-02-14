@@ -5,9 +5,12 @@
 
 
 {% block body %}
-    <div class="ui text container">
-        {% if user|has_any_news_permissions or user.is_superuser %}
-            <a class="ui yellow button" href="{% url 'admin' %}">{% trans "Articles and events" %}</a>
+    <div class="ui container">
+        {% if user|has_any_article_permission or user.is_superuser %}
+            <a class="ui yellow button" href="{% url 'admin-articles' %}">{% trans "Articles" %}</a>
+        {% endif %}
+        {% if user|has_any_event_permission or user.is_superuser %}
+            <a class="ui yellow button" href="{% url 'admin-events' %}">{% trans "Events" %}</a>
         {% endif %}
         {% if perms.make_queue.can_create_event_reservation %}
             <a class="ui yellow button" href="{% url 'admin_reservation' %}">{% trans "Reservations" %}</a>

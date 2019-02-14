@@ -3,13 +3,14 @@ from django.urls import path
 
 from news.ical import SingleTimePlaceFeed
 from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
-    ViewEventView, AdminView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
+    ViewEventView, AdminArticleView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
     DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView, \
-    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView
+    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView, AdminEventsView
 
 urlpatterns = [
-    path('admin/', login_required(AdminView.as_view()), name='admin'),
+    path('admin/articles/', login_required(AdminArticleView.as_view()), name='admin-articles'),
+    path('admin/events/', login_required(AdminEventsView.as_view()), name='admin-events'),
     path('admin/toggle/article/', login_required(AdminArticleToggleView.as_view()), name='article-toggle'),
     path('admin/toggle/event/', login_required(AdminEventToggleView.as_view()), name='event-toggle'),
     path('admin/toggle/timeplace/', login_required(AdminTimeplaceToggleView.as_view()), name='timeplace-toggle'),

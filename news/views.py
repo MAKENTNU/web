@@ -18,7 +18,7 @@ from mail import email
 from news.forms import TimePlaceForm, EventRegistrationForm
 from news.models import Article, Event, TimePlace, EventTicket
 from web import settings
-from web.templatetags.permission_tags import has_any_news_permissions
+from web.templatetags.permission_tags import has_any_article_permission, has_any_event_permission
 
 
 class ViewEventsView(TemplateView):
@@ -106,16 +106,28 @@ class ViewArticleView(TemplateView):
         return context
 
 
-class AdminView(TemplateView):
-    template_name = 'news/admin.html'
+class AdminArticleView(TemplateView):
+    template_name = 'news/admin_articles.html'
 
     def get_context_data(self, **kwargs):
-        if not has_any_news_permissions(self.request.user) and not self.request.user.is_superuser:
+        if not has_any_article_permission(self.request.user) and not self.request.user.is_superuser:
             raise Http404()
         context = super().get_context_data(**kwargs)
         context.update({
             'articles': Article.objects.all(),
-            'events': Event.objects.all(),
+        })
+        return context
+
+
+class AdminEventsView(TemplateView):
+    template_name = 'news/admin_events.html'
+
+    def get_context_data(self, **kwargs):
+        if not has_any_event_permission(self.request.user) and not self.request.user.is_superuser:
+            raise Http404()
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'articles': Article.objects.all(),
         })
         return context
 
@@ -143,7 +155,9 @@ class EditArticleView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_article',
     )
-    success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-articles")
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
@@ -164,7 +178,9 @@ class CreateArticleView(PermissionRequiredMixin, CreateView):
     permission_required = (
         'news.add_article',
     )
-    success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-articles")
 
 
 class EditEventView(PermissionRequiredMixin, UpdateView):
