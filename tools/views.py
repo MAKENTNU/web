@@ -3,7 +3,6 @@ from django.views.generic import TemplateView
 from tools.models import Tool
 
 
-
 class ViewToolView(TemplateView):
     template_name = 'tools/tool.html'
 
