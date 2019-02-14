@@ -1,0 +1,37 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <div class="ui container">
+        <h2>{% trans "Register for the event" %}: "{{ event.title }}{{ timeplace.event.title }}"</h2>
+
+        {% for error in form.non_field_errors %}
+            <div class="ui error message">
+                {{ error }}
+            </div>
+        {% endfor %}
+
+        <form class="ui form" action="" method="POST">
+            {% csrf_token %}
+            <div class="ui three fields">
+                <div class="ui field">
+                    <label>{{ form.name.label }}</label>
+                    {{ form.name }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.email.label }}</label>
+                    {{ form.email }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.language.label }}</label>
+                    {{ form.language }}
+                </div>
+            </div>
+            <div class="ui field">
+                <label>{{ form.comment.label }}</label>
+                {{ form.comment }}
+            </div>
+            <button class="ui right floated blue button">{% trans "Register" %}</button>
+        </form>
+    </div>
+{% endblock %}
