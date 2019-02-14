@@ -8,7 +8,7 @@ html, body {
     height: 100%;
 }
 
-.content {
+body > div > .content {
     display: table-row;
     height: 100%;
 }

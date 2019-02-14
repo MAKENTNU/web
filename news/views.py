@@ -1,16 +1,23 @@
-from datetime import timedelta, datetime
-
 import math
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
+from datetime import timedelta
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.translation import get_language
+from django.utils.translation import gettext
+from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView
+from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
 
-from news.forms import TimePlaceForm
-from news.models import Article, Event, TimePlace
+from mail import email
+from news.forms import TimePlaceForm, EventRegistrationForm
+from news.models import Article, Event, TimePlace, EventTicket
+from web import settings
 from web.templatetags.permission_tags import has_any_news_permissions
 
 
@@ -113,6 +120,11 @@ class AdminView(TemplateView):
         return context
 
 
+class AdminEventView(DetailView):
+    template_name = 'news/admin_event.html'
+    model = Event
+
+
 class EditArticleView(PermissionRequiredMixin, UpdateView):
     model = Article
     template_name = 'news/article_edit.html'
@@ -168,12 +180,14 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
         'private',
         'featured',
         'multiday',
-        'hoopla',
+        'number_of_tickets',
     )
     permission_required = (
         'news.change_event',
     )
-    success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.id,))
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
@@ -189,12 +203,14 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
         'private',
         'featured',
         'multiday',
-        'hoopla',
+        'number_of_tickets',
     )
     permission_required = (
         'news.add_event',
     )
-    success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.id,))
 
 
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
@@ -204,17 +220,15 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_timeplace',
     )
-    success_url = '/news/admin'
 
+    def get_form(self, form_class=None):
+        form = self.form_class(**self.get_form_kwargs())
+        if self.object.event.multiday:
+            del form.fields["number_of_tickets"]
+        return form
 
-class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
-    model = TimePlace
-    template_name = 'news/timeplace_create.html'
-    form_class = TimePlaceForm
-    permission_required = (
-        'news.add_timeplace',
-    )
-    success_url = '/news/admin'
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.event.id,))
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, View):
@@ -308,3 +322,162 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
     permission_required = (
         'news.delete_timeplace',
     )
+
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.event.id,))
+
+
+class EventRegistrationView(CreateView):
+    model = EventTicket
+    template_name = "news/event_registration.html"
+    form_class = EventRegistrationForm
+
+    @property
+    def timeplace(self):
+        if "timeplace_pk" in self.kwargs:
+            return get_object_or_404(TimePlace, pk=self.kwargs["timeplace_pk"])
+        return None
+
+    @property
+    def event(self):
+        if "event_pk" in self.kwargs:
+            return get_object_or_404(Event, pk=self.kwargs["event_pk"])
+        return None
+
+    def is_registration_allowed(self):
+        return self.timeplace and self.timeplace.can_register(self.request.user) \
+               or self.event and self.event.can_register(self.request.user)
+
+    def form_valid(self, form):
+        if not self.is_registration_allowed():
+            form.add_error(None, _("Could not register you for the event, please try again later."))
+            return self.form_invalid(form)
+
+        ticket = form.save()
+        if self.request.user.is_authenticated:
+            ticket.user = self.request.user
+
+        ticket.event = self.event
+        ticket.timeplace = self.timeplace
+        ticket.save()
+
+        async_to_sync(get_channel_layer().send)(
+            "email", {
+                "type": "send_html",
+                "html_render": email.render_html({"ticket": ticket}, "email/ticket.html"),
+                "text": email.render_text({"ticket": ticket}, text_template_name="email/ticket.txt"),
+                "subject": gettext("Your ticket!"),
+                "from": settings.EVENT_TICKET_EMAIL,
+                "to": ticket.email,
+            }
+        )
+
+        self.object = ticket
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({
+            "timeplace": self.timeplace,
+            "event": self.event,
+        })
+        return context_data
+
+    def get_success_url(self):
+        return reverse_lazy("ticket", args=(self.object.uuid,))
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.user.is_authenticated:
+            kwargs["initial"].update({
+                "name": self.request.user.get_full_name(),
+                "email": self.request.user.email,
+            })
+        kwargs["initial"].update({
+            "language": get_language()
+        })
+        return kwargs
+
+
+class TicketView(DetailView):
+    model = EventTicket
+    template_name = "news/ticket_overview.html"
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**kwargs)
+
+
+class MyTicketsView(TemplateView):
+    template_name = "news/my_tickets.html"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data.update({
+            "tickets": EventTicket.objects.filter(user=self.request.user),
+        })
+        return context_data
+
+
+class ClaimTicketView(RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = "ticket"
+
+    def get_redirect_url(self, *args, **kwargs):
+        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0), user=None)
+        ticket.user = self.request.user
+        ticket.save()
+        return super().get_redirect_url(*args, **kwargs)
+
+
+class AdminEventTicketView(TemplateView):
+    template_name = "news/admin_event_tickets.html"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data()
+        event = get_object_or_404(Event, pk=kwargs.pop("pk", 0))
+        if not event.number_of_tickets:
+            raise Http404()
+        context_data.update({
+            "tickets": event.eventticket_set.order_by("-active").all(),
+            "object": event,
+            "event": event,
+        })
+        return context_data
+
+
+class AdminTimeplaceTicketView(TemplateView):
+    template_name = "news/admin_event_tickets.html"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data()
+        timeplace = get_object_or_404(TimePlace, pk=kwargs.pop("pk", 0))
+        if not timeplace.number_of_tickets:
+            raise Http404()
+        context_data.update({
+            "tickets": timeplace.eventticket_set.order_by("-active").all(),
+            "event": timeplace.event,
+            "object": timeplace
+        })
+        return context_data
+
+
+class CancelTicketView(RedirectView):
+    permanent = False
+    query_string = True
+    pattern_name = "ticket"
+
+    def get_redirect_url(self, *args, **kwargs):
+        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0))
+
+        # Allow for toggling if a ticket is canceled or not
+        if self.request.user.has_perm("news.cancel_ticket"):
+            ticket.active = not ticket.active
+        elif self.request.user == ticket.user or ticket.user is None:
+            ticket.active = False
+        ticket.save()
+
+        next_page = self.request.GET.get("next")
+        if next_page is None:
+            return super().get_redirect_url(*args, **kwargs)
+        return next_page
