@@ -36,6 +36,12 @@
     margin: 4px;
 }
 
+.footer .social.list .item.slack-icon {
+    padding-top: 12px;
+    padding-left: 0;
+}
+
+
 .footer .social.list i {
     font-size: 28px;
     color: rgb(12, 66, 106) !important;
