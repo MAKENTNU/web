@@ -21,5 +21,8 @@
         {% if perms.make_queue.change_printer3dcourse %}
             <a class="ui yellow button" href="{% url 'course_panel' %}">{% trans "Course registrations" %}</a>
         {% endif %}
+            {% if user|has_any_news_permissions or user.is_superuser %}
+            <a class="ui yellow button" href="{% url 'tools/admin' %}">{% trans "Tools" %}</a>
+        {% endif %}
     </div>
 {% endblock body %}
