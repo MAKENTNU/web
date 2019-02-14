@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-16 10:45+0100\n"
-"PO-Revision-Date: 2018-10-09 14:05+0200\n"
+"POT-Creation-Date: 2019-02-14 13:56+0100\n"
+"PO-Revision-Date: 2019-02-14 13:59+0100\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
 "Language: nb\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: checkin/templates/checkin/profile.html:14
 msgid "My profile"
@@ -1118,15 +1118,27 @@ msgctxt "abort action"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: web/templates/web/footer.html:12
+#: web/templates/web/footer.html:13
+msgid "You can find us here!"
+msgstr "Du kan finne oss her!"
+
+#: web/templates/web/footer.html:13
 msgid "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 msgstr "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 
-#: web/templates/web/footer.html:28
+#: web/templates/web/footer.html:18
+msgid "Like us on Facebook!"
+msgstr "Lik oss på Facebook! "
+
+#: web/templates/web/footer.html:21
+msgid "Join us at Slack!"
+msgstr "Du kan finne oss på Slack!"
+
+#: web/templates/web/footer.html:30
 msgid "Follow us on Instagram!"
 msgstr "Følg oss på Instagram!"
 
-#: web/templates/web/footer.html:42
+#: web/templates/web/footer.html:44
 msgid "Cookies"
 msgstr "Cookies"
 
