@@ -1,8 +1,9 @@
 from django.forms import ModelForm, Textarea
 from django.utils.translation import gettext_lazy as _
 
-from news.models import TimePlace, EventTicket
-from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticTimeInput, SemanticDateInput
+from news.models import TimePlace, EventTicket, Event
+from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticTimeInput, SemanticDateInput, \
+    SemanticFileInput
 
 
 class TimePlaceForm(ModelForm):
@@ -34,4 +35,14 @@ class EventRegistrationForm(ModelForm):
                 "rows": "3",
                 "placeholder": _("Here you can enter any requests or information you want to provide to the organizers")
             })
+        }
+
+
+class EventForm(ModelForm):
+    class Meta:
+        model = Event
+        fields = "__all__"
+        exclude = ["hoopla"]
+        widgets = {
+            "image": SemanticFileInput()
         }

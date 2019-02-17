@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-16 11:00+0100\n"
+"POT-Creation-Date: 2019-02-17 09:47+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -165,7 +165,7 @@ msgstr "Et eller flere språk mangler innhold"
 #: contentbox/templates/contentbox/edit.html:39
 #: groups/templates/groups/committee_form.html:30
 #: news/templates/news/article_edit.html:65
-#: news/templates/news/event_edit.html:69
+#: news/templates/news/event_edit.html:125
 #: news/templates/news/timeplace_edit.html:78
 msgid "Save"
 msgstr "Lagre"
@@ -180,17 +180,17 @@ msgstr "Beskrivelse"
 
 #: groups/models.py:96
 #: make_queue/templates/make_queue/reservation_calendar.html:94
-#: news/models.py:192
+#: news/models.py:193
 msgid "Email"
 msgstr "Epost"
 
-#: groups/models.py:97 news/models.py:50
+#: groups/models.py:97 news/models.py:51
 msgid "Image"
 msgstr "Bilde"
 
-#: groups/models.py:100 news/models.py:45
+#: groups/models.py:100 news/models.py:47
 msgid "Clickbait"
-msgstr "Clickbait"
+msgstr "Lokketekst"
 
 #: groups/templates/groups/committee_admin.html:13
 #: groups/templates/groups/committee_list.html:8
@@ -228,7 +228,7 @@ msgid "Select user"
 msgstr "Velg bruker"
 
 #: make_queue/forms.py:113 make_queue/models/course.py:19
-#: make_queue/models/models.py:77 news/models.py:190
+#: make_queue/models/models.py:77 news/models.py:191
 msgid "User"
 msgstr "Bruker"
 
@@ -318,13 +318,13 @@ msgstr "Alle brukere"
 
 #: make_queue/models/models.py:229
 #: make_queue/templates/make_queue/make_reservation.html:75
-#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:145
+#: make_queue/templates/make_queue/make_reservation.html:79 news/models.py:146
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:230
 #: make_queue/templates/make_queue/make_reservation.html:89
-#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:149
+#: make_queue/templates/make_queue/make_reservation.html:93 news/models.py:150
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -392,7 +392,7 @@ msgstr "Veksle visning av ikke valgte brukere"
 
 #: make_queue/templates/make_queue/course/course_panel.html:90
 #: make_queue/templates/make_queue/reservation_calendar.html:91
-#: news/models.py:191
+#: news/models.py:192
 msgid "Name"
 msgstr "Navn"
 
@@ -516,13 +516,13 @@ msgstr "Utstyr"
 msgid "Select machine"
 msgstr "Velg maskin"
 
-#: make_queue/templates/make_queue/make_reservation.html:104 news/models.py:194
+#: make_queue/templates/make_queue/make_reservation.html:104 news/models.py:195
 #: news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
 #: make_queue/templates/make_queue/make_reservation.html:118
-#: make_queue/templates/make_queue/make_reservation.html:132 news/models.py:203
+#: make_queue/templates/make_queue/make_reservation.html:132 news/models.py:204
 msgid "Event"
 msgstr "Arrangement"
 
@@ -703,7 +703,7 @@ msgid "About the machine"
 msgstr "Om maskinen"
 
 #: make_queue/templates/make_queue/reservation_overview.html:34
-#: news/models.py:154
+#: news/models.py:155
 msgid "Location"
 msgstr "Sted"
 
@@ -865,7 +865,7 @@ msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 msgid "for"
 msgstr "i"
 
-#: news/forms.py:35
+#: news/forms.py:36
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
 "organizers"
@@ -873,15 +873,19 @@ msgstr ""
 "Her kan du fylle inn eventuelle forespørsler eller opplysninger du ønsker å "
 "gi til arrangørene"
 
-#: news/models.py:54
+#: news/models.py:43 news/templates/news/article_edit.html:26
+msgid "Content"
+msgstr "Innhold"
+
+#: news/models.py:55
 msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
 
-#: news/models.py:58
+#: news/models.py:59
 msgid "Highlighted"
 msgstr "Fremhevet"
 
-#: news/models.py:62 news/models.py:168
+#: news/models.py:63 news/models.py:169
 #: news/templates/news/admin_articles.html:36
 #: news/templates/news/admin_event.html:42
 #: news/templates/news/admin_events.html:36
@@ -889,59 +893,59 @@ msgstr "Fremhevet"
 msgid "Hidden"
 msgstr "Skjult"
 
-#: news/models.py:66
+#: news/models.py:67
 msgid "MAKE internal"
 msgstr "MAKE intern"
 
-#: news/models.py:82 news/models.py:128
+#: news/models.py:83 news/models.py:129
 msgid "Publishing date"
 msgstr "Publiseringsdato"
 
-#: news/models.py:86 news/models.py:132
+#: news/models.py:87 news/models.py:133
 msgid "Publishing time"
 msgstr "Publiseringstid"
 
-#: news/models.py:96
+#: news/models.py:97
 msgid "Single registration"
 msgstr "Én påmelding"
 
-#: news/models.py:100 news/models.py:164
+#: news/models.py:101 news/models.py:165
 msgid "Hoopla url"
 msgstr "Hoopla url"
 
-#: news/models.py:102 news/models.py:170
+#: news/models.py:103 news/models.py:171
 msgid "Number of available tickets"
 msgstr "Antall tilgjengelige billetter"
 
-#: news/models.py:136
+#: news/models.py:137
 msgid "Start date"
 msgstr "Startdato"
 
-#: news/models.py:141
+#: news/models.py:142
 msgid "End date"
 msgstr "Sluttdato"
 
-#: news/models.py:159
+#: news/models.py:160
 msgid "Location URL"
 msgstr "Sted URL"
 
-#: news/models.py:193 news/templates/news/admin_event_tickets.html:19
+#: news/models.py:194 news/templates/news/admin_event_tickets.html:19
 msgid "Active"
 msgstr "Aktiv"
 
-#: news/models.py:195 web/templatetags/language_tags.py:19
+#: news/models.py:196 web/templatetags/language_tags.py:19
 msgid "English"
 msgstr "Engelsk"
 
-#: news/models.py:195 web/templatetags/language_tags.py:18
+#: news/models.py:196 web/templatetags/language_tags.py:18
 msgid "Norwegian"
 msgstr "Norsk"
 
-#: news/models.py:196
+#: news/models.py:197
 msgid "Preferred language"
 msgstr "Foretrukket språk"
 
-#: news/models.py:202
+#: news/models.py:203
 msgid "Timeplace"
 msgstr "Tidspunkt"
 
@@ -1208,11 +1212,6 @@ msgstr "Ny artikkel"
 msgid "Edit article"
 msgstr "Rediger artikkel"
 
-#: news/templates/news/article_edit.html:26
-#: news/templates/news/event_edit.html:27
-msgid "Content"
-msgstr "Innhold"
-
 #: news/templates/news/article_edit.html:35
 #: news/templates/news/timeplace_edit.html:66
 msgid "Publishing"
@@ -1238,16 +1237,78 @@ msgstr "Ingen påmelding"
 #: news/templates/news/event_create.html:4
 #: news/templates/news/event_create.html:5
 msgid "New event"
-msgstr "Ny event"
+msgstr "Nytt arrangement"
 
 #: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:18
 msgid "Edit event"
-msgstr "Rediger event"
+msgstr "Rediger arrangmenet"
 
-#: news/templates/news/event_edit.html:37
+#: news/templates/news/event_edit.html:28
+msgid "The main description of the event"
+msgstr "Brødteksten til arrangementet"
+
+#: news/templates/news/event_edit.html:36
+msgid "A short text designed to lure users into clicking the event"
+msgstr "En kort tekst for å lure brukerene til å klikke på arrangementet"
+
+#: news/templates/news/event_edit.html:45
+msgid "Type of event"
+msgstr "Arrangementstype"
+
+#: news/templates/news/event_edit.html:50
+msgid "Repeating"
+msgstr "Gjentagende"
+
+#: news/templates/news/event_edit.html:51
+msgid ""
+"Used for repeating events where the user is to register for one of several "
+"occurrences. Each occurrence will have its own registration."
+msgstr ""
+"Brukt for gjentagende arrangementer, hvor brukeren registrerer seg for et av flere "
+"tidspunkter. Hvert tidspunkt vil ha sin egen registrering."
+
+#: news/templates/news/event_edit.html:62
+msgid "Standalone"
+msgstr "Frittstående"
+
+#: news/templates/news/event_edit.html:63
+msgid ""
+"Used for events that happens once, e.g. a weekend long happening. All "
+"occurrences of the event will have a common registration."
+msgstr ""
+"Brukt for arrangementer som skjer en gang, f.eks. en workshop i en helg. "
+"Det vil være en felles registrering for alle tidspunktene til arrangementet."
+
+#: news/templates/news/event_edit.html:76
 #: news/templates/news/timeplace_edit.html:41
 msgid "A value of zero indicates that no registration is required"
 msgstr "En verdi på 0 vil si at arrangementet ikke krever påmelding"
+
+#: news/templates/news/event_edit.html:80
+msgid ""
+"Only used for standalone events. For repeating events tickets are "
+"administered per occurrence."
+msgstr ""
+"Bare brukt til frittstående arrangementer. For gjentagende arrangementer "
+"er billettene administrert per tidspunkt."
+
+#: news/templates/news/event_edit.html:92
+msgid "Attributes"
+msgstr "Egenskaper"
+
+#: news/templates/news/event_edit.html:98
+msgid "If selected, the event may be shown on the frontpage."
+msgstr "Hvis valgt kan arrangementet bli vist på forsiden."
+
+#: news/templates/news/event_edit.html:108
+msgid "If selected, the event will only be visible to admin users."
+msgstr ""
+"Hvis valgt vil arrangementet være skjult for ikke administrator brukere."
+
+#: news/templates/news/event_edit.html:118
+msgid "If selected, the event will only be visible to members of MAKE NTNU"
+msgstr ""
+"Hvis valgt vil arrangementet bare vises for medlemmer av MAKE NTNU."
 
 #: news/templates/news/event_registration.html:6
 msgid "Register for the event"
@@ -1342,13 +1403,13 @@ msgstr "Fra"
 msgid "To"
 msgstr "Til"
 
-#: news/views.py:369
+#: news/views.py:347
 msgid "Could not register you for the event, please try again later."
 msgstr ""
 "Det var ikke mulig å registrere deg for arrangementet på dette tidspunktet. "
 "Vennligst prøv igjen ved en senere anledning."
 
-#: news/views.py:385
+#: news/views.py:363
 msgid "Your ticket!"
 msgstr "Din billett!"
 
@@ -1453,6 +1514,14 @@ msgstr "Feltet er ikke fylt ut for"
 msgid "languages"
 msgstr "språk"
 
+#: web/templates/web/forms/widgets/semantic_file.html:6
+msgid "Upload image"
+msgstr "Last opp bilde"
+
+#: web/templates/web/forms/widgets/semantic_file.html:14
+msgid "An image is required"
+msgstr "Et bilde er krevd"
+
 #: web/templates/web/header.html:37
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
@@ -1477,6 +1546,6 @@ msgstr "Logg ut"
 msgid "Choose value"
 msgstr "Velg verdi"
 
-#: web/widgets.py:34
+#: web/widgets.py:38
 msgid "Search places"
 msgstr "Søk etter steder"

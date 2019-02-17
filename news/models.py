@@ -39,11 +39,12 @@ class NewsBase(models.Model):
         max_length=100,
         verbose_name=_('Title'),
     )
-    content = MultiLingualRichTextUploadingField()
+    content = MultiLingualRichTextUploadingField(
+        verbose_name=_("Content"),
+    )
     clickbait = MultiLingualTextField(
         max_length=300,
         verbose_name=_('Clickbait'),
-        blank=True,
         widget=MultiLingualTextarea
     )
     image = models.ImageField(

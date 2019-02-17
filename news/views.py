@@ -15,7 +15,7 @@ from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
 
 from mail import email
-from news.forms import TimePlaceForm, EventRegistrationForm
+from news.forms import TimePlaceForm, EventRegistrationForm, EventForm
 from news.models import Article, Event, TimePlace, EventTicket
 from web import settings
 from web.templatetags.permission_tags import has_any_article_permission, has_any_event_permission
@@ -186,18 +186,7 @@ class CreateArticleView(PermissionRequiredMixin, CreateView):
 class EditEventView(PermissionRequiredMixin, UpdateView):
     model = Event
     template_name = 'news/event_edit.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-        'multiday',
-        'number_of_tickets',
-    )
+    form_class = EventForm
     permission_required = (
         'news.change_event',
     )
@@ -209,18 +198,7 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
 class CreateEventView(PermissionRequiredMixin, CreateView):
     model = Event
     template_name = 'news/event_create.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-        'multiday',
-        'number_of_tickets',
-    )
+    form_class = EventForm
     permission_required = (
         'news.add_event',
     )
