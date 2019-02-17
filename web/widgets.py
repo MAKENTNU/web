@@ -25,6 +25,10 @@ class SemanticDateInput(forms.DateInput):
     template_name = "web/forms/widgets/semantic_date.html"
 
 
+class SemanticFileInput(forms.ClearableFileInput):
+    template_name = "web/forms/widgets/semantic_file.html"
+
+
 class MazemapSearchInput(forms.TextInput):
     """
     Widget that enables mazemap search functionality, including autofill of url to mazemap
