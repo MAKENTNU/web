@@ -8,8 +8,8 @@
 
 {% block body %}
     <div class="ui container">
-        {% if not object.user or object.user == request.user or perms.news.view_ticket %}
-            <h1>{% trans "Ticket for" %}: "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
+        {% if not object.user or object.user == request.user or perms.news.view_eventticket %}
+            <h1>{% trans "Ticket for" %} "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
             <div>
                 <b>{% trans "Registered to" %}:</b> {{ object.name }},
                 <a href="mailto:{{ object.email }}">{{ object.email }}</a>
@@ -32,9 +32,9 @@
             {% include "news/ticket.html" with ticket=object %}
         {% else %}
             <div class="ui error message">
-            {% trans "This ticket is registered to another account. Please" %}
+                {% trans "This ticket is registered to another account. Please" %}
                 <a href="{% url "social:begin" "dataporten" %}?next={% url "ticket" pk=object.uuid %}">{% trans "login" %}</a>
-            {% trans "to the correct account to see your ticket." %}
+                {% trans "to the correct account to see your ticket." %}
             </div>
         {% endif %}
     </div>

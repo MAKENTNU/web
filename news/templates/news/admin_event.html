@@ -137,7 +137,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
             $.ajax({
                 type: "POST",
@@ -161,9 +161,9 @@
                     }
 
                     if (model === "event") {
-                        $("#message-" + toggle).toggleClass("hidden", data["color"] === "grey")
+                        $("#message-" + toggle).toggleClass("hidden", data["color"] === "grey");
                     }
-                }
+                },
             });
         }
     </script>

@@ -1,19 +1,19 @@
+from ckeditor_uploader import views as ckeditor_views
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
-from django.contrib.auth.decorators import permission_required
-from django.views.decorators.cache import never_cache
-from django.views.i18n import JavaScriptCatalog
-from django.views.generic import TemplateView
 from django.contrib import admin
+from django.contrib.auth.decorators import permission_required
 from django.urls import path, re_path, include
+from django.views.decorators.cache import never_cache
+from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
+from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 from social_core.utils import setting_name
 
 from contentbox.models import ContentBox
 from dataporten.views import Logout, login_wrapper
 from web.views import IndexView, AdminPanelView, View404, View500
-from ckeditor_uploader import views as ckeditor_views
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 

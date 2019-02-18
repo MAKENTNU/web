@@ -1,5 +1,6 @@
 import logging
 import smtplib
+
 from channels.consumer import SyncConsumer
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.template.loader import get_template

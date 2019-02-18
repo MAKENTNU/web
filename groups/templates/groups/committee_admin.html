@@ -18,13 +18,13 @@
                 {% for committee in committees %}
                     <div class="item">
                         <i class="ui icon">
-			    {% if committee.image %}
-				<img class="inline square_36" src="{{ committee.image.url }}">
-			    {% else %}
-				{# Use a transparent base64 encoded image #}
-				<img class="inline square_36" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=">
-			    {% endif %}
-			</i>
+                            {% if committee.image %}
+                                <img class="inline square_36" src="{{ committee.image.url }}">
+                            {% else %}
+                                {# Use a transparent base64 encoded image #}
+                                <img class="inline square_36" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=">
+                            {% endif %}
+                        </i>
                         <div class="content">
                             <div class="header">
                                 <a class="inline-block make_col_blue header"
@@ -37,11 +37,11 @@
                                 </span>
                             </div>
                             <div class="description">
-				{% if committee.clickbait %}
-				    {{ committee.clickbait }}
-				{% else %}
-				    {{ committee.description }}
-				{% endif %}
+                                {% if committee.clickbait %}
+                                    {{ committee.clickbait }}
+                                {% else %}
+                                    {{ committee.description }}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -61,7 +61,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
             $.ajax({
                 type: "POST",
@@ -74,7 +74,7 @@
                     if (!data['color']) {
                         return;
                     }
-                    if (toggle == 'private') {
+                    if (toggle === 'private') {
                         if (data['color'] == 'yellow') {
                             element.attr('src', '{% static "web/img/m_yellow.svg" %}');
                         } else {
@@ -83,7 +83,7 @@
                     } else {
                         element.removeClass('yellow grey').addClass(data['color']);
                     }
-                }
+                },
             });
         }
     </script>
