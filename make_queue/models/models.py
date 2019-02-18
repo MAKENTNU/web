@@ -1,6 +1,7 @@
 from abc import abstractmethod
-from ckeditor_uploader.fields import RichTextUploadingField
 from datetime import timedelta
+
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models

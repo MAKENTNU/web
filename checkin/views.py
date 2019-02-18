@@ -1,18 +1,19 @@
+from datetime import timedelta
+
+from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.utils.decorators import method_decorator
-from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView
 from django.utils import timezone
+from django.utils.decorators import method_decorator
+from django.utils.translation import ugettext_lazy as _
+from django.views import View
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from web import settings
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib import messages
-from datetime import datetime, timedelta
-from django.utils.translation import ugettext_lazy as _
 
 
 class CheckInView(View):

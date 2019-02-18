@@ -1,4 +1,5 @@
 import copy
+
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingFormField
 from django import forms
@@ -21,7 +22,11 @@ class MultiLingualFormField(forms.MultiValueField):
         """
         structure = MultiLingualTextStructure("", True)
         for index, language in enumerate(structure.supported_languages):
-            structure[language] = data_list[index]
+            # Non required fields may not have enough values
+            try:
+                structure[language] = data_list[index]
+            except IndexError:
+                pass
         return structure
 
     def __init__(self, *args, **kwargs):
