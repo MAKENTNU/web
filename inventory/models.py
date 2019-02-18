@@ -6,9 +6,14 @@ class Item(models.Model):
     description = models.CharField(max_length=256)
     searchable = models.BooleanField(default=True)
 
-    def _total_amount(self): # Skal summere alle item amounts i subcontainers
-        return self.iteminsubcontainer_set.all()
-    totalAmount = property(_total_amount)
+    @property
+    def total_amount(self):  # returns total amount of this item
+        amount = 0
+        items_in_sub_containers = self.iteminsubcontainer_set.all()
+        for obj in items_in_sub_containers:
+            amount += obj.amount
+        return amount
+
     # Skal amount og subcontainer inn her kanskje?
 
     def __str__(self):
