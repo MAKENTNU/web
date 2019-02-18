@@ -5,6 +5,10 @@ class Item(models.Model):
     name = models.CharField(max_length=128)
     description = models.CharField(max_length=256)
     searchable = models.BooleanField(default=True)
+
+    def _total_amount(self): # Skal summere alle item amounts i subcontainers
+        return self.iteminsubcontainer_set.all()
+    totalAmount = property(_total_amount)
     # Skal amount og subcontainer inn her kanskje?
 
     def __str__(self):
@@ -20,7 +24,7 @@ class Room(models.Model):
 
 class Container(models.Model):
     name = models.CharField(max_length=128)
-    room = models.ForeignKey(Room,on_delete=models.CASCADE)
+    room = models.ForeignKey(Room, on_delete=models.CASCADE)
 
     def __str__(self):
         return "Container: "+self.name+" in "+self.room.name
