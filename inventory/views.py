@@ -19,6 +19,19 @@ class InventoryView(TemplateView):
         return context
 
 
+class ItemView(TemplateView):
+    template_name = "inventory/item.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        item = Item.objects.first()
+        context.update({
+            'item': item,
+        })
+        return context
+
+
 def index(request):
     queryset = ItemInSubContainer.objects.values()
     output = '<br/>'.join([q.__str__() for q in queryset])
