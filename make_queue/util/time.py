@@ -1,9 +1,9 @@
+from calendar import day_name
 from datetime import timedelta
 
 from django.utils import timezone, translation
 from django.utils.datetime_safe import datetime
 from django.utils.translation import ugettext
-from calendar import day_name
 
 
 def is_valid_week(year, week):

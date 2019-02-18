@@ -1,8 +1,7 @@
-from math import ceil
-
 from abc import abstractmethod
-from ckeditor_uploader.fields import RichTextUploadingField
 from datetime import timedelta
+
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -47,6 +46,7 @@ class Machine(models.Model):
                self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
+
     def __str__(self):
         return self.name + " - " + self.machine_model
 

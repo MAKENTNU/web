@@ -1,5 +1,6 @@
 import copy
 import json
+
 from django.contrib import admin
 from django.db import models
 
@@ -76,6 +77,7 @@ class MultiLingualFieldAdmin(admin.ModelAdmin):
     Django admin does not render MultiValue fields correctly. This ModelAdmin object overrides the default Django admin
     rendering of the MultiLingual fields.
     """
+
     def formfield_for_dbfield(self, db_field, request, **kwargs):
         # Want to override the Django admin fields
         if isinstance(db_field, MultiLingualTextField):

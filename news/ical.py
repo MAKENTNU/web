@@ -53,6 +53,7 @@ class EventFeed(ICalFeed):
 
 class SingleEventFeed(EventFeed):
     """An iCal feed of all occurences of a single event"""
+
     def file_name(self, attrs):
         title = self.items(attrs).values_list('event__title', flat=True).first()
         return f'{title}.ics'
