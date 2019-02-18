@@ -7,3 +7,12 @@
     <link rel="stylesheet" href="{% static "news/css/admin-event.css" %}">
 {% endblock %}
 
+{% block body %}
+    <h1 class="ui text-centered make_col_yellow header">
+        {% trans "Tools" %}
+        <a class="make_col_blue explanation-popup" data-title="{% trans "Create" %}"
+           data-content="{% trans "If clicked, a new event will be created." %}" href="{% url 'event-create' %}">
+            <i class="ui add icon"></i>
+        </a>
+    </h1>
+{% endblock %}
