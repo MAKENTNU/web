@@ -57,7 +57,7 @@ function filter() {
 // Sorts the elements based on the column to sort and its order
 function sort() {
     state.elements.sort(function (a, b) {
-        return a[state.sortBy].localeCompare(b[state.sortBy])
+        return a[state.sortBy].localeCompare(b[state.sortBy]);
     });
 
     if (!state.sortOrder) {
@@ -72,7 +72,7 @@ $("#status_filter").parent().dropdown({
     onChange: function (value) {
         state.status_value = value;
         filter();
-    }
+    },
 });
 
 // Button to toggle if only selected users should be shown
@@ -123,7 +123,7 @@ $("#status_set").parent().dropdown({
         });
 
         modal.modal("show");
-    }
+    },
 });
 
 // The search field for usernames
@@ -164,7 +164,7 @@ function calculate_range_pagination() {
     return {
         start: start,
         end: end,
-    }
+    };
 }
 
 // Toggles which rows to show based on the current state
@@ -239,7 +239,7 @@ function setupState() {
                 display: true,
                 element: $(this),
             });
-        }
+        },
     );
 
     state.numPages = Math.ceil(state.elements.length / state.elementPerPage);

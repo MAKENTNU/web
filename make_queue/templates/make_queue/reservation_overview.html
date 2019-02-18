@@ -73,7 +73,7 @@
                 <div id="fader"></div>
                 <i id="closefullscreen" class="ui times icon"></i>
                 <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
-                <script>let streamID = "{% sanitize_stream_name machine %}";</script>
+                <script>var streamID = "{% sanitize_stream_name machine %}";</script>
                 <script src="{% static "make_queue/js/stream.js" %}"></script>
             {% endif %}
 

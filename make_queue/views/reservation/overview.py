@@ -15,4 +15,3 @@ class MyReservationsView(TemplateView):
         """
         return {"reservations": Reservation.objects.filter(user=self.request.user, event=None, special=False).order_by(
             "-end_time", "-start_time")}
-

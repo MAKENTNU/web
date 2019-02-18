@@ -111,7 +111,7 @@ a.place {
     }
 
     .accordion .calendar-link {
-	display: inline-block;
-	position: initial;
+        display: inline-block;
+        position: initial;
     }
 }

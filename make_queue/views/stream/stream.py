@@ -1,6 +1,6 @@
-from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 
+from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
 
 
@@ -25,7 +25,7 @@ class StreamConsumer(AsyncWebsocketConsumer):
         )
 
     # Receive message from WebSocket
-    async def receive(self, text_data):
+    async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         image = text_data_json['image']
         key = text_data_json['key']

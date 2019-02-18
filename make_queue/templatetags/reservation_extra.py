@@ -1,6 +1,6 @@
 from django import template
-from django.utils import timezone
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
