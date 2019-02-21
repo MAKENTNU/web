@@ -157,6 +157,14 @@ class FreeSlotForm(forms.Form):
 
 
 class BaseMachineForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["status"] = forms.ChoiceField(choices=(
+            ("F", _("Available")),
+            ("O", _("Out of order")),
+            ("M", _("Maintenance")),
+        ))
+
     class Meta:
         model = Machine
         fields = "__all__"
@@ -167,19 +175,6 @@ class BaseMachineForm(forms.ModelForm):
         }
 
 
-class CreateMachineForm(BaseMachineForm):
-    class Meta(BaseMachineForm.Meta):
-        exclude = ["status"]
-
-
 class EditMachineForm(BaseMachineForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["status"] = forms.ChoiceField(choices=(
-            ("F", _("Available")),
-            ("O", _("Out of order")),
-            ("M", _("Maintenance")),
-        ))
-
     class Meta(BaseMachineForm.Meta):
         exclude = ["machine_type", "machine_model"]

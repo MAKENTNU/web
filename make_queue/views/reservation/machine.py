@@ -1,10 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
 from make_queue.fields import MachineTypeField
-from make_queue.forms import CreateMachineForm, EditMachineForm
+from make_queue.forms import BaseMachineForm, EditMachineForm
 from make_queue.models.models import Machine
 
 
@@ -30,7 +29,7 @@ class MachineView(TemplateView):
 class CreateMachineView(PermissionRequiredMixin, CreateView):
     template_name = "make_queue/machine/machine_create.html"
     model = Machine
-    form_class = CreateMachineForm
+    form_class = BaseMachineForm
     success_url = reverse_lazy("reservation_machines_overview")
     permission_required = (
         'make_queue.add_machine',
