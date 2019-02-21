@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'Slack font';
+  font-style: normal;
+  font-weight: normal;
+  font-display: auto;
+  src: url("../fonts/slack.ttf") format("truetype")
+}
+
 .footer-wrapper {
     display: table-row;
 }
@@ -35,12 +43,14 @@
 }
 
 .footer .social.list .item.slack-icon {
-    padding-top: 12px;
     padding-left: 0;
 }
 
+.footer .social.list .item.slack-icon span {
+    font-family: 'Slack font';
+}
 
-.footer .social.list i {
+.footer .social.list i, .footer .social.list span {
     font-size: 28px;
     color: rgb(12, 66, 106) !important;
 }
