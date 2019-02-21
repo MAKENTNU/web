@@ -18,6 +18,12 @@ class Item(models.Model):
     def __str__(self):
         return "Item: "+self.name
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['name', ]),
+            models.Index(fields=['description', ]),
+        ]
+
 
 class Room(models.Model):
     name = models.CharField(max_length=128)
