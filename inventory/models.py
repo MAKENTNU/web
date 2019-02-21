@@ -9,8 +9,7 @@ class Item(models.Model):
     @property
     def total_amount(self):  # returns total amount of this item
         amount = 0
-        items_in_sub_containers = self.iteminsubcontainer_set.all()
-        for obj in items_in_sub_containers:
+        for obj in self.iteminsubcontainer_set.all():
             amount += obj.amount
         return amount
 
