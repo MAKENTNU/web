@@ -100,7 +100,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
             $.ajax({
                 type: "POST",
@@ -122,7 +122,7 @@
                     } else {
                         element.removeClass('yellow grey').addClass(data['color']);
                     }
-                }
+                },
             });
         }
     </script>

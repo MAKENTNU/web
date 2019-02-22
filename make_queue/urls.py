@@ -1,8 +1,8 @@
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import include, path, register_converter, re_path
 
 from make_queue.views import api, admin, quota, reservation
 from . import converters
-from django.contrib.auth.decorators import login_required, permission_required
 
 register_converter(converters.MachineType, "machine_type")
 register_converter(converters.SpecificMachine, "machine")

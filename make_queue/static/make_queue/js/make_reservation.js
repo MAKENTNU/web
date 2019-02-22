@@ -1,7 +1,7 @@
 let reservations = [];
 let reservationRules = [];
 let reservationCalendarDate = new Date();
-var canIgnoreRules = false;
+var canIgnoreRules; // Defined in calendar.html
 
 function getFutureReservations(machine_id, force_new_time) {
     /**
@@ -25,8 +25,8 @@ function getFutureReservations(machine_id, force_new_time) {
             reservationRules.push({
                 "periods": value.periods,
                 "max_inside": value.max_hours,
-                "max_crossed": value.max_hours_crossed
-            })
+                "max_crossed": value.max_hours_crossed,
+            });
         });
         // Indicates if we want to update the start date or not
         if (force_new_time) {
@@ -57,7 +57,7 @@ function updateReservationCalendar() {
     $.get(langPrefix + "/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_pk + "/", {}, (data) => {
         $("#reservation_calendar").html(data);
         setupReservationCalendar();
-    })
+    });
 }
 
 function getFirstReservableTimeSlot(date) {
@@ -130,7 +130,7 @@ function getMaxDateReservation(date) {
         shouldRestrictToRules = false;
     } else {
         // Normal reservations should never be more than 1 week
-        maxDate = new Date(maxDate.valueOf() + 7 * 24 * 60 * 60 * 1000 - 1000)
+        maxDate = new Date(maxDate.valueOf() + 7 * 24 * 60 * 60 * 1000 - 1000);
     }
     for (let index = 0; index < reservations.length; index++) {
         if (date <= reservations[index].start_time && reservations[index].start_time < maxDate)
@@ -141,7 +141,7 @@ function getMaxDateReservation(date) {
         // is valid given the rules for the machine type
         return modifyToFirstValid(reservationRules, date, maxDate, 1);
     }
-    return maxDate
+    return maxDate;
 }
 
 function updateMaxEndDate() {
@@ -188,8 +188,8 @@ $("#start_time").calendar({
                 $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(value));
             }
             return shouldChange;
-        }
-    }
+        },
+    },
 );
 
 $("#end_time").calendar({
@@ -251,7 +251,7 @@ function formatDate(date) {
      * Formats the given date in a format that Django understands
      */
     return date.getFullYear() + "-" + zeroPadDateElement(date.getMonth() + 1) + "-" + zeroPadDateElement(date.getDate())
-        + " " + zeroPadDateElement(date.getHours()) + ":" + zeroPadDateElement(date.getMinutes())
+        + " " + zeroPadDateElement(date.getHours()) + ":" + zeroPadDateElement(date.getMinutes());
 }
 
 $('form').submit(function (event) {

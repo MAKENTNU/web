@@ -1,5 +1,6 @@
 import uuid
 from datetime import date, time
+
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Q
@@ -37,7 +38,7 @@ class TimePlaceManager(models.Manager):
 class NewsBase(models.Model):
     title = MultiLingualTextField(
         max_length=100,
-        verbose_name=_('Title'),
+        verbose_name=_("Title"),
     )
     content = MultiLingualRichTextUploadingField(
         verbose_name=_("Content"),
@@ -45,10 +46,11 @@ class NewsBase(models.Model):
     clickbait = MultiLingualTextField(
         max_length=300,
         verbose_name=_('Clickbait'),
+        blank=True,
         widget=MultiLingualTextarea
     )
     image = models.ImageField(
-        verbose_name=_('Image'),
+        verbose_name=_("Image"),
     )
     contain = models.BooleanField(
         default=False,
@@ -56,15 +58,15 @@ class NewsBase(models.Model):
     )
     featured = models.BooleanField(
         default=True,
-        verbose_name=_('Highlighted'),
+        verbose_name=_("Highlighted"),
     )
     hidden = models.BooleanField(
         default=False,
-        verbose_name=_('Hidden'),
+        verbose_name=_("Hidden"),
     )
     private = models.BooleanField(
         default=False,
-        verbose_name=_('MAKE internal'),
+        verbose_name=_("MAKE internal"),
     )
 
     def __str__(self):
@@ -80,11 +82,11 @@ class Article(NewsBase):
     objects = ArticleManager()
     pub_date = models.DateField(
         default=date.today,
-        verbose_name=_('Publishing date'),
+        verbose_name=_("Publishing date"),
     )
     pub_time = models.TimeField(
         default=time.min,
-        verbose_name=_('Publishing time'),
+        verbose_name=_("Publishing time"),
     )
 
     class Meta:
@@ -94,11 +96,11 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
-    multiday = models.BooleanField(default=False, verbose_name=_('Single registration'))
+    multiday = models.BooleanField(default=False, verbose_name=_("Single registration"))
     hoopla = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name=_('Hoopla url'),
+        verbose_name=_("Hoopla URL"),
     )
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
@@ -126,47 +128,47 @@ class TimePlace(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     pub_date = models.DateField(
         default=date.today,
-        verbose_name=_('Publishing date'),
+        verbose_name=_("Publishing date"),
     )
     pub_time = models.TimeField(
         default=time.min,
-        verbose_name=_('Publishing time'),
+        verbose_name=_("Publishing time"),
     )
     start_date = models.DateField(
         default=date.today,
-        verbose_name=_('Start date'),
+        verbose_name=_("Start date"),
     )
     end_date = models.DateField(
         blank=True,
         null=True,
-        verbose_name=_('End date')
+        verbose_name=_("End date")
     )
     start_time = models.TimeField(
         default=time.min,
-        verbose_name=_('Start time'),
+        verbose_name=_("Start time"),
     )
     end_time = models.TimeField(
         default=time.min,
-        verbose_name=_('End time'),
+        verbose_name=_("End time"),
     )
     place = models.CharField(
         max_length=100,
         blank=True,
-        verbose_name=_('Location'),
+        verbose_name=_("Location"),
     )
     place_url = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name=_('Location URL'),
+        verbose_name=_("Location URL"),
     )
     hoopla = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name=_('Hoopla url'),
+        verbose_name=_("Hoopla URL"),
     )
     hidden = models.BooleanField(
         default=True,
-        verbose_name=_('Hidden'),
+        verbose_name=_("Hidden"),
     )
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 

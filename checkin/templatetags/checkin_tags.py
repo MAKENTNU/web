@@ -1,5 +1,4 @@
 from django import template
-from checkin.models import Profile, Skill, UserSkill, SuggestSkill
 
 register = template.Library()
 

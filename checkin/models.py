@@ -1,8 +1,5 @@
-from _datetime import datetime
 from django.contrib.auth.models import User
 from django.db import models
-from ckeditor.fields import RichTextField
-from django.utils import timezone
 
 
 class Skill(models.Model):

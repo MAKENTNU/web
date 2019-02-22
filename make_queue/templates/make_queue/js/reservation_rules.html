@@ -52,7 +52,7 @@
                         "period": rule.periods[periodIndex],
                         "max_inside": rule.max_inside,
                         "max_crossed": rule.max_crossed,
-                    }
+                    };
                 }
             }
         }
@@ -143,7 +143,7 @@
                     // time periods are selected, then shrink till it is equal to that.
                     endTime = new Date(Math.max(
                         new Date(endTime.valueOf() - (currentOverlap - period.max_crossed) * 60 * 60 * 1000),
-                        new Date(startTime.valueOf() + minTime * 60 * 60 * 1000)
+                        new Date(startTime.valueOf() + minTime * 60 * 60 * 1000),
                     ));
                 } else {
                     // If the overlap is smaller than both the allowed inside when single- and multi-period, shrink till
@@ -161,7 +161,7 @@
                     // time periods are selected, then shrink till it is equal to that.
                     startTime = new Date(Math.min(
                         new Date(startTime.valueOf() + (currentOverlap - period.max_crossed) * 60 * 60 * 1000),
-                        new Date(endTime.valueOf() - minTime * 60 * 60 * 1000)
+                        new Date(endTime.valueOf() - minTime * 60 * 60 * 1000),
                     ));
                 } else {
                     // If the overlap is smaller than both the allowed inside when single- and multi-period, shrink till
