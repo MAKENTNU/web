@@ -81,7 +81,7 @@
             </h1>
         </div>
 
-        {% if event.multiday %}
+        {% if event.standalone %}
             <h2>Tickets</h2>
             {% if event.number_of_tickets %}
                 <b><a href="{% url "event-tickets" pk=event.pk %}">

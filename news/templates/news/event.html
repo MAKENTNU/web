@@ -42,7 +42,7 @@
                             <i class="ui large calendar outline icon"></i>
                         </a>
                     </div>
-                    {% if not event.event.multiday %}
+                    {% if event.event.repeating %}
                         {% if event.number_of_tickets %}
                             {% if event.number_of_registered_tickets < event.number_of_tickets %}
                                 <div class="ui two buttons">
@@ -64,7 +64,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            {% if article.multiday and article.timeplace_set.future %}
+            {% if article.standalone and article.timeplace_set.future %}
                 <div class="ui card">
                     {% if article.number_of_tickets %}
                         {% if article.number_of_registered_tickets < article.number_of_tickets %}
@@ -90,7 +90,7 @@
 
 {% block event_accordion %}
     <div class="accordion">
-        {% if article.multiday %}
+        {% if article.standalone %}
             {% if article.number_of_tickets %}
                 {% if article.number_of_registered_tickets < article.number_of_tickets %}
                     <a class="ui make_bg_yellow black fluid button" href="{% url "register-event" article.id %}" target="_blank">
@@ -149,7 +149,7 @@
                             <i class="ui large calendar outline icon"></i>
                         </a>
 
-                        {% if not event.event.multiday %}
+                        {% if event.event.repeating %}
                             {% if event.number_of_tickets %}
                                 {% if event.number_of_registered_tickets < event.number_of_tickets %}
                                     <a class="ui yellow button" href="{% url "register-timeplace" event.id %}">

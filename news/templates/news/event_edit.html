@@ -9,7 +9,7 @@
     <script type="text/javascript" src="{% static "web/calendar/calendar.min.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-    <script type="text/javascript" src="{% static "news/js/multiday.js" %}"></script>
+    <script type="text/javascript" src="{% static "news/js/event_type.js" %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -41,11 +41,11 @@
         <div class="two fields">
             <div class="ui field">
                 <div class="grouped fields">
-                    <label>{% trans "Type of event" %}</label>
+                    <label>{{ form.event_type.label }}</label>
                     <div class="field">
                         <div class="ui radio checkbox">
-                            <input type="radio" id="repeating" name="multiday" value="false"
-                                   {% if not form.multiday.value %}checked{% endif %}>
+                            <input type="radio" id="repeating" name="{{ form.event_type.name }}" value="R"
+                                   {% if form.event_type.value == "R" %}checked{% endif %}>
                             <label for="repeating">{% trans "Repeating" %}
                                 <span data-content="{% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}">
                                     <i class="ui yellow question circle icon"></i>
@@ -56,8 +56,8 @@
 
                     <div class="field">
                         <div class="ui radio checkbox">
-                            <input type="radio" id="standalone" name="multiday" value="true"
-                                   {% if form.multiday.value %}checked{% endif %}>
+                            <input type="radio" id="standalone" name="{{ form.event_type.name }}" value="S"
+                                   {% if form.event_type.value == "S" %}checked{% endif %}>
                             <label for="standalone">{% trans "Standalone" %}
                                 <span data-content="{% trans "Used for events that happens once, e.g. a weekend long happening. All occurrences of the event will have a common registration." %}">
                                     <i class="ui yellow question circle icon"></i>

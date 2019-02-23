@@ -31,7 +31,7 @@ class ViewEventsView(TemplateView):
         for event in Event.objects.filter(hidden=False):
             if not event.get_future_occurrences().exists() and not event.get_past_occurrences().exists():
                 continue
-            if event.multiday:
+            if event.standalone:
                 if event.get_future_occurrences().exists():
                     future.append({
                         "first_occurrence": event.get_future_occurrences().first(),
@@ -84,7 +84,7 @@ class ViewEventView(TemplateView):
         event = get_object_or_404(Event, pk=kwargs['pk'])
         context.update({
             'article': event,
-            'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future(),
+            'timeplaces': event.timeplace_set.all() if event.standalone else event.timeplace_set.future(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')) \
                 or (event.private and not self.request.user.has_perm('news.can_view_private')):
@@ -197,7 +197,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = self.form_class(**self.get_form_kwargs())
-        if self.object.event.multiday:
+        if self.object.event.standalone:
             del form.fields["number_of_tickets"]
         return form
 
