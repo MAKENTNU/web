@@ -46,7 +46,6 @@ class NewsBase(models.Model):
     clickbait = MultiLingualTextField(
         max_length=300,
         verbose_name=_('Clickbait'),
-        blank=True,
         widget=MultiLingualTextarea
     )
     image = models.ImageField(
