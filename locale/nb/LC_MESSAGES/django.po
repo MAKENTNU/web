@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-22 16:25+0100\n"
+"POT-Creation-Date: 2019-02-23 01:18+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -164,7 +164,7 @@ msgstr "Et eller flere språk mangler innhold"
 
 #: contentbox/templates/contentbox/edit.html:39
 #: groups/templates/groups/committee_form.html:30
-#: news/templates/news/article_edit.html:64
+#: news/templates/news/article_edit.html:95
 #: news/templates/news/event_edit.html:124
 #: news/templates/news/timeplace_edit.html:76
 msgid "Save"
@@ -865,7 +865,7 @@ msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 msgid "for"
 msgstr "i"
 
-#: news/forms.py:48
+#: news/forms.py:49
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
 "organizers"
@@ -873,7 +873,7 @@ msgstr ""
 "Her kan du fylle inn eventuelle forespørsler eller opplysninger du ønsker å "
 "gi til arrangørene"
 
-#: news/models.py:44 news/templates/news/article_edit.html:25
+#: news/models.py:44
 msgid "Content"
 msgstr "Innhold"
 
@@ -1209,10 +1209,40 @@ msgstr "Ny artikkel"
 msgid "Edit article"
 msgstr "Rediger artikkel"
 
+#: news/templates/news/article_edit.html:26
+msgid "The main content of the article"
+msgstr "Brødteksten til artikkelen"
+
 #: news/templates/news/article_edit.html:34
+msgid "A short text designed to lure users into clicking the article"
+msgstr "En kort tekst for å lure brukerene til å klikke på artikkelen"
+
+#: news/templates/news/article_edit.html:42
 #: news/templates/news/timeplace_edit.html:64
 msgid "Publishing"
 msgstr "Publisering"
+
+#: news/templates/news/article_edit.html:43
+msgid "The article will be hidden until this date"
+msgstr "Artikkelen vil være skjult før publiseringstidspunktet"
+
+#: news/templates/news/article_edit.html:62
+#: news/templates/news/event_edit.html:91
+msgid "Attributes"
+msgstr "Egenskaper"
+
+#: news/templates/news/article_edit.html:68
+msgid "If selected, the article may be shown on the front page."
+msgstr "Hvis valgt vil artikkelen vises på forsiden."
+
+#: news/templates/news/article_edit.html:78
+msgid "If selected, the article will only be visible to admin users."
+msgstr ""
+"Hvis valgt vil artikkelen være skjult for ikke administrator brukere."
+
+#: news/templates/news/article_edit.html:88
+msgid "If selected, the article will only be visible to members of MAKE NTNU."
+msgstr "Hvis valgt vil artikkelen bare vises for medlemmer av MAKE NTNU."
 
 #: news/templates/news/event.html:49 news/templates/news/event.html:56
 #: news/templates/news/event.html:76 news/templates/news/event.html:81
@@ -1289,12 +1319,8 @@ msgstr ""
 "Bare brukt til frittstående arrangementer. For gjentagende arrangementer er "
 "billettene administrert per tidspunkt."
 
-#: news/templates/news/event_edit.html:91
-msgid "Attributes"
-msgstr "Egenskaper"
-
 #: news/templates/news/event_edit.html:97
-msgid "If selected, the event may be shown on the frontpage."
+msgid "If selected, the event may be shown on the front page."
 msgstr "Hvis valgt kan arrangementet bli vist på forsiden."
 
 #: news/templates/news/event_edit.html:107

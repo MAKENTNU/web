@@ -22,16 +22,28 @@
             {{ form.title }}
         </div>
         <div class="field">
-            <label>{% trans "Content" %}</label>
+            <label>{{ form.content.label }}
+                <span data-content="{% trans "The main content of the article" %}">
+                    <i class="ui yellow question circle icon"></i>
+                </span>
+            </label>
             {{ form.content }}
         </div>
         <div class="field">
-            <label>{{ form.clickbait.label }}</label>
+            <label>{{ form.clickbait.label }}
+                <span data-content="{% trans "A short text designed to lure users into clicking the article" %}">
+                    <i class="ui yellow question circle icon"></i>
+                </span>
+            </label>
             {{ form.clickbait }}
         </div>
         <div class="two fields">
             <div class="field">
-                <label>{% trans "Publishing" %}</label>
+                <label>{% trans "Publishing" %}
+                    <span data-content="{% trans "The article will be hidden until this date" %}">
+                        <i class="ui yellow question circle icon"></i>
+                    </span>
+                </label>
                 {{ form.pub_date }}
             </div>
             <div class="field">
@@ -42,25 +54,47 @@
         <div class="field">
             <label>{{ form.image.label }}</label>
             {{ form.image }}
-        </div>
-        <div class="ui four fields">
-            <div class="field">
-                <label>{{ form.contain.label }}</label>
+            <div class="ui checkbox" style="float: right; margin-top: 1em">
                 {{ form.contain }}
+                <label for="id_contain"><b>{{ form.contain.label }}</b></label>
+            </div>
+        </div>
+        <h4>{% trans "Attributes" %}</h4>
+        <div class="ui three fields">
+            <div class="field">
+                <div class="ui checkbox">
+                    {{ form.featured }}
+                    <label>{{ form.featured.label }}
+                        <span data-content="{% trans "If selected, the article may be shown on the front page." %}">
+                            <i class="ui yellow question circle icon"></i>
+                        </span>
+                    </label>
+                </div>
             </div>
             <div class="field">
-                <label>{{ form.featured.label }}</label>
-                {{ form.featured }}
+                <div class="ui checkbox">
+                    {{ form.hidden }}
+                    <label>{{ form.hidden.label }}
+                        <span data-content="{% trans "If selected, the article will only be visible to admin users." %}">
+                            <i class="ui yellow question circle icon"></i>
+                        </span>
+                    </label>
+                </div>
             </div>
             <div class="field">
-                <label>{{ form.hidden.label }}</label>
-                {{ form.hidden }}
-            </div>
-            <div class="field">
-                <label>{{ form.private.label }}</label>
-                {{ form.private }}
+                <div class="ui checkbox">
+                    {{ form.private }}
+                    <label>{{ form.private.label }}
+                        <span data-content="{% trans "If selected, the article will only be visible to members of MAKE NTNU." %}">
+                            <i class="ui yellow question circle icon"></i>
+                        </span>
+                    </label>
+                </div>
             </div>
         </div>
         <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
     </form>
+    <script>
+        $("span[data-content]").popup()
+    </script>
 {% endblock body %}

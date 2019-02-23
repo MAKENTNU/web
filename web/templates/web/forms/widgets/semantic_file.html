@@ -17,7 +17,7 @@
 <script>
     $("#{{ widget.attrs.id }}-error-message").hide();
 
-    $("#{{ widget.attrs.id }}-button").click((e) => {
+    $("#{{ widget.attrs.id }}-button, #{{ widget.attrs.id }} input[type=text]").click((e) => {
         let button = $(e.target);
         let fileInput = button.parent().find("input[type=file]");
         fileInput.change((e) => {
