@@ -11,7 +11,6 @@ class TimePlaceForm(ModelForm):
     class Meta:
         model = TimePlace
         fields = '__all__'
-        exclude = ["hoopla"]
         widgets = {
             "place": MazemapSearchInput(url_field="place_url"),
             "event": SemanticSearchableChoiceInput(),
@@ -55,7 +54,6 @@ class EventForm(ModelForm):
     class Meta:
         model = Event
         fields = "__all__"
-        exclude = ["hoopla"]
         widgets = {
             "image": SemanticFileInput()
         }

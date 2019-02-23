@@ -97,11 +97,6 @@ class Article(NewsBase):
 
 class Event(NewsBase):
     multiday = models.BooleanField(default=False, verbose_name=_("Single registration"))
-    hoopla = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name=_("Hoopla URL"),
-    )
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def get_future_occurrences(self):
@@ -160,11 +155,6 @@ class TimePlace(models.Model):
         max_length=200,
         blank=True,
         verbose_name=_("Location URL"),
-    )
-    hoopla = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name=_("Hoopla URL"),
     )
     hidden = models.BooleanField(
         default=True,
