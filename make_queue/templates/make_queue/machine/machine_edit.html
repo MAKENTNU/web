@@ -12,7 +12,7 @@
                 {% trans "Edit machine" %}
             {% endblock %}
         </h1>
-        <form class="ui form text container" method="post">
+        <form class="ui form container" method="post">
             {% if form.errors %}
                 {% for field in form %}
                     {% for error in field.errors %}
@@ -24,35 +24,39 @@
                 {% endfor %}
             {% endif %}
             {% csrf_token %}
-            <div class="ui field">
-                <label>{{ form.name.label }}</label>
-                {{ form.name }}
-            </div>
-            {% if form.machine_type %}
+            <div class="ui two fields">
                 <div class="ui field">
-                    <label>{{ form.machine_type.label }}</label>
-                    {{ form.machine_type }}
+                    <label>{{ form.name.label }}</label>
+                    {{ form.name }}
                 </div>
-            {% endif %}
-            {% if form.machine_model %}
-                <div class="ui field">
-                    <label>{{ form.machine_model.label }}</label>
-                    {{ form.machine_model }}
-                </div>
-            {% endif %}
-            {% if form.status %}
                 <div class="ui field">
                     <label>{{ form.status.label }}</label>
                     {{ form.status }}
                 </div>
-            {% endif %}
-            <div class="ui field">
-                <label>{{ form.location.label }}</label>
-                {{ form.location }}
             </div>
-            <div class="ui field">
-                <label>{{ form.location_url.label }}</label>
-                {{ form.location_url }}
+            <div class="ui two fields">
+                {% if form.machine_type %}
+                    <div class="ui field">
+                        <label>{{ form.machine_type.label }}</label>
+                        {{ form.machine_type }}
+                    </div>
+                {% endif %}
+                {% if form.machine_model %}
+                    <div class="ui field">
+                        <label>{{ form.machine_model.label }}</label>
+                        {{ form.machine_model }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="ui two fields">
+                <div class="ui text field">
+                    <label>{{ form.location.label }}</label>
+                    {{ form.location }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.location_url.label }}</label>
+                    {{ form.location_url }}
+                </div>
             </div>
             <input class="ui blue submit right floated button" type="submit" value="{% trans "Save" %}">
 

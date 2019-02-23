@@ -159,18 +159,18 @@ class FreeSlotForm(forms.Form):
 class BaseMachineForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["status"] = forms.ChoiceField(choices=(
-            ("F", _("Available")),
-            ("O", _("Out of order")),
-            ("M", _("Maintenance")),
-        ))
+        self.fields["status"] = forms.ChoiceField(
+            choices=(
+                ("F", _("Available")),
+                ("O", _("Out of order")),
+                ("M", _("Maintenance")),
+            ),
+        )
 
     class Meta:
         model = Machine
         fields = "__all__"
         widgets = {
-            "status": SemanticChoiceInput(),
-            "machine_type": SemanticChoiceInput(),
             "location": MazemapSearchInput(url_field="location_url"),
         }
 
