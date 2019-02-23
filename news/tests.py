@@ -99,10 +99,10 @@ class ViewTestCase(TestCase):
         )
 
     def test_admin(self):
-        response = self.client.get(reverse('admin'))
+        response = self.client.get(reverse('admin-articles'))
         self.assertNotEqual(response.status_code, 200)
         self.add_permission('change_article')
-        response = self.client.get(reverse('admin'))
+        response = self.client.get(reverse('admin-articles'))
         self.assertEqual(response.status_code, 200)
 
     def test_articles(self):
