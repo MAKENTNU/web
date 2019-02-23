@@ -276,7 +276,7 @@ class AdminTimeplaceToggleView(AdminArticleToggleView):
 
 class DeleteArticleView(PermissionRequiredMixin, DeleteView):
     model = Article
-    success_url = reverse_lazy('admin')
+    success_url = reverse_lazy('admin-articles')
     permission_required = (
         'news.delete_article',
     )
@@ -284,7 +284,7 @@ class DeleteArticleView(PermissionRequiredMixin, DeleteView):
 
 class DeleteEventView(PermissionRequiredMixin, DeleteView):
     model = Event
-    success_url = reverse_lazy('admin')
+    success_url = reverse_lazy('admin-events')
     permission_required = (
         'news.delete_event',
     )
@@ -292,7 +292,6 @@ class DeleteEventView(PermissionRequiredMixin, DeleteView):
 
 class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
     model = TimePlace
-    success_url = reverse_lazy('admin')
     permission_required = (
         'news.delete_timeplace',
     )

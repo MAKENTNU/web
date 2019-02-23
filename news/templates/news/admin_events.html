@@ -8,123 +8,59 @@
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui text-centered make_col_yellow header">
-        {% trans "Events" %}
-        <a class="make_col_blue explanation-popup" data-title="{% trans "Create" %}"
-           data-content="{% trans "If clicked, a new event will be created." %}" href="{% url 'event-create' %}">
-            <i class="ui add icon"></i>
-        </a>
-    </h1>
-    <div class="ui text container">
-        {% if events %}
-            <div class="ui divided list">
-                {% for event in events %}
-                    <div class="item">
-                        <i class="ui icon"><img class="inline square_36" src="{{ event.image.url }}"></i>
-                        <div class="content">
-                            <div class="header">
-                                <a class="inline-block make_col_blue header" href="{% url 'admin-event' event.id %}">
-                                    {{ event.title }}
-                                </a>
-                                <span>
-                                    &nbsp;&nbsp;
-                                    <i class="ui {{ event.featured|color }} star icon toggle explanation-popup"
-                                       data-title="{% trans "Feature" %}"
-                                       data-content="{% trans "If selected, the event is shown on the front page." %}"
-                                       data-pk="{{ event.pk }}" data-toggle="featured" data-model="event"></i>
-                                    <i class="ui {{ event.hidden|color }} eye slash icon toggle explanation-popup"
-                                       data-title="{% trans "Hidden" %}"
-                                       data-content="{% trans "If selected, the event is hidden for non-admin users." %}"
-                                       data-pk="{{ event.pk }}" data-toggle="hidden" data-model="event"></i>
-                                    <img class="makeicon toggle explanation-popup"
-                                         data-title="{% trans "Internal" %}"
-                                         data-content="{% trans "If selected, the event is only available for MAKE members." %}"
-                                            {% if event.private %}
-                                         src="{% static "web/img/m_yellow.svg" %}"
-                                            {% else %}
-                                         src="{% static "web/img/m_grey.svg" %}"
-                                            {% endif %}
-                                         data-pk="{{ event.pk }}" data-toggle="private" data-model="event">
-                                    &nbsp;&nbsp;&nbsp;
-                                    {% if perms.news.change_event %}
-                                        <a class="inline-block make_col_blue explanation-popup"
-                                           data-title="{% trans "Edit" %}"
-                                           data-content="{% trans "If clicked, a form for editing the event is shown." %}"
-                                           href="{% url 'event-edit' event.id %}">
-                                            <i class="ui edit icon"></i>
-                                        </a>
-                                    {% endif %}
-                                    {% if perms.news.delete_event %}
-                                        <a class="delete confirm inline-block make_col_blue explanation-popup"
-                                           data-title="{% trans "Delete" %}"
-                                           data-content="{% trans "If clicked, the event will be deleted." %}"
-                                           href="{% url 'event-delete' event.id %}">
-                                            <i class="ui delete icon"></i>
-                                        </a>
-                                    {% endif %}
-                                    {% if perms.news.add_timeplace %}
-                                        <a class="inline-block make_col_blue explanation-popup"
-                                           data-title="{% trans "Occurrence" %}"
-                                           data-content="{% trans "If clicked, creates a new occurrence of the event" %}"
-                                           href="{% url 'timeplace-new' event.id %}">
-                                            <i class="icons">
-                                                <i class="time icon"></i>
-                                                <i class="noshadow bottom right corner add icon"></i>
-                                            </i>
-                                        </a>
-                                    {% endif %}
-                                </span>
-                            </div>
-                            <div class="description">
-                                {{ event.clickbait }}
-                            </div>
-                        </div>
+    <div class="ui container">
+        <h1 class="ui text-centered header">
+            {% trans "Events" %}
+            <a class=explanation-popup" href="{% url 'event-create' %}">
+                <i class="ui green add icon"></i>
+            </a>
+        </h1>
+        <div class="ui four  doubling stackable cards">
+            {% for event in events %}
+                <div class="ui card">
+                    <div class="image">
+                        <img src="{{ event.image.url }}">
                     </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="text-centered"><i>{% trans "No events" %}</i></p>
-        {% endif %}
+                    <div class="content">
+                        <div class="header">{{ event.title }}</div>
+                        <div class="meta">
+                            {% if event.get_future_occurrences %}
+                                {{ event.get_future_occurrences.count }} {% trans "Future occurrences" %}
+                            {% endif %}
+                        </div>
+                        <div class="description">{{ event.clickbait }}</div>
+                    </div>
+                    {% if event.featured or event.hidden or event.private %}
+                        <div class="extra content">
+                            {% if event.featured %}
+                                <div class="ui green tiny label">
+                                    {% trans "Featured" %}
+                                </div>
+                            {% endif %}
+
+                            {% if event.hidden %}
+                                <div class="ui red tiny label">
+                                    {% trans "Hidden" %}
+                                </div>
+                            {% endif %}
+
+                            {% if event.private %}
+                                <div class="ui yellow tiny label">
+                                    {% trans "Internal" %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    <div class="ui two bottom attached buttons">
+                        <a class="ui yellow button" href="{% url "admin-event" event.id %}">
+                            {% trans "Admin" %}
+                        </a>
+                        <a class="ui blue button" href="{% url "event" event.id %}">
+                            {% trans "View" %}
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </div>
-
-    <script>
-        $('.ui.accordion').accordion();
-
-        $(".explanation-popup").popup();
-
-        $('.toggle').click(function () {
-            toggle_post($(this), $(this).data('pk'), $(this).data('model'), $(this).data('toggle'));
-        });
-
-        function toggle_post(element, pk, model, toggle) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                },
-            });
-            $.ajax({
-                type: "POST",
-                url: '/news/admin/toggle/' + model + '/',
-                data: {
-                    'pk': pk,
-                    'toggle': toggle,
-                },
-                success: function (data) {
-                    if (!data['color']) {
-                        return;
-                    }
-                    if (toggle === 'private') {
-                        if (data['color'] === 'yellow') {
-                            element.attr('src', '{% static "web/img/m_yellow.svg" %}');
-                        } else {
-                            element.attr('src', '{% static "web/img/m_grey.svg" %}');
-                        }
-                    } else {
-                        element.removeClass('yellow grey').addClass(data['color']);
-                    }
-                },
-            });
-        }
-    </script>
-
 {% endblock body %}
