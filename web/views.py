@@ -8,9 +8,14 @@ class IndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        events = TimePlace.objects.future().filter(event__featured=True)
+        if not self.request.user.has_perm('news.can_view_private'):
+            events = events.filter(event__private=False)
+
         context.update({
             'articles': Article.objects.published().filter(featured=True)[:4],
-            'events': TimePlace.objects.future().filter(event__featured=True)[:4],
+            'events': events[:4],
         })
         return context
 
