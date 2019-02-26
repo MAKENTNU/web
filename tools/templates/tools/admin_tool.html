@@ -11,8 +11,26 @@
     <h1 class="ui text-centered make_col_yellow header">
         {% trans "Tools" %}
         <a class="make_col_blue explanation-popup" data-title="{% trans "Create" %}"
-           data-content="{% trans "If clicked, a new event will be created." %}" href="{% url 'event-create' %}">
+           data-content="{% trans "If clicked, a new event will be created." %}" href="{% url 'tools/create' %}">
             <i class="ui add icon"></i>
         </a>
     </h1>
+
+    <div class="ui divided list">
+        {% for tool in tools_list %}
+            <div class="item">
+                <i class="ui icon"><img class="inline square_36" src="{{ tool.image.url }}"></i>
+
+
+                <div class="content">
+                    <div class="header">
+                        <a class="inline-block make_col_blue header" >{{ tool.title }}
+
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

@@ -1,10 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'tools/admin_tool_edit.html' %}
+{% load i18n %}
 
-</body>
-</html>
+{% block title %}{% trans "New tool" %}{% endblock title %}
+{% block form_header %}{% trans "New tool" %}{% endblock form_header %}
