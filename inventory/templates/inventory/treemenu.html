@@ -1,0 +1,158 @@
+{% load staticfiles %}
+{% load thumbnail %}
+{% load i18n %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "inventory/css/treemenu.css" %}">
+{% endblock head %}
+
+{# https://codepen.io/IronGeek/pen/vOejyr #}
+
+{% block body %}
+    <div class="treemenu boxed">
+        <div class="ui fluid styled accordion">
+            <div class="title">
+                <i class="dropdown icon"></i> Level 1
+            </div>
+            <div class="content">
+                <div class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel euismod purus.
+                    Donec nec tempor lorem, et consequat tellus. Sed id consequat nibh. Praesent a posuere mi. Ut
+                    gravida feugiat diam, non accumsan risus facilisis et. Donec ullamcorper
+                    facilisis magna a accumsan. Duis varius purus in dapibus interdum. Aenean a felis sit amet lectus
+                    interdum venenatis in imperdiet sapien. Sed at leo maximus, blandit orci ac, viverra orci.
+                </div>
+                <div class="accordion">
+                    <div class="active title">
+                        <i class="dropdown icon"></i> Level 1A
+                    </div>
+                    <div class="active content">
+                        <div class="subtitle">Level 1A Subtitles</div>
+                        <div class="accordion">
+                            <div class="title">
+                                <i class="dropdown icon"></i> Level 1A-A
+                            </div>
+                            <div class="content">
+                                Level 1A-A Contents
+                            </div>
+                            <div class="title">
+                                <i class="dropdown icon"></i> Level 1A-B
+                            </div>
+                            <div class="content">
+                                Level 1A-B Contents
+                            </div>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i> Level 1B
+                    </div>
+                    <div class="content">
+                        Level 1B Contents
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i> Level 1C
+                    </div>
+                    <div class="content">
+                        Level 1C Contents
+                    </div>
+                </div>
+            </div>
+            <div class="title">
+                <i class="dropdown icon"></i> Level 2
+            </div>
+            <div class="content">
+                <div class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel euismod purus.
+                    Donec nec tempor lorem, et consequat tellus. Sed id consequat nibh. Praesent a posuere mi. Ut
+                    gravida feugiat diam, non accumsan risus facilisis et. Donec ullamcorper
+                    facilisis magna a accumsan. Duis varius purus in dapibus interdum. Aenean a felis sit amet lectus
+                    interdum venenatis in imperdiet sapien. Sed at leo maximus, blandit orci ac, viverra orci.
+                </div>
+                <div class="accordion">
+                    <div class="active title">
+                        <i class="dropdown icon"></i> Level 2A
+                    </div>
+                    <div class="active content">
+                        <div class="subtitle">Level 2A Subtitles</div>
+                        <div class="accordion">
+                            <div class="title">
+                                <i class="dropdown icon"></i> Level 2A-A
+                            </div>
+                            <div class="content">
+                                Level 2A-A Contents
+                            </div>
+                            <div class="title">
+                                <i class="dropdown icon"></i> Level 2A-B
+                            </div>
+                            <div class="content">
+                                Level 2A-B Contents
+                            </div>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i> Level 2B
+                    </div>
+                    <div class="content">
+                        Level 2B Contents
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i> Level 2C
+                    </div>
+                    <div class="content">
+                        Level 2C Contents
+                    </div>
+                </div>
+            </div>
+            <div class="title">
+                <i class="dropdown icon"></i> Level 3
+            </div>
+            <div class="content">
+                <div class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla vel euismod purus.
+                    Donec nec tempor lorem, et consequat tellus. Sed id consequat nibh. Praesent a posuere mi. Ut
+                    gravida feugiat diam, non accumsan risus facilisis et. Donec ullamcorper
+                    facilisis magna a accumsan. Duis varius purus in dapibus interdum. Aenean a felis sit amet lectus
+                    interdum venenatis in imperdiet sapien. Sed at leo maximus, blandit orci ac, viverra orci.
+                </div>
+                <div class="accordion">
+                    <div class="active title">
+                        <i class="dropdown icon"></i> Level 3A
+                    </div>
+                    <div class="active content">
+                        <div class="subtitle">Level 3A Subtitles</div>
+                        <div class="accordion">
+                            <div class="title">
+                                <i class="dropdown icon"></i> Level 3A-A
+                            </div>
+                            <div class="content">
+                                Level 3A-A Contents
+                            </div>
+                            <div class="title">
+                                <i class="dropdown icon"></i> Level 3A-B
+                            </div>
+                            <div class="content">
+                                Level 3A-B Contents
+                            </div>
+                        </div>
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i> Level 3B
+                    </div>
+                    <div class="content">
+                        Level 3B Contents
+                    </div>
+                    <div class="title">
+                        <i class="dropdown icon"></i> Level 3C
+                    </div>
+                    <div class="content">
+                        Level 3C Contents
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock body %}
+
+
+{% block scripts %}
+    <script>
+        $('.ui.accordion').accordion({exclusive: false});
+    </script>
+{% endblock scripts %}
