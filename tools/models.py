@@ -1,9 +1,12 @@
-from ckeditor.fields import RichTextField
 from django.db import models
 
-class Tool(models.Model):
-    title = models.CharField(max_length=100, verbose_name=('Title'),)
-    image = models.ImageField(verbose_name=('Image'), blank=True,)
-    content = RichTextField()
+from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
 
-# Create your models here.
+
+class Tool(models.Model):
+    title = MultiLingualTextField(
+        max_length=100,
+        verbose_name=('Title'),
+    )
+    image = models.ImageField(verbose_name=('Image'), blank=True, )
+    content = MultiLingualRichTextUploadingField()
