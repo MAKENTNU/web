@@ -3,7 +3,10 @@ from django.db import models
 
 class Item(models.Model):
     name = models.CharField(max_length=128)
+    unit = models.CharField(max_length=16)
+    category = models.CharField(max_length=128)
     description = models.CharField(max_length=256)
+    comment = models.CharField(max_length=256)
     searchable = models.BooleanField(default=True)
 
     @property
@@ -52,7 +55,7 @@ class SubContainer(models.Model):
 class ItemInSubContainer(models.Model):
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
     subcontainer = models.ForeignKey(SubContainer, on_delete=models.CASCADE)
-    amount = models.PositiveIntegerField()
+    amount = models.DecimalField(decimal_places=2, max_digits=6)
 
     def __str__(self):
         return self.subcontainer.name + " contains "+str(self.amount)+" of item "+self.item.name
