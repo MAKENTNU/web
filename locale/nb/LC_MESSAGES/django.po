@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2.1\n"
 
 #: checkin/templates/checkin/profile.html:14
 msgid "My profile"
@@ -1390,27 +1390,31 @@ msgctxt "abort action"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: web/templates/web/footer.html:12
+#: web/templates/web/footer.html:13
+msgid "You can find us here!"
+msgstr "Du kan finne oss her!"
+
+#: web/templates/web/footer.html:13
 msgid "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 msgstr "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 
-#: web/templates/web/footer.html:16
+#: web/templates/web/footer.html:18
 msgid "Like us on Facebook!"
 msgstr "Lik oss på Facebook!"
 
-#: web/templates/web/footer.html:19
+#: web/templates/web/footer.html:21
 msgid "Chat with us on Slack!"
 msgstr "Prat med oss på Slack!"
 
-#: web/templates/web/footer.html:22
+#: web/templates/web/footer.html:24
 msgid "Open a pull request on GitHub!"
 msgstr "Åpne en pull request på GitHub!"
 
-#: web/templates/web/footer.html:28
+#: web/templates/web/footer.html:30
 msgid "Follow us on Instagram!"
 msgstr "Følg oss på Instagram!"
 
-#: web/templates/web/footer.html:42
+#: web/templates/web/footer.html:44
 msgid "Cookies"
 msgstr "Cookies"
 

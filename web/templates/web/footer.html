@@ -9,14 +9,17 @@
             <div class="logo">
                 <img src="{% static "web/img/logo_allwhite.svg" %}">
             </div>
-            <a href="http://s.mazemap.com/2zleDaH" target="_blank">{% trans "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim" %}</a>
+            <a href="http://s.mazemap.com/2zleDaH" title={% trans "You can find us here!" %} target="_blank">{% trans "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim" %} </a>
+            <a href="http://s.mazemap.com/2zleDaH" target="blank"><i class="map marker alternate icon"></i></a>
         </div>
         <div class="ui social list">
             <div class="item">
                 <a href="http://www.facebook.com/MAKENTNU/" title="{% trans "Like us on Facebook!" %}" target="_blank"><i class="facebook f icon"></i></a>
             </div>
-            <div class="item">
-                <a href="http://makentnu.slack.com/" title="{% trans "Chat with us on Slack!" %}" target="_blank"><i class="slack icon"></i></a>
+            <div class="item slack-icon">
+                <a href="http://makentnu.slack.com/" title="{% trans "Chat with us on Slack!" %}" target="_blank">
+		    <span></span>
+		</a>
             </div>
             <div class="item">
                 <a href="http://github.com/MAKENTNU" title="{% trans "Open a pull request on GitHub!" %}" target="_blank"><i class="github alternate icon"></i></a>
