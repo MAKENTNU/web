@@ -25,7 +25,7 @@
     <script src="{% static "web/js/jquery-3.1.1.min.js" %}"></script>
     <script src="{% static "web/semantic-ui/semantic.min.js" %}"></script>
     {% get_current_language as LANGUAGE_CODE %}
-    <script>let langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
+    <script>const langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {% block head %}{% endblock head %}
 </head>
 <body>

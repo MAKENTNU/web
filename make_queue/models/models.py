@@ -1,8 +1,7 @@
-from math import ceil
-
 from abc import abstractmethod
-from ckeditor_uploader.fields import RichTextUploadingField
 from datetime import timedelta
+
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -24,12 +23,12 @@ class Machine(models.Model):
         ("M", _("Maintenance")),
     )
 
-    status = models.CharField(max_length=2, choices=status_choices)
-    name = models.CharField(max_length=30, unique=True)
-    location = models.CharField(max_length=40)
-    location_url = models.URLField()
-    machine_model = models.CharField(max_length=40)
-    machine_type = MachineTypeField(null=True)
+    status = models.CharField(max_length=2, choices=status_choices, verbose_name=_("Status"), default="F")
+    name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
+    location = models.CharField(max_length=40, verbose_name=_("Location"))
+    location_url = models.URLField(verbose_name=_("Location URL"))
+    machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
+    machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
 
     @abstractmethod
     def get_reservation_set(self):
@@ -47,6 +46,7 @@ class Machine(models.Model):
                self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
+
     def __str__(self):
         return self.name + " - " + self.machine_model
 

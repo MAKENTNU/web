@@ -9,7 +9,8 @@ from make_queue.fields import MachineTypeField, MachineTypeForm
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
-from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput
+from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput, \
+    MazemapSearchInput
 
 
 class ReservationForm(forms.Form):
@@ -153,3 +154,28 @@ class FreeSlotForm(forms.Form):
         initial=1, label=_("Machine type"))
     hours = IntegerField(min_value=0, initial=1, label=_("Duration in hours"))
     minutes = IntegerField(min_value=0, max_value=59, initial=0, label=_("Duration in minutes"))
+
+
+class BaseMachineForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["status"] = forms.ChoiceField(
+            choices=(
+                ("F", _("Available")),
+                ("O", _("Out of order")),
+                ("M", _("Maintenance")),
+            ),
+            widget=SemanticSearchableChoiceInput(attrs={"required": True}),
+        )
+
+    class Meta:
+        model = Machine
+        fields = "__all__"
+        widgets = {
+            "location": MazemapSearchInput(url_field="location_url"),
+        }
+
+
+class EditMachineForm(BaseMachineForm):
+    class Meta(BaseMachineForm.Meta):
+        exclude = ["machine_type", "machine_model"]

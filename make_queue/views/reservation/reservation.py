@@ -1,6 +1,6 @@
+from abc import ABCMeta
 from math import ceil
 
-from abc import ABCMeta
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy

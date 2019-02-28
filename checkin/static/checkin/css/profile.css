@@ -4,6 +4,10 @@
     border-radius: 10px;
 }
 
+#profile-pic:hover {
+    cursor: pointer;
+}
+
 .search.dropdown {
     width: 100% !important;
 }

@@ -1,9 +1,9 @@
 from datetime import timedelta
-from django.core.exceptions import ValidationError
 
+from django.contrib.auth.models import User, AnonymousUser
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
-from django.contrib.auth.models import User, AnonymousUser
 
 from make_queue.fields import MachineTypeField, can_use_3d_printer
 from make_queue.models.course import Printer3DCourse

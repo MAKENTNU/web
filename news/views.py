@@ -1,8 +1,8 @@
 import math
+from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from datetime import timedelta
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
@@ -15,7 +15,7 @@ from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
 
 from mail import email
-from news.forms import TimePlaceForm, EventRegistrationForm
+from news.forms import TimePlaceForm, EventRegistrationForm, ArticleForm
 from news.models import Article, Event, TimePlace, EventTicket
 from web import settings
 from web.templatetags.permission_tags import has_any_news_permissions
@@ -28,6 +28,8 @@ class ViewEventsView(TemplateView):
         context = super().get_context_data(**kwargs)
         past, future = [], []
         for event in Event.objects.filter(hidden=False):
+            if event.private and not self.request.user.has_perm('news.can_view_private'):
+                continue
             if not event.get_future_occurrences().exists() and not event.get_past_occurrences().exists():
                 continue
             if event.multiday:
@@ -128,18 +130,8 @@ class AdminEventView(DetailView):
 class EditArticleView(PermissionRequiredMixin, UpdateView):
     model = Article
     template_name = 'news/article_edit.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'pub_date',
-        'pub_time',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-    )
+    form_class = ArticleForm
+
     permission_required = (
         'news.change_article',
     )
@@ -149,18 +141,7 @@ class EditArticleView(PermissionRequiredMixin, UpdateView):
 class CreateArticleView(PermissionRequiredMixin, CreateView):
     model = Article
     template_name = 'news/article_create.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'pub_date',
-        'pub_time',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-    )
+    form_class = ArticleForm
     permission_required = (
         'news.add_article',
     )

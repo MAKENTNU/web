@@ -1,5 +1,5 @@
 function update_multiday() {
-    var is_multiday = $('#id_multiday').prop('checked');
+    let is_multiday = $('#id_multiday').prop('checked');
     $("#id_number_of_tickets").parent().toggleClass("disabled", !is_multiday);
 
 }

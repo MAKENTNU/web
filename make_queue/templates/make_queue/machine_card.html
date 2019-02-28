@@ -11,6 +11,16 @@
     <div class="content">
         <div class="header">
             {{ machine.name }}
+            {% if perms.make_queue.change_machine %}
+                <a href="{% url "edit_machine" machine.pk %}">
+                    <i class="ui yellow pencil icon"></i>
+                </a>
+            {% endif %}
+            {% if perms.make_queue.delete_machine %}
+                <a class="delete confirm" href="{% url "delete_machine" machine.pk %}">
+                    <i class="ui red trash icon"></i>
+                </a>
+            {% endif %}
         </div>
         <div class="meta">
             <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
@@ -33,7 +43,7 @@
     {% if machine.machine_type.has_stream %}
         <div id="fader"></div>
         <i id="closefullscreen" class="ui times icon"></i>
-        <script>var streamID = "stream-{% sanitize_stream_name machine %}"</script>
+        <script>var streamID = "stream-{% sanitize_stream_name machine %}";</script>
         <script src="{% static "make_queue/js/stream.js" %}"></script>
     {% endif %}
 </div>
