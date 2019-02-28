@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from django.views.generic import ListView, DetailView, UpdateView, CreateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from tools.models import Tool
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
@@ -49,3 +49,10 @@ class ViewAdminEditVeiw(PermissionRequiredMixin, UpdateView):
         'image',
     )
     success_url = reverse_lazy('tools/admin')
+
+class ViewDeleteView(DeleteView):
+    model = Tool
+    success_url = reverse_lazy('tools/admin')
+
+    def get(self, request, *args, **argv):
+        return self.post(request, *args, **argv)
