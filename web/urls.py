@@ -13,7 +13,7 @@ from social_core.utils import setting_name
 
 from contentbox.models import ContentBox
 from dataporten.views import Logout, login_wrapper
-from web.views import IndexView, AdminPanelView, View404
+from web.views import IndexView, AdminPanelView, View404, View500
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
@@ -51,3 +51,4 @@ urlpatterns += [
 ]
 
 handler404 = View404.as_view()
+handler500 = View500.as_view()
