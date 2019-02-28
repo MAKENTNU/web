@@ -25,10 +25,21 @@
                             <div class="header">
                                 <a class="inline-block make_col_blue header" href="{% url 'tools/edit' tool.id %}">
                                     {{ tool.title }}
+
+
                                 </a>
+                                {% if perms.tool.delete_event %}
+                                    <a class="delete confirm inline-block make_col_blue explanation-popup"
+                                       data-title="{% trans "Delete" %}"
+                                       data-content="{% trans "If clicked, the tool will be deleted." %}"
+                                       href="{% url 'tools/delete' tool.id %}">
+                                        <i class="ui delete icon"></i>
+                                    </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
+
                 {% endfor %}
             </div>
         {% else %}
