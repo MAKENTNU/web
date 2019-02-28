@@ -165,6 +165,7 @@ class BaseMachineForm(forms.ModelForm):
                 ("O", _("Out of order")),
                 ("M", _("Maintenance")),
             ),
+            widget=SemanticSearchableChoiceInput(attrs={"required": True}),
         )
 
     class Meta:
