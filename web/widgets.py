@@ -16,7 +16,7 @@ class SemanticSearchableChoiceInput(forms.Select):
     prompt_text = _("Choose value")
 
     def __init__(self, *args, **kwargs):
-        super().__init__()
+        super().__init__(attrs=kwargs.pop("attrs", {}))
         self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
         self.attrs["force_selection"] = kwargs.pop("force_selection", False)
 

@@ -1,0 +1,76 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block head %}
+    {{ form.media }}
+{% endblock %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="ui centered header">
+            {% block form_title %}
+                {% trans "Edit machine" %}
+            {% endblock %}
+        </h1>
+        <form class="ui form container" method="post">
+            {% if form.errors %}
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error|escape }}</b>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            {% csrf_token %}
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.name.label }}</label>
+                    {{ form.name }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.status.label }}</label>
+                    {{ form.status }}
+                </div>
+            </div>
+            <div class="ui two fields">
+                {% if form.machine_type %}
+                    <div class="ui field">
+                        <label>{{ form.machine_type.label }}</label>
+                        {{ form.machine_type }}
+                    </div>
+                {% endif %}
+                {% if form.machine_model %}
+                    <div class="ui field">
+                        <label>{{ form.machine_model.label }}</label>
+                        {{ form.machine_model }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="ui two fields">
+                <div class="ui text field">
+                    <label>{{ form.location.label }}</label>
+                    {{ form.location }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.location_url.label }}</label>
+                    {{ form.location_url }}
+                </div>
+            </div>
+            <input class="ui blue submit right floated button" type="submit" value="{% trans "Save" %}">
+
+            <a href="{% url "reservation_machines_overview" %}" class="ui right floated blue button">
+                {% trans "Cancel" %}
+            </a>
+        </form>
+    </div>
+
+    <script>
+        $(".message .close").click(function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
+    </script>
+{% endblock %}
