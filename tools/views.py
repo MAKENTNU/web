@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from tools.models import Tool
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -17,14 +16,14 @@ class ViewToolsView(ListView):
     context_object_name = 'tools_list'
 
 
-class ViewAdminWiev(PermissionRequiredMixin, ListView):
+class ViewAdminView(PermissionRequiredMixin, ListView):
     model = Tool
     template_name = 'tools/admin_tool.html'
     context_object_name = 'tools_list'
     permission_required = 'tools.add_Tool'
 
 
-class ViewAdminCreateVeiw(PermissionRequiredMixin, CreateView):
+class ViewAdminCreateView(PermissionRequiredMixin, CreateView):
     model = Tool
     template_name = 'tools/admin_tool_create.html'
     context_object_name = 'tool'
@@ -37,7 +36,7 @@ class ViewAdminCreateVeiw(PermissionRequiredMixin, CreateView):
     success_url = reverse_lazy('tools/admin')
 
 
-class ViewAdminEditVeiw(PermissionRequiredMixin, UpdateView):
+class ViewAdminEditView(PermissionRequiredMixin, UpdateView):
     model = Tool
 
     template_name = 'tools/admin_tool_edit.html'
@@ -49,6 +48,7 @@ class ViewAdminEditVeiw(PermissionRequiredMixin, UpdateView):
         'image',
     )
     success_url = reverse_lazy('tools/admin')
+
 
 class ViewDeleteView(DeleteView):
     model = Tool
