@@ -92,7 +92,8 @@
                 </div>
             </div>
         </div>
-        <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
+        <input class="ui yellow right floated submit button" type="submit" value="{% trans "Save" %}">
+        <a href="{% url "admin-articles" %}" class="ui red right floated button">{% trans "Cancel" %}</a>
     </form>
     <script>
         $("span[data-content]").popup()

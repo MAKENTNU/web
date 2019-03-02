@@ -227,15 +227,19 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
         return HttpResponseRedirect(reverse('timeplace-edit', args=(timeplace.pk,)))
 
 
-class NewTimePlaceView(PermissionRequiredMixin, View):
+class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
+    model = TimePlace
+    template_name = "news/timeplace_create.html"
+    form_class = TimePlaceForm
     permission_required = (
         'news.add_timeplace',
     )
 
-    def get(self, request, pk):
-        event = get_object_or_404(Event, pk=pk)
-        new_timeplace = TimePlace.objects.create(event=event)
-        return HttpResponseRedirect(reverse('timeplace-edit', args=(new_timeplace.pk,)))
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        event = get_object_or_404(Event, pk=self.kwargs["event_pk"])
+        form.fields["event"].initial = event.pk
+        return form
 
 
 class AdminArticleToggleView(PermissionRequiredMixin, View):
