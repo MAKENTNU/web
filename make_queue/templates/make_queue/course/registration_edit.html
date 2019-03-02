@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load i18n %}
+{% load util_tags %}
 
 {% block head %}
     {{ block.super }}
@@ -32,6 +33,16 @@
                 </div>
                 <p> {% trans "Are you sure you entered the correct username?" %} </p>
             </div>
+            {% form_has_error form "username" "unique" as unique_error %}
+            {% if unique_error %}
+                <div class="ui error message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        {% trans "Username already exists" %}
+                    </div>
+                    <p>{% trans "Are you sure you entered the correct username?" %}</p>
+                </div>
+            {% endif %}
         {% endblock %}
 
 
