@@ -105,7 +105,7 @@
                         <a href="{% url "edit_course_registration" registration.pk %}">
                             <i class="ui yellow pencil icon"></i>
                         </a>
-                        {% if perms.delete_printer3dcourse %}
+                        {% if perms.make_queue.delete_printer3dcourse %}
                             <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
                                 <i class="ui red trash icon"></i>
                             </a>
