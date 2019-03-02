@@ -58,7 +58,7 @@ class EditRegistrationView(PermissionRequiredMixin, UpdateView):
 class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
     model = Printer3DCourse
     permission_required = (
-        "make_queue.delete_printer3d_course",
+        "make_queue.delete_printer3dcourse",
     )
 
     def get_success_url(self):
