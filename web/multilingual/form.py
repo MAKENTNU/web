@@ -9,7 +9,7 @@ from web.multilingual.data_structures import MultiLingualTextStructure
 
 class MultiLingualFormField(forms.MultiValueField):
     """
-    A multi value field for a multilingual database field
+    A multi-value field for a multilingual database field
     """
     field_class = forms.CharField
 
