@@ -80,7 +80,7 @@
                     {% trans "Submit" context "edit" %}
                 {% endblock %}
             </button>
-            <a href="{% url "course_panel" %}" class="ui right floated yellow button">
+            <a href="{% url "course_panel" %}" class="ui right floated red button">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
@@ -109,12 +109,12 @@
                     $('#username_not_found_warning').fadeIn();
                 },
             });
-            $("#user").closest(".dropdown").dropdown("set selected", $(event.target).val())
+            $("#user").closest(".dropdown").dropdown("set selected", $(event.target).val());
         });
 
         let cardNumberLengthCount = $("#card_number_count");
         $("input[name={{ form.card_number.name }}]").on("keyup paste", (event) => {
             cardNumberLengthCount.text(event.target.value.length);
-        })
+        });
     </script>
 {% endblock %}
