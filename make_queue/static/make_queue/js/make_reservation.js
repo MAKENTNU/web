@@ -225,13 +225,13 @@ $('#special_checkbox').checkbox({
     },
 });
 
-$('#machine_type_dropdown').dropdown('setting', 'onChange', function (value) {
+$('#machine_type_dropdown').dropdown('setting', 'onChange', function (selectedMachineType) {
     if (!$('#machine_type_dropdown').is(".disabled")) {
         $('#machine_name_dropdown').toggleClass("disabled", false).dropdown("restore defaults");
+
+        // Replace the shown machine items from the last selected machine type with the ones from the currently selected machine type
         $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", true);
-        $('#machine_name_dropdown .menu').toggleClass("menu", false);
-        $('#machine_name_dropdown .' + value).toggleClass("menu", true);
-        $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", false);
+        $('#machine_name_dropdown .menu .item.' + selectedMachineType).toggleClass("make_hidden", false);
     }
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
