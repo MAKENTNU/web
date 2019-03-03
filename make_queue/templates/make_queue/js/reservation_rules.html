@@ -77,7 +77,8 @@
          */
         let coveredRules = getRulesCovered(rules, startTime, endTime);
         if (coveredRules.length === 1) {
-            return coveredRules[0].max_inside >= hoursInsideRule(coveredRules[0], startTime, endTime).toPrecision(2);
+            let hoursInside = hoursInsideRule(coveredRules[0], startTime, endTime);
+            return coveredRules[0].max_inside >= Number(hoursInside.toPrecision(2));
         }
 
         // If the reservation is shorter than the maximum inside for any of the rules, it should also be valid for
@@ -94,7 +95,8 @@
         let maxTime = 0;
         for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
             maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
-            if (coveredRules[ruleIndex].max_crossed < hoursInsideRule(coveredRules[ruleIndex], startTime, endTime).toPrecision(2)) {
+            let hoursInside = hoursInsideRule(coveredRules[ruleIndex], startTime, endTime);
+            if (coveredRules[ruleIndex].max_crossed < Number(hoursInside.toPrecision(2))) {
                 return false;
             }
         }
@@ -133,6 +135,8 @@
             let period = getPeriodIn(rules, modificationDirection ? endTime : startTime, modificationDirection);
             if (modificationDirection) {
                 let currentOverlap = overlap(period.period[0], period.period[1], period.period[0], dateToWeekRep(endTime), 7) * 24;
+                // Discard precision beyond seconds, as the calculation is prone to floating point accuracy errors
+                currentOverlap = Number(currentOverlap.toFixed(4));
                 // Shrink the overlap until
                 if (currentOverlap > period.max_inside) {
                     // If the overlap with the current time period is greater than the maximum allowed inside then
