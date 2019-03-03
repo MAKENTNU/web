@@ -84,7 +84,9 @@
             </div>
         </div>
         <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
-        <a href="{% url "admin-event" form.event.initial %}" class="ui red right floated button">{% trans "Cancel" %}</a>
+        <a href="{% url "admin-event" form.event.initial %}" class="ui red right floated button">
+            {% trans "Cancel" context "abort action" %}
+        </a>
     </form>
     <script>
         $("span[data-content]").popup()

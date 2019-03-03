@@ -31,7 +31,7 @@
         </div>
         <div class="field">
             <label>{{ form.clickbait.label }}
-                <span data-content="{% trans "A short text designed to lure users into clicking the article" %}">
+                <span data-content="{% trans "A short text designed to bait users into clicking the article" %}">
                     <i class="ui yellow question circle icon"></i>
                 </span>
             </label>
@@ -93,7 +93,9 @@
             </div>
         </div>
         <input class="ui yellow right floated submit button" type="submit" value="{% trans "Save" %}">
-        <a href="{% url "admin-articles" %}" class="ui red right floated button">{% trans "Cancel" %}</a>
+        <a href="{% url "admin-articles" %}" class="ui red right floated button">
+            {% trans "Cancel" context "abort action" %}
+        </a>
     </form>
     <script>
         $("span[data-content]").popup()

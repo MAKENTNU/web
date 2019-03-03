@@ -85,7 +85,8 @@
                         widget.find(".ui.red.pointing.label").remove();
                         if (languagesNotFilled.length) {
                             let languageMissingTextIndicator = $("<div class='ui red pointing label'>");
-                            languageMissingTextIndicator.text("{% trans "The field is missing a value for" %} " + languagesNotFilled.length + " {% trans "languages" %}.");
+                            let languagePlural = languagesNotFilled.length > 1 ? {% trans "languages" %} : {% trans "language" %};
+                            languageMissingTextIndicator.text("{% trans "The field is missing a value for" %} " + languagesNotFilled.length + ` ${languagePlural}.`);
                             widget.append(languageMissingTextIndicator);
                         }
                     });
