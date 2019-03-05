@@ -89,7 +89,7 @@ class UserByUsername:
 
     def to_python(self, value):
         try:
-            User.objects.get(username=value)
+            return User.objects.get(username=value)
         except User.DoesNotExist:
             raise ValueError("No user with that username")
 
