@@ -1459,6 +1459,3 @@ msgstr "Velg verdi"
 #: web/widgets.py:34
 msgid "Search places"
 msgstr "Søk etter steder"
-
-#~ msgid "Username already exists"
-#~ msgstr "Brukernavnet finnes allerede"
