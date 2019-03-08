@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-28 13:42+0100\n"
+"POT-Creation-Date: 2019-03-05 11:13+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -449,7 +449,7 @@ msgid "Set status"
 msgstr "Sett status"
 
 #: make_queue/templates/make_queue/course/course_panel.html:183
-#: make_queue/templates/make_queue/course/registration_edit.html:77
+#: make_queue/templates/make_queue/course/registration_edit.html:88
 #: make_queue/templates/make_queue/machine/machine_edit.html:64
 msgid "Cancel"
 msgstr "Kanseller"
@@ -462,23 +462,35 @@ msgstr "Legg til kursregistrering"
 msgid "Registration of course participation successful"
 msgstr "Registrering av kursdeltakelse vellykket"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:23
+#: make_queue/templates/make_queue/course/registration_edit.html:24
 msgid "Edit course registration"
 msgstr "Endre kursregistrering"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:31
+#: make_queue/templates/make_queue/course/registration_edit.html:32
 msgid "Could not find the user in the NTNU database"
 msgstr "Kunne ikke finne brukeren i NTNUs database"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:33
+#: make_queue/templates/make_queue/course/registration_edit.html:34
 msgid "Are you sure you entered the correct username?"
 msgstr "Er du sikker på at du har skrevet inn riktig brukernavn?"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:48
+#: make_queue/templates/make_queue/course/registration_edit.html:41
+msgid "A user with this username is already registered"
+msgstr "En bruker med dette brukernavnet er allerede registrert"
+
+#: make_queue/templates/make_queue/course/registration_edit.html:43
+msgid ""
+"Either the user has already taken the course, or the username of another "
+"user has been entered."
+msgstr ""
+"Enten har brukeren allerede tatt kurset, eller brukernavnet til en annen "
+"bruker har blitt skrevet inn"
+
+#: make_queue/templates/make_queue/course/registration_edit.html:59
 msgid "Clear selection"
 msgstr "Nullstill valg"
 
-#: make_queue/templates/make_queue/course/registration_edit.html:73
+#: make_queue/templates/make_queue/course/registration_edit.html:84
 #: make_queue/templates/make_queue/quota/quota_edit.html:61
 #: make_queue/templates/make_queue/rule_edit.html:100
 msgctxt "edit"
@@ -1275,7 +1287,7 @@ msgstr "Tidligere arrangementer"
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
 
-#: news/templates/news/my_tickets.html:11 web/templates/web/header.html:63
+#: news/templates/news/my_tickets.html:11 web/templates/web/header.html:67
 msgid "My tickets"
 msgstr "Mine billetter"
 
@@ -1303,7 +1315,7 @@ msgstr "Denne billetten er ikke knyttet til noen bruker."
 msgid "Click"
 msgstr "Klikk"
 
-#: news/templates/news/ticket_overview.html:26 web/templates/web/header.html:73
+#: news/templates/news/ticket_overview.html:26 web/templates/web/header.html:77
 msgid "Login"
 msgstr "Logg inn"
 
@@ -1428,15 +1440,15 @@ msgstr "Makerverkstedet"
 msgid "About us"
 msgstr "Om oss"
 
-#: web/templates/web/header.html:56
+#: web/templates/web/header.html:60
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:60
+#: web/templates/web/header.html:64
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:66
+#: web/templates/web/header.html:70
 msgid "Logout"
 msgstr "Logg ut"
 
