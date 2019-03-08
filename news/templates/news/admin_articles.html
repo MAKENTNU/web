@@ -54,9 +54,11 @@
                         <a class="ui yellow button" href="{% url "article-edit" article.id %}">
                             {% trans "Edit" %}
                         </a>
-                        <a class="ui red delete confirm button" href="{% url "article-delete" article.id %}">
-                            {% trans "Delete" %}
-                        </a>
+                        {% if perms.news.delete_article %}
+                            <a class="ui red delete confirm button" href="{% url "article-delete" article.id %}">
+                                {% trans "Delete" %}
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
