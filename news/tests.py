@@ -189,14 +189,6 @@ class ViewTestCase(TestCase):
         self.assertEqual(new.start_date, new_start_date)
         self.assertEqual(new.end_date, new_end_date)
 
-    def test_timeplace_new(self):
-        self.add_permission('add_timeplace')
-        self.add_permission('change_timeplace')
-        response = self.client.get(reverse('timeplace-new', args=[self.event.pk]))
-        new = TimePlace.objects.latest('pk')
-        self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
-        self.assertEquals(new.event, self.event)
-
     def test_admin_article_toggle_view(self):
         def toggle(pk, attr):
             response = self.client.post(reverse('article-toggle'), {'pk': pk, 'toggle': attr})
