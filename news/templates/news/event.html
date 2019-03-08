@@ -4,6 +4,14 @@
 
 {% block event_classes %} lalign{% endblock event_classes %}
 
+{% block admin-page %}
+    {% if perms.news.change_event %}
+        <a href="{% url "admin-event" article.id %}" class="ui right floated yellow button">
+            <i class="ui sticky note icon"></i>{% trans "Admin page" %}
+        </a>
+    {% endif %}
+{% endblock admin-page %}
+
 {% block rail %}
     <div class="ui right attached rail">
         <div class="ui sticky rail-content">
@@ -12,7 +20,7 @@
                     <div class="content">
                         {% if event.start_date == event.end_date or not event.end_date %}
                             <p>
-                                <i class="ui wait icon"></i>
+                                <i class="ui make_yellow wait icon"></i>
                                 {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
                                 {% if event.end_time %}
                                     - {{ event.end_time|time:"H:i" }}
@@ -20,26 +28,26 @@
                             </p>
                         {% else %}
                             <p>
-                                <i class="ui wait icon"></i>
+                                <i class="ui make_yellow wait icon"></i>
                                 {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
                                 - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
                         {% endif %}
                         {% if event.place %}
                             {% if event.place_url %}
                                 <p>
-                                    <i class="ui marker icon"></i>
+                                    <i class="ui make_yellow marker icon"></i>
                                     <a class="place" href="{{ event.place_url }}" target="_blank">{{ event.place }}</a>
                                 </p>
                             {% else %}
                                 <p>
-                                    <i class="ui marker icon"></i>
+                                    <i class="ui make_yellow marker icon"></i>
                                     {{ event.place }}
                                 </p>
                             {% endif %}
                         {% endif %}
 
                         <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
-                            <i class="ui large calendar outline icon"></i>
+                            <i class="ui make_yellow large calendar outline icon"></i>
                         </a>
                     </div>
                     {% if event.event.repeating %}
@@ -118,7 +126,7 @@
                 <div class="transition hidden">
                     {% if event.start_date == event.end_date or not event.end_date %}
                         <p>
-                            <i class="ui wait icon"></i>
+                            <i class="ui make_yellow wait icon"></i>
                             {{ event.start_time|time:"H:i" }}
                             {% if event.end_time %}
                                 - {{ event.end_time|time:"H:i" }}
@@ -126,19 +134,19 @@
                         </p>
                     {% else %}
                         <p>
-                            <i class="ui wait icon"></i>
+                            <i class="ui make_yellow wait icon"></i>
                             {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
                             - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
                     {% endif %}
                     {% if event.place %}
                         {% if event.place_url %}
                             <p>
-                                <i class="ui marker icon"></i>
+                                <i class="ui make_yellow marker icon"></i>
                                 <a class="place" href="{{ event.place_url }}" target="_blank">{{ event.place }}</a>
                             </p>
                         {% else %}
                             <p>
-                                <i class="ui marker icon"></i>
+                                <i class="ui make_yellow marker icon"></i>
                                 {{ event.place }}
                             </p>
                         {% endif %}
@@ -146,7 +154,7 @@
 
                     <div class="attend">
                         <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
-                            <i class="ui large calendar outline icon"></i>
+                            <i class="ui make_yellow large calendar outline icon"></i>
                         </a>
 
                         {% if event.event.repeating %}
