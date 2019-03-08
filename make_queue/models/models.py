@@ -23,12 +23,12 @@ class Machine(models.Model):
         ("M", _("Maintenance")),
     )
 
-    status = models.CharField(max_length=2, choices=status_choices)
-    name = models.CharField(max_length=30, unique=True)
-    location = models.CharField(max_length=40)
-    location_url = models.URLField()
-    machine_model = models.CharField(max_length=40)
-    machine_type = MachineTypeField(null=True)
+    status = models.CharField(max_length=2, choices=status_choices, verbose_name=_("Status"), default="F")
+    name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
+    location = models.CharField(max_length=40, verbose_name=_("Location"))
+    location_url = models.URLField(verbose_name=_("Location URL"))
+    machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
+    machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
 
     @abstractmethod
     def get_reservation_set(self):

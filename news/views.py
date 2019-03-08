@@ -29,6 +29,8 @@ class ViewEventsView(TemplateView):
         context = super().get_context_data(**kwargs)
         past, future = [], []
         for event in Event.objects.filter(hidden=False):
+            if event.private and not self.request.user.has_perm('news.can_view_private'):
+                continue
             if not event.get_future_occurrences().exists() and not event.get_past_occurrences().exists():
                 continue
             if event.standalone:

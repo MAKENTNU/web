@@ -17,7 +17,7 @@ class Printer3DCourse(models.Model):
     )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
-    username = UsernameField(max_length=32, verbose_name=_("Username"))
+    username = UsernameField(max_length=32, verbose_name=_("Username"), unique=True)
     date = models.DateField(verbose_name=_("Course date"))
     card_number = models.IntegerField(null=True, verbose_name=_("Card number (EM)"))
     name = models.CharField(max_length=256, verbose_name=_("Full name"))

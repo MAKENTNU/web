@@ -41,6 +41,17 @@
             <div class="text">{% trans "About us" %}</div>
             <div class="make_bg_yellow bubble-background"></div>
         </a>
+
+	{% comment "Apply page" %}
+	The apply (søknad) page. This should only be available when people
+	can apply for MAKE. To make it available, move endcomment tag below
+	this line, before the <a> tag.
+
+	<a class="item" href="{% url 'apply' %}">
+	    <div class="text">SØK</div>
+	    <div class="make_bg_blue bubble-background"></div>
+	</a>
+	{% endcomment %}
     </nav>
 
     <div id="side-nav" class="ui secondary menu">
