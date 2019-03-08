@@ -241,6 +241,9 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
         form.fields["event"].initial = event.pk
         return form
 
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.event.id,))
+
 
 class AdminArticleToggleView(PermissionRequiredMixin, View):
     model = Article
