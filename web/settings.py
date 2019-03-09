@@ -21,6 +21,11 @@ STREAM_KEY = ''
 # which has a DNS address of 127.0.0.1. Should be changed in production.
 SESSION_COOKIE_DOMAIN = "local.test.pe"
 
+# For django-hosts to redirect correctly across subdomains, we have to specify the
+# host we are running on. This currently points to "local.test.pe:8000", and should
+# be changed in production
+PARENT_HOST = "local.test.pe:8000"
+
 try:
     from .local_settings import *
 except ImportError:
