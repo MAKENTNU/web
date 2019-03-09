@@ -1,0 +1,82 @@
+{% load staticfiles %}
+{% load i18n %}
+{% load string_tags %}
+{% load permission_tags %}
+{% load hosts %}
+{% get_current_language as LANGUAGE_CODE %}
+
+<link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
+
+<header id="header">
+    <div class="logo-centering">
+        {# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
+
+    <div class="logo">
+        <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
+        <a href="{% url 'home' %}">
+            <img class="large" src="{% static "web/img/logo_white.svg" %}">
+            <img class="medium" src="{% static "web/img/logo_make.svg" %}">
+            <img class="small" src="{% static "web/img/logo_m.svg" %}">
+        </a>
+    </div>
+
+    <i id="burger" class="big inverted sidebar icon"></i>
+
+    <nav id="nav" class="ui secondary inverted menu">
+        <a class="item" href="{% host_url "front-page" host "main" %}">
+            <div class="text">{% trans "Public pages" %}</div>
+            <div class="make_bg_yellow bubble-background"></div>
+        </a>
+    </nav>
+
+    <div id="side-nav" class="ui secondary menu">
+        <div id="nav-user-dropdown" class="ui dropdown item">
+            <div class="text">{{ user.first_name|first_word }}</div>
+            <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
+            <div class="make_bg_blue bubble-background"></div>
+
+            <div class="menu transition hidden">
+            </div>
+
+        </div>
+
+        <div class="lang-link ui inverted secondary menu">
+            <div class="ui language link item">
+                <div class="text">
+                    {% if LANGUAGE_CODE == "en" %}
+                        Norsk
+                    {% else %}
+                        English
+                    {% endif %}
+                </div>
+                <i class="globe icon text"></i>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+{# This form is hidden, but is submitted through jQuery #}
+<form id="lang-form" action="{% url "set_language" %}" method="POST">
+    {% csrf_token %}
+    {% if LANGUAGE_CODE == "en" %}
+        <input name="language" type="hidden" value="nb"/>
+        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
+    {% else %}
+        <input name="language" type="hidden" value="en"/>
+        <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
+    {% endif %}
+</form>
+
+<script>
+    $('#nav-user-dropdown').dropdown({action: "nothing"});
+
+    $(".lang-link").click(function (event) {
+        event.preventDefault();
+        $("#lang-form").submit();
+    });
+
+    $('#burger').click(function () {
+        $('#header').toggleClass('active');
+    });
+</script>
