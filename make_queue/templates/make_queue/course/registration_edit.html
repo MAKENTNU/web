@@ -86,6 +86,7 @@
                     {{ form.status }}
                 </div>
             </div>
+
             <button class="ui right floated yellow button">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
@@ -101,7 +102,7 @@
         $(".message .close").click(function () {
             $(this)
                 .closest(".message")
-                .transition("fade");
+                .fadeOut();
         });
 
         $(".clear-dropdown").click(function () {
