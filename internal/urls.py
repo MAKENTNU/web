@@ -3,10 +3,11 @@ from django.contrib.auth.decorators import permission_required
 from django.urls import path, include
 from django_hosts import reverse
 
-from internal.views import Home
+from internal.views import Home, MembersListView
 from web.url_util import decorated_includes
 
 unsafe_urlpatterns = [
+    path("members", MembersListView.as_view(), name="members"),
     path("", Home.as_view(), name="home"),
 ]
 

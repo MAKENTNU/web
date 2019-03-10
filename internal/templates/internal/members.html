@@ -1,0 +1,14 @@
+{% extends "internal/base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Members list" %}{% endblock %}
+
+{% block body %}
+
+    <div class="ui container">
+        {% for member in object_list %}
+            {{ member }}
+        {% endfor %}
+    </div>
+
+{% endblock %}
