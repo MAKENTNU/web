@@ -58,10 +58,11 @@
                     {{ form.location_url }}
                 </div>
             </div>
-            <input class="ui blue submit right floated button" type="submit" value="{% trans "Save" %}">
 
-            <a href="{% url "reservation_machines_overview" %}" class="ui right floated blue button">
-                {% trans "Cancel" %}
+            <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
+
+            <a href="{% url "reservation_machines_overview" %}" class="ui right floated red button">
+                {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
