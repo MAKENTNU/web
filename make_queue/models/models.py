@@ -70,7 +70,7 @@ class MachineUsageRule(models.Model):
 
 
 class Quota(models.Model):
-    number_of_reservations = models.IntegerField(default=3, verbose_name=_("Number of reservations"))
+    number_of_reservations = models.IntegerField(default=1, verbose_name=_("Number of reservations"))
     diminishing = models.BooleanField(default=False, verbose_name=_("Diminishing"))
     ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
     all = models.BooleanField(default=False, verbose_name=_("All users"))

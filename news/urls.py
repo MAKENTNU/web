@@ -3,13 +3,14 @@ from django.urls import path
 
 from news.ical import SingleTimePlaceFeed
 from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
-    ViewEventView, AdminView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
-    DuplicateTimePlaceView, NewTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
+    ViewEventView, AdminArticleView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
+    DuplicateTimePlaceView, CreateTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView, \
-    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView
+    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView, AdminEventsView
 
 urlpatterns = [
-    path('admin/', login_required(AdminView.as_view()), name='admin'),
+    path('admin/articles/', login_required(AdminArticleView.as_view()), name='admin-articles'),
+    path('admin/events/', login_required(AdminEventsView.as_view()), name='admin-events'),
     path('admin/toggle/article/', login_required(AdminArticleToggleView.as_view()), name='article-toggle'),
     path('admin/toggle/event/', login_required(AdminEventToggleView.as_view()), name='event-toggle'),
     path('admin/toggle/timeplace/', login_required(AdminTimeplaceToggleView.as_view()), name='timeplace-toggle'),
@@ -28,7 +29,7 @@ urlpatterns = [
     path('event/<int:event_pk>/register/', EventRegistrationView.as_view(), name="register-event"),
     path('timeplace/<int:pk>/edit/', login_required(EditTimePlaceView.as_view()), name='timeplace-edit'),
     path('timeplace/<int:pk>/duplicate/', login_required(DuplicateTimePlaceView.as_view()), name='timeplace-duplicate'),
-    path('timeplace/<int:pk>/new/', login_required(NewTimePlaceView.as_view()), name='timeplace-new'),
+    path('timeplace/<int:event_pk>/new/', login_required(CreateTimePlaceView.as_view()), name='timeplace-new'),
     path('timeplace/<int:pk>/tickets/', permission_required("news.change_event")(AdminTimeplaceTicketView.as_view()), name="timeplace-tickets"),
     path('timeplace/<int:pk>/delete/', login_required(DeleteTimePlaceView.as_view()), name='timeplace-delete'),
     path('timeplace/<int:pk>/ical/', SingleTimePlaceFeed(), name='timeplace-ical'),

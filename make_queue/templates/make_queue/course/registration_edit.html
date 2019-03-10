@@ -1,18 +1,11 @@
 {% extends "web/base.html" %}
 {% load i18n %}
+{% load staticfiles %}
+{% load form_utility %}
 
 {% block head %}
     {{ block.super }}
-    <style>
-        .clear-dropdown {
-            color: #0E6EB8;
-            float: right;
-        }
-
-        .clear-dropdown:hover {
-            cursor: pointer;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static "make_queue/css/course_registration.css" %}">
 {% endblock %}
 
 {% block body %}
@@ -32,16 +25,40 @@
                 </div>
                 <p> {% trans "Are you sure you entered the correct username?" %} </p>
             </div>
+            {% form_has_error form field="username" error_code="unique" as unique_error %}
+            {% if unique_error %}
+                <div class="ui error message">
+                    <i class="close icon"></i>
+                    <div class="header">
+                        {% trans "A user with this username is already registered" %}
+                    </div>
+                    <p>{% trans "Either the user has already taken the course, or the username of another user has been entered." %}</p>
+                </div>
+            {% endif %}
         {% endblock %}
 
 
         <form class="ui form" action="{% block form_action %}{% endblock %}" method="post">
             {% csrf_token %}
+
+            <div class="ui horizontal divider">
+                {% trans "User information" %}
+            </div>
+
             <div class="ui two fields">
                 <div class="ui field">
                     <label>{{ form.username.label }}</label>
                     {{ form.username }}
                 </div>
+                <div class="ui field">
+                    <label>{{ form.card_number.label }}
+                        <span id="card_number_count">{{ form.card_number.initial|stringformat:"i"|length }}</span>
+                    </label>
+                    {{ form.card_number }}
+                </div>
+
+            </div>
+            <div class="ui two fields">
                 <div class="ui field">
                     <label>
                         {{ form.user.label }}
@@ -49,16 +66,17 @@
                     </label>
                     {{ form.user }}
                 </div>
-            </div>
-            <div class="ui four fields">
                 <div class="ui field">
                     <label>{{ form.name.label }}</label>
                     {{ form.name }}
                 </div>
-                <div class="ui field">
-                    <label>{{ form.card_number.label }}</label>
-                    {{ form.card_number }}
-                </div>
+            </div>
+
+            <div class="ui horizontal divider">
+                {% trans "Registration status" %}
+            </div>
+
+            <div class="ui two fields">
                 <div class="ui field">
                     <label>{{ form.date.label }}</label>
                     {{ form.date }}
@@ -68,13 +86,14 @@
                     {{ form.status }}
                 </div>
             </div>
+
             <button class="ui right floated yellow button">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
                 {% endblock %}
             </button>
-            <a href="{% url "course_panel" %}" class="ui right floated yellow button">
-                {% trans "Cancel" %}
+            <a href="{% url "course_panel" %}" class="ui right floated red button">
+                {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
@@ -83,7 +102,7 @@
         $(".message .close").click(function () {
             $(this)
                 .closest(".message")
-                .transition("fade");
+                .fadeOut();
         });
 
         $(".clear-dropdown").click(function () {
@@ -92,8 +111,8 @@
                 .find("input.search").val("");
         });
 
-        $("input[name='username']").focusout(function () {
-            $.ajax(langPrefix + "/reservation/json/" + $("input[name='username']").val() + "/", {
+        $("input[name='username']").focusout((event) => {
+            $.ajax(`${langPrefix}/reservation/json/${$(event.target).val()}/`, {
                 success: function (data) {
                     $("input[name='name']").val(data["full_name"]);
                     $('#username_not_found_warning').fadeOut();
@@ -102,6 +121,12 @@
                     $('#username_not_found_warning').fadeIn();
                 },
             });
+            $("#user").closest(".dropdown").dropdown("set selected", $(event.target).val());
+        });
+
+        let cardNumberLengthCount = $("#card_number_count");
+        $("input[name={{ form.card_number.name }}]").on("keyup paste", (event) => {
+            cardNumberLengthCount.text(event.target.value.length);
         });
     </script>
 {% endblock %}

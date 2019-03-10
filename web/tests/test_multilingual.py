@@ -172,7 +172,7 @@ class TestMultiLingualTextField(TestCase):
 
 class TestMultiLingualFormField(TestCase):
     """
-    Tests for the MultiLingualFormField class. Tests assumes that the MultiLingualTextStructure class works correctly.
+    Tests for the MultiLingualFormField class. Tests assume that the MultiLingualTextStructure class works correctly.
     """
 
     def setUp(self):

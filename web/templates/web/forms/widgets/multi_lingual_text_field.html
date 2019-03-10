@@ -1,4 +1,5 @@
 {% load language_tags %}
+{% load i18n %}
 
 <div id="{{ widget.attrs.id }}" class="multilingual-input">
     <div class="ui right floated pointing secondary menu inline">
@@ -26,6 +27,18 @@
 
         {% if widget.attrs.required %}
             {
+                let isFilled = function (element, value) {
+                    /**
+                     * Checks if the given element has content or not.
+                     *
+                     * @value Used to explicitly pass the value of the element, e.g. in the case of CKEDITOR
+                     */
+                    if (value !== undefined) {
+                        return value !== "";
+                    }
+                    return $(element).val() !== "";
+
+                };
                 let checkFilled = function (element, value) {
                     /**
                      * Checks if the given element has content or not. If there is no content (and value is empty), the
@@ -33,14 +46,8 @@
                      *
                      * @value Used to explicitly pass the value of the element, e.g. in the case of CKEDITOR
                      */
-                    let isFilled;
-                    if (value !== undefined) {
-                        isFilled = value !== "";
-                    } else {
-                        isFilled = $(element).val() !== "";
-                    }
                     let tabValue = $(element).closest(".ui.tab").data("tab");
-                    $(".menu > .item[data-tab=" + tabValue + "]").toggleClass("language-not-filled", !isFilled);
+                    $(".menu > .item[data-tab=" + tabValue + "]").toggleClass("language-not-filled", !isFilled(element, value));
                 };
 
                 let tabs = $("#{{ widget.attrs.id }}").find(".ui.tab");
@@ -51,6 +58,40 @@
                         checkFilled(this);
                     }.bind(this));
                 });
+
+                {# CKEDITOR is setup first after the DOM has loaded #}
+                tabs.find(".django-ckeditor-widget").each(function () {
+                    $(document).ready(function () {
+                        $(this).find("textarea").each(function () {
+                            CKEDITOR.instances[this.id].on("change", function () {
+                                checkFilled(this.element.$, this.getData());
+                            });
+                        });
+                    }.bind(this));
+                });
+
+                // Have to wait until the document is ready, as the submit button is usually at the end of the form
+                $(document).ready(() => {
+                    let widget = $("#{{ widget.attrs.id }}");
+                    widget.closest("form").find("input[type=submit]").click(() => {
+                        // The constant check for the color of the tabs will set classes which we can use
+                        let languagesNotFilled = widget.find(".menu .item.language-not-filled");
+
+                        // Change to the first non-filled tab
+                        let firstLanguageNotFilled = languagesNotFilled.first();
+                        firstLanguageNotFilled.tab("change tab", firstLanguageNotFilled.data("tab"));
+
+                        // Remove old error messages, we are creating a new one if there are still errors
+                        widget.find(".ui.red.pointing.label").remove();
+                        if (languagesNotFilled.length) {
+                            let languageMissingTextIndicator = $("<div class='ui red pointing label'>");
+                            let languagePlural = languagesNotFilled.length > 1 ? {% trans "languages" %} : {% trans "language" %};
+                            languageMissingTextIndicator.text("{% trans "The field is missing a value for" %} " + languagesNotFilled.length + ` ${languagePlural}.`);
+                            widget.append(languageMissingTextIndicator);
+                        }
+                    });
+                });
+
 
                 {# CKEDITOR is setup first after the DOM has loaded #}
                 tabs.find(".django-ckeditor-widget").each(function () {
