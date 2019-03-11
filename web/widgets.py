@@ -21,6 +21,15 @@ class SemanticSearchableChoiceInput(forms.Select):
         self.attrs["force_selection"] = kwargs.pop("force_selection", False)
 
 
+class SemanticMultipleSelectInput(forms.SelectMultiple):
+    template_name = "web/forms/widgets/semantic_select_multiple.html"
+    prompt_text = _("Choose value")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
+
+
 class SemanticDateInput(forms.DateInput):
     template_name = "web/forms/widgets/semantic_date.html"
 
