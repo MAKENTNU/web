@@ -6,9 +6,93 @@
 {% block body %}
 
     <div class="ui container">
-        {% for member in object_list %}
-            {{ member }}
-        {% endfor %}
+        <h1>{% trans "Members list" %}</h1>
+
+        <form class="ui form">
+            <div class="ui fields">
+                <div class="ui multiple blue labeled button icon dropdown">
+                    <input type="hidden" name="filter-state">
+                    <i class="ui filter icon"></i>
+                    <span class="ui text">Filter Membership State</span>
+                    <div class="menu">
+                        <div class="scrolling menu">
+                            <div class="item" data-value="active">
+                                <i class="ui green circle icon"></i>Active
+                            </div>
+                            <div class="item" data-value="inactive">
+                                <i class="ui gray circle icon"></i>Inactive
+                            </div>
+                            <div class="item" data-value="pang">
+                                <i class="ui blue circle icon"></i>Pang
+                            </div>
+                            <div class="item" data-value="honorary">
+                                <i class="ui yellow circle icon"></i>Honorary
+                            </div>
+                            <div class="item" data-value="quit">
+                                <i class="ui red circle icon"></i>Quit
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui multiple blue labeled button icon dropdown">
+                    <input type="hidden" name="filter-committee">
+                    <i class="ui filter icon"></i>
+                    <span class="ui text">Filter Committees</span>
+                    <div class="menu">
+                        <div class="scrolling menu">
+                            <div class="item" data-value="dev">
+                                <i class="ui green circle icon"></i>Dev
+                            </div>
+                            <div class="item" data-value="mentor">
+                                <i class="ui red circle icon"></i>Mentor
+                            </div>
+                            <div class="item" data-value="event">
+                                <i class="ui blue circle icon"></i>Event
+                            </div>
+                            <div class="item" data-value="pr">
+                                <i class="ui yellow circle icon"></i>PR
+                            </div>
+                            <div class="item" data-value="styret">
+                                <i class="ui gray circle icon"></i>Styret
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table class="ui celled selectable striped table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Committees</th>
+                <th>Joined</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            {% for member in object_list %}
+                <tr>
+                    <td>{{ member.user.get_full_name }}</td>
+                    <td>
+                        {% for committee in member.committees.all %}
+                            <div>{{ committee }}</div>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {{ member.term_joined }}
+                    </td>
+                    <td>
+                        {% if member.email %}{{ member.email }}{% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 
+{% endblock %}
+
+{% block scripts %}
+    {{ super.block }}
+    <script>
+        $(".ui.dropdown").dropdown();
+    </script>
 {% endblock %}

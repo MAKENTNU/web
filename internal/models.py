@@ -1,5 +1,7 @@
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.db import models
+from django.db.models.signals import post_save, post_init
+from django.dispatch import receiver
 from django.utils import timezone
 
 from groups.models import Committee
@@ -32,15 +34,22 @@ class Member(models.Model):
     retired = models.BooleanField(default=False)
     honorary_member = models.BooleanField(default=False)
 
-    @classmethod
-    def create(cls, *args, **kwargs):
-        member = cls(*args, **kwargs)
-        member.email = member.user.email
-        member.save()
+    def on_create(self):
+        self.email = self.user.email
+        self.save()
+
         for property_name, value in MemberProperty.name_choices:
             # All members will be registered on the website when added to the members list
-            MemberProperty.objects.create(name=property_name, value=property_name == "Nettside", member=member)
-        return member
+            MemberProperty.objects.create(name=property_name, value=property_name == "Website", member=self)
+
+        # Want to add user to committees on creation
+        for committee in self.committees.all():
+            committee.group.user_set.add(self.user)
+
+        # Add
+        self.toggle_membership(True)
+
+        return self
 
     @property
     def term_joined(self):
@@ -63,7 +72,29 @@ class Member(models.Model):
             self.date_quit = timezone.now()
 
         self.reason_quit = reason
+        self.toggle_membership(self.quit)
         self.quit = not self.quit
+
+    def toggle_membership(self, membership_state):
+        """
+        Toggle membership by removing/adding the member to the MAKE group (if it exists)
+        :param membership_state: True if the user should be a member of MAKE and false otherwise
+        """
+        make = Group.objects.filter(name="MAKE")
+        if make.exists():
+            if membership_state:
+                make.first().user_set.add(self.user)
+            else:
+                make.first().user_set.discard(self.user)
+
+
+@receiver(post_save, sender=Member)
+def update_user_groups(sender, instance, created, updated_fields=None, **kwargs):
+    if created:
+        instance.on_create()
+    else:
+        # TODO: Update user groups if committees have changed
+        pass
 
 
 class MemberProperty(models.Model):
