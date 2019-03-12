@@ -3,10 +3,10 @@ from django.db import models
 
 class Item(models.Model):
     name = models.CharField(max_length=128)
-    unit = models.CharField(max_length=16)
-    category = models.CharField(max_length=128)
+    unit = models.CharField(max_length=16, null=True)
+    category = models.CharField(max_length=128, null=True)
     description = models.CharField(max_length=256)
-    comment = models.CharField(max_length=256)
+    comment = models.CharField(max_length=256, null=True)
     searchable = models.BooleanField(default=True)
 
     @property
