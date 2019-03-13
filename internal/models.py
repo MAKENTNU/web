@@ -1,12 +1,12 @@
 from django.contrib.auth.models import User, Group
 from django.db import models
-from django.db.models.signals import post_save, post_init
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from groups.models import Committee
 from internal.util import date_to_term
-from django.utils.translation import gettext_lazy as _
 
 
 class Member(models.Model):
@@ -86,6 +86,9 @@ class Member(models.Model):
                 make.first().user_set.add(self.user)
             else:
                 make.first().user_set.discard(self.user)
+
+    def __str__(self):
+        return self.user.get_full_name()
 
 
 @receiver(post_save, sender=Member)
