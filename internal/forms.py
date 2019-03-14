@@ -19,6 +19,7 @@ class AddMemberForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["user"].queryset = User.objects.filter(member=None)
+        self.fields["user"].label_from_instance = lambda user: user.get_full_name()
 
 
 class EditMemberForm(ModelForm):

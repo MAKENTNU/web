@@ -12,7 +12,14 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{% trans "Members list" %}</h1>
+        <h1>
+            {% trans "Members list" %}
+            {% if perms.internal.can_register_new_member %}
+                <a href="{% url "add-member" %}" class="ui right floated yellow button">
+                    <i class="ui plus icon"></i>{% trans "Add member" %}
+                </a>
+            {% endif %}
+        </h1>
 
         <form class="ui form">
             <div class="ui fields">
@@ -93,8 +100,10 @@
                     data-role="{{ member.role }}"
                     data-committees="{{ committees }}"
                     data-comment="{{ member.comment }}"
-                    data-guidance-exemption="{% if member.guidance_exemption %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}"
-                    data-edit="{% if member.user == request.user or perms.internal.change_member %}{% url "edit-member" member.pk %}{% endif %}"
+                    data-guidance-exemption="
+                            {% if member.guidance_exemption %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}"
+                    data-edit="
+                            {% if member.user == request.user or perms.internal.change_member %}{% url "edit-member" member.pk %}{% endif %}"
                 >
                     <td>{{ member.user.get_full_name }}</td>
                     <td>
