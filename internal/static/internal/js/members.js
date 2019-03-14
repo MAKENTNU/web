@@ -32,6 +32,8 @@ function showDetailedMemberInformation(member) {
     memberInfoModal.find("#member-comment").text(member.data.comment).parent().toggleClass("make_hidden", member.data.comment.isEmpty());
     memberInfoModal.find("#member-guidance-exemption").text(member.data.guidanceExemption);
 
+    memberInfoModal.find("#member-edit").attr("href", member.data.editUrl).toggleClass("make_hidden", member.data.editUrl.isEmpty());
+
     let memberStateElement = memberInfoModal.find("#member-state, #member-state-header");
     memberStateElement.empty();
     memberStateElement.append(member.data.state.map(state => $(`<div class="ui ${state.color} label">${state.name}</div>`)));
@@ -114,6 +116,7 @@ function setup() {
                 role: row.data("role"),
                 comment: row.data("comment"),
                 guidanceExemption: row.data("guidance-exemption"),
+                editUrl: row.data("edit"),
                 // Membership state is a list of pairs of state and color: [('Active', 'green')]. Need to parse this list.
                 state: row.data("state").slice(1, -1).replace(/'/g, "").match(/[^()]+/g).filter(state => state !== ", ").map(state => state.split(", ")).map(state => ({
                     name: state[0],

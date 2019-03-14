@@ -94,6 +94,7 @@
                     data-committees="{{ committees }}"
                     data-comment="{{ member.comment }}"
                     data-guidance-exemption="{% if member.guidance_exemption %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}"
+                    data-edit="{% if member.user == request.user or perms.internal.change_member %}{% url "edit-member" member.pk %}{% endif %}"
                 >
                     <td>{{ member.user.get_full_name }}</td>
                     <td>
@@ -117,6 +118,7 @@
     <div class="ui inverted longer modal" id="detailed-member-info">
         <div class="header">
             <span id="member-name-header"></span>
+            <a class="" id="member-edit"><i class="ui yellow pencil icon"></i></a>
             <span style="float: right" id="member-state-header"></span>
         </div>
         <div class="scrolling content">

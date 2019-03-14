@@ -21,7 +21,7 @@ def get_membership_states(member):
     else:
         states += [(_("Active"), "green")]
 
-    if member.honorary_member:
+    if member.honorary:
         states += [(_("Honorary"), "yellow")]
 
     return states

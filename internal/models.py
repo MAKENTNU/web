@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User, Group
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -17,22 +17,22 @@ class Member(models.Model):
             ("can_edit_group_membership", "Can edit the groups a member is part of, including (de)activation")
         )
 
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=True)
-    committees = models.ManyToManyField(Committee)
-    role = models.CharField(max_length=64)
-    email = models.EmailField(blank=True, null=True)
-    phone_number = models.CharField(max_length=32, default="")
-    study_program = models.CharField(max_length=32, default="")
-    card_number = models.CharField(max_length=32, default="")
-    date_joined = models.DateField(default=timezone.datetime.now)
-    date_quit = models.DateField(blank=True, null=True)
-    reason_quit = models.TextField(max_length=256, default="")
-    comment = models.TextField(max_length=256, default="")
-    active = models.BooleanField(default=True)
-    guidance_exemption = models.BooleanField(default=False)
-    quit = models.BooleanField(default=False)
-    retired = models.BooleanField(default=False)
-    honorary_member = models.BooleanField(default=False)
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=True, verbose_name=_("User"))
+    committees = models.ManyToManyField(Committee, blank=True, verbose_name=_("Committees"))
+    role = models.CharField(max_length=64, blank=True, verbose_name=_("Role"))
+    email = models.EmailField(blank=True, null=True, verbose_name=_("Email"))
+    phone_number = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Phone number"))
+    study_program = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Study program"))
+    card_number = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Card number (EM)"))
+    date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
+    date_quit = models.DateField(blank=True, null=True, verbose_name=_("Date quit"))
+    reason_quit = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Reason quit"))
+    comment = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Comment"))
+    active = models.BooleanField(default=True, verbose_name=_("Is active"))
+    guidance_exemption = models.BooleanField(default=False, verbose_name=_("Guidance exemption"))
+    quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
+    retired = models.BooleanField(default=False, verbose_name=_("Retired"))
+    honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
 
     def on_create(self):
         self.email = self.user.email
@@ -41,10 +41,6 @@ class Member(models.Model):
         for property_name, value in MemberProperty.name_choices:
             # All members will be registered on the website when added to the members list
             MemberProperty.objects.create(name=property_name, value=property_name == "Website", member=self)
-
-        # Want to add user to committees on creation
-        for committee in self.committees.all():
-            committee.group.user_set.add(self.user)
 
         # Add
         self.toggle_membership(True)
@@ -68,7 +64,7 @@ class Member(models.Model):
             self.date_quit = None
         else:
             for committee in self.committees.all():
-                committee.group.user_set.discard(self.user)
+                committee.group.user_set.remove(self.user)
             self.date_quit = timezone.now()
 
         self.reason_quit = reason
@@ -85,19 +81,29 @@ class Member(models.Model):
             if membership_state:
                 make.first().user_set.add(self.user)
             else:
-                make.first().user_set.discard(self.user)
+                make.first().user_set.remove(self.user)
 
     def __str__(self):
         return self.user.get_full_name()
 
 
 @receiver(post_save, sender=Member)
-def update_user_groups(sender, instance, created, updated_fields=None, **kwargs):
+def member_on_create(sender, instance, created, update_fields=None, **kwargs):
     if created:
         instance.on_create()
-    else:
-        # TODO: Update user groups if committees have changed
-        pass
+
+
+@receiver(m2m_changed, sender=Member.committees.through)
+def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs):
+    if action == "pre_add":
+        committees = Committee.objects.filter(pk__in=pk_set)
+        for committee in committees:
+            committee.group.user_set.add(instance.user)
+    elif action == "pre_remove":
+        committees = Committee.objects.filter(pk__in=pk_set)
+        for committee in committees:
+            print(committee.group.user_set)
+            committee.group.user_set.remove(instance.user)
 
 
 class MemberProperty(models.Model):
