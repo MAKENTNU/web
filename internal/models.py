@@ -57,19 +57,42 @@ class Member(models.Model):
             return None
         return date_to_term(self.date_quit)
 
-    def toggle_quit(self, reason=""):
+    def toggle_quit(self, quit_state, reason="", date_quit=timezone.now()):
+        """
+        Perform all the actions to set a member as quit or undo this action
+        :param quit_state: Indicates if the member has quit
+        :param reason: The reason why the member has quit
+        :param date_quit: The date the member quit
+        """
+        self.quit = quit_state
         if self.quit:
-            for committee in self.committees.all():
-                committee.group.user_set.add(self.user)
-            self.date_quit = None
+            self.date_quit = date_quit
         else:
-            for committee in self.committees.all():
-                committee.group.user_set.remove(self.user)
-            self.date_quit = timezone.now()
+            self.date_quit = None
 
         self.reason_quit = reason
-        self.toggle_membership(self.quit)
-        self.quit = not self.quit
+        self.toggle_committee_membership(not quit_state)
+        self.toggle_membership(not quit_state)
+
+    def toggle_retirement(self, retirement_state):
+        """
+        Performs all the actions to set a member as retired or to undo this action
+        :param retirement_state: Indicates if the member has retired
+        """
+        self.retired = retirement_state
+        self.toggle_committee_membership(not retirement_state)
+        self.toggle_membership(True)
+
+    def toggle_committee_membership(self, membership_state):
+        """
+        Adds or removes the user to all the committees of its membership
+        :param membership_state: Indicates if the member should be a part of the commitees
+        """
+        for committee in self.committees.all():
+            if membership_state:
+                committee.group.user_set.add(self.user)
+            else:
+                committee.group.user_set.remove(self.user)
 
     def toggle_membership(self, membership_state):
         """
@@ -95,6 +118,9 @@ def member_on_create(sender, instance, created, update_fields=None, **kwargs):
 
 @receiver(m2m_changed, sender=Member.committees.through)
 def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs):
+    """
+    Makes sure that the member is added removed from the correct groups as its committee membership changes
+    """
     if action == "pre_add":
         committees = Committee.objects.filter(pk__in=pk_set)
         for committee in committees:
@@ -102,7 +128,6 @@ def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs
     elif action == "pre_remove":
         committees = Committee.objects.filter(pk__in=pk_set)
         for committee in committees:
-            print(committee.group.user_set)
             committee.group.user_set.remove(instance.user)
 
 

@@ -95,15 +95,17 @@
                     data-term-joined="{{ member.term_joined }}"
                     data-date-joined="{{ member.date_joined|date:"d.m.y" }}"
                     data-term-quit="{% if member.quit %}{{ member.term_quit }}{% endif %}"
-                    data-date-quit="{% if member.quit %}{{ member.date_quit }}{% endif %}"
+                    data-date-quit="{% if member.quit %}{{ member.date_quit|date:"d.m.y" }}{% endif %}"
                     data-reason-quit="{% if member.quit %}{{ member.reason_quit }}{% endif %}"
                     data-role="{{ member.role }}"
                     data-committees="{{ committees }}"
                     data-comment="{{ member.comment }}"
-                    data-guidance-exemption="
-                            {% if member.guidance_exemption %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}"
-                    data-edit="
-                            {% if member.user == request.user or perms.internal.change_member %}{% url "edit-member" member.pk %}{% endif %}"
+                    data-guidance-exemption="{% if member.guidance_exemption %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}"
+                    data-edit="{% if member.user == request.user or perms.internal.change_member %}{% url "edit-member" member.pk %}{% endif %}"
+                    data-retire="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}{% url "member-retire" member.pk %}{% endif %}"
+                    data-undo-retire="{% if member.retired and perms.internal.can_edit_group_membership %}{% url "member-undo-retire" member.pk %}{% endif %}"
+                    data-quit="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}{% url "member-quit" member.pk %}{% endif %}"
+                    data-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{% url "member-undo-quit" member.pk %}{% endif %}"
                 >
                     <td>{{ member.user.get_full_name }}</td>
                     <td>
@@ -207,6 +209,16 @@
 
                 </tbody>
             </table>
+
+            {% if perms.internal.can_edit_group_membership %}
+                <h4 class="ui horizontal divider header">
+                    <i class="ui wrench yellow icon"></i>{% trans "Actions" %}
+                </h4>
+                <a id="member-set-quit" class="ui red button">{% trans "Set member as quit" %}</a>
+                <a id="member-set-not-quit" class="ui green button">{% trans "Set member as not quit" %}</a>
+                <a id="member-set-retired" class="ui yellow button">{% trans "Set member as retired" %}</a>
+                <a id="member-set-not-retired" class="ui yellow button">{% trans "Set member as not retired" %}</a>
+            {% endif %}
         </div>
     </div>
 

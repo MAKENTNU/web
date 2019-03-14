@@ -38,3 +38,14 @@ class EditMemberForm(ModelForm):
         if not user.has_perm("internal.can_edit_group_membership"):
             for field_name in ["committees", "role", "comment", "guidance_exemption", "active", "honorary"]:
                 del self.fields[field_name]
+
+
+class MemberQuitForm(ModelForm):
+    class Meta:
+        model = Member
+        fields = ["date_quit", "reason_quit"]
+
+        widgets = {
+            "date_quit": SemanticDateInput(),
+            "reason_quit": TextInput(),
+        }

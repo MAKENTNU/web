@@ -33,6 +33,10 @@ function showDetailedMemberInformation(member) {
     memberInfoModal.find("#member-guidance-exemption").text(member.data.guidanceExemption);
 
     memberInfoModal.find("#member-edit").attr("href", member.data.editUrl).toggleClass("make_hidden", member.data.editUrl.isEmpty());
+    memberInfoModal.find("#member-set-quit").attr("href", member.data.quitUrl).toggleClass("make_hidden", member.data.quitUrl.isEmpty());
+    memberInfoModal.find("#member-set-not-quit").attr("href", member.data.undoQuitUrl).toggleClass("make_hidden", member.data.undoQuitUrl.isEmpty());
+    memberInfoModal.find("#member-set-retired").attr("href", member.data.retireUrl).toggleClass("make_hidden", member.data.retireUrl.isEmpty());
+    memberInfoModal.find("#member-set-not-retired").attr("href", member.data.undoRetireUrl).toggleClass("make_hidden", member.data.undoRetireUrl.isEmpty());
 
     let memberStateElement = memberInfoModal.find("#member-state, #member-state-header");
     memberStateElement.empty();
@@ -117,6 +121,10 @@ function setup() {
                 comment: row.data("comment"),
                 guidanceExemption: row.data("guidance-exemption"),
                 editUrl: row.data("edit"),
+                quitUrl: row.data("quit"),
+                undoQuitUrl: row.data("undo-quit"),
+                retireUrl: row.data("retire"),
+                undoRetireUrl: row.data("undo-retire"),
                 // Membership state is a list of pairs of state and color: [('Active', 'green')]. Need to parse this list.
                 state: row.data("state").slice(1, -1).replace(/'/g, "").match(/[^()]+/g).filter(state => state !== ", ").map(state => state.split(", ")).map(state => ({
                     name: state[0],
