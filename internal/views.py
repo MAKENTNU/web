@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, PermissionDenied
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
@@ -35,6 +35,11 @@ class EditMemberView(UpdateView):
     model = Member
     form_class = EditMemberForm
     success_url = reverse_lazy("members")
+
+    def get_context_data(self, **kwargs):
+        if self.request.user != self.object.user and not self.request.user.has_perm("internal.can_edit_group_membership"):
+            raise PermissionDenied("The requesting user does not have access to change the membership information for the given user.")
+        return super().get_context_data(**kwargs)
 
     def get_form(self, form_class=None):
         if form_class is None:
