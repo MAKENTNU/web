@@ -51,4 +51,4 @@ def get_committees(member):
         "PR": "yellow",
         "Styret": "purple",
     }
-    return [(committee.name, colors[committee.name]) for committee in member.committees.all()] or ""
+    return sorted([(committee.name, colors[committee.name]) for committee in member.committees.all()]) or ""

@@ -1,3 +1,13 @@
 .make_hidden {
     display: none !important;
 }
+
+#member-table tbody tr {
+    cursor: pointer;
+}
+
+/* For when the objects eventually stack on top of each other on a mobile screen */
+#member-table .label,
+form .multiple.labeled.dropdown {
+    margin-top: 5px;
+}
