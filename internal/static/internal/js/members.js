@@ -39,7 +39,7 @@ function showDetailedMemberInformation(member) {
      * Displays the selected members information in a popup modal
      */
     memberInfoModal.find("#member-name, #member-name-header").text(member.data.name);
-    memberInfoModal.find("#member-phone").text(member.data.phone);
+    memberInfoModal.find("#member-phone").text(member.data.phone).attr("href", "tel:" + member.data.phone);
     memberInfoModal.find("#member-email").text(member.data.email).attr("href", "mailto:" + member.data.email);
     memberInfoModal.find("#member-card-number").text(member.data.cardNumber);
     memberInfoModal.find("#member-study-program").text(member.data.studyProgram);
@@ -66,7 +66,10 @@ function showDetailedMemberInformation(member) {
     memberSystemAccessesElement.empty();
     memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`<tr>
         <td class="six wide column"><b>${access.name}</b></td>
-        <td><div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div></td>
+        <td>
+            <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
+            <a href="${access.changeUrl}" class="right floated orange link">${access.changeUrl.isEmpty() ? "" : "Change"}</a>
+        </td>
     </tr>`)));
 
     let memberCommitteesElement = memberInfoModal.find("#member-committee");
@@ -157,6 +160,7 @@ function setup() {
 
         let member = {
             data: {
+                pk: row.data("pk"),
                 name: row.data("name"),
                 phone: row.data("phone"),
                 email: row.data("email"),
@@ -180,11 +184,12 @@ function setup() {
                     name: state[0],
                     color: state[1],
                 })),
-                // System accesses is a list of triples of name, value and displayText: [("Website", "True", "Yes")]. Need to parse this list
+                // System accesses is a list of quads of name, value, displayText and changeUrl: [("Website", "True", "Yes", "https://...")]. Need to parse this list
                 systemAccesses: row.data("system-accesses").slice(1, -1).replace(/'/g, "").match(/[^()]+/g).filter(access => access !== ", ").map(access => access.split(", ")).map(access => ({
                     name: access[0],
                     value: access[1] === "True",
                     displayText: access[2],
+                    changeUrl: access[3],
                 })),
                 // Committees is a list of pairs of name and color: [('Dev', 'green')]. Need to parse this list
                 committees: row.data("committees").slice(1, -1).replace(/'/g, "").match(/[^()]*/g).filter(committee => committee !== ", " && !committee.isEmpty()).map(committee => committee.split(", ")).map(committee => ({

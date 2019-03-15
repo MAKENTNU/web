@@ -2,6 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.db import models
 from django.db.models.signals import post_save, m2m_changed
 from django.dispatch import receiver
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -144,3 +145,24 @@ class MemberProperty(models.Model):
     name = models.fields.CharField(max_length=32, choices=name_choices)
     value = models.fields.BooleanField()
     member = models.ForeignKey(Member, models.CASCADE)
+
+    @property
+    def change_url(self):
+        """
+        The URL to change the property. Depends on the type of property
+        :return: An URL for the page where the property can be changed. Is an empty string if it should not be changed
+        """
+        if not self.should_be_changed():
+            return ""
+
+        # In the future it would be beneficial to create automated processes for adding, removing and revoking
+        # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
+        # channels, or using GSuite APIs to add and remove people from mailing lists.
+        return reverse("toggle-member-property", args=(self.pk,))
+
+    @property
+    def code_name(self):
+        return next(code_name for name, code_name in self.name_choices if name == self.name)
+
+    def should_be_changed(self):
+        return self.code_name != "website"

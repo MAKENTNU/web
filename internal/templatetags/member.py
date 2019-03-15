@@ -28,13 +28,18 @@ def get_membership_states(member):
 
 
 @register.simple_tag()
-def get_system_accesses(member):
+def get_system_accesses(member, user):
     """
     Returns a list of tuples (Name of system, Has access) of the systems the member could have access to
     :param member: The member to check accesses for
     :return: A list of system accesses with their state
     """
-    return [(prop.name, prop.value, [_("No"), _("Yes")][prop.value]) for prop in member.memberproperty_set.all()]
+    return [(
+        prop.name,
+        prop.value,
+        [_("No"), _("Yes")][prop.value],
+        prop.change_url if member.user == user or user.has_perm("internal.change_member_property") else "",
+    ) for prop in member.memberproperty_set.all()]
 
 
 @register.simple_tag()

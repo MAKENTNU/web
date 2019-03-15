@@ -11,3 +11,11 @@
 form .multiple.labeled.dropdown {
     margin-top: 5px;
 }
+
+.right.floated.link {
+    float: right;
+}
+
+.orange.link {
+    color: orange;
+}

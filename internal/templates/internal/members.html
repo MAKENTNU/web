@@ -80,7 +80,7 @@
                 <th>{% trans "Committee" %}<i class="ui up sort icon" id="member-sort-committees"></i></th>
                 <th>{% trans "Role" %}<i class="ui sort icon" id="member-sort-role"></i></th>
                 <th class="mobile hidden">{% trans "Status" %}<i class="ui sort icon" id="member-sort-status"></i></th>
-                <th class="computer only">{% trans "Joined "%}<i class="ui sort icon" id="member-sort-joined"></i></th>
+                <th class="computer only">{% trans "Joined " %}<i class="ui sort icon" id="member-sort-joined"></i></th>
                 <th class="mobile hidden">{% trans "Email" %}<i class="ui sort icon" id="member-sort-email"></i></th>
                 <th class="computer only">{% trans "Phone" %}<i class="ui sort icon" id="member-sort-phone"></i></th>
             </tr>
@@ -89,13 +89,14 @@
             {% for member in object_list %}
                 {% get_committees member as committees %}
                 {% get_membership_states member as membership_state %}
-                <tr data-name="{{ member.user.get_full_name }}"
+                <tr data-pk="{{ member.pk }}"
+                    data-name="{{ member.user.get_full_name }}"
                     data-state='{{ membership_state }}'
                     data-phone="{{ member.phone_number }}"
                     data-email="{% if member.email %}{{ member.email }}{% endif %}"
                     data-card-number="{{ member.card_number }}"
                     data-study-program="{{ member.study_program }}"
-                    data-system-accesses="{% get_system_accesses member %}"
+                    data-system-accesses="{% get_system_accesses member request.user %}"
                     data-term-joined="{{ member.term_joined }}"
                     data-date-joined="{{ member.date_joined|date:"d.m.y" }}"
                     data-term-quit="{% if member.quit %}{{ member.term_quit }}{% endif %}"
@@ -127,7 +128,7 @@
                     <td class="mobile hidden">
                         {% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}
                     </td>
-                    <td class="computer only">{{ member.phone_number }}</td>
+                    <td class="computer only"><a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -153,7 +154,7 @@
                 </tr>
                 <tr>
                     <td><b>{% trans "Phone" %}</b></td>
-                    <td id="member-phone"></td>
+                    <td><b><a id="member-phone"></a></b></td>
                 </tr>
                 <tr>
                     <td><b>{% trans "Email" %}</b></td>
@@ -218,6 +219,8 @@
 
                 </tbody>
             </table>
+            <div style="clear: both">
+            </div>
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
@@ -240,4 +243,9 @@
         $("input[name=filter-state]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
     </script>
     <script src="{% static "internal/js/members.js" %}"></script>
+    {% if selected_member %}
+        <script>
+            showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}))
+        </script>
+    {% endif %}
 {% endblock %}
