@@ -2,7 +2,7 @@
     display: none !important;
 }
 
-#member-table tbody tr {
+#member-table tbody tr, #member-table thead th {
     cursor: pointer;
 }
 

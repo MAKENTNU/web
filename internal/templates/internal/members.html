@@ -76,13 +76,13 @@
         <table class="ui celled unstackable selectable striped table" id="member-table">
             <thead>
             <tr>
-                <th>{% trans "Name" %}</th>
-                <th>{% trans "Committee" %}</th>
-                <th class="mobile hidden">{% trans "Status" %}</th>
-                <th class="computer only">{% trans "Joined "%}</th>
-                <th class="mobile hidden">{% trans "Email" %}</th>
-                <th class="computer only">{% trans "Study program" %}</th>
-                <th class="tablet hidden">{% trans "Phone" %}</th>
+                <th>{% trans "Name" %}<i class="ui sort icon" id="member-sort-name"></i></th>
+                <th>{% trans "Committee" %}<i class="ui up sort icon" id="member-sort-committees"></i></th>
+                <th>{% trans "Role" %}<i class="ui sort icon" id="member-sort-role"></i></th>
+                <th class="mobile hidden">{% trans "Status" %}<i class="ui sort icon" id="member-sort-status"></i></th>
+                <th class="computer only">{% trans "Joined "%}<i class="ui sort icon" id="member-sort-joined"></i></th>
+                <th class="mobile hidden">{% trans "Email" %}<i class="ui sort icon" id="member-sort-email"></i></th>
+                <th class="computer only">{% trans "Phone" %}<i class="ui sort icon" id="member-sort-phone"></i></th>
             </tr>
             </thead>
             <tbody>
@@ -117,6 +117,7 @@
                             <div class="ui {{ color }} label">{{ committee_name }}</div>
                         {% endfor %}
                     </td>
+                    <td>{{ member.role }}</td>
                     <td class="mobile hidden">
                         {% for state_name, color in membership_state %}
                             <div class="ui {{ color }} label">{{ state_name }}</div>
@@ -126,8 +127,7 @@
                     <td class="mobile hidden">
                         {% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}
                     </td>
-                    <td class="computer only">{{ member.study_program }}</td>
-                    <td class="tablet hidden">{{ member.phone_number }}</td>
+                    <td class="computer only">{{ member.phone_number }}</td>
                 </tr>
             {% endfor %}
             </tbody>

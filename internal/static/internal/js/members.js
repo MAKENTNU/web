@@ -5,6 +5,9 @@ let state = {
     members: [],
     stateFilter: [],
     committeeFilter: [],
+    sortBy: "committees",
+    sortDirection: -1,
+    sortElement: $("#member-sort-committees")
 };
 
 String.prototype.isEmpty = function () {
@@ -13,6 +16,22 @@ String.prototype.isEmpty = function () {
 Array.prototype.isEmpty = function () {
     return this.length === 0;
 };
+
+function compareElements(a, b) {
+    /**
+     * Compares two elements a and b either using localCompare for strings or element by element for arrays
+     */
+    if (typeof a === "string") return a.localeCompare(b);
+    if (Array.isArray(a)) {
+        for (let index = 0; index < Math.min(a.length, b.length); index++) {
+            let elementComparision = a[index].name.localeCompare(b[index].name);
+            if (elementComparision !== 0) return elementComparision;
+        }
+
+        return a.length - b.length;
+    }
+    return 0;
+}
 
 
 function showDetailedMemberInformation(member) {
@@ -83,6 +102,37 @@ function filter() {
     });
 }
 
+function setSort(attributeName, element) {
+    /**
+     * Toggles which attribute the table will be sorted by
+     */
+    state.sortElement.toggleClass(state.sortDirection === 1 ? "down" : "up", false);
+    if (attributeName === state.sortBy) {
+        state.sortDirection *= -1;
+    } else {
+        state.sortBy = attributeName;
+        state.sortDirection = 1;
+        state.sortElement = element;
+    }
+    state.sortElement.toggleClass(state.sortDirection === 1 ? "down" : "up", true);
+    sort();
+}
+
+function sort() {
+    /**
+     * Sorts the table based on the current state
+     */
+    state.members.sort(function (a, b) {
+        return compareElements(a.data[state.sortBy], b.data[state.sortBy]);
+    });
+
+    if (state.sortDirection === -1) {
+        state.members.reverse();
+    }
+
+    $("#member-table tbody").append(state.members.map((member) => member.element))
+}
+
 function setup() {
     /**
      * Setup of the global state and actions
@@ -146,10 +196,20 @@ function setup() {
         };
 
         row.click(() => showDetailedMemberInformation(member));
+        member.element = row;
         state.members.push(member)
     });
 
+    $("#member-sort-name").parent().click((e) => setSort("name", $(e.target).find(".icon")));
+    $("#member-sort-committees").parent().click((e) => setSort("committees", $(e.target).find(".icon")));
+    $("#member-sort-status").parent().click((e) => setSort("state", $(e.target).find(".icon")));
+    $("#member-sort-joined").parent().click((e) => setSort("dateJoined", $(e.target).find(".icon")));
+    $("#member-sort-email").parent().click((e) => setSort("email", $(e.target).find(".icon")));
+    $("#member-sort-role").parent().click((e) => setSort("role", $(e.target).find(".icon")));
+    $("#member-sort-phone").parent().click((e) => setSort("phone", $(e.target).find(".icon")));
+
     filter();
+    sort();
 }
 
 setup();
