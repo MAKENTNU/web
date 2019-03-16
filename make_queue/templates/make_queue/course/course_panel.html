@@ -105,7 +105,7 @@
                         <a href="{% url "edit_course_registration" registration.pk %}">
                             <i class="ui yellow pencil icon"></i>
                         </a>
-                        {% if perms.delete_printer3dcourse %}
+                        {% if perms.make_queue.delete_printer3dcourse %}
                             <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
                                 <i class="ui red trash icon"></i>
                             </a>
@@ -170,7 +170,7 @@
         </form>
 
         <div class="content">
-            <p><b>{% trans "You are changing the status for the following users:" %}</b></p>
+            <p><b>{% trans "You are changing the status for the following users" %}:</b></p>
             <p id="selected-users"></p>
             <p><b>{% trans "Are you sure you want to do this?" %}</b></p>
         </div>
@@ -180,7 +180,7 @@
                 {% trans "Set status" %}
             </div>
             <div class="ui red cancel button">
-                {% trans "Cancel" %}
+                {% trans "Cancel" context "abort action" %}
             </div>
         </div>
     </div>

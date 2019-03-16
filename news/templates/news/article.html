@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
 {% load staticfiles %}
 {% load thumbnail %}
+{% load i18n %}
 
 {% block title %}{{ article.title }}{% endblock title %}
 
@@ -23,9 +24,17 @@
             {% endblock rail %}
 
             <h1>
+                {% block admin-page %}
+                    {% if perms.news.change_article %}
+                        <a href="{% url "admin-articles" %}" class="ui right floated yellow button">
+                            <i class="ui sticky note icon"></i>{% trans "Admin page" %}
+                        </a>
+                    {% endif %}
+                {% endblock admin-page %}
                 {{ article.title }}
                 {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
                 <span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span>
+
             </h1>
             <div>
                 {% if article.content == "<p>x</p>" %}
@@ -43,7 +52,7 @@
     </div>
     <script>
         $('.ui.sticky').sticky({
-            context: '#sticky'
+            context: '#sticky',
         });
     </script>
 {% endblock body %}

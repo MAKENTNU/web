@@ -61,6 +61,9 @@
                     {% trans "Submit" context "edit" %}
                 {% endblock %}
             </button>
+            <a class="ui red right floated button" href="{% url "quota_panel" %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
         </form>
     </div>
 
@@ -73,7 +76,7 @@
             },
             onUnchecked: function () {
                 $("#user-field").toggleClass("disabled", false);
-            }
+            },
         });
 
         $("form").submit(function () {

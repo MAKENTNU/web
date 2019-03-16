@@ -1,0 +1,67 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load news_tags %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin.css" %}">
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="ui text-centered">
+            {% trans "Articles" %}
+            <a href="{% url 'article-create' %}">
+                <i class="ui green add icon"></i>
+            </a>
+        </h1>
+
+        <div class="ui three doubling stackable cards">
+            {% for article in articles %}
+                <div class="ui card">
+                    <div class="image">
+                        <img src="{{ article.image.url }}">
+                    </div>
+                    <div class="content">
+                        <div class="header">{{ article.title }}</div>
+                        <div class="description">{{ article.clickbait }}</div>
+                    </div>
+                    {% if article.featured or article.hidden or article.private %}
+                        <div class="extra content">
+                            {% if article.featured %}
+                                <div class="ui green tiny label">
+                                    {% trans "Featured" %}
+                                </div>
+                            {% endif %}
+
+                            {% if article.hidden %}
+                                <div class="ui red tiny label">
+                                    {% trans "Hidden" %}
+                                </div>
+                            {% endif %}
+
+                            {% if article.private %}
+                                <div class="ui yellow tiny label">
+                                    {% trans "Internal" %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    <div class="ui three bottom attached buttons">
+                        <a class="ui blue button" href="{% url "article" article.id %}">
+                            {% trans "View" %}
+                        </a>
+                        <a class="ui yellow button" href="{% url "article-edit" article.id %}">
+                            {% trans "Edit" %}
+                        </a>
+                        {% if perms.news.delete_article %}
+                            <a class="ui red delete confirm button" href="{% url "article-delete" article.id %}">
+                                {% trans "Delete" %}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

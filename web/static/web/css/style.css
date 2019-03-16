@@ -2,20 +2,20 @@ html, body {
     height: 100%;
 }
 
+body {
+    display: block;
+    flex-direction: column;
+}
+
 .wrapper {
     display: table;
     width: 100%;
     height: 100%;
 }
 
-.content {
+body > div > .content {
     display: table-row;
     height: 100%;
-}
-
-body {
-    display: block;
-    flex-direction: column;
 }
 
 .removebottommargin {
@@ -119,7 +119,7 @@ p, a, h1, h2, h3, h4, h5 {
 }
 
 .multilingual-input .ui.pointing.secondary.menu .item.language-not-filled {
-    border-bottom-color: #ffa5a2;
+    border-bottom-color: #FFA5A2;
 }
 
 .multilingual-input .ui.pointing.secondary.menu .item.active.language-not-filled {

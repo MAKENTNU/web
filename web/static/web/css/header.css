@@ -93,6 +93,13 @@
     opacity: 1;
 }
 
+#nav > .item:active .bubble-background,
+#side-nav > .item:active .bubble-background {
+    /* Prevents the bubble-backgrounds from only partially expanding before the new page loads
+       (when clicking on a link in the navbar), on fast mobile devices */
+    transition: all 0s;
+}
+
 #nav > .item > .text,
 #side-nav > .item > .text {
     z-index: 1;

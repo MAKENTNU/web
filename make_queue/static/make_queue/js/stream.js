@@ -1,34 +1,41 @@
-$('#' + streamID).each(function () {
-    var chatSocket = new WebSocket(
+function setupSocket($elem) {
+    let chatSocket = new WebSocket(
         'wss://' + window.location.host +
-        '/ws/stream/' + $(this).attr("name").replace(/ /g, "-").replace(/ö/g, "o") + '/');
+        '/ws/stream/' + $elem.attr("name").replace(/ /g, "-").replace(/ö/g, "o") + '/');
 
-    chatSocket.image = $(this);
+    chatSocket.image = $elem;
 
     chatSocket.onmessage = function (e) {
-        var data = JSON.parse(e.data);
+        let data = JSON.parse(e.data);
         chatSocket.image.attr('src', 'data:image/jpeg;base64,' + data['image']);
     };
 
     chatSocket.onclose = function (e) {
-        console.error('Socket closed unexpectedly');
+        console.error('Socket closed unexpectedly. Restarting');
+        setupSocket($elem);
     };
+}
+
+$('#' + streamID).each(function () {
+    setupSocket($(this));
 }).click(function () {
     $(this).toggleClass('fullscreen');
     $('#fader').toggleClass('fullscreen');
     $('#closefullscreen').toggleClass('fullscreen');
 });
 
-$("html").keydown(function (event) {
-    if (event.key === "Escape") {
-        closeFullscreen();
-    }
-});
+{
+    let closeFullscreen = function () {
+        $('.fullscreen').each(function () {
+            $(this).removeClass('fullscreen');
+        });
+    };
 
-var closeFullscreen = function () {
-    $('.fullscreen').each(function () {
-        $(this).removeClass('fullscreen');
+    $("html").keydown(function (event) {
+        if (event.key === "Escape") {
+            closeFullscreen();
+        }
     });
-};
 
-$('#closefullscreen').click(closeFullscreen);
+    $('#closefullscreen').click(closeFullscreen);
+}

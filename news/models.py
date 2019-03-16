@@ -1,4 +1,7 @@
+import uuid
 from datetime import date, time
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -35,17 +38,18 @@ class TimePlaceManager(models.Manager):
 class NewsBase(models.Model):
     title = MultiLingualTextField(
         max_length=100,
-        verbose_name=_('Title'),
+        verbose_name=_("Title"),
     )
-    content = MultiLingualRichTextUploadingField()
+    content = MultiLingualRichTextUploadingField(
+        verbose_name=_("Content"),
+    )
     clickbait = MultiLingualTextField(
         max_length=300,
         verbose_name=_('Clickbait'),
-        blank=True,
         widget=MultiLingualTextarea
     )
     image = models.ImageField(
-        verbose_name=_('Image'),
+        verbose_name=_("Image"),
     )
     contain = models.BooleanField(
         default=False,
@@ -53,15 +57,15 @@ class NewsBase(models.Model):
     )
     featured = models.BooleanField(
         default=True,
-        verbose_name=_('Highlighted'),
+        verbose_name=_("Highlighted"),
     )
     hidden = models.BooleanField(
         default=False,
-        verbose_name=_('Hidden'),
+        verbose_name=_("Hidden"),
     )
     private = models.BooleanField(
         default=False,
-        verbose_name=_('MAKE internal'),
+        verbose_name=_("MAKE internal"),
     )
 
     def __str__(self):
@@ -77,11 +81,11 @@ class Article(NewsBase):
     objects = ArticleManager()
     pub_date = models.DateField(
         default=date.today,
-        verbose_name=_('Publishing date'),
+        verbose_name=_("Publishing date"),
     )
     pub_time = models.TimeField(
         default=time.min,
-        verbose_name=_('Publishing time'),
+        verbose_name=_("Publishing time"),
     )
 
     class Meta:
@@ -91,12 +95,13 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
-    multiday = models.BooleanField(default=False, verbose_name=_('Single registration'))
-    hoopla = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name=_('Hoopla url'),
+    event_type = models.CharField(
+        choices=(("R", _("Repeating")), ("S", _("Standalone"))),
+        max_length=1,
+        default="R",
+        verbose_name=_("Type of event")
     )
+    number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def get_future_occurrences(self):
         return TimePlace.objects.future().filter(event=self).order_by("start_date", "start_time")
@@ -104,55 +109,70 @@ class Event(NewsBase):
     def get_past_occurrences(self):
         return TimePlace.objects.past().filter(event=self).order_by("-start_date", "-start_time")
 
+    def number_of_registered_tickets(self):
+        return self.eventticket_set.filter(active=True).count()
+
+    @property
+    def repeating(self):
+        return self.event_type == "R"
+
+    @property
+    def standalone(self):
+        return self.event_type == "S"
+
+    def can_register(self, user):
+        if self.hidden:
+            return False
+        if self.private and not user.has_perm("news.can_view_private"):
+            return False
+        if self.standalone:
+            return self.number_of_tickets > self.number_of_registered_tickets()
+        return True
+
 
 class TimePlace(models.Model):
     objects = TimePlaceManager()
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
     pub_date = models.DateField(
         default=date.today,
-        verbose_name=_('Publishing date'),
+        verbose_name=_("Publishing date"),
     )
     pub_time = models.TimeField(
         default=time.min,
-        verbose_name=_('Publishing time'),
+        verbose_name=_("Publishing time"),
     )
     start_date = models.DateField(
         default=date.today,
-        verbose_name=_('Start date'),
+        verbose_name=_("Start date"),
     )
     end_date = models.DateField(
         blank=True,
         null=True,
-        verbose_name=_('End date')
+        verbose_name=_("End date")
     )
     start_time = models.TimeField(
         default=time.min,
-        verbose_name=_('Start time'),
+        verbose_name=_("Start time"),
     )
     end_time = models.TimeField(
-        blank=True,
-        null=True,
-        verbose_name=_('End time')
+        default=time.min,
+        verbose_name=_("End time"),
     )
     place = models.CharField(
         max_length=100,
         blank=True,
-        verbose_name=_('Location'),
+        verbose_name=_("Location"),
     )
     place_url = models.CharField(
         max_length=200,
         blank=True,
-        verbose_name=_('Location URL'),
-    )
-    hoopla = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name=_('Hoopla url'),
+        verbose_name=_("Location URL"),
     )
     hidden = models.BooleanField(
         default=True,
-        verbose_name=_('Hidden'),
+        verbose_name=_("Hidden"),
     )
+    number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def __str__(self):
         return '%s - %s' % (self.event.title, self.start_date.strftime('%Y.%m.%d'))
@@ -160,4 +180,37 @@ class TimePlace(models.Model):
     class Meta:
         ordering = (
             'start_date',
+        )
+
+    def number_of_registered_tickets(self):
+        return self.eventticket_set.filter(active=True).count()
+
+    def can_register(self, user):
+        if not self.event.can_register(user):
+            return False
+        return not self.hidden and self.number_of_registered_tickets() < self.number_of_tickets
+
+
+class EventTicket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
+    name = models.CharField(max_length=128, verbose_name=_("Name"))
+    email = models.EmailField(verbose_name=_("Email"))
+    active = models.BooleanField(verbose_name=_("Active"), default=True)
+    comment = models.TextField(verbose_name=_("Comment"), blank=True)
+    language = models.CharField(max_length=2, choices=(("en", _("English")), ("nb", _("Norwegian"))), default="en",
+                                verbose_name=_("Preferred language"))
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
+
+    # Since timeplaces can be added/removed from standalone events, it is easier to use two foreign keys, instead of
+    # using a many-to-many field for timeplaces
+    timeplace = models.ForeignKey(TimePlace, on_delete=models.CASCADE, blank=True, null=True,
+                                  verbose_name=_("Timeplace"))
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_("Event"))
+
+    def __str__(self):
+        return f"{self.name} - {self.event if self.event is not None else self.timeplace}"
+
+    class Meta:
+        permissions = (
+            ("cancel_ticket", "Can cancel and reactivate all event tickets"),
         )

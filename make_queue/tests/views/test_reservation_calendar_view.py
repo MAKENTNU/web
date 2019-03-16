@@ -1,13 +1,14 @@
-from django.test import TestCase
-from django.contrib.auth.models import User
 from datetime import datetime, timedelta
-from django.utils import timezone
+
 import pytz
+from django.contrib.auth.models import User
+from django.test import TestCase
+from django.utils import timezone
 
 from make_queue.fields import MachineTypeField
 from make_queue.models.course import Printer3DCourse
-from make_queue.views.reservation.calendar import ReservationCalendarComponentView
 from make_queue.models.models import Machine, Reservation, Quota
+from make_queue.views.reservation.calendar import ReservationCalendarComponentView
 
 
 class ReservationCalendarComponentViewTestCase(TestCase):

@@ -26,6 +26,9 @@ SESSION_COOKIE_DOMAIN = "local.test.pe"
 # be changed in production
 PARENT_HOST = "local.test.pe:8000"
 
+EVENT_TICKET_EMAIL = "ticket@makentnu.no"
+EMAIL_SITE_URL = "https://makentnu.no"
+
 try:
     from .local_settings import *
 except ImportError:
@@ -49,6 +52,7 @@ INSTALLED_APPS = [
     'make_queue',
     'social_django',
     'news',
+    'mail',
     'ckeditor',
     'ckeditor_uploader',
     'contentbox',

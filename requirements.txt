@@ -1,4 +1,4 @@
-django>=2.1.2
+django>=2.1.5
 django-ckeditor==5.6.1
 Pillow
 python-social-auth
@@ -11,3 +11,4 @@ django_ical
 xlsxwriter
 python_ldap==3.1.0
 django-hosts==3.0.0
+uuid

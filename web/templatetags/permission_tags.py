@@ -12,12 +12,17 @@ def has_any_permissions(user):
     return Permission.objects.filter(user=user).exists()
 
 
-@register.filter(name='has_any_news_permissions')
-def has_any_news_permissions(user):
-    models = "article", "event", "timeplace"
+@register.filter(name="has_any_article_permission")
+def has_any_article_permission(user):
+    return any(user.has_perm(f"news.{action}_article") for action in ["add", "change", "delete"])
+
+
+@register.filter(name="has_any_event_permission")
+def has_any_event_permission(user):
+    models = "event", "timeplace"
     actions = "add", "change", "delete"
-    for m in models:
-        for a in actions:
-            if user.has_perm('news.' + a + "_" + m):
+    for model in models:
+        for action in actions:
+            if user.has_perm(f"news.{action}_{model}"):
                 return True
     return False
