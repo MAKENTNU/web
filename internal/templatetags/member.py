@@ -35,11 +35,11 @@ def get_system_accesses(member, user):
     :return: A list of system accesses with their state
     """
     return [(
-        prop.name,
+        prop.get_name_display(),
         prop.value,
         [_("No"), _("Yes")][prop.value],
-        prop.change_url if member.user == user or user.has_perm("internal.change_member_property") else "",
-    ) for prop in member.memberproperty_set.all()]
+        prop.change_url if member.user == user or user.has_perm("internal.change_systemaccess") else "",
+    ) for prop in member.systemaccess_set.all()]
 
 
 @register.simple_tag()

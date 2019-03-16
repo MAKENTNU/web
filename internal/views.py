@@ -1,12 +1,12 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.exceptions import ValidationError, PermissionDenied
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
 
 from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleMemberPropertyForm
-from internal.models import Member, MemberProperty
+from internal.models import Member, SystemAccess
 
 
 class Home(TemplateView):
@@ -104,15 +104,17 @@ class MemberUndoRetireView(RedirectView):
         return reverse_lazy("members", args=(member.pk,))
 
 
-class ToggleMemberPropertyView(UpdateView):
-    template_name = "internal/member_property_edit.html"
-    model = MemberProperty
+class ToggleSystemAccessView(UpdateView):
+    template_name = "internal/system_access_edit.html"
+    model = SystemAccess
     form_class = ToggleMemberPropertyForm
 
     def get_context_data(self, **kwargs):
         if self.object.member.user != self.request.user and \
-                not self.request.user.has_perm("internal.change_member_property"):
-            raise PermissionDenied("The requesting user does not have permission to change other members properties")
+                not self.request.user.has_perm("internal.change_systemaccess"):
+            raise PermissionDenied("The requesting user does not have permission to change other's system accesses")
+        if  not self.object.should_be_changed():
+            raise Http404("System access should not be changed")
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):

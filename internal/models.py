@@ -39,9 +39,9 @@ class Member(models.Model):
         self.email = self.user.email
         self.save()
 
-        for property_name, value in MemberProperty.name_choices:
+        for property_name, value in SystemAccess.name_choices:
             # All members will be registered on the website when added to the members list
-            MemberProperty.objects.create(name=property_name, value=property_name == "Website", member=self)
+            SystemAccess.objects.create(name=property_name, value=property_name == SystemAccess.WEBSITE, member=self)
 
         # Add
         self.toggle_membership(True)
@@ -132,25 +132,32 @@ def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs
             committee.group.user_set.remove(instance.user)
 
 
-class MemberProperty(models.Model):
+class SystemAccess(models.Model):
+    DRIVE = "drive"
+    SLACK = "slack"
+    CALENDAR = "calendar"
+    TRELLO = "trello"
+    EMAIL = "email"
+    WEBSITE = "website"
+
     name_choices = (
-        (_("Drive"), "drive"),
-        (_("Slack"), "slack"),
-        (_("Google Calendar"), "calendar"),
-        (_("Trello"), "trello"),
-        (_("Email lists"), "email"),
-        (_("Website"), "website")
+        (DRIVE, _("Drive")),
+        (SLACK, _("Slack")),
+        (CALENDAR, _("Calendar")),
+        (TRELLO, _("Trello")),
+        (EMAIL, _("Email")),
+        (WEBSITE, _("Website")),
     )
 
-    name = models.fields.CharField(max_length=32, choices=name_choices)
-    value = models.fields.BooleanField()
-    member = models.ForeignKey(Member, models.CASCADE)
+    name = models.fields.CharField(max_length=32, choices=name_choices, verbose_name=_("System"))
+    value = models.fields.BooleanField(verbose_name=_("Access"))
+    member = models.ForeignKey(Member, models.CASCADE, verbose_name="Member")
 
     @property
     def change_url(self):
         """
-        The URL to change the property. Depends on the type of property
-        :return: An URL for the page where the property can be changed. Is an empty string if it should not be changed
+        The URL to change the system access. Depends on the type of system
+        :return: An URL for the page where the access can be changed. Is an empty string if it should not be changed
         """
         if not self.should_be_changed():
             return ""
@@ -158,11 +165,7 @@ class MemberProperty(models.Model):
         # In the future it would be beneficial to create automated processes for adding, removing and revoking
         # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
         # channels, or using GSuite APIs to add and remove people from mailing lists.
-        return reverse("toggle-member-property", args=(self.pk,))
-
-    @property
-    def code_name(self):
-        return next(code_name for name, code_name in self.name_choices if name == self.name)
+        return reverse("toggle-system-access", args=(self.pk,))
 
     def should_be_changed(self):
-        return self.code_name != "website"
+        return self.name != self.WEBSITE

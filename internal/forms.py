@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm, TextInput
 from django.utils.translation import gettext_lazy as _
 
-from internal.models import Member, MemberProperty
+from internal.models import Member, SystemAccess
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
 
 
@@ -53,11 +53,11 @@ class MemberQuitForm(ModelForm):
 
 class ToggleMemberPropertyForm(ModelForm):
     class Meta:
-        model = MemberProperty
+        model = SystemAccess
         fields = "__all__"
 
         widgets = {
-            "name": TextInput(),
+            "name": SemanticSearchableChoiceInput(),
             "member": SemanticSearchableChoiceInput(),
         }
 

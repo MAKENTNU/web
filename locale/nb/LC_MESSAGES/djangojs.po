@@ -37,11 +37,7 @@ msgstr "Ingen resultater"
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"
 
-#~ msgid "Change saved"
-#~ msgstr "Endring lagret"
+#: internal/static/js/members.js:71
+msgid "Change"
+msgstr "Endre"
 
-#~ msgid "Save"
-#~ msgstr "Lagre"
-
-#~ msgid "Saving"
-#~ msgstr "Lagrer"

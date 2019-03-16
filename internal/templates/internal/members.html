@@ -2,11 +2,13 @@
 {% load i18n %}
 {% load staticfiles %}
 {% load member %}
+{% load hosts %}
 
 {% block title %}{% trans "Members list" %}{% endblock %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static "internal/css/members.css" %}">
+    <script src="{% host_url "javascript-catalog" host "main" %}"></script>
 {% endblock %}
 
 {% block body %}
