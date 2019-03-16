@@ -51,7 +51,7 @@ class MemberQuitForm(ModelForm):
         }
 
 
-class ToggleMemberPropertyForm(ModelForm):
+class ToggleSystemAccessForm(ModelForm):
     class Meta:
         model = SystemAccess
         fields = "__all__"

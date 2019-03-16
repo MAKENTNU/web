@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
 
-from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleMemberPropertyForm
+from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
 from internal.models import Member, SystemAccess
 
 
@@ -107,7 +107,7 @@ class MemberUndoRetireView(RedirectView):
 class ToggleSystemAccessView(UpdateView):
     template_name = "internal/system_access_edit.html"
     model = SystemAccess
-    form_class = ToggleMemberPropertyForm
+    form_class = ToggleSystemAccessForm
 
     def get_context_data(self, **kwargs):
         if self.object.member.user != self.request.user and \
