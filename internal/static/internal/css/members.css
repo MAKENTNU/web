@@ -19,3 +19,7 @@ form .multiple.labeled.dropdown {
 .orange.link {
     color: orange;
 }
+
+#member-state-header {
+    float: right;
+}

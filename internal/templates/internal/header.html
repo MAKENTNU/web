@@ -23,10 +23,6 @@
     <i id="burger" class="big inverted sidebar icon"></i>
 
     <nav id="nav" class="ui secondary inverted menu">
-        <a class="item" href="{% host_url "front-page" host "main" %}">
-            <div class="text">{% trans "Public pages" %}</div>
-            <div class="make_bg_yellow bubble-background"></div>
-        </a>
         <a class="item" href="{% url "members" %}">
             <div class="text">{% trans "Members" %}</div>
             <div class="make_bg_blue bubble-background"></div>
@@ -40,6 +36,12 @@
             <div class="make_bg_blue bubble-background"></div>
 
             <div class="menu transition hidden">
+                <a class="item" href="{% host_url "front-page" host "main" %}">
+                    <div class="text">{% trans "Public pages" %}</div>
+                </a>
+                <a class="item" href="{% host_url 'logout' host "main" %}">
+                    <div class="text">{% trans "Logout" %}</div>
+                </a>
             </div>
 
         </div>

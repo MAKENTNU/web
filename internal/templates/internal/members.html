@@ -139,8 +139,8 @@
     <div class="ui inverted longer modal" id="detailed-member-info">
         <div class="header">
             <span id="member-name-header"></span>
-            <a class="" id="member-edit"><i class="ui yellow pencil icon"></i></a>
-            <span style="float: right" id="member-state-header"></span>
+            <a id="member-edit"><i class="ui yellow pencil icon"></i></a>
+            <span id="member-state-header"></span>
         </div>
         <div class="scrolling content">
             <h4 class="ui horizontal divider header">
@@ -219,8 +219,6 @@
 
                 </tbody>
             </table>
-            <div style="clear: both">
-            </div>
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
