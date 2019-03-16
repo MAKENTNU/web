@@ -43,7 +43,7 @@ class Member(models.Model):
             # All members will be registered on the website when added to the members list
             SystemAccess.objects.create(name=property_name, value=property_name == SystemAccess.WEBSITE, member=self)
 
-        # Add
+        # Add user to the MAKE group
         self.toggle_membership(True)
 
         return self
@@ -113,6 +113,9 @@ class Member(models.Model):
 
 @receiver(post_save, sender=Member)
 def member_on_create(sender, instance, created, update_fields=None, **kwargs):
+    """
+    Make sure to run the `on_create` method when a member is created
+    """
     if created:
         instance.on_create()
 
@@ -120,7 +123,7 @@ def member_on_create(sender, instance, created, update_fields=None, **kwargs):
 @receiver(m2m_changed, sender=Member.committees.through)
 def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs):
     """
-    Makes sure that the member is added removed from the correct groups as its committee membership changes
+    Makes sure that the member is added/removed from the correct groups as its committee membership changes
     """
     if action == "pre_add":
         committees = Committee.objects.filter(pk__in=pk_set)
