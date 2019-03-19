@@ -1,0 +1,90 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load news_tags %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin.css" %}">
+{% endblock head %}
+
+{% block body %}
+    <h1 class="ui text-centered make_col_yellow header">
+        {% trans "Tools" %}
+        <a class="make_col_blue explanation-popup" data-title="{% trans "Create" %}"
+           data-content="{% trans "If clicked, a new Tool will be created." %}" href="{% url 'tools/create' %}">
+            <i class="ui add icon"></i>
+        </a>
+    </h1>
+    <div class="ui text container">
+        {% if tools_list %}
+            <div class="ui divided list">
+                {% for tool in tools_list %}
+                    <div class="item">
+                        <i class="ui icon"><img class="inline square_36" src="{{ tool.image.url }}"></i>
+                        <div class="content">
+                            <div class="header">
+                                <a class="inline-block make_col_blue header" href="{% url 'tools/edit' tool.id %}">
+                                    {{ tool.title }}
+
+
+                                </a>
+                                {% if perms.tool.delete_event %}
+                                    <a class="delete confirm inline-block make_col_blue explanation-popup"
+                                       data-title="{% trans "Delete" %}"
+                                       data-content="{% trans "If clicked, the tool will be deleted." %}"
+                                       href="{% url 'tools/delete' tool.id %}">
+                                        <i class="ui delete icon"></i>
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-centered"><i>{% trans "No events" %}</i></p>
+        {% endif %}
+    </div>
+
+    <script>
+        $('.ui.accordion').accordion();
+
+        $(".explanation-popup").popup();
+
+        $('.toggle').click(function () {
+            toggle_post($(this), $(this).data('pk'), $(this).data('model'), $(this).data('toggle'));
+        });
+
+        function toggle_post(element, pk, model, toggle) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                }
+            });
+            $.ajax({
+                type: "POST",
+                url: '/news/admin/toggle/' + model + '/',
+                data: {
+                    'pk': pk,
+                    'toggle': toggle,
+                },
+                success: function (data) {
+                    if (!data['color']) {
+                        return;
+                    }
+                    if (toggle === 'private') {
+                        if (data['color'] === 'yellow') {
+                            element.attr('src', '{% static "web/img/m_yellow.svg" %}');
+                        } else {
+                            element.attr('src', '{% static "web/img/m_grey.svg" %}');
+                        }
+                    } else {
+                        element.removeClass('yellow grey').addClass(data['color']);
+                    }
+                }
+            });
+        }
+    </script>
+
+{% endblock body %}

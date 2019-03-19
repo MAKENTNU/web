@@ -32,6 +32,11 @@
             {{ form.clickbait }}
         </div>
         <div class="field">
+            <label>{{ form.number_of_tickets.label }}</label>
+            {{ form.number_of_tickets }}
+            <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}</div>
+        </div>
+        <div class="field">
             <label>{{ form.image.label }}</label>
             {{ form.image }}
         </div>

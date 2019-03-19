@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
 from django.utils.translation import gettext_lazy as _
 
-from make_queue.fields import MachineTypeField
+from make_queue.fields import MachineTypeField, MachineTypeForm
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
@@ -143,4 +143,13 @@ class Printer3DCourseForm(forms.ModelForm):
         widgets = {
             "status": SemanticChoiceInput(),
             "date": SemanticDateInput(),
+            "username": forms.TextInput(attrs={"autofocus": "autofocus"}),
         }
+
+
+class FreeSlotForm(forms.Form):
+    machine_type = MachineTypeForm(
+        choices=((machine_type.id, machine_type.name) for machine_type in MachineTypeField.possible_machine_types),
+        initial=1, label=_("Machine type"))
+    hours = IntegerField(min_value=0, initial=1, label=_("Duration in hours"))
+    minutes = IntegerField(min_value=0, max_value=59, initial=0, label=_("Duration in minutes"))

@@ -1,9 +1,10 @@
 from django import template
 from django.utils import timezone
 from django.urls import reverse
+from django.utils.timesince import timeuntil
+from django.utils.translation import gettext_lazy as _
 
 from make_queue.util.time import date_to_local, get_day_name
-from urllib.parse import quote
 
 register = template.Library()
 
@@ -20,6 +21,12 @@ def current_calendar_url(machine):
     current_time = timezone.localtime(timezone.now())
     return reverse('reservation_calendar',
                    kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'machine': machine})
+
+
+@register.simple_tag()
+def calendar_url_timestamp(machine, time):
+    return reverse("reservation_calendar",
+                   kwargs={"year": time.year, "week": time.isocalendar()[1], "machine": machine})
 
 
 @register.simple_tag()
@@ -46,7 +53,14 @@ def is_current_date(date):
 
 @register.simple_tag()
 def card_text_from_machine_status(machine):
-    return dict(machine.status_choices)[machine.get_status()]
+    status = dict(machine.status_choices)[machine.get_status()]
+    next_reservation = machine.get_next_reservation()
+
+    # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.
+    if machine.get_status() == "F" and next_reservation is not None and (
+            next_reservation.start_time - timezone.now()).days < 1:
+        status = "{:} {:} {:}".format(status, _('for'), timeuntil(next_reservation.start_time))
+    return status
 
 
 @register.simple_tag()

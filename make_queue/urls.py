@@ -16,24 +16,26 @@ register_converter(converters.DateTime, "time")
 json_urlpatterns = [
     path('<machine:machine>', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<machine:machine>/<reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
+    path('<str:username>/', permission_required("make_queue.add_printer3dcourse")(api.user_info.get_user_info_from_username), name="user_json"),
 ]
 
 quota_url_patterns = [
     path('create/', permission_required("make_queue.add_quota")(admin.quota.CreateQuotaView.as_view()), name="create_quota"),
-    path('update/<int:pk>/', permission_required("make_queue.update_quota")(admin.quota.EditQuotaView.as_view()), name="edit_quota"),
+    path('update/<int:pk>/', permission_required("make_queue.change_quota")(admin.quota.EditQuotaView.as_view()), name="edit_quota"),
     path('delete/<int:pk>/', permission_required("make_queue.delete_quota")(admin.quota.DeleteQuotaView.as_view()), name="delete_quota"),
-    path('user/<username:user>/', permission_required("make_queue.update_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view()), name="quotas_user"),
-    path('<username:user>/', permission_required("make_queue.update_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
-    path('', permission_required("make_queue.update_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
+    path('user/<username:user>/', permission_required("make_queue.change_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view()), name="quotas_user"),
+    path('<username:user>/', permission_required("make_queue.change_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
+    path('', permission_required("make_queue.change_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
 ]
 
 course_url_patterns = [
-    path('download/', permission_required("make_queue.update_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
-    path('create/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
-    path('create/success/', permission_required("make_queue.create_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
-    path('edit/<int:pk>/', permission_required("make_queue.update_printer3dcourse")(admin.course.EditRegistrationView.as_view()), name="edit_course_registration"),
+    path('status/', permission_required("make_queue.change_printer3dcourse")(admin.course.BulkStatusUpdate.as_view()), name="bulk_status_update"),
+    path('download/', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
+    path('create/', permission_required("make_queue.add_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
+    path('create/success/', permission_required("make_queue.add_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
+    path('edit/<int:pk>/', permission_required("make_queue.change_printer3dcourse")(admin.course.EditRegistrationView.as_view()), name="edit_course_registration"),
     path('delete/<int:pk>/', permission_required("make_queue.delete_printer3dcourse")(admin.course.DeleteRegistrationView.as_view()), name="delete_course_registration"),
-    path('', permission_required("make_queue.update_printer3dcourse")(admin.course.CourseView.as_view()), name="course_panel"),
+    path('', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseView.as_view()), name="course_panel"),
 ]
 
 rules_url_patterns = [
@@ -56,6 +58,7 @@ urlpatterns = [
     path('finish/', login_required(reservation.reservation.MarkReservationAsDone.as_view()), name="mark_reservation_done"),
     path('change/<reservation:reservation>/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
     path('rules/', include(rules_url_patterns)),
+    path('slot/', reservation.reservation.FindFreeSlot.as_view(), name="find_free_slot"),
     path('json/', include(json_urlpatterns)),
     path('quota/', include(quota_url_patterns)),
     path('course/', include(course_url_patterns)),

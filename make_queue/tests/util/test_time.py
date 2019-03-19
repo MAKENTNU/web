@@ -13,6 +13,10 @@ class WeekUtilTest(TestCase):
         date = datetime(2017, 12, 18)
         self.assertEqual(date, year_and_week_to_monday(2017, 51))
 
+    def test_year_and_week_to_monday_start_of_year(self):
+        date = datetime(2018, 12, 31)
+        self.assertEqual(date, year_and_week_to_monday(2019, 1))
+
     def test_is_valid_week_with_zero_week_number(self):
         self.assertFalse(is_valid_week(2017, 0))
 
@@ -21,6 +25,9 @@ class WeekUtilTest(TestCase):
 
     def test_is_valid_week_with_to_high_week(self):
         self.assertFalse(is_valid_week(2017, 53))
+
+    def test_is_valid_week_with_to_high_week2(self):
+        self.assertFalse(is_valid_week(2018, 53))
 
     def test_get_next_valid_week_middle_of_year(self):
         self.assertEqual((2017, 30), get_next_week(2017, 29, 1))

@@ -1,9 +1,9 @@
-$('#' + streamID).each(function () {
+function setupSocket($elem) {
     var chatSocket = new WebSocket(
         'wss://' + window.location.host +
-        '/ws/stream/' + $(this).attr("name").replace(/ /g, "-").replace(/ö/g, "o") + '/');
+        '/ws/stream/' + $elem.attr("name").replace(/ /g, "-").replace(/ö/g, "o") + '/');
 
-    chatSocket.image = $(this);
+    chatSocket.image = $elem;
 
     chatSocket.onmessage = function (e) {
         var data = JSON.parse(e.data);
@@ -11,8 +11,13 @@ $('#' + streamID).each(function () {
     };
 
     chatSocket.onclose = function (e) {
-        console.error('Socket closed unexpectedly');
+        console.error('Socket closed unexpectedly. Restarting');
+	setupSocket($elem)
     };
+}
+
+$('#' + streamID).each(function () {
+    setupSocket($(this))
 }).click(function () {
     $(this).toggleClass('fullscreen');
     $('#fader').toggleClass('fullscreen');

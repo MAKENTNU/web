@@ -1,11 +1,7 @@
 function update_multiday() {
-    var multiday = $('#id_multiday').prop('checked');
-    console.log(multiday);
-    if (multiday) {
-        $('#id_hoopla').parent().css('display', 'block');
-    } else {
-        $('#id_hoopla').parent().css('display', 'none');
-    }
+    var is_multiday = $('#id_multiday').prop('checked');
+    $("#id_number_of_tickets").parent().toggleClass("disabled", !is_multiday);
+
 }
 
 $(function () {

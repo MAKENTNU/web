@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block title %}
-    {{ machine.name }} - {{ machine.model }}
+    {{ machine.name }} - {{ machine.machine_model }}
 {% endblock %}
 
 {% block body %}
@@ -20,42 +20,67 @@
         {% csrf_token %}
         <div class="ui machine-title-field">
             <div class="ui huge header machine-title">
-                {% trans "Reservations" %}
+                {{ machine.name }}
             </div>
             <a href="{% url "machine_usage_rules" machine.machine_type %}">({% trans "Rules" %})</a>
         </div>
-        <div class="ui grid padded equal width ">
-            <div class="column">
-                <div class="ui cards">
-                    {% include 'make_queue/machine_card.html' with machine=machine color_bottom=1 %}
-                </div>
-            </div>
-            <div class="column no padding">
-                <div class="ui vertical buttons make_right_floated">
-                    <div class="enable_popup"
-                            {% if not user.is_authenticated %}
-                         data-content="{% trans "You must be logged in to make new reservations" %}"
-                            {% elif not can_use %}
-                         data-content="{% get_machine_cannot_use_text machine %}"
-                            {% elif not can_make_more_reservations %}
-                         data-content="{% trans "You have reached the maximum number of future reservations" %}"
-                            {% endif %}>
-                        <a class="ui labeled icon wrapped make_yellow button {% if not can_use or not can_make_more_reservations %}disabled{% endif %}"
-                           href="{% url 'make_reservation' machine=machine %}">
-                            <i class="add icon"></i>
-                            {% trans "New reservation" %}
-                        </a>
+        <div class="ui three column padded grid vpad">
+            <div class="ui five wide no padding column">
+                <h3>{% trans "About the machine" %}</h3>
+                <div class="ui relaxed list">
+                    <div class="item">
+                        <i class="ui large middle aligned make_col_yellow location arrow icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Location" %}</div>
+                            <a href="{{ machine.location_url }}">{{ machine.location }}</a>
+                        </div>
                     </div>
-                    <a class="ui labeled icon make_yellow button" href="{% url 'my_reservations' %}">
-                        <i class="list icon"></i>
-                        {% trans "My reservations" %}
-                    </a>
-                    <a class="ui labeled icon make_yellow button" href="{% url 'reservation_machines_overview' %}">
-                        <i class="cogs icon"></i>
-                        {% trans "Other machines" %}
-                    </a>
+                    <div class="item">
+                        <i class="ui large middle aligned make_col_yellow cog icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Machine type" %}</div>
+                            {{ machine.machine_type.name }}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="ui large middle aligned make_col_yellow wrench icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Model" %}</div>
+                            {{ machine.machine_model }}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="ui large middle make_col_yellow aligned info circle icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Status" %}</div>
+                            <span class="ui {% card_color_from_machine_status machine %} text tiny header">
+                                {% card_text_from_machine_status machine %}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="ui right floated no padding column tablet computer only">
+                {% include "make_queue/reservation_actions.html" %}
+            </div>
+
+            {% if machine.machine_type.has_stream %}
+                <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
+                    <img class="ui right floated stream medium image" id="{% sanitize_stream_name machine %}" name="{{ machine.name }}"
+                         src="{% static "make_queue/img/no_stream.jpg" %}">
+                </div>
+                <div id="fader"></div>
+                <i id="closefullscreen" class="ui times icon"></i>
+                <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
+                <script>let streamID = "{% sanitize_stream_name machine %}";</script>
+                <script src="{% static "make_queue/js/stream.js" %}"></script>
+            {% endif %}
+
+            <div class="ui right floated {% if machine.machine_type.has_stream %}sixteen{% else %}ten{% endif %} wide mobile only no padding column">
+                {% include "make_queue/reservation_actions.html" %}
+            </div>
+
         </div>
         {% url 'reservation_calendar' year=next.0 week=next.1 machine=machine as link_next %}
         {% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine as link_prev %}

@@ -1,0 +1,62 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+{% load reservation_extra %}
+
+{% block head %}
+    {{ block.super }}
+    <style>
+        .list {
+            max-width: 60em;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>{% trans "Find free reservation slots" %}</h1>
+        <form class="ui form" action="" method="POST">
+            {% csrf_token %}
+            <div class="ui fields">
+                <div class="ui six wide field">
+                    <label>{{ form.machine_type.label }}</label>
+                    {{ form.machine_type }}
+                </div>
+                <div class="ui three wide field" id="hour-field">
+                    <label>{{ form.hours.label }}</label>
+                    {{ form.hours }}
+                </div>
+                <div class="ui three wide field">
+                    <label>{{ form.minutes.label }}</label>
+                    {{ form.minutes }}
+                </div>
+                <div class="ui two wide field">
+                    <label>&nbsp;</label>
+                    <button class="ui primary button">{% trans "Search" %}</button>
+                </div>
+            </div>
+        </form>
+        {% if free_slots %}
+            <div class="ui divider"></div>
+            <h2>{% trans "Free reservation slots" %}</h2>
+            <div class="ui selection relaxed divided list">
+                {% for slot in free_slots %}
+                    <a class="ui item" href="{% calendar_url_timestamp machine=slot.machine time=slot.start_time %}">
+                        <div class="right floated content">
+                            {{ slot.duration }}{% trans "h" %}
+                        </div>
+                        <i class="ui middle aligned clock icon"></i>
+                        <div class="content">
+                            <div class="header">
+                                {{ slot.machine.name }}
+                            </div>
+                            <div class="description">
+                                {{ slot.start_time|date:"d F H:i" }} - {{ slot.end_time|date:"d F H:i" }}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

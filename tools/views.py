@@ -1,30 +1,59 @@
-from django.shortcuts import get_object_or_404
-from django.views.generic import TemplateView
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from tools.models import Tool
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.urls import reverse_lazy
 
 
-class ViewToolView(TemplateView):
+
+class ViewToolView(DetailView):
+    model = Tool
     template_name = 'tools/tool.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        tool = get_object_or_404(Tool, pk=kwargs['pk'])
-        context.update({
-            'tool': tool,
-        })
-        return context
+    context_object_name = 'tool'
 
 
-class ViewToolsView(TemplateView):
+class ViewToolsView(ListView):
+    model = Tool
     template_name = 'tools/tools.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'tools_list': Tool.objects.all()
-        })
-        return context
+    context_object_name = 'tools_list'
 
 
-class ToolView(TemplateView):
-    template_name = 'tools/tool.html'
+class ViewAdminView(PermissionRequiredMixin, ListView):
+    model = Tool
+    template_name = 'tools/admin_tool.html'
+    context_object_name = 'tools_list'
+    permission_required = 'tools.add_Tool'
+
+
+class ViewAdminCreateView(PermissionRequiredMixin, CreateView):
+    model = Tool
+    template_name = 'tools/admin_tool_create.html'
+    context_object_name = 'tool'
+    permission_required = 'tools.add_Tool'
+    fields = (
+        'title',
+        'content',
+        'image',
+    )
+    success_url = reverse_lazy('tools/admin')
+
+
+class ViewAdminEditView(PermissionRequiredMixin, UpdateView):
+    model = Tool
+
+    template_name = 'tools/admin_tool_edit.html'
+    context_object_name = 'tool'
+    permission_required = 'tools.add_Tool'
+    fields = (
+        'title',
+        'content',
+        'image',
+    )
+    success_url = reverse_lazy('tools/admin')
+
+
+class ViewDeleteView(DeleteView):
+    model = Tool
+    success_url = reverse_lazy('tools/admin')
+
+    def get(self, request, *args, **argv):
+        return self.post(request, *args, **argv)

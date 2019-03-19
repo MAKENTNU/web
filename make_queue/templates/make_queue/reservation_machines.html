@@ -5,6 +5,7 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
 {% endblock %}
 
 {% block title %}{% trans "Machines" %}{% endblock %}
@@ -16,6 +17,9 @@
         {% if request.user.is_authenticated %}
             <a href="{% url 'my_reservations' %}" class="ui primary button">
                 {% trans "My reservations" %}
+            </a>
+            <a href="{% url "find_free_slot" %}" class="ui primary button">
+                {% trans "Find free reservation slots" %}
             </a>
         {% endif %}
         {% for machine_type in machine_types %}

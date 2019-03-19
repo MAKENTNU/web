@@ -1,4 +1,5 @@
-import pytz
+from datetime import timedelta
+
 from django.utils import timezone, translation
 from django.utils.datetime_safe import datetime
 from django.utils.translation import ugettext
@@ -13,7 +14,7 @@ def is_valid_week(year, week):
     :param week: The week to check
     :return: A boolean indicating if the given year and week is a valid combination
     """
-    return 0 < week < 54 and year_and_week_to_monday(year, week).year == year
+    return 0 < week < 54 and (year_and_week_to_monday(year, week) + timedelta(days=3)).year == year
 
 
 def year_and_week_to_monday(year, week):
@@ -24,7 +25,7 @@ def year_and_week_to_monday(year, week):
     :param week: The week to get the date for
     :return: The monday in the given week of the given year
     """
-    return datetime.strptime(str(year) + " " + str(week) + " 1", "%Y %W %w")
+    return datetime.strptime("{:04d} {:02d} 1".format(year, week), "%G %V %w")
 
 
 def get_next_week(year, week, shift_direction):
@@ -59,7 +60,7 @@ def local_to_date(date):
     :param date: The date to localize
     :return: The localized date
     """
-    return pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+    return timezone.make_aware(date, timezone.get_default_timezone())
 
 
 def timedelta_to_hours(timedelta_obj):
@@ -73,7 +74,15 @@ def timedelta_to_hours(timedelta_obj):
 
 
 def get_day_name(day_no, locale):
+    """
+    Gets the name of the given day [0, 6] in the given locale
+    
+    :param day_no: The day in the week in the range [0, 6], with Monday being 0
+    :param locale: The language code
+    :return: The name of the given day in the given locale
+    """
+    previous_lang = translation.get_language()
     translation.activate(locale)
     locale_day_name = ugettext(day_name[day_no])
-    translation.deactivate()
+    translation.activate(previous_lang)
     return locale_day_name
