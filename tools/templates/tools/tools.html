@@ -16,15 +16,18 @@
     <div class="ui container">
         <div class="articles">
             {% for tool in tools_list %}
-
-                {% thumbnail tool.image "600" as im %}
-                    <img class="article-img clickable {% cycle 'float-right' 'float-left' %}
-                    			    {% if forloop.first %}article-first{% endif %}
-			                        {% if forloop.last %}article-last{% endif %}"
-                         src="{{ im.url }}" href="{% url 'tools' tool.id %}">
+                <!-- For the pictures -->
+                {% thumbnail tool.image "250x250"  as im %}
+                    <img class=" clickable css = float-right
+                    			    {% if forloop.first %}tool-first{% endif %}
+			                        {% if forloop.last %}tool-last{% endif %}"
+                         src="{{ im.url }}" href="{% url 'tools' tool.id %}"
+                         width="{{ im.width }}" height="{{ im.height }}"
+                         style="margin: 30px 0 0 100px ">
                 {% endthumbnail %}
 
-                <div class="article-text {% cycle 'float-left' 'float-right' %}
+                <!-- For the text -->
+                <div class="article-text css = float-left
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}">
                     <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
@@ -33,7 +36,7 @@
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
                     <div>
                         <h2>
-                            <a href="{% url 'tools' tool.id %}"><h2>{{ tool.title }}</a>
+                            <a href="{% url 'tools' tool.id %}">{{ tool.title }}</a>
                             {% if perms.tools.add_reservation_rule %}
                                 <i class="ui green plus icon"></i>
                             {% endif %}
