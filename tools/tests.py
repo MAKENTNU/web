@@ -12,4 +12,3 @@ class ToolTestCase(TestCase):
         self.first_tool.title = 'test tool'
         self.assertEqual(self.first_tool.title,'test tool')
 
-
