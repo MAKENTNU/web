@@ -1,4 +1,3 @@
-
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
 from tools.models import Tool
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -57,4 +56,3 @@ class ViewDeleteView(DeleteView):
 
     def get(self, request, *args, **argv):
         return self.post(request, *args, **argv)
-

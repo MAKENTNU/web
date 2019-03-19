@@ -9,3 +9,4 @@ urlpatterns = [
     path(r'admin/create', views.ViewAdminCreateView.as_view(), name='tools/create'),
     path(r'admin/<int:pk>/edit', views.ViewAdminEditView.as_view(), name='tools/edit'),
     path(r'admin/<int:pk>/delete', views.ViewDeleteView.as_view(), name='tools/delete'),
+]
