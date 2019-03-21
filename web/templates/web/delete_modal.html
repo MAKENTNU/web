@@ -20,13 +20,17 @@
     /*$('#delete-modal').modal({
       'closable': false
     });*/
-    $('.delete.confirm').click(function (e) {
-        e.preventDefault();
-        var url = $(this).attr('href');
-        $('#delete-form').attr('action', url);
-        $('#delete-modal .delete.button').click(function (e) {
-            $('#delete-form').submit();
+    function setupDeleteModal() {
+        $('.delete.confirm').click(function (e) {
+            e.preventDefault();
+            let url = $(this).attr('href');
+            $('#delete-form').attr('action', url);
+            $('#delete-modal .delete.button').click(function (e) {
+                $('#delete-form').submit();
+            });
+            $('#delete-modal').modal('show');
         });
-        $('#delete-modal').modal('show');
-    });
+    }
+
+    setupDeleteModal();
 </script>

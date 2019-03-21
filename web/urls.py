@@ -1,19 +1,20 @@
+from ckeditor_uploader import views as ckeditor_views
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
-from django.contrib.auth.decorators import permission_required
-from django.views.decorators.cache import never_cache
-from django.views.i18n import JavaScriptCatalog
-from django.views.generic import TemplateView
 from django.contrib import admin
+from django.contrib.auth.decorators import permission_required
+from django.urls import path, re_path, include
+from django.views.decorators.cache import never_cache
+from django.views.generic import TemplateView
 from django.urls import path, re_path, include
 from django.views.generic.base import RedirectView
+from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 from social_core.utils import setting_name
 
 from contentbox.models import ContentBox
 from dataporten.views import Logout, login_wrapper
-from web.views import IndexView, AdminPanelView, View404, AboutView
-from ckeditor_uploader import views as ckeditor_views
+from web.views import IndexView, AdminPanelView, View404, View500
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
@@ -25,8 +26,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('inventory/', include('inventory.urls')),
     path('reservation/', include('make_queue.urls')),
-    path('adminpanel/', AdminPanelView.as_view(), name='adminpanel'),
-    path('admin/', admin.site.urls),
+    path('admin/', AdminPanelView.as_view(), name='adminpanel'),
     path('', IndexView.as_view(), name='front-page'),
     path('login/', RedirectView.as_view(url='/login/dataporten/'), name='login'),
     path('logout/', Logout.as_view(), name='logout'),
@@ -37,7 +37,8 @@ urlpatterns += i18n_patterns(
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
-    path('about/', AboutView.as_view(), name='about'),
+    ContentBox.url('about'),
+    ContentBox.url('apply'),
     ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
@@ -52,3 +53,4 @@ urlpatterns += [
 ]
 
 handler404 = View404.as_view()
+handler500 = View500.as_view()

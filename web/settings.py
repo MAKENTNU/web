@@ -16,6 +16,20 @@ REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
 
+# When using more than one sub-domain, the session cookie domain has to be set so
+# that the sub-domains can use the same session. Currently points to "makentnu.localhost"
+# should be changed in production. Cannot use only "localhost", as domains for cookies
+# are required to have two dots in them.
+SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
+
+# For django-hosts to redirect correctly across subdomains, we have to specify the
+# host we are running on. This currently points to "makentnu.localhost:8000", and should
+# be changed in production
+PARENT_HOST = "makentnu.localhost:8000"
+
+EVENT_TICKET_EMAIL = "ticket@makentnu.no"
+EMAIL_SITE_URL = "https://makentnu.no"
+
 try:
     from .local_settings import *
 except ImportError:
@@ -33,21 +47,25 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_hosts',
     'groups',
     'web',
     'make_queue',
     'social_django',
     'news',
+    'mail',
     'ckeditor',
     'ckeditor_uploader',
     'contentbox',
     'checkin',
     'sorl.thumbnail',
     'channels',
+    'internal',
     'inventory',
 ]
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -56,9 +74,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'web.urls'
+ROOT_HOSTCONF = "web.hosts"
+DEFAULT_HOST = "main"
 
 TEMPLATES = [
     {
@@ -82,6 +103,10 @@ CHANNEL_LAYERS = {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
             'hosts': [(REDIS_IP, REDIS_PORT)],
+            # The maximum resend time of a message in seconds
+            'expiry': 30,
+            # The number of seconds before a connection expires
+            'group_expiry': 900,
         },
     },
 }

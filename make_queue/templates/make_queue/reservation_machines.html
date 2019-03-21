@@ -9,20 +9,31 @@
 {% endblock %}
 
 {% block title %}{% trans "Machines" %}{% endblock %}
+
 {% block body %}
-    <br><br>
     <div class="ui container">
         <div class="ui huge header">
             {% trans "Machines" %}
+            {% if perms.make_queue.add_machine %}
+            <a href="{% url "create_machine" %}" data-tooltip="{% trans "Add" %}">
+                <i class="ui green plus icon"></i>
+            </a>
+            {% endif %}
         </div>
         {% if request.user.is_authenticated %}
             <a href="{% url 'my_reservations' %}" class="ui primary button">
                 {% trans "My reservations" %}
             </a>
+            <a href="{% url "find_free_slot" %}" class="ui primary button">
+                {% trans "Find free reservation slots" %}
+            </a>
         {% endif %}
         {% for machine_type in machine_types %}
-            <div class="ui large header">
-                {{ machine_type.name }}
+            <div class="ui machine-title-field">
+                <div class="ui large header machine-title">
+                    {{ machine_type.name }}
+                </div>
+                <a href="{% url "machine_usage_rules" machine_type.type %}">({% trans "Rules" %})</a>
             </div>
             <div class="ui cards">
                 {% for machine in machine_type.machines %}
@@ -31,9 +42,4 @@
             </div>
         {% endfor %}
     </div>
-    <br><br>
-
-    <div id="fader"></div>
-    <i id="closefullscreen" class="ui times icon"></i>
-    <script src="{% static "make_queue/js/stream.js" %}"></script>
 {% endblock %}

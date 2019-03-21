@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from make_queue.models import Reservation
+from make_queue.models.models import Reservation
 
 
 class MyReservationsView(TemplateView):
@@ -13,7 +13,5 @@ class MyReservationsView(TemplateView):
 
         :return: A list of the user's reservations
         """
-        return {"reservations": sorted(
-            [reservation for reservation_subclass in Reservation.__subclasses__() for reservation in
-             reservation_subclass.objects.filter(user=self.request.user, event=None, special=False)],
-            key=lambda x: x.end_time, reverse=True)}
+        return {"reservations": Reservation.objects.filter(user=self.request.user, event=None, special=False).order_by(
+            "-end_time", "-start_time")}

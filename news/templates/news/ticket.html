@@ -1,0 +1,78 @@
+{% load i18n %}
+
+<div class="ui ticket card">
+    {% if not ticket.active %}
+        <div class="ui red cancel label">
+            {% trans "Canceled" %}
+        </div>
+    {% endif %}
+
+    <div class="content">
+        <div class="header">
+            <a href="{% if ticket.event %}
+                        {% url "event" ticket.event.id %}
+                    {% else %}
+                        {% url "event" ticket.timeplace.event.id %}
+                    {% endif %}">
+                {{ ticket.event.title }}{{ ticket.timeplace.event.title }}
+            </a>
+        </div>
+        <div class="description">
+            {% if ticket.event %}
+                <div class="ui relaxed list">
+                    {% for timeplace in ticket.event.timeplace_set.all %}
+                        {% if not timeplace.hidden %}
+                            <div class="ui item">
+                                <div class="content">
+                                    <div class="header">
+                                        {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }} -
+                                        {% if timeplace.end_date %}{{ timeplace.end_date|date:"d. M" }}{% else %}
+                                            {{ timeplace.start_date|date:"d. M" }}{% endif %}
+                                        {{ timeplace.end_time|date:"H:i" }}
+                                        <a class="left floated" href="{% url 'timeplace-ical' timeplace.id %}"
+                                           target="_blank">
+                                            <i class="ui make_col_yellow large calendar plus outline icon"></i>
+                                        </a>
+                                    </div>
+                                    <div class="description">
+                                        <a href="{{ timeplace.place_url }}">{{ timeplace.place }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <a class="left floated" href="{% url 'timeplace-ical' ticket.timeplace.id %}" target="_blank">
+                    <i class="ui make_col_yellow large calendar plus outline icon"></i>
+                </a>
+                <b>
+                    {{ ticket.timeplace.start_date|date:"d. M" }} {{ ticket.timeplace.start_time|date:"H:i" }} -
+                    {% if ticket.timeplace.end_date %}{{ ticket.timeplace.end_date|date:"d. M" }}{% else %}
+                        {{ ticket.timeplace.start_date|date:"d. M" }}{% endif %}
+                    {{ ticket.timeplace.end_time|date:"H:i" }}
+                </b>
+            {% endif %}
+        </div>
+    </div>
+    <div class="extra content">
+        <div class="right floated">
+            <b>{% trans "Ref #" %}:</b>
+            <a href="{% url "ticket" pk=ticket.uuid %}">
+                {{ ticket.uuid }}
+            </a>
+        </div>
+    </div>
+    {% if ticket.active %}
+        {% if ticket.user == request.user or ticket.user == None or perms.news.cancel_ticket %}
+            <a class="ui red bottom attached button"
+               href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
+                {% trans "Cancel ticket" %}
+            </a>
+        {% endif %}
+    {% elif perms.news.cancel_ticket %}
+        <a class="ui green bottom attached button" href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
+            {% trans "Reactivate ticket" %}
+        </a>
+    {% endif %}
+</div>

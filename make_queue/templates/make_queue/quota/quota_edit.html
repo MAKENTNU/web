@@ -1,0 +1,110 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>
+            {% block form_title %}
+                {% trans "Change quota" %}
+            {% endblock %}
+        </h1>
+
+        <div class="ui red message close hidden" id="missing-fields-error-message">
+            <i class="close icon"></i>
+            {% trans "Missing required fields." %}
+        </div>
+
+        <div class="ui red message close hidden" id="select-user-error-message">
+            <i class="close icon"></i>
+            {% trans "Must select specific user or all users." %}
+        </div>
+
+        <form class="ui form" method="post" action="">
+            {% csrf_token %}
+            <div class="two fields">
+                <div class="field" id="number-of-reservations-field">
+                    <label>{{ form.number_of_reservations.label }}</label>
+                    {{ form.number_of_reservations }}
+                </div>
+                <div class="field" id="machine-type-field">
+                    <label>{{ form.machine_type.label }}</label>
+                    {{ form.machine_type }}
+                </div>
+            </div>
+            <div class="inline fields">
+                <div class="field">
+                    <div class="ui checkbox">
+                        <label>{{ form.diminishing.label }}</label>
+                        {{ form.diminishing }}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox">
+                        <label>{{ form.ignore_rules.label }}</label>
+                        {{ form.ignore_rules }}
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="ui checkbox" id="checkbox-all-users">
+                        <label>{{ form.all.label }}</label>
+                        {{ form.all }}
+                    </div>
+                </div>
+            </div>
+            <div class="field" id="user-field">
+                <label>{{ form.user.label }}</label>
+                {{ form.user }}
+            </div>
+            <button class="ui right floated yellow button" type="submit">
+                {% block submit_button %}
+                    {% trans "Submit" context "edit" %}
+                {% endblock %}
+            </button>
+            <a class="ui red right floated button" href="{% url "quota_panel" %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
+        </form>
+    </div>
+
+    <script>
+        $(".checkbox").checkbox();
+        $("#checkbox-all-users").checkbox({
+            fireOnInit: true,
+            onChecked: function () {
+                $("#user-field").toggleClass("disabled", true).find("div.dropdown").dropdown("clear");
+            },
+            onUnchecked: function () {
+                $("#user-field").toggleClass("disabled", false);
+            },
+        });
+
+        $("form").submit(function () {
+            let user = $("#user-field").find("div.dropdown").dropdown("get value");
+            let allUsers = $("#checkbox-all-users").checkbox("is checked");
+            let numberOfReservationsEmpty = $("#number-of-reservations-field").find("input").val() === "";
+            let machineTypeEmpty = $("#machine-type-field").find("div.dropdown").dropdown("get value") === "";
+            let userEmpty = !allUsers && user === "";
+
+
+            $("#select-user-error-message").toggleClass("hidden", !userEmpty);
+            $("#missing-fields-error-message").toggleClass("hidden", !numberOfReservationsEmpty && !machineTypeEmpty);
+
+            $("#machine-type-field").toggleClass("error", machineTypeEmpty);
+            $("#number-of-reservations-field").toggleClass("error", numberOfReservationsEmpty);
+            $("#user-field").toggleClass("error", userEmpty);
+
+            return !(userEmpty || machineTypeEmpty || numberOfReservationsEmpty);
+        });
+
+        $('.message .close')
+            .on('click', function () {
+                $(this)
+                    .closest('.message')
+                    .transition('fade')
+                ;
+            })
+        ;
+    </script>
+
+{% endblock %}

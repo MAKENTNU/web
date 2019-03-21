@@ -111,12 +111,11 @@
         $('.rating.skill-lvl').rating('disable');
 
         $('#star-rating').click(function () {
-            var rating = $(this).rating('get rating');
-            if (rating == $('#rating-input').val()) {
+            let rating = $(this).rating('get rating');
+            if (rating === $('#rating-input').val()) {
                 $('#rating-input').val(0);
                 $(this).rating('set rating', 0);
-            }
-            else {
+            } else {
                 $('#rating-input').val(rating);
             }
         });
@@ -129,7 +128,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
             $.ajax({
                 type: "POST",
@@ -144,20 +143,18 @@
                             element.addClass('green');
                             element.addClass('disabled');
                             element.html('{% trans "Registered" %}');
-                        }
-                        else {
+                        } else {
                             element.addClass('red');
                             element.attr('data-tooltip', '{% trans "Scan card again!" %}');
                             element.attr('data-position', 'right center');
                         }
-                    }
-                    else {
+                    } else {
                         element.addClass('red');
                         element.attr('data-tooltip', '{% trans "Scan card" %}');
                         element.attr('data-position', 'right center');
                     }
 
-                }
+                },
             });
         }
 
@@ -165,12 +162,8 @@
             $('#input-image').click();
         });
 
-        $('#profile-pic').hover(function () {
-            $(this).css('cursor', 'pointer');
-        });
-
         $('#input-image').change(function () {
-            $('#image-form').submit()
+            $('#image-form').submit();
         });
 
 

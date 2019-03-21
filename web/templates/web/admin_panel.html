@@ -5,18 +5,81 @@
 
 
 {% block body %}
-    <div class="ui text container">
-        {% if user|has_any_news_permissions or user.is_superuser %}
-            <a class="ui yellow button" href="{% url 'admin' %}">{% trans "Articles and events" %}</a>
-        {% endif %}
-        {% if perms.make_queue.can_create_event_reservation %}
-            <a class="ui yellow button" href="{% url 'admin_reservation' %}">{% trans "Reservations" %}</a>
-        {% endif %}
-        {% if perms.make_queue.can_edit_quota %}
-            <a class="ui yellow button" href="{% url 'quota_panel' %}">{% trans "Quota" %}</a>
-        {% endif %}
-	{% if perms.groups.can_edit_group %}
-            <a class="ui yellow button" href="{% url 'committee_admin' %}">{% trans "Committees" %}</a>
-	{% endif %}
+    <div class="ui container">
+        <h1>{% trans "Admin panel" %}</h1>
+        <div class="ui four doubling stackable cards">
+            {% if user|has_any_article_permission or user.is_superuser %}
+                <div class="ui yellow card">
+                    <a href="{% url 'admin-articles' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey newspaper outline icon"></i>{% trans "Articles" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can create, edit and delete articles." %}
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            {% if user|has_any_event_permission or user.is_superuser %}
+                <div class="ui yellow card">
+                    <a href="{% url 'admin-events' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey calendar outline icon"></i>{% trans "Events" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can create, edit and delete events and their occurrences." %}
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            {% if perms.make_queue.can_create_event_reservation %}
+                <div class="ui yellow card">
+                    <a href="{% url 'admin_reservation' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey cogs icon"></i>{% trans "Reservations" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can view machine reservations for events and other MAKE NTNU causes." %}
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            {% if perms.make_queue.change_quota %}
+                <div class="ui yellow card">
+                    <a href="{% url 'quota_panel' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey clock outline icon"></i>{% trans "Quota" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can create and edit both global and personal quotas for reservations of machines." %}
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            {% if perms.groups.can_edit_group %}
+                <div class="ui yellow card">
+                    <a href="{% url 'committee_admin' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey users icon"></i>{% trans "Committees" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can edit the committees' description, image and email." %}
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            {% if perms.make_queue.change_printer3dcourse %}
+                <div class="ui yellow card">
+                    <a href="{% url 'course_panel' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey user plus icon"></i>{% trans "Course registrations" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can add and edit information about persons who have taken the 3D-printer course." %}
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+        </div>
     </div>
 {% endblock body %}

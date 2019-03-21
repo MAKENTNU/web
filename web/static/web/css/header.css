@@ -1,144 +1,279 @@
-.nav {
+#header {
+    --logo-padding: 30px;
+    --logo-width: 360px;
+    --logo-min-width: 120px;
+    --logo-space: minmax(var(--logo-min-width), var(--logo-width));
+
+    --burger-margin: 1em;
+
+    --header-height: 120px;
+
+    /* nav */
+    --nav-space-between: 2em;
+    --bubble-background-extra-width: calc(1.5 * var(--nav-space-between));
+    --dur: 0.15s;
+    --font-size: 1.25em;
+
     display: grid;
-    grid-template-columns: minmax(120px, 1fr) 3fr;
-    grid-template-rows: 120px;
+    grid-template-columns: 1fr auto 1fr;
     width: 100%;
-    height: 120px;
-    background-color: rgb(33, 43, 52);
+    height: var(--header-height);
+    background-color: rgb(34, 43, 52);
 }
 
-.nav .menu {
+#header .item > .text {
+    color: #DCDDDE;
+}
+
+#header .item:hover > .text {
+    color: #FFF;
+}
+
+#header div.logo-centering {
+    display: none;
+}
+
+#header .logo {
+    display: grid;
+    grid-template-columns: var(--logo-padding) var(--logo-space) minmax(var(--nav-space-between), var(--logo-padding));
     align-self: center;
-    margin: 0;
-    padding: 0 30px;
 }
 
-.nav .logo {
-    align-self: center;
-    padding: 0 30px;
-}
-
-.nav .logo img {
+#header .logo img {
+    display: none; /* Logo size changes at the bottom of this stylesheet */
+    margin: auto;
+    max-height: 50px;
     object-fit: contain;
 }
 
-.limg {
+#burger {
     display: none;
+    align-self: center;
+    justify-self: end;
+    margin-right: var(--burger-margin);
 }
 
-.limg.large {
-    display: inline;
-}
-
-.burger {
-    display: none;
-    margin-bottom: -10px;
-}
-
-.burger:hover {
+#burger:hover {
     cursor: pointer;
 }
 
-.burger {
-    align-self: center;
-    justify-self: center;
+#nav {
+    font-size: var(--font-size);
 }
 
-.burger i {
-    color: #FFFFFF;
-    font-size: 30px;
+#nav > .item,
+#side-nav > .item {
+    height: calc(var(--font-size) + 2em);
+    margin: calc(var(--nav-space-between) / 2);
+    padding: 0;
+    justify-content: center;
 }
 
-.nav .ui.inverted.menu .item {
-    color: rgba(255, 255, 255, .7) !important;
+#nav > .item:hover,
+#side-nav > .item:hover,
+#nav-user-dropdown.active {
+    /* Disables property from Semantic UI */
+    background-color: transparent;
 }
 
-.lang-form {
-    display: none;
+#nav > .item .bubble-background,
+#side-nav > .item .bubble-background {
+    position: absolute;
+    width: 100%;
+    height: var(--font-size);
+    border-radius: 2em;
+    opacity: 0;
+    transition: width var(--dur) linear, height var(--dur) linear, opacity var(--dur) ease-out;
 }
 
-@media screen and (max-width: 900px) {
-    .limg.large {
-        display: none;
-    }
+#nav > .item:hover .bubble-background,
+#side-nav > .item:hover .bubble-background {
+    width: calc(100% + var(--bubble-background-extra-width));
+    height: calc(var(--font-size) + 2em);
+    opacity: 1;
+}
 
-    .limg.small {
-        display: none;
-    }
+#nav > .item:active .bubble-background,
+#side-nav > .item:active .bubble-background {
+    /* Prevents the bubble-backgrounds from only partially expanding before the new page loads
+       (when clicking on a link in the navbar), on fast mobile devices */
+    transition: all 0s;
+}
 
-    .limg.medium {
-        display: inline;
+#nav > .item > .text,
+#side-nav > .item > .text {
+    z-index: 1;
+    transition: color var(--dur) ease;
+}
+
+#nav > .item .make_bg_yellow.bubble-background {
+    filter: brightness(90%);
+}
+
+#nav > .item .make_bg_turquoise.bubble-background {
+    filter: brightness(90%);
+}
+
+#nav > .item .make_bg_blue.bubble-background,
+#side-nav > .item .make_bg_blue.bubble-background {
+    filter: brightness(130%);
+}
+
+#side-nav {
+    --estimated-max-name-length: 10em;
+
+    margin: 0;
+    justify-self: end;
+    display: grid;
+    grid-template-columns: var(--estimated-max-name-length) calc(var(--logo-padding) + 10px);
+    justify-items: end;
+    font-size: var(--font-size);
+}
+
+#side-nav > .item {
+    margin-right: 0;
+}
+
+#nav-user-dropdown .menu {
+    background-color: rgb(34, 43, 52);
+    border-radius: 7px;
+    border: 2px solid rgb(220, 221, 222);
+}
+
+#nav-user-dropdown .menu > .item {
+    /* Fixes weird centering of dropdown items, caused by Semantic UI setting dropdown menu to `display: flex !important`
+       when it's too close to the right window edge */
+    align-self: auto;
+}
+
+#nav-user-dropdown .menu > .item:hover {
+    background-color: rgba(255, 255, 255, .08) !important; /* Overrides Semantic UI */
+}
+
+#side-nav .lang-link {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    right: 0;
+}
+
+#side-nav .lang-link .link {
+    margin: 0;
+    align-self: start;
+}
+
+#side-nav .lang-link .link .text {
+    margin-right: 0.5em;
+}
+
+#side-nav .lang-link .link .globe.icon {
+    margin: 0;
+}
+
+/* Narrower space between elements in navbar */
+@media screen and (max-width: 1200px) {
+    #header {
+        --nav-space-between: 1em;
     }
 }
 
-@media screen and (max-width: 730px) {
-    .limg.large {
-        display: inline;
+/* Switch to mobile layout with burger */
+@media screen and (max-width: 992px) {
+    #header {
+        --burger-space: minmax(calc(4em + var(--burger-margin)), 1fr);
+
+        grid-template-columns: var(--burger-space) auto var(--burger-space);
+        grid-template-rows: var(--header-height);
     }
 
-    .limg.small {
-        display: none;
-    }
-
-    .limg.medium {
-        display: none;
-    }
-
-    .nav {
-        grid-template-columns: 1fr 3fr;
-    }
-
-    .nav .logo {
-        margin-right: 80px;
-    }
-
-    .nav .menu {
-        display: none;
-        grid-row-start: 2;
-        grid-column-start: 1;
-        grid-column-end: 3;
-    }
-
-    .nav.active .menu {
-        display: inline;
-        padding-left: 10px;
-        padding-bottom: 20px !important;
-
-    }
-
-    .nav.active {
+    #header.active {
         height: auto;
     }
 
-    .burger {
+    #header div.logo-centering {
         display: inline;
+    }
+
+    #header .logo {
+        grid-template-columns: var(--logo-padding) var(--logo-space) var(--logo-padding);
+    }
+
+    #burger {
+        display: inline;
+    }
+
+    #nav {
+        grid-row: 2;
+        grid-column-start: 1;
+        grid-column-end: 4;
+        margin: 0;
+        justify-self: center; /* Makes the navbar not take up the entire width of its parent, which most noticably applies to the buttons inside */
+    }
+
+    #nav,
+    #side-nav {
+        display: none;
+    }
+
+    #header.active #nav,
+    #header.active #side-nav {
+        display: inline;
+    }
+
+    #nav > .item,
+    #side-nav > .item {
+        margin: 0;
+    }
+
+    #side-nav {
+        align-self: end;
+        justify-self: center;
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-column-end: 5;
+        margin-top: 2em;
+        margin-bottom: 1em;
+    }
+
+    #header.active #nav-user-dropdown .menu {
+        /* Fixes Semantic UI de-centering the dropdown menu */
+        left: initial;
+    }
+
+    #side-nav .lang-link {
+        position: static;
     }
 }
 
-@media screen and (max-width: 600px) {
-    .limg.large {
-        display: none;
-    }
+/*** Logo size changes ***/
 
-    .limg.small {
-        display: none;
+@media screen and (min-width: 1201px) {
+    #header .logo img.large {
+        display: block;
     }
+}
 
-    .limg.medium {
-        display: inline;
+@media screen and (max-width: 1200px) and (min-width: 993px) {
+    #header .logo img.medium {
+        display: block;
+    }
+}
+
+/* Switch to mobile layout */
+@media screen and (max-width: 992px) and (min-width: 601px) {
+    #header .logo img.large {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 600px) and (min-width: 341px) {
+    #header .logo img.medium {
+        display: block;
     }
 }
 
 @media screen and (max-width: 340px) {
-    .limg.medium {
-        display: none;
-    }
-
-    .limg.large {
-        display: none;
-    }
-
-    .limg.small {
-        display: inline;
+    #header .logo img.small {
+        display: block;
     }
 }

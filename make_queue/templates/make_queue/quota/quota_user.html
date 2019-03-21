@@ -1,13 +1,30 @@
-<div class="ui card">
-    <div class="make_hidden" data-username="{{ user.username }}" id="current_username"></div>
-    <div class="content">
-        <div class="header" data-user>{{ user.first_name }} {{ user.last_name }}</div>
-        <div class="meta">{{ user.username }}</div>
+{% load i18n %}
+
+{% for quota in user_quotas %}
+    <div class="ui card">
+        <div class="content">
+            <div class="header">
+                {% if quota.diminishing %}
+                    {% trans "One-time quota" %}
+                {% else %}
+                    {% trans "Replenishing quota" %}
+                {% endif %}
+                <a href="{% url "edit_quota" quota.pk %}"><i class="ui yellow icon pencil"></i></a>
+                {% if perms.make_queue.delete_quota %}
+                    <a class="delete confirm" href="{% url "delete_quota" quota.pk %}">
+                        <i class="ui red icon trash"></i>
+                    </a>
+                {% endif %}
+            </div>
+            <div class="meta">{{ quota.machine_type.name }}</div>
+            <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
+            {% if quota.ignore_rules %}
+                <b>{% trans "Ignores rules" %}</b>
+            {% endif %}
+        </div>
     </div>
-</div>
-<div class="ui card machine_card" id="3D-Printer_card">
-    {% include 'make_queue/quota/3d-quota.html' %}
-</div>
-<div class="ui card machine_card" id="Sewing_card">
-    {% include 'make_queue/quota/sewing-quota.html' %}
-</div>
+{% empty %}
+    <div class="text-centered">
+        <i>{% trans 'User has no personal quotas' %}</i>
+    </div>
+{% endfor %}

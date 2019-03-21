@@ -1,0 +1,25 @@
+{% extends "internal/base.html" %}
+{% load i18n %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>{% trans "Set member" %} "{{ form.instance.user.get_full_name }}" {% trans "as quit" %}</h1>
+        <form class="ui form" method="POST" action="">
+            {% csrf_token %}
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.date_quit.label }}</label>
+                    {{ form.date_quit }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.reason_quit.label }}</label>
+                    {{ form.reason_quit }}
+                </div>
+            </div>
+            <button class="ui right floated yellow button">{% trans "Set quit" %}</button>
+            <a class="ui right floated red button" href="{% url "members" %}">{% trans "Cancel" context "abort action" %}</a>
+        </form>
+    </div>
+
+{% endblock %}

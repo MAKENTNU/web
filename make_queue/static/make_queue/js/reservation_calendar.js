@@ -1,8 +1,8 @@
 function getWeekNumber(date) {
     date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
     date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-    var yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-    var weekNumber = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    let yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    let weekNumber = Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
     return weekNumber;
 }
 
@@ -28,8 +28,8 @@ $("#period_desktop, #period_mobile").calendar({
             current_location[current_location.length - 4] = date.getFullYear();
             current_location[current_location.length - 3] = getWeekNumber(date);
             document.location = current_location.join("/");
-        }
-    }
+        },
+    },
 );
 
 $(".enable_popup").popup();
@@ -40,7 +40,7 @@ if (allowed) {
         $("<div>").addClass("header").html(gettext("New reservation")).appendTo(container);
         $("<div>").html(date).appendTo(container);
         $("<div>").html(startTime + " - " + endTime).appendTo(container);
-        let form = $("<form>").attr("method", "POST").attr("action", langPrefix + "/reservation/make/" + machine.type + "/" + machine.pk + "/").addClass("ui form").appendTo(container);
+        let form = $("<form>").attr("method", "POST").attr("action", langPrefix + "/reservation/make/" + machine.pk + "/").addClass("ui form").appendTo(container);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
         $("<input>").addClass("make_hidden").val(date + " " + startTime).attr("name", "start_time").appendTo(form);
         $("<input>").addClass("make_hidden").val(date + " " + endTime).attr("name", "end_time").appendTo(form);
@@ -51,6 +51,6 @@ if (allowed) {
     }
 } else {
     function timeSelectionPopupHTML(date, startTime, endTime, machine) {
-        return $("<div>").html(gettext("Can't add more reservations"))
+        return $("<div>").html(gettext("Can't add more reservations"));
     }
 }

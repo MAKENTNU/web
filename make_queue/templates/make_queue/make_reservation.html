@@ -25,8 +25,9 @@
                 {% trans "Edit reservation" %}
             {% endif %}
         </div>
+
         <form class="ui form" id="reserve_form" method="post"
-              data-max-time-reservation="{{ quota.max_time_reservation }}">
+              {% if not new_reservation %}data-reservation="{{ reservation_pk }}"{% endif %}>
             {% csrf_token %}
             <div class="two fields">
                 <div class="field">
@@ -41,7 +42,7 @@
                         <div class="menu">
                             {% for machine_type in machine_types %}
                                 {% if machine_type.instances %}
-                                    <div class="item {% if selected_machine.literal == machine_type.literal %}selected_machine_type{% endif %}"
+                                    <div class="item {% if selected_machine.machine_type.name == machine_type.literal %}selected_machine_type{% endif %}"
                                          data-value="{{ machine_type.literal }}">{{ machine_type.literal }}</div>
                                 {% endif %}
                             {% endfor %}
@@ -56,16 +57,14 @@
                             {% trans "Select machine" %}
                         </div>
                         <i class="dropdown icon"></i>
-                        {% for machine_type in machine_types %}
-                            {% if machine_type.instances %}
-                                <div class="menu {{ machine_type.literal }}">
-                                    {% for instance in machine_type.instances %}
-                                        <div class="item {% if selected_machine.pk == instance.pk %}selected_machine_name{% endif %}"
-                                             data-value="{{ instance.pk }}">{{ instance.name }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+                        <div class="menu">
+                            {% for machine_type in machine_types %}
+                                {% for instance in machine_type.instances %}
+                                    <div class="{{ machine_type.literal }} item {% if selected_machine.pk == instance.pk %}selected_machine_name{% endif %}"
+                                         data-value="{{ instance.pk }}">{{ instance.name }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -74,7 +73,7 @@
                 <div class="field">
                     <label>{% trans "Start time" %}</label>
                     <div class="ui calendar" id="start_time">
-                        <div class="ui input left icon">
+                        <div class="ui input {% if not can_change_start_time %}disabled{% endif %} left icon">
                             <i class="calendar icon"></i>
                             <input name="start_time" type="text" placeholder="{% trans "Start time" %}"
                                    value="{% if start_time %}
@@ -175,9 +174,9 @@
         maximum_day.setDate(maximum_day.getDate() + {{ maximum_days_in_advance }});
     </script>
     <script src="{% url 'javascript-catalog' %}"></script>
+    {% include "make_queue/js/reservation_rules.html" %}
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
     <script>
-        getFutureReservations($('#machine_type_dropdown').dropdown('get value'), $('#machine_name_dropdown').dropdown('get value'), {% invert start_time %});
-        updateMaxReservationTime("{{ selected_machine.literal }}");
+        getFutureReservations($('#machine_name_dropdown').dropdown('get value'), {% invert start_time %});
     </script>
 {% endblock %}

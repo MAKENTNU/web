@@ -88,3 +88,53 @@
         display: none !important;
     }
 }
+
+.machine-title {
+    vertical-align: sub;
+    display: inline;
+}
+
+.machine-title-field {
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+}
+
+.action.list > .item {
+    border: 1px solid rgba(34, 36, 38, .35) !important;
+    border-bottom-width: 0 !important;
+}
+
+.action.list > .item:first-child {
+    border-radius: 5px 5px 0 0 !important;
+}
+
+.action.list > .item:last-child {
+    border-bottom-width: 1px !important;
+    border-radius: 0 0 5px 5px !important;
+}
+
+.action.list > .item a {
+    color: rgba(0, 0, 0, .4);
+}
+
+.action.list .item.disable {
+    background-color: rgba(34, 36, 38, .20) !important;
+}
+
+.action.list .item.disable:hover {
+    cursor: default;
+}
+
+.action.list a.item.disable,
+.action.list a.item.disable:hover {
+    cursor: default;
+}
+
+.large.middle.aligned.list.icon {
+    padding: 0;
+}
+
+.large.middle.aligned.cogs.icon {
+    font-size: 1.3em;
+    padding: 0;
+}

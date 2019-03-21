@@ -2,27 +2,33 @@ from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.utils.datetime_safe import datetime
 
-from make_queue.models import Machine
+from make_queue.fields import MachineTypeField
+from make_queue.models.models import Machine, Reservation
 
 
 class MachineType:
-    regex = "(" + "|".join(machine.literal.replace("-", "\-") for machine in Machine.__subclasses__()) + ")"
+    regex = "([0-9]+)"
 
     def to_python(self, value):
-        return Machine.get_subclass(value)
+        return MachineTypeField.get_machine_type(int(value))
 
-    def to_url(self, machine_class):
-        return machine_class.literal
+    def to_url(self, machine_type):
+        if type(machine_type) is list and machine_type:
+            return machine_type[0].id
+        return machine_type.id
 
 
-class MachineTypeSpecific:
-    regex = MachineType.regex + "/" + "([0-9]+)"
+class SpecificMachine:
+    regex = "([0-9]+)"
 
     def to_python(self, value):
-        return MachineType().to_python(value.split("/")[0]).objects.get(pk=int(value.split("/")[1]))
+        try:
+            return Machine.objects.get(pk=int(value))
+        except Machine.DoesNotExist:
+            raise ValueError("No machine for that key")
 
     def to_url(self, machine):
-        return MachineType().to_url(machine.__class__) + "/" + str(machine.pk)
+        return str(machine.pk)
 
 
 class Year:
@@ -66,21 +72,26 @@ class DateTime:
 
 
 class MachineReservation:
-    regex = MachineTypeSpecific.regex + "/([0-9]+)"
+    regex = "([0-9]+)"
 
     def to_python(self, value):
-        return MachineTypeSpecific().to_python("/".join(value.split("/")[:-1])).get_reservation_set().get(
-            pk=int(value.split("/")[-1]))
+        try:
+            return Reservation.objects.get(pk=int(value))
+        except Reservation.DoesNotExist:
+            raise ValueError("No reservation for that key")
 
     def to_url(self, reservation):
-        return MachineTypeSpecific().to_url(reservation.get_machine()) + "/" + str(reservation.pk)
+        return str(reservation.pk)
 
 
 class UserByUsername:
     regex = "([-0-9A-Za-z.]*)"
 
     def to_python(self, value):
-        return get_object_or_404(User, username=value)
+        try:
+            return User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise ValueError("No user with that username")
 
     def to_url(self, user):
         return user.username

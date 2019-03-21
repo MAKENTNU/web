@@ -1,0 +1,50 @@
+{% load i18n %}
+
+<div class="ui action input" id="{{ widget.attrs.id }}">
+    <input type="text" readonly value="{{ widget.value.name }}">
+    <button class="ui right labeled icon yellow button" id="{{ widget.attrs.id }}-button">
+        {% trans "Upload image" %} <i class="ui upload icon"></i>
+    </button>
+    <input hidden type="file" name="{{ widget.name }}" accept="{{ widget.attrs.accept }}" formnovalidate data-required="{{ widget.attrs.required }}">
+</div>
+{% if widget.value %}
+    <a href="{{ widget.value.url }}" target="_blank">View old image</a>
+{% endif %}
+<div class="ui red pointing label" id="{{ widget.attrs.id }}-error-message">
+    {% trans "An image is required" %}
+</div>
+
+<script>
+    $("#{{ widget.attrs.id }}-error-message").hide();
+
+    $("#{{ widget.attrs.id }}-button, #{{ widget.attrs.id }} input[type=text]").click((e) => {
+        let button = $(e.target);
+        let fileInput = button.parent().find("input[type=file]");
+        fileInput.change((e) => {
+            // Set filename in visible readonly text field
+            button.parent().find("input[type=text]").val($(e.target).val().split("\\").pop().split("/").pop());
+        });
+        fileInput.click();
+
+        // Make sure that the button does not submit the form
+        return false;
+    }).closest("form").submit(() => {
+        // Toggle an error message. Cannot use the builtin on required, as the readonly field cannot have required,
+        // and the other field is hidden. Meaning that required will not work correctly
+        let input = $("#{{ widget.attrs.id }}");
+        // Check the value of the text field that holds the filename, as if there is already an old file uploaded,
+        // a new file is not required. In that case, the filename will be displayed in the readonly text field
+        let hasFile = input.find("input[type=text]").val() !== "";
+        let required = input.find("input[type=file]").data("required") === "True";
+        let errorMessage = $("#{{ widget.attrs.id }}-error-message");
+        let isFilledIn = hasFile || !required;
+
+        if (isFilledIn) {
+            errorMessage.hide();
+        } else {
+            errorMessage.show();
+        }
+
+        return isFilledIn;
+    });
+</script>

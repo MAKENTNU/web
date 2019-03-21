@@ -8,7 +8,7 @@ a.place {
     line-height: 16px !important;
 }
 
-.ui.icon {
+.ui.icon.make_yellow {
     color: #F8C700 !important;
 }
 
@@ -85,6 +85,12 @@ a.place {
     position: relative;
 }
 
+.calendar-link {
+    position: absolute;
+    top: 1em;
+    right: 1em;
+}
+
 @media screen and (max-width: 1024px) {
     .right.rail {
         display: none;
@@ -102,5 +108,10 @@ a.place {
 
     .accordion {
         display: inline;
+    }
+
+    .accordion .calendar-link {
+        display: inline-block;
+        position: initial;
     }
 }

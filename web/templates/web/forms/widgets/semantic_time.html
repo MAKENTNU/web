@@ -1,0 +1,8 @@
+<div class="ui calendar">{% include "django/forms/widgets/input.html" %}</div>
+
+<script>
+    $("#{{ widget.attrs.id }}").parent(".ui.calendar").calendar({
+        ampm: false,
+        type: 'time',
+    });
+</script>

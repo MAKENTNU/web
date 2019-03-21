@@ -1,0 +1,189 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block body %}
+
+    <style>
+        .make_hidden {
+            display: none;
+        }
+    </style>
+
+    <div class="ui container">
+        <h1>
+            {% trans "Course registrations" %}
+            <a href="{% url "create_course_registration" %}" data-tooltip="{% trans "Add" %}">
+                <i class="ui green plus icon"></i>
+            </a>
+        </h1>
+
+        <form class="ui form" method="POST" action="{% url "download_course_registrations" %}">
+            {% csrf_token %}
+            <div class="ui fields">
+                <div class="ui six wide field">
+                    <label>{% trans "Filter users based on name" %}</label>
+                    <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
+                           name="search_text">
+                </div>
+                <div class="ui four wide field">
+                    <label>{% trans "Filter users based on status" %}</label>
+                    <div class="ui selection dropdown">
+                        <input type="hidden" name="status_filter" value="" id="status_filter">
+                        <i class="ui dropdown icon"></i>
+                        <div class="default text"></div>
+                        <div class="menu">
+                            <div class="item" data-value="">{% trans "All" %}</div>
+                            {% for choice in possible_statuses %}
+                                <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="ui six wide field">
+                    {# Using label with non-blocking space to keep the download button further down #}
+                    <label>&nbsp;</label>
+                    <button class="ui right floated make_yellow button">
+                        {% trans "Download filtered users" %}
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        {# Prepopulated area to be shown when one or more rows are selected #}
+        <div id="selected-actions" class="make_hidden ui secondary segment">
+            <h4>
+                <span id="num-selected"></span> {% trans "user(s) selected" %}
+            </h4>
+            <div class="ui form">
+                <div class="ui fields">
+                    <div class="ui six wide field">
+                        <label>{% trans "Set status for all selected users" %}</label>
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="status_set" value="" id="status_set">
+                            <i class="ui dropdown icon"></i>
+                            <div class="default text">{% trans "Select status" %}</div>
+                            <div class="menu">
+                                {% for choice in possible_statuses %}
+                                    <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui ten wide field">
+                        <label>&nbsp;</label>
+                        <button class="ui right floated make_yellow button" id="clear-selected-users">
+                            {% trans "Clear selected users" %}
+                        </button>
+                        <button class="ui right floated make_yellow button" id="show-selected-users">
+                            {% trans "Toggle non-selected users" %}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Table of registrations #}
+        <table class="ui very simple selectable celled table">
+            <thead>
+            <tr>
+                <th data-column-name="name">{% trans "Name" %}<i class="ui icon sort down"></i></th>
+                <th data-column-name="username">{% trans "Username" %}</th>
+                <th data-column-name="cardNumber">{% trans "Card number" %}</th>
+                <th data-column-name="date">{% trans "Date" %}</th>
+                <th data-column-name="status">{% trans "Status" %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for registration in registrations %}
+                <tr data-name="{{ registration.name }}" data-username="{{ registration.username }}"
+                    data-card-number="{{ registration.card_number|default:"" }}"
+                    data-date="{{ registration.date|date:"Y-m-d" }}" data-pk="{{ registration.pk }}"
+                    data-status="{{ registration.status }}" class="make_hidden">
+                    <td>
+                        {{ registration.name }}
+                        <a href="{% url "edit_course_registration" registration.pk %}">
+                            <i class="ui yellow pencil icon"></i>
+                        </a>
+                        {% if perms.make_queue.delete_printer3dcourse %}
+                            <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
+                                <i class="ui red trash icon"></i>
+                            </a>
+                        {% endif %}
+                        {% if registration.user %}
+                            <span data-tooltip="{% trans "Connected to user" %}">
+                                <i class="ui icon user"></i>
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ registration.username }}
+                    </td>
+                    {% if registration.card_number %}
+                        <td class="right aligned">
+                            {{ registration.card_number }}
+                        </td>
+                    {% else %}
+                        <td class="error"></td>
+                    {% endif %}
+                    <td>{{ registration.date|date:"Y-m-d" }}</td>
+                    <td class="{% if registration.status != "access" %}warning{% endif %}">
+                        {{ registration.get_status_display }}
+                    </td>
+                </tr>
+
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="ui right floated pagination menu" id="pagination-bar">
+            <a class="item" id="left-skip">
+                <i class="ui icon double angle left"></i>
+            </a>
+            <a class="item" id="left-change">
+                <i class="ui icon angle left"></i>
+            </a>
+            <a class="item" id="right-change">
+                <i class="ui icon angle right"></i>
+            </a>
+            <a class="item" id="right-skip">
+                <i class="ui icon double angle right"></i>
+            </a>
+        </div>
+        <span>
+            {% trans "Displaying" %}
+            <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
+            {% trans "registrations" %}
+        </span>
+    </div>
+
+    {# Modal for confirmation of bulk status update on selected users #}
+    <div class="ui modal" id="set-status-modal">
+        <div class="ui icon header">
+            <i class="yellow exclamation icon"></i>
+            {% trans "Set status of users to" %} &quot;<i><span id="set-status-text"></span></i>&quot;
+        </div>
+
+        <form method="POST" action="{% url "bulk_status_update" %}">
+            {% csrf_token %}
+            <input type="hidden" value="" name="status" id="status">
+        </form>
+
+        <div class="content">
+            <p><b>{% trans "You are changing the status for the following users" %}:</b></p>
+            <p id="selected-users"></p>
+            <p><b>{% trans "Are you sure you want to do this?" %}</b></p>
+        </div>
+
+        <div class="actions">
+            <div class="ui green ok button">
+                {% trans "Set status" %}
+            </div>
+            <div class="ui red cancel button">
+                {% trans "Cancel" context "abort action" %}
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static "make_queue/js/course_panel.js" %}"></script>
+{% endblock %}

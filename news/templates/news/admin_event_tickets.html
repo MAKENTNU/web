@@ -1,0 +1,51 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>{{ event.title }}</h1>
+        <a href="{% url "admin-event" event.pk %}">
+            <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
+        </a>
+
+        <h3>{% trans "Tickets" %}</h3>
+        <b>{{ object.number_of_registered_tickets }}/{{ object.number_of_tickets }} {% trans "tickets reserved" %}</b>
+        <div class="ui relaxed divided list">
+            {% for ticket in tickets %}
+                <div class="item">
+                    <span class="right floated ">
+                        {% if ticket.active %}
+                            <span class="ui green label">{% trans "Active" %}</span>
+                        {% else %}
+                            <span class="ui red label">{% trans "Canceled" %}</span>
+                        {% endif %}
+                    </span>
+                    <i class="ui very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
+                    <div class="ui content">
+                        <div class="header">
+                            {{ ticket.name }} - <a href="mailto:{{ ticket.email }}">{{ ticket.email }}</a>
+                        </div>
+                        <div class="description">
+                            <div>
+                                <b>{% trans "Ref #" %}:</b>
+                                <a href="{% url "ticket" ticket.uuid %}">{{ ticket.uuid }}</a>
+                            </div>
+                            <div>
+                                <b>{% trans "Language" %}</b> {{ ticket.get_language_display }}
+                            </div>
+                            {% if ticket.comment %}
+                                <div>
+                                    <b>{% trans "Comment" %}:</b> {{ ticket.comment }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                {% trans "No tickets have been registered for this event" %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

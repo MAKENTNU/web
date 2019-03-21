@@ -10,29 +10,33 @@
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui centered header">
-        {% block form_header %}
-            {% trans "Edit" %}
-            {{ contentbox.title }}
-        {% endblock form_header %}
-    </h1>
-    <form class="ui form text container" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="field">
-            <div class="ui tabular pointing secondary menu">
-                <a class="active item" data-tab="first"><i class="no flag"></i>&nbsp;{% trans "Norwegian" %}</a>
-                <a class="item" data-tab="second"><i class="us flag"></i>&nbsp;{% trans "English" %}</a>
+    <div class="ui container">
+        <h1 class="ui centered header">
+            {% block form_header %}
+                {% trans "Edit" %}
+                {{ contentbox.title }}
+            {% endblock form_header %}
+        </h1>
+
+        {% if form.content.errors %}
+            <div class="ui error message">
+                <i class="close icon"></i>
+                <div class="header">{% trans "Missing language" %}</div>
+                <div class="content">{% trans "One or more languages has no content" %}</div>
             </div>
-            <div class="ui tab active" data-tab="first">
+            <script>
+                $(".message .close").click(function () {
+                    $(this).closest(".message").fadeOut();
+                });
+            </script>
+        {% endif %}
+
+        <form class="ui form text" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="field">
                 {{ form.content }}
             </div>
-            <div class="ui tab" data-tab="second">
-                {{ form.content_en }}
-            </div>
-        </div>
-        <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
-    </form>
-    <script>
-        $('.tabular.menu .item').tab();
-    </script>
+            <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
+        </form>
+    </div>
 {% endblock body %}

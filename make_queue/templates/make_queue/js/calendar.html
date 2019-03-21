@@ -1,0 +1,195 @@
+{% include 'make_queue/js/reservation_rules.html' %}
+<script>
+    var canIgnoreRules = {{ can_ignore_rules }}; // Used in make_reservation.js
+    {
+        let canMakeReservation = {{ can_make_more_reservations|lower }};
+        let rules = [
+            {% for rule in rules %}
+                {
+                    periods: {{ rule.periods }},
+                    max_inside: {{ rule.max_hours }},
+                    max_crossed: {{ rule.max_hours_crossed }},
+                },
+            {% endfor %}
+        ];
+
+        let time_selection_element = $(".time_selection");
+
+        let zeroPadClock = (number) => ("00" + number).substr(-2, 2);
+        let timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
+
+        let getStartTime = () => parseFloat(time_selection_element.css("top")) / time_selection_element.closest(".day").height() * 24;
+        let getEndTime = () => (parseFloat(time_selection_element.css("top")) + time_selection_element.height()) / time_selection_element.closest(".day").height() * 24;
+        let getDay = () => parseInt(time_selection_element.closest(".day").data("week-index"));
+
+        let currentDate = () => {
+            let dateText = $(clickedDay).data("date").split("-");
+            let startTime = timeToClock(getStartTime()).split(":");
+            return new Date(dateText[0], parseInt(dateText[1]) - 1, dateText[2], startTime[0], startTime[1]);
+        };
+
+        let resetSelection = () => {
+            clickedDay = null;
+            selected = false;
+            clickedPoint = 0;
+            resizingDirection = null;
+            time_selection_element.remove();
+        };
+
+        let clickedDay, clickedPoint, selected, resizingDirection;
+        resetSelection();
+
+        let onLetGoFunc = (event) => {
+            if ($(clickedDay).find($(event.target)) && (event.type === "mouseout" || event.type === "touchout")) return;
+            resizingDirection = null;
+            {# We do not care about the situations where another day is clicked #}
+            if (clickedDay == null || clickedDay !== event.target && !$(clickedDay).find($(event.target))) return false;
+
+            selected = true;
+            let day = time_selection_element.closest(".day");
+
+            {# If there exists a function name timeSelectionPopupHTML create a popup with this as content #}
+            if (typeof timeSelectionPopupHTML !== "undefined") {
+                time_selection_element.popup({
+                    html: timeSelectionPopupHTML(day.data("date"), timeToClock(getStartTime()), timeToClock(getEndTime()), {
+                        type: day.data("machine-type"),
+                        pk: day.data("machine-pk"),
+                    }),
+                    position: "right center", on: "onload",
+                }).popup("show");
+            }
+
+            $("body").mousedown((event) => {
+                if (!$(".popup").find($(event.target)).length && !$(clickedDay).find($(event.target)).length) {
+                    resetSelection();
+                    $("body").unbind("mousedown");
+                }
+            });
+
+            $("<div>").addClass("extend top").on({
+                "mousedown": () => resizingDirection = -1,
+                "touchstart": () => resizingDirection = -1,
+            }).appendTo(time_selection_element);
+            $("<div>").addClass("extend bottom").on({
+                "mousedown": () => resizingDirection = 1,
+                "touchstart": () => resizingDirection = 1,
+            }).appendTo(time_selection_element);
+        };
+
+        let onMouseDownFunc = (event) => {
+            if (clickedDay !== null) return;
+
+            event.preventDefault();
+            clickedDay = event.target;
+            clickedPoint = positionCalculation(event);
+            time_selection_element = $("<div>")
+                .addClass("time_selection")
+                .css("top", clickedPoint + "px")
+                .css("height", "1px")
+                .appendTo($(event.target));
+
+            if (new Date() > currentDate()) {
+                resetSelection();
+                return;
+            }
+
+            $("<div>")
+                .addClass("start_time")
+                .html(timeToClock(getStartTime()))
+                .appendTo(time_selection_element);
+            $("<div>")
+                .addClass("end_time")
+                .html(timeToClock(getEndTime()))
+                .appendTo(time_selection_element);
+        };
+
+        let isOverlapping = () => {
+            let top = parseFloat(time_selection_element.css("top"));
+            let bottom = top + parseFloat(time_selection_element.css("height"));
+            let parentHeight = parseFloat(time_selection_element.closest(".day").height());
+            let isOverlapping = false;
+
+            time_selection_element.closest(".day").children(".make_reservation_calendar_time_table_item").each(function (index, element) {
+                let elementTop = parseFloat($(element).css("top"));
+                if (overlap(top, bottom, elementTop, elementTop + parseFloat($(element).css("height")), parentHeight) > 0) {
+                    isOverlapping = true;
+                }
+            });
+
+            return isOverlapping;
+        };
+
+        let isValid = () => {
+            if (isOverlapping()) return false;
+            let startTime = currentDate();
+            let endTime = new Date(startTime.valueOf());
+            endTime.setHours(getEndTime(), (getEndTime() % 1) * 60);
+            return isValidForRules(rules, startTime, endTime);
+        };
+
+        let limitTimeSelection = (direction) => {
+            while (!isValid()) {
+                if (direction === "top")
+                    time_selection_element
+                        .css("top", parseFloat(time_selection_element.css("top")) + 1 + "px")
+                        .css("height", parseFloat(time_selection_element.css("height")) - 1 + "px");
+                else
+                    time_selection_element
+                        .css("height", parseFloat(time_selection_element.css("height")) - 1 + "px");
+            }
+        };
+
+        let resizeTop = (event) => {
+            let bottomPosition = parseFloat(time_selection_element.css("top")) + parseFloat(time_selection_element.css("height"));
+            let currentY = Math.min(positionCalculation(event), bottomPosition - 1);
+            time_selection_element
+                .css("height", Math.max(bottomPosition - currentY, 1) + "px")
+                .css("top", currentY + "px");
+            if (new Date() > currentDate()) setLimitTop();
+            limitTimeSelection("top");
+            $(".time_selection > .start_time").html(timeToClock(getStartTime()));
+        };
+
+        let resizeBottom = (event) => {
+            let topHeight = parseFloat(time_selection_element.css("top"));
+            let currentY = Math.max(positionCalculation(event), topHeight);
+            time_selection_element.css("height", Math.max(currentY - topHeight, 1) + "px");
+            limitTimeSelection("bottom");
+            $(".time_selection > .end_time").html(timeToClock(getEndTime()));
+        };
+
+        let setLimitTop = () => {
+            let topLimit = (new Date().getHours() / 24 + (new Date().getMinutes() + 1) / (24 * 60) + new Date().getSeconds() / (24 * 60 * 60)) * $(clickedDay).height();
+            time_selection_element
+                .css("height", parseFloat(time_selection_element.css("height")) + parseFloat(time_selection_element.css("top")) - topLimit + "px")
+                .css("top", topLimit + "px");
+        };
+
+        let onMouseMoveFunc = (event) => {
+            if (clickedDay !== event.target || selected) {
+                if (resizingDirection === 1) resizeBottom(event);
+                if (resizingDirection === -1) resizeTop(event);
+                return;
+            }
+
+            let currentY = positionCalculation(event);
+            time_selection_element.css("top", Math.min(currentY, clickedPoint) + "px").css("height", Math.abs(currentY - clickedPoint) + "px");
+            {# Do not allow the selection of an area earlier than the current time #}
+            if (new Date() > currentDate()) setLimitTop();
+            if (currentY > clickedPoint) limitTimeSelection("bottom");
+            else limitTimeSelection("top");
+            $(".time_selection > .start_time").html(timeToClock(getStartTime()));
+            $(".time_selection > .end_time").html(timeToClock(getEndTime()));
+        };
+
+        {# The position calculation differs between touch and mouse events #}
+        let positionCalculation = (event) =>
+            (event.touches === undefined ? event.pageY : event.touches[0].pageY) - $(clickedDay).offset().top;
+
+
+        $(".day").on({
+            "touchstart": onMouseDownFunc, "touchend": onLetGoFunc, "touchmove": onMouseMoveFunc, "touchout": onLetGoFunc,
+            "mousedown": onMouseDownFunc, "mouseup": onLetGoFunc, "mousemove": onMouseMoveFunc, "mouseout": onLetGoFunc,
+        });
+    }
+</script>

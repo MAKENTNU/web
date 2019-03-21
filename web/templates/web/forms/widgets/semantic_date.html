@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load semantic_ui_calendar_extra %}
+
+<script type="text/javascript" src="{% static 'web/calendar/calendar.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'web/calendar/calendar.min.css' %}">
+
+<div class="ui calendar" id="{{ widget.name }}">
+    <div class="ui input left icon">
+        <i class="calendar icon"></i>
+        <input type="text" placeholder="{% trans "Date" %}"
+                {% if widget.value %}
+               value="{{ widget.value }}"
+                {% else %}
+               value="{% set_current_date_only %}"
+                {% endif %} name="{{ widget.name }}">
+    </div>
+</div>
+
+<script>
+    $("#{{ widget.name }}").calendar({
+        type: "date",
+        firstDayOfWeek: 1,
+        monthFirst: false,
+        parser: {
+            date: function (text, settings) {
+                let year = parseInt(text.slice(0, 4));
+                let month = parseInt(text.slice(5, 7)) - 1;
+                let day = parseInt(text.slice(8, 10));
+                return new Date(year, month, day);
+            },
+        },
+    });
+
+    $("form").submit(function () {
+        let zeroPadDateElement = (val) => val < 10 ? "0" + val : val;
+        let date = $("#{{ widget.name }}").calendar("get date");
+        let year = date.getFullYear();
+        let month = zeroPadDateElement(date.getMonth() + 1);
+        let day = zeroPadDateElement(date.getDate());
+        $("#{{ widget.name }} input").val(year + "-" + month + "-" + day);
+    });
+</script>

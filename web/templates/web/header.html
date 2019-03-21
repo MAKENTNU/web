@@ -2,82 +2,114 @@
 {% load i18n %}
 {% load string_tags %}
 {% load permission_tags %}
+{% load hosts %}
 {% get_current_language as LANGUAGE_CODE %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 
-<div class="nav">
-    <div class="burger">
-        <i class="sidebar icon"></i>
-    </div>
+<header id="header">
+    <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
+
     <div class="logo">
+        <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% url 'front-page' %}">
-            <img class="limg large" src="{% static "web/img/logo_white.svg" %}">
-            <img class="limg medium" src="{% static "web/img/logo_make.svg" %}">
-            <img class="limg small" src="{% static "web/img/logo_m.svg" %}">
+            <img class="large" src="{% static "web/img/logo_white.svg" %}">
+            <img class="medium" src="{% static "web/img/logo_make.svg" %}">
+            <img class="small" src="{% static "web/img/logo_m.svg" %}">
         </a>
     </div>
-    <div class="ui secondary inverted menu">
-        <a class="item" href="{% url 'front-page' %}">
-            {% trans "Home" %}
-        </a>
+
+    <i id="burger" class="big inverted sidebar icon"></i>
+
+    <nav id="nav" class="ui secondary inverted menu">
         <a class="item" href="{% url 'events' %}">
-            {% trans "Events" %}
+            <div class="text">{% trans "Events" %}</div>
+            <div class="make_bg_yellow bubble-background"></div>
         </a>
         <a class="item" href="{% url 'articles' %}">
-            {% trans "Articles" %}
-        </a>
-        <a class="item" href="{% url 'makerspace' %}">
-            {% trans "Makerverkstedet" %}
+            <div class="text">{% trans "Articles" %}</div>
+            <div class="make_bg_turquoise bubble-background"></div>
         </a>
         <a class="item" href="{% url 'reservation_machines_overview' %}">
-            {% trans "Reservations" %}
+            <div class="text">{% trans "Reservations" %}</div>
+            <div class="make_bg_blue bubble-background"></div>
         </a>
+        <a class="item" href="{% url 'makerspace' %}">
+            <div class="text">{% trans "Makerverkstedet" %}</div>
+            <div class="make_bg_turquoise bubble-background"></div>
+        </a>
+        <a class="item" href="{% url 'about' %}">
+            <div class="text">{% trans "About us" %}</div>
+            <div class="make_bg_yellow bubble-background"></div>
+        </a>
+
+	{% comment "Apply page" %}
+	The apply (søknad) page. This should only be available when people
+	can apply for MAKE. To make it available, move endcomment tag below
+	this line, before the <a> tag.
+
+	<a class="item" href="{% url 'apply' %}">
+	    <div class="text">SØK</div>
+	    <div class="make_bg_blue bubble-background"></div>
+	</a>
+	{% endcomment %}
+    </nav>
+
+    <div id="side-nav" class="ui secondary menu">
         {% if user.is_authenticated %}
-            <div class="ui dropdown item" id="nav-user-dropdown">
-                {{ user.first_name|first_word }} <i class="dropdown icon"></i>
+            <div id="nav-user-dropdown" class="ui dropdown item">
+                <div class="text">{{ user.first_name|first_word }}</div>
+                <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
+                <div class="make_bg_blue bubble-background"></div>
+
                 <div class="menu transition hidden">
                     {% if user|has_any_permissions or user.is_superuser %}
                         <a class="item" href="{% url 'adminpanel' %}">
-                            {% trans "Administration" %}
+                            <div class="text">{% trans "Administration" %}</div>
                         </a>
                     {% endif %}
                     <a class="item" href="{% url 'profile' %}">
-                        {% trans "Profile" %}
+                        <div class="text">{% trans "Profile" %}</div>
+                    </a>
+                    {% if perms.internal.is_internal %}
+                        <a class="item" href="{% host_url "home" host "internal" "internt" %}">
+                            <div class="text">{% trans "Internal pages" %}</div>
+                        </a>
+                    {% endif %}
+                    <a class="item" href="{% url 'my-tickets' %}">
+                        <div class="text">{% trans "My tickets" %}</div>
                     </a>
                     <a class="item" href="{% url 'logout' %}">
-                        {% trans "Logout" %}
+                        <div class="text">{% trans "Logout" %}</div>
                     </a>
                 </div>
+
             </div>
         {% else %}
             <a class="item" href="{% url 'login' %}">
-                {% trans "Login" %}
+                <div class="text">{% trans "Login" %}</div>
+                <div class="make_bg_blue bubble-background"></div>
             </a>
         {% endif %}
-        <!--div class="right menu">
-            <div class="item">
-                <div class="ui icon input">
-                    <input type="text" placeholder="Search...">
-                    <i class="search link icon"></i>
-                </div>
-            </div>
-            <a class="ui item">
-                Logout
-            </a>
-        </div-->
-        <a class="item lang-link" href="">
-            {% if LANGUAGE_CODE == "en" %}
-                Norsk
-            {% else %}
-                English
-            {% endif %}
-        </a>
-    </div>
-</div>
 
-{# This form is hidden, but is submitted through JQuery #}
-<form class="lang-form" action="{% url 'set_language' %}" method="POST">
+        <div class="lang-link ui inverted secondary menu">
+            <div class="ui language link item">
+                <div class="text">
+                    {% if LANGUAGE_CODE == "en" %}
+                        Norsk
+                    {% else %}
+                        English
+                    {% endif %}
+                </div>
+                <i class="globe icon text"></i>
+            </div>
+        </div>
+
+    </div>
+</header>
+
+{# This form is hidden, but is submitted through jQuery #}
+<form id="lang-form" action="{% url 'set_language' %}" method="POST">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>
@@ -86,16 +118,17 @@
         <input name="language" type="hidden" value="en"/>
         <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
     {% endif %}
-    <input type="submit"/>
 </form>
 
 <script>
     $('#nav-user-dropdown').dropdown({action: "nothing"});
+
     $(".lang-link").click(function (event) {
         event.preventDefault();
-        $(".lang-form").submit();
+        $("#lang-form").submit();
     });
-    $('.burger').click(function () {
-        $('.nav').toggleClass('active');
+
+    $('#burger').click(function () {
+        $('#header').toggleClass('active');
     });
 </script>

@@ -44,18 +44,18 @@ class ModelTestCase(TestCase):
             pub_date=timezone.now().date(),
             pub_time=(timezone.now() + timedelta(seconds=1)).time()
         )
-        Article.objects.create(
+        published1 = Article.objects.create(
             title='PUBLISHED',
             pub_date=(timezone.now() - timedelta(days=1)).date(),
             pub_time=timezone.now().time()
         )
-        Article.objects.create(
+        published2 = Article.objects.create(
             title='PUBLISHED',
             pub_date=timezone.now().date(),
             pub_time=(timezone.now() - timedelta(seconds=1)).time()
         )
         self.assertEqual(Article.objects.published().count(), 2)
-        self.assertEqual(list(Article.objects.published().values_list('title', flat=True)), ['PUBLISHED'] * 2)
+        self.assertEqual(set(Article.objects.published()), {published1, published2})
 
     def test_event_manager(self):
         event = Event.objects.create(title='', hidden=False)
@@ -99,10 +99,10 @@ class ViewTestCase(TestCase):
         )
 
     def test_admin(self):
-        response = self.client.get(reverse('admin'))
+        response = self.client.get(reverse('admin-articles'))
         self.assertNotEqual(response.status_code, 200)
         self.add_permission('change_article')
-        response = self.client.get(reverse('admin'))
+        response = self.client.get(reverse('admin-articles'))
         self.assertEqual(response.status_code, 200)
 
     def test_articles(self):
@@ -188,14 +188,6 @@ class ViewTestCase(TestCase):
 
         self.assertEqual(new.start_date, new_start_date)
         self.assertEqual(new.end_date, new_end_date)
-
-    def test_timeplace_new(self):
-        self.add_permission('add_timeplace')
-        self.add_permission('change_timeplace')
-        response = self.client.get(reverse('timeplace-new', args=[self.event.pk]))
-        new = TimePlace.objects.latest('pk')
-        self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
-        self.assertEquals(new.event, self.event)
 
     def test_admin_article_toggle_view(self):
         def toggle(pk, attr):

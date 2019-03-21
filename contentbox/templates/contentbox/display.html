@@ -11,11 +11,7 @@
             </a>
         {% endif %}
         {% autoescape off %}
-            {% if request.LANGUAGE_CODE == 'nb' %}
-                {{ contentbox.content }}
-            {% else %}
-                {{ contentbox.content_en }}
-            {% endif %}
+            {{ contentbox.content }}
         {% endautoescape %}
     </div>
 {% endblock body %}
