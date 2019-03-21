@@ -16,4 +16,6 @@ urlpatterns = [
 # case, all users would log in through Dataporten anyways, so
 # there would be no passwords to login through the admin page login.
 if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
-    urlpatterns.insert(0, path('login/', RedirectView.as_view(url=reverse("login", host="main"))))
+    urlpatterns.insert(0, path('login/', RedirectView.as_view(
+        url=f"{reverse('login', host='main')}?next=//admin.{settings.PARENT_HOST}"
+    )))
