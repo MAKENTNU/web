@@ -17,14 +17,15 @@ REDIS_PORT = 6379
 STREAM_KEY = ''
 
 # When using more than one sub-domain, the session cookie domain has to be set so
-# that the sub-domains can use the same session. Currently points to "local.test.pe"
-# which has a DNS address of 127.0.0.1. Should be changed in production.
-SESSION_COOKIE_DOMAIN = "local.test.pe"
+# that the sub-domains can use the same session. Currently points to "makentnu.localhost"
+# should be changed in production. Cannot use only "localhost", as domains for cookies
+# are required to have two dots in them.
+SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 
 # For django-hosts to redirect correctly across subdomains, we have to specify the
-# host we are running on. This currently points to "local.test.pe:8000", and should
+# host we are running on. This currently points to "makentnu.localhost:8000", and should
 # be changed in production
-PARENT_HOST = "local.test.pe:8000"
+PARENT_HOST = "makentnu.localhost:8000"
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"
 EMAIL_SITE_URL = "https://makentnu.no"
