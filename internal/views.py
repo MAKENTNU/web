@@ -68,7 +68,9 @@ class MemberQuitView(UpdateView):
     def form_valid(self, form):
         member = form.instance
         if member.retired or member.quit:
-            raise ValidationError("Bad Request. Tried to set member that is either retired or quit to quit.")
+            raise ValidationError(
+                f"Cannot set member as quit when membership state is set to ${'quit' if member.quit else 'retired'}."
+            )
         member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
         member.save()
         return HttpResponseRedirect(self.get_success_url())
@@ -78,7 +80,7 @@ class MemberUndoQuitView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.quit:
-            raise ValidationError("Bad Request. Tried to undo quit for a not quit member.")
+            raise ValidationError("Tried to undo quit for a not quit member.")
         member.toggle_quit(False)
         member.save()
         return reverse_lazy("members", args=(member.pk,))
@@ -88,7 +90,9 @@ class MemberRetireView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if member.quit or member.retired:
-            raise ValidationError("Bad Request. Tried to set member that is either retired or quit to retired.")
+            raise ValidationError(
+                f"Cannot set member as retired when membership state is set to ${'quit' if member.quit else 'retired'}."
+            )
         member.toggle_retirement(True)
         member.save()
         return reverse_lazy("members", args=(member.pk,))
@@ -98,7 +102,7 @@ class MemberUndoRetireView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.retired:
-            raise ValidationError("Bad Request. Tried to undo retirement for a not retired member.")
+            raise ValidationError("Tried to undo retirement for a not retired member.")
         member.toggle_retirement(False)
         member.save()
         return reverse_lazy("members", args=(member.pk,))
@@ -113,7 +117,7 @@ class ToggleSystemAccessView(UpdateView):
         if self.object.member.user != self.request.user and \
                 not self.request.user.has_perm("internal.change_systemaccess"):
             raise PermissionDenied("The requesting user does not have permission to change other's system accesses")
-        if  not self.object.should_be_changed():
+        if not self.object.should_be_changed():
             raise Http404("System access should not be changed")
         return super().get_context_data(**kwargs)
 
