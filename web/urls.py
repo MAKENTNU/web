@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import permission_required
 from django.urls import path, re_path, include
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
+from django.urls import path, re_path, include
 from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
@@ -24,8 +25,7 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path('reservation/', include('make_queue.urls')),
-    path('adminpanel/', AdminPanelView.as_view(), name='adminpanel'),
-    path('admin/', admin.site.urls),
+    path('admin/', AdminPanelView.as_view(), name='adminpanel'),
     path('', IndexView.as_view(), name='front-page'),
     path('login/', RedirectView.as_view(url='/login/dataporten/'), name='login'),
     path('logout/', Logout.as_view(), name='logout'),
