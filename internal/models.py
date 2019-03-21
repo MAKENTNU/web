@@ -35,18 +35,22 @@ class Member(models.Model):
     retired = models.BooleanField(default=False, verbose_name=_("Retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
 
-    def on_create(self):
-        self.email = self.user.email
-        self.save()
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        is_creation = self.pk is None
 
-        for property_name, value in SystemAccess.name_choices:
-            # All members will be registered on the website when added to the members list
-            SystemAccess.objects.create(name=property_name, value=property_name == SystemAccess.WEBSITE, member=self)
+        super().save(force_insert, force_update, using, update_fields)
 
-        # Add user to the MAKE group
-        self.toggle_membership(True)
+        if is_creation:
+            self.email = self.user.email
 
-        return self
+            # Setup all properties for new members
+            for property_name, value in SystemAccess.name_choices:
+                # All members will be registered on the website when added to the members list
+                SystemAccess.objects.create(name=property_name, member=self,
+                                            value=property_name == SystemAccess.WEBSITE)
+
+            # Add user to the MAKE group
+            self.toggle_membership(True)
 
     @property
     def term_joined(self):
@@ -109,15 +113,6 @@ class Member(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
-
-
-@receiver(post_save, sender=Member)
-def member_on_create(sender, instance, created, update_fields=None, **kwargs):
-    """
-    Make sure to run the `on_create` method when a member is created
-    """
-    if created:
-        instance.on_create()
 
 
 @receiver(m2m_changed, sender=Member.committees.through)
