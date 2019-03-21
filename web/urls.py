@@ -49,10 +49,9 @@ if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
         path('', include('social_django.urls', namespace='social')),
         prefix_default_language=False,
     )
-
-# If it is not configured, we would like to have a simple login page. So that
-# we can test with non-superusers without giving them access to the admin page.
 else:
+    # If it is not configured, we would like to have a simple login page. So that
+    # we can test with non-superusers without giving them access to the admin page.
     urlpatterns += i18n_patterns(
         path('login/', auth_views.LoginView.as_view(template_name="web/login.html"), name='login'),
         path('logout/', auth_views.LogoutView.as_view(next_page="/"), name='logout'),
