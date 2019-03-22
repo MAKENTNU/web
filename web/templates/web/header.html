@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load string_tags %}
 {% load permission_tags %}
+{% load hosts %}
 {% get_current_language as LANGUAGE_CODE %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
@@ -70,6 +71,11 @@
                     <a class="item" href="{% url 'profile' %}">
                         <div class="text">{% trans "Profile" %}</div>
                     </a>
+                    {% if perms.internal.is_internal %}
+                        <a class="item" href="{% host_url "home" host "internal" "internt" %}">
+                            <div class="text">{% trans "Internal pages" %}</div>
+                        </a>
+                    {% endif %}
                     <a class="item" href="{% url 'my-tickets' %}">
                         <div class="text">{% trans "My tickets" %}</div>
                     </a>
