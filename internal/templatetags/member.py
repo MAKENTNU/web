@@ -15,7 +15,7 @@ def get_membership_states(member):
     if member.quit:
         states += [(_("Quit"), "red")]
     elif member.retired:
-        states += [(_("Pang"), "blue")]
+        states += [(_("Retired"), "blue")]
     elif not member.active:
         states += [(_("Inactive"), "grey")]
     else:

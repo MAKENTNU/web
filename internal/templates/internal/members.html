@@ -37,8 +37,8 @@
                             <div class="item" data-value="{% trans "Inactive" %}">
                                 <i class="ui grey circle icon"></i>{% trans "Inactive" %}
                             </div>
-                            <div class="item" data-value="{% trans "Pang" %}">
-                                <i class="ui blue circle icon"></i>{% trans "Pang" %}
+                            <div class="item" data-value="{% trans "Retired" %}">
+                                <i class="ui blue circle icon"></i>{% trans "Retired" %}
                             </div>
                             <div class="item" data-value="{% trans "Honorary" %}">
                                 <i class="ui yellow circle icon"></i>{% trans "Honorary" %}
@@ -82,9 +82,9 @@
                 <th>{% trans "Committee" %}<i class="ui up sort icon" id="member-sort-committees"></i></th>
                 <th>{% trans "Role" %}<i class="ui sort icon" id="member-sort-role"></i></th>
                 <th class="mobile hidden">{% trans "Status" %}<i class="ui sort icon" id="member-sort-status"></i></th>
-                <th class="computer only">{% trans "Joined " %}<i class="ui sort icon" id="member-sort-joined"></i></th>
+                <th class="computer only">{% trans "Joined" %}<i class="ui sort icon" id="member-sort-joined"></i></th>
                 <th class="mobile hidden">{% trans "Email" %}<i class="ui sort icon" id="member-sort-email"></i></th>
-                <th class="computer only">{% trans "Phone" %}<i class="ui sort icon" id="member-sort-phone"></i></th>
+                <th class="computer only">{% trans "Phone number" %}<i class="ui sort icon" id="member-sort-phone"></i></th>
             </tr>
             </thead>
             <tbody>
@@ -155,7 +155,7 @@
                     <td id="member-name"></td>
                 </tr>
                 <tr>
-                    <td><b>{% trans "Phone" %}</b></td>
+                    <td><b>{% trans "Phone number" %}</b></td>
                     <td><b><a id="member-phone"></a></b></td>
                 </tr>
                 <tr>
@@ -163,7 +163,7 @@
                     <td><b><a id="member-email"></a></b></td>
                 </tr>
                 <tr>
-                    <td><b>{% trans "Card number" %}</b></td>
+                    <td><b>{% trans "Card number (EM)" %}</b></td>
                     <td id="member-card-number"></td>
                 </tr>
                 <tr>
