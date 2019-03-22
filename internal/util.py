@@ -11,4 +11,4 @@ def date_to_term(date):
         term = "V"
     elif date.month < 8 or date.month == 8 and date.day < 20:
         term = "S"
-    return f"{date.year % 100}{term}"
+    return f"{term}{date.year % 100}"
