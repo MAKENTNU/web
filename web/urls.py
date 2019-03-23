@@ -1,12 +1,10 @@
 from ckeditor_uploader import views as ckeditor_views
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
-from django.contrib import admin
 from django.contrib.auth.decorators import permission_required
 from django.urls import path, re_path, include
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
-from django.urls import path, re_path, include
 from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve

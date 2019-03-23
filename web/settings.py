@@ -16,8 +16,8 @@ REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
 
-# When using more than one sub-domain, the session cookie domain has to be set so
-# that the sub-domains can use the same session. Currently points to "makentnu.localhost"
+# When using more than one subdomain, the session cookie domain has to be set so
+# that the subdomains can use the same session. Currently points to "makentnu.localhost"
 # should be changed in production. Cannot use only "localhost", as domains for cookies
 # are required to have two dots in them.
 SESSION_COOKIE_DOMAIN = ".makentnu.localhost"

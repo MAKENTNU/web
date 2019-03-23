@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import permission_required
 from django.urls import path, include
 from django_hosts import reverse
 
-from internal.views import Home, MembersListView, AddMemberView, EditMemberView, MemberUndoQuitView, MemberQuitView, \
+from internal.views import MembersListView, AddMemberView, EditMemberView, MemberUndoQuitView, MemberQuitView, \
     MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView
 from web.url_util import decorated_includes
 

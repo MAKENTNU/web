@@ -7,7 +7,7 @@ let state = {
     committeeFilter: [],
     sortBy: "committees",
     sortDirection: -1,
-    sortElement: $("#member-sort-committees")
+    sortElement: $("#member-sort-committees"),
 };
 
 String.prototype.isEmpty = function () {
@@ -133,7 +133,7 @@ function sort() {
         state.members.reverse();
     }
 
-    $("#member-table tbody").append(state.members.map((member) => member.element))
+    $("#member-table tbody").append(state.members.map((member) => member.element));
 }
 
 function setup() {
@@ -202,7 +202,7 @@ function setup() {
 
         row.click(() => showDetailedMemberInformation(member));
         member.element = row;
-        state.members.push(member)
+        state.members.push(member);
     });
 
     $("#member-sort-name").parent().click((e) => setSort("name", $(e.target).find(".icon")));

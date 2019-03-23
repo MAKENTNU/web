@@ -245,7 +245,7 @@
     <script src="{% static "internal/js/members.js" %}"></script>
     {% if selected_member %}
         <script>
-            showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}))
+            showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}));
         </script>
     {% endif %}
 {% endblock %}
