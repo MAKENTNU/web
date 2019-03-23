@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
 from django.utils.datetime_safe import datetime
 
 from make_queue.fields import MachineTypeField
