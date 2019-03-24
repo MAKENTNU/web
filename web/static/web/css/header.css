@@ -147,7 +147,7 @@
 }
 
 #nav-user-dropdown .menu > .item:hover {
-    background-color: rgba(255, 255, 255, .08) !important; /* Overrides Semantic UI */
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Semantic UI */
 }
 
 #side-nav .lang-link {

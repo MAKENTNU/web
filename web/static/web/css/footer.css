@@ -50,12 +50,15 @@
     font-family: 'Slack font';
 }
 
-.footer .social.list i, .footer .social.list span {
+.footer .social.list i,
+.footer .social.list span {
     font-size: 28px;
     color: rgb(12, 66, 106) !important;
 }
 
-.footer p, .footer a, .footer i {
+.footer p,
+.footer a,
+.footer i {
     color: #FFFFFF !important;
 }
 

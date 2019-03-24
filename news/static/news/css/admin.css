@@ -15,7 +15,8 @@
     position: relative;
 }
 
-.accordion, .accordion .content {
+.accordion,
+.accordion .content {
     padding: 0 !important;
 }
 
@@ -33,6 +34,7 @@
     cursor: pointer;
 }
 
-span::selection, span img::selection {
+span::selection,
+span img::selection {
     background-color: rgba(0, 0, 0, 0);
 }

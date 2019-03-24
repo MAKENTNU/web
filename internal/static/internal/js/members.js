@@ -1,6 +1,6 @@
 let memberInfoModal = $("#detailed-member-info");
 
-// Global state to reduce number of JQuery calls
+// Global state to reduce number of jQuery calls
 let state = {
     members: [],
     statusFilter: [],
