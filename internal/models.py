@@ -70,51 +70,51 @@ class Member(models.Model):
             return None
         return date_to_term(self.date_quit)
 
-    def toggle_quit(self, quit_state, reason="", date_quit=timezone.now()):
+    def toggle_quit(self, quit_status, reason="", date_quit=timezone.now()):
         """
         Perform all the actions to set a member as quit or undo this action
-        :param quit_state: Indicates if the member has quit
+        :param quit_status: Indicates if the member has quit
         :param reason: The reason why the member has quit
         :param date_quit: The date the member quit
         """
-        self.quit = quit_state
+        self.quit = quit_status
         if self.quit:
             self.date_quit = date_quit
         else:
             self.date_quit = None
 
         self.reason_quit = reason
-        self.toggle_committee_membership(not quit_state)
-        self.toggle_membership(not quit_state)
+        self.toggle_committee_membership(not quit_status)
+        self.toggle_membership(not quit_status)
 
-    def toggle_retirement(self, retirement_state):
+    def toggle_retirement(self, retirement_status):
         """
         Performs all the actions to set a member as retired or to undo this action
-        :param retirement_state: Indicates if the member has retired
+        :param retirement_status: Indicates if the member has retired
         """
-        self.retired = retirement_state
-        self.toggle_committee_membership(not retirement_state)
+        self.retired = retirement_status
+        self.toggle_committee_membership(not retirement_status)
         self.toggle_membership(True)
 
-    def toggle_committee_membership(self, membership_state):
+    def toggle_committee_membership(self, membership_status):
         """
         Adds or removes the user to all the committees of its membership
-        :param membership_state: Indicates if the member should be a part of the commitees
+        :param membership_status: Indicates if the member should be a part of the commitees
         """
         for committee in self.committees.all():
-            if membership_state:
+            if membership_status:
                 committee.group.user_set.add(self.user)
             else:
                 committee.group.user_set.remove(self.user)
 
-    def toggle_membership(self, membership_state):
+    def toggle_membership(self, membership_status):
         """
         Toggle membership by removing/adding the member to the MAKE group (if it exists)
-        :param membership_state: True if the user should be a member of MAKE and false otherwise
+        :param membership_status: True if the user should be a member of MAKE and false otherwise
         """
         make = Group.objects.filter(name="MAKE")
         if make.exists():
-            if membership_state:
+            if membership_status:
                 make.first().user_set.add(self.user)
             else:
                 make.first().user_set.remove(self.user)

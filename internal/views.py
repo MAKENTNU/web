@@ -69,7 +69,7 @@ class MemberQuitView(UpdateView):
         member = form.instance
         if member.retired or member.quit:
             raise ValidationError(
-                f"Cannot set member as quit when membership state is set to ${'quit' if member.quit else 'retired'}."
+                f"Cannot set member as quit when membership status is set to ${'quit' if member.quit else 'retired'}."
             )
         member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
         member.save()
@@ -91,7 +91,7 @@ class MemberRetireView(RedirectView):
         member = get_object_or_404(Member, pk=pk)
         if member.quit or member.retired:
             raise ValidationError(
-                f"Cannot set member as retired when membership state is set to ${'quit' if member.quit else 'retired'}."
+                f"Cannot set member as retired when membership status is set to ${'quit' if member.quit else 'retired'}."
             )
         member.toggle_retirement(True)
         member.save()

@@ -3,7 +3,7 @@ let memberInfoModal = $("#detailed-member-info");
 // Global state to reduce number of JQuery calls
 let state = {
     members: [],
-    stateFilter: [],
+    statusFilter: [],
     committeeFilter: [],
     sortBy: "committees",
     sortDirection: -1,
@@ -57,9 +57,9 @@ function showDetailedMemberInformation(member) {
     memberInfoModal.find("#member-set-retired").attr("href", member.data.retireUrl).toggleClass("make_hidden", member.data.retireUrl.isEmpty());
     memberInfoModal.find("#member-set-not-retired").attr("href", member.data.undoRetireUrl).toggleClass("make_hidden", member.data.undoRetireUrl.isEmpty());
 
-    let memberStateElement = memberInfoModal.find("#member-state, #member-state-header");
-    memberStateElement.empty();
-    memberStateElement.append(member.data.state.map(state => $(`<div class="ui ${state.color} label">${state.name}</div>`)));
+    let memberStatusElement = memberInfoModal.find("#member-status, #member-status-header");
+    memberStatusElement.empty();
+    memberStatusElement.append(member.data.status.map(status => $(`<div class="ui ${status.color} label">${status.name}</div>`)));
 
 
     let memberSystemAccessesElement = memberInfoModal.find("#member-system-accesses");
@@ -99,7 +99,7 @@ function filter() {
      * Filters the displayed rows based on the given state
      */
     $.each(state.members, (index, member) => {
-        let shouldShow = filterAllows(state.stateFilter, member.data.state.map(state => state.name))
+        let shouldShow = filterAllows(state.statusFilter, member.data.status.map(status => status.name))
             && filterAllows(state.committeeFilter, member.data.committees.map(committee => committee.name));
         member.element.toggleClass("make_hidden", !shouldShow);
     });
@@ -140,12 +140,12 @@ function setup() {
     /**
      * Setup of the global state and actions
      */
-    let stateInput = $("input[name=filter-state]");
-    stateInput.change(() => {
-        state.stateFilter = getFilterValues(stateInput);
+    let statusInput = $("input[name=filter-status]");
+    statusInput.change(() => {
+        state.statusFilter = getFilterValues(statusInput);
         filter();
     });
-    state.stateFilter = getFilterValues(stateInput);
+    state.statusFilter = getFilterValues(statusInput);
 
     let committeeInput = $("input[name=filter-committee]");
     committeeInput.change(() => {
@@ -179,10 +179,10 @@ function setup() {
                 undoQuitUrl: row.data("undo-quit"),
                 retireUrl: row.data("retire"),
                 undoRetireUrl: row.data("undo-retire"),
-                // Membership state is a list of pairs of state and color: [('Active', 'green')]. Need to parse this list.
-                state: row.data("state").slice(1, -1).replace(/'/g, "").match(/[^()]+/g).filter(state => state !== ", ").map(state => state.split(", ")).map(state => ({
-                    name: state[0],
-                    color: state[1],
+                // Membership status is a list of pairs of status name and color: [('Active', 'green')]. Need to parse this list.
+                status: row.data("status").slice(1, -1).replace(/'/g, "").match(/[^()]+/g).filter(status => status !== ", ").map(status => status.split(", ")).map(status => ({
+                    name: status[0],
+                    color: status[1],
                 })),
                 // System accesses is a list of quads of name, value, displayText and changeUrl: [("Website", "True", "Yes", "https://...")]. Need to parse this list
                 systemAccesses: row.data("system-accesses").slice(1, -1).replace(/'/g, "").match(/[^()]+/g).filter(access => access !== ", ").map(access => access.split(", ")).map(access => ({
@@ -207,7 +207,7 @@ function setup() {
 
     $("#member-sort-name").parent().click((e) => setSort("name", $(e.target).find(".icon")));
     $("#member-sort-committees").parent().click((e) => setSort("committees", $(e.target).find(".icon")));
-    $("#member-sort-status").parent().click((e) => setSort("state", $(e.target).find(".icon")));
+    $("#member-sort-status").parent().click((e) => setSort("status", $(e.target).find(".icon")));
     $("#member-sort-joined").parent().click((e) => setSort("dateJoined", $(e.target).find(".icon")));
     $("#member-sort-email").parent().click((e) => setSort("email", $(e.target).find(".icon")));
     $("#member-sort-role").parent().click((e) => setSort("role", $(e.target).find(".icon")));
