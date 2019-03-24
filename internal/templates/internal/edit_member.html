@@ -2,6 +2,13 @@
 {% load i18n %}
 
 {% block body %}
+    <style>
+        .ui.checkbox.field input[type=checkbox] {
+            /* Fixes offset too far to the left set by Semantic UI */
+            left: auto !important;
+        }
+    </style>
+
     <div class="ui container">
         <h2>{% trans "Change information for" %}: {{ form.instance.user.get_full_name }}</h2>
         <form class="ui form" method="POST" action="">
