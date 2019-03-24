@@ -2,7 +2,8 @@
 {% load i18n %}
 
 <!DOCTYPE html>
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8">
@@ -24,7 +25,6 @@
     <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
     <script src="{% static "lib/jquery/jquery-3.1.1.min.js" %}"></script>
     <script src="{% static "lib/semantic-ui/semantic.min.js" %}"></script>
-    {% get_current_language as LANGUAGE_CODE %}
     <script>const langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {% block head %}{% endblock head %}
 </head>
