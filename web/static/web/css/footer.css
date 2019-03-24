@@ -10,7 +10,7 @@
     display: table-row;
 }
 
-.footer {
+#footer {
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
@@ -19,20 +19,20 @@
     background-color: rgb(12, 66, 106);
 }
 
-.footer > div {
+#footer > div {
     justify-self: center;
     align-self: center;
 }
 
-.footer .list {
+#footer .list {
     margin: 0;
 }
 
-.footer .social.list {
+#footer .social.list {
     text-align: center;
 }
 
-.footer .social.list .item {
+#footer .social.list .item {
     display: inline-block;
     padding: 17px 0 0 4px;
     background-color: rgb(248, 200, 17);
@@ -42,32 +42,32 @@
     margin: 4px;
 }
 
-.footer .social.list .item.slack-icon {
+#footer .social.list .item.slack-icon {
     padding-left: 0;
 }
 
-.footer .social.list .item.slack-icon span {
+#footer .social.list .item.slack-icon span {
     font-family: 'Slack font';
 }
 
-.footer .social.list i,
-.footer .social.list span {
+#footer .social.list i,
+#footer .social.list span {
     font-size: 28px;
     color: rgb(12, 66, 106) !important;
 }
 
-.footer p,
-.footer a,
-.footer i {
+#footer p,
+#footer a,
+#footer i {
     color: #FFFFFF !important;
 }
 
-.footer .logo {
+#footer .logo {
     align-self: center;
     margin-left: -4px;
 }
 
-.footer .logo img {
+#footer .logo img {
     object-fit: contain;
     width: 150px;
 }
@@ -90,13 +90,13 @@
 }
 
 @media screen and (max-width: 900px) {
-    .footer {
+    #footer {
         grid-template-columns: 1fr;
         grid-gap: 30px;
         text-align: center;
     }
 
-    .footer .logo {
+    #footer .logo {
         margin-left: 0;
     }
 
