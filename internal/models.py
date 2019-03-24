@@ -53,6 +53,14 @@ class Member(models.Model):
             self.toggle_membership(True)
 
     @property
+    def formatted_phone_number(self):
+        if len(self.phone_number) == 8:
+            # Safe to assume that the phone number is Norwegian
+            return "{} {} {}".format(self.phone_number[:3], self.phone_number[3:5], self.phone_number[5:])
+
+        return self.phone_number
+
+    @property
     def term_joined(self):
         return date_to_term(self.date_joined)
 
