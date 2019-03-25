@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.views.generic import TemplateView
 
 from news.models import Article, TimePlace
@@ -22,6 +23,20 @@ class IndexView(TemplateView):
 
 class AdminPanelView(TemplateView):
     template_name = 'web/admin_panel.html'
+    possible_permissions = [
+        "news.add_article", "news.change_article", "news.delete_article",
+        "news.add_event", "news.change_event", "news.delete_event",
+        "news.add_timeplace", "news.change_timeplace", "news.delete_timeplace",
+        "make_queue.can_create_event_reservation",
+        "make_queue.change_quota",
+        "make_queue.change_printer3dcourse",
+        "groups.can_edit_group",
+    ]
+
+    def get_context_data(self, **kwargs):
+        if not any(self.request.user.has_perm(permission) for permission in self.possible_permissions):
+            raise Http404("The requesting user has no permissions for the admin panel")
+        return super().get_context_data(**kwargs)
 
 
 class View404(TemplateView):
