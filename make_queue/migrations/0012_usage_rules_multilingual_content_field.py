@@ -14,7 +14,7 @@ def merge_machine_rule_content_fields(apps, schema_editor):
         rule.save()
 
 
-def reverse_merge_machine_rule_fields(apps, schema_editor):
+def reverse_merge_machine_rule_content_fields(apps, schema_editor):
     MachineUsageRule = apps.get_model("make_queue", "MachineUsageRule")
     for rule in MachineUsageRule.objects.all():
         content_dict = json.loads(rule.content)
@@ -29,7 +29,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(merge_machine_rule_content_fields, reverse_merge_machine_rule_fields),
+        migrations.RunPython(merge_machine_rule_content_fields, reverse_merge_machine_rule_content_fields),
         migrations.RemoveField(
             model_name='machineusagerule',
             name='content_en',
