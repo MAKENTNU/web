@@ -51,9 +51,11 @@
                         <i class="ui large middle make_col_yellow aligned info circle icon"></i>
                         <div class="content">
                             <div class="header">{% trans "Status" %}</div>
-                            <span class="ui {% card_color_from_machine_status machine %} text tiny header">
-                                {% card_text_from_machine_status machine %}
-                            </span>
+                            <b>
+                                <span class="ui {% card_color_from_machine_status machine %} text">
+                                    {% card_text_from_machine_status machine %}
+                                </span>
+                            </b>
                         </div>
                     </div>
                 </div>
