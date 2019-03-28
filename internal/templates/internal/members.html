@@ -94,7 +94,7 @@
                 <tr data-pk="{{ member.pk }}"
                     data-name="{{ member.user.get_full_name }}"
                     data-status='{{ membership_status }}'
-                    data-phone="{{ member.formatted_phone_number }}"
+                    data-phone="{{ member.phone_number }}"
                     data-email="{% if member.email %}{{ member.email }}{% endif %}"
                     data-card-number="{{ member.card_number }}"
                     data-study-program="{{ member.study_program }}"
@@ -130,7 +130,7 @@
                     <td class="mobile hidden">
                         {% if member.email %}<a href="mailto:{{ member.email }}">{{ member.email }}</a>{% endif %}
                     </td>
-                    <td class="computer only"><a href="tel:{{ member.formatted_phone_number }}">{{ member.formatted_phone_number }}</a></td>
+                    <td class="computer only"><a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a></td>
                 </tr>
             {% endfor %}
             </tbody>
