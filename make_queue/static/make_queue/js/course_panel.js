@@ -224,6 +224,7 @@ let rightSkipElement = $("#right-skip");
 let rightChangeElement = $("#right-change");
 let leftChangeElement = $("#left-change");
 let leftSkipElement = $("#left-skip");
+let downloadUsersForm = $("#download_users");
 
 // Setup the initial state
 function setupState() {
@@ -263,6 +264,14 @@ function setupState() {
     leftSkipElement.click(function () {
         state.page = 0;
         updateDisplay();
+    });
+
+    downloadUsersForm.submit(function () {
+        let selected = [];
+        if (state.onlyShowSelectedUsers) {
+            selected = state.elements.filter((e) => e.display).map(e => e.pk);
+        }
+        downloadUsersForm.find("#selected").val(selected)
     });
 
     updateDisplay();
