@@ -21,7 +21,7 @@
 
     <i id="burger" class="big inverted sidebar icon"></i>
 
-    <nav id="nav" class="ui secondary huge inverted menu">
+    <nav id="nav" class="ui secondary huge inverted menu" aria-label="Main">
         <a class="item" href="{% url 'events' %}">
             <div class="text">{% trans "Events" %}</div>
             <div class="make_bg_yellow bubble-background"></div>
@@ -55,14 +55,14 @@
         {% endcomment %}
     </nav>
 
-    <div id="side-nav" class="ui secondary huge inverted menu">
+    <nav id="side-nav" class="ui secondary huge inverted menu">
         {% if user.is_authenticated %}
-            <div id="nav-user-dropdown" class="ui dropdown item">
+            <nav id="nav-user-dropdown" class="ui dropdown item">
                 <div class="text">{{ user.first_name|first_word }}</div>
                 <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
                 <div class="make_bg_blue bubble-background"></div>
 
-                <div class="menu transition">
+                <nav class="menu transition" aria-label="User">
                     {% if user|has_any_permissions or user.is_superuser %}
                         <a class="item" href="{% url 'adminpanel' %}">
                             <div class="text">{% trans "Administration" %}</div>
@@ -82,9 +82,9 @@
                     <a class="item" href="{% url 'logout' %}">
                         <div class="text">{% trans "Logout" %}</div>
                     </a>
-                </div>
+                </nav>
 
-            </div>
+            </nav>
         {% else %}
             <a class="item" href="{% url 'login' %}">
                 <div class="text">{% trans "Login" %}</div>
@@ -105,7 +105,7 @@
             </div>
         </div>
 
-    </div>
+    </nav>
 </header>
 
 {# This form is hidden, but is submitted through jQuery #}

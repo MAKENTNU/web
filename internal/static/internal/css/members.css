@@ -2,7 +2,8 @@
     display: none !important;
 }
 
-#member-table tbody tr, #member-table thead th {
+#member-table tbody tr,
+#member-table thead th {
     cursor: pointer;
 }
 
@@ -20,6 +21,6 @@ form .multiple.labeled.dropdown {
     color: orange;
 }
 
-#member-state-header {
+#member-status-header {
     float: right;
 }

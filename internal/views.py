@@ -69,7 +69,7 @@ class MemberQuitView(UpdateView):
         member = form.instance
         if member.retired or member.quit:
             raise ValidationError(
-                f"Cannot set member as quit when membership state is set to ${'quit' if member.quit else 'retired'}."
+                f"Cannot set member as quit when membership status is set to ${'quit' if member.quit else 'retired'}."
             )
         member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
         member.save()
@@ -80,7 +80,7 @@ class MemberUndoQuitView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.quit:
-            raise ValidationError("Tried to undo quit for a not quit member.")
+            raise ValidationError("Tried to undo quit for a member that has not quit.")
         member.toggle_quit(False)
         member.save()
         return reverse_lazy("members", args=(member.pk,))
@@ -91,7 +91,7 @@ class MemberRetireView(RedirectView):
         member = get_object_or_404(Member, pk=pk)
         if member.quit or member.retired:
             raise ValidationError(
-                f"Cannot set member as retired when membership state is set to ${'quit' if member.quit else 'retired'}."
+                f"Cannot set member as retired when membership status is set to ${'quit' if member.quit else 'retired'}."
             )
         member.toggle_retirement(True)
         member.save()
@@ -102,7 +102,7 @@ class MemberUndoRetireView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.retired:
-            raise ValidationError("Tried to undo retirement for a not retired member.")
+            raise ValidationError("Tried to undo retirement for a nonretired member.")
         member.toggle_retirement(False)
         member.save()
         return reverse_lazy("members", args=(member.pk,))
@@ -116,7 +116,7 @@ class ToggleSystemAccessView(UpdateView):
     def get_context_data(self, **kwargs):
         if self.object.member.user != self.request.user and \
                 not self.request.user.has_perm("internal.change_systemaccess"):
-            raise PermissionDenied("The requesting user does not have permission to change other's system accesses")
+            raise PermissionDenied("The requesting user does not have permission to change others' system accesses")
         if not self.object.should_be_changed():
             raise Http404("System access should not be changed")
         return super().get_context_data(**kwargs)

@@ -5,26 +5,26 @@ register = template.Library()
 
 
 @register.simple_tag()
-def get_membership_states(member):
+def get_membership_statuses(member):
     """
-    Returns a list of tuples (Membership state, Display color) of the states of the membership of the given member
-    :param member: The member to retrieve states for
+    Returns a list of tuples (Membership status, Display color) of the statuses of the membership of the given member
+    :param member: The member to retrieve statuses for
     :return: A list of one or two tuples (two if honorary member)
     """
-    states = []
+    statuses = []
     if member.quit:
-        states += [(_("Quit"), "red")]
+        statuses += [(_("Quit"), "red")]
     elif member.retired:
-        states += [(_("Retired"), "blue")]
+        statuses += [(_("Retired"), "blue")]
     elif not member.active:
-        states += [(_("Inactive"), "grey")]
+        statuses += [(_("Inactive"), "grey")]
     else:
-        states += [(_("Active"), "green")]
+        statuses += [(_("Active"), "green")]
 
     if member.honorary:
-        states += [(_("Honorary"), "yellow")]
+        statuses += [(_("Honorary"), "yellow")]
 
-    return states
+    return statuses
 
 
 @register.simple_tag()
