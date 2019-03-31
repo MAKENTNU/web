@@ -8,7 +8,6 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static "internal/css/members.css" %}">
-    <script src="{% host_url "javascript-catalog" host "main" %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -138,7 +137,7 @@
     </div>
 
     {# Modal for showing detailed information about the user #}
-    <div class="ui inverted longer modal" id="detailed-member-info">
+    <div class="ui longer modal" id="detailed-member-info">
         <div class="header">
             <span id="member-name-header"></span>
             <a id="member-edit"><i class="ui yellow pencil icon"></i></a>
