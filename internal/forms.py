@@ -39,11 +39,6 @@ class EditMemberForm(ModelForm):
             for field_name in ["committees", "role", "comment", "guidance_exemption", "active", "honorary"]:
                 del self.fields[field_name]
 
-    def clean_phone_number(self):
-        phone_number = self.cleaned_data['phone_number']
-        # Remove spaces from phone number, as it'll be formatted (by `Member.formatted_phone_number()`) when displayed
-        return phone_number.replace(" ", "")
-
 
 class MemberQuitForm(ModelForm):
     class Meta:

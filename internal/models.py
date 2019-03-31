@@ -5,6 +5,7 @@ from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from groups.models import Committee
 from internal.util import date_to_term
@@ -22,7 +23,7 @@ class Member(models.Model):
     committees = models.ManyToManyField(Committee, blank=True, verbose_name=_("Committees"))
     role = models.CharField(max_length=64, blank=True, verbose_name=_("Role"))
     email = models.EmailField(blank=True, null=True, verbose_name=_("Email"))
-    phone_number = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Phone number"))
+    phone_number = PhoneNumberField(max_length=32, default="", blank=True, verbose_name=_("Phone number"))
     study_program = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Study program"))
     card_number = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Card number (EM)"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
@@ -51,14 +52,6 @@ class Member(models.Model):
 
             # Add user to the MAKE group
             self.toggle_membership(True)
-
-    @property
-    def formatted_phone_number(self):
-        if len(self.phone_number) == 8:
-            # Safe to assume that the phone number is Norwegian
-            return "{} {} {}".format(self.phone_number[:3], self.phone_number[3:5], self.phone_number[5:])
-
-        return self.phone_number
 
     @property
     def term_joined(self):

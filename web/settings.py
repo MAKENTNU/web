@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'web',
     'make_queue',
     'social_django',
+    'phonenumber_field',
     'news',
     'mail',
     'ckeditor',
@@ -224,3 +225,7 @@ CKEDITOR_CONFIGS = {
         ])
     }
 }
+
+# Phonenumbers
+PHONENUMBER_DEFAULT_REGION = 'NO'
+PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
