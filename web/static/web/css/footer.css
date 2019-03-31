@@ -76,7 +76,7 @@
     width: 100px;
 }
 
-@media screen and (max-width: 900px) {
+@media screen and (max-width: 992px) {
     #footer {
         grid-template-columns: 1fr;
         grid-gap: 30px;

@@ -20,11 +20,7 @@
         </div>
         <div>
             {% autoescape off %}
-                {% if request.LANGUAGE_CODE == 'nb' %}
-                    {{ usage_rules.content }}
-                {% else %}
-                    {{ usage_rules.content_en }}
-                {% endif %}
+                {{ usage_rules.content }}
             {% endautoescape %}
         </div>
     </div>
