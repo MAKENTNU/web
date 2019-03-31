@@ -2,7 +2,8 @@
 {% load i18n %}
 
 <!DOCTYPE html>
-<html lang="en">
+{% get_current_language as LANGUAGE_CODE %}
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8">
@@ -25,7 +26,6 @@
     <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
     <script src="{% static "lib/jquery/jquery-3.1.1.min.js" %}"></script>
     <script src="{% static "lib/fomantic-ui/semantic.min.js" %}"></script>
-    {% get_current_language as LANGUAGE_CODE %}
     <script>const langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {% block head %}{% endblock head %}
 </head>
@@ -40,8 +40,10 @@
                 <div class="make_content_padding"></div>
             {% endblock %}
 
-            {% block body %}
-            {% endblock body %}
+            <main id="main">
+                {% block body %}
+                {% endblock body %}
+            </main>
 
             {% block padding-bottom %}
                 <div class="make_content_padding"></div>
