@@ -22,20 +22,20 @@
 
     <i id="burger" class="big inverted sidebar icon"></i>
 
-    <nav id="nav" class="ui secondary inverted menu" aria-label="Main">
+    <nav id="nav" class="ui secondary huge inverted menu" aria-label="Main">
         <a class="item" href="{% url "members" %}">
             <div class="text">{% trans "Members" %}</div>
             <div class="make_bg_blue bubble-background"></div>
         </a>
     </nav>
 
-    <div id="side-nav" class="ui secondary menu">
+    <div id="side-nav" class="ui huge secondary inverted menu">
         <div id="nav-user-dropdown" class="ui dropdown item">
             <div class="text">{{ user.first_name|first_word }}</div>
             <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
             <div class="make_bg_blue bubble-background"></div>
 
-            <nav class="menu transition hidden" aria-label="User">
+            <nav class="menu transition" aria-label="User">
                 <a class="item" href="{% host_url "front-page" host "main" %}">
                     <div class="text">{% trans "Public pages" %}</div>
                 </a>
