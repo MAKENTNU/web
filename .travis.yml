@@ -13,6 +13,9 @@ install:
 
 # command to run tests
 script:
+  # Necessary for generating staticfiles manifest entries
+  # used by Django's `ManifestStaticFilesStorage`:
+  - python manage.py collectstatic --no-input
   - coverage run --source='.' manage.py test
 
 # command to run after success
