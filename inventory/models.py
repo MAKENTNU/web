@@ -5,11 +5,10 @@ class Item(models.Model):
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=16, null=True)
     category = models.CharField(max_length=128, null=True)
-    description = models.CharField(max_length=256)
-    comment = models.CharField(max_length=256, null=True)
+    description = models.TextField(max_length=256)
+    comment = models.TextField(max_length=256, null=True)
     searchable = models.BooleanField(default=True)
     consumable = models.BooleanField(default=False)
-
 
     @property
     def total_amount(self):  # returns total amount of this item
