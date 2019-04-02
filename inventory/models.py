@@ -8,6 +8,8 @@ class Item(models.Model):
     description = models.CharField(max_length=256)
     comment = models.CharField(max_length=256, null=True)
     searchable = models.BooleanField(default=True)
+    consumable = models.BooleanField(default=False)
+
 
     @property
     def total_amount(self):  # returns total amount of this item
