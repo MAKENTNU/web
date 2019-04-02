@@ -4,8 +4,6 @@
 {% load reservation_extra %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static 'web/calendar/calendar.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'web/calendar/calendar.min.css' %}">
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'make_queue/css/overview.css' %}">
 {% endblock %}
@@ -53,9 +51,11 @@
                         <i class="ui large middle make_col_yellow aligned info circle icon"></i>
                         <div class="content">
                             <div class="header">{% trans "Status" %}</div>
-                            <span class="ui {% card_color_from_machine_status machine %} text tiny header">
-                                {% card_text_from_machine_status machine %}
-                            </span>
+                            <b>
+                                <span class="ui {% card_color_from_machine_status machine %} text">
+                                    {% card_text_from_machine_status machine %}
+                                </span>
+                            </b>
                         </div>
                     </div>
                 </div>
@@ -88,6 +88,5 @@
         {% include 'make_queue/reservation_calendar.html' with week_days=week_days link_prev=link_prev link_next=link_next %}
     </div>
     <script>let allowed = {% if can_make_more_reservations %}true{% else %}false{% endif %};</script>
-    <script src="{% url 'javascript-catalog' %}"></script>
     <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}

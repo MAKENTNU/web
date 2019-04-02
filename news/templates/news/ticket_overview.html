@@ -23,7 +23,7 @@
                     {% if request.user.is_authenticated %}
                         {% trans "Click" %} <a href="{{ claim_url }}">{% trans "here" %}</a>
                     {% else %}
-                        <a href="{% url "social:begin" "dataporten" %}?next={{ claim_url }}">{% trans "Login" %}</a>
+                        <a href="{% url "login" %}?next={{ claim_url }}">{% trans "Login" %}</a>
                     {% endif %}
                     {% trans "to register the ticket to your account." %}
                 </div>
@@ -33,7 +33,7 @@
         {% else %}
             <div class="ui error message">
                 {% trans "This ticket is registered to another account. Please" %}
-                <a href="{% url "social:begin" "dataporten" %}?next={% url "ticket" pk=object.uuid %}">{% trans "login" %}</a>
+                <a href="{% url "login" %}?next={% url "ticket" pk=object.uuid %}">{% trans "login" %}</a>
                 {% trans "to the correct account to see your ticket." %}
             </div>
         {% endif %}

@@ -18,7 +18,7 @@
             </a>
         </h1>
 
-        <form class="ui form" method="POST" action="{% url "download_course_registrations" %}">
+        <form id="download_users" class="ui form" method="POST" action="{% url "download_course_registrations" %}">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
@@ -40,6 +40,7 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" id="selected" name="selected">
                 <div class="ui six wide field">
                     {# Using label with non-blocking space to keep the download button further down #}
                     <label>&nbsp;</label>
@@ -89,7 +90,7 @@
             <tr>
                 <th data-column-name="name">{% trans "Name" %}<i class="ui icon sort down"></i></th>
                 <th data-column-name="username">{% trans "Username" %}</th>
-                <th data-column-name="cardNumber">{% trans "Card number" %}</th>
+                <th data-column-name="cardNumber">{% trans "Card number (EM)" %}</th>
                 <th data-column-name="date">{% trans "Date" %}</th>
                 <th data-column-name="status">{% trans "Status" %}</th>
             </tr>
