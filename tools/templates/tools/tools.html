@@ -18,12 +18,12 @@
             {% for tool in tools_list %}
                 <!-- For the pictures -->
                 {% thumbnail tool.image "250x250"  as im %}
-                    <img class=" clickable css = float-right
-                    			    {% if forloop.first %}tool-first{% endif %}
-			                        {% if forloop.last %}tool-last{% endif %}"
+                    <img class="clickable css = float-right
+                    			    {% if forloop.first %}article-first{% endif %}
+			                        {% if forloop.last %}article-last{% endif %}"
                          src="{{ im.url }}" href="{% url 'tools' tool.id %}"
                          width="{{ im.width }}" height="{{ im.height }}"
-                         style="margin: 30px 0 0 100px ">
+                    style="margin-top: 30px">
                 {% endthumbnail %}
 
                 <!-- For the text -->
