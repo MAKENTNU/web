@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 # Create your views here.
 from django.views.generic import TemplateView
@@ -32,25 +32,17 @@ class ItemView(TemplateView):
         return context
 
 
-def index(request):
-    queryset = ItemInSubContainer.objects.values()
-    output = '<br/>'.join([q.__str__() for q in queryset])
-    template = loader.get_template('inventory/index.html')
-    context = {
-        'output': output
-    }
-    return HttpResponse(template.render(context, request))
+class SearchItemsView(TemplateView):
+    template_name = "inventory/inventory.html"
 
+    def post(self, request):
+        search_string = request.POST.get('search')
 
-def items(request):
-    items = Item.objects.values()
-    print(request)
-    context = {
-        'items': items
-    }
-    template = loader.get_template('inventory/inventory.html')
-    return HttpResponse(template.render(context, request))
+        # TODO: Do some sanity checks on search_string...
 
+        result_name = Item.objects.filter(name__contains=search_string)
+        result_description = Item.objects.filter(description__contains=search_string)
+        data = {
+        }
 
-def item(request):
-    return HttpResponse("an item boys")
+        return JsonResponse(data)

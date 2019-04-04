@@ -9,7 +9,7 @@
 
 {% block body %}
 
-{#    {% include "inventory/treemenu.html" %}#}
+    {#    {% include "inventory/treemenu.html" %}#}
 
 
     <div class="ui container text-centered">
@@ -30,11 +30,11 @@
             <div class="results"></div>
         </div>
 
-        {% for item in items %}
-            <div>
-                {{ item.name|add:" hey" }}
-            </div>
-        {% endfor %}
+        {#        {% for item in items %}#}
+        {#            <div>#}
+        {#                {{ item.name|add:" hey" }}#}
+        {#            </div>#}
+        {#        {% endfor %}#}
     </div>
 {% endblock %}
 
@@ -42,7 +42,38 @@
     <script>
         $('.ui.dropdown').dropdown();
 
-        // Implement Ajax item search query
+
+        // TODO: Call function on change or return of item-search
+        function get_search_query(element, search) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                },
+            });
+            $.ajax({
+                type: "POST",
+                url: '/inventory/search/',
+                data: {
+                    'search': search,
+                },
+                success: function (data) {
+                    if (data['is_forced']) {
+                        element.parents('tr').remove();
+                    }
+                    element.addClass('green');
+                    element.addClass('disabled');
+                    element.html('{% trans "Voted!" %}');
+
+                    if (!data['user_exists']) {
+                        let incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
+                        element.parent().siblings('#vote-count').html(incrementedCount);
+                    }
+                    if (data['skill_passed']) {
+                        element.parents('tr').remove();
+                    }
+                },
+            });
+        }
 
     </script>
 {% endblock scripts %}

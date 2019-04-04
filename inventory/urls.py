@@ -1,7 +1,8 @@
-from django.urls import re_path
+from django.urls import re_path, path
 
-from inventory.views import InventoryView
+from inventory.views import InventoryView, SearchItemsView
 
 urlpatterns = [
-    re_path('(?P<search_word>.*)', InventoryView.as_view())
+    path('', InventoryView.as_view(), name='inventory'),
+    path('search', SearchItemsView.as_view(), name='search'),
 ]
