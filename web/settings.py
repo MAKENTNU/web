@@ -11,10 +11,22 @@ SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
 LOGOUT_URL = '/'
 LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
 CHECKIN_KEY = ''
 REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
+
+# When using more than one subdomain, the session cookie domain has to be set so
+# that the subdomains can use the same session. Currently points to "makentnu.localhost"
+# should be changed in production. Cannot use only "localhost", as domains for cookies
+# are required to have two dots in them.
+SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
+
+# For django-hosts to redirect correctly across subdomains, we have to specify the
+# host we are running on. This currently points to "makentnu.localhost:8000", and should
+# be changed in production
+PARENT_HOST = "makentnu.localhost:8000"
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"
 EMAIL_SITE_URL = "https://makentnu.no"
@@ -36,10 +48,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_hosts',
     'groups',
     'web',
     'make_queue',
     'social_django',
+    'phonenumber_field',
     'news',
     'mail',
     'ckeditor',
@@ -49,9 +63,11 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'channels',
     'tools',
+    'internal',
 ]
 
 MIDDLEWARE = [
+    'django_hosts.middleware.HostsRequestMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -60,9 +76,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
 ROOT_URLCONF = 'web.urls'
+ROOT_HOSTCONF = "web.hosts"
+DEFAULT_HOST = "main"
 
 TEMPLATES = [
     {
@@ -183,7 +202,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "../static")
 STATIC_URL = '/static/'
+
+# ManifestStaticFilesStorage appends every static file's MD5 hash to its filename,
+# which avoids waiting for browsers' cache to update if a file's contents change
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
@@ -207,3 +231,7 @@ CKEDITOR_CONFIGS = {
         ])
     }
 }
+
+# Phonenumbers
+PHONENUMBER_DEFAULT_REGION = 'NO'
+PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'

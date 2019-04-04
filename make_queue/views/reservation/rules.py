@@ -72,11 +72,10 @@ class EditUsageRulesView(PermissionRequiredMixin, UpdateView):
     template_name = 'contentbox/edit.html'
     fields = (
         'content',
-        'content_en',
     )
     permission_required = (
         'make_queue.change_machineusagerule',
     )
 
     def get_success_url(self):
-        return reverse("machine_rules", args=[self.object.machine_type])
+        return reverse("machine_usage_rules", args=[self.object.machine_type])

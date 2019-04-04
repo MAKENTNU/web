@@ -4,6 +4,14 @@
 
 {% block event_classes %} lalign{% endblock event_classes %}
 
+{% block admin-page %}
+    {% if perms.news.change_event %}
+        <a href="{% url "admin-event" article.id %}" class="ui right floated yellow button">
+            <i class="ui sticky note icon"></i>{% trans "Admin page" %}
+        </a>
+    {% endif %}
+{% endblock admin-page %}
+
 {% block rail %}
     <div class="ui right attached rail">
         <div class="ui sticky rail-content">
@@ -12,7 +20,7 @@
                     <div class="content">
                         {% if event.start_date == event.end_date or not event.end_date %}
                             <p>
-                                <i class="ui wait icon"></i>
+                                <i class="ui make_yellow wait icon"></i>
                                 {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
                                 {% if event.end_time %}
                                     - {{ event.end_time|time:"H:i" }}
@@ -20,35 +28,30 @@
                             </p>
                         {% else %}
                             <p>
-                                <i class="ui wait icon"></i>
+                                <i class="ui make_yellow wait icon"></i>
                                 {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
                                 - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
                         {% endif %}
                         {% if event.place %}
                             {% if event.place_url %}
                                 <p>
-                                    <i class="ui marker icon"></i>
+                                    <i class="ui make_yellow marker icon"></i>
                                     <a class="place" href="{{ event.place_url }}" target="_blank">{{ event.place }}</a>
                                 </p>
                             {% else %}
                                 <p>
-                                    <i class="ui marker icon"></i>
+                                    <i class="ui make_yellow marker icon"></i>
                                     {{ event.place }}
                                 </p>
                             {% endif %}
                         {% endif %}
 
                         <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
-                            <i class="ui large calendar outline icon"></i>
+                            <i class="ui make_yellow large calendar outline icon"></i>
                         </a>
                     </div>
-                    {% if not event.event.multiday %}
-                        {% if event.hoopla %}
-                            <div class="ui two buttons">
-                                <a class="ui make_bg_yellow black button" href="{{ event.hoopla }}"
-                                   target="_blank">{% trans "Registration" %}</a>
-                            </div>
-                        {% elif event.number_of_tickets %}
+                    {% if event.event.repeating %}
+                        {% if event.number_of_tickets %}
                             {% if event.number_of_registered_tickets < event.number_of_tickets %}
                                 <div class="ui two buttons">
                                     <a class="ui make_bg_yellow black button"
@@ -69,13 +72,9 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            {% if article.multiday and article.timeplace_set.future %}
+            {% if article.standalone and article.timeplace_set.future %}
                 <div class="ui card">
-                    {% if article.hoopla %}
-                        <a class="ui make_bg_yellow black button" href="{{ article.hoopla }}" target="_blank">
-                            {% trans "Registration" %}
-                        </a>
-                    {% elif article.number_of_tickets %}
+                    {% if article.number_of_tickets %}
                         {% if article.number_of_registered_tickets < article.number_of_tickets %}
                             <a class="ui make_bg_yellow black button" href="{% url "register-event" article.id %}">
                                 {% trans "Registration" %}
@@ -99,11 +98,8 @@
 
 {% block event_accordion %}
     <div class="accordion">
-        {% if article.multiday %}
-            {% if article.hoopla %}
-                <a class="ui make_bg_yellow black fluid button" href="{{ article.hoopla }}"
-                   target="_blank">{% trans "Registration" %}</a>
-            {% elif article.number_of_tickets %}
+        {% if article.standalone %}
+            {% if article.number_of_tickets %}
                 {% if article.number_of_registered_tickets < article.number_of_tickets %}
                     <a class="ui make_bg_yellow black fluid button" href="{% url "register-event" article.id %}" target="_blank">
                         {% trans "Registration" %}
@@ -130,7 +126,7 @@
                 <div class="transition hidden">
                     {% if event.start_date == event.end_date or not event.end_date %}
                         <p>
-                            <i class="ui wait icon"></i>
+                            <i class="ui make_yellow wait icon"></i>
                             {{ event.start_time|time:"H:i" }}
                             {% if event.end_time %}
                                 - {{ event.end_time|time:"H:i" }}
@@ -138,19 +134,19 @@
                         </p>
                     {% else %}
                         <p>
-                            <i class="ui wait icon"></i>
+                            <i class="ui make_yellow wait icon"></i>
                             {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
                             - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
                     {% endif %}
                     {% if event.place %}
                         {% if event.place_url %}
                             <p>
-                                <i class="ui marker icon"></i>
+                                <i class="ui make_yellow marker icon"></i>
                                 <a class="place" href="{{ event.place_url }}" target="_blank">{{ event.place }}</a>
                             </p>
                         {% else %}
                             <p>
-                                <i class="ui marker icon"></i>
+                                <i class="ui make_yellow marker icon"></i>
                                 {{ event.place }}
                             </p>
                         {% endif %}
@@ -158,15 +154,11 @@
 
                     <div class="attend">
                         <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
-                            <i class="ui large calendar outline icon"></i>
+                            <i class="ui make_yellow large calendar outline icon"></i>
                         </a>
 
-                        {% if not event.event.multiday %}
-                            {% if event.hoopla %}
-                                <a class="ui yellow button" href="{{ event.hoopla }}" target="_blank">
-                                    {% trans "Registration" %}
-                                </a>
-                            {% elif event.number_of_tickets %}
+                        {% if event.event.repeating %}
+                            {% if event.number_of_tickets %}
                                 {% if event.number_of_registered_tickets < event.number_of_tickets %}
                                     <a class="ui yellow button" href="{% url "register-timeplace" event.id %}">
                                         {% trans "Registration" %}

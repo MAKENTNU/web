@@ -5,8 +5,6 @@
 {% load reservation_extra %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static 'web/calendar/calendar.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'web/calendar/calendar.min.css' %}">
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
 {% endblock %}
 
@@ -25,6 +23,7 @@
                 {% trans "Edit reservation" %}
             {% endif %}
         </div>
+
         <form class="ui form" id="reserve_form" method="post"
               {% if not new_reservation %}data-reservation="{{ reservation_pk }}"{% endif %}>
             {% csrf_token %}
@@ -56,16 +55,14 @@
                             {% trans "Select machine" %}
                         </div>
                         <i class="dropdown icon"></i>
-                        {% for machine_type in machine_types %}
-                            {% if machine_type.instances %}
-                                <div class="menu {{ machine_type.literal }}">
-                                    {% for instance in machine_type.instances %}
-                                        <div class="item {% if selected_machine.pk == instance.pk %}selected_machine_name{% endif %}"
-                                             data-value="{{ instance.pk }}">{{ instance.name }}</div>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        {% endfor %}
+                        <div class="menu">
+                            {% for machine_type in machine_types %}
+                                {% for instance in machine_type.instances %}
+                                    <div class="{{ machine_type.literal }} item {% if selected_machine.pk == instance.pk %}selected_machine_name{% endif %}"
+                                         data-value="{{ instance.pk }}">{{ instance.name }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -174,7 +171,6 @@
         let maximum_day = new Date();
         maximum_day.setDate(maximum_day.getDate() + {{ maximum_days_in_advance }});
     </script>
-    <script src="{% url 'javascript-catalog' %}"></script>
     {% include "make_queue/js/reservation_rules.html" %}
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
     <script>

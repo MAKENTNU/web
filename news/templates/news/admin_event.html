@@ -10,7 +10,28 @@
 {% block body %}
 
     <div class="ui container">
-        <h1><a href="{% url "event" object.id %}">{{ object.title }}</a></h1>
+        <h1>
+            {{ object.title }}
+            <a class="ui yellow right floated button" href="{% url "event" object.id %}">
+                <i class="ui sticky note icon"></i>{% trans "Go to the event page" %}
+            </a>
+
+            {% if perms.news.change_event %}
+                <a class="ui blue right floated button" href="{% url 'event-edit' event.id %}">
+                    <i class="ui edit icon"></i>{% trans "Edit" %}
+                </a>
+            {% endif %}
+
+            {% if perms.news.delete_event %}
+                <a class="ui delete confirm red button right floated" href="{% url 'event-delete' event.id %}">
+                    <i class="ui trash icon"></i>{% trans "Delete" %}
+                </a>
+            {% endif %}
+        </h1>
+
+        <a href="{% url "admin-events" %}">
+            <i class="ui angle double left icon"></i>{% trans "Admin page for events" %}
+        </a>
 
         <div class="ui info {% if not object.hidden %}hidden{% endif %} message" id="message-hidden">
             <div class="header">
@@ -31,58 +52,10 @@
             {% trans "This event is private! It is only visible to members of MAKE NTNU." %}
         </div>
 
-        <div>
-            <h2>{% trans "Tools" %}</h2>
-            <h1>
-                <i class="ui {{ object.featured|color }} star icon toggle explanation-popup"
-                   data-title="{% trans "Feature" %}"
-                   data-content="{% trans "If selected, the event is shown on the front page." %}"
-                   data-pk="{{ object.pk }}" data-toggle="featured" data-model="event"></i>
-                <i class="ui {{ event.hidden|color }} eye slash icon toggle explanation-popup"
-                   data-title="{% trans "Hidden" %}"
-                   data-content="{% trans "If selected, the event is hidden for non-admin users." %}"
-                   data-pk="{{ object.pk }}" data-toggle="hidden" data-model="event"></i>
-                <img class="makeicon toggle explanation-popup"
-                     data-title="{% trans "Internal" %}"
-                     data-content="{% trans "If selected, the event is only available for MAKE members." %}"
-                        {% if event.private %}
-                     src="{% static "web/img/m_yellow.svg" %}"
-                        {% else %}
-                     src="{% static "web/img/m_grey.svg" %}"
-                        {% endif %}
-                     data-pk="{{ object.pk }}" data-toggle="private" data-model="event">
-                {% if perms.news.change_event %}
-                    <a class="inline-block make_col_blue explanation-popup"
-                       data-title="{% trans "Edit" %}"
-                       data-content="{% trans "If clicked, a form for editing the event is shown." %}"
-                       href="{% url 'event-edit' event.id %}">
-                        <i class="ui edit icon"></i>
-                    </a>
-                {% endif %}
-                {% if perms.news.delete_event %}
-                    <a class="delete confirm inline-block make_col_blue explanation-popup"
-                       data-title="{% trans "Delete" %}"
-                       data-content="{% trans "If clicked, the event will be deleted." %}"
-                       href="{% url 'event-delete' event.id %}">
-                        <i class="ui delete icon"></i>
-                    </a>
-                {% endif %}
-                {% if perms.news.add_timeplace %}
-                    <a class="inline-block make_col_blue explanation-popup"
-                       data-title="{% trans "Occurrence" %}"
-                       data-content="{% trans "If clicked, creates a new occurrence of the event" %}"
-                       href="{% url 'timeplace-new' event.id %}">
-                        <i class="icons">
-                            <i class="time icon"></i>
-                            <i class="noshadow bottom right corner add icon"></i>
-                        </i>
-                    </a>
-                {% endif %}
-            </h1>
-        </div>
-
-        {% if event.multiday %}
-            <h2>Tickets</h2>
+        {% if event.standalone %}
+            <h3 class="ui horizontal divider header">
+                <i class="ui ticket icon"></i> {% trans "Tickets" %}
+            </h3>
             {% if event.number_of_tickets %}
                 <b><a href="{% url "event-tickets" pk=event.pk %}">
                     {{ event.number_of_registered_tickets }}/{{ event.number_of_tickets }} {% trans "tickets reserved" %}
@@ -92,7 +65,20 @@
             {% endif %}
         {% endif %}
 
-        <h2>{% trans "Occurrences" %}</h2>
+        <h3 class="ui horizontal divider header">
+            <i class="ui time icon"></i>{% trans "Occurrences" %}
+        </h3>
+        <div style="clear: both; overflow: auto">
+            {% if perms.news.add_timeplace %}
+                <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace-new' event.id %}">
+                    <i class="icons">
+                        <i class="time icon"></i>
+                        <i class="noshadow bottom right corner add icon"></i>
+                    </i>
+                    {% trans "New occurrence" %}
+                </a>
+            {% endif %}
+        </div>
         <div class="ui tabular pointing secondary menu">
             <a class="active item" data-tab="future">{% trans "Future" %}
                 <div class="ui blue label">{{ object.timeplace_set|future|length }}</div>
@@ -137,7 +123,7 @@
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
+                },
             });
             $.ajax({
                 type: "POST",
@@ -161,9 +147,9 @@
                     }
 
                     if (model === "event") {
-                        $("#message-" + toggle).toggleClass("hidden", data["color"] === "grey")
+                        $("#message-" + toggle).toggleClass("hidden", data["color"] === "grey");
                     }
-                }
+                },
             });
         }
     </script>

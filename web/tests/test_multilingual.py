@@ -1,4 +1,5 @@
 import json
+
 from django.test import TestCase
 from django.utils import translation
 
@@ -171,7 +172,7 @@ class TestMultiLingualTextField(TestCase):
 
 class TestMultiLingualFormField(TestCase):
     """
-    Tests for the MultiLingualFormField class. Tests assumes that the MultiLingualTextStructure class works correctly.
+    Tests for the MultiLingualFormField class. Tests assume that the MultiLingualTextStructure class works correctly.
     """
 
     def setUp(self):
@@ -195,5 +196,3 @@ class TestMultiLingualFormField(TestCase):
         self.assertEqual(MultiLingualTextStructure, type(compressed_data))
         self.assertEqual(compressed_data["nb"], "test-nb")
         self.assertEqual(compressed_data["en"], "test-en")
-
-

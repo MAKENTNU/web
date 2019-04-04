@@ -1,8 +1,8 @@
 import math
+from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from datetime import timedelta
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
@@ -15,10 +15,11 @@ from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
 
 from mail import email
-from news.forms import TimePlaceForm, EventRegistrationForm
+from news.forms import EventForm
+from news.forms import TimePlaceForm, EventRegistrationForm, ArticleForm
 from news.models import Article, Event, TimePlace, EventTicket
 from web import settings
-from web.templatetags.permission_tags import has_any_news_permissions
+from web.templatetags.permission_tags import has_any_article_permission, has_any_event_permission
 
 
 class ViewEventsView(TemplateView):
@@ -28,9 +29,11 @@ class ViewEventsView(TemplateView):
         context = super().get_context_data(**kwargs)
         past, future = [], []
         for event in Event.objects.filter(hidden=False):
+            if event.private and not self.request.user.has_perm('news.can_view_private'):
+                continue
             if not event.get_future_occurrences().exists() and not event.get_past_occurrences().exists():
                 continue
-            if event.multiday:
+            if event.standalone:
                 if event.get_future_occurrences().exists():
                     future.append({
                         "first_occurrence": event.get_future_occurrences().first(),
@@ -83,7 +86,7 @@ class ViewEventView(TemplateView):
         event = get_object_or_404(Event, pk=kwargs['pk'])
         context.update({
             'article': event,
-            'timeplaces': event.timeplace_set.all() if event.multiday else event.timeplace_set.future(),
+            'timeplaces': event.timeplace_set.all() if event.standalone else event.timeplace_set.future(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')) \
                 or (event.private and not self.request.user.has_perm('news.can_view_private')):
@@ -106,15 +109,27 @@ class ViewArticleView(TemplateView):
         return context
 
 
-class AdminView(TemplateView):
-    template_name = 'news/admin.html'
+class AdminArticleView(TemplateView):
+    template_name = 'news/admin_articles.html'
 
     def get_context_data(self, **kwargs):
-        if not has_any_news_permissions(self.request.user) and not self.request.user.is_superuser:
+        if not has_any_article_permission(self.request.user) and not self.request.user.is_superuser:
             raise Http404()
         context = super().get_context_data(**kwargs)
         context.update({
             'articles': Article.objects.all(),
+        })
+        return context
+
+
+class AdminEventsView(TemplateView):
+    template_name = 'news/admin_events.html'
+
+    def get_context_data(self, **kwargs):
+        if not has_any_event_permission(self.request.user) and not self.request.user.is_superuser:
+            raise Http404()
+        context = super().get_context_data(**kwargs)
+        context.update({
             'events': Event.objects.all(),
         })
         return context
@@ -128,60 +143,32 @@ class AdminEventView(DetailView):
 class EditArticleView(PermissionRequiredMixin, UpdateView):
     model = Article
     template_name = 'news/article_edit.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'pub_date',
-        'pub_time',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-    )
+    form_class = ArticleForm
+
     permission_required = (
         'news.change_article',
     )
-    success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-articles")
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
     model = Article
     template_name = 'news/article_create.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'pub_date',
-        'pub_time',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-    )
+    form_class = ArticleForm
     permission_required = (
         'news.add_article',
     )
-    success_url = '/news/admin'
+
+    def get_success_url(self):
+        return reverse_lazy("admin-articles")
 
 
 class EditEventView(PermissionRequiredMixin, UpdateView):
     model = Event
     template_name = 'news/event_edit.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-        'multiday',
-        'number_of_tickets',
-    )
+    form_class = EventForm
     permission_required = (
         'news.change_event',
     )
@@ -193,18 +180,7 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
 class CreateEventView(PermissionRequiredMixin, CreateView):
     model = Event
     template_name = 'news/event_create.html'
-    fields = (
-        'title',
-        'content',
-        'clickbait',
-        'image',
-        'contain',
-        'hidden',
-        'private',
-        'featured',
-        'multiday',
-        'number_of_tickets',
-    )
+    form_class = EventForm
     permission_required = (
         'news.add_event',
     )
@@ -223,7 +199,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
 
     def get_form(self, form_class=None):
         form = self.form_class(**self.get_form_kwargs())
-        if self.object.event.multiday:
+        if self.object.event.standalone:
             del form.fields["number_of_tickets"]
         return form
 
@@ -253,15 +229,22 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
         return HttpResponseRedirect(reverse('timeplace-edit', args=(timeplace.pk,)))
 
 
-class NewTimePlaceView(PermissionRequiredMixin, View):
+class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
+    model = TimePlace
+    template_name = "news/timeplace_create.html"
+    form_class = TimePlaceForm
     permission_required = (
         'news.add_timeplace',
     )
 
-    def get(self, request, pk):
-        event = get_object_or_404(Event, pk=pk)
-        new_timeplace = TimePlace.objects.create(event=event)
-        return HttpResponseRedirect(reverse('timeplace-edit', args=(new_timeplace.pk,)))
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        event = get_object_or_404(Event, pk=self.kwargs["event_pk"])
+        form.fields["event"].initial = event.pk
+        return form
+
+    def get_success_url(self):
+        return reverse_lazy("admin-event", args=(self.object.event.id,))
 
 
 class AdminArticleToggleView(PermissionRequiredMixin, View):
@@ -302,7 +285,7 @@ class AdminTimeplaceToggleView(AdminArticleToggleView):
 
 class DeleteArticleView(PermissionRequiredMixin, DeleteView):
     model = Article
-    success_url = reverse_lazy('admin')
+    success_url = reverse_lazy('admin-articles')
     permission_required = (
         'news.delete_article',
     )
@@ -310,7 +293,7 @@ class DeleteArticleView(PermissionRequiredMixin, DeleteView):
 
 class DeleteEventView(PermissionRequiredMixin, DeleteView):
     model = Event
-    success_url = reverse_lazy('admin')
+    success_url = reverse_lazy('admin-events')
     permission_required = (
         'news.delete_event',
     )
@@ -318,7 +301,6 @@ class DeleteEventView(PermissionRequiredMixin, DeleteView):
 
 class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
     model = TimePlace
-    success_url = reverse_lazy('admin')
     permission_required = (
         'news.delete_timeplace',
     )

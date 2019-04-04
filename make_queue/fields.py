@@ -53,7 +53,7 @@ class MachineTypeField(models.IntegerField):
             "",
             lambda user: user.is_authenticated,
             False,
-        )
+        ),
     )
 
     @staticmethod

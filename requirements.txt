@@ -10,4 +10,7 @@ channels_redis
 django_ical
 xlsxwriter
 python_ldap==3.1.0
+django-hosts==3.0.0
 uuid
+django-phonenumber-field
+phonenumbers

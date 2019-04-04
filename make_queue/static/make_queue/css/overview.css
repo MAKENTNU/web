@@ -28,7 +28,8 @@ a.wrapped.button {
     margin-top: 0.75em;
 }
 
-.ui.grid.vpad > .column, .ui.grid.vpad > .column.no.padding {
+.ui.grid.vpad > .column,
+.ui.grid.vpad > .column.no.padding {
     padding-bottom: 1em;
 
 }

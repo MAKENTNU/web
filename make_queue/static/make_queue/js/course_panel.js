@@ -57,7 +57,7 @@ function filter() {
 // Sorts the elements based on the column to sort and its order
 function sort() {
     state.elements.sort(function (a, b) {
-        return a[state.sortBy].localeCompare(b[state.sortBy])
+        return a[state.sortBy].localeCompare(b[state.sortBy]);
     });
 
     if (!state.sortOrder) {
@@ -72,7 +72,7 @@ $("#status_filter").parent().dropdown({
     onChange: function (value) {
         state.status_value = value;
         filter();
-    }
+    },
 });
 
 // Button to toggle if only selected users should be shown
@@ -123,7 +123,7 @@ $("#status_set").parent().dropdown({
         });
 
         modal.modal("show");
-    }
+    },
 });
 
 // The search field for usernames
@@ -164,7 +164,7 @@ function calculate_range_pagination() {
     return {
         start: start,
         end: end,
-    }
+    };
 }
 
 // Toggles which rows to show based on the current state
@@ -224,6 +224,7 @@ let rightSkipElement = $("#right-skip");
 let rightChangeElement = $("#right-change");
 let leftChangeElement = $("#left-change");
 let leftSkipElement = $("#left-skip");
+let downloadUsersForm = $("#download_users");
 
 // Setup the initial state
 function setupState() {
@@ -239,7 +240,7 @@ function setupState() {
                 display: true,
                 element: $(this),
             });
-        }
+        },
     );
 
     state.numPages = Math.ceil(state.elements.length / state.elementPerPage);
@@ -263,6 +264,14 @@ function setupState() {
     leftSkipElement.click(function () {
         state.page = 0;
         updateDisplay();
+    });
+
+    downloadUsersForm.submit(function () {
+        let selected = [];
+        if (state.onlyShowSelectedUsers) {
+            selected = state.elements.filter((e) => e.display).map(e => e.pk);
+        }
+        downloadUsersForm.find("#selected").val(selected)
     });
 
     updateDisplay();

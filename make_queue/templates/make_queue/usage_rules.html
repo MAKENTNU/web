@@ -5,7 +5,7 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "Rules for usage of the " %}{{ usage_rules.machine_type.name }}</h1>
+        <h1>{% trans "Rules for usage of the" %} {{ usage_rules.machine_type.name }}</h1>
         <div style="margin-bottom: 10px">
             <a class="ui blue button" href="{% url "machine_rules" usage_rules.machine_type %}">
                 {% trans "Quota and detailed rules for reservation duration" %}
@@ -20,11 +20,7 @@
         </div>
         <div>
             {% autoescape off %}
-                {% if request.LANGUAGE_CODE == 'nb' %}
-                    {{ usage_rules.content }}
-                {% else %}
-                    {{ usage_rules.content_en }}
-                {% endif %}
+                {{ usage_rules.content }}
             {% endautoescape %}
         </div>
     </div>

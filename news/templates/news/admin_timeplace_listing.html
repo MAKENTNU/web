@@ -2,7 +2,7 @@
 {% load news_tags %}
 
 <div class="item">
-    {% if not timeplace.event.multiday %}
+    {% if timeplace.event.repeating %}
         <span class="ui right floated">
             {% if timeplace.number_of_tickets %}
                 <a href="{% url "timeplace-tickets" pk=timeplace.pk %}">
