@@ -44,7 +44,7 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
     form_class = EditMemberForm
 
     def test_func(self):
-        return self.request.user == self.object.user or self.request.user.has_perm("internal.can_edit_group_membership")
+        return self.request.user == self.get_object().user or self.request.user.has_perm("internal.can_edit_group_membership")
 
     def get_form(self, form_class=None):
         if form_class is None:
