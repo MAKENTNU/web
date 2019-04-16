@@ -86,7 +86,7 @@
 
             </nav>
         {% else %}
-            <a class="item" href="{% url 'login' %}">
+            <a class="item" href="{% url 'login' %}?next={{ request.path }}">
                 <div class="text">{% trans "Login" %}</div>
                 <div class="make_bg_blue bubble-background"></div>
             </a>
