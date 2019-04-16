@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from news.models import Article, TimePlace
@@ -44,8 +45,5 @@ class View404(TemplateView):
         return self.render_to_response({}, status=404)
 
 
-class View500(TemplateView):
-    template_name = "web/500.html"
-
-    def get(self, request, *args, **kwargs):
-        return self.render_to_response({}, status=500)
+def view_500(request):
+    return render(request, template_name="web/500.html", status=500)
