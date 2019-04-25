@@ -79,7 +79,7 @@
                     <a class="item" href="{% url 'my-tickets' %}">
                         <div class="text">{% trans "My tickets" %}</div>
                     </a>
-                    <a class="item" href="{% url 'logout' %}">
+                    <a class="item" href="{% url 'logout' %}?next={{ request.path }}">
                         <div class="text">{% trans "Logout" %}</div>
                     </a>
                 </nav>
