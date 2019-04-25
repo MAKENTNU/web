@@ -86,7 +86,12 @@
 
             </nav>
         {% else %}
-            <a class="item" href="{% url 'login' %}?next={{ request.path }}">
+            {% if request.path|cut:"/" %}
+                <a class="item" href="{% url 'login' %}?next={{ request.path }}">
+            {% else %}
+                <a class="item" href="{% url 'login' %}"> {# Don't add the `next` parameter if on the front page #}
+            {% endif %}
+
                 <div class="text">{% trans "Login" %}</div>
                 <div class="make_bg_blue bubble-background"></div>
             </a>
