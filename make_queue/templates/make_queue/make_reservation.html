@@ -5,8 +5,6 @@
 {% load reservation_extra %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static 'lib/calendar/calendar.min.js' %}"></script>
-    <link rel="stylesheet" href="{% static 'lib/calendar/calendar.min.css' %}">
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
 {% endblock %}
 
@@ -173,7 +171,6 @@
         let maximum_day = new Date();
         maximum_day.setDate(maximum_day.getDate() + {{ maximum_days_in_advance }});
     </script>
-    <script src="{% url 'javascript-catalog' %}"></script>
     {% include "make_queue/js/reservation_rules.html" %}
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
     <script>

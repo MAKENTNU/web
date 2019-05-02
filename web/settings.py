@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'web',
     'make_queue',
     'social_django',
+    'phonenumber_field',
     'news',
     'mail',
     'ckeditor',
@@ -200,7 +201,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "../static")
 STATIC_URL = '/static/'
+
+# ManifestStaticFilesStorage appends every static file's MD5 hash to its filename,
+# which avoids waiting for browsers' cache to update if a file's contents change
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
@@ -224,3 +230,7 @@ CKEDITOR_CONFIGS = {
         ])
     }
 }
+
+# Phonenumbers
+PHONENUMBER_DEFAULT_REGION = 'NO'
+PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'

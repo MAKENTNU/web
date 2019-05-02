@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path
-from django.views.generic import RedirectView
+from django.views.generic import RedirectView, TemplateView
 from django_hosts import reverse
 
 from web import settings
@@ -9,6 +9,7 @@ from web import settings
 admin.site.site_url = f"//{settings.PARENT_HOST}/"
 
 urlpatterns = [
+    path('robots.txt', TemplateView.as_view(template_name='web/admin_robots.txt', content_type='text/plain')),
     path('', admin.site.urls),
 ]
 
