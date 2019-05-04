@@ -11,8 +11,8 @@ class InventoryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        search_word = kwargs['search_word']
-        itemset = Item.objects.filter(name__contains=search_word)
+        # search_word = kwargs['search_word']
+        itemset = Item.objects.all()
         context.update({
             'items': itemset,
         })
@@ -43,6 +43,8 @@ class SearchItemsView(TemplateView):
         result_name = Item.objects.filter(name__contains=search_string)
         result_description = Item.objects.filter(description__contains=search_string)
         data = {
+            "name": result_name,
+            "description": result_description,
         }
 
         return JsonResponse(data)

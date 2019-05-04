@@ -22,12 +22,14 @@
             </select>
         </div>
 
-        <div class="ui search">
+        <div class="ui category search">
             <div class="ui icon input">
                 <input id="item-search" class="prompt" type="text" placeholder="Item...">
                 <i class="search icon"></i>
             </div>
-            <div class="results"></div>
+            <div class="results">
+                OKOKOK
+            </div>
         </div>
 
         {#        {% for item in items %}#}
@@ -41,6 +43,10 @@
 {% block scripts %}
     <script>
         $('.ui.dropdown').dropdown();
+
+        $('.ui.search').search({
+            minCharacters: 2,
+        });
 
 
         // TODO: Call function on change or return of item-search
