@@ -79,14 +79,14 @@
                     <a class="item" href="{% url 'my-tickets' %}">
                         <div class="text">{% trans "My tickets" %}</div>
                     </a>
-                    <a class="item" href="{% url 'logout' %}">
+                    <a class="item" href="{% url 'logout' %}?next={{ request.path }}">
                         <div class="text">{% trans "Logout" %}</div>
                     </a>
                 </nav>
 
             </nav>
         {% else %}
-            <a class="item" href="{% url 'login' %}">
+            <a class="item" href="{% url 'login' %}{{ login_next_param }}">
                 <div class="text">{% trans "Login" %}</div>
                 <div class="make_bg_blue bubble-background"></div>
             </a>
