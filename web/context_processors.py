@@ -19,5 +19,5 @@ def login(request):
         login_redirect_path = request.path
 
     return {
-        'login_next_param': ("?next=" + login_redirect_path) if login_redirect_path else "",
+        'login_next_param': f"?next={login_redirect_path}" if login_redirect_path else "",
     }
