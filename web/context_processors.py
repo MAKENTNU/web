@@ -1,5 +1,5 @@
 from django.contrib.auth.views import LoginView
-from django.shortcuts import reverse
+from django_hosts import reverse
 
 
 def login(request):
@@ -7,7 +7,7 @@ def login(request):
     current_redirect_url = LoginView(request=request).get_redirect_url()
 
     # If at the login page:
-    if request.path.startswith(reverse('login').rstrip("/")):
+    if request.path.startswith(reverse('login', host="main").rstrip("/")):
         # Let the `next` parameter be the same as it currently is
         login_redirect_path = current_redirect_url
     # If at the front page:
