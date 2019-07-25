@@ -1,7 +1,5 @@
 from abc import abstractmethod
 from datetime import timedelta
-
-from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -12,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from make_queue.fields import MachineTypeField
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+from web.multilingual.database import MultiLingualRichTextUploadingField
 
 
 class Machine(models.Model):
@@ -55,7 +54,12 @@ class Machine(models.Model):
             return self.status
         return self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)) and "R" or "F"
 
-    def get_status_display(self):
+    def _get_FIELD_display(self, field):
+        if field.attname == "status":
+            return self._get_status_display()
+        return super()._get_FIELD_display(field)
+
+    def _get_status_display(self):
         current_status = self.get_status()
         return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
 
@@ -65,8 +69,7 @@ class MachineUsageRule(models.Model):
     Allows for specification of rules for each type of machine
     """
     machine_type = MachineTypeField(unique=True)
-    content = RichTextUploadingField()
-    content_en = RichTextUploadingField()
+    content = MultiLingualRichTextUploadingField()
 
 
 class Quota(models.Model):

@@ -83,9 +83,15 @@ class CourseXLSXView(View):
     def post(self, request):
         search_string = request.POST.get("search_text")
         status_filter = request.POST.get("status_filter")
+        selected = request.POST.get("selected")
 
-        course_registrations = Printer3DCourse.objects.filter(
-            Q(username__icontains=search_string) | Q(name__icontains=search_string), status__icontains=status_filter)
+        # If selected is set, we want to include only these registrations
+        if selected:
+            course_registrations = Printer3DCourse.objects.filter(pk__in=selected.split(","))
+        else:
+            course_registrations = Printer3DCourse.objects.filter(
+                Q(username__icontains=search_string) | Q(name__icontains=search_string),
+                status__icontains=status_filter)
 
         # Use an in-memory output file, to avoid having to clean up the disk
         output_file = io.BytesIO()

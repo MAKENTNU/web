@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{% static "web/css/footer.css" %}">
 
 <div class="footer-wrapper">
-    <div class="footer">
+    <footer id="footer">
         <div>
             <div class="logo">
                 <img src="{% static "web/img/logo_allwhite.svg" %}">
@@ -16,29 +16,22 @@
             <div class="item">
                 <a href="http://www.facebook.com/MAKENTNU/" title="{% trans "Like us on Facebook!" %}" target="_blank"><i class="facebook f icon"></i></a>
             </div>
-            <div class="item slack-icon">
+            <div class="item">
                 <a href="http://makentnu.slack.com/" title="{% trans "Chat with us on Slack!" %}" target="_blank">
-		    <span></span>
-		</a>
+                    <i class="slack icon"></i>
+                </a>
             </div>
             <div class="item">
                 <a href="http://github.com/MAKENTNU" title="{% trans "Open a pull request on GitHub!" %}" target="_blank"><i class="github alternate icon"></i></a>
             </div>
             <div class="item">
-                <a href="mailto:styret@makentnu.no"><i class="mail icon"></i></a>
+                <a href="mailto:styret@makentnu.no" title="{% trans "Contact us by mail!" %}"><i class="mail icon"></i></a>
             </div>
             <div class="item">
                 <a href="https://www.instagram.com/make_ntnu/" title="{% trans "Follow us on Instagram!" %}" target="_blank"><i class="instagram icon"></i></a>
             </div>
         </div>
-        <div class="two-cols">
-            <div class="ui list">
-                <div class="item">
-                    <a href="https://www.sit.no" target="_blank">
-                        <img class="sit" src="{% static "web/img/sit-logo-standard.svg" %}">
-                    </a>
-                </div>
-            </div>
+        <div class="one-col">
             <div class="ui list">
                 <div class="item">
                     <div class="content">
@@ -48,5 +41,5 @@
             </div>
         </div>
         <div class="copyright">© {% now "Y" %} MAKE NTNU</div>
-    </div>
+    </footer>
 </div>

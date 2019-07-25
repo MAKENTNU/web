@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import UserPassesTestMixin
+from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from news.models import Article, TimePlace
@@ -20,8 +22,20 @@ class IndexView(TemplateView):
         return context
 
 
-class AdminPanelView(TemplateView):
+class AdminPanelView(UserPassesTestMixin, TemplateView):
     template_name = 'web/admin_panel.html'
+    possible_permissions = [
+        "news.add_article", "news.change_article", "news.delete_article",
+        "news.add_event", "news.change_event", "news.delete_event",
+        "news.add_timeplace", "news.change_timeplace", "news.delete_timeplace",
+        "make_queue.can_create_event_reservation",
+        "make_queue.change_quota",
+        "make_queue.change_printer3dcourse",
+        "groups.can_edit_group",
+    ]
+
+    def test_func(self):
+        return any(self.request.user.has_perm(permission) for permission in self.possible_permissions)
 
 
 class View404(TemplateView):
@@ -31,8 +45,5 @@ class View404(TemplateView):
         return self.render_to_response({}, status=404)
 
 
-class View500(TemplateView):
-    template_name = "web/500.html"
-
-    def get(self, request, *args, **kwargs):
-        return self.render_to_response({}, status=500)
+def view_500(request):
+    return render(request, template_name="web/500.html", status=500)

@@ -12,7 +12,6 @@
     --nav-space-between: 2em;
     --bubble-background-extra-width: calc(1.5 * var(--nav-space-between));
     --dur: 0.15s;
-    --font-size: 1.25em;
 
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -57,13 +56,9 @@
     cursor: pointer;
 }
 
-#nav {
-    font-size: var(--font-size);
-}
-
 #nav > .item,
 #side-nav > .item {
-    height: calc(var(--font-size) + 2em);
+    height: 3em;
     margin: calc(var(--nav-space-between) / 2);
     padding: 0;
     justify-content: center;
@@ -80,7 +75,7 @@
 #side-nav > .item .bubble-background {
     position: absolute;
     width: 100%;
-    height: var(--font-size);
+    height: 1em;
     border-radius: 2em;
     opacity: 0;
     transition: width var(--dur) linear, height var(--dur) linear, opacity var(--dur) ease-out;
@@ -89,7 +84,7 @@
 #nav > .item:hover .bubble-background,
 #side-nav > .item:hover .bubble-background {
     width: calc(100% + var(--bubble-background-extra-width));
-    height: calc(var(--font-size) + 2em);
+    height: 3em;
     opacity: 1;
 }
 
@@ -127,7 +122,6 @@
     display: grid;
     grid-template-columns: var(--estimated-max-name-length) calc(var(--logo-padding) + 10px);
     justify-items: end;
-    font-size: var(--font-size);
 }
 
 #side-nav > .item {
@@ -147,7 +141,7 @@
 }
 
 #nav-user-dropdown .menu > .item:hover {
-    background-color: rgba(255, 255, 255, .08) !important; /* Overrides Semantic UI */
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Semantic UI */
 }
 
 #side-nav .lang-link {

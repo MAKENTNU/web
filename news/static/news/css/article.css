@@ -12,7 +12,8 @@ a.place {
     color: #F8C700 !important;
 }
 
-.accordion p, .card p {
+.accordion p,
+.card p {
     margin: 0 !important;
 }
 

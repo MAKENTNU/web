@@ -11,13 +11,14 @@ SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
 LOGOUT_URL = '/'
 LOGIN_URL = '/login'
+LOGIN_REDIRECT_URL = '/'
 CHECKIN_KEY = ''
 REDIS_IP = '127.0.0.1'
 REDIS_PORT = 6379
 STREAM_KEY = ''
 
-# When using more than one sub-domain, the session cookie domain has to be set so
-# that the sub-domains can use the same session. Currently points to "makentnu.localhost"
+# When using more than one subdomain, the session cookie domain has to be set so
+# that the subdomains can use the same session. Currently points to "makentnu.localhost"
 # should be changed in production. Cannot use only "localhost", as domains for cookies
 # are required to have two dots in them.
 SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'web',
     'make_queue',
     'social_django',
+    'phonenumber_field',
     'news',
     'mail',
     'ckeditor',
@@ -91,6 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'web.context_processors.login',
             ],
         },
     },
@@ -199,7 +203,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+STATIC_ROOT = os.path.join(BASE_DIR, "../static")
 STATIC_URL = '/static/'
+
+# ManifestStaticFilesStorage appends every static file's MD5 hash to its filename,
+# which avoids waiting for browsers' cache to update if a file's contents change
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
@@ -223,3 +232,7 @@ CKEDITOR_CONFIGS = {
         ])
     }
 }
+
+# Phonenumbers
+PHONENUMBER_DEFAULT_REGION = 'NO'
+PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'

@@ -31,11 +31,11 @@
         });
 
         {% if widget.attrs.required %}
-             input.closest("form").submit(() => {
-                 let isSelected = input.val() !== "";
-                 input.closest(".field").toggleClass("error", !isSelected);
-                 return isSelected;
-             });
+            input.closest("form").submit(() => {
+                let isSelected = input.val() !== "";
+                input.closest(".field").toggleClass("error", !isSelected);
+                return isSelected;
+            });
         {% endif %}
     }
 </script>

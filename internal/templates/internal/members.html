@@ -8,7 +8,6 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static "internal/css/members.css" %}">
-    <script src="{% host_url "javascript-catalog" host "main" %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -26,9 +25,9 @@
         <form class="ui form">
             <div class="ui fields">
                 <div class="ui multiple blue labeled button icon dropdown">
-                    <input type="hidden" name="filter-state">
+                    <input type="hidden" name="filter-status">
                     <i class="ui filter icon"></i>
-                    <span class="ui text">Filter Membership State</span>
+                    <span class="ui text">{% trans "Filter membership status" %}</span>
                     <div class="menu">
                         <div class="scrolling menu">
                             <div class="item" data-value="{% trans "Active" %}">
@@ -52,7 +51,7 @@
                 <div class="ui multiple blue labeled button icon dropdown">
                     <input type="hidden" name="filter-committee">
                     <i class="ui filter icon"></i>
-                    <span class="ui text">Filter Committees</span>
+                    <span class="ui text">{% trans "Filter committees" %}</span>
                     <div class="menu">
                         <div class="scrolling menu">
                             <div class="item" data-value="Dev">
@@ -90,10 +89,10 @@
             <tbody>
             {% for member in object_list %}
                 {% get_committees member as committees %}
-                {% get_membership_states member as membership_state %}
+                {% get_membership_statuses member as membership_status %}
                 <tr data-pk="{{ member.pk }}"
                     data-name="{{ member.user.get_full_name }}"
-                    data-state='{{ membership_state }}'
+                    data-status='{{ membership_status }}'
                     data-phone="{{ member.phone_number }}"
                     data-email="{% if member.email %}{{ member.email }}{% endif %}"
                     data-card-number="{{ member.card_number }}"
@@ -122,8 +121,8 @@
                     </td>
                     <td>{{ member.role }}</td>
                     <td class="mobile hidden">
-                        {% for state_name, color in membership_state %}
-                            <div class="ui {{ color }} label">{{ state_name }}</div>
+                        {% for status_name, color in membership_status %}
+                            <div class="ui {{ color }} label">{{ status_name }}</div>
                         {% endfor %}
                     </td>
                     <td class="computer only">{{ member.term_joined }}</td>
@@ -138,11 +137,11 @@
     </div>
 
     {# Modal for showing detailed information about the user #}
-    <div class="ui inverted longer modal" id="detailed-member-info">
+    <div class="ui longer modal" id="detailed-member-info">
         <div class="header">
             <span id="member-name-header"></span>
             <a id="member-edit"><i class="ui yellow pencil icon"></i></a>
-            <span id="member-state-header"></span>
+            <span id="member-status-header"></span>
         </div>
         <div class="scrolling content">
             <h4 class="ui horizontal divider header">
@@ -192,7 +191,7 @@
                 </tr>
                 <tr>
                     <td><b>{% trans "Status" %}</b></td>
-                    <td id="member-state"></td>
+                    <td id="member-status"></td>
                 </tr>
                 <tr>
                     <td><b>{% trans "Committee" %}</b></td>
@@ -240,12 +239,12 @@
     {{ super.block }}
     <script>
         $("div.ui.dropdown").dropdown();
-        $("input[name=filter-state]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
+        $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
     </script>
     <script src="{% static "internal/js/members.js" %}"></script>
     {% if selected_member %}
         <script>
-            showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}))
+            showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}));
         </script>
     {% endif %}
 {% endblock %}

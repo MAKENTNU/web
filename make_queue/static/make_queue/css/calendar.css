@@ -124,7 +124,8 @@
     bottom: -0.7em;
 }
 
-.time_selection > .end_time, .time_selection > .start_time {
+.time_selection > .end_time,
+.time_selection > .start_time {
     position: absolute;
     border: 1px solid lightgrey;
     font-size: 0.8em;
