@@ -5,6 +5,7 @@
 {% block title %}{% trans "Edit" %} {{ contentbox.title }}{% endblock title %}
 
 {% block head %}
+    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
     <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
 {% endblock head %}
