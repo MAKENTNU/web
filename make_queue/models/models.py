@@ -1,7 +1,4 @@
-from math import ceil
-
 from abc import abstractmethod
-from ckeditor_uploader.fields import RichTextUploadingField
 from datetime import timedelta
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
@@ -13,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from make_queue.fields import MachineTypeField
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+from web.multilingual.database import MultiLingualRichTextUploadingField
 
 
 class Machine(models.Model):
@@ -24,12 +22,12 @@ class Machine(models.Model):
         ("M", _("Maintenance")),
     )
 
-    status = models.CharField(max_length=2, choices=status_choices)
-    name = models.CharField(max_length=30, unique=True)
-    location = models.CharField(max_length=40)
-    location_url = models.URLField()
-    machine_model = models.CharField(max_length=40)
-    machine_type = MachineTypeField(null=True)
+    status = models.CharField(max_length=2, choices=status_choices, verbose_name=_("Status"), default="F")
+    name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
+    location = models.CharField(max_length=40, verbose_name=_("Location"))
+    location_url = models.URLField(verbose_name=_("Location URL"))
+    machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
+    machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
 
     @abstractmethod
     def get_reservation_set(self):
@@ -47,6 +45,7 @@ class Machine(models.Model):
                self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
                self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
                                                  end_time__gte=end_time)
+
     def __str__(self):
         return self.name + " - " + self.machine_model
 
@@ -65,12 +64,11 @@ class MachineUsageRule(models.Model):
     Allows for specification of rules for each type of machine
     """
     machine_type = MachineTypeField(unique=True)
-    content = RichTextUploadingField()
-    content_en = RichTextUploadingField()
+    content = MultiLingualRichTextUploadingField()
 
 
 class Quota(models.Model):
-    number_of_reservations = models.IntegerField(default=3, verbose_name=_("Number of reservations"))
+    number_of_reservations = models.IntegerField(default=1, verbose_name=_("Number of reservations"))
     diminishing = models.BooleanField(default=False, verbose_name=_("Diminishing"))
     ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
     all = models.BooleanField(default=False, verbose_name=_("All users"))

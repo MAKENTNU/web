@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.shortcuts import get_object_or_404
 from django.utils.datetime_safe import datetime
 
 from make_queue.fields import MachineTypeField
@@ -22,7 +21,10 @@ class SpecificMachine:
     regex = "([0-9]+)"
 
     def to_python(self, value):
-        return Machine.objects.get(pk=int(value))
+        try:
+            return Machine.objects.get(pk=int(value))
+        except Machine.DoesNotExist:
+            raise ValueError("No machine for that key")
 
     def to_url(self, machine):
         return str(machine.pk)
@@ -72,7 +74,10 @@ class MachineReservation:
     regex = "([0-9]+)"
 
     def to_python(self, value):
-        return Reservation.objects.get(pk=int(value))
+        try:
+            return Reservation.objects.get(pk=int(value))
+        except Reservation.DoesNotExist:
+            raise ValueError("No reservation for that key")
 
     def to_url(self, reservation):
         return str(reservation.pk)
@@ -82,7 +87,10 @@ class UserByUsername:
     regex = "([-0-9A-Za-z.]*)"
 
     def to_python(self, value):
-        return get_object_or_404(User, username=value)
+        try:
+            return User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise ValueError("No user with that username")
 
     def to_url(self, user):
         return user.username

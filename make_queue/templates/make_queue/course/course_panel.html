@@ -18,7 +18,7 @@
             </a>
         </h1>
 
-        <form class="ui form" method="POST" action="{% url "download_course_registrations" %}">
+        <form id="download_users" class="ui form" method="POST" action="{% url "download_course_registrations" %}">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
@@ -40,6 +40,7 @@
                         </div>
                     </div>
                 </div>
+                <input type="hidden" id="selected" name="selected">
                 <div class="ui six wide field">
                     {# Using label with non-blocking space to keep the download button further down #}
                     <label>&nbsp;</label>
@@ -89,7 +90,7 @@
             <tr>
                 <th data-column-name="name">{% trans "Name" %}<i class="ui icon sort down"></i></th>
                 <th data-column-name="username">{% trans "Username" %}</th>
-                <th data-column-name="cardNumber">{% trans "Card number" %}</th>
+                <th data-column-name="cardNumber">{% trans "Card number (EM)" %}</th>
                 <th data-column-name="date">{% trans "Date" %}</th>
                 <th data-column-name="status">{% trans "Status" %}</th>
             </tr>
@@ -105,7 +106,7 @@
                         <a href="{% url "edit_course_registration" registration.pk %}">
                             <i class="ui yellow pencil icon"></i>
                         </a>
-                        {% if perms.delete_printer3dcourse %}
+                        {% if perms.make_queue.delete_printer3dcourse %}
                             <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
                                 <i class="ui red trash icon"></i>
                             </a>
@@ -170,7 +171,7 @@
         </form>
 
         <div class="content">
-            <p><b>{% trans "You are changing the status for the following users:" %}</b></p>
+            <p><b>{% trans "You are changing the status for the following users" %}:</b></p>
             <p id="selected-users"></p>
             <p><b>{% trans "Are you sure you want to do this?" %}</b></p>
         </div>
@@ -180,7 +181,7 @@
                 {% trans "Set status" %}
             </div>
             <div class="ui red cancel button">
-                {% trans "Cancel" %}
+                {% trans "Cancel" context "abort action" %}
             </div>
         </div>
     </div>

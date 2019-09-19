@@ -2,4 +2,4 @@
 
 Your ticket for "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"
 
-{% trans "Thank you for your recently registration for the above event. You can view your ticket at the url:" %} "{{ site }}{% url "ticket" ticket.uuid %}". {% trans "If you want to cancel your registration, you can do so by visiting the following url:" %} "{{ site }}{% url "cancel-ticket" ticket.uuid %}".
+{% trans "Thank you for registering for this event. You can view your ticket at the following URL" %}: "{{ site }}{% url "ticket" ticket.uuid %}". {% trans "If you want to cancel your registration, you can do so by visiting the following URL" %}: "{{ site }}{% url "cancel-ticket" ticket.uuid %}".

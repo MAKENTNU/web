@@ -1,6 +1,6 @@
 import django.forms as forms
-from django.utils.translation import gettext_lazy as _
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 
 class SemanticTimeInput(forms.TimeInput):
@@ -16,31 +16,44 @@ class SemanticSearchableChoiceInput(forms.Select):
     prompt_text = _("Choose value")
 
     def __init__(self, *args, **kwargs):
-        super().__init__()
+        super().__init__(attrs=kwargs.pop("attrs", {}))
         self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
         self.attrs["force_selection"] = kwargs.pop("force_selection", False)
+
+
+class SemanticMultipleSelectInput(forms.SelectMultiple):
+    template_name = "web/forms/widgets/semantic_select_multiple.html"
+    prompt_text = _("Choose value")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__()
+        self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
 
 
 class SemanticDateInput(forms.DateInput):
     template_name = "web/forms/widgets/semantic_date.html"
 
 
+class SemanticFileInput(forms.ClearableFileInput):
+    template_name = "web/forms/widgets/semantic_file.html"
+
+
 class MazemapSearchInput(forms.TextInput):
     """
-    Widget that enables mazemap search functionality, including autofill of url to mazemap
+    Widget that enables MazeMap search functionality, including autofill of URL to MazeMap.
     """
     template_name = "web/forms/widgets/mazemap_search.html"
     required_class_attr = "prompt"
     placeholder = _("Search places")
 
     class Media:
-        js = ('web/js/widgets/mazemap-search.js', reverse_lazy("javascript-catalog"))
+        js = ('web/js/widgets/mazemap-search.js',)
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
         """
         :param campus_id: Campus to search for points of interest on. Default: NTNU Gløshaugen
         :param max_results: Maximum number of search results to return
-        :param url_field: Field to autofill with mazemap url. If None, autofill functionality is turned off
+        :param url_field: Field to autofill with MazeMap URL. If None, autofill functionality is turned off
         :param attrs: HTML attributes for the <input> element
         """
 

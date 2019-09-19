@@ -37,11 +37,136 @@ msgstr "Ingen resultater"
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"
 
-#~ msgid "Change saved"
-#~ msgstr "Endring lagret"
+#: internal/static/js/members.js:71
+msgid "Change"
+msgstr "Endre"
 
-#~ msgid "Save"
-#~ msgstr "Lagre"
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgctxt "Sun"
+msgid "S"
+msgstr "S"
 
-#~ msgid "Saving"
-#~ msgstr "Lagrer"
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgctxt "Sat"
+msgid "S"
+msgstr "L"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "M"
+msgstr "M"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "T"
+msgstr "T"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "W"
+msgstr "O"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "F"
+msgstr "F"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "January"
+msgstr "Januar"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "February"
+msgstr "Februar"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "March"
+msgstr "Mars"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "April"
+msgstr "April"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "May"
+msgstr "Mai"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "June"
+msgstr "Juni"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "July"
+msgstr "Juli"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "August"
+msgstr "August"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "September"
+msgstr "September"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "October"
+msgstr "Oktober"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "November"
+msgstr "November"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "December"
+msgstr "Desember"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Jan"
+msgstr "Jan"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Feb"
+msgstr "Feb"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Mar"
+msgstr "Mar"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Apr"
+msgstr "Apr"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Jun"
+msgstr "Jun"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Jul"
+msgstr "Jul"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Aug"
+msgstr "Aug"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Sep"
+msgstr "Sep"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Oct"
+msgstr "Okt"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Nov"
+msgstr "Nov"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Dec"
+msgstr "Des"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Now"
+msgstr "Nå"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Week"
+msgstr "Uke"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Today"
+msgstr "I dag"

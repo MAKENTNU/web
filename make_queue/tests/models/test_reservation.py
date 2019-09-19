@@ -1,14 +1,14 @@
-from django.test import TestCase
+from datetime import timedelta, datetime, time
 from unittest.mock import patch
+
+from django.contrib.auth.models import User, Permission
+from django.core.exceptions import ValidationError
+from django.test import TestCase
+from django.utils import timezone
 
 from make_queue.fields import MachineTypeField
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, Quota, Reservation, ReservationRule
-from django.contrib.auth.models import User, Permission
-from django.core.exceptions import ValidationError
-from django.utils import timezone
-from datetime import timedelta, datetime, time
-
 from make_queue.util.time import local_to_date
 from news.models import Event, TimePlace
 

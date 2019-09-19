@@ -8,11 +8,12 @@ a.place {
     line-height: 16px !important;
 }
 
-.ui.icon {
+.ui.icon.make_yellow {
     color: #F8C700 !important;
 }
 
-.accordion p, .card p {
+.accordion p,
+.card p {
     margin: 0 !important;
 }
 
@@ -111,7 +112,7 @@ a.place {
     }
 
     .accordion .calendar-link {
-	display: inline-block;
-	position: initial;
+        display: inline-block;
+        position: initial;
     }
 }

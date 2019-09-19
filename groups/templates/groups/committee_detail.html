@@ -4,19 +4,19 @@
 
 {% block body %}
     <div class="ui text container">
-	{% if committee.image %}
-	    <img class="ui centered aligned image" src="{{ committee.image.url }}"/>
-	{% endif %}
+        {% if committee.image %}
+            <img class="ui centered aligned image" src="{{ committee.image.url }}"/>
+        {% endif %}
 
         <h1>
             <strong>{{ committee.name|capfirst }}</strong>
         </h1>
 
-	{% if committee.clickbait %}
-	    <p>{{ committee.clickbait }}</p>
-	    <br>
-	{% endif %}
+        {% if committee.clickbait %}
+            <p>{{ committee.clickbait }}</p>
+            <br>
+        {% endif %}
 
-	{{ committee.description|safe }}
+        {{ committee.description|safe }}
     </div>
 {% endblock %}

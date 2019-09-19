@@ -1,12 +1,12 @@
-from django.test import TestCase
+from django.contrib.admin.sites import AdminSite
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.admin.sites import AdminSite
+from django.test import TestCase
 
+from news.models import Article
 from .admin import InheritanceGroupAdmin
 from .models import InheritanceGroup as Group, Committee
-from news.models import Article
 
 
 def permission_to_perm(permission):

@@ -1,12 +1,12 @@
 import io
+
 import xlsxwriter
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.generic import TemplateView, View, CreateView, UpdateView, DeleteView
-from django.db.models import Q
-from django.views.generic.edit import ProcessFormView, FormMixin
 
 from make_queue.forms import Printer3DCourseForm
 from make_queue.models.course import Printer3DCourse
@@ -58,7 +58,7 @@ class EditRegistrationView(PermissionRequiredMixin, UpdateView):
 class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
     model = Printer3DCourse
     permission_required = (
-        "make_queue.delete_printer3d_course",
+        "make_queue.delete_printer3dcourse",
     )
 
     def get_success_url(self):
@@ -83,9 +83,15 @@ class CourseXLSXView(View):
     def post(self, request):
         search_string = request.POST.get("search_text")
         status_filter = request.POST.get("status_filter")
+        selected = request.POST.get("selected")
 
-        course_registrations = Printer3DCourse.objects.filter(
-            Q(username__icontains=search_string) | Q(name__icontains=search_string), status__icontains=status_filter)
+        # If selected is set, we want to include only these registrations
+        if selected:
+            course_registrations = Printer3DCourse.objects.filter(pk__in=selected.split(","))
+        else:
+            course_registrations = Printer3DCourse.objects.filter(
+                Q(username__icontains=search_string) | Q(name__icontains=search_string),
+                status__icontains=status_filter)
 
         # Use an in-memory output file, to avoid having to clean up the disk
         output_file = io.BytesIO()

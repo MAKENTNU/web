@@ -4,23 +4,24 @@
 <!DOCTYPE html>
 <html style="width: 100%; padding: 0; margin: 0;">
 <body style="width: 100%; padding: 0; margin: 0;">
-<header style="width: 100%; background-color: rgb(34, 43, 52); padding: 20px; position: relative;">
-    <img src="{{ site }}{% static "web/img/logo_white.svg" %}" alt="MAKE NTNU logo"
-         style="width: 500px; max-width: 100%;">
-</header>
-<main style="position: relative; width: 100%; padding: 30px;">
-    <div>
-        <h1>{% trans "Your ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
+    <header style="width: 100%; background-color: rgb(34, 43, 52); padding: 20px; position: relative;">
+        <img src="{{ site }}{% static "web/img/logo_white.svg" %}" alt="MAKE NTNU logo"
+             style="width: 500px; max-width: 100%;">
+    </header>
+    <main style="position: relative; width: 100%; padding: 30px;">
         <div>
-            {% trans "Thank you for your recently registration for the above event. You can view your ticket" %} <a
-                href="
-                        {{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>. {% trans "If you want to cancel your registration, you can do so by clicking " %}
-            <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+            <h1>{% trans "Your ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
+            <div>
+                {% trans "Thank you for registering for this event. You can view your ticket" %}
+                <a href="{{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>.
+
+                {% trans "If you want to cancel your registration, you can do so by clicking" %}
+                <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+            </div>
+            <div style="margin-top: 30px;">
+                {% trans "The reference number for your ticket is" %}: <b>"{{ ticket.uuid }}"</b>
+            </div>
         </div>
-        <div style="margin-top: 30px;">
-            {% trans "The reference number for your ticket is: " %} <b>"{{ ticket.uuid }}"</b>
-        </div>
-    </div>
-</main>
+    </main>
 </body>
 </html>

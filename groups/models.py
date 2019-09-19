@@ -1,20 +1,19 @@
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import Group, Permission
 from django.db import models
-from ckeditor.fields import RichTextField
+from django.utils.translation import gettext_lazy as _
 
 
 class InheritanceGroup(Group):
     """
     A group that allow inheritance of permissions.
 
-    The groups that a group will inherit from is given
+    The groups that a group will inherit from, are given
     by the `parents` field.
 
     The permissions that this group has independently
-    from its parents are given by the `own_permissions` field.
+    from its parents, are given by the `own_permissions` field.
 
-    The standard `permissions` field will contain the groups own
+    The standard `permissions` field will contain the group's own
     permissions, and those it has inherited. This field should not
     be altered, as any change will get overwritten.
     """
@@ -32,7 +31,7 @@ class InheritanceGroup(Group):
     )
 
     def update_permissions(self):
-        """Update the permissions of this and all sub groups."""
+        """Update the permissions of this and all sub-groups."""
         permissions = list(self.own_permissions.all())
 
         for parent in self.parents.all():
@@ -48,7 +47,7 @@ class InheritanceGroup(Group):
         return set(self.permissions.all()) - set(self.own_permissions.all())
 
     def get_sub_groups(self):
-        """Return a queryset of all groups that inherits from this group."""
+        """Return a queryset of all groups that inherit from this group."""
         subs = self.sub_groups.all()
 
         for sub in self.sub_groups.all():

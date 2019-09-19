@@ -1,5 +1,4 @@
-from django.conf.urls import url, include
-from django.contrib import admin
+from django.conf.urls import url
 from django.contrib.auth.decorators import login_required
 
 from checkin.views import CheckInView, ShowSkillsView, ProfilePageView, SuggestSkillView, RegisterProfileView, \
@@ -16,4 +15,3 @@ urlpatterns = [
     url(r'^suggest/vote/$', login_required(VoteSuggestionView.as_view()), name="vote"),
     url(r'^suggest/delete/$', login_required(DeleteSuggestionView.as_view()), name="delete"),
 ]
-
