@@ -29,6 +29,7 @@
 
 .article-text, .article-img {
     position: relative;
+    margin-top: 30px
 }
 
 .clickable {
@@ -38,16 +39,19 @@
 .article-text h2 a, .events .header a {
     color: rgb(248, 200, 17);
     text-transform: uppercase;
-    font-size: 32px;
+    font-size: 50px;
+    margin-top: 30px
 }
 
 .article-text h2 {
     text-align: center;
+    margin-top: 30px
 }
 
 .article-text p, .events .description p {
     font-size: 16px;
     line-height: 26px;
+    margin-top: 30px
 }
 
 .events .header a {
@@ -85,6 +89,7 @@
 .article-text.article-last.float-right .txtborder.bl,
 .article-text.article-last.float-left .txtborder.br {
     display: inline;
+
 }
 
 .events {
@@ -118,10 +123,12 @@
     grid-template-columns: 1fr 10fr 10fr 1fr;
     grid-auto-flow: dense;
     margin: 80px 0;
+
 }
 
 .articles .article-img {
     grid-column: 2/3;
+    margin-top: 30px
 }
 
 .articles .article-text {
@@ -129,28 +136,34 @@
     overflow: hidden;
     display: grid;
     align-items: center;
+    margin-top: 30px
 }
 
 .articles .article-text p {
     padding: 0 50px 50px;
+    margin-top: 30px
 }
 
 .articles h2 {
     margin-bottom: 5px;
+    margin-top: 30px
 }
 
 .articles .float-left {
     grid-column: 3/4;
+    margin-top: 30px
 }
 
 .articles .float-right {
     grid-column: 2/3;
+    margin-top: 30px
 }
 
 .articles .article-img {
     object-fit: cover;
     width: 100%;
     height: 100%;
+    margin-top: 30px
 }
 
 .noevents {
@@ -174,10 +187,12 @@
 @media screen and (max-width: 992px) {
     .articles {
         grid-template-columns: 1fr 20fr 1fr;
+        margin-top: 30px
     }
 
     .articles .article-text, .articles .article-img {
         grid-column: 2/3 !important;
+        margin-top: 30px
     }
 
     .txtborder.tl, .txtborder.tr, .txtborder.bl, .txtborder.br {
@@ -194,29 +209,34 @@
 
     .articles {
         grid-template-rows: auto;
+        margin-top: 30px
     }
 
     .articles .article-text {
         align-items: flex-start;
+        margin-top: 30px
     }
 
     .article-text h2 {
         text-align: left;
-        margin-top: 20px !important;
+        margin-top: 20px;
     }
 
     .article-text p, .article-text a, .article-text h2 {
         margin-left: 0 !important;
         padding: 0 !important;
+        margin-top: 30px
     }
 
     .article-text p {
         padding-bottom: 80px !important;
+        margin-top: 30px
     }
 
     .articles .article-text {
         height: auto;
         max-height: 300px;
+        margin-top: 30px
     }
 }
 @media screen and (max-width: 1200px) {
