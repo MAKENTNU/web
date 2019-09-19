@@ -18,6 +18,7 @@
     <script src="{% static "lib/jquery/jquery-3.1.1.min.js" %}"></script>
     <script src="{% static "lib/fomantic-ui/semantic.min.js" %}"></script>
     <script>let langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
+    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
     {% block head %}{% endblock head %}
 </head>
 <body>
