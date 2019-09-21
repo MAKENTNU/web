@@ -34,8 +34,12 @@ class RFIDView(View):
         :param request: The HTTP POST request to handle. Must include a secret and the card id.
         :return: An HttpResponse.
         """
-        if request.POST.get('secret') == settings.CHECKIN_KEY:
-            card_id = request.POST.get('card_id')
+        secret = request.POST.get('secret')
+        card_id = request.POST.get('card_id')
+        if secret is None or card_id is None:
+            return HttpResponse(status=400)
+
+        if secret == settings.CHECKIN_KEY:
             if len(card_id) == 10 and card_id.isnumeric():
                 return self.card_id_valid("EM" + card_id)
             else:
