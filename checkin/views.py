@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -16,22 +17,62 @@ from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProf
 from web import settings
 
 
-class CheckInView(View):
+class RFIDView(View):
+    """
+    Base view class for receiving requests from RFID card readers
+    """
+
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     @csrf_exempt
     def post(self, request):
+        """
+        Handles the request from the RFID card reader.
+        Does a basic check for a valid card id.
+        :param request: The HTTP POST request to handle. Must include a secret and the card id.
+        :return: An HttpResponse.
+        """
         if request.POST.get('secret') == settings.CHECKIN_KEY:
-            if Profile.objects.get(card_id=request.POST.get('card_id')).on_make:
-                Profile.objects.filter(card_id=request.POST.get('card_id')).update(on_make=False)
-                return HttpResponse('check out'.encode(), status=200)
+            card_id = request.POST.get('card_id')
+            if len(card_id) == 10 and card_id.isnumeric():
+                return self.card_id_valid("EM" + card_id)
             else:
-                Profile.objects.filter(card_id=request.POST.get('card_id')).update(on_make=True, last_checkin=timezone.now())
-                return HttpResponse('check in'.encode(), status=200)
+                return self.card_id_invalid("EM" + card_id)
+        return HttpResponse(status=403)
 
+    def card_id_valid(self, card_id):
+        """
+        Handles the case where the card id is valid.
+        Should be overridden in a subclass.
+        :param card_id: The card id from the request, prefixed with EM
+        :return: An HttpResponse
+        """
+        return HttpResponse(status=200)
+
+    def card_id_invalid(self, card_id):
+        """
+        Handles the case where the card id is invalid.
+        Should be overridden in a subclass.
+        :param card_id: The card id from the request, prefixed with EM
+        :return: An HttpResponse
+        """
         return HttpResponse(status=401)
+
+
+class CheckInView(RFIDView):
+    def card_id_valid(self, card_id):
+        profiles = Profile.objects.filter(card_id=card_id)
+        if not profiles.exists():
+            return HttpResponse(status=401)
+
+        if profiles.first().on_make:
+            profiles.update(on_make=False)
+            return HttpResponse('check out'.encode(), status=200)
+        else:
+            profiles.update(on_make=True, last_checkin=timezone.now())
+            return HttpResponse('check in'.encode(), status=200)
 
 
 class ShowSkillsView(TemplateView):
@@ -211,21 +252,12 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
         return JsonResponse(data)
 
 
-class RegisterCardView(View):
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    @csrf_exempt
-    def post(self, request):
-        if request.POST.get('secret') == settings.CHECKIN_KEY:
-            card_id = request.POST.get('card_id')
-            if not Profile.objects.filter(card_id=card_id).exists():
-                RegisterProfile.objects.all().delete()
-                RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
-                return HttpResponse('card scanned', status=200)
-
-        return HttpResponse(status=400)
+class RegisterCardView(RFIDView):
+    def card_id_valid(self, card_id):
+        if not Profile.objects.filter(card_id=card_id).exists():
+            RegisterProfile.objects.all().delete()
+            RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
+            return HttpResponse('card scanned', status=200)
 
 
 class RegisterProfileView(TemplateView):
