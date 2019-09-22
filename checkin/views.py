@@ -10,13 +10,14 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
 
+from card.models import Card
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from card.views import RFIDView
 
 
 class CheckInView(RFIDView):
     def card_id_valid(self, card_id):
-        profiles = Profile.objects.filter(card_id=card_id)
+        profiles = Profile.objects.filter(user__card__number=card_id)
         if not profiles.exists():
             return HttpResponse(status=401)
 
@@ -207,7 +208,7 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 class RegisterCardView(RFIDView):
     def card_id_valid(self, card_id):
-        if not Profile.objects.filter(card_id=card_id).exists():
+        if not Profile.objects.filter(user__card__number=card_id).exists():
             RegisterProfile.objects.all().delete()
             RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
             return HttpResponse('card scanned', status=200)
@@ -225,7 +226,7 @@ class RegisterProfileView(TemplateView):
             scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
-                Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
+                Card.objects.create(user=request.user, number=RegisterProfile.objects.first().card_id)
         RegisterProfile.objects.all().delete()
         return JsonResponse(data)
 

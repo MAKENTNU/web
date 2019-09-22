@@ -6,7 +6,6 @@ from checkin.models import Skill, Profile, UserSkill, SuggestSkill
 class ProfileAdmin(admin.ModelAdmin):
     model = Profile
     readonly_fields = ('last_checkin',)
-    list_display = ('__str__', 'card_id')
 
 
 class UserSkillAdmin(admin.ModelAdmin):
