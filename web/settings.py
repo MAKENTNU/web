@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     'channels',
     'internal',
     'users',
+    'card',
 ]
 
 MIDDLEWARE = [
