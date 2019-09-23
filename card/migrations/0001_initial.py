@@ -10,14 +10,14 @@ def course_registration_card(apps, schema_editor):
     Create Card objects to connect course registration card_number to registration user
     """
     Card = apps.get_model('card', 'Card')
-    Printer3DCourse = apps.get_model('make_queue.course', 'Printer3DCourse')
+    Printer3DCourse = apps.get_model('make_queue', 'Printer3DCourse')
     db_alias = schema_editor.connection.alias
 
     for registration in Printer3DCourse.objects.using(db_alias).all():
-        if hasattr(registration, 'user') and registration.card_number:
+        if hasattr(registration, 'user') and registration.user and registration.card_number:
             user = registration.user
             if not hasattr(user, 'card'):
-                Card.objects.using(db_alias).create(user=user, number=registration.card_number)
+                Card.objects.using(db_alias).create(user=user, number="EM " + str(registration.card_number).zfill(10))
 
 
 class Migration(migrations.Migration):
