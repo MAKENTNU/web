@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
 
+from card.models import Card
 from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
 from internal.models import Member, SystemAccess
 
@@ -50,6 +51,12 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
         if form_class is None:
             form_class = self.get_form_class()
         return form_class(self.request.user, **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        user = self.object.user
+        card_id = "EM " + form.cleaned_data["card_number"]
+        Card.update_or_create(user, card_id)
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("members", args=(self.object.pk,))

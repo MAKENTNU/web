@@ -15,3 +15,11 @@ class Card(models.Model):
 
     def __str__(self):
         return self.number
+
+    @classmethod
+    def update_or_create(cls, user, number):
+        if hasattr(user, 'card'):
+            user.card.number = number
+            user.card.save()
+        else:
+            cls.objects.create(user=user, number=number)

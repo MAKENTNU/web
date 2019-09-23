@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, TextInput
+from django.forms import ModelForm, TextInput, CharField
 from django.utils.translation import gettext_lazy as _
 
 from internal.models import Member, SystemAccess
@@ -23,6 +23,8 @@ class AddMemberForm(ModelForm):
 
 
 class EditMemberForm(ModelForm):
+    card_number = CharField(max_length=10, min_length=10, empty_value="", label=_("Card number (EM)"))
+
     class Meta:
         model = Member
         fields = "__all__"
