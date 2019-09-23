@@ -54,7 +54,12 @@ class Machine(models.Model):
             return self.status
         return self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)) and "R" or "F"
 
-    def get_status_display(self):
+    def _get_FIELD_display(self, field):
+        if field.attname == "status":
+            return self._get_status_display()
+        return super()._get_FIELD_display(field)
+
+    def _get_status_display(self):
         current_status = self.get_status()
         return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
 

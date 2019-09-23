@@ -1,4 +1,4 @@
-django>=2.1.5
+django>=2.2.0,<2.3.0
 django-ckeditor==5.6.1
 Pillow
 python-social-auth

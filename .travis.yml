@@ -2,6 +2,7 @@ notifications:
   email: false
 
 # code language
+dist: xenial
 language: python
 python:
   - "3.6"
