@@ -6,6 +6,9 @@ import django.db.models.deletion
 
 
 def course_registration_card(apps, schema_editor):
+    """
+    Create Card objects to connect course registration card_number to registration user
+    """
     Card = apps.get_model('card', 'Card')
     Printer3DCourse = apps.get_model('make_queue.course', 'Printer3DCourse')
     db_alias = schema_editor.connection.alias

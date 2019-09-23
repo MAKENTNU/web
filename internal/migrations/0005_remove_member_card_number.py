@@ -18,6 +18,20 @@ def member_card(apps, schema_editor):
                 Card.objects.using(db_alias).create(user=user, number=member.card_number)
 
 
+def reverse_member_card(apps, schema_editor):
+    """
+    Reverse creation of Card objects from members
+    """
+    Card = apps.get_model('card', 'Card')
+    Member = apps.get_model('internal', 'Member')
+    db_alias = schema_editor.connection.alias
+
+    for card in Card.objects.using(db_alias).all():
+        member = Member.objects.using(db_alias).filter(user=card.user)
+        if member.exists():
+            member.update(card_number=card.number)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -26,7 +40,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(member_card),
+        migrations.RunPython(member_card, reverse_member_card),
         migrations.RemoveField(
             model_name='member',
             name='card_number',

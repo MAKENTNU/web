@@ -4,6 +4,9 @@ from django.db import migrations
 
 
 def create_cards_from_profiles(apps, schema_editor):
+    """
+    Create Card objects connecting the profile card_id to the profile user
+    """
     Card = apps.get_model('card', 'Card')
     Profile = apps.get_model('checkin', 'Profile')
     db_alias = schema_editor.connection.alias
@@ -15,6 +18,20 @@ def create_cards_from_profiles(apps, schema_editor):
                 Card.objects.using(db_alias).create(user=user, number=profile.card_id)
 
 
+def reverse_create_cards_from_profiles(apps, schema_editor):
+    """
+    Reverse creation of Card objects from profiles
+    """
+    Card = apps.get_model('card', 'Card')
+    Profile = apps.get_model('checkin', 'Profile')
+    db_alias = schema_editor.connection.alias
+
+    for card in Card.objects.using(db_alias).all():
+        profile = Profile.objects.using(db_alias).filter(user=card.user)
+        if profile.exists():
+            profile.update(card_id=card.number)
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -23,7 +40,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(create_cards_from_profiles),
+        migrations.RunPython(create_cards_from_profiles, reverse_create_cards_from_profiles),
         migrations.RemoveField(
             model_name='profile',
             name='card_id',
