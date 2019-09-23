@@ -9,8 +9,10 @@ def create_cards_from_profiles(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for profile in Profile.objects.using(db_alias).all():
-        print(profile.card_id)
-        Card.objects.using(db_alias).create(user=profile.user, number=profile.card_id)
+        if profile.card_id:
+            user = profile.user
+            if not hasattr(user, 'card'):
+                Card.objects.using(db_alias).create(user=user, number=profile.card_id)
 
 
 class Migration(migrations.Migration):

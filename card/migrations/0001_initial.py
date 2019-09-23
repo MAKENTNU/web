@@ -5,12 +5,25 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
+def course_registration_card(apps, schema_editor):
+    Card = apps.get_model('card', 'Card')
+    Printer3DCourse = apps.get_model('make_queue.course', 'Printer3DCourse')
+    db_alias = schema_editor.connection.alias
+
+    for registration in Printer3DCourse.objects.using(db_alias).all():
+        if hasattr(registration, 'user') and registration.card_number:
+            user = registration.user
+            if not hasattr(user, 'card'):
+                Card.objects.using(db_alias).create(user=user, number=registration.card_number)
+
+
 class Migration(migrations.Migration):
 
     initial = True
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('make_queue', '0008_auto_20181103_1524'),  # Printer3DCourse model
     ]
 
     operations = [
@@ -26,4 +39,5 @@ class Migration(migrations.Migration):
             model_name='card',
             constraint=models.UniqueConstraint(fields=('number',), name='unique_number'),
         ),
+        migrations.RunPython(course_registration_card, migrations.RunPython.noop)
     ]
