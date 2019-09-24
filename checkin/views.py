@@ -226,7 +226,7 @@ class RegisterProfileView(TemplateView):
             scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
-                Card.objects.create(user=request.user, number=RegisterProfile.objects.first().card_id)
+                Card.update_or_create(user=request.user, number=RegisterProfile.objects.first().card_id)
         RegisterProfile.objects.all().delete()
         return JsonResponse(data)
 
