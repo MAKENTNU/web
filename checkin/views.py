@@ -13,6 +13,7 @@ from django.views.generic import TemplateView
 from card.models import Card
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from card.views import RFIDView
+from make_queue.models.course import Printer3DCourse
 
 
 class CheckInView(RFIDView):
@@ -94,6 +95,12 @@ class ProfilePageView(TemplateView):
             profile = Profile.objects.get(user=self.request.user)
         else:
             profile = Profile.objects.create(user=self.request.user)
+
+        # Connect card number from course registration to user
+        registration = Printer3DCourse.objects.filter(user__username=self.request.user.username)
+        if registration.exists():
+            Card.update_or_create(self.request.user, registration.first().card_number)
+
         img = profile.image
         userskill_set = profile.userskill_set.all()
 
