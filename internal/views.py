@@ -65,7 +65,7 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
         # Update card connected to user
         user = self.object.user
         card_id = form.cleaned_data["card_number"]
-        Card.update_or_create(user, card_id)
+        Card.update_or_create(user, "EM " + str(card_id))
         return super().form_valid(form)
 
     def get_success_url(self):

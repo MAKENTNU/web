@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, TextInput, CharField
+from django.forms import ModelForm, TextInput, IntegerField
 from django.utils.translation import gettext_lazy as _
 
 from internal.models import Member, SystemAccess
@@ -23,7 +23,7 @@ class AddMemberForm(ModelForm):
 
 
 class EditMemberForm(ModelForm):
-    card_number = CharField(max_length=10, min_length=10, empty_value="", label=_("Card number (EM)"))
+    card_number = IntegerField(label=_("Card number (EM)"))
 
     class Meta:
         model = Member
@@ -38,8 +38,9 @@ class EditMemberForm(ModelForm):
     def __init__(self, user, **kwargs):
         super().__init__(**kwargs)
 
-        if hasattr(user, 'card'):
-            self.initial['card_number'] = user.card.number
+        member = kwargs['instance']
+        if hasattr(member.user, 'card'):
+            self.initial['card_number'] = member.user.card.number.split()[1]  # Without EM prefix
 
         if not user.has_perm("internal.can_edit_group_membership"):
             for field_name in ["committees", "role", "comment", "guidance_exemption", "active", "honorary"]:
