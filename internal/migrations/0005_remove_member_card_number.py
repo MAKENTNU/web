@@ -27,7 +27,7 @@ def reverse_member_card(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for card in Card.objects.using(db_alias).all():
-        member = Member.objects.using(db_alias).filter(user=card.user)
+        member = Member.objects.using(db_alias).filter(user_id=card.user.id)
         if member.exists():
             member.update(card_number=card.number)
 

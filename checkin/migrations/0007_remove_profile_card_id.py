@@ -27,7 +27,7 @@ def reverse_create_cards_from_profiles(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for card in Card.objects.using(db_alias).all():
-        profile = Profile.objects.using(db_alias).filter(user=card.user)
+        profile = Profile.objects.using(db_alias).filter(user_id=card.user.id)
         if profile.exists():
             profile.update(card_id=card.number)
 
