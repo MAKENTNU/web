@@ -2,6 +2,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 # Create your views here.
 from django.views.generic import TemplateView
+from django.db.models import Q
 
 from inventory.models import ItemInSubContainer, Room, Item
 
@@ -14,7 +15,7 @@ class InventoryView(TemplateView):
         # search_word = kwargs['search_word']
         itemset = Item.objects.all()
         context.update({
-            'items': itemset,
+            'items': itemset[:10],
         })
         return context
 
@@ -35,16 +36,18 @@ class ItemView(TemplateView):
 class SearchItemsView(TemplateView):
     template_name = "inventory/inventory.html"
 
+    MAX_RESULTS = 10
+
     def post(self, request):
         search_string = request.POST.get('search')
 
         # TODO: Do some sanity checks on search_string...
 
-        result_name = Item.objects.filter(name__contains=search_string)
-        result_description = Item.objects.filter(description__contains=search_string)
+        item_filter = Q(name__contains=search_string) | Q(description__contains=search_string)
+        matched_items = Item.objects.filter(item_filter).order_by('name')[:self.MAX_RESULTS]
+
         data = {
-            "name": result_name,
-            "description": result_description,
+            "item_names": [item.name for item in matched_items],
         }
 
         return JsonResponse(data)
