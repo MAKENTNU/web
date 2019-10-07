@@ -22,8 +22,7 @@
                     			    {% if forloop.first %}article-first{% endif %}
 			                        {% if forloop.last %}article-last{% endif %}"
                          src="{{ im.url }}" href="{% url 'tools' tool.id %}"
-                         width="{{ im.width }}" height="{{ im.height }}"
-                    style="margin-top: 30px">
+                         width="{{ im.width }}" height="{{ im.height }}"c>
                 {% endthumbnail %}
 
                 <!-- For the text -->
@@ -37,9 +36,6 @@
                     <div>
                         <h2>
                             <a href="{% url 'tools' tool.id %}">{{ tool.title }}</a>
-                            {% if perms.tools.add_reservation_rule %}
-                                <i class="ui green plus icon"></i>
-                            {% endif %}
                         </h2>
                     </div>
                 </div>

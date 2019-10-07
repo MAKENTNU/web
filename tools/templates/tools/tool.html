@@ -23,6 +23,13 @@
                 {% endthumbnail %}
                 <h1 class="tool-title">
                     <div>
+                        {% block admin-page %}
+                             {% if perms.tools.add_Tool%}
+                                 <a href="{% url "tools/admin" %}" class="ui right floated yellow button">
+                                     <i class="ui sticky note icon"></i>{% trans "Admin page" %}
+                                 </a>
+                             {% endif %}
+                        {% endblock admin-page %}
                         {{ tool.title }}
                     </div>
                     <div>
