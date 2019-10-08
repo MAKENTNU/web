@@ -17,7 +17,7 @@ def course_registration_card(apps, schema_editor):
         if hasattr(registration, 'user') and registration.user and registration.card_number:
             user = registration.user
             if not hasattr(user, 'card'):
-                Card.objects.using(db_alias).create(user=user, number="EM " + str(registration.card_number).zfill(10))
+                Card.objects.using(db_alias).create(user=user, number=str(registration.card_number).zfill(10))
 
 
 class Migration(migrations.Migration):

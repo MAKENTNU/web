@@ -150,7 +150,7 @@ class Printer3DCourseForm(forms.ModelForm):
 
     def save(self, commit=True):
         if self.cleaned_data['user'] and self.cleaned_data['card_number']:
-            Card.update_or_create(self.cleaned_data['user'], "EM " + str(self.cleaned_data['card_number']))
+            Card.update_or_create(self.cleaned_data['user'], str(self.cleaned_data['card_number']))
         super().save(commit)
 
 

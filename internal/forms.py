@@ -40,7 +40,7 @@ class EditMemberForm(ModelForm):
 
         member = kwargs['instance']
         if hasattr(member.user, 'card'):
-            self.initial['card_number'] = member.user.card.number.split()[1]  # Without EM prefix
+            self.initial['card_number'] = member.user.card.number
 
         if not user.has_perm("internal.can_edit_group_membership"):
             for field_name in ["committees", "role", "comment", "guidance_exemption", "active", "honorary"]:

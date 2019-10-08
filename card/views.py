@@ -30,9 +30,9 @@ class RFIDView(View):
 
         if secret == settings.CHECKIN_KEY:
             if len(card_id) == 10 and card_id.isnumeric():
-                return self.card_id_valid("EM " + card_id)
+                return self.card_id_valid(card_id)
             else:
-                return self.card_id_invalid("EM " + card_id)
+                return self.card_id_invalid(card_id)
         return HttpResponse(status=403)
 
     def card_id_valid(self, card_id):
