@@ -31,7 +31,7 @@ def can_use_3d_printer(user):
         course_registration.user = user
         course_registration.save()
         if course_registration.card_number:
-            Card.update_or_create(user, str(course_registration.card_number))
+            Card.update_or_create(user, course_registration.card_number)
         return True
     return False
 

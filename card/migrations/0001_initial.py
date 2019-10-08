@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
 
+import card.models
+
 
 def course_registration_card(apps, schema_editor):
     """
@@ -17,7 +19,7 @@ def course_registration_card(apps, schema_editor):
         if hasattr(registration, 'user') and registration.user and registration.card_number:
             user = registration.user
             if not hasattr(user, 'card'):
-                Card.objects.using(db_alias).create(user=user, number=str(registration.card_number).zfill(10))
+                Card.objects.using(db_alias).create(user=user, number=registration.card_number)
 
 
 class Migration(migrations.Migration):
@@ -34,13 +36,9 @@ class Migration(migrations.Migration):
             name='Card',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('number', models.CharField(max_length=16, verbose_name='Card number')),
+                ('number', card.models.CardNumberField(unique=True, validators=[django.core.validators.MaxValueValidator(9999999999, 'Card number must be ten digits long'), django.core.validators.MinValueValidator(1000000, 'Card number must be ten digits long')], verbose_name='Card number')),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
             ],
-        ),
-        migrations.AddConstraint(
-            model_name='card',
-            constraint=models.UniqueConstraint(fields=('number',), name='unique_number'),
         ),
         migrations.RunPython(course_registration_card, migrations.RunPython.noop)
     ]

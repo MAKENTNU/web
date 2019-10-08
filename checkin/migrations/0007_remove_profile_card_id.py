@@ -15,7 +15,7 @@ def create_cards_from_profiles(apps, schema_editor):
         if profile.card_id:
             user = profile.user
             if not hasattr(user, 'card'):
-                Card.objects.using(db_alias).create(user=user, number=profile.card_id)
+                Card.objects.using(db_alias).create(user=user, number=int(profile.card_id))
 
 
 def reverse_create_cards_from_profiles(apps, schema_editor):
@@ -29,7 +29,7 @@ def reverse_create_cards_from_profiles(apps, schema_editor):
     for card in Card.objects.using(db_alias).all():
         profile = Profile.objects.using(db_alias).filter(user_id=card.user.id)
         if profile.exists():
-            profile.update(card_id=card.number)
+            profile.update(card_id=str(card.number))
 
 
 class Migration(migrations.Migration):

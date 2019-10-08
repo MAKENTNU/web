@@ -99,7 +99,7 @@ class ProfilePageView(TemplateView):
         # Connect card number from course registration to user
         registration = Printer3DCourse.objects.filter(user__username=self.request.user.username)
         if registration.exists():
-            Card.update_or_create(self.request.user, str(registration.first().card_number))
+            Card.update_or_create(self.request.user, registration.first().card_number)
 
         img = profile.image
         userskill_set = profile.userskill_set.all()

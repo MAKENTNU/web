@@ -44,7 +44,7 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
         user = form.cleaned_data['user']
         registration = Printer3DCourse.objects.filter(username=user.username)
         if registration.exists():
-            Card.update_or_create(user, str(registration.first().card_number))
+            Card.update_or_create(user, registration.first().card_number)
         return super().form_valid(form)
 
 
@@ -65,7 +65,7 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
         # Update card connected to user
         user = self.object.user
         card_id = form.cleaned_data["card_number"]
-        Card.update_or_create(user, str(card_id))
+        Card.update_or_create(user, card_id)
         return super().form_valid(form)
 
     def get_success_url(self):
