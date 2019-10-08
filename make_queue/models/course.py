@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from card.models import CardNumberField
+
 
 class UsernameField(models.CharField):
 
@@ -19,6 +21,6 @@ class Printer3DCourse(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
     username = UsernameField(max_length=32, verbose_name=_("Username"), unique=True)
     date = models.DateField(verbose_name=_("Course date"))
-    card_number = models.IntegerField(null=True, verbose_name=_("Card number (EM)"))
+    card_number = CardNumberField(unique=True, null=True)
     name = models.CharField(max_length=256, verbose_name=_("Full name"))
     status = models.CharField(choices=STATUS_CHOICES, default="registered", max_length=20, verbose_name=_("Status"))
