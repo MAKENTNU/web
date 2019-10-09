@@ -16,7 +16,7 @@ def member_card(apps, schema_editor):
             user = member.user
             if not hasattr(user, 'card'):
                 # Create card without EM prefix
-                Card.objects.using(db_alias).create(user=user, number=int(member.card_number.split("EM ")[-1]))
+                Card.objects.using(db_alias).create(user=user, number=member.card_number.split("EM ")[-1].zfill(10))
 
 
 def reverse_member_card(apps, schema_editor):

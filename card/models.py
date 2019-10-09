@@ -1,32 +1,30 @@
 from django.contrib.auth.models import User
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 import card.forms
 
 
-class CardNumberField(models.IntegerField):
+class CardNumberField(models.CharField):
     """
     Custom field for card numbers, doing some extra validation
     """
-    max_value = 10 ** 10 - 1  # No card numbers are more than 10 digits long
-    min_value = 10 ** 6  # Allow for old card numbers and those with 0 as first digit
 
     def __init__(self, **kwargs):
-        kwargs.update({
+        kwargs = {
+            "verbose_name": _("Card number"),
+            **kwargs,
             "validators": (
-                MaxValueValidator(self.max_value, _("Card number must be ten digits long")),
-                MinValueValidator(self.min_value, _("Card number must be ten digits long")),
+                RegexValidator(r"\d{10}", _("Card number must be ten digits long")),
             ),
-        })
-        super().__init__(**kwargs)
+            "max_length": 10,
+        }
+        super().__init__(**kwargs)  # No card numbers are more than ten digits long
 
     def formfield(self, **kwargs):
         if "form_class" not in kwargs:
             kwargs["form_class"] = card.forms.CardNumberField
-        kwargs["max_value"] = self.max_value
-        kwargs["min_value"] = self.min_value
         return super().formfield(**kwargs)
 
 
@@ -34,7 +32,7 @@ class Card(models.Model):
     """
     Model for connecting a card number to a user
     """
-    number = CardNumberField(verbose_name=_("Card number"), unique=True)
+    number = CardNumberField(unique=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("User"))
 
     def __str__(self):

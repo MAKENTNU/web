@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='printer3dcourse',
             name='card_number',
-            field=card.models.CardNumberField(null=True, unique=True, validators=[django.core.validators.MaxValueValidator(9999999999, 'Card number must be ten digits long'), django.core.validators.MinValueValidator(1000000, 'Card number must be ten digits long')]),
+            field=card.models.CardNumberField(max_length=10, null=True, unique=True, validators=[django.core.validators.RegexValidator('\\d{10}', 'Card number must be ten digits long')], verbose_name='Card number'),
         ),
     ]
