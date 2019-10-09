@@ -51,9 +51,7 @@
                     {{ form.username }}
                 </div>
                 <div class="ui field">
-                    <label>{{ form.card_number.label }}
-                        <span id="card_number_count">{{ form.card_number.initial|stringformat:"i"|length }}</span>
-                    </label>
+                    <label>{{ form.card_number.label }}</label>
                     {{ form.card_number }}
                 </div>
 
@@ -122,11 +120,6 @@
                 },
             });
             $("#user").closest(".dropdown").dropdown("set selected", $(event.target).val());
-        });
-
-        let cardNumberLengthCount = $("#card_number_count");
-        $("input[name={{ form.card_number.name }}]").on("keyup paste", (event) => {
-            cardNumberLengthCount.text(event.target.value.length);
         });
     </script>
 {% endblock %}

@@ -3,21 +3,31 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+import card.forms
+
 
 class CardNumberField(models.IntegerField):
     """
     Custom field for card numbers, doing some extra validation
     """
+    max_value = 10 ** 10 - 1  # No card numbers are more than 10 digits long
+    min_value = 10 ** 6  # Allow for old card numbers and those with 0 as first digit
+
     def __init__(self, **kwargs):
         kwargs.update({
             "validators": (
-                 # No card numbers are more than 10 digits long
-                 MaxValueValidator(10 ** 10 - 1, _("Card number must be ten digits long")),
-                 # Allow for old card numbers and those with 0 as first digit
-                 MinValueValidator(10 ** 6, _("Card number must be ten digits long")),
+                MaxValueValidator(self.max_value, _("Card number must be ten digits long")),
+                MinValueValidator(self.min_value, _("Card number must be ten digits long")),
             ),
         })
         super().__init__(**kwargs)
+
+    def formfield(self, **kwargs):
+        if "form_class" not in kwargs:
+            kwargs["form_class"] = card.forms.CardNumberField
+        kwargs["max_value"] = self.max_value
+        kwargs["min_value"] = self.min_value
+        return super().formfield(**kwargs)
 
 
 class Card(models.Model):
