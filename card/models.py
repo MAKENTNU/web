@@ -1,5 +1,4 @@
 from django.contrib.auth.models import User
-from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -15,9 +14,7 @@ class CardNumberField(models.CharField):
         kwargs = {
             "verbose_name": _("Card number"),
             **kwargs,
-            "validators": (
-                RegexValidator(r"\d{10}", _("Card number must be ten digits long")),
-            ),
+            "validators": card.forms.card_number_validators,
             "max_length": 10,
         }
         super().__init__(**kwargs)  # No card numbers are more than ten digits long
