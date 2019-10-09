@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
-from django.forms import ModelForm, TextInput, IntegerField
+from django.forms import ModelForm, TextInput
 from django.utils.translation import gettext_lazy as _
 
+from card.forms import CardNumberField
 from internal.models import Member, SystemAccess
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
 
@@ -23,7 +24,7 @@ class AddMemberForm(ModelForm):
 
 
 class EditMemberForm(ModelForm):
-    card_number = IntegerField(label=_("Card number (EM)"))
+    card_number = CardNumberField()
 
     class Meta:
         model = Member
