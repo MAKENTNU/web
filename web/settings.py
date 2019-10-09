@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'channels',
     'internal',
+    'card',
 ]
 
 MIDDLEWARE = [

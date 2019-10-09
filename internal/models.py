@@ -25,7 +25,6 @@ class Member(models.Model):
     email = models.EmailField(blank=True, null=True, verbose_name=_("Email"))
     phone_number = PhoneNumberField(max_length=32, default="", blank=True, verbose_name=_("Phone number"))
     study_program = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Study program"))
-    card_number = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Card number (EM)"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
     date_quit = models.DateField(blank=True, null=True, verbose_name=_("Date quit"))
     reason_quit = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Reason quit"))

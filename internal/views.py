@@ -5,8 +5,10 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
 
+from card.models import Card
 from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
 from internal.models import Member, SystemAccess
+from make_queue.models.course import Printer3DCourse
 
 
 class Home(TemplateView):
@@ -37,6 +39,14 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("edit-member", args=(self.object.pk,))
 
+    def form_valid(self, form):
+        # Connect card number from course registration to user
+        user = form.cleaned_data['user']
+        registration = Printer3DCourse.objects.filter(username=user.username)
+        if registration.exists():
+            Card.update_or_create(user, "EM " + str(registration.first().card_number))
+        return super().form_valid(form)
+
 
 class EditMemberView(UserPassesTestMixin, UpdateView):
     template_name = "internal/edit_member.html"
@@ -50,6 +60,13 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
         if form_class is None:
             form_class = self.get_form_class()
         return form_class(self.request.user, **self.get_form_kwargs())
+
+    def form_valid(self, form):
+        # Update card connected to user
+        user = self.object.user
+        card_id = form.cleaned_data["card_number"]
+        Card.update_or_create(user, "EM " + str(card_id))
+        return super().form_valid(form)
 
     def get_success_url(self):
         return reverse("members", args=(self.object.pk,))

@@ -6,67 +6,19 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
+from card.models import Card
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
-from web import settings
-
-
-class RFIDView(View):
-    """
-    Base view class for receiving requests from RFID card readers
-    """
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    @csrf_exempt
-    def post(self, request):
-        """
-        Handles the request from the RFID card reader.
-        Does a basic check for a valid card id.
-        :param request: The HTTP POST request to handle. Must include a secret and the card id.
-        :return: An HttpResponse.
-        """
-        secret = request.POST.get('secret')
-        card_id = request.POST.get('card_id')
-        if secret is None or card_id is None:
-            return HttpResponse(status=400)
-
-        if secret == settings.CHECKIN_KEY:
-            if len(card_id) == 10 and card_id.isnumeric():
-                return self.card_id_valid("EM" + card_id)
-            else:
-                return self.card_id_invalid("EM" + card_id)
-        return HttpResponse(status=403)
-
-    def card_id_valid(self, card_id):
-        """
-        Handles the case where the card id is valid.
-        Should be overridden in a subclass.
-        :param card_id: The card id from the request, prefixed with EM
-        :return: An HttpResponse
-        """
-        return HttpResponse(status=200)
-
-    def card_id_invalid(self, card_id):
-        """
-        Handles the case where the card id is invalid.
-        Should be overridden in a subclass.
-        :param card_id: The card id from the request, prefixed with EM
-        :return: An HttpResponse
-        """
-        return HttpResponse(status=401)
+from card.views import RFIDView
+from make_queue.models.course import Printer3DCourse
 
 
 class CheckInView(RFIDView):
     def card_id_valid(self, card_id):
-        profiles = Profile.objects.filter(card_id=card_id)
+        profiles = Profile.objects.filter(user__card__number=card_id)
         if not profiles.exists():
             return HttpResponse(status=401)
 
@@ -143,6 +95,12 @@ class ProfilePageView(TemplateView):
             profile = Profile.objects.get(user=self.request.user)
         else:
             profile = Profile.objects.create(user=self.request.user)
+
+        # Connect card number from course registration to user
+        registration = Printer3DCourse.objects.filter(user__username=self.request.user.username)
+        if registration.exists():
+            Card.update_or_create(self.request.user, "EM " + str(registration.first().card_number))
+
         img = profile.image
         userskill_set = profile.userskill_set.all()
 
@@ -258,7 +216,7 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 class RegisterCardView(RFIDView):
     def card_id_valid(self, card_id):
-        if not Profile.objects.filter(card_id=card_id).exists():
+        if not Profile.objects.filter(user__card__number=card_id).exists():
             RegisterProfile.objects.all().delete()
             RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
             return HttpResponse('card scanned', status=200)
@@ -276,7 +234,7 @@ class RegisterProfileView(TemplateView):
             scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
-                Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
+                Card.update_or_create(user=request.user, number=RegisterProfile.objects.first().card_id)
         RegisterProfile.objects.all().delete()
         return JsonResponse(data)
 

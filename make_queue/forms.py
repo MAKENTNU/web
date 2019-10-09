@@ -11,6 +11,7 @@ from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
 from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput, \
     MazemapSearchInput
+from card.models import Card
 
 
 class ReservationForm(forms.Form):
@@ -146,6 +147,11 @@ class Printer3DCourseForm(forms.ModelForm):
             "date": SemanticDateInput(),
             "username": forms.TextInput(attrs={"autofocus": "autofocus"}),
         }
+
+    def save(self, commit=True):
+        if self.cleaned_data['user'] and self.cleaned_data['card_number']:
+            Card.update_or_create(self.cleaned_data['user'], "EM " + str(self.cleaned_data['card_number']))
+        super().save(commit)
 
 
 class FreeSlotForm(forms.Form):
