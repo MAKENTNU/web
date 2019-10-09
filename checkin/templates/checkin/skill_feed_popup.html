@@ -1,0 +1,15 @@
+{% load checkin_tags %}
+{% load i18n %}
+
+<div class='content'>
+    <div>
+        <span class='skill-text'>{{ skill|locale_title:request.LANGUAGE_CODE }}</span>
+        <span class='ui star rating skill-lvl' data-rating='{{ leveltime.0 }}' data-max-rating='3'></span>
+    </div>
+    <div class='date'>{% trans "Checked in " %} {{ leveltime.1|timesince }} {% trans " ago" %}</div>
+</div>
+
+<script>
+    $('.ui.rating').rating();
+    $('.rating.skill-lvl').rating('disable');
+</script> 

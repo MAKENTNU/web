@@ -78,39 +78,39 @@ class CheckInView(RFIDView):
             return HttpResponse('check in'.encode(), status=200)
 
 
-class ShowSkillsView(TemplateView):
-    template_name = 'checkin/skills.html'
-    expiry_time = 3600 * 3
-
-    def is_checkin_expired(self, profile):
-        return (timezone.now() - profile.last_checkin).seconds >= self.expiry_time
-
-    def check_out_expired(self, profile):
-        if self.is_checkin_expired(profile):
-            profile.on_make = False
-            profile.save()
-
-    def get_context_data(self, **kwargs):
-        """ Creates dict with skill titles as keys and
-         the highest corresponding skill level as its pair value (quick fix) to show on website """
-        # skill_dict = UserSkill.objects.filter(profile__on_make=True).order_by("-skill_level")
-
-        skill_dict = {}
-
-        for profile in Profile.objects.filter(on_make=True):
-            self.check_out_expired(profile)
-            for userskill in profile.userskill_set.all():
-                skill = userskill.skill
-
-                if (skill not in skill_dict or skill.skill_level > skill_dict[skill][0]) \
-                        and not self.is_checkin_expired(profile):
-                    skill_dict[skill] = (userskill.skill_level, profile.last_checkin)
-
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'skill_dict': sorted(skill_dict.items(), key=lambda x: x[1][1], reverse=True),
-        })
-        return context
+# class ShowSkillsView(TemplateView):
+#     template_name = 'checkin/old_skill_feed.html'
+#     expiry_time = 3600 * 3
+#
+#     def is_checkin_expired(self, profile):
+#         return (timezone.now() - profile.last_checkin).seconds >= self.expiry_time
+#
+#     def check_out_expired(self, profile):
+#         if self.is_checkin_expired(profile):
+#             profile.on_make = False
+#             profile.save()
+#
+#     def get_context_data(self, **kwargs):
+#         """ Creates dict with skill titles as keys and
+#          the highest corresponding skill level as its pair value (quick fix) to show on website """
+#         # skill_dict = UserSkill.objects.filter(profile__on_make=True).order_by("-skill_level")
+#
+#         skill_dict = {}
+#
+#         for profile in Profile.objects.filter(on_make=True):
+#             self.check_out_expired(profile)
+#             for userskill in profile.userskill_set.all():
+#                 skill = userskill.skill
+#
+#                 if (skill not in skill_dict or skill.skill_level > skill_dict[skill][0]) \
+#                         and not self.is_checkin_expired(profile):
+#                     skill_dict[skill] = (userskill.skill_level, profile.last_checkin)
+#
+#         context = super().get_context_data(**kwargs)
+#         context.update({
+#             'skill_dict': sorted(skill_dict.items(), key=lambda x: x[1][1], reverse=True),
+#         })
+#         return context
 
 
 class ProfilePageView(TemplateView):
@@ -199,6 +199,7 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
                 sug = SuggestSkill.objects.create(creator=profile, title=suggestion, title_en=suggestion_english,
                                                   image=image)
                 sug.voters.add(profile)
+                sug.save()
 
             if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
                 Skill.objects.create(title=suggestion, image=image)

@@ -1,13 +1,59 @@
-.blackbox {
-    background-color: black;
-}
-
 .skill-lvl {
     margin-top: auto;
     margin-bottom: auto;
+    margin-left: -2px;
 }
 
 .skill-text {
-    display: inline-block;
     min-width: 15%;
+    font-size: 15px;
+    margin-right: 5px;
+}
+
+.skill-image {
+    position: relative;
+    vertical-align: middle;
+}
+
+.in-line {
+    display: inline-block !important;
+}
+
+.centering {
+    margin: auto;
+    width: fit-content;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+}
+
+.inline.field.centering::-webkit-scrollbar{
+  display: none;
+}
+
+#my-segment {
+    background: #0C426A !important;
+    width: 100% !important;
+    padding: 0.5rem;
+    max-height: 96px;
+    margin: 0;
+    border-radius: 0;
+}
+
+.placeholder-skill-image {
+    background-color: white !important;
+}
+
+.label-container {
+    top: 0;
+    left: 100%;
+    position: absolute;
+    z-index: 100;
+}
+
+#question-icon {
+    position: absolute;
+    top: 8px;
+    right: 16px;
 }

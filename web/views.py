@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from news.models import Article, TimePlace
+from checkin.utilities.skill_feed_context import get_skill_dict_context
 
 
 class IndexView(TemplateView):
@@ -18,6 +19,7 @@ class IndexView(TemplateView):
         context.update({
             'articles': Article.objects.published().filter(featured=True)[:4],
             'events': events[:4],
+            'skill_dict': get_skill_dict_context()
         })
         return context
 

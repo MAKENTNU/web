@@ -11,6 +11,8 @@
 {% block padding-top %}{% endblock %}
 
 {% block body %}
+    {% include "checkin/skill_feed.html" %}
+
     <div class="top">
         <div class="topimg large parallax-window" data-parallax="scroll" data-image-src="{% static "web/img/topimg_2.jpg" %}"></div>
         <img class="topimg small" src="{% static "web/img/topimg_small.jpg" %}">
