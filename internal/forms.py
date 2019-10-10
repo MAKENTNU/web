@@ -3,6 +3,7 @@ from django.forms import ModelForm, TextInput
 from django.utils.translation import gettext_lazy as _
 
 from card.forms import CardNumberField
+from card.models import Card
 from internal.models import Member, SystemAccess
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
 
@@ -46,6 +47,14 @@ class EditMemberForm(ModelForm):
         if not user.has_perm("internal.can_edit_group_membership"):
             for field_name in ["committees", "role", "comment", "guidance_exemption", "active", "honorary"]:
                 del self.fields[field_name]
+
+    def is_valid(self):
+        card_number = self.data["card_number"]
+        member_id = self.initial["id"]
+        is_duplicate = Card.objects.filter(number=card_number).exclude(user__member__id=member_id).exists()
+        if is_duplicate:
+            self.add_error("card_number", _("Card number is not unique"))
+        return super().is_valid() and not is_duplicate
 
 
 class MemberQuitForm(ModelForm):
