@@ -16,6 +16,9 @@ class CardNumberField(models.CharField):
             **kwargs,
             "validators": card.forms.card_number_validators,
             "max_length": 10,
+            "error_messages": {
+                "unique": _("Card number is not unique"),
+            },
         }
         super().__init__(**kwargs)  # No card numbers are more than ten digits long
 

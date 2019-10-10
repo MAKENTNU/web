@@ -36,6 +36,14 @@
                 </div>
             {% endif %}
         {% endblock %}
+        {% for error in form.card_number.errors %}
+            <div class="ui error message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ error }}
+                </div>
+            </div>
+        {% endfor %}
 
 
         <form class="ui form" action="{% block form_action %}{% endblock %}" method="post">
