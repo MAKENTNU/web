@@ -98,6 +98,10 @@
                     {% trans "Place the card on the card reader and press the button below to register the card" %}
                 </p>
                 <button class="ui button register-profile">{% trans "Register" %}</button>
+                <div id="duplicate_error" class="ui negative small message" style="display: none;">
+                    <i class="close icon"></i>
+                    <b>{% trans "Card number is already in use" %}</b>
+                </div>
             </div>
         {% endif %}
 
@@ -153,8 +157,13 @@
                         element.attr('data-tooltip', '{% trans "Scan card" %}');
                         element.attr('data-position', 'right center');
                     }
-
+                    $(".message.negative").fadeOut();
                 },
+                error: function (jqXHR, error, errorthrown) {
+                    if (jqXHR.status === 409) {
+                        $("#duplicate_error").fadeIn();
+                    }
+                }
             });
         }
 
@@ -166,6 +175,10 @@
             $('#image-form').submit();
         });
 
-
+        $(".message .close").click(function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
     </script>
 {% endblock scripts %}

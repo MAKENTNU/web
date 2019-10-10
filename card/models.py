@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -17,7 +18,7 @@ class CardNumberField(models.CharField):
             "validators": card.forms.card_number_validators,
             "max_length": 10,
             "error_messages": {
-                "unique": _("Card number is not unique"),
+                "unique": _("Card number already in use"),
             },
         }
         super().__init__(**kwargs)  # No card numbers are more than ten digits long
@@ -53,3 +54,17 @@ class Card(models.Model):
             user.card.save()
         else:
             cls.objects.create(user=user, number=number)
+
+    @classmethod
+    def is_valid(cls, value):
+        """
+        Checks if value is a valid card number by running all card number validators.
+        :param value: The card number to check
+        :return: True if value passes all validators
+        """
+        for validator in card.forms.card_number_validators:
+            try:
+                validator(value)
+            except ValidationError:
+                return False
+        return True

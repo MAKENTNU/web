@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views import View
 
 from web import settings
+from card.models import Card
 
 
 class RFIDView(View):
@@ -24,31 +25,31 @@ class RFIDView(View):
         :return: An HttpResponse.
         """
         secret = request.POST.get('secret')
-        card_id = request.POST.get('card_id')
-        if secret is None or card_id is None:
+        card_number = request.POST.get('card_number')
+        if secret is None or card_number is None:
             return HttpResponse(status=400)
 
         if secret == settings.CHECKIN_KEY:
-            if len(card_id) == 10 and card_id.isnumeric():
-                return self.card_id_valid(card_id)
+            if Card.is_valid(card_number):
+                return self.card_number_valid(card_number)
             else:
-                return self.card_id_invalid(card_id)
+                return self.card_number_invalid(card_number)
         return HttpResponse(status=403)
 
-    def card_id_valid(self, card_id):
+    def card_number_valid(self, card_number):
         """
         Handles the case where the card id is valid.
         Should be overridden in a subclass.
-        :param card_id: The card id from the request, prefixed with EM
+        :param card_number: The card id from the request
         :return: An HttpResponse
         """
-        return HttpResponse(status=200)
+        return HttpResponse(f"Valid card number {card_number}", status=200)
 
-    def card_id_invalid(self, card_id):
+    def card_number_invalid(self, card_number):
         """
         Handles the case where the card id is invalid.
         Should be overridden in a subclass.
-        :param card_id: The card id from the request, prefixed with EM
+        :param card_number: The card id from the request
         :return: An HttpResponse
         """
-        return HttpResponse(status=401)
+        return HttpResponse(f"Invalid card number {card_number}", status=401)

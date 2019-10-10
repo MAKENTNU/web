@@ -17,10 +17,10 @@ from make_queue.models.course import Printer3DCourse
 
 
 class CheckInView(RFIDView):
-    def card_id_valid(self, card_id):
-        profiles = Profile.objects.filter(user__card__number=card_id)
+    def card_number_valid(self, card_number):
+        profiles = Profile.objects.filter(user__card__number=card_number)
         if not profiles.exists():
-            return HttpResponse(status=401)
+            return HttpResponse(f"{card_number} is not registered", status=401)
 
         if profiles.first().on_make:
             profiles.update(on_make=False)
@@ -142,7 +142,8 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
         elif not suggestion.strip() and not suggestion_english.strip():
             return HttpResponseRedirect(reverse('suggest'))
 
-        if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(title_en=suggestion_english).exists():
+        if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(
+                title_en=suggestion_english).exists():
             messages.error(request, _("Skill already exists!"))
             return HttpResponseRedirect(reverse('suggest'))
         else:
@@ -214,10 +215,12 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 
 class RegisterCardView(RFIDView):
-    def card_id_valid(self, card_id):
-        if not Profile.objects.filter(user__card__number=card_id).exists():
+    def card_number_valid(self, card_number):
+        if Profile.objects.filter(user__card__number=card_number).exists():
+            return HttpResponse(f"{card_number} is already registered", status=409)
+        else:
             RegisterProfile.objects.all().delete()
-            RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
+            RegisterProfile.objects.create(card_id=card_number, last_scan=timezone.now())
             return HttpResponse('card scanned', status=200)
 
 
@@ -233,7 +236,11 @@ class RegisterProfileView(TemplateView):
             scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
-                Card.update_or_create(user=request.user, number=RegisterProfile.objects.first().card_id)
+                card_number = RegisterProfile.objects.first().card_id
+                is_duplicate = Card.objects.filter(number=card_number).exclude(user=request.user).exists()
+                if is_duplicate:
+                    return HttpResponse(status=409)
+                Card.update_or_create(user=request.user, number=card_number)
         RegisterProfile.objects.all().delete()
         return JsonResponse(data)
 

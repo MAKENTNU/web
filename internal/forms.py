@@ -53,7 +53,7 @@ class EditMemberForm(ModelForm):
         member_id = self.initial["id"]
         is_duplicate = Card.objects.filter(number=card_number).exclude(user__member__id=member_id).exists()
         if is_duplicate:
-            self.add_error("card_number", _("Card number is not unique"))
+            self.add_error("card_number", _("Card number is already in use"))
         return super().is_valid() and not is_duplicate
 
 
