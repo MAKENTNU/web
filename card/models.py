@@ -39,10 +39,13 @@ class Card(models.Model):
     def update_or_create(cls, user, number):
         """
         Checks if the user has a card already. Updates the card number if it has, creates a card if it hasn't.
+        Deletes the card object if number is empty.
         :param user: The user whose card number to set
-        :param number: The card number to attach to the user
+        :param number: The card number to attach to the user. Must be zero-padded and ten digits long or empty.
         """
-        if hasattr(user, 'card'):
+        if not number:
+            cls.objects.filter(user=user).delete()
+        elif hasattr(user, 'card'):
             user.card.number = number
             user.card.save()
         else:

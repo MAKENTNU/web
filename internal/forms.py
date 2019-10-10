@@ -24,7 +24,7 @@ class AddMemberForm(ModelForm):
 
 
 class EditMemberForm(ModelForm):
-    card_number = CardNumberField()
+    card_number = CardNumberField(required=False)
 
     class Meta:
         model = Member
