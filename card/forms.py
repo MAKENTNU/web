@@ -19,6 +19,12 @@ class CardNumberField(CharField):
     widget = CardNumberInput
     default_validators = card_number_validators
 
+    def __init__(self, **kwargs):
+        super().__init__(**{
+            "label": _("Card number"),
+            **kwargs,
+        })
+
     def to_python(self, value):
         value = super().to_python(value)
         if not value:
