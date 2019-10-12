@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from card.models import CardNumberField
+from card.models import CardNumberField, Card
 
 
 class UsernameField(models.CharField):
@@ -24,3 +24,8 @@ class Printer3DCourse(models.Model):
     card_number = CardNumberField(unique=True, null=True)
     name = models.CharField(max_length=256, verbose_name=_("Full name"))
     status = models.CharField(choices=STATUS_CHOICES, default="registered", max_length=20, verbose_name=_("Status"))
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.card_number and self.user:
+            Card.update_or_create(self.user, self.card_number)
+        super().save(force_insert, force_update, using, update_fields)

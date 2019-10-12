@@ -148,11 +148,6 @@ class Printer3DCourseForm(forms.ModelForm):
             "username": forms.TextInput(attrs={"autofocus": "autofocus"}),
         }
 
-    def save(self, commit=True):
-        if self.cleaned_data['user'] and self.cleaned_data['card_number']:
-            Card.update_or_create(self.cleaned_data['user'], self.cleaned_data['card_number'])
-        super().save(commit)
-
     def is_valid(self):
         card_number = self.data["card_number"]
         username = self.data["username"]

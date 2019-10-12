@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from card.models import Card
 from make_queue.models.course import Printer3DCourse
 from web.widgets import SemanticSearchableChoiceInput
 
@@ -30,8 +29,6 @@ def can_use_3d_printer(user):
         course_registration = Printer3DCourse.objects.get(username=user.username)
         course_registration.user = user
         course_registration.save()
-        if course_registration.card_number:
-            Card.update_or_create(user, course_registration.card_number)
         return True
     return False
 
