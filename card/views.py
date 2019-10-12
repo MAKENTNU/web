@@ -7,16 +7,12 @@ from web import settings
 from card.models import Card
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class RFIDView(View):
     """
     Base view class for receiving requests from RFID card readers
     """
 
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    @csrf_exempt
     def post(self, request):
         """
         Handles the request from the RFID card reader.
@@ -25,7 +21,7 @@ class RFIDView(View):
         :return: An HttpResponse.
         """
         secret = request.POST.get('secret')
-        card_number = request.POST.get('card_number')
+        card_number = request.POST.get('card_id')
         if secret is None or card_number is None:
             return HttpResponse(status=400)
 
@@ -38,7 +34,7 @@ class RFIDView(View):
 
     def card_number_valid(self, card_number):
         """
-        Handles the case where the card id is valid.
+        Handles the case where the card number is valid.
         Should be overridden in a subclass.
         :param card_number: The card id from the request
         :return: An HttpResponse
@@ -47,7 +43,7 @@ class RFIDView(View):
 
     def card_number_invalid(self, card_number):
         """
-        Handles the case where the card id is invalid.
+        Handles the case where the card number is invalid.
         Should be overridden in a subclass.
         :param card_number: The card id from the request
         :return: An HttpResponse

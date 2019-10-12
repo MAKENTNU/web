@@ -37,7 +37,7 @@ class Card(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("User"))
 
     def __str__(self):
-        return "EM " + str(self.number)
+        return f"EM {self.number}"
 
     @classmethod
     def update_or_create(cls, user, number):

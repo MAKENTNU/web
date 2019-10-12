@@ -100,7 +100,8 @@
                 <button class="ui button register-profile">{% trans "Register" %}</button>
                 <div id="duplicate_error" class="ui negative small message" style="display: none;">
                     <i class="close icon"></i>
-                    <b>{% trans "Card number is already in use" %}</b>
+                    <div class="header">{% trans "Card number is already in use" %}</div>
+                    <p>{% trans "Contact" %} <a href="mailto:styret@makentnu.no">styret@makentnu.no</a> {% trans "to fix the problem." %}</p>
                 </div>
             </div>
         {% endif %}
