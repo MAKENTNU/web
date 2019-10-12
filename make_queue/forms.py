@@ -153,6 +153,14 @@ class Printer3DCourseForm(forms.ModelForm):
             Card.update_or_create(self.cleaned_data['user'], self.cleaned_data['card_number'])
         super().save(commit)
 
+    def is_valid(self):
+        card_number = self.data["card_number"]
+        username = self.data["username"]
+        is_duplicate = Card.objects.filter(number=card_number).exclude(user__username=username).exists()
+        if is_duplicate:
+            self.add_error("card_number", _("Card number is already in use"))
+        return super().is_valid() and not is_duplicate
+
 
 class FreeSlotForm(forms.Form):
     machine_type = MachineTypeForm(
