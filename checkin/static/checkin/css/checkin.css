@@ -57,3 +57,7 @@
     top: 8px;
     right: 16px;
 }
+
+.ui.rating .active.icon {
+    color: rgb(248, 200, 17);
+}

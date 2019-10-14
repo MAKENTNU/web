@@ -37,7 +37,7 @@
 
         <br>
 
-        {% if make_member %}
+        {% if not make_member %}
 
             <div class="ui container">
                 <h4>
@@ -91,6 +91,7 @@
 
         <br>
 
+{% comment %}
         {% if not profile.user.card %}
             <div class="card-register">
                 <h3>{% trans "No registered card" %}</h3>
@@ -100,12 +101,14 @@
                 <button class="ui button register-profile">{% trans "Register" %}</button>
             </div>
         {% endif %}
+{% endcomment %}
 
     </div>
 {% endblock body %}
 
 {% block scripts %}
     <script>
+        // TODO: Rating stars colored black, should be MAKE yellow
         $('.ui.rating').rating();
         $('.ui.dropdown').dropdown();
         $('.rating.skill-lvl').rating('disable');
@@ -120,6 +123,7 @@
             }
         });
 
+        {% comment %}
         $('.register-profile').click(function () {
             register_profile_post($(this));
         });
@@ -157,6 +161,7 @@
                 },
             });
         }
+        {% endcomment %}
 
         $('#profile-pic').click(function () {
             $('#input-image').click();
