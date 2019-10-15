@@ -33,27 +33,71 @@ class Card(models.Model):
     """
     Model for connecting a card number to a user
     """
-    number = CardNumberField(unique=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("User"))
+    number = CardNumberField(unique=True, null=True)
+    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL, verbose_name=_("User"))
 
     def __str__(self):
-        return f"EM {self.number}"
+        return f"EM {self.number}" if self.number else ""
+
+    def __repr__(self):
+        return f'<Card: {str(self)}, {self.user}>'
+
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None, update_course=True):
+        """
+        Saves the card object. If both number and user fields are None the object is deleted.
+        An extra parameter update_course determines whether the connected Printer3DCourse object should be updated
+        if there is a change in the user field. Defaults to True. Mainly for calls from Printer3DCourse save().
+        """
+        all_none = self.number is None and self.user is None
+        is_creation = self.pk is None
+
+        if all_none:
+            if not is_creation:
+                self.delete()  # Delete empty object
+            return  # Do not create empty object
+
+        if update_course and hasattr(self, "printer3dcourse"):
+            if is_creation:
+                self._update_course_user()
+            else:
+                old = Card.objects.get(pk=self.pk)
+                if old.user != self.user:
+                    self._update_course_user()
+
+        super().save(force_insert, force_update, using, update_fields)
+
+    def _update_course_user(self):
+        self.printer3dcourse.user = self.user
+        self.printer3dcourse.save()
 
     @classmethod
-    def update_or_create(cls, user, number):
+    def update_or_create(cls, number=None, user=None, update_course=True):
         """
         Checks if the user has a card already. Updates the card number if it has, creates a card if it hasn't.
-        Deletes the card object if number is empty.
+        Raises ValidationError if card with number is already connected to another user
         :param user: The user whose card number to set
-        :param number: The card number to attach to the user. Must be zero-padded and ten digits long or empty.
+        :param number: The card number to attach to the user. Must be zero-padded and ten digits long or None.
+        :param update_course: Whether to propagate changes to the connected Printer3DCourse. Defaults to True.
+        :return: The updated or created card
         """
-        if not number:
-            cls.objects.filter(user=user).delete()
-        elif hasattr(user, 'card'):
+        if not user and not number:
+            return None
+
+        card_with_number = Card.objects.filter(number=number)
+        if hasattr(user, 'card'):
             user.card.number = number
-            user.card.save()
+            user.card.save(update_course=False)
+            return user.card
+        elif card_with_number.filter(user__isnull=False).exists():
+            raise ValidationError(_("Card number already in use"))
+        elif card_with_number.exists():  # Card with number but no user
+            card_with_number = card_with_number.first()
+            card_with_number.user = user
+            card_with_number.save(update_course)  # Update does not call save() or emit signals, thus not used here
+            return card_with_number
         else:
-            cls.objects.create(user=user, number=number)
+            # There exists no card for user and no card with number, create a new card
+            return cls.objects.create(user=user, number=number)
 
     @classmethod
     def is_valid(cls, value):

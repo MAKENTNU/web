@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
 from django.utils.translation import gettext_lazy as _
 
+from card.forms import CardNumberField
 from make_queue.fields import MachineTypeField, MachineTypeForm
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, ReservationRule, Quota
@@ -131,17 +132,19 @@ class QuotaForm(forms.ModelForm):
 
 
 class Printer3DCourseForm(forms.ModelForm):
+    card_number = CardNumberField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
             queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
             required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name)
-        self.fields["card_number"].required = False
+        self.initial['card_number'] = kwargs["instance"].card_number if kwargs["instance"] else None
 
     class Meta:
         model = Printer3DCourse
-        exclude = []
+        exclude = ["card"]
         widgets = {
             "status": SemanticChoiceInput(),
             "date": SemanticDateInput(),
@@ -155,6 +158,10 @@ class Printer3DCourseForm(forms.ModelForm):
         if is_duplicate:
             self.add_error("card_number", _("Card number is already in use"))
         return super().is_valid() and not is_duplicate
+
+    def save(self, commit=True):
+        self.instance.card = Card.update_or_create(self.cleaned_data['user'], self.cleaned_data["card_number"])
+        return super().save(commit)
 
 
 class FreeSlotForm(forms.Form):
