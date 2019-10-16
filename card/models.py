@@ -56,6 +56,7 @@ class Card(models.Model):
                 self.delete()  # Delete empty object
             return  # Do not create empty object
 
+        # Update course registration user if user is changed and card is connected to course registration
         if update_course and hasattr(self, "printer3dcourse"):
             if is_creation:
                 self._update_course_user()
@@ -65,6 +66,15 @@ class Card(models.Model):
                     self._update_course_user()
 
         super().save(force_insert, force_update, using, update_fields)
+
+        # Connect card to course registration if there exists a course registration with user.username
+        if update_course and self.user:
+            from make_queue.models.course import Printer3DCourse
+            course = Printer3DCourse.objects.filter(username=self.user.username)
+            if course.exists():
+                course = course.first()
+                course.card = self
+                course.save()
 
     def _update_course_user(self):
         self.printer3dcourse.user = self.user
@@ -83,7 +93,7 @@ class Card(models.Model):
         if not user and not number:
             return None
 
-        card_with_number = Card.objects.filter(number=number)
+        card_with_number = Card.objects.filter(number__isnull=False, number=number)
         if hasattr(user, 'card'):
             user.card.number = number
             user.card.save(update_course=False)
