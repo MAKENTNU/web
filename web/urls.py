@@ -27,7 +27,7 @@ urlpatterns += i18n_patterns(
     path('admin/', AdminPanelView.as_view(), name='adminpanel'),
     path('', IndexView.as_view(), name='front-page'),
     path('news/', include('news.urls')),
-    path('makerspace/tools/', include('tools.urls')),
+    path('makerspace/tools/', include('makerspace.urls')),
     path('contentbox/', include('contentbox.urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),

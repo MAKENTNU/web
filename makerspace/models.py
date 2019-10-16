@@ -3,7 +3,7 @@ from django.db import models
 from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
 
 
-class Tool(models.Model):
+class MakerSpace(models.Model):
     title = MultiLingualTextField(
         max_length=100,
         verbose_name=('Title'),

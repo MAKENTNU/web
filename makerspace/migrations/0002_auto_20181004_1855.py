@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tools', '0001_initial'),
+        ('makerspace', '0001_initial'),
     ]
 
     operations = [

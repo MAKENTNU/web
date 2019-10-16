@@ -7,7 +7,7 @@ import web.multilingual.database
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('tools', '0002_auto_20181004_1855'),
+        ('makerspace', '0002_auto_20181004_1855'),
     ]
 
     operations = [

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from tools.models import Tool
+from makerspace.models import MakerSpace
 
 from web.multilingual.database import MultiLingualFieldAdmin
 
-admin.site.register(Tool, MultiLingualFieldAdmin)
+admin.site.register(MakerSpace, MultiLingualFieldAdmin)
