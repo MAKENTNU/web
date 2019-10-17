@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
@@ -12,7 +12,7 @@ from make_queue.views.reservation.overview import MyReservationsView
 class MyReservationsViewTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user("user", "user@makentnu.no")
+        self.user = get_user_model().objects.create_user("user", "user@makentnu.no")
 
         self.machine_type_printer = MachineTypeField.get_machine_type(1)
 

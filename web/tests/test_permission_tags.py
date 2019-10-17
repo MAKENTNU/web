@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User, Permission, Group
+from django.contrib.auth.models import Permission, Group
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from web.templatetags.permission_tags import has_any_permissions
@@ -7,7 +8,7 @@ from web.templatetags.permission_tags import has_any_permissions
 class HasAnyPermissionTest(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username="test")
+        self.user = get_user_model().objects.create_user(username="test")
 
     def test_no_permissions(self):
         self.assertFalse(has_any_permissions(self.user))

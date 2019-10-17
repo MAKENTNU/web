@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.forms import ModelForm, TextInput
 from django.utils.translation import gettext_lazy as _
 
@@ -18,7 +18,7 @@ class AddMemberForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["user"].queryset = User.objects.filter(member=None)
+        self.fields["user"].queryset = get_user_model().objects.filter(member=None)
         self.fields["user"].label_from_instance = lambda user: user.get_full_name()
 
 

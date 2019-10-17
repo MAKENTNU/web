@@ -1,7 +1,8 @@
 import json
 from datetime import timedelta
 
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
@@ -84,7 +85,7 @@ class ViewTestCase(TestCase):
     def setUp(self):
         username = 'TEST_USER'
         password = 'TEST_PASS'
-        self.user = User.objects.create_user(username=username, password=password)
+        self.user = get_user_model().objects.create_user(username=username, password=password)
         self.client.login(username=username, password=password)
 
         self.article = Article.objects.create(
@@ -212,7 +213,7 @@ class HiddenPrivateTestCase(TestCase):
     def setUp(self):
         username = 'TEST_USER'
         password = 'TEST_PASS'
-        self.user = User.objects.create_user(username=username, password=password)
+        self.user = get_user_model().objects.create_user(username=username, password=password)
         self.client.login(username=username, password=password)
 
         self.article = Article.objects.create(
