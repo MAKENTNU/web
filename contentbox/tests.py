@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from contentbox.models import ContentBox, DisplayContentBoxView
@@ -35,7 +36,7 @@ class ModelTestCase(TestCase):
     def test_edit_with_permission(self):
         username = 'TEST_USER'
         password = 'TEST_PASS'
-        user = User.objects.create_user(username=username, password=password)
+        user = get_user_model().objects.create_user(username=username, password=password)
         permission = Permission.objects.get(codename='change_contentbox')
         user.user_permissions.add(permission)
         self.client.login(username=username, password=password)

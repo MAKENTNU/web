@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.utils.datetime_safe import datetime
 
 from make_queue.fields import MachineTypeField
@@ -88,8 +88,8 @@ class UserByUsername:
 
     def to_python(self, value):
         try:
-            return User.objects.get(username=value)
-        except User.DoesNotExist:
+            return get_user_model().objects.get(username=value)
+        except get_user_model().DoesNotExist:
             raise ValueError("No user with that username")
 
     def to_url(self, user):

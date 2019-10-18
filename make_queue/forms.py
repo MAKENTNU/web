@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
@@ -110,7 +110,7 @@ class QuotaForm(forms.ModelForm):
         def label_from_instance(self, obj):
             return f'{obj.get_full_name()} - {obj.username}'
 
-    user = UserModelChoiceField(queryset=User.objects.all(),
+    user = UserModelChoiceField(queryset=get_user_model().objects.all(),
                                 widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
                                 label=_("User"),
                                 required=False)
@@ -134,7 +134,7 @@ class Printer3DCourseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
-            queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
+            queryset=get_user_model().objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
             required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name)
         self.fields["card_number"].required = False

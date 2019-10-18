@@ -1,7 +1,7 @@
 import uuid
 from datetime import date, time
 
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -192,7 +192,7 @@ class TimePlace(models.Model):
 
 
 class EventTicket(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
     name = models.CharField(max_length=128, verbose_name=_("Name"))
     email = models.EmailField(verbose_name=_("Email"))
     active = models.BooleanField(verbose_name=_("Active"), default=True)
