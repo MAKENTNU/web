@@ -5,13 +5,14 @@ from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
 from django.utils.translation import gettext_lazy as _
 
+import card
+from card.forms import CardNumberField
 from make_queue.fields import MachineTypeField, MachineTypeForm
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
 from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput, \
     MazemapSearchInput
-from card.models import Card
 
 
 class ReservationForm(forms.Form):
@@ -131,17 +132,19 @@ class QuotaForm(forms.ModelForm):
 
 
 class Printer3DCourseForm(forms.ModelForm):
+    card_number = CardNumberField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
             queryset=get_user_model().objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
             required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name)
-        self.fields["card_number"].required = False
+        self.initial["card_number"] = self.instance.card_number
 
     class Meta:
         model = Printer3DCourse
-        exclude = []
+        exclude = ["_card_number"]
         widgets = {
             "status": SemanticChoiceInput(),
             "date": SemanticDateInput(),
@@ -149,14 +152,13 @@ class Printer3DCourseForm(forms.ModelForm):
         }
 
     def save(self, commit=True):
-        if self.cleaned_data['user'] and self.cleaned_data['card_number']:
-            Card.update_or_create(self.cleaned_data['user'], self.cleaned_data['card_number'])
+        self.instance.card_number = self.cleaned_data["card_number"]
         super().save(commit)
 
     def is_valid(self):
         card_number = self.data["card_number"]
         username = self.data["username"]
-        is_duplicate = Card.objects.filter(number=card_number).exclude(user__username=username).exists()
+        is_duplicate = card.utils.is_duplicate(card_number, username)
         if is_duplicate:
             self.add_error("card_number", _("Card number is already in use"))
         return super().is_valid() and not is_duplicate

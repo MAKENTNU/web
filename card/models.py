@@ -1,5 +1,3 @@
-from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -28,43 +26,3 @@ class CardNumberField(models.CharField):
             kwargs["form_class"] = card.forms.CardNumberField
         return super().formfield(**kwargs)
 
-
-class Card(models.Model):
-    """
-    Model for connecting a card number to a user
-    """
-    number = CardNumberField(unique=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name=_("User"))
-
-    def __str__(self):
-        return f"EM {self.number}"
-
-    @classmethod
-    def update_or_create(cls, user, number):
-        """
-        Checks if the user has a card already. Updates the card number if it has, creates a card if it hasn't.
-        Deletes the card object if number is empty.
-        :param user: The user whose card number to set
-        :param number: The card number to attach to the user. Must be zero-padded and ten digits long or empty.
-        """
-        if not number:
-            cls.objects.filter(user=user).delete()
-        elif hasattr(user, 'card'):
-            user.card.number = number
-            user.card.save()
-        else:
-            cls.objects.create(user=user, number=number)
-
-    @classmethod
-    def is_valid(cls, value):
-        """
-        Checks if value is a valid card number by running all card number validators.
-        :param value: The card number to check
-        :return: True if value passes all validators
-        """
-        for validator in card.forms.card_number_validators:
-            try:
-                validator(value)
-            except ValidationError:
-                return False
-        return True

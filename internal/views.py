@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
 
-from card.models import Card
 from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
 from internal.models import Member, SystemAccess
 from make_queue.models.course import Printer3DCourse
@@ -40,11 +39,14 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
         return reverse_lazy("edit-member", args=(self.object.pk,))
 
     def form_valid(self, form):
-        # Connect card number from course registration to user
         user = form.cleaned_data['user']
         registration = Printer3DCourse.objects.filter(username=user.username)
         if registration.exists():
-            Card.update_or_create(user, registration.first().card_number)
+            registration = registration.first()
+            user.card_number = registration.card_number
+            registration.user = user
+            registration.save()
+            user.save()
         return super().form_valid(form)
 
 
@@ -61,15 +63,15 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
             form_class = self.get_form_class()
         return form_class(self.request.user, **self.get_form_kwargs())
 
-    def form_valid(self, form):
-        # Update card connected to user
-        user = self.object.user
-        card_id = form.cleaned_data["card_number"]
-        Card.update_or_create(user, card_id)
-        return super().form_valid(form)
-
     def get_success_url(self):
         return reverse("members", args=(self.object.pk,))
+
+    def form_valid(self, form):
+        user = self.object.user
+        card_number = form.cleaned_data["card_number"]
+        user.card_number = card_number
+        user.save()
+        return super().form_valid(form)
 
 
 class MemberQuitView(UpdateView):

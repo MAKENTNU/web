@@ -5,38 +5,35 @@ from django.db import migrations
 
 def create_cards_from_profiles(apps, schema_editor):
     """
-    Create Card objects connecting the profile card_id to the profile user
+    Set user card_number from  profile card_id
     """
-    Card = apps.get_model('card', 'Card')
     Profile = apps.get_model('checkin', 'Profile')
     db_alias = schema_editor.connection.alias
 
     for profile in Profile.objects.using(db_alias).all():
-        if profile.card_id:
-            user = profile.user
-            if not hasattr(user, 'card'):
-                Card.objects.using(db_alias).create(user=user, number=profile.card_id.zfill(10))
+        if profile.user:
+            profile.user.card_number = profile.card_id
+            profile.user.save(using=db_alias)
 
 
 def reverse_create_cards_from_profiles(apps, schema_editor):
     """
-    Reverse creation of Card objects from profiles
+    Reverse setting of user card_number
     """
-    Card = apps.get_model('card', 'Card')
     Profile = apps.get_model('checkin', 'Profile')
     db_alias = schema_editor.connection.alias
 
-    for card in Card.objects.using(db_alias).all():
-        profile = Profile.objects.using(db_alias).filter(user_id=card.user.id)
-        if profile.exists():
-            profile.update(card_id=str(card.number))
+    for profile in Profile.objects.using(db_alias).all():
+        if profile.user:
+            profile.card_id = profile.user.card_number
+            profile.save(using=db_alias)
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('checkin', '0006_auto_20180906_1915'),
-        ('card', '0001_initial'),
+        ('users', '0003_user_card_number'),
     ]
 
     operations = [
