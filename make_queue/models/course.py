@@ -48,8 +48,20 @@ class Printer3DCourse(models.Model):
             self._card_number = card_number
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.user:
+            # Update username in the rare case that a user changes their username
+            self.username = self.user.username
+        else:
+            # Connect to user if user exists
+            try:
+                self.user = User.objects.get(username=self.username)
+            except User.DoesNotExist:
+                pass
+
+        # If user is set, use card number from user
         if self.user and self._card_number:
             self.user.card_number = self._card_number
             self.user.save()
             self._card_number = None
+
         super().save(force_insert, force_update, using, update_fields)
