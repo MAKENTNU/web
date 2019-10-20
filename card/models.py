@@ -26,3 +26,26 @@ class CardNumberField(models.CharField):
             kwargs["form_class"] = card.forms.CardNumberField
         return super().formfield(**kwargs)
 
+    def get_prep_value(self, value):
+        if isinstance(value, CardNumber):
+            return value.number
+        elif isinstance(value, str):
+            return value.split()[-1]  # Remove possible EM prefix
+        return value
+
+    def from_db_value(self, value, expression, connection):
+        if value:
+            return CardNumber(value)
+        return None
+
+
+class CardNumber:
+    """
+    Object used to print card numbers with prefix.
+    """
+
+    def __init__(self, number):
+        self.number = number
+
+    def __str__(self):
+        return f"EM {self.number}"
