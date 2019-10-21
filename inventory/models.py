@@ -4,7 +4,6 @@ from django.db import models
 class Item(models.Model):
     name = models.CharField(max_length=128)
     unit = models.CharField(max_length=16, null=True)
-    category = models.CharField(max_length=128, null=True)
     description = models.TextField(max_length=256)
     comment = models.TextField(max_length=256, null=True)
     searchable = models.BooleanField(default=True)
@@ -13,11 +12,9 @@ class Item(models.Model):
     @property
     def total_amount(self):  # returns total amount of this item
         amount = 0
-        for obj in self.iteminsubcontainer_set.all():
+        for obj in self.iteminsubcontainers.all():
             amount += obj.amount
         return amount
-
-    # Skal amount og subcontainer inn her kanskje?
 
     def __str__(self):
         return "Item: "+self.name
@@ -29,6 +26,14 @@ class Item(models.Model):
         ]
 
 
+class Category(models.Model):
+    name = models.CharField(max_length=128)
+    items = models.ManyToManyField(
+        Item,
+        related_name="items",
+    )
+
+
 class Room(models.Model):
     name = models.CharField(max_length=128)
 
@@ -38,7 +43,11 @@ class Room(models.Model):
 
 class Container(models.Model):
     name = models.CharField(max_length=128)
-    room = models.ForeignKey(Room, on_delete=models.CASCADE)
+    room = models.ForeignKey(
+        Room,
+        on_delete=models.CASCADE,
+        related_name="containers",
+    )
 
     def __str__(self):
         return "Container: "+self.name+" in "+self.room.name
@@ -46,16 +55,32 @@ class Container(models.Model):
 
 class SubContainer(models.Model):
     name = models.CharField(max_length=128)
-    items = models.ManyToManyField(Item, through='ItemInSubContainer')
-    container = models.ForeignKey(Container, on_delete=models.CASCADE)
+    items = models.ManyToManyField(
+        Item,
+        through='ItemInSubContainer',
+        related_name="subcontainers",
+    )
+    container = models.ForeignKey(
+        Container,
+        on_delete=models.CASCADE,
+        related_name="subcontainers",
+    )
 
     def __str__(self):
         return "Subcontainer "+self.name + " in container "+self.container.name
 
 
 class ItemInSubContainer(models.Model):
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    subcontainer = models.ForeignKey(SubContainer, on_delete=models.CASCADE)
+    item = models.ForeignKey(
+        Item,
+        on_delete=models.CASCADE,
+        related_name="iteminsubcontainers",
+    )
+    subcontainer = models.ForeignKey(
+        SubContainer,
+        on_delete=models.CASCADE,
+        related_name="iteminsubcontainers",
+    )
     amount = models.DecimalField(decimal_places=2, max_digits=6)
 
     def __str__(self):

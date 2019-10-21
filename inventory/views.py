@@ -41,7 +41,7 @@ class SearchItemsView(TemplateView):
     def post(self, request):
         search_string = request.POST.get('search')
 
-        # TODO: Do some sanity checks on search_string...
+        search_string = search_string.lower().strip()
 
         item_filter = Q(name__contains=search_string) | Q(description__contains=search_string)
         matched_items = Item.objects.filter(item_filter).order_by('name')[:self.MAX_RESULTS]
