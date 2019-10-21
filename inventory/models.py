@@ -8,6 +8,7 @@ class Item(models.Model):
     comment = models.TextField(max_length=256, null=True)
     searchable = models.BooleanField(default=True)
     consumable = models.BooleanField(default=False)
+    image = models.ImageField(upload_to="inventory", blank=True)
 
     @property
     def total_amount(self):  # returns total amount of this item
@@ -32,6 +33,9 @@ class Category(models.Model):
         Item,
         related_name="items",
     )
+
+    def __str__(self):
+        return "Category: " + self.name
 
 
 class Room(models.Model):
