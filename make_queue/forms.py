@@ -163,9 +163,6 @@ class Printer3DCourseForm(forms.ModelForm):
             self.add_error("card_number", _("Card number is already in use"))
         return super().is_valid() and not is_duplicate
 
-    def save(self, commit=True):
-        self.instance.card = Card.update_or_create(self.cleaned_data['user'], self.cleaned_data["card_number"])
-        return super().save(commit)
 
 
 class FreeSlotForm(forms.Form):
