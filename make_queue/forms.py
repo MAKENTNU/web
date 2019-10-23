@@ -1,10 +1,11 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
 from django.utils.translation import gettext_lazy as _
 
+import card
 from card.forms import CardNumberField
 from make_queue.fields import MachineTypeField, MachineTypeForm
 from make_queue.models.course import Printer3DCourse
@@ -12,7 +13,6 @@ from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
 from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput, \
     MazemapSearchInput
-from card.models import Card
 
 
 class ReservationForm(forms.Form):
@@ -111,7 +111,7 @@ class QuotaForm(forms.ModelForm):
         def label_from_instance(self, obj):
             return f'{obj.get_full_name()} - {obj.username}'
 
-    user = UserModelChoiceField(queryset=User.objects.all(),
+    user = UserModelChoiceField(queryset=get_user_model().objects.all(),
                                 widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
                                 label=_("User"),
                                 required=False)
@@ -137,24 +137,28 @@ class Printer3DCourseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
-            queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
+            queryset=get_user_model().objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
             required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name)
-        self.initial['card_number'] = kwargs["instance"].card_number if kwargs["instance"] else None
+        self.initial["card_number"] = self.instance.card_number.number
 
     class Meta:
         model = Printer3DCourse
-        exclude = ["card"]
+        exclude = ["_card_number"]
         widgets = {
             "status": SemanticChoiceInput(),
             "date": SemanticDateInput(),
             "username": forms.TextInput(attrs={"autofocus": "autofocus"}),
         }
 
+    def save(self, commit=True):
+        self.instance.card_number = self.cleaned_data["card_number"]
+        super().save(commit)
+
     def is_valid(self):
         card_number = self.data["card_number"]
         username = self.data["username"]
-        is_duplicate = Card.objects.filter(number=card_number).exclude(user__username=username).exists()
+        is_duplicate = card.utils.is_duplicate(card_number, username)
         if is_duplicate:
             self.add_error("card_number", _("Card number is already in use"))
         return super().is_valid() and not is_duplicate

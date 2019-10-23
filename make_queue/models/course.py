@@ -1,8 +1,10 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.db.models.constraints import CheckConstraint
+from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
 
-from card.models import Card
+from card.models import CardNumberField
+from users.models import User
 
 
 class UsernameField(models.CharField):
@@ -18,53 +20,58 @@ class Printer3DCourse(models.Model):
         ("access", _("Access granted")),
     )
 
+    class Meta:
+        constraints = (
+            CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
+        )
+
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
     username = UsernameField(max_length=32, verbose_name=_("Username"), unique=True)
     date = models.DateField(verbose_name=_("Course date"))
-    card = models.OneToOneField(Card, null=True, on_delete=models.SET_NULL)
+    _card_number = CardNumberField(unique=True, null=True)  # Card number backing field. Use card_number property instead
     name = models.CharField(max_length=256, verbose_name=_("Full name"))
     status = models.CharField(choices=STATUS_CHOICES, default="registered", max_length=20, verbose_name=_("Status"))
 
     @property
     def card_number(self):
-        if self.card:
-            return self.card.number
-        return None
+        if self.user:
+            return self.user.card_number
+        return self._card_number
+
+    @card_number.setter
+    def card_number(self, card_number):
+        if self.user:
+            self.user.card_number = card_number
+            self.user.save()
+            self._card_number = None
+        else:
+            self._card_number = card_number
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
-        """
-        Saves the Printer3DCourse object and updates username and the connected card.
-        """
-        if self.pk is None:  # New object
+        if self.pk is None:  # Creation of new object
             self._connect_to_user()
-            self._update_card_user()
-        else:  # Changing object
+        else:
             old = Printer3DCourse.objects.get(pk=self.pk)
-            if old.user != self.user:
-                if self.user:
-                    self.username = self.user.username
-                else:
-                    self._connect_to_user()
-                self._update_card_user(old_user=old.user)
-
-            elif old.username != self.username:
+            if old.username != self.username:
+                # Changed username, connect to new user
                 self._connect_to_user()
-                self._update_card_user(old_user=old.user)
+            elif self.user:
+                # Update username in the rare case that a user changes their username
+                self.username = self.user.username
+
+        # If user is set, use card number from user
+        if self.user and self._card_number:
+            self.user.card_number = self._card_number
+            self._card_number = None
+            self.user.save()
 
         super().save(force_insert, force_update, using, update_fields)
 
-    def _update_card_user(self, old_user=None):
-        """
-        Helper function when saving Printer3DCourse. Only for internal use. Does not call save().
-        """
-        if old_user:
-            self.card.user = None  # Disconnect card from old user to not cause duplication error
-            self.card.save(update_course=False)  # Save card but do not propagate change back to Printer3DCourse
-        self.card = Card.update_or_create(number=self.card_number, user=self.user, update_course=False)
-
     def _connect_to_user(self):
         """
-        Helper function when saving Printer3DCourse. Only for internal use.  Does not call save().
+        Connect to user with username if user exists
         """
-        user = User.objects.filter(username=self.username)
-        self.user = user.first() if user.exists() else None
+        try:
+            self.user = User.objects.get(username=self.username)
+        except User.DoesNotExist:
+            pass

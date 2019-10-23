@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
 
-from card.models import Card
+import card.utils
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from card.views import RFIDView
 from make_queue.models.course import Printer3DCourse
@@ -99,7 +99,8 @@ class ProfilePageView(TemplateView):
         # Connect card number from course registration to user
         registration = Printer3DCourse.objects.filter(user__username=self.request.user.username)
         if registration.exists():
-            Card.update_or_create(self.request.user, registration.first().card_number)
+            registration.user = self.request.user
+            registration.save()
 
         img = profile.image
         userskill_set = profile.userskill_set.all()
@@ -237,10 +238,11 @@ class RegisterProfileView(TemplateView):
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 card_number = RegisterProfile.objects.first().card_id
-                is_duplicate = Card.objects.filter(number=card_number).exclude(user=request.user).exists()
+                is_duplicate = card.utils.is_duplicate(card_number, request.user.username)
                 if is_duplicate:
                     return HttpResponse(status=409)
-                Card.update_or_create(user=request.user, number=card_number)
+                request.user.card_number = card_number
+                request.user.save()
         RegisterProfile.objects.all().delete()
         return JsonResponse(data)
 

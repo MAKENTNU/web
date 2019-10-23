@@ -5,39 +5,34 @@ from django.db import migrations
 
 def member_card(apps, schema_editor):
     """
-    Create Card objects connecting the member card_number to the member user.
+    Set user card number from member card number
     """
-    Card = apps.get_model('card', 'Card')
     Member = apps.get_model('internal', 'Member')
     db_alias = schema_editor.connection.alias
 
     for member in Member.objects.using(db_alias).all():
-        if member.card_number:
-            user = member.user
-            if not hasattr(user, 'card'):
-                # Create card without EM prefix
-                Card.objects.using(db_alias).create(user=user, number=member.card_number.split("EM ")[-1].zfill(10))
+        member.user.card_number = member.card_number
+        member.user.save()
 
 
 def reverse_member_card(apps, schema_editor):
     """
-    Reverse creation of Card objects from members
+    Reverse setting of card number on user
     """
-    Card = apps.get_model('card', 'Card')
     Member = apps.get_model('internal', 'Member')
     db_alias = schema_editor.connection.alias
 
-    for card in Card.objects.using(db_alias).all():
-        member = Member.objects.using(db_alias).filter(user_id=card.user.id)
-        if member.exists():
-            member.update(card_number=str(card.number))
+    for member in Member.objects.using(db_alias).all():
+        card_number = member.user.card_number
+        member.card_number = card_number if card_number else ""
+        member.save()
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('internal', '0004_member_phone_number_field'),
-        ('card', '0001_initial'),
+        ('users', '0003_user_card_number'),
     ]
 
     operations = [

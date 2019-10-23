@@ -95,7 +95,7 @@
                     data-status='{{ membership_status }}'
                     data-phone="{{ member.phone_number }}"
                     data-email="{% if member.email %}{{ member.email }}{% endif %}"
-                    data-card-number="{{ member.user.card }}"
+                    data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
                     data-system-accesses="{% get_system_accesses member request.user %}"
                     data-term-joined="{{ member.term_joined }}"

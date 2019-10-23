@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from unittest import mock
 
 import pytz
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.utils import timezone
 
@@ -19,7 +19,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
         machine_type = MachineTypeField.get_machine_type(1)
         Machine.objects.create(name="S1", location="U1", machine_model="Ultimaker", status="F",
                                machine_type=machine_type)
-        user = User.objects.create_user("User", "user@makentnu.no", "unsecure_pass")
+        user = get_user_model().objects.create_user("User", "user@makentnu.no", "unsecure_pass")
         user.save()
         Quota.objects.create(user=user, number_of_reservations=2, ignore_rules=True, machine_type=machine_type)
         Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),

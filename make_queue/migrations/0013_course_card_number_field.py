@@ -11,7 +11,7 @@ def to_cardnumberfield(apps, schema_editor):
 
     for registration in Printer3DCourse.objects.using(db_alias).all():
         if registration.old_card_number:
-            registration.card_number = str(registration.old_card_number).zfill(10)
+            registration._card_number = str(registration.old_card_number).zfill(10)
             registration.save()
 
 
@@ -20,15 +20,14 @@ def to_integerfield(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for registration in Printer3DCourse.objects.using(db_alias).all():
-        if registration.card_number:
-            registration.old_card_number = int(registration.card_number)
+        if registration._card_number:
+            registration.old_card_number = int(registration._card_number)
             registration.save()
 
 
 class Migration(migrations.Migration):
     dependencies = [
         ('make_queue', '0012_usage_rules_multilingual_content_field'),
-        ('card', '0001_initial'),
     ]
 
     operations = [
@@ -44,7 +43,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='printer3dcourse',
-            name='card_number',
+            name='_card_number',
             field=card.models.CardNumberField(max_length=10, null=True, unique=True, validators=[
                 django.core.validators.RegexValidator('\\d{10}', 'Card number must be ten digits long')],
                                               verbose_name='Card number'),
@@ -53,5 +52,11 @@ class Migration(migrations.Migration):
         migrations.RemoveField(  # Remove old field when converting is done
             model_name='printer3dcourse',
             name='old_card_number'
-        )
+        ),
+        migrations.AddConstraint(
+            model_name='printer3dcourse',
+            constraint=models.CheckConstraint(
+                check=models.Q(('user__isnull', True), ('_card_number__isnull', True), _connector='OR'),
+                name='user_or_cardnumber_null'),
+        ),
     ]
