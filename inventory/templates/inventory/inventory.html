@@ -1,97 +1,112 @@
 {% extends "web/base.html" %}
-{% load staticfiles %}
-{% load thumbnail %}
 {% load i18n %}
+{% load staticfiles %}
+
+{% block title %}{% trans "Members list" %}{% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "inventory/css/inventory.css" %}">
-{% endblock head %}
+    <link rel="stylesheet" href="{% static "inventory/css/inventory.css" %}">
+{% endblock %}
 
 {% block body %}
 
-    {#    {% include "inventory/treemenu.html" %}#}
+    <div class="ui container">
+        <h1>
+            {% trans "Inventory" %}
+            {% comment %}{% if perms.internal.can_register_new_member %}
+                <a href="{% url "add-member" %}" class="ui right floated yellow button">
+                    <i class="ui plus icon"></i>{% trans "Add member" %}
+                </a>
+            {% endif %}{% endcomment %}
+        </h1>
 
-
-    <div class="ui container text-centered">
-        <div class="five wide field">
-            <select id="item-dropdown" class="ui fluid dropdown search" name="items">
-                <option value="">{% trans "Select/search" %}</option>
-{#                {% for item in items %}#}
-{#                    <option value="{{ item.name }}">{{ item.name }}</option>#}
-{#                {% endfor %}#}
-            </select>
-        </div>
-
-{#        <div class="ui category search">#}
-{#            <div class="ui icon input">#}
-{#                <input id="item-search" class="prompt" type="text" placeholder="Item...">#}
-{#                <i class="search icon"></i>#}
-{#            </div>#}
-{#            <div class="results"></div>#}
-{#        </div>#}
-        <p id="test-field"></p>
+        <form class="ui form">
+            <div class="ui fields">
+                <div class="ui multiple blue labeled button icon dropdown">
+                    <input type="hidden" name="filter-status">
+                    <i class="ui filter icon"></i>
+                    <span class="ui text">{% trans "Filter inventory category" %}</span>
+                    <div class="menu">
+                        <div class="scrolling menu">
+                            <div class="item" data-value="{% trans "Active" %}">
+                                <i class="ui green circle icon"></i>{% trans "Active" %}
+                            </div>
+                            <div class="item" data-value="{% trans "Inactive" %}">
+                                <i class="ui grey circle icon"></i>{% trans "Inactive" %}
+                            </div>
+                            <div class="item" data-value="{% trans "Retired" %}">
+                                <i class="ui blue circle icon"></i>{% trans "Retired" %}
+                            </div>
+                            <div class="item" data-value="{% trans "Honorary" %}">
+                                <i class="ui yellow circle icon"></i>{% trans "Honorary" %}
+                            </div>
+                            <div class="item" data-value="{% trans "Quit" %}">
+                                <i class="ui red circle icon"></i>{% trans "Quit" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui multiple blue labeled button icon dropdown">
+                    <input type="hidden" name="filter-committee">
+                    <i class="ui filter icon"></i>
+                    <span class="ui text">{% trans "Filter committees" %}</span>
+                    <div class="menu">
+                        <div class="scrolling menu">
+                            <div class="item" data-value="Dev">
+                                <i class="ui green circle icon"></i>Dev
+                            </div>
+                            <div class="item" data-value="Mentor">
+                                <i class="ui red circle icon"></i>Mentor
+                            </div>
+                            <div class="item" data-value="Event">
+                                <i class="ui blue circle icon"></i>Event
+                            </div>
+                            <div class="item" data-value="PR">
+                                <i class="ui yellow circle icon"></i>PR
+                            </div>
+                            <div class="item" data-value="Styret">
+                                <i class="ui purple circle icon"></i>Styret
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table class="ui celled unstackable selectable striped table" id="member-table">
+            <thead>
+            <tr>
+                <th>{% trans "Name" %}<i class="ui sort icon" id="member-sort-name"></i></th>
+                <th>{% trans "Committee" %}<i class="ui up sort icon" id="member-sort-committees"></i></th>
+                <th>{% trans "Role" %}<i class="ui sort icon" id="member-sort-role"></i></th>
+                <th class="mobile hidden">{% trans "Status" %}<i class="ui sort icon" id="member-sort-status"></i></th>
+                <th class="computer only">{% trans "Joined" %}<i class="ui sort icon" id="member-sort-joined"></i></th>
+                <th class="mobile hidden">{% trans "Email" %}<i class="ui sort icon" id="member-sort-email"></i></th>
+                <th class="computer only">{% trans "Phone number" %}<i class="ui sort icon" id="member-sort-phone"></i>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for item in all_items %}
+                {#{% get_committees member as committees %}#}
+                <tr data-pk="">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td class="mobile hidden"></td>
+                    <td class="computer only"></td>
+                    <td class="mobile hidden"></td>
+                    <td class="computer only"></td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
-{% endblock %}
+
+{% endblock body %}
+
 
 {% block scripts %}
     <script>
-        let last_entry = "";
-
         $('.dropdown').dropdown();
-
-
-        $('.ui.dropdown').keyup(function (event) {
-            let current_entry = $('#item-dropdown').siblings('input.search').val();
-            let key_code = event.keyCode;
-            if (current_entry !== last_entry || key_code === '13') {
-                get_search_query($(this), current_entry);
-            }
-            last_entry = current_entry;
-        });
-
-
-        function get_search_query(element, search) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                },
-            });
-            $.ajax({
-                type: "POST",
-                url: 'search',
-                data: {
-                    'search': search,
-                },
-                success: function (data) {
-                    if (data['item_names']) {
-                        let item_names = data['item_names'];
-                        let content = [];
-                        $('#item-dropdown').children('option').remove();
-                        $('#item-dropdown').append('<option value="">{% trans "Select/search" %}</option>');
-                        for (let i = 0; i < Math.min(10, item_names.length); i++) {
-                            let name = item_names[i];
-                            let html = `<option value=\"${name}\">${name}</option>`;
-
-                            $('#item-dropdown').append(html);
-                        }
-                    }
-                    {#if (data['is_forced']) {#}
-                    {#    element.parents('tr').remove();#}
-
-                    {#element.addClass('green');#}
-                    {#element.addClass('disabled');#}
-                    {#element.html('{% trans "Voted!" %}');#}
-                    {##}
-                    {#if (!data['user_exists']) {#}
-                    {#    let incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;#}
-                    {#    element.parent().siblings('#vote-count').html(incrementedCount);#}
-
-                    {#if (data['skill_passed']) {#}
-                    {#    element.parents('tr').remove();#}
-
-                },
-            });
-        }
-
     </script>
 {% endblock scripts %}

@@ -12,10 +12,9 @@ class InventoryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # search_word = kwargs['search_word']
         itemset = Item.objects.all()
         context.update({
-            'items': itemset[:10],
+            'all_items': itemset,
         })
         return context
 
@@ -34,7 +33,7 @@ class ItemView(TemplateView):
 
 
 class SearchItemsView(TemplateView):
-    template_name = "inventory/inventory.html"
+    template_name = "inventory/inventory_search.html"
 
     MAX_RESULTS = 10
 
