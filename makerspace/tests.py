@@ -1,12 +1,12 @@
 from django.test import TestCase
 
-from .models import MakerSpace
+from .models import Makerspace
 
 
 # Create your tests here.
 class ToolTestCase(TestCase):
     def setUp(self):
-        self.first_tool = MakerSpace()
+        self.first_tool = Makerspace()
 
     def test_create_a_tool(self):
         self.first_tool.title = 'test tool'

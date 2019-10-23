@@ -1,0 +1,29 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+    <script src="{% static "web/js/image-link.js" %}"></script>
+{% endblock head %}
+
+
+{% block body %}
+    <div class="make_content_padding"></div>
+    <div class="ui text container" style="position: relative; margin: 100px 0 ;">
+    <h1>
+        <strong>
+            {{ latest_makerspace_announce.title }}
+        </strong>
+    </h1>
+    {% autoescape off %}
+        {{ latest_makerspace_announce.content }}
+    {% endautoescape %}
+
+    </div>
+
+
+
+
+{% endblock body %}
