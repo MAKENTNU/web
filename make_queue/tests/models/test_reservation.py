@@ -2,7 +2,7 @@ from datetime import timedelta, datetime, time
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -41,7 +41,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.machine_type = MachineTypeField.get_machine_type(1)
         self.machine = Machine.objects.create(name="C1", location="Printer room", status="F",
                                               machine_type=self.machine_type)
-        self.user = get_user_model().objects.create_user("User", "user@makentnu.no", "user_pass")
+        self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
                                                machine_type=self.machine_type)
         self.course_registration = Printer3DCourse.objects.create(user=self.user, username=self.user.username,
@@ -253,14 +253,14 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                                 special_text="Test").can_change(self.user))
 
     def test_can_other_user_change_future_reservation(self):
-        user2 = get_user_model().objects.create_user("test", "user2@makentnu.no", "test_pass")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
         self.assertTrue(reservation.can_change(self.user))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_user_with_event_reservation_change_other_user_non_event_reservation(self):
-        user2 = get_user_model().objects.create_user("test", "user2@makentnu.no", "test_pass")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
@@ -270,7 +270,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_can_user_with_event_reservation_change_other_user_event_reservation(self):
         self.give_user_event_permission()
-        user2 = get_user_model().objects.create_user("test", "user2@makentnu.no", "test_pass")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
@@ -280,7 +280,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_can_user_with_event_reservation_change_other_user_special_reservation(self):
         self.give_user_event_permission()
-        user2 = get_user_model().objects.create_user("test", "user2@makentnu.no", "test_pass")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
@@ -290,7 +290,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_can_user_without_event_reservation_change_other_user_special_reservation(self):
         self.give_user_event_permission()
-        user2 = get_user_model().objects.create_user("test", "user2@makentnu.no", "test_pass")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
@@ -299,7 +299,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_can_user_without_event_reservation_change_other_user_event_reservation(self):
         self.give_user_event_permission()
-        user2 = get_user_model().objects.create_user("test", "user2@makentnu.no", "test_pass")
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 

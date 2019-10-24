@@ -2,7 +2,7 @@ from datetime import timedelta
 from unittest import mock
 
 import pytz
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.test import TestCase
 
 from make_queue.fields import MachineTypeField
@@ -17,7 +17,7 @@ class ReservationExtraTestCases(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_calendar_reservation_url(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 12, 9, 12, 24))
-        user = get_user_model().objects.create_user("user", "user@makentnu.no", "weak_pass")
+        user = User.objects.create_user("user", "user@makentnu.no", "weak_pass")
         user.save()
 
         machine_type_printer = MachineTypeField.get_machine_type(1)

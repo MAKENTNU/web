@@ -1,15 +1,16 @@
-from django.contrib.auth import get_user, get_user_model
+from django.contrib.auth import get_user
 from django.test import TestCase
 from django.urls import reverse
 
 from dataporten.social import DataportenOAuth2
+from users.models import User
 
 
 class ViewTestCase(TestCase):
     def test_logout(self):
         username = 'TEST_USER'
         password = 'TEST_PASS'
-        self.user = get_user_model().objects.create_user(username=username, password=password)
+        self.user = User.objects.create_user(username=username, password=password)
         self.client.login(username=username, password=password)
         self.assertTrue(get_user(self.client).is_authenticated)
         self.client.get(reverse('logout'))

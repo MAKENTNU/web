@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
@@ -19,7 +19,7 @@ class QuotaView(TemplateView):
         """
         context_data = super().get_context_data(**kwargs)
         context_data.update({
-            "users": get_user_model().objects.all(),
+            "users": User.objects.all(),
             "global_quotas": Quota.objects.filter(all=True),
             "requested_user": user,
         })

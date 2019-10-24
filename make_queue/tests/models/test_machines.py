@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -17,7 +17,7 @@ class TestGenericMachine(TestCase):
         machine_type = MachineTypeField.get_machine_type(1)
         printer = Machine.objects.create(name="C1", location="Printer room", status="F",
                                          machine_model="Ultimaker 2 Extended", machine_type=machine_type)
-        user = get_user_model().objects.create_user("test")
+        user = User.objects.create_user("test")
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
         Quota.objects.create(machine_type=machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
@@ -58,18 +58,18 @@ class TestCanUse3DPrinter(TestCase):
         self.assertFalse(can_use_3d_printer(AnonymousUser()))
 
     def test_registered_user_use_3d_printer(self):
-        user = get_user_model().objects.create_user("test")
+        user = User.objects.create_user("test")
         Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
                                        date=timezone.now().date())
         self.assertTrue(can_use_3d_printer(user))
 
     def test_registered_username_for_user_use_3d_printer(self):
-        user = get_user_model().objects.create_user("test")
+        user = User.objects.create_user("test")
         Printer3DCourse.objects.create(username=user.username, name=user.get_full_name(), date=timezone.now().date())
         self.assertTrue(can_use_3d_printer(user))
 
     def test_unregistered_user_use_3d_printer(self):
-        user = get_user_model().objects.create_user("test")
+        user = User.objects.create_user("test")
         self.assertFalse(can_use_3d_printer(user))
 
 

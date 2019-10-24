@@ -1,5 +1,6 @@
-from django.conf import settings
 from django.db import models
+
+from users.models import User
 
 
 class Skill(models.Model):
@@ -17,7 +18,7 @@ class Skill(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     card_id = models.CharField(max_length=100, null=True, blank=True, verbose_name="Kortnummer")
     image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")

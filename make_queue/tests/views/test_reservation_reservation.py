@@ -2,7 +2,7 @@ from datetime import timedelta, time
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.http import HttpResponse
 from django.test import TestCase
 from django.utils import timezone
@@ -24,7 +24,7 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
     def setUp(self):
         Reservation.reservation_future_limit_days = 7
         self.machine_type_sewing = MachineTypeField.get_machine_type(2)
-        self.user = get_user_model().objects.create_user(username="test")
+        self.user = User.objects.create_user(username="test")
         self.machine = Machine.objects.create(machine_model="Test", machine_type=self.machine_type_sewing)
         self.event = Event.objects.create(title="Test_event")
         Quota.objects.create(user=self.user, machine_type=self.machine_type_sewing, number_of_reservations=100,
@@ -312,7 +312,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 class ReservationAdminViewTest(TestCase):
 
     def test_get_admin_reservation(self):
-        user = get_user_model().objects.create_user("test")
+        user = User.objects.create_user("test")
         machine_type = MachineTypeField.get_machine_type(1)
         Quota.objects.create(machine_type=machine_type, number_of_reservations=10, ignore_rules=True, user=user)
         permission = Permission.objects.get(codename="can_create_event_reservation")
@@ -342,7 +342,7 @@ class ReservationAdminViewTest(TestCase):
 class MarkReservationAsDoneTest(TestCase):
 
     def setUp(self):
-        self.user = get_user_model().objects.create_user("test")
+        self.user = User.objects.create_user("test")
         self.machine_type = MachineTypeField.get_machine_type(2)
         self.machine = Machine.objects.create(machine_type=self.machine_type, status="F", name="Test")
         Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False,
@@ -408,7 +408,7 @@ class MarkReservationAsDoneTest(TestCase):
                                                  end_time=timezone.now() + timedelta(hours=6), user=self.user)
         reservation2 = Reservation.objects.create(machine=self.machine, start_time=timezone.now() + timedelta(hours=6),
                                                   end_time=timezone.now() + timedelta(hours=6, minutes=26),
-                                                  user=get_user_model().objects.create_user("test2"))
+                                                  user=User.objects.create_user("test2"))
         now_mock.return_value = local_to_date(timezone.datetime(2018, 11, 16, 15, 56, 0))
         response = self.post_to_view(reservation)
         self.assertEqual(302, response.status_code)

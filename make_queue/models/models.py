@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from datetime import timedelta
 
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
@@ -11,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from make_queue.fields import MachineTypeField
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+from users.models import User
 from web.multilingual.database import MultiLingualRichTextUploadingField
 
 
@@ -78,7 +78,7 @@ class Quota(models.Model):
     diminishing = models.BooleanField(default=False, verbose_name=_("Diminishing"))
     ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
     all = models.BooleanField(default=False, verbose_name=_("All users"))
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
     machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
 
     class Meta:
@@ -140,7 +140,7 @@ class Quota(models.Model):
 
 
 class Reservation(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     event = models.ForeignKey(TimePlace, null=True, blank=True, on_delete=models.CASCADE)

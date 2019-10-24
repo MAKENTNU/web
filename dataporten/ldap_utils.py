@@ -3,7 +3,7 @@ Note: querying NTNU's LDAP server requires connection to NTNU's VPN.
 """
 
 import ldap
-from django.contrib.auth import get_user_model
+from users.models import User
 
 LDAP_HOST = 'ldap://at.ntnu.no'
 LDAP_BASE = 'dc=ntnu, dc=no'
@@ -64,7 +64,7 @@ def get_user_details_from_username(username, use_cached=True):
     :return: Dictionary with user details. (full name, username, email)
     """
     if use_cached:
-        user = get_user_model().objects.filter(username=username).first()
+        user = User.objects.filter(username=username).first()
         if user:
             return {
                 "username": username,
@@ -83,7 +83,7 @@ def get_user_details_from_email(email, use_cached=True):
     :return: Dictionary with user details. (full name, username, email)
     """
     if use_cached:
-        user = get_user_model().objects.filter(email=email).first()
+        user = User.objects.filter(email=email).first()
         if user:
             return {
                 "username": user.username,

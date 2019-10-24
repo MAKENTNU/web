@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models.signals import m2m_changed
@@ -10,6 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from groups.models import Committee
 from internal.util import date_to_term
+from users.models import User
 
 
 class Member(models.Model):
@@ -20,7 +20,7 @@ class Member(models.Model):
             ("can_edit_group_membership", "Can edit the groups a member is part of, including (de)activation")
         )
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.DO_NOTHING, null=True, verbose_name=_("User"))
+    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=True, verbose_name=_("User"))
     committees = models.ManyToManyField(Committee, blank=True, verbose_name=_("Committees"))
     role = models.CharField(max_length=64, blank=True, verbose_name=_("Role"))
     email = models.EmailField(blank=True, null=True, verbose_name=_("Email"))

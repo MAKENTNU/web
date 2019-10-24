@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -16,7 +16,7 @@ class Printer3DCourse(models.Model):
         ("access", _("Access granted")),
     )
 
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=True, verbose_name=_("User"))
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
     username = UsernameField(max_length=32, verbose_name=_("Username"), unique=True)
     date = models.DateField(verbose_name=_("Course date"))
     card_number = models.IntegerField(null=True, verbose_name=_("Card number (EM)"))

@@ -1,12 +1,12 @@
 import uuid
 from datetime import date, time
 
-from django.conf import settings
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from users.models import User
 from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
 from web.multilingual.widgets import MultiLingualTextarea
 
@@ -192,7 +192,7 @@ class TimePlace(models.Model):
 
 
 class EventTicket(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
     name = models.CharField(max_length=128, verbose_name=_("Name"))
     email = models.EmailField(verbose_name=_("Email"))
     active = models.BooleanField(verbose_name=_("Active"), default=True)

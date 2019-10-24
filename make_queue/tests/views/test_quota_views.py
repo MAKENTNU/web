@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.test import TestCase
 
 from make_queue.fields import MachineTypeField
@@ -11,8 +11,8 @@ from make_queue.views.quota.user import GetUserQuotaView
 class TestGetQuotaView(TestCase):
 
     def test_get_user_quota(self):
-        user = get_user_model().objects.create_user("test")
-        user2 = get_user_model().objects.create_user("test2")
+        user = User.objects.create_user("test")
+        user2 = User.objects.create_user("test2")
         machine_type = MachineTypeField.get_machine_type(1)
         Quota.objects.create(all=True, user=user, machine_type=machine_type, number_of_reservations=2)
         quota2 = Quota.objects.create(user=user, machine_type=machine_type, number_of_reservations=2)
@@ -29,8 +29,8 @@ class TestQuotaPanelView(TestCase):
     def setUp(self):
         self.machine_type_printer = MachineTypeField.get_machine_type(1)
         self.machine_type_sewing = MachineTypeField.get_machine_type(2)
-        self.user = get_user_model().objects.create_user("test")
-        self.user2 = get_user_model().objects.create_user("test2")
+        self.user = User.objects.create_user("test")
+        self.user2 = User.objects.create_user("test2")
         self.quota1 = Quota.objects.create(all=True, machine_type=self.machine_type_sewing, number_of_reservations=2)
         self.quota2 = Quota.objects.create(all=True, machine_type=self.machine_type_printer, number_of_reservations=4)
         self.quota3 = Quota.objects.create(user=self.user, machine_type=self.machine_type_printer,

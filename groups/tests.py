@@ -1,5 +1,5 @@
 from django.contrib.admin.sites import AdminSite
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
@@ -133,7 +133,7 @@ class PermGroupTestCase(TestCase):
         self.assertIn(perm2, new_group.permissions.all())
 
     def test_user(self):
-        user_model = get_user_model()
+        user_model = User
 
         org = Group.objects.get(name='Org')
         dev = Group.objects.get(name='Dev')
