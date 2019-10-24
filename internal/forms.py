@@ -1,7 +1,9 @@
-from users.models import User
+from django.contrib.auth import get_user_model
 from django.forms import ModelForm, TextInput
 from django.utils.translation import gettext_lazy as _
 
+import card.utils
+from card.forms import CardNumberField
 from internal.models import Member, SystemAccess
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
 
@@ -18,11 +20,13 @@ class AddMemberForm(ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["user"].queryset = User.objects.filter(member=None)
+        self.fields["user"].queryset = get_user_model().objects.filter(member=None)
         self.fields["user"].label_from_instance = lambda user: user.get_full_name()
 
 
 class EditMemberForm(ModelForm):
+    card_number = CardNumberField(required=False)
+
     class Meta:
         model = Member
         fields = "__all__"
@@ -35,9 +39,21 @@ class EditMemberForm(ModelForm):
 
     def __init__(self, user, **kwargs):
         super().__init__(**kwargs)
+
+        member = kwargs['instance']
+        self.initial['card_number'] = member.user.card_number.number
+
         if not user.has_perm("internal.can_edit_group_membership"):
             for field_name in ["committees", "role", "comment", "guidance_exemption", "active", "honorary"]:
                 del self.fields[field_name]
+
+    def is_valid(self):
+        card_number = self.data["card_number"]
+        username = self.instance.user.username
+        is_duplicate = card.utils.is_duplicate(card_number, username)
+        if is_duplicate:
+            self.add_error("card_number", _("Card number is already in use"))
+        return super().is_valid() and not is_duplicate
 
 
 class MemberQuitForm(ModelForm):
