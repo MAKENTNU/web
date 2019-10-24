@@ -5,6 +5,16 @@ import django.contrib.auth.validators
 from django.db import migrations, models
 import django.utils.timezone
 
+"""
+This migration will fail if the database is non-empty. One has to manually replace the default Django user model
+with the new one in the database. This is done by running the following SQL in the django dbshell:
+
+INSERT INTO django_migrations (app, name, applied) VALUES ('users', '0001_initial', CURRENT_TIMESTAMP);
+UPDATE django_content_type SET app_label = 'users' WHERE app_label = 'auth' and model = 'user';
+
+On a fresh database the migrations can be run as normal.
+"""
+
 
 class Migration(migrations.Migration):
 
