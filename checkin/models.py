@@ -2,7 +2,6 @@ from django.db import models
 
 from users.models import User
 
-
 class Skill(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
     title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Skill (english)")
@@ -19,7 +18,6 @@ class Skill(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
-    card_id = models.CharField(max_length=100, null=True, blank=True, verbose_name="Kortnummer")
     image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
     last_checkin = models.DateTimeField(auto_now=True, verbose_name="Sist sjekket inn")

@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 
+from card.models import CardNumberField
+
 
 class User(AbstractUser):
-    pass
+    card_number = CardNumberField(unique=True, null=True)
