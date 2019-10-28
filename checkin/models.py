@@ -83,6 +83,17 @@ class UserSkill(models.Model):
 
 
 class SuggestSkill(models.Model):
+    """Model for suggested skill
+
+    :var creator: Profile model of the suggestion holder
+    :var title: Suggested skill in Norwegian
+    :var title_en: Suggested skill in English
+    :var voters: Profile model of who has voted for suggested skill.
+    :var image: Skill image
+
+    :func __str__: returns suggested skill in Norwegian
+    :func locale_title(language_code): returns suggested skill in correct language
+    """
     creator = models.ForeignKey(Profile, related_name="suggestions", null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100, unique=True, verbose_name="Foreslått ferdighet")
     title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Suggested skill")
