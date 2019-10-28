@@ -3,6 +3,15 @@ from django.db import models
 
 
 class Skill(models.Model):
+    """Skill with image
+
+    :var title: Skill name in Norwegian
+    :var title_en: Skill name in English
+    :var image: Skill image
+
+    :func __str__: returns title
+    :func locale_title(language_code): returns title in correct language
+    """
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
     title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Skill (english)")
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
@@ -19,7 +28,6 @@ class Skill(models.Model):
         :return: title in correct language
 
         """
-
 
         if language_code == "nb":
             return self.title
