@@ -31,6 +31,15 @@ PARENT_HOST = "makentnu.localhost:8000"
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"
 EMAIL_SITE_URL = "https://makentnu.no"
 
+
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'test.makentnu@gmail.com'
+EMAIL_HOST_PASSWORD = 'makentnu'
+EMAIL_PORT = 587
+
 try:
     from .local_settings import *
 except ImportError:

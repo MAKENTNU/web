@@ -1791,3 +1791,4 @@ msgstr "Velg verdi"
 #: web/widgets.py:47
 msgid "Search places"
 msgstr "Søk etter steder"
+

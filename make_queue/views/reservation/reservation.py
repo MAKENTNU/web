@@ -2,6 +2,7 @@ from abc import ABCMeta
 from math import ceil
 
 from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -13,6 +14,27 @@ from make_queue.models.models import Machine, Reservation
 from make_queue.templatetags.reservation_extra import calendar_url_reservation
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+
+from django.core.mail import send_mail, EmailMessage
+from django.http import HttpResponse
+
+
+
+class SLA_request(TemplateView):
+    template_name = "make_queue/SLA.html"
+
+    def post(self, request):
+        self.contact_info = request.POST.get("email")
+        self.file = request.POST.get("stl_file")
+        self.content = request.POST.get("description")
+
+        msg = EmailMessage("SLA request", self.content + '\n' + self.contact_info, self.contact_info, ["test.makentnu@gmail.com"])
+        msg.attach(self.file, self.file, 'application/sla')
+        msg.send()
+        return HttpResponseRedirect(reverse("SLA_request"))
+
+
+
 
 
 class ReservationCreateOrChangeView(TemplateView):
@@ -236,6 +258,7 @@ class MarkReservationAsDone(RedirectView):
 
 
 class FindFreeSlot(FormView):
+
     """
     View to find free time slots for reservations
     """

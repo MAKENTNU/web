@@ -27,6 +27,10 @@
             <a href="{% url "find_free_slot" %}" class="ui primary button">
                 {% trans "Find free reservation slots" %}
             </a>
+            <a href="{% url "SLA_request" %}" class="ui primary button">
+                {% trans "SLA-print request" %}
+            </a>
+
         {% endif %}
         {% for machine_type in machine_types %}
             <div class="ui machine-title-field">

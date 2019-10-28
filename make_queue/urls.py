@@ -59,6 +59,7 @@ urlpatterns = [
     path('make/<machine:machine>/', login_required(reservation.reservation.MakeReservationView.as_view()), name="make_reservation"),
     path('make/<time:start_time>/<machine:machine>/', login_required(reservation.reservation.MakeReservationView.as_view()), name="make_reservation"),
     path('me/', login_required(reservation.overview.MyReservationsView.as_view()), name="my_reservations"),
+    path('SLA_print/', reservation.reservation.SLA_request.as_view(), name ="SLA_request"),
     path('admin/', permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.AdminReservationView.as_view()), name="admin_reservation"),
     path('delete/', login_required(reservation.reservation.DeleteReservationView.as_view()), name="delete_reservation"),
     path('finish/', login_required(reservation.reservation.MarkReservationAsDone.as_view()), name="mark_reservation_done"),
@@ -69,5 +70,6 @@ urlpatterns = [
     path('quota/', include(quota_url_patterns)),
     path('course/', include(course_url_patterns)),
     path('machine/', include(machine_url_patterns)),
+
     re_path('^', reservation.machine.MachineView.as_view(), name="reservation_machines_overview")
 ]
