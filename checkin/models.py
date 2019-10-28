@@ -116,6 +116,15 @@ class SuggestSkill(models.Model):
 
 
 class RegisterProfile(models.Model):
+    """Model for registrating profile
+
+        :var card_id: Charfield with student card number.
+        :var last_scan: DateTimeField with time of last scan
+
+        :func __str__: returns card_id
+
+    """
+
     card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
     last_scan = models.DateTimeField()
 
