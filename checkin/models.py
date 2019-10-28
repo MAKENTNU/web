@@ -11,6 +11,16 @@ class Skill(models.Model):
         return self.title
 
     def locale_title(self, language_code):
+        """Returns title in correct language.
+
+        Only 'nb' is recognised, everything else will return the english title.
+
+        :param language_code: Two letter string with language code
+        :return: title in correct language
+
+        """
+
+
         if language_code == "nb":
             return self.title
         return self.title_en
