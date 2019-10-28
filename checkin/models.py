@@ -59,7 +59,7 @@ class UserSkill(models.Model):
     """Model for user's skill
 
     :var profile: Profile model
-    :var skill: boolean, if at Makerverkstedet
+    :var skill: skill model
     :var skill_level: Three levels, 1=beginner, 3=expert
 
     :func __str__: returns "[username] - [skill]"
