@@ -9,8 +9,8 @@ class Skill(models.Model):
     :var title_en: Skill name in English
     :var image: Skill image
 
-    :func __str__: returns title
-    :func locale_title(language_code): returns title in correct language
+    :func __str__: returns skill name
+    :func locale_title(language_code): returns skill name in correct language
     """
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
     title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Skill (english)")
@@ -20,12 +20,12 @@ class Skill(models.Model):
         return self.title
 
     def locale_title(self, language_code):
-        """Returns title in correct language.
+        """Returns skill name in correct language.
 
-        Only 'nb' is recognised, everything else will return the english title.
+        Only 'nb' is recognised, everything else will return the english skill name.
 
         :param language_code: Two letter string with language code
-        :return: title in correct language
+        :return: skill name in correct language
 
         """
 
