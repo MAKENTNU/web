@@ -35,6 +35,15 @@ class Skill(models.Model):
 
 
 class Profile(models.Model):
+    """Profile model
+
+    :var user: User model
+    :var image: Profile picture
+    :var on_make: boolean, if at Makerverkstedet
+    :var last_checkin: DateTimeField, last time at Makerverkstedet
+
+    :func __str__: returns username or 'None'
+    """
     user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
