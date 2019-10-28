@@ -4,7 +4,7 @@ from django.template import loader
 from django.views.generic import TemplateView
 from django.db.models import Q
 
-from inventory.models import ItemInSubContainer, Room, Item
+from inventory.models import ItemInSubContainer, Item
 
 
 class InventoryView(TemplateView):

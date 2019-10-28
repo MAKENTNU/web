@@ -18,7 +18,7 @@ class Item(models.Model):
         return amount
 
     def __str__(self):
-        return "Item: "+self.name
+        return f"Item: {self.name}"
 
     class Meta:
         indexes = [
@@ -35,26 +35,14 @@ class Category(models.Model):
     )
 
     def __str__(self):
-        return "Category: " + self.name
-
-
-class Room(models.Model):
-    name = models.CharField(max_length=128)
-
-    def __str__(self):
-        return "Room: "+self.name
+        return f"Category: {self.name}"
 
 
 class Container(models.Model):
     name = models.CharField(max_length=128)
-    room = models.ForeignKey(
-        Room,
-        on_delete=models.CASCADE,
-        related_name="containers",
-    )
 
     def __str__(self):
-        return "Container: "+self.name+" in "+self.room.name
+        return f"Container: {self.name}"
 
 
 class SubContainer(models.Model):
@@ -71,7 +59,7 @@ class SubContainer(models.Model):
     )
 
     def __str__(self):
-        return "Subcontainer "+self.name + " in container "+self.container.name
+        return f"Subcontainer {self.name} in container {self.container.name}"
 
 
 class ItemInSubContainer(models.Model):
@@ -88,7 +76,7 @@ class ItemInSubContainer(models.Model):
     amount = models.DecimalField(decimal_places=2, max_digits=6)
 
     def __str__(self):
-        return self.subcontainer.name + " contains "+str(self.amount)+" of item "+self.item.name
+        return f"{self.subcontainer.name} contains {str(self.amount)} of item {self.item.name}"
 
 # TODO: Orders are  currently WIP
 """
