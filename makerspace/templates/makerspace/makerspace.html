@@ -12,16 +12,23 @@
 {% block body %}
     <div class="make_content_padding"></div>
     <div class="ui text container" style="position: relative; margin: 100px 0 ;">
-    <h1>
-        <strong>
-            {{ latest_makerspace_announce.title }}
-        </strong>
-    </h1>
-    {% autoescape off %}
-        {{ latest_makerspace_announce.content }}
-    {% endautoescape %}
-
+        <h1>
+            <strong>
+                {{ latest_makerspace_announce.title }}
+            </strong>
+        </h1>
+        {% autoescape off %}
+            {{ latest_makerspace_announce.content }}
+        {% endautoescape %}
+        {% if user.is_superuser %}
+            <p></p>
+            <a href= "{{ latest_makerspace_announce.id}}/edit"    class="ui yellow button">
+               Rediger
+            </a>
+        {% endif %}
     </div>
+
+
 
 
 

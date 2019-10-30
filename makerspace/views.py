@@ -11,7 +11,22 @@ class ViewMakerspaceView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['latest_makerspace_announce'] = Makerspace.objects.last()
+        print(context)
         return context
+
+
+class ViewAdminMakerspaceView(PermissionRequiredMixin, UpdateView):
+    model = Makerspace
+
+    template_name = 'makerspace/admin_makerspace.html'
+    context_object_name = 'makerspace'
+    permission_required = 'makerspace.add_Makerspace'
+    fields = (
+        'title',
+        'content',
+        'image',
+    )
+    success_url = reverse_lazy('makerspace')
 
 
 class ViewToolView(DetailView):
@@ -43,7 +58,7 @@ class ViewAdminCreateView(PermissionRequiredMixin, CreateView):
         'content',
         'image',
     )
-    success_url = reverse_lazy('makerspace/admin')
+    success_url = reverse_lazy('makerspace/tools/admin')
 
 
 class ViewAdminEditView(PermissionRequiredMixin, UpdateView):
@@ -57,12 +72,12 @@ class ViewAdminEditView(PermissionRequiredMixin, UpdateView):
         'content',
         'image',
     )
-    success_url = reverse_lazy('makerspace/admin')
+    success_url = reverse_lazy('makerspace/tools/admin')
 
 
 class ViewDeleteView(DeleteView):
     model = Tool
-    success_url = reverse_lazy('makerspace/admin')
+    success_url = reverse_lazy('makerspace/tools/admin')
 
     def get(self, request, *args, **argv):
         return self.post(request, *args, **argv)
