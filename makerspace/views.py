@@ -1,31 +1,40 @@
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView
-from makerspace.models import MakerSpace
+from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView, TemplateView
+from makerspace.models import Makerspace, Tool
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 
 
 
+class ViewMakerspaceView(TemplateView):
+    template_name = 'makerspace/makerspace.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['latest_makerspace_announce'] = Makerspace.objects.last()
+        return context
+
+
 class ViewToolView(DetailView):
-    model = MakerSpace
+    model = Tool
     template_name = 'tools/tool.html'
     context_object_name = 'tool'
 
 
 class ViewToolsView(ListView):
-    model = MakerSpace
+    model = Tool
     template_name = 'tools/tools.html'
     context_object_name = 'tools_list'
 
 
 class ViewAdminView(PermissionRequiredMixin, ListView):
-    model = MakerSpace
+    model = Tool
     template_name = 'tools/admin_tool.html'
     context_object_name = 'tools_list'
     permission_required = 'makerspace.add_Tool'
 
 
 class ViewAdminCreateView(PermissionRequiredMixin, CreateView):
-    model = MakerSpace
+    model = Tool
     template_name = 'tools/admin_tool_create.html'
     context_object_name = 'tool'
     permission_required = 'makerspace.add_Tool'
@@ -38,7 +47,7 @@ class ViewAdminCreateView(PermissionRequiredMixin, CreateView):
 
 
 class ViewAdminEditView(PermissionRequiredMixin, UpdateView):
-    model = MakerSpace
+    model = Tool
 
     template_name = 'tools/admin_tool_edit.html'
     context_object_name = 'tool'
@@ -52,7 +61,7 @@ class ViewAdminEditView(PermissionRequiredMixin, UpdateView):
 
 
 class ViewDeleteView(DeleteView):
-    model = MakerSpace
+    model = Tool
     success_url = reverse_lazy('makerspace/admin')
 
     def get(self, request, *args, **argv):
