@@ -25,7 +25,7 @@
                     <div>
                         {% block admin-page %}
                              {% if perms.tools.add_Tool%}
-                                 <a href="{% url "makerspace/tools/admin" %}" class="ui right floated yellow button">
+                                 <a href="{% url "makerspace-tools-admin" %}" class="ui right floated yellow button">
                                      <i class="ui sticky note icon"></i>{% trans "Admin page" %}
                                  </a>
                              {% endif %}

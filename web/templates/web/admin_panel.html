@@ -83,7 +83,7 @@
 
             {% if user|has_any_event_permission or user.is_superuser %}
                 <div class="ui yellow card">
-                    <a href="{% url 'makerspace/tools/admin' %}" class="content">
+                    <a href="{% url 'makerspace-tools-admin' %}" class="content">
                         <div class="center aligned header">
                             <i class="ui grey user plus icon"></i>{% trans "Tools" %}
                         </div>

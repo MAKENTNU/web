@@ -21,7 +21,7 @@
                     <img class="clickable css = float-right
                     			    {% if forloop.first %}article-first{% endif %}
 			                        {% if forloop.last %}article-last{% endif %}"
-                         src="{{ im.url }}" href="{% url 'makerspace' tool.id %}"
+                         src="{{ im.url }}" href="{% url 'makerspace-tool' tool.id %}"
                          width="{{ im.width }}" height="{{ im.height }}"c>
                 {% endthumbnail %}
 
@@ -35,7 +35,7 @@
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
                     <div>
                         <h2>
-                            <a href="{% url 'makerspace' tool.id %}">{{ tool.title }}</a>
+                            <a href="{% url 'makerspace-tool' tool.id %}">{{ tool.title }}</a>
                         </h2>
                     </div>
                 </div>
