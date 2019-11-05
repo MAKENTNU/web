@@ -17,7 +17,7 @@ class Makerspace(models.Model):
         max_length=100,
         verbose_name=('Title'),
     )
-    image = models.ImageField(verbose_name=('Image'), blank=True, ) # If used in the future
+    image = models.ImageField(verbose_name=('Image'), blank=True, )#If used in the future
     content = MultiLingualRichTextUploadingField()
 
 
