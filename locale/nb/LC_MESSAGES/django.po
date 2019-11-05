@@ -1708,7 +1708,15 @@ msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
 "printerkurset."
 
-#: web/templates/web/admin_panel.html:100
+#: web/templates/web/admin_panel.html:88
+msgid "Tools"
+msgstr "Verktøy"
+
+#: web/templates/web/admin_panel.html:88
+msgid "Here you can add or edit tools at MAKE NTNU."
+msgstr "Her kan du legge til eller endre på verktøy"
+
+#: web/templates/web/admin_panel.html:91
 msgid "Maker space"
 msgstr "Makerverkstedet"
 
