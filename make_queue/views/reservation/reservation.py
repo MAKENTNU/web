@@ -31,9 +31,8 @@ class SLA_request(TemplateView):
         msg = EmailMessage("SLA request", self.content + '\n' + self.contact_info, self.contact_info, ["test.makentnu@gmail.com"])
         msg.attach(self.file, self.file, 'application/sla')
         msg.send()
+
         return HttpResponseRedirect(reverse("SLA_request"))
-
-
 
 
 
@@ -49,6 +48,7 @@ class ReservationCreateOrChangeView(TemplateView):
         :param form: The form to generate an error message for
         :return: The error message
         """
+
         if not reservation.is_within_allowed_period_for_reservation() and not (
                 reservation.special or reservation.event):
             return "Reservasjoner kan bare lages {:} dager frem i tid".format(reservation.reservation_future_limit_days)
