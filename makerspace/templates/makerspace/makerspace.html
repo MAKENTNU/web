@@ -13,6 +13,12 @@
 {% block body %}
     <div class="make_content_padding"></div>
     <div class="ui text container" style="position: relative; margin: 100px 0 ;">
+        {% if user.is_superuser %}
+            <p></p>
+            <a href= "{{ latest_makerspace_announce.id}}/edit"    class="ui yellow button">
+               Rediger
+            </a>
+        {% endif %}
         <h1>
             <strong>
                 {{ latest_makerspace_announce.title }}
@@ -26,12 +32,7 @@
         {% else %}
             <a href="{% url 'makerspace-tools' %}" style="font-size: large; text-align: start"> Gå til ustyrliste </a>
         {% endif %}
-        {% if user.is_superuser %}
-            <p></p>
-            <a href= "{{ latest_makerspace_announce.id}}/edit"    class="ui yellow button">
-               Rediger
-            </a>
-        {% endif %}
+
     </div>
 
 
