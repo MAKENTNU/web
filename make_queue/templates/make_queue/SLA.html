@@ -1,0 +1,28 @@
+{% extends "web/base.html" %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block body %}
+    <form class="ui form text container" action="" method="post" >
+    {% csrf_token %}
+        <h1 class="ui header">{% trans "SLA request" %}</h1>
+        <div class="field">
+            <label> {% trans "Email" %}</label>
+            <input type="text" required type="text" name="email" placeholder="example@gmail.com" >
+        </div>
+        <div class="field">
+            <label> {% trans "Describe your project" %}</label>
+            <textarea required name="description"></textarea>
+        </div>
+         <div>
+             <input type="file" name="stl_file" accept=".stl" name="file" title="{% trans open %}">
+        </div>
+        <div>
+            <input class="ui blue submit button" type="submit" name="button" value="{% trans "Send" %}" >
+        </div>
+    </form>
+
+{% endblock body %}
+
+
+
