@@ -14,6 +14,7 @@ class EmailConsumer(SyncConsumer):
     and sends email messages given by the `message` dictionary given through Django Channels. The message object has
     several properties which are needed and some that are optional.
 
+    "type"        [required]: The type of message to send, either "send_text" or "send_html"
     "to"          [required]: The email address to send to
     "from"        [required]: The email address to send from
     "text"        [required]: The text content of the email, required no matter if HTML or plaintext is used
@@ -23,10 +24,10 @@ class EmailConsumer(SyncConsumer):
     "attachments" [optional]: A list of files to attach to the email. Each file is a tuple of the filename, content
                               and content type. `serialize_file` can be used to create this tuple from a file.
 
-    To send an asynchronous email use `async_to_sync(get_channel_layer().send)(message)`, where `message` is a message
-    dictionary as described above. `async_to_sync` can be imported from `asgiref.sync` and `get_channel_layer` can be
-    imported from `channels.layers`. The email consumer requires a worker to be ran which can be started by the command
-    `python manage.py runworker -v 2 email`. Requires a normal Django setup of email credentials to send emails.
+    To send an asynchronous email use `async_to_sync(get_channel_layer().send)("email", message)`, where `message` is a
+    message dictionary as described above. `async_to_sync` can be imported from `asgiref.sync` and `get_channel_layer`
+    can be imported from `channels.layers`. The email consumer requires a worker to be ran which can be started by the
+    command `python manage.py runworker -v 2 email`. Requires a normal Django setup of email credentials to send emails.
     """
 
     def send_text(self, message):
