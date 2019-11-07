@@ -19,6 +19,7 @@ class EmailConsumer(SyncConsumer):
     "text"        [required]: The text content of the email, required no matter if HTML or plaintext is used
     "subject"     [required]: The subject of the email message
     "html_render" [required]: The content for the html render, only used in `send_html`
+    "reply_to"    [optional]: The content of the reply-to field, needs to be a list or a tuple
     "attachments" [optional]: A list of files to attach to the email. Each file is a tuple of the filename, content
                               and content type. `serialize_file` can be used to create this tuple from a file.
 
@@ -60,6 +61,9 @@ class EmailConsumer(SyncConsumer):
         :return: A email message object
         """
         msg = EmailMultiAlternatives(message["subject"], message["text"], message["from"], [message["to"]])
+        if "reply_to" in message:
+            msg.reply_to = message["reply_to"]
+
         # Attach files if any
         if "attachments" in message:
             for filename, file, filetype in message["attachments"]:
