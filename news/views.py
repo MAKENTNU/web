@@ -326,6 +326,12 @@ class EventRegistrationView(CreateView):
             return get_object_or_404(Event, pk=self.kwargs["event_pk"])
         return None
 
+    def get(self, request, *args, **kwargs):
+        # Require users to be logged in to sign up for events
+        if not self.request.user.is_authenticated:
+            return HttpResponseRedirect(reverse_lazy("login"))
+        return super().get(request, args, kwargs)
+
     def is_registration_allowed(self):
         return self.timeplace and self.timeplace.can_register(self.request.user) \
                or self.event and self.event.can_register(self.request.user)
@@ -335,13 +341,13 @@ class EventRegistrationView(CreateView):
             form.add_error(None, _("Could not register you for the event, please try again later."))
             return self.form_invalid(form)
 
-        ticket = form.save()
-        if self.request.user.is_authenticated:
-            ticket.user = self.request.user
+        if not self.request.user.is_authenticated:
+            return self.form_invalid(form)
 
-        ticket.event = self.event
-        ticket.timeplace = self.timeplace
-        ticket.save()
+        form.instance.user = self.request.user
+        form.instance.event = self.event
+        form.instance.timeplace = self.timeplace
+        ticket = form.save()
 
         async_to_sync(get_channel_layer().send)(
             "email", {
@@ -370,11 +376,6 @@ class EventRegistrationView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        if self.request.user.is_authenticated:
-            kwargs["initial"].update({
-                "name": self.request.user.get_full_name(),
-                "email": self.request.user.email,
-            })
         kwargs["initial"].update({
             "language": get_language()
         })
