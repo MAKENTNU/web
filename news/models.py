@@ -193,8 +193,8 @@ class TimePlace(models.Model):
 
 class EventTicket(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
-    name = models.CharField(max_length=128, verbose_name=_("Name"))
-    email = models.EmailField(verbose_name=_("Email"))
+    _name = models.CharField(max_length=128, verbose_name=_("Name"), db_column="name")
+    _email = models.EmailField(verbose_name=_("Email"), db_column="email")
     active = models.BooleanField(verbose_name=_("Active"), default=True)
     comment = models.TextField(verbose_name=_("Comment"), blank=True)
     language = models.CharField(max_length=2, choices=(("en", _("English")), ("nb", _("Norwegian"))), default="en",
@@ -214,3 +214,13 @@ class EventTicket(models.Model):
         permissions = (
             ("cancel_ticket", "Can cancel and reactivate all event tickets"),
         )
+
+    @property
+    def name(self):
+        # For backwards compatibility, name is no longer set
+        return self.user.get_full_name() if self.user else self._name
+
+    @property
+    def email(self):
+        # For backwards compatibility, email is no longer set
+        return self.user.email if self.user else self._email
