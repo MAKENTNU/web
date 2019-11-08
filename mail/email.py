@@ -1,4 +1,6 @@
 import logging
+import mimetypes
+import os
 import smtplib
 
 from channels.consumer import SyncConsumer
@@ -112,4 +114,9 @@ def serialize_file(file):
     :param file: The file to serialize
     :return: A tuple of the filename, content and content type
     """
-    return file.name, file.read(), file.content_type
+    # Django files have content_type specified, while normal Python files don't
+    try:
+        content_type = file.content_type
+    except AttributeError:
+        content_type = mimetypes.guess_type(file.name)[0]
+    return os.path.basename(file.name), file.read(), content_type
