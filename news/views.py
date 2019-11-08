@@ -329,7 +329,7 @@ class EventRegistrationView(CreateView):
     def get(self, request, *args, **kwargs):
         # Require users to be logged in to sign up for events
         if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(reverse_lazy("login"))
+            return HttpResponseRedirect(f'{reverse_lazy("login")}?next={request.path}')
         return super().get(request, args, kwargs)
 
     def is_registration_allowed(self):
