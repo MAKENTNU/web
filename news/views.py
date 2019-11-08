@@ -344,6 +344,10 @@ class EventRegistrationView(CreateView):
         if not self.request.user.is_authenticated:
             return self.form_invalid(form)
 
+        if EventTicket.objects.filter(user=self.request.user, active=True, timeplace=self.timeplace, event=self.event).exists():
+            form.add_error(None, _("You are already registered for this event."))
+            return self.form_invalid(form)
+
         form.instance.user = self.request.user
         form.instance.event = self.event
         form.instance.timeplace = self.timeplace
