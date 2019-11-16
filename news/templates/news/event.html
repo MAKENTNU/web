@@ -53,9 +53,9 @@
                     </div>
                     {% if event.event.repeating %}
                         {% if event.number_of_tickets %}
-                            {% is_registered event user as registered %}
-                            {% if registered %}
-                                <a href="{% url "my-tickets" %}" class="ui green fluid button">
+                            {% get_ticket event user as ticket %}
+                            {% if ticket %}
+                                <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
                                     {% trans "You are registered for this event" %}
                                 </a>
                             {% elif event.number_of_registered_tickets < event.number_of_tickets %}
@@ -81,9 +81,9 @@
             {% if article.standalone and article.timeplace_set.future %}
                 <div class="ui card">
                     {% if article.number_of_tickets %}
-                        {% is_registered article user as registered %}
-                        {% if registered %}
-                            <a href="{% url "my-tickets" %}" class="ui green fluid button">
+                        {% get_ticket article user as ticket %}
+                        {% if ticket %}
+                            <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
                                 {% trans "You are registered for this event" %}
                             </a>
                         {% elif article.number_of_registered_tickets < article.number_of_tickets %}
@@ -111,9 +111,9 @@
     <div class="accordion">
         {% if article.standalone %}
             {% if article.number_of_tickets %}
-                {% is_registered article user as registered %}
-                {% if registered %}
-                    <a href="{% url "my-tickets" %}" class="ui green fluid button">
+                {% get_ticket article user as ticket %}
+                {% if ticket %}
+                    <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
                         {% trans "You are registered for this event" %}
                     </a>
                 {% elif article.number_of_registered_tickets < article.number_of_tickets %}
@@ -176,9 +176,9 @@
                     </div>
                     {% if event.event.repeating %}
                         {% if event.number_of_tickets %}
-                            {% is_registered event user as registered %}
-                            {% if registered %}
-                                <a href="{% url "my-tickets" %}" class="ui green fluid button">
+                            {% get_ticket event user as ticket %}
+                            {% if ticket %}
+                                <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
                                     {% trans "You are registered for this event" %}
                                 </a>
                             {% elif event.number_of_registered_tickets < event.number_of_tickets %}

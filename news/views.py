@@ -330,13 +330,16 @@ class EventRegistrationView(LoginRequiredMixin, CreateView):
         return self.timeplace and self.timeplace.can_register(self.request.user) \
                or self.event and self.event.can_register(self.request.user)
 
+    def dispatch(self, request, *args, **kwargs):
+        ticket = EventTicket.objects.filter(user=self.request.user, active=True,
+                                            timeplace=self.timeplace, event=self.event)
+        if ticket.exists():
+            return HttpResponseRedirect(reverse_lazy("ticket", kwargs={"pk": ticket.first().pk}))
+        return super().dispatch(request, args, kwargs)
+
     def form_valid(self, form):
         if not self.is_registration_allowed():
             form.add_error(None, _("Could not register you for the event, please try again later."))
-            return self.form_invalid(form)
-
-        if EventTicket.objects.filter(user=self.request.user, active=True, timeplace=self.timeplace, event=self.event).exists():
-            form.add_error(None, _("You are already registered for this event."))
             return self.form_invalid(form)
 
         form.instance.user = self.request.user

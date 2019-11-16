@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-16 16:23+0100\n"
+"POT-Creation-Date: 2019-11-16 19:28+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -186,7 +186,7 @@ msgstr "Beskrivelse"
 #: internal/templates/internal/members.html:85
 #: internal/templates/internal/members.html:161
 #: make_queue/templates/make_queue/reservation_calendar.html:94
-#: news/models.py:197
+#: news/models.py:198
 msgid "Email"
 msgstr "E-post"
 
@@ -271,7 +271,7 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:199
+#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:200
 #: news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
@@ -387,7 +387,7 @@ msgstr "Filtrer medlemskapsstatus"
 #: internal/templates/internal/members.html:33
 #: internal/templates/internal/members.html:34
 #: internal/templates/internal/members.html:242
-#: internal/templatetags/member.py:22 news/models.py:198
+#: internal/templatetags/member.py:22 news/models.py:199
 #: news/templates/news/admin_event_tickets.html:19
 msgid "Active"
 msgstr "Aktiv"
@@ -413,7 +413,7 @@ msgstr "Filtrer komiteer"
 #: internal/templates/internal/members.html:153 make_queue/models/models.py:26
 #: make_queue/templates/make_queue/course/course_panel.html:91
 #: make_queue/templates/make_queue/reservation_calendar.html:91
-#: news/models.py:196
+#: news/models.py:197
 msgid "Name"
 msgstr "Navn"
 
@@ -805,7 +805,7 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:208
+#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:209
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1192,19 +1192,19 @@ msgstr "Startdato"
 msgid "End date"
 msgstr "Sluttdato"
 
-#: news/models.py:200 web/templatetags/language_tags.py:19
+#: news/models.py:201 web/templatetags/language_tags.py:19
 msgid "English"
 msgstr "Engelsk"
 
-#: news/models.py:200 web/templatetags/language_tags.py:18
+#: news/models.py:201 web/templatetags/language_tags.py:18
 msgid "Norwegian"
 msgstr "Norsk"
 
-#: news/models.py:201
+#: news/models.py:202
 msgid "Preferred language"
 msgstr "Foretrukket språk"
 
-#: news/models.py:207
+#: news/models.py:208
 msgid "Timeplace"
 msgstr "Tidspunkt"
 
@@ -1631,17 +1631,13 @@ msgid ""
 "If selected, the occurrence will be hidden, even after the publication date"
 msgstr "Hvis valgt vil forekomsten være skjult, selv etter publikasjonsdatoen"
 
-#: news/views.py:341
+#: news/views.py:342
 msgid "Could not register you for the event, please try again later."
 msgstr ""
 "Det var ikke mulig å melde deg på arrangementet på dette tidspunktet. "
 "Vennligst prøv igjen ved en senere anledning."
 
-#: news/views.py:348
-msgid "You are already registered for this event."
-msgstr "Du er allerede påmeldt dette arrangementet"
-
-#: news/views.py:361
+#: news/views.py:355
 msgid "Your ticket!"
 msgstr "Din billett!"
 

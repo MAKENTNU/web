@@ -6,11 +6,11 @@ register = template.Library()
 
 
 @register.simple_tag
-def is_registered(event, user):
+def get_ticket(event, user):
     if not user.is_authenticated:
-        return False
+        return None
     tickets = EventTicket.objects.filter(user=user, active=True)
     if isinstance(event, Event):
-        return tickets.filter(event=event).exists()
+        return tickets.filter(event=event).first()
     else:
-        return tickets.filter(timeplace=event).exists()
+        return tickets.filter(timeplace=event).first()
