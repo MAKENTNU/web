@@ -193,6 +193,7 @@ class TimePlace(models.Model):
 
 class EventTicket(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
+    # For backwards compatibility, name and email are no longer set. Getting name and email from user.
     _name = models.CharField(max_length=128, verbose_name=_("Name"), db_column="name")
     _email = models.EmailField(verbose_name=_("Email"), db_column="email")
     active = models.BooleanField(verbose_name=_("Active"), default=True)
@@ -217,10 +218,16 @@ class EventTicket(models.Model):
 
     @property
     def name(self):
-        # For backwards compatibility, name is no longer set
+        """
+        Gets the name of the user whom the ticket is registered to. For backwards compatibility it returns the _name
+        field if the user is not set.
+        """
         return self.user.get_full_name() if self.user else self._name
 
     @property
     def email(self):
-        # For backwards compatibility, email is no longer set
+        """
+        Gets the email of the user whom the ticket is registered to. For backwards compatibility it returns the _email
+        field if the user is not set.
+        """
         return self.user.email if self.user else self._email
