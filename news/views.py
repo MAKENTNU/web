@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -309,7 +309,7 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
         return reverse_lazy("admin-event", args=(self.object.event.id,))
 
 
-class EventRegistrationView(CreateView):
+class EventRegistrationView(LoginRequiredMixin, CreateView):
     model = EventTicket
     template_name = "news/event_registration.html"
     form_class = EventRegistrationForm
@@ -326,12 +326,6 @@ class EventRegistrationView(CreateView):
             return get_object_or_404(Event, pk=self.kwargs["event_pk"])
         return None
 
-    def get(self, request, *args, **kwargs):
-        # Require users to be logged in to sign up for events
-        if not self.request.user.is_authenticated:
-            return HttpResponseRedirect(f'{reverse_lazy("login")}?next={request.path}')
-        return super().get(request, args, kwargs)
-
     def is_registration_allowed(self):
         return self.timeplace and self.timeplace.can_register(self.request.user) \
                or self.event and self.event.can_register(self.request.user)
@@ -339,9 +333,6 @@ class EventRegistrationView(CreateView):
     def form_valid(self, form):
         if not self.is_registration_allowed():
             form.add_error(None, _("Could not register you for the event, please try again later."))
-            return self.form_invalid(form)
-
-        if not self.request.user.is_authenticated:
             return self.form_invalid(form)
 
         if EventTicket.objects.filter(user=self.request.user, active=True, timeplace=self.timeplace, event=self.event).exists():
