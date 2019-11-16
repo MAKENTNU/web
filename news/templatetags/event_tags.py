@@ -7,6 +7,8 @@ register = template.Library()
 
 @register.simple_tag
 def is_registered(event, user):
+    if not user.is_authenticated:
+        return False
     tickets = EventTicket.objects.filter(user=user, active=True)
     if isinstance(event, Event):
         return tickets.filter(event=event).exists()
