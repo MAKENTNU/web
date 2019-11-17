@@ -80,8 +80,7 @@
                     </a>
                 </div>
             {% endif %}
-
-            {% if user|has_any_event_permission or user.is_superuser %}
+            {% if  user.is_superuser %}
                 <div class="ui yellow card">
                     <a href="{% url 'makerspace-tools-admin' %}" class="content">
                         <div class="center aligned header">
@@ -93,14 +92,14 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_event_permission or user.is_superuser %}
+            {% if  user.is_superuser %}
                 <div class="ui yellow card">
                     <a href="{% url 'makerspace' %}" class="content">
                         <div class="center aligned header">
-                            <i class="ui grey piggy chalkboard icon"></i>{% trans "Maker space" %}
+                            <i class="ui grey piggy chalkboard icon"></i>{% trans "Makerspace" %}
                         </div>
                         <div class="description">
-                            {% trans "Here you can edit information at the maker space." %}
+                            {% trans "Here you can edit information about makerspace." %}
                         </div>
                     </a>
                 </div>

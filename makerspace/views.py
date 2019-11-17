@@ -4,15 +4,12 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 
 
-
 class ViewMakerspaceView(TemplateView):
     template_name = 'makerspace/makerspace.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['latest_makerspace_announce'] = Makerspace.objects.last()
-        print("QP", context)
-        print(context['view'])
         return context
 
 
@@ -25,7 +22,6 @@ class ViewAdminMakerspaceView(PermissionRequiredMixin, UpdateView):
     fields = (
         'title',
         'content',
-        'image',
     )
     success_url = reverse_lazy('makerspace')
 

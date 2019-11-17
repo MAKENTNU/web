@@ -1717,12 +1717,12 @@ msgid "Here you can add or edit tools at MAKE NTNU."
 msgstr "Her kan du legge til eller endre på verktøy"
 
 #: web/templates/web/admin_panel.html:91
-msgid "Maker space"
+msgid "Makerspace"
 msgstr "Makerverkstedet"
 
 #: web/templates/web/admin_panel.html:103
-msgid "Here you can edit information at the maker space."
-msgstr "Her kan du endre informasjon på makerverkstedet."
+msgid "Here you can edit information about makerspace."
+msgstr "Her kan du endre informasjon om makerverkstedet."
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"

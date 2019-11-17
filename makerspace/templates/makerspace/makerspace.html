@@ -1,21 +1,14 @@
 {% extends "web/base.html" %}
 {% load staticfiles %}
 {% load i18n %}
-{% load thumbnail %}
 {% get_current_language as LANGUAGE_CODE %}
-
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
-    <script src="{% static "web/js/image-link.js" %}"></script>
-{% endblock head %}
-
 
 {% block body %}
     <div class="make_content_padding"></div>
     <div class="ui text container" style="position: relative; margin: 100px 0 ;">
         {% if user.is_superuser %}
             <p></p>
-            <a href= "{{ latest_makerspace_announce.id}}/edit"    class="ui yellow button">
+            <a href= "{{ latest_makerspace_announce.id}}/edit" class="ui yellow button">
                Rediger
             </a>
         {% endif %}

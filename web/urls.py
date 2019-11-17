@@ -28,7 +28,6 @@ urlpatterns += i18n_patterns(
     path('', IndexView.as_view(), name='front-page'),
     path('news/', include('news.urls')),
     path('makerspace/', include('makerspace.urls')),
-  #  path('makerspace/tools/', include('makerspace.urls')),
     path('contentbox/', include('contentbox.urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),
@@ -36,7 +35,6 @@ urlpatterns += i18n_patterns(
 
     ContentBox.url('about'),
     ContentBox.url('apply'),
-    #ContentBox.url('makerspace'),
     ContentBox.url('cookies'),
     ContentBox.url('rules'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
