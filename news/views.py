@@ -384,9 +384,6 @@ class TicketView(DetailView):
     model = EventTicket
     template_name = "news/ticket_overview.html"
 
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
-
 
 class MyTicketsView(TemplateView):
     template_name = "news/my_tickets.html"
@@ -397,18 +394,6 @@ class MyTicketsView(TemplateView):
             "tickets": EventTicket.objects.filter(user=self.request.user),
         })
         return context_data
-
-
-class ClaimTicketView(RedirectView):
-    permanent = False
-    query_string = True
-    pattern_name = "ticket"
-
-    def get_redirect_url(self, *args, **kwargs):
-        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0), user=None)
-        ticket.user = self.request.user
-        ticket.save()
-        return super().get_redirect_url(*args, **kwargs)
 
 
 class AdminEventTicketView(TemplateView):
