@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -309,7 +309,7 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
         return reverse_lazy("admin-event", args=(self.object.event.id,))
 
 
-class EventRegistrationView(CreateView):
+class EventRegistrationView(LoginRequiredMixin, CreateView):
     model = EventTicket
     template_name = "news/event_registration.html"
     form_class = EventRegistrationForm
@@ -330,18 +330,22 @@ class EventRegistrationView(CreateView):
         return self.timeplace and self.timeplace.can_register(self.request.user) \
                or self.event and self.event.can_register(self.request.user)
 
+    def dispatch(self, request, *args, **kwargs):
+        ticket = EventTicket.objects.filter(user=self.request.user, active=True,
+                                            timeplace=self.timeplace, event=self.event)
+        if ticket.exists():
+            return HttpResponseRedirect(reverse_lazy("ticket", kwargs={"pk": ticket.first().pk}))
+        return super().dispatch(request, args, kwargs)
+
     def form_valid(self, form):
         if not self.is_registration_allowed():
             form.add_error(None, _("Could not register you for the event, please try again later."))
             return self.form_invalid(form)
 
+        form.instance.user = self.request.user
+        form.instance.event = self.event
+        form.instance.timeplace = self.timeplace
         ticket = form.save()
-        if self.request.user.is_authenticated:
-            ticket.user = self.request.user
-
-        ticket.event = self.event
-        ticket.timeplace = self.timeplace
-        ticket.save()
 
         async_to_sync(get_channel_layer().send)(
             "email", {
@@ -370,11 +374,6 @@ class EventRegistrationView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        if self.request.user.is_authenticated:
-            kwargs["initial"].update({
-                "name": self.request.user.get_full_name(),
-                "email": self.request.user.email,
-            })
         kwargs["initial"].update({
             "language": get_language()
         })

@@ -38,8 +38,7 @@ class ArticleForm(ModelForm):
 class EventRegistrationForm(ModelForm):
     class Meta:
         model = EventTicket
-        fields = "__all__"
-        exclude = ["user", "active", "timeplace", "event"]
+        fields = ("comment", "language")
         widgets = {
             "language": SemanticSearchableChoiceInput(),
             "comment": Textarea(attrs={
