@@ -29,10 +29,23 @@ class ReservationCreateOrChangeView(TemplateView):
         """
         if not reservation.is_within_allowed_period_for_reservation() and not (
                 reservation.special or reservation.event):
-            return "Reservasjoner kan bare lages {:} dager frem i tid".format(reservation.reservation_future_limit_days)
+            """Translation: Reservasjoner kan bare lages {:} dager frem i tid"""
+            return _("Reservations can only be made {:} days ahead of time".format(
+                reservation.reservation_future_limit_days))
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
-            return "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
-        return "Tidspunktet er ikke lengre tilgjengelig"
+            """Translation: Tidspunktet eller eventen, er ikke lengre tilgjengelig"""
+            return _("The time slot or event, it no longer available")
+        if not reservation.quota_can_make_reservation():
+            """Translation: Reservasjonen går over kvoten """
+            return _("The reservation exceeds the quota")
+        if reservation.check_start_time_after_end_time():
+            """Translation: Startstiden kan ikke være etter slutttiden"""
+            return _("The start time can't be after the end time")
+        if reservation.reservation_starts_before_now():
+            """Translation: Reservasjonen kan ikke starte i fortiden"""
+            return _("The reservation can't start in the past")
+        """Translation: Tidspunktet er ikke tilgjengelig"""
+        return _("The time slot is not available")
 
     def validate_and_save(self, reservation, form):
         """
