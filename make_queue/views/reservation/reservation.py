@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import RedirectView, TemplateView, FormView
+from django.utils.translation import gettext_lazy as _
 
 from make_queue.fields import MachineTypeField
 from make_queue.forms import ReservationForm, FreeSlotForm
