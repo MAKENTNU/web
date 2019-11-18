@@ -439,7 +439,7 @@ class CancelTicketView(RedirectView):
         # Allow for toggling if a ticket is canceled or not
         if self.request.user.has_perm("news.cancel_ticket"):
             ticket.active = not ticket.active
-        elif self.request.user == ticket.user or ticket.user is None:
+        elif self.request.user == ticket.user:
             ticket.active = False
         ticket.save()
 
