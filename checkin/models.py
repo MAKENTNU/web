@@ -36,9 +36,9 @@ class UserSkill(models.Model):
     EXPERT = 3
 
     LEVEL_CHOICES = (
-        (BEGINNER, _("Nybegynner")),
-        (EXPERIENCED, _("Viderekommen")),
-        (EXPERT, _("Ekspert")),
+        (BEGINNER, _("Beginner")),
+        (EXPERIENCED, _("Experienced")),
+        (EXPERT, _("Expert")),
     )
 
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
