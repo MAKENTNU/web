@@ -7,7 +7,7 @@ from makerspace.views import ViewMakerspaceView, EditMakerspaceView, \
 
 urlpatterns = [
     path('', ViewMakerspaceView.as_view(), name='makerspace'),
-    path(r'<int:pk>/edit/', login_required(EditMakerspaceView.as_view()), name='makerspace-edit'),
+    path(r'admin/<int:pk>/edit/', login_required(EditMakerspaceView.as_view()), name='makerspace-edit'),
     path(r'tools/', ToolsView.as_view(), name='makerspace-tools'),
     path(r'tool/<int:pk>/', ToolView.as_view(), name='makerspace-tool'),
     path(r'tools/admin', login_required(AdminToolView.as_view()), name='makerspace-tools-admin'),

@@ -11,7 +11,7 @@ class ViewMakerspaceView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['latest_makerspace_announce'] = Makerspace.objects.last()
+        context['makerspace_latest'] = Makerspace.objects.last()
         return context
 
 

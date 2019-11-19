@@ -6,18 +6,15 @@
 {% block body %}
     <div class="ui text container" style="margin: 100px 0 ;">
         {% if perms.makerspace.change_makerspace or user.is_superuser %}
-            <p></p>
-            <a href= "{{ latest_makerspace_announce.id}}/edit" class="ui yellow button">
-               {% trans "Edit" %}
+            <a href= "{% url 'makerspace-edit' makerspace_latest.id %}" class="ui yellow button">
+               {% trans "Rediger" %}
             </a>
         {% endif %}
         <h1>
-            <strong>
-                {{ latest_makerspace_announce.title }}
-            </strong>
+            {{ makerspace_latest.title }}
         </h1>
         {% autoescape off %}
-            {{ latest_makerspace_announce.content }}
+            {{ makerspace_latest.content }}
         {% endautoescape %}
         <a href="{% url 'makerspace-tools' %}"> {% trans "Go to tools" %} </a>
     </div>
