@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Skill(models.Model):
@@ -35,10 +36,11 @@ class UserSkill(models.Model):
     EXPERT = 3
 
     LEVEL_CHOICES = (
-        (BEGINNER, "Nybegynner"),
-        (EXPERIENCED, "Viderekommen"),
-        (EXPERT, "Ekspert"),
+        (BEGINNER, _("Nybegynner")),
+        (EXPERIENCED, _("Viderekommen")),
+        (EXPERT, _("Ekspert")),
     )
+
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
     skill_level = models.IntegerField(choices=LEVEL_CHOICES)
