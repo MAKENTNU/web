@@ -17,7 +17,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
     @staticmethod
     def create_reservation(start_time, end_time):
         machine_type = MachineTypeField.get_machine_type(1)
-        Machine.objects.create(name="S1", location="U1", machine_model="Ultimaker", status="F",
+        Machine.objects.create(name="S1", location="U1", machine_model="Ultimaker", status=Machine.AVAILABLE,
                                machine_type=machine_type)
         user = User.objects.create_user("User", "user@makentnu.no", "unsecure_pass")
         user.save()

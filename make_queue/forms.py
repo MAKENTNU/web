@@ -161,9 +161,9 @@ class BaseMachineForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields["status"] = forms.ChoiceField(
             choices=(
-                ("F", _("Available")),
-                ("O", _("Out of order")),
-                ("M", _("Maintenance")),
+                (Machine.AVAILABLE, _("Available")),
+                (Machine.OUT_OF_ORDER, _("Out of order")),
+                (Machine.MAINTENANCE, _("Maintenance")),
             ),
             widget=SemanticSearchableChoiceInput(attrs={"required": True}),
         )

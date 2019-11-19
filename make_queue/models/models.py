@@ -14,15 +14,21 @@ from web.multilingual.database import MultiLingualRichTextUploadingField
 
 
 class Machine(models.Model):
-    status_choices = (
-        ("R", _("Reserved")),
-        ("F", _("Available")),
-        ("I", _("In use")),
-        ("O", _("Out of order")),
-        ("M", _("Maintenance")),
+    RESERVED = "R"
+    AVAILABLE = "F"
+    IN_USE = "I"
+    OUT_OF_ORDER = "O"
+    MAINTENANCE = "M"
+
+    STATUS_CHOICES = (
+        (RESERVED, _("Reserved")),
+        (AVAILABLE, _("Available")),
+        (IN_USE, _("In use")),
+        (OUT_OF_ORDER, _("Out of order")),
+        (MAINTENANCE, _("Maintenance")),
     )
 
-    status = models.CharField(max_length=2, choices=status_choices, verbose_name=_("Status"), default="F")
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
@@ -50,9 +56,9 @@ class Machine(models.Model):
         return self.name + " - " + self.machine_model
 
     def get_status(self):
-        if self.status in "OM":
+        if self.status in (self.OUT_OF_ORDER, self.MAINTENANCE):
             return self.status
-        return self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)) and "R" or "F"
+        return self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)) and self.RESERVED or self.AVAILABLE
 
     def _get_FIELD_display(self, field):
         if field.attname == "status":

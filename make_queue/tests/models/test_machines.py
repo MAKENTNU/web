@@ -14,37 +14,37 @@ class TestGenericMachine(TestCase):
 
     def test_status(self):
         machine_type = MachineTypeField.get_machine_type(1)
-        printer = Machine.objects.create(name="C1", location="Printer room", status="F",
+        printer = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
                                          machine_model="Ultimaker 2 Extended", machine_type=machine_type)
         user = User.objects.create_user("test")
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
         Quota.objects.create(machine_type=machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
-        self.assertEquals(printer.get_status(), "F")
+        self.assertEquals(printer.get_status(), Machine.AVAILABLE)
         self.assertEquals(printer.get_status_display(), "Ledig")
-        printer.status = "O"
-        self.assertEquals(printer.get_status(), "O")
+        printer.status = Machine.OUT_OF_ORDER
+        self.assertEquals(printer.get_status(), Machine.OUT_OF_ORDER)
         self.assertEquals(printer.get_status_display(), "I ustand")
-        printer.status = "M"
-        self.assertEquals(printer.get_status(), "M")
+        printer.status = Machine.MAINTENANCE
+        self.assertEquals(printer.get_status(), Machine.MAINTENANCE)
         self.assertEquals(printer.get_status_display(), "Vedlikehold")
-        printer.status = "R"
-        self.assertEquals(printer.get_status(), "F")
+        printer.status = Machine.RESERVED
+        self.assertEquals(printer.get_status(), Machine.AVAILABLE)
         self.assertEquals(printer.get_status_display(), "Ledig")
 
         Reservation.objects.create(machine=printer, start_time=timezone.now(),
                                    end_time=timezone.now() + timedelta(hours=1), user=user)
 
-        self.assertEquals(printer.get_status(), "R")
+        self.assertEquals(printer.get_status(), Machine.RESERVED)
         self.assertEquals(printer.get_status_display(), "Reservert")
-        printer.status = "F"
-        self.assertEquals(printer.get_status(), "R")
+        printer.status = Machine.AVAILABLE
+        self.assertEquals(printer.get_status(), Machine.RESERVED)
         self.assertEquals(printer.get_status_display(), "Reservert")
-        printer.status = "O"
-        self.assertEquals(printer.get_status(), "O")
+        printer.status = Machine.OUT_OF_ORDER
+        self.assertEquals(printer.get_status(), Machine.OUT_OF_ORDER)
         self.assertEquals(printer.get_status_display(), "I ustand")
-        printer.status = "M"
-        self.assertEquals(printer.get_status(), "M")
+        printer.status = Machine.MAINTENANCE
+        self.assertEquals(printer.get_status(), Machine.MAINTENANCE)
         self.assertEquals(printer.get_status_display(), "Vedlikehold")
 
 
