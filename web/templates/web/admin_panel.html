@@ -80,7 +80,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if  user.is_superuser %}
+            {% if user|has_any_tools_permission or user.is_superuser %}
                 <div class="ui yellow card">
                     <a href="{% url 'makerspace-tools-admin' %}" class="content">
                         <div class="center aligned header">
@@ -92,7 +92,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if  user.is_superuser %}
+            {% if  user|has_any_makerspace_permission or user.is_superuser %}
                 <div class="ui yellow card">
                     <a href="{% url 'makerspace' %}" class="content">
                         <div class="center aligned header">

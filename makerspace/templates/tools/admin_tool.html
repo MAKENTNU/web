@@ -21,9 +21,8 @@
                                 <a class="inline-block make_col_blue header" href="{% url 'makerspace-tools-edit' tool.id %}">
                                     {{ tool.title }}
 
-
                                 </a>
-                                {% if perms.tool.delete_event %}
+                                {% if perms.tool.delete_tool %}
                                     <a class="delete confirm inline-block make_col_blue explanation-popup"
                                        data-title="{% trans "Delete" %}"
                                        data-content="{% trans "If clicked, the tool will be deleted." %}"
@@ -37,49 +36,7 @@
 
                 {% endfor %}
             </div>
-        {% else %}
-            <p class="text-centered"><i>{% trans "No events" %}</i></p>
         {% endif %}
     </div>
-
-    <script>
-        $('.ui.accordion').accordion();
-
-        $(".explanation-popup").popup();
-
-        $('.toggle').click(function () {
-            toggle_post($(this), $(this).data('pk'), $(this).data('model'), $(this).data('toggle'));
-        });
-
-        function toggle_post(element, pk, model, toggle) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                }
-            });
-            $.ajax({
-                type: "POST",
-                url: '/news/admin/toggle/' + model + '/',
-                data: {
-                    'pk': pk,
-                    'toggle': toggle,
-                },
-                success: function (data) {
-                    if (!data['color']) {
-                        return;
-                    }
-                    if (toggle === 'private') {
-                        if (data['color'] === 'yellow') {
-                            element.attr('src', '{% static "web/img/m_yellow.svg" %}');
-                        } else {
-                            element.attr('src', '{% static "web/img/m_grey.svg" %}');
-                        }
-                    } else {
-                        element.removeClass('yellow grey').addClass(data['color']);
-                    }
-                }
-            });
-        }
-    </script>
 
 {% endblock body %}

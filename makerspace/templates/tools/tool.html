@@ -2,6 +2,7 @@
 {% load staticfiles %}
 {% load i18n %}
 {% load thumbnail %}
+{% load permission_tags %}
 
 {% block title %}{{ tool.title }}{% endblock title %}
 
@@ -24,7 +25,7 @@
                 <h1 class="tool-title">
                     <div>
                         {% block admin-page %}
-                             {% if perms.tools.add_Tool%}
+                             {% if user|has_any_tools_permission%}
                                  <a href="{% url "makerspace-tools-admin" %}" class="ui right floated yellow button">
                                      <i class="ui sticky note icon"></i>{% trans "Admin page" %}
                                  </a>

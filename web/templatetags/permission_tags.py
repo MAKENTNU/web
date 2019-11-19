@@ -26,3 +26,13 @@ def has_any_event_permission(user):
             if user.has_perm(f"news.{action}_{model}"):
                 return True
     return False
+
+
+@register.filter(name="has_any_makerspace_permission")
+def has_any_article_permission(user):
+    return any(user.has_perm(f"makerspace.{action}_makerspace") for action in ["add", "change", "delete"])
+
+
+@register.filter(name="has_any_tools_permission")
+def has_any_article_permission(user):
+    return any(user.has_perm(f"makerspace.{action}_tool") for action in ["add", "change", "delete"])
