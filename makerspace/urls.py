@@ -14,5 +14,4 @@ urlpatterns = [
     path(r'tools/admin/<int:pk>/edit', login_required(EditToolView.as_view()), name='makerspace-tools-edit'),
     path(r'tools/admin/<int:pk>/delete', login_required(DeleteToolView.as_view()), name='makerspace-tools-delete'),
     path(r'tool/<int:pk>/', ToolView.as_view(), name='makerspace-tool'),
-
 ]
