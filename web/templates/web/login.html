@@ -13,6 +13,7 @@
     <div class="ui container">
         <form class="ui form" action="" method="POST">
             {% csrf_token %}
+            {{ form.non_field_errors }}
             <div class="ui two fields">
                 <div class="ui field">
                     <label>{{ form.username.label }}</label>
