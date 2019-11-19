@@ -59,7 +59,11 @@ class Machine(models.Model):
     def get_status(self):
         if self.status in (self.OUT_OF_ORDER, self.MAINTENANCE):
             return self.status
-        return self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)) and self.RESERVED or self.AVAILABLE
+
+        if self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)):
+            return self.RESERVED
+        else:
+            return self.AVAILABLE
 
     def _get_FIELD_display(self, field):
         if field.attname == "status":
