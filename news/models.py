@@ -26,13 +26,13 @@ class TimePlaceManager(models.Manager):
 
     def future(self):
         return self.published().filter(
-            Q(start_date=timezone.localtime().date(), start_time__gt=timezone.localtime().time()) |
-            Q(start_date__gt=timezone.localtime().date()))
+            Q(end_date=timezone.localtime().date(), end_time__gt=timezone.localtime().time()) |
+            Q(end_date__gt=timezone.localtime().date()))
 
     def past(self):
         return self.published().filter(
-            Q(start_date=timezone.localtime().date(), start_time__lt=timezone.localtime().time()) |
-            Q(start_date__lt=timezone.localtime().date()))
+            Q(end_date=timezone.localtime().date(), end_time__lt=timezone.localtime().time()) |
+            Q(end_date__lt=timezone.localtime().date()))
 
 
 class NewsBase(models.Model):
