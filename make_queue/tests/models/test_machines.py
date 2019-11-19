@@ -20,32 +20,28 @@ class TestGenericMachine(TestCase):
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
         Quota.objects.create(machine_type=machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
-        self.assertEquals(printer.get_status(), Machine.AVAILABLE)
-        self.assertEquals(printer.get_status_display(), "Ledig")
+        self.check_status(printer, Machine.AVAILABLE)
         printer.status = Machine.OUT_OF_ORDER
-        self.assertEquals(printer.get_status(), Machine.OUT_OF_ORDER)
-        self.assertEquals(printer.get_status_display(), "I ustand")
+        self.check_status(printer, Machine.OUT_OF_ORDER)
         printer.status = Machine.MAINTENANCE
-        self.assertEquals(printer.get_status(), Machine.MAINTENANCE)
-        self.assertEquals(printer.get_status_display(), "Vedlikehold")
+        self.check_status(printer, Machine.MAINTENANCE)
         printer.status = Machine.RESERVED
-        self.assertEquals(printer.get_status(), Machine.AVAILABLE)
-        self.assertEquals(printer.get_status_display(), "Ledig")
+        self.check_status(printer, Machine.AVAILABLE)
 
         Reservation.objects.create(machine=printer, start_time=timezone.now(),
                                    end_time=timezone.now() + timedelta(hours=1), user=user)
 
-        self.assertEquals(printer.get_status(), Machine.RESERVED)
-        self.assertEquals(printer.get_status_display(), "Reservert")
+        self.check_status(printer, Machine.RESERVED)
         printer.status = Machine.AVAILABLE
-        self.assertEquals(printer.get_status(), Machine.RESERVED)
-        self.assertEquals(printer.get_status_display(), "Reservert")
+        self.check_status(printer, Machine.RESERVED)
         printer.status = Machine.OUT_OF_ORDER
-        self.assertEquals(printer.get_status(), Machine.OUT_OF_ORDER)
-        self.assertEquals(printer.get_status_display(), "I ustand")
+        self.check_status(printer, Machine.OUT_OF_ORDER)
         printer.status = Machine.MAINTENANCE
-        self.assertEquals(printer.get_status(), Machine.MAINTENANCE)
-        self.assertEquals(printer.get_status_display(), "Vedlikehold")
+        self.check_status(printer, Machine.MAINTENANCE)
+
+    def check_status(self, machine, status):
+        self.assertEquals(machine.get_status(), status)
+        self.assertEquals(machine.get_status_display(), Machine.STATUS_CHOICES_DICT[status])
 
 
 class TestCanUse3DPrinter(TestCase):

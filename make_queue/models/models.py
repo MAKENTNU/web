@@ -27,6 +27,7 @@ class Machine(models.Model):
         (OUT_OF_ORDER, _("Out of order")),
         (MAINTENANCE, _("Maintenance")),
     )
+    STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
 
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
@@ -66,8 +67,7 @@ class Machine(models.Model):
         return super()._get_FIELD_display(field)
 
     def _get_status_display(self):
-        current_status = self.get_status()
-        return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
+        return self.STATUS_CHOICES_DICT[self.get_status()]
 
 
 class MachineUsageRule(models.Model):
