@@ -5,12 +5,13 @@
 {% block body %}
     <h1 class="ui text-centered make_col_yellow header">
         {% trans "Tools" %}
-        <a class="make_col_blue explanation-popup" data-title="{% trans "Create" %}"
-           data-content="{% trans "If clicked, a new Tool will be created." %}" href="{% url 'makerspace-tools-create' %}">
-            <i class="ui add icon"></i>
-        </a>
     </h1>
+
     <div class="ui text container">
+        <a class="ui yellow button">
+            <i class="ui add icon blue"></i>
+            {% trans "Add new tool" %}
+        </a>
         {% if tools_list %}
             <div class="ui divided list">
                 {% for tool in tools_list %}
@@ -24,9 +25,9 @@
                                 {% if perms.makerspace.delete_tool %}
                                     <a class="delete confirm inline-block make_col_blue explanation-popup"
                                        data-title="{% trans "Delete" %}"
-                                       data-content="{% trans "If clicked, the tool will be deleted." %}"
+                                       data-content="{% trans "Click to delete." %}"
                                        href="{% url 'makerspace-tools-delete' tool.id %}">
-                                        <i class="ui delete icon"></i>
+                                        <i class="ui delete icon red"></i>
                                     </a>
                                 {% endif %}
                             </div>

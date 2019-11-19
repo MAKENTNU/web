@@ -1813,3 +1813,11 @@ msgstr "Søk etter steder"
 #: makerspace/templates/makerspace/makerspace.html:23
 msgid "Go to tools"
 msgstr "Gå til utstyrside"
+
+#: makerspace/templates/admin_tool.html:13
+msgid "Add new tool"
+msgstr "Legg til nytt verktøy"
+
+#: makerspace/templates/admin_tool.html:28
+msgid "Click to delete"
+msgstr "Trykk for å slette"
