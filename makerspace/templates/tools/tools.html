@@ -4,7 +4,7 @@
 {% load thumbnail %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "tools/css/tools.css" %}">
     <script src="{% static "web/js/image-link.js" %}"></script>
 {% endblock head %}
 
@@ -14,21 +14,21 @@
         {% trans "Available Tools at Makerverkstedet" %}
     </h1>
     <div class="ui container">
-        <div class="articles">
+        <div class="tools">
             {% for tool in tools_list %}
                 <!-- For the pictures -->
                 {% thumbnail tool.image "250x250"  as im %}
                     <img class="clickable css = float-right
-                    			    {% if forloop.first %}article-first{% endif %}
-			                        {% if forloop.last %}article-last{% endif %}"
+                    			    {% if forloop.first %}tool-first{% endif %}
+			                        {% if forloop.last %}tool-last{% endif %}"
                          src="{{ im.url }}" href="{% url 'makerspace-tool' tool.id %}"
                          width="{{ im.width }}" height="{{ im.height }}"c>
                 {% endthumbnail %}
 
                 <!-- For the text -->
-                <div class="article-text css = float-left
-			    {% if forloop.first %}article-first{% endif %}
-			    {% if forloop.last %}article-last{% endif %}">
+                <div class="tool-text css = float-left
+			    {% if forloop.first %}tool-first{% endif %}
+			    {% if forloop.last %}tool-last{% endif %}">
                     <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
                     <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">

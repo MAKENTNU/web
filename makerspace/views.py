@@ -19,10 +19,7 @@ class ViewAdminMakerspaceView(PermissionRequiredMixin, UpdateView):
     template_name = 'makerspace/admin_makerspace.html'
     context_object_name = 'makerspace'
     permission_required = 'makerspace.add_Makerspace'
-    fields = (
-        'title',
-        'content',
-    )
+    fields = "__all__"
     success_url = reverse_lazy('makerspace')
 
 
@@ -50,11 +47,7 @@ class ViewAdminCreateView(PermissionRequiredMixin, CreateView):
     template_name = 'tools/admin_tool_create.html'
     context_object_name = 'tool'
     permission_required = 'makerspace.add_Tool'
-    fields = (
-        'title',
-        'content',
-        'image',
-    )
+    fields = "__all__"
     success_url = reverse_lazy('makerspace-tools-admin')
 
 
@@ -64,11 +57,7 @@ class ViewAdminEditView(PermissionRequiredMixin, UpdateView):
     template_name = 'tools/admin_tool_edit.html'
     context_object_name = 'tool'
     permission_required = 'makerspace.add_Tool'
-    fields = (
-        'title',
-        'content',
-        'image',
-    )
+    fields = "__all__"
     success_url = reverse_lazy('makerspace-tools-admin')
 
 
