@@ -1,18 +1,17 @@
 from django.urls import path
-
-from makerspace.views import ViewMakerspaceView, ViewAdminMakerspaceView, \
-    ViewToolsView, ViewToolView, ViewAdminEditView, ViewAdminCreateView, \
-    ViewAdminView, ViewDeleteView
+from django.contrib.auth.decorators import login_required
+from makerspace.views import ViewMakerspaceView, EditMakerspaceView, \
+    ToolsView, ToolView, EditToolView, CreateToolView, \
+    AdminToolView, DeleteToolView
 
 
 urlpatterns = [
     path('', ViewMakerspaceView.as_view(), name='makerspace'),
-    path(r'<int:pk>/edit/', ViewAdminMakerspaceView.as_view(), name='makerspace-edit'),
-    path(r'tools/', ViewToolsView.as_view(), name='makerspace-tools'),
-    path(r'tool/<int:pk>/', ViewToolView.as_view(), name='makerspace-tool'),
-    path(r'tools/admin', ViewAdminView.as_view(), name='makerspace-tools-admin'),
-    path(r'tools/admin/create', ViewAdminCreateView.as_view(), name='makerspace-tools-create'),
-    path(r'tools/admin/<int:pk>/edit', ViewAdminEditView.as_view(), name='makerspace-tools-edit'),
-    path(r'tools/admin/<int:pk>/delete', ViewDeleteView.as_view(), name='makerspace-tools-delete'),
+    path(r'<int:pk>/edit/', login_required(EditMakerspaceView.as_view()), name='makerspace-edit'),
+    path(r'tools/', ToolsView.as_view(), name='makerspace-tools'),
+    path(r'tool/<int:pk>/', ToolView.as_view(), name='makerspace-tool'),
+    path(r'tools/admin', login_required(AdminToolView.as_view()), name='makerspace-tools-admin'),
+    path(r'tools/admin/create', login_required(CreateToolView.as_view()), name='makerspace-tools-create'),
+    path(r'tools/admin/<int:pk>/edit', login_required(EditToolView.as_view()), name='makerspace-tools-edit'),
+    path(r'tools/admin/<int:pk>/delete', login_required(DeleteToolView.as_view()), name='makerspace-tools-delete'),
 ]
-

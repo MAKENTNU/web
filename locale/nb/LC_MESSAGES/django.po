@@ -152,6 +152,7 @@ msgstr "Tittel"
 #: news/templates/news/admin_articles.html:55
 #: news/templates/news/admin_event.html:21
 #: news/templates/news/admin_timeplace_listing.html:28
+#: makerspace/templates/makerspace/makerspace.html:11
 msgid "Edit"
 msgstr "Rediger"
 
@@ -1807,3 +1808,8 @@ msgstr "Velg verdi"
 #: web/widgets.py:47
 msgid "Search places"
 msgstr "Søk etter steder"
+
+
+#: makerspace/templates/makerspace/makerspace.html:23
+msgid "Go to tools"
+msgstr "Gå til utstyrside"

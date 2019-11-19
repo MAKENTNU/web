@@ -20,9 +20,8 @@
                             <div class="header">
                                 <a class="inline-block make_col_blue header" href="{% url 'makerspace-tools-edit' tool.id %}">
                                     {{ tool.title }}
-
                                 </a>
-                                {% if perms.tool.delete_tool %}
+                                {% if perms.makerspace.delete_tool %}
                                     <a class="delete confirm inline-block make_col_blue explanation-popup"
                                        data-title="{% trans "Delete" %}"
                                        data-content="{% trans "If clicked, the tool will be deleted." %}"
@@ -38,5 +37,4 @@
             </div>
         {% endif %}
     </div>
-
 {% endblock body %}
