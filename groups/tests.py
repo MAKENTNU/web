@@ -37,8 +37,8 @@ class PermGroupTestCase(TestCase):
         content_type = ContentType.objects.get_for_model(Article)
         for i in range(5):
             Permission.objects.create(
-                codename='perm{}'.format(i),
-                name='Perm {}'.format(i),
+                codename=f'perm{i}',
+                name=f'Perm {i}',
                 content_type=content_type,
             )
 

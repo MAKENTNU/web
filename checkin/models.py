@@ -51,7 +51,7 @@ class UserSkill(models.Model):
         )
 
     def __str__(self):
-        return str(self.profile) + " - " + str(self.skill)
+        return f"{self.profile} - {self.skill}"
 
 
 class SuggestSkill(models.Model):

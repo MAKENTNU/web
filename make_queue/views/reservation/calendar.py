@@ -28,8 +28,8 @@ class ReservationCalendarComponentView(TemplateView):
         end_time = min(reservation.end_time, date + timedelta(days=1, seconds=-1))
 
         return {'reservation': reservation, 'start_percentage': date_to_percentage(start_time),
-                'start_time': "{:02}:{:02}".format(start_time.hour, start_time.minute),
-                'end_time': "{:02}:{:02}".format(end_time.hour, end_time.minute),
+                'start_time': f"{start_time.hour:02}:{start_time.minute:02}",
+                'end_time': f"{end_time.hour:02}:{end_time.minute:02}",
                 'length': date_to_percentage(end_time) - date_to_percentage(start_time)}
 
     @staticmethod

@@ -16,7 +16,7 @@ jQuery.fn.extend({
                     results: mazemapResponse.result.map(item => ({
                         title: (
                             item.dispPoiNames[0] +
-                            (item.dispBldNames[0] ? ", " + item.dispBldNames[0] : "")
+                            (item.dispBldNames[0] ? `, ${item.dispBldNames[0]}` : "")
                         ).replace(/<[^>]*>/g, ""),
                         description: (item.dispPoiNames[1] ? item.dispPoiNames[1] : "").replace(/<[^>]*>/g, ""),
                         id: item.poiId,

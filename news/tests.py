@@ -31,7 +31,7 @@ class ModelTestCase(TestCase):
         event = Event.objects.create(title=title)
         time_place = self.create_time_place(event, 0, 0)
         date_str = timezone.now().date().strftime('%Y.%m.%d')
-        self.assertEqual(str(time_place), "{} - {}".format(title, date_str))
+        self.assertEqual(str(time_place), f"{title} - {date_str}")
 
     def test_article_manager(self):
         Article.objects.create(

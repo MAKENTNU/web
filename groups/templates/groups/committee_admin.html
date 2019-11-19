@@ -65,7 +65,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: '/news/admin/toggle/' + model + '/',
+                url: `/news/admin/toggle/${model}/`,
                 data: {
                     'pk': pk,
                     'toggle': toggle,

@@ -15,7 +15,7 @@
 
         let time_selection_element = $(".time_selection");
 
-        let zeroPadClock = (number) => ("00" + number).substr(-2, 2);
+        let zeroPadClock = (number) => (`00${number}`).substr(-2, 2);
         let timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
 
         let getStartTime = () => parseFloat(time_selection_element.css("top")) / time_selection_element.closest(".day").height() * 24;
@@ -84,7 +84,7 @@
             clickedPoint = positionCalculation(event);
             time_selection_element = $("<div>")
                 .addClass("time_selection")
-                .css("top", clickedPoint + "px")
+                .css("top", `${clickedPoint}px`)
                 .css("height", "1px")
                 .appendTo($(event.target));
 
@@ -143,8 +143,8 @@
             let bottomPosition = parseFloat(time_selection_element.css("top")) + parseFloat(time_selection_element.css("height"));
             let currentY = Math.min(positionCalculation(event), bottomPosition - 1);
             time_selection_element
-                .css("height", Math.max(bottomPosition - currentY, 1) + "px")
-                .css("top", currentY + "px");
+                .css("height", `${Math.max(bottomPosition - currentY, 1)}px`)
+                .css("top", `${currentY}px`);
             if (new Date() > currentDate()) setLimitTop();
             limitTimeSelection("top");
             $(".time_selection > .start_time").html(timeToClock(getStartTime()));
@@ -153,7 +153,7 @@
         let resizeBottom = (event) => {
             let topHeight = parseFloat(time_selection_element.css("top"));
             let currentY = Math.max(positionCalculation(event), topHeight);
-            time_selection_element.css("height", Math.max(currentY - topHeight, 1) + "px");
+            time_selection_element.css("height", `${Math.max(currentY - topHeight, 1)}px`);
             limitTimeSelection("bottom");
             $(".time_selection > .end_time").html(timeToClock(getEndTime()));
         };
@@ -162,7 +162,7 @@
             let topLimit = (new Date().getHours() / 24 + (new Date().getMinutes() + 1) / (24 * 60) + new Date().getSeconds() / (24 * 60 * 60)) * $(clickedDay).height();
             time_selection_element
                 .css("height", parseFloat(time_selection_element.css("height")) + parseFloat(time_selection_element.css("top")) - topLimit + "px")
-                .css("top", topLimit + "px");
+                .css("top", `${topLimit}px`);
         };
 
         let onMouseMoveFunc = (event) => {
@@ -173,7 +173,7 @@
             }
 
             let currentY = positionCalculation(event);
-            time_selection_element.css("top", Math.min(currentY, clickedPoint) + "px").css("height", Math.abs(currentY - clickedPoint) + "px");
+            time_selection_element.css("top", `${Math.min(currentY, clickedPoint)}px`).css("height", `${Math.abs(currentY - clickedPoint)}px`);
             {# Do not allow the selection of an area earlier than the current time #}
             if (new Date() > currentDate()) setLimitTop();
             if (currentY > clickedPoint) limitTimeSelection("bottom");

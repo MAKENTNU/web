@@ -25,7 +25,7 @@ def year_and_week_to_monday(year, week):
     :param week: The week to get the date for
     :return: The monday in the given week of the given year
     """
-    return datetime.strptime("{:04d} {:02d} 1".format(year, week), "%G %V %w")
+    return datetime.strptime(f"{year:04d} {week:02d} 1", "%G %V %w")
 
 
 def get_next_week(year, week, shift_direction):

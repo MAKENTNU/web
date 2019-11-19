@@ -54,7 +54,7 @@ class Machine(models.Model):
                                                  end_time__gte=end_time)
 
     def __str__(self):
-        return self.name + " - " + self.machine_model
+        return f"{self.name} - {self.machine_model}"
 
     def get_status(self):
         if self.status in (self.OUT_OF_ORDER, self.MAINTENANCE):
@@ -233,9 +233,9 @@ class Reservation(models.Model):
         )
 
     def __str__(self):
-        return "{:} har reservert {:} fra {:} til {:}".format(self.user.get_full_name(), self.machine.name,
-                                                              self.start_time.strftime("%d/%m/%Y - %H:%M"),
-                                                              self.end_time.strftime("%d/%m/%Y - %H:%M"))
+        start_time = self.start_time.strftime("%d/%m/%Y - %H:%M")
+        end_time = self.end_time.strftime("%d/%m/%Y - %H:%M")
+        return f"{self.user.get_full_name():} har reservert {self.machine.name:} fra {start_time:} til {end_time:}"
 
 
 class ReservationRule(models.Model):
