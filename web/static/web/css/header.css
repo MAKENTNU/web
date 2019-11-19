@@ -67,7 +67,7 @@
 #nav > .item:hover,
 #side-nav > .item:hover,
 #nav-user-dropdown.active {
-    /* Disables property from Semantic UI */
+    /* Disables property from Fomantic UI */
     background-color: transparent;
 }
 
@@ -135,13 +135,13 @@
 }
 
 #nav-user-dropdown .menu > .item {
-    /* Fixes weird centering of dropdown items, caused by Semantic UI setting dropdown menu to `display: flex !important`
+    /* Fixes weird centering of dropdown items, caused by Fomantic UI setting dropdown menu to `display: flex !important`
        when it's too close to the right window edge */
     align-self: auto;
 }
 
 #nav-user-dropdown .menu > .item:hover {
-    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Semantic UI */
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic UI */
 }
 
 #side-nav .lang-link {
@@ -230,7 +230,7 @@
     }
 
     #header.active #nav-user-dropdown .menu {
-        /* Fixes Semantic UI de-centering the dropdown menu */
+        /* Fixes Fomantic UI de-centering the dropdown menu */
         left: initial;
     }
 
