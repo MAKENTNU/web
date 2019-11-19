@@ -172,6 +172,9 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_event',
     )
+    extra_context = {
+        'Event': Event,  # for referencing event_type's choice values
+    }
 
     def get_success_url(self):
         return reverse_lazy("admin-event", args=(self.object.id,))
@@ -184,6 +187,9 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
     permission_required = (
         'news.add_event',
     )
+    extra_context = {
+        'Event': Event,  # for referencing event_type's choice values
+    }
 
     def get_success_url(self):
         return reverse_lazy("admin-event", args=(self.object.id,))
