@@ -9,7 +9,6 @@ from make_queue.models.models import Machine, Reservation, Quota
 
 
 class DeleteReservationViewTestCase(TestCase):
-
     def setUp(self):
         user1 = User.objects.create_user("user1", "user1@makentnu.no", "weak_pass")
         user1.save()

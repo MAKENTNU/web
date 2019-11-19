@@ -64,13 +64,15 @@ function showDetailedMemberInformation(member) {
 
     let memberSystemAccessesElement = memberInfoModal.find("#member-system-accesses");
     memberSystemAccessesElement.empty();
-    memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`<tr>
-        <td class="six wide column"><b>${access.name}</b></td>
-        <td>
-            <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
-            <a href="${access.changeUrl}" class="right floated orange link">${access.changeUrl.isEmpty() ? "" : gettext("Change")}</a>
-        </td>
-    </tr>`)));
+    memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`
+        <tr>
+            <td class="six wide column"><b>${access.name}</b></td>
+            <td>
+                <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
+                <a href="${access.changeUrl}" class="right floated orange link">${access.changeUrl.isEmpty() ? "" : gettext("Change")}</a>
+            </td>
+        </tr>
+    `)));
 
     let memberCommitteesElement = memberInfoModal.find("#member-committee");
     memberCommitteesElement.empty();

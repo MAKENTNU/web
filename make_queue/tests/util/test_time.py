@@ -8,7 +8,6 @@ from make_queue.util.time import year_and_week_to_monday, is_valid_week, get_nex
 
 
 class WeekUtilTest(TestCase):
-
     def test_year_and_week_to_monday(self):
         date = datetime(2017, 12, 18)
         self.assertEqual(date, year_and_week_to_monday(2017, 51))
@@ -39,7 +38,6 @@ class WeekUtilTest(TestCase):
 
 
 class TimedeltaTest(TestCase):
-
     def test_hour_conversion(self):
         self.assertEqual(1, timedelta_to_hours(timezone.timedelta(hours=1)))
         self.assertEqual(1.25, timedelta_to_hours(timezone.timedelta(minutes=75)))

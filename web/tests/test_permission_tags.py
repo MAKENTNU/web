@@ -5,7 +5,6 @@ from web.templatetags.permission_tags import has_any_permissions
 
 
 class HasAnyPermissionTest(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user(username="test")
 

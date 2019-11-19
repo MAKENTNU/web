@@ -14,7 +14,6 @@ from news.models import Event, TimePlace
 
 
 class GeneralReservationTestCase(TestCase):
-
     def check_reservation_invalid(self, reservation, error_message):
         self.assertFalse(reservation.validate(), error_message)
         try:

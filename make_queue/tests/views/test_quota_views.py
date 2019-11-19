@@ -9,7 +9,6 @@ from make_queue.views.quota.user import GetUserQuotaView
 
 
 class TestGetQuotaView(TestCase):
-
     def test_get_user_quota(self):
         user = User.objects.create_user("test")
         user2 = User.objects.create_user("test2")
@@ -25,7 +24,6 @@ class TestGetQuotaView(TestCase):
 
 
 class TestQuotaPanelView(TestCase):
-
     def setUp(self):
         self.machine_type_printer = MachineTypeField.get_machine_type(1)
         self.machine_type_sewing = MachineTypeField.get_machine_type(2)

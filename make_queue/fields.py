@@ -8,7 +8,6 @@ from web.widgets import SemanticSearchableChoiceInput
 
 
 class MachineType:
-
     def __init__(self, id, name, cannot_use_text, can_user_use, has_stream):
         self.id = id
         self.name = name

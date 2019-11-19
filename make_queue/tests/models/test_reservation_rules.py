@@ -8,7 +8,6 @@ from make_queue.models.models import ReservationRule
 
 
 class PeriodTests(TestCase):
-
     def setUp(self):
         self.period = ReservationRule.Period
         self.machine_type = MachineTypeField.get_machine_type(1)
@@ -61,7 +60,6 @@ class PeriodTests(TestCase):
 
 
 class ReservationRuleTests(TestCase):
-
     def setUp(self):
         self.machine_type = MachineTypeField.get_machine_type(1)
 

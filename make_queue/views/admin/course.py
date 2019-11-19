@@ -79,7 +79,6 @@ class BulkStatusUpdate(View):
 
 
 class CourseXLSXView(View):
-
     def post(self, request):
         search_string = request.POST.get("search_text")
         status_filter = request.POST.get("status_filter")

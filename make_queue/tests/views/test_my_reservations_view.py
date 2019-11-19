@@ -10,7 +10,6 @@ from make_queue.views.reservation.overview import MyReservationsView
 
 
 class MyReservationsViewTestCase(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user("user", "user@makentnu.no")
 

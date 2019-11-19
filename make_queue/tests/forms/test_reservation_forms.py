@@ -10,7 +10,6 @@ from news.models import Event, TimePlace
 
 
 class ReservationFormTest(TestCase):
-
     def setUp(self):
         machine_type_printer = MachineTypeField.get_machine_type(1)
         self.machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+",

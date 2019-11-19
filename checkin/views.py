@@ -138,7 +138,6 @@ class ProfilePageView(TemplateView):
         return HttpResponseRedirect(reverse('profile'))
 
     def get_context_data(self, **kwargs):
-
         if Profile.objects.filter(user=self.request.user).exists():
             profile = Profile.objects.get(user=self.request.user)
         else:
@@ -208,7 +207,6 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
         return HttpResponseRedirect(reverse('suggest'))
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
         context.update({
             'suggestions': SuggestSkill.objects.all(),
@@ -264,7 +262,6 @@ class RegisterCardView(RFIDView):
 
 
 class RegisterProfileView(TemplateView):
-
     def post(self, request):
         scan_exists = RegisterProfile.objects.exists()
         data = {
@@ -281,7 +278,6 @@ class RegisterProfileView(TemplateView):
 
 
 class EditProfilePictureView(View):
-
     def post(self, request):
         image = request.FILES.get('image')
         profile = request.user.profile

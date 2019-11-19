@@ -19,7 +19,6 @@ from news.models import Event, TimePlace
 
 
 class BaseReservationCreateOrChangeViewTest(TestCase):
-
     def setUp(self):
         Reservation.reservation_future_limit_days = 7
         self.machine_type_sewing = MachineTypeField.get_machine_type(2)
@@ -52,7 +51,6 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
 
 
 class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
-
     def test_get_error_message_non_event(self):
         view = self.get_view()
         form = self.create_form(1, 2)
@@ -170,7 +168,6 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
 
 
 class MakeReservationViewTest(BaseReservationCreateOrChangeViewTest):
-
     def get_view(self):
         view = MakeReservationView()
         view.request = request_with_user(self.user)
@@ -213,7 +210,6 @@ class MakeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
 
 class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
-
     def get_view(self):
         view = ChangeReservationView()
         view.request = request_with_user(self.user)
@@ -309,7 +305,6 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
 
 class ReservationAdminViewTest(TestCase):
-
     def test_get_admin_reservation(self):
         user = User.objects.create_user("test")
         machine_type = MachineTypeField.get_machine_type(1)
@@ -339,7 +334,6 @@ class ReservationAdminViewTest(TestCase):
 
 
 class MarkReservationAsDoneTest(TestCase):
-
     def setUp(self):
         self.user = User.objects.create_user("test")
         self.machine_type = MachineTypeField.get_machine_type(2)

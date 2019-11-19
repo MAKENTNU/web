@@ -38,10 +38,10 @@ def numeric_range(start, end, step=1):
 @register.simple_tag()
 def card_color_from_machine_status(machine):
     colors = {
-        Machine.AVAILABLE: "green",
-        Machine.OUT_OF_ORDER: "red",
         Machine.RESERVED: "blue",
+        Machine.AVAILABLE: "green",
         Machine.IN_USE: "orange",
+        Machine.OUT_OF_ORDER: "red",
         Machine.MAINTENANCE: "brown"
     }
     return colors[machine.get_status()]
