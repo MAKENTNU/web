@@ -217,7 +217,7 @@ class Reservation(models.Model):
     def check_start_time_after_end_time(self):
         return self.start_time >= self.end_time
 
-    # # Check if the user can make the given reservation/edit
+    # Check if the user can make the given reservation/edit
     def quota_can_make_reservation(self):
         return Quota.can_make_reservation(self)
 
