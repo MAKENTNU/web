@@ -3,7 +3,7 @@
 {% load staticfiles %}
 {% load inventory_tags %}
 
-{% block title %}{% trans "Members list" %}{% endblock %}
+{% block title %}{% trans "Inventory" %}{% endblock %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static "inventory/css/inventory.css" %}">
@@ -11,7 +11,6 @@
 
 {% block body %}
 
-    {# TODO: include search with standard input field and populating table with search results #}
     <div class="ui container">
         <h1>
             {% trans "Inventory" %}
@@ -38,56 +37,32 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui multiple blue labeled button icon dropdown">
-                    <input type="hidden" name="filter-committee">
-                    <i class="ui filter icon"></i>
-                    <span class="ui text">{% trans "Filter committees" %}</span>
-                    <div class="menu">
-                        <div class="scrolling menu">
-                            <div class="item" data-value="Dev">
-                                <i class="ui green circle icon"></i>Dev
-                            </div>
-                            <div class="item" data-value="Mentor">
-                                <i class="ui red circle icon"></i>Mentor
-                            </div>
-                            <div class="item" data-value="Event">
-                                <i class="ui blue circle icon"></i>Event
-                            </div>
-                            <div class="item" data-value="PR">
-                                <i class="ui yellow circle icon"></i>PR
-                            </div>
-                            <div class="item" data-value="Styret">
-                                <i class="ui purple circle icon"></i>Styret
-                            </div>
-                        </div>
-                    </div>
+                <div class="ui four wide field">
+                    <input type="text" placeholder="{% trans "Search name and description of item" %}" id="search"
+                           name="search_text">
                 </div>
             </div>
         </form>
-        <table class="ui celled unstackable selectable striped table" id="member-table">
+        <table class="ui celled unstackable selectable striped table" id="item-table">
             <thead>
             <tr>
-                <th>{% trans "Name" %}<i class="ui sort icon" id="member-sort-name"></i></th>
-                <th>{% trans "Category" %}<i class="ui up sort icon" id="member-sort-committees"></i></th>
-                <th>{% trans "Total amount" %}<i class="ui sort icon" id="member-sort-role"></i></th>
-                <th class="mobile hidden">{% trans "Container" %}<i class="ui sort icon" id="member-sort-status"></i>
+                <th>{% trans "Name" %}<i class="ui sort icon" id="item-sort-name"></i></th>
+                <th>{% trans "Category" %}<i class="ui up sort icon" id="item-sort-categories"></i></th>
+                <th>{% trans "Total amount" %}<i class="ui sort icon" id="item-sort-amount"></i></th>
+                <th class="mobile hidden">{% trans "Container" %}<i class="ui sort icon" id="item-sort-container"></i>
                 </th>
-                <th class="mobile hidden">{% trans "Comment" %}<i class="ui sort icon" id="member-sort-email"></i></th>
+                <th class="mobile hidden">{% trans "Comment" %}<i class="ui sort icon" id="item-sort-comment"></i></th>
             </tr>
             </thead>
             <tbody>
             {% for item in all_items %}
                 {#{% get_committees member as committees %}#}
-                <tr data-pk="">
+                <tr data-pk="{{ item.pk }}">
                     <td>{{ item.name }}</td>
-                    <td>
-                        {{ item.category_html_list }}
-                    </td>
+                    <td>{{ item.category_html_list }}</td>
                     <td> {{ item.total_amount }} {% if item.unit %}{{ item.unit }}{% endif %}</td>
-                    <td class="mobile hidden">
-                        {{ item.container_html_list }}
-                    </td>
-                    <td class="mobile hidden"></td>
+                    <td class="mobile hidden">{{ item.container_html_list }}</td>
+                    <td class="mobile hidden">{{ item.comment }}</td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -100,5 +75,49 @@
 {% block scripts %}
     <script>
         $('.dropdown').dropdown();
+
+        let last_entry = "";
+        $('#search').keyup(function (event) {
+            let current_entry = $(this).val();
+            let key_code = event.keyCode;
+            if (current_entry !== last_entry || key_code === '13') {
+                get_search_query($(this), current_entry);
+            }
+            last_entry = current_entry;
+        });
+
+
+        function get_search_query(element, search) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                },
+            });
+            $.ajax({
+                type: "POST",
+                url: 'search',
+                data: {
+                    'search': search,
+                },
+                success: function (data) {
+                    if (data['matched_items']) {
+                        let items = data['matched_items'];
+                        let item_table_body = $('#item-table').find('tbody');
+                        item_table_body.children('tr').remove();
+                        for (let i = 0; i < items.length; i++) {
+                            let item = items[i];
+                            let html = `<tr data-pk=\"${item['pk']}\">
+                                            <td>${item['name']}</td>
+                                            <td>${item['categories']}</td>
+                                            <td> ${item['amount']} ${item['unit']}</td>
+                                            <td class=\"mobile hidden\">${item['container']}</td>
+                                            <td class=\"mobile hidden\">${item['comment']}</td>
+                                        </tr>`;
+                            item_table_body.append(html);
+                        }
+                    }
+                },
+            });
+        }
     </script>
 {% endblock scripts %}
