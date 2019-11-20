@@ -14,15 +14,22 @@ from web.multilingual.database import MultiLingualRichTextUploadingField
 
 
 class Machine(models.Model):
-    status_choices = (
-        ("R", _("Reserved")),
-        ("F", _("Available")),
-        ("I", _("In use")),
-        ("O", _("Out of order")),
-        ("M", _("Maintenance")),
-    )
+    RESERVED = "R"
+    AVAILABLE = "F"
+    IN_USE = "I"
+    OUT_OF_ORDER = "O"
+    MAINTENANCE = "M"
 
-    status = models.CharField(max_length=2, choices=status_choices, verbose_name=_("Status"), default="F")
+    STATUS_CHOICES = (
+        (RESERVED, _("Reserved")),
+        (AVAILABLE, _("Available")),
+        (IN_USE, _("In use")),
+        (OUT_OF_ORDER, _("Out of order")),
+        (MAINTENANCE, _("Maintenance")),
+    )
+    STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
+
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
@@ -50,9 +57,13 @@ class Machine(models.Model):
         return self.name + " - " + self.machine_model
 
     def get_status(self):
-        if self.status in "OM":
+        if self.status in (self.OUT_OF_ORDER, self.MAINTENANCE):
             return self.status
-        return self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)) and "R" or "F"
+
+        if self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)):
+            return self.RESERVED
+        else:
+            return self.AVAILABLE
 
     def _get_FIELD_display(self, field):
         if field.attname == "status":
@@ -60,8 +71,7 @@ class Machine(models.Model):
         return super()._get_FIELD_display(field)
 
     def _get_status_display(self):
-        current_status = self.get_status()
-        return [full_name for short_hand, full_name in self.status_choices if short_hand == current_status][0]
+        return self.STATUS_CHOICES_DICT[self.get_status()]
 
 
 class MachineUsageRule(models.Model):

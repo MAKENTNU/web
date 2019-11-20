@@ -95,10 +95,18 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
+    REPEATING = "R"
+    STANDALONE = "S"
+
+    EVENT_TYPE_CHOICES = (
+        (REPEATING, _("Repeating")),
+        (STANDALONE, _("Standalone")),
+    )
+
     event_type = models.CharField(
-        choices=(("R", _("Repeating")), ("S", _("Standalone"))),
+        choices=EVENT_TYPE_CHOICES,
         max_length=1,
-        default="R",
+        default=REPEATING,
         verbose_name=_("Type of event")
     )
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
@@ -114,11 +122,11 @@ class Event(NewsBase):
 
     @property
     def repeating(self):
-        return self.event_type == "R"
+        return self.event_type == self.REPEATING
 
     @property
     def standalone(self):
-        return self.event_type == "S"
+        return self.event_type == self.STANDALONE
 
     def can_register(self, user):
         if self.hidden:
