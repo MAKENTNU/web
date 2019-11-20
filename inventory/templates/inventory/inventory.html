@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load i18n %}
 {% load staticfiles %}
+{% load inventory_tags %}
 
 {% block title %}{% trans "Members list" %}{% endblock %}
 
@@ -10,6 +11,7 @@
 
 {% block body %}
 
+    {# TODO: include search with standard input field and populating table with search results #}
     <div class="ui container">
         <h1>
             {% trans "Inventory" %}
@@ -28,27 +30,11 @@
                     <span class="ui text">{% trans "Filter category" %}</span>
                     <div class="menu">
                         <div class="scrolling menu">
-                            <div class="item" data-value="{% trans "Tools" %}">
-                                <i class="ui green circle icon"></i>{% trans "Tools" %}
-                            </div>
-                            <div class="item" data-value="{% trans "3D-printing" %}">
-                                <i class="ui grey circle icon"></i>{% trans "3D-printing" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Sewing/fabric" %}">
-                                <i class="ui blue circle icon"></i>{% trans "Sewing/fabric" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Electric" %}">
-                                <i class="ui yellow circle icon"></i>{% trans "Electric" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Consumables" %}">
-                                <i class="ui red circle icon"></i>{% trans "Consumables" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Misc" %}">
-                                <i class="ui make_col_turquoise circle icon"></i>{% trans "Misc" %}
-                            </div>
-                            <div class="item" data-value="{% trans "HSE" %}">
-                                <i class="ui purple circle icon"></i>{% trans "HSE" %}
-                            </div>
+                            {% for category in all_categories %}
+                                <div class="item" data-value="{{ category.name }}">
+                                    <i class="ui circle icon {{ forloop.counter0|color }}"></i>{{ category.name }}
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
@@ -83,12 +69,10 @@
             <tr>
                 <th>{% trans "Name" %}<i class="ui sort icon" id="member-sort-name"></i></th>
                 <th>{% trans "Category" %}<i class="ui up sort icon" id="member-sort-committees"></i></th>
-                <th>{% trans "Amount" %}<i class="ui sort icon" id="member-sort-role"></i></th>
-                <th class="mobile hidden">{% trans "Container" %}<i class="ui sort icon" id="member-sort-status"></i></th>
-                <th class="computer only">{% trans "Subcontainer" %}<i class="ui sort icon" id="member-sort-joined"></i></th>
-                <th class="mobile hidden">{% trans "Comment" %}<i class="ui sort icon" id="member-sort-email"></i></th>
-                <th class="computer only">{% trans "" %}<i class="ui sort icon" id="member-sort-phone"></i>
+                <th>{% trans "Total amount" %}<i class="ui sort icon" id="member-sort-role"></i></th>
+                <th class="mobile hidden">{% trans "Container" %}<i class="ui sort icon" id="member-sort-status"></i>
                 </th>
+                <th class="mobile hidden">{% trans "Comment" %}<i class="ui sort icon" id="member-sort-email"></i></th>
             </tr>
             </thead>
             <tbody>
@@ -96,12 +80,14 @@
                 {#{% get_committees member as committees %}#}
                 <tr data-pk="">
                     <td>{{ item.name }}</td>
-                    <td>{{ item.category }}</td>
-                    <td></td>
+                    <td>
+                        {{ item.category_html_list }}
+                    </td>
+                    <td> {{ item.total_amount }} {% if item.unit %}{{ item.unit }}{% endif %}</td>
+                    <td class="mobile hidden">
+                        {{ item.container_html_list }}
+                    </td>
                     <td class="mobile hidden"></td>
-                    <td class="computer only"></td>
-                    <td class="mobile hidden"></td>
-                    <td class="computer only"></td>
                 </tr>
             {% endfor %}
             </tbody>
