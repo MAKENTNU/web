@@ -1,7 +1,6 @@
 from datetime import timedelta
 from unittest import mock
 
-import pytz
 from django.contrib.auth.models import User
 from django.test import TestCase
 
@@ -36,7 +35,7 @@ class ReservationExtraTestCases(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_current_calendar_url(self, now_mock):
         date = timezone.datetime(2017, 12, 26, 12, 34, 0)
-        now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+        now_mock.return_value = timezone.get_default_timezone().localize(date)
         printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status=Machine.AVAILABLE)
 
         self.assertEqual(reverse('reservation_calendar',
@@ -46,7 +45,7 @@ class ReservationExtraTestCases(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_is_current_data(self, now_mock):
         date = timezone.datetime(2017, 3, 5, 11, 18, 0)
-        now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+        now_mock.return_value = timezone.get_default_timezone().localize(date)
 
         self.assertTrue(is_current_date(timezone.now().date()))
         self.assertTrue(is_current_date((timezone.now() + timedelta(hours=1)).date()))
@@ -57,7 +56,7 @@ class ReservationExtraTestCases(TestCase):
     def test_get_current_time_of_day(self, now_mock):
         def set_mock_value(hours, minutes):
             date = timezone.datetime(2017, 3, 5, hours, minutes, 0)
-            now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+            now_mock.return_value = timezone.get_default_timezone().localize(date)
 
         set_mock_value(12, 0)
         self.assertEqual(50, get_current_time_of_day())

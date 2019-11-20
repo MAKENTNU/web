@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from unittest import mock
 
-import pytz
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
@@ -33,7 +32,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
     def test_format_reservation_start_end_same_day(self, get_default_timezone_mock):
         # Set default timezone to UTC
         get_default_timezone_mock.return_value = timezone.get_fixed_timezone(0)
-        date = pytz.timezone("UTC").localize(
+        date = timezone.utc.localize(
             datetime.combine(timezone.now().date() + timedelta(days=1), datetime.min.time()))
         reservation = self.create_reservation(date + timedelta(hours=12), date + timedelta(hours=18))
         self.assertEqual(ReservationCalendarComponentView.format_reservation(reservation, date), {
@@ -48,7 +47,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
     def test_format_reservation_start_day_before(self, get_default_timezone_mock):
         # Set default timezone to UTC
         get_default_timezone_mock.return_value = timezone.get_fixed_timezone(0)
-        date = pytz.timezone("UTC").localize(
+        date = timezone.utc.localize(
             datetime.combine(timezone.now().date() + timedelta(days=1), datetime.min.time()))
         reservation = self.create_reservation(date + timedelta(hours=12), date + timedelta(days=1, hours=6))
         self.assertEqual(ReservationCalendarComponentView.format_reservation(reservation, date + timedelta(days=1)), {
@@ -63,7 +62,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
     def test_format_reservation_end_day_after(self, get_default_timezone_mock):
         # Set default timezone to UTC
         get_default_timezone_mock.return_value = timezone.get_fixed_timezone(0)
-        date = pytz.timezone("UTC").localize(
+        date = timezone.utc.localize(
             datetime.combine(timezone.now().date() + timedelta(days=1), datetime.min.time()))
         reservation = self.create_reservation(date + timedelta(hours=12), date + timedelta(days=1, hours=4))
         self.assertEqual(ReservationCalendarComponentView.format_reservation(reservation, date), {

@@ -1,4 +1,3 @@
-import pytz
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
@@ -51,14 +50,14 @@ class LocalizationTest(TestCase):
 
     def test_local_to_date(self):
         local_date = datetime(2018, 3, 12, 11, 20, 20)
-        self.assertEqual(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC")),
+        self.assertEqual(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=timezone.utc),
                          local_to_date(local_date))
 
     def test_date_to_local(self):
         self.assertEqual(datetime(2018, 3, 12, 11, 20, 20).date(),
-                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))).date())
+                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=timezone.utc)).date())
         self.assertEqual(datetime(2018, 3, 12, 11, 20, 20).time(),
-                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=pytz.timezone("UTC"))).time())
+                         date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=timezone.utc)).time())
 
     def test_get_day_name(self):
         english_day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
