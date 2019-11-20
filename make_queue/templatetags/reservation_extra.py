@@ -76,7 +76,7 @@ def date_to_percentage(date):
         date = date_to_local(date)
     except ValueError:
         pass
-    return (date.hour / 24 + date.minute / 1440) * 100
+    return (date.hour / 24 + date.minute / (24 * 60)) * 100
 
 
 @register.simple_tag()

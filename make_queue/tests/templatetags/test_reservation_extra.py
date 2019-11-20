@@ -78,7 +78,7 @@ class ReservationExtraTestCases(TestCase):
         self.assertEqual((17 / 24) * 100, date_to_percentage(date))
 
         date = timezone.datetime(2017, 3, 5, 17, 25, 0)
-        self.assertEqual((17 / 24 + 25 / 1440) * 100, date_to_percentage(date))
+        self.assertEqual((17 / 24 + 25 / (24 * 60)) * 100, date_to_percentage(date))
 
     def test_invert(self):
         self.assertEqual("true", invert(0))

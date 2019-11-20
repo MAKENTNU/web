@@ -70,5 +70,5 @@ class ReservationCalendarComponentViewTestCase(TestCase):
             'start_percentage': 50,
             'start_time': '12:00',
             'end_time': "23:59",
-            'length': 50 - 100 / 1440,
+            'length': 50 - 100 / (24 * 60),
         })

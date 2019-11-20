@@ -258,7 +258,7 @@ class ReservationRule(models.Model):
     @staticmethod
     def valid_time(start_time, end_time, machine_type):
         # Normal non rule ignoring reservations will not be longer than 1 week
-        if timedelta_to_hours(end_time - start_time) > 168:
+        if timedelta_to_hours(end_time - start_time) > (7 * 24):
             return False
         rules = [rule for rule in ReservationRule.objects.filter(machine_type=machine_type) if
                  rule.hours_inside(start_time, end_time)]
@@ -291,7 +291,7 @@ class ReservationRule(models.Model):
 
         @staticmethod
         def __to_inner_rep(day, time):
-            return day + time.hour / 24 + time.minute / 1440 + time.second / 86400
+            return day + time.hour / 24 + time.minute / (24 * 60) + time.second / (24 * 60 * 60)
 
         def overlap(self, other):
             return self.hours_overlap(self.start_time, self.end_time, other.start_time, other.end_time) > 0

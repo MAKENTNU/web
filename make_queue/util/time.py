@@ -70,7 +70,7 @@ def timedelta_to_hours(timedelta_obj):
     :param timedelta_obj: The timedelta object
     :return: The number of hours it covers
     """
-    return timedelta_obj.days * 24 + timedelta_obj.seconds / 3600
+    return timedelta_obj.days * 24 + timedelta_obj.seconds / (60 * 60)
 
 
 def get_day_name(day_no, locale):

@@ -80,7 +80,7 @@ class CheckInView(RFIDView):
 
 class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
-    expiry_time = 3600 * 3
+    expiry_time = (60 * 60) * 3
 
     def is_checkin_expired(self, profile):
         return (timezone.now() - profile.last_checkin).seconds >= self.expiry_time

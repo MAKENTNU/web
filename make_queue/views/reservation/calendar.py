@@ -70,8 +70,8 @@ class ReservationCalendarComponentView(TemplateView):
                        {
                            "periods": [
                                [
-                                   day + rule.start_time.hour / 24 + rule.start_time.minute / 1440,
-                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / 1440) % 7
+                                   day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
+                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
                                ]
                                for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
                            ],
