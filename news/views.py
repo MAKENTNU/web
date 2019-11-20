@@ -262,10 +262,10 @@ class AdminArticleToggleView(PermissionRequiredMixin, View):
     def post(self, request):
         pk, toggle = request.POST.get('pk'), request.POST.get('toggle')
         try:
-            object = self.model.objects.get(pk=pk)
-            val = not getattr(object, toggle)
-            setattr(object, toggle, val)
-            object.save()
+            obj = self.model.objects.get(pk=pk)
+            val = not getattr(obj, toggle)
+            setattr(obj, toggle, val)
+            obj.save()
             color = 'yellow' if val else 'grey'
         except (self.model.DoesNotExist, AttributeError):
             return JsonResponse({})

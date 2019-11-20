@@ -8,8 +8,8 @@ from web.widgets import SemanticSearchableChoiceInput
 
 
 class MachineType:
-    def __init__(self, id, name, cannot_use_text, can_user_use, has_stream):
-        self.id = id
+    def __init__(self, id_, name, cannot_use_text, can_user_use, has_stream):
+        self.id = id_
         self.name = name
         self.cannot_use_text = cannot_use_text
         self.can_user_use_func = can_user_use
@@ -56,8 +56,8 @@ class MachineTypeField(models.IntegerField):
     )
 
     @staticmethod
-    def get_machine_type(id):
-        types = list(filter(lambda machine_type: machine_type.id == id, MachineTypeField.possible_machine_types))
+    def get_machine_type(id_):
+        types = list(filter(lambda machine_type: machine_type.id == id_, MachineTypeField.possible_machine_types))
         if types:
             return types[0]
         return None
