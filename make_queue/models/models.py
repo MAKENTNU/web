@@ -197,7 +197,7 @@ class Reservation(models.Model):
             return False
 
         # Check if the user can make the given reservation/edit
-        return self.quota_can_make_reservation(self)
+        return self.quota_can_make_reservation()
 
     # Check if the start time is before current time
     def reservation_starts_before_now(self):
@@ -207,7 +207,7 @@ class Reservation(models.Model):
     def check_start_time_after_end_time(self):
         return self.start_time >= self.end_time
 
-    # Check if reservation is within the quota
+    # # Check if the user can make the given reservation/edit
     def quota_can_make_reservation(self):
         return Quota.can_make_reservation(self)
 

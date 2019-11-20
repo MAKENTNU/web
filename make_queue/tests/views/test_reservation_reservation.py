@@ -59,7 +59,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
-        self.assertEqual(view.get_error_message(form, reservation), "Tidspunktet er ikke lengre tilgjengelig")
+        self.assertEqual(view.get_error_message(form, reservation), "The time slot is not available")
 
     def test_get_error_message_event(self):
         view = self.get_view()
@@ -69,7 +69,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         self.assertEqual(view.get_error_message(form, reservation),
-                         "Tidspunktet eller eventen, er ikke lengre tilgjengelig")
+                         "The time slot or event, it no longer available")
 
     def test_get_error_message_too_far_in_the_future(self):
         view = self.get_view()
@@ -78,7 +78,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.assertEqual(view.get_error_message(form, reservation),
-                         "Reservasjoner kan bare lages 7 dager frem i tid")
+                         "Reservations can only be made 7 days ahead of time")
 
     def test_validate_and_save_valid_reservation(self):
         view = self.get_view()
