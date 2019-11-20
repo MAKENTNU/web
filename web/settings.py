@@ -190,7 +190,7 @@ LOCALE_PATHS = (
     BASE_DIR / 'locale',
 )
 
-TIME_ZONE = 'CET'
+TIME_ZONE = 'Europe/Oslo'
 
 USE_I18N = True
 
