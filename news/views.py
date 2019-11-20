@@ -320,6 +320,10 @@ class EventRegistrationView(LoginRequiredMixin, CreateView):
     template_name = "news/event_registration.html"
     form_class = EventRegistrationForm
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.object = None
+
     @property
     def timeplace(self):
         if "timeplace_pk" in self.kwargs:
