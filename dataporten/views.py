@@ -28,7 +28,7 @@ def login_wrapper(request, backend, *args, **kwargs):
     try:
         response = complete(request, backend, *args, **kwargs)
     except Exception as e:
-        logging.exception("Authentication through Dataporten failed.", exc_info=e)
+        logging.getLogger('django.request').exception("Authentication through Dataporten failed.", exc_info=e)
         return HttpResponseForbidden()
 
     user = request.user
