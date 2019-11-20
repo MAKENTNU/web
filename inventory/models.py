@@ -38,6 +38,18 @@ class Item(models.Model):
             amount += obj.amount
         return amount
 
+    @property
+    def containers(self):
+        return {sc.container for sc in self.subcontainers.all()}
+
+    @property
+    def container_html_list(self):
+        return ", ".join(str(c) for c in self.containers)
+
+    @property
+    def category_html_list(self):
+        return ", ".join(str(c) for c in self.categories.all())
+
     def __str__(self):
         return self.name
 
@@ -46,7 +58,7 @@ class Container(models.Model):
     class Meta:
         ordering = ["name"]
 
-    name = models.CharField(max_length=128)
+    name = models.CharField(max_length=128, unique=True)
 
     def __str__(self):
         return self.name
@@ -91,7 +103,7 @@ class ItemInSubContainer(models.Model):
         on_delete=models.CASCADE,
         related_name="items_in_subcontainer",
     )
-    amount = models.DecimalField(decimal_places=2, max_digits=6)
+    amount = models.DecimalField(decimal_places=1, max_digits=6)
 
     def __str__(self):
         return f"{self.subcontainer.name} contains {str(self.amount)} of item {self.item.name}"
