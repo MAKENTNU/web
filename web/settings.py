@@ -126,14 +126,14 @@ if DATABASE == 'postgres':
             'PASSWORD': DATABASE_PASSWORD,
             'HOST': 'localhost',
             'PORT': '',
-        }
+        },
     }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': str(BASE_DIR / 'db.sqlite3'),
-        }
+        },
     }
 
 # Password validation
@@ -227,7 +227,7 @@ CKEDITOR_CONFIGS = {
         'extraPlugins': ','.join([
             'uploadimage',
             'image2',
-        ])
+        ]),
     }
 }
 

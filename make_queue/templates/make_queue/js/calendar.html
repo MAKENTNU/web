@@ -16,7 +16,7 @@
         let time_selection_element = $(".time_selection");
 
         let zeroPadClock = (number) => (`00${number}`).substr(-2, 2);
-        let timeToClock = (time) => time <= 0 ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
+        let timeToClock = (time) => (time <= 0) ? "00:00" : zeroPadClock(Math.floor(time)) + ":" + zeroPadClock(Math.floor(time % 1 * 60));
 
         let getStartTime = () => parseFloat(time_selection_element.css("top")) / time_selection_element.closest(".day").height() * 24;
         let getEndTime = () => (parseFloat(time_selection_element.css("top")) + time_selection_element.height()) / time_selection_element.closest(".day").height() * 24;

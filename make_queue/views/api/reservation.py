@@ -22,5 +22,5 @@ def get_machine_data(request, machine, reservation=None):
                 ],
                 "max_hours": rule.max_hours,
                 "max_hours_crossed": rule.max_inside_border_crossed,
-            } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)]
+            } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)],
     })

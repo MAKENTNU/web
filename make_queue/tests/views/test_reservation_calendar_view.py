@@ -40,7 +40,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
             'start_percentage': 50,
             'start_time': "12:00",
             'end_time': "18:00",
-            'length': 25
+            'length': 25,
         })
 
     @mock.patch("make_queue.util.time.timezone.get_default_timezone")
@@ -55,7 +55,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
             'start_percentage': 0,
             'start_time': "00:00",
             'end_time': "06:00",
-            "length": 25
+            "length": 25,
         })
 
     @mock.patch("make_queue.util.time.timezone.get_default_timezone")
@@ -70,5 +70,5 @@ class ReservationCalendarComponentViewTestCase(TestCase):
             'start_percentage': 50,
             'start_time': '12:00',
             'end_time': "23:59",
-            'length': 50 - 100 / 1440
+            'length': 50 - 100 / 1440,
         })

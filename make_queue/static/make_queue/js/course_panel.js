@@ -271,7 +271,7 @@ function setupState() {
         if (state.onlyShowSelectedUsers) {
             selected = state.elements.filter((e) => e.display).map(e => e.pk);
         }
-        downloadUsersForm.find("#selected").val(selected)
+        downloadUsersForm.find("#selected").val(selected);
     });
 
     updateDisplay();

@@ -88,8 +88,8 @@ class ViewEventView(TemplateView):
             'article': event,
             'timeplaces': event.timeplace_set.all() if event.standalone else event.timeplace_set.future(),
         })
-        if (event.hidden and not self.request.user.has_perm('news.change_event')) \
-                or (event.private and not self.request.user.has_perm('news.can_view_private')):
+        if (event.hidden and not self.request.user.has_perm('news.change_event')
+                or event.private and not self.request.user.has_perm('news.can_view_private')):
             raise Http404()
         return context
 
@@ -103,8 +103,8 @@ class ViewArticleView(TemplateView):
         context.update({
             'article': article,
         })
-        if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')) \
-                or (article.private and not self.request.user.has_perm('news.can_view_private')):
+        if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')
+                or article.private and not self.request.user.has_perm('news.can_view_private')):
             raise Http404()
         return context
 
@@ -337,8 +337,8 @@ class EventRegistrationView(LoginRequiredMixin, CreateView):
         return None
 
     def is_registration_allowed(self):
-        return self.timeplace and self.timeplace.can_register(self.request.user) \
-               or self.event and self.event.can_register(self.request.user)
+        return (self.timeplace and self.timeplace.can_register(self.request.user)
+                or self.event and self.event.can_register(self.request.user))
 
     def dispatch(self, request, *args, **kwargs):
         ticket = EventTicket.objects.filter(user=self.request.user, active=True,
@@ -385,7 +385,7 @@ class EventRegistrationView(LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs["initial"].update({
-            "language": get_language()
+            "language": get_language(),
         })
         return kwargs
 
@@ -448,7 +448,7 @@ class AdminTimeplaceTicketView(TemplateView):
         context_data.update({
             "tickets": timeplace.eventticket_set.order_by("-active").all(),
             "event": timeplace.event,
-            "object": timeplace
+            "object": timeplace,
         })
         return context_data
 

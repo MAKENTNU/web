@@ -42,7 +42,7 @@ def card_color_from_machine_status(machine):
         Machine.AVAILABLE: "green",
         Machine.IN_USE: "orange",
         Machine.OUT_OF_ORDER: "red",
-        Machine.MAINTENANCE: "brown"
+        Machine.MAINTENANCE: "brown",
     }
     return colors[machine.get_status()]
 
@@ -58,8 +58,9 @@ def card_text_from_machine_status(machine):
     next_reservation = machine.get_next_reservation()
 
     # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.
-    if machine.get_status() == Machine.AVAILABLE and next_reservation is not None and (
-            next_reservation.start_time - timezone.now()).days < 1:
+    if (machine.get_status() == Machine.AVAILABLE
+            and next_reservation is not None
+            and (next_reservation.start_time - timezone.now()).days < 1):
         status = f"{status:} {_('for'):} {timeuntil(next_reservation.start_time):}"
     return status
 

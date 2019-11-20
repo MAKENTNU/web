@@ -75,7 +75,7 @@
                         return;
                     }
                     if (toggle === 'private') {
-                        if (data['color'] == 'yellow') {
+                        if (data['color'] === 'yellow') {
                             element.attr('src', '{% static "web/img/m_yellow.svg" %}');
                         } else {
                             element.attr('src', '{% static "web/img/m_grey.svg" %}');

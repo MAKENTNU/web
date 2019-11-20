@@ -68,7 +68,7 @@ class ReservationCreateOrChangeView(TemplateView):
                 for machine_type in MachineTypeField.possible_machine_types if
                 machine_type.can_user_use(self.request.user)
             ],
-            "maximum_days_in_advance": Reservation.reservation_future_limit_days
+            "maximum_days_in_advance": Reservation.reservation_future_limit_days,
         }
 
         # If we are given a reservation, populate the information relevant to that reservation
@@ -251,7 +251,7 @@ class FindFreeSlot(FormView):
             "machine": machine,
             "start_time": start_time,
             "end_time": end_time,
-            "duration": ceil(timedelta_to_hours(end_time - start_time))
+            "duration": ceil(timedelta_to_hours(end_time - start_time)),
         }
 
     def get_periods(self, machine, required_time):

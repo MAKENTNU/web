@@ -57,7 +57,7 @@ class MachineTypeField(models.IntegerField):
 
     @staticmethod
     def get_machine_type(id):
-        types = list(filter(lambda y: y.id == id, MachineTypeField.possible_machine_types))
+        types = list(filter(lambda machine_type: machine_type.id == id, MachineTypeField.possible_machine_types))
         if types:
             return types[0]
         return None
@@ -73,7 +73,7 @@ class MachineTypeField(models.IntegerField):
     def to_python(self, value):
         if value is None:
             return value
-        if type(value) == MachineType:
+        if type(value) is MachineType:
             return value
         try:
             value = int(value)
@@ -105,7 +105,7 @@ class MachineTypeField(models.IntegerField):
         return obj.name
 
     def validate(self, value, model_instance):
-        if type(value) != int:
+        if type(value) is not int:
             super(MachineTypeField, self).validate(self.get_prep_value(value), model_instance)
         else:
             super(MachineTypeField, self).validate(value, model_instance)

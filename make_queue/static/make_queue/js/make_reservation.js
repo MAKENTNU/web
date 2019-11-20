@@ -244,7 +244,7 @@ $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name')
     $("#start_time, #end_time").calendar('clear');
 });
 
-zeroPadDateElement = (val) => val < 10 ? `0${val}` : val;
+zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
 
 function formatDate(date) {
     /**

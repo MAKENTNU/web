@@ -49,10 +49,9 @@ class Machine(models.Model):
         return self.machine_type.can_user_use(user)
 
     def reservations_in_period(self, start_time, end_time):
-        return self.get_reservation_set().filter(start_time__lte=start_time, end_time__gt=start_time) | \
-               self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time) | \
-               self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
-                                                 end_time__gte=end_time)
+        return (self.get_reservation_set().filter(start_time__lte=start_time, end_time__gt=start_time)
+                | self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time)
+                | self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time, end_time__gte=end_time))
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
@@ -107,10 +106,11 @@ class Quota(models.Model):
         return self.number_of_reservations != self.get_active_reservations(user).count()
 
     def is_valid_in(self, reservation):
-        return (self.reservation_set.filter(pk=reservation.pk).exists() or
-                self.can_make_more_reservations(reservation.user)) and \
-               (self.ignore_rules or ReservationRule.valid_time(reservation.start_time, reservation.end_time,
-                                                                reservation.machine.machine_type))
+        reservation_exists_or_can_make_more = (self.reservation_set.filter(pk=reservation.pk).exists()
+                                               or self.can_make_more_reservations(reservation.user))
+        ignore_rules_or_valid_time = (self.ignore_rules
+                                      or ReservationRule.valid_time(reservation.start_time, reservation.end_time, reservation.machine.machine_type))
+        return reservation_exists_or_can_make_more and ignore_rules_or_valid_time
 
     @staticmethod
     def can_make_new_reservation(user, machine_type):
@@ -199,8 +199,8 @@ class Reservation(models.Model):
             old_reservation = Reservation.objects.get(pk=self.pk)
             can_change = self.can_change(self.user)
             can_change_end_time = old_reservation.can_change_end_time(self.user)
-            valid_end_time_change = old_reservation.start_time == self.start_time and \
-                                    self.end_time >= timezone.now() - timedelta(minutes=5)
+            valid_end_time_change = (old_reservation.start_time == self.start_time
+                                     and self.end_time >= timezone.now() - timedelta(minutes=5))
             if not can_change and not (can_change_end_time and valid_end_time_change):
                 return False
 
@@ -219,7 +219,8 @@ class Reservation(models.Model):
         return self.user == user and self.start_time > timezone.now()
 
     def can_change(self, user):
-        if user.has_perm("make_queue.can_create_event_reservation") and (self.special or (self.event is not None)):
+        if (user.has_perm("make_queue.can_create_event_reservation")
+                and (self.special or (self.event is not None))):
             return True
         if self.start_time < timezone.now():
             return False
@@ -297,8 +298,9 @@ class ReservationRule(models.Model):
 
     def is_valid_rule(self, raise_error=False):
         # Check if the time period is a valid time period (within a week)
-        if self.start_time > self.end_time and not self.days_changed or self.days_changed > 7 or \
-                self.days_changed == 7 and self.start_time < self.end_time:
+        if (self.start_time > self.end_time and not self.days_changed
+                or self.days_changed > 7
+                or self.days_changed == 7 and self.start_time < self.end_time):
             if raise_error:
                 raise ValidationError("Period is either too long (7+ days) or start time is earlier than end time.")
             return False

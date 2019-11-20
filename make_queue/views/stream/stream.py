@@ -41,7 +41,7 @@ class StreamConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'image',
-                    'image': image
+                    'image': image,
                 }
             )
 
@@ -51,5 +51,5 @@ class StreamConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'image': image
+            'image': image,
         }))

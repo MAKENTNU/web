@@ -46,8 +46,8 @@ class ReservationCalendarComponentView(TemplateView):
 
         return [{
             "date": date,
-            "reservations": list(map(lambda x: ReservationCalendarComponentView.format_reservation(x, date),
-                                     machine.reservations_in_period(date, date + timedelta(days=1))))
+            "reservations": list(map(lambda reservation: ReservationCalendarComponentView.format_reservation(reservation, date),
+                                     machine.reservations_in_period(date, date + timedelta(days=1)))),
         } for date in [first_date_of_week + timedelta(days=day_number) for day_number in range(7)]]
 
     def get_context_data(self, year, week, machine):

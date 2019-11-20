@@ -102,13 +102,14 @@ class ShowSkillsView(TemplateView):
             for userskill in profile.userskill_set.all():
                 skill = userskill.skill
 
-                if (skill not in skill_dict or skill.skill_level > skill_dict[skill][0]) \
-                        and not self.is_checkin_expired(profile):
+                if ((skill not in skill_dict
+                     or skill.skill_level > skill_dict[skill][0])
+                        and not self.is_checkin_expired(profile)):
                     skill_dict[skill] = (userskill.skill_level, profile.last_checkin)
 
         context = super().get_context_data(**kwargs)
         context.update({
-            'skill_dict': sorted(skill_dict.items(), key=lambda x: x[1][1], reverse=True),
+            'skill_dict': sorted(skill_dict.items(), key=lambda item: item[1][1], reverse=True),
         })
         return context
 

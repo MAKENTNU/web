@@ -46,7 +46,7 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
             "start_time": date_to_local(timezone.now() + timedelta(hours=start_diff)).strftime("%d.%m.%Y %H:%M:%S"),
             "end_time": date_to_local(timezone.now() + timedelta(hours=end_diff)).strftime("%d.%m.%Y %H:%M:%S"),
             "event": event is not None, "event_pk": 0 if event is None else event.pk, "special": special,
-            "special_text": special_text, "machine_name": self.machine.pk
+            "special_text": special_text, "machine_name": self.machine.pk,
         }
 
 
@@ -121,13 +121,13 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(context_data, {
             "can_change_start_time": True, "events": [self.timeplace], "new_reservation": False, "machine_types": [{
                 "literal": machine_type.name,
-                "instances": list(Machine.objects.filter(machine_type=machine_type))
+                "instances": list(Machine.objects.filter(machine_type=machine_type)),
             } for machine_type in MachineTypeField.possible_machine_types if machine_type.can_user_use(self.user)
             ],
             "start_time": reservation.start_time, "end_time": reservation.end_time, "selected_machine": self.machine,
             "event": self.timeplace, "special": False, "special_text": "",
             "maximum_days_in_advance": Reservation.reservation_future_limit_days, "comment": "Comment",
-            "reservation_pk": reservation.pk
+            "reservation_pk": reservation.pk,
         })
 
     def test_get_context_data_non_reservation(self):
@@ -144,7 +144,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
             "events": [self.timeplace], "new_reservation": True,
             "machine_types": [{
                 "literal": machine_type.name,
-                "instances": list(Machine.objects.filter(machine_type=machine_type))
+                "instances": list(Machine.objects.filter(machine_type=machine_type)),
             } for machine_type in MachineTypeField.possible_machine_types if machine_type.can_user_use(self.user)
             ],
             "start_time": start_time, "selected_machine": self.machine,
@@ -158,8 +158,10 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         view.new_reservation = False
         # Need to handle the valid form function
         valid_form_calls = {"calls": 0}
-        view.form_valid = lambda x, **y: valid_form_calls.update(
-            {"calls": valid_form_calls["calls"] + 1}) or HttpResponse()
+        view.form_valid = lambda _form, **_kwargs: (
+                valid_form_calls.update({"calls": valid_form_calls["calls"] + 1})
+                or HttpResponse()
+        )
 
         self.assertTrue(ReservationForm(view.request.POST).is_valid())
         response = view.handle_post(view.request)
