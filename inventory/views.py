@@ -4,7 +4,7 @@ from django.template import loader
 from django.views.generic import TemplateView
 from django.db.models import Q
 
-from inventory.models import ItemInSubContainer, Item
+from inventory.models import ItemInSubContainer, Item, Category
 
 
 class InventoryView(TemplateView):
@@ -12,9 +12,11 @@ class InventoryView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        itemset = Item.objects.all()
         context.update({
-            'all_items': itemset,
+            'all_items': Item.objects.prefetch_related('categories',
+                                                       'subcontainers__container',
+                                                       'items_in_subcontainer'),
+            'all_categories': Category.objects.all(),
         })
         return context
 
