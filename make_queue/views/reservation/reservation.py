@@ -35,12 +35,12 @@ class ReservationCreateOrChangeView(TemplateView):
                 reservation.reservation_future_limit_days))
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             """Translation: Tidspunktet eller eventen, er ikke lengre tilgjengelig"""
-            return _("The time slot or event, it no longer available")
+            return _("The time slot or event, is no longer available")
         if not reservation.quota_can_make_reservation():
-            """Translation: Reservasjonen går over kvoten """
+            """Translation: Reservasjonen går over kvoten"""
             return _("The reservation exceeds the quota")
         if reservation.check_start_time_after_end_time():
-            """Translation: Startstiden kan ikke være etter slutttiden"""
+            """Translation: Starttiden kan ikke være etter sluttiden"""
             return _("The start time can't be after the end time")
         if reservation.reservation_starts_before_now():
             """Translation: Reservasjonen kan ikke starte i fortiden"""

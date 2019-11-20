@@ -69,7 +69,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         self.assertEqual(view.get_error_message(form, reservation),
-                         "The time slot or event, it no longer available")
+                         "The time slot or event, is no longer available")
 
     def test_get_error_message_too_far_in_the_future(self):
         view = self.get_view()
