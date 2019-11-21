@@ -380,7 +380,7 @@ class EventRegistrationView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class TicketView(DetailView):
+class TicketView(LoginRequiredMixin, DetailView):
     model = EventTicket
     template_name = "news/ticket_overview.html"
 
@@ -428,7 +428,7 @@ class AdminTimeplaceTicketView(TemplateView):
         return context_data
 
 
-class CancelTicketView(RedirectView):
+class CancelTicketView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
     pattern_name = "ticket"
