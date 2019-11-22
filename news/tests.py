@@ -11,6 +11,7 @@ from news.models import Article, Event, TimePlace
 
 
 class ModelTestCase(TestCase):
+
     @staticmethod
     def create_time_place(event, pub_date_adjust_days, start_time_adjust_seconds,
                           hidden=TimePlace._meta.get_field("hidden").default):

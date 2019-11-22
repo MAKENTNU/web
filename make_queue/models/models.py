@@ -237,7 +237,7 @@ class Reservation(models.Model):
     def __str__(self):
         start_time = self.start_time.strftime("%d/%m/%Y - %H:%M")
         end_time = self.end_time.strftime("%d/%m/%Y - %H:%M")
-        return f"{self.user.get_full_name():} har reservert {self.machine.name:} fra {start_time:} til {end_time:}"
+        return f"{self.user.get_full_name()} har reservert {self.machine.name} fra {start_time} til {end_time}"
 
 
 class ReservationRule(models.Model):

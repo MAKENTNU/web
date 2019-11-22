@@ -29,7 +29,7 @@ class ReservationCreateOrChangeView(TemplateView):
         """
         if not reservation.is_within_allowed_period_for_reservation() and not (
                 reservation.special or reservation.event):
-            return f"Reservasjoner kan bare lages {reservation.reservation_future_limit_days:} dager frem i tid"
+            return f"Reservasjoner kan bare lages {reservation.reservation_future_limit_days} dager frem i tid"
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
         return "Tidspunktet er ikke lengre tilgjengelig"

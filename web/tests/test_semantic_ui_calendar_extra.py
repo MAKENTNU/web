@@ -8,6 +8,7 @@ from web.templatetags.semantic_ui_calendar_extra import set_current_date
 
 
 class TemplateTagTestCases(TestCase):
+
     @mock.patch('django.utils.timezone.now')
     def test_set_current_date_without_shift(self, now_mock):
         date = datetime(2017, 12, 23, 12, 34, 0)

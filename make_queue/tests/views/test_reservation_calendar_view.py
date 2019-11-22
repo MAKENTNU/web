@@ -12,6 +12,7 @@ from make_queue.views.reservation.calendar import ReservationCalendarComponentVi
 
 
 class ReservationCalendarComponentViewTestCase(TestCase):
+
     @staticmethod
     def create_reservation(start_time, end_time):
         machine_type = MachineTypeField.get_machine_type(1)
