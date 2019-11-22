@@ -73,6 +73,7 @@ class MemberQuitView(UpdateView):
 
 
 class MemberUndoQuitView(RedirectView):
+
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.quit:
@@ -83,6 +84,7 @@ class MemberUndoQuitView(RedirectView):
 
 
 class MemberRetireView(RedirectView):
+
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if member.quit or member.retired:
@@ -95,6 +97,7 @@ class MemberRetireView(RedirectView):
 
 
 class MemberUndoRetireView(RedirectView):
+
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.retired:

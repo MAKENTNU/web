@@ -65,6 +65,7 @@ class RFIDView(View):
 
 
 class CheckInView(RFIDView):
+
     def card_id_valid(self, card_id):
         profiles = Profile.objects.filter(card_id=card_id)
         if not profiles.exists():
@@ -255,6 +256,7 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 
 class RegisterCardView(RFIDView):
+
     def card_id_valid(self, card_id):
         if not Profile.objects.filter(card_id=card_id).exists():
             RegisterProfile.objects.all().delete()
@@ -263,6 +265,7 @@ class RegisterCardView(RFIDView):
 
 
 class RegisterProfileView(TemplateView):
+
     def post(self, request):
         scan_exists = RegisterProfile.objects.exists()
         data = {
@@ -279,6 +282,7 @@ class RegisterProfileView(TemplateView):
 
 
 class EditProfilePictureView(View):
+
     def post(self, request):
         image = request.FILES.get('image')
         profile = request.user.profile

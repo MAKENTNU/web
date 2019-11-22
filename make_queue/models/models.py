@@ -271,6 +271,7 @@ class ReservationRule(models.Model):
         return all(rule.valid_time_in_rule(start_time, end_time, len(rules) > 1) for rule in rules)
 
     class Period:
+
         def __init__(self, start_day, rule):
             self.start_time = self.__to_inner_rep(start_day, rule.start_time)
             self.end_time = self.__to_inner_rep(start_day + rule.days_changed, rule.end_time)

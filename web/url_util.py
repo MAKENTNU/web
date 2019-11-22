@@ -2,6 +2,7 @@ from django.urls import URLPattern, URLResolver
 
 
 class DecoratedURLPattern(URLPattern):
+
     def resolve(self, *args, **kwargs):
         result = super(DecoratedURLPattern, self).resolve(*args, **kwargs)
         if result:
@@ -10,6 +11,7 @@ class DecoratedURLPattern(URLPattern):
 
 
 class DecoratedURLResolver(URLResolver):
+
     def resolve(self, *args, **kwargs):
         result = super(DecoratedURLResolver, self).resolve(*args, **kwargs)
         if result:

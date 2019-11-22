@@ -11,6 +11,7 @@ from make_queue.models.models import Machine, Quota, Reservation
 
 
 class TestGenericMachine(TestCase):
+
     def test_status(self):
         machine_type = MachineTypeField.get_machine_type(1)
         printer = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
@@ -44,6 +45,7 @@ class TestGenericMachine(TestCase):
 
 
 class TestCanUse3DPrinter(TestCase):
+
     def setUp(self):
         self.machine_type = MachineTypeField.get_machine_type(1)
 
@@ -67,6 +69,7 @@ class TestCanUse3DPrinter(TestCase):
 
 
 class TestGetMachineType(TestCase):
+
     def test_get_machine_type(self):
         for machine_type in MachineTypeField.possible_machine_types:
             self.assertEqual(machine_type, MachineTypeField.get_machine_type(machine_type.id))
@@ -75,6 +78,7 @@ class TestGetMachineType(TestCase):
 
 
 class TestMachineTypeField(TestCase):
+
     def test_to_python(self):
         machine_type_field = MachineTypeField()
         self.assertEqual(None, machine_type_field.to_python(None))

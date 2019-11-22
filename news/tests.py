@@ -77,6 +77,7 @@ class ModelTestCase(TestCase):
 
 
 class ViewTestCase(TestCase):
+
     def add_permission(self, codename):
         permission = Permission.objects.get(codename=codename)
         self.user.user_permissions.add(permission)
@@ -205,6 +206,7 @@ class ViewTestCase(TestCase):
 
 
 class HiddenPrivateTestCase(TestCase):
+
     def add_permission(self, codename):
         permission = Permission.objects.get(codename=codename)
         self.user.user_permissions.add(permission)

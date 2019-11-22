@@ -5,6 +5,7 @@ from django.conf import settings
 
 
 class StreamConsumer(AsyncWebsocketConsumer):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.room_name = None

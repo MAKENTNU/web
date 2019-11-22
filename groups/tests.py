@@ -19,11 +19,13 @@ class MockRequest:
 
 
 class MockSuperUser:
+
     def has_perm(self, *args, **kwargs):
         return True
 
 
 class PermGroupTestCase(TestCase):
+
     def setUp(self):
         org = Group.objects.create(name='Org')
         mentor = Group.objects.create(name='Mentor')
@@ -214,6 +216,7 @@ class PermGroupTestCase(TestCase):
 
 
 class InheritanceGroupAdminTestCase(TestCase):
+
     def setUp(self):
         self.site = AdminSite()
         self.request = MockRequest()
@@ -249,6 +252,7 @@ class InheritanceGroupAdminTestCase(TestCase):
 
 
 class CommitteeTestCase(TestCase):
+
     def setUp(self):
         org = Group.objects.create(name='Org')
         mentor = Group.objects.create(name='Mentor')

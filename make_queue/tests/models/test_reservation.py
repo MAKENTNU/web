@@ -14,6 +14,7 @@ from news.models import Event, TimePlace
 
 
 class GeneralReservationTestCase(TestCase):
+
     def check_reservation_invalid(self, reservation, error_message):
         self.assertFalse(reservation.validate(), error_message)
         try:
@@ -31,6 +32,7 @@ class GeneralReservationTestCase(TestCase):
 
 
 class GeneralReservationTestCases(GeneralReservationTestCase):
+
     def setUp(self):
         event = Event.objects.create(title="TEST EVENT")
         self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),

@@ -7,6 +7,7 @@ from make_queue.views.reservation.machine import MachineView
 
 
 class MachineViewTest(TestCase):
+
     def test_no_machines(self):
         self.assertEqual(template_view_get_context_data(MachineView), {"machine_types": []})
 
