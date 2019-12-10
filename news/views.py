@@ -386,12 +386,9 @@ class EventRegistrationView(LoginRequiredMixin, CreateView):
         return kwargs
 
 
-class TicketView(DetailView):
+class TicketView(LoginRequiredMixin, DetailView):
     model = EventTicket
     template_name = "news/ticket_overview.html"
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
 
 
 class MyTicketsView(TemplateView):
@@ -403,18 +400,6 @@ class MyTicketsView(TemplateView):
             "tickets": EventTicket.objects.filter(user=self.request.user),
         })
         return context_data
-
-
-class ClaimTicketView(RedirectView):
-    permanent = False
-    query_string = True
-    pattern_name = "ticket"
-
-    def get_redirect_url(self, *args, **kwargs):
-        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0), user=None)
-        ticket.user = self.request.user
-        ticket.save()
-        return super().get_redirect_url(*args, **kwargs)
 
 
 class AdminEventTicketView(TemplateView):
@@ -449,7 +434,7 @@ class AdminTimeplaceTicketView(TemplateView):
         return context_data
 
 
-class CancelTicketView(RedirectView):
+class CancelTicketView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
     pattern_name = "ticket"
@@ -460,7 +445,7 @@ class CancelTicketView(RedirectView):
         # Allow for toggling if a ticket is canceled or not
         if self.request.user.has_perm("news.cancel_ticket"):
             ticket.active = not ticket.active
-        elif self.request.user == ticket.user or ticket.user is None:
+        elif self.request.user == ticket.user:
             ticket.active = False
         ticket.save()
 
