@@ -12,6 +12,7 @@ from web.multilingual.widgets import MultiLingualTextarea
 
 
 class ArticleManager(models.Manager):
+
     def published(self):
         return self.filter(hidden=False).filter(
             Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
@@ -19,6 +20,7 @@ class ArticleManager(models.Manager):
 
 
 class TimePlaceManager(models.Manager):
+
     def published(self):
         return self.filter(hidden=False, event__hidden=False).filter(
             Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
@@ -95,10 +97,18 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
+    REPEATING = "R"
+    STANDALONE = "S"
+
+    EVENT_TYPE_CHOICES = (
+        (REPEATING, _("Repeating")),
+        (STANDALONE, _("Standalone")),
+    )
+
     event_type = models.CharField(
-        choices=(("R", _("Repeating")), ("S", _("Standalone"))),
+        choices=EVENT_TYPE_CHOICES,
         max_length=1,
-        default="R",
+        default=REPEATING,
         verbose_name=_("Type of event")
     )
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
@@ -114,11 +124,11 @@ class Event(NewsBase):
 
     @property
     def repeating(self):
-        return self.event_type == "R"
+        return self.event_type == self.REPEATING
 
     @property
     def standalone(self):
-        return self.event_type == "S"
+        return self.event_type == self.STANDALONE
 
     def can_register(self, user):
         if self.hidden:
@@ -193,8 +203,9 @@ class TimePlace(models.Model):
 
 class EventTicket(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
-    name = models.CharField(max_length=128, verbose_name=_("Name"))
-    email = models.EmailField(verbose_name=_("Email"))
+    # For backwards compatibility, name and email are no longer set. Getting name and email from user.
+    _name = models.CharField(max_length=128, verbose_name=_("Name"), db_column="name")
+    _email = models.EmailField(verbose_name=_("Email"), db_column="email")
     active = models.BooleanField(verbose_name=_("Active"), default=True)
     comment = models.TextField(verbose_name=_("Comment"), blank=True)
     language = models.CharField(max_length=2, choices=(("en", _("English")), ("nb", _("Norwegian"))), default="en",
@@ -214,3 +225,19 @@ class EventTicket(models.Model):
         permissions = (
             ("cancel_ticket", "Can cancel and reactivate all event tickets"),
         )
+
+    @property
+    def name(self):
+        """
+        Gets the name of the user whom the ticket is registered to. For backwards compatibility it returns the _name
+        field if the user is not set.
+        """
+        return self.user.get_full_name() if self.user else self._name
+
+    @property
+    def email(self):
+        """
+        Gets the email of the user whom the ticket is registered to. For backwards compatibility it returns the _email
+        field if the user is not set.
+        """
+        return self.user.email if self.user else self._email

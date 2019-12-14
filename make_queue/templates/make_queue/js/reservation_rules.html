@@ -20,7 +20,7 @@
     }
 
     function dateToWeekRep(date) {
-        return (date.getDay() + 6) % 7 + date.getHours() / 24 + date.getMinutes() / 1440 + date.getSeconds() / 86400;
+        return (date.getDay() + 6) % 7 + date.getHours() / 24 + date.getMinutes() / (24 * 60) + date.getSeconds() / (24 * 60 * 60);
     }
 
     function hoursInsideRule(rule, startTime, endTime) {
@@ -38,7 +38,7 @@
     }
 
     function getPeriodIn(rules, date, direction) {
-        date = (date.getDay() + 6) % 7 + date.getHours() / 24 + date.getMinutes() / 1440;
+        date = (date.getDay() + 6) % 7 + date.getHours() / 24 + date.getMinutes() / (24 * 60);
         for (let ruleIndex = 0; ruleIndex < rules.length; ruleIndex++) {
             let rule = rules[ruleIndex];
             for (let periodIndex = 0; periodIndex < rule.periods.length; periodIndex++) {
@@ -83,7 +83,7 @@
 
         // If the reservation is shorter than the maximum inside for any of the rules, it should also be valid for
         // the whole duration, even though it breaks with one or more of the max_crossed rules.
-        let minTime = 168;
+        let minTime = 7 * 24;
         for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
             minTime = Math.min(minTime, coveredRules[ruleIndex].max_inside);
         }
@@ -115,7 +115,7 @@
 
             // Check if the total time of the reservation is greater than what is allowed by the covered rules
             let maxTime = 0;
-            let minTime = 168;
+            let minTime = 7 * 24;
             for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
                 maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
                 minTime = Math.min(minTime, coveredRules[ruleIndex].max_inside);

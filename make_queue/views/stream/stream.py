@@ -5,6 +5,12 @@ from django.conf import settings
 
 
 class StreamConsumer(AsyncWebsocketConsumer):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.room_name = None
+        self.room_group_name = None
+
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['stream_name']
         self.room_group_name = 'stream_%s' % self.room_name
@@ -36,7 +42,7 @@ class StreamConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 {
                     'type': 'image',
-                    'image': image
+                    'image': image,
                 }
             )
 
@@ -46,5 +52,5 @@ class StreamConsumer(AsyncWebsocketConsumer):
 
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
-            'image': image
+            'image': image,
         }))

@@ -1,13 +1,12 @@
 from datetime import timedelta
 from unittest import mock
 
-import pytz
 from django.contrib.auth.models import User
 from django.test import TestCase
 
 from make_queue.fields import MachineTypeField
 from make_queue.models.course import Printer3DCourse
-from make_queue.models.models import Machine, Quota, Reservation
+from make_queue.models.models import Quota, Reservation
 from make_queue.templatetags.reservation_extra import *
 from make_queue.util.time import local_to_date
 
@@ -23,7 +22,7 @@ class ReservationExtraTestCases(TestCase):
         machine_type_printer = MachineTypeField.get_machine_type(1)
         Quota.objects.create(user=user, number_of_reservations=2, ignore_rules=True,
                              machine_type=machine_type_printer)
-        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status="F",
+        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status=Machine.AVAILABLE,
                                          machine_type=machine_type_printer)
         Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
                                        date=timezone.now())
@@ -37,8 +36,8 @@ class ReservationExtraTestCases(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_current_calendar_url(self, now_mock):
         date = timezone.datetime(2017, 12, 26, 12, 34, 0)
-        now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
-        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status="F")
+        now_mock.return_value = timezone.get_default_timezone().localize(date)
+        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status=Machine.AVAILABLE)
 
         self.assertEqual(reverse('reservation_calendar',
                                  kwargs={'year': 2017, 'week': 52, 'machine': printer}),
@@ -47,7 +46,7 @@ class ReservationExtraTestCases(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_is_current_data(self, now_mock):
         date = timezone.datetime(2017, 3, 5, 11, 18, 0)
-        now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+        now_mock.return_value = timezone.get_default_timezone().localize(date)
 
         self.assertTrue(is_current_date(timezone.now().date()))
         self.assertTrue(is_current_date((timezone.now() + timedelta(hours=1)).date()))
@@ -58,7 +57,7 @@ class ReservationExtraTestCases(TestCase):
     def test_get_current_time_of_day(self, now_mock):
         def set_mock_value(hours, minutes):
             date = timezone.datetime(2017, 3, 5, hours, minutes, 0)
-            now_mock.return_value = pytz.timezone(timezone.get_default_timezone_name()).localize(date)
+            now_mock.return_value = timezone.get_default_timezone().localize(date)
 
         set_mock_value(12, 0)
         self.assertEqual(50, get_current_time_of_day())
@@ -80,7 +79,7 @@ class ReservationExtraTestCases(TestCase):
         self.assertEqual((17 / 24) * 100, date_to_percentage(date))
 
         date = timezone.datetime(2017, 3, 5, 17, 25, 0)
-        self.assertEqual((17 / 24 + 25 / 1440) * 100, date_to_percentage(date))
+        self.assertEqual((17 / 24 + 25 / (24 * 60)) * 100, date_to_percentage(date))
 
     def test_invert(self):
         self.assertEqual("true", invert(0))

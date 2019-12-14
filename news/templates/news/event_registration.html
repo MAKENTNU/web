@@ -13,19 +13,9 @@
 
         <form class="ui form" action="" method="POST">
             {% csrf_token %}
-            <div class="ui three fields">
-                <div class="ui field">
-                    <label>{{ form.name.label }}</label>
-                    {{ form.name }}
-                </div>
-                <div class="ui field">
-                    <label>{{ form.email.label }}</label>
-                    {{ form.email }}
-                </div>
-                <div class="ui field">
-                    <label>{{ form.language.label }}</label>
-                    {{ form.language }}
-                </div>
+            <div class="ui field">
+                <label>{{ form.language.label }}</label>
+                {{ form.language }}
             </div>
             <div class="ui field">
                 <label>{{ form.comment.label }}</label>

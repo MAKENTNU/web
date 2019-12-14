@@ -30,11 +30,11 @@
     });
 
     $("form").submit(function () {
-        let zeroPadDateElement = (val) => val < 10 ? "0" + val : val;
+        let zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
         let date = $("#{{ widget.name }}").calendar("get date");
         let year = date.getFullYear();
         let month = zeroPadDateElement(date.getMonth() + 1);
         let day = zeroPadDateElement(date.getDate());
-        $("#{{ widget.name }} input").val(year + "-" + month + "-" + day);
+        $("#{{ widget.name }} input").val(`${year}-${month}-${day}`);
     });
 </script>
