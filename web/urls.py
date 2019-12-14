@@ -53,7 +53,7 @@ else:
     # If it is not configured, we would like to have a simple login page. So that
     # we can test with non-superusers without giving them access to the admin page.
     urlpatterns += i18n_patterns(
-        path('login/', auth_views.LoginView.as_view(template_name="web/login.html"), name='login'),
+        path('login/', auth_views.LoginView.as_view(template_name="web/login.html", redirect_authenticated_user=True), name='login'),
         path('logout/', auth_views.LogoutView.as_view(next_page="/"), name='logout'),
         prefix_default_language=False,
     )

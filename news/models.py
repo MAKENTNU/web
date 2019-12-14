@@ -12,6 +12,7 @@ from web.multilingual.widgets import MultiLingualTextarea
 
 
 class ArticleManager(models.Manager):
+
     def published(self):
         return self.filter(hidden=False).filter(
             Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
@@ -19,6 +20,7 @@ class ArticleManager(models.Manager):
 
 
 class TimePlaceManager(models.Manager):
+
     def published(self):
         return self.filter(hidden=False, event__hidden=False).filter(
             Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |

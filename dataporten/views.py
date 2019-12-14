@@ -11,6 +11,7 @@ from dataporten.ldap_utils import get_user_details_from_email
 
 
 class Logout(View):
+
     def get(self, request):
         logout(request)
         return HttpResponseRedirect(settings.LOGOUT_URL)

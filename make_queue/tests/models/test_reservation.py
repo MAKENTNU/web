@@ -32,6 +32,7 @@ class GeneralReservationTestCase(TestCase):
 
 
 class GeneralReservationTestCases(GeneralReservationTestCase):
+
     def setUp(self):
         event = Event.objects.create(title="TEST EVENT")
         self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),

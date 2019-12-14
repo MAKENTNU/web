@@ -11,6 +11,7 @@ from news.models import Article, Event, TimePlace
 
 
 class ModelTestCase(TestCase):
+
     @staticmethod
     def create_time_place(event, pub_date_adjust_days, start_time_adjust_seconds,
                           hidden=TimePlace._meta.get_field("hidden").default):
@@ -31,7 +32,7 @@ class ModelTestCase(TestCase):
         event = Event.objects.create(title=title)
         time_place = self.create_time_place(event, 0, 0)
         date_str = timezone.now().date().strftime('%Y.%m.%d')
-        self.assertEqual(str(time_place), "{} - {}".format(title, date_str))
+        self.assertEqual(str(time_place), f"{title} - {date_str}")
 
     def test_article_manager(self):
         Article.objects.create(
@@ -77,6 +78,7 @@ class ModelTestCase(TestCase):
 
 
 class ViewTestCase(TestCase):
+
     def add_permission(self, codename):
         permission = Permission.objects.get(codename=codename)
         self.user.user_permissions.add(permission)
@@ -205,6 +207,7 @@ class ViewTestCase(TestCase):
 
 
 class HiddenPrivateTestCase(TestCase):
+
     def add_permission(self, codename):
         permission = Permission.objects.get(codename=codename)
         self.user.user_permissions.add(permission)
