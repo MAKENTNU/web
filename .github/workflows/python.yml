@@ -1,4 +1,4 @@
-name: MAKE NTNU Web
+name: build
 
 on: [push]
 
