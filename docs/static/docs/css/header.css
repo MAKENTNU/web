@@ -1,0 +1,41 @@
+#header {
+    height: 5em;
+    background-color: rgb(34, 43, 52);
+    padding: 1em;
+    color: #ffffff;
+}
+
+#page-search {
+    float: right;
+}
+
+#home-button {
+    height: 100%;
+    display: inline-block;
+}
+
+#home-button img {
+    height: 100%;
+    object-fit: contain;
+    display: none;
+}
+
+/*** Logo size changes ***/
+
+@media screen and (min-width: 651px) {
+    #home-button img.large {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 650px) and (min-width: 401px) {
+    #home-button img.medium {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #home-button img.small {
+        display: block;
+    }
+}
