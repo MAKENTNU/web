@@ -1,5 +1,5 @@
 #header {
-    height: 5em;
+    height: 4.75em;
     background-color: rgb(34, 43, 52);
     padding: 1em;
     color: #ffffff;
@@ -7,6 +7,10 @@
 
 #page-search {
     float: right;
+}
+
+#new-page {
+    margin: 0.1em 0.5em;
 }
 
 #home-button {
@@ -22,20 +26,26 @@
 
 /*** Logo size changes ***/
 
-@media screen and (min-width: 651px) {
+@media screen and (min-width: 751px) {
     #home-button img.large {
         display: block;
     }
 }
 
-@media screen and (max-width: 650px) and (min-width: 401px) {
+@media screen and (max-width: 750px) and (min-width: 601px) {
     #home-button img.medium {
         display: block;
     }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 600px) {
     #home-button img.small {
         display: block;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #page-search input {
+        width: 10em;
     }
 }

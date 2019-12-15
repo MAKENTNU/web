@@ -2,7 +2,7 @@
 {% load i18n %}
 {% load staticfiles %}
 
-{% block title %}{% trans "Edit" %} "{{ page_title }}"{% endblock %}
+{% block title %}{% trans "Edit" %} "{{ page.title }}"{% endblock %}
 
 {% block head %}
     <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
@@ -12,13 +12,16 @@
 {% block body %}
     <div class="ui container">
         {{ form.errors }}
-        <h1>{% trans "Edit" %} "{{ page_title }}"</h1>
+        <h1>{% trans "Edit" %} "{{ page.title }}"</h1>
         <form class="ui form" method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="ui field">
                 {{ form.content }}
             </div>
             <button class="ui right floated yellow button">{% trans "Submit" context "edit" %}</button>
+            <a href="{% url "page" pk=page %}" class="ui right floated red button">
+                {% trans "Cancel" context "abort action" %}
+            </a>
         </form>
     </div>
 {% endblock %}

@@ -7,7 +7,7 @@ from django_hosts import reverse
 from docs import converters
 from docs.models import Page
 from docs.views import DocumentationPageView, EditDocumentationPageView, DeleteDocumentationPageView, \
-    HistoryDocumentationPageView, OldDocumentationPageContentView
+    HistoryDocumentationPageView, OldDocumentationPageContentView, CreateDocumentationPageView
 from web.url_util import decorated_includes
 
 register_converter(converters.PageByTitle, "page")
@@ -18,9 +18,11 @@ unsafe_urlpatterns = [
     path("page/<page:pk>/history/", HistoryDocumentationPageView.as_view(), name="page-history"),
     path("page/<page:pk>/history/<content:content>/", OldDocumentationPageContentView.as_view(),
          name="old-page-content"),
+    path("page/new/create/", CreateDocumentationPageView.as_view(), name="create-page"),
     path("page/<page:pk>/edit/", EditDocumentationPageView.as_view(), name="edit-page"),
     path("page/<page:pk>/delete/", DeleteDocumentationPageView.as_view(), name="delete-page"),
-    path("", DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Home")[0].pk}, name="home"),
+    path("", DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Documentation")[0].pk},
+         name="home"),
 ]
 
 urlpatterns = [
