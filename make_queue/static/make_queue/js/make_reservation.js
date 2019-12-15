@@ -7,7 +7,7 @@ function getFutureReservations(machine_id, force_new_time) {
     /**
      * Retrieves future reservations and all reservation rules from the server.
      */
-    let jsonUrl = langPrefix + "/reservation/json/" + machine_id;
+    let jsonUrl = `${langPrefix}/reservation/json/${machine_id}`;
     if ($("#reserve_form").data("reservation")) {
         jsonUrl += "/" + $("#reserve_form").data("reservation");
     }
@@ -44,7 +44,7 @@ function getWeekNumber(date) {
     date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
     date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
     let yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
+    return Math.ceil((((date - yearStart) / (24 * 60 * 60 * 1000)) + 1) / 7);
 }
 
 function updateReservationCalendar() {
@@ -54,7 +54,7 @@ function updateReservationCalendar() {
     let weekNumber = getWeekNumber(reservationCalendarDate);
     let year = reservationCalendarDate.getFullYear();
     let machine_pk = $("#machine_name_dropdown").dropdown("get value");
-    $.get(langPrefix + "/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_pk + "/", {}, (data) => {
+    $.get(`${langPrefix}/reservation/calendar/${year}/${weekNumber}/${machine_pk}/`, {}, (data) => {
         $("#reservation_calendar").html(data);
         setupReservationCalendar();
     });
@@ -231,7 +231,7 @@ $('#machine_type_dropdown').dropdown('setting', 'onChange', function (selectedMa
 
         // Replace the shown machine items from the last selected machine type with the ones from the currently selected machine type
         $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", true);
-        $('#machine_name_dropdown .menu .item.' + selectedMachineType).toggleClass("make_hidden", false);
+        $(`#machine_name_dropdown .menu .item.${selectedMachineType}`).toggleClass("make_hidden", false);
     }
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
@@ -244,7 +244,7 @@ $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name')
     $("#start_time, #end_time").calendar('clear');
 });
 
-zeroPadDateElement = (val) => val < 10 ? "0" + val : val;
+zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
 
 function formatDate(date) {
     /**
@@ -326,8 +326,8 @@ function timeSelectionPopupHTML(date, startTime, endTime, machine) {
      * Creates a valid popup for the time selection utility in the reservation calendar
      */
     return $("<div>").addClass("ui make_yellow button").html(gettext("Choose time")).click(() => {
-        $("#start_time").calendar("set date", new Date(date + " " + startTime));
-        $("#end_time").calendar("set date", new Date(date + " " + endTime));
+        $("#start_time").calendar("set date", new Date(`${date} ${startTime}`));
+        $("#end_time").calendar("set date", new Date(`${date} ${endTime}`));
         $("body").mousedown();
     });
 }

@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -88,8 +88,8 @@ class ViewEventView(TemplateView):
             'article': event,
             'timeplaces': event.timeplace_set.all() if event.standalone else event.timeplace_set.future(),
         })
-        if (event.hidden and not self.request.user.has_perm('news.change_event')) \
-                or (event.private and not self.request.user.has_perm('news.can_view_private')):
+        if (event.hidden and not self.request.user.has_perm('news.change_event')
+                or event.private and not self.request.user.has_perm('news.can_view_private')):
             raise Http404()
         return context
 
@@ -103,8 +103,8 @@ class ViewArticleView(TemplateView):
         context.update({
             'article': article,
         })
-        if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')) \
-                or (article.private and not self.request.user.has_perm('news.can_view_private')):
+        if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')
+                or article.private and not self.request.user.has_perm('news.can_view_private')):
             raise Http404()
         return context
 
@@ -172,6 +172,9 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
     permission_required = (
         'news.change_event',
     )
+    extra_context = {
+        'Event': Event,  # for referencing event_type's choice values
+    }
 
     def get_success_url(self):
         return reverse_lazy("admin-event", args=(self.object.id,))
@@ -184,6 +187,9 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
     permission_required = (
         'news.add_event',
     )
+    extra_context = {
+        'Event': Event,  # for referencing event_type's choice values
+    }
 
     def get_success_url(self):
         return reverse_lazy("admin-event", args=(self.object.id,))
@@ -256,10 +262,10 @@ class AdminArticleToggleView(PermissionRequiredMixin, View):
     def post(self, request):
         pk, toggle = request.POST.get('pk'), request.POST.get('toggle')
         try:
-            object = self.model.objects.get(pk=pk)
-            val = not getattr(object, toggle)
-            setattr(object, toggle, val)
-            object.save()
+            obj = self.model.objects.get(pk=pk)
+            val = not getattr(obj, toggle)
+            setattr(obj, toggle, val)
+            obj.save()
             color = 'yellow' if val else 'grey'
         except (self.model.DoesNotExist, AttributeError):
             return JsonResponse({})
@@ -309,7 +315,7 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
         return reverse_lazy("admin-event", args=(self.object.event.id,))
 
 
-class EventRegistrationView(CreateView):
+class EventRegistrationView(LoginRequiredMixin, CreateView):
     model = EventTicket
     template_name = "news/event_registration.html"
     form_class = EventRegistrationForm
@@ -327,21 +333,25 @@ class EventRegistrationView(CreateView):
         return None
 
     def is_registration_allowed(self):
-        return self.timeplace and self.timeplace.can_register(self.request.user) \
-               or self.event and self.event.can_register(self.request.user)
+        return (self.timeplace and self.timeplace.can_register(self.request.user)
+                or self.event and self.event.can_register(self.request.user))
+
+    def dispatch(self, request, *args, **kwargs):
+        ticket = EventTicket.objects.filter(user=self.request.user, active=True,
+                                            timeplace=self.timeplace, event=self.event)
+        if ticket.exists():
+            return HttpResponseRedirect(reverse_lazy("ticket", kwargs={"pk": ticket.first().pk}))
+        return super().dispatch(request, args, kwargs)
 
     def form_valid(self, form):
         if not self.is_registration_allowed():
             form.add_error(None, _("Could not register you for the event, please try again later."))
             return self.form_invalid(form)
 
+        form.instance.user = self.request.user
+        form.instance.event = self.event
+        form.instance.timeplace = self.timeplace
         ticket = form.save()
-        if self.request.user.is_authenticated:
-            ticket.user = self.request.user
-
-        ticket.event = self.event
-        ticket.timeplace = self.timeplace
-        ticket.save()
 
         async_to_sync(get_channel_layer().send)(
             "email", {
@@ -370,23 +380,15 @@ class EventRegistrationView(CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        if self.request.user.is_authenticated:
-            kwargs["initial"].update({
-                "name": self.request.user.get_full_name(),
-                "email": self.request.user.email,
-            })
         kwargs["initial"].update({
-            "language": get_language()
+            "language": get_language(),
         })
         return kwargs
 
 
-class TicketView(DetailView):
+class TicketView(LoginRequiredMixin, DetailView):
     model = EventTicket
     template_name = "news/ticket_overview.html"
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**kwargs)
 
 
 class MyTicketsView(TemplateView):
@@ -398,18 +400,6 @@ class MyTicketsView(TemplateView):
             "tickets": EventTicket.objects.filter(user=self.request.user),
         })
         return context_data
-
-
-class ClaimTicketView(RedirectView):
-    permanent = False
-    query_string = True
-    pattern_name = "ticket"
-
-    def get_redirect_url(self, *args, **kwargs):
-        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0), user=None)
-        ticket.user = self.request.user
-        ticket.save()
-        return super().get_redirect_url(*args, **kwargs)
 
 
 class AdminEventTicketView(TemplateView):
@@ -439,12 +429,12 @@ class AdminTimeplaceTicketView(TemplateView):
         context_data.update({
             "tickets": timeplace.eventticket_set.order_by("-active").all(),
             "event": timeplace.event,
-            "object": timeplace
+            "object": timeplace,
         })
         return context_data
 
 
-class CancelTicketView(RedirectView):
+class CancelTicketView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
     pattern_name = "ticket"
@@ -455,7 +445,7 @@ class CancelTicketView(RedirectView):
         # Allow for toggling if a ticket is canceled or not
         if self.request.user.has_perm("news.cancel_ticket"):
             ticket.active = not ticket.active
-        elif self.request.user == ticket.user or ticket.user is None:
+        elif self.request.user == ticket.user:
             ticket.active = False
         ticket.save()
 

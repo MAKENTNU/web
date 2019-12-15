@@ -7,6 +7,7 @@ from users.models import User
 
 
 class ViewTestCase(TestCase):
+
     def test_logout(self):
         username = 'TEST_USER'
         password = 'TEST_PASS'
@@ -18,6 +19,7 @@ class ViewTestCase(TestCase):
 
 
 class DataportenTestCase(TestCase):
+
     def test_dataporten(self):
         oa = DataportenOAuth2(None)
         try:

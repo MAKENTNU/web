@@ -107,7 +107,7 @@ $("#status_set").parent().dropdown({
         let selectedUsers = [];
         state.elements.forEach(function (element) {
             if (element.element.hasClass("active")) {
-                form.append($("<input type='hidden' value='" + element.pk + "' name='users'>"));
+                form.append($(`<input type="hidden" value="${element.pk}" name="users">`));
                 selectedUsers.push(element.element.data("name"));
             }
         });
@@ -208,7 +208,7 @@ function updateDisplay() {
     rightSkipElement.toggleClass("disabled", state.page === state.numPages - 1);
 
     for (let page = page_range.start; page <= page_range.end; page++) {
-        let page_element = $("<a class='item'>" + (page + 1) + "</a>");
+        let page_element = $(`<a class="item">${page + 1}</a>`);
         if (page === state.page) {
             page_element.toggleClass("active", true);
         }
@@ -271,7 +271,7 @@ function setupState() {
         if (state.onlyShowSelectedUsers) {
             selected = state.elements.filter((e) => e.display).map(e => e.pk);
         }
-        downloadUsersForm.find("#selected").val(selected)
+        downloadUsersForm.find("#selected").val(selected);
     });
 
     updateDisplay();

@@ -62,7 +62,7 @@ class MachineUsageRulesView(TemplateView):
     def get_context_data(self, machine_type, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update({
-            "usage_rules": MachineUsageRule.objects.get_or_create(machine_type=machine_type)[0]
+            "usage_rules": MachineUsageRule.objects.get_or_create(machine_type=machine_type)[0],
         })
         return context_data
 

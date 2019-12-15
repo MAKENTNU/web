@@ -16,27 +16,72 @@ from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProf
 from web import settings
 
 
-class CheckInView(View):
+class RFIDView(View):
+    """
+    Base view class for receiving requests from RFID card readers
+    """
+
     @method_decorator(csrf_exempt)
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
 
     @csrf_exempt
     def post(self, request):
-        if request.POST.get('secret') == settings.CHECKIN_KEY:
-            if Profile.objects.get(card_id=request.POST.get('card_id')).on_make:
-                Profile.objects.filter(card_id=request.POST.get('card_id')).update(on_make=False)
-                return HttpResponse('check out'.encode(), status=200)
-            else:
-                Profile.objects.filter(card_id=request.POST.get('card_id')).update(on_make=True, last_checkin=timezone.now())
-                return HttpResponse('check in'.encode(), status=200)
+        """
+        Handles the request from the RFID card reader.
+        Does a basic check for a valid card id.
+        :param request: The HTTP POST request to handle. Must include a secret and the card id.
+        :return: An HttpResponse.
+        """
+        secret = request.POST.get('secret')
+        card_id = request.POST.get('card_id')
+        if secret is None or card_id is None:
+            return HttpResponse(status=400)
 
+        if secret == settings.CHECKIN_KEY:
+            if len(card_id) == 10 and card_id.isnumeric():
+                return self.card_id_valid(f"EM{card_id}")
+            else:
+                return self.card_id_invalid(f"EM{card_id}")
+        return HttpResponse(status=403)
+
+    def card_id_valid(self, card_id):
+        """
+        Handles the case where the card id is valid.
+        Should be overridden in a subclass.
+        :param card_id: The card id from the request, prefixed with EM
+        :return: An HttpResponse
+        """
+        return HttpResponse(status=200)
+
+    def card_id_invalid(self, card_id):
+        """
+        Handles the case where the card id is invalid.
+        Should be overridden in a subclass.
+        :param card_id: The card id from the request, prefixed with EM
+        :return: An HttpResponse
+        """
         return HttpResponse(status=401)
+
+
+class CheckInView(RFIDView):
+
+    def card_id_valid(self, card_id):
+        profiles = Profile.objects.filter(card_id=card_id)
+        if not profiles.exists():
+            return HttpResponse(status=401)
+
+        if profiles.first().on_make:
+            profiles.update(on_make=False)
+            return HttpResponse('check out'.encode(), status=200)
+        else:
+            profiles.update(on_make=True, last_checkin=timezone.now())
+            return HttpResponse('check in'.encode(), status=200)
 
 
 class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
-    expiry_time = 3600 * 3
+    expiry_time = (60 * 60) * 3
 
     def is_checkin_expired(self, profile):
         return (timezone.now() - profile.last_checkin).seconds >= self.expiry_time
@@ -58,13 +103,14 @@ class ShowSkillsView(TemplateView):
             for userskill in profile.userskill_set.all():
                 skill = userskill.skill
 
-                if (skill not in skill_dict or skill.skill_level > skill_dict[skill][0]) \
-                        and not self.is_checkin_expired(profile):
+                if ((skill not in skill_dict
+                     or skill.skill_level > skill_dict[skill][0])
+                        and not self.is_checkin_expired(profile)):
                     skill_dict[skill] = (userskill.skill_level, profile.last_checkin)
 
         context = super().get_context_data(**kwargs)
         context.update({
-            'skill_dict': sorted(skill_dict.items(), key=lambda x: x[1][1], reverse=True),
+            'skill_dict': sorted(skill_dict.items(), key=lambda item: item[1][1], reverse=True),
         })
         return context
 
@@ -94,7 +140,6 @@ class ProfilePageView(TemplateView):
         return HttpResponseRedirect(reverse('profile'))
 
     def get_context_data(self, **kwargs):
-
         if Profile.objects.filter(user=self.request.user).exists():
             profile = Profile.objects.get(user=self.request.user)
         else:
@@ -164,7 +209,6 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
         return HttpResponseRedirect(reverse('suggest'))
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
         context.update({
             'suggestions': SuggestSkill.objects.all(),
@@ -211,21 +255,13 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
         return JsonResponse(data)
 
 
-class RegisterCardView(View):
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+class RegisterCardView(RFIDView):
 
-    @csrf_exempt
-    def post(self, request):
-        if request.POST.get('secret') == settings.CHECKIN_KEY:
-            card_id = request.POST.get('card_id')
-            if not Profile.objects.filter(card_id=card_id).exists():
-                RegisterProfile.objects.all().delete()
-                RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
-                return HttpResponse('card scanned', status=200)
-
-        return HttpResponse(status=400)
+    def card_id_valid(self, card_id):
+        if not Profile.objects.filter(card_id=card_id).exists():
+            RegisterProfile.objects.all().delete()
+            RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
+            return HttpResponse('card scanned', status=200)
 
 
 class RegisterProfileView(TemplateView):

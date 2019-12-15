@@ -27,7 +27,7 @@ def LDAP_search(search_field, search_value):
     """
     l = ldap.initialize(LDAP_HOST, bytes_mode=False)
     l.simple_bind()
-    query = "({}={})".format(LDAP_FIELDS[search_field], search_value)
+    query = f"({LDAP_FIELDS[search_field]}={search_value})"
     return l.search_s(LDAP_BASE, ldap.SCOPE_SUBTREE, query)
 
 

@@ -46,7 +46,7 @@ class Member(models.Model):
             self.email = self.user.email
 
             # Setup all properties for new members
-            for property_name, value in SystemAccess.name_choices:
+            for property_name, value in SystemAccess.NAME_CHOICES:
                 # All members will be registered on the website when added to the members list
                 SystemAccess.objects.create(name=property_name, member=self,
                                             value=property_name == SystemAccess.WEBSITE)
@@ -140,7 +140,7 @@ class SystemAccess(models.Model):
     EMAIL = "email"
     WEBSITE = "website"
 
-    name_choices = (
+    NAME_CHOICES = (
         (DRIVE, _("Drive")),
         (SLACK, _("Slack")),
         (CALENDAR, _("Calendar")),
@@ -149,7 +149,7 @@ class SystemAccess(models.Model):
         (WEBSITE, _("Website")),
     )
 
-    name = models.fields.CharField(max_length=32, choices=name_choices, verbose_name=_("System"))
+    name = models.fields.CharField(max_length=32, choices=NAME_CHOICES, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
     member = models.ForeignKey(Member, models.CASCADE, verbose_name="Member")
 
