@@ -1,7 +1,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
-from django.views.generic import DetailView, FormView
+from django.views.generic import DetailView, FormView, DeleteView
 
 from docs.forms import PageContentForm
 from docs.models import Page, Content
@@ -46,3 +46,9 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
             changed=datetime.now(),
         )
         return redirect
+
+
+class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
+    model = Page
+    success_url = reverse_lazy("home")
+    permission_required = ()
