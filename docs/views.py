@@ -63,12 +63,14 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
 
     def form_valid(self, form):
         redirect = super().form_valid(form)
-        Content.objects.create(
-            content=form.cleaned_data["content"],
-            page=self.get_page(),
-            changed=datetime.now(),
-            made_by=self.request.user,
-        )
+        page = self.get_page()
+        if not page.content or form.cleaned_data["content"] != page.content.content:
+            Content.objects.create(
+                content=form.cleaned_data["content"],
+                page=self.get_page(),
+                changed=datetime.now(),
+                made_by=self.request.user,
+            )
         return redirect
 
 
