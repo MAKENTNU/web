@@ -3,14 +3,12 @@ from django.db import models
 
 
 class Skill(models.Model):
-    """Skill with image
+    """
+    Skill with image
 
     :var title: Skill name in Norwegian
     :var title_en: Skill name in English
     :var image: Skill image
-
-    :func __str__: returns skill name
-    :func locale_title(language_code): returns skill name in correct language
     """
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
     title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Skill (english)")
@@ -20,29 +18,27 @@ class Skill(models.Model):
         return self.title
 
     def locale_title(self, language_code):
-        """Returns skill name in correct language.
-
-        Only 'nb' is recognised, everything else will return the english skill name.
-
-        :param language_code: Two letter string with language code
-        :return: skill name in correct language
-
         """
+        Finds the title of the skill in the given language
 
+        Supports Norwegian Bokmål and English, defaulting to English for all other language codes.
+
+        :param language_code: A string representing an ISO 639-1 language code
+        :return: Skill name in given language
+        """
         if language_code == "nb":
             return self.title
         return self.title_en
 
 
 class Profile(models.Model):
-    """Profile model
+    """
+    Profile model, storing status of last been at Makerverkstedet.
 
-    :var user: User model
+    :var user: The user to which this profile belongs
     :var image: Profile picture
-    :var on_make: boolean, if at Makerverkstedet
-    :var last_checkin: DateTimeField, last time at Makerverkstedet
-
-    :func __str__: returns username or 'None'
+    :var on_make: If at Makerverkstedet
+    :var last_checkin: Last time at Makerverkstedet
     """
     user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
     image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
@@ -56,13 +52,12 @@ class Profile(models.Model):
 
 
 class UserSkill(models.Model):
-    """Model for user's skill
+    """
+    Model for user's skill, storing skill and skill level of skill
 
-    :var profile: Profile model
+    :var profile: Profile of the user which this skill belongs to
     :var skill: skill model
     :var skill_level: Three levels, 1=beginner, 3=expert
-
-    :func __str__: returns "[username] - [skill]"
     """
     level_choices = (
         (1, "Nybegynner"),
@@ -83,16 +78,14 @@ class UserSkill(models.Model):
 
 
 class SuggestSkill(models.Model):
-    """Model for suggested skill
+    """
+    Model for suggested skill, keeping track of suggestion creator and voters
 
     :var creator: Profile model of the suggestion holder
     :var title: Suggested skill in Norwegian
     :var title_en: Suggested skill in English
     :var voters: Profile model of who has voted for suggested skill.
     :var image: Skill image
-
-    :func __str__: returns suggested skill in Norwegian
-    :func locale_title(language_code): returns suggested skill in correct language
     """
     creator = models.ForeignKey(Profile, related_name="suggestions", null=True, on_delete=models.SET_NULL)
     title = models.CharField(max_length=100, unique=True, verbose_name="Foreslått ferdighet")
@@ -104,13 +97,13 @@ class SuggestSkill(models.Model):
         return self.title
 
     def locale_title(self, language_code):
-        """Returns skill name in correct language.
+        """
+        Finds the title of the skill in the given language
 
-        Only 'nb' is recognised, everything else will return the english skill name.
+        Supports Norwegian Bokmål and English, defaulting to English for all other language codes.
 
-        :param language_code: Two letter string with language code
-        :return: skill name in correct language
-
+        :param language_code: A string representing an ISO 639-1 language code
+        :return: Skill name in given language
         """
         if language_code == "nb":
             return self.title
@@ -124,13 +117,11 @@ class SuggestSkill(models.Model):
 
 
 class RegisterProfile(models.Model):
-    """Model for registrating profile
+    """
+    Model for registrating profile, storing card id and time of last scan
 
-        :var card_id: Charfield with student card number.
-        :var last_scan: DateTimeField with time of last scan
-
-        :func __str__: returns card_id
-
+    :var card_id: Student card number.
+    :var last_scan: Time of last scan
     """
 
     card_id = models.CharField(max_length=100, verbose_name="Kortnummer")
