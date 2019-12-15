@@ -15,7 +15,7 @@
                data-content="{% trans "Click to view the content history of the page" %}">
                 <i class="ui blue archive icon"></i>
             </a>
-            <a href="" class="explanation-popup" data-title="{% trans "Edit" %}"
+            <a href="{% url "edit-page" pk=page %}" class="explanation-popup" data-title="{% trans "Edit" %}"
                data-content="{% trans "Click to edit the content of the page" %}">
                 <i class="ui yellow edit icon"></i>
             </a>
@@ -27,11 +27,13 @@
         <h1>{{ page.title }}</h1>
 
         {% if page.content %}
-            {{ page.content }}
+            {% autoescape off %}
+                {{ page.content.content }}
+            {% endautoescape %}
         {% else %}
             <i>
                 {% trans "No content exists for this page, do you wish to" %}
-                <a href="">{% trans "create" %}</a>
+                <a href="{% url "edit-page" pk=page %}">{% trans "create" %}</a>
                 {% trans "some" %}?
             </i>
         {% endif %}
