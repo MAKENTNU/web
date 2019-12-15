@@ -13,6 +13,29 @@ class DocumentationPageView(DetailView):
     context_object_name = "page"
 
 
+class HistoryDocumentationPageView(DetailView):
+    template_name = "docs/documentation_page_history.html"
+    model = Page
+    context_object_name = "page"
+
+
+class OldDocumentationPageContentView(DetailView):
+    template_name = "docs/documentation_page.html"
+    model = Page
+    context_object_name = "page"
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        content = self.kwargs.get("content")
+        context_data.update({
+            "old": True,
+            "content": content,
+            "form": PageContentForm(initial={"content": content.content})
+        })
+        return context_data
+
+
 class EditDocumentationPageView(PermissionRequiredMixin, FormView):
     template_name = "docs/edit_documentation_page.html"
     model = Content
@@ -44,6 +67,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
             content=form.cleaned_data["content"],
             page=self.get_page(),
             changed=datetime.now(),
+            made_by=self.request.user,
         )
         return redirect
 

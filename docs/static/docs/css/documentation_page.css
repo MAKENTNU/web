@@ -1,3 +1,7 @@
 .edit.tools {
     float: right;
 }
+
+.hidden.form {
+    display: none !important;
+}

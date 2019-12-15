@@ -10,8 +10,22 @@
 
 {% block body %}
     <div class="ui container">
+        {% if old %}
+            <div class="ui warning message">
+                <div class="ui header">
+                    {% trans "You are viewing an old version of this page" %}
+                </div>
+                {% trans "You are viewing an old version of this page, where the last edit was made by" %}
+                {% if content.made_by %}{{ content.made_by.get_full_name }}{% else %}{% trans "Anonymous" %}{% endif %}
+                {% trans "on" %} {{ content.changed|date:"d.m.Y" }} {% trans "at" %} {{ content.changed|date:"H:i" }}.
+                {% trans "To view the current version, click" %}
+                <a href="{% url "page" pk=page %}">{% trans "here" %}</a>.
+                {% trans "To change the current version to this one, click" %}
+                <a href="" id="change-current-version">{% trans "here" %}</a>.
+            </div>
+        {% endif %}
         <h3 class="edit tools">
-            <a href="" class="explanation-popup" data-title="{% trans "History" %}"
+            <a href="{% url "page-history" pk=page %}" class="explanation-popup" data-title="{% trans "History" %}"
                data-content="{% trans "Click to view the content history of the page" %}">
                 <i class="ui blue archive icon"></i>
             </a>
@@ -26,7 +40,11 @@
         </h3>
         <h1>{{ page.title }}</h1>
 
-        {% if page.content %}
+        {% if content %}
+            {% autoescape off %}
+                {{ content.content }}
+            {% endautoescape %}
+        {% elif page.content %}
             {% autoescape off %}
                 {{ page.content.content }}
             {% endautoescape %}
@@ -38,10 +56,24 @@
             </i>
         {% endif %}
     </div>
+
+    {% if form and old %}
+        <form id="change-version-form" class="hidden form" method="POST" action="{% url "edit-page" pk=page %}">
+            {% csrf_token %}
+            {{ form.content }}
+        </form>
+    {% endif %}
 {% endblock %}
 
 {% block scripts %}
     <script>
         $(".explanation-popup").popup();
+
+        {% if old %}
+            $("#change-current-version").click(() => {
+                $("#change-version-form").submit();
+                return false;
+            });
+        {% endif %}
     </script>
 {% endblock %}

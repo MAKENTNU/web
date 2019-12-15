@@ -1,4 +1,4 @@
-from docs.models import Page
+from docs.models import Page, Content
 
 
 class PageByTitle:
@@ -12,3 +12,16 @@ class PageByTitle:
 
     def to_url(self, page):
         return page.title
+
+
+class ContentByPk(object):
+    regex = "[0-9]+"
+
+    def to_python(self, value):
+        try:
+            return Content.objects.get(pk=value)
+        except Content.DoesNotExist:
+            raise ValueError("No content exists with that PK")
+
+    def to_url(self, content):
+        return content.pk
