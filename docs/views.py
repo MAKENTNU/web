@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from django.views.generic import DetailView
 
-# Create your views here.
+from docs.models import Page
+
+
+class DocumentationPageView(DetailView):
+    template_name = "docs/documentation_page.html"
+    model = Page
+    context_object_name = "page"

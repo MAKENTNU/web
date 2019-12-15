@@ -1,0 +1,45 @@
+{% extends "docs/base.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "docs/css/documentation_page.css" %}">
+{% endblock %}
+
+{% block body %}
+    <div class="ui container">
+        <h3 class="edit tools">
+            <a href="" class="explanation-popup" data-title="{% trans "History" %}"
+               data-content="{% trans "Click to view the content history of the page" %}">
+                <i class="ui blue archive icon"></i>
+            </a>
+            <a href="" class="explanation-popup" data-title="{% trans "Edit" %}"
+               data-content="{% trans "Click to edit the content of the page" %}">
+                <i class="ui yellow edit icon"></i>
+            </a>
+            <a href="" class="delete confirm explanation-popup" data-title="{% trans "Delete" %}"
+               data-content="{% trans "Click to delete the page" %}">
+                <i class="ui red trash icon"></i>
+            </a>
+        </h3>
+        <h1>{{ page.title }}</h1>
+
+        {% if page.content %}
+            {{ page.content }}
+        {% else %}
+            <i>
+                {% trans "No content exists for this page, do you wish to" %}
+                <a href="">{% trans "create" %}</a>
+                {% trans "some" %}?
+            </i>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(".explanation-popup").popup();
+    </script>
+{% endblock %}

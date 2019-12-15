@@ -1,12 +1,19 @@
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.decorators import permission_required
-from django.urls import path, include
+from django.urls import path, include, register_converter
 from django.views.generic import TemplateView
 from django_hosts import reverse
 
+from docs import converters
+from docs.models import Page
+from docs.views import DocumentationPageView
 from web.url_util import decorated_includes
 
+register_converter(converters.PageByTitle, "page")
+
 unsafe_urlpatterns = [
+    path("page/<page:pk>/", DocumentationPageView.as_view(), name="page"),
+    path("", DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Home")[0].pk}, name="home"),
 ]
 
 urlpatterns = [
@@ -19,7 +26,7 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path("", decorated_includes(
-        permission_required("internal.is_internal", login_url=reverse("login", host="main")),
+        permission_required("docs.can_view", login_url=reverse("login", host="main")),
         include(unsafe_urlpatterns)
     )),
     prefix_default_language=False
