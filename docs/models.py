@@ -11,7 +11,7 @@ class Page(models.Model):
     title_validator = RegexValidator(regex=title_regex,
                                      message=_("Only numbers, letters, space, parenthesises and colon are allowed"))
     title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[title_validator])
-    created_by = models.ForeignKey(User, models.DO_NOTHING, null=True, blank=True)
+    created_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
 
     @property
     def content(self):
@@ -29,4 +29,4 @@ class Content(models.Model):
     page = models.ForeignKey(Page, models.CASCADE, related_name="content_history", verbose_name=_("Page"))
     changed = models.DateTimeField(verbose_name=_("Time changed"))
     content = RichTextUploadingField(verbose_name=_("Content"))
-    made_by = models.ForeignKey(User, models.DO_NOTHING, verbose_name=_("Made by"), null=True, blank=True)
+    made_by = models.ForeignKey(User, models.SET_NULL, verbose_name=_("Made by"), null=True, blank=True)
