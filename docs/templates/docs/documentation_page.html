@@ -29,14 +29,16 @@
                data-content="{% trans "Click to view the content history of the page" %}">
                 <i class="ui blue archive icon"></i>
             </a>
-            <a href="{% url "edit-page" pk=page %}" class="explanation-popup" data-title="{% trans "Edit" %}"
-               data-content="{% trans "Click to edit the content of the page" %}">
-                <i class="ui yellow edit icon"></i>
-            </a>
-            <a href="{% url "delete-page" pk=page %}" class="delete confirm explanation-popup"
-               data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}">
-                <i class="ui red trash icon"></i>
-            </a>
+            {% if not old %}
+                <a href="{% url "edit-page" pk=page %}" class="explanation-popup" data-title="{% trans "Edit" %}"
+                   data-content="{% trans "Click to edit the content of the page" %}">
+                    <i class="ui yellow edit icon"></i>
+                </a>
+                <a href="{% url "delete-page" pk=page %}" class="delete confirm explanation-popup"
+                   data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}">
+                    <i class="ui red trash icon"></i>
+                </a>
+            {% endif %}
         </h3>
         <h1>{{ page.title }}</h1>
 
@@ -44,9 +46,9 @@
             {% autoescape off %}
                 {{ content.content }}
             {% endautoescape %}
-        {% elif page.content %}
+        {% elif page.current_content %}
             {% autoescape off %}
-                {{ page.content.content }}
+                {{ page.current_content.content }}
             {% endautoescape %}
         {% else %}
             <i>
@@ -58,9 +60,10 @@
     </div>
 
     {% if form and old %}
-        <form id="change-version-form" class="hidden form" method="POST" action="{% url "edit-page" pk=page %}">
+        <form id="change-version-form" class="hidden form" method="POST"
+              action="{% url "change-page-version" pk=page %}">
             {% csrf_token %}
-            {{ form.content }}
+            {{ form }}
         </form>
     {% endif %}
 {% endblock %}

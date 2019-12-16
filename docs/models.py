@@ -12,13 +12,7 @@ class Page(models.Model):
                                      message=_("Only numbers, letters, space, parenthesises and colon are allowed"))
     title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[title_validator])
     created_by = models.ForeignKey(User, models.SET_NULL, null=True, blank=True)
-
-    @property
-    def content(self):
-        """Finds the current content of the page in the content history"""
-        if self.content_history.exists():
-            return self.content_history.order_by("changed").last()
-        return ""
+    current_content = models.ForeignKey("Content", models.SET_NULL, null=True, blank=True, related_name="in_use")
 
     def __str__(self):
         return self.title

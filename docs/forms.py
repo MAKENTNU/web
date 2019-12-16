@@ -17,3 +17,11 @@ class PageContentForm(forms.ModelForm):
         fields = (
             "content",
         )
+
+
+class ChangePageVersionForm(forms.ModelForm):
+    class Meta:
+        model = Page
+        fields = (
+            "current_content",
+        )
