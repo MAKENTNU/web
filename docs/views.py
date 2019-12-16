@@ -1,6 +1,7 @@
 from math import ceil
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
@@ -117,3 +118,30 @@ class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy("home")
     permission_required = ()
 
+
+class SearchPagesView(TemplateView):
+    template_name = "docs/search.html"
+    page_size = 10
+
+    def pages_to_show(self, current_page, n_pages):
+        if current_page <= 3:
+            return range(1, min(n_pages + 1, 8))
+        if current_page >= n_pages - 3:
+            return range(max(1, n_pages - 6), n_pages + 1)
+        return range(current_page - 3, current_page + 4)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        query = self.request.GET.get("query", "")
+        page = int(self.request.GET.get("page", 1))
+        pages = Page.objects.filter(Q(title__icontains=query) | Q(current_content__content__icontains=query))
+        n_pages = ceil(pages.count() / self.page_size)
+        context_data.update({
+            "pages": pages[(page - 1) * self.page_size:page * self.page_size],
+            "page": page,
+            "pages_to_show": self.pages_to_show(page, n_pages),
+            "query": query,
+        })
+
+        return context_data

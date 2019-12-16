@@ -6,10 +6,12 @@
 
 <header id="header">
     <div id="page-search">
-        <div class="ui icon input">
-            <input type="text" placeholder="{% trans "Search" %}">
-            <i class="search icon"></i>
-        </div>
+        <form id="search-form" action="{% url "search-pages" %}" method="GET">
+            <div class="ui icon input">
+                <input type="text" name="query" id="query" placeholder="{% trans "Search" %}">
+                <i class="search link icon" id="search"></i>
+            </div>
+        </form>
     </div>
     <a href="{% url "create-page" %}" id="new-page" class="ui right floated yellow button">
         <i class="ui plus icon"></i>
@@ -23,3 +25,7 @@
         </a>
     </div>
 </header>
+
+<script>
+    $("#search").click(() => $("#search-form").submit())
+</script>
