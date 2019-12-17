@@ -337,6 +337,10 @@ class EventRegistrationView(CreateView):
                 or self.event and self.event.can_register(self.request.user))
 
     def dispatch(self, request, *args, **kwargs):
+        if not self.is_registration_allowed():
+            event = self.event or self.timeplace.event
+            return HttpResponseRedirect(reverse("event", kwargs={"pk": event.pk}))
+
         ticket = EventTicket.objects.filter(user=self.request.user, active=True,
                                             timeplace=self.timeplace, event=self.event)
         if ticket.exists():
