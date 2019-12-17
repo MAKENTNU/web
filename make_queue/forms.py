@@ -108,6 +108,7 @@ class RuleForm(forms.ModelForm):
 
 class QuotaForm(forms.ModelForm):
     class UserModelChoiceField(ModelChoiceField):
+
         def label_from_instance(self, obj):
             return f'{obj.get_full_name()} - {obj.username}'
 
@@ -173,14 +174,19 @@ class FreeSlotForm(forms.Form):
 
 
 class BaseMachineForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        status_choices = (
+            Machine.AVAILABLE,
+            Machine.OUT_OF_ORDER,
+            Machine.MAINTENANCE,
+        )
         self.fields["status"] = forms.ChoiceField(
-            choices=(
-                ("F", _("Available")),
-                ("O", _("Out of order")),
-                ("M", _("Maintenance")),
-            ),
+            choices=[
+                (c, Machine.STATUS_CHOICES_DICT[c])
+                for c in status_choices
+            ],
             widget=SemanticSearchableChoiceInput(attrs={"required": True}),
         )
 

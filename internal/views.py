@@ -92,6 +92,7 @@ class MemberQuitView(UpdateView):
 
 
 class MemberUndoQuitView(RedirectView):
+
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.quit:
@@ -102,6 +103,7 @@ class MemberUndoQuitView(RedirectView):
 
 
 class MemberRetireView(RedirectView):
+
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if member.quit or member.retired:
@@ -114,6 +116,7 @@ class MemberRetireView(RedirectView):
 
 
 class MemberUndoRetireView(RedirectView):
+
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.retired:
@@ -129,8 +132,8 @@ class ToggleSystemAccessView(UpdateView):
     form_class = ToggleSystemAccessForm
 
     def get_context_data(self, **kwargs):
-        if self.object.member.user != self.request.user and \
-                not self.request.user.has_perm("internal.change_systemaccess"):
+        if (self.object.member.user != self.request.user
+                and not self.request.user.has_perm("internal.change_systemaccess")):
             raise PermissionDenied("The requesting user does not have permission to change others' system accesses")
         if not self.object.should_be_changed():
             raise Http404("System access should not be changed")

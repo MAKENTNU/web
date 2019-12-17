@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 # Default values
 DATABASE = 'sqlite'
@@ -36,8 +36,8 @@ try:
 except ImportError:
     pass
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Build paths inside the project like this: BASE_DIR / ...
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Application definition
 
@@ -128,14 +128,14 @@ if DATABASE == 'postgres':
             'PASSWORD': DATABASE_PASSWORD,
             'HOST': 'localhost',
             'PORT': '',
-        }
+        },
     }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
+            'NAME': str(BASE_DIR / 'db.sqlite3'),
+        },
     }
 
 # Password validation
@@ -180,8 +180,6 @@ SOCIAL_AUTH_DATAPORTEN_EMAIL_SECRET = SOCIAL_AUTH_DATAPORTEN_SECRET
 SOCIAL_AUTH_DATAPORTEN_FEIDE_KEY = SOCIAL_AUTH_DATAPORTEN_KEY
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SECRET = SOCIAL_AUTH_DATAPORTEN_SECRET
 
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = SOCIAL_AUTH_LOGIN_REDIRECT_URL
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -193,10 +191,10 @@ LANGUAGES = (
 )
 
 LOCALE_PATHS = (
-    os.path.join(BASE_DIR, 'locale'),
+    BASE_DIR / 'locale',
 )
 
-TIME_ZONE = 'CET'
+TIME_ZONE = 'Europe/Oslo'
 
 USE_I18N = True
 
@@ -207,7 +205,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "../static")
+STATIC_ROOT = BASE_DIR.parent / 'static'
 STATIC_URL = '/static/'
 
 # ManifestStaticFilesStorage appends every static file's MD5 hash to its filename,
@@ -233,7 +231,7 @@ CKEDITOR_CONFIGS = {
         'extraPlugins': ','.join([
             'uploadimage',
             'image2',
-        ])
+        ]),
     }
 }
 

@@ -7,7 +7,7 @@ Module for testing the RFID functionality on makentnu.no when running locally an
 
 def _card(path, card_id, secret):
     r = requests.post(
-        "http://makentnu.local.test.pe:8000/" + path,
+        f"http://makentnu.local.test.pe:8000/{path}",
         headers={"Content-type": "application/x-www-form-urlencoded"},
         data={"card_id": card_id, "secret": secret}
     )

@@ -39,8 +39,8 @@ function showDetailedMemberInformation(member) {
      * Displays the selected members information in a popup modal
      */
     memberInfoModal.find("#member-name, #member-name-header").text(member.data.name);
-    memberInfoModal.find("#member-phone").text(member.data.phone).attr("href", "tel:" + member.data.phone);
-    memberInfoModal.find("#member-email").text(member.data.email).attr("href", "mailto:" + member.data.email);
+    memberInfoModal.find("#member-phone").text(member.data.phone).attr("href", `tel:${member.data.phone}`);
+    memberInfoModal.find("#member-email").text(member.data.email).attr("href", `mailto:${member.data.email}`);
     memberInfoModal.find("#member-card-number").text(member.data.cardNumber);
     memberInfoModal.find("#member-study-program").text(member.data.studyProgram);
 
@@ -64,13 +64,15 @@ function showDetailedMemberInformation(member) {
 
     let memberSystemAccessesElement = memberInfoModal.find("#member-system-accesses");
     memberSystemAccessesElement.empty();
-    memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`<tr>
-        <td class="six wide column"><b>${access.name}</b></td>
-        <td>
-            <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
-            <a href="${access.changeUrl}" class="right floated orange link">${access.changeUrl.isEmpty() ? "" : gettext("Change")}</a>
-        </td>
-    </tr>`)));
+    memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`
+        <tr>
+            <td class="six wide column"><b>${access.name}</b></td>
+            <td>
+                <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
+                <a href="${access.changeUrl}" class="right floated orange link">${access.changeUrl.isEmpty() ? "" : gettext("Change")}</a>
+            </td>
+        </tr>
+    `)));
 
     let memberCommitteesElement = memberInfoModal.find("#member-committee");
     memberCommitteesElement.empty();

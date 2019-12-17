@@ -8,26 +8,12 @@
 
 {% block body %}
     <div class="ui container">
-        {% if not object.user or object.user == request.user or perms.news.view_eventticket %}
+        {% if object.user == request.user or perms.news.view_eventticket %}
             <h1>{% trans "Ticket for" %} "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
             <div>
                 <b>{% trans "Registered to" %}:</b> {{ object.name }},
                 <a href="mailto:{{ object.email }}">{{ object.email }}</a>
             </div>
-
-            {# Allow a user to register the ticket to their account if the ticket is not registered to an account #}
-            {% if not object.user %}
-                <div class="ui yellow message">
-                    {% trans "This ticket is not registered to any account." %}
-                    {% url "claim-ticket" pk=object.uuid as claim_url %}
-                    {% if request.user.is_authenticated %}
-                        {% trans "Click" %} <a href="{{ claim_url }}">{% trans "here" %}</a>
-                    {% else %}
-                        <a href="{% url "login" %}?next={{ claim_url }}">{% trans "Login" %}</a>
-                    {% endif %}
-                    {% trans "to register the ticket to your account." %}
-                </div>
-            {% endif %}
 
             {% include "news/ticket.html" with ticket=object %}
         {% else %}

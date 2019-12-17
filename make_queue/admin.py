@@ -7,7 +7,7 @@ from make_queue.models.models import *
 
 class MachineTypeOverride(admin.ModelAdmin):
     """
-    Class used to override the Semantic UI select widget of the machine type field.
+    Class used to override the Fomantic UI select widget of the machine type field.
     """
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
