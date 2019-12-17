@@ -1,12 +1,12 @@
 import uuid
 from datetime import date, time
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from users.models import User
 from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
 from web.multilingual.widgets import MultiLingualTextarea
 

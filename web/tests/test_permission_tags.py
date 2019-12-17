@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User, Permission, Group
+from django.contrib.auth.models import Permission, Group
+from users.models import User
 from django.test import TestCase
 
 from web.templatetags.permission_tags import has_any_permissions
