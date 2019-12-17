@@ -43,7 +43,7 @@ class OldDocumentationPageContentView(DetailView):
 class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
     model = Page
     form_class = ChangePageVersionForm
-    permission_required = ()
+    permission_required = ("docs.change_page",)
 
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse("page-history", kwargs={"pk": self.get_object()}))
@@ -56,7 +56,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
     template_name = "docs/create_documentation_page.html"
     model = Page
     form_class = CreatePageForm
-    permission_required = ()
+    permission_required = ("docs.add_page",)
 
     def form_invalid(self, form):
         try:
@@ -77,7 +77,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
     template_name = "docs/edit_documentation_page.html"
     model = Content
     form_class = PageContentForm
-    permission_required = ()
+    permission_required = ("docs.change_page",)
 
     def get_page(self):
         return Page.objects.get(pk=self.kwargs.get("pk"))
@@ -116,7 +116,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
 class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
     model = Page
     success_url = reverse_lazy("home")
-    permission_required = ()
+    permission_required = ("docs.delete_page",)
 
 
 class SearchPagesView(TemplateView):

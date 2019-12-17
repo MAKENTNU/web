@@ -20,8 +20,10 @@
                 {% trans "on" %} {{ content.changed|date:"d.m.Y" }} {% trans "at" %} {{ content.changed|date:"H:i" }}.
                 {% trans "To view the current version, click" %}
                 <a href="{% url "page" pk=page %}">{% trans "here" %}</a>.
-                {% trans "To change the current version to this one, click" %}
-                <a href="" id="change-current-version">{% trans "here" %}</a>.
+                {% if perms.docs.change_page %}
+                    {% trans "To change the current version to this one, click" %}
+                    <a href="" id="change-current-version">{% trans "here" %}</a>.
+                {% endif %}
             </div>
         {% endif %}
         <h3 class="edit tools">
@@ -30,14 +32,18 @@
                 <i class="ui blue archive icon"></i>
             </a>
             {% if not old %}
-                <a href="{% url "edit-page" pk=page %}" class="explanation-popup" data-title="{% trans "Edit" %}"
-                   data-content="{% trans "Click to edit the content of the page" %}">
-                    <i class="ui yellow edit icon"></i>
-                </a>
-                <a href="{% url "delete-page" pk=page %}" class="delete confirm explanation-popup"
-                   data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}">
-                    <i class="ui red trash icon"></i>
-                </a>
+                {% if perms.docs.change_page %}
+                    <a href="{% url "edit-page" pk=page %}" class="explanation-popup" data-title="{% trans "Edit" %}"
+                       data-content="{% trans "Click to edit the content of the page" %}">
+                        <i class="ui yellow edit icon"></i>
+                    </a>
+                {% endif %}
+                {% if perms.docs.delete_page %}
+                    <a href="{% url "delete-page" pk=page %}" class="delete confirm explanation-popup"
+                       data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}">
+                        <i class="ui red trash icon"></i>
+                    </a>
+                {% endif %}
             {% endif %}
         </h3>
         <h1>{{ page.title }}</h1>
@@ -52,14 +58,18 @@
             {% endautoescape %}
         {% else %}
             <i>
-                {% trans "No content exists for this page, do you wish to" %}
-                <a href="{% url "edit-page" pk=page %}">{% trans "create" %}</a>
-                {% trans "some" %}?
+                {% if perms.docs.change_page %}
+                    {% trans "No content exists for this page, do you wish to" %}
+                    <a href="{% url "edit-page" pk=page %}">{% trans "create" %}</a>
+                    {% trans "some" %}?
+                {% else %}
+                    {% trans "No content exists for this page" %}!
+                {% endif %}
             </i>
         {% endif %}
     </div>
 
-    {% if form and old %}
+    {% if form and old and perms.docs.change_page %}
         <form id="change-version-form" class="hidden form" method="POST"
               action="{% url "change-page-version" pk=page %}">
             {% csrf_token %}
@@ -72,7 +82,7 @@
     <script>
         $(".explanation-popup").popup();
 
-        {% if old %}
+        {% if old and perms.docs.change_page %}
             $("#change-current-version").click(() => {
                 $("#change-version-form").submit();
                 return false;

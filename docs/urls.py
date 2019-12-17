@@ -31,14 +31,14 @@ unsafe_urlpatterns = [
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name="docs/robots.txt", content_type="text/plain")),
     path("i18n/", decorated_includes(
-        permission_required("docs.can_view", login_url=reverse("login", host="main")),
+        permission_required("docs.view_page", login_url=reverse("login", host="main")),
         include("django.conf.urls.i18n")
     )),
 ]
 
 urlpatterns += i18n_patterns(
     path("", decorated_includes(
-        permission_required("docs.can_view", login_url=reverse("login", host="main")),
+        permission_required("docs.view_page", login_url=reverse("login", host="main")),
         include(unsafe_urlpatterns)
     )),
     prefix_default_language=False

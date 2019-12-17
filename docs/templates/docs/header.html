@@ -13,10 +13,12 @@
             </div>
         </form>
     </div>
-    <a href="{% url "create-page" %}" id="new-page" class="ui right floated yellow button">
-        <i class="ui plus icon"></i>
-        {% trans "New page" %}
-    </a>
+    {% if perms.docs.add_page %}
+        <a href="{% url "create-page" %}" id="new-page" class="ui right floated yellow button">
+            <i class="ui plus icon"></i>
+            {% trans "New page" %}
+        </a>
+    {% endif %}
     <div id="home-button">
         <a href="{% url "home" %}">
             <img class="large" src="{% static "web/img/logo_white.svg" %}" alt="{% trans "Logo" %}">
