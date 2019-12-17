@@ -315,7 +315,7 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
         return reverse_lazy("admin-event", args=(self.object.event.id,))
 
 
-class EventRegistrationView(LoginRequiredMixin, CreateView):
+class EventRegistrationView(CreateView):
     model = EventTicket
     template_name = "news/event_registration.html"
     form_class = EventRegistrationForm
