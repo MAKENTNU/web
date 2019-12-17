@@ -1,7 +1,6 @@
 from abc import abstractmethod
 from datetime import timedelta
 
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
@@ -11,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from make_queue.fields import MachineTypeField
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+from users.models import User
 from web.multilingual.database import MultiLingualRichTextUploadingField
 
 

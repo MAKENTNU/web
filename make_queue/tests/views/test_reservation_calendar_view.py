@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
 from unittest import mock
 
-from django.contrib.auth.models import User
+import pytz
+from users.models import User
 from django.test import TestCase
 from django.utils import timezone
 

@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from users.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField

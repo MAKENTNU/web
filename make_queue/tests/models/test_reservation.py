@@ -1,7 +1,8 @@
 from datetime import timedelta, datetime, time
 from unittest.mock import patch
 
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
+from users.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone

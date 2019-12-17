@@ -1,12 +1,12 @@
 import uuid
 from datetime import date, time
 
-from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from users.models import User
 from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
 from web.multilingual.widgets import MultiLingualTextarea
 
@@ -137,6 +137,8 @@ class Event(NewsBase):
             return False
         if self.standalone:
             return self.number_of_tickets > self.number_of_registered_tickets()
+        if not self.get_future_occurrences():
+            return False
         return True
 
 
@@ -195,8 +197,13 @@ class TimePlace(models.Model):
     def number_of_registered_tickets(self):
         return self.eventticket_set.filter(active=True).count()
 
+    def is_in_the_past(self):
+        current_date = timezone.now().date()
+        current_time = timezone.now().time()
+        return self.end_date < current_date or self.end_date == current_date and self.end_time < current_time
+
     def can_register(self, user):
-        if not self.event.can_register(user):
+        if not self.event.can_register(user) or self.is_in_the_past():
             return False
         return not self.hidden and self.number_of_registered_tickets() < self.number_of_tickets
 
