@@ -1,7 +1,8 @@
 import json
 from datetime import timedelta
 
-from django.contrib.auth.models import User, Permission
+from users.models import User
+from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse

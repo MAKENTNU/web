@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
+from users.models import User
 from django.test import TestCase
 
 from contentbox.models import ContentBox, DisplayContentBoxView
