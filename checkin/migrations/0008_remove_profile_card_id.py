@@ -32,7 +32,7 @@ def reverse_create_cards_from_profiles(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('checkin', '0006_auto_20180906_1915'),
+        ('checkin', '0007_skill_level_english_labels'),
         ('users', '0003_user_card_number'),
     ]
 
