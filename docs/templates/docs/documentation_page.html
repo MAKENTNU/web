@@ -38,7 +38,7 @@
                         <i class="ui yellow edit icon"></i>
                     </a>
                 {% endif %}
-                {% if perms.docs.delete_page %}
+                {% if perms.docs.delete_page and page.title != "Documentation" %}
                     <a href="{% url "delete-page" pk=page %}" class="delete confirm explanation-popup"
                        data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}">
                         <i class="ui red trash icon"></i>

@@ -118,6 +118,9 @@ class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
     success_url = reverse_lazy("home")
     permission_required = ("docs.delete_page",)
 
+    def get_queryset(self):
+        return Page.objects.exclude(title="Documentation")
+
 
 class SearchPagesView(TemplateView):
     template_name = "docs/search.html"
