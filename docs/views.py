@@ -2,7 +2,7 @@ from math import ceil
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
 from django.views.generic import DetailView, FormView, DeleteView, TemplateView, UpdateView
@@ -28,10 +28,21 @@ class OldDocumentationPageContentView(DetailView):
     model = Page
     context_object_name = "page"
 
+    def dispatch(self, request, *args, **kwargs):
+        # A check to make sure that the given content is related to the given page. As to make sure that the database
+        # stays in a correct state.
+        if self.get_object() != self.get_content().page:
+            return HttpResponseRedirect(reverse("page", kwargs={"pk": self.get_object()}))
+        else:
+            return super().dispatch(request, *args, **kwargs)
+
+    def get_content(self):
+        return self.kwargs.get("content")
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        content = self.kwargs.get("content")
+        content = self.get_content()
         context_data.update({
             "old": True,
             "content": content,
@@ -50,6 +61,9 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("page", kwargs={"pk": self.get_object()})
+
+    def form_invalid(self, form):
+        return HttpResponseForbidden()
 
 
 class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
