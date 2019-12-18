@@ -21,7 +21,7 @@
                     <div class="ui item">
                         <div class="content">
                             <div class="header">
-                                {{ page.title }}
+                                <a href="{% url "page" pk=page %}">{{ page.title }}</a>
                             </div>
                             <div class="description">
                                 {% if page.current_content %}
