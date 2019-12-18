@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'channels',
     'internal',
+    'docs',
     'users',
 ]
 
@@ -223,11 +224,12 @@ CKEDITOR_CONFIGS = {
                        'JustifyRight', 'JustifyBlock']},
             {'name': 'links', 'items': ['Link', 'Unlink']},
             {'name': 'format', 'items': ['Format', 'RemoveFormat']},
-            {'name': 'insert', 'items': ['Image']},
+            {'name': 'insert', 'items': ['Image', 'CodeSnippet']},
         ],
         'toolbar': 'main',
         'tabSpaces': 4,
         'extraPlugins': ','.join([
+            'codesnippet',
             'uploadimage',
             'image2',
         ]),
