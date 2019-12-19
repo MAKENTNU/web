@@ -134,6 +134,10 @@
     z-index: 1;
 }
 
+#nav-user-dropdown .profile-pic img {
+    object-fit: cover;
+}
+
 #nav-user-dropdown .menu {
     background-color: rgb(34, 43, 52);
     border-radius: 7px;

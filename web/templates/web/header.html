@@ -61,8 +61,10 @@
             <nav id="nav-user-dropdown" class="ui dropdown item">
                 <div class="profile-pic ui avatar image">
                     {% if user.profile.image %}
-                        {% thumbnail user.profile.image "50x50" crop="center" as img %}
-                            <img src="{{ img.url }}">
+                        {% thumbnail user.profile.image "50x50" crop="center" as image_thumb %}
+                            <img src="{{ image_thumb.url }}">
+                        {% empty %}
+                            <img src="{{ user.profile.image.url }}">
                         {% endthumbnail %}
                     {% else %}
                         <img src="{% static "checkin/img/placeholder_profile.png" %}"/>
