@@ -185,6 +185,17 @@
     }
 }
 
+/* Before switching to mobile layout */
+@media screen and (min-width: 993px) {
+    #nav-user-dropdown .menu {
+        /* Manual fix for Fomantic UI not giving the dropdown menu the class `left`
+           when the profile picture and username combined are "too" wide,
+           which causes the dropdown menu to appear too far right */
+        left: auto !important;
+        right: 0 !important;
+    }
+}
+
 /* Switch to mobile layout with burger */
 @media screen and (max-width: 992px) {
     #header {
@@ -250,6 +261,7 @@
 
     #side-nav .lang-link {
         position: static;
+        justify-content: center;
     }
 }
 
