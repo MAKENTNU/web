@@ -27,6 +27,13 @@
             </div>
         {% endif %}
         <h3 class="edit tools">
+            <span id="permanent-link" class="explanation-popup" data-title="{% trans "Permanent Link" %}"
+                  data-content="{% trans "Click to get a permanent link to the page" %}">
+                <i class="ui icons">
+                    <i class="ui blue linkify icon"></i>
+                    <i class="ui blue bottom right corner lock icon"></i>
+                </i>
+            </span>
             <a href="{% url "page-history" pk=page %}" class="explanation-popup" data-title="{% trans "History" %}"
                data-content="{% trans "Click to view the content history of the page" %}">
                 <i class="ui blue archive icon"></i>
@@ -76,6 +83,23 @@
             {{ form }}
         </form>
     {% endif %}
+
+    <div class="ui tiny basic modal" id="permanent-link-modal">
+        <div class="ui header">{% trans "Permanent link" %}</div>
+        <div class="ui content">
+            <div>
+                {% trans "As a result of changes to page titles, the URL to this page might change. For a permanent link to the page, use the following permanent URL." %}
+            </div>
+            <div class="ui fluid action input">
+                <input type="text" readonly id="permanent-link-url"
+                       value="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url "page-permanent" pk=page %}">
+                <button class="ui yellow right labeled icon button" id="permanent-link-url-copy">
+                    <i class="copy icon"></i>
+                    {% trans "Copy" %}
+                </button>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -88,5 +112,26 @@
                 return false;
             });
         {% endif %}
+
+        $("#permanent-link").click(() => {
+            $("#permanent-link-modal").modal("show");
+        });
+
+        $("#permanent-link-url-copy").click(() => {
+            {# Copies the URL to the users clipboard and hides the modal #}
+            let url_field = $("#permanent-link-url")[0];
+            url_field.select();
+            document.execCommand("copy");
+            window.getSelection().removeAllRanges();
+            $("#permanent-link-modal").modal("hide");
+            $("body")
+                .toast({
+                    class: "yellow",
+                    position: "bottom right",
+                    showIcon: false,
+                    message: "{% trans "Link copied to clipboard" %}"
+                })
+            ;
+        })
     </script>
 {% endblock %}

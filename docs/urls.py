@@ -8,14 +8,16 @@ from docs import converters
 from docs.models import Page
 from docs.views import DocumentationPageView, EditDocumentationPageView, DeleteDocumentationPageView, \
     HistoryDocumentationPageView, OldDocumentationPageContentView, CreateDocumentationPageView, SearchPagesView, \
-    ChangeDocumentationPageVersionView
+    ChangeDocumentationPageVersionView, DocumentationPageRedirectView
 from web.url_util import decorated_includes
 
 register_converter(converters.PageByTitle, "page")
+register_converter(converters.PageByPk, "page_pk")
 register_converter(converters.ContentByPk, "content")
 
 unsafe_urlpatterns = [
     path("page/<page:pk>/", DocumentationPageView.as_view(), name="page"),
+    path("page/permanent/<page_pk:pk>/", DocumentationPageRedirectView.as_view(), name="page-permanent"),
     path("page/<page:pk>/history/", HistoryDocumentationPageView.as_view(), name="page-history"),
     path("page/<page:pk>/history/change/", ChangeDocumentationPageVersionView.as_view(), name="change-page-version"),
     path("page/<page:pk>/history/<content:content>/", OldDocumentationPageContentView.as_view(),

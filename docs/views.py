@@ -5,7 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
-from django.views.generic import DetailView, FormView, DeleteView, TemplateView, UpdateView
+from django.views.generic import DetailView, FormView, DeleteView, TemplateView, UpdateView, RedirectView
 
 from docs.forms import PageContentForm, CreatePageForm, ChangePageVersionForm
 from docs.models import Page, Content
@@ -15,6 +15,11 @@ class DocumentationPageView(DetailView):
     template_name = "docs/documentation_page.html"
     model = Page
     context_object_name = "page"
+
+
+class DocumentationPageRedirectView(RedirectView):
+    """Redirect view for permanent URLs to pages"""
+    pattern_name = "page"
 
 
 class HistoryDocumentationPageView(DetailView):

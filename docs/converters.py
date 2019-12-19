@@ -14,6 +14,19 @@ class PageByTitle:
         return page.title
 
 
+class PageByPk:
+    regex = "[0-9]+"
+
+    def to_python(self, value):
+        try:
+            return Page.objects.get(pk=int(value))
+        except Page.DoesNotExist:
+            raise ValueError("No page exists with that PK")
+
+    def to_url(self, page):
+        return page.pk
+
+
 class ContentByPk(object):
     regex = "[0-9]+"
 

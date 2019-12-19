@@ -5,3 +5,11 @@
 .hidden.form {
     display: none !important;
 }
+
+#permanent-link:hover {
+    cursor: pointer;
+}
+
+#permanent-link-modal .input {
+    margin-top: 1em;
+}
