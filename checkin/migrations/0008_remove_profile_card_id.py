@@ -3,7 +3,7 @@
 from django.db import migrations
 
 
-def create_cards_from_profiles(apps, schema_editor):
+def update_user_card_from_profiles(apps, schema_editor):
     """
     Set user card_number from  profile card_id
     """
@@ -11,12 +11,12 @@ def create_cards_from_profiles(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for profile in Profile.objects.using(db_alias).all():
-        if profile.user:
+        if profile.user and profile.card_id:
             profile.user.card_number = profile.card_id
             profile.user.save(using=db_alias)
 
 
-def reverse_create_cards_from_profiles(apps, schema_editor):
+def reverse_update_user_card_from_profiles(apps, schema_editor):
     """
     Reverse setting of user card_number
     """
@@ -24,20 +24,19 @@ def reverse_create_cards_from_profiles(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for profile in Profile.objects.using(db_alias).all():
-        if profile.user:
+        if profile.user and profile.user.card_number:
             profile.card_id = profile.user.card_number
             profile.save(using=db_alias)
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('checkin', '0007_skill_level_english_labels'),
         ('users', '0003_user_card_number'),
     ]
 
     operations = [
-        migrations.RunPython(create_cards_from_profiles, reverse_create_cards_from_profiles),
+        migrations.RunPython(update_user_card_from_profiles, reverse_update_user_card_from_profiles),
         migrations.RemoveField(
             model_name='profile',
             name='card_id',

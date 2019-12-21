@@ -21,13 +21,35 @@ def to_integerfield(apps, schema_editor):
 
     for registration in Printer3DCourse.objects.using(db_alias).all():
         if registration._card_number:
-            registration.old_card_number = int(registration._card_number)
+            registration.old_card_number = int(registration._card_number.number)
             registration.save()
+
+
+def update_user_card_from_course(apps, schema_editor):
+    Course = apps.get_model('make_queue', 'Printer3DCourse')
+    db_alias = schema_editor.connection.alias
+
+    for course in Course.objects.using(db_alias).filter(user__isnull=False):
+        if course._card_number:
+            course.user.card_number = course._card_number
+            course.user.save(using=db_alias)
+            course._card_number = None
+            course.save(using=db_alias)
+
+
+def reverse_update_user_card_from_course(apps, schema_editor):
+    Course = apps.get_model('make_queue', 'Printer3DCourse')
+    db_alias = schema_editor.connection.alias
+
+    for course in Course.objects.using(db_alias).filter(user__isnull=False, user__card_number__isnull=False):
+        course._card_number = course.user.card_number
+        course.save(using=db_alias)
 
 
 class Migration(migrations.Migration):
     dependencies = [
         ('make_queue', '0012_usage_rules_multilingual_content_field'),
+        ('users', '0003_user_card_number'),
     ]
 
     operations = [
@@ -48,11 +70,13 @@ class Migration(migrations.Migration):
                 django.core.validators.RegexValidator('\\d{10}', 'Card number must be ten digits long')],
                                               verbose_name='Card number'),
         ),
-        migrations.RunPython(to_cardnumberfield, to_integerfield),
+        migrations.RunPython(to_cardnumberfield, to_integerfield),  # Do conversion
         migrations.RemoveField(  # Remove old field when converting is done
             model_name='printer3dcourse',
             name='old_card_number'
         ),
+        # Move card number to user
+        migrations.RunPython(update_user_card_from_course, reverse_update_user_card_from_course),
         migrations.AddConstraint(
             model_name='printer3dcourse',
             constraint=models.CheckConstraint(

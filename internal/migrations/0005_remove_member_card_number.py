@@ -3,7 +3,7 @@
 from django.db import migrations
 
 
-def member_card(apps, schema_editor):
+def update_user_card_from_member(apps, schema_editor):
     """
     Set user card number from member card number
     """
@@ -11,11 +11,12 @@ def member_card(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for member in Member.objects.using(db_alias).all():
-        member.user.card_number = member.card_number
-        member.user.save()
+        if member.card_number and member.user:
+            member.user.card_number = member.card_number
+            member.user.save(using=db_alias)
 
 
-def reverse_member_card(apps, schema_editor):
+def reverse_update_user_card_from_member(apps, schema_editor):
     """
     Reverse setting of card number on user
     """
@@ -23,20 +24,19 @@ def reverse_member_card(apps, schema_editor):
     db_alias = schema_editor.connection.alias
 
     for member in Member.objects.using(db_alias).all():
-        card_number = member.user.card_number
-        member.card_number = card_number if card_number else ""
-        member.save()
+        if member.user and member.user.card_number:
+            member.card_number = member.user.card_number
+            member.save(using=db_alias)
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('internal', '0004_member_phone_number_field'),
         ('users', '0003_user_card_number'),
     ]
 
     operations = [
-        migrations.RunPython(member_card, reverse_member_card),
+        migrations.RunPython(update_user_card_from_member, reverse_update_user_card_from_member),
         migrations.RemoveField(
             model_name='member',
             name='card_number',
