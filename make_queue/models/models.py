@@ -97,7 +97,6 @@ class Machine(models.Model):
     )
     STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
 
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
@@ -114,6 +113,7 @@ class Machine(models.Model):
         verbose_name=_("Priority"),
         help_text=_("If specified, the machines are sorted ascending by this value."),
     )
+    out_of_order = models.BooleanField(verbose_name=_("Out of order"), default=False)
 
     @abstractmethod
     def get_reservation_set(self):
@@ -129,14 +129,15 @@ class Machine(models.Model):
     def reservations_in_period(self, start_time, end_time):
         return (self.get_reservation_set().filter(start_time__lte=start_time, end_time__gt=start_time)
                 | self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time)
-                | self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time, end_time__gte=end_time))
+                | self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
+                                                    end_time__gte=end_time))
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
 
     def get_status(self):
-        if self.status in (self.OUT_OF_ORDER, self.MAINTENANCE):
-            return self.status
+        if self.out_of_order:
+            return self.OUT_OF_ORDER
 
         if self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)):
             return self.RESERVED
@@ -200,7 +201,8 @@ class Quota(models.Model):
         reservation_exists_or_can_make_more = (self.reservation_set.filter(pk=reservation.pk).exists()
                                                or self.can_make_more_reservations(reservation.user))
         ignore_rules_or_valid_time = (self.ignore_rules
-                                      or ReservationRule.valid_time(reservation.start_time, reservation.end_time, reservation.machine.machine_type))
+                                      or ReservationRule.valid_time(reservation.start_time, reservation.end_time,
+                                                                    reservation.machine.machine_type))
         return reservation_exists_or_can_make_more and ignore_rules_or_valid_time
 
     @staticmethod

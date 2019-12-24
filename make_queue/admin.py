@@ -28,10 +28,10 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
 
 
 class MachineAdmin(admin.ModelAdmin):
-    list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'status', 'priority')
-    list_filter = ('machine_type', 'machine_model', 'location', 'status')
+    list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'out_of_order', 'priority')
+    list_filter = ('machine_type', 'machine_model', 'location', 'out_of_order')
     search_fields = ('name', 'machine_model', 'machine_type__name', 'location', 'location_url')
-    list_editable = ('status', 'priority')
+    list_editable = ('out_of_order', 'priority')
     ordering = ('machine_type__priority', 'priority', Lower('name'))
     list_select_related = ('machine_type',)
 
