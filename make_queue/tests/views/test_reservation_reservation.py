@@ -346,7 +346,7 @@ class MarkReservationAsDoneTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user("test")
         self.machine_type = MachineTypeField.get_machine_type(2)
-        self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.AVAILABLE, name="Test")
+        self.machine = Machine.objects.create(machine_type=self.machine_type, name="Test")
         Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False,
                              all=True)
         ReservationRule.objects.create(start_time=time(0, 0), end_time=time(23, 59), start_days=1, days_changed=6,

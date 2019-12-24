@@ -40,8 +40,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                                   start_time=(timezone.now() + timedelta(seconds=1)).time(),
                                                   event=event)
         self.machine_type = MachineTypeField.get_machine_type(1)
-        self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
-                                              machine_type=self.machine_type)
+        self.machine = Machine.objects.create(name="C1", location="Printer room", machine_type=self.machine_type)
         self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
                                                machine_type=self.machine_type)
@@ -208,10 +207,9 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                      "Changing a reservation with the maximum number of reservations should be valid")
 
     def test_same_time_separate_machines(self):
-        additional_printer = Machine.objects.create(name="C2", location="Printer room Mackerspace U1", status=Machine.AVAILABLE,
+        additional_printer = Machine.objects.create(name="C2", location="Printer room Mackerspace U1",
                                                     machine_type=self.machine_type)
-        Machine.objects.create(name="C3", location="Printer room Mackerspace U1", status=Machine.AVAILABLE,
-                               machine_type=self.machine_type)
+        Machine.objects.create(name="C3", location="Printer room Mackerspace U1", machine_type=self.machine_type)
 
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
                                      "Saving a single reservation should be valid")
