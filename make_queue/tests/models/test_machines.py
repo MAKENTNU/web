@@ -13,34 +13,28 @@ class TestGenericMachine(TestCase):
 
     def test_status(self):
         printer_machine_type = MachineType.objects.get(pk=1)
-        printer = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
+        printer = Machine.objects.create(name="C1", location="Printer room",
                                          machine_model="Ultimaker 2 Extended", machine_type=printer_machine_type)
         user = User.objects.create_user("test")
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
         Quota.objects.create(machine_type=printer_machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
         self.check_status(printer, Machine.AVAILABLE)
-        printer.status = Machine.OUT_OF_ORDER
+        printer.out_of_order = True
         self.check_status(printer, Machine.OUT_OF_ORDER)
-        printer.status = Machine.MAINTENANCE
-        self.check_status(printer, Machine.MAINTENANCE)
-        printer.status = Machine.RESERVED
+        printer.out_of_order = False
         self.check_status(printer, Machine.AVAILABLE)
 
         Reservation.objects.create(machine=printer, start_time=timezone.now(),
                                    end_time=timezone.now() + timedelta(hours=1), user=user)
 
         self.check_status(printer, Machine.RESERVED)
-        printer.status = Machine.AVAILABLE
-        self.check_status(printer, Machine.RESERVED)
-        printer.status = Machine.OUT_OF_ORDER
+        printer.out_of_order = True
         self.check_status(printer, Machine.OUT_OF_ORDER)
-        printer.status = Machine.MAINTENANCE
-        self.check_status(printer, Machine.MAINTENANCE)
 
     def check_status(self, machine, status):
         self.assertEquals(machine.get_status(), status)
-        self.assertEquals(machine.get_status_display(), Machine.STATUS_CHOICES_DICT[status])
+        self.assertEquals(machine._get_status_display(), Machine.STATUS_CHOICES_DICT[status])
 
 
 class TestCanUse3DPrinter(TestCase):

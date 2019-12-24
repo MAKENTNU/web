@@ -16,18 +16,19 @@ class MyReservationsViewTestCase(TestCase):
         self.printer_machine_type = MachineType.objects.get(pk=1)
 
         printer = Machine.objects.create(name="U1", machine_type=self.printer_machine_type,
-                                         machine_model="Ultimaker 2", location="S1", status=Machine.AVAILABLE)
+                                         machine_model="Ultimaker 2", location="S1")
         Quota.objects.create(user=self.user, number_of_reservations=2, ignore_rules=True,
                              machine_type=self.printer_machine_type)
         Printer3DCourse.objects.create(user=self.user, name=self.user.get_full_name(), username=self.user.username,
                                        date=timezone.now().date())
 
-        Reservation.objects.create(user=self.user, machine=printer, event=None,
-                                   start_time=timezone.now(), end_time=timezone.now() + timezone.timedelta(hours=2))
+        Reservation.objects.create(user=self.user, machine=printer, event=None, start_time=timezone.now(),
+                                   end_time=timezone.now() + timezone.timedelta(hours=2))
 
     def test_get_user_reservations_single_reservation(self):
         self.assertEqual([Reservation.objects.get(user=self.user)],
-                         list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"]))
+                         list(template_view_get_context_data(MyReservationsView, request_user=self.user)[
+                                  "reservations"]))
 
     def test_get_user_reservations_multiple_reservations(self):
         Reservation.objects.create(user=self.user,
@@ -44,7 +45,7 @@ class MyReservationsViewTestCase(TestCase):
         Quota.objects.create(user=self.user, number_of_reservations=2, machine_type=sewing_machine_type,
                              ignore_rules=True)
 
-        sewing_machine = Machine.objects.create(name="T1", machine_model="Generic", location="M1", status=Machine.AVAILABLE,
+        sewing_machine = Machine.objects.create(name="T1", machine_model="Generic", location="M1",
                                                 machine_type=sewing_machine_type)
 
         Reservation.objects.create(user=self.user, machine=sewing_machine,

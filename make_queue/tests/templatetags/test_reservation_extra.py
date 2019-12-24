@@ -22,7 +22,7 @@ class ReservationExtraTestCases(TestCase):
         printer_machine_type = MachineType.objects.get(pk=1)
         Quota.objects.create(user=user, number_of_reservations=2, ignore_rules=True,
                              machine_type=printer_machine_type)
-        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status=Machine.AVAILABLE,
+        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker",
                                          machine_type=printer_machine_type)
         Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
                                        date=timezone.now())
@@ -39,7 +39,7 @@ class ReservationExtraTestCases(TestCase):
         now_mock.return_value = timezone.get_default_timezone().localize(date)
         printer_machine_type = MachineType.objects.get(pk=1)
         printer = Machine.objects.create(
-            name="U1", location="S1", machine_model="Ultimaker", machine_type=printer_machine_type, status=Machine.AVAILABLE,
+            name="U1", location="S1", machine_model="Ultimaker", machine_type=printer_machine_type,
         )
 
         self.assertEqual(reverse('reservation_calendar',
