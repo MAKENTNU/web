@@ -159,22 +159,6 @@ class FreeSlotForm(forms.Form):
 
 
 class BaseMachineForm(forms.ModelForm):
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        status_choices = (
-            Machine.AVAILABLE,
-            Machine.OUT_OF_ORDER,
-            Machine.MAINTENANCE,
-        )
-        self.fields["status"] = forms.ChoiceField(
-            choices=[
-                (c, Machine.STATUS_CHOICES_DICT[c])
-                for c in status_choices
-            ],
-            widget=SemanticSearchableChoiceInput(attrs={"required": True}),
-        )
-
     class Meta:
         model = Machine
         fields = "__all__"
