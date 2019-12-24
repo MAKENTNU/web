@@ -44,7 +44,7 @@ def card_color_from_machine_status(machine):
         Machine.OUT_OF_ORDER: "red",
         Machine.MAINTENANCE: "brown",
     }
-    return colors[machine.get_status()]
+    return colors[machine.status]
 
 
 @register.simple_tag()
@@ -63,7 +63,7 @@ def card_text_from_machine_status(machine):
     next_reservation = machine.get_next_reservation()
 
     # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.
-    if (machine.get_status() == Machine.AVAILABLE
+    if (machine.status == Machine.AVAILABLE
             and next_reservation is not None
             and (next_reservation.start_time - timezone.now()).days < 1):
         # Uses old format scheme due to gettext not having automatic detection of translations in f-strings

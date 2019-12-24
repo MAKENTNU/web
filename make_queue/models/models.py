@@ -135,7 +135,8 @@ class Machine(models.Model):
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
 
-    def get_status(self):
+    @property
+    def status(self):
         if self.out_of_order:
             return self.OUT_OF_ORDER
 
@@ -150,11 +151,11 @@ class Machine(models.Model):
         return super()._get_FIELD_display(field)
 
     def _get_status_display(self):
-        return self.STATUS_CHOICES_DICT[self.get_status()]
+        return self.STATUS_CHOICES_DICT[self.status]
 
     @property
     def is_reservable(self):
-        return self.get_status() in {self.AVAILABLE, self.RESERVED, self.IN_USE}
+        return self.status in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE}
 
 
 class MachineUsageRule(models.Model):
@@ -325,11 +326,11 @@ class Reservation(models.Model):
 
     def check_machine_out_of_order(self):
         """Check if the machine is listed as out of order"""
-        return self.machine.get_status() == Machine.OUT_OF_ORDER
+        return self.machine.status == Machine.Status.OUT_OF_ORDER
 
     def check_machine_maintenance(self):
         """Check if the machine is listed as maintenance"""
-        return self.machine.get_status() == Machine.MAINTENANCE
+        return self.machine.status == Machine.Status.MAINTENANCE
 
     def can_delete(self, user):
         if user.has_perm("make_queue.delete_reservation"):

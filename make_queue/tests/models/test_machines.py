@@ -33,7 +33,7 @@ class TestGenericMachine(TestCase):
         self.check_status(printer, Machine.OUT_OF_ORDER)
 
     def check_status(self, machine, status):
-        self.assertEquals(machine.get_status(), status)
+        self.assertEquals(machine.status, status)
         self.assertEquals(machine._get_status_display(), Machine.STATUS_CHOICES_DICT[status])
 
 
