@@ -128,7 +128,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
             } for machine_type in MachineTypeField.possible_machine_types if machine_type.can_user_use(self.user)
             ],
             "start_time": reservation.start_time, "end_time": reservation.end_time, "selected_machine": self.machine,
-            "event": self.timeplace, "special": False, "special_text": "",
+            "event": self.timeplace, "special": False, "special_text": "", "maintenance": False,
             "maximum_days_in_advance": Reservation.reservation_future_limit_days, "comment": "Comment",
             "reservation_pk": reservation.pk,
         })

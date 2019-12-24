@@ -23,6 +23,12 @@
     z-index: 200;
 }
 
+.make_reservation_calendar_time_table_maintenance {
+    background-color: #a5673f;
+    border-top: 1px solid #805032;
+    border-bottom: 1px solid #805032;
+}
+
 .make_reservation_calendar_time_table_event:hover {
     cursor: pointer;
 }

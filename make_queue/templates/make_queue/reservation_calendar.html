@@ -73,6 +73,8 @@
                                                 make_reservation_calendar_time_table_make
                                             {% elif reservation.reservation.event %}
                                                 make_reservation_calendar_time_table_event
+                                            {% elif reservation.reservation.maintenance %}
+                                                make_reservation_calendar_time_table_maintenance
                                             {% else %}
                                                 {% if reservation.reservation.user == request.user %}
                                                     make_reservation_calendar_time_table_my_non_event
@@ -120,6 +122,10 @@
             <th colspan="8">
                 <div class="make_reservation_calendar_legend make_right_floated">
                     <div class="make_reservation_calendar_legend_item">
+                        <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_maintenance"></div>
+                        {% trans "Maintenance" %}
+                    </div>
+                    <div class="make_reservation_calendar_legend_item">
                         <div class="make_reservation_calendar_legend_box make_reservation_calendar_time_table_make"></div>
                         {% trans "MAKE NTNU" %}
                     </div>
@@ -140,7 +146,6 @@
         </tr>
         </tfoot>
     </table>
-
     <script>
         {# The calendar is sometimes loaded through AJAX, as such the JavaScript cannot be loaded asynchronously #}
         $(".make_reservation_calendar_time_table_item").popup();

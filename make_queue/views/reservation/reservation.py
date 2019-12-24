@@ -28,7 +28,7 @@ class ReservationCreateOrChangeView(TemplateView):
         :return: The error message
         """
         if not reservation.is_within_allowed_period_for_reservation() and not (
-                reservation.special or reservation.event):
+                reservation.special or reservation.event or reservation.maintenance):
             return f"Reservasjoner kan bare lages {reservation.reservation_future_limit_days} dager frem i tid"
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
@@ -80,6 +80,7 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["selected_machine"] = reservation.machine
             context_data["event"] = reservation.event
             context_data["special"] = reservation.special
+            context_data["maintenance"] = reservation.maintenance
             context_data["special_text"] = reservation.special_text
             context_data["comment"] = reservation.comment
             context_data["can_change_start_time"] = reservation.can_change(self.request.user)
@@ -137,6 +138,9 @@ class MakeReservationView(ReservationCreateOrChangeView):
         if form.cleaned_data["special"]:
             reservation.special = True
             reservation.special_text = form.cleaned_data["special_text"]
+
+        if form.cleaned_data["maintenance"]:
+            reservation.maintenance = True
 
         return self.validate_and_save(reservation, form)
 

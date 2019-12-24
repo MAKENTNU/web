@@ -23,6 +23,7 @@ class ReservationForm(forms.Form):
     event = forms.BooleanField(required=False)
     event_pk = forms.CharField(required=False)
     special = forms.BooleanField(required=False)
+    maintenance = forms.BooleanField(required=False)
     special_text = forms.CharField(required=False, max_length=20)
     comment = forms.CharField(required=False, max_length=2000, initial="")
 
@@ -55,8 +56,8 @@ class ReservationForm(forms.Form):
                 raise ValidationError("Event must exist")
             cleaned_data["event"] = event_query.first()
 
-        if cleaned_data["event"] and cleaned_data["special"]:
-            raise ValidationError("Cannot be both special and event")
+        if sum(bool(cleaned_data[special_type]) for special_type in ("event", "special", "maintenance")) > 1:
+            raise ValidationError("Can only be one of event, MAKE NTNU and maintenance.")
 
         return cleaned_data
 

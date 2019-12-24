@@ -205,6 +205,7 @@ $('#event_checkbox').checkbox({
         $("#event_name_input").toggleClass("make_hidden", !$(this).is(':checked'));
         if ($(this).is(':checked')) {
             $('#special_checkbox').checkbox("uncheck");
+            $('#maintenance_checkbox').checkbox("uncheck");
             $("#start_time").calendar("setting", "maxDate", null);
         } else {
             $("#start_time").calendar("setting", "maxDate", maximum_day);
@@ -212,11 +213,26 @@ $('#event_checkbox').checkbox({
         updateMaxEndDate();
     },
 });
+
 $('#special_checkbox').checkbox({
     onChange: function () {
         $("#special_input").toggleClass("make_hidden", !$(this).is(':checked'));
         if ($(this).is(':checked')) {
             $('#event_checkbox').checkbox("uncheck");
+            $('#maintenance_checkbox').checkbox("uncheck");
+            $("#start_time").calendar("setting", "maxDate", null);
+        } else {
+            $("#start_time").calendar("setting", "maxDate", maximum_day);
+        }
+        updateMaxEndDate();
+    },
+});
+
+$('#maintenance_checkbox').checkbox({
+    onChange: function () {
+        if ($(this).is(':checked')) {
+            $('#event_checkbox').checkbox("uncheck");
+            $('#special_checkbox').checkbox("uncheck");
             $("#start_time").calendar("setting", "maxDate", null);
         } else {
             $("#start_time").calendar("setting", "maxDate", maximum_day);
