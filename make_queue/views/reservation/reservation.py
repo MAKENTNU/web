@@ -297,9 +297,8 @@ class FindFreeSlot(FormView):
         required_time = form.cleaned_data["hours"] + form.cleaned_data["minutes"] / 60
 
         periods = []
-        for machine in Machine.objects.filter(machine_type=form.cleaned_data["machine_type"]):
-            if not machine.get_status() == Machine.OUT_OF_ORDER:
-                periods += self.get_periods(machine, required_time)
+        for machine in Machine.objects.filter(machine_type=form.cleaned_data["machine_type"], out_of_order=False):
+            periods += self.get_periods(machine, required_time)
 
         # Periods in the near future is more interesting than in the distant future
         periods.sort(key=lambda period: period["start_time"])

@@ -30,12 +30,12 @@ class Machine(models.Model):
     )
     STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
 
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
     machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
     machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
+    out_of_order = models.BooleanField(verbose_name=_("Out of order"), default=False)
 
     @abstractmethod
     def get_reservation_set(self):
@@ -51,19 +51,25 @@ class Machine(models.Model):
     def reservations_in_period(self, start_time, end_time):
         return (self.get_reservation_set().filter(start_time__lte=start_time, end_time__gt=start_time)
                 | self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time)
-                | self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time, end_time__gte=end_time))
+                | self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time,
+                                                    end_time__gte=end_time))
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
 
     def get_status(self):
-        if self.status in (self.OUT_OF_ORDER, self.MAINTENANCE):
-            return self.status
+        if self.out_of_order:
+            return self.OUT_OF_ORDER
 
-        if self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)):
-            return self.RESERVED
-        else:
+        current = self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1))
+        if not current:
             return self.AVAILABLE
+
+        current = current.first()
+        if current.maintenance:
+            return self.MAINTENANCE
+        else:
+            return self.RESERVED
 
     def _get_FIELD_display(self, field):
         if field.attname == "status":
@@ -109,7 +115,8 @@ class Quota(models.Model):
         reservation_exists_or_can_make_more = (self.reservation_set.filter(pk=reservation.pk).exists()
                                                or self.can_make_more_reservations(reservation.user))
         ignore_rules_or_valid_time = (self.ignore_rules
-                                      or ReservationRule.valid_time(reservation.start_time, reservation.end_time, reservation.machine.machine_type))
+                                      or ReservationRule.valid_time(reservation.start_time, reservation.end_time,
+                                                                    reservation.machine.machine_type))
         return reservation_exists_or_can_make_more and ignore_rules_or_valid_time
 
     @staticmethod
@@ -156,6 +163,7 @@ class Reservation(models.Model):
     event = models.ForeignKey(TimePlace, null=True, blank=True, on_delete=models.CASCADE)
     showed = models.NullBooleanField(default=None)
     special = models.BooleanField(default=False)
+    maintenance = models.BooleanField(default=False, verbose_name=_("Maintenance"))
     special_text = models.CharField(max_length=64)
     reservation_future_limit_days = 28
     comment = models.TextField(max_length=2000, default="")
@@ -167,7 +175,7 @@ class Reservation(models.Model):
             raise ValidationError("Not a valid reservation")
 
         # Do not connect the reservation to a quota if it is not a personal reservation
-        if not (self.event or self.special):
+        if not (self.event or self.special or self.maintenance):
             self.quota = Quota.get_best_quota(self)
 
         super(Reservation, self).save(*args, **kwargs)
@@ -187,7 +195,7 @@ class Reservation(models.Model):
             return False
 
         # Event reservations are always valid, if the time is not already reserved
-        if self.event or self.special:
+        if self.event or self.special or self.maintenance:
             return self.user.has_perm("make_queue.can_create_event_reservation")
 
         # Limit the amount of time forward in time a reservation can be made
@@ -220,7 +228,7 @@ class Reservation(models.Model):
 
     def can_change(self, user):
         if (user.has_perm("make_queue.can_create_event_reservation")
-                and (self.special or (self.event is not None))):
+                and (self.maintenance or self.special or (self.event is not None))):
             return True
         if self.start_time < timezone.now():
             return False
