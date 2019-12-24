@@ -59,7 +59,7 @@ def shorthand_days():
 
 @register.simple_tag()
 def card_text_from_machine_status(machine):
-    status = machine.get_status_display()
+    status = machine._get_status_display()
     next_reservation = machine.get_next_reservation()
 
     # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.

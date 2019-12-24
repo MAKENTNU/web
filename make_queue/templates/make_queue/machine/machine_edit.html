@@ -23,16 +23,11 @@
                     {% endfor %}
                 {% endfor %}
             {% endif %}
+
             {% csrf_token %}
-            <div class="ui two fields">
-                <div class="ui field">
-                    <label>{{ form.name.label }}</label>
-                    {{ form.name }}
-                </div>
-                <div class="ui field">
-                    <label>{{ form.status.label }}</label>
-                    {{ form.status }}
-                </div>
+            <div class="ui field">
+                <label>{{ form.name.label }}</label>
+                {{ form.name }}
             </div>
             <div class="ui two fields">
                 {% if form.machine_type %}
@@ -58,7 +53,13 @@
                     {{ form.location_url }}
                 </div>
             </div>
-
+            <div class="ui field">
+                <label>{{ form.out_of_order.label }}</label>
+                <div class="ui checkbox">
+                    {{ form.out_of_order }}
+                    <label>{{ form.out_of_order.label }}</label>
+                </div>
+            </div>
             <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
 
             <a href="{% url "reservation_machines_overview" %}" class="ui right floated red button">
