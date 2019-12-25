@@ -59,11 +59,12 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         reservation.validate = validate_function
 
     def create_reservation(self, timedelta_start, timedelta_end, event=None, user=None, machine=None, special=False,
-                           special_text=""):
+                           special_text="", maintenance=False):
         machine = self.machine if machine is None else machine
         user = self.user if user is None else user
         return Reservation(user=user, machine=machine, event=event, start_time=timezone.now() + timedelta_start,
-                           end_time=timezone.now() + timedelta_end, special=special, special_text=special_text)
+                           end_time=timezone.now() + timedelta_end, special=special, special_text=special_text,
+                           maintenance=maintenance)
 
     def set_reservation_future_limit_days(self, days):
         self.reservation_future_limit_days = Reservation.reservation_future_limit_days
@@ -192,6 +193,32 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
             self.create_reservation(timedelta(hours=1), timedelta(hours=self.max_time_reservation + 2),
                                     event=self.timeplace),
             "User should be able to make event reservations longer than their maximum reservation time")
+
+    def test_make_maintenance_without_permission(self):
+        self.check_reservation_invalid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=2), maintenance=True),
+            "Should not be able to make maintenance reservation without correct permission")
+
+    def test_make_maintenance_with_permission(self):
+        self.give_user_event_permission()
+        self.user_quota.max_number_of_reservations = 1
+        self.user_quota.save()
+
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=2), maintenance=True),
+            "User with the correct permission should be allowed to create an maintenance reservation")
+
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(days=1, hours=1), timedelta(days=1, hours=2), maintenance=True),
+            "Maintenance reservations should not count towards the total number of reservations")
+
+    def test_make_maintenance_reservation_with_longer_than_user_max_time(self):
+        self.give_user_event_permission()
+
+        self.check_reservation_valid(
+            self.create_reservation(timedelta(hours=1), timedelta(hours=self.max_time_reservation + 2),
+                                    event=self.timeplace),
+            "User should be able to make maintenance reservations longer than their maximum reservation time")
 
     def test_change_event_while_maximum_booked(self):
         self.user_quota.max_number_of_reservations = 1

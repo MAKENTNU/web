@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.models import AnonymousUser, Permission
 from users.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
@@ -18,6 +18,7 @@ class TestGenericMachine(TestCase):
         printer = Machine.objects.create(name="C1", location="Printer room", machine_model="Ultimaker 2 Extended",
                                          machine_type=machine_type)
         user = User.objects.create_user("test")
+        user.user_permissions.add(Permission.objects.get(codename="can_create_event_reservation"))
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
         Quota.objects.create(machine_type=machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
@@ -27,12 +28,20 @@ class TestGenericMachine(TestCase):
         printer.out_of_order = False
         self.check_status(printer, Machine.AVAILABLE)
 
-        Reservation.objects.create(machine=printer, start_time=timezone.now(),
-                                   end_time=timezone.now() + timedelta(hours=1), user=user)
+        reservation = Reservation.objects.create(machine=printer, start_time=timezone.now(), maintenance=True,
+                                                 end_time=timezone.now() + timedelta(hours=1), user=user)
 
-        self.check_status(printer, Machine.RESERVED)
+        self.check_status(printer, Machine.MAINTENANCE)
         printer.out_of_order = True
         self.check_status(printer, Machine.OUT_OF_ORDER)
+
+        reservation.delete()
+        Reservation.objects.create(machine=printer, maintenance=False, start_time=timezone.now(),
+                                   end_time=timezone.now() + timedelta(hours=1), user=user)
+
+        self.check_status(printer, Machine.OUT_OF_ORDER)
+        printer.out_of_order = False
+        self.check_status(printer, Machine.RESERVED)
 
     def check_status(self, machine, status):
         self.assertEquals(machine.status, status)
