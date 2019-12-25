@@ -13,5 +13,5 @@ class AdminReservationView(TemplateView):
 
         :return: The context required for the view
         """
-        return {"reservations": Reservation.objects.exclude(event=None, special=False).order_by(
+        return {"reservations": Reservation.objects.exclude(event=None, special=False, maintenance=False).order_by(
             "-end_time", "-start_time"), "admin": True}

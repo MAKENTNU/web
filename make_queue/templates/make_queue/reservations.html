@@ -83,6 +83,11 @@
                         <td>
                             <b class="large-text">{{ reservation.special_text }}</b>
                         </td>
+                    {% elif reservation.maintenance %}
+                        <td>
+                            <b>{% trans "Maintenance" %}</b><br>
+                            {{ reservation.comment }}
+                        </td>
                     {% endif %}
                     <td>
                         <a href="{% calendar_url_reservation reservation %}">
