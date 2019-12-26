@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from datetime import timedelta
+from enum import Enum
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -15,20 +16,12 @@ from web.multilingual.database import MultiLingualRichTextUploadingField
 
 
 class Machine(models.Model):
-    RESERVED = "R"
-    AVAILABLE = "F"
-    IN_USE = "I"
-    OUT_OF_ORDER = "O"
-    MAINTENANCE = "M"
-
-    STATUS_CHOICES = (
-        (RESERVED, _("Reserved")),
-        (AVAILABLE, _("Available")),
-        (IN_USE, _("In use")),
-        (OUT_OF_ORDER, _("Out of order")),
-        (MAINTENANCE, _("Maintenance")),
-    )
-    STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
+    class Status(Enum):
+        RESERVED = _("Reserved")
+        AVAILABLE = _("Available")
+        IN_USE = _("In use")
+        OUT_OF_ORDER = _("Out of order")
+        MAINTENANCE = _("Maintenance")
 
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
     location = models.CharField(max_length=40, verbose_name=_("Location"))
@@ -60,17 +53,17 @@ class Machine(models.Model):
     @property
     def status(self):
         if self.out_of_order:
-            return self.OUT_OF_ORDER
+            return self.Status.OUT_OF_ORDER
 
         current = self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1))
         if not current:
-            return self.AVAILABLE
+            return self.Status.AVAILABLE
 
         current = current.first()
         if current.maintenance:
-            return self.MAINTENANCE
+            return self.Status.MAINTENANCE
         else:
-            return self.RESERVED
+            return self.Status.RESERVED
 
     def _get_FIELD_display(self, field):
         if field.attname == "status":
@@ -78,7 +71,7 @@ class Machine(models.Model):
         return super()._get_FIELD_display(field)
 
     def _get_status_display(self):
-        return self.STATUS_CHOICES_DICT[self.status]
+        return self.status.value
 
 
 class MachineUsageRule(models.Model):

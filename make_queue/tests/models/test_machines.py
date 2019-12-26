@@ -22,30 +22,30 @@ class TestGenericMachine(TestCase):
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
         Quota.objects.create(machine_type=machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
-        self.check_status(printer, Machine.AVAILABLE)
+        self.check_status(printer, Machine.Status.AVAILABLE)
         printer.out_of_order = True
-        self.check_status(printer, Machine.OUT_OF_ORDER)
+        self.check_status(printer, Machine.Status.OUT_OF_ORDER)
         printer.out_of_order = False
-        self.check_status(printer, Machine.AVAILABLE)
+        self.check_status(printer, Machine.Status.AVAILABLE)
 
         reservation = Reservation.objects.create(machine=printer, start_time=timezone.now(), maintenance=True,
                                                  end_time=timezone.now() + timedelta(hours=1), user=user)
 
-        self.check_status(printer, Machine.MAINTENANCE)
+        self.check_status(printer, Machine.Status.MAINTENANCE)
         printer.out_of_order = True
-        self.check_status(printer, Machine.OUT_OF_ORDER)
+        self.check_status(printer, Machine.Status.OUT_OF_ORDER)
 
         reservation.delete()
         Reservation.objects.create(machine=printer, maintenance=False, start_time=timezone.now(),
                                    end_time=timezone.now() + timedelta(hours=1), user=user)
 
-        self.check_status(printer, Machine.OUT_OF_ORDER)
+        self.check_status(printer, Machine.Status.OUT_OF_ORDER)
         printer.out_of_order = False
-        self.check_status(printer, Machine.RESERVED)
+        self.check_status(printer, Machine.Status.RESERVED)
 
     def check_status(self, machine, status):
         self.assertEquals(machine.status, status)
-        self.assertEquals(machine._get_status_display(), Machine.STATUS_CHOICES_DICT[status])
+        self.assertEquals(machine._get_status_display(), status.value)
 
 
 class TestCanUse3DPrinter(TestCase):
