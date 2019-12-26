@@ -38,11 +38,11 @@ def numeric_range(start, end, step=1):
 @register.simple_tag()
 def card_color_from_machine_status(machine):
     colors = {
-        Machine.RESERVED: "blue",
-        Machine.AVAILABLE: "green",
-        Machine.IN_USE: "orange",
-        Machine.OUT_OF_ORDER: "red",
-        Machine.MAINTENANCE: "brown",
+        Machine.Status.RESERVED: "blue",
+        Machine.Status.AVAILABLE: "green",
+        Machine.Status.IN_USE: "orange",
+        Machine.Status.OUT_OF_ORDER: "red",
+        Machine.Status.MAINTENANCE: "brown",
     }
     return colors[machine.status]
 
@@ -63,7 +63,7 @@ def card_text_from_machine_status(machine):
     next_reservation = machine.get_next_reservation()
 
     # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.
-    if (machine.status == Machine.AVAILABLE
+    if (machine.status == Machine.Status.AVAILABLE
             and next_reservation is not None
             and (next_reservation.start_time - timezone.now()).days < 1):
         # Uses old format scheme due to gettext not having automatic detection of translations in f-strings
