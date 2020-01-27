@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-12-17 15:18+0100\n"
+"POT-Creation-Date: 2020-01-27 09:29+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -72,7 +72,8 @@ msgstr ""
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile.html:145 make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:145
+#: make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
@@ -158,7 +159,7 @@ msgstr "Ferdighet lagt til!"
 msgid "Title"
 msgstr "Tittel"
 
-#: contentbox/templates/contentbox/display.html:10
+#: contentbox/templates/contentbox/display.html:13
 #: contentbox/templates/contentbox/edit.html:5
 #: contentbox/templates/contentbox/edit.html:16
 #: docs/templates/docs/documentation_page.html:36
@@ -190,6 +191,12 @@ msgstr "Et eller flere språk mangler innhold"
 #: news/templates/news/timeplace_edit.html:84
 msgid "Save"
 msgstr "Lagre"
+
+#: docs/forms.py:42
+#, fuzzy
+#| msgid "No content exists for this page"
+msgid "The content does not belong to the given page"
+msgstr "Det eksisterer ingen innhold for denne siden"
 
 #: docs/models.py:13
 msgid "Only numbers, letters, space, parenthesises and colon are allowed"
@@ -364,7 +371,9 @@ msgstr "Logo"
 #: docs/templates/docs/search.html:40
 msgid ""
 "There are no documents for that search. Try searching for something else."
-msgstr "The finnes ingen dokumenter som samsvarer med det søket. Vennligst prøve et annet søk."
+msgstr ""
+"The finnes ingen dokumenter som samsvarer med det søket. Vennligst prøve et "
+"annet søk."
 
 #: groups/models.py:92
 msgid "group"
@@ -408,8 +417,9 @@ msgstr "Velg bruker"
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: internal/models.py:23 make_queue/forms.py:115 make_queue/models/course.py:19
-#: make_queue/models/models.py:90 news/models.py:212
+#: internal/models.py:23 make_queue/forms.py:115
+#: make_queue/models/course.py:19 make_queue/models/models.py:90
+#: news/models.py:212
 msgid "User"
 msgstr "Bruker"
 
@@ -446,8 +456,8 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:33 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:217
-#: news/templates/news/admin_event_tickets.html:39
+#: make_queue/templates/make_queue/make_reservation.html:101
+#: news/models.py:217 news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -483,7 +493,8 @@ msgstr "Drive"
 msgid "Slack"
 msgstr "Slack"
 
-#: internal/models.py:146 make_queue/templates/make_queue/reservations.html:90
+#: internal/models.py:146
+#: make_queue/templates/make_queue/reservations.html:90
 #: make_queue/templates/make_queue/reservations.html:161
 msgid "Calendar"
 msgstr "Kalender"
@@ -530,7 +541,8 @@ msgstr "Medlemmer"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43 web/templates/web/header.html:83
+#: internal/templates/internal/header.html:43
+#: web/templates/web/header.html:83
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -585,7 +597,8 @@ msgid "Filter committees"
 msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/members.html:80
-#: internal/templates/internal/members.html:153 make_queue/models/models.py:34
+#: internal/templates/internal/members.html:153
+#: make_queue/models/models.py:34
 #: make_queue/templates/make_queue/course/course_panel.html:91
 #: make_queue/templates/make_queue/reservation_calendar.html:91
 #: news/models.py:214
@@ -598,8 +611,8 @@ msgid "Committee"
 msgstr "Komité"
 
 #: internal/templates/internal/members.html:83
-#: internal/templates/internal/members.html:193 make_queue/models/course.py:24
-#: make_queue/models/models.py:33
+#: internal/templates/internal/members.html:193
+#: make_queue/models/course.py:24 make_queue/models/models.py:33
 #: make_queue/templates/make_queue/course/course_panel.html:95
 #: make_queue/templates/make_queue/reservation_overview.html:53
 msgid "Status"
@@ -679,7 +692,7 @@ msgid "Select user"
 msgstr "Velg bruker"
 
 #: make_queue/forms.py:156 make_queue/models/models.py:38
-#: make_queue/models/models.py:91 make_queue/models/models.py:251
+#: make_queue/models/models.py:91 make_queue/models/models.py:264
 #: make_queue/templates/make_queue/reservation_overview.html:39
 msgid "Machine type"
 msgstr "Maskintype"
@@ -766,32 +779,34 @@ msgstr "Ignorerer regler"
 msgid "All users"
 msgstr "Alle brukere"
 
-#: make_queue/models/models.py:244
+#: make_queue/models/models.py:257
 #: make_queue/templates/make_queue/make_reservation.html:72
-#: make_queue/templates/make_queue/make_reservation.html:76 news/models.py:167
+#: make_queue/templates/make_queue/make_reservation.html:76
+#: news/models.py:167
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/models/models.py:245
+#: make_queue/models/models.py:258
 #: make_queue/templates/make_queue/make_reservation.html:86
-#: make_queue/templates/make_queue/make_reservation.html:90 news/models.py:171
+#: make_queue/templates/make_queue/make_reservation.html:90
+#: news/models.py:171
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/models/models.py:247
+#: make_queue/models/models.py:260
 msgid "Days"
 msgstr "Dager"
 
-#: make_queue/models/models.py:248
+#: make_queue/models/models.py:261
 #: make_queue/templates/make_queue/rule_edit.html:35
 msgid "Start days"
 msgstr "Start dager for regel perioder"
 
-#: make_queue/models/models.py:249
+#: make_queue/models/models.py:262
 msgid "Hours single period"
 msgstr "Timer enkelt periode"
 
-#: make_queue/models/models.py:250
+#: make_queue/models/models.py:263
 msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
@@ -969,7 +984,8 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:226
+#: make_queue/templates/make_queue/make_reservation.html:129
+#: news/models.py:226
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1279,6 +1295,32 @@ msgstr "Regler for bruk av"
 msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
+#: make_queue/views/reservation/reservation.py:34
+msgid "Reservations can only be made {:} days ahead of time"
+msgstr "Reservasjoner kan bare lages {:} dager frem i tid"
+
+#: make_queue/views/reservation/reservation.py:38
+msgid "The time slot or event, is no longer available"
+msgstr "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
+
+#: make_queue/views/reservation/reservation.py:41
+#, fuzzy
+#| msgid "No reservations connected to quota"
+msgid "The reservation exceeds the quota"
+msgstr "Reservasjonen går over kvoten"
+
+#: make_queue/views/reservation/reservation.py:44
+msgid "The start time can't be after the end time"
+msgstr "Starttiden kan ikke være etter sluttiden"
+
+#: make_queue/views/reservation/reservation.py:47
+msgid "The reservation can't start in the past"
+msgstr "Reservasjonen kan ikke starte i fortiden"
+
+#: make_queue/views/reservation/reservation.py:49
+msgid "The time slot is not available"
+msgstr "Tidspunktet er ikke tilgjengelig"
+
 #: news/forms.py:47
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
@@ -1389,8 +1431,8 @@ msgstr ""
 "besøke følgende adresse"
 
 #: news/templates/news/admin_articles.html:13
-#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
-#: web/templates/web/header.html:30
+#: news/templates/news/articles.html:13
+#: web/templates/web/admin_panel.html:15 web/templates/web/header.html:30
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1620,7 +1662,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Nytt arrangement"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:15
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:15
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
