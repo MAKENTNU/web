@@ -6,7 +6,7 @@ from news.views import EditArticleView, CreateArticleView, EditEventView, Create
     ViewEventView, AdminArticleView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
     DuplicateTimePlaceView, CreateTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView, \
-    ClaimTicketView, AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView, AdminEventsView
+    AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView, AdminEventsView
 
 urlpatterns = [
     path('admin/articles/', login_required(AdminArticleView.as_view()), name='admin-articles'),
@@ -26,16 +26,15 @@ urlpatterns = [
     path('event/<int:pk>/tickets/', permission_required("news.change_event")(AdminEventTicketView.as_view()), name="event-tickets"),
     path('event/<int:pk>/delete/', login_required(DeleteEventView.as_view()), name='event-delete'),
     path('event/<int:pk>/', ViewEventView.as_view(), name='event'),
-    path('event/<int:event_pk>/register/', EventRegistrationView.as_view(), name="register-event"),
+    path('event/<int:event_pk>/register/', login_required(EventRegistrationView.as_view()), name="register-event"),
     path('timeplace/<int:pk>/edit/', login_required(EditTimePlaceView.as_view()), name='timeplace-edit'),
     path('timeplace/<int:pk>/duplicate/', login_required(DuplicateTimePlaceView.as_view()), name='timeplace-duplicate'),
     path('timeplace/<int:event_pk>/new/', login_required(CreateTimePlaceView.as_view()), name='timeplace-new'),
     path('timeplace/<int:pk>/tickets/', permission_required("news.change_event")(AdminTimeplaceTicketView.as_view()), name="timeplace-tickets"),
     path('timeplace/<int:pk>/delete/', login_required(DeleteTimePlaceView.as_view()), name='timeplace-delete'),
     path('timeplace/<int:pk>/ical/', SingleTimePlaceFeed(), name='timeplace-ical'),
-    path('timeplace/<int:timeplace_pk>/register/', EventRegistrationView.as_view(), name="register-timeplace"),
+    path('timeplace/<int:timeplace_pk>/register/', login_required(EventRegistrationView.as_view()), name="register-timeplace"),
     path('ticket/<uuid:pk>/', TicketView.as_view(), name="ticket"),
-    path('ticket/<uuid:pk>/claim/', login_required(ClaimTicketView.as_view()), name="claim-ticket"),
     path('ticket/<uuid:pk>/cancel/', CancelTicketView.as_view(), name="cancel-ticket"),
     path('ticket/me/', login_required(MyTicketsView.as_view()), name="my-tickets"),
 ]

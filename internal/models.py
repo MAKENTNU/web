@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
@@ -9,6 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from groups.models import Committee
 from internal.util import date_to_term
+from users.models import User
 
 
 class Member(models.Model):

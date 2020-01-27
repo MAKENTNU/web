@@ -31,7 +31,7 @@ class MultiLingualFormField(forms.MultiValueField):
 
     def __init__(self, *args, **kwargs):
         defaults = {
-            "max_length": kwargs.pop("max_length", None)
+            "max_length": kwargs.pop("max_length", None),
         }
         defaults.update(**kwargs)
 

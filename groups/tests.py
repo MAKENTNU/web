@@ -1,5 +1,5 @@
 from django.contrib.admin.sites import AdminSite
-from django.contrib.auth import get_user_model
+from users.models import User
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
@@ -19,11 +19,13 @@ class MockRequest:
 
 
 class MockSuperUser:
+
     def has_perm(self, *args, **kwargs):
         return True
 
 
 class PermGroupTestCase(TestCase):
+
     def setUp(self):
         org = Group.objects.create(name='Org')
         mentor = Group.objects.create(name='Mentor')
@@ -37,8 +39,8 @@ class PermGroupTestCase(TestCase):
         content_type = ContentType.objects.get_for_model(Article)
         for i in range(5):
             Permission.objects.create(
-                codename='perm{}'.format(i),
-                name='Perm {}'.format(i),
+                codename=f'perm{i}',
+                name=f'Perm {i}',
                 content_type=content_type,
             )
 
@@ -133,7 +135,7 @@ class PermGroupTestCase(TestCase):
         self.assertIn(perm2, new_group.permissions.all())
 
     def test_user(self):
-        user_model = get_user_model()
+        user_model = User
 
         org = Group.objects.get(name='Org')
         dev = Group.objects.get(name='Dev')
@@ -214,6 +216,7 @@ class PermGroupTestCase(TestCase):
 
 
 class InheritanceGroupAdminTestCase(TestCase):
+
     def setUp(self):
         self.site = AdminSite()
         self.request = MockRequest()
@@ -249,6 +252,7 @@ class InheritanceGroupAdminTestCase(TestCase):
 
 
 class CommitteeTestCase(TestCase):
+
     def setUp(self):
         org = Group.objects.create(name='Org')
         mentor = Group.objects.create(name='Mentor')

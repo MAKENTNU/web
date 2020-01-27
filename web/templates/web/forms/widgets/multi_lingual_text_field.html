@@ -47,7 +47,7 @@
                      * @value Used to explicitly pass the value of the element, e.g. in the case of CKEDITOR
                      */
                     let tabValue = $(element).closest(".ui.tab").data("tab");
-                    $(".menu > .item[data-tab=" + tabValue + "]").toggleClass("language-not-filled", !isFilled(element, value));
+                    $(`.menu > .item[data-tab=${tabValue}]`).toggleClass("language-not-filled", !isFilled(element, value));
                 };
 
                 let tabs = $("#{{ widget.attrs.id }}").find(".ui.tab");
@@ -86,7 +86,7 @@
                         if (languagesNotFilled.length) {
                             let languageMissingTextIndicator = $("<div class='ui red pointing label'>");
                             let languagePlural = languagesNotFilled.length > 1 ? {% trans "languages" %} : {% trans "language" %};
-                            languageMissingTextIndicator.text("{% trans "The field is missing a value for" %} " + languagesNotFilled.length + ` ${languagePlural}.`);
+                            languageMissingTextIndicator.text(`{% trans "The field is missing a value for" %} ${languagesNotFilled.length} ${languagePlural}.`);
                             widget.append(languageMissingTextIndicator);
                         }
                     });

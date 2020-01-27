@@ -28,8 +28,8 @@ class ReservationCalendarComponentView(TemplateView):
         end_time = min(reservation.end_time, date + timedelta(days=1, seconds=-1))
 
         return {'reservation': reservation, 'start_percentage': date_to_percentage(start_time),
-                'start_time': "{:02}:{:02}".format(start_time.hour, start_time.minute),
-                'end_time': "{:02}:{:02}".format(end_time.hour, end_time.minute),
+                'start_time': f"{start_time.hour:02}:{start_time.minute:02}",
+                'end_time': f"{end_time.hour:02}:{end_time.minute:02}",
                 'length': date_to_percentage(end_time) - date_to_percentage(start_time)}
 
     @staticmethod
@@ -46,8 +46,8 @@ class ReservationCalendarComponentView(TemplateView):
 
         return [{
             "date": date,
-            "reservations": list(map(lambda x: ReservationCalendarComponentView.format_reservation(x, date),
-                                     machine.reservations_in_period(date, date + timedelta(days=1))))
+            "reservations": list(map(lambda reservation: ReservationCalendarComponentView.format_reservation(reservation, date),
+                                     machine.reservations_in_period(date, date + timedelta(days=1)))),
         } for date in [first_date_of_week + timedelta(days=day_number) for day_number in range(7)]]
 
     def get_context_data(self, year, week, machine):
@@ -70,8 +70,8 @@ class ReservationCalendarComponentView(TemplateView):
                        {
                            "periods": [
                                [
-                                   day + rule.start_time.hour / 24 + rule.start_time.minute / 1440,
-                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / 1440) % 7
+                                   day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
+                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
                                ]
                                for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
                            ],

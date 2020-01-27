@@ -66,6 +66,6 @@ class MazemapSearchInput(forms.TextInput):
         if attrs:
             default_attrs.update(attrs)
 
-        default_attrs["class"] = default_attrs.get("class", "") + " " + self.required_class_attr
+        default_attrs["class"] = f"{default_attrs.get('class', '')} {self.required_class_attr}"
 
         super().__init__(attrs=default_attrs)

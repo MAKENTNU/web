@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from users.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
@@ -106,6 +106,7 @@ class RuleForm(forms.ModelForm):
 
 class QuotaForm(forms.ModelForm):
     class UserModelChoiceField(ModelChoiceField):
+
         def label_from_instance(self, obj):
             return f'{obj.get_full_name()} - {obj.username}'
 
@@ -130,6 +131,7 @@ class QuotaForm(forms.ModelForm):
 
 
 class Printer3DCourseForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
@@ -157,6 +159,7 @@ class FreeSlotForm(forms.Form):
 
 
 class BaseMachineForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         status_choices = (

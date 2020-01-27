@@ -32,7 +32,7 @@ class ReservationFormTest(TestCase):
             "start_time": timezone.now() + timedelta(hours=1),
             "end_time": timezone.now() + timedelta(hours=2),
             # Since there is only one machine we can get an invalid primary key by just negating the current one
-            "machine_name": not self.machine.pk
+            "machine_name": not self.machine.pk,
         }
 
         form = ReservationForm(data=form_data)
@@ -85,7 +85,7 @@ class ReservationFormTest(TestCase):
             "end_time": timezone.now() + timedelta(hours=2),
             "machine_name": self.machine.pk,
             "special": True,
-            "special_text": "23 characters is enough"
+            "special_text": "23 characters is enough",
         }
 
         form = ReservationForm(data=form_data)

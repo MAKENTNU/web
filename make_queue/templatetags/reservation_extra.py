@@ -38,11 +38,11 @@ def numeric_range(start, end, step=1):
 @register.simple_tag()
 def card_color_from_machine_status(machine):
     colors = {
-        Machine.AVAILABLE: "green",
-        Machine.OUT_OF_ORDER: "red",
         Machine.RESERVED: "blue",
+        Machine.AVAILABLE: "green",
         Machine.IN_USE: "orange",
-        Machine.MAINTENANCE: "brown"
+        Machine.OUT_OF_ORDER: "red",
+        Machine.MAINTENANCE: "brown",
     }
     return colors[machine.get_status()]
 
@@ -58,9 +58,10 @@ def card_text_from_machine_status(machine):
     next_reservation = machine.get_next_reservation()
 
     # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.
-    if machine.get_status() == Machine.AVAILABLE and next_reservation is not None and (
-            next_reservation.start_time - timezone.now()).days < 1:
-        status = "{:} {:} {:}".format(status, _('for'), timeuntil(next_reservation.start_time))
+    if (machine.get_status() == Machine.AVAILABLE
+            and next_reservation is not None
+            and (next_reservation.start_time - timezone.now()).days < 1):
+        status = f"{status} {_('for')} {timeuntil(next_reservation.start_time)}"
     return status
 
 
@@ -75,7 +76,7 @@ def date_to_percentage(date):
         date = date_to_local(date)
     except ValueError:
         pass
-    return (date.hour / 24 + date.minute / 1440) * 100
+    return (date.hour / 24 + date.minute / (24 * 60)) * 100
 
 
 @register.simple_tag()

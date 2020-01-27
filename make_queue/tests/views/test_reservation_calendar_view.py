@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from unittest import mock
 
 import pytz
-from django.contrib.auth.models import User
+from users.models import User
 from django.test import TestCase
 from django.utils import timezone
 
@@ -34,7 +34,7 @@ class ReservationCalendarComponentViewTestCase(TestCase):
     def test_format_reservation_start_end_same_day(self, get_default_timezone_mock):
         # Set default timezone to UTC
         get_default_timezone_mock.return_value = timezone.get_fixed_timezone(0)
-        date = pytz.timezone("UTC").localize(
+        date = timezone.utc.localize(
             datetime.combine(timezone.now().date() + timedelta(days=1), datetime.min.time()))
         reservation = self.create_reservation(date + timedelta(hours=12), date + timedelta(hours=18))
         self.assertEqual(ReservationCalendarComponentView.format_reservation(reservation, date), {
@@ -42,14 +42,14 @@ class ReservationCalendarComponentViewTestCase(TestCase):
             'start_percentage': 50,
             'start_time': "12:00",
             'end_time': "18:00",
-            'length': 25
+            'length': 25,
         })
 
     @mock.patch("make_queue.util.time.timezone.get_default_timezone")
     def test_format_reservation_start_day_before(self, get_default_timezone_mock):
         # Set default timezone to UTC
         get_default_timezone_mock.return_value = timezone.get_fixed_timezone(0)
-        date = pytz.timezone("UTC").localize(
+        date = timezone.utc.localize(
             datetime.combine(timezone.now().date() + timedelta(days=1), datetime.min.time()))
         reservation = self.create_reservation(date + timedelta(hours=12), date + timedelta(days=1, hours=6))
         self.assertEqual(ReservationCalendarComponentView.format_reservation(reservation, date + timedelta(days=1)), {
@@ -57,14 +57,14 @@ class ReservationCalendarComponentViewTestCase(TestCase):
             'start_percentage': 0,
             'start_time': "00:00",
             'end_time': "06:00",
-            "length": 25
+            "length": 25,
         })
 
     @mock.patch("make_queue.util.time.timezone.get_default_timezone")
     def test_format_reservation_end_day_after(self, get_default_timezone_mock):
         # Set default timezone to UTC
         get_default_timezone_mock.return_value = timezone.get_fixed_timezone(0)
-        date = pytz.timezone("UTC").localize(
+        date = timezone.utc.localize(
             datetime.combine(timezone.now().date() + timedelta(days=1), datetime.min.time()))
         reservation = self.create_reservation(date + timedelta(hours=12), date + timedelta(days=1, hours=4))
         self.assertEqual(ReservationCalendarComponentView.format_reservation(reservation, date), {
@@ -72,5 +72,5 @@ class ReservationCalendarComponentViewTestCase(TestCase):
             'start_percentage': 50,
             'start_time': '12:00',
             'end_time': "23:59",
-            'length': 50 - 100 / 1440
+            'length': 50 - 100 / (24 * 60),
         })
