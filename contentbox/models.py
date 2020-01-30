@@ -28,6 +28,14 @@ class ContentBox(models.Model):
     def path(title):
         return django_path(f'{title}/', DisplayContentBoxView.as_view(title=title), name=title)
 
+    @staticmethod
+    def multi_path(title, alt_url1, *other_alt_urls) -> tuple:
+        alt_urls = (alt_url1, *other_alt_urls)
+        return (
+            django_path(f'{title}/', DisplayContentBoxView.as_view(title=title), name=title),
+            *(django_path(f'{url}/', DisplayContentBoxView.as_view(title=title)) for url in alt_urls),
+        )
+
     class Meta:
         permissions = (
             ("can_upload_image", "Can upload image for CKEditor"),

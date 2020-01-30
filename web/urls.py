@@ -32,7 +32,7 @@ urlpatterns += i18n_patterns(
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
     ContentBox.path('about'),
-    ContentBox.path('apply'),
+    *ContentBox.multi_path('apply', 'søk', 'sok'),
     ContentBox.path('makerspace'),
     ContentBox.path('cookies'),
     ContentBox.path('rules'),
