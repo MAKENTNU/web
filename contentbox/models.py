@@ -1,5 +1,5 @@
-from django.conf.urls import url as durl
 from django.db import models
+from django.urls import path as django_path
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
@@ -25,8 +25,8 @@ class ContentBox(models.Model):
             return ContentBox.objects.create(title=title)
 
     @staticmethod
-    def url(title):
-        return durl(r'%s/$' % title, DisplayContentBoxView.as_view(title=title), name=title)
+    def path(title):
+        return django_path(f'{title}/', DisplayContentBoxView.as_view(title=title), name=title)
 
     class Meta:
         permissions = (
