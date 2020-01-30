@@ -16,6 +16,13 @@
         <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
 
         <div class="ui container">
+            {% for message in messages %}
+                <div class="ui red message">
+                    <i class="close icon"></i>
+                    {{ message }}
+                </div>
+            {% endfor %}
+
             <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
                 {% if image %}
                     {% thumbnail image "150x150" crop="center" as image_thumb %}
@@ -32,7 +39,7 @@
                 <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="post"
                       enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden>
+                    <input id="input-image" type="file" name="image" accept="image/*" hidden>
                 </form>
             </div>
         </div>

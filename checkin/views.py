@@ -1,5 +1,7 @@
+import os
 from datetime import timedelta
 
+from PIL import Image
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -285,7 +287,18 @@ class EditProfilePictureView(View):
 
     def post(self, request):
         image = request.FILES.get('image')
-        profile = request.user.profile
-        profile.image = image
-        profile.save()
+        if not image:
+            return HttpResponseRedirect(reverse('profile'))
+
+        _image_name, image_ext = os.path.splitext(image.name)
+        image_ext = image_ext.lower()
+        # Pillow is the default image engine that `sorl-thumbnail` uses to generate thumbnails
+        pillow_registered_extensions = Image.registered_extensions()
+        if image_ext in pillow_registered_extensions:
+            profile = request.user.profile
+            profile.image = image
+            profile.save()
+        else:
+            messages.error(request, _("Illegal file type {image_ext}").fomat(image_ext=image_ext))
+
         return HttpResponseRedirect(reverse('profile'))
