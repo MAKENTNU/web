@@ -135,10 +135,10 @@ class Event(NewsBase):
             return False
         if self.private and not user.has_perm("news.can_view_private"):
             return False
-        if self.standalone:
-            return self.number_of_tickets > self.number_of_registered_tickets()
         if not self.get_future_occurrences():
             return False
+        if self.standalone:
+            return self.number_of_tickets > self.number_of_registered_tickets()
         return True
 
 
