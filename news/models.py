@@ -80,15 +80,17 @@ class NewsBase(models.Model):
         while resulting in non to very minuscule reduction in quality. In almost all cases, the possible reduction in
         quality will not be visible to the naked eye.
         """
-        image = Image.open(self.image)
-        if image.format == "JPEG":
-            output = BytesIO()
-            image.save(output, format="JPEG", quality=90)
-            output.seek(0)
+        # Only check the image if there is actually an image
+        if self.image:
+            image = Image.open(self.image)
+            if image.format == "JPEG":
+                output = BytesIO()
+                image.save(output, format="JPEG", quality=90)
+                output.seek(0)
 
-            self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
-                                              sys.getsizeof(output), None)
-        image.close()
+                self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
+                                                  sys.getsizeof(output), None)
+            image.close()
 
         super(NewsBase, self).save(kwargs)
 
