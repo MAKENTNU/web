@@ -82,15 +82,19 @@ class NewsBase(models.Model):
         """
         # Only check the image if there is actually an image
         if self.image:
-            image = Image.open(self.image)
-            if image.format == "JPEG":
-                output = BytesIO()
-                image.save(output, format="JPEG", quality=90)
-                output.seek(0)
+            # PIL will throw an IO error if it cannot open the image, or does not support the given format
+            try:
+                image = Image.open(self.image)
+                if image.format == "JPEG":
+                    output = BytesIO()
+                    image.save(output, format="JPEG", quality=90)
+                    output.seek(0)
 
-                self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
+                    self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
                                                   sys.getsizeof(output), None)
-            image.close()
+                image.close()
+            except IOError:
+                pass
 
         super(NewsBase, self).save(kwargs)
 
