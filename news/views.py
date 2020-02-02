@@ -88,7 +88,7 @@ class ViewEventView(TemplateView):
             'article': event,
             'timeplaces': event.timeplace_set.all() if event.standalone else event.timeplace_set.future(),
             'is_old': not event.timeplace_set.future().exists(),
-            'last_occurrence': event.get_past_occurrences().exists() and event.get_past_occurrences().first() or None
+            'last_occurrence': event.get_past_occurrences().first(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')
                 or event.private and not self.request.user.has_perm('news.can_view_private')):
