@@ -16,9 +16,9 @@ class ModelTestCase(TestCase):
                           hidden=TimePlace._meta.get_field("hidden").default):
         return TimePlace.objects.create(
             event=event,
-            pub_date=(timezone.now() + timedelta(days=pub_date_adjust_days)).date(),
-            start_date=timezone.now().date(),
-            start_time=(timezone.now() + timedelta(seconds=start_time_adjust_seconds)).time(),
+            pub_date=(timezone.localtime() + timedelta(days=pub_date_adjust_days)).date(),
+            end_date=timezone.localtime().date(),
+            end_time=(timezone.localtime() + timedelta(seconds=start_time_adjust_seconds)).time(),
             hidden=hidden,
         )
 
@@ -36,23 +36,23 @@ class ModelTestCase(TestCase):
     def test_article_manager(self):
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=(timezone.now() + timedelta(days=1)).date(),
-            pub_time=timezone.now().time()
+            pub_date=(timezone.localtime() + timedelta(days=1)).date(),
+            pub_time=timezone.localtime().time()
         )
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=timezone.now().date(),
-            pub_time=(timezone.now() + timedelta(seconds=1)).time()
+            pub_date=timezone.localtime().date(),
+            pub_time=(timezone.localtime() + timedelta(seconds=1)).time()
         )
         published1 = Article.objects.create(
             title='PUBLISHED',
-            pub_date=(timezone.now() - timedelta(days=1)).date(),
-            pub_time=timezone.now().time()
+            pub_date=(timezone.localtime() - timedelta(days=1)).date(),
+            pub_time=timezone.localtime().time()
         )
         published2 = Article.objects.create(
             title='PUBLISHED',
-            pub_date=timezone.now().date(),
-            pub_time=(timezone.now() - timedelta(seconds=1)).time()
+            pub_date=timezone.localtime().date(),
+            pub_time=(timezone.localtime() - timedelta(seconds=1)).time()
         )
         self.assertEqual(Article.objects.published().count(), 2)
         self.assertEqual(set(Article.objects.published()), {published1, published2})
