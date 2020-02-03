@@ -191,7 +191,7 @@ class Reservation(models.Model):
             return self.user.has_perm("make_queue.can_create_event_reservation")
 
         # Limit the amount of time forward in time a reservation can be made
-        if not self.is_within_allowed_period_for_reservation():
+        if not self.is_within_allowed_period():
             return False
 
         # Check if the user can change the reservation
@@ -211,7 +211,7 @@ class Reservation(models.Model):
         return self.quota_can_make_reservation()
 
     # Check if the start time is before current time
-    def reservation_starts_before_now(self):
+    def starts_before_now(self):
         return self.start_time < timezone.now()
 
     # Check if start time is after end time
@@ -223,7 +223,7 @@ class Reservation(models.Model):
         return Quota.can_make_reservation(self)
 
     # Check if the reservation is made within the reservation_future_limit
-    def is_within_allowed_period_for_reservation(self):
+    def is_within_allowed_period(self):
         return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
 
     def can_delete(self, user):

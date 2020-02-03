@@ -193,8 +193,6 @@ msgid "Save"
 msgstr "Lagre"
 
 #: docs/forms.py:42
-#, fuzzy
-#| msgid "No content exists for this page"
 msgid "The content does not belong to the given page"
 msgstr "Det eksisterer ingen innhold for denne siden"
 
@@ -1304,10 +1302,8 @@ msgid "The time slot or event, is no longer available"
 msgstr "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
 
 #: make_queue/views/reservation/reservation.py:41
-#, fuzzy
-#| msgid "No reservations connected to quota"
 msgid "The reservation exceeds the quota"
-msgstr "Reservasjonen går over kvoten"
+msgstr "Reservasjonen går over kvoten din"
 
 #: make_queue/views/reservation/reservation.py:44
 msgid "The start time can't be after the end time"

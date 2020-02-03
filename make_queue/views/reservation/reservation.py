@@ -28,24 +28,19 @@ class ReservationCreateOrChangeView(TemplateView):
         :param form: The form to generate an error message for
         :return: The error message
         """
-        if not reservation.is_within_allowed_period_for_reservation() and not (
+        if not reservation.is_within_allowed_period() and not (
                 reservation.special or reservation.event):
-            """Translation: Reservasjoner kan bare lages {:} dager frem i tid"""
-            return _("Reservations can only be made {:} days ahead of time".format(
-                reservation.reservation_future_limit_days));
-        if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
-            """Translation: Tidspunktet eller eventen, er ikke lengre tilgjengelig"""
+            return _("Reservations can only be made {} days ahead of time").format(
+                reservation.reservation_future_limit_days)
+        if self.request.user.has_perm(
+                "make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return _("The time slot or event, is no longer available")
         if not reservation.quota_can_make_reservation():
-            """Translation: Reservasjonen går over kvoten"""
-            return _("The reservation exceeds the quota")
+            return _("The reservation exceeds your quota")
         if reservation.check_start_time_after_end_time():
-            """Translation: Starttiden kan ikke være etter sluttiden"""
             return _("The start time can't be after the end time")
-        if reservation.reservation_starts_before_now():
-            """Translation: Reservasjonen kan ikke starte i fortiden"""
+        if reservation.starts_before_now():
             return _("The reservation can't start in the past")
-        """Translation: Tidspunktet er ikke tilgjengelig"""
         return _("The time slot is not available")
 
     def validate_and_save(self, reservation, form):
@@ -72,7 +67,8 @@ class ReservationCreateOrChangeView(TemplateView):
         :return: The context data needed for the template
         """
 
-        # Always include a list of events and machines to populate the dropdown lists
+        # Always include a list of events and machines to populate the dropdown
+        # lists
         context_data = {
             "new_reservation": self.new_reservation, "events": list(TimePlace.objects.filter(
                 Q(end_date=timezone.now().date(), end_time__gt=timezone.now().time()) |
@@ -85,7 +81,8 @@ class ReservationCreateOrChangeView(TemplateView):
             "maximum_days_in_advance": Reservation.reservation_future_limit_days,
         }
 
-        # If we are given a reservation, populate the information relevant to that reservation
+        # If we are given a reservation, populate the information relevant to
+        # that reservation
         if "reservation" in kwargs:
             reservation = kwargs["reservation"]
             context_data["start_time"] = reservation.start_time
@@ -96,7 +93,8 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
             context_data["comment"] = reservation.comment
-            context_data["can_change_start_time"] = reservation.can_change(self.request.user)
+            context_data["can_change_start_time"] = reservation.can_change(
+                self.request.user)
         # Otherwise populate with default information given to the view
         else:
             context_data["selected_machine"] = kwargs["machine"]
@@ -141,9 +139,12 @@ class MakeReservationView(ReservationCreateOrChangeView):
         :param form: The valid reservation form
         :return: HTTP response
         """
-        reservation = Reservation(start_time=form.cleaned_data["start_time"],
-                                  end_time=form.cleaned_data["end_time"], user=self.request.user,
-                                  machine=form.cleaned_data["machine"], comment=form.cleaned_data["comment"])
+        reservation = Reservation(
+            start_time=form.cleaned_data["start_time"],
+            end_time=form.cleaned_data["end_time"],
+            user=self.request.user,
+            machine=form.cleaned_data["machine"],
+            comment=form.cleaned_data["comment"])
 
         if form.cleaned_data["event"]:
             reservation.event = form.cleaned_data["event"]
@@ -196,7 +197,8 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
-        if not kwargs["reservation"].can_change(request.user) and not kwargs["reservation"].can_change_end_time(
+        if not kwargs["reservation"].can_change(
+                request.user) and not kwargs["reservation"].can_change_end_time(
                 request.user):
             return redirect("my_reservations")
         return super().dispatch(request, *args, **kwargs)
@@ -240,7 +242,8 @@ class MarkReservationAsDone(RedirectView):
             return self.get(request, *args, **kwargs)
 
         reservation = reservations.first()
-        if not reservation.can_change_end_time(request.user) or reservation.start_time >= timezone.now():
+        if not reservation.can_change_end_time(
+                request.user) or reservation.start_time >= timezone.now():
             return self.get(request, *args, **kwargs)
 
         reservation.end_time = timezone.now()
@@ -278,24 +281,36 @@ class FindFreeSlot(FormView):
         """
         periods = []
         reservations = list(
-            Reservation.objects.filter(end_time__gte=timezone.now(), machine__pk=machine.pk).order_by("start_time"))
+            Reservation.objects.filter(
+                end_time__gte=timezone.now(),
+                machine__pk=machine.pk).order_by("start_time"))
 
         # Find all periods between reservations
         for period_start, period_end in zip(reservations, reservations[1:]):
-            duration = timedelta_to_hours(period_end.start_time - period_start.end_time)
+            duration = timedelta_to_hours(
+                period_end.start_time - period_start.end_time)
             if duration >= required_time:
-                periods.append(self.format_period(machine, period_start.end_time, period_end.start_time))
+                periods.append(
+                    self.format_period(
+                        machine,
+                        period_start.end_time,
+                        period_end.start_time))
 
         # Add remaining time after last reservation
         if reservations:
             periods.append(self.format_period(
                 machine, reservations[-1].end_time,
                 timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)))
-        # If the machine is not reserved anytime in the future, we include the whole allowed period
+        # If the machine is not reserved anytime in the future, we include the
+        # whole allowed period
         else:
-            periods.append(self.format_period(
-                machine, timezone.now(),
-                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)))
+            periods.append(
+                self.format_period(
+                    machine,
+                    timezone.now(),
+                    timezone.now() +
+                    timezone.timedelta(
+                        days=Reservation.reservation_future_limit_days)))
         return periods
 
     def form_valid(self, form):
@@ -308,14 +323,17 @@ class FindFreeSlot(FormView):
         context = self.get_context_data()
 
         # Time should be expressed in hours
-        required_time = form.cleaned_data["hours"] + form.cleaned_data["minutes"] / 60
+        required_time = form.cleaned_data["hours"] + \
+            form.cleaned_data["minutes"] / 60
 
         periods = []
-        for machine in Machine.objects.filter(machine_type=form.cleaned_data["machine_type"]):
+        for machine in Machine.objects.filter(
+                machine_type=form.cleaned_data["machine_type"]):
             if not machine.get_status() == Machine.OUT_OF_ORDER:
                 periods += self.get_periods(machine, required_time)
 
-        # Periods in the near future is more interesting than in the distant future
+        # Periods in the near future is more interesting than in the distant
+        # future
         periods.sort(key=lambda period: period["start_time"])
 
         context.update({
