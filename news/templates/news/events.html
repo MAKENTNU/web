@@ -59,7 +59,7 @@
                 <div class="item">
                     <div class="ui small image">
                         <p class="ui yellow make_bg_yellow ribbon label">
-                            {{ event.last_occurrence.start_date|date:"d M" }}
+                            {{ event.last_occurrence.start_date|date:"d M Y" }}
                             {% if event.number_of_occurrences > 1 %}
                                 <br><span>+{{ event.number_of_occurrences|add:-1 }} {% if event.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
                             {% endif %}

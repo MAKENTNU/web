@@ -131,14 +131,23 @@ class Event(NewsBase):
         return self.event_type == self.STANDALONE
 
     def can_register(self, user):
+        # When hidden, registration is always disabled
         if self.hidden:
             return False
+
+        # Registration for private events is never allowed for non members
         if self.private and not user.has_perm("news.can_view_private"):
             return False
-        if self.standalone:
-            return self.number_of_tickets > self.number_of_registered_tickets()
+
+        # If there are no future occurrences, there is never anything to register for
         if not self.get_future_occurrences():
             return False
+
+        # If the event is standalone, the ability to register is dependent on if there are any more available tickets
+        if self.standalone:
+            return self.number_of_tickets > self.number_of_registered_tickets()
+
+        # Registration to a repeating event with future occurrences is handled by the time place objects
         return True
 
 
