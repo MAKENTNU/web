@@ -96,7 +96,7 @@ class NewsBase(models.Model):
             except IOError:
                 pass
 
-        super(NewsBase, self).save(kwargs)
+        super(NewsBase, self).save(**kwargs)
 
     def __str__(self):
         return self.title.__str__()
