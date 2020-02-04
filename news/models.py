@@ -15,26 +15,26 @@ class ArticleManager(models.Manager):
 
     def published(self):
         return self.filter(hidden=False).filter(
-            Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
-            Q(pub_date__lt=timezone.now().date()))
+            Q(pub_date=timezone.localtime().date(), pub_time__lt=timezone.localtime().time()) |
+            Q(pub_date__lt=timezone.localtime().date()))
 
 
 class TimePlaceManager(models.Manager):
 
     def published(self):
         return self.filter(hidden=False, event__hidden=False).filter(
-            Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
-            Q(pub_date__lt=timezone.now().date()))
+            Q(pub_date=timezone.localtime().date(), pub_time__lt=timezone.localtime().time()) |
+            Q(pub_date__lt=timezone.localtime().date()))
 
     def future(self):
         return self.published().filter(
-            Q(start_date=timezone.now().date(), start_time__gt=timezone.now().time()) |
-            Q(start_date__gt=timezone.now().date()))
+            Q(end_date=timezone.localtime().date(), end_time__gt=timezone.localtime().time()) |
+            Q(end_date__gt=timezone.localtime().date()))
 
     def past(self):
         return self.published().filter(
-            Q(start_date=timezone.now().date(), start_time__lt=timezone.now().time()) |
-            Q(start_date__lt=timezone.now().date()))
+            Q(end_date=timezone.localtime().date(), end_time__lt=timezone.localtime().time()) |
+            Q(end_date__lt=timezone.localtime().date()))
 
 
 class NewsBase(models.Model):
