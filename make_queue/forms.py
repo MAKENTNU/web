@@ -141,7 +141,8 @@ class Printer3DCourseForm(forms.ModelForm):
             queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
             required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name)
-        self.initial["card_number"] = self.instance.card_number.number
+        if self.instance.card_number is not None:
+            self.initial["card_number"] = self.instance.card_number.number
 
     class Meta:
         model = Printer3DCourse
