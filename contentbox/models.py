@@ -1,5 +1,5 @@
-from django.conf.urls import url as durl
 from django.db import models
+from django.urls import path as django_path
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
@@ -25,8 +25,16 @@ class ContentBox(models.Model):
             return ContentBox.objects.create(title=title)
 
     @staticmethod
-    def url(title):
-        return durl(r'%s/$' % title, DisplayContentBoxView.as_view(title=title), name=title)
+    def path(title):
+        return django_path(f'{title}/', DisplayContentBoxView.as_view(title=title), name=title)
+
+    @staticmethod
+    def multi_path(title, alt_url1, *other_alt_urls) -> tuple:
+        alt_urls = (alt_url1, *other_alt_urls)
+        return (
+            django_path(f'{title}/', DisplayContentBoxView.as_view(title=title), name=title),
+            *(django_path(f'{url}/', DisplayContentBoxView.as_view(title=title)) for url in alt_urls),
+        )
 
     class Meta:
         permissions = (
