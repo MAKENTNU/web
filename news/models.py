@@ -1,6 +1,10 @@
+import sys
 import uuid
 from datetime import date, time
+from io import BytesIO
 
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -69,6 +73,30 @@ class NewsBase(models.Model):
         default=False,
         verbose_name=_("MAKE internal"),
     )
+
+    def save(self, **kwargs):
+        """
+        Override of save, to change all JPEG images to have quality 90. This greatly reduces the size of JPEG images,
+        while resulting in non to very minuscule reduction in quality. In almost all cases, the possible reduction in
+        quality will not be visible to the naked eye.
+        """
+        # Only check the image if there is actually an image
+        if self.image:
+            # PIL will throw an IO error if it cannot open the image, or does not support the given format
+            try:
+                image = Image.open(self.image)
+                if image.format == "JPEG":
+                    output = BytesIO()
+                    image.save(output, format="JPEG", quality=90)
+                    output.seek(0)
+
+                    self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
+                                                  sys.getsizeof(output), None)
+                image.close()
+            except IOError:
+                pass
+
+        super(NewsBase, self).save(**kwargs)
 
     def __str__(self):
         return self.title.__str__()
