@@ -91,13 +91,18 @@
 
         <br>
 
-        {% if not profile.card_id %}
+        {% if not profile.user.card_number %}
             <div class="card-register">
                 <h3>{% trans "No registered card" %}</h3>
                 <p>
                     {% trans "Place the card on the card reader and press the button below to register the card" %}
                 </p>
                 <button class="ui button register-profile">{% trans "Register" %}</button>
+                <div id="duplicate_error" class="ui negative small message" style="display: none;">
+                    <i class="close icon"></i>
+                    <div class="header">{% trans "Card number is already in use" %}</div>
+                    <p>{% trans "Contact" %} <a href="mailto:dev@makentnu.no">styret@makentnu.no</a> {% trans "to fix the problem." %}</p>
+                </div>
             </div>
         {% endif %}
 
@@ -153,8 +158,13 @@
                         element.attr('data-tooltip', '{% trans "Scan card" %}');
                         element.attr('data-position', 'right center');
                     }
-
+                    $(".message.negative").fadeOut();
                 },
+                error: function (jqXHR, error, errorthrown) {
+                    if (jqXHR.status === 409) {
+                        $("#duplicate_error").fadeIn();
+                    }
+                }
             });
         }
 
@@ -166,6 +176,10 @@
             $('#image-form').submit();
         });
 
-
+        $(".message .close").click(function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
     </script>
 {% endblock scripts %}

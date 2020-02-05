@@ -36,10 +36,6 @@ a.place {
     width: calc(100% - 315px);
 }
 
-.container {
-    margin: 0 !important;
-}
-
 .article > .container > img {
     object-fit: cover;
     width: 100%;
