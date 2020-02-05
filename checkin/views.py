@@ -97,8 +97,8 @@ class ProfilePageView(TemplateView):
             profile = Profile.objects.create(user=self.request.user)
 
         # Connect card number from course registration to user
-        registration = Printer3DCourse.objects.filter(user__username=self.request.user.username)
-        if registration.exists():
+        registration = Printer3DCourse.objects.filter(user__username=self.request.user.username).first()
+        if registration is not None:
             registration.user = self.request.user
             registration.save()
 
