@@ -7,6 +7,7 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 
 from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
 from internal.models import Member, SystemAccess
+from make_queue.models.course import Printer3DCourse
 
 
 class Home(TemplateView):
@@ -37,6 +38,17 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
     def get_success_url(self):
         return reverse_lazy("edit-member", args=(self.object.pk,))
 
+    def form_valid(self, form):
+        user = form.cleaned_data['user']
+        registration = Printer3DCourse.objects.filter(username=user.username)
+        if registration.exists():
+            registration = registration.first()
+            user.card_number = registration.card_number
+            registration.user = user
+            registration.save()
+            user.save()
+        return super().form_valid(form)
+
 
 class EditMemberView(UserPassesTestMixin, UpdateView):
     template_name = "internal/edit_member.html"
@@ -53,6 +65,13 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         return reverse("members", args=(self.object.pk,))
+
+    def form_valid(self, form):
+        user = self.object.user
+        card_number = form.cleaned_data["card_number"]
+        user.card_number = card_number
+        user.save()
+        return super().form_valid(form)
 
 
 class MemberQuitView(UpdateView):
