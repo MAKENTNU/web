@@ -316,9 +316,9 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     def test_is_within_allowed_period_for_reservation(self):
         self.set_reservation_future_limit_days(7)
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
-        self.assertTrue(reservation.is_within_allowed_period_for_reservation())
+        self.assertTrue(reservation.is_within_allowed_period())
         reservation.end_time = timezone.now() + timedelta(days=7, minutes=2)
-        self.assertFalse(reservation.is_within_allowed_period_for_reservation())
+        self.assertFalse(reservation.is_within_allowed_period())
         self.reset_reservation_future_limit_days()
 
     def test_make_reservation_too_far_in_the_future(self):

@@ -183,7 +183,7 @@ class Reservation(models.Model):
             return False
 
         # A reservation must have a valid time period
-        if self.start_time >= self.end_time:
+        if self.check_start_time_after_end_time():
             return False
 
         # Event reservations are always valid, if the time is not already reserved
@@ -191,7 +191,7 @@ class Reservation(models.Model):
             return self.user.has_perm("make_queue.can_create_event_reservation")
 
         # Limit the amount of time forward in time a reservation can be made
-        if not self.is_within_allowed_period_for_reservation():
+        if not self.is_within_allowed_period():
             return False
 
         # Check if the user can change the reservation
@@ -208,9 +208,22 @@ class Reservation(models.Model):
             return False
 
         # Check if the user can make the given reservation/edit
+        return self.quota_can_make_reservation()
+
+    def starts_before_now(self):
+        """Check if the start time is before current time"""
+        return self.start_time < timezone.now()
+
+    def check_start_time_after_end_time(self):
+        """Check if start time is after end time"""
+        return self.start_time >= self.end_time
+
+    def quota_can_make_reservation(self):
+        """Check if the user can make the given reservation/edit"""
         return Quota.can_make_reservation(self)
 
-    def is_within_allowed_period_for_reservation(self):
+    def is_within_allowed_period(self):
+        """Check if the reservation is made within the reservation_future_limit"""
         return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
 
     def can_delete(self, user):
