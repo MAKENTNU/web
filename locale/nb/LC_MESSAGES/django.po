@@ -1319,11 +1319,10 @@ msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
 #: make_queue/views/reservation/reservation.py:36
-#, fuzzy, python-brace-format
-#| msgid "Reservations can only be made {num_days} days ahead of time"
+#, python-brace-format
 msgid "Reservations can only be made {num_days} day ahead of time"
 msgid_plural "Reservations can only be made {num_days} days ahead of time"
-msgstr[0] "Reservasjoner kan bare lages {num_days} dager frem i tid"
+msgstr[0] "Reservasjoner kan bare lages {num_days} dag frem i tid"
 msgstr[1] "Reservasjoner kan bare lages {num_days} dager frem i tid"
 
 #: make_queue/views/reservation/reservation.py:42
