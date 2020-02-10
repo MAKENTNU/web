@@ -290,12 +290,20 @@ class EditProfilePictureView(View):
         if not image:
             return HttpResponseRedirect(reverse('profile'))
 
+        # Prevent filename conflicts
+        image.name = f"{request.user.username}_{image.name}"
+
         _image_name, image_ext = os.path.splitext(image.name)
         image_ext = image_ext.lower()
         # Pillow is the default image engine that `sorl-thumbnail` uses to generate thumbnails
         pillow_registered_extensions = Image.registered_extensions()
         if image_ext in pillow_registered_extensions:
             profile = request.user.profile
+
+            # Delete old profile image
+            if profile.image:
+                profile.image.delete(save=False)  # will save model below
+
             profile.image = image
             profile.save()
         else:
