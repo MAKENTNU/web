@@ -6,8 +6,3 @@
 .clear-dropdown:hover {
     cursor: pointer;
 }
-
-#card_number_count {
-    float: right;
-    font-weight: normal;
-}

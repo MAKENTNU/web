@@ -1,6 +1,10 @@
+import sys
 import uuid
 from datetime import date, time
+from io import BytesIO
 
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -15,26 +19,26 @@ class ArticleManager(models.Manager):
 
     def published(self):
         return self.filter(hidden=False).filter(
-            Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
-            Q(pub_date__lt=timezone.now().date()))
+            Q(pub_date=timezone.localtime().date(), pub_time__lt=timezone.localtime().time()) |
+            Q(pub_date__lt=timezone.localtime().date()))
 
 
 class TimePlaceManager(models.Manager):
 
     def published(self):
         return self.filter(hidden=False, event__hidden=False).filter(
-            Q(pub_date=timezone.now().date(), pub_time__lt=timezone.now().time()) |
-            Q(pub_date__lt=timezone.now().date()))
+            Q(pub_date=timezone.localtime().date(), pub_time__lt=timezone.localtime().time()) |
+            Q(pub_date__lt=timezone.localtime().date()))
 
     def future(self):
         return self.published().filter(
-            Q(start_date=timezone.now().date(), start_time__gt=timezone.now().time()) |
-            Q(start_date__gt=timezone.now().date()))
+            Q(end_date=timezone.localtime().date(), end_time__gt=timezone.localtime().time()) |
+            Q(end_date__gt=timezone.localtime().date()))
 
     def past(self):
         return self.published().filter(
-            Q(start_date=timezone.now().date(), start_time__lt=timezone.now().time()) |
-            Q(start_date__lt=timezone.now().date()))
+            Q(end_date=timezone.localtime().date(), end_time__lt=timezone.localtime().time()) |
+            Q(end_date__lt=timezone.localtime().date()))
 
 
 class NewsBase(models.Model):
@@ -69,6 +73,30 @@ class NewsBase(models.Model):
         default=False,
         verbose_name=_("MAKE internal"),
     )
+
+    def save(self, **kwargs):
+        """
+        Override of save, to change all JPEG images to have quality 90. This greatly reduces the size of JPEG images,
+        while resulting in non to very minuscule reduction in quality. In almost all cases, the possible reduction in
+        quality will not be visible to the naked eye.
+        """
+        # Only check the image if there is actually an image
+        if self.image:
+            # PIL will throw an IO error if it cannot open the image, or does not support the given format
+            try:
+                image = Image.open(self.image)
+                if image.format == "JPEG":
+                    output = BytesIO()
+                    image.save(output, format="JPEG", quality=90)
+                    output.seek(0)
+
+                    self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
+                                                  sys.getsizeof(output), None)
+                image.close()
+            except IOError:
+                pass
+
+        super(NewsBase, self).save(**kwargs)
 
     def __str__(self):
         return self.title.__str__()
@@ -131,14 +159,23 @@ class Event(NewsBase):
         return self.event_type == self.STANDALONE
 
     def can_register(self, user):
+        # When hidden, registration is always disabled
         if self.hidden:
             return False
+
+        # Registration for private events is never allowed for non members
         if self.private and not user.has_perm("news.can_view_private"):
             return False
-        if self.standalone:
-            return self.number_of_tickets > self.number_of_registered_tickets()
+
+        # If there are no future occurrences, there is never anything to register for
         if not self.get_future_occurrences():
             return False
+
+        # If the event is standalone, the ability to register is dependent on if there are any more available tickets
+        if self.standalone:
+            return self.number_of_tickets > self.number_of_registered_tickets()
+
+        # Registration to a repeating event with future occurrences is handled by the time place objects
         return True
 
 
