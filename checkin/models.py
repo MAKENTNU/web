@@ -3,13 +3,7 @@ from django.db import models
 
 
 class Skill(models.Model):
-    """
-    Skill with image
-
-    :var title: Skill name in Norwegian
-    :var title_en: Skill name in English
-    :var image: Skill image
-    """
+    """Skill with image"""
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
     title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Skill (english)")
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
@@ -19,9 +13,8 @@ class Skill(models.Model):
 
     def locale_title(self, language_code):
         """
-        Finds the title of the skill in the given language
-
-        Supports Norwegian Bokmål and English, defaulting to English for all other language codes.
+        Finds the title of the skill in Norwegian Bokmål or English,
+        defaulting to English for all other language codes.
 
         :param language_code: A string representing an ISO 639-1 language code
         :return: Skill name in given language
@@ -33,11 +26,11 @@ class Skill(models.Model):
 
 class Profile(models.Model):
     """
-    Profile model, storing status of last been at Makerverkstedet.
+    A model for user profiles, storing the status of the their last visit to Makerverkstedet
 
     :var user: The user to which this profile belongs
     :var image: Profile picture
-    :var on_make: If at Makerverkstedet
+    :var on_make: Indicates if the user is at Makerverkstedet
     :var last_checkin: Last time at Makerverkstedet
     """
     user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
@@ -53,11 +46,11 @@ class Profile(models.Model):
 
 class UserSkill(models.Model):
     """
-    Model for user's skill, storing skill and skill level of skill
+    A model for indicating a user's skill level
 
-    :var profile: Profile of the user which this skill belongs to
-    :var skill: skill model
-    :var skill_level: Three levels, 1=beginner, 3=expert
+    :var profile: The profile of the user
+    :var skill: The skill which the object indicates the user's skill
+    :var skill_level: The user's skill level, can be one of three levels: "beginner", "intermediate" or "expert"
     """
     level_choices = (
         (1, "Nybegynner"),
@@ -98,9 +91,8 @@ class SuggestSkill(models.Model):
 
     def locale_title(self, language_code):
         """
-        Finds the title of the skill in the given language
-
-        Supports Norwegian Bokmål and English, defaulting to English for all other language codes.
+        Finds the title of the skill in Norwegian Bokmål or English,
+        defaulting to English for all other language codes.
 
         :param language_code: A string representing an ISO 639-1 language code
         :return: Skill name in given language
