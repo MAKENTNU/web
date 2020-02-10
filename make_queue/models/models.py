@@ -210,20 +210,20 @@ class Reservation(models.Model):
         # Check if the user can make the given reservation/edit
         return self.quota_can_make_reservation()
 
-    # Check if the start time is before current time
     def starts_before_now(self):
+        """Check if the start time is before current time"""
         return self.start_time < timezone.now()
 
-    # Check if start time is after end time
     def check_start_time_after_end_time(self):
+        """Check if start time is after end time"""
         return self.start_time >= self.end_time
 
-    # Check if the user can make the given reservation/edit
     def quota_can_make_reservation(self):
+        """Check if the user can make the given reservation/edit"""
         return Quota.can_make_reservation(self)
 
-    # Check if the reservation is made within the reservation_future_limit
     def is_within_allowed_period(self):
+        """Check if the reservation is made within the reservation_future_limit"""
         return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
 
     def can_delete(self, user):

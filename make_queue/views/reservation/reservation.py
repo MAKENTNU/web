@@ -7,6 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.generic import RedirectView, TemplateView, FormView
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 from make_queue.fields import MachineTypeField
 from make_queue.forms import ReservationForm, FreeSlotForm
@@ -30,8 +31,12 @@ class ReservationCreateOrChangeView(TemplateView):
         """
         if not reservation.is_within_allowed_period() and not (
                 reservation.special or reservation.event):
-            return _("Reservations can only be made {} days ahead of time").format(
-                reservation.reservation_future_limit_days)
+            num_days = reservation.reservation_future_limit_days
+            return ngettext(
+                'Reservations can only be made {num_days} day ahead of time',
+                'Reservations can only be made {num_days} days ahead of time',
+                num_days).format(
+                num_days=num_days)
         if self.request.user.has_perm(
                 "make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return _("The time slot or event, is no longer available")

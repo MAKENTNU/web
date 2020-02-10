@@ -193,6 +193,8 @@ msgid "Save"
 msgstr "Lagre"
 
 #: docs/forms.py:42
+#, fuzzy
+#| msgid "No content exists for this page"
 msgid "The content does not belong to the given page"
 msgstr "Det eksisterer ingen innhold for denne siden"
 
@@ -1294,8 +1296,8 @@ msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
 #: make_queue/views/reservation/reservation.py:34
-msgid "Reservations can only be made {:} days ahead of time"
-msgstr "Reservasjoner kan bare lages {:} dager frem i tid"
+msgid "Reservations can only be made {num_days} days ahead of time"
+msgstr "Reservasjoner kan bare lages {num_days} dager frem i tid"
 
 #: make_queue/views/reservation/reservation.py:38
 msgid "The time slot or event, is no longer available"
