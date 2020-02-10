@@ -202,9 +202,8 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
-        if not kwargs["reservation"].can_change(
-                request.user) and not kwargs["reservation"].can_change_end_time(
-                request.user):
+        if not (kwargs["reservation"].can_change(request.user)
+                and kwargs["reservation"].can_change_end_time(request.user)):
             return redirect("my_reservations")
         return super().dispatch(request, *args, **kwargs)
 
@@ -247,8 +246,7 @@ class MarkReservationAsDone(RedirectView):
             return self.get(request, *args, **kwargs)
 
         reservation = reservations.first()
-        if not reservation.can_change_end_time(
-                request.user) or reservation.start_time >= timezone.now():
+        if not reservation.can_change_end_time(request.user) or reservation.start_time >= timezone.now():
             return self.get(request, *args, **kwargs)
 
         reservation.end_time = timezone.now()
