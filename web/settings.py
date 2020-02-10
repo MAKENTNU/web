@@ -208,6 +208,9 @@ STATIC_URL = '/static/'
 # which avoids waiting for browsers' cache to update if a file's contents change
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
+# Size limit of profile images
+MAX_UPLOADED_IMAGE_SIZE = 15 * 2 ** 20  # 15 MB
+
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {

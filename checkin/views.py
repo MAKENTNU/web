@@ -4,6 +4,7 @@ from datetime import timedelta
 from PIL import Image
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.files.uploadhandler import MemoryFileUploadHandler
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -11,11 +12,12 @@ from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.views.generic import TemplateView
 
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from web import settings
+from .uploadhandlers import ThrottledUploadHandler
 
 
 class RFIDView(View):
@@ -283,9 +285,29 @@ class RegisterProfileView(TemplateView):
         return JsonResponse(data)
 
 
+@method_decorator(csrf_exempt, name='dispatch')  # only for being able to add the upload handler in `post()`
 class EditProfilePictureView(View):
 
+    # Will be invoked before any uploaded file data has been written to disk
     def post(self, request):
+        def index_of_first_instance(collection, cls):
+            for i, obj in enumerate(collection):
+                if isinstance(obj, cls):
+                    return i
+            return None
+
+        memory_upload_handler_index = index_of_first_instance(request.upload_handlers, MemoryFileUploadHandler)
+        if memory_upload_handler_index is not None:
+            # Insert after `MemoryFileUploadHandler`, which has its own file size check (<2.5 MB) and is more efficient with smaller files
+            insert_index = memory_upload_handler_index + 1
+        else:
+            insert_index = 0
+        request.upload_handlers.insert(insert_index, ThrottledUploadHandler(request))
+
+        return self._post(request)
+
+    @method_decorator(csrf_protect)
+    def _post(self, request):
         image = request.FILES.get('image')
         if not image:
             return HttpResponseRedirect(reverse('profile'))
