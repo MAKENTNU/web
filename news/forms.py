@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 from news.models import Event
 from news.models import TimePlace, EventTicket, Article
-from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticTimeInput, SemanticDateInput
+from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticDateTimeInput
 from web.widgets import SemanticFileInput
 
 
@@ -14,9 +14,9 @@ class TimePlaceForm(ModelForm):
         widgets = {
             "place": MazemapSearchInput(url_field="place_url"),
             "event": SemanticSearchableChoiceInput(),
-            "start_time": None,
-            "end_time": None,
-            "publication_time": None,
+            "start_time": SemanticDateTimeInput(),
+            "end_time": SemanticDateTimeInput(),
+            "publication_time": SemanticDateTimeInput(),
         }
 
 
@@ -26,7 +26,7 @@ class ArticleForm(ModelForm):
         fields = "__all__"
         exclude = []
         widgets = {
-            "publication_time": None,
+            "publication_time": SemanticDateTimeInput(),
             "image": SemanticFileInput(),
         }
 
@@ -40,7 +40,8 @@ class EventRegistrationForm(ModelForm):
             "comment": Textarea(attrs={
                 "cols": "40",
                 "rows": "3",
-                "placeholder": _("Here you can enter any requests or information you want to provide to the organizers"),
+                "placeholder": _(
+                    "Here you can enter any requests or information you want to provide to the organizers"),
             }),
         }
 

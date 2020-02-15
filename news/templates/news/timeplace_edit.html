@@ -36,39 +36,21 @@
                 <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}</div>
             </div>
         {% endif %}
-        <div class="two fields">
-            <div class="field">
-                <label>{% trans "From" %}</label>
-                {{ form.start_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.start_time }}
-            </div>
+        <div class="field">
+            <label>{% trans "From" %}</label>
+            {{ form.start_time }}
         </div>
-        <div class="two fields">
-            <div class="field">
-                <label>{% trans "To" %}</label>
-                {{ form.end_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.end_time }}
-            </div>
+        <div class="field">
+            <label>{% trans "To" %}</label>
+            {{ form.end_time }}
         </div>
-        <div class="two fields">
-            <div class="field">
-                <label>{% trans "Publishing" %}
-                    <span data-content="{% trans "The occurrence will not be shown before this date" %}">
-                        <i class="ui yellow question circle icon"></i>
-                    </span>
-                </label>
-                {{ form.pub_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.pub_time }}
-            </div>
+        <div class="field">
+            <label>{% trans "Publishing" %}
+                <span data-content="{% trans "The occurrence will not be shown before this date" %}">
+                    <i class="ui yellow question circle icon"></i>
+                </span>
+            </label>
+            {{ form.publication_time }}
         </div>
         <h4>{% trans "Attributes" %}</h4>
         <div class="field">
