@@ -77,7 +77,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.assertEqual(view.get_error_message(form, reservation),
-                         "Reservations can only be made 7 days ahead of time")
+                         "Reservasjoner kan bare lages 7 dager frem i tid")
 
     def test_validate_and_save_valid_reservation(self):
         view = self.get_view()
