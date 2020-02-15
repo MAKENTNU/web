@@ -18,11 +18,19 @@
     (function() {
         let widget = $("#{{ widget.name }}");
 
-        widget.calendar({
-            type: "datetime",
-            ampm: false,
-            firstDayOfWeek: 1,
-            monthFirst: false,
+        $(document).ready(() => {
+            widget.calendar({
+                type: "datetime",
+                ampm: false,
+                firstDayOfWeek: 1,
+                monthFirst: false,
+                {% if widget.attrs.start_calendar %}
+                    startCalendar: $("#{{ widget.attrs.start_calendar }}"),
+                {% endif %}
+                {% if widget.attrs.end_calendar %}
+                    endCalendar: $("#{{ widget.attrs.end_calendar }}"),
+                {% endif %}
+            });
         });
 
         $("form").submit(function () {

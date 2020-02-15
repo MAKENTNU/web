@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea
 from django.utils.translation import gettext_lazy as _
 
@@ -14,10 +15,21 @@ class TimePlaceForm(ModelForm):
         widgets = {
             "place": MazemapSearchInput(url_field="place_url"),
             "event": SemanticSearchableChoiceInput(),
-            "start_time": SemanticDateTimeInput(),
-            "end_time": SemanticDateTimeInput(),
+            "start_time": SemanticDateTimeInput(attrs={"end_calendar": "end_time"}),
+            "end_time": SemanticDateTimeInput(attrs={"start_calendar": "start_time"}),
             "publication_time": SemanticDateTimeInput(),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+
+        if start_time > end_time:
+            raise ValidationError(_("The event cannot end before it starts"))
+
+        return cleaned_data
 
 
 class ArticleForm(ModelForm):

@@ -16,6 +16,12 @@
 {% block body %}
     <h1 class="ui centered header">{% block form-header %}{% trans "Edit time" %}{% endblock %}</h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
+        {% for error in form.non_field_errors %}
+            <div class="ui negative message">
+                {{ error }}
+            </div>
+        {% endfor %}
+
         {% csrf_token %}
         <div class="field disabled">
             <label>{{ form.event.label }}</label>
