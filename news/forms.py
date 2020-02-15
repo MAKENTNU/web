@@ -14,12 +14,9 @@ class TimePlaceForm(ModelForm):
         widgets = {
             "place": MazemapSearchInput(url_field="place_url"),
             "event": SemanticSearchableChoiceInput(),
-            "start_time": SemanticTimeInput(),
-            "start_date": SemanticDateInput(),
-            "end_time": SemanticTimeInput(),
-            "end_date": SemanticDateInput(),
-            "pub_time": SemanticTimeInput(),
-            "pub_date": SemanticDateInput(),
+            "start_time": None,
+            "end_time": None,
+            "publication_time": None,
         }
 
 
@@ -29,8 +26,7 @@ class ArticleForm(ModelForm):
         fields = "__all__"
         exclude = []
         widgets = {
-            "pub_time": SemanticTimeInput(),
-            "pub_date": SemanticDateInput(),
+            "publication_time": None,
             "image": SemanticFileInput(),
         }
 

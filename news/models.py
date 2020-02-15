@@ -1,12 +1,10 @@
 import sys
 import uuid
-from datetime import date, time
 from io import BytesIO
 
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
-from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -18,27 +16,19 @@ from web.multilingual.widgets import MultiLingualTextarea
 class ArticleManager(models.Manager):
 
     def published(self):
-        return self.filter(hidden=False).filter(
-            Q(pub_date=timezone.localtime().date(), pub_time__lt=timezone.localtime().time()) |
-            Q(pub_date__lt=timezone.localtime().date()))
+        return self.filter(hidden=False, publication_time__lte=timezone.localtime())
 
 
 class TimePlaceManager(models.Manager):
 
     def published(self):
-        return self.filter(hidden=False, event__hidden=False).filter(
-            Q(pub_date=timezone.localtime().date(), pub_time__lt=timezone.localtime().time()) |
-            Q(pub_date__lt=timezone.localtime().date()))
+        return self.filter(hidden=False, event__hidden=False).filter(publication_time__lte=timezone.localtime())
 
     def future(self):
-        return self.published().filter(
-            Q(end_date=timezone.localtime().date(), end_time__gt=timezone.localtime().time()) |
-            Q(end_date__gt=timezone.localtime().date()))
+        return self.published().filter(start_time__gte=timezone.localtime())
 
     def past(self):
-        return self.published().filter(
-            Q(end_date=timezone.localtime().date(), end_time__lt=timezone.localtime().time()) |
-            Q(end_date__lt=timezone.localtime().date()))
+        return self.published().filter(start_time__lt=timezone.localtime())
 
 
 class NewsBase(models.Model):
@@ -109,18 +99,14 @@ class NewsBase(models.Model):
 
 class Article(NewsBase):
     objects = ArticleManager()
-    pub_date = models.DateField(
-        default=date.today,
-        verbose_name=_("Publishing date"),
-    )
-    pub_time = models.TimeField(
-        default=time.min,
+    publication_time = models.DateTimeField(
+        default=timezone.localtime,
         verbose_name=_("Publishing time"),
     )
 
     class Meta:
         ordering = (
-            '-pub_date',
+            '-publication_time',
         )
 
 
@@ -142,10 +128,10 @@ class Event(NewsBase):
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def get_future_occurrences(self):
-        return TimePlace.objects.future().filter(event=self).order_by("start_date", "start_time")
+        return TimePlace.objects.future().filter(event=self).order_by("start_time")
 
     def get_past_occurrences(self):
-        return TimePlace.objects.past().filter(event=self).order_by("-start_date", "-start_time")
+        return TimePlace.objects.past().filter(event=self).order_by("-start_time")
 
     def number_of_registered_tickets(self):
         return self.eventticket_set.filter(active=True).count()
@@ -182,29 +168,16 @@ class Event(NewsBase):
 class TimePlace(models.Model):
     objects = TimePlaceManager()
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    pub_date = models.DateField(
-        default=date.today,
-        verbose_name=_("Publishing date"),
-    )
-    pub_time = models.TimeField(
-        default=time.min,
+    publication_time = models.DateTimeField(
+        default=timezone.localtime,
         verbose_name=_("Publishing time"),
     )
-    start_date = models.DateField(
-        default=date.today,
-        verbose_name=_("Start date"),
-    )
-    end_date = models.DateField(
-        blank=True,
-        null=True,
-        verbose_name=_("End date")
-    )
-    start_time = models.TimeField(
-        default=time.min,
+    start_time = models.DateTimeField(
+        default=timezone.localtime,
         verbose_name=_("Start time"),
     )
-    end_time = models.TimeField(
-        default=time.min,
+    end_time = models.DateTimeField(
+        default=timezone.localtime,
         verbose_name=_("End time"),
     )
     place = models.CharField(
@@ -224,20 +197,18 @@ class TimePlace(models.Model):
     number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def __str__(self):
-        return '%s - %s' % (self.event.title, self.start_date.strftime('%Y.%m.%d'))
+        return '%s - %s' % (self.event.title, self.start_time.strftime('%Y.%m.%d'))
 
     class Meta:
         ordering = (
-            'start_date',
+            'start_time',
         )
 
     def number_of_registered_tickets(self):
         return self.eventticket_set.filter(active=True).count()
 
     def is_in_the_past(self):
-        current_date = timezone.now().date()
-        current_time = timezone.now().time()
-        return self.end_date < current_date or self.end_date == current_date and self.end_time < current_time
+        return self.end_time < timezone.localtime()
 
     def can_register(self, user):
         if not self.event.can_register(user) or self.is_in_the_past():

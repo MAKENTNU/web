@@ -61,8 +61,8 @@ class ViewEventsView(TemplateView):
                     })
 
         context.update({
-            'past': sorted(past, key=lambda event: event["last_occurrence"].start_date, reverse=True),
-            'future': sorted(future, key=lambda event: event["first_occurrence"].start_date),
+            'past': sorted(past, key=lambda event: event["last_occurrence"].start_time, reverse=True),
+            'future': sorted(future, key=lambda event: event["first_occurrence"].start_time),
         })
         return context
 
@@ -211,15 +211,13 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
 
     def get(self, request, pk):
         timeplace = get_object_or_404(TimePlace, pk=pk)
-        now = timezone.now()
-        if now.date() > timeplace.start_date:
-            delta_days = (timezone.now().date() - timeplace.start_date).days
+        if timezone.now() > timeplace.start_time:
+            delta_days = (timezone.now() - timeplace.start_time).days
             weeks = math.ceil(delta_days / 7)
         else:
             weeks = 1
-        timeplace.start_date += timedelta(weeks=weeks)
-        if timeplace.end_date:
-            timeplace.end_date += timedelta(weeks=weeks)
+        timeplace.start_time += timedelta(weeks=weeks)
+        timeplace.end_time += timedelta(weeks=weeks)
         timeplace.hidden = True
         timeplace.pk = None
         timeplace.save()
