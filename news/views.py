@@ -211,8 +211,8 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
 
     def get(self, request, pk):
         timeplace = get_object_or_404(TimePlace, pk=pk)
-        if timezone.now() > timeplace.start_time:
-            delta_days = (timezone.now() - timeplace.start_time).days
+        if timezone.localtime() > timeplace.start_time:
+            delta_days = (timezone.localtime() - timeplace.start_time).days
             weeks = math.ceil(delta_days / 7)
         else:
             weeks = 1

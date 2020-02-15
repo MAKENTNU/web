@@ -36,8 +36,9 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def setUp(self):
         event = Event.objects.create(title="TEST EVENT")
-        self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),
-                                                  start_time=(timezone.now() + timedelta(seconds=1)).time(),
+        self.timeplace = TimePlace.objects.create(publication_time=timezone.now(),
+                                                  start_time=timezone.now() + timedelta(seconds=1),
+                                                  end_time=timezone.now() + timedelta(minutes=1),
                                                   event=event)
         self.machine_type = MachineTypeField.get_machine_type(1)
         self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,

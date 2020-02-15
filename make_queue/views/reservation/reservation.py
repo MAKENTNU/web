@@ -75,7 +75,8 @@ class ReservationCreateOrChangeView(TemplateView):
         # Always include a list of events and machines to populate the dropdown
         # lists
         context_data = {
-            "new_reservation": self.new_reservation, "events": list(TimePlace.objects.future()),
+            "new_reservation": self.new_reservation,
+            "events": list(TimePlace.objects.filter(end_time__gte=timezone.localtime())),
             "machine_types": [
                 {"literal": machine_type.name, "instances": Machine.objects.filter(machine_type=machine_type)}
                 for machine_type in MachineTypeField.possible_machine_types if
