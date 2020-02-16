@@ -1,0 +1,47 @@
+{% load i18n %}
+{% load staticfiles %}
+{% load semantic_ui_calendar_extra %}
+
+<div class="ui calendar" id="{{ widget.name }}">
+    <div class="ui input left icon">
+        <i class="calendar icon"></i>
+        <input type="text" placeholder="{% trans "Date" %}"
+                {% if widget.value %}
+               value="{{ widget.value }}"
+                {% else %}
+               value="{% set_current_date_only %}"
+                {% endif %} name="{{ widget.name }}">
+    </div>
+</div>
+
+<script>
+    (function() {
+        let widget = $("#{{ widget.name }}");
+
+        $(document).ready(() => {
+            widget.calendar({
+                type: "datetime",
+                ampm: false,
+                firstDayOfWeek: 1,
+                monthFirst: false,
+                {% if widget.attrs.start_calendar %}
+                    startCalendar: $("#{{ widget.attrs.start_calendar }}"),
+                {% endif %}
+                {% if widget.attrs.end_calendar %}
+                    endCalendar: $("#{{ widget.attrs.end_calendar }}"),
+                {% endif %}
+            });
+        });
+
+        $("form").submit(function () {
+            let pad = (val) => (val < 10) ? `0${val}` : val;
+            let date = widget.calendar("get date");
+            let year = date.getFullYear();
+            let month = pad(date.getMonth() + 1);
+            let day = pad(date.getDate());
+            let hours = pad(date.getHours());
+            let minutes = pad(date.getMinutes());
+            widget.find("input").val(`${year}-${month}-${day} ${hours}:${minutes}`);
+        });
+    })();
+</script>
