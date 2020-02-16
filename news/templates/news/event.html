@@ -112,6 +112,14 @@
 
 {% block event_accordion %}
     <div class="accordion">
+        {% if is_old %}
+            <div class="ui info message">
+                {% trans "You are viewing an old event" %}.
+                {% if last_occurrence %}
+                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_date|date:"d.m.Y" }}
+                {% endif %}
+            </div>
+        {% endif %}
         {% if article.standalone %}
             {% if article.number_of_tickets %}
                 {% get_ticket article user as ticket %}
