@@ -61,7 +61,7 @@ class ModelTestCase(TestCase):
 
         not_published = self.create_time_place(event, 1, 1, False)
         future = self.create_time_place(event, -1, 1, False)
-        past = self.create_time_place(event, -1, -1, False)
+        past = self.create_time_place(event, -1, -100, False)
 
         self.create_time_place(hidden_event, -1, 1)
         self.create_time_place(hidden_event, -1, -1)

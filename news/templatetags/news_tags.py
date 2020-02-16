@@ -11,7 +11,7 @@ def color(val):
 
 @register.filter(name="past")
 def past(timeplace_set):
-    return timeplace_set.filter(end_time__lt=timezone.now())
+    return timeplace_set.filter(end_time__lte=timezone.now())
 
 
 @register.filter(name="future")

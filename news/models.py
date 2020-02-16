@@ -25,10 +25,10 @@ class TimePlaceManager(models.Manager):
         return self.filter(hidden=False, event__hidden=False).filter(publication_time__lte=timezone.localtime())
 
     def future(self):
-        return self.published().filter(start_time__gte=timezone.localtime())
+        return self.published().filter(end_time__gt=timezone.localtime())
 
     def past(self):
-        return self.published().filter(start_time__lt=timezone.localtime())
+        return self.published().filter(end_time__lte=timezone.localtime())
 
 
 class NewsBase(models.Model):
