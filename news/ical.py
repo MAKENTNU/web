@@ -38,11 +38,10 @@ class EventFeed(ICalFeed):
         return item.event.clickbait
 
     def item_start_datetime(self, item):
-        return datetime.combine(item.start_date, item.start_time)
+        return item.start_time
 
     def item_end_datetime(self, item):
-        date = item.end_date if item.end_date else item.start_date
-        return datetime.combine(date, item.end_time)
+        return item.end_time
 
     def item_location(self, item):
         return item.place

@@ -27,20 +27,15 @@
             {% for event in timeplaces %}
                 <div class="ui card">
                     <div class="content">
-                        {% if event.start_date == event.end_date or not event.end_date %}
-                            <p>
-                                <i class="ui make_yellow wait icon"></i>
-                                {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
-                                {% if event.end_time %}
-                                    - {{ event.end_time|time:"H:i" }}
-                                {% endif %}
-                            </p>
-                        {% else %}
-                            <p>
-                                <i class="ui make_yellow wait icon"></i>
-                                {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
-                                - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
-                        {% endif %}
+                        <p>
+                            <i class="ui make_yellow wait icon"></i>
+                            {{ event.start_time|date:"d. M, H:i" }} -
+                            {% if event.start_time.date == event.end_time.date %}
+                                {{ event.end_time|date:"H:i" }}
+                            {% else %}
+                                {{ event.end_time|date:"d. M, H:i" }}
+                            {% endif %}
+                        </p>
                         {% if event.place %}
                             {% if event.place_url %}
                                 <p>
@@ -117,6 +112,14 @@
 
 {% block event_accordion %}
     <div class="accordion">
+        {% if is_old %}
+            <div class="ui info message">
+                {% trans "You are viewing an old event" %}.
+                {% if last_occurrence %}
+                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_date|date:"d.m.Y" }}
+                {% endif %}
+            </div>
+        {% endif %}
         {% if article.standalone %}
             {% if article.number_of_tickets %}
                 {% get_ticket article user as ticket %}
@@ -145,24 +148,18 @@
         {% for event in timeplaces %}
             <div class="title">
                 <i class="dropdown icon"></i>
-                {{ event.start_date|date:"d. M" }}
+                {{ event.start_time|date:"d. M" }}
             </div>
             <div class="content">
                 <div class="transition hidden">
-                    {% if event.start_date == event.end_date or not event.end_date %}
-                        <p>
-                            <i class="ui make_yellow wait icon"></i>
-                            {{ event.start_time|time:"H:i" }}
-                            {% if event.end_time %}
-                                - {{ event.end_time|time:"H:i" }}
-                            {% endif %}
-                        </p>
-                    {% else %}
-                        <p>
-                            <i class="ui make_yellow wait icon"></i>
-                            {{ event.start_date|date:"d. M" }}, {{ event.start_time|time:"H:i" }}
-                            - {{ event.end_date|date:"d. M" }}, {{ event.end_time|time:"H:i" }}</p>
-                    {% endif %}
+                    <p>
+                        <i class="ui make_yellow wait icon"></i>
+                        {% if event.start_time.date == event.end_time.date %}
+                            {{ event.start_time|time:"H:i" }} - {{ event.end_time|time:"H:i" }}
+                        {% else %}
+                            {{ event.start_time|date:"d. M, H:i" }} - {{ event.end_time|date:"d. M, H:i" }}
+                        {% endif %}
+                    </p>
                     {% if event.place %}
                         {% if event.place_url %}
                             <p>

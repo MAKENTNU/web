@@ -18,9 +18,9 @@ class ModelTestCase(TestCase):
                           hidden=TimePlace._meta.get_field("hidden").default):
         return TimePlace.objects.create(
             event=event,
-            pub_date=(timezone.localtime() + timedelta(days=pub_date_adjust_days)).date(),
-            end_date=timezone.localtime().date(),
-            end_time=(timezone.localtime() + timedelta(seconds=start_time_adjust_seconds)).time(),
+            publication_time=timezone.localtime() + timedelta(days=pub_date_adjust_days),
+            start_time=timezone.localtime() + timedelta(seconds=start_time_adjust_seconds),
+            end_time=timezone.localtime() + timedelta(minutes=1, seconds=start_time_adjust_seconds),
             hidden=hidden,
         )
 
@@ -38,23 +38,19 @@ class ModelTestCase(TestCase):
     def test_article_manager(self):
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=(timezone.localtime() + timedelta(days=1)).date(),
-            pub_time=timezone.localtime().time()
+            publication_time=timezone.localtime() + timedelta(days=1),
         )
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=timezone.localtime().date(),
-            pub_time=(timezone.localtime() + timedelta(seconds=1)).time()
+            publication_time=timezone.localtime() + timedelta(seconds=1),
         )
         published1 = Article.objects.create(
             title='PUBLISHED',
-            pub_date=(timezone.localtime() - timedelta(days=1)).date(),
-            pub_time=timezone.localtime().time()
+            publication_time=timezone.localtime() - timedelta(days=1),
         )
         published2 = Article.objects.create(
             title='PUBLISHED',
-            pub_date=timezone.localtime().date(),
-            pub_time=(timezone.localtime() - timedelta(seconds=1)).time()
+            publication_time=timezone.localtime() - timedelta(seconds=1),
         )
         self.assertEqual(Article.objects.published().count(), 2)
         self.assertEqual(set(Article.objects.published()), {published1, published2})
@@ -65,7 +61,7 @@ class ModelTestCase(TestCase):
 
         not_published = self.create_time_place(event, 1, 1, False)
         future = self.create_time_place(event, -1, 1, False)
-        past = self.create_time_place(event, -1, -1, False)
+        past = self.create_time_place(event, -1, -100, False)
 
         self.create_time_place(hidden_event, -1, 1)
         self.create_time_place(hidden_event, -1, -1)
@@ -93,8 +89,7 @@ class ViewTestCase(TestCase):
         self.article = Article.objects.create(
             title='PUBLISHED',
             image=SimpleUploadedFile(name='img.jpg', content='', content_type='image/jpeg'),
-            pub_date=timezone.now() - timedelta(days=1),
-            pub_time=timezone.now().time()
+            publication_time=timezone.localtime() - timedelta(days=1),
         )
         self.event = Event.objects.create(
             title='FUTURE',
@@ -153,7 +148,8 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_timeplace_duplicate(self):
-        tp = TimePlace.objects.create(event=self.event)
+        tp = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
+                                      end_time=timezone.localtime() + timedelta(minutes=10))
         response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, 200)
         self.add_permission('add_timeplace')
@@ -163,25 +159,25 @@ class ViewTestCase(TestCase):
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
         self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
 
-        new_start_date = tp.start_date + timedelta(weeks=1)
-        new_end_date = (tp.end_date + timedelta(weeks=1)) if tp.end_date else None
+        new_start_time = tp.start_time + timedelta(weeks=1)
+        new_end_time = tp.end_time + timedelta(weeks=1)
         self.assertTrue(new.hidden)
-        self.assertEqual(new.start_date, new_start_date)
-        self.assertEqual(new.end_date, new_end_date)
+        self.assertEqual(new.start_time, new_start_time)
+        self.assertEqual(new.end_time, new_end_time)
 
     def test_timplace_duplicate_old(self):
         self.add_permission('add_timeplace')
         self.add_permission('change_timeplace')
 
-        start_date = timezone.now().date() - timedelta(weeks=2, days=3)
-        end_date = start_date + timedelta(days=1)
-        new_start_date = start_date + timedelta(weeks=3)
-        new_end_date = end_date + timedelta(weeks=3)
+        start_time = timezone.localtime() - timedelta(weeks=2, days=3)
+        end_time = start_time + timedelta(days=1)
+        new_start_time = start_time + timedelta(weeks=3)
+        new_end_time = end_time + timedelta(weeks=3)
 
         tp = TimePlace.objects.create(
             event=self.event,
-            start_date=start_date,
-            end_date=end_date,
+            start_time=start_time,
+            end_time=end_time,
             hidden=False,
         )
 
@@ -189,8 +185,8 @@ class ViewTestCase(TestCase):
         self.assertNotEqual(response.status_code, 200)
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
 
-        self.assertEqual(new.start_date, new_start_date)
-        self.assertEqual(new.end_date, new_end_date)
+        self.assertEqual(new.start_time, new_start_time)
+        self.assertEqual(new.end_time, new_end_time)
 
     def test_admin_article_toggle_view(self):
         def toggle(pk, attr):
@@ -222,8 +218,7 @@ class HiddenPrivateTestCase(TestCase):
         self.article = Article.objects.create(
             title='',
             image=SimpleUploadedFile(name='img.jpg', content='', content_type='image/jpeg'),
-            pub_date=timezone.now() - timedelta(days=1),
-            pub_time=timezone.now().time(),
+            publication_time=timezone.now() - timedelta(days=1),
             hidden=True,
             private=False,
         )

@@ -33,7 +33,7 @@
                 {% endblock admin-page %}
                 {{ article.title }}
                 {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
-                <span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span>
+                <span class="pub_date">{{ article.publication_time|date:"d.m.Y" }}</span>
 
             </h1>
             <div>

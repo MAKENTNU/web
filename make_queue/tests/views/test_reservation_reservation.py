@@ -30,10 +30,8 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
         Quota.objects.create(user=self.user, machine_type=self.machine_type_sewing, number_of_reservations=100,
                              ignore_rules=True)
         self.timeplace = TimePlace.objects.create(event=self.event,
-                                                  start_time=(timezone.now() + timedelta(hours=1)).time(),
-                                                  start_date=(timezone.now() + timedelta(hours=1)).date(),
-                                                  end_time=(timezone.now() + timedelta(hours=2)).time(),
-                                                  end_date=(timezone.now() + timedelta(hours=2)).date())
+                                                  start_time=timezone.localtime() + timedelta(hours=1),
+                                                  end_time=timezone.localtime() + timedelta(hours=2))
 
     def get_view(self):
         view = ReservationCreateOrChangeView()
@@ -79,7 +77,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.assertEqual(view.get_error_message(form, reservation),
-                         "Reservations can only be made 7 days ahead of time")
+                         "Reservasjoner kan bare lages 7 dager frem i tid")
 
     def test_validate_and_save_valid_reservation(self):
         view = self.get_view()
@@ -283,10 +281,8 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
                                                  machine=self.machine, event=self.timeplace,
                                                  end_time=timezone.now() + timedelta(hours=2), user=self.user)
         self.timeplace = TimePlace.objects.create(event=self.event,
-                                                  start_time=(timezone.now() + timedelta(hours=1)).time(),
-                                                  start_date=(timezone.now() + timedelta(hours=1)).date(),
-                                                  end_time=(timezone.now() + timedelta(hours=2)).time(),
-                                                  end_date=(timezone.now() + timedelta(hours=2)).date())
+                                                  start_time=timezone.now() + timedelta(hours=1),
+                                                  end_time=timezone.now() + timedelta(hours=2))
         form = self.create_form(1, 2, event=self.timeplace)
         self.assertTrue(form.is_valid())
         response = view.form_valid(form, reservation=reservation)
@@ -320,10 +316,8 @@ class ReservationAdminViewTest(TestCase):
         permission = Permission.objects.get(codename="can_create_event_reservation")
         user.user_permissions.add(permission)
         event = Event.objects.create(title="Test_event")
-        timeplace = TimePlace.objects.create(event=event, start_time=(timezone.now() + timedelta(hours=1)).time(),
-                                             start_date=(timezone.now() + timedelta(hours=1)).date(),
-                                             end_time=(timezone.now() + timedelta(hours=2)).time(),
-                                             end_date=(timezone.now() + timedelta(hours=2)).date())
+        timeplace = TimePlace.objects.create(event=event, start_time=timezone.now() + timedelta(hours=1),
+                                             end_time=timezone.now() + timedelta(hours=2))
         printer = Machine.objects.create(machine_type=machine_type, machine_model="Ultimaker")
         Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
                                        date=timezone.now())
