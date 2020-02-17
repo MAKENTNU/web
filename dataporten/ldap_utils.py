@@ -3,7 +3,7 @@ Note: querying NTNU's LDAP server requires connection to NTNU's VPN.
 """
 
 import ldap
-from django.contrib.auth.models import User
+from users.models import User
 
 LDAP_HOST = 'ldap://at.ntnu.no'
 LDAP_BASE = 'dc=ntnu, dc=no'
@@ -27,7 +27,7 @@ def LDAP_search(search_field, search_value):
     """
     l = ldap.initialize(LDAP_HOST, bytes_mode=False)
     l.simple_bind()
-    query = "({}={})".format(LDAP_FIELDS[search_field], search_value)
+    query = f"({LDAP_FIELDS[search_field]}={search_value})"
     return l.search_s(LDAP_BASE, ldap.SCOPE_SUBTREE, query)
 
 

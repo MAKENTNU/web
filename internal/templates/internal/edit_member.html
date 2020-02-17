@@ -4,11 +4,10 @@
 {% block body %}
     <style>
         .ui.checkbox.field input[type=checkbox] {
-            /* Fixes offset too far to the left set by Semantic UI */
+            /* Fixes offset too far to the left set by Fomantic UI */
             left: auto !important;
         }
     </style>
-
     <div class="ui container">
         <h2>{% trans "Change information for" %}: {{ form.instance.user.get_full_name }}</h2>
         <form class="ui form" method="POST" action="">
@@ -37,6 +36,12 @@
                 <div class="ui field">
                     <label>{{ form.card_number.label }}</label>
                     {{ form.card_number }}
+                    {% for error in form.card_number.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error|escape }}</b>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
 

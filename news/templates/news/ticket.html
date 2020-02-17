@@ -64,7 +64,7 @@
         </div>
     </div>
     {% if ticket.active %}
-        {% if ticket.user == request.user or ticket.user == None or perms.news.cancel_ticket %}
+        {% if ticket.user == request.user or perms.news.cancel_ticket %}
             <a class="ui red bottom attached button"
                href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
                 {% trans "Cancel ticket" %}

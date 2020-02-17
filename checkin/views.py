@@ -6,69 +6,21 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.decorators import method_decorator
 from django.utils.translation import ugettext_lazy as _
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
+import card.utils
+from card.views import RFIDView
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
-from web import settings
-
-
-class RFIDView(View):
-    """
-    Base view class for receiving requests from RFID card readers
-    """
-
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
-
-    @csrf_exempt
-    def post(self, request):
-        """
-        Handles the request from the RFID card reader.
-        Does a basic check for a valid card id.
-        :param request: The HTTP POST request to handle. Must include a secret and the card id.
-        :return: An HttpResponse.
-        """
-        secret = request.POST.get('secret')
-        card_id = request.POST.get('card_id')
-        if secret is None or card_id is None:
-            return HttpResponse(status=400)
-
-        if secret == settings.CHECKIN_KEY:
-            if len(card_id) == 10 and card_id.isnumeric():
-                return self.card_id_valid("EM" + card_id)
-            else:
-                return self.card_id_invalid("EM" + card_id)
-        return HttpResponse(status=403)
-
-    def card_id_valid(self, card_id):
-        """
-        Handles the case where the card id is valid.
-        Should be overridden in a subclass.
-        :param card_id: The card id from the request, prefixed with EM
-        :return: An HttpResponse
-        """
-        return HttpResponse(status=200)
-
-    def card_id_invalid(self, card_id):
-        """
-        Handles the case where the card id is invalid.
-        Should be overridden in a subclass.
-        :param card_id: The card id from the request, prefixed with EM
-        :return: An HttpResponse
-        """
-        return HttpResponse(status=401)
+from make_queue.models.course import Printer3DCourse
 
 
 class CheckInView(RFIDView):
-    def card_id_valid(self, card_id):
-        profiles = Profile.objects.filter(card_id=card_id)
+    def card_number_valid(self, card_number):
+        profiles = Profile.objects.filter(user__card_number=card_number)
         if not profiles.exists():
-            return HttpResponse(status=401)
+            return HttpResponse(f"{card_number} is not registered", status=401)
 
         if profiles.first().on_make:
             profiles.update(on_make=False)
@@ -80,7 +32,7 @@ class CheckInView(RFIDView):
 
 class ShowSkillsView(TemplateView):
     template_name = 'checkin/skills.html'
-    expiry_time = 3600 * 3
+    expiry_time = (60 * 60) * 3
 
     def is_checkin_expired(self, profile):
         return (timezone.now() - profile.last_checkin).seconds >= self.expiry_time
@@ -102,13 +54,14 @@ class ShowSkillsView(TemplateView):
             for userskill in profile.userskill_set.all():
                 skill = userskill.skill
 
-                if (skill not in skill_dict or skill.skill_level > skill_dict[skill][0]) \
-                        and not self.is_checkin_expired(profile):
+                if ((skill not in skill_dict
+                     or skill.skill_level > skill_dict[skill][0])
+                        and not self.is_checkin_expired(profile)):
                     skill_dict[skill] = (userskill.skill_level, profile.last_checkin)
 
         context = super().get_context_data(**kwargs)
         context.update({
-            'skill_dict': sorted(skill_dict.items(), key=lambda x: x[1][1], reverse=True),
+            'skill_dict': sorted(skill_dict.items(), key=lambda item: item[1][1], reverse=True),
         })
         return context
 
@@ -138,11 +91,17 @@ class ProfilePageView(TemplateView):
         return HttpResponseRedirect(reverse('profile'))
 
     def get_context_data(self, **kwargs):
-
         if Profile.objects.filter(user=self.request.user).exists():
             profile = Profile.objects.get(user=self.request.user)
         else:
             profile = Profile.objects.create(user=self.request.user)
+
+        # Connect card number from course registration to user
+        registration = Printer3DCourse.objects.filter(user__username=self.request.user.username).first()
+        if registration is not None:
+            registration.user = self.request.user
+            registration.save()
+
         img = profile.image
         userskill_set = profile.userskill_set.all()
 
@@ -184,7 +143,8 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
         elif not suggestion.strip() and not suggestion_english.strip():
             return HttpResponseRedirect(reverse('suggest'))
 
-        if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(title_en=suggestion_english).exists():
+        if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(
+                title_en=suggestion_english).exists():
             messages.error(request, _("Skill already exists!"))
             return HttpResponseRedirect(reverse('suggest'))
         else:
@@ -208,7 +168,6 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
         return HttpResponseRedirect(reverse('suggest'))
 
     def get_context_data(self, **kwargs):
-
         context = super().get_context_data(**kwargs)
         context.update({
             'suggestions': SuggestSkill.objects.all(),
@@ -256,10 +215,12 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 
 class RegisterCardView(RFIDView):
-    def card_id_valid(self, card_id):
-        if not Profile.objects.filter(card_id=card_id).exists():
+    def card_number_valid(self, card_number):
+        if Profile.objects.filter(user__card__number=card_number).exists():
+            return HttpResponse(f"{card_number} is already registered", status=409)
+        else:
             RegisterProfile.objects.all().delete()
-            RegisterProfile.objects.create(card_id=card_id, last_scan=timezone.now())
+            RegisterProfile.objects.create(card_id=card_number, last_scan=timezone.now())
             return HttpResponse('card scanned', status=200)
 
 
@@ -275,7 +236,12 @@ class RegisterProfileView(TemplateView):
             scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
-                Profile.objects.filter(user=request.user).update(card_id=RegisterProfile.objects.first().card_id)
+                card_number = RegisterProfile.objects.first().card_id
+                is_duplicate = card.utils.is_duplicate(card_number, request.user.username)
+                if is_duplicate:
+                    return HttpResponse(status=409)
+                request.user.card_number = card_number
+                request.user.save()
         RegisterProfile.objects.all().delete()
         return JsonResponse(data)
 

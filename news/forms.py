@@ -38,15 +38,14 @@ class ArticleForm(ModelForm):
 class EventRegistrationForm(ModelForm):
     class Meta:
         model = EventTicket
-        fields = "__all__"
-        exclude = ["user", "active", "timeplace", "event"]
+        fields = ("comment", "language")
         widgets = {
             "language": SemanticSearchableChoiceInput(),
             "comment": Textarea(attrs={
                 "cols": "40",
                 "rows": "3",
-                "placeholder": _("Here you can enter any requests or information you want to provide to the organizers")
-            })
+                "placeholder": _("Here you can enter any requests or information you want to provide to the organizers"),
+            }),
         }
 
 
@@ -55,5 +54,5 @@ class EventForm(ModelForm):
         model = Event
         fields = "__all__"
         widgets = {
-            "image": SemanticFileInput()
+            "image": SemanticFileInput(),
         }

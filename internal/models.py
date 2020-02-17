@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
@@ -9,6 +9,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from groups.models import Committee
 from internal.util import date_to_term
+from users.models import User
 
 
 class Member(models.Model):
@@ -25,7 +26,6 @@ class Member(models.Model):
     email = models.EmailField(blank=True, null=True, verbose_name=_("Email"))
     phone_number = PhoneNumberField(max_length=32, default="", blank=True, verbose_name=_("Phone number"))
     study_program = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Study program"))
-    card_number = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Card number (EM)"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
     date_quit = models.DateField(blank=True, null=True, verbose_name=_("Date quit"))
     reason_quit = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Reason quit"))
@@ -45,7 +45,7 @@ class Member(models.Model):
             self.email = self.user.email
 
             # Setup all properties for new members
-            for property_name, value in SystemAccess.name_choices:
+            for property_name, value in SystemAccess.NAME_CHOICES:
                 # All members will be registered on the website when added to the members list
                 SystemAccess.objects.create(name=property_name, member=self,
                                             value=property_name == SystemAccess.WEBSITE)
@@ -139,7 +139,7 @@ class SystemAccess(models.Model):
     EMAIL = "email"
     WEBSITE = "website"
 
-    name_choices = (
+    NAME_CHOICES = (
         (DRIVE, _("Drive")),
         (SLACK, _("Slack")),
         (CALENDAR, _("Calendar")),
@@ -148,7 +148,7 @@ class SystemAccess(models.Model):
         (WEBSITE, _("Website")),
     )
 
-    name = models.fields.CharField(max_length=32, choices=name_choices, verbose_name=_("System"))
+    name = models.fields.CharField(max_length=32, choices=NAME_CHOICES, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
     member = models.ForeignKey(Member, models.CASCADE, verbose_name="Member")
 

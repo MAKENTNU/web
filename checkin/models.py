@@ -1,6 +1,7 @@
-from django.contrib.auth.models import User
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
+from users.models import User
 
 class Skill(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
@@ -18,7 +19,6 @@ class Skill(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
-    card_id = models.CharField(max_length=100, null=True, blank=True, verbose_name="Kortnummer")
     image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
     last_checkin = models.DateTimeField(auto_now=True, verbose_name="Sist sjekket inn")
@@ -30,14 +30,19 @@ class Profile(models.Model):
 
 
 class UserSkill(models.Model):
-    level_choices = (
-        (1, "Nybegynner"),
-        (2, "Viderekommen"),
-        (3, "Ekspert"),
+    BEGINNER = 1
+    EXPERIENCED = 2
+    EXPERT = 3
+
+    LEVEL_CHOICES = (
+        (BEGINNER, _("Beginner")),
+        (EXPERIENCED, _("Experienced")),
+        (EXPERT, _("Expert")),
     )
+
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
-    skill_level = models.IntegerField(choices=level_choices)
+    skill_level = models.IntegerField(choices=LEVEL_CHOICES)
 
     class Meta:
         ordering = (
@@ -45,7 +50,7 @@ class UserSkill(models.Model):
         )
 
     def __str__(self):
-        return str(self.profile) + " - " + str(self.skill)
+        return f"{self.profile} - {self.skill}"
 
 
 class SuggestSkill(models.Model):

@@ -1,10 +1,12 @@
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
+from users.models import User
 from django.test import TestCase
 
 from contentbox.models import ContentBox, DisplayContentBoxView
 
 
 class ModelTestCase(TestCase):
+
     def test_str(self):
         contentbox = ContentBox.objects.create(title='TEST_TITLE')
         self.assertEqual(contentbox.title, 'TEST_TITLE')

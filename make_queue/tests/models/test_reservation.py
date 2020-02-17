@@ -1,7 +1,8 @@
 from datetime import timedelta, datetime, time
 from unittest.mock import patch
 
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
+from users.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -32,13 +33,14 @@ class GeneralReservationTestCase(TestCase):
 
 
 class GeneralReservationTestCases(GeneralReservationTestCase):
+
     def setUp(self):
         event = Event.objects.create(title="TEST EVENT")
         self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),
                                                   start_time=(timezone.now() + timedelta(seconds=1)).time(),
                                                   event=event)
         self.machine_type = MachineTypeField.get_machine_type(1)
-        self.machine = Machine.objects.create(name="C1", location="Printer room", status="F",
+        self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
                                               machine_type=self.machine_type)
         self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
@@ -206,9 +208,9 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                      "Changing a reservation with the maximum number of reservations should be valid")
 
     def test_same_time_separate_machines(self):
-        additional_printer = Machine.objects.create(name="C2", location="Printer room Mackerspace U1", status="F",
+        additional_printer = Machine.objects.create(name="C2", location="Printer room Mackerspace U1", status=Machine.AVAILABLE,
                                                     machine_type=self.machine_type)
-        Machine.objects.create(name="C3", location="Printer room Mackerspace U1", status="F",
+        Machine.objects.create(name="C3", location="Printer room Mackerspace U1", status=Machine.AVAILABLE,
                                machine_type=self.machine_type)
 
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),

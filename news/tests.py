@@ -1,7 +1,8 @@
 import json
 from datetime import timedelta
 
-from django.contrib.auth.models import User, Permission
+from users.models import User
+from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
@@ -11,14 +12,15 @@ from news.models import Article, Event, TimePlace
 
 
 class ModelTestCase(TestCase):
+
     @staticmethod
     def create_time_place(event, pub_date_adjust_days, start_time_adjust_seconds,
                           hidden=TimePlace._meta.get_field("hidden").default):
         return TimePlace.objects.create(
             event=event,
-            pub_date=(timezone.now() + timedelta(days=pub_date_adjust_days)).date(),
-            start_date=timezone.now().date(),
-            start_time=(timezone.now() + timedelta(seconds=start_time_adjust_seconds)).time(),
+            pub_date=(timezone.localtime() + timedelta(days=pub_date_adjust_days)).date(),
+            end_date=timezone.localtime().date(),
+            end_time=(timezone.localtime() + timedelta(seconds=start_time_adjust_seconds)).time(),
             hidden=hidden,
         )
 
@@ -31,28 +33,28 @@ class ModelTestCase(TestCase):
         event = Event.objects.create(title=title)
         time_place = self.create_time_place(event, 0, 0)
         date_str = timezone.now().date().strftime('%Y.%m.%d')
-        self.assertEqual(str(time_place), "{} - {}".format(title, date_str))
+        self.assertEqual(str(time_place), f"{title} - {date_str}")
 
     def test_article_manager(self):
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=(timezone.now() + timedelta(days=1)).date(),
-            pub_time=timezone.now().time()
+            pub_date=(timezone.localtime() + timedelta(days=1)).date(),
+            pub_time=timezone.localtime().time()
         )
         Article.objects.create(
             title='NOT PUBLISHED',
-            pub_date=timezone.now().date(),
-            pub_time=(timezone.now() + timedelta(seconds=1)).time()
+            pub_date=timezone.localtime().date(),
+            pub_time=(timezone.localtime() + timedelta(seconds=1)).time()
         )
         published1 = Article.objects.create(
             title='PUBLISHED',
-            pub_date=(timezone.now() - timedelta(days=1)).date(),
-            pub_time=timezone.now().time()
+            pub_date=(timezone.localtime() - timedelta(days=1)).date(),
+            pub_time=timezone.localtime().time()
         )
         published2 = Article.objects.create(
             title='PUBLISHED',
-            pub_date=timezone.now().date(),
-            pub_time=(timezone.now() - timedelta(seconds=1)).time()
+            pub_date=timezone.localtime().date(),
+            pub_time=(timezone.localtime() - timedelta(seconds=1)).time()
         )
         self.assertEqual(Article.objects.published().count(), 2)
         self.assertEqual(set(Article.objects.published()), {published1, published2})
@@ -77,6 +79,7 @@ class ModelTestCase(TestCase):
 
 
 class ViewTestCase(TestCase):
+
     def add_permission(self, codename):
         permission = Permission.objects.get(codename=codename)
         self.user.user_permissions.add(permission)
@@ -205,6 +208,7 @@ class ViewTestCase(TestCase):
 
 
 class HiddenPrivateTestCase(TestCase):
+
     def add_permission(self, codename):
         permission = Permission.objects.get(codename=codename)
         self.user.user_permissions.add(permission)
