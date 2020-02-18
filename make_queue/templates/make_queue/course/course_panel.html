@@ -11,6 +11,21 @@
     </style>
 
     <div class="ui container">
+        {% if message %}
+            <div class="ui {{ type }} message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{ message }}
+                </div>
+            </div>
+            <script>
+                $(".message .close").click(function () {
+                    $(this)
+                        .closest(".message")
+                        .fadeOut();
+                });
+            </script>
+        {% endif %}
         <h1>
             {% trans "Course registrations" %}
             <a href="{% url "create_course_registration" %}" data-tooltip="{% trans "Add" %}">
