@@ -67,6 +67,10 @@ class EmailConsumer(SyncConsumer):
         msg = EmailMultiAlternatives(message["subject"], message["text"], message["from"], [message["to"]])
         if "reply_to" in message:
             msg.reply_to = message["reply_to"]
+        if "cc" in message:
+            msg.cc = message["cc"]
+        if "bcc" in message:
+            msg.bcc = message["bcc"]
 
         # Attach files if any
         if "attachments" in message:
