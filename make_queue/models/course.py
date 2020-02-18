@@ -24,6 +24,9 @@ class Printer3DCourse(models.Model):
         constraints = (
             CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
         )
+        permissions = (
+            ("can_send_access_control_mail", "Can send access control mail"),
+        )
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
     username = UsernameField(max_length=32, verbose_name=_("Username"), unique=True)

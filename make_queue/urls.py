@@ -37,6 +37,7 @@ machine_url_patterns = [
 course_url_patterns = [
     path('status/', permission_required("make_queue.change_printer3dcourse")(admin.course.BulkStatusUpdate.as_view()), name="bulk_status_update"),
     path('download/', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseXLSXView.as_view()), name="download_course_registrations"),
+    path('send/', permission_required("make_queue.can_send_access_control_mail")(admin.course.SendAccessEmailView.as_view()), name="send_access_email"),
     path('create/', permission_required("make_queue.add_printer3dcourse")(admin.course.CreateRegistrationView.as_view()), name="create_course_registration"),
     path('create/success/', permission_required("make_queue.add_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)), name="create_course_registration_success"),
     path('edit/<int:pk>/', permission_required("make_queue.change_printer3dcourse")(admin.course.EditRegistrationView.as_view()), name="edit_course_registration"),

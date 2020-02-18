@@ -47,6 +47,11 @@
                     <button class="ui right floated make_yellow button">
                         {% trans "Download filtered users" %}
                     </button>
+                    {% if perms.make_queue.can_send_access_control_mail %}
+                    <a href="{% url "send_access_email" %}" class="ui right floated make_yellow button">
+                        {% trans "Send access email" %}
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </form>

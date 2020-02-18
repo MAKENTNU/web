@@ -29,7 +29,10 @@ SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 PARENT_HOST = "makentnu.localhost:8000"
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"
+PRINTER_TEAM_EMAIL = "3dprint@makentnu.no"
+NTNU_ACCESS_CONTROL_EMAIL = None
 EMAIL_SITE_URL = "https://makentnu.no"
+
 
 try:
     from .local_settings import *
