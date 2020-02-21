@@ -4,6 +4,7 @@ from datetime import timedelta
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.db.models import Max
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -124,6 +125,9 @@ class AdminEventsView(PermissionRequiredMixin, ListView):
 
     def has_permission(self):
         return has_any_event_permission(self.request.user)
+
+    def get_queryset(self):
+        return Event.objects.annotate(latest_occurrence=Max("timeplace__end_time")).order_by("-latest_occurrence")
 
 
 class AdminEventView(DetailView):
