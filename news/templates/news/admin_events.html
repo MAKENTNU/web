@@ -24,7 +24,7 @@
                     <div class="content">
                         <a class="header" href="{% url "event" event.id %}">{{ event.title }}</a>
                         <div class="meta">
-                            {% with event.get_future_occurrences.count as num_future_occurrences %}
+                            {% with event.timeplace_set|future|length as num_future_occurrences %}
                                 {% if num_future_occurrences %}
                                     <div>
                                         {% blocktrans count counter=num_future_occurrences %}
