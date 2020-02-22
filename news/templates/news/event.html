@@ -53,6 +53,15 @@
                         <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
                             <i class="ui make_yellow large calendar outline icon"></i>
                         </a>
+
+                        {% if event.number_of_tickets and perms.news.change_event %}
+                            <div class="right floated meta">
+                                <a href="{% url "timeplace-tickets" pk=event.pk %}">
+                                    <i class="ui ticket icon"></i>
+                                    {{ event.number_of_registered_tickets }} / {{ event.number_of_tickets }}
+                                </a>
+                            </div>
+                        {% endif %}
                     </div>
                     {% if event.event.repeating %}
                         {% if event.number_of_tickets %}
@@ -149,59 +158,73 @@
             <div class="title">
                 <i class="dropdown icon"></i>
                 {{ event.start_time|date:"d. M" }}
+
             </div>
             <div class="content">
                 <div class="transition hidden">
-                    <p>
-                        <i class="ui make_yellow wait icon"></i>
-                        {% if event.start_time.date == event.end_time.date %}
-                            {{ event.start_time|time:"H:i" }} - {{ event.end_time|time:"H:i" }}
-                        {% else %}
-                            {{ event.start_time|date:"d. M, H:i" }} - {{ event.end_time|date:"d. M, H:i" }}
-                        {% endif %}
-                    </p>
-                    {% if event.place %}
-                        {% if event.place_url %}
+                    <div class="ui card">
+                        <div class="content">
                             <p>
-                                <i class="ui make_yellow marker icon"></i>
-                                <a class="place" href="{{ event.place_url }}" target="_blank">{{ event.place }}</a>
+                                <i class="ui make_yellow wait icon"></i>
+                                {% if event.start_time.date == event.end_time.date %}
+                                    {{ event.start_time|time:"H:i" }} - {{ event.end_time|time:"H:i" }}
+                                {% else %}
+                                    {{ event.start_time|date:"d. M, H:i" }} - {{ event.end_time|date:"d. M, H:i" }}
+                                {% endif %}
                             </p>
-                        {% else %}
-                            <p>
-                                <i class="ui make_yellow marker icon"></i>
-                                {{ event.place }}
-                            </p>
-                        {% endif %}
-                    {% endif %}
+                            {% if event.place %}
+                                {% if event.place_url %}
+                                    <p>
+                                        <i class="ui make_yellow marker icon"></i>
+                                        <a class="place" href="{{ event.place_url }}"
+                                           target="_blank">{{ event.place }}</a>
+                                    </p>
+                                {% else %}
+                                    <p>
+                                        <i class="ui make_yellow marker icon"></i>
+                                        {{ event.place }}
+                                    </p>
+                                {% endif %}
+                            {% endif %}
 
-                    <div class="attend">
-                        <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
-                            <i class="ui make_yellow large calendar outline icon"></i>
-                        </a>
-                    </div>
-                    {% if event.event.repeating %}
-                        {% if event.number_of_tickets %}
-                            {% get_ticket event user as ticket %}
-                            {% if ticket %}
-                                <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
-                                    {% trans "You are registered for this event" %}
-                                </a>
-                            {% elif event.number_of_registered_tickets < event.number_of_tickets %}
-                                <a class="ui yellow button" href="{% url "register-timeplace" event.id %}">
-                                    {% trans "Registration" %}
-                                </a>
+                            <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
+                                <i class="ui make_yellow large calendar outline icon"></i>
+                            </a>
+
+                            {% if event.number_of_tickets and perms.news.change_event %}
+                                <div class="right floated meta">
+                                    <a href="{% url "timeplace-tickets" pk=event.pk %}">
+                                        <i class="ui ticket icon"></i>
+                                        {{ event.number_of_registered_tickets }} / {{ event.number_of_tickets }}
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if event.event.repeating %}
+                            {% if event.number_of_tickets %}
+                                {% get_ticket event user as ticket %}
+                                {% if ticket %}
+                                    <a href="{% url "ticket" pk=ticket.pk %}" class="ui bottom attached green button">
+                                        {% trans "You are registered for this event" %}
+                                    </a>
+                                {% elif event.number_of_registered_tickets < event.number_of_tickets %}
+                                    <a class="ui yellow bottom attached button"
+                                       href="{% url "register-timeplace" event.id %}">
+                                        {% trans "Registration" %}
+                                    </a>
+                                {% else %}
+                                    <p class="ui disabled bottom attached button">
+                                        {% trans "Sold out" %}
+                                    </p>
+                                {% endif %}
                             {% else %}
-                                <p class="ui disabled button">
-                                    {% trans "Sold out" %}
+                                <p class="ui disabled bottom attached button">
+                                    {% trans "No registration" %}
                                 </p>
                             {% endif %}
-                        {% else %}
-                            <p class="ui disabled button">
-                                {% trans "No registration" %}
-                            </p>
                         {% endif %}
-                    {% endif %}
-
+                    </div>
                 </div>
             </div>
         {% endfor %}

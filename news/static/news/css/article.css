@@ -107,8 +107,4 @@ a.place {
         display: inline;
     }
 
-    .accordion .calendar-link {
-        display: inline-block;
-        position: initial;
-    }
 }
