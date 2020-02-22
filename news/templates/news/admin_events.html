@@ -27,10 +27,10 @@
                             {% with event.timeplace_set|future|length as num_future_occurrences %}
                                 {% if num_future_occurrences %}
                                     <div>
-                                        {% blocktrans count counter=num_future_occurrences %}
-                                            1 Future occurrence
+                                        {% blocktrans trimmed count counter=num_future_occurrences %}
+                                            1 future occurrence
                                         {% plural %}
-                                            {{ counter }} Future occurrences
+                                            {{ counter }} future occurrences
                                         {% endblocktrans %}
                                     </div>
                                 {% endif %}
