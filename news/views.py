@@ -236,6 +236,8 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
         form = super().get_form(form_class)
         event = get_object_or_404(Event, pk=self.kwargs["event_pk"])
         form.fields["event"].initial = event.pk
+        if event.standalone:
+            del form.fields["number_of_tickets"]
         return form
 
     def get_success_url(self):
