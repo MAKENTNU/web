@@ -270,7 +270,15 @@ class HiddenPrivateTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_not_published_article(self):
-        self.article.pub_date = timezone.now() + timedelta(days=1)
+        self.article.hidden = False
+
+        self.article.publication_time = timezone.now() - timedelta(days=1)
+        self.article.save()
+        response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
+        self.assertEqual(response.status_code, 200)
+
+        self.article.publication_time = timezone.now() + timedelta(days=1)
+        self.article.save()
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
         self.add_permission('change_article')
