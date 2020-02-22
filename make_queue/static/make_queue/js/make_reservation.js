@@ -15,8 +15,8 @@ function getFutureReservations(machine_id, force_new_time) {
         reservations.length = 0;
         $.each(data.reservations, function (index, value) {
             reservations.push({
-                "start_time": new Date(Date.parse(value.start_date)),
-                "end_time": new Date(Date.parse(value.end_date)),
+                "start_time": new Date(Date.parse(value.start_time)),
+                "end_time": new Date(Date.parse(value.end_time)),
             });
         });
         canIgnoreRules = data.canIgnoreRules;
@@ -30,9 +30,9 @@ function getFutureReservations(machine_id, force_new_time) {
         });
         // Indicates if we want to update the start date or not
         if (force_new_time) {
-            let start_date = getFirstReservableTimeSlot(new Date());
-            $("#start_time").calendar("set date", start_date);
-            $("#end_time").calendar("set date", getMaxDateReservation(start_date));
+            let start_time = getFirstReservableTimeSlot(new Date());
+            $("#start_time").calendar("set date", start_time);
+            $("#end_time").calendar("set date", getMaxDateReservation(start_time));
         }
     });
 }

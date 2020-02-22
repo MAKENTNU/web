@@ -14,11 +14,11 @@ from news.models import Article, Event, TimePlace
 class ModelTestCase(TestCase):
 
     @staticmethod
-    def create_time_place(event, pub_date_adjust_days, start_time_adjust_seconds,
+    def create_time_place(event, publication_time_adjust_days, start_time_adjust_seconds,
                           hidden=TimePlace._meta.get_field("hidden").default):
         return TimePlace.objects.create(
             event=event,
-            publication_time=timezone.localtime() + timedelta(days=pub_date_adjust_days),
+            publication_time=timezone.localtime() + timedelta(days=publication_time_adjust_days),
             start_time=timezone.localtime() + timedelta(seconds=start_time_adjust_seconds),
             end_time=timezone.localtime() + timedelta(minutes=1, seconds=start_time_adjust_seconds),
             hidden=hidden,
