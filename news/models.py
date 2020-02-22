@@ -82,6 +82,7 @@ class NewsBase(models.Model):
 
                     self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
                                                       sys.getsizeof(output), None)
+                # Should not close image, as Django uses the image and closes it by default
             except IOError:
                 pass
 
