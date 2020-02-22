@@ -29,8 +29,11 @@ class CardNumberField(models.CharField):
     def get_prep_value(self, value):
         if isinstance(value, CardNumber):
             return value.number
-        elif isinstance(value, str) and len(value):
-            return value.split()[-1]  # Remove possible EM prefix
+        elif isinstance(value, str):
+            # Only try to remove the any EM prefix if the string is just whitespace
+            if value.strip():
+                return value.split()[-1]  # Remove possible EM prefix
+            return ""  # No need to include the whitespace
         return value
 
     def from_db_value(self, value, expression, connection):
