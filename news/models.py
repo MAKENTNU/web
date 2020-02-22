@@ -81,8 +81,7 @@ class NewsBase(models.Model):
                     output.seek(0)
 
                     self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
-                                                  sys.getsizeof(output), None)
-                image.close()
+                                                      sys.getsizeof(output), None)
             except IOError:
                 pass
 
