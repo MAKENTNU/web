@@ -42,7 +42,7 @@ a.place {
     height: 400px;
 }
 
-.pub_date {
+.publication_time {
     font-size: 12px;
     font-weight: 400;
     margin-left: 10px;
@@ -85,7 +85,16 @@ a.place {
 .calendar-link {
     position: absolute;
     top: 1em;
-    right: 1em;
+    right: 0.25em;
+}
+
+.grey.link.text {
+    float: right;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.grey.link.text:hover {
+    color: rgba(0, 0, 0, 0.6);
 }
 
 @media screen and (max-width: 1024px) {
@@ -108,7 +117,8 @@ a.place {
     }
 
     .accordion .calendar-link {
-        display: inline-block;
-        position: initial;
+        top: 0.4em;
+        right: 0;
     }
+
 }

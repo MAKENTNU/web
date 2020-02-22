@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import path
 
-from news.ical import SingleTimePlaceFeed
-from news.views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
+from .ical import SingleTimePlaceFeed
+from .views import EditArticleView, CreateArticleView, EditEventView, CreateEventView, ViewArticleView, \
     ViewEventView, AdminArticleView, ViewEventsView, ViewArticlesView, EditTimePlaceView, \
     DuplicateTimePlaceView, CreateTimePlaceView, AdminArticleToggleView, AdminEventToggleView, AdminTimeplaceToggleView, \
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView, \
