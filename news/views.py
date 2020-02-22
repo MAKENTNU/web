@@ -16,11 +16,11 @@ from django.views import View
 from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView, ListView
 
 from mail import email
-from news.forms import EventForm
-from news.forms import TimePlaceForm, EventRegistrationForm, ArticleForm
-from news.models import Article, Event, TimePlace, EventTicket
 from web import settings
 from web.templatetags.permission_tags import has_any_article_permission, has_any_event_permission
+from .forms import EventForm
+from .forms import TimePlaceForm, EventRegistrationForm, ArticleForm
+from .models import Article, Event, TimePlace, EventTicket
 
 
 class ViewEventsView(TemplateView):

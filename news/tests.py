@@ -1,14 +1,14 @@
 import json
 from datetime import timedelta
 
-from users.models import User
 from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from news.models import Article, Event, TimePlace
+from users.models import User
+from .models import Article, Event, TimePlace
 
 
 class ModelTestCase(TestCase):
@@ -99,6 +99,7 @@ class ViewTestCase(TestCase):
     def test_admin(self):
         response = self.client.get(reverse('admin-articles'))
         self.assertNotEqual(response.status_code, 200)
+
         self.add_permission('change_article')
         response = self.client.get(reverse('admin-articles'))
         self.assertEqual(response.status_code, 200)
@@ -114,6 +115,7 @@ class ViewTestCase(TestCase):
     def test_article_create(self):
         response = self.client.get(reverse('article-create'))
         self.assertNotEqual(response.status_code, 200)
+
         self.add_permission('add_article')
         response = self.client.get(reverse('article-create'))
         self.assertEqual(response.status_code, 200)
@@ -121,6 +123,7 @@ class ViewTestCase(TestCase):
     def test_article_edit(self):
         response = self.client.get(reverse('article-edit', kwargs={'pk': self.article.pk}))
         self.assertNotEqual(response.status_code, 200)
+
         self.add_permission('change_article')
         response = self.client.get(reverse('article-edit', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
@@ -136,6 +139,7 @@ class ViewTestCase(TestCase):
     def test_event_create(self):
         response = self.client.get(reverse('event-create'))
         self.assertNotEqual(response.status_code, 200)
+
         self.add_permission('add_event')
         response = self.client.get(reverse('event-create'))
         self.assertEqual(response.status_code, 200)
@@ -143,6 +147,7 @@ class ViewTestCase(TestCase):
     def test_event_edit(self):
         response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
         self.assertNotEqual(response.status_code, 200)
+
         self.add_permission('change_event')
         response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
@@ -152,6 +157,7 @@ class ViewTestCase(TestCase):
                                       end_time=timezone.localtime() + timedelta(minutes=10))
         response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, 200)
+
         self.add_permission('add_timeplace')
         self.add_permission('change_timeplace')
         response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
@@ -232,6 +238,7 @@ class HiddenPrivateTestCase(TestCase):
     def test_hidden_event(self):
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 404)
+
         self.add_permission('change_event')
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
@@ -239,6 +246,7 @@ class HiddenPrivateTestCase(TestCase):
     def test_hidden_article(self):
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
+
         self.add_permission('change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
@@ -248,10 +256,12 @@ class HiddenPrivateTestCase(TestCase):
         self.event.save()
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
+
         self.event.private = True
         self.event.save()
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 404)
+
         self.add_permission('can_view_private')
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
@@ -261,10 +271,12 @@ class HiddenPrivateTestCase(TestCase):
         self.article.save()
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
+
         self.article.private = True
         self.article.save()
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
+
         self.add_permission('can_view_private')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
@@ -281,6 +293,7 @@ class HiddenPrivateTestCase(TestCase):
         self.article.save()
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
+
         self.add_permission('change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)

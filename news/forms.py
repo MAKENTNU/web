@@ -2,10 +2,10 @@ from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea
 from django.utils.translation import gettext_lazy as _
 
-from news.models import Event
-from news.models import TimePlace, EventTicket, Article
 from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticDateTimeInput
 from web.widgets import SemanticFileInput
+from .models import Event
+from .models import TimePlace, EventTicket, Article
 
 
 class TimePlaceForm(ModelForm):
