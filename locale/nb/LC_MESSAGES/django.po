@@ -1539,7 +1539,7 @@ msgstr "Ingen fremtidige forekomster finnes for dette arrangementet"
 
 #: news/templates/news/admin_event.html:105
 msgid "No past occurrences exist for this event"
-msgstr "Ingen tidilgere forekomster finnes for dette arrangementet"
+msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
 #: news/templates/news/admin_event_tickets.html:9
 msgid "Event admin page"
