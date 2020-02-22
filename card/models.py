@@ -29,7 +29,7 @@ class CardNumberField(models.CharField):
     def get_prep_value(self, value):
         if isinstance(value, CardNumber):
             return value.number
-        elif isinstance(value, str):
+        elif isinstance(value, str) and len(value):
             return value.split()[-1]  # Remove possible EM prefix
         return value
 
