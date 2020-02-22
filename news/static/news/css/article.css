@@ -88,6 +88,15 @@ a.place {
     right: 0.25em;
 }
 
+.grey.link.text {
+    float: right;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.grey.link.text:hover {
+    color: rgba(0, 0, 0, 0.6);
+}
+
 @media screen and (max-width: 1024px) {
     .right.rail {
         display: none;

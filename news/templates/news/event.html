@@ -7,9 +7,19 @@
 
 {% block admin-page %}
     {% if perms.news.change_event %}
-        <a href="{% url "admin-event" article.id %}" class="ui right floated yellow button">
-            <i class="ui sticky note icon"></i>{% trans "Admin page" %}
-        </a>
+        <div>
+            <a href="{% url "admin-event" article.id %}" class="ui yellow button">
+                <i class="ui sticky note icon"></i>{% trans "Admin page" %}
+            </a>
+            {% if article.number_of_tickets and perms.news.change_event %}
+                <a href="{% url "event-tickets" article.id %}">
+                    <span class="grey link text">
+                        <i class="ui ticket icon"></i>
+                        {{ article.number_of_registered_tickets }} / {{ article.number_of_tickets }}
+                    </span>
+                </a>
+            {% endif %}
+        </div>
     {% endif %}
 {% endblock admin-page %}
 
