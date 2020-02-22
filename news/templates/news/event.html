@@ -19,7 +19,7 @@
             <div class="ui info message">
                 {% trans "You are viewing an old event" %}.
                 {% if last_occurrence %}
-                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_date|date:"d.m.Y" }}
+                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_time|date:"d.m.Y" }}
                 {% endif %}
             </div>
         {% endif %}
