@@ -1447,7 +1447,7 @@ msgstr "Artikler"
 
 #: news/templates/news/admin_articles.html:23
 msgid "Article image"
-msgstr "Artikel bilde"
+msgstr "Artikkelbilde"
 
 #: news/templates/news/admin_articles.html:30
 #: news/templates/news/admin_events.html:40
