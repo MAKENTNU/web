@@ -85,7 +85,7 @@ a.place {
 .calendar-link {
     position: absolute;
     top: 1em;
-    right: 1em;
+    right: 0.25em;
 }
 
 @media screen and (max-width: 1024px) {
@@ -105,6 +105,11 @@ a.place {
 
     .accordion {
         display: inline;
+    }
+
+    .accordion .calendar-link {
+        top: 0.4em;
+        right: 0;
     }
 
 }
