@@ -24,11 +24,17 @@
                     <div class="content">
                         <a class="header" href="{% url "event" event.id %}">{{ event.title }}</a>
                         <div class="meta">
-                            {% if event.get_future_occurrences %}
-                                <div>
-                                    {{ event.get_future_occurrences.count }} {% trans "Future occurrences" %}
-                                </div>
-                            {% endif %}
+                            {% with event.get_future_occurrences.count as num_future_occurrences %}
+                                {% if num_future_occurrences %}
+                                    <div>
+                                        {% blocktrans count counter=num_future_occurrences %}
+                                            1 Future occurrence
+                                        {% plural %}
+                                            {{ counter }} Future occurrences
+                                        {% endblocktrans %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
                             {% if event.featured %}
                                 <span class="ui green mini label">
                                     {% trans "Featured" %}
