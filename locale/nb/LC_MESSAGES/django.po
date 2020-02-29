@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-15 15:57+0100\n"
+"POT-Creation-Date: 2020-02-22 18:22+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -166,7 +166,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: docs/templates/docs/documentation_page.html:43
-#: news/templates/news/admin_articles.html:59
+#: news/templates/news/admin_articles.html:54
 #: news/templates/news/admin_event.html:27
 #: news/templates/news/admin_timeplace_listing.html:36
 #: web/templates/web/delete_modal.html:11
@@ -197,7 +197,7 @@ msgstr "Tittel"
 #: docs/templates/docs/edit_documentation_page.html:19
 #: groups/templates/groups/committee_form.html:14
 #: make_queue/templates/make_queue/usage_rules.html:17
-#: news/templates/news/admin_articles.html:55
+#: news/templates/news/admin_articles.html:50
 #: news/templates/news/admin_event.html:21
 #: news/templates/news/admin_timeplace_listing.html:28
 msgid "Edit"
@@ -1359,8 +1359,8 @@ msgid "Highlighted"
 msgstr "Fremhevet"
 
 #: news/models.py:60 news/models.py:195
-#: news/templates/news/admin_articles.html:39
-#: news/templates/news/admin_events.html:43
+#: news/templates/news/admin_articles.html:36
+#: news/templates/news/admin_events.html:46
 #: news/templates/news/admin_timeplace_listing.html:22
 msgid "Hidden"
 msgstr "Skjult"
@@ -1445,20 +1445,19 @@ msgstr ""
 msgid "Articles"
 msgstr "Artikler"
 
-#: news/templates/news/admin_articles.html:33
-#: news/templates/news/admin_events.html:37
+#: news/templates/news/admin_articles.html:23
+msgid "Article image"
+msgstr "Artikkelbilde"
+
+#: news/templates/news/admin_articles.html:30
+#: news/templates/news/admin_events.html:40
 msgid "Featured"
 msgstr "Fremhevet"
 
-#: news/templates/news/admin_articles.html:45
-#: news/templates/news/admin_events.html:49
+#: news/templates/news/admin_articles.html:42
+#: news/templates/news/admin_events.html:52
 msgid "Internal"
 msgstr "Intern"
-
-#: news/templates/news/admin_articles.html:52
-#: news/templates/news/admin_events.html:59
-msgid "View"
-msgstr "Se"
 
 #: news/templates/news/admin_event.html:16
 msgid "Go to the event page"
@@ -1540,7 +1539,7 @@ msgstr "Ingen fremtidige forekomster finnes for dette arrangementet"
 
 #: news/templates/news/admin_event.html:105
 msgid "No past occurrences exist for this event"
-msgstr "Ingen tidilgere forekomster finnes for dette arrangementet"
+msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
 #: news/templates/news/admin_event_tickets.html:9
 msgid "Event admin page"
@@ -1564,11 +1563,14 @@ msgstr "Språk"
 msgid "No tickets have been registered for this event"
 msgstr "Ingen billetter har blitt registrert for dette arrangement"
 
-#: news/templates/news/admin_events.html:28
-msgid "Future occurrences"
-msgstr "Fremtidige forekomster"
+#: news/templates/news/admin_events.html:30
+#, python-format
+msgid "1 future occurrence"
+msgid_plural "%(counter)s future occurrences"
+msgstr[0] "1 fremtidig forekomst"
+msgstr[1] "%(counter)s fremtidige forekomster"
 
-#: news/templates/news/admin_events.html:56
+#: news/templates/news/admin_events.html:59
 msgid "Admin"
 msgstr "Admin"
 
@@ -1592,7 +1594,7 @@ msgstr "Dupliser"
 msgid "If clicked, the occurrence is duplicated."
 msgstr "Klikk for å duplisere forekomsten."
 
-#: news/templates/news/article.html:30 news/templates/news/event.html:11
+#: news/templates/news/article.html:31 news/templates/news/event.html:12
 msgid "Admin page"
 msgstr "Administrasjonspanel"
 
@@ -1646,31 +1648,31 @@ msgstr "Hvis valgt vil artikkelen bare være synlig for administratorer."
 msgid "If selected, the article will only be visible to members of MAKE NTNU."
 msgstr "Hvis valgt vil artikkelen bare vises for medlemmer av MAKE NTNU."
 
-#: news/templates/news/event.html:20
+#: news/templates/news/event.html:30 news/templates/news/event.html:136
 msgid "You are viewing an old event"
 msgstr "Du ser på et gammelt arrangement"
 
-#: news/templates/news/event.html:22
+#: news/templates/news/event.html:32 news/templates/news/event.html:138
 msgid "The last occurrence of this event was"
 msgstr "Sist gang arrangement ble holdt var"
 
-#: news/templates/news/event.html:62 news/templates/news/event.html:90
-#: news/templates/news/event.html:120 news/templates/news/event.html:179
+#: news/templates/news/event.html:81 news/templates/news/event.html:109
+#: news/templates/news/event.html:147 news/templates/news/event.html:219
 msgid "You are registered for this event"
 msgstr "Du er påmeldt dette arrangementet"
 
-#: news/templates/news/event.html:68 news/templates/news/event.html:94
-#: news/templates/news/event.html:125 news/templates/news/event.html:183
+#: news/templates/news/event.html:87 news/templates/news/event.html:113
+#: news/templates/news/event.html:152 news/templates/news/event.html:224
 msgid "Registration"
 msgstr "Påmelding"
 
-#: news/templates/news/event.html:73 news/templates/news/event.html:98
-#: news/templates/news/event.html:129 news/templates/news/event.html:187
+#: news/templates/news/event.html:92 news/templates/news/event.html:117
+#: news/templates/news/event.html:156 news/templates/news/event.html:228
 msgid "Sold out"
 msgstr "Utsolgt"
 
-#: news/templates/news/event.html:103 news/templates/news/event.html:134
-#: news/templates/news/event.html:192
+#: news/templates/news/event.html:122 news/templates/news/event.html:161
+#: news/templates/news/event.html:233
 msgid "No registration"
 msgstr "Ingen påmelding"
 
@@ -1814,13 +1816,13 @@ msgid ""
 "If selected, the occurrence will be hidden, even after the publication date"
 msgstr "Hvis valgt vil forekomsten være skjult, selv etter publikasjonsdatoen"
 
-#: news/views.py:341
+#: news/views.py:347
 msgid "Could not register you for the event, please try again later."
 msgstr ""
 "Det var ikke mulig å melde deg på arrangementet på dette tidspunktet. "
 "Vennligst prøv igjen ved en senere anledning."
 
-#: news/views.py:354
+#: news/views.py:360
 msgid "Your ticket!"
 msgstr "Din billett!"
 
@@ -1947,6 +1949,10 @@ msgstr "Feltet er ikke fylt ut for"
 #: web/templates/web/forms/widgets/semantic_file.html:6
 msgid "Upload image"
 msgstr "Last opp bilde"
+
+#: web/templates/web/forms/widgets/semantic_file.html:11
+msgid "View old image"
+msgstr "Se gammelt bilde"
 
 #: web/templates/web/forms/widgets/semantic_file.html:14
 msgid "An image is required"

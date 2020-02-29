@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 import card.utils
 from card.forms import CardNumberField
 from internal.models import Member, SystemAccess
+from users.models import User
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
 
 
@@ -40,7 +41,8 @@ class EditMemberForm(ModelForm):
         super().__init__(**kwargs)
 
         member = kwargs['instance']
-        self.initial['card_number'] = member.user.card_number.number
+        if member.user.card_number:
+            self.initial['card_number'] = member.user.card_number.number
 
         if not user.has_perm("internal.can_edit_group_membership"):
             for field_name in ["committees", "role", "comment", "guidance_exemption", "active", "honorary"]:

@@ -8,7 +8,7 @@
     <input hidden type="file" name="{{ widget.name }}" accept="{{ widget.attrs.accept }}" formnovalidate data-required="{{ widget.attrs.required }}">
 </div>
 {% if widget.value %}
-    <a href="{{ widget.value.url }}" target="_blank">View old image</a>
+    <a href="{{ widget.value.url }}" target="_blank">{% trans "View old image" %}</a>
 {% endif %}
 <div class="ui red pointing label" id="{{ widget.attrs.id }}-error-message">
     {% trans "An image is required" %}

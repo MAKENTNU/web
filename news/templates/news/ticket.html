@@ -25,7 +25,7 @@
                             <div class="ui item">
                                 <div class="content">
                                     <div class="header">
-                                        {{ timeplace.start_date|date:"d. M H:i" }}
+                                        {{ timeplace.start_time|date:"d. M H:i" }}
                                         - {{ timeplace.end_time|date:"d. M H:i" }}
                                         <a class="left floated" href="{% url 'timeplace-ical' timeplace.id %}"
                                            target="_blank">

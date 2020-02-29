@@ -1,6 +1,6 @@
 from django import template
 
-from news.models import Event, EventTicket
+from ..models import Event, EventTicket
 
 register = template.Library()
 

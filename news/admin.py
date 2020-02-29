@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from news.models import Article, Event, TimePlace, EventTicket
 from web.multilingual.database import MultiLingualFieldAdmin
+from .models import Article, Event, TimePlace, EventTicket
 
 admin.site.register(Article, MultiLingualFieldAdmin)
 admin.site.register(Event, MultiLingualFieldAdmin)
