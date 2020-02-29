@@ -1,0 +1,103 @@
+{% load i18n %}
+{% load reservation_extra %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static "make_queue/css/calendar.css" %}">
+<script src="{% static "make_queue/js/calendar.js" %}"></script>
+
+<div class="reservation_calendar">
+    <div class="ui top attached buttons">
+        <div class="ui make_yellow labeled icon previous button">
+            <i class="left chevron icon"></i>
+            {% trans "Previous" %}
+        </div>
+
+        <div class="ui make_yellow bordered current button">
+            <i class="calendar icon"></i>
+            {% trans "Today" %}
+        </div>
+
+        <div class="ui make_yellow right labeled icon next button">
+            <i class="right chevron icon"></i>
+            {% trans "Next" %}
+        </div>
+    </div>
+
+    <table class="ui attached celled fixed very compact unstackable table">
+        <thead>
+        <tr>
+            <th>
+                <div class="large header"></div>
+                <div class="medium header"></div>
+            </th>
+            <th>
+                <div class="large header">{% trans "Mon"|capfirst %}</div>
+                <div class="medium header"></div>
+            </th>
+            <th>
+                <div class="large header">{% trans "Tue"|capfirst %}</div>
+                <div class="medium header"></div>
+            </th>
+            <th>
+                <div class="large header">{% trans "Wed"|capfirst %}</div>
+                <div class="medium header"></div>
+            </th>
+            <th>
+                <div class="large header">{% trans "Thu"|capfirst %}</div>
+                <div class="medium header"></div>
+            </th>
+            <th>
+                <div class="large header">{% trans "Fri"|capfirst %}</div>
+                <div class="medium header"></div>
+            </th>
+            <th>
+                <div class="large header">{% trans "Sat"|capfirst %}</div>
+                <div class="medium header"></div>
+            </th>
+            <th>
+                <div class="large header">{% trans "Sun"|capfirst %}</div>
+                <div class="medium header"></div>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    {% numeric_range 1 24 as hours %}
+                    {% for hour in hours %}
+                        <div>{{ hour|stringformat:"02d" }}:00</div>
+                    {% endfor %}
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+                <td>
+
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <th colspan="8">
+                {# TODO: Add explanations for the colors #}
+            </th>
+        </tr>
+        </tfoot>
+    </table>
+
+</div>
