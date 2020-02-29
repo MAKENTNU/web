@@ -53,6 +53,11 @@ def is_current_date(date):
 
 
 @register.simple_tag()
+def shorthand_days():
+    return [_("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun")]
+
+
+@register.simple_tag()
 def card_text_from_machine_status(machine):
     status = machine.get_status_display()
     next_reservation = machine.get_next_reservation()

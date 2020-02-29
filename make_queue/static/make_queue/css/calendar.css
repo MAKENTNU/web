@@ -7,11 +7,33 @@
 }
 
 .reservation_calendar .medium.header {
+    font-size: 1.1em;
     font-weight: normal;
 }
 
+.reservation_calendar .height.adjuster {
+    height: 0.5em;
+}
+
+.reservation_calendar .time.indicator {
+    text-align: center;
+}
+
+.reservation_calendar .time.indication.line {
+    height: 12.5%;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+}
+
+.reservation_calendar .current.time.indicator {
+    width: 100%;
+    height: 2px;
+    background-color: red;
+    position: absolute;
+    z-index: 2;
+}
+
 td.wrapping {
-    text-align: center !important;
     height: 1px !important;
     padding: 0 !important;
 }
@@ -20,12 +42,61 @@ tr.wrapping {
     height: 100% !important;
 }
 
+@supports (-moz-appearance:none) {
+    td.wrapping {
+        height: 100% !important;
+    }
+}
+
 .day {
     position: relative;
 }
 
 .reservation {
-    background-color: #0c85d0;
     position: absolute;
     width: 100%;
+}
+
+.event.reservation {
+    background-color: #21BA45;
+    border-top: 1px solid #1B8F3A;
+    border-bottom: 1px solid #1B8F3A;
+}
+
+.normal.reservation {
+    background-color: #2185D0;
+    border-top: 1px solid #1B629D;
+    border-bottom: 1px solid #1B629D;
+}
+
+.own.reservation {
+    background-color: #F8C811;
+    border-top: 1px solid #D7AB0F;
+    border-bottom: 1px solid #D7AB0F;
+}
+
+.make.reservation {
+    background-color: #DCDDDE;
+    border-top: 1px solid #BABBBC;
+    border-bottom: 1px solid #BABBBC;
+    z-index: 200;
+}
+
+.reservation.box {
+    width: 1em;
+    height: 1em;
+    position: relative;
+    display: inline-block;
+}
+
+.legend.item {
+    display: inline-block;
+    padding-right: 0.5em;
+}
+
+@media screen and (max-width: 600px) {
+    .legend {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
 }

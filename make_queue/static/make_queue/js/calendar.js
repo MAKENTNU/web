@@ -50,6 +50,10 @@ Date.prototype.djangoFormat = function () {
     return `${this.getUTCFullYear()}-${this.getUTCMonth() + 1}-${this.getUTCDate()} ${zeroPad(this.getUTCHours())}:${zeroPad(this.getUTCMinutes())}`;
 };
 
+Date.prototype.getMonthText = function() {
+    return gettext(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][this.getMonth()]);
+};
+
 function ReservationCalendar(element, properties) {
     /**
      * Creates a new ReservationCalendar object. The properties field is a dictionary of properties:
@@ -58,7 +62,7 @@ function ReservationCalendar(element, properties) {
      */
     this.date = new Date().startOfWeek();
     this.informationHeaders = element.find("thead th").toArray();
-    this.days = element.find("tbody .day").toArray();
+    this.days = element.find("tbody .day .reservations").toArray();
     this.element = element;
     this.machine = properties.machine;
     this.init();
@@ -79,7 +83,9 @@ ReservationCalendar.prototype.init = function () {
     this.element.find(".previous.button").click(() => {
         this.date = this.date.previousWeek();
         this.update();
-    })
+    });
+    let reservationCalendar = this;
+    setInterval(() => reservationCalendar.updateCurrentTimeIndication(), 60 * 1000);
 };
 
 ReservationCalendar.prototype.update = function () {
@@ -90,6 +96,18 @@ ReservationCalendar.prototype.update = function () {
         startDate: this.date.djangoFormat(),
         endDate: this.date.nextWeek().djangoFormat(),
     }, (data) => reservationCalendar.updateReservations.apply(reservationCalendar, [data]), "json");
+};
+
+ReservationCalendar.prototype.updateCurrentTimeIndication = function () {
+    this.element.find(".current.time.indicator").remove();
+
+    let currentTime = new Date();
+    if (currentTime >= this.date && currentTime < this.date.nextWeek()) {
+        let timeOfDay = (currentTime.getHours() / 24 + currentTime.getMinutes() / (60 * 24) + currentTime.getSeconds() / (60 * 24 * 60)) * 100;
+        let timeIndication = $(`<div class="current time indicator" style="top: ${timeOfDay}%;">`);
+
+        $(this.days[(currentTime.getDay() + 5) % 6]).append(timeIndication);
+    }
 };
 
 ReservationCalendar.prototype.addReservation = function (reservation) {
@@ -103,7 +121,7 @@ ReservationCalendar.prototype.addReservation = function (reservation) {
             let dayStartTime = (Math.max(startTime, currentDayStart) - currentDayStart) / (24 * 60 * 60 * 1000) * 100;
             let dayEndTime = (Math.min(endTime, currentDayEnd) - Math.max(startTime, currentDayStart)) / (24 * 60 * 60 * 1000) * 100;
 
-            let reservationBlock = $(`<div class="reservation" style='top: ${dayStartTime}%; height: ${dayEndTime}%;'>`);
+            let reservationBlock = $(`<div class="${reservation.type} reservation" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`);
             $(this.days[day]).append(reservationBlock);
         }
 
@@ -114,13 +132,14 @@ ReservationCalendar.prototype.addReservation = function (reservation) {
 
 ReservationCalendar.prototype.updateReservations = function (data) {
     this.days.forEach(day => $(day).empty());
+    this.updateCurrentTimeIndication();
 
     let reservationCalendar = this;
     data.reservations.forEach((reservation) => reservationCalendar.addReservation.apply(reservationCalendar, [reservation]));
 };
 
 ReservationCalendar.prototype.updateInformationHeaders = function () {
-    this.informationHeaders[0].querySelector(".large.header").textContent = "";
+    this.informationHeaders[0].querySelector(".large.header").textContent = this.date.getMonthText();
     this.informationHeaders[0].querySelector(".medium.header").textContent = this.date.getWeekNumber();
 
     let date = this.date;
