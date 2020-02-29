@@ -53,7 +53,12 @@ rules_url_patterns = [
     path('edit/<int:pk>/', reservation.rules.EditReservationRuleView.as_view(), name="edit_machine_rule"),
 ]
 
+calendar_url_patterns = [
+    path('<machine:machine>/reservations', api.calendar.get_reservations, name="api_reservations"),
+]
+
 urlpatterns = [
+    path('calendar/', include(calendar_url_patterns)),
     path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
     path('calendar/<year:year>/<week:week>/<machine:machine>/', reservation.calendar.ReservationCalendarComponentView.as_view(), name="reservation_calendar_component"),
     path('make/<machine:machine>/', login_required(reservation.reservation.MakeReservationView.as_view()), name="make_reservation"),

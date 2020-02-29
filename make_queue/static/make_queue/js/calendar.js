@@ -45,10 +45,22 @@ Date.prototype.previousWeek = function () {
     return date;
 };
 
+Date.prototype.djangoFormat = function () {
+    let zeroPad = (value) => value < 10 ? `0${value}` : `${value}`;
+    return `${this.getUTCFullYear()}-${this.getUTCMonth() + 1}-${this.getUTCDate()} ${zeroPad(this.getUTCHours())}:${zeroPad(this.getUTCMinutes())}`;
+};
+
 function ReservationCalendar(element, properties) {
+    /**
+     * Creates a new ReservationCalendar object. The properties field is a dictionary of properties:
+     *
+     * machine - The pk of the machine to display for
+     */
     this.date = new Date().startOfWeek();
-    this.informationHeaders = element.find("thead th");
+    this.informationHeaders = element.find("thead th").toArray();
+    this.days = element.find("tbody .day").toArray();
     this.element = element;
+    this.machine = properties.machine;
     this.init();
 }
 
@@ -72,6 +84,39 @@ ReservationCalendar.prototype.init = function () {
 
 ReservationCalendar.prototype.update = function () {
     this.updateInformationHeaders();
+    let reservationCalendar = this;
+
+    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/reservations`, {
+        startDate: this.date.djangoFormat(),
+        endDate: this.date.nextWeek().djangoFormat(),
+    }, (data) => reservationCalendar.updateReservations.apply(reservationCalendar, [data]), "json");
+};
+
+ReservationCalendar.prototype.addReservation = function (reservation) {
+    let startTime = Date.parse(reservation.start);
+    let endTime = Date.parse(reservation.end);
+
+    let currentDayStart = this.date;
+    let currentDayEnd = this.date.nextDay();
+    for (let day = 0; day < 7; day++) {
+        if (startTime < currentDayEnd && endTime > currentDayStart) {
+            let dayStartTime = (Math.max(startTime, currentDayStart) - currentDayStart) / (24 * 60 * 60 * 1000) * 100;
+            let dayEndTime = (Math.min(endTime, currentDayEnd) - Math.max(startTime, currentDayStart)) / (24 * 60 * 60 * 1000) * 100;
+
+            let reservationBlock = $(`<div class="reservation" style='top: ${dayStartTime}%; height: ${dayEndTime}%;'>`);
+            $(this.days[day]).append(reservationBlock);
+        }
+
+        currentDayStart = currentDayStart.nextDay();
+        currentDayEnd = currentDayEnd.nextDay();
+    }
+};
+
+ReservationCalendar.prototype.updateReservations = function (data) {
+    this.days.forEach(day => $(day).empty());
+
+    let reservationCalendar = this;
+    data.reservations.forEach((reservation) => reservationCalendar.addReservation.apply(reservationCalendar, [reservation]));
 };
 
 ReservationCalendar.prototype.updateInformationHeaders = function () {

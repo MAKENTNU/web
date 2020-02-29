@@ -9,3 +9,23 @@
 .reservation_calendar .medium.header {
     font-weight: normal;
 }
+
+td.wrapping {
+    text-align: center !important;
+    height: 1px !important;
+    padding: 0 !important;
+}
+
+tr.wrapping {
+    height: 100% !important;
+}
+
+.day {
+    position: relative;
+}
+
+.reservation {
+    background-color: #0c85d0;
+    position: absolute;
+    width: 100%;
+}
