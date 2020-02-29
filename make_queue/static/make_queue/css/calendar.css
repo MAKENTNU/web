@@ -63,6 +63,10 @@ tr.wrapping {
     border-bottom: 1px solid #1B8F3A;
 }
 
+.event.reservation:hover {
+    cursor: pointer;
+}
+
 .normal.reservation {
     background-color: #2185D0;
     border-top: 1px solid #1B629D;

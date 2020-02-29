@@ -13,8 +13,8 @@ Date.prototype.getWeekNumber = function () {
      * Finds the current week number
      */
     let date = new Date(this);
-    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-    let yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
+    date.setDate(date.getDate() + 4 - (date.getDay() || 7));
+    let yearStart = new Date(date.getFullYear(), 0, 1);
     return Math.ceil((((date - yearStart) / (24 * 60 * 60 * 1000)) + 1) / 7);
 };
 
@@ -45,13 +45,30 @@ Date.prototype.previousWeek = function () {
     return date;
 };
 
+Date.prototype.timeString = function () {
+    let zeroPad = (value) => value < 10 ? `0${value}` : `${value}`;
+    return `${zeroPad(this.getHours())}:${zeroPad(this.getMinutes())}`;
+};
+
 Date.prototype.djangoFormat = function () {
     let zeroPad = (value) => value < 10 ? `0${value}` : `${value}`;
     return `${this.getUTCFullYear()}-${this.getUTCMonth() + 1}-${this.getUTCDate()} ${zeroPad(this.getUTCHours())}:${zeroPad(this.getUTCMinutes())}`;
 };
 
-Date.prototype.getMonthText = function() {
+Date.prototype.getMonthText = function () {
     return gettext(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][this.getMonth()]);
+};
+
+Date.prototype.getMonthTextShort = function () {
+    return this.getMonthText().slice(0, 3);
+};
+
+Date.prototype.getDayText = function () {
+    return gettext(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][this.getDay()])
+};
+
+Date.prototype.getDayTextShort = function () {
+    return this.getDayText().slice(0, 3);
 };
 
 function ReservationCalendar(element, properties) {
@@ -111,23 +128,63 @@ ReservationCalendar.prototype.updateCurrentTimeIndication = function () {
 };
 
 ReservationCalendar.prototype.addReservation = function (reservation) {
-    let startTime = Date.parse(reservation.start);
-    let endTime = Date.parse(reservation.end);
+    reservation.start = new Date(Date.parse(reservation.start));
+    reservation.end = new Date(Date.parse(reservation.end));
 
     let currentDayStart = this.date;
     let currentDayEnd = this.date.nextDay();
     for (let day = 0; day < 7; day++) {
-        if (startTime < currentDayEnd && endTime > currentDayStart) {
-            let dayStartTime = (Math.max(startTime, currentDayStart) - currentDayStart) / (24 * 60 * 60 * 1000) * 100;
-            let dayEndTime = (Math.min(endTime, currentDayEnd) - Math.max(startTime, currentDayStart)) / (24 * 60 * 60 * 1000) * 100;
+        if (reservation.start < currentDayEnd && reservation.end > currentDayStart) {
+            let dayStartTime = (Math.max(reservation.start, currentDayStart) - currentDayStart) / (24 * 60 * 60 * 1000) * 100;
+            let dayEndTime = (Math.min(reservation.end, currentDayEnd) - Math.max(reservation.start, currentDayStart)) / (24 * 60 * 60 * 1000) * 100;
 
             let reservationBlock = $(`<div class="${reservation.type} reservation" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`);
             $(this.days[day]).append(reservationBlock);
+
+            // Create popup on hover
+            if (reservation.displayText !== undefined) {
+                this.createPopup(reservationBlock, reservation);
+            }
+
+            if (reservation.eventLink !== undefined) {
+                reservationBlock.click(() => {
+                    window.location = reservation.eventLink;
+                })
+            }
         }
 
         currentDayStart = currentDayStart.nextDay();
         currentDayEnd = currentDayEnd.nextDay();
     }
+};
+
+ReservationCalendar.prototype.createPopup = function (reservationElement, reservation) {
+    let content;
+
+    if (reservation.user !== undefined) {
+        let duration = `${reservation.start.getDayTextShort()} ${reservation.start.timeString()} - ${reservation.end.getDayTextShort()} ${reservation.end.timeString()}`;
+
+        content = `
+            <div class="header">${gettext("Reservation")}</div>
+            <div><b>${gettext("Name")}:</b> ${reservation.user}</div>
+            <div><b>${gettext("Email")}:</b> ${reservation.email}</div>
+            <div><b>${gettext("Time")}:</b> ${duration}</div>
+        `;
+
+        if (reservation.displayText !== "") {
+            content += `<div><b>${gettext("Comment")}:</b></div><div>${reservation.displayText}</div>`
+        }
+    } else if (reservation.eventLink !== undefined) {
+        content = `<div class="header">${reservation.displayText}</div>`;
+    } else {
+        content = reservation.displayText;
+    }
+
+    reservationElement.popup({
+        position: "top center",
+        html: content,
+    });
+
 };
 
 ReservationCalendar.prototype.updateReservations = function (data) {
