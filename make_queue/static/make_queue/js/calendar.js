@@ -245,6 +245,14 @@ ReservationCalendar.prototype.getSelectionTimes = function () {
             }
         });
     }
+
+
+    if (endTime > this.roundTime(this.selectionStart)) {
+        endTime = modifyToFirstValid(this.reservationRules, startTime, endTime, 1);
+    } else if (startTime < this.roundTime(this.selectionStart)) {
+        startTime = modifyToFirstValid(this.reservationRules, startTime, endTime, 0);
+    }
+
     return [startTime, endTime];
 };
 
@@ -272,12 +280,16 @@ ReservationCalendar.prototype.resetSelection = function () {
 
 ReservationCalendar.prototype.update = function () {
     this.updateInformationHeaders();
-    let reservationCalendar = this;
+    let calendar = this;
 
     $.get(`${window.location.origin}/reservation/calendar/${this.machine}/reservations`, {
         startDate: this.date.djangoFormat(),
         endDate: this.date.nextWeek().djangoFormat(),
-    }, (data) => reservationCalendar.updateReservations.apply(reservationCalendar, [data]), "json");
+    }, (data) => calendar.updateReservations.apply(calendar, [data]), "json");
+
+    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/rules`, {}, (data) => {
+        calendar.reservationRules = data.rules;
+    })
 };
 
 ReservationCalendar.prototype.updateCurrentTimeIndication = function () {

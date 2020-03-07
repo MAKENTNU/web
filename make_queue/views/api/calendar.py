@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.dateparse import parse_datetime
 
-from make_queue.models.models import Reservation
+from make_queue.models.models import Reservation, ReservationRule
 
 
 def reservation_type(reservation, user):
@@ -46,3 +46,21 @@ def get_reservations(request, machine):
         reservations.append(reservation_data)
 
     return JsonResponse({"reservations": reservations})
+
+
+def get_reservation_rules(request, machine):
+    return JsonResponse({
+        "rules": [
+            {
+                "periods": [
+                    [
+                        day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
+                        (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
+                    ]
+                    for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
+                ],
+                "max_inside": rule.max_hours,
+                "max_crossed": rule.max_inside_border_crossed,
+            } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)
+        ],
+    })

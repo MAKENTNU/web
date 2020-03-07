@@ -55,6 +55,7 @@ rules_url_patterns = [
 
 calendar_url_patterns = [
     path('<machine:machine>/reservations', api.calendar.get_reservations, name="api_reservations"),
+    path('<machine:machine>/rules', api.calendar.get_reservation_rules, name="api_reservation_rules"),
 ]
 
 urlpatterns = [
