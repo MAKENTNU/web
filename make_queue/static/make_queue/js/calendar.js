@@ -119,7 +119,7 @@ ReservationCalendar.prototype.init = function () {
     let reservationCalendar = this;
     setInterval(() => reservationCalendar.updateCurrentTimeIndication(), 60 * 1000);
 
-    if(this.selection) {
+    if (this.selection) {
         this.setupSelection();
     }
 };
@@ -132,18 +132,56 @@ ReservationCalendar.prototype.setupSelection = function () {
     let calendar = this;
 
     for (let day = 0; day < 7; day++) {
+        // Start selection when the mouse is clicked
         $(this.days[day]).parent().mousedown((event) => {
             calendar.selecting = true;
             calendar.selectionStart = calendar.getHoverDate(event, day);
             calendar.selectionEnd = calendar.selectionStart;
         }).mousemove((event) => {
+            // Update the selection when any of the days are hovered over
             if (calendar.selecting) {
                 calendar.selectionEnd = calendar.getHoverDate(event, day);
                 calendar.updateSelection();
             }
-        })
+        });
+
+        // The header for the week should set the selection date to the start of the week
+        $(this.informationHeaders[0]).mousemove(() => {
+            if (calendar.selecting) {
+                calendar.selectionEnd = calendar.date;
+                calendar.updateSelection();
+            }
+        });
+
+        // The headers above the dates should set the selection date to the start of the given day
+        $(this.informationHeaders[day + 1]).mousemove(() => {
+            if (calendar.selecting) {
+                calendar.selectionEnd = calendar.date.nextDays(day);
+                calendar.updateSelection();
+            }
+        });
     }
 
+    // The part of the calendar that shows the timestamps should set the selection date to the start of the week
+    this.element.find(".time.information").mousemove((event) => {
+        if (calendar.selecting) {
+            calendar.selectionEnd = calendar.date;
+            calendar.updateSelection();
+        }
+    });
+
+    // Hovering over the footer will set the selection to the end of the day hovered under
+    let footer = this.element.find("tfoot");
+    footer.mousemove((event) => {
+        if (calendar.selecting) {
+            let hoverPosition = (event.pageX - footer.offset().left) / footer.width();
+            let dayHoveredUnder = Math.floor(hoverPosition * 8);
+            calendar.selectionEnd = calendar.date.nextDays(dayHoveredUnder);
+            calendar.updateSelection();
+        }
+    });
+
+    // Stop selection whenever the mouse is released
     $(document).mouseup(() => {
         if (calendar.selecting) {
             calendar.updateSelection();
@@ -153,14 +191,14 @@ ReservationCalendar.prototype.setupSelection = function () {
     })
 };
 
-ReservationCalendar.prototype.updateSelection = function() {
+ReservationCalendar.prototype.updateSelection = function () {
     if (this.selecting) {
         this.element.find(".selection.reservation").remove();
         this.drawReservation(this.getSelectionStartTime(), this.getSelectionEndTime(), "selection reservation");
     }
 };
 
-ReservationCalendar.prototype.drawReservation = function(startDate, endDate, classes) {
+ReservationCalendar.prototype.drawReservation = function (startDate, endDate, classes) {
     let date = this.date;
     let millisecondsInDay = 24 * 60 * 60 * 1000;
     for (let day = 0; day < 7; day++) {
@@ -174,20 +212,20 @@ ReservationCalendar.prototype.drawReservation = function(startDate, endDate, cla
     }
 };
 
-ReservationCalendar.prototype.getSelectionStartTime = function() {
+ReservationCalendar.prototype.getSelectionStartTime = function () {
     return this.roundTime(Math.max(new Date(), Math.min(this.selectionStart, this.selectionEnd)));
 };
 
-ReservationCalendar.prototype.getSelectionEndTime = function() {
+ReservationCalendar.prototype.getSelectionEndTime = function () {
     return this.roundTime(Math.max(new Date(), this.selectionStart, this.selectionEnd));
 };
 
-ReservationCalendar.prototype.roundTime = function(time) {
+ReservationCalendar.prototype.roundTime = function (time) {
     let millisecondsIn5Minutes = 5 * 60 * 1000;
     return new Date(Math.ceil(time / millisecondsIn5Minutes) * millisecondsIn5Minutes);
 };
 
-ReservationCalendar.prototype.getHoverDate = function(event, day) {
+ReservationCalendar.prototype.getHoverDate = function (event, day) {
     let date = this.date.nextDays(day);
     let dayElement = $(event.target).closest(".day");
     let timeOfDay = (event.pageY - dayElement.offset().top) / dayElement.height();
