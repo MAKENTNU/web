@@ -194,7 +194,9 @@ ReservationCalendar.prototype.setupSelection = function () {
 ReservationCalendar.prototype.updateSelection = function () {
     if (this.selecting) {
         this.element.find(".selection.reservation").remove();
-        this.drawReservation(this.getSelectionStartTime(), this.getSelectionEndTime(), "selection reservation");
+        if (this.getSelectionStartTime() !== this.getSelectionEndTime()) {
+            this.drawReservation(this.getSelectionStartTime(), this.getSelectionEndTime(), "selection reservation");
+        }
     }
 };
 
@@ -213,11 +215,33 @@ ReservationCalendar.prototype.drawReservation = function (startDate, endDate, cl
 };
 
 ReservationCalendar.prototype.getSelectionStartTime = function () {
-    return this.roundTime(Math.max(new Date(), Math.min(this.selectionStart, this.selectionEnd)));
+    return this.getSelectionTimes()[0];
 };
 
 ReservationCalendar.prototype.getSelectionEndTime = function () {
-    return this.roundTime(Math.max(new Date(), this.selectionStart, this.selectionEnd));
+    return this.getSelectionTimes()[1];
+};
+
+ReservationCalendar.prototype.getSelectionTimes = function () {
+    let startTime = this.roundTime(Math.max(new Date(), Math.min(this.selectionStart, this.selectionEnd)));
+    let endTime = this.roundTime(Math.max(new Date(), this.selectionStart, this.selectionEnd));
+    let adjusted = true;
+
+    // Adjust the start and end times so that the selection does not overlap any reservations
+    while (adjusted) {
+        adjusted = false;
+        this.reservations.forEach((reservation) => {
+            if (reservation.end > startTime && (reservation.start <= startTime || (reservation.end <= endTime && this.selectionStart > reservation.start))) {
+                startTime = reservation.end;
+                adjusted = true;
+            }
+            if (reservation.start < endTime && (reservation.end > endTime || (reservation.start >= startTime && this.selectionStart < reservation.end))) {
+                endTime = reservation.start;
+                adjusted = true;
+            }
+        });
+    }
+    return [startTime, endTime];
 };
 
 ReservationCalendar.prototype.roundTime = function (time) {
