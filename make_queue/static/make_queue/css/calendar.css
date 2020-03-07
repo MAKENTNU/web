@@ -83,7 +83,12 @@ tr.wrapping {
     background-color: #DCDDDE;
     border-top: 1px solid #BABBBC;
     border-bottom: 1px solid #BABBBC;
-    z-index: 200;
+}
+
+.selection.reservation {
+    background-color: #38CAFF;
+    border-top: 1px solid #369bce;
+    border-bottom: 1px solid #369bce;
 }
 
 .reservation.box {

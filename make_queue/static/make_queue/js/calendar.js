@@ -22,10 +22,15 @@ Date.prototype.nextDay = function () {
     /**
      * Returns the next day
      */
+    return this.nextDays(1);
+};
+
+Date.prototype.nextDays = function (nDays) {
     let date = new Date(this);
-    date.setDate(date.getDate() + 1);
+    date.setDate(date.getDate() + nDays);
     return date;
 };
+
 
 Date.prototype.nextWeek = function () {
     /**
@@ -76,14 +81,24 @@ function ReservationCalendar(element, properties) {
      * Creates a new ReservationCalendar object. The properties field is a dictionary of properties:
      *
      * machine - The pk of the machine to display for
+     * selection - A boolean indicating if selection is allowed
+     * onSelect [optional] - A function to handle what should be shown on selection
      */
     this.date = new Date().startOfWeek();
     this.informationHeaders = element.find("thead th").toArray();
     this.days = element.find("tbody .day .reservations").toArray();
     this.element = element;
     this.machine = properties.machine;
+    this.selection = properties.selection;
+    if (properties.onSelect) {
+        this.onSelection = properties.onSelect;
+    }
     this.init();
 }
+
+ReservationCalendar.prototype.onSelection = function () {
+    // TODO: Implement a default function for onSelection
+};
 
 ReservationCalendar.prototype.init = function () {
     this.update();
@@ -103,6 +118,90 @@ ReservationCalendar.prototype.init = function () {
     });
     let reservationCalendar = this;
     setInterval(() => reservationCalendar.updateCurrentTimeIndication(), 60 * 1000);
+
+    if(this.selection) {
+        this.setupSelection();
+    }
+};
+
+ReservationCalendar.prototype.setupSelection = function () {
+    this.selectionStart = null;
+    this.selectionEnd = null;
+    this.selecting = false;
+
+    let calendar = this;
+
+    for (let day = 0; day < 7; day++) {
+        $(this.days[day]).parent().mousedown((event) => {
+            calendar.selecting = true;
+            calendar.selectionStart = calendar.getHoverDate(event, day);
+            calendar.selectionEnd = calendar.selectionStart;
+        }).mousemove((event) => {
+            if (calendar.selecting) {
+                calendar.selectionEnd = calendar.getHoverDate(event, day);
+                calendar.updateSelection();
+            }
+        })
+    }
+
+    $(document).mouseup(() => {
+        if (calendar.selecting) {
+            calendar.updateSelection();
+            calendar.selecting = false;
+            calendar.onSelection();
+        }
+    })
+};
+
+ReservationCalendar.prototype.updateSelection = function() {
+    if (this.selecting) {
+        this.element.find(".selection.reservation").remove();
+        this.drawReservation(this.getSelectionStartTime(), this.getSelectionEndTime(), "selection reservation");
+    }
+};
+
+ReservationCalendar.prototype.drawReservation = function(startDate, endDate, classes) {
+    let date = this.date;
+    let millisecondsInDay = 24 * 60 * 60 * 1000;
+    for (let day = 0; day < 7; day++) {
+        if (endDate > date && startDate < date.nextDay()) {
+            let dayStartTime = (Math.max(date, startDate) - date) / millisecondsInDay * 100;
+            let dayEndTime = (Math.min(date.nextDay(), endDate) - Math.max(date, startDate)) / millisecondsInDay * 100;
+            let reservationBlock = $(`<div class="${classes}" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`);
+            $(this.days[day]).append(reservationBlock);
+        }
+        date = date.nextDay();
+    }
+};
+
+ReservationCalendar.prototype.getSelectionStartTime = function() {
+    return this.roundTime(Math.max(new Date(), Math.min(this.selectionStart, this.selectionEnd)));
+};
+
+ReservationCalendar.prototype.getSelectionEndTime = function() {
+    return this.roundTime(Math.max(new Date(), this.selectionStart, this.selectionEnd));
+};
+
+ReservationCalendar.prototype.roundTime = function(time) {
+    let millisecondsIn5Minutes = 5 * 60 * 1000;
+    return new Date(Math.ceil(time / millisecondsIn5Minutes) * millisecondsIn5Minutes);
+};
+
+ReservationCalendar.prototype.getHoverDate = function(event, day) {
+    let date = this.date.nextDays(day);
+    let dayElement = $(event.target).closest(".day");
+    let timeOfDay = (event.pageY - dayElement.offset().top) / dayElement.height();
+    date = new Date(date.valueOf() + timeOfDay * 24 * 60 * 60 * 1000);
+    return date;
+};
+
+
+ReservationCalendar.prototype.resetSelection = function () {
+    if (this.selection) {
+        this.selectionStart = null;
+        this.selectionEnd = null;
+        this.element.find(".selection.reservation").remove();
+    }
 };
 
 ReservationCalendar.prototype.update = function () {
@@ -123,7 +222,7 @@ ReservationCalendar.prototype.updateCurrentTimeIndication = function () {
         let timeOfDay = (currentTime.getHours() / 24 + currentTime.getMinutes() / (60 * 24) + currentTime.getSeconds() / (60 * 24 * 60)) * 100;
         let timeIndication = $(`<div class="current time indicator" style="top: ${timeOfDay}%;">`);
 
-        $(this.days[(currentTime.getDay() + 5) % 6]).append(timeIndication);
+        $(this.days[(currentTime.getDay() + 6) % 7]).append(timeIndication);
     }
 };
 
@@ -193,6 +292,9 @@ ReservationCalendar.prototype.updateReservations = function (data) {
 
     let reservationCalendar = this;
     data.reservations.forEach((reservation) => reservationCalendar.addReservation.apply(reservationCalendar, [reservation]));
+
+    this.reservations = data.reservations;
+    this.resetSelection();
 };
 
 ReservationCalendar.prototype.updateInformationHeaders = function () {

@@ -84,7 +84,7 @@
         </div>
         {% include "make_queue/calendar.html" %}
         <script>
-            new ReservationCalendar($(".reservation_calendar"), {machine: {{ machine.pk }}});
+            new ReservationCalendar($(".reservation_calendar"), {machine: {{ machine.pk }}, selection: true});
         </script>
     </div>
 {% endblock body %}
