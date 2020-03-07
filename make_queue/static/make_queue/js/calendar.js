@@ -190,6 +190,12 @@ ReservationCalendar.prototype.setupSelection = function () {
             calendar.selecting = false;
             calendar.onSelection();
         }
+    });
+
+    $(document).mousedown(() => {
+        if (calendar.selecting === false && calendar.selectionStart != null) {
+            calendar.resetSelection();
+        }
     })
 };
 
