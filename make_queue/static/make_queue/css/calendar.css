@@ -128,6 +128,30 @@ tr.wrapping {
     bottom: -0.7em;
 }
 
+.selection.expand {
+    height: 10px;
+    position: absolute;
+    width: 100%;
+    pointer-events: all;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.selection.expand:hover {
+    cursor: ns-resize;
+}
+
+.selection.expand.top {
+    top: 0;
+}
+
+.selection.expand.bottom {
+    bottom: 0;
+}
+
 @media screen and (max-width: 600px) {
     .legend {
         display: grid;

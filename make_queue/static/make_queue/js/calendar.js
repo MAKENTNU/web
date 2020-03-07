@@ -186,8 +186,8 @@ ReservationCalendar.prototype.setupSelection = function () {
     // Stop selection whenever the mouse is released
     $(document).mouseup(() => {
         if (calendar.selecting) {
-            calendar.updateSelection();
             calendar.selecting = false;
+            calendar.updateSelection();
             calendar.onSelection();
         }
     });
@@ -200,21 +200,54 @@ ReservationCalendar.prototype.setupSelection = function () {
 };
 
 ReservationCalendar.prototype.updateSelection = function () {
-    if (this.selecting) {
+    let calendar = this;
+    if (this.selectionStart != null) {
         let startTime = this.getSelectionStartTime();
         let endTime = this.getSelectionEndTime();
         this.element.find(".selection.reservation").remove();
-        if (startTime !== endTime) {
-            this.drawReservation(startTime, endTime, "selection reservation", (element, day) => {
-                if (day <= startTime && startTime < day.nextDay()) {
-                    element.append($(`<div class='selection start time'>${startTime.timeString()}</div>`));
-                }
+        this.drawReservation(startTime, endTime, "selection reservation", (element, day) => {
+            // If this is the first day of the selection, add the start time indicator
+            if (day <= startTime && startTime < day.nextDay()) {
+                element.append($(`<div class='selection start time'>${startTime.timeString()}</div>`));
 
-                if (day < endTime && endTime <= day.nextDay()) {
-                    element.append($(`<div class='selection end time'>${endTime.timeString()}</div>`))
+                // Add an element for expanding modifying the selection
+                if (!this.selecting) {
+                    let expander = $(`<div class='selection expand top'>`);
+                    element.append(expander);
+                    expander.mousedown(() => {
+                        // Modification is done by simply starting the selection anew, now with the selection bound to
+                        // the end time
+                        calendar.selectionStart = endTime;
+                        calendar.selectionEnd = startTime;
+                        calendar.selecting = true;
+                        calendar.updateSelection();
+                        // We don't want to trigger any other events
+                        return false;
+                    });
                 }
-            });
-        }
+            }
+
+            // If this is the last day of the selection, add the end time indicator
+            if (day < endTime && endTime <= day.nextDay()) {
+                element.append($(`<div class='selection end time'>${endTime.timeString()}</div>`))
+
+                // Add an element for expanding modifying the selection
+                if (!this.selecting) {
+                    let expander = $(`<div class='selection expand bottom'>`);
+                    element.append(expander);
+                    expander.mousedown(() => {
+                        // Modification is done by simply starting the selection anew, now with the selection bound to
+                        // the start time
+                        calendar.selectionStart = startTime;
+                        calendar.selectionEnd = endTime;
+                        calendar.selecting = true;
+                        calendar.updateSelection();
+                        // We don't want to trigger any other events
+                        return false;
+                    });
+                }
+            }
+        });
     }
 };
 
