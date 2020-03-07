@@ -82,6 +82,7 @@ function ReservationCalendar(element, properties) {
      *
      * machine - The pk of the machine to display for
      * selection - A boolean indicating if selection is allowed
+     * canBreakRules - A boolean indicating if the user can break the reservation rules
      * onSelect [optional] - A function to handle what should be shown on selection
      */
     this.date = new Date().startOfWeek();
@@ -90,6 +91,7 @@ function ReservationCalendar(element, properties) {
     this.element = element;
     this.machine = properties.machine;
     this.selection = properties.selection;
+    this.canBreakRules = properties.canBreakRules;
     if (properties.onSelect) {
         this.onSelection = properties.onSelect;
     }
@@ -256,11 +258,13 @@ ReservationCalendar.prototype.getSelectionTimes = function () {
         });
     }
 
-    // Decrease the end time or increase the start time based on the reservation rules
-    if (endTime > this.roundTime(this.selectionStart)) {
-        endTime = modifyToFirstValid(this.reservationRules, startTime, endTime, 1);
-    } else if (startTime < this.roundTime(this.selectionStart)) {
-        startTime = modifyToFirstValid(this.reservationRules, startTime, endTime, 0);
+    if (!this.canBreakRules) {
+        // Decrease the end time or increase the start time based on the reservation rules
+        if (endTime > this.roundTime(this.selectionStart)) {
+            endTime = modifyToFirstValid(this.reservationRules, startTime, endTime, 1);
+        } else if (startTime < this.roundTime(this.selectionStart)) {
+            startTime = modifyToFirstValid(this.reservationRules, startTime, endTime, 0);
+        }
     }
 
     return [startTime, endTime];
