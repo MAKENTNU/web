@@ -200,7 +200,7 @@ ReservationCalendar.prototype.updateSelection = function () {
     }
 };
 
-ReservationCalendar.prototype.drawReservation = function (startDate, endDate, classes) {
+ReservationCalendar.prototype.drawReservation = function (startDate, endDate, classes, callback) {
     let date = this.date;
     let millisecondsInDay = 24 * 60 * 60 * 1000;
     for (let day = 0; day < 7; day++) {
@@ -209,6 +209,10 @@ ReservationCalendar.prototype.drawReservation = function (startDate, endDate, cl
             let dayEndTime = (Math.min(date.nextDay(), endDate) - Math.max(date, startDate)) / millisecondsInDay * 100;
             let reservationBlock = $(`<div class="${classes}" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`);
             $(this.days[day]).append(reservationBlock);
+
+            if (callback !== undefined) {
+                callback(reservationBlock);
+            }
         }
         date = date.nextDay();
     }
@@ -292,31 +296,17 @@ ReservationCalendar.prototype.addReservation = function (reservation) {
     reservation.start = new Date(Date.parse(reservation.start));
     reservation.end = new Date(Date.parse(reservation.end));
 
-    let currentDayStart = this.date;
-    let currentDayEnd = this.date.nextDay();
-    for (let day = 0; day < 7; day++) {
-        if (reservation.start < currentDayEnd && reservation.end > currentDayStart) {
-            let dayStartTime = (Math.max(reservation.start, currentDayStart) - currentDayStart) / (24 * 60 * 60 * 1000) * 100;
-            let dayEndTime = (Math.min(reservation.end, currentDayEnd) - Math.max(reservation.start, currentDayStart)) / (24 * 60 * 60 * 1000) * 100;
-
-            let reservationBlock = $(`<div class="${reservation.type} reservation" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`);
-            $(this.days[day]).append(reservationBlock);
-
-            // Create popup on hover
-            if (reservation.displayText !== undefined) {
-                this.createPopup(reservationBlock, reservation);
-            }
-
-            if (reservation.eventLink !== undefined) {
-                reservationBlock.click(() => {
-                    window.location = reservation.eventLink;
-                })
-            }
+    this.drawReservation(reservation.start, reservation.end, `${reservation.type} reservation`, (htmlElement) => {
+        if (reservation.displayText !== undefined) {
+            this.createPopup(htmlElement, reservation);
         }
 
-        currentDayStart = currentDayStart.nextDay();
-        currentDayEnd = currentDayEnd.nextDay();
-    }
+        if (reservation.eventLink !== undefined) {
+            htmlElement.click(() => {
+                window.location = reservation.eventLink;
+            })
+        }
+    });
 };
 
 ReservationCalendar.prototype.createPopup = function (reservationElement, reservation) {
