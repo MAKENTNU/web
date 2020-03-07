@@ -103,6 +103,31 @@ tr.wrapping {
     padding-right: 0.5em;
 }
 
+.time.selection {
+    font-size: 0.8em;
+    position: absolute;
+    background-color: #ffffff;
+    padding: 0.1em;
+    border-radius: 1em;
+    border: 1px solid lightgrey;
+    width: 3em;
+    z-index: 3;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.start.time.selection {
+    left: 0;
+    top: -0.7em;
+}
+
+.end.time.selection {
+    right: 0;
+    bottom: -0.7em;
+}
+
 @media screen and (max-width: 600px) {
     .legend {
         display: grid;

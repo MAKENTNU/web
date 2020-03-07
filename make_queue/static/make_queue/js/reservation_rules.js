@@ -77,7 +77,7 @@ function isValidForRules(rules, startTime, endTime) {
     let coveredRules = getRulesCovered(rules, startTime, endTime);
     if (coveredRules.length === 1) {
         let hoursInside = hoursInsideRule(coveredRules[0], startTime, endTime);
-        return coveredRules[0].max_inside >= Number(hoursInside.toPrecision(2));
+        return coveredRules[0].max_inside >= Number(hoursInside.toFixed(2));
     }
 
     // If the reservation is shorter than the maximum inside for any of the rules, it should also be valid for
@@ -95,7 +95,7 @@ function isValidForRules(rules, startTime, endTime) {
     for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
         maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
         let hoursInside = hoursInsideRule(coveredRules[ruleIndex], startTime, endTime);
-        if (coveredRules[ruleIndex].max_crossed < Number(hoursInside.toPrecision(2))) {
+        if (coveredRules[ruleIndex].max_crossed < Number(hoursInside.toFixed(2))) {
             return false;
         }
     }

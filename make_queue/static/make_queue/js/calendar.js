@@ -193,9 +193,19 @@ ReservationCalendar.prototype.setupSelection = function () {
 
 ReservationCalendar.prototype.updateSelection = function () {
     if (this.selecting) {
+        let startTime = this.getSelectionStartTime();
+        let endTime = this.getSelectionEndTime();
         this.element.find(".selection.reservation").remove();
-        if (this.getSelectionStartTime() !== this.getSelectionEndTime()) {
-            this.drawReservation(this.getSelectionStartTime(), this.getSelectionEndTime(), "selection reservation");
+        if (startTime !== endTime) {
+            this.drawReservation(startTime, endTime, "selection reservation", (element, day) => {
+                if (day <= startTime && startTime < day.nextDay()) {
+                    element.append($(`<div class='selection start time'>${startTime.timeString()}</div>`));
+                }
+
+                if (day < endTime && endTime <= day.nextDay()) {
+                    element.append($(`<div class='selection end time'>${endTime.timeString()}</div>`))
+                }
+            });
         }
     }
 };
@@ -211,7 +221,7 @@ ReservationCalendar.prototype.drawReservation = function (startDate, endDate, cl
             $(this.days[day]).append(reservationBlock);
 
             if (callback !== undefined) {
-                callback(reservationBlock);
+                callback(reservationBlock, date);
             }
         }
         date = date.nextDay();
@@ -246,7 +256,7 @@ ReservationCalendar.prototype.getSelectionTimes = function () {
         });
     }
 
-
+    // Decrease the end time or increase the start time based on the reservation rules
     if (endTime > this.roundTime(this.selectionStart)) {
         endTime = modifyToFirstValid(this.reservationRules, startTime, endTime, 1);
     } else if (startTime < this.roundTime(this.selectionStart)) {
