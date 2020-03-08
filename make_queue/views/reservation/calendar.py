@@ -46,8 +46,9 @@ class ReservationCalendarComponentView(TemplateView):
 
         return [{
             "date": date,
-            "reservations": list(map(lambda reservation: ReservationCalendarComponentView.format_reservation(reservation, date),
-                                     machine.reservations_in_period(date, date + timedelta(days=1)))),
+            "reservations": list(
+                map(lambda reservation: ReservationCalendarComponentView.format_reservation(reservation, date),
+                    machine.reservations_in_period(date, date + timedelta(days=1)))),
         } for date in [first_date_of_week + timedelta(days=day_number) for day_number in range(7)]]
 
     def get_context_data(self, year, week, machine):
@@ -71,7 +72,8 @@ class ReservationCalendarComponentView(TemplateView):
                            "periods": [
                                [
                                    day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
-                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
+                                   (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (
+                                           24 * 60)) % 7
                                ]
                                for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
                            ],
@@ -91,7 +93,7 @@ class ReservationCalendarComponentView(TemplateView):
         return context
 
 
-class ReservationCalendarView(ReservationCalendarComponentView):
+class ReservationCalendarView(TemplateView):
     """Main view for showing the reservation calendar for a machine"""
     template_name = "make_queue/reservation_overview.html"
 
@@ -104,11 +106,25 @@ class ReservationCalendarView(ReservationCalendarComponentView):
         :param machine: The machine object to show the calendar for
         :return: context required to show the reservation calendar with controls
         """
-        context = super().get_context_data(year, week, machine)
+        context = super().get_context_data()
         context.update({
-            "next": get_next_week(context["year"], context["week"], 1),
-            "prev": get_next_week(context["year"], context["week"], -1),
+            "can_make_reservations": False,
+            "can_make_more_reservations": False,
+            "can_ignore_rules": False,
             "other_machines": Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type),
+            "machine": machine,
+            "year": year,
+            "week": week,
+            "date": year_and_week_to_monday(year, week),
         })
+
+        if self.request.user.is_authenticated:
+            context.update({
+                "can_make_reservations": machine.machine_type.can_user_use(self.request.user),
+                "can_make_more_reservations": Quota.can_make_new_reservation(self.request.user, machine.machine_type),
+                "can_ignore_rules": any(quota.can_make_more_reservations(self.request.user) for quota in
+                                        Quota.get_user_quotas(self.request.user, machine.machine_type).filter(
+                                            ignore_rules=True))
+            })
 
         return context

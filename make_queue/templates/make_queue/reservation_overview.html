@@ -84,7 +84,12 @@
         </div>
         {% include "make_queue/calendar.html" %}
         <script>
-            new ReservationCalendar($(".reservation_calendar"), {machine: {{ machine.pk }}, selection: true, canBreakRules: false});
+            new ReservationCalendar($(".reservation_calendar"), {
+                machine: {{ machine.pk }},
+                selection: {% if can_make_reservations and can_make_more_reservations %}true{% else %}false{% endif %},
+                canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
+                date: new Date(Date.parse("{{ date|date:"c" }}")),
+            });
         </script>
     </div>
 {% endblock body %}
