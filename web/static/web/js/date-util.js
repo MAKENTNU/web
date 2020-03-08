@@ -71,10 +71,10 @@ Date.prototype.dateString = function () {
 
 Date.prototype.djangoFormat = function () {
     /**
-     * Returns a string of the UTC date in the format YYYY-mm-dd HH:MM, which is one of the formats Django accepts
+     * Returns a string of the date in the format YYYY-mm-dd HH:MM, which is one of the formats Django accepts
      */
     let zeroPad = (value) => value < 10 ? `0${value}` : `${value}`;
-    return `${this.getUTCFullYear()}-${this.getUTCMonth() + 1}-${this.getUTCDate()} ${zeroPad(this.getUTCHours())}:${zeroPad(this.getUTCMinutes())}`;
+    return `${this.getFullYear()}-${this.getMonth() + 1}-${this.getDate()} ${zeroPad(this.getHours())}:${zeroPad(this.getMinutes())}`;
 };
 
 Date.prototype.getMonthText = function () {
