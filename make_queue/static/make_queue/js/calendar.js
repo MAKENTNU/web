@@ -142,7 +142,7 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
             </div>
     `);
 
-    popupContent.find(".button").mousedown(() => {
+    popupContent.find(".button").on("mousedown touchstart", () => {
         // Create and submit a hidden form to create a new reservation
         let form = $(`<form method='POST' action='${langPrefix}/reservation/make/${calendar.machine}/'>`).appendTo(popupContent);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
@@ -191,11 +191,12 @@ ReservationCalendar.prototype.setupSelection = function () {
 
     for (let day = 0; day < 7; day++) {
         // Start selection when the mouse is clicked
-        $(this.days[day]).parent().mousedown((event) => {
+        $(this.days[day]).parent().on("mousedown touchstart", (event) => {
             calendar.selecting = true;
             calendar.selectionStart = calendar.getHoverDate(event, day);
             calendar.selectionEnd = calendar.selectionStart;
-        }).mousemove((event) => {
+            return false;
+        }).on("mousemove touchmove", (event) => {
             // Update the selection when any of the days are hovered over
             if (calendar.selecting) {
                 calendar.selectionEnd = calendar.getHoverDate(event, day);
@@ -204,7 +205,7 @@ ReservationCalendar.prototype.setupSelection = function () {
         });
 
         // The header for the week should set the selection date to the start of the week
-        $(this.informationHeaders[0]).mousemove(() => {
+        $(this.informationHeaders[0]).on("mousemove touchmove", () => {
             if (calendar.selecting) {
                 calendar.selectionEnd = calendar.date;
                 calendar.updateSelection();
@@ -212,7 +213,7 @@ ReservationCalendar.prototype.setupSelection = function () {
         });
 
         // The headers above the dates should set the selection date to the start of the given day
-        $(this.informationHeaders[day + 1]).mousemove(() => {
+        $(this.informationHeaders[day + 2]).on("mousemove touchmove", () => {
             if (calendar.selecting) {
                 calendar.selectionEnd = calendar.date.nextDays(day);
                 calendar.updateSelection();
@@ -221,7 +222,7 @@ ReservationCalendar.prototype.setupSelection = function () {
     }
 
     // The part of the calendar that shows the timestamps should set the selection date to the start of the week
-    this.element.find(".time.information").mousemove((event) => {
+    this.element.find(".time.information").on("mousemove touchmove", () => {
         if (calendar.selecting) {
             calendar.selectionEnd = calendar.date;
             calendar.updateSelection();
@@ -230,7 +231,7 @@ ReservationCalendar.prototype.setupSelection = function () {
 
     // Hovering over the footer will set the selection to the end of the day hovered under
     let footer = this.element.find("tfoot");
-    footer.mousemove((event) => {
+    footer.on("mousemove touchmove", (event) => {
         if (calendar.selecting) {
             let hoverPosition = (event.pageX - footer.offset().left) / footer.width();
             let dayHoveredUnder = Math.floor(hoverPosition * 8);
@@ -240,7 +241,7 @@ ReservationCalendar.prototype.setupSelection = function () {
     });
 
     // Stop selection whenever the mouse is released
-    $(document).mouseup(() => {
+    $(document).on("mouseup touchend", () => {
         if (calendar.selecting) {
             calendar.selecting = false;
             calendar.updateSelection();
@@ -248,7 +249,7 @@ ReservationCalendar.prototype.setupSelection = function () {
         }
     });
 
-    $(document).mousedown(() => {
+    $(document).on("mousedown touchstart", () => {
         if (calendar.selecting === false && calendar.selectionStart != null) {
             calendar.resetSelection();
         }
@@ -270,7 +271,7 @@ ReservationCalendar.prototype.updateSelection = function () {
                 if (!this.selecting) {
                     let expander = $(`<div class='selection expand top'>`);
                     element.append(expander);
-                    expander.mousedown(() => {
+                    expander.on("mousedown touchstart", () => {
                         // Modification is done by simply starting the selection anew, now with the selection bound to
                         // the end time
                         calendar.selectionStart = endTime;
@@ -291,7 +292,7 @@ ReservationCalendar.prototype.updateSelection = function () {
                 if (!this.selecting) {
                     let expander = $(`<div class='selection expand bottom'>`);
                     element.append(expander);
-                    expander.mousedown(() => {
+                    expander.on("mousedown touchstart", () => {
                         // Modification is done by simply starting the selection anew, now with the selection bound to
                         // the start time
                         calendar.selectionStart = startTime;
@@ -373,7 +374,8 @@ ReservationCalendar.prototype.roundTime = function (time) {
 ReservationCalendar.prototype.getHoverDate = function (event, day) {
     let date = this.date.nextDays(day);
     let dayElement = $(event.target).closest(".day");
-    let timeOfDay = (event.pageY - dayElement.offset().top) / dayElement.height();
+    let yPosition = event.touches === undefined ? event.pageY : event.touches[0].pageY;
+    let timeOfDay = (yPosition - dayElement.offset().top) / dayElement.height();
     date = new Date(date.valueOf() + timeOfDay * 24 * 60 * 60 * 1000);
     return date;
 };
@@ -423,7 +425,7 @@ ReservationCalendar.prototype.addReservation = function (reservation) {
         }
 
         if (reservation.eventLink !== undefined) {
-            htmlElement.click(() => {
+            htmlElement.on("click touch", () => {
                 window.location = reservation.eventLink;
             })
         }
@@ -473,9 +475,11 @@ ReservationCalendar.prototype.updateReservations = function (data) {
 ReservationCalendar.prototype.updateInformationHeaders = function () {
     this.informationHeaders[0].querySelector(".large.header").textContent = this.date.getMonthText();
     this.informationHeaders[0].querySelector(".medium.header").textContent = this.date.getWeekNumber();
+    this.informationHeaders[1].querySelector(".large.header").textContent = this.date.getMonthTextShort();
+    this.informationHeaders[1].querySelector(".medium.header").textContent = this.date.getWeekNumber();
 
     let date = this.date;
-    for (let day = 1; day < 8; day++) {
+    for (let day = 2; day < 9; day++) {
         this.informationHeaders[day].querySelector(".medium.header").textContent = date.getDate();
         date = date.nextDay();
     }

@@ -158,3 +158,16 @@ tr.wrapping {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+
+/* There is not enough space on mobile for a full month header in the table. Thus the second one with a three letter shorthand */
+@media screen and (min-width: 801px) {
+    .reservation_calendar thead th:nth-child(2) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .reservation_calendar thead th:first-child {
+        display: none;
+    }
+}
