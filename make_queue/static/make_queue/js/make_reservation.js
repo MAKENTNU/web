@@ -1,7 +1,6 @@
 let reservations = [];
 let reservationRules = [];
-let reservationCalendarDate = new Date();
-var canIgnoreRules;
+let canIgnoreRules = false;
 
 function getFutureReservations(machine_id, force_new_time) {
     /**
@@ -19,7 +18,10 @@ function getFutureReservations(machine_id, force_new_time) {
                 "end_time": new Date(Date.parse(value.end_time)),
             });
         });
+
+        calendar.updateCanBreakRules(data.canIgnoreRules);
         canIgnoreRules = data.canIgnoreRules;
+
         reservationRules.length = 0;
         $.each(data.rules, function (index, value) {
             reservationRules.push({
@@ -285,10 +287,10 @@ function getMachine() {
 }
 
 let calendar = new ReservationCalendar($(".reservation_calendar"), {
-    date: reservationCalendarDate,
+    date: new Date(),
     machine: getMachine(),
     selection: true,
-    canBreakRules: canIgnoreRules,
+    canBreakRules: false,
     selectionPopupContent: timeSelectionPopupHTML,
 });
 

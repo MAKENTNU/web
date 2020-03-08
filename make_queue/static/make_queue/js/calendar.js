@@ -362,6 +362,13 @@ ReservationCalendar.prototype.changeMachine = function (machine) {
     this.update();
 };
 
+ReservationCalendar.prototype.updateCanBreakRules = function (canbreakRules) {
+    /**
+     * Setter for the canBreakRules property
+     */
+    this.canBreakRules = canbreakRules;
+};
+
 ReservationCalendar.prototype.showDate = function (date) {
     /**
      * Shows the given date in the calendar
