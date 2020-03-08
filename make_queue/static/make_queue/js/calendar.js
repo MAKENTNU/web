@@ -354,6 +354,21 @@ ReservationCalendar.prototype.roundTime = function (time) {
     return new Date(Math.ceil(time / millisecondsIn5Minutes) * millisecondsIn5Minutes);
 };
 
+ReservationCalendar.prototype.changeMachine = function (machine) {
+    /**
+     * Changes the machine used for finding reservations and updates the calendar
+     */
+    this.machine = machine;
+    this.update();
+};
+
+ReservationCalendar.prototype.showDate = function (date) {
+    /**
+     * Shows the given date in the calendar
+     */
+    this.date = date.startOfWeek();
+    this.update();
+};
 
 ReservationCalendar.prototype.update = function () {
     this.updateInformationHeaders();
