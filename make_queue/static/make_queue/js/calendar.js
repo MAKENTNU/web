@@ -99,7 +99,7 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
     let popupContent = $(`
             <div class="ui card">
                 <div class="ui content">
-                    <div class="header">${gettext("New Reservation")}</div>
+                    <div class="header">${gettext("New reservation")}</div>
                     <div class="description">
                         ${dateString}
                     </div>
