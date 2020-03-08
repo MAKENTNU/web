@@ -1,7 +1,7 @@
 let reservations = [];
 let reservationRules = [];
 let reservationCalendarDate = new Date();
-var canIgnoreRules; // Defined in calendar.html
+var canIgnoreRules;
 
 function getFutureReservations(machine_id, force_new_time) {
     /**

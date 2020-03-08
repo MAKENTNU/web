@@ -61,7 +61,6 @@ calendar_url_patterns = [
 urlpatterns = [
     path('calendar/', include(calendar_url_patterns)),
     path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
-    path('calendar/<year:year>/<week:week>/<machine:machine>/', reservation.calendar.ReservationCalendarComponentView.as_view(), name="reservation_calendar_component"),
     path('make/<machine:machine>/', login_required(reservation.reservation.MakeReservationView.as_view()), name="make_reservation"),
     path('make/<time:start_time>/<machine:machine>/', login_required(reservation.reservation.MakeReservationView.as_view()), name="make_reservation"),
     path('me/', login_required(reservation.overview.MyReservationsView.as_view()), name="my_reservations"),
