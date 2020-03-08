@@ -6,6 +6,9 @@
 <script src="{% static "make_queue/js/calendar.js" %}"></script>
 <script src="{% static "make_queue/js/reservation_rules.js" %}"></script>
 
+{# Needed to be able to create a reservation #}
+{% csrf_token %}
+
 <div class="reservation_calendar">
     <div class="ui top attached buttons">
         <div class="ui make_yellow labeled icon previous button">

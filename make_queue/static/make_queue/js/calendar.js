@@ -55,6 +55,11 @@ Date.prototype.timeString = function () {
     return `${zeroPad(this.getHours())}:${zeroPad(this.getMinutes())}`;
 };
 
+Date.prototype.dateString = function () {
+    let zeroPad = (value) => value < 10 ? `0${value}` : `${value}`;
+    return `${zeroPad(this.getDate())}.${zeroPad(this.getMonth() + 1)}.${this.getFullYear()}`;
+};
+
 Date.prototype.djangoFormat = function () {
     let zeroPad = (value) => value < 10 ? `0${value}` : `${value}`;
     return `${this.getUTCFullYear()}-${this.getUTCMonth() + 1}-${this.getUTCDate()} ${zeroPad(this.getUTCHours())}:${zeroPad(this.getUTCMinutes())}`;
@@ -84,6 +89,8 @@ function ReservationCalendar(element, properties) {
      * selection - A boolean indicating if selection is allowed
      * canBreakRules - A boolean indicating if the user can break the reservation rules
      * onSelect [optional] - A function to handle what should be shown on selection
+     * selectionPopupContent [optional] - A function to generate the content to be shown in the popup made by the
+     *                                    default onSelect function.
      */
     this.date = new Date().startOfWeek();
     this.informationHeaders = element.find("thead th").toArray();
@@ -95,11 +102,60 @@ function ReservationCalendar(element, properties) {
     if (properties.onSelect) {
         this.onSelection = properties.onSelect;
     }
+    if (properties.selectionPopupContent) {
+        this.selectionPopupContent = properties.selectionPopupContent;
+    }
     this.init();
 }
 
 ReservationCalendar.prototype.onSelection = function () {
-    // TODO: Implement a default function for onSelection
+    $(this.element.find(".selection.reservation").first()).popup({
+        position: "right center",
+        html: this.selectionPopupContent(),
+        on: "onload",
+    }).popup("show");
+};
+
+ReservationCalendar.prototype.selectionPopupContent = function () {
+    let dateString;
+    let startTime = this.getSelectionStartTime();
+    let endTime = this.getSelectionEndTime();
+    let calendar = this;
+
+    if (startTime.getDate() === endTime.getDate()) {
+        dateString = `${startTime.dateString()} <br/> ${startTime.timeString()} - ${endTime.timeString()}`;
+    } else {
+        dateString = `${startTime.dateString()} ${startTime.timeString()} - ${endTime.dateString()} ${endTime.timeString()}`;
+    }
+
+    let popupContent = $(`
+            <div class="ui card">
+                <div class="ui content">
+                    <div class="header">${gettext("New Reservation")}</div>
+                    <div class="description">
+                        ${dateString}
+                    </div>
+                </div>
+                <div class="ui bottom attached yellow button">
+                    ${gettext("Reserve")}
+                </div>
+            </div>
+    `);
+
+    popupContent.find(".button").mousedown(() => {
+        // Create and submit a hidden form to create a new reservation
+        let form = $(`<form method='POST' action='${langPrefix}/reservation/make/${calendar.machine}/'>`).appendTo(popupContent);
+        $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
+        // Hide the form in case something fails
+        $("<input class='make_hidden' name='start_time'>").val(startTime.djangoFormat()).appendTo(form);
+        $("<input class='make_hidden' name='end_time'>").val(endTime.djangoFormat()).appendTo(form);
+        $("<input class='make_hidden' name='machine_name'>").val(calendar.machine).appendTo(form);
+        form.submit();
+
+        return false;
+    });
+
+    return popupContent;
 };
 
 ReservationCalendar.prototype.init = function () {
