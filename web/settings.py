@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'internal',
     'docs',
     'users',
+    'card',
 ]
 
 MIDDLEWARE = [

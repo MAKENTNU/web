@@ -19,44 +19,39 @@
         <div class="ui three doubling stackable cards">
             {% for article in articles %}
                 <div class="ui card">
-                    <div class="image">
-                        <img src="{{ article.image.url }}">
-                    </div>
+                    <a class="image" href="{% url "article" article.id %}">
+                        <img src="{{ article.image.url }}" alt="{% trans "Article image" %}">
+                    </a>
                     <div class="content">
-                        <div class="header">{{ article.title }}</div>
-                        <div class="description">{{ article.clickbait }}</div>
-                    </div>
-                    {% if article.featured or article.hidden or article.private %}
-                        <div class="extra content">
+                        <a class="header" href="{% url "article" article.id %}">{{ article.title }}</a>
+                        <div class="meta">
                             {% if article.featured %}
-                                <div class="ui green tiny label">
+                                <div class="ui green mini label">
                                     {% trans "Featured" %}
                                 </div>
                             {% endif %}
 
                             {% if article.hidden %}
-                                <div class="ui red tiny label">
+                                <div class="ui red mini label">
                                     {% trans "Hidden" %}
                                 </div>
                             {% endif %}
 
                             {% if article.private %}
-                                <div class="ui yellow tiny label">
+                                <div class="ui yellow mini label">
                                     {% trans "Internal" %}
                                 </div>
                             {% endif %}
                         </div>
-                    {% endif %}
-                    <div class="ui three bottom attached buttons">
-                        <a class="ui blue button" href="{% url "article" article.id %}">
-                            {% trans "View" %}
-                        </a>
+                        <div class="description">{{ article.clickbait }}</div>
+                    </div>
+                    <div class="ui two bottom attached buttons">
                         <a class="ui yellow button" href="{% url "article-edit" article.id %}">
-                            {% trans "Edit" %}
+                            <i class="ui pencil icon"></i>{% trans "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
                             <a class="ui red delete confirm button" href="{% url "article-delete" article.id %}">
-                                {% trans "Delete" %}
+                                <i class="ui trash icon"></i>{% trans "Delete" %}
                             </a>
                         {% endif %}
                     </div>

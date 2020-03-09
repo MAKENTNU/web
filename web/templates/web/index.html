@@ -48,8 +48,8 @@
                 <div class="item">
                     <div class="ui small clickable image" href="{% url 'event' event.event.id %}">
                         <p class="ui yellow make_bg_yellow ribbon label">
-                            {{ event.start_date|date:"d" }}<br>
-                            {{ event.start_date|date:"M" }}
+                            {{ event.start_time|date:"d" }}<br>
+                            {{ event.start_time|date:"M" }}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
                             <img src="{{ im.url }}"

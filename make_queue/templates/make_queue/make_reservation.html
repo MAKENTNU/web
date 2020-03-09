@@ -137,10 +137,10 @@
                                 {% for event in events %}
                                     <div class="item" data-value="{{ event.pk }}">
                                         <b>{{ event.event.title }}</b><br>
-                                        {% if event.start_date == event.end_date %}{{ event.start_date|date:"d/m/Y" }} -
-                                            {{ event.start_time|time:"H:i" }}
-                                            {% else %}{{ event.start_date|date:"d/m/Y" }} -
-                                            {{ event.end_date|date:"d/m/Y" }}
+                                        {% if event.start_time.date == event.end_time.date %}
+                                            {{ event.start_time|date:"d/m/Y - H:i" }}
+                                        {% else %}
+                                            {{ event.start_time|date:"d/m/Y" }} - {{ event.end_time|date:"d/m/Y" }}
                                         {% endif %}
                                     </div>
                                 {% endfor %}

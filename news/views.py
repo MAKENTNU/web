@@ -4,6 +4,7 @@ from datetime import timedelta
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.db.models import Max
 from django.http import HttpResponseRedirect, JsonResponse, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -12,14 +13,14 @@ from django.utils.translation import get_language
 from django.utils.translation import gettext
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView
+from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView, ListView
 
 from mail import email
-from news.forms import EventForm
-from news.forms import TimePlaceForm, EventRegistrationForm, ArticleForm
-from news.models import Article, Event, TimePlace, EventTicket
 from web import settings
 from web.templatetags.permission_tags import has_any_article_permission, has_any_event_permission
+from .forms import EventForm
+from .forms import TimePlaceForm, EventRegistrationForm, ArticleForm
+from .models import Article, Event, TimePlace, EventTicket
 
 
 class ViewEventsView(TemplateView):
@@ -61,21 +62,18 @@ class ViewEventsView(TemplateView):
                     })
 
         context.update({
-            'past': sorted(past, key=lambda event: event["last_occurrence"].start_date, reverse=True),
-            'future': sorted(future, key=lambda event: event["first_occurrence"].start_date),
+            'past': sorted(past, key=lambda event: event["last_occurrence"].start_time, reverse=True),
+            'future': sorted(future, key=lambda event: event["first_occurrence"].start_time),
         })
         return context
 
 
-class ViewArticlesView(TemplateView):
+class ViewArticlesView(ListView):
     template_name = 'news/articles.html'
+    context_object_name = "articles"
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'articles': Article.objects.published().filter(),
-        })
-        return context
+    def get_queryset(self):
+        return Article.objects.published()
 
 
 class ViewEventView(TemplateView):
@@ -87,6 +85,8 @@ class ViewEventView(TemplateView):
         context.update({
             'article': event,
             'timeplaces': event.timeplace_set.all() if event.standalone else event.timeplace_set.future(),
+            'is_old': not event.timeplace_set.future().exists(),
+            'last_occurrence': event.get_past_occurrences().first(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')
                 or event.private and not self.request.user.has_perm('news.can_view_private')):
@@ -109,30 +109,25 @@ class ViewArticleView(TemplateView):
         return context
 
 
-class AdminArticleView(TemplateView):
+class AdminArticleView(PermissionRequiredMixin, ListView):
     template_name = 'news/admin_articles.html'
+    model = Article
+    context_object_name = 'articles'
 
-    def get_context_data(self, **kwargs):
-        if not has_any_article_permission(self.request.user) and not self.request.user.is_superuser:
-            raise Http404()
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'articles': Article.objects.all(),
-        })
-        return context
+    def has_permission(self):
+        return has_any_article_permission(self.request.user)
 
 
-class AdminEventsView(TemplateView):
+class AdminEventsView(PermissionRequiredMixin, ListView):
     template_name = 'news/admin_events.html'
+    model = Event
+    context_object_name = 'events'
 
-    def get_context_data(self, **kwargs):
-        if not has_any_event_permission(self.request.user) and not self.request.user.is_superuser:
-            raise Http404()
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'events': Event.objects.all(),
-        })
-        return context
+    def has_permission(self):
+        return has_any_event_permission(self.request.user)
+
+    def get_queryset(self):
+        return Event.objects.annotate(latest_occurrence=Max("timeplace__end_time")).order_by("-latest_occurrence")
 
 
 class AdminEventView(DetailView):
@@ -220,15 +215,13 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
 
     def get(self, request, pk):
         timeplace = get_object_or_404(TimePlace, pk=pk)
-        now = timezone.now()
-        if now.date() > timeplace.start_date:
-            delta_days = (timezone.now().date() - timeplace.start_date).days
+        if timezone.localtime() > timeplace.start_time:
+            delta_days = (timezone.localtime() - timeplace.start_time).days
             weeks = math.ceil(delta_days / 7)
         else:
             weeks = 1
-        timeplace.start_date += timedelta(weeks=weeks)
-        if timeplace.end_date:
-            timeplace.end_date += timedelta(weeks=weeks)
+        timeplace.start_time += timedelta(weeks=weeks)
+        timeplace.end_time += timedelta(weeks=weeks)
         timeplace.hidden = True
         timeplace.pk = None
         timeplace.save()
@@ -247,6 +240,8 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
         form = super().get_form(form_class)
         event = get_object_or_404(Event, pk=self.kwargs["event_pk"])
         form.fields["event"].initial = event.pk
+        if event.standalone:
+            del form.fields["number_of_tickets"]
         return form
 
     def get_success_url(self):
@@ -395,15 +390,12 @@ class TicketView(LoginRequiredMixin, DetailView):
     template_name = "news/ticket_overview.html"
 
 
-class MyTicketsView(TemplateView):
+class MyTicketsView(ListView):
     template_name = "news/my_tickets.html"
+    context_object_name = "tickets"
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data.update({
-            "tickets": EventTicket.objects.filter(user=self.request.user),
-        })
-        return context_data
+    def get_queryset(self):
+        return EventTicket.objects.filter(user=self.request.user)
 
 
 class AdminEventTicketView(TemplateView):

@@ -36,8 +36,9 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def setUp(self):
         event = Event.objects.create(title="TEST EVENT")
-        self.timeplace = TimePlace.objects.create(pub_date=timezone.now(), start_date=timezone.now(),
-                                                  start_time=(timezone.now() + timedelta(seconds=1)).time(),
+        self.timeplace = TimePlace.objects.create(publication_time=timezone.now(),
+                                                  start_time=timezone.now() + timedelta(seconds=1),
+                                                  end_time=timezone.now() + timedelta(minutes=1),
                                                   event=event)
         self.machine_type = MachineTypeField.get_machine_type(1)
         self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
@@ -316,9 +317,9 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     def test_is_within_allowed_period_for_reservation(self):
         self.set_reservation_future_limit_days(7)
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
-        self.assertTrue(reservation.is_within_allowed_period_for_reservation())
+        self.assertTrue(reservation.is_within_allowed_period())
         reservation.end_time = timezone.now() + timedelta(days=7, minutes=2)
-        self.assertFalse(reservation.is_within_allowed_period_for_reservation())
+        self.assertFalse(reservation.is_within_allowed_period())
         self.reset_reservation_future_limit_days()
 
     def test_make_reservation_too_far_in_the_future(self):
