@@ -42,18 +42,15 @@ ReservationCalendar.prototype.init = function () {
     // Run the update function to retrieve reservations
     this.update();
     this.element.find(".next.button").click(() => {
-        this.date = this.date.nextWeek();
-        this.update();
+        this.showDate(this.date.nextWeek());
     });
 
     this.element.find(".current.button").click(() => {
-        this.date = new Date().startOfWeek();
-        this.update();
+        this.showDate(new Date().startOfWeek());
     });
 
     this.element.find(".previous.button").click(() => {
-        this.date = this.date.previousWeek();
-        this.update();
+        this.showDate(this.date.previousWeek());
     });
 
     // Update the red line indicating the current time every minute
