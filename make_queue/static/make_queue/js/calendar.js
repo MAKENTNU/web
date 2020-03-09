@@ -73,7 +73,7 @@ ReservationCalendar.prototype.onSelection = function () {
         html: this.selectionPopupContent(),
         // Allows the popup to stay open when the user does not hover over the selection
         on: "onload",
-    }).popup("show");
+    }).popup("show").popup("get popup").addClass("default reservation popup")
 };
 
 ReservationCalendar.prototype.selectionPopupContent = function () {

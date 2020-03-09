@@ -171,3 +171,7 @@ tr.wrapping {
         display: none;
     }
 }
+
+.default.reservation.popup {
+    padding: 0;
+}

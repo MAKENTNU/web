@@ -275,7 +275,7 @@ function timeSelectionPopupHTML() {
     /**
      * Creates a valid popup for the time selection utility in the reservation calendar
      */
-    return $("<div>").addClass("ui make_yellow button").html(gettext("Choose time")).on("mousedown touchstart", () => {
+    return $("<div>").addClass("ui fluid make_yellow button").html(gettext("Choose time")).on("mousedown touchstart", () => {
         $("#start_time").calendar("set date", calendar.getSelectionStartTime());
         $("#end_time").calendar("set date", calendar.getSelectionEndTime());
         calendar.resetSelection();
