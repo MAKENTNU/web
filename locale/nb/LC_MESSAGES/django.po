@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-08 18:51+0100\n"
+"POT-Creation-Date: 2020-03-10 23:03+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -1324,6 +1324,10 @@ msgstr "Lør"
 #: make_queue/templatetags/reservation_extra.py:57
 msgid "Sun"
 msgstr "Søn"
+
+#: make_queue/templatetags/reservation_extra.py:70
+msgid "for"
+msgstr "i"
 
 #: make_queue/views/reservation/reservation.py:36
 #, python-brace-format
