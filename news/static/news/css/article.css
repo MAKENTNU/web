@@ -39,7 +39,7 @@ a.place {
 .article > .container > img {
     object-fit: cover;
     width: 100%;
-    height: 400px;
+    max-height: 400px;
 }
 
 .publication_time {
