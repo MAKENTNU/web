@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-08 18:51+0100\n"
+"POT-Creation-Date: 2020-03-12 21:23+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -1995,6 +1995,14 @@ msgstr "Internsider"
 #: web/templates/web/header.html:90 web/templates/web/login.html:27
 msgid "Login"
 msgstr "Logg inn"
+
+#: web/templates/web/header.html:111
+msgid ""
+"Due to the COVID-19 closing of NTNU, Makerverkstedet is closed and all "
+"events are postponed until further notice."
+msgstr ""
+"Grunnet COVID-19 stengingen av NTNU er Makerverkstedet stengt og alle "
+"arrangementer er utsatt inntil videre."
 
 #: web/widgets.py:16 web/widgets.py:26
 msgid "Choose value"
