@@ -1325,6 +1325,10 @@ msgstr "Lør"
 msgid "Sun"
 msgstr "Søn"
 
+#: make_queue/templatetags/reservation_extra.py:70
+msgid "for"
+msgstr "i"
+
 #: make_queue/views/reservation/reservation.py:36
 #, python-brace-format
 msgid "Reservations can only be made {num_days} day ahead of time"
