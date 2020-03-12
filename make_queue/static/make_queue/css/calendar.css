@@ -1,141 +1,134 @@
-.make_reservation_calendar_time_table_event {
+.reservation_calendar .header {
+    text-align: center;
+}
+
+.reservation_calendar .large.header {
+    font-size: 1.2em;
+}
+
+.reservation_calendar .medium.header {
+    font-size: 1.1em;
+    font-weight: normal;
+}
+
+.reservation_calendar .height.adjuster {
+    height: 0.5em;
+}
+
+.reservation_calendar .time.indicator {
+    text-align: center;
+}
+
+.reservation_calendar .time.indication.line {
+    height: 12.5%;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+}
+
+.reservation_calendar .current.time.indicator {
+    width: 100%;
+    height: 2px;
+    background-color: red;
+    position: absolute;
+    z-index: 2;
+}
+
+td.wrapping {
+    height: 1px !important;
+    padding: 0 !important;
+}
+
+tr.wrapping {
+    height: 100% !important;
+}
+
+@supports (-moz-appearance:none) {
+    td.wrapping {
+        height: 100% !important;
+    }
+}
+
+.day {
+    position: relative;
+}
+
+.reservation {
+    position: absolute;
+    width: 100%;
+}
+
+.event.reservation {
     background-color: #21BA45;
     border-top: 1px solid #1B8F3A;
     border-bottom: 1px solid #1B8F3A;
 }
 
-.make_reservation_calendar_time_table_non_event {
+.event.reservation:hover {
+    cursor: pointer;
+}
+
+.normal.reservation {
     background-color: #2185D0;
     border-top: 1px solid #1B629D;
     border-bottom: 1px solid #1B629D;
 }
 
-.make_reservation_calendar_time_table_my_non_event {
+.own.reservation {
     background-color: #F8C811;
     border-top: 1px solid #D7AB0F;
     border-bottom: 1px solid #D7AB0F;
 }
 
-.make_reservation_calendar_time_table_make {
+.make.reservation {
     background-color: #DCDDDE;
     border-top: 1px solid #BABBBC;
     border-bottom: 1px solid #BABBBC;
-    z-index: 200;
 }
 
-.make_reservation_calendar_time_table_event:hover {
-    cursor: pointer;
+.selection.reservation {
+    background-color: #38CAFF;
+    border-top: 1px solid #369bce;
+    border-bottom: 1px solid #369bce;
 }
 
-.make_reservation_calendar_legend_box {
-    display: inline-block;
+.reservation.box {
     width: 1em;
     height: 1em;
-    margin-right: 5px;
+    position: relative;
+    display: inline-block;
 }
 
-.make_reservation_calendar_legend_item {
+.legend.item {
     display: inline-block;
     padding-right: 0.5em;
 }
 
-.make_reservation_calendar_time_table_calendar_fill {
-    width: 100%;
-}
-
-.make_reservation_calendar_time_table_item {
+.time.selection {
+    font-size: 0.8em;
     position: absolute;
-    width: 100%;
+    background-color: #ffffff;
+    padding: 0.1em;
+    border-radius: 1em;
+    border: 1px solid lightgrey;
+    width: 3em;
+    z-index: 3;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
 
-.make_reservation_calendar_high_z_index {
-    z-index: 100;
-}
-
-@media screen and (max-width: 1000px) {
-    .make_reservation_calendar_long_month {
-        display: none;
-    }
-}
-
-@media screen and (min-width: 1000px) {
-    .make_reservation_calendar_short_month {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    .make_reservation_calendar_legend {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-.popup {
-    position: absolute;
-}
-
-.title_large {
-    font-size: 1.2em;
-    text-align: center !important;
-}
-
-.title_medium {
-    font-size: 1.1em;
-    font-weight: normal;
-    text-align: center !important;;
-}
-
-.title_small {
-    font-size: 0.9em;
-    font-weight: normal;
-    text-align: center !important;;
-}
-
-.day {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-.hour_indication_line {
-    width: 100%;
-    height: 12.5%;
-    border-bottom: 1px solid lightgrey;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.time_selection {
-    position: absolute;
-    width: 100%;
-    background-color: #38CAFF;
-    pointer-events: none;
-    border-radius: 0.3em;
-}
-
-.time_selection > .start_time {
+.start.time.selection {
     left: 0;
     top: -0.7em;
 }
 
-.time_selection > .end_time {
+.end.time.selection {
     right: 0;
     bottom: -0.7em;
 }
 
-.time_selection > .end_time,
-.time_selection > .start_time {
-    position: absolute;
-    border: 1px solid lightgrey;
-    font-size: 0.8em;
-    background-color: white;
-    border-radius: 1em;
-    width: 3em;
-    z-index: 200;
-}
-
-.time_selection > .extend {
+.selection.expand {
     height: 10px;
     position: absolute;
     width: 100%;
@@ -147,44 +140,38 @@
     user-select: none;
 }
 
-.time_selection > .extend:hover {
+.selection.expand:hover {
     cursor: ns-resize;
 }
 
-.time_selection > .extend.top {
+.selection.expand.top {
     top: 0;
-    border-radius: 0.3em 0.3em 0 0;
 }
 
-.time_selection > .extend.bottom {
+.selection.expand.bottom {
     bottom: 0;
-    border-radius: 0 0 0.3em 0.3em;
 }
 
-.half_height {
-    height: 0.5em;
-}
-
-td.wrapping {
-    text-align: center !important;
-    height: 1px !important;
-    padding: 0 !important;
-}
-
-tr.wrapping {
-    height: 100% !important;
-}
-
-.current_time_indicator {
-    width: 100%;
-    height: 2px;
-    background-color: #FF0000;
-    position: absolute;
-    z-index: 300;
-}
-
-@supports (-moz-appearance:none) {
-    td.wrapping {
-        height: 100% !important;
+@media screen and (max-width: 600px) {
+    .legend {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }
+}
+
+/* There is not enough space on mobile for a full month header in the table. Thus the second one with a three letter shorthand */
+@media screen and (min-width: 801px) {
+    .reservation_calendar thead th:nth-child(2) {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 800px) {
+    .reservation_calendar thead th:first-child {
+        display: none;
+    }
+}
+
+.default.reservation.popup {
+    padding: 0;
 }

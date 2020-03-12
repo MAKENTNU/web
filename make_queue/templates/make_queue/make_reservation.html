@@ -1,5 +1,5 @@
 {% extends "web/base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 {% load semantic_ui_calendar_extra %}
 {% load reservation_extra %}
@@ -161,17 +161,13 @@
                        value="{% if new_reservation %}{% trans "Reserve" %}{% else %}{% trans "Change" %}{% endif %}">
             </div>
         </form>
-
-        <div id="reservation_calendar">
-
-        </div>
+        {% include "make_queue/calendar.html" %}
     </div>
 
     <script>
         let maximum_day = new Date();
         maximum_day.setDate(maximum_day.getDate() + {{ maximum_days_in_advance }});
     </script>
-    {% include "make_queue/js/reservation_rules.html" %}
     <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
     <script>
         getFutureReservations($('#machine_name_dropdown').dropdown('get value'), {% invert start_time %});

@@ -1,5 +1,5 @@
 {% extends "web/base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 {% load reservation_extra %}
 
@@ -82,11 +82,14 @@
             </div>
 
         </div>
-        {% url 'reservation_calendar' year=next.0 week=next.1 machine=machine as link_next %}
-        {% url 'reservation_calendar' year=prev.0 week=prev.1 machine=machine as link_prev %}
-        {% current_calendar_url machine as link_now %}
-        {% include 'make_queue/reservation_calendar.html' with week_days=week_days link_prev=link_prev link_next=link_next %}
+        {% include "make_queue/calendar.html" %}
+        <script>
+            new ReservationCalendar($(".reservation_calendar"), {
+                machine: {{ machine.pk }},
+                selection: {% if can_make_reservations and can_make_more_reservations %}true{% else %}false{% endif %},
+                canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
+                date: new Date(Date.parse("{{ date|date:"c" }}")),
+            });
+        </script>
     </div>
-    <script>let allowed = {% if can_make_more_reservations %}true{% else %}false{% endif %};</script>
-    <script src="{% static "make_queue/js/reservation_calendar.js" %}"></script>
 {% endblock body %}

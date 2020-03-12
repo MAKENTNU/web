@@ -271,3 +271,13 @@
         display: block;
     }
 }
+
+.corona {
+    text-align: center;
+    padding: 1em;
+    font-size: 1.2em;
+    background-color: #ffe8e6;
+    border-top: 1px solid #db2828;
+    border-bottom: 1px solid #db2828;
+    color: #912d2b;
+}
