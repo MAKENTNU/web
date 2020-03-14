@@ -44,3 +44,8 @@ class Announcement(models.Model):
 
     def __str__(self):
         return f"{self.get_classification_display()}: {self.content}"
+
+    def is_valid(self):
+        """Checks if the given reservation is currently valid"""
+        return self.display_from <= timezone.localtime() and (
+                    self.display_to is None or self.display_to > timezone.localtime())

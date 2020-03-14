@@ -1,2 +1,41 @@
 {% extends "web/base.html" %}
+{% load i18n %}
 
+{% block body %}
+    <div class="ui container">
+        <h1>{% trans "Announcements" %} <a><i class="green plus icon"></i></a></h1>
+        <div class="ui relaxed divided list">
+            {% for announcement in announcements %}
+                <div class="item">
+                    <div class="content">
+                        <div class="header">
+                            {{ announcement.get_classification_display }}
+                            {% if announcement.site_wide %}
+                                [{% trans "Site-wide" %}]
+                            {% else %}
+                                [{% trans "Front page" %}]
+                            {% endif %}
+                            {% if perms.announcements.create_announcement %}
+                                <a><i class="yellow pencil icon"></i></a>
+                            {% endif %}
+                            {% if perms.announcements.delete_announcement %}
+                                <a><i class="red trash icon"></i></a>
+                            {% endif %}
+                        </div>
+                        <div class="meta">
+                            <span class="ui {% if announcement.is_valid %}green{% else %}red{% endif %} text">
+                            {% if announcement.display_to %}
+                                {{ announcement.display_from|date:"d.m.Y H:i" }} -
+                                {{ announcement.display_to|date:"d.m.Y H:i" }}
+                            {% else %}
+                                {% trans "From" %} {{ announcement.display_from|date:"d.m.Y H:i" }}
+                            {% endif %}
+                            </span>
+                        </div>
+                        <div class="description">{{ announcement.content }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
