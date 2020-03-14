@@ -1,3 +1,8 @@
-from django.shortcuts import render
+from django.views.generic import ListView
 
-# Create your views here.
+from announcements.models import Announcement
+
+
+class AnnouncementAdminView(ListView):
+    model = Announcement
+    template_name = "announcements/announcements-admin.html"
