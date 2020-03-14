@@ -1,0 +1,65 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>{% block header_text %}{% trans "New Announcement" %}{% endblock %}</h1>
+        <form class="ui form" method="POST" action="">
+            {% csrf_token %}
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.classification.label }}</label>
+                    {{ form.classification }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.link.label }}
+                        <span data-content="{% trans "An optional link to an information page" %}">
+                            <i class="ui yellow question circle icon"></i>
+                        </span>
+                    </label>
+                    {{ form.link }}
+                </div>
+            </div>
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.display_from.label }}
+                        <span data-content="{% trans "The date from which the announcement will be shown" %}">
+                            <i class="ui yellow question circle icon"></i>
+                        </span>
+                    </label>
+                    {{ form.display_from }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.display_to.label }}
+                        <span data-content="{% trans "The announcement will be shown until this date. If none is given, it is shown indefinitely." %}">
+                            <i class="ui yellow question circle icon"></i>
+                        </span>
+                    </label>
+                    {{ form.display_to }}
+                </div>
+            </div>
+            <div class="ui field">
+                <label>{{ form.content.label }}</label>
+                {{ form.content }}
+            </div>
+            <div class="ui field">
+                <label>{{ form.site_wide.label }}
+                    <span data-content="{% trans "If selected, the announcement will be shown on all pages, otherwise it is only shown on the front page." %}">
+                        <i class="ui yellow question circle icon"></i>
+                    </span>
+                </label>
+                {{ form.site_wide }}
+            </div>
+            <button class="ui right floated yellow button">
+                {% trans "Save" %}
+            </button>
+            <a class="ui right floated red button" href="{% url "announcement_admin" %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
+        </form>
+    </div>
+
+    <script>
+        $("span[data-content]").popup();
+    </script>
+{% endblock %}

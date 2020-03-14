@@ -3,7 +3,14 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "Announcements" %} <a><i class="green plus icon"></i></a></h1>
+        <h1>
+            {% trans "Announcements" %}
+            {% if perms.announcements.add_announcement %}
+                <a href="{% url "create_announcement" %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
         <div class="ui relaxed divided list">
             {% for announcement in announcements %}
                 <div class="item">
@@ -15,8 +22,10 @@
                             {% else %}
                                 [{% trans "Front page" %}]
                             {% endif %}
-                            {% if perms.announcements.create_announcement %}
-                                <a><i class="yellow pencil icon"></i></a>
+                            {% if perms.announcements.change_announcement %}
+                                <a href="{% url "edit_announcement" pk=announcement.pk %}">
+                                    <i class="yellow pencil icon"></i>
+                                </a>
                             {% endif %}
                             {% if perms.announcements.delete_announcement %}
                                 <a><i class="red trash icon"></i></a>

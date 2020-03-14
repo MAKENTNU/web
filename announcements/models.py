@@ -39,8 +39,8 @@ class Announcement(models.Model):
     site_wide = models.BooleanField(verbose_name=_("Site-wide"))
     content = MultiLingualTextField(max_length=256, verbose_name=_("Content"))
     link = models.CharField(max_length=2048, verbose_name=_("Link"), blank=True, null=True)
-    display_from = models.DateTimeField(default=timezone.localtime().now())
-    display_to = models.DateTimeField(blank=True, null=True)
+    display_from = models.DateTimeField(default=timezone.localtime().now(), verbose_name=_("Display from"))
+    display_to = models.DateTimeField(blank=True, null=True, verbose_name=_("Display to"))
 
     def __str__(self):
         return f"{self.get_classification_display()}: {self.content}"
