@@ -1,3 +1,6 @@
 from django.contrib import admin
 
-# Register your models here.
+from announcements.models import Announcement
+from web.multilingual.database import MultiLingualFieldAdmin
+
+admin.site.register(Announcement, MultiLingualFieldAdmin)
