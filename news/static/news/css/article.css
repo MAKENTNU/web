@@ -61,7 +61,8 @@ a.place {
 }
 
 .rail-content {
-    padding-top: 17px !important;
+    padding-top: 17px;
+    padding-bottom: 17px;
 }
 
 .event.article {
