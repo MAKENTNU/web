@@ -31,8 +31,8 @@ class Announcement(models.Model):
 
     class AnnouncementType(models.TextChoices):
         INFO = "I", _("Information")
-        WARNING = "W", _("Warning")
-        ERROR = "E", _("Error")
+        WARNING = "W", _("Warning message")
+        ERROR = "E", _("Error message")
 
     classification = models.CharField(max_length=1, choices=AnnouncementType.choices, default=AnnouncementType.INFO,
                                       verbose_name=_("Type"))
