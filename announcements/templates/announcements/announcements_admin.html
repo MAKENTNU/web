@@ -28,7 +28,9 @@
                                 </a>
                             {% endif %}
                             {% if perms.announcements.delete_announcement %}
-                                <a><i class="red trash icon"></i></a>
+                                <a class="delete confirm" href="{% url "delete_announcement" pk=announcement.pk%}">
+                                    <i class="red trash icon"></i>
+                                </a>
                             {% endif %}
                         </div>
                         <div class="meta">
