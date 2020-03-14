@@ -54,6 +54,13 @@ class MachineTypeField(models.IntegerField):
             lambda user: user.is_authenticated,
             False,
         ),
+        MachineType(
+            3,
+            _("3D-scanners"),
+            "",
+            lambda user: user.is_authenticated,
+            False,
+        )
     )
 
     @staticmethod
