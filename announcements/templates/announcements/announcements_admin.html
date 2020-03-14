@@ -15,13 +15,8 @@
             {% for announcement in announcements %}
                 <div class="item">
                     <div class="content">
-                        <div class="header">
+                        <div class="ui header">
                             {{ announcement.get_classification_display }}
-                            {% if announcement.site_wide %}
-                                [{% trans "Site-wide" %}]
-                            {% else %}
-                                [{% trans "Front page" %}]
-                            {% endif %}
                             {% if perms.announcements.change_announcement %}
                                 <a href="{% url "edit_announcement" pk=announcement.pk %}">
                                     <i class="yellow pencil icon"></i>
@@ -34,6 +29,14 @@
                             {% endif %}
                         </div>
                         <div class="meta">
+                            {% if announcement.site_wide %}
+                                <i class="ui yellow globe icon"></i>{% trans "Site-wide" %}
+                            {% else %}
+                                <i class="ui yellow home icon"></i>{% trans "Front page" %}
+                            {% endif %}
+                        </div>
+                        <div class="description">{{ announcement.content }}</div>
+                        <div class="extra">
                             <span class="ui {% if announcement.is_valid %}green{% else %}red{% endif %} text">
                             {% if announcement.display_to %}
                                 {{ announcement.display_from|date:"d.m.Y H:i" }} -
@@ -43,7 +46,6 @@
                             {% endif %}
                             </span>
                         </div>
-                        <div class="description">{{ announcement.content }}</div>
                     </div>
                 </div>
             {% endfor %}
