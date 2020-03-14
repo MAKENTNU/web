@@ -10,7 +10,7 @@ def announcement_css_class(announcement):
     return {
         Announcement.AnnouncementType.INFO: "info",
         Announcement.AnnouncementType.WARNING: "warning",
-        Announcement.AnnouncementType.ERROR: "error",
+        Announcement.AnnouncementType.CRITICAL: "critical",
     }[announcement.classification]
 
 

@@ -26,12 +26,12 @@
     color: #b58112;
 }
 
-.error.announcement {
+.critical.announcement {
     background-color: #ffe8e6;
     border-top-color: #db2828;
     border-bottom-color: #db2828;
 }
 
-.error.announcement, .error.announcement a {
+.critical.announcement, .critical.announcement a {
     color: #912d2b;
 }

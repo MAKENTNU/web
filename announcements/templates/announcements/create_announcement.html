@@ -13,7 +13,7 @@
                 </div>
                 <div class="ui field">
                     <label>{{ form.link.label }}
-                        <span data-content="{% trans "An optional link to an information page" %}">
+                        <span data-content="{{ form.link.help_text }}">
                             <i class="ui yellow question circle icon"></i>
                         </span>
                     </label>
@@ -23,7 +23,7 @@
             <div class="ui two fields">
                 <div class="ui field">
                     <label>{{ form.display_from.label }}
-                        <span data-content="{% trans "The date from which the announcement will be shown" %}">
+                        <span data-content="{{ form.display_from.help_text }}">
                             <i class="ui yellow question circle icon"></i>
                         </span>
                     </label>
@@ -31,7 +31,7 @@
                 </div>
                 <div class="ui field">
                     <label>{{ form.display_to.label }}
-                        <span data-content="{% trans "The announcement will be shown until this date. If none is given, it is shown indefinitely." %}">
+                        <span data-content="{{ form.display_to.help_text }}">
                             <i class="ui yellow question circle icon"></i>
                         </span>
                     </label>
@@ -44,7 +44,7 @@
             </div>
             <div class="ui field">
                 <label>{{ form.site_wide.label }}
-                    <span data-content="{% trans "If selected, the announcement will be shown on all pages, otherwise it is only shown on the front page." %}">
+                    <span data-content="{{ form.site_wide.help_text }}">
                         <i class="ui yellow question circle icon"></i>
                     </span>
                 </label>

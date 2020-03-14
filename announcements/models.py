@@ -31,16 +31,22 @@ class Announcement(models.Model):
 
     class AnnouncementType(models.TextChoices):
         INFO = "I", _("Information")
-        WARNING = "W", _("Warning message")
-        ERROR = "E", _("Error message")
+        WARNING = "W", _("Warning")
+        CRITICAL = "C", _("Critical")
 
     classification = models.CharField(max_length=1, choices=AnnouncementType.choices, default=AnnouncementType.INFO,
                                       verbose_name=_("Type"))
-    site_wide = models.BooleanField(verbose_name=_("Site-wide"))
+    site_wide = models.BooleanField(verbose_name=_("Site-wide"),
+                                    help_text=_("If selected, the announcement will be shown on all pages, otherwise it"
+                                                " is only shown on the front page."))
     content = MultiLingualTextField(max_length=256, verbose_name=_("Content"))
-    link = models.CharField(max_length=2048, verbose_name=_("Link"), blank=True, null=True)
-    display_from = models.DateTimeField(default=timezone.localtime().now(), verbose_name=_("Display from"))
-    display_to = models.DateTimeField(blank=True, null=True, verbose_name=_("Display to"))
+    link = models.CharField(max_length=2048, verbose_name=_("Link"), blank=True, null=True,
+                            help_text=_("An optional link to an information page."))
+    display_from = models.DateTimeField(default=timezone.localtime().now, verbose_name=_("Display from"),
+                                        help_text=_("The date from which the announcement will be shown."))
+    display_to = models.DateTimeField(blank=True, null=True, verbose_name=_("Display to"),
+                                      help_text=_("The announcement will be shown until this date. If none is given, it"
+                                                  " is shown indefinitely."))
 
     def __str__(self):
         return f"{self.get_classification_display()}: {self.content}"
@@ -48,4 +54,4 @@ class Announcement(models.Model):
     def is_valid(self):
         """Checks if the given reservation is currently valid"""
         return self.display_from <= timezone.localtime() and (
-                    self.display_to is None or self.display_to > timezone.localtime())
+                self.display_to is None or self.display_to > timezone.localtime())
