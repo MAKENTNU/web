@@ -3,3 +3,7 @@
     {% include option.template_name with widget=option %}{% endfor %}{% if group_name %}
     </optgroup>{% endif %}{% endfor %}
 </select>
+
+<script>
+    $("#id_{{ widget.name }}").dropdown();
+</script>
