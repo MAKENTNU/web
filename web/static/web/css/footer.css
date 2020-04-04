@@ -91,3 +91,7 @@
         grid-column-start: auto;
     }
 }
+
+#footer .content {
+    text-align: right;
+}

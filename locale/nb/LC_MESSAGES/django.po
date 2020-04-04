@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-31 15:45+0200\n"
+"POT-Creation-Date: 2020-04-04 14:09+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -60,7 +60,8 @@ msgstr ""
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile.html:145 make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:145
+#: make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
@@ -146,7 +147,7 @@ msgstr "Tittel"
 
 #: contentbox/templates/contentbox/display.html:10
 #: contentbox/templates/contentbox/edit.html:5
-#: contentbox/templates/contentbox/edit.html:16
+#: contentbox/templates/contentbox/edit.html:17
 #: groups/templates/groups/committee_form.html:14
 #: make_queue/templates/make_queue/usage_rules.html:17
 #: news/templates/news/admin_articles.html:55
@@ -155,15 +156,15 @@ msgstr "Tittel"
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:24
+#: contentbox/templates/contentbox/edit.html:25
 msgid "Missing language"
 msgstr "Manglende språk"
 
-#: contentbox/templates/contentbox/edit.html:25
+#: contentbox/templates/contentbox/edit.html:26
 msgid "One or more languages has no content"
 msgstr "Et eller flere språk mangler innhold"
 
-#: contentbox/templates/contentbox/edit.html:39
+#: contentbox/templates/contentbox/edit.html:40
 #: groups/templates/groups/committee_form.html:30
 #: internal/templates/internal/edit_member.html:76
 #: internal/templates/internal/system_access_edit.html:25
@@ -213,7 +214,7 @@ msgstr "Rediger komité"
 #: internal/templates/internal/edit_member.html:77
 #: internal/templates/internal/member_quit.html:21
 #: internal/templates/internal/system_access_edit.html:26
-#: make_queue/templates/make_queue/course/course_panel.html:183
+#: make_queue/templates/make_queue/course/course_panel.html:184
 #: make_queue/templates/make_queue/course/registration_edit.html:96
 #: make_queue/templates/make_queue/machine/machine_edit.html:65
 #: make_queue/templates/make_queue/quota/quota_edit.html:65
@@ -233,8 +234,9 @@ msgstr "Velg bruker"
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: internal/models.py:22 make_queue/forms.py:114 make_queue/models/course.py:19
-#: make_queue/models/models.py:75 news/models.py:195
+#: internal/models.py:22 make_queue/forms.py:114
+#: make_queue/models/course.py:19 make_queue/models/models.py:80
+#: news/models.py:195
 msgid "User"
 msgstr "Bruker"
 
@@ -254,7 +256,7 @@ msgstr "Studieprogram"
 
 #: internal/models.py:28 internal/templates/internal/members.html:165
 #: make_queue/models/course.py:22
-#: make_queue/templates/make_queue/course/course_panel.html:92
+#: make_queue/templates/make_queue/course/course_panel.html:93
 msgid "Card number (EM)"
 msgstr "Kortnummer (EM)"
 
@@ -271,8 +273,8 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:199
-#: news/templates/news/admin_event_tickets.html:39
+#: make_queue/templates/make_queue/make_reservation.html:101
+#: news/models.py:199 news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -308,7 +310,8 @@ msgstr "Drive"
 msgid "Slack"
 msgstr "Slack"
 
-#: internal/models.py:145 make_queue/templates/make_queue/reservations.html:90
+#: internal/models.py:145
+#: make_queue/templates/make_queue/reservations.html:90
 #: make_queue/templates/make_queue/reservations.html:161
 msgid "Calendar"
 msgstr "Kalender"
@@ -355,7 +358,8 @@ msgstr "Medlemmer"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43 web/templates/web/header.html:83
+#: internal/templates/internal/header.html:43
+#: web/templates/web/header.html:83
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -410,8 +414,9 @@ msgid "Filter committees"
 msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/members.html:80
-#: internal/templates/internal/members.html:153 make_queue/models/models.py:26
-#: make_queue/templates/make_queue/course/course_panel.html:90
+#: internal/templates/internal/members.html:153
+#: make_queue/models/models.py:26
+#: make_queue/templates/make_queue/course/course_panel.html:91
 #: make_queue/templates/make_queue/reservation_calendar.html:91
 #: news/models.py:196
 msgid "Name"
@@ -423,9 +428,9 @@ msgid "Committee"
 msgstr "Komité"
 
 #: internal/templates/internal/members.html:83
-#: internal/templates/internal/members.html:193 make_queue/models/course.py:24
-#: make_queue/models/models.py:25
-#: make_queue/templates/make_queue/course/course_panel.html:94
+#: internal/templates/internal/members.html:193
+#: make_queue/models/course.py:24 make_queue/models/models.py:25
+#: make_queue/templates/make_queue/course/course_panel.html:95
 #: make_queue/templates/make_queue/reservation_overview.html:53
 msgid "Status"
 msgstr "Status"
@@ -504,7 +509,7 @@ msgid "Select user"
 msgstr "Velg bruker"
 
 #: make_queue/forms.py:154 make_queue/models/models.py:30
-#: make_queue/models/models.py:76 make_queue/models/models.py:234
+#: make_queue/models/models.py:81 make_queue/models/models.py:239
 #: make_queue/templates/make_queue/reservation_overview.html:39
 msgid "Machine type"
 msgstr "Maskintype"
@@ -538,7 +543,7 @@ msgid "Access granted"
 msgstr "Tilgang gitt"
 
 #: make_queue/models/course.py:20
-#: make_queue/templates/make_queue/course/course_panel.html:91
+#: make_queue/templates/make_queue/course/course_panel.html:92
 msgid "Username"
 msgstr "Brukernavn"
 
@@ -572,51 +577,53 @@ msgstr "Sted-URL"
 msgid "Machine model"
 msgstr "Maskinmodell"
 
-#: make_queue/models/models.py:71
+#: make_queue/models/models.py:76
 msgid "Number of reservations"
 msgstr "Antall reservasjoner"
 
-#: make_queue/models/models.py:72
+#: make_queue/models/models.py:77
 msgid "Diminishing"
 msgstr "Oppbrukbar"
 
-#: make_queue/models/models.py:73
+#: make_queue/models/models.py:78
 #: make_queue/templates/make_queue/quota/quota_panel.html:38
 #: make_queue/templates/make_queue/quota/quota_user.html:22
 #: make_queue/templates/make_queue/rules.html:93
 msgid "Ignores rules"
 msgstr "Ignorerer regler"
 
-#: make_queue/models/models.py:74
+#: make_queue/models/models.py:79
 msgid "All users"
 msgstr "Alle brukere"
 
-#: make_queue/models/models.py:227
+#: make_queue/models/models.py:232
 #: make_queue/templates/make_queue/make_reservation.html:72
-#: make_queue/templates/make_queue/make_reservation.html:76 news/models.py:155
+#: make_queue/templates/make_queue/make_reservation.html:76
+#: news/models.py:155
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/models/models.py:228
+#: make_queue/models/models.py:233
 #: make_queue/templates/make_queue/make_reservation.html:86
-#: make_queue/templates/make_queue/make_reservation.html:90 news/models.py:159
+#: make_queue/templates/make_queue/make_reservation.html:90
+#: news/models.py:159
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/models/models.py:230
+#: make_queue/models/models.py:235
 msgid "Days"
 msgstr "Dager"
 
-#: make_queue/models/models.py:231
+#: make_queue/models/models.py:236
 #: make_queue/templates/make_queue/rule_edit.html:35
 msgid "Start days"
 msgstr "Start dager for regel perioder"
 
-#: make_queue/models/models.py:232
+#: make_queue/models/models.py:237
 msgid "Hours single period"
 msgstr "Timer enkelt periode"
 
-#: make_queue/models/models.py:233
+#: make_queue/models/models.py:238
 msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
@@ -641,60 +648,60 @@ msgstr "Filtrer brukere basert på status"
 msgid "All"
 msgstr "Alle"
 
-#: make_queue/templates/make_queue/course/course_panel.html:47
+#: make_queue/templates/make_queue/course/course_panel.html:48
 msgid "Download filtered users"
 msgstr "Last ned filtrerte brukere"
 
-#: make_queue/templates/make_queue/course/course_panel.html:56
+#: make_queue/templates/make_queue/course/course_panel.html:57
 msgid "user(s) selected"
 msgstr "bruker(e) valgt"
 
-#: make_queue/templates/make_queue/course/course_panel.html:61
+#: make_queue/templates/make_queue/course/course_panel.html:62
 msgid "Set status for all selected users"
 msgstr "Sett status for alle valgte brukere"
 
-#: make_queue/templates/make_queue/course/course_panel.html:65
+#: make_queue/templates/make_queue/course/course_panel.html:66
 msgid "Select status"
 msgstr "Velg status"
 
-#: make_queue/templates/make_queue/course/course_panel.html:76
+#: make_queue/templates/make_queue/course/course_panel.html:77
 msgid "Clear selected users"
 msgstr "Nullstill valg av brukere"
 
-#: make_queue/templates/make_queue/course/course_panel.html:79
+#: make_queue/templates/make_queue/course/course_panel.html:80
 msgid "Toggle non-selected users"
 msgstr "Veksle visning av ikke valgte brukere"
 
-#: make_queue/templates/make_queue/course/course_panel.html:93
+#: make_queue/templates/make_queue/course/course_panel.html:94
 #: web/templates/web/forms/widgets/semantic_date.html:8
 msgid "Date"
 msgstr "Dato"
 
-#: make_queue/templates/make_queue/course/course_panel.html:114
+#: make_queue/templates/make_queue/course/course_panel.html:115
 msgid "Connected to user"
 msgstr "Koblet til bruker"
 
-#: make_queue/templates/make_queue/course/course_panel.html:154
+#: make_queue/templates/make_queue/course/course_panel.html:155
 msgid "Displaying"
 msgstr "Viser"
 
-#: make_queue/templates/make_queue/course/course_panel.html:156
+#: make_queue/templates/make_queue/course/course_panel.html:157
 msgid "registrations"
 msgstr "registreringer"
 
-#: make_queue/templates/make_queue/course/course_panel.html:164
+#: make_queue/templates/make_queue/course/course_panel.html:165
 msgid "Set status of users to"
 msgstr "Sett status for brukere til"
 
-#: make_queue/templates/make_queue/course/course_panel.html:173
+#: make_queue/templates/make_queue/course/course_panel.html:174
 msgid "You are changing the status for the following users"
 msgstr "Du vil endre status for følgende brukere"
 
-#: make_queue/templates/make_queue/course/course_panel.html:175
+#: make_queue/templates/make_queue/course/course_panel.html:176
 msgid "Are you sure you want to do this?"
 msgstr "Er du sikker på at du vil gjøre dette?"
 
-#: make_queue/templates/make_queue/course/course_panel.html:180
+#: make_queue/templates/make_queue/course/course_panel.html:181
 msgid "Set status"
 msgstr "Sett status"
 
@@ -805,7 +812,8 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:208
+#: make_queue/templates/make_queue/make_reservation.html:129
+#: news/models.py:208
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1248,8 +1256,8 @@ msgstr ""
 "besøke følgende adresse"
 
 #: news/templates/news/admin_articles.html:13
-#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
-#: web/templates/web/header.html:30
+#: news/templates/news/articles.html:13
+#: web/templates/web/admin_panel.html:15 web/templates/web/header.html:30
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1474,7 +1482,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Nytt arrangement"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:15
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:15
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
@@ -1583,8 +1592,8 @@ msgstr "Denne billetten er ikke knyttet til noen bruker."
 msgid "Click"
 msgstr "Klikk"
 
-#: news/templates/news/ticket_overview.html:26 web/templates/web/header.html:90
-#: web/templates/web/login.html:26
+#: news/templates/news/ticket_overview.html:26
+#: web/templates/web/header.html:90 web/templates/web/login.html:26
 msgid "Login"
 msgstr "Logg inn"
 
@@ -1740,9 +1749,13 @@ msgstr "Kontakt oss på e-post!"
 msgid "Follow us on Instagram!"
 msgstr "Følg oss på Instagram!"
 
-#: web/templates/web/footer.html:45
+#: web/templates/web/footer.html:38
 msgid "Cookies"
 msgstr "Cookies"
+
+#: web/templates/web/footer.html:39
+msgid "Privacy Policy"
+msgstr "Vilkår for bruk av nettside"
 
 #: web/templates/web/forms/widgets/multi_lingual_text_field.html:88
 msgid "languages"
