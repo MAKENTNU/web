@@ -41,6 +41,54 @@ msgstr "Søket ditt ga ingen resultater"
 msgid "Change"
 msgstr "Endre"
 
+#: make_queue/static/js/calendar.js:67
+msgid "Sunday"
+msgstr "Søndag"
+
+#: make_queue/static/js/calendar.js:67
+msgid "Monday"
+msgstr "Mandag"
+
+#: make_queue/static/js/calendar.js:67
+msgid "Tuesday"
+msgstr "Tirsdag"
+
+#: make_queue/static/js/calendar.js:67
+msgid "Wednesday"
+msgstr "Onsdag"
+
+#: make_queue/static/js/calendar.js:67
+msgid "Thursday"
+msgstr "Torsdag"
+
+#: make_queue/static/js/calendar.js:67
+msgid "Friday"
+msgstr "Fredag"
+
+#: make_queue/static/js/calendar.js:67
+msgid "Saturday"
+msgstr "Lørdag"
+
+#: make_queue/static/js/calendar.js:162
+msgid "Reservation"
+msgstr "Reservasjon"
+
+#: make_queue/static/js/calendar.js:163
+msgid "Name"
+msgstr "Navn"
+
+#: make_queue/static/js/calendar.js:164
+msgid "Email"
+msgstr "E-post"
+
+#: make_queue/static/js/calendar.js:165
+msgid "Time"
+msgstr "Tidspunkt"
+
+#: make_queue/static/js/calendar.js:169
+msgid "Comment"
+msgstr "Kommentar"
+
 #: web/static/lib/fomantic-ui/semantic.min.js:11
 msgctxt "Sun"
 msgid "S"

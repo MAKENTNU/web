@@ -1,5 +1,5 @@
 {% extends 'web/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 
 {% block title %}{% trans "Edit event" %}{% endblock title %}
@@ -42,8 +42,8 @@
                     <label>{{ form.event_type.label }}</label>
                     <div class="field">
                         <div class="ui radio checkbox">
-                            <input type="radio" id="repeating" name="{{ form.event_type.name }}" value="R"
-                                   {% if form.event_type.value == "R" %}checked{% endif %}>
+                            <input type="radio" id="repeating" name="{{ form.event_type.name }}" value="{{ Event.REPEATING }}"
+                                   {% if form.event_type.value == Event.REPEATING %}checked{% endif %}>
                             <label for="repeating">{% trans "Repeating" %}
                                 <span data-content="{% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}">
                                     <i class="ui yellow question circle icon"></i>
@@ -54,8 +54,8 @@
 
                     <div class="field">
                         <div class="ui radio checkbox">
-                            <input type="radio" id="standalone" name="{{ form.event_type.name }}" value="S"
-                                   {% if form.event_type.value == "S" %}checked{% endif %}>
+                            <input type="radio" id="standalone" name="{{ form.event_type.name }}" value="{{ Event.STANDALONE }}"
+                                   {% if form.event_type.value == Event.STANDALONE %}checked{% endif %}>
                             <label for="standalone">{% trans "Standalone" %}
                                 <span data-content="{% trans "Used for events that happen once, e.g. a weekend-long happening. All occurrences of the event will have a common registration." %}">
                                     <i class="ui yellow question circle icon"></i>
@@ -87,7 +87,7 @@
             </div>
         </div>
         <h4>{% trans "Attributes" %}</h4>
-        <div class="ui three fields">
+        <div class="ui three inline fields">
             <div class="field">
                 <div class="ui checkbox">
                     {{ form.featured }}

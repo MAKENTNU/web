@@ -1,0 +1,54 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>
+            {% trans "Announcements" %}
+            {% if perms.announcements.add_announcement %}
+                <a href="{% url "create_announcement" %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+        <div class="ui relaxed divided list">
+            {% for announcement in announcements %}
+                <div class="item">
+                    <div class="content">
+                        <div class="ui header">
+                            {{ announcement.get_classification_display }}
+                            {% if perms.announcements.change_announcement %}
+                                <a href="{% url "edit_announcement" pk=announcement.pk %}">
+                                    <i class="yellow pencil icon"></i>
+                                </a>
+                            {% endif %}
+                            {% if perms.announcements.delete_announcement %}
+                                <a class="delete confirm" href="{% url "delete_announcement" pk=announcement.pk%}">
+                                    <i class="red trash icon"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="meta">
+                            {% if announcement.site_wide %}
+                                <i class="ui yellow globe icon"></i>{% trans "Site-wide" %}
+                            {% else %}
+                                <i class="ui yellow home icon"></i>{% trans "Front page" %}
+                            {% endif %}
+                        </div>
+                        <div class="description">{{ announcement.content }}</div>
+                        <div class="extra">
+                            <span class="ui {% if announcement.is_valid %}green{% else %}red{% endif %} text">
+                            {% if announcement.display_to %}
+                                {{ announcement.display_from|date:"d.m.Y H:i" }} -
+                                {{ announcement.display_to|date:"d.m.Y H:i" }}
+                            {% else %}
+                                {% trans "From" %} {{ announcement.display_from|date:"d.m.Y H:i" }}
+                            {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

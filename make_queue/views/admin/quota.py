@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.contrib.auth.models import User
+from users.models import User
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 

@@ -11,12 +11,12 @@ jQuery.fn.extend({
                     `&rows=${data.maxresults}` +
                     `&campusid=${data.campusid}`,
 
-                // Convert MazeMap search results to fit Semantic UI search format
+                // Convert MazeMap search results to fit Fomantic UI search format
                 onResponse: (mazemapResponse => ({
                     results: mazemapResponse.result.map(item => ({
                         title: (
                             item.dispPoiNames[0] +
-                            (item.dispBldNames[0] ? ", " + item.dispBldNames[0] : "")
+                            (item.dispBldNames[0] ? `, ${item.dispBldNames[0]}` : "")
                         ).replace(/<[^>]*>/g, ""),
                         description: (item.dispPoiNames[1] ? item.dispPoiNames[1] : "").replace(/<[^>]*>/g, ""),
                         id: item.poiId,
@@ -24,7 +24,7 @@ jQuery.fn.extend({
                 })),
             },
             templates: {
-                // Template for error messages. Default provided by Semantic UI but with translations
+                // Template for error messages. Default provided by Fomantic UI but with translations
                 message: (type, message) => (
                     `<div class="message empty">
                     <div class="header">

@@ -34,6 +34,10 @@ class SemanticDateInput(forms.DateInput):
     template_name = "web/forms/widgets/semantic_date.html"
 
 
+class SemanticDateTimeInput(forms.DateTimeInput):
+    template_name = "web/forms/widgets/semantic_datetime.html"
+
+
 class SemanticFileInput(forms.ClearableFileInput):
     template_name = "web/forms/widgets/semantic_file.html"
 
@@ -66,6 +70,6 @@ class MazemapSearchInput(forms.TextInput):
         if attrs:
             default_attrs.update(attrs)
 
-        default_attrs["class"] = default_attrs.get("class", "") + " " + self.required_class_attr
+        default_attrs["class"] = f"{default_attrs.get('class', '')} {self.required_class_attr}"
 
         super().__init__(attrs=default_attrs)

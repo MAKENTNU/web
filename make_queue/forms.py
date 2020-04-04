@@ -1,14 +1,16 @@
 from django import forms
-from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms import ModelChoiceField, IntegerField
 from django.utils.translation import gettext_lazy as _
 
+import card
+from card.forms import CardNumberField
 from make_queue.fields import MachineTypeField, MachineTypeForm
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
+from users.models import User
 from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput, \
     MazemapSearchInput
 
@@ -106,6 +108,7 @@ class RuleForm(forms.ModelForm):
 
 class QuotaForm(forms.ModelForm):
     class UserModelChoiceField(ModelChoiceField):
+
         def label_from_instance(self, obj):
             return f'{obj.get_full_name()} - {obj.username}'
 
@@ -130,22 +133,37 @@ class QuotaForm(forms.ModelForm):
 
 
 class Printer3DCourseForm(forms.ModelForm):
+    card_number = CardNumberField(required=False)
+
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
             queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
             required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name)
-        self.fields["card_number"].required = False
+        if self.instance.card_number is not None:
+            self.initial["card_number"] = self.instance.card_number.number
 
     class Meta:
         model = Printer3DCourse
-        exclude = []
+        exclude = ["_card_number"]
         widgets = {
             "status": SemanticChoiceInput(),
             "date": SemanticDateInput(),
             "username": forms.TextInput(attrs={"autofocus": "autofocus"}),
         }
+
+    def save(self, commit=True):
+        self.instance.card_number = self.cleaned_data["card_number"]
+        super().save(commit)
+
+    def is_valid(self):
+        card_number = self.data["card_number"]
+        username = self.data["username"]
+        is_duplicate = card.utils.is_duplicate(card_number, username)
+        if is_duplicate:
+            self.add_error("card_number", _("Card number is already in use"))
+        return super().is_valid() and not is_duplicate
 
 
 class FreeSlotForm(forms.Form):
@@ -157,14 +175,19 @@ class FreeSlotForm(forms.Form):
 
 
 class BaseMachineForm(forms.ModelForm):
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        status_choices = (
+            Machine.AVAILABLE,
+            Machine.OUT_OF_ORDER,
+            Machine.MAINTENANCE,
+        )
         self.fields["status"] = forms.ChoiceField(
-            choices=(
-                ("F", _("Available")),
-                ("O", _("Out of order")),
-                ("M", _("Maintenance")),
-            ),
+            choices=[
+                (c, Machine.STATUS_CHOICES_DICT[c])
+                for c in status_choices
+            ],
             widget=SemanticSearchableChoiceInput(attrs={"required": True}),
         )
 

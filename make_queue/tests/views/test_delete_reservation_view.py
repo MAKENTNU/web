@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from users.models import User
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -17,7 +17,7 @@ class DeleteReservationViewTestCase(TestCase):
         user2.save()
 
         machine_type_printer = MachineTypeField.get_machine_type(1)
-        Machine.objects.create(name="U1", location="Make", machine_model="Ultimaker 2", status="F",
+        Machine.objects.create(name="U1", location="Make", machine_model="Ultimaker 2", status=Machine.AVAILABLE,
                                machine_type=machine_type_printer)
 
         Quota.objects.create(user=user1, number_of_reservations=2, ignore_rules=True, machine_type=machine_type_printer)

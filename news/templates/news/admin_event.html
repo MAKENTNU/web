@@ -1,7 +1,7 @@
 {% extends "web/base.html" %}
 {% load i18n %}
 {% load news_tags %}
-{% load staticfiles %}
+{% load static %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static "news/css/admin-event.css" %}">
@@ -127,7 +127,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: '/news/admin/toggle/' + model + '/',
+                url: `/news/admin/toggle/${model}/`,
                 data: {
                     'pk': pk,
                     'toggle': toggle,
@@ -147,7 +147,7 @@
                     }
 
                     if (model === "event") {
-                        $("#message-" + toggle).toggleClass("hidden", data["color"] === "grey");
+                        $(`#message-${toggle}`).toggleClass("hidden", data["color"] === "grey");
                     }
                 },
             });

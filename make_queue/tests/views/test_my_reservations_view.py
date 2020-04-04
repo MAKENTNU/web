@@ -1,4 +1,4 @@
-from django.contrib.auth.models import User
+from users.models import User
 from django.test import TestCase
 from django.utils import timezone
 
@@ -17,7 +17,7 @@ class MyReservationsViewTestCase(TestCase):
         self.machine_type_printer = MachineTypeField.get_machine_type(1)
 
         printer = Machine.objects.create(name="U1", machine_type=self.machine_type_printer,
-                                         machine_model="Ultimaker 2", location="S1", status="F")
+                                         machine_model="Ultimaker 2", location="S1", status=Machine.AVAILABLE)
         Quota.objects.create(user=self.user, number_of_reservations=2, ignore_rules=True,
                              machine_type=self.machine_type_printer)
         Printer3DCourse.objects.create(user=self.user, name=self.user.get_full_name(), username=self.user.username,
@@ -45,7 +45,7 @@ class MyReservationsViewTestCase(TestCase):
         Quota.objects.create(user=self.user, number_of_reservations=2, machine_type=machine_type_sewing,
                              ignore_rules=True)
 
-        sewing_machine = Machine.objects.create(name="T1", machine_model="Generic", location="M1", status="F",
+        sewing_machine = Machine.objects.create(name="T1", machine_model="Generic", location="M1", status=Machine.AVAILABLE,
                                                 machine_type=machine_type_sewing)
 
         Reservation.objects.create(user=self.user, machine=sewing_machine,

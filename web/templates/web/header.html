@@ -1,11 +1,13 @@
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 {% load string_tags %}
 {% load permission_tags %}
 {% load hosts %}
+{% load announcement_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
+<link rel="stylesheet" type="text/css" href="{% static "announcements/css/announcement.css" %}">
 
 <header id="header">
     <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
@@ -50,7 +52,7 @@
         {% endcomment %}
 
         <a class="item" href="{% url 'apply' %}">
-            <div class="text">SØK</div>
+            <div class="text">Søk verv</div>
             <div class="make_bg_blue bubble-background"></div>
         </a>
     </nav>
@@ -107,6 +109,12 @@
 
     </nav>
 </header>
+
+{# Show all site-wide announcements #}
+{% site_wide_announcements as announcements %}
+{% for announcement in announcements %}
+    {% include "announcements/announcement.html" with announcement=announcement %}
+{% endfor %}
 
 {# This form is hidden, but is submitted through jQuery #}
 <form id="lang-form" action="{% url 'set_language' %}" method="POST">

@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
+from make_queue.models.models import Machine
 from make_queue.util.time import date_to_local, get_day_name
 
 register = template.Library()
@@ -37,11 +38,11 @@ def numeric_range(start, end, step=1):
 @register.simple_tag()
 def card_color_from_machine_status(machine):
     colors = {
-        "F": "green",
-        "O": "red",
-        "R": "blue",
-        "I": "orange",
-        "M": "brown"
+        Machine.RESERVED: "blue",
+        Machine.AVAILABLE: "green",
+        Machine.IN_USE: "orange",
+        Machine.OUT_OF_ORDER: "red",
+        Machine.MAINTENANCE: "brown",
     }
     return colors[machine.get_status()]
 
@@ -52,13 +53,20 @@ def is_current_date(date):
 
 
 @register.simple_tag()
+def shorthand_days():
+    return [_("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun")]
+
+
+@register.simple_tag()
 def card_text_from_machine_status(machine):
-    status = dict(machine.status_choices)[machine.get_status()]
+    status = machine.get_status_display()
     next_reservation = machine.get_next_reservation()
 
     # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.
-    if machine.get_status() == "F" and next_reservation is not None and (
-            next_reservation.start_time - timezone.now()).days < 1:
+    if (machine.get_status() == Machine.AVAILABLE
+            and next_reservation is not None
+            and (next_reservation.start_time - timezone.now()).days < 1):
+        # Uses old format scheme due to gettext not having automatic detection of translations in f-strings
         status = "{:} {:} {:}".format(status, _('for'), timeuntil(next_reservation.start_time))
     return status
 
@@ -74,7 +82,7 @@ def date_to_percentage(date):
         date = date_to_local(date)
     except ValueError:
         pass
-    return (date.hour / 24 + date.minute / 1440) * 100
+    return (date.hour / 24 + date.minute / (24 * 60)) * 100
 
 
 @register.simple_tag()

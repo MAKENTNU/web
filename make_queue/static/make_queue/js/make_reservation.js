@@ -1,13 +1,12 @@
 let reservations = [];
 let reservationRules = [];
-let reservationCalendarDate = new Date();
-var canIgnoreRules; // Defined in calendar.html
+let canIgnoreRules = false;
 
 function getFutureReservations(machine_id, force_new_time) {
     /**
      * Retrieves future reservations and all reservation rules from the server.
      */
-    let jsonUrl = langPrefix + "/reservation/json/" + machine_id;
+    let jsonUrl = `${langPrefix}/reservation/json/${machine_id}`;
     if ($("#reserve_form").data("reservation")) {
         jsonUrl += "/" + $("#reserve_form").data("reservation");
     }
@@ -15,11 +14,14 @@ function getFutureReservations(machine_id, force_new_time) {
         reservations.length = 0;
         $.each(data.reservations, function (index, value) {
             reservations.push({
-                "start_time": new Date(Date.parse(value.start_date)),
-                "end_time": new Date(Date.parse(value.end_date)),
+                "start_time": new Date(Date.parse(value.start_time)),
+                "end_time": new Date(Date.parse(value.end_time)),
             });
         });
+
+        calendar.updateCanBreakRules(data.canIgnoreRules);
         canIgnoreRules = data.canIgnoreRules;
+
         reservationRules.length = 0;
         $.each(data.rules, function (index, value) {
             reservationRules.push({
@@ -30,33 +32,10 @@ function getFutureReservations(machine_id, force_new_time) {
         });
         // Indicates if we want to update the start date or not
         if (force_new_time) {
-            let start_date = getFirstReservableTimeSlot(new Date());
-            $("#start_time").calendar("set date", start_date);
-            $("#end_time").calendar("set date", getMaxDateReservation(start_date));
+            let start_time = getFirstReservableTimeSlot(new Date());
+            $("#start_time").calendar("set date", start_time);
+            $("#end_time").calendar("set date", getMaxDateReservation(start_time));
         }
-    });
-}
-
-function getWeekNumber(date) {
-    /**
-     * Returns the week number of a given date (this is not built in to JS)
-     */
-    date = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-    date.setUTCDate(date.getUTCDate() + 4 - (date.getUTCDay() || 7));
-    let yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-    return Math.ceil((((date - yearStart) / 86400000) + 1) / 7);
-}
-
-function updateReservationCalendar() {
-    /**
-     * Retrieves the reservation calendar for the date set for the reservation calendar
-     */
-    let weekNumber = getWeekNumber(reservationCalendarDate);
-    let year = reservationCalendarDate.getFullYear();
-    let machine_pk = $("#machine_name_dropdown").dropdown("get value");
-    $.get(langPrefix + "/reservation/calendar/" + year + "/" + weekNumber + "/" + machine_pk + "/", {}, (data) => {
-        $("#reservation_calendar").html(data);
-        setupReservationCalendar();
     });
 }
 
@@ -231,20 +210,20 @@ $('#machine_type_dropdown').dropdown('setting', 'onChange', function (selectedMa
 
         // Replace the shown machine items from the last selected machine type with the ones from the currently selected machine type
         $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", true);
-        $('#machine_name_dropdown .menu .item.' + selectedMachineType).toggleClass("make_hidden", false);
+        $(`#machine_name_dropdown .menu .item.${selectedMachineType}`).toggleClass("make_hidden", false);
     }
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
 $('#machine_name_dropdown').dropdown("set selected", $('.selected_machine_name').data("value")).dropdown('setting', "onChange", function (value) {
     if (value !== "default" && value !== "") {
         getFutureReservations(value, true);
-        updateReservationCalendar();
+        calendar.changeMachine(value);
     }
     $("#start_time > div, #end_time > div").toggleClass('disabled', value === "default");
     $("#start_time, #end_time").calendar('clear');
 });
 
-zeroPadDateElement = (val) => val < 10 ? "0" + val : val;
+zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
 
 function formatDate(date) {
     /**
@@ -288,46 +267,34 @@ $('form').submit(function (event) {
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));
 });
 
-function setupReservationCalendar() {
-    /**
-     * Registration of custom onclick functions for the reservation calendar (it is loaded async)
-     */
-
-    $("#now_button").click(() => {
-        reservationCalendarDate = new Date();
-        updateReservationCalendar();
-    });
-
-    $("#prev_week_button").click(() => {
-        reservationCalendarDate.setDate(reservationCalendarDate.getDate() - 7);
-        updateReservationCalendar();
-    });
-
-    $("#next_week_button").click(() => {
-        reservationCalendarDate.setDate(reservationCalendarDate.getDate() + 7);
-        updateReservationCalendar();
-    });
-
-}
-
-setupReservationCalendar();
-
 $('.message .close').on('click', function () {
     $(this).closest('.message').transition('fade');
 });
 
-if ($("#start_time").calendar("get date") !== null) {
-    reservationCalendarDate = $("#start_time").calendar("get date");
-}
-updateReservationCalendar();
-
-function timeSelectionPopupHTML(date, startTime, endTime, machine) {
+function timeSelectionPopupHTML() {
     /**
      * Creates a valid popup for the time selection utility in the reservation calendar
      */
-    return $("<div>").addClass("ui make_yellow button").html(gettext("Choose time")).click(() => {
-        $("#start_time").calendar("set date", new Date(date + " " + startTime));
-        $("#end_time").calendar("set date", new Date(date + " " + endTime));
-        $("body").mousedown();
+    return $("<div>").addClass("ui fluid make_yellow button").html(gettext("Choose time")).on("mousedown touchstart", () => {
+        $("#start_time").calendar("set date", calendar.getSelectionStartTime());
+        $("#end_time").calendar("set date", calendar.getSelectionEndTime());
+        calendar.resetSelection();
     });
 }
+
+function getMachine() {
+    return $('#machine_name_dropdown').dropdown("get value");
+}
+
+let calendar = new ReservationCalendar($(".reservation_calendar"), {
+    date: new Date(),
+    machine: getMachine(),
+    selection: true,
+    canBreakRules: false,
+    selectionPopupContent: timeSelectionPopupHTML,
+});
+
+if ($("#start_time").calendar("get date") !== null) {
+    calendar.showDate($("#start_time").calendar("get date"));
+}
+

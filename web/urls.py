@@ -31,12 +31,13 @@ urlpatterns += i18n_patterns(
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
-    ContentBox.url('about'),
-    ContentBox.url('apply'),
-    ContentBox.url('makerspace'),
-    ContentBox.url('cookies'),
-    ContentBox.url('rules'),
-    ContentBox.url('privacypolicy'),
+    path('announcements/', include('announcements.urls')),
+    ContentBox.path('about'),
+    *ContentBox.multi_path('apply', 'søk', 'sok'),
+    ContentBox.path('makerspace'),
+    ContentBox.path('cookies'),
+    ContentBox.path('rules'),
+    ContentBox.path('privacypolicy'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
 )
@@ -54,7 +55,7 @@ else:
     # If it is not configured, we would like to have a simple login page. So that
     # we can test with non-superusers without giving them access to the admin page.
     urlpatterns += i18n_patterns(
-        path('login/', auth_views.LoginView.as_view(template_name="web/login.html"), name='login'),
+        path('login/', auth_views.LoginView.as_view(template_name="web/login.html", redirect_authenticated_user=True), name='login'),
         path('logout/', auth_views.LogoutView.as_view(next_page="/"), name='logout'),
         prefix_default_language=False,
     )

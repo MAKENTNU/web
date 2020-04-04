@@ -134,8 +134,8 @@ class CourseXLSXView(View):
         for index, registration in enumerate(course_registrations):
             worksheet.write(index + 1, 0, registration.name, format_row)
             worksheet.write(index + 1, 1, registration.username, format_row)
-            worksheet.write(index + 1, 2, registration.card_number if registration.card_number is not None else "",
-                            format_row)
+            worksheet.write(index + 1, 2,
+                            registration.card_number.number if registration.card_number is not None else "", format_row)
             worksheet.write(index + 1, 3, registration.date.strftime("%Y-%m-%d"), format_row)
 
         workbook.close()

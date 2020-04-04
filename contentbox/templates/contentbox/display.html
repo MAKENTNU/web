@@ -1,12 +1,15 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "contentbox/css/display.css" %}">
+{% endblock %}
 
 {% block body %}
-    <div class="ui text container" style="position: relative; margin: 100px 0;">
+    <div class="ui container">
         {% if perms.contentbox.change_contentbox %}
-            <a class="ui yellow button"
-               href="{% url 'contentbox_edit' contentbox.id %}"
-               style="position: absolute; top: -50px; left: 0;">
+            <a class="ui yellow button" href="{% url 'contentbox_edit' contentbox.id %}">
                 {% trans "Edit" %}
             </a>
         {% endif %}
