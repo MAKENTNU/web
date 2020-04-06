@@ -43,6 +43,10 @@
     color: rgb(12, 66, 106) !important;
 }
 
+#footer .content {
+    text-align: right;
+}
+
 #footer p,
 #footer a,
 #footer i {
@@ -90,8 +94,7 @@
     .copyright {
         grid-column-start: auto;
     }
-}
-
-#footer .content {
-    text-align: right;
+    #footer .content{
+        text-align: center;
+    }
 }
