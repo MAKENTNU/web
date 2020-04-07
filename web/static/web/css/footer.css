@@ -91,11 +91,11 @@
         margin-left: 0;
     }
 
-    .copyright {
-        grid-column-start: auto;
-    }
     #footer .content{
         text-align: center;
     }
-}
 
+    .copyright {
+        grid-column-start: auto;
+    }
+}
