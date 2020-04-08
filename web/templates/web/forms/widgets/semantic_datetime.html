@@ -8,7 +8,7 @@
         <input type="text" placeholder="{% trans "Date" %}"
                 {% if widget.value %}
                value="{{ widget.value }}"
-                {% else %}
+                {% elif not widget.attrs.default_blank %}
                value="{% set_current_date_only %}"
                 {% endif %} name="{{ widget.name }}">
     </div>
@@ -33,9 +33,10 @@
             });
         });
 
-        $("form").submit(function () {
+        widget.closest("form").submit(function () {
             let pad = (val) => (val < 10) ? `0${val}` : val;
             let date = widget.calendar("get date");
+            if (date === null) return;
             let year = date.getFullYear();
             let month = pad(date.getMonth() + 1);
             let day = pad(date.getDate());

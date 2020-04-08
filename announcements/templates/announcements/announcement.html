@@ -1,0 +1,11 @@
+{% load announcement_tags %}
+
+<div class="{% announcement_css_class announcement %} announcement">
+    {% if announcement.link %}
+        <a href="{{ announcement.link }}">
+            {{ announcement.content }}
+        </a>
+    {% else %}
+        {{ announcement.content }}
+    {% endif %}
+</div>
