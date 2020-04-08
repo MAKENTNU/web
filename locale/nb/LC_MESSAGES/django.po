@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-14 20:00+0100\n"
+"POT-Creation-Date: 2020-04-08 16:35+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -768,7 +768,7 @@ msgid "Select machine type"
 msgstr "Velg maskintype"
 
 #: make_queue/fields.py:44
-msgid "3D-printers"
+msgid "3D printers"
 msgstr "3D-printere"
 
 #: make_queue/fields.py:45
@@ -776,7 +776,7 @@ msgid ""
 "You must have completed a 3D printer course to reserve the printers. If you "
 "have taken the course, but don't have access, contact 3dprint@makentnu.no"
 msgstr ""
-"Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt "
+"Reservasjon av 3D-printere krever fullført 3D-printerkurs. Hvis du har hatt "
 "kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
 
 #: make_queue/fields.py:52
@@ -784,7 +784,7 @@ msgid "Sewing machines"
 msgstr "Symaskiner"
 
 #: make_queue/fields.py:59
-msgid "3D-scanners"
+msgid "3D scanners"
 msgstr "3D-skannere"
 
 #: make_queue/forms.py:116 make_queue/forms.py:142
@@ -1988,7 +1988,7 @@ msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse."
 
 #: web/templates/web/admin_panel.html:78
 msgid ""
-"Here you can add and edit information about persons who have taken the 3D-"
+"Here you can add and edit information about persons who have taken the 3D "
 "printer course."
 msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"

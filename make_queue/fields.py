@@ -41,7 +41,7 @@ class MachineTypeField(models.IntegerField):
     possible_machine_types = (
         MachineType(
             1,
-            _("3D-printers"),
+            _("3D printers"),
             _("You must have completed a 3D printer course to reserve the printers. If you "
               "have taken the course, but don't have access, contact 3dprint@makentnu.no"),
             can_use_3d_printer,
@@ -56,7 +56,7 @@ class MachineTypeField(models.IntegerField):
         ),
         MachineType(
             3,
-            _("3D-scanners"),
+            _("3D scanners"),
             "",
             lambda user: user.is_authenticated,
             False,
