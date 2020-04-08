@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-14 19:43+0100\n"
+"POT-Creation-Date: 2020-04-04 15:12+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -219,7 +219,8 @@ msgstr "Kontakt"
 msgid "to fix the problem."
 msgstr "for å fikse problemet."
 
-#: checkin/templates/checkin/profile.html:150 make_queue/models/course.py:18
+#: checkin/templates/checkin/profile.html:150
+#: make_queue/models/course.py:18
 msgid "Registered"
 msgstr "Registrert"
 
@@ -525,8 +526,9 @@ msgstr "Velg bruker"
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: internal/models.py:23 make_queue/forms.py:117 make_queue/models/course.py:28
-#: make_queue/models/models.py:90 news/models.py:220
+#: internal/models.py:23 make_queue/forms.py:117
+#: make_queue/models/course.py:28 make_queue/models/models.py:90
+#: news/models.py:220
 msgid "User"
 msgstr "Bruker"
 
@@ -557,8 +559,8 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:225
-#: news/templates/news/admin_event_tickets.html:39
+#: make_queue/templates/make_queue/make_reservation.html:101
+#: news/models.py:225 news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -594,7 +596,8 @@ msgstr "Drive"
 msgid "Slack"
 msgstr "Slack"
 
-#: internal/models.py:145 make_queue/templates/make_queue/reservations.html:89
+#: internal/models.py:145
+#: make_queue/templates/make_queue/reservations.html:89
 #: make_queue/templates/make_queue/reservations.html:160
 msgid "Calendar"
 msgstr "Kalender"
@@ -641,7 +644,8 @@ msgstr "Medlemmer"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43 web/templates/web/header.html:85
+#: internal/templates/internal/header.html:43
+#: web/templates/web/header.html:85
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -696,7 +700,8 @@ msgid "Filter committees"
 msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/members.html:80
-#: internal/templates/internal/members.html:153 make_queue/models/models.py:34
+#: internal/templates/internal/members.html:153
+#: make_queue/models/models.py:34
 #: make_queue/templates/make_queue/course/course_panel.html:91
 #: news/models.py:222
 msgid "Name"
@@ -708,8 +713,8 @@ msgid "Committee"
 msgstr "Komité"
 
 #: internal/templates/internal/members.html:83
-#: internal/templates/internal/members.html:193 make_queue/models/course.py:33
-#: make_queue/models/models.py:33
+#: internal/templates/internal/members.html:193
+#: make_queue/models/course.py:33 make_queue/models/models.py:33
 #: make_queue/templates/make_queue/course/course_panel.html:95
 #: make_queue/templates/make_queue/reservation_overview.html:53
 msgid "Status"
@@ -878,13 +883,15 @@ msgstr "Alle brukere"
 
 #: make_queue/models/models.py:257
 #: make_queue/templates/make_queue/make_reservation.html:72
-#: make_queue/templates/make_queue/make_reservation.html:76 news/models.py:177
+#: make_queue/templates/make_queue/make_reservation.html:76
+#: news/models.py:177
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:258
 #: make_queue/templates/make_queue/make_reservation.html:86
-#: make_queue/templates/make_queue/make_reservation.html:90 news/models.py:181
+#: make_queue/templates/make_queue/make_reservation.html:90
+#: news/models.py:181
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -1110,7 +1117,8 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:234
+#: make_queue/templates/make_queue/make_reservation.html:129
+#: news/models.py:234
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1536,8 +1544,8 @@ msgstr ""
 "besøke følgende adresse"
 
 #: news/templates/news/admin_articles.html:13
-#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
-#: web/templates/web/header.html:32
+#: news/templates/news/articles.html:13
+#: web/templates/web/admin_panel.html:15 web/templates/web/header.html:32
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1777,7 +1785,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Nytt arrangement"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:15
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:15
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
@@ -2033,6 +2042,10 @@ msgstr "Følg oss på Instagram!"
 #: web/templates/web/footer.html:38
 msgid "Cookies"
 msgstr "Cookies"
+
+#: web/templates/web/footer.html:39
+msgid "Privacy Policy"
+msgstr "Personvernerklæring"
 
 #: web/templates/web/forms/widgets/multi_lingual_text_field.html:88
 msgid "languages"

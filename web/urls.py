@@ -37,6 +37,7 @@ urlpatterns += i18n_patterns(
     ContentBox.path('makerspace'),
     ContentBox.path('cookies'),
     ContentBox.path('rules'),
+    ContentBox.path('privacypolicy'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
 )
