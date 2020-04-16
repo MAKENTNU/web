@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load static %}
 {% load thumbnail %}
+{% load announcement_tags %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
@@ -9,6 +10,16 @@
 {% endblock head %}
 
 {% block padding-top %}{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+
+    {# Show non-site-wide announcements on the front page #}
+    {% non_site_wide_announcements as announcements %}
+    {% for announcement in announcements %}
+        {% include "announcements/announcement.html" with announcement=announcement %}
+    {% endfor %}
+{% endblock %}
 
 {% block body %}
     <div class="top">

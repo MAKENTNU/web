@@ -31,11 +31,13 @@ urlpatterns += i18n_patterns(
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
+    path('announcements/', include('announcements.urls')),
     ContentBox.path('about'),
     *ContentBox.multi_path('apply', 'søk', 'sok'),
     ContentBox.path('makerspace'),
     ContentBox.path('cookies'),
     ContentBox.path('rules'),
+    ContentBox.path('privacypolicy'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
 )
