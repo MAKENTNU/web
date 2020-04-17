@@ -4,24 +4,42 @@
 <!DOCTYPE html>
 <html style="width: 100%; padding: 0; margin: 0;">
 <body style="width: 100%; padding: 0; margin: 0;">
-    <header style="width: 100%; background-color: rgb(34, 43, 52); padding: 20px; position: relative;">
-        <img src="{{ site }}{% static "web/img/logo_white.svg" %}" alt="MAKE NTNU logo"
-             style="width: 500px; max-width: 100%;">
-    </header>
-    <main style="position: relative; width: 100%; padding: 30px;">
-        <div>
-            <h1>{% trans "Your ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
-            <div>
-                {% trans "Thank you for registering for this event. You can view your ticket" %}
-                <a href="{{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>.
+<table style="width: 100%; padding: 0; margin: 0; border-width: 0; border-collapse: collapse;">
+    <thead style="width: 100%; background-color: rgb(34, 43, 52); margin: 0; padding: 0;">
+    <tr style="padding: 0; margin: 0; width: 100%;">
+        <th style="padding: 20px;">
+            <img src="{{ site }}{% static "web/img/logo_white.svg" %}" alt="MAKE NTNU logo"
+                 style="width: 500px; max-width: 100%;">
+        </th>
+    </tr>
+    </thead>
+    <tbody style="width: 100%;">
+    <tr style="width: 100%">
+        <td style="align-items: center; padding: 0; margin: 0;">
+            <img src="{{ site }}{{ ticket.event.image.url }}{{ ticket.timeplace.event.image.url }}" alt="Event image"
+                 style="width: 100%;">
+        </td>
+    </tr>
+    <tr style="width: 100%">
+        <td style="padding: 30px 30px 0 30px; font-size: 30px; font-weight: bold;">{% trans "Your ticket for" %}
+            "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"
+        </td>
+    </tr>
+    <tr style="width: 100%">
+        <td style="padding: 15px 30px 0 30px;">
+            {% trans "Thank you for registering for this event. You can view your ticket" %}
+            <a href="{{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>.
 
-                {% trans "If you want to cancel your registration, you can do so by clicking" %}
-                <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
-            </div>
-            <div style="margin-top: 30px;">
-                {% trans "The reference number for your ticket is" %}: <b>"{{ ticket.uuid }}"</b>
-            </div>
-        </div>
-    </main>
+            {% trans "If you want to cancel your registration, you can do so by clicking" %}
+            <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+        </td>
+    </tr>
+    <tr style="width: 100%">
+        <td style="padding: 30px;">
+            {% trans "The reference number for your ticket is" %}: <b>"{{ ticket.uuid }}"</b>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-08 16:35+0200\n"
+"POT-Creation-Date: 2020-04-17 19:11+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -389,7 +389,7 @@ msgstr "For å se den nåværende versjonen, klikk"
 
 #: docs/templates/docs/documentation_page.html:22
 #: docs/templates/docs/documentation_page.html:25
-#: news/templates/email/ticket.html:16 news/templates/email/ticket.html:19
+#: news/templates/email/ticket.html:31 news/templates/email/ticket.html:34
 msgid "here"
 msgstr "her"
 
@@ -1505,21 +1505,21 @@ msgstr "Foretrukket språk"
 msgid "Timeplace"
 msgstr "Tidspunkt"
 
-#: news/templates/email/ticket.html:13
+#: news/templates/email/ticket.html:24
 msgid "Your ticket for"
 msgstr "Din billett til"
 
-#: news/templates/email/ticket.html:15
+#: news/templates/email/ticket.html:30
 msgid "Thank you for registering for this event. You can view your ticket"
 msgstr ""
 "Takk for at du meldte deg på dette arrangementet. Du kan se billetten din"
 
-#: news/templates/email/ticket.html:18
+#: news/templates/email/ticket.html:33
 msgid "If you want to cancel your registration, you can do so by clicking"
 msgstr ""
 "Hvis du ønsker å avbestille billetten din, så kan du gjøre dette ved å trykke"
 
-#: news/templates/email/ticket.html:22
+#: news/templates/email/ticket.html:39
 msgid "The reference number for your ticket is"
 msgstr "Ditt referansenummer er"
 
@@ -2037,6 +2037,10 @@ msgstr "Følg oss på Instagram!"
 #: web/templates/web/footer.html:38
 msgid "Cookies"
 msgstr "Cookies"
+
+#: web/templates/web/footer.html:39
+msgid "Privacy Policy"
+msgstr "Personvernerklæring"
 
 #: web/templates/web/forms/widgets/multi_lingual_text_field.html:88
 msgid "languages"
