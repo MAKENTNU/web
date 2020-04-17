@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-03-12 21:23+0100\n"
+"POT-Creation-Date: 2020-04-17 19:11+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -13,6 +13,122 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.2.1\n"
+
+#: announcements/models.py:33
+#: make_queue/templates/make_queue/reservations.html:46
+msgid "Information"
+msgstr "Informasjon"
+
+#: announcements/models.py:34
+msgid "Warning"
+msgstr "Advarsel"
+
+#: announcements/models.py:35
+msgid "Critical"
+msgstr "Kritisk"
+
+#: announcements/models.py:38
+msgid "Type"
+msgstr "Type"
+
+#: announcements/models.py:39
+#: announcements/templates/announcements/announcements_admin.html:33
+msgid "Site-wide"
+msgstr "Hele nettsiden"
+
+#: announcements/models.py:40
+msgid ""
+"If selected, the announcement will be shown on all pages, otherwise it is "
+"only shown on the front page."
+msgstr ""
+"Hvis valgt vil kunngjøringen vises på hele nettsiden, ellers vil den kun "
+"vises på forsiden."
+
+#: announcements/models.py:42 docs/models.py:26 news/models.py:40
+msgid "Content"
+msgstr "Innhold"
+
+#: announcements/models.py:43
+msgid "Link"
+msgstr "Lenke"
+
+#: announcements/models.py:44
+msgid "An optional link to an information page."
+msgstr "En valgfri lenke til en informasjonside."
+
+#: announcements/models.py:45
+msgid "Display from"
+msgstr "Vis fra"
+
+#: announcements/models.py:46
+msgid "The date from which the announcement will be shown."
+msgstr "Kunngjøringen vil vises fra dette tidspunktet."
+
+#: announcements/models.py:47
+msgid "Display to"
+msgstr "Vis til"
+
+#: announcements/models.py:48
+msgid ""
+"The announcement will be shown until this date. If none is given, it is "
+"shown indefinitely."
+msgstr ""
+"Kunngjøringen vil bli vist til dette tidspunktet. Hvis det ikke er oppgitt "
+"et sluttidspunkt vil kunngjøringen vises evig."
+
+#: announcements/templates/announcements/announcements_admin.html:7
+#: web/templates/web/admin_panel.html:87
+msgid "Announcements"
+msgstr "Kunngjøringer"
+
+#: announcements/templates/announcements/announcements_admin.html:35
+msgid "Front page"
+msgstr "Forsiden"
+
+#: announcements/templates/announcements/announcements_admin.html:45
+#: news/templates/news/timeplace_edit.html:46
+msgid "From"
+msgstr "Fra"
+
+#: announcements/templates/announcements/create_announcement.html:6
+msgid "New Announcement"
+msgstr "Ny kunngjøring"
+
+#: announcements/templates/announcements/create_announcement.html:54
+#: contentbox/templates/contentbox/edit.html:39
+#: groups/templates/groups/committee_form.html:30
+#: internal/templates/internal/edit_member.html:81
+#: internal/templates/internal/system_access_edit.html:25
+#: make_queue/templates/make_queue/machine/machine_edit.html:62
+#: news/templates/news/article_edit.html:87
+#: news/templates/news/event_edit.html:122
+#: news/templates/news/timeplace_edit.html:72
+msgid "Save"
+msgstr "Lagre"
+
+#: announcements/templates/announcements/create_announcement.html:57
+#: docs/templates/docs/create_documentation_page.html:24
+#: docs/templates/docs/edit_documentation_page.html:27
+#: groups/templates/groups/committee_form.html:33
+#: internal/templates/internal/add_member.html:25
+#: internal/templates/internal/edit_member.html:82
+#: internal/templates/internal/member_quit.html:21
+#: internal/templates/internal/system_access_edit.html:26
+#: make_queue/templates/make_queue/course/course_panel.html:184
+#: make_queue/templates/make_queue/course/registration_edit.html:102
+#: make_queue/templates/make_queue/machine/machine_edit.html:65
+#: make_queue/templates/make_queue/quota/quota_edit.html:65
+#: news/templates/news/article_edit.html:89
+#: news/templates/news/event_edit.html:124
+#: news/templates/news/timeplace_edit.html:74
+#: web/templates/web/delete_modal.html:15 web/templates/web/login.html:28
+msgctxt "abort action"
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: announcements/templates/announcements/edit_announcement.html:5
+msgid "Edit Announcement"
+msgstr "Rediger kunngjøring"
 
 #: card/forms.py:11
 msgid "Card number must be ten digits long."
@@ -211,17 +327,6 @@ msgstr "Manglende språk"
 msgid "One or more languages has no content"
 msgstr "Et eller flere språk mangler innhold"
 
-#: contentbox/templates/contentbox/edit.html:39
-#: groups/templates/groups/committee_form.html:30
-#: internal/templates/internal/edit_member.html:81
-#: internal/templates/internal/system_access_edit.html:25
-#: make_queue/templates/make_queue/machine/machine_edit.html:62
-#: news/templates/news/article_edit.html:87
-#: news/templates/news/event_edit.html:122
-#: news/templates/news/timeplace_edit.html:72
-msgid "Save"
-msgstr "Lagre"
-
 #: docs/forms.py:42
 msgid "The content does not belong to the given page"
 msgstr "Dette innholdet hører ikke til denne siden"
@@ -238,10 +343,6 @@ msgstr "Side"
 msgid "Time changed"
 msgstr "Tidspunkt endret"
 
-#: docs/models.py:26 news/models.py:40
-msgid "Content"
-msgstr "Innhold"
-
 #: docs/models.py:27
 msgid "Made by"
 msgstr "Gjort av"
@@ -257,25 +358,6 @@ msgstr "MAKE NTNU"
 #: docs/templates/docs/create_documentation_page.html:8
 msgid "Create a New Page"
 msgstr "Lage en ny side"
-
-#: docs/templates/docs/create_documentation_page.html:24
-#: docs/templates/docs/edit_documentation_page.html:27
-#: groups/templates/groups/committee_form.html:33
-#: internal/templates/internal/add_member.html:25
-#: internal/templates/internal/edit_member.html:82
-#: internal/templates/internal/member_quit.html:21
-#: internal/templates/internal/system_access_edit.html:26
-#: make_queue/templates/make_queue/course/course_panel.html:184
-#: make_queue/templates/make_queue/course/registration_edit.html:102
-#: make_queue/templates/make_queue/machine/machine_edit.html:65
-#: make_queue/templates/make_queue/quota/quota_edit.html:65
-#: news/templates/news/article_edit.html:89
-#: news/templates/news/event_edit.html:124
-#: news/templates/news/timeplace_edit.html:74
-#: web/templates/web/delete_modal.html:15 web/templates/web/login.html:28
-msgctxt "abort action"
-msgid "Cancel"
-msgstr "Avbryt"
 
 #: docs/templates/docs/documentation_page.html:16
 msgid "You are viewing an old version of this page"
@@ -307,7 +389,7 @@ msgstr "For å se den nåværende versjonen, klikk"
 
 #: docs/templates/docs/documentation_page.html:22
 #: docs/templates/docs/documentation_page.html:25
-#: news/templates/email/ticket.html:16 news/templates/email/ticket.html:19
+#: news/templates/email/ticket.html:31 news/templates/email/ticket.html:34
 msgid "here"
 msgstr "her"
 
@@ -559,7 +641,7 @@ msgstr "Medlemmer"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43 web/templates/web/header.html:83
+#: internal/templates/internal/header.html:43 web/templates/web/header.html:85
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -686,7 +768,7 @@ msgid "Select machine type"
 msgstr "Velg maskintype"
 
 #: make_queue/fields.py:44
-msgid "3D-printers"
+msgid "3D printers"
 msgstr "3D-printere"
 
 #: make_queue/fields.py:45
@@ -694,12 +776,16 @@ msgid ""
 "You must have completed a 3D printer course to reserve the printers. If you "
 "have taken the course, but don't have access, contact 3dprint@makentnu.no"
 msgstr ""
-"Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt "
+"Reservasjon av 3D-printere krever fullført 3D-printerkurs. Hvis du har hatt "
 "kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
 
 #: make_queue/fields.py:52
 msgid "Sewing machines"
 msgstr "Symaskiner"
+
+#: make_queue/fields.py:59
+msgid "3D scanners"
+msgstr "3D-skannere"
 
 #: make_queue/forms.py:116 make_queue/forms.py:142
 #: make_queue/templates/make_queue/quota/quota_panel.html:48
@@ -841,7 +927,7 @@ msgstr "Andre reservasjoner"
 
 #: make_queue/templates/make_queue/calendar.html:93
 #: news/templates/news/admin_events.html:13
-#: web/templates/web/admin_panel.html:27 web/templates/web/header.html:26
+#: web/templates/web/admin_panel.html:27 web/templates/web/header.html:28
 msgid "Events"
 msgstr "Arrangementer"
 
@@ -1165,10 +1251,6 @@ msgstr "Reservasjon"
 msgid "Time"
 msgstr "Tidspunkt"
 
-#: make_queue/templates/make_queue/reservations.html:46
-msgid "Information"
-msgstr "Informasjon"
-
 #: make_queue/templates/make_queue/reservations.html:50
 #: make_queue/templates/make_queue/reservations.html:121
 #: make_queue/templates/make_queue/reservations.html:185
@@ -1423,21 +1505,21 @@ msgstr "Foretrukket språk"
 msgid "Timeplace"
 msgstr "Tidspunkt"
 
-#: news/templates/email/ticket.html:13
+#: news/templates/email/ticket.html:24
 msgid "Your ticket for"
 msgstr "Din billett til"
 
-#: news/templates/email/ticket.html:15
+#: news/templates/email/ticket.html:30
 msgid "Thank you for registering for this event. You can view your ticket"
 msgstr ""
 "Takk for at du meldte deg på dette arrangementet. Du kan se billetten din"
 
-#: news/templates/email/ticket.html:18
+#: news/templates/email/ticket.html:33
 msgid "If you want to cancel your registration, you can do so by clicking"
 msgstr ""
 "Hvis du ønsker å avbestille billetten din, så kan du gjøre dette ved å trykke"
 
-#: news/templates/email/ticket.html:22
+#: news/templates/email/ticket.html:39
 msgid "The reference number for your ticket is"
 msgstr "Ditt referansenummer er"
 
@@ -1459,7 +1541,7 @@ msgstr ""
 
 #: news/templates/news/admin_articles.html:13
 #: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
-#: web/templates/web/header.html:30
+#: web/templates/web/header.html:32
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1780,7 +1862,7 @@ msgstr "Tidligere arrangementer"
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
 
-#: news/templates/news/my_tickets.html:11 web/templates/web/header.html:80
+#: news/templates/news/my_tickets.html:11 web/templates/web/header.html:82
 msgid "My tickets"
 msgstr "Mine billetter"
 
@@ -1816,10 +1898,6 @@ msgstr "til den riktige brukeren for å se billetten din."
 #: news/templates/news/timeplace_edit.html:17
 msgid "Edit time"
 msgstr "Rediger tidspunkt"
-
-#: news/templates/news/timeplace_edit.html:46
-msgid "From"
-msgstr "Fra"
 
 #: news/templates/news/timeplace_edit.html:50
 msgid "To"
@@ -1881,7 +1959,7 @@ msgstr "Her kan du lage, endre og slette artikler."
 msgid "Here you can create, edit and delete events and their occurrences."
 msgstr "Her kan du lage, endre og slette arrangementer og deres forekomster."
 
-#: web/templates/web/admin_panel.html:39 web/templates/web/header.html:34
+#: web/templates/web/admin_panel.html:39 web/templates/web/header.html:36
 msgid "Reservations"
 msgstr "Reservasjoner"
 
@@ -1910,11 +1988,19 @@ msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse."
 
 #: web/templates/web/admin_panel.html:78
 msgid ""
-"Here you can add and edit information about persons who have taken the 3D-"
+"Here you can add and edit information about persons who have taken the 3D "
 "printer course."
 msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
 "printerkurset."
+
+#: web/templates/web/admin_panel.html:90
+msgid ""
+"Here you can create and modify announcements to be shown on either the front "
+"page or the entire website."
+msgstr ""
+"Her kan du legge til og endre kunngjøringer som kan vises på forsiden eller "
+"på hele nettsiden."
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
@@ -1952,6 +2038,10 @@ msgstr "Følg oss på Instagram!"
 msgid "Cookies"
 msgstr "Cookies"
 
+#: web/templates/web/footer.html:39
+msgid "Privacy Policy"
+msgstr "Personvernerklæring"
+
 #: web/templates/web/forms/widgets/multi_lingual_text_field.html:88
 msgid "languages"
 msgstr "språk"
@@ -1976,37 +2066,29 @@ msgstr "Se gammelt bilde"
 msgid "An image is required"
 msgstr "Et bilde er krevd"
 
-#: web/templates/web/header.html:38
+#: web/templates/web/header.html:40
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 
-#: web/templates/web/header.html:42
+#: web/templates/web/header.html:44
 msgid "About us"
 msgstr "Om oss"
 
-#: web/templates/web/header.html:68
+#: web/templates/web/header.html:70
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:72
+#: web/templates/web/header.html:74
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:76
+#: web/templates/web/header.html:78
 msgid "Internal pages"
 msgstr "Internsider"
 
-#: web/templates/web/header.html:90 web/templates/web/login.html:27
+#: web/templates/web/header.html:92 web/templates/web/login.html:27
 msgid "Login"
 msgstr "Logg inn"
-
-#: web/templates/web/header.html:111
-msgid ""
-"Due to the COVID-19 closing of NTNU, Makerverkstedet is closed and all "
-"events are postponed until further notice."
-msgstr ""
-"Grunnet COVID-19 stengingen av NTNU er Makerverkstedet stengt og alle "
-"arrangementer er utsatt inntil videre."
 
 #: web/widgets.py:16 web/widgets.py:26
 msgid "Choose value"
