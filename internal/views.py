@@ -1,8 +1,10 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import ValidationError, PermissionDenied
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
 
 from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
@@ -56,7 +58,8 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
     form_class = EditMemberForm
 
     def test_func(self):
-        return self.request.user == self.get_object().user or self.request.user.has_perm("internal.can_edit_group_membership")
+        return self.request.user == self.get_object().user or self.request.user.has_perm(
+            "internal.can_edit_group_membership")
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -83,11 +86,12 @@ class MemberQuitView(UpdateView):
     def form_valid(self, form):
         member = form.instance
         if member.retired or member.quit:
-            raise ValidationError(
-                f"Cannot set member as quit when membership status is set to ${'quit' if member.quit else 'retired'}."
-            )
-        member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
-        member.save()
+            # Fail gracefully
+            messages.add_message(self.request, messages.WARNING,
+                                 _("Member was not set to quit as the member has already quit or retired."))
+        else:
+            member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
+            member.save()
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -96,9 +100,12 @@ class MemberUndoQuitView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.quit:
-            raise ValidationError("Tried to undo quit for a member that has not quit.")
-        member.toggle_quit(False)
-        member.save()
+            # Fail gracefully
+            messages.add_message(self.request, messages.WARNING,
+                                 _("Member's quit status was not undone, as the member had not quit."))
+        else:
+            member.toggle_quit(False)
+            member.save()
         return reverse_lazy("members", args=(member.pk,))
 
 
@@ -107,11 +114,12 @@ class MemberRetireView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if member.quit or member.retired:
-            raise ValidationError(
-                f"Cannot set member as retired when membership status is set to ${'quit' if member.quit else 'retired'}."
-            )
-        member.toggle_retirement(True)
-        member.save()
+            # Fail gracefully
+            messages.add_message(self.request, messages.WARNING,
+                                 _("Member was not set to retired as the member has already quit or retired."))
+        else:
+            member.toggle_retirement(True)
+            member.save()
         return reverse_lazy("members", args=(member.pk,))
 
 
@@ -120,9 +128,12 @@ class MemberUndoRetireView(RedirectView):
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
         if not member.retired:
-            raise ValidationError("Tried to undo retirement for a nonretired member.")
-        member.toggle_retirement(False)
-        member.save()
+            # Fail gracefully
+            messages.add_message(self.request, messages.WARNING,
+                                 _("Member's retirement was not undone, as the member was not retired."))
+        else:
+            member.toggle_retirement(False)
+            member.save()
         return reverse_lazy("members", args=(member.pk,))
 
 
