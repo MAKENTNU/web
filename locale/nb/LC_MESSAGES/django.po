@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-04 15:12+0200\n"
+"POT-Creation-Date: 2020-04-21 13:21+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.1/n"
 
 #: announcements/models.py:33
 #: make_queue/templates/make_queue/reservations.html:46
@@ -1225,7 +1225,20 @@ msgstr "Oversikt"
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/templates/make_queue/reservation_machines.html:36
+#: make_queue/templates/make_queue/reservation_machines.html:32
+msgid ""
+"All MAKE's printers are currently making protective visors for healthcare "
+"workers as part of a national COVID-19 response dugnad. Interested in "
+"helping? Visit the"
+msgstr "MAKEs printerne blir for øyeblikket brukt for å lage "
+"smittevernutstyr for helsearbeidere som en del av en nasjonal COVID-19 dugnad. "
+"Interessert i å hjelpe? Besøk"
+
+#: make_queue/templates/make_queue/reservation_machines.html:34
+msgid "page to find out how you can get involved"
+msgstr "siden for å finne ut hvordan du kan bli involvert"
+
+#: make_queue/templates/make_queue/reservation_machines.html:41
 #: make_queue/templates/make_queue/reservation_overview.html:23
 msgid "Rules"
 msgstr "Regler"
