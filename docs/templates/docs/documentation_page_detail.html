@@ -17,7 +17,7 @@
                     {% trans "You are viewing an old version of this page" %}
                 </div>
                 {% trans "You are viewing an old version of this page, where the last edit was made by" %}
-                {% if content.made_by %}{{ content.made_by.get_full_name }}{% else %}{% trans "Anonymous" %}{% endif %}
+                {{ last_edit_name }}
                 {% trans "on" %} {{ content.changed|date:"d.m.Y" }} {% trans "at" %} {{ content.changed|date:"H:i" }}.
                 {% trans "To view the current version, click" %}
                 <a href="{% url "page" pk=page %}">{% trans "here" %}</a>.

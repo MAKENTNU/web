@@ -5,6 +5,7 @@ from django.db.models import Q
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, DetailView, FormView, TemplateView, UpdateView
 
 from util.views import PreventGetRequestsMixin
@@ -49,6 +50,7 @@ class OldDocumentationPageContentView(DetailView):
         context_data.update({
             "old": True,
             "content": content,
+            "last_edit_name": content.made_by.get_full_name() if content.made_by else _("Anonymous"),
             "form": ChangePageVersionForm(initial={"current_content": content}),
         })
         return context_data
