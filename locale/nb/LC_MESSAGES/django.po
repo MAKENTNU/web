@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-04 15:12+0200\n"
+"POT-Creation-Date: 2020-04-21 22:17+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -219,8 +219,7 @@ msgstr "Kontakt"
 msgid "to fix the problem."
 msgstr "for å fikse problemet."
 
-#: checkin/templates/checkin/profile.html:150
-#: make_queue/models/course.py:18
+#: checkin/templates/checkin/profile.html:150 make_queue/models/course.py:18
 msgid "Registered"
 msgstr "Registrert"
 
@@ -390,7 +389,7 @@ msgstr "For å se den nåværende versjonen, klikk"
 
 #: docs/templates/docs/documentation_page.html:22
 #: docs/templates/docs/documentation_page.html:25
-#: news/templates/email/ticket.html:16 news/templates/email/ticket.html:19
+#: news/templates/email/ticket.html:31 news/templates/email/ticket.html:34
 msgid "here"
 msgstr "her"
 
@@ -526,9 +525,8 @@ msgstr "Velg bruker"
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: internal/models.py:23 make_queue/forms.py:117
-#: make_queue/models/course.py:28 make_queue/models/models.py:90
-#: news/models.py:220
+#: internal/models.py:23 make_queue/forms.py:117 make_queue/models/course.py:28
+#: make_queue/models/models.py:90 news/models.py:220
 msgid "User"
 msgstr "Bruker"
 
@@ -559,8 +557,8 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101
-#: news/models.py:225 news/templates/news/admin_event_tickets.html:39
+#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:225
+#: news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -596,8 +594,7 @@ msgstr "Drive"
 msgid "Slack"
 msgstr "Slack"
 
-#: internal/models.py:145
-#: make_queue/templates/make_queue/reservations.html:89
+#: internal/models.py:145 make_queue/templates/make_queue/reservations.html:89
 #: make_queue/templates/make_queue/reservations.html:160
 msgid "Calendar"
 msgstr "Kalender"
@@ -644,8 +641,7 @@ msgstr "Medlemmer"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43
-#: web/templates/web/header.html:85
+#: internal/templates/internal/header.html:43 web/templates/web/header.html:85
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -700,8 +696,7 @@ msgid "Filter committees"
 msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/members.html:80
-#: internal/templates/internal/members.html:153
-#: make_queue/models/models.py:34
+#: internal/templates/internal/members.html:153 make_queue/models/models.py:34
 #: make_queue/templates/make_queue/course/course_panel.html:91
 #: news/models.py:222
 msgid "Name"
@@ -713,8 +708,8 @@ msgid "Committee"
 msgstr "Komité"
 
 #: internal/templates/internal/members.html:83
-#: internal/templates/internal/members.html:193
-#: make_queue/models/course.py:33 make_queue/models/models.py:33
+#: internal/templates/internal/members.html:193 make_queue/models/course.py:33
+#: make_queue/models/models.py:33
 #: make_queue/templates/make_queue/course/course_panel.html:95
 #: make_queue/templates/make_queue/reservation_overview.html:53
 msgid "Status"
@@ -768,12 +763,29 @@ msgstr "Sett medlem som ikke pang"
 msgid "Change system access"
 msgstr "Endre systemtilgang"
 
+#: internal/views.py:91
+msgid "Member was not set to quit as the member has already quit or retired."
+msgstr "Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status \"sluttet\" eller \"pang\""
+
+#: internal/views.py:105
+msgid "Member's quit status was not undone, as the member had not quit."
+msgstr "Medlemmet's \"sluttet\" status ble ikke gjort om siden medlemmet ikke hadde status \"sluttet\""
+
+#: internal/views.py:119
+msgid ""
+"Member was not set to retired as the member has already quit or retired."
+msgstr "Medlemmet ble ikke markert som pang siden medlemmet allerede har status \"sluttet\" eller \"pang\""
+
+#: internal/views.py:133
+msgid "Member's retirement was not undone, as the member was not retired."
+msgstr "Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde status \"pang\""
+
 #: make_queue/fields.py:38
 msgid "Select machine type"
 msgstr "Velg maskintype"
 
 #: make_queue/fields.py:44
-msgid "3D-printers"
+msgid "3D printers"
 msgstr "3D-printere"
 
 #: make_queue/fields.py:45
@@ -781,12 +793,16 @@ msgid ""
 "You must have completed a 3D printer course to reserve the printers. If you "
 "have taken the course, but don't have access, contact 3dprint@makentnu.no"
 msgstr ""
-"Reservasjon av 3D-printere krever fullført 3D-printer kurs. Hvis du har hatt "
+"Reservasjon av 3D-printere krever fullført 3D-printerkurs. Hvis du har hatt "
 "kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
 
 #: make_queue/fields.py:52
 msgid "Sewing machines"
 msgstr "Symaskiner"
+
+#: make_queue/fields.py:59
+msgid "3D scanners"
+msgstr "3D-skannere"
 
 #: make_queue/forms.py:116 make_queue/forms.py:142
 #: make_queue/templates/make_queue/quota/quota_panel.html:48
@@ -883,15 +899,13 @@ msgstr "Alle brukere"
 
 #: make_queue/models/models.py:257
 #: make_queue/templates/make_queue/make_reservation.html:72
-#: make_queue/templates/make_queue/make_reservation.html:76
-#: news/models.py:177
+#: make_queue/templates/make_queue/make_reservation.html:76 news/models.py:177
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:258
 #: make_queue/templates/make_queue/make_reservation.html:86
-#: make_queue/templates/make_queue/make_reservation.html:90
-#: news/models.py:181
+#: make_queue/templates/make_queue/make_reservation.html:90 news/models.py:181
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -1117,8 +1131,7 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129
-#: news/models.py:234
+#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:234
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1226,6 +1239,17 @@ msgid "Machines"
 msgstr "Maskiner"
 
 #: make_queue/templates/make_queue/reservation_machines.html:36
+#, python-format
+msgid ""
+"All MAKE's printers are currently making protective visors for healthcare "
+"workers as part of a national COVID-19 response dugnad. Interested in "
+"helping? Visit the %(link)s page to find out how you can get involved!"
+msgstr ""
+"MAKEs printere blir for øyeblikket brukt til å lage smittevernutstyr for "
+"helsearbeidere som en del av en nasjonal COVID-19-dugnad. Interessert i å "
+"hjelpe? Besøk %(link)s-siden for å finne ut hvordan du kan bli involvert!"
+
+#: make_queue/templates/make_queue/reservation_machines.html:48
 #: make_queue/templates/make_queue/reservation_overview.html:23
 msgid "Rules"
 msgstr "Regler"
@@ -1509,21 +1533,21 @@ msgstr "Foretrukket språk"
 msgid "Timeplace"
 msgstr "Tidspunkt"
 
-#: news/templates/email/ticket.html:13
+#: news/templates/email/ticket.html:24
 msgid "Your ticket for"
 msgstr "Din billett til"
 
-#: news/templates/email/ticket.html:15
+#: news/templates/email/ticket.html:30
 msgid "Thank you for registering for this event. You can view your ticket"
 msgstr ""
 "Takk for at du meldte deg på dette arrangementet. Du kan se billetten din"
 
-#: news/templates/email/ticket.html:18
+#: news/templates/email/ticket.html:33
 msgid "If you want to cancel your registration, you can do so by clicking"
 msgstr ""
 "Hvis du ønsker å avbestille billetten din, så kan du gjøre dette ved å trykke"
 
-#: news/templates/email/ticket.html:22
+#: news/templates/email/ticket.html:39
 msgid "The reference number for your ticket is"
 msgstr "Ditt referansenummer er"
 
@@ -1544,8 +1568,8 @@ msgstr ""
 "besøke følgende adresse"
 
 #: news/templates/news/admin_articles.html:13
-#: news/templates/news/articles.html:13
-#: web/templates/web/admin_panel.html:15 web/templates/web/header.html:32
+#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
+#: web/templates/web/header.html:32
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1785,8 +1809,7 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Nytt arrangement"
 
-#: news/templates/news/event_edit.html:5
-#: news/templates/news/event_edit.html:15
+#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:15
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
@@ -1993,7 +2016,7 @@ msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse."
 
 #: web/templates/web/admin_panel.html:78
 msgid ""
-"Here you can add and edit information about persons who have taken the 3D-"
+"Here you can add and edit information about persons who have taken the 3D "
 "printer course."
 msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
