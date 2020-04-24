@@ -4,7 +4,6 @@ from django.conf import settings
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.views import View
-from social_core.exceptions import AuthException
 from social_django.views import complete
 
 from dataporten.ldap_utils import get_user_details_from_email
@@ -28,8 +27,8 @@ def login_wrapper(request, backend, *args, **kwargs):
     """
     try:
         response = complete(request, backend, *args, **kwargs)
-    except AuthException as e:
-        logging.warning("Authentication through Dataporten failed.", e)
+    except Exception as e:
+        logging.exception("Authentication through Dataporten failed.", exc_info=e)
         return HttpResponseForbidden()
 
     user = request.user
