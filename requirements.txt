@@ -11,6 +11,7 @@ django_ical
 xlsxwriter
 python_ldap==3.2.*
 django-hosts==4.0.0
+django-decorator-include
 uuid
 django-phonenumber-field
 phonenumbers
