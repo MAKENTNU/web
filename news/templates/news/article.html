@@ -8,6 +8,7 @@
 {% block og_title %}{{ article.title }}{% endblock og_title %}
 {% block og_image %}{{ article.image.url }}{% endblock og_image %}
 {% block og_description %}{{ article.clickbait }}{% endblock og_description %}
+{% block description %}{{ article.clickbait }}{% endblock description %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/article.css" %}">
