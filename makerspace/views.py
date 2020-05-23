@@ -1,27 +1,9 @@
 from django.http import Http404
 from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView, TemplateView
-from makerspace.models import Makerspace, Tool
+from makerspace.models import Tool
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from web.templatetags.permission_tags import has_any_tool_permission
-
-
-class ViewMakerspaceView(TemplateView):
-    template_name = 'makerspace/makerspace.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['makerspace_latest'] = Makerspace.objects.last()
-        return context
-
-
-class EditMakerspaceView(PermissionRequiredMixin, UpdateView):
-    model = Makerspace
-    template_name = 'makerspace/admin_makerspace.html'
-    context_object_name = 'makerspace'
-    permission_required = 'makerspace.change_makerspace'
-    fields = "__all__"
-    success_url = reverse_lazy('makerspace')
 
 
 class ToolView(DetailView):

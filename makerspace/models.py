@@ -12,11 +12,3 @@ class Tool(models.Model):
     image = models.ImageField(verbose_name=_('Image'))
     content = MultiLingualRichTextUploadingField()
 
-
-class Makerspace(models.Model):
-    """ Object model  to add description at makentnu/makerspace  """
-    title = MultiLingualTextField(
-        max_length=100,
-        verbose_name=_('Title'),
-    )
-    content = MultiLingualRichTextUploadingField()
