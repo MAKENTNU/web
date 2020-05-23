@@ -6,13 +6,14 @@ coverage:
     patch:
       default:
         threshold: 80%
-  ignore:
-    - manage.py
-    - web/settings.py
-    - **/apps.py
-    - **/tests.py
-    - **/wsgi.py
-    - **/asgi.py
-    - **/test**.py
-    - **/migrations
-    - **/__init__.py
+
+ignore:
+  - "manage.py"
+  - "web/settings.py"
+  - "**/apps.py"
+  - "**/wsgi.py"
+  - "**/asgi.py"
+  - "**/test*.py"
+  - "**/*test.py"
+  - "**/migrations/**"
+  - "**/__init__.py"

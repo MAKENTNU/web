@@ -34,6 +34,10 @@ class SemanticDateInput(forms.DateInput):
     template_name = "web/forms/widgets/semantic_date.html"
 
 
+class SemanticDateTimeInput(forms.DateTimeInput):
+    template_name = "web/forms/widgets/semantic_datetime.html"
+
+
 class SemanticFileInput(forms.ClearableFileInput):
     template_name = "web/forms/widgets/semantic_file.html"
 

@@ -30,7 +30,10 @@ class CardNumberField(models.CharField):
         if isinstance(value, CardNumber):
             return value.number
         elif isinstance(value, str):
-            return value.split()[-1]  # Remove possible EM prefix
+            # Only try to remove the any EM prefix if the string is just whitespace
+            if value.strip():
+                return value.split()[-1]  # Remove possible EM prefix
+            return ""  # No need to include the whitespace
         return value
 
     def from_db_value(self, value, expression, connection):

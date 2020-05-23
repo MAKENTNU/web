@@ -1,5 +1,5 @@
 {% extends 'web/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 
 {% block title %}{% trans "Edit event" %}{% endblock title %}
@@ -87,7 +87,7 @@
             </div>
         </div>
         <h4>{% trans "Attributes" %}</h4>
-        <div class="ui three fields">
+        <div class="ui three inline fields">
             <div class="field">
                 <div class="ui checkbox">
                     {{ form.featured }}

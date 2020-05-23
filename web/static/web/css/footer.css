@@ -43,6 +43,10 @@
     color: rgb(12, 66, 106) !important;
 }
 
+#footer .content {
+    text-align: right;
+}
+
 #footer p,
 #footer a,
 #footer i {
@@ -85,6 +89,10 @@
 
     #footer .logo {
         margin-left: 0;
+    }
+
+    #footer .content{
+        text-align: center;
     }
 
     .copyright {

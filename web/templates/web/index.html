@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% load thumbnail %}
+{% load announcement_tags %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
@@ -9,6 +10,16 @@
 {% endblock head %}
 
 {% block padding-top %}{% endblock %}
+
+{% block header %}
+    {{ block.super }}
+
+    {# Show non-site-wide announcements on the front page #}
+    {% non_site_wide_announcements as announcements %}
+    {% for announcement in announcements %}
+        {% include "announcements/announcement.html" with announcement=announcement %}
+    {% endfor %}
+{% endblock %}
 
 {% block body %}
     <div class="top">
@@ -48,8 +59,8 @@
                 <div class="item">
                     <div class="ui small clickable image" href="{% url 'event' event.event.id %}">
                         <p class="ui yellow make_bg_yellow ribbon label">
-                            {{ event.start_date|date:"d" }}<br>
-                            {{ event.start_date|date:"M" }}
+                            {{ event.start_time|date:"d" }}<br>
+                            {{ event.start_time|date:"M" }}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
                             <img src="{{ im.url }}"

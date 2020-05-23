@@ -1,10 +1,11 @@
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm, Textarea
 from django.utils.translation import gettext_lazy as _
 
-from news.models import Event
-from news.models import TimePlace, EventTicket, Article
-from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticTimeInput, SemanticDateInput
+from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticDateTimeInput
 from web.widgets import SemanticFileInput
+from .models import Event
+from .models import TimePlace, EventTicket, Article
 
 
 class TimePlaceForm(ModelForm):
@@ -14,13 +15,21 @@ class TimePlaceForm(ModelForm):
         widgets = {
             "place": MazemapSearchInput(url_field="place_url"),
             "event": SemanticSearchableChoiceInput(),
-            "start_time": SemanticTimeInput(),
-            "start_date": SemanticDateInput(),
-            "end_time": SemanticTimeInput(),
-            "end_date": SemanticDateInput(),
-            "pub_time": SemanticTimeInput(),
-            "pub_date": SemanticDateInput(),
+            "start_time": SemanticDateTimeInput(attrs={"end_calendar": "end_time"}),
+            "end_time": SemanticDateTimeInput(attrs={"start_calendar": "start_time"}),
+            "publication_time": SemanticDateTimeInput(),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+
+        if start_time > end_time:
+            raise ValidationError(_("The event cannot end before it starts"))
+
+        return cleaned_data
 
 
 class ArticleForm(ModelForm):
@@ -29,8 +38,7 @@ class ArticleForm(ModelForm):
         fields = "__all__"
         exclude = []
         widgets = {
-            "pub_time": SemanticTimeInput(),
-            "pub_date": SemanticDateInput(),
+            "publication_time": SemanticDateTimeInput(),
             "image": SemanticFileInput(),
         }
 
@@ -44,7 +52,8 @@ class EventRegistrationForm(ModelForm):
             "comment": Textarea(attrs={
                 "cols": "40",
                 "rows": "3",
-                "placeholder": _("Here you can enter any requests or information you want to provide to the organizers"),
+                "placeholder": _(
+                    "Here you can enter any requests or information you want to provide to the organizers"),
             }),
         }
 

@@ -1,5 +1,6 @@
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
+{% load uri_tags %}
 
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
@@ -11,13 +12,13 @@
     <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
     <meta property="og:site_name" content="MAKE NTNU"/>
     <meta property="og:image"
-          content="http://makentnu.no{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}"/>
+          content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}"/>
     <meta property="og:description"
           content="{% block og_description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock og_description %}"/>
     <meta property="description"
           content="{% block description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock description %}"/>
     <meta property="og:type" content="website"/>
-    <meta property="og:url" content="http://makentnu.no/"/>
+    <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
     <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
     <meta name="theme-color" content="rgb(248, 200, 17)"/>
 

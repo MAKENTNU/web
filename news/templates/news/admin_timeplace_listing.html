@@ -15,7 +15,7 @@
     {% endif %}
     <div class="content">
         <div class="header">
-            {{ timeplace.start_date|date:"d. M" }} {{ timeplace.start_time|date:"H:i" }}
+            {{ timeplace.start_time|date:"d. M Y H:i" }}
             <span>
                 &nbsp;&nbsp;
                     <i class="ui {{ timeplace.hidden|color }} eye slash icon toggle explanation-popup"

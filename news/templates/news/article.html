@@ -1,5 +1,5 @@
 {% extends 'web/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% load thumbnail %}
 {% load i18n %}
 
@@ -8,6 +8,7 @@
 {% block og_title %}{{ article.title }}{% endblock og_title %}
 {% block og_image %}{{ article.image.url }}{% endblock og_image %}
 {% block og_description %}{{ article.clickbait }}{% endblock og_description %}
+{% block description %}{{ article.clickbait }}{% endblock description %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/article.css" %}">
@@ -23,17 +24,20 @@
             {% block rail %}
             {% endblock rail %}
 
-            <h1>
-                {% block admin-page %}
-                    {% if perms.news.change_article %}
-                        <a href="{% url "admin-articles" %}" class="ui right floated yellow button">
+
+            {% block admin-page %}
+                {% if perms.news.change_article %}
+                    <div>
+                        <a href="{% url "admin-articles" %}" class="ui yellow button">
                             <i class="ui sticky note icon"></i>{% trans "Admin page" %}
                         </a>
-                    {% endif %}
-                {% endblock admin-page %}
+                    </div>
+                {% endif %}
+            {% endblock admin-page %}
+            <h1>
                 {{ article.title }}
                 {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
-                <span class="pub_date">{{ article.pub_date|date:"d.m.Y" }}</span>
+                <span class="publication_time">{{ article.publication_time|date:"d.m.Y" }}</span>
 
             </h1>
             <div>

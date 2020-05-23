@@ -1,6 +1,6 @@
 {% extends "internal/base.html" %}
 {% load i18n %}
-{% load staticfiles %}
+{% load static %}
 {% load member %}
 {% load hosts %}
 
@@ -247,4 +247,15 @@
             showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}));
         </script>
     {% endif %}
+
+    {# Show any possible messages created by actions (changing retirement/quit status) #}
+    <script>
+        {% for message in messages %}
+            $("body").toast({
+                displayTime: 0,
+                message: "{{ message }}",
+                class: "warning",
+            });
+        {% endfor %}
+    </script>
 {% endblock %}

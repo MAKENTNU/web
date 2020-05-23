@@ -1,5 +1,5 @@
 {% extends "web/base.html" %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 {% load permission_tags %}
 
@@ -75,7 +75,19 @@
                             <i class="ui grey user plus icon"></i>{% trans "Course registrations" %}
                         </div>
                         <div class="description">
-                            {% trans "Here you can add and edit information about persons who have taken the 3D-printer course." %}
+                            {% trans "Here you can add and edit information about persons who have taken the 3D printer course." %}
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+            {% if perms.announcements.change_announcement %}
+                <div class="ui yellow card">
+                    <a href="{% url 'announcement_admin' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey bullhorn icon"></i>{% trans "Announcements" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can create and modify announcements to be shown on either the front page or the entire website." %}
                         </div>
                     </a>
                 </div>

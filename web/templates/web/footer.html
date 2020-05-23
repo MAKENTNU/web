@@ -1,4 +1,4 @@
-﻿{% load staticfiles %}
+﻿{% load static %}
 {% load i18n %}
 
 <link rel="stylesheet" type="text/css" href="{% static "web/css/footer.css" %}">
@@ -9,7 +9,7 @@
             <div class="logo">
                 <img src="{% static "web/img/logo_allwhite.svg" %}">
             </div>
-            <a href="http://s.mazemap.com/2zleDaH" title={% trans "You can find us here!" %} target="_blank">{% trans "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim" %} </a>
+            <a href="http://s.mazemap.com/2zleDaH" title="{% trans "You can find us here!" %}" target="_blank">{% trans "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim" %} </a>
             <a href="http://s.mazemap.com/2zleDaH" target="blank"><i class="map marker alternate icon"></i></a>
         </div>
         <div class="ui social list">
@@ -28,14 +28,15 @@
                 <a href="{% url 'about' %}#footer" title="{% trans "Contact us by mail!" %}"><i class="mail icon"></i></a>
             </div>
             <div class="item">
-                <a href="https://www.instagram.com/make_ntnu/" title="{% trans "Follow us on Instagram!" %}" target="_blank"><i class="instagram icon"></i></a>
+                <a href="https://www.instagram.com/makentnu/" title="{% trans "Follow us on Instagram!" %}" target="_blank"><i class="instagram icon"></i></a>
             </div>
         </div>
         <div class="one-col">
             <div class="ui list">
                 <div class="item">
                     <div class="content">
-                        <a href="{% url 'cookies' %}">{% trans "Cookies" %}</a>
+                        <a href="{% url 'cookies' %}">{% trans "Cookies" %}</a> <br>
+                        <a href="{% url 'privacypolicy' %}">{% trans "Privacy Policy" %}</a>
                     </div>
                 </div>
             </div>

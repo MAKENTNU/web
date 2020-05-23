@@ -1,5 +1,5 @@
 {% extends 'web/base.html' %}
-{% load staticfiles %}
+{% load static %}
 {% load i18n %}
 
 {% block title %}{% trans "Edit time" %}{% endblock title %}
@@ -16,6 +16,12 @@
 {% block body %}
     <h1 class="ui centered header">{% block form-header %}{% trans "Edit time" %}{% endblock %}</h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
+        {% for error in form.non_field_errors %}
+            <div class="ui negative message">
+                {{ error }}
+            </div>
+        {% endfor %}
+
         {% csrf_token %}
         <div class="field disabled">
             <label>{{ form.event.label }}</label>
@@ -36,39 +42,21 @@
                 <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}</div>
             </div>
         {% endif %}
-        <div class="two fields">
-            <div class="field">
-                <label>{% trans "From" %}</label>
-                {{ form.start_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.start_time }}
-            </div>
+        <div class="field">
+            <label>{% trans "From" %}</label>
+            {{ form.start_time }}
         </div>
-        <div class="two fields">
-            <div class="field">
-                <label>{% trans "To" %}</label>
-                {{ form.end_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.end_time }}
-            </div>
+        <div class="field">
+            <label>{% trans "To" %}</label>
+            {{ form.end_time }}
         </div>
-        <div class="two fields">
-            <div class="field">
-                <label>{% trans "Publishing" %}
-                    <span data-content="{% trans "The occurrence will not be shown before this date" %}">
-                        <i class="ui yellow question circle icon"></i>
-                    </span>
-                </label>
-                {{ form.pub_date }}
-            </div>
-            <div class="field">
-                <label>&nbsp;</label>
-                {{ form.pub_time }}
-            </div>
+        <div class="field">
+            <label>{% trans "Publishing" %}
+                <span data-content="{% trans "The occurrence will not be shown before this date" %}">
+                    <i class="ui yellow question circle icon"></i>
+                </span>
+            </label>
+            {{ form.publication_time }}
         </div>
         <h4>{% trans "Attributes" %}</h4>
         <div class="field">
