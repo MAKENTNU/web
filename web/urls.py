@@ -27,12 +27,12 @@ urlpatterns += i18n_patterns(
     path('admin/', AdminPanelView.as_view(), name='adminpanel'),
     path('', IndexView.as_view(), name='front-page'),
     path('news/', include('news.urls')),
-    path('makerspace/', include('makerspace.urls')),
     path('contentbox/', include('contentbox.urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
     path('announcements/', include('announcements.urls')),
+    path('makerspace/', include('makerspace.urls')),
     ContentBox.path('about'),
     *ContentBox.multi_path('apply', 'søk', 'sok'),
     ContentBox.path('makerspace'),
@@ -56,7 +56,7 @@ else:
     # If it is not configured, we would like to have a simple login page. So that
     # we can test with non-superusers without giving them access to the admin page.
     urlpatterns += i18n_patterns(
-        path('login/', auth_views.LoginView.as_view(template_name="web/login.html"), redirect_authenticated_user=True), name='login'),
+        path('login/', auth_views.LoginView.as_view(template_name="web/login.html", redirect_authenticated_user=True), name='login'),
         path('logout/', auth_views.LogoutView.as_view(next_page="/"), name='logout'),
         prefix_default_language=False,
     )
