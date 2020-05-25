@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 22:17+0200\n"
+"POT-Creation-Date: 2020-05-25 21:26+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -44,7 +44,8 @@ msgstr ""
 "Hvis valgt vil kunngjøringen vises på hele nettsiden, ellers vil den kun "
 "vises på forsiden."
 
-#: announcements/models.py:42 docs/models.py:26 news/models.py:40
+#: announcements/models.py:42 docs/models.py:26
+#: makerspace/templates/tools/admin_tool_edit.html:18 news/models.py:40
 msgid "Content"
 msgstr "Innhold"
 
@@ -100,6 +101,7 @@ msgstr "Ny kunngjøring"
 #: internal/templates/internal/edit_member.html:81
 #: internal/templates/internal/system_access_edit.html:25
 #: make_queue/templates/make_queue/machine/machine_edit.html:62
+#: makerspace/templates/tools/admin_tool_edit.html:25
 #: news/templates/news/article_edit.html:87
 #: news/templates/news/event_edit.html:122
 #: news/templates/news/timeplace_edit.html:72
@@ -219,7 +221,8 @@ msgstr "Kontakt"
 msgid "to fix the problem."
 msgstr "for å fikse problemet."
 
-#: checkin/templates/checkin/profile.html:150 make_queue/models/course.py:18
+#: checkin/templates/checkin/profile.html:150
+#: make_queue/models/course.py:18
 msgid "Registered"
 msgstr "Registrert"
 
@@ -259,7 +262,7 @@ msgstr "Tittel (engelsk)"
 msgid "Suggested skills"
 msgstr "Foreslåtte ferdigheter"
 
-#: checkin/templates/checkin/suggest_skill.html:45
+#: checkin\templates/checkin/suggest_skill.html:45
 msgid "Skill"
 msgstr "Ferdighet"
 
@@ -282,6 +285,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: docs/templates/docs/documentation_page.html:43
+#: makerspace/templates/tools/admin_tool.html:25
 #: news/templates/news/admin_articles.html:54
 #: news/templates/news/admin_event.html:27
 #: news/templates/news/admin_timeplace_listing.html:36
@@ -301,7 +305,8 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:13 docs/models.py:14 news/models.py:37
+#: contentbox/models.py:13 docs/models.py:14 makerspace/models.py:10
+#: news/models.py:37
 msgid "Title"
 msgstr "Tittel"
 
@@ -350,7 +355,7 @@ msgstr "Gjort av"
 #: docs/templates/docs/base.html:9
 #: make_queue/templates/make_queue/calendar.html:85
 #: make_queue/templates/make_queue/make_reservation.html:123
-#: web/templates/web/base.html:8
+#: web/templates/web/base.html:9
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
 
@@ -499,7 +504,7 @@ msgstr "Beskrivelse"
 msgid "Email"
 msgstr "E-post"
 
-#: groups/models.py:96 news/models.py:48
+#: groups/models.py:96 makerspace/models.py:12 news/models.py:48
 msgid "Image"
 msgstr "Bilde"
 
@@ -525,8 +530,9 @@ msgstr "Velg bruker"
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: internal/models.py:23 make_queue/forms.py:117 make_queue/models/course.py:28
-#: make_queue/models/models.py:90 news/models.py:220
+#: internal/models.py:23 make_queue/forms.py:117
+#: make_queue/models/course.py:28 make_queue/models/models.py:90
+#: news/models.py:220
 msgid "User"
 msgstr "Bruker"
 
@@ -557,8 +563,8 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:225
-#: news/templates/news/admin_event_tickets.html:39
+#: make_queue/templates/make_queue/make_reservation.html:101
+#: news/models.py:225 news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -594,7 +600,8 @@ msgstr "Drive"
 msgid "Slack"
 msgstr "Slack"
 
-#: internal/models.py:145 make_queue/templates/make_queue/reservations.html:89
+#: internal/models.py:145
+#: make_queue/templates/make_queue/reservations.html:89
 #: make_queue/templates/make_queue/reservations.html:160
 msgid "Calendar"
 msgstr "Kalender"
@@ -641,7 +648,8 @@ msgstr "Medlemmer"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43 web/templates/web/header.html:85
+#: internal/templates/internal/header.html:43
+#: web/templates/web/header.html:85
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -696,7 +704,8 @@ msgid "Filter committees"
 msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/members.html:80
-#: internal/templates/internal/members.html:153 make_queue/models/models.py:34
+#: internal/templates/internal/members.html:153
+#: make_queue/models/models.py:34
 #: make_queue/templates/make_queue/course/course_panel.html:91
 #: news/models.py:222
 msgid "Name"
@@ -708,8 +717,8 @@ msgid "Committee"
 msgstr "Komité"
 
 #: internal/templates/internal/members.html:83
-#: internal/templates/internal/members.html:193 make_queue/models/course.py:33
-#: make_queue/models/models.py:33
+#: internal/templates/internal/members.html:193
+#: make_queue/models/course.py:33 make_queue/models/models.py:33
 #: make_queue/templates/make_queue/course/course_panel.html:95
 #: make_queue/templates/make_queue/reservation_overview.html:53
 msgid "Status"
@@ -765,20 +774,28 @@ msgstr "Endre systemtilgang"
 
 #: internal/views.py:91
 msgid "Member was not set to quit as the member has already quit or retired."
-msgstr "Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status \"sluttet\" eller \"pang\""
+msgstr ""
+"Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
+"\"sluttet\" eller \"pang\""
 
 #: internal/views.py:105
 msgid "Member's quit status was not undone, as the member had not quit."
-msgstr "Medlemmet's \"sluttet\" status ble ikke gjort om siden medlemmet ikke hadde status \"sluttet\""
+msgstr ""
+"Medlemmet's \"sluttet\" status ble ikke gjort om siden medlemmet ikke hadde "
+"status \"sluttet\""
 
 #: internal/views.py:119
 msgid ""
 "Member was not set to retired as the member has already quit or retired."
-msgstr "Medlemmet ble ikke markert som pang siden medlemmet allerede har status \"sluttet\" eller \"pang\""
+msgstr ""
+"Medlemmet ble ikke markert som pang siden medlemmet allerede har status "
+"\"sluttet\" eller \"pang\""
 
 #: internal/views.py:133
 msgid "Member's retirement was not undone, as the member was not retired."
-msgstr "Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde status \"pang\""
+msgstr ""
+"Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde "
+"status \"pang\""
 
 #: make_queue/fields.py:38
 msgid "Select machine type"
@@ -899,13 +916,15 @@ msgstr "Alle brukere"
 
 #: make_queue/models/models.py:257
 #: make_queue/templates/make_queue/make_reservation.html:72
-#: make_queue/templates/make_queue/make_reservation.html:76 news/models.py:177
+#: make_queue/templates/make_queue/make_reservation.html:76
+#: news/models.py:177
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:258
 #: make_queue/templates/make_queue/make_reservation.html:86
-#: make_queue/templates/make_queue/make_reservation.html:90 news/models.py:181
+#: make_queue/templates/make_queue/make_reservation.html:90
+#: news/models.py:181
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -1131,7 +1150,8 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:234
+#: make_queue/templates/make_queue/make_reservation.html:129
+#: news/models.py:234
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1238,7 +1258,7 @@ msgstr "Oversikt"
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/templates/make_queue/reservation_machines.html:36
+#: make_queue/templates/make_queue/reservation_machines.html:34
 #, python-format
 msgid ""
 "All MAKE's printers are currently making protective visors for healthcare "
@@ -1249,7 +1269,7 @@ msgstr ""
 "helsearbeidere som en del av en nasjonal COVID-19-dugnad. Interessert i å "
 "hjelpe? Besøk %(link)s-siden for å finne ut hvordan du kan bli involvert!"
 
-#: make_queue/templates/make_queue/reservation_machines.html:48
+#: make_queue/templates/make_queue/reservation_machines.html:45
 #: make_queue/templates/make_queue/reservation_overview.html:23
 msgid "Rules"
 msgstr "Regler"
@@ -1466,6 +1486,44 @@ msgstr "Reservasjonen kan ikke starte i fortiden"
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
+#: makerspace/templates/tools/admin_tool.html:7
+#: web/templates/web/admin_panel.html:99
+msgid "Tools"
+msgstr "Verktøy"
+
+#: makerspace/templates/tools/admin_tool.html:8
+msgid "Add new tool"
+msgstr "Legg til nytt verktøy"
+
+#: makerspace/templates/tools/admin_tool.html:26
+#, fuzzy
+#| msgid "Click to delete"
+msgid "Click to delete."
+msgstr "Trykk for å slette"
+
+#: makerspace/templates/tools/admin_tool_create.html:4
+#: makerspace/templates/tools/admin_tool_create.html:5
+msgid "New tool"
+msgstr "Legg til nytt verktøy"
+
+#: makerspace/templates/tools/admin_tool_edit.html:5
+#: makerspace/templates/tools/admin_tool_edit.html:9
+msgid "Edit tool"
+msgstr "Rediger verktøy"
+
+#: makerspace/templates/tools/tool.html:11
+msgid "A list of tools"
+msgstr "En utstyrsliste"
+
+#: makerspace/templates/tools/tool.html:29
+#: news/templates/news/article.html:32 news/templates/news/event.html:12
+msgid "Admin page"
+msgstr "Administrasjonspanel"
+
+#: makerspace/templates/tools/tools.html:14
+msgid "Available tools at Makerspace"
+msgstr "Tilgjengelige verktøy på Makerverkstedet"
+
 #: news/forms.py:30
 msgid "The event cannot end before it starts"
 msgstr "Arrangementet kan ikke slutte før det starter"
@@ -1568,8 +1626,8 @@ msgstr ""
 "besøke følgende adresse"
 
 #: news/templates/news/admin_articles.html:13
-#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
-#: web/templates/web/header.html:32
+#: news/templates/news/articles.html:13
+#: web/templates/web/admin_panel.html:15 web/templates/web/header.html:32
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1722,10 +1780,6 @@ msgstr "Dupliser"
 msgid "If clicked, the occurrence is duplicated."
 msgstr "Klikk for å duplisere forekomsten."
 
-#: news/templates/news/article.html:31 news/templates/news/event.html:12
-msgid "Admin page"
-msgstr "Administrasjonspanel"
-
 #: news/templates/news/article_create.html:4
 #: news/templates/news/article_create.html:5
 msgid "New article"
@@ -1809,7 +1863,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Nytt arrangement"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:15
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:15
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
@@ -2022,22 +2077,6 @@ msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
 "printerkurset."
 
-#: web/templates/web/admin_panel.html:88
-msgid "Tools"
-msgstr "Verktøy"
-
-#: web/templates/web/admin_panel.html:88
-msgid "Here you can add or edit tools at MAKE NTNU."
-msgstr "Her kan du legge til eller endre på verktøy"
-
-#: web/templates/web/admin_panel.html:91
-msgid "Makerspace"
-msgstr "Makerverkstedet"
-
-#: web/templates/web/admin_panel.html:103
-msgid "Here you can edit information about makerspace."
-msgstr "Her kan du endre informasjon om makerverkstedet."
-
 #: web/templates/web/admin_panel.html:90
 msgid ""
 "Here you can create and modify announcements to be shown on either the front "
@@ -2045,6 +2084,10 @@ msgid ""
 msgstr ""
 "Her kan du legge til og endre kunngjøringer som kan vises på forsiden eller "
 "på hele nettsiden."
+
+#: web/templates/web/admin_panel.html:102
+msgid "Here you can add or edit tools at MAKE NTNU."
+msgstr "Her kan du legge til eller endre på verktøy"
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
@@ -2142,15 +2185,8 @@ msgstr "Velg verdi"
 msgid "Search places"
 msgstr "Søk etter steder"
 
+#~ msgid "Makerspace"
+#~ msgstr "Makerverkstedet"
 
-#: makerspace/templates/makerspace/makerspace.html:23
-msgid "Go to tools"
-msgstr "Gå til utstyrside"
-
-#: makerspace/templates/admin_tool.html:13
-msgid "Add new tool"
-msgstr "Legg til nytt verktøy"
-
-#: makerspace/templates/admin_tool.html:28
-msgid "Click to delete"
-msgstr "Trykk for å slette"
+#~ msgid "Here you can edit information about makerspace."
+#~ msgstr "Her kan du endre informasjon om makerverkstedet."
