@@ -5,18 +5,15 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from web.templatetags.permission_tags import has_any_tool_permission
 
-
 class ToolView(DetailView):
     model = Tool
     template_name = 'tools/tool.html'
     context_object_name = 'tool'
 
-
 class ToolsView(ListView):
     model = Tool
     template_name = 'tools/tools.html'
     context_object_name = 'tools_list'
-
 
 class AdminToolView(TemplateView):
     template_name = 'tools/admin_tool.html'
@@ -30,7 +27,6 @@ class AdminToolView(TemplateView):
         })
         return context
 
-
 class CreateToolView(PermissionRequiredMixin, CreateView):
     model = Tool
     template_name = 'tools/admin_tool_create.html'
@@ -38,7 +34,6 @@ class CreateToolView(PermissionRequiredMixin, CreateView):
     permission_required = 'makerspace.add_tool'
     fields = "__all__"
     success_url = reverse_lazy('makerspace-tools-admin')
-
 
 class EditToolView(PermissionRequiredMixin, UpdateView):
     model = Tool
@@ -48,11 +43,7 @@ class EditToolView(PermissionRequiredMixin, UpdateView):
     fields = "__all__"
     success_url = reverse_lazy('makerspace-tools-admin')
 
-
 class DeleteToolView(PermissionRequiredMixin, DeleteView):
     model = Tool
     success_url = reverse_lazy('makerspace-tools-admin')
     permission_required = 'makerspace.delete_tool'
-
-    def get(self, request, *args, **argv):
-        return self.post(request, *args, **argv)
