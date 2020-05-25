@@ -5,12 +5,11 @@
 {% block body %}
     <h1 class="ui text-centered make_col_yellow header">
         {% trans "Tools" %}
+        <a href="{% url 'makerspace-tools-create' %}" title="{% trans "Add new tool" %}">
+            <i class="ui add icon green"></i>
+        </a>
     </h1>
     <div class="ui text container">
-        <a class="ui yellow button" href="{% url 'makerspace-tools-create' %}">
-            <i class="ui add icon green"></i>
-            {% trans "Add new tool" %}
-        </a>
         {% if tools_list %}
             <div class="ui divided list">
                 {% for tool in tools_list %}
