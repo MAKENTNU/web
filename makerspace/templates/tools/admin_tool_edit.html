@@ -10,18 +10,13 @@
     </h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <div class="field">
-            <label>{{ form.title.label }}</label>
-            {{ form.title }}
-        </div>
-        <div class="field">
-            <label>{{ form.description.label }}</label>
-            {{ form.description }}
-        </div>
-        <div class="field">
-            <label>{{ form.image.label }}</label>
-            {{ form.image }}
-        </div>
+        {% for field in form %}
+            <div class="field">
+                <label>{{ field.label }}</label>
+                {{ field }}
+            </div>
+        {% endfor %}
+
         <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
     </form>
 {% endblock body %}
