@@ -10,5 +10,5 @@ class Tool(models.Model):
         verbose_name=_('Title'),
     )
     image = models.ImageField(upload_to='tools', verbose_name=_('Image'))
-    content = MultiLingualRichTextUploadingField()
+    description = MultiLingualRichTextUploadingField(verbose_name=_('Description'))
 

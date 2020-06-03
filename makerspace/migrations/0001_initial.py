@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', web.multilingual.database.MultiLingualTextField(max_length=100, verbose_name='Title')),
                 ('image', models.ImageField(upload_to='tools', verbose_name='Image')),
-                ('content', web.multilingual.database.MultiLingualRichTextUploadingField()),
+                ('description', web.multilingual.database.MultiLingualRichTextUploadingField(verbose_name='Description')),
             ],
         ),
     ]
