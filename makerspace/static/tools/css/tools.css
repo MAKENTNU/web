@@ -78,12 +78,17 @@
     /* --- tools.html --- */
     .tools {
         grid-template-columns: 1fr 20fr 1fr;
-        margin-top: 30px
+        grid-row-gap: 0;
+        justify-items: center;
     }
 
     .tool-text {
         grid-column: 2/3;
-        margin-top: 30px;
+        margin-bottom: 60px;
+    }
+
+    .tool-title {
+        text-align: center;
     }
 
     .txtborder.tl,
