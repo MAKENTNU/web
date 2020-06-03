@@ -1502,16 +1502,14 @@ msgstr "Legg til nytt verktøy"
 msgid "Image of %(tool)s"
 msgstr "Bilde av %(tool)s"
 
-#: makerspace/templates/tools/admin_tool.html:26
-#, fuzzy
-#| msgid "Click to delete"
-msgid "Click to delete."
+#: makerspace/templates/tools/admin_tool.html:39
+msgid "Click to delete"
 msgstr "Trykk for å slette"
 
 #: makerspace/templates/tools/admin_tool_create.html:4
 #: makerspace/templates/tools/admin_tool_create.html:5
 msgid "New tool"
-msgstr "Legg til nytt verktøy"
+msgstr "Nytt verktøy"
 
 #: makerspace/templates/tools/admin_tool_edit.html:5
 #: makerspace/templates/tools/admin_tool_edit.html:9
@@ -1521,11 +1519,6 @@ msgstr "Rediger verktøy"
 #: makerspace/templates/tools/tool.html:11
 msgid "A list of tools"
 msgstr "En utstyrsliste"
-
-#: makerspace/templates/tools/tool.html:29
-#: news/templates/news/article.html:32 news/templates/news/event.html:12
-msgid "Admin page"
-msgstr "Administrasjonspanel"
 
 #: makerspace/templates/tools/tools.html:14
 msgid "Available tools at Makerspace"
@@ -1786,6 +1779,10 @@ msgstr "Dupliser"
 #: news/templates/news/admin_timeplace_listing.html:45
 msgid "If clicked, the occurrence is duplicated."
 msgstr "Klikk for å duplisere forekomsten."
+
+#: news/templates/news/article.html:32 news/templates/news/event.html:12
+msgid "Admin page"
+msgstr "Administrasjonspanel"
 
 #: news/templates/news/article_create.html:4
 #: news/templates/news/article_create.html:5

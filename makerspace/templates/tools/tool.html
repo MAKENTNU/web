@@ -8,11 +8,12 @@
 
 {% block og_title %}{{ title.title }}{% endblock og_title %}
 {% block og_image %}{{ title.image.url }}{% endblock og_image %}
-{% block og_description %} {% trans "A list of tools" %}{% endblock og_description %}
+{% block og_description %}{% trans "A list of tools" %}{% endblock og_description %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "tools/css/tools.css" %}">
 {% endblock head %}
+
 
 {% block body %}
     <div class="tool">
@@ -27,23 +28,19 @@
                     alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
                 />
 
-                <h1 class="tool-title">
-                    <div>
-                        {% block admin-page %}
-                             {% if user|has_any_tool_permissions%}
-                                 <a href="{% url "makerspace-tools-edit" tool.id %}" class="ui yellow button">
-                                     <i class="ui edit icon"></i>{% trans "Edit" %}
-                                 </a>
-                             {% endif %}
-                        {% endblock admin-page %}
-                        {{ tool.title }}
-                    </div>
-                </h1>
-                <div>
-                    {% autoescape off %}
-                        {{ tool.description }}
-                    {% endautoescape %}
-                </div>
+                {% block admin-page %}
+                    {% if user|has_any_tool_permissions %}
+                        <br/>
+                        <a href="{% url "makerspace-tools-edit" tool.id %}" class="ui yellow button">
+                            <i class="ui edit icon"></i>{% trans "Edit" %}
+                        </a>
+                    {% endif %}
+                {% endblock admin-page %}
+
+                <h1>{{ tool.title }}</h1>
+                <p class="tool-description">
+                    {{ tool.description|safe }}
+                </p>
             </div>
         </div>
     </div>

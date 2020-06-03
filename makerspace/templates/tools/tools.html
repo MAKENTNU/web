@@ -18,7 +18,7 @@
         <div class="tools">
             {% for tool in tools_list %}
 
-                <!-- For the pictures -->
+                {# For the images #}
                 <a class="tool-img" href="{% url 'makerspace-tool' tool.id %}">
                     <img {% thumbnail tool.image "250x250" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
@@ -30,23 +30,20 @@
                     />
                 </a>
 
-                <!-- For the text -->
-                <div class="tool-text css = float-left
-			    {% if forloop.first %}tool-first{% endif %}
-			    {% if forloop.last %}tool-last{% endif %}">
-                    <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
-                    <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
-                    <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
-                    <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
-                    <div>
-                        <h2>
-                            <a href="{% url 'makerspace-tool' tool.id %}">{{ tool.title }}</a>
-                        </h2>
-                    </div>
+                {# For the text #}
+                <div class="tool-text
+                            {% if forloop.first %}tool-first{% endif %}
+                            {% if forloop.last %}tool-last{% endif %}">
+                    <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}" alt=""/>
+                    <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}" alt=""/>
+                    <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}" alt=""/>
+                    <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}" alt=""/>
+                    <h2 class="tool-title">
+                        <a class="make_col_yellow" href="{% url 'makerspace-tool' tool.id %}">{{ tool.title }}</a>
+                    </h2>
                 </div>
 
             {% endfor %}
         </div>
     </div>
-
 {% endblock body %}
