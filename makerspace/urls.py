@@ -1,8 +1,7 @@
-from django.urls import path
 from django.contrib.auth.decorators import login_required
-from makerspace.views import ToolsView, ToolView, EditToolView, CreateToolView, \
-    AdminToolView, DeleteToolView
+from django.urls import path
 
+from .views import AdminToolView, CreateToolView, DeleteToolView, EditToolView, ToolView, ToolsView
 
 urlpatterns = [
     path('tools/', ToolsView.as_view(), name='makerspace-tools'),

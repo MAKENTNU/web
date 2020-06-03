@@ -1,14 +1,17 @@
-from django.views.generic import ListView, DetailView, UpdateView, CreateView, DeleteView, TemplateView
-from makerspace.models import Tool
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+
 from web.templatetags.permission_tags import has_any_tool_permissions
 from .forms import ToolForm
+from .models import Tool
+
 
 class ToolView(DetailView):
     model = Tool
     template_name = 'tools/tool.html'
     context_object_name = 'tool'
+
 
 class ToolsView(ListView):
     model = Tool
@@ -32,6 +35,7 @@ class CreateToolView(PermissionRequiredMixin, CreateView):
     context_object_name = 'tool'
     permission_required = 'makerspace.add_tool'
     success_url = reverse_lazy('makerspace-tools-admin')
+
 
 class EditToolView(PermissionRequiredMixin, UpdateView):
     model = Tool

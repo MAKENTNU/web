@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-05-25 21:26+0200\n"
+"POT-Creation-Date: 2020-06-01 19:43+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -44,8 +44,7 @@ msgstr ""
 "Hvis valgt vil kunngjøringen vises på hele nettsiden, ellers vil den kun "
 "vises på forsiden."
 
-#: announcements/models.py:42 docs/models.py:26
-#: makerspace/templates/tools/admin_tool_edit.html:18 news/models.py:40
+#: announcements/models.py:42 docs/models.py:26 news/models.py:40
 msgid "Content"
 msgstr "Innhold"
 
@@ -101,7 +100,7 @@ msgstr "Ny kunngjøring"
 #: internal/templates/internal/edit_member.html:81
 #: internal/templates/internal/system_access_edit.html:25
 #: make_queue/templates/make_queue/machine/machine_edit.html:62
-#: makerspace/templates/tools/admin_tool_edit.html:25
+#: makerspace/templates/tools/admin_tool_edit.html:34
 #: news/templates/news/article_edit.html:87
 #: news/templates/news/event_edit.html:122
 #: news/templates/news/timeplace_edit.html:72
@@ -120,6 +119,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/registration_edit.html:102
 #: make_queue/templates/make_queue/machine/machine_edit.html:65
 #: make_queue/templates/make_queue/quota/quota_edit.html:65
+#: makerspace/templates/tools/admin_tool_edit.html:36
 #: news/templates/news/article_edit.html:89
 #: news/templates/news/event_edit.html:124
 #: news/templates/news/timeplace_edit.html:74
@@ -262,7 +262,7 @@ msgstr "Tittel (engelsk)"
 msgid "Suggested skills"
 msgstr "Foreslåtte ferdigheter"
 
-#: checkin\templates/checkin/suggest_skill.html:45
+#: checkin/templates/checkin/suggest_skill.html:45
 msgid "Skill"
 msgstr "Ferdighet"
 
@@ -285,7 +285,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: docs/templates/docs/documentation_page.html:43
-#: makerspace/templates/tools/admin_tool.html:25
+#: makerspace/templates/tools/admin_tool.html:38
 #: news/templates/news/admin_articles.html:54
 #: news/templates/news/admin_event.html:27
 #: news/templates/news/admin_timeplace_listing.html:36
@@ -305,7 +305,7 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:13 docs/models.py:14 makerspace/models.py:10
+#: contentbox/models.py:13 docs/models.py:14 makerspace/models.py:12
 #: news/models.py:37
 msgid "Title"
 msgstr "Tittel"
@@ -318,6 +318,7 @@ msgstr "Tittel"
 #: docs/templates/docs/edit_documentation_page.html:19
 #: groups/templates/groups/committee_form.html:14
 #: make_queue/templates/make_queue/usage_rules.html:17
+#: makerspace/templates/tools/tool.html:35
 #: news/templates/news/admin_articles.html:50
 #: news/templates/news/admin_event.html:21
 #: news/templates/news/admin_timeplace_listing.html:28
@@ -494,7 +495,7 @@ msgstr ""
 msgid "group"
 msgstr "gruppe"
 
-#: groups/models.py:94
+#: groups/models.py:94 makerspace/models.py:15
 msgid "Description"
 msgstr "Beskrivelse"
 
@@ -504,7 +505,7 @@ msgstr "Beskrivelse"
 msgid "Email"
 msgstr "E-post"
 
-#: groups/models.py:96 makerspace/models.py:12 news/models.py:48
+#: groups/models.py:96 makerspace/models.py:14 news/models.py:48
 msgid "Image"
 msgstr "Bilde"
 
@@ -1486,12 +1487,12 @@ msgstr "Reservasjonen kan ikke starte i fortiden"
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
-#: makerspace/templates/tools/admin_tool.html:7
+#: makerspace/templates/tools/admin_tool.html:9
 #: web/templates/web/admin_panel.html:99
 msgid "Tools"
 msgstr "Verktøy"
 
-#: makerspace/templates/tools/admin_tool.html:8
+#: makerspace/templates/tools/admin_tool.html:10
 msgid "Add new tool"
 msgstr "Legg til nytt verktøy"
 
@@ -1516,12 +1517,12 @@ msgstr "Nytt verktøy"
 msgid "Edit tool"
 msgstr "Rediger verktøy"
 
-#: makerspace/templates/tools/tool.html:11
+#: makerspace/templates/tools/tool.html:12
 msgid "A list of tools"
 msgstr "En utstyrsliste"
 
-#: makerspace/templates/tools/tools.html:14
-msgid "Available tools at Makerspace"
+#: makerspace/templates/tools/tools.html:15
+msgid "Available tools at Makerverkstedet"
 msgstr "Tilgjengelige verktøy på Makerverkstedet"
 
 #: news/forms.py:30
@@ -2039,12 +2040,12 @@ msgid "Admin panel"
 msgstr "Administrasjonspanel"
 
 #: web/templates/web/admin_panel.html:18
-msgid "Here you can create, edit and delete articles."
-msgstr "Her kan du lage, endre og slette artikler."
+msgid "Here you can create, edit and delete articles"
+msgstr "Her kan du lage, endre og slette artikler"
 
 #: web/templates/web/admin_panel.html:30
-msgid "Here you can create, edit and delete events and their occurrences."
-msgstr "Her kan du lage, endre og slette arrangementer og deres forekomster."
+msgid "Here you can create, edit and delete events and their occurrences"
+msgstr "Her kan du lage, endre og slette arrangementer og deres forekomster"
 
 #: web/templates/web/admin_panel.html:39 web/templates/web/header.html:36
 msgid "Reservations"
@@ -2052,10 +2053,10 @@ msgstr "Reservasjoner"
 
 #: web/templates/web/admin_panel.html:42
 msgid ""
-"Here you can view machine reservations for events and other MAKE NTNU causes."
+"Here you can view machine reservations for events and other MAKE NTNU causes"
 msgstr ""
 "Her kan du se reservasjoner av maskiner for arrangementer og andre MAKE NTNU-"
-"sammenhenger."
+"sammenhenger"
 
 #: web/templates/web/admin_panel.html:51
 msgid "Quota"
@@ -2064,34 +2065,34 @@ msgstr "Kvote"
 #: web/templates/web/admin_panel.html:54
 msgid ""
 "Here you can create and edit both global and personal quotas for "
-"reservations of machines."
+"reservations of machines"
 msgstr ""
 "Her kan du lage og endre både globale og personlige kvoter for reservasjoner "
-"av maskiner."
+"av maskiner"
 
 #: web/templates/web/admin_panel.html:66
-msgid "Here you can edit the committees' description, image and email."
-msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse."
+msgid "Here you can edit the committees' description, image and email"
+msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse"
 
 #: web/templates/web/admin_panel.html:78
 msgid ""
 "Here you can add and edit information about persons who have taken the 3D "
-"printer course."
+"printer course"
 msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
-"printerkurset."
+"printerkurset"
 
 #: web/templates/web/admin_panel.html:90
 msgid ""
 "Here you can create and modify announcements to be shown on either the front "
-"page or the entire website."
+"page or the entire website"
 msgstr ""
 "Her kan du legge til og endre kunngjøringer som kan vises på forsiden eller "
-"på hele nettsiden."
+"på hele nettsiden"
 
 #: web/templates/web/admin_panel.html:102
-msgid "Here you can add or edit tools at MAKE NTNU."
-msgstr "Her kan du legge til eller endre på verktøy"
+msgid "Here you can add or edit tools at Makerverkstedet"
+msgstr "Her kan du legge til eller redigere verktøy på Makerverkstedet"
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
@@ -2188,9 +2189,3 @@ msgstr "Velg verdi"
 #: web/widgets.py:51
 msgid "Search places"
 msgstr "Søk etter steder"
-
-#~ msgid "Makerspace"
-#~ msgstr "Makerverkstedet"
-
-#~ msgid "Here you can edit information about makerspace."
-#~ msgstr "Her kan du endre informasjon om makerverkstedet."

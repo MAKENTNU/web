@@ -1,6 +1,7 @@
 from django.db import models
-from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
 from django.utils.translation import gettext_lazy as _
+
+from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
 class Tool(models.Model):
@@ -13,3 +14,5 @@ class Tool(models.Model):
     image = models.ImageField(upload_to='tools', verbose_name=_('Image'))
     description = MultiLingualRichTextUploadingField(verbose_name=_('Description'))
 
+    def __str__(self):
+        return str(self.title)
