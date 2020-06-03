@@ -92,7 +92,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_tools_permission %}
+            {% if user|has_any_tool_permissions %}
                 <div class="ui yellow card">
                     <a href="{% url 'makerspace-tools-admin' %}" class="content">
                         <div class="center aligned header">

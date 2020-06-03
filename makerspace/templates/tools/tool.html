@@ -30,7 +30,7 @@
                 <h1 class="tool-title">
                     <div>
                         {% block admin-page %}
-                             {% if user|has_any_tools_permission%}
+                             {% if user|has_any_tool_permissions%}
                                  <a href="{% url "makerspace-tools-edit" tool.id %}" class="ui yellow button">
                                      <i class="ui edit icon"></i>{% trans "Edit" %}
                                  </a>

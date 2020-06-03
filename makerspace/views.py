@@ -2,7 +2,7 @@ from django.views.generic import ListView, DetailView, UpdateView, CreateView, D
 from makerspace.models import Tool
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from web.templatetags.permission_tags import has_any_tool_permission
+from web.templatetags.permission_tags import has_any_tool_permissions
 from .forms import ToolForm
 
 class ToolView(DetailView):
@@ -22,7 +22,7 @@ class AdminToolView(PermissionRequiredMixin, ListView):
     context_object_name = 'tools_list'
 
     def has_permission(self):
-        return has_any_tool_permission(self.request.user)
+        return has_any_tool_permissions(self.request.user)
 
 
 class CreateToolView(PermissionRequiredMixin, CreateView):

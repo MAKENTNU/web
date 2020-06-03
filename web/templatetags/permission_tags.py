@@ -33,6 +33,6 @@ def has_any_makerspace_permission(user):
     return any(user.has_perm(f"makerspace.{action}_makerspace") for action in ["add", "change", "delete"])
 
 
-@register.filter(name="has_any_tools_permission")
-def has_any_tool_permission(user):
+@register.filter
+def has_any_tool_permissions(user):
     return any(user.has_perm(f"makerspace.{action}_tool") for action in ["add", "change", "delete"])
