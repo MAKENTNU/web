@@ -7,6 +7,7 @@ class Tool(models.Model):
     """ Object model  to add description to tools at makerspace/tools """
     title = MultiLingualTextField(
         max_length=100,
+        unique=True,
         verbose_name=_('Title'),
     )
     image = models.ImageField(upload_to='tools', verbose_name=_('Image'))

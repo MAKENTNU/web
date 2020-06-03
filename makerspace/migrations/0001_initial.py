@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
             name='Tool',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', web.multilingual.database.MultiLingualTextField(max_length=100, verbose_name='Title')),
+                ('title', web.multilingual.database.MultiLingualTextField(max_length=100, unique=True, verbose_name='Title')),
                 ('image', models.ImageField(upload_to='tools', verbose_name='Image')),
                 ('description', web.multilingual.database.MultiLingualRichTextUploadingField(verbose_name='Description')),
             ],
