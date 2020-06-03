@@ -20,8 +20,10 @@
             <div class="ui text container basic segment">
                 <img {% thumbnail tool.image "400" crop="center" as image_thumb %}
                     src="{{ image_thumb.url }}"
+                {% empty %}
+                    src="{{ tool.image.url }}"
                 {% endthumbnail %}
-                    class="ui image center"
+                    class="ui image center" style="width: 400px;"
                     alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
                 />
 

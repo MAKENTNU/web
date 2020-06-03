@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
+{% load css_tags %}
 
 {% block body %}
     <h1 class="ui text-centered make_col_yellow header">
@@ -20,7 +21,10 @@
                             <a href="{% url 'makerspace-tools-edit' tool.id %}">
                                 <img {% thumbnail tool.image "36x36" crop="center" as image_thumb %}
                                     src="{{ image_thumb.url }}"
+                                {% empty %}
+                                    src="{{ tool.image.url }}"
                                 {% endthumbnail %}
+                                    style="{% img_square 36 %}"
                                     alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
                                 />
                             </a>

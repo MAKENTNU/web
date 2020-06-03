@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
+{% load css_tags %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "tools/css/tools.css" %}">
@@ -21,7 +22,10 @@
                 <a class="tool-img" href="{% url 'makerspace-tool' tool.id %}">
                     <img {% thumbnail tool.image "250x250" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
+                    {% empty %}
+                        src="{{ tool.image.url }}"
                     {% endthumbnail %}
+                        style="{% img_square 250 %}"
                         alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
                     />
                 </a>
