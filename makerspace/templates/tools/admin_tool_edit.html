@@ -17,6 +17,9 @@
             </div>
         {% endfor %}
 
-        <input class="ui blue submit button" type="submit" value="{% trans "Save" %}">
+        <input class="ui yellow right floated submit button" type="submit" value="{% trans "Save" %}"/>
+        <a href="{% url "makerspace-tools-admin" %}" class="ui red right floated button">
+            {% trans "Cancel" context "abort action" %}
+        </a>
     </form>
 {% endblock body %}

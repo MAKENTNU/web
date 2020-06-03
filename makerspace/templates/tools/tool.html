@@ -31,8 +31,8 @@
                     <div>
                         {% block admin-page %}
                              {% if user|has_any_tools_permission%}
-                                 <a href="{% url "makerspace-tools-admin" %}" class="ui right floated yellow button">
-                                     <i class="ui sticky note icon"></i>{% trans "Admin page" %}
+                                 <a href="{% url "makerspace-tools-edit" tool.id %}" class="ui yellow button">
+                                     <i class="ui edit icon"></i>{% trans "Edit" %}
                                  </a>
                              {% endif %}
                         {% endblock admin-page %}
