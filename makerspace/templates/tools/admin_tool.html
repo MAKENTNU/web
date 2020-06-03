@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load static %}
 {% load i18n %}
+{% load thumbnail %}
 
 {% block body %}
     <h1 class="ui text-centered make_col_yellow header">
@@ -14,7 +15,16 @@
             <div class="ui divided list">
                 {% for tool in tools_list %}
                     <div class="item">
-                        <i class="ui icon"><img class="inline square_36" src="{{ tool.image.url }}"></i>
+
+                        <i class="ui icon">
+                            <a href="{% url 'makerspace-tools-edit' tool.id %}">
+                                <img {% thumbnail tool.image "36x36" crop="center" as image_thumb %}
+                                    src="{{ image_thumb.url }}"
+                                {% endthumbnail %}
+                                    alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
+                                />
+                            </a>
+                        </i>
                         <div class="content">
                             <div class="header">
                                 <a class="inline-block make_col_blue header" href="{% url 'makerspace-tools-edit' tool.id %}">
@@ -30,8 +40,8 @@
                                 {% endif %}
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 {% endfor %}
             </div>
         {% endif %}

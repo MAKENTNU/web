@@ -16,14 +16,15 @@
     <div class="ui container">
         <div class="tools">
             {% for tool in tools_list %}
+
                 <!-- For the pictures -->
-                {% thumbnail tool.image "250x250"  as im %}
-                    <img class="clickable css = float-right
-                    			    {% if forloop.first %}tool-first{% endif %}
-			                        {% if forloop.last %}tool-last{% endif %}"
-                         src="{{ im.url }}" href="{% url 'makerspace-tool' tool.id %}"
-                         width="{{ im.width }}" height="{{ im.height }}"c>
-                {% endthumbnail %}
+                <a class="tool-img" href="{% url 'makerspace-tool' tool.id %}">
+                    <img {% thumbnail tool.image "250x250" crop="center" as image_thumb %}
+                        src="{{ image_thumb.url }}"
+                    {% endthumbnail %}
+                        alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
+                    />
+                </a>
 
                 <!-- For the text -->
                 <div class="tool-text css = float-left

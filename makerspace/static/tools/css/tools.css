@@ -3,13 +3,18 @@
     justify-content: space-between;
 }
 
-.tool-text, .tool-img {
-    position: relative;
-    margin-top: 30px
+.tool-img {
+    grid-column: 2/3;
+    width: max-content;
 }
 
-.clickable {
-    cursor: pointer;
+.tool-img img {
+    display: block;
+}
+
+.tool-text {
+    position: relative;
+    margin-top: 30px
 }
 
 .tool-text h2 a, .header a {
@@ -74,11 +79,6 @@
 
 }
 
-.tools .tool-img {
-    grid-column: 2/3;
-    margin-top: 30px
-}
-
 .tools .tool-text {
     overflow-wrap: break-word;
     overflow: hidden;
@@ -107,13 +107,6 @@
     margin-top: 30px
 }
 
-.tools .tool-img {
-    object-fit: cover;
-    width: 100%;
-    height: 100%;
-    margin-top: 30px
-}
-
 
 /* Switch to mobile layout */
 @media screen and (max-width: 992px) {
@@ -122,8 +115,7 @@
         margin-top: 30px
     }
 
-    .tools .tool-text,
-    .tools .tool-img {
+    .tools .tool-text {
         grid-column: 2/3 !important;
         margin-top: 30px
     }

@@ -1495,6 +1495,13 @@ msgstr "Verktøy"
 msgid "Add new tool"
 msgstr "Legg til nytt verktøy"
 
+#: makerspace/templates/tools/admin_tool.html:28
+#: makerspace/templates/tools/tool.html:28
+#: makerspace/templates/tools/tools.html:29
+#, python-format
+msgid "Image of %(tool)s"
+msgstr "Bilde av %(tool)s"
+
 #: makerspace/templates/tools/admin_tool.html:26
 #, fuzzy
 #| msgid "Click to delete"

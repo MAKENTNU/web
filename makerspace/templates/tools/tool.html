@@ -18,9 +18,13 @@
     <div class="tool">
         <div class="ui container">
             <div class="ui text container basic segment">
-                {% thumbnail tool.image "400" crop="center" as im %}
-                    <img class="ui image center" src="{{ im.url }}">
+                <img {% thumbnail tool.image "400" crop="center" as image_thumb %}
+                    src="{{ image_thumb.url }}"
                 {% endthumbnail %}
+                    class="ui image center"
+                    alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
+                />
+
                 <h1 class="tool-title">
                     <div>
                         {% block admin-page %}
