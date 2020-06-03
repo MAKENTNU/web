@@ -43,7 +43,21 @@ class EditToolView(PermissionRequiredMixin, UpdateView):
     fields = "__all__"
     success_url = reverse_lazy('makerspace-tools-admin')
 
+    # Delete the old image file if a new image is being uploaded:
+    def form_valid(self, form):
+        if form.files.get('image'):
+            tool = self.get_object()
+            tool.image.delete()
+        return super().form_valid(form)
+
+
 class DeleteToolView(PermissionRequiredMixin, DeleteView):
     model = Tool
     success_url = reverse_lazy('makerspace-tools-admin')
     permission_required = 'makerspace.delete_tool'
+
+    # Delete the image file before deleting the object:
+    def delete(self, request, *args, **kwargs):
+        tool = self.get_object()
+        tool.image.delete()
+        return super().delete(request, *args, **kwargs)

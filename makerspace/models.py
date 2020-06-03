@@ -9,6 +9,6 @@ class Tool(models.Model):
         max_length=100,
         verbose_name=_('Title'),
     )
-    image = models.ImageField(verbose_name=_('Image'))
+    image = models.ImageField(upload_to='tools', verbose_name=_('Image'))
     content = MultiLingualRichTextUploadingField()
 
