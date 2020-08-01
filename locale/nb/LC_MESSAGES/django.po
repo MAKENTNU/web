@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 22:17+0200\n"
+"POT-Creation-Date: 2020-08-01 14:42+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -219,7 +219,8 @@ msgstr "Kontakt"
 msgid "to fix the problem."
 msgstr "for å fikse problemet."
 
-#: checkin/templates/checkin/profile.html:150 make_queue/models/course.py:18
+#: checkin/templates/checkin/profile.html:150
+#: make_queue/models/course.py:18
 msgid "Registered"
 msgstr "Registrert"
 
@@ -350,7 +351,7 @@ msgstr "Gjort av"
 #: docs/templates/docs/base.html:9
 #: make_queue/templates/make_queue/calendar.html:85
 #: make_queue/templates/make_queue/make_reservation.html:123
-#: web/templates/web/base.html:8
+#: web/templates/web/base.html:9
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
 
@@ -525,8 +526,9 @@ msgstr "Velg bruker"
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: internal/models.py:23 make_queue/forms.py:117 make_queue/models/course.py:28
-#: make_queue/models/models.py:90 news/models.py:220
+#: internal/models.py:23 make_queue/forms.py:117
+#: make_queue/models/course.py:28 make_queue/models/models.py:90
+#: news/models.py:220
 msgid "User"
 msgstr "Bruker"
 
@@ -557,8 +559,8 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101 news/models.py:225
-#: news/templates/news/admin_event_tickets.html:39
+#: make_queue/templates/make_queue/make_reservation.html:101
+#: news/models.py:225 news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -594,7 +596,8 @@ msgstr "Drive"
 msgid "Slack"
 msgstr "Slack"
 
-#: internal/models.py:145 make_queue/templates/make_queue/reservations.html:89
+#: internal/models.py:145
+#: make_queue/templates/make_queue/reservations.html:89
 #: make_queue/templates/make_queue/reservations.html:160
 msgid "Calendar"
 msgstr "Kalender"
@@ -641,7 +644,8 @@ msgstr "Medlemmer"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43 web/templates/web/header.html:85
+#: internal/templates/internal/header.html:43
+#: web/templates/web/header.html:85
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -696,7 +700,8 @@ msgid "Filter committees"
 msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/members.html:80
-#: internal/templates/internal/members.html:153 make_queue/models/models.py:34
+#: internal/templates/internal/members.html:153
+#: make_queue/models/models.py:34
 #: make_queue/templates/make_queue/course/course_panel.html:91
 #: news/models.py:222
 msgid "Name"
@@ -708,8 +713,8 @@ msgid "Committee"
 msgstr "Komité"
 
 #: internal/templates/internal/members.html:83
-#: internal/templates/internal/members.html:193 make_queue/models/course.py:33
-#: make_queue/models/models.py:33
+#: internal/templates/internal/members.html:193
+#: make_queue/models/course.py:33 make_queue/models/models.py:33
 #: make_queue/templates/make_queue/course/course_panel.html:95
 #: make_queue/templates/make_queue/reservation_overview.html:53
 msgid "Status"
@@ -765,20 +770,28 @@ msgstr "Endre systemtilgang"
 
 #: internal/views.py:91
 msgid "Member was not set to quit as the member has already quit or retired."
-msgstr "Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status \"sluttet\" eller \"pang\""
+msgstr ""
+"Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
+"\"sluttet\" eller \"pang\""
 
-#: internal/views.py:105
+#: internal\views.py:105
 msgid "Member's quit status was not undone, as the member had not quit."
-msgstr "Medlemmet's \"sluttet\" status ble ikke gjort om siden medlemmet ikke hadde status \"sluttet\""
+msgstr ""
+"Medlemmet's \"sluttet\" status ble ikke gjort om siden medlemmet ikke hadde "
+"status \"sluttet\""
 
 #: internal/views.py:119
 msgid ""
 "Member was not set to retired as the member has already quit or retired."
-msgstr "Medlemmet ble ikke markert som pang siden medlemmet allerede har status \"sluttet\" eller \"pang\""
+msgstr ""
+"Medlemmet ble ikke markert som pang siden medlemmet allerede har status "
+"\"sluttet\" eller \"pang\""
 
 #: internal/views.py:133
 msgid "Member's retirement was not undone, as the member was not retired."
-msgstr "Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde status \"pang\""
+msgstr ""
+"Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde "
+"status \"pang\""
 
 #: make_queue/fields.py:38
 msgid "Select machine type"
@@ -899,13 +912,15 @@ msgstr "Alle brukere"
 
 #: make_queue/models/models.py:257
 #: make_queue/templates/make_queue/make_reservation.html:72
-#: make_queue/templates/make_queue/make_reservation.html:76 news/models.py:177
+#: make_queue/templates/make_queue/make_reservation.html:76
+#: news/models.py:177
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:258
 #: make_queue/templates/make_queue/make_reservation.html:86
-#: make_queue/templates/make_queue/make_reservation.html:90 news/models.py:181
+#: make_queue/templates/make_queue/make_reservation.html:90
+#: news/models.py:181
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -1131,7 +1146,8 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129 news/models.py:234
+#: make_queue/templates/make_queue/make_reservation.html:129
+#: news/models.py:234
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1238,18 +1254,7 @@ msgstr "Oversikt"
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/templates/make_queue/reservation_machines.html:36
-#, python-format
-msgid ""
-"All MAKE's printers are currently making protective visors for healthcare "
-"workers as part of a national COVID-19 response dugnad. Interested in "
-"helping? Visit the %(link)s page to find out how you can get involved!"
-msgstr ""
-"MAKEs printere blir for øyeblikket brukt til å lage smittevernutstyr for "
-"helsearbeidere som en del av en nasjonal COVID-19-dugnad. Interessert i å "
-"hjelpe? Besøk %(link)s-siden for å finne ut hvordan du kan bli involvert!"
-
-#: make_queue/templates/make_queue/reservation_machines.html:48
+#: make_queue/templates/make_queue/reservation_machines.html:37
 #: make_queue/templates/make_queue/reservation_overview.html:23
 msgid "Rules"
 msgstr "Regler"
@@ -1568,8 +1573,8 @@ msgstr ""
 "besøke følgende adresse"
 
 #: news/templates/news/admin_articles.html:13
-#: news/templates/news/articles.html:13 web/templates/web/admin_panel.html:15
-#: web/templates/web/header.html:32
+#: news/templates/news/articles.html:13
+#: web/templates/web/admin_panel.html:15 web/templates/web/header.html:32
 msgid "Articles"
 msgstr "Artikler"
 
@@ -1722,7 +1727,7 @@ msgstr "Dupliser"
 msgid "If clicked, the occurrence is duplicated."
 msgstr "Klikk for å duplisere forekomsten."
 
-#: news/templates/news/article.html:31 news/templates/news/event.html:12
+#: news/templates/news/article.html:32 news/templates/news/event.html:12
 msgid "Admin page"
 msgstr "Administrasjonspanel"
 
@@ -1809,7 +1814,8 @@ msgstr "Ingen påmelding"
 msgid "New event"
 msgstr "Nytt arrangement"
 
-#: news/templates/news/event_edit.html:5 news/templates/news/event_edit.html:15
+#: news/templates/news/event_edit.html:5
+#: news/templates/news/event_edit.html:15
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
