@@ -60,7 +60,15 @@ class MachineTypeField(models.IntegerField):
             "",
             lambda user: user.is_authenticated,
             False,
+        ),
+        MachineType(
+            4,
+            _("Workspaces"),
+            "",
+            lambda user: user.is_authenticated,
+            False,
         )
+
     )
 
     @staticmethod
