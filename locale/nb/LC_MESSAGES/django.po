@@ -817,6 +817,10 @@ msgstr "Symaskiner"
 msgid "3D scanners"
 msgstr "3D-skannere"
 
+#: make_queue/fields.py:66
+msgid "Workspaces"
+msgstr "Arbeidsplasser"
+
 #: make_queue/forms.py:116 make_queue/forms.py:142
 #: make_queue/templates/make_queue/quota/quota_panel.html:48
 msgid "Select user"

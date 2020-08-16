@@ -40,6 +40,13 @@ class MachineTypeField(models.IntegerField):
     # ID, name, cannot use text
     possible_machine_types = (
         MachineType(
+            4,
+            _("Workspaces"),
+            "",
+            lambda user: user.is_authenticated,
+            False,
+        ),
+        MachineType(
             1,
             _("3D printers"),
             _("You must have completed a 3D printer course to reserve the printers. If you "
