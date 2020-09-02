@@ -112,7 +112,7 @@ def rule_period_end_text(period, locale):
 
 @register.simple_tag()
 def can_change_reservation(reservation, user):
-    return reservation.can_change(user) or reservation.can_change_end_time(user)
+    return reservation.can_change(user)
 
 
 @register.simple_tag()
