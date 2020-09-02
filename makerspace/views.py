@@ -9,19 +9,19 @@ from .models import Tool
 
 class ToolView(DetailView):
     model = Tool
-    template_name = 'tools/tool.html'
+    template_name = 'makerspace/tools/tool.html'
     context_object_name = 'tool'
 
 
 class ToolsView(ListView):
     model = Tool
-    template_name = 'tools/tools.html'
+    template_name = 'makerspace/tools/tools.html'
     context_object_name = 'tools_list'
 
 
 class AdminToolView(PermissionRequiredMixin, ListView):
     model = Tool
-    template_name = 'tools/admin_tool.html'
+    template_name = 'makerspace/tools/admin_tool.html'
     context_object_name = 'tools_list'
 
     def has_permission(self):
@@ -31,7 +31,7 @@ class AdminToolView(PermissionRequiredMixin, ListView):
 class CreateToolView(PermissionRequiredMixin, CreateView):
     model = Tool
     form_class = ToolForm
-    template_name = 'tools/admin_tool_create.html'
+    template_name = 'makerspace/tools/admin_tool_create.html'
     context_object_name = 'tool'
     permission_required = 'makerspace.add_tool'
     success_url = reverse_lazy('makerspace-tools-admin')
@@ -40,7 +40,7 @@ class CreateToolView(PermissionRequiredMixin, CreateView):
 class EditToolView(PermissionRequiredMixin, UpdateView):
     model = Tool
     form_class = ToolForm
-    template_name = 'tools/admin_tool_edit.html'
+    template_name = 'makerspace/tools/admin_tool_edit.html'
     context_object_name = 'tool'
     permission_required = 'makerspace.change_tool'
     success_url = reverse_lazy('makerspace-tools-admin')

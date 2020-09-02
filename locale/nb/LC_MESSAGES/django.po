@@ -100,7 +100,7 @@ msgstr "Ny kunngjøring"
 #: internal/templates/internal/edit_member.html:81
 #: internal/templates/internal/system_access_edit.html:25
 #: make_queue/templates/make_queue/machine/machine_edit.html:62
-#: makerspace/templates/tools/admin_tool_edit.html:34
+#: makerspace/templates/makerspace/tools/admin_tool_edit.html:34
 #: news/templates/news/article_edit.html:87
 #: news/templates/news/event_edit.html:122
 #: news/templates/news/timeplace_edit.html:72
@@ -119,7 +119,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/registration_edit.html:102
 #: make_queue/templates/make_queue/machine/machine_edit.html:65
 #: make_queue/templates/make_queue/quota/quota_edit.html:65
-#: makerspace/templates/tools/admin_tool_edit.html:36
+#: makerspace/templates/makerspace/tools/admin_tool_edit.html:36
 #: news/templates/news/article_edit.html:89
 #: news/templates/news/event_edit.html:124
 #: news/templates/news/timeplace_edit.html:74
@@ -285,7 +285,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: docs/templates/docs/documentation_page.html:43
-#: makerspace/templates/tools/admin_tool.html:38
+#: makerspace/templates/makerspace/tools/admin_tool.html:38
 #: news/templates/news/admin_articles.html:54
 #: news/templates/news/admin_event.html:27
 #: news/templates/news/admin_timeplace_listing.html:36
@@ -318,7 +318,7 @@ msgstr "Tittel"
 #: docs/templates/docs/edit_documentation_page.html:19
 #: groups/templates/groups/committee_form.html:14
 #: make_queue/templates/make_queue/usage_rules.html:17
-#: makerspace/templates/tools/tool.html:35
+#: makerspace/templates/makerspace/tools/tool.html:35
 #: news/templates/news/admin_articles.html:50
 #: news/templates/news/admin_event.html:21
 #: news/templates/news/admin_timeplace_listing.html:28
@@ -1480,41 +1480,41 @@ msgstr "Reservasjonen kan ikke starte i fortiden"
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
-#: makerspace/templates/tools/admin_tool.html:9
+#: makerspace/templates/makerspace/tools/admin_tool.html:9
 #: web/templates/web/admin_panel.html:99
 msgid "Tools"
 msgstr "Verktøy"
 
-#: makerspace/templates/tools/admin_tool.html:10
+#: makerspace/templates/makerspace/tools/admin_tool.html:10
 msgid "Add new tool"
 msgstr "Legg til nytt verktøy"
 
-#: makerspace/templates/tools/admin_tool.html:28
-#: makerspace/templates/tools/tool.html:28
-#: makerspace/templates/tools/tools.html:29
+#: makerspace/templates/makerspace/tools/admin_tool.html:28
+#: makerspace/templates/makerspace/tools/tool.html:28
+#: makerspace/templates/makerspace/tools/tools.html:29
 #, python-format
 msgid "Image of %(tool)s"
 msgstr "Bilde av %(tool)s"
 
-#: makerspace/templates/tools/admin_tool.html:39
+#: makerspace/templates/makerspace/tools/admin_tool.html:39
 msgid "Click to delete"
 msgstr "Trykk for å slette"
 
-#: makerspace/templates/tools/admin_tool_create.html:4
-#: makerspace/templates/tools/admin_tool_create.html:5
+#: makerspace/templates/makerspace/tools/admin_tool_create.html:4
+#: makerspace/templates/makerspace/tools/admin_tool_create.html:5
 msgid "New tool"
 msgstr "Nytt verktøy"
 
-#: makerspace/templates/tools/admin_tool_edit.html:5
-#: makerspace/templates/tools/admin_tool_edit.html:9
+#: makerspace/templates/makerspace/tools/admin_tool_edit.html:5
+#: makerspace/templates/makerspace/tools/admin_tool_edit.html:9
 msgid "Edit tool"
 msgstr "Rediger verktøy"
 
-#: makerspace/templates/tools/tool.html:12
+#: makerspace/templates/makerspace/tools/tool.html:12
 msgid "A list of tools"
 msgstr "En utstyrsliste"
 
-#: makerspace/templates/tools/tools.html:15
+#: makerspace/templates/makerspace/tools/tools.html:15
 msgid "Available tools at Makerverkstedet"
 msgstr "Tilgjengelige verktøy på Makerverkstedet"
 
