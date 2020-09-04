@@ -25,7 +25,7 @@
 }
 
 #header .item:hover > .text {
-    color: #FFF;
+    color: #eee;
 }
 
 #header div.logo-centering {
@@ -66,7 +66,8 @@
 
 #nav > .item:hover,
 #side-nav > .item:hover,
-#nav-user-dropdown.active {
+#nav-user-dropdown.active,
+#makerspace-dropdown.active {
     /* Disables property from Fomantic UI */
     background-color: transparent;
 }
@@ -128,7 +129,9 @@
     margin-right: 0;
 }
 
-#nav-user-dropdown .menu {
+
+#nav-user-dropdown .menu,
+#makerspace-dropdown .menu {
     background-color: rgb(34, 43, 52);
     border-radius: 7px;
     border: 2px solid rgb(220, 221, 222);
@@ -140,7 +143,8 @@
     align-self: auto;
 }
 
-#nav-user-dropdown .menu > .item:hover {
+#nav-user-dropdown .menu > .item:hover,
+#makerspace-dropdown .menu > .item:hover {
     background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic UI */
 }
 
