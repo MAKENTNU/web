@@ -5,41 +5,41 @@
 {% load css_tags %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/tools.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment.css" %}"/>
     <script src="{% static "web/js/image-link.js" %}"></script>
 {% endblock head %}
 
 
 {% block body %}
     <h1 class="ui text-centered make_col_blue header">
-        {% trans "Available tools at Makerverkstedet" %}
+        {% trans "Available equipment at Makerverkstedet" %}
     </h1>
     <div class="ui container">
-        <div class="tools">
-            {% for tool in tools_list %}
+        <div class="equipment-list">
+            {% for equipment in equipment_list %}
 
                 {# For the images #}
-                <a class="tool-img" href="{% url 'makerspace-tool' tool.id %}">
-                    <img {% thumbnail tool.image "250x250" crop="center" as image_thumb %}
+                <a class="equipment-img" href="{% url 'makerspace-equipment' equipment.id %}">
+                    <img {% thumbnail equipment.image "250x250" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
                     {% empty %}
-                        src="{{ tool.image.url }}"
+                        src="{{ equipment.image.url }}"
                     {% endthumbnail %}
                         style="{% img_square 250 %}"
-                        alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
+                        alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
                     />
                 </a>
 
                 {# For the text #}
-                <div class="tool-text
-                            {% if forloop.first %}tool-first{% endif %}
-                            {% if forloop.last %}tool-last{% endif %}">
+                <div class="equipment-text
+                            {% if forloop.first %}equipment-first{% endif %}
+                            {% if forloop.last %}equipment-last{% endif %}">
                     <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}" alt=""/>
                     <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}" alt=""/>
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}" alt=""/>
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}" alt=""/>
-                    <h2 class="tool-title">
-                        <a class="make_col_yellow" href="{% url 'makerspace-tool' tool.id %}">{{ tool.title }}</a>
+                    <h2 class="equipment-title">
+                        <a class="make_col_yellow" href="{% url 'makerspace-equipment' equipment.id %}">{{ equipment.title }}</a>
                     </h2>
                 </div>
 

@@ -1,13 +1,13 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 
-from .views import AdminToolView, CreateToolView, DeleteToolView, EditToolView, ToolView, ToolsView
+from . import views
 
 urlpatterns = [
-    path('tools/', ToolsView.as_view(), name='makerspace-tools'),
-    path('tools/admin', login_required(AdminToolView.as_view()), name='makerspace-tools-admin'),
-    path('tools/admin/create', login_required(CreateToolView.as_view()), name='makerspace-tools-create'),
-    path('tools/admin/<int:pk>/edit', login_required(EditToolView.as_view()), name='makerspace-tools-edit'),
-    path('tools/admin/<int:pk>/delete', login_required(DeleteToolView.as_view()), name='makerspace-tools-delete'),
-    path('tool/<int:pk>/', ToolView.as_view(), name='makerspace-tool'),
+    path('equipment/', views.EquipmentListView.as_view(), name='makerspace-equipment-list'),
+    path('equipment/admin/', login_required(views.AdminEquipmentView.as_view()), name='makerspace-equipment-admin'),
+    path('equipment/admin/create/', login_required(views.CreateEquipmentView.as_view()), name='makerspace-equipment-create'),
+    path('equipment/admin/<int:pk>/edit/', login_required(views.EditEquipmentView.as_view()), name='makerspace-equipment-edit'),
+    path('equipment/admin/<int:pk>/delete/', login_required(views.DeleteEquipmentView.as_view()), name='makerspace-equipment-delete'),
+    path('equipment/<int:pk>/', views.EquipmentView.as_view(), name='makerspace-equipment'),
 ]

@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class ToolsConfig(AppConfig):
+class MakerspaceConfig(AppConfig):
     name = 'makerspace'

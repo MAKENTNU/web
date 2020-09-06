@@ -1,9 +1,9 @@
 from django import forms
 
-from .models import Tool
+from .models import Equipment
 
 
-class ToolForm(forms.ModelForm):
+class EquipmentForm(forms.ModelForm):
     class Meta:
-        model = Tool
+        model = Equipment
         fields = ['title', 'description', 'image']

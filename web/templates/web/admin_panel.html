@@ -92,14 +92,14 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_tool_permissions %}
+            {% if user|has_any_equipment_permissions %}
                 <div class="ui yellow card">
-                    <a href="{% url 'makerspace-tools-admin' %}" class="content">
+                    <a href="{% url 'makerspace-equipment-admin' %}" class="content">
                         <div class="center aligned header">
-                            <i class="ui grey tools icon"></i>{% trans "Tools" %}
+                            <i class="ui grey tools icon"></i>{% trans "Equipment" %}
                         </div>
                         <div class="description">
-                            {% trans "Here you can add or edit tools at Makerverkstedet" %}.
+                            {% trans "Here you can add or edit equipment at Makerverkstedet" %}.
                         </div>
                     </a>
                 </div>

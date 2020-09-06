@@ -2,12 +2,12 @@
 {% load static %}
 {% load i18n %}
 
-{% block title %}{% trans "Edit tool" %}{% endblock title %}
+{% block title %}{% trans "Edit equipment" %}{% endblock title %}
 
 
 {% block body %}
     <h1 class="ui centered header">
-        {% block form_header %}{% trans "Edit tool" %}{% endblock form_header %}
+        {% block form_header %}{% trans "Edit equipment" %}{% endblock form_header %}
     </h1>
     <form class="ui form text container" method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -28,7 +28,7 @@
         {% endfor %}
 
         <input class="ui yellow right floated submit button" type="submit" value="{% trans "Save" %}"/>
-        <a href="{% url "makerspace-tools-admin" %}" class="ui red right floated button">
+        <a href="{% url "makerspace-equipment-admin" %}" class="ui red right floated button">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>

@@ -1,22 +1,22 @@
-/* --- tools.html --- */
+/* --- equipment_list.html --- */
 
-.tools {
+.equipment-list {
     display: grid;
     grid-template-columns: 1fr 10fr 10fr 1fr;
     grid-row-gap: 30px;
     margin: 80px 0;
 }
 
-.tool-img {
+.equipment-img {
     grid-column: 2/3;
     width: max-content;
 }
 
-.tool-img img {
+.equipment-img img {
     display: block;
 }
 
-.tool-text {
+.equipment-text {
     position: relative;
     grid-column: 3/4;
     display: grid;
@@ -26,7 +26,7 @@
     overflow: hidden;
 }
 
-.tool-title a {
+.equipment-title a {
     text-transform: uppercase;
     font-size: 50px;
 }
@@ -58,15 +58,15 @@
     right: 0;
 }
 
-.tool-text.tool-first .txtborder.tr,
-.tool-text.tool-last .txtborder.br {
+.equipment-text.equipment-first .txtborder.tr,
+.equipment-text.equipment-last .txtborder.br {
     display: inline;
 }
 
 
-/* --- tool.html --- */
+/* --- equipment.html --- */
 
-.tool-description {
+.equipment-description {
     font-size: 16px;
     line-height: 26px;
 }
@@ -75,19 +75,19 @@
 /* Switch to mobile layout */
 @media screen and (max-width: 992px) {
 
-    /* --- tools.html --- */
-    .tools {
+    /* --- equipment_list.html --- */
+    .equipment-list {
         grid-template-columns: 1fr 20fr 1fr;
         grid-row-gap: 0;
         justify-items: center;
     }
 
-    .tool-text {
+    .equipment-text {
         grid-column: 2/3;
         margin-bottom: 60px;
     }
 
-    .tool-title {
+    .equipment-title {
         text-align: center;
     }
 

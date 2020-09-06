@@ -6,38 +6,38 @@
 
 {% block body %}
     <h1 class="ui text-centered make_col_yellow header">
-        {% trans "Tools" %}
-        <a href="{% url 'makerspace-tools-create' %}" title="{% trans "Add new tool" %}">
+        {% trans "Equipment" %}
+        <a href="{% url 'makerspace-equipment-create' %}" title="{% trans "Add new equipment" %}">
             <i class="ui add icon green"></i>
         </a>
     </h1>
     <div class="ui text container">
-        {% if tools_list %}
+        {% if equipment_list %}
             <div class="ui divided list">
-                {% for tool in tools_list %}
+                {% for equipment in equipment_list %}
                     <div class="item">
 
                         <i class="ui icon">
-                            <a href="{% url 'makerspace-tools-edit' tool.id %}">
-                                <img {% thumbnail tool.image "36x36" crop="center" as image_thumb %}
+                            <a href="{% url 'makerspace-equipment-edit' equipment.id %}">
+                                <img {% thumbnail equipment.image "36x36" crop="center" as image_thumb %}
                                     src="{{ image_thumb.url }}"
                                 {% empty %}
-                                    src="{{ tool.image.url }}"
+                                    src="{{ equipment.image.url }}"
                                 {% endthumbnail %}
                                     style="{% img_square 36 %}"
-                                    alt="{% blocktrans trimmed with tool=tool.title %}Image of {{ tool }}{% endblocktrans %}"
+                                    alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
                                 />
                             </a>
                         </i>
                         <div class="content">
-                            <a class="inline-block make_col_blue header" href="{% url 'makerspace-tools-edit' tool.id %}">
-                                {{ tool.title }}
+                            <a class="inline-block make_col_blue header" href="{% url 'makerspace-equipment-edit' equipment.id %}">
+                                {{ equipment.title }}
                             </a>
-                            {% if perms.makerspace.delete_tool %}
+                            {% if perms.makerspace.delete_equipment %}
                                 <a class="delete confirm"
                                    data-title="{% trans "Delete" %}"
                                    data-content="{% trans "Click to delete" %}."
-                                   href="{% url 'makerspace-tools-delete' tool.id %}">
+                                   href="{% url 'makerspace-equipment-delete' equipment.id %}">
                                     <i class="ui delete icon red"></i>
                                 </a>
                             {% endif %}
