@@ -17,7 +17,7 @@ class IndexView(TemplateView):
 
         context.update({
             'articles': Article.objects.published().filter(featured=True)[:4],
-            'events': events[:4],
+            'events': events[:2],
         })
         return context
 
