@@ -202,7 +202,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         """
         # User must be able to change the given reservation
         if not (kwargs["reservation"].can_change(request.user)
-                and kwargs["reservation"].can_change_end_time(request.user)):
+                or kwargs["reservation"].can_change_end_time(request.user)):
             return redirect("my_reservations")
         return super().dispatch(request, *args, **kwargs)
 
