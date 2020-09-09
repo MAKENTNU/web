@@ -13,8 +13,8 @@
     z-index: -10;
     width: 100%;
     height: calc(50vh - 120px);
-    min-height: 150px;
-    max-height: 300px;
+    min-height: 50px;
+    max-height: 170px;
 }
 
 .topimg {
