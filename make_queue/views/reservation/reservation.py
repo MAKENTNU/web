@@ -217,6 +217,10 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         if reservation.machine != form.cleaned_data["machine"]:
             return redirect("my_reservations")
 
+        # If the reservation has begun, the user is not allowed to change the start time
+        if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
+            return redirect("my_reservations")
+
         reservation.comment = form.cleaned_data["comment"]
 
         reservation.start_time = form.cleaned_data["start_time"]
