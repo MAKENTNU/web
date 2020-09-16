@@ -201,10 +201,11 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
-        if not (kwargs["reservation"].can_change(request.user)
-                or kwargs["reservation"].can_change_end_time(request.user)):
+        reservation = kwargs["reservation"]
+        if reservation.can_change(request.user) or reservation.can_change_end_time(request.user):
+            return super().dispatch(request, *args, **kwargs)
+        else:
             return redirect("my_reservations")
-        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form, **kwargs):
         """
