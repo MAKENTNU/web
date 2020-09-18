@@ -2163,9 +2163,13 @@ msgstr "Se gammelt bilde"
 msgid "An image is required"
 msgstr "Et bilde er krevd"
 
-#: web/templates/web/header.html:43 web/templates/web/header.html:49
+#: web/templates/web/header.html:43
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
+
+#: web/templates/web/header.html:49
+msgid "About"
+msgstr "Om"
 
 #: web/templates/web/header.html:61
 msgid "About us"
