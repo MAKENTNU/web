@@ -17,6 +17,6 @@ class ContentBox(models.Model):
 
     class Meta:
         permissions = (
-            ("can_upload_image", "Can upload image for CKEditor"),
-            ("can_browse_image", "Can brows image in CKEditor"),
+            ("can_upload_image", "Can upload images in CKEditor"),
+            ("can_browse_image", "Can browse images in CKEditor"),
         )
