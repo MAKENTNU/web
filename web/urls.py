@@ -35,7 +35,6 @@ urlpatterns += i18n_patterns(
     path('makerspace/', include('makerspace.urls')),
     DisplayContentBoxView.get_path('about'),
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
-    DisplayContentBoxView.get_path('makerspace'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),

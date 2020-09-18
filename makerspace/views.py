@@ -2,9 +2,15 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from contentbox.views import DisplayContentBoxView
 from web.templatetags.permission_tags import has_any_equipment_permissions
 from .forms import EquipmentForm
 from .models import Equipment
+
+
+class MakerspaceView(DisplayContentBoxView):
+    template_name = 'makerspace/makerspace.html'
+    title = 'makerspace'
 
 
 class EquipmentView(DetailView):

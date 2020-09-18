@@ -1,0 +1,9 @@
+.makerspace-sub-pages p {
+    margin-top: 25px;
+}
+
+.makerspace-sub-pages .title {
+    line-height: 30px;
+    font-size: x-large;
+    font-weight: bold;
+}

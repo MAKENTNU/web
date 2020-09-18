@@ -5,6 +5,7 @@ from contentbox.views import DisplayContentBoxView
 from . import views
 
 urlpatterns = [
+    path('', views.MakerspaceView.as_view(), name='makerspace'),
     path('equipment/', views.EquipmentListView.as_view(), name='makerspace-equipment-list'),
     path('equipment/admin/', login_required(views.AdminEquipmentView.as_view()), name='makerspace-equipment-admin'),
     path('equipment/admin/create/', login_required(views.CreateEquipmentView.as_view()), name='makerspace-equipment-create'),

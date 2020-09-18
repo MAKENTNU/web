@@ -305,12 +305,12 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:13 docs/models.py:14 makerspace/models.py:11
+#: contentbox/models.py:11 docs/models.py:14 makerspace/models.py:11
 #: news/models.py:37
 msgid "Title"
 msgstr "Tittel"
 
-#: contentbox/templates/contentbox/display.html:13
+#: contentbox/templates/contentbox/display.html:16
 #: contentbox/templates/contentbox/edit.html:5
 #: contentbox/templates/contentbox/edit.html:16
 #: docs/templates/docs/documentation_page.html:36
@@ -1268,6 +1268,7 @@ msgstr "Maskiner"
 
 #: make_queue/templates/make_queue/reservation_machines.html:37
 #: make_queue/templates/make_queue/reservation_overview.html:23
+#: makerspace/templates/makerspace/makerspace.html:24
 #: web/templates/web/header.html:55
 msgid "Rules"
 msgstr "Regler"
@@ -1516,6 +1517,18 @@ msgstr "En utstyrsliste"
 #: makerspace/templates/makerspace/equipment/equipment_list.html:15
 msgid "Available equipment at Makerverkstedet"
 msgstr "Tilgjengelig utstyr på Makerverkstedet"
+
+#: makerspace/templates/makerspace/makerspace.html:19
+msgid ""
+"an overview of the various equipment at the workshop, and instructions on "
+"how to use it"
+msgstr ""
+"en oversikt over det forskjellige utstyret på verkstedet, og tilhørende "
+"bruksanvisninger"
+
+#: makerspace/templates/makerspace/makerspace.html:25
+msgid "you must follow these to be allowed to use the workshop"
+msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
 #: news/forms.py:30
 msgid "The event cannot end before it starts"
