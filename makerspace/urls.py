@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import path
 
+from contentbox.views import DisplayContentBoxView
 from . import views
 
 urlpatterns = [
@@ -10,4 +11,5 @@ urlpatterns = [
     path('equipment/admin/<int:pk>/edit/', login_required(views.EditEquipmentView.as_view()), name='makerspace-equipment-edit'),
     path('equipment/admin/<int:pk>/delete/', login_required(views.DeleteEquipmentView.as_view()), name='makerspace-equipment-delete'),
     path('equipment/<int:pk>/', views.EquipmentView.as_view(), name='makerspace-equipment'),
+    DisplayContentBoxView.get_path('rules'),
 ]
