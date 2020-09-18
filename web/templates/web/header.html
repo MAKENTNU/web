@@ -23,6 +23,8 @@
 
     <i id="burger" class="big inverted sidebar icon"></i>
 
+    {# `aria-label` should be used in conjunction with `role="navigation"`, which the `nav` tag specifies implicitly #}
+    {# See https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/Navigation_Role #}
     <nav id="nav" class="ui secondary huge inverted menu" aria-label="Main">
         <a class="item" href="{% url 'events' %}">
             <div class="text">{% trans "Events" %}</div>
@@ -36,10 +38,25 @@
             <div class="text">{% trans "Reservations" %}</div>
             <div class="make_bg_blue bubble-background"></div>
         </a>
-        <a class="item" href="{% url 'makerspace' %}">
+
+        <div id="makerspace-dropdown" class="ui dropdown item">
             <div class="text">{% trans "Makerverkstedet" %}</div>
+            <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
             <div class="make_bg_turquoise bubble-background"></div>
-        </a>
+
+            <nav class="menu transition" aria-label="Makerverkstedet">
+                <a class="item" href="{% url 'makerspace' %}">
+                    <div class="text">{% trans "About" %}</div>
+                </a>
+                <a class="item" href="{% url 'makerspace-equipment-list' %}">
+                    <div class="text">{% trans "Equipment" %}</div>
+                </a>
+                <a class="item" href="{% url 'rules' %}">
+                    <div class="text">{% trans "Rules" %}</div>
+                </a>
+            </nav>
+        </div>
+
         <a class="item" href="{% url 'about' %}">
             <div class="text">{% trans "About us" %}</div>
             <div class="make_bg_yellow bubble-background"></div>
@@ -57,9 +74,9 @@
         </a>
     </nav>
 
-    <nav id="side-nav" class="ui secondary huge inverted menu">
+    <div id="side-nav" class="ui secondary huge inverted menu">
         {% if user.is_authenticated %}
-            <nav id="nav-user-dropdown" class="ui dropdown item">
+            <div id="nav-user-dropdown" class="ui dropdown item">
                 <div class="text">{{ user.first_name|first_word }}</div>
                 <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
                 <div class="make_bg_blue bubble-background"></div>
@@ -86,7 +103,7 @@
                     </a>
                 </nav>
 
-            </nav>
+            </div>
         {% else %}
             <a class="item" href="{% url 'login' %}{{ login_next_param }}">
                 <div class="text">{% trans "Login" %}</div>
@@ -107,7 +124,7 @@
             </div>
         </div>
 
-    </nav>
+    </div>
 </header>
 
 {# Show all site-wide announcements #}
@@ -129,7 +146,7 @@
 </form>
 
 <script>
-    $('#nav-user-dropdown').dropdown({action: "nothing"});
+    $('#nav-user-dropdown, #makerspace-dropdown').dropdown({action: "nothing"});
 
     $(".lang-link").click(function (event) {
         event.preventDefault();
