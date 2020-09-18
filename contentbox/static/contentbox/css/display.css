@@ -1,10 +1,10 @@
-.container {
+.contentbox {
     position: relative;
     margin-top: 100px;
     margin-bottom: 100px;
 }
 
-.container .button {
+.contentbox .edit.button {
     position: absolute;
     top: -50px;
     left: 0;
