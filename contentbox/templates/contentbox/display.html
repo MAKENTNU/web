@@ -9,11 +9,15 @@
 
 {% block body %}
     <div class="contentbox ui container">
+        {% block extra_pre_content %}{% endblock %}
+
         {% if perms.contentbox.change_contentbox %}
             <a class="edit ui yellow button" href="{% url 'contentbox_edit' contentbox.id %}">
                 {% trans "Edit" %}
             </a>
         {% endif %}
         {{ contentbox.content|safe }}
+
+        {% block extra_post_content %}{% endblock %}
     </div>
 {% endblock body %}
