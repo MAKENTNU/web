@@ -11,7 +11,7 @@ from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 from social_core.utils import setting_name
 
-from contentbox.models import ContentBox
+from contentbox.views import DisplayContentBoxView
 from dataporten.views import Logout, login_wrapper
 from web.views import IndexView, AdminPanelView, View404, view_500
 
@@ -32,12 +32,12 @@ urlpatterns += i18n_patterns(
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
     path('announcements/', include('announcements.urls')),
-    ContentBox.path('about'),
-    *ContentBox.multi_path('apply', 'søk', 'sok'),
-    ContentBox.path('makerspace'),
-    ContentBox.path('cookies'),
-    ContentBox.path('rules'),
-    ContentBox.path('privacypolicy'),
+    DisplayContentBoxView.get_path('about'),
+    *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
+    DisplayContentBoxView.get_path('makerspace'),
+    DisplayContentBoxView.get_path('cookies'),
+    DisplayContentBoxView.get_path('rules'),
+    DisplayContentBoxView.get_path('privacypolicy'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
 )
