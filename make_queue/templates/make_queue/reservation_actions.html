@@ -3,7 +3,8 @@
 
 <h3>{% trans "Actions" %}</h3>
 <div class="ui relaxed divided selection action list">
-    <a class="item {% if not can_use or not can_make_more_reservations %}disable{% endif %} enable_popup"
+    {% machine_out_of_order machine as machine_out_of_order %}
+    <a class="item {% if not can_use or machine_out_of_order or not can_make_more_reservations %}disable{% endif %} enable_popup"
             {% if not user.is_authenticated %}
        data-content="{% trans "You must be logged in to make new reservations" %}"
             {% elif not can_use %}

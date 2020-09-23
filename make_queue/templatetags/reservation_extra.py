@@ -91,6 +91,11 @@ def can_use_machine(machine, user):
 
 
 @register.simple_tag()
+def machine_out_of_order(machine):
+    return machine.get_status() == "O"
+
+
+@register.simple_tag()
 def get_machine_cannot_use_text(machine):
     return machine.machine_type.cannot_use_text
 

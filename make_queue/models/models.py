@@ -194,6 +194,10 @@ class Reservation(models.Model):
         if not self.is_within_allowed_period():
             return False
 
+        # Check if machine is listed as out of order
+        if self.check_machine_out_of_order():
+            return False
+
         # Check if the user can change the reservation
         if self.pk:
             old_reservation = Reservation.objects.get(pk=self.pk)
@@ -225,6 +229,10 @@ class Reservation(models.Model):
     def is_within_allowed_period(self):
         """Check if the reservation is made within the reservation_future_limit"""
         return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
+
+    def check_machine_out_of_order(self):
+        """Check if the mashine is listed as out of order"""
+        return self.machine.get_status()=="O"
 
     def can_delete(self, user):
         if user.has_perm("make_queue.delete_reservation"):
