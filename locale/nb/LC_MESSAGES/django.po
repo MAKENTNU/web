@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-06 01:29+0200\n"
+"POT-Creation-Date: 2020-09-23 15:20+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -100,7 +100,7 @@ msgstr "Ny kunngjøring"
 #: internal/templates/internal/edit_member.html:81
 #: internal/templates/internal/system_access_edit.html:25
 #: make_queue/templates/make_queue/machine/machine_edit.html:62
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:33
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:30
 #: news/templates/news/article_edit.html:87
 #: news/templates/news/event_edit.html:122
 #: news/templates/news/timeplace_edit.html:72
@@ -119,7 +119,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/registration_edit.html:102
 #: make_queue/templates/make_queue/machine/machine_edit.html:65
 #: make_queue/templates/make_queue/quota/quota_edit.html:65
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:35
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:32
 #: news/templates/news/article_edit.html:89
 #: news/templates/news/event_edit.html:124
 #: news/templates/news/timeplace_edit.html:74
@@ -779,7 +779,7 @@ msgstr ""
 "Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
 "\"sluttet\" eller \"pang\""
 
-#: internal\views.py:105
+#: internal/views.py:105
 msgid "Member's quit status was not undone, as the member had not quit."
 msgstr ""
 "Medlemmet's \"sluttet\" status ble ikke gjort om siden medlemmet ikke hadde "
@@ -803,10 +803,14 @@ msgid "Select machine type"
 msgstr "Velg maskintype"
 
 #: make_queue/fields.py:44
+msgid "Workspaces"
+msgstr "Arbeidsplasser"
+
+#: make_queue/fields.py:51
 msgid "3D printers"
 msgstr "3D-printere"
 
-#: make_queue/fields.py:45
+#: make_queue/fields.py:52
 msgid ""
 "You must have completed a 3D printer course to reserve the printers. If you "
 "have taken the course, but don't have access, contact 3dprint@makentnu.no"
@@ -814,17 +818,13 @@ msgstr ""
 "Reservasjon av 3D-printere krever fullført 3D-printerkurs. Hvis du har hatt "
 "kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
 
-#: make_queue/fields.py:52
+#: make_queue/fields.py:59
 msgid "Sewing machines"
 msgstr "Symaskiner"
 
-#: make_queue/fields.py:59
+#: make_queue/fields.py:66
 msgid "3D scanners"
 msgstr "3D-skannere"
-
-#: make_queue/fields.py:66
-msgid "Workspaces"
-msgstr "Arbeidsplasser"
 
 #: make_queue/forms.py:116 make_queue/forms.py:142
 #: make_queue/templates/make_queue/quota/quota_panel.html:48
@@ -832,7 +832,7 @@ msgid "Select user"
 msgstr "Velg bruker"
 
 #: make_queue/forms.py:172 make_queue/models/models.py:38
-#: make_queue/models/models.py:91 make_queue/models/models.py:264
+#: make_queue/models/models.py:91 make_queue/models/models.py:272
 #: make_queue/templates/make_queue/reservation_overview.html:39
 msgid "Machine type"
 msgstr "Maskintype"
@@ -919,34 +919,34 @@ msgstr "Ignorerer regler"
 msgid "All users"
 msgstr "Alle brukere"
 
-#: make_queue/models/models.py:257
+#: make_queue/models/models.py:265
 #: make_queue/templates/make_queue/make_reservation.html:72
 #: make_queue/templates/make_queue/make_reservation.html:76
 #: news/models.py:177
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/models/models.py:258
+#: make_queue/models/models.py:266
 #: make_queue/templates/make_queue/make_reservation.html:86
 #: make_queue/templates/make_queue/make_reservation.html:90
 #: news/models.py:181
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/models/models.py:260
+#: make_queue/models/models.py:268
 msgid "Days"
 msgstr "Dager"
 
-#: make_queue/models/models.py:261
+#: make_queue/models/models.py:269
 #: make_queue/templates/make_queue/rule_edit.html:35
 msgid "Start days"
 msgstr "Start dager for regel perioder"
 
-#: make_queue/models/models.py:262
+#: make_queue/models/models.py:270
 msgid "Hours single period"
 msgstr "Timer enkelt periode"
 
-#: make_queue/models/models.py:263
+#: make_queue/models/models.py:271
 msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
@@ -973,7 +973,7 @@ msgid "Events"
 msgstr "Arrangementer"
 
 #: make_queue/templates/make_queue/calendar.html:97
-#: make_queue/templates/make_queue/reservation_actions.html:24
+#: make_queue/templates/make_queue/reservation_actions.html:25
 #: make_queue/templates/make_queue/reservation_machines.html:25
 #: make_queue/templates/make_queue/reservations.html:14
 #: make_queue/templates/make_queue/reservations.html:23
@@ -1130,7 +1130,7 @@ msgid "View in calendar"
 msgstr "Se i kalender"
 
 #: make_queue/templates/make_queue/make_reservation.html:21
-#: make_queue/templates/make_queue/reservation_actions.html:17
+#: make_queue/templates/make_queue/reservation_actions.html:18
 msgid "New reservation"
 msgstr "Ny reservasjon"
 
@@ -1230,33 +1230,33 @@ msgstr "Maksimalt antall aktive reservasjoner"
 msgid "User has no personal quotas"
 msgstr "Brukeren har ingen personlige kvoter"
 
-#: make_queue/templates/make_queue/reservation_actions.html:8
+#: make_queue/templates/make_queue/reservation_actions.html:9
 msgid "You must be logged in to make new reservations"
 msgstr "Du må være logget inn for å kunne lage nye reservasjoner"
 
-#: make_queue/templates/make_queue/reservation_actions.html:12
+#: make_queue/templates/make_queue/reservation_actions.html:13
 msgid "You have reached the maximum number of future reservations"
 msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
 
-#: make_queue/templates/make_queue/reservation_actions.html:18
+#: make_queue/templates/make_queue/reservation_actions.html:19
 msgid "Click to create a new reservation"
 msgstr "Klikk for å lage en ny reservasjon"
 
-#: make_queue/templates/make_queue/reservation_actions.html:25
+#: make_queue/templates/make_queue/reservation_actions.html:26
 msgid "Click to see your reservations"
 msgstr "Klikk for å se dine reservasjoner"
 
-#: make_queue/templates/make_queue/reservation_actions.html:35
-#: make_queue/templates/make_queue/reservation_actions.html:55
+#: make_queue/templates/make_queue/reservation_actions.html:36
+#: make_queue/templates/make_queue/reservation_actions.html:56
 msgid "Other machines"
 msgstr "Andre maskiner"
 
-#: make_queue/templates/make_queue/reservation_actions.html:36
-#: make_queue/templates/make_queue/reservation_actions.html:56
+#: make_queue/templates/make_queue/reservation_actions.html:37
+#: make_queue/templates/make_queue/reservation_actions.html:57
 msgid "Click to see other machines"
 msgstr "Klikk for å se andre maskiner"
 
-#: make_queue/templates/make_queue/reservation_actions.html:40
+#: make_queue/templates/make_queue/reservation_actions.html:41
 msgid "Overview"
 msgstr "Oversikt"
 
@@ -1481,7 +1481,11 @@ msgstr "Starttiden kan ikke være etter sluttiden"
 msgid "The reservation can't start in the past"
 msgstr "Reservasjonen kan ikke starte i fortiden"
 
-#: make_queue/views/reservation/reservation.py:49
+#: make_queue/views/reservation/reservation.py:50
+msgid "The machine is out of order"
+msgstr "Maskinen er i ustand"
+
+#: make_queue/views/reservation/reservation.py:51
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
@@ -2103,39 +2107,39 @@ msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
 msgid "Are sure you want to delete?"
 msgstr "Er du sikker på at du vil slette?"
 
-#: web/templates/web/footer.html:12
+#: web/templates/web/footer.html:13
 msgid "You can find us here!"
 msgstr "Du kan finne oss her!"
 
-#: web/templates/web/footer.html:12
+#: web/templates/web/footer.html:14
 msgid "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 msgstr "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
 
-#: web/templates/web/footer.html:17
+#: web/templates/web/footer.html:23
 msgid "Like us on Facebook!"
 msgstr "Lik oss på Facebook!"
 
-#: web/templates/web/footer.html:20
+#: web/templates/web/footer.html:26
 msgid "Chat with us on Slack!"
 msgstr "Prat med oss på Slack!"
 
-#: web/templates/web/footer.html:25
+#: web/templates/web/footer.html:31
 msgid "Open a pull request on GitHub!"
 msgstr "Åpne en pull request på GitHub!"
 
-#: web/templates/web/footer.html:28
+#: web/templates/web/footer.html:34
 msgid "Contact us by mail!"
 msgstr "Kontakt oss på e-post!"
 
-#: web/templates/web/footer.html:31
+#: web/templates/web/footer.html:37
 msgid "Follow us on Instagram!"
 msgstr "Følg oss på Instagram!"
 
-#: web/templates/web/footer.html:38
+#: web/templates/web/footer.html:44
 msgid "Cookies"
 msgstr "Cookies"
 
-#: web/templates/web/footer.html:39
+#: web/templates/web/footer.html:45
 msgid "Privacy Policy"
 msgstr "Personvernerklæring"
 
