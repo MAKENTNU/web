@@ -90,9 +90,6 @@ def can_use_machine(machine, user):
     return machine.can_user_use(user)
 
 
-@register.simple_tag()
-def machine_out_of_order(machine):
-    return machine.get_status() == "O"
 
 
 @register.simple_tag()
