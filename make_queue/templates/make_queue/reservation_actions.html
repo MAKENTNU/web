@@ -4,7 +4,7 @@
 <h3>{% trans "Actions" %}</h3>
 <div class="ui relaxed divided selection action list">
     <a class="item enable_popup
-            {% if not can_use or machine.get_status == Machine.OUT_OF_ORDER or machine.get_status == Machine.MAINTENANCE or not can_make_more_reservations %}
+            {% if not can_use or not machine.is_reservable or not can_make_more_reservations %}
                 disable
             {% endif %}"
        href="{% url 'make_reservation' machine=machine %}"
@@ -14,7 +14,8 @@
        data-content="{% get_machine_cannot_use_text machine %}"
             {% elif not can_make_more_reservations %}
        data-content="{% trans "You have reached the maximum number of future reservations" %}"
-            {% endif %}>
+            {% endif %}
+    >
         <i class="large middle aligned make_col_yellow plus icon"></i>
         <div class="content">
             <div class="header">{% trans "New reservation" %}</div>

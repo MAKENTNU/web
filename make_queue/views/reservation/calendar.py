@@ -27,7 +27,6 @@ class ReservationCalendarView(TemplateView):
             "year": year,
             "week": week,
             "date": year_and_week_to_monday(year, week),
-            "Machine": Machine,
         })
 
         if self.request.user.is_authenticated:

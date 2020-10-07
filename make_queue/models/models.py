@@ -73,6 +73,10 @@ class Machine(models.Model):
     def _get_status_display(self):
         return self.STATUS_CHOICES_DICT[self.get_status()]
 
+    @property
+    def is_reservable(self):
+        return self.get_status() in {self.AVAILABLE, self.RESERVED, self.IN_USE}
+
 
 class MachineUsageRule(models.Model):
     """
