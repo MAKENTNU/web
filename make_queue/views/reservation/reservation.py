@@ -46,6 +46,10 @@ class ReservationCreateOrChangeView(TemplateView):
             return _("The start time can't be after the end time")
         if reservation.starts_before_now():
             return _("The reservation can't start in the past")
+        if reservation.check_machine_out_of_order():
+            return _("The machine is out of order")
+        if reservation.check_machine_maintenance():
+            return _("The machine is under maintenance")
         return _("The time slot is not available")
 
     def validate_and_save(self, reservation, form):
