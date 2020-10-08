@@ -900,6 +900,14 @@ msgstr "Sted-URL"
 msgid "Machine model"
 msgstr "Maskinmodell"
 
+#: make_queue/models/models.py:43
+msgid "Priority"
+msgstr "Prioritet"
+
+#: make_queue/models/models.py:44
+msgid "If specified, the machines are sorted ascending by this value."
+msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
+
 #: make_queue/models/models.py:86
 msgid "Number of reservations"
 msgstr "Antall reservasjoner"

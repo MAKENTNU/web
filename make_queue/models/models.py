@@ -37,6 +37,13 @@ class Machine(models.Model):
     machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
     machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
 
+    priority = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_("Priority"),
+        help_text=_("If specified, the machines are sorted ascending by this value."),
+    )
+
     @abstractmethod
     def get_reservation_set(self):
         return Reservation.objects.filter(machine=self)
