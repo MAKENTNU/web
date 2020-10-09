@@ -46,6 +46,10 @@ class ReservationCreateOrChangeView(TemplateView):
             return _("The start time can't be after the end time")
         if reservation.starts_before_now():
             return _("The reservation can't start in the past")
+        if reservation.check_machine_out_of_order():
+            return _("The machine is out of order")
+        if reservation.check_machine_maintenance():
+            return _("The machine is under maintenance")
         return _("The time slot is not available")
 
     def validate_and_save(self, reservation, form):
@@ -201,10 +205,11 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
-        if not (kwargs["reservation"].can_change(request.user)
-                and kwargs["reservation"].can_change_end_time(request.user)):
+        reservation = kwargs["reservation"]
+        if reservation.can_change(request.user) or reservation.can_change_end_time(request.user):
+            return super().dispatch(request, *args, **kwargs)
+        else:
             return redirect("my_reservations")
-        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form, **kwargs):
         """
@@ -215,6 +220,10 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         reservation = kwargs["reservation"]
         # The user is not allowed to change the machine for a reservation
         if reservation.machine != form.cleaned_data["machine"]:
+            return redirect("my_reservations")
+
+        # If the reservation has begun, the user is not allowed to change the start time
+        if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
             return redirect("my_reservations")
 
         reservation.comment = form.cleaned_data["comment"]

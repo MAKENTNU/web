@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'checkin',
     'sorl.thumbnail',
     'channels',
+    'makerspace',
     'internal',
     'docs',
     'users',

@@ -73,6 +73,10 @@ class Machine(models.Model):
     def _get_status_display(self):
         return self.STATUS_CHOICES_DICT[self.get_status()]
 
+    @property
+    def is_reservable(self):
+        return self.get_status() in {self.AVAILABLE, self.RESERVED, self.IN_USE}
+
 
 class MachineUsageRule(models.Model):
     """
@@ -194,6 +198,10 @@ class Reservation(models.Model):
         if not self.is_within_allowed_period():
             return False
 
+        # Check if machine is listed as out of order or maintenance
+        if self.check_machine_out_of_order() or self.check_machine_maintenance():
+            return False
+
         # Check if the user can change the reservation
         if self.pk:
             old_reservation = Reservation.objects.get(pk=self.pk)
@@ -225,6 +233,14 @@ class Reservation(models.Model):
     def is_within_allowed_period(self):
         """Check if the reservation is made within the reservation_future_limit"""
         return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
+
+    def check_machine_out_of_order(self):
+        """Check if the machine is listed as out of order"""
+        return self.machine.get_status() == Machine.OUT_OF_ORDER
+
+    def check_machine_maintenance(self):
+        """Check if the machine is listed as maintenance"""
+        return self.machine.get_status() == Machine.MAINTENANCE
 
     def can_delete(self, user):
         if user.has_perm("make_queue.delete_reservation"):

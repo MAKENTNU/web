@@ -79,6 +79,17 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(view.get_error_message(form, reservation),
                          "Reservasjoner kan bare lages 7 dager frem i tid")
 
+    def test_get_error_message_machine_out_of_order(self):
+        view = self.get_view()
+        form = self.create_form(1, 2)
+        self.assertTrue(form.is_valid())
+        machine = Machine.objects.create(machine_model="Test", machine_type=self.machine_type_sewing,
+                                         status=Machine.OUT_OF_ORDER, name="test out of order")
+        reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
+                                  end_time=form.cleaned_data["end_time"], machine=machine)
+        self.assertEqual(view.get_error_message(form, reservation),
+                         "Maskinen er i ustand")
+
     def test_validate_and_save_valid_reservation(self):
         view = self.get_view()
         form = self.create_form(1, 2)

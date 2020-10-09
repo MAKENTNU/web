@@ -2,19 +2,22 @@
 {% load i18n %}
 {% load static %}
 
+
 {% block head %}
     <link rel="stylesheet" href="{% static "contentbox/css/display.css" %}">
 {% endblock %}
 
 {% block body %}
-    <div class="ui container">
+    <div class="contentbox ui container">
+        {% block extra_pre_content %}{% endblock %}
+
         {% if perms.contentbox.change_contentbox %}
-            <a class="ui yellow button" href="{% url 'contentbox_edit' contentbox.id %}">
+            <a class="edit ui yellow button" href="{% url 'contentbox_edit' contentbox.id %}">
                 {% trans "Edit" %}
             </a>
         {% endif %}
-        {% autoescape off %}
-            {{ contentbox.content }}
-        {% endautoescape %}
+        {{ contentbox.content|safe }}
+
+        {% block extra_post_content %}{% endblock %}
     </div>
 {% endblock body %}
