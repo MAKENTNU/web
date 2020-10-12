@@ -5,11 +5,10 @@ import pytz
 from users.models import User
 from django.test import TestCase
 
-from make_queue.fields import MachineTypeField
-from make_queue.models.course import Printer3DCourse
-from make_queue.models.models import Quota, Reservation
-from make_queue.templatetags.reservation_extra import *
 from make_queue.util.time import local_to_date
+from ...models.course import Printer3DCourse
+from ...models.models import Machine, MachineType, Quota, Reservation
+from ...templatetags.reservation_extra import *
 
 
 class ReservationExtraTestCases(TestCase):
@@ -20,11 +19,11 @@ class ReservationExtraTestCases(TestCase):
         user = User.objects.create_user("user", "user@makentnu.no", "weak_pass")
         user.save()
 
-        machine_type_printer = MachineTypeField.get_machine_type(1)
+        printer_machine_type = MachineType.objects.get(pk=1)
         Quota.objects.create(user=user, number_of_reservations=2, ignore_rules=True,
-                             machine_type=machine_type_printer)
+                             machine_type=printer_machine_type)
         printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status=Machine.AVAILABLE,
-                                         machine_type=machine_type_printer)
+                                         machine_type=printer_machine_type)
         Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
                                        date=timezone.now())
 
@@ -38,7 +37,10 @@ class ReservationExtraTestCases(TestCase):
     def test_current_calendar_url(self, now_mock):
         date = timezone.datetime(2017, 12, 26, 12, 34, 0)
         now_mock.return_value = timezone.get_default_timezone().localize(date)
-        printer = Machine.objects.create(name="U1", location="S1", machine_model="Ultimaker", status=Machine.AVAILABLE)
+        printer_machine_type = MachineType.objects.get(pk=1)
+        printer = Machine.objects.create(
+            name="U1", location="S1", machine_model="Ultimaker", machine_type=printer_machine_type, status=Machine.AVAILABLE,
+        )
 
         self.assertEqual(reverse('reservation_calendar',
                                  kwargs={'year': 2017, 'week': 52, 'machine': printer}),

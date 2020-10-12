@@ -2,9 +2,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
-from make_queue.fields import MachineTypeField
-from make_queue.forms import BaseMachineForm, EditMachineForm
-from make_queue.models.models import Machine
+from ...forms import BaseMachineForm, EditMachineForm
+from ...models.models import Machine, MachineType
 
 
 class MachineView(TemplateView):
@@ -13,17 +12,14 @@ class MachineView(TemplateView):
 
     def get_context_data(self):
         """
-        Creates the context required for the template
+        Creates the context required for the template.
 
-        :return: A list of all machine types with a list of their machine if there exists at least one machine of that
-                type
+        :return: A queryset of all machine types which have at least one existing machine.
         """
-        return {"machine_types": [{
-            "name": machine_type.name,
-            "machines": list(Machine.objects.filter(machine_type=machine_type)),
-            "type": machine_type,
-        } for machine_type in MachineTypeField.possible_machine_types if
-            Machine.objects.filter(machine_type=machine_type).exists()]}
+        return {
+            "machine_types": MachineType.objects.prefetch_machines_and_default_order_by(machines_attr_name="existing_machines")
+                .filter(machines__isnull=False).distinct(),  # filtering through a many-related field (`machines`) can cause duplicates
+        }
 
 
 class CreateMachineView(PermissionRequiredMixin, CreateView):

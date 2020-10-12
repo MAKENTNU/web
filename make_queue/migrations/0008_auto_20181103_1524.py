@@ -4,7 +4,6 @@ import ckeditor_uploader.fields
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import make_queue.fields
 import make_queue.models.course
 
 
@@ -20,7 +19,7 @@ class Migration(migrations.Migration):
             name='MachineUsageRule',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('machine_type', make_queue.fields.MachineTypeField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], unique=True)),
+                ('machine_type', models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], unique=True)),
                 ('content', ckeditor_uploader.fields.RichTextUploadingField()),
                 ('content_en', ckeditor_uploader.fields.RichTextUploadingField()),
             ],
@@ -55,7 +54,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quota',
             name='machine_type',
-            field=make_queue.fields.MachineTypeField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], null=True, verbose_name='Machine type'),
+            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], null=True, verbose_name='Machine type'),
         ),
         migrations.AlterField(
             model_name='quota',
@@ -75,6 +74,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='reservationrule',
             name='machine_type',
-            field=make_queue.fields.MachineTypeField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], verbose_name='Machine type'),
+            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], verbose_name='Machine type'),
         ),
     ]
