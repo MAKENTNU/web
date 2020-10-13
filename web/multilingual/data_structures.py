@@ -34,6 +34,9 @@ class MultiLingualTextStructure:
         """
         return self[get_language()]
 
+    def __repr__(self):
+        return repr(self.languages)
+
     def __getitem__(self, key):
         """
         Returns the string for the given language
@@ -50,3 +53,13 @@ class MultiLingualTextStructure:
         Sets the content of the given language to the given string
         """
         self.languages[key] = item
+
+    def __eq__(self, other):
+        if type(other) is not MultiLingualTextStructure:
+            return False
+        if super().__eq__(other):
+            return True
+        return (
+                self.languages == other.languages
+                and self.use_default_for_empty == other.use_default_for_empty
+        )
