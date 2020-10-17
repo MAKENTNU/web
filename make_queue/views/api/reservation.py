@@ -9,7 +9,7 @@ def get_machine_data(request, machine, reservation=None):
         "reservations": [{"start_time": c_reservation.start_time, "end_time": c_reservation.end_time} for c_reservation
                          in Reservation.objects.filter(end_time__gte=timezone.now(), machine=machine)
                          if c_reservation != reservation],
-        "canIgnoreRules": any(quota.ignore_rules and quota.can_make_more_reservations(request.user) for quota in
+        "canIgnoreRules": any(quota.ignore_rules and quota.can_create_more_reservations(request.user) for quota in
                               Quota.get_user_quotas(request.user, machine.machine_type)),
         "rules": [
             {

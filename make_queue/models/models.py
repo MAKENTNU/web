@@ -193,19 +193,19 @@ class Quota(models.Model):
         reservation_set = self.reservation_set if not self.all else self.reservation_set.filter(user=user)
         return reservation_set.all().filter(end_time__gte=timezone.now())
 
-    def can_make_more_reservations(self, user):
+    def can_create_more_reservations(self, user):
         return self.number_of_reservations != self.get_active_reservations(user).count()
 
     def is_valid_in(self, reservation):
         reservation_exists_or_can_make_more = (self.reservation_set.filter(pk=reservation.pk).exists()
-                                               or self.can_make_more_reservations(reservation.user))
+                                               or self.can_create_more_reservations(reservation.user))
         ignore_rules_or_valid_time = (self.ignore_rules
                                       or ReservationRule.valid_time(reservation.start_time, reservation.end_time, reservation.machine.machine_type))
         return reservation_exists_or_can_make_more and ignore_rules_or_valid_time
 
     @staticmethod
     def can_make_new_reservation(user, machine_type):
-        return any(quota.can_make_more_reservations(user) for quota in Quota.get_user_quotas(user, machine_type))
+        return any(quota.can_create_more_reservations(user) for quota in Quota.get_user_quotas(user, machine_type))
 
     @staticmethod
     def get_user_quotas(user, machine_type):
@@ -236,7 +236,7 @@ class Quota(models.Model):
         return best_quota
 
     @staticmethod
-    def can_make_reservation(reservation):
+    def can_create_reservation(reservation):
         return Quota.get_best_quota(reservation) is not None
 
 
@@ -303,7 +303,7 @@ class Reservation(models.Model):
             return False
 
         # Check if the user can make the given reservation/edit
-        return self.quota_can_make_reservation()
+        return self.quota_can_create_reservation()
 
     def starts_before_now(self):
         """Check if the start time is before current time"""
@@ -313,9 +313,9 @@ class Reservation(models.Model):
         """Check if start time is after end time"""
         return self.start_time >= self.end_time
 
-    def quota_can_make_reservation(self):
+    def quota_can_create_reservation(self):
         """Check if the user can make the given reservation/edit"""
-        return Quota.can_make_reservation(self)
+        return Quota.can_create_reservation(self)
 
     def is_within_allowed_period(self):
         """Check if the reservation is made within the reservation_future_limit"""

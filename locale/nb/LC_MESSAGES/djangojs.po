@@ -45,7 +45,7 @@ msgstr "Tidspunkt"
 msgid "Comment"
 msgstr "Kommentar"
 
-#: make_queue/static/make_queue/js/make_reservation.js:278
+#: make_queue/static/make_queue/js/reservation_create.js:278
 msgid "Choose time"
 msgstr "Velg tid"
 

@@ -357,7 +357,7 @@ msgstr "Gjort av"
 
 #: docs/templates/docs/base.html:9
 #: make_queue/templates/make_queue/calendar.html:85
-#: make_queue/templates/make_queue/make_reservation.html:123
+#: make_queue/templates/make_queue/reservation_create.html:123
 #: web/templates/web/base.html:9
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
@@ -567,7 +567,7 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:34 internal/templates/internal/members.html:209
-#: make_queue/templates/make_queue/make_reservation.html:101
+#: make_queue/templates/make_queue/reservation_create.html:101
 #: news/models.py:226 news/templates/news/admin_event_tickets.html:57
 msgid "Comment"
 msgstr "Kommentar"
@@ -957,15 +957,15 @@ msgid "All users"
 msgstr "Alle brukere"
 
 #: make_queue/models/models.py:359
-#: make_queue/templates/make_queue/make_reservation.html:72
-#: make_queue/templates/make_queue/make_reservation.html:76
+#: make_queue/templates/make_queue/reservation_create.html:72
+#: make_queue/templates/make_queue/reservation_create.html:76
 #: news/models.py:178
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:360
-#: make_queue/templates/make_queue/make_reservation.html:86
-#: make_queue/templates/make_queue/make_reservation.html:90
+#: make_queue/templates/make_queue/reservation_create.html:86
+#: make_queue/templates/make_queue/reservation_create.html:90
 #: news/models.py:182
 msgid "End time"
 msgstr "Slutt-tidspunkt"
@@ -1166,53 +1166,53 @@ msgstr "Rediger maskin"
 msgid "View in calendar"
 msgstr "Se i kalender"
 
-#: make_queue/templates/make_queue/make_reservation.html:21
+#: make_queue/templates/make_queue/reservation_create.html:21
 #: make_queue/templates/make_queue/reservation_actions.html:21
 msgid "New reservation"
 msgstr "Ny reservasjon"
 
-#: make_queue/templates/make_queue/make_reservation.html:23
+#: make_queue/templates/make_queue/reservation_create.html:23
 msgid "Edit reservation"
 msgstr "Endre reservasjon"
 
-#: make_queue/templates/make_queue/make_reservation.html:32
+#: make_queue/templates/make_queue/reservation_create.html:32
 msgid "Equipment type"
 msgstr "Utstyrstype"
 
-#: make_queue/templates/make_queue/make_reservation.html:37
+#: make_queue/templates/make_queue/reservation_create.html:37
 msgid "Select equipment type"
 msgstr "Velg utstyrstype"
 
-#: make_queue/templates/make_queue/make_reservation.html:51
+#: make_queue/templates/make_queue/reservation_create.html:51
 #: makerspace/templates/makerspace/equipment/admin_equipment.html:9
 #: makerspace/templates/makerspace/makerspace.html:18
 #: web/templates/web/admin_panel.html:99 web/templates/web/header.html:52
 msgid "Equipment"
 msgstr "Utstyr"
 
-#: make_queue/templates/make_queue/make_reservation.html:55
+#: make_queue/templates/make_queue/reservation_create.html:55
 msgid "Select machine"
 msgstr "Velg maskin"
 
-#: make_queue/templates/make_queue/make_reservation.html:115
-#: make_queue/templates/make_queue/make_reservation.html:129
+#: make_queue/templates/make_queue/reservation_create.html:115
+#: make_queue/templates/make_queue/reservation_create.html:129
 #: news/models.py:235
 msgid "Event"
 msgstr "Arrangement"
 
-#: make_queue/templates/make_queue/make_reservation.html:133
+#: make_queue/templates/make_queue/reservation_create.html:133
 msgid "Select event"
 msgstr "Velg arrangement"
 
-#: make_queue/templates/make_queue/make_reservation.html:151
+#: make_queue/templates/make_queue/reservation_create.html:151
 msgid "Reservation text"
 msgstr "Reservasjonstekst"
 
-#: make_queue/templates/make_queue/make_reservation.html:161
+#: make_queue/templates/make_queue/reservation_create.html:161
 msgid "Reserve"
 msgstr "Reserver"
 
-#: make_queue/templates/make_queue/make_reservation.html:161
+#: make_queue/templates/make_queue/reservation_create.html:161
 #: make_queue/templates/make_queue/reservations.html:49
 #: make_queue/templates/make_queue/reservations.html:98
 #: make_queue/templates/make_queue/reservations.html:166
@@ -1268,7 +1268,7 @@ msgid "User has no personal quotas"
 msgstr "Brukeren har ingen personlige kvoter"
 
 #: make_queue/templates/make_queue/reservation_actions.html:12
-msgid "You must be logged in to make new reservations"
+msgid "You must be logged in to create new reservations"
 msgstr "Du må være logget inn for å kunne lage nye reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_actions.html:16
