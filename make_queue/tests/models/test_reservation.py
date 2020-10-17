@@ -321,7 +321,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.assertFalse(reservation.is_within_allowed_period())
         self.reset_reservation_future_limit_days()
 
-    def test_make_reservation_too_far_in_the_future(self):
+    def test_create_reservation_too_far_in_the_future(self):
         self.set_reservation_future_limit_days(7)
         self.check_reservation_invalid(self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1)),
                                        "Reservation is too far in the future and should not be valid")

@@ -168,7 +168,7 @@
         let maximum_day = new Date();
         maximum_day.setDate(maximum_day.getDate() + {{ maximum_days_in_advance }});
     </script>
-    <script src="{% static "make_queue/js/make_reservation.js" %}"></script>
+    <script src="{% static "make_queue/js/reservation_create.js" %}"></script>
     <script>
         getFutureReservations($('#machine_name_dropdown').dropdown('get value'), {% invert start_time %});
     </script>

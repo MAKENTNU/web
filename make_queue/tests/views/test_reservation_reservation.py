@@ -14,7 +14,7 @@ from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 from ...tests.utility import post_request_with_user, request_with_user, template_view_get_context_data
 from ...views.admin.reservation import AdminReservationView
-from ...views.reservation.reservation import ChangeReservationView, MakeReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
+from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
 
 
 class BaseReservationCreateOrChangeViewTest(TestCase):
@@ -174,10 +174,10 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(1, valid_form_calls["calls"])
 
 
-class MakeReservationViewTest(BaseReservationCreateOrChangeViewTest):
+class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     def get_view(self):
-        view = MakeReservationView()
+        view = CreateReservationView()
         view.request = request_with_user(self.user)
         return view
 
@@ -236,7 +236,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         response = view.dispatch(view.request, reservation=reservation)
         # Response should be the edit page for the reservation, as no form is posted with the data
         self.assertEqual(200, response.status_code)
-        self.assertEqual(["make_queue/make_reservation.html"], response.template_name)
+        self.assertEqual(["make_queue/reservation_create.html"], response.template_name)
 
     @patch("django.utils.timezone.now")
     def test_post_unchangeable_reservation(self, now_mock):
