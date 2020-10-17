@@ -183,38 +183,38 @@ msgstr "Nå"
 msgid "Week"
 msgstr "Uke"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_util.js:98
 msgid "Sunday"
 msgstr "Søndag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_util.js:98
 msgid "Monday"
 msgstr "Mandag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_util.js:98
 msgid "Tuesday"
 msgstr "Tirsdag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_util.js:98
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_util.js:98
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_util.js:98
 msgid "Friday"
 msgstr "Fredag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_util.js:98
 msgid "Saturday"
 msgstr "Lørdag"
 
-#: web/static/web/js/widgets/mazemap-search.js:31
+#: web/static/web/js/widgets/mazemap_search.js:31
 msgid "No Results"
 msgstr "Ingen resultater"
 
-#: web/static/web/js/widgets/mazemap-search.js:34
+#: web/static/web/js/widgets/mazemap_search.js:34
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"
