@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'channels',
     'makerspace',
+    'FAQPage',
     'internal',
     'docs',
     'users',
