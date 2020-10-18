@@ -6,9 +6,11 @@ from django.http import HttpResponse
 
 
 class FAQPageView(DisplayContentBoxView):
-    template_name = 'FAQPage/3DPrinter/3dprinter.html'
+    template_name = 'FAQPage/MainPage/FAQ.html'
     title = 'FAQPage'
 
 
-def index(request):
-    return HttpResponse("Hello, world. You're at the FAQ Page.")
+class PrinterView(DisplayContentBoxView):
+    template_name = 'FAQPage/3DPrinter/3dprinter.html'
+    title = 'FAQPage'
+
