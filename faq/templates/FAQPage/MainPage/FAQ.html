@@ -1,0 +1,17 @@
+{% extends 'contentbox/display.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block head %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block body %}
+    {% for question in questions %}
+        <p>test2</p>
+        <p>{{ question.title }}</p>
+    {% endfor %}
+    <p>test</p>
+{% endblock body %}

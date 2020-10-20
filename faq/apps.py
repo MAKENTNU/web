@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class FaqpageConfig(AppConfig):
-    name = 'FAQPage'
+    name = 'faq'
