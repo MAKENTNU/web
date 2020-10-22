@@ -11,18 +11,26 @@
 {% block body %}
     <div class="ui styled accordion">
         {% for category in categories %}
-            
-            {% for question in category.questions.all %}
-                <div class="active title">
+            <div class="title">
                    <i class="dropdown icon"></i>
                     <p>
-                        {{ question.title|safe }}
+                        {{ category.name }}
                     </p>
                 </div>
                 <div class="content">
-                    {{ question.answer|safe }}
+                    <div class = "styled accordion">
+                        {% for question in category.questions.all %}
+                            <div class="active title">
+                               <i class="dropdown icon"></i>
+                                    {{ question.title }}
+                            </div>
+                            <div class="content">
+                                    {{ question.answer|safe }}
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            {% endfor %}
+
         {% endfor %}
     </div>
     <script>
