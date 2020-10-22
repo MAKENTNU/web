@@ -1,0 +1,31 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block head %}
+    {{ block.super }}
+{% endblock %}
+
+
+{% block body %}
+    <div class="ui styled accordion">
+        {% for category in categories %}
+            
+            {% for question in category.questions.all %}
+                <div class="active title">
+                   <i class="dropdown icon"></i>
+                    <p>
+                        {{ question.title|safe }}
+                    </p>
+                </div>
+                <div class="content">
+                    {{ question.answer|safe }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <script>
+        $('.ui.accordion').accordion();
+    </script>
+{% endblock body %}

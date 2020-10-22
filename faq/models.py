@@ -10,6 +10,7 @@ from django.core.validators import RegexValidator
 class Category(models.Model):
     name = models.CharField(
         max_length=200,
+        verbose_name=_('Category')
     )
 
     def __str__(self):
