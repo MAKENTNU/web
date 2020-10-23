@@ -3,15 +3,14 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
-from make_queue.fields import MachineTypeField
-from make_queue.models.models import ReservationRule
+from ...models.models import MachineType, ReservationRule
 
 
 class PeriodTests(TestCase):
 
     def setUp(self):
         self.period = ReservationRule.Period
-        self.machine_type = MachineTypeField.get_machine_type(1)
+        self.machine_type = MachineType.objects.get(pk=1)
 
     def test_hours_overlap_inside(self):
         self.assertEqual(round(self.period.hours_overlap(0.25, 0.5, 0.25, 0.4), 2), 3.6)
@@ -63,7 +62,7 @@ class PeriodTests(TestCase):
 class ReservationRuleTests(TestCase):
 
     def setUp(self):
-        self.machine_type = MachineTypeField.get_machine_type(1)
+        self.machine_type = MachineType.objects.get(pk=1)
 
     def test_time_periods(self):
         rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
@@ -143,7 +142,7 @@ class ReservationRuleTests(TestCase):
         except ValidationError:
             pass
 
-        rule.machine_type = MachineTypeField.get_machine_type(2)
+        rule.machine_type = MachineType.objects.get(pk=2)
         self.assertTrue(rule.is_valid_rule(),
                         "Rules for different machine types should not effect the validity of each other")
 

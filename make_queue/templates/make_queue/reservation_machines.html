@@ -34,10 +34,10 @@
                 <div class="ui large header machine-title">
                     {{ machine_type.name }}
                 </div>
-                <a href="{% url "machine_usage_rules" machine_type.type %}">({% trans "Rules" %})</a>
+                <a href="{% url "machine_usage_rules" machine_type %}">({% trans "Rules" %})</a>
             </div>
             <div class="ui cards">
-                {% for machine in machine_type.machines %}
+                {% for machine in machine_type.existing_machines %}
                     {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
                 {% endfor %}
             </div>

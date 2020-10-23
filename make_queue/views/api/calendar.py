@@ -61,6 +61,6 @@ def get_reservation_rules(request, machine):
                 ],
                 "max_inside": rule.max_hours,
                 "max_crossed": rule.max_inside_border_crossed,
-            } for rule in ReservationRule.objects.filter(machine_type=machine.machine_type)
+            } for rule in machine.machine_type.reservation_rules.all()
         ],
     })
