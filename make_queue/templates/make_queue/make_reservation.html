@@ -40,8 +40,8 @@
                         <div class="menu">
                             {% for machine_type in machine_types %}
                                 {% if machine_type.instances %}
-                                    <div class="item {% if selected_machine.machine_type.name == machine_type.literal %}selected_machine_type{% endif %}"
-                                         data-value="{{ machine_type.literal }}">{{ machine_type.literal }}</div>
+                                    <div class="item {% if selected_machine.machine_type == machine_type %}selected_machine_type{% endif %}"
+                                         data-value="{{ machine_type.pk }}">{{ machine_type.name }}</div>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -58,7 +58,7 @@
                         <div class="menu">
                             {% for machine_type in machine_types %}
                                 {% for instance in machine_type.instances %}
-                                    <div class="{{ machine_type.literal }} item {% if selected_machine.pk == instance.pk %}selected_machine_name{% endif %}"
+                                    <div class="machine_type_{{ machine_type.pk }} item {% if selected_machine == instance %}selected_machine_name{% endif %}"
                                          data-value="{{ instance.pk }}">{{ instance.name }}</div>
                                 {% endfor %}
                             {% endfor %}
