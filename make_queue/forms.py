@@ -6,22 +6,19 @@ from django.utils.translation import gettext_lazy as _
 
 import card
 from card.forms import CardNumberField
-from make_queue.fields import MachineTypeField, MachineTypeForm
-from make_queue.models.course import Printer3DCourse
-from make_queue.models.models import Machine, ReservationRule, Quota
 from news.models import TimePlace
 from users.models import User
 from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput, \
     MazemapSearchInput
+from .models.course import Printer3DCourse
+from .models.models import Machine, MachineType, Quota, ReservationRule
 
 
 class ReservationForm(forms.Form):
     """Form for creating or changing a reservation"""
     start_time = forms.DateTimeField()
     end_time = forms.DateTimeField()
-    machine_type = forms.ChoiceField(
-        choices=((machine_type.name, machine_type.name) for machine_type in MachineTypeField.possible_machine_types),
-        required=False)
+    machine_type = forms.ModelChoiceField(required=False, queryset=MachineType.objects.all())
     event = forms.BooleanField(required=False)
     event_pk = forms.CharField(required=False)
     special = forms.BooleanField(required=False)
@@ -116,6 +113,12 @@ class QuotaForm(forms.ModelForm):
                                 widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
                                 label=_("User"),
                                 required=False)
+    machine_type = forms.ModelChoiceField(
+        queryset=MachineType.objects.order_by("priority"),
+        label=_("Machine type"),
+        empty_label=_("Select machine type"),
+        widget=SemanticChoiceInput,
+    )
 
     def clean(self):
         cleaned_data = super().clean()
@@ -167,14 +170,22 @@ class Printer3DCourseForm(forms.ModelForm):
 
 
 class FreeSlotForm(forms.Form):
-    machine_type = MachineTypeForm(
-        choices=((machine_type.id, machine_type.name) for machine_type in MachineTypeField.possible_machine_types),
-        initial=1, label=_("Machine type"))
+    machine_type = forms.ModelChoiceField(
+        queryset=MachineType.objects.order_by("priority"),
+        label=_("Machine type"),
+        widget=SemanticChoiceInput,
+    )
     hours = IntegerField(min_value=0, initial=1, label=_("Duration in hours"))
     minutes = IntegerField(min_value=0, max_value=59, initial=0, label=_("Duration in minutes"))
 
 
 class BaseMachineForm(forms.ModelForm):
+    machine_type = forms.ModelChoiceField(
+        queryset=MachineType.objects.order_by("priority"),
+        label=_("Machine type"),
+        empty_label=_("Select machine type"),
+        widget=SemanticChoiceInput,
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -200,5 +211,7 @@ class BaseMachineForm(forms.ModelForm):
 
 
 class EditMachineForm(BaseMachineForm):
+    machine_type = None
+
     class Meta(BaseMachineForm.Meta):
         exclude = ["machine_type", "machine_model"]

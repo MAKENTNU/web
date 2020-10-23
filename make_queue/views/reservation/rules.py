@@ -2,18 +2,18 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
 from django.views.generic import TemplateView, DeleteView, CreateView, UpdateView
 
-from make_queue.forms import RuleForm
-from make_queue.models.models import ReservationRule, Quota, MachineUsageRule
+from ...forms import RuleForm
+from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRule
 
 
 class RulesOverviewView(TemplateView):
     template_name = "make_queue/rules.html"
 
-    def get_context_data(self, machine_type, **kwargs):
+    def get_context_data(self, machine_type: MachineType, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update({
             "machine_type": machine_type,
-            "rules": ReservationRule.objects.filter(machine_type=machine_type),
+            "rules": machine_type.reservation_rules.all(),
         })
         if not self.request.user.is_anonymous:
             context_data.update({

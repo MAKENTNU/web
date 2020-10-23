@@ -3,18 +3,16 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from make_queue.fields import MachineTypeField
-from make_queue.forms import ReservationForm
-from make_queue.models.models import Machine
 from news.models import Event, TimePlace
+from ...forms import ReservationForm
+from ...models.models import Machine, MachineType
 
 
 class ReservationFormTest(TestCase):
 
     def setUp(self):
-        machine_type_printer = MachineTypeField.get_machine_type(1)
-        self.machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+",
-                                              machine_type=machine_type_printer)
+        printer_machine_type = MachineType.objects.get(pk=1)
+        self.machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+", machine_type=printer_machine_type)
         self.event = Event.objects.create(title="Test_Event")
         self.timeplace = TimePlace.objects.create(event=self.event)
 
