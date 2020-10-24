@@ -4,4 +4,4 @@ from card.models import CardNumberField
 
 
 class User(AbstractUser):
-    card_number = CardNumberField(unique=True, null=True)
+    card_number = CardNumberField(unique=True, null=True, blank=True)
