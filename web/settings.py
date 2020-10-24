@@ -1,4 +1,11 @@
+import logging
+import sys
 from pathlib import Path
+
+# Disable logging when testing
+if 'test' in sys.argv:
+    # Disable calls with severity level equal to or less than `CRITICAL` (i.e. everything)
+    logging.disable(logging.CRITICAL)
 
 # Default values
 DATABASE = 'sqlite'
