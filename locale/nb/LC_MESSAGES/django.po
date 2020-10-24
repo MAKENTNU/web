@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-13 16:30+0200\n"
+"POT-Creation-Date: 2020-10-24 02:01+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -100,7 +100,7 @@ msgstr "Ny kunngjøring"
 #: internal/templates/internal/edit_member.html:81
 #: internal/templates/internal/system_access_edit.html:25
 #: make_queue/templates/make_queue/machine/machine_edit.html:62
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:30
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:35
 #: news/templates/news/article_edit.html:87
 #: news/templates/news/event_edit.html:122
 #: news/templates/news/timeplace_edit.html:72
@@ -119,7 +119,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/registration_edit.html:102
 #: make_queue/templates/make_queue/machine/machine_edit.html:65
 #: make_queue/templates/make_queue/quota/quota_edit.html:65
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:32
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:37
 #: news/templates/news/article_edit.html:89
 #: news/templates/news/event_edit.html:124
 #: news/templates/news/timeplace_edit.html:74
@@ -1515,8 +1515,8 @@ msgstr "Trykk for å slette"
 msgid "New equipment"
 msgstr "Nytt utstyr"
 
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:5
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:10
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:6
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:15
 msgid "Edit equipment"
 msgstr "Rediger utstyr"
 
@@ -1544,7 +1544,7 @@ msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 msgid "The event cannot end before it starts"
 msgstr "Arrangementet kan ikke slutte før det starter"
 
-#: news/forms.py:55
+#: news/forms.py:56
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
 "organizers"
@@ -2024,6 +2024,10 @@ msgstr ""
 #: news/views.py:360
 msgid "Your ticket!"
 msgstr "Din billett!"
+
+#: users/models.py:9
+msgid "Full name from LDAP"
+msgstr "Fullt navn fra LDAP"
 
 #: web/templates/web/404.html:5
 msgid "The page doesn't exist"
