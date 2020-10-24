@@ -1,6 +1,6 @@
-Django==3.0.*
-django-hosts==4.0.0
-django-ckeditor==5.9.*
+Django==3.1.*
+django-hosts==4.0
+django-ckeditor==6.0.*
 django-decorator-include>=3.0
 django_ical
 django-phonenumber-field
@@ -9,9 +9,9 @@ sorl-thumbnail
 python-social-auth
 python-dataporten-auth
 social-auth-app-django
-python_ldap==3.2.*
+python_ldap==3.3.*
 
-channels
+channels>=2.3.0
 channels_redis
 
 phonenumbers
