@@ -21,12 +21,14 @@ class EquipmentView(DetailView):
 
 class EquipmentListView(ListView):
     model = Equipment
+    queryset = Equipment.objects.default_order_by()
     template_name = 'makerspace/equipment/equipment_list.html'
     context_object_name = 'equipment_list'
 
 
 class AdminEquipmentView(PermissionRequiredMixin, ListView):
     model = Equipment
+    queryset = Equipment.objects.default_order_by()
     template_name = 'makerspace/equipment/admin_equipment.html'
     context_object_name = 'equipment_list'
 

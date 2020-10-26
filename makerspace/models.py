@@ -21,8 +21,8 @@ class Equipment(models.Model):
         unique=True,
         verbose_name=_('Title'),
     )
-    image = models.ImageField(upload_to='equipment', verbose_name=_('Image'))
     description = MultiLingualRichTextUploadingField(verbose_name=_('Description'))
+    image = models.ImageField(upload_to='equipment', verbose_name=_('Image'))
     priority = models.IntegerField(
         null=True,
         blank=True,
