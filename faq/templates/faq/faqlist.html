@@ -4,23 +4,28 @@
 
 
 {% block head %}
-    {{ block.super }}
-{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static "faq/css/faqlist.css" %}"/>
+{% endblock head %}
 
 
 {% block body %}
-    <div class="ui styled accordion">
-        {% for category in categories %}
-            <div class="title">
-                   <i class="dropdown icon"></i>
-                    <p>
-                        {{ category.name }}
-                    </p>
+    <div class="ui container">
+        <div class="text" id="pagetitle">
+            {% trans "Frequently Asked Questions" %}
+        </div>
+        <div class="ui styled accordion" id="outeraccordion">
+            {% for category in categories %}
+                <div class="active title" id="outeraccordionTitle">
+                       <i class="dropdown icon"></i>
+                        <p>
+                            {{ category.name }}
+                        </p>
                 </div>
                 <div class="content">
-                    <div class = "styled accordion">
+                {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
+                    <div class ="styled accordion">
                         {% for question in category.questions.all %}
-                            <div class="active title">
+                            <div class="active title" id="innerTitle">
                                <i class="dropdown icon"></i>
                                     {{ question.title }}
                             </div>
@@ -31,7 +36,8 @@
                     </div>
                 </div>
 
-        {% endfor %}
+            {% endfor %}
+        </div>
     </div>
     <script>
         $('.ui.accordion').accordion();

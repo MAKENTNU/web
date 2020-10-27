@@ -1,0 +1,19 @@
+#outeraccordion{
+  width: 100%;
+  font-size: 200%;
+}
+
+.ui.accordion .title:not(.ui){
+  display: flex;
+}
+
+#pagetitle{
+  font-size: 300%;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10%;
+}
+
+#innerTitle {
+  color: rgb(12, 66, 106);
+}
