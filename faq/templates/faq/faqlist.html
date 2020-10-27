@@ -10,9 +10,9 @@
 
 {% block body %}
     <div class="ui container">
-        <div class="text" id="pagetitle">
+        <h1 class="ui text-centered make_col_blue header" id="pagetitle">
             {% trans "Frequently Asked Questions" %}
-        </div>
+        </h1>
         <div class="ui styled accordion" id="outeraccordion">
             {% for category in categories %}
                 <div class="active title" id="outeraccordionTitle">
@@ -27,7 +27,7 @@
                         {% for question in category.questions.all %}
                             <div class="active title" id="innerTitle">
                                <i class="dropdown icon"></i>
-                                    {{ question.title }}
+                                    <div class="make_col_blue">{{ question.title }}</div>
                             </div>
                             <div class="content">
                                     {{ question.answer|safe }}
