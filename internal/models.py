@@ -11,6 +11,8 @@ from groups.models import Committee
 from internal.util import date_to_term
 from users.models import User
 
+from web.multilingual.database import MultiLingualRichTextUploadingField
+
 
 class Member(models.Model):
     class Meta:
@@ -168,3 +170,18 @@ class SystemAccess(models.Model):
 
     def should_be_changed(self):
         return self.name != self.WEBSITE
+
+
+class SecretContentBox(models.Model):
+    title = models.CharField(
+        max_length=100,
+        unique=True,
+        verbose_name=_('Title'),
+    )
+    date_changed_password = models.DateTimeField("date of the password change")
+    password = models.IntegerField(default=0)
+
+    content = MultiLingualRichTextUploadingField()
+
+    def __str__(self):
+        return self.title

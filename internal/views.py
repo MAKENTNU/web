@@ -15,6 +15,8 @@ from make_queue.models.course import Printer3DCourse
 class Home(TemplateView):
     template_name = "internal/home.html"
 
+class SecretsView(TemplateView):
+    template_name = "internal/secrets.html"
 
 class MembersListView(ListView):
     template_name = "internal/members.html"
@@ -152,3 +154,4 @@ class ToggleSystemAccessView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("members", args=(self.object.member.pk,))
+
