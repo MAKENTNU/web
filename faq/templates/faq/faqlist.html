@@ -15,7 +15,7 @@
         </h1>
         <div class="ui styled accordion" id="outeraccordion">
             {% for category in categories %}
-                <div class="active title" id="outeraccordionTitle">
+                <div class="active title">
                        <i class="dropdown icon"></i>
                         <p>
                             {{ category.name }}
@@ -25,7 +25,7 @@
                 {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
                     <div class ="styled accordion">
                         {% for question in category.questions.all %}
-                            <div class="active title" id="innerTitle">
+                            <div class="active title">
                                <i class="dropdown icon"></i>
                                     <div class="make_col_blue">{{ question.title }}</div>
                             </div>

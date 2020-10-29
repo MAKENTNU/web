@@ -1,0 +1,32 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>
+            {% trans "Questions" %}
+            {% if perms.faq.can_add_questions %}
+                <a href="{% url "FAQ-create" %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+        <div class="ui relaxed divided list">
+            {% for question in questionlist %}
+                <div class="item">
+                    <div class="content">
+                        <div class="ui header">
+                            {{ question.title }}
+                            {% if perms.faq.can_add_question %}
+                                <a href="{% url "FAQ-edit" pk=question.pk %}">
+                                    <i class="yellow pencil icon"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="description">{{ question.answer|safe }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

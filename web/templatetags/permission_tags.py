@@ -36,3 +36,8 @@ def has_any_makerspace_permission(user):
 @register.filter
 def has_any_equipment_permissions(user):
     return any(user.has_perm(f"makerspace.{action}_equipment") for action in ["add", "change", "delete"])
+
+
+@register.filter
+def has_any_faq_permissions(user):
+    return user.has_perm("can_add_questions")
