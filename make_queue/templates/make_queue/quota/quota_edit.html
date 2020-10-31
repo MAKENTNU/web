@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load i18n %}
 
+
 {% block body %}
 
     <div class="ui container">
@@ -10,12 +11,12 @@
             {% endblock %}
         </h1>
 
-        <div class="ui red message close hidden" id="missing-fields-error-message">
+        <div id="missing-fields-error-message" class="ui red message close hidden">
             <i class="close icon"></i>
             {% trans "Missing required fields." %}
         </div>
 
-        <div class="ui red message close hidden" id="select-user-error-message">
+        <div id="select-user-error-message" class="ui red message close hidden">
             <i class="close icon"></i>
             {% trans "Must select specific user or all users." %}
         </div>
@@ -23,11 +24,11 @@
         <form class="ui form" method="post" action="">
             {% csrf_token %}
             <div class="two fields">
-                <div class="field" id="number-of-reservations-field">
+                <div id="number-of-reservations-field" class="field">
                     <label>{{ form.number_of_reservations.label }}</label>
                     {{ form.number_of_reservations }}
                 </div>
-                <div class="field" id="machine-type-field">
+                <div id="machine-type-field" class="field">
                     <label>{{ form.machine_type.label }}</label>
                     {{ form.machine_type }}
                 </div>
@@ -46,22 +47,23 @@
                     </div>
                 </div>
                 <div class="field">
-                    <div class="ui checkbox" id="checkbox-all-users">
+                    <div id="checkbox-all-users" class="ui checkbox">
                         <label>{{ form.all.label }}</label>
                         {{ form.all }}
                     </div>
                 </div>
             </div>
-            <div class="field" id="user-field">
+            <div id="user-field" class="field">
                 <label>{{ form.user.label }}</label>
                 {{ form.user }}
             </div>
+
             <button class="ui right floated yellow button" type="submit">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
                 {% endblock %}
             </button>
-            <a class="ui red right floated button" href="{% url "quota_panel" %}">
+            <a class="ui right floated red button" href="{% url "quota_panel" %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
@@ -101,10 +103,8 @@
             .on('click', function () {
                 $(this)
                     .closest('.message')
-                    .transition('fade')
-                ;
-            })
-        ;
+                    .transition('fade');
+            });
     </script>
 
 {% endblock %}

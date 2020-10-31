@@ -31,7 +31,6 @@ a.wrapped.button {
 .ui.grid.vpad > .column,
 .ui.grid.vpad > .column.no.padding {
     padding-bottom: 1em;
-
 }
 
 /* Dropdown should not be overlapped by reservations, which have a maximum z-index of 200 (300 for current_time_indicator) */

@@ -1,9 +1,9 @@
 <div class="ui {% if widget.attrs.disabled %}disabled{% endif %} search selection dropdown">
-    <input type="hidden" name="{{ widget.name }}" id="{{ widget.name }}"
+    <input id="{{ widget.name }}" type="hidden" name="{{ widget.name }}"
             {% for group_name, group_choices, group_index in widget.optgroups %}
                 {% for option in group_choices %}
                     {% if option.selected %}
-                        value="{{ option.value }}"
+           value="{{ option.value }}"
                     {% endif %}
                 {% endfor %}
             {% endfor %}

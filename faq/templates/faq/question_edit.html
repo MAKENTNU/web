@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block title %}{% trans "Edit Question" %}{% endblock title %}
 
 {% block head %}
@@ -22,8 +23,7 @@
             {{ form.title }}
         </div>
         <div class="field">
-            <label>{{ form.answer.label }}
-            </label>
+            <label>{{ form.answer.label }}</label>
             {{ form.answer }}
         </div>
         <div class="field">
@@ -35,8 +35,8 @@
             {{ form.categories }}
         </div>
 
-        <input class="ui yellow right floated submit button" type="submit" value="{% trans "Save" %}"/>
-        <a href="{% url "faq-admin" %}" class="ui red right floated button">
+        <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}"/>
+        <a class="ui right floated red button" href="{% url "faq-admin" %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>

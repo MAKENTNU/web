@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load thumbnail %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
 {% endblock head %}
@@ -25,7 +26,8 @@
 
                         {% thumbnail event.event.image "300" crop="center" as im %}
                             <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            />
                         {% endthumbnail %}
                     </div>
 
@@ -66,7 +68,8 @@
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
                             <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            />
                         {% endthumbnail %}
                     </div>
 

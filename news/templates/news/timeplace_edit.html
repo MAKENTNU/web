@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block title %}{% trans "Edit time" %}{% endblock title %}
 
 {% block head %}
@@ -69,8 +70,9 @@
                 </label>
             </div>
         </div>
+
         <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
-        <a href="{% url "admin-event" form.event.initial %}" class="ui red right floated button">
+        <a class="ui right floated red button" href="{% url "admin-event" form.event.initial %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>

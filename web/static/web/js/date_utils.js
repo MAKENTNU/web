@@ -4,7 +4,6 @@ Date.prototype.startOfWeek = function () {
      */
     let dayDifference = ((this.getDay() + 6) % 7) * 24 * 60 * 60 * 1000;
     let timeDifference = this.getHours() * 60 * 60 * 1000 + this.getMinutes() * 60 * 1000 + this.getSeconds() * 1000 + this.getMilliseconds();
-
     return new Date(this - timeDifference - dayDifference);
 };
 

@@ -1,6 +1,7 @@
 {% load i18n %}
 {% load reservation_extra %}
 
+
 <h3>{% trans "Actions" %}</h3>
 <div class="ui relaxed divided selection action list">
     <a class="item enable_popup
@@ -22,7 +23,7 @@
             {% trans "Click to create a new reservation" %}
         </div>
     </a>
-    <a href="{% url "my_reservations" %}" class="item">
+    <a class="item" href="{% url "my_reservations" %}">
         <i class="large middle aligned make_col_yellow list ul icon"></i>
         <div class="content">
             <div class="header">{% trans "My reservations" %}</div>
@@ -35,7 +36,7 @@
                 <i class="ui large make_col_yellow dropdown icon"></i>
             </div>
             <i class="large middle aligned make_col_yellow cogs icon"></i>
-            <div class="content" id="test">
+            <div id="test" class="content">
                 <div class="header">{% trans "Other machines" %}</div>
                 {% trans "Click to see other machines" %}
             </div>
@@ -48,7 +49,9 @@
                 </h4>
                 {% for other_machine in other_machines %}
                     <a class="item"
-                       href="{% url "reservation_calendar" machine=other_machine year=year week=week %}">{{ other_machine.name }}</a>
+                       href="{% url "reservation_calendar" machine=other_machine year=year week=week %}">
+                        {{ other_machine.name }}
+                    </a>
                 {% endfor %}
             </div>
         </div>

@@ -4,6 +4,7 @@
 {% load checkin_tags %}
 {% load i18n %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
 {% endblock head %}
@@ -65,7 +66,7 @@
             <div class="container">
                 <form class="ui form" action="" method="post">
                     {% csrf_token %}
-                    <input name="rating" type="number" id="rating-input" value="1" hidden>
+                    <input id="rating-input" type="number" name="rating" value="1" hidden>
                     <div class="inline fields">
                         <div class="ten wide field">
                             <label>{% trans "Add skills" %}</label>

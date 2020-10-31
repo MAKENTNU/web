@@ -1,8 +1,9 @@
 {% load i18n %}
 
-<div class="ui action input" id="{{ widget.attrs.id }}">
+
+<div id="{{ widget.attrs.id }}" class="ui action input">
     <input type="text" readonly value="{{ widget.value.name }}">
-    <button class="ui right labeled icon yellow button" id="{{ widget.attrs.id }}-button">
+    <button id="{{ widget.attrs.id }}-button" class="ui right labeled icon yellow button">
         {% trans "Upload image" %} <i class="ui upload icon"></i>
     </button>
     <input hidden type="file" name="{{ widget.name }}" accept="{{ widget.attrs.accept }}" formnovalidate data-required="{{ widget.attrs.required }}">
@@ -10,7 +11,7 @@
 {% if widget.value %}
     <a href="{{ widget.value.url }}" target="_blank">{% trans "View old image" %}</a>
 {% endif %}
-<div class="ui red pointing label" id="{{ widget.attrs.id }}-error-message">
+<div id="{{ widget.attrs.id }}-error-message" class="ui red pointing label">
     {% trans "An image is required" %}
 </div>
 

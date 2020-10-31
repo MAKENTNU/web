@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load i18n %}
 
+
 {% block head %}
     {{ form.media }}
 {% endblock %}
@@ -60,8 +61,7 @@
             </div>
 
             <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
-
-            <a href="{% url "reservation_machines_overview" %}" class="ui right floated red button">
+            <a class="ui right floated red button" href="{% url "reservation_machines_overview" %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>

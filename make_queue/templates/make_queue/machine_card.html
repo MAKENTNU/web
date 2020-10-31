@@ -2,11 +2,13 @@
 {% load reservation_extra %}
 {% load i18n %}
 
+
 <div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %} {% endif %}card">
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
     {% if machine.machine_type.has_stream %}
-        <img class="stream image" name="{% sanitize_stream_name machine %}"
-             src="{% static "make_queue/img/no_stream.jpg" %}" id="stream-{% sanitize_stream_name machine %}">
+        <img id="stream-{% sanitize_stream_name machine %}" class="stream image" name="{% sanitize_stream_name machine %}"
+             src="{% static "make_queue/img/no_stream.jpg" %}"
+        />
     {% endif %}
     <div class="content">
         <div class="header">
@@ -27,7 +29,7 @@
                 {% card_text_from_machine_status machine %}
             </div>
         </div>
-        {{ machine.machine_model }} <br>
+        {{ machine.machine_model }}<br>
         <a href="{{ machine.location_url }}" target="_blank">
             <i class="icon location arrow"></i>{{ machine.location }}
         </a>

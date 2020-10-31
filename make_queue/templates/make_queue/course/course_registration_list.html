@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 
+
 {% block body %}
 
     <style>
@@ -23,13 +24,13 @@
             <div class="ui fields">
                 <div class="ui six wide field">
                     <label>{% trans "Filter users based on name" %}</label>
-                    <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
+                    <input id="search" type="text" placeholder="{% trans "Search name and username" %}"
                            name="search_text">
                 </div>
                 <div class="ui four wide field">
                     <label>{% trans "Filter users based on status" %}</label>
                     <div class="ui selection dropdown">
-                        <input type="hidden" name="status_filter" value="" id="status_filter">
+                        <input id="status_filter" type="hidden" name="status_filter" value="">
                         <i class="ui dropdown icon"></i>
                         <div class="default text"></div>
                         <div class="menu">
@@ -40,7 +41,7 @@
                         </div>
                     </div>
                 </div>
-                <input type="hidden" id="selected" name="selected">
+                <input id="selected" type="hidden" name="selected">
                 <div class="ui six wide field">
                     {# Using label with non-blocking space to keep the download button further down #}
                     <label>&nbsp;</label>
@@ -61,7 +62,7 @@
                     <div class="ui six wide field">
                         <label>{% trans "Set status for all selected users" %}</label>
                         <div class="ui selection dropdown">
-                            <input type="hidden" name="status_set" value="" id="status_set">
+                            <input id="status_set" type="hidden" name="status_set" value="">
                             <i class="ui dropdown icon"></i>
                             <div class="default text">{% trans "Select status" %}</div>
                             <div class="menu">
@@ -73,10 +74,10 @@
                     </div>
                     <div class="ui ten wide field">
                         <label>&nbsp;</label>
-                        <button class="ui right floated make_yellow button" id="clear-selected-users">
+                        <button id="clear-selected-users" class="ui right floated make_yellow button">
                             {% trans "Clear selected users" %}
                         </button>
-                        <button class="ui right floated make_yellow button" id="show-selected-users">
+                        <button id="show-selected-users" class="ui right floated make_yellow button">
                             {% trans "Toggle non-selected users" %}
                         </button>
                     </div>
@@ -137,29 +138,31 @@
             </tbody>
         </table>
 
-        <div class="ui right floated pagination menu" id="pagination-bar">
-            <a class="item" id="left-skip">
+        <div id="pagination-bar" class="ui right floated pagination menu">
+            <a id="left-skip" class="item">
                 <i class="ui icon double angle left"></i>
             </a>
-            <a class="item" id="left-change">
+            <a id="left-change" class="item">
                 <i class="ui icon angle left"></i>
             </a>
-            <a class="item" id="right-change">
+            <a id="right-change" class="item">
                 <i class="ui icon angle right"></i>
             </a>
-            <a class="item" id="right-skip">
+            <a id="right-skip" class="item">
                 <i class="ui icon double angle right"></i>
             </a>
         </div>
         <span>
             {% trans "Displaying" %}
-            <b><span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}</b>
+            <b>
+                <span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}
+            </b>
             {% trans "registrations" %}
         </span>
     </div>
 
     {# Modal for confirmation of bulk status update on selected users #}
-    <div class="ui modal" id="set-status-modal">
+    <div id="set-status-modal" class="ui modal">
         <div class="ui icon header">
             <i class="yellow exclamation icon"></i>
             {% trans "Set status of users to" %} &quot;<i><span id="set-status-text"></span></i>&quot;
@@ -167,7 +170,7 @@
 
         <form method="POST" action="{% url "bulk_status_update" %}">
             {% csrf_token %}
-            <input type="hidden" value="" name="status" id="status">
+            <input id="status" type="hidden" value="" name="status">
         </form>
 
         <div class="content">

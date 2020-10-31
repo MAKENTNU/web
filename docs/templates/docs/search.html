@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load search_tags %}
 
+
 {% block body %}
     <div class="ui container">
         <h1>{% trans "Search" %}</h1>
@@ -40,9 +41,9 @@
             {% trans "There are no documents for that search. Try searching for something else." %}
         {% endif %}
 
-        <form action="" method="GET" id="page-form">
+        <form id="page-form" action="" method="GET">
             <input type="hidden" name="query" value="{{ query }}">
-            <input type="hidden" name="page" value="{{ page }}" id="page-form-page-input">
+            <input id="page-form-page-input" type="hidden" name="page" value="{{ page }}">
         </form>
 
         {# Create buttons to allow changing page to one that is close to the current selected page #}

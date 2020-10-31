@@ -8,13 +8,13 @@
     <div id="page-search">
         <form id="search-form" action="{% url "search-pages" %}" method="GET">
             <div class="ui icon input">
-                <input type="text" name="query" id="query" placeholder="{% trans "Search" %}">
-                <i class="search link icon" id="search"></i>
+                <input id="query" type="text" name="query" placeholder="{% trans "Search" %}">
+                <i id="search" class="search link icon"></i>
             </div>
         </form>
     </div>
     {% if perms.docs.add_page %}
-        <a href="{% url "create-page" %}" id="new-page" class="ui right floated yellow button">
+        <a id="new-page" class="ui right floated yellow button" href="{% url "create-page" %}">
             <i class="ui plus icon"></i>
             {% trans "New page" %}
         </a>

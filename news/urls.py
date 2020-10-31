@@ -8,6 +8,7 @@ from .views import EditArticleView, CreateArticleView, EditEventView, CreateEven
     DeleteArticleView, DeleteTimePlaceView, DeleteEventView, AdminEventView, EventRegistrationView, TicketView, \
     AdminEventTicketView, AdminTimeplaceTicketView, MyTicketsView, CancelTicketView, AdminEventsView
 
+
 urlpatterns = [
     path('admin/articles/', login_required(AdminArticleView.as_view()), name='admin-articles'),
     path('admin/events/', login_required(AdminEventsView.as_view()), name='admin-events'),

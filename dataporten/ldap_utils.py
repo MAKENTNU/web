@@ -3,6 +3,7 @@ Note: querying NTNU's LDAP server requires connection to NTNU's VPN.
 """
 
 import ldap
+
 from users.models import User
 
 LDAP_HOST = 'ldap://at.ntnu.no'
@@ -23,7 +24,7 @@ def LDAP_search(search_field, search_value):
     Searches the LDAP server given by LDAP_HOST with the filter search_field=search_value
 
     :return: List of results returned by the LDAP server. Each item in the list is a tuple with distinguished name
-    and a dictionary with the attributes of the user.
+             and a dictionary with the attributes of the user.
     """
     l = ldap.initialize(LDAP_HOST, bytes_mode=False)
     l.simple_bind()

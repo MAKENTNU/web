@@ -3,9 +3,6 @@
 {% load reservation_extra %}
 {% load static %}
 
-{% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-{% endblock %}
 
 {% block title %}
     {% if admin %}
@@ -14,6 +11,11 @@
         {% trans "My reservations" %}
     {% endif %}
 {% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+{% endblock %}
+
 {% block body %}
     <div class="ui container">
         <div class="ui huge header">
@@ -23,19 +25,21 @@
                 {% trans "My reservations" %}
             {% endif %}
         </div>
+
         <div class="ui vertical segment">
             <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
                 {% trans "Machines" %}
             </a>
             <div class="make_right_floated make_row_fill">
                 <div class="field">
-                    <div class="ui checkbox" id="hide_old_reservations">
-                        <input type="checkbox" class="hidden" checked/>
+                    <div id="hide_old_reservations" class="ui checkbox">
+                        <input class="hidden" type="checkbox" checked/>
                         <label>{% trans "Hide previous reservations" %}</label>
                     </div>
                 </div>
             </div>
         </div>
+
         <!-- Desktop table -->
         <table class="ui table make_my_reservation_desktop">
             <thead>
@@ -50,11 +54,13 @@
                 <th>{% trans "Cancel" context "cancel reservation" %}</th>
             </tr>
             </thead>
+
             <tbody>
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
                 <tr class="make_my_reservation_desktop {% if not future_reservation %}make_hidden{% endif %}"
                     data-is-future-reservation="{{ future_reservation }}">
+
                     <td>
                         <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
@@ -75,7 +81,7 @@
                     </td>
                     {% if reservation.event %}
                         <td>
-                            <b class="large-text">{{ reservation.event.event.title }}</b> <br>
+                            <b class="large-text">{{ reservation.event.event.title }}</b><br>
                             {{ reservation.event.start_time|date:"d/m/Y" }}
                         </td>
                     {% elif reservation.special %}
@@ -106,36 +112,38 @@
                         {% if can_mark_finished %}
                             <form method="post" action="{% url 'mark_reservation_done' %}">
                                 {% csrf_token %}
-                                <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
-                                <input type="submit" class="ui button green" value="{% trans "Mark as done" %}"/>
+                                <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                <input class="ui button green" type="submit" value="{% trans "Mark as done" %}"/>
                                 {% if admin %}
-                                    <input type="text" name="next" class="make_hidden"
+                                    <input class="make_hidden" type="text" name="next"
                                            value="{% url 'admin_reservation' %}"/>
                                 {% endif %}
                             </form>
                         {% elif can_delete %}
                             <form method="post" action="{% url 'delete_reservation' %}">
                                 {% csrf_token %}
-                                <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
-                                <input type="submit" class="ui button red"
+                                <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                <input class="ui button red" type="submit"
                                        value="{% trans "Cancel" context "cancel reservation" %}">
                                 {% if admin %}
-                                    <input type="text" name="next" class="make_hidden"
+                                    <input class="make_hidden" type="text" name="next"
                                            value="{% url 'admin_reservation' %}"/>
                                 {% endif %}
                             </form>
                         {% endif %}
-
                     </td>
+
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+
         <div class="ui cards make_my_reservation_cards_padding make_my_reservation_tablet">
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
                 <div class="card {% if not future_reservation %}make_hidden{% endif %}"
                      data-is-future-reservation="{{ future_reservation }}">
+
                     <div class="content">
                         <div class="header">{{ reservation.machine.name }}</div>
                         <div class="meta">
@@ -154,6 +162,7 @@
                             <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
                         {% endif %}
                     </div>
+
                     <div class="ui bottom attached buttons">
                         <a class="ui primary button make_my_reservation_button_pad"
                            href="{% calendar_url_reservation reservation %}">
@@ -173,9 +182,9 @@
                                 {% trans "Done" %}
                                 <form method="post" action="{% url 'mark_reservation_done' %}">
                                     {% csrf_token %}
-                                    <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
+                                    <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
                                     {% if admin %}
-                                        <input type="text" name="next" class="make_hidden"
+                                        <input class="make_hidden" type="text" name="next"
                                                value="{% url 'admin_reservation' %}"/>
                                     {% endif %}
                                 </form>
@@ -185,15 +194,16 @@
                                 {% trans "Cancel" context "cancel reservation" %}
                                 <form method="post" action="{% url 'delete_reservation' %}">
                                     {% csrf_token %}
-                                    <input type="number" name="pk" class="make_hidden" value="{{ reservation.pk }}"/>
+                                    <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
                                     {% if admin %}
-                                        <input type="text" name="next" class="make_hidden"
+                                        <input class="make_hidden" type="text" name="next"
                                                value="{% url 'admin_reservation' %}"/>
                                     {% endif %}
                                 </form>
                             </div>
                         {% endif %}
                     </div>
+
                 </div>
             {% endfor %}
         </div>

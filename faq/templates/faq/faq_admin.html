@@ -1,8 +1,10 @@
 {% extends "web/base.html" %}
 {% load i18n %}
 
+
 {% block body %}
     <div class="ui container">
+
         <h1>
             {% trans "Questions" %}
             {% if perms.faq.add_question %}
@@ -37,5 +39,6 @@
                 </div>
             {% endfor %}
         </div>
+
     </div>
 {% endblock %}

@@ -103,7 +103,7 @@ tr.wrapping {
     padding-right: 0.5em;
 }
 
-.time.selection {
+.selection.time {
     font-size: 0.8em;
     position: absolute;
     background-color: #ffffff;
@@ -118,12 +118,12 @@ tr.wrapping {
     -ms-user-select: none;
 }
 
-.start.time.selection {
+.selection.start.time {
     left: 0;
     top: -0.7em;
 }
 
-.end.time.selection {
+.selection.end.time {
     right: 0;
     bottom: -0.7em;
 }
@@ -151,6 +151,7 @@ tr.wrapping {
 .selection.expand.bottom {
     bottom: 0;
 }
+
 
 @media screen and (max-width: 600px) {
     .legend {

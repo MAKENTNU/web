@@ -1,6 +1,7 @@
 {% extends "internal/base.html" %}
 {% load i18n %}
 
+
 {% block body %}
     <div class="ui container">
         <h1>{% trans "Change system access" %}</h1>
@@ -22,8 +23,13 @@
                     <label>{{ form.value.label }}</label>
                 </div>
             </div>
-            <button class="ui right floated yellow button">{% trans "Save" %}</button>
-            <a href="{% url "members" %}" class="ui right floated red button">{% trans "Cancel" context "abort action" %}</a>
+
+            <button class="ui right floated yellow button">
+                {% trans "Save" %}
+            </button>
+            <a class="ui right floated red button" href="{% url "members" %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
         </form>
     </div>
 {% endblock %}

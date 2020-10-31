@@ -3,13 +3,14 @@
 {% load i18n %}
 {% load reservation_extra %}
 
-{% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}">
-{% endblock %}
 
 {% block title %}
     {{ machine.name }} - {{ machine.machine_model }}
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}">
 {% endblock %}
 
 {% block body %}
@@ -22,7 +23,9 @@
             </div>
             <a href="{% url "machine_usage_rules" machine.machine_type %}">({% trans "Rules" %})</a>
         </div>
+
         <div class="ui three column padded grid vpad">
+
             <div class="ui five wide no padding column">
                 <h3>{% trans "About the machine" %}</h3>
                 <div class="ui relaxed list">
@@ -67,8 +70,9 @@
 
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
-                    <img class="ui right floated stream medium image" id="{% sanitize_stream_name machine %}" name="{{ machine.name }}"
-                         src="{% static "make_queue/img/no_stream.jpg" %}">
+                    <img id="{% sanitize_stream_name machine %}" class="ui right floated stream medium image" name="{{ machine.name }}"
+                         src="{% static "make_queue/img/no_stream.jpg" %}"
+                    />
                 </div>
                 <div id="fader"></div>
                 <i id="closefullscreen" class="ui times icon"></i>
@@ -82,6 +86,7 @@
             </div>
 
         </div>
+
         {% include "make_queue/calendar.html" %}
         <script>
             new ReservationCalendar($(".reservation_calendar"), {
@@ -91,5 +96,6 @@
                 date: new Date(Date.parse("{{ date|date:"c" }}")),
             });
         </script>
+
     </div>
 {% endblock body %}
