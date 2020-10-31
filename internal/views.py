@@ -17,8 +17,8 @@ class Home(TemplateView):
 
 
 class MembersListView(ListView):
-    template_name = "internal/members.html"
     model = Member
+    template_name = "internal/members.html"
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context_data = super().get_context_data(object_list=object_list, **kwargs)
@@ -30,12 +30,10 @@ class MembersListView(ListView):
 
 
 class AddMemberView(PermissionRequiredMixin, CreateView):
-    template_name = "internal/add_member.html"
+    permission_required = ("internal.can_register_new_member",)
     model = Member
     form_class = AddMemberForm
-    permission_required = (
-        "internal.can_register_new_member",
-    )
+    template_name = "internal/add_member.html"
 
     def get_success_url(self):
         return reverse_lazy("edit-member", args=(self.object.pk,))
@@ -53,9 +51,9 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
 
 
 class EditMemberView(UserPassesTestMixin, UpdateView):
-    template_name = "internal/edit_member.html"
     model = Member
     form_class = EditMemberForm
+    template_name = "internal/edit_member.html"
 
     def test_func(self):
         return self.request.user == self.get_object().user or self.request.user.has_perm(
@@ -78,17 +76,19 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
 
 
 class MemberQuitView(UpdateView):
-    template_name = "internal/member_quit.html"
     model = Member
     form_class = MemberQuitForm
+    template_name = "internal/member_quit.html"
     success_url = reverse_lazy("members")
 
     def form_valid(self, form):
         member = form.instance
         if member.retired or member.quit:
             # Fail gracefully
-            messages.add_message(self.request, messages.WARNING,
-                                 _("Member was not set to quit as the member has already quit or retired."))
+            messages.add_message(
+                self.request, messages.WARNING,
+                _("Member was not set to quit as the member has already quit or retired."),
+            )
         else:
             member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
             member.save()
@@ -101,8 +101,10 @@ class MemberUndoQuitView(RedirectView):
         member = get_object_or_404(Member, pk=pk)
         if not member.quit:
             # Fail gracefully
-            messages.add_message(self.request, messages.WARNING,
-                                 _("Member's quit status was not undone, as the member had not quit."))
+            messages.add_message(
+                self.request, messages.WARNING,
+                _("Member's quit status was not undone, as the member had not quit."),
+            )
         else:
             member.toggle_quit(False)
             member.save()
@@ -115,8 +117,10 @@ class MemberRetireView(RedirectView):
         member = get_object_or_404(Member, pk=pk)
         if member.quit or member.retired:
             # Fail gracefully
-            messages.add_message(self.request, messages.WARNING,
-                                 _("Member was not set to retired as the member has already quit or retired."))
+            messages.add_message(
+                self.request, messages.WARNING,
+                _("Member was not set to retired as the member has already quit or retired."),
+            )
         else:
             member.toggle_retirement(True)
             member.save()
@@ -129,8 +133,10 @@ class MemberUndoRetireView(RedirectView):
         member = get_object_or_404(Member, pk=pk)
         if not member.retired:
             # Fail gracefully
-            messages.add_message(self.request, messages.WARNING,
-                                 _("Member's retirement was not undone, as the member was not retired."))
+            messages.add_message(
+                self.request, messages.WARNING,
+                _("Member's retirement was not undone, as the member was not retired."),
+            )
         else:
             member.toggle_retirement(False)
             member.save()
@@ -138,9 +144,9 @@ class MemberUndoRetireView(RedirectView):
 
 
 class ToggleSystemAccessView(UpdateView):
-    template_name = "internal/system_access_edit.html"
     model = SystemAccess
     form_class = ToggleSystemAccessForm
+    template_name = "internal/system_access_edit.html"
 
     def get_context_data(self, **kwargs):
         if (self.object.member.user != self.request.user

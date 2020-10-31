@@ -1,8 +1,8 @@
-from users.models import User
 from django.test import TestCase
 from django.utils import timezone
 
 # Create your tests here.
+from users.models import User
 from make_queue.models.course import Printer3DCourse
 
 

@@ -303,9 +303,8 @@ class ViewTestCase(TestCase):
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
         )
         self.add_permission("change_event")
-        
+
         response = self.client.get(reverse(url_name, args=[event.pk]))
-        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
 
@@ -331,6 +330,7 @@ class ViewTestCase(TestCase):
                 )
             )
         return tickets
+
 
 class HiddenPrivateTestCase(TestCase):
 
@@ -420,4 +420,3 @@ class HiddenPrivateTestCase(TestCase):
         self.add_permission('change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
-

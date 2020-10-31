@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load news_tags %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/admin.css" %}">
 {% endblock head %}
@@ -22,7 +23,9 @@
                                 <img class="inline square_36" src="{{ committee.image.url }}">
                             {% else %}
                                 {# Use a transparent base64 encoded image #}
-                                <img class="inline square_36" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=">
+                                <img class="inline square_36"
+                                     src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
+                                />
                             {% endif %}
                         </i>
                         <div class="content">

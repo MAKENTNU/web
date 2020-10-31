@@ -3,9 +3,10 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 
+
 class Skill(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name="Ferdighet")
-    title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Skill (english)")
+    title_en = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name="Skill (english)")
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):
@@ -18,7 +19,11 @@ class Skill(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(
+        to=User,
+        on_delete=models.SET_NULL,
+        null=True,
+    )
     image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
     last_checkin = models.DateTimeField(auto_now=True, verbose_name="Sist sjekket inn")
@@ -40,24 +45,36 @@ class UserSkill(models.Model):
         (EXPERT, _("Expert")),
     )
 
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
-    skill = models.ForeignKey(Skill, on_delete=models.CASCADE)
+    profile = models.ForeignKey(
+        to=Profile,
+        on_delete=models.CASCADE,
+    )
+    skill = models.ForeignKey(
+        to=Skill,
+        on_delete=models.CASCADE,
+    )
     skill_level = models.IntegerField(choices=LEVEL_CHOICES)
 
     class Meta:
-        ordering = (
-            "skill__title",
-        )
+        ordering = ('skill__title',)
 
     def __str__(self):
         return f"{self.profile} - {self.skill}"
 
 
 class SuggestSkill(models.Model):
-    creator = models.ForeignKey(Profile, related_name="suggestions", null=True, on_delete=models.SET_NULL)
+    creator = models.ForeignKey(
+        to=Profile,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='suggestions',
+    )
     title = models.CharField(max_length=100, unique=True, verbose_name="Foreslått ferdighet")
-    title_en = models.CharField(max_length=100, unique=True, blank=True, null=True, verbose_name="Suggested skill")
-    voters = models.ManyToManyField(Profile, related_name="votes")
+    title_en = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name="Suggested skill")
+    voters = models.ManyToManyField(
+        to=Profile,
+        related_name='votes',
+    )
     image = models.ImageField(upload_to='skills', blank=True, verbose_name="Ferdighetbilde")
 
     def __str__(self):

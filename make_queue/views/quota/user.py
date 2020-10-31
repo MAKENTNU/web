@@ -14,4 +14,6 @@ class GetUserQuotaView(TemplateView):
         :param user: The user for which to get the quota
         :return: The context
         """
-        return {"user_quotas": Quota.objects.filter(user=user, all=False)}
+        return {
+            "user_quotas": Quota.objects.filter(user=user, all=False),
+        }

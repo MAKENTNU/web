@@ -26,12 +26,10 @@ class CourseView(TemplateView):
 
 class CreateRegistrationView(PermissionRequiredMixin, CreateView):
     is_next = False
+    permission_required = ("make_queue.add_printer3dcourse",)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = "make_queue/course/registration_create.html"
-    permission_required = (
-        "make_queue.add_printer3dcourse",
-    )
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -44,22 +42,18 @@ class CreateRegistrationView(PermissionRequiredMixin, CreateView):
 
 
 class EditRegistrationView(PermissionRequiredMixin, UpdateView):
+    permission_required = ("make_queue.change_printer3dcourse",)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = "make_queue/course/registration_edit.html"
-    permission_required = (
-        "make_queue.change_printer3dcourse",
-    )
 
     def get_success_url(self):
         return reverse("course_panel")
 
 
 class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
+    permission_required = ("make_queue.delete_printer3dcourse",)
     model = Printer3DCourse
-    permission_required = (
-        "make_queue.delete_printer3dcourse",
-    )
 
     def get_success_url(self):
         return reverse("course_panel")

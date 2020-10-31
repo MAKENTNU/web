@@ -39,8 +39,8 @@ function filter() {
             element.display = element.element.hasClass("active");
         } else {
             element.display =
-                (element.name.includes(state.search_value) || element.username.includes(state.search_value)) &&
-                element.status.includes(state.status_value);
+                (element.name.includes(state.search_value) || element.username.includes(state.search_value))
+                && element.status.includes(state.status_value);
         }
 
         numberOfShown += element.display;
@@ -143,6 +143,7 @@ $("th").click(function () {
         state.sortBy = columnName;
     }
     sort();
+
     $(this).append(state.sortOrder ? $("<i class=\"ui icon sort down\"></i>") : $("<i class=\"ui icon sort up\"></i>"));
 });
 

@@ -3,6 +3,7 @@ Note: querying NTNU's LDAP server requires connection to NTNU's VPN.
 """
 
 import ldap
+
 from users.models import User
 
 LDAP_HOST = 'ldap://at.ntnu.no'

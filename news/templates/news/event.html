@@ -3,12 +3,13 @@
 {% load i18n %}
 {% load event_tags %}
 
-{% block event_classes %} lalign{% endblock event_classes %}
+
+{% block event_classes %}lalign{% endblock event_classes %}
 
 {% block admin-page %}
     {% if perms.news.change_event %}
         <div>
-            <a href="{% url "admin-event" article.id %}" class="ui yellow button">
+            <a class="ui yellow button" href="{% url "admin-event" article.id %}">
                 <i class="ui sticky note icon"></i>{% trans "Admin page" %}
             </a>
             {% if article.number_of_tickets and perms.news.change_event %}
@@ -22,6 +23,7 @@
         </div>
     {% endif %}
 {% endblock admin-page %}
+
 
 {% block rail %}
     <div class="ui right attached rail">
@@ -50,7 +52,9 @@
                             {% if event.place_url %}
                                 <p>
                                     <i class="ui make_yellow marker icon"></i>
-                                    <a class="place" href="{{ event.place_url }}" target="_blank">{{ event.place }}</a>
+                                    <a class="place" href="{{ event.place_url }}" target="_blank">
+                                        {{ event.place }}
+                                    </a>
                                 </p>
                             {% else %}
                                 <p>
@@ -77,7 +81,7 @@
                         {% if event.number_of_tickets %}
                             {% get_ticket event user as ticket %}
                             {% if ticket %}
-                                <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
+                                <a class="ui green fluid button" href="{% url "ticket" pk=ticket.pk %}">
                                     {% trans "You are registered for this event" %}
                                 </a>
                             {% elif event.number_of_registered_tickets < event.number_of_tickets %}
@@ -105,7 +109,7 @@
                     {% if article.number_of_tickets %}
                         {% get_ticket article user as ticket %}
                         {% if ticket %}
-                            <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
+                            <a class="ui green fluid button" href="{% url "ticket" pk=ticket.pk %}">
                                 {% trans "You are registered for this event" %}
                             </a>
                         {% elif article.number_of_registered_tickets < article.number_of_tickets %}
@@ -143,7 +147,7 @@
             {% if article.number_of_tickets %}
                 {% get_ticket article user as ticket %}
                 {% if ticket %}
-                    <a href="{% url "ticket" pk=ticket.pk %}" class="ui green fluid button">
+                    <a class="ui green fluid button" href="{% url "ticket" pk=ticket.pk %}">
                         {% trans "You are registered for this event" %}
                     </a>
                 {% elif article.number_of_registered_tickets < article.number_of_tickets %}
@@ -168,7 +172,6 @@
             <div class="title">
                 <i class="dropdown icon"></i>
                 {{ event.start_time|date:"d. M" }}
-
             </div>
             <div class="content">
                 <div class="transition hidden">
@@ -186,8 +189,9 @@
                                 {% if event.place_url %}
                                     <p>
                                         <i class="ui make_yellow marker icon"></i>
-                                        <a class="place" href="{{ event.place_url }}"
-                                           target="_blank">{{ event.place }}</a>
+                                        <a class="place" href="{{ event.place_url }}" target="_blank">
+                                            {{ event.place }}
+                                        </a>
                                     </p>
                                 {% else %}
                                     <p>
@@ -215,7 +219,7 @@
                             {% if event.number_of_tickets %}
                                 {% get_ticket event user as ticket %}
                                 {% if ticket %}
-                                    <a href="{% url "ticket" pk=ticket.pk %}" class="ui bottom attached green button">
+                                    <a class="ui bottom attached green button" href="{% url "ticket" pk=ticket.pk %}">
                                         {% trans "You are registered for this event" %}
                                     </a>
                                 {% elif event.number_of_registered_tickets < event.number_of_tickets %}
@@ -242,6 +246,7 @@
     <script>$('.ui.accordion').accordion('open', 0);</script>
 {% endblock event_accordion %}
 
+
 {% block scripts %}
     {{ block.super }}
     <script>
@@ -252,7 +257,6 @@
             this stopgap solution. In most cases, the solution will not be needed, as the average number of occurrences
             is low enough that the event content is heigher than the sticky part.
         {% endcomment %}
-
 
         $(document).ready(() => {
             // Use a timeout of 50 to make sure that the Fomantic UI code is finished
@@ -276,7 +280,6 @@
                 });
                 fixHeight();
             }, 50)
-
         });
     </script>
 {% endblock %}

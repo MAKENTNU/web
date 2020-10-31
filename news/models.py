@@ -14,56 +14,15 @@ from web.multilingual.database import MultiLingualTextField, MultiLingualRichTex
 from web.multilingual.widgets import MultiLingualTextarea
 
 
-class ArticleManager(models.Manager):
-
-    def published(self):
-        return self.filter(hidden=False, publication_time__lte=timezone.localtime())
-
-
-class TimePlaceManager(models.Manager):
-
-    def published(self):
-        return self.filter(hidden=False, event__hidden=False).filter(publication_time__lte=timezone.localtime())
-
-    def future(self):
-        return self.published().filter(end_time__gt=timezone.localtime())
-
-    def past(self):
-        return self.published().filter(end_time__lte=timezone.localtime())
-
-
 class NewsBase(models.Model):
-    title = MultiLingualTextField(
-        max_length=100,
-        verbose_name=_("Title"),
-    )
-    content = MultiLingualRichTextUploadingField(
-        verbose_name=_("Content"),
-    )
-    clickbait = MultiLingualTextField(
-        max_length=300,
-        verbose_name=_('Clickbait'),
-        widget=MultiLingualTextarea
-    )
-    image = models.ImageField(
-        verbose_name=_("Image"),
-    )
-    contain = models.BooleanField(
-        default=False,
-        verbose_name=_("Don't crop the image"),
-    )
-    featured = models.BooleanField(
-        default=True,
-        verbose_name=_("Highlighted"),
-    )
-    hidden = models.BooleanField(
-        default=False,
-        verbose_name=_("Hidden"),
-    )
-    private = models.BooleanField(
-        default=False,
-        verbose_name=_("MAKE internal"),
-    )
+    title = MultiLingualTextField(max_length=100, verbose_name=_("Title"))
+    content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
+    clickbait = MultiLingualTextField(max_length=300, verbose_name=_('Clickbait'), widget=MultiLingualTextarea)
+    image = models.ImageField(verbose_name=_("Image"))
+    contain = models.BooleanField(default=False, verbose_name=_("Don't crop the image"))
+    featured = models.BooleanField(default=True, verbose_name=_("Highlighted"))
+    hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))
+    private = models.BooleanField(default=False, verbose_name=_("MAKE internal"))
 
     def save(self, **kwargs):
         """
@@ -98,17 +57,19 @@ class NewsBase(models.Model):
         )
 
 
+class ArticleManager(models.Manager):
+
+    def published(self):
+        return self.filter(hidden=False, publication_time__lte=timezone.localtime())
+
+
 class Article(NewsBase):
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publishing time"))
+
     objects = ArticleManager()
-    publication_time = models.DateTimeField(
-        default=timezone.localtime,
-        verbose_name=_("Publishing time"),
-    )
 
     class Meta:
-        ordering = (
-            '-publication_time',
-        )
+        ordering = ('-publication_time',)
 
 
 class Event(NewsBase):
@@ -126,7 +87,7 @@ class Event(NewsBase):
         default=REPEATING,
         verbose_name=_("Type of event")
     )
-    number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
+    number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
 
     def get_future_occurrences(self):
         return TimePlace.objects.future().filter(event=self).order_by("start_time")
@@ -166,44 +127,38 @@ class Event(NewsBase):
         return True
 
 
+class TimePlaceManager(models.Manager):
+
+    def published(self):
+        return self.filter(hidden=False, event__hidden=False).filter(publication_time__lte=timezone.localtime())
+
+    def future(self):
+        return self.published().filter(end_time__gt=timezone.localtime())
+
+    def past(self):
+        return self.published().filter(end_time__lte=timezone.localtime())
+
+
 class TimePlace(models.Model):
+    event = models.ForeignKey(
+        to=Event,
+        on_delete=models.CASCADE,
+    )
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publishing time"))
+    start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Start time"))
+    end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("End time"))
+    place = models.CharField(max_length=100, blank=True, verbose_name=_("Location"))
+    place_url = models.CharField(max_length=200, blank=True, verbose_name=_("Location URL"))
+    hidden = models.BooleanField(default=True, verbose_name=_("Hidden"))
+    number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
+
     objects = TimePlaceManager()
-    event = models.ForeignKey(Event, on_delete=models.CASCADE)
-    publication_time = models.DateTimeField(
-        default=timezone.localtime,
-        verbose_name=_("Publishing time"),
-    )
-    start_time = models.DateTimeField(
-        default=timezone.localtime,
-        verbose_name=_("Start time"),
-    )
-    end_time = models.DateTimeField(
-        default=timezone.localtime,
-        verbose_name=_("End time"),
-    )
-    place = models.CharField(
-        max_length=100,
-        blank=True,
-        verbose_name=_("Location"),
-    )
-    place_url = models.CharField(
-        max_length=200,
-        blank=True,
-        verbose_name=_("Location URL"),
-    )
-    hidden = models.BooleanField(
-        default=True,
-        verbose_name=_("Hidden"),
-    )
-    number_of_tickets = models.IntegerField(verbose_name=_("Number of available tickets"), default=0)
 
     def __str__(self):
         return '%s - %s' % (self.event.title, self.start_time.strftime('%Y.%m.%d'))
 
     class Meta:
-        ordering = (
-            'start_time',
-        )
+        ordering = ('start_time',)
 
     def number_of_registered_tickets(self):
         return self.eventticket_set.filter(active=True).count()
@@ -218,21 +173,37 @@ class TimePlace(models.Model):
 
 
 class EventTicket(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, verbose_name=_("User"))
-    # For backwards compatibility, name and email are no longer set. Getting name and email from user.
-    _name = models.CharField(max_length=128, verbose_name=_("Name"), db_column="name")
-    _email = models.EmailField(verbose_name=_("Email"), db_column="email")
-    active = models.BooleanField(verbose_name=_("Active"), default=True)
-    comment = models.TextField(verbose_name=_("Comment"), blank=True)
-    language = models.CharField(max_length=2, choices=(("en", _("English")), ("nb", _("Norwegian"))), default="en",
-                                verbose_name=_("Preferred language"))
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True)
-
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name=_("User"),
+    )
     # Since timeplaces can be added/removed from standalone events, it is easier to use two foreign keys, instead of
     # using a many-to-many field for timeplaces
-    timeplace = models.ForeignKey(TimePlace, on_delete=models.CASCADE, blank=True, null=True,
-                                  verbose_name=_("Timeplace"))
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, blank=True, null=True, verbose_name=_("Event"))
+    timeplace = models.ForeignKey(
+        to=TimePlace,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name=_("Timeplace"),
+    )
+    event = models.ForeignKey(
+        to=Event,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        verbose_name=_("Event"),
+    )
+    # For backwards compatibility, name and email are no longer set. Getting name and email from user.
+    _name = models.CharField(max_length=128, db_column="name", verbose_name=_("Name"))
+    _email = models.EmailField(db_column="email", verbose_name=_("Email"))
+    active = models.BooleanField(default=True, verbose_name=_("Active"))
+    comment = models.TextField(blank=True, verbose_name=_("Comment"))
+    language = models.CharField(choices=(("en", _("English")), ("nb", _("Norwegian"))), max_length=2, default="en",
+                                verbose_name=_("Preferred language"))
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     def __str__(self):
         return f"{self.name} - {self.event if self.event is not None else self.timeplace}"

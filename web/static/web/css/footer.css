@@ -80,6 +80,7 @@
     width: 100px;
 }
 
+
 @media screen and (max-width: 992px) {
     #footer {
         grid-template-columns: 1fr;
@@ -91,7 +92,7 @@
         margin-left: 0;
     }
 
-    #footer .content{
+    #footer .content {
         text-align: center;
     }
 

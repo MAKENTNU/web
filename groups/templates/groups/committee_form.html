@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block title %}{% trans "Edit committee" %}{% endblock title %}
 
 {% block head %}
@@ -28,8 +29,7 @@
         {% endfor %}
 
         <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
-
-        <a href="{% url "committee_admin" %}" class="ui right floated red button">
+        <a class="ui right floated red button" href="{% url "committee_admin" %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>

@@ -23,9 +23,9 @@ urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path('reservation/', include('make_queue.urls')),
-    path('admin/', AdminPanelView.as_view(), name='adminpanel'),
     path('', IndexView.as_view(), name='front-page'),
+    path('admin/', AdminPanelView.as_view(), name='adminpanel'),
+    path('reservation/', include('make_queue.urls')),
     path('news/', include('news.urls')),
     path('contentbox/', include('contentbox.urls')),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT}),  # local only, nginx in prod
@@ -37,6 +37,7 @@ urlpatterns += i18n_patterns(
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),
+
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
 )
@@ -46,8 +47,9 @@ if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
     urlpatterns += i18n_patterns(
         path('login/', RedirectView.as_view(url='/login/dataporten/', query_string=True), name='login'),
         path('logout/', Logout.as_view(), name='logout'),
-        re_path(r'^complete/(?P<backend>[^/]+){0}$'.format(extra), login_wrapper),
+
         path('', include('social_django.urls', namespace='social')),
+        re_path(r'^complete/(?P<backend>[^/]+){0}$'.format(extra), login_wrapper),
         prefix_default_language=False,
     )
 else:

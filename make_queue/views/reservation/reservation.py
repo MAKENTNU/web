@@ -20,6 +20,7 @@ from ...templatetags.reservation_extra import calendar_url_reservation
 class ReservationCreateOrChangeView(TemplateView):
     """Base abstract class for the reservation create or change view"""
     __metaclass__ = ABCMeta
+
     template_name = "make_queue/reservation_create.html"
 
     def get_error_message(self, form, reservation):
@@ -29,16 +30,14 @@ class ReservationCreateOrChangeView(TemplateView):
         :param form: The form to generate an error message for
         :return: The error message
         """
-        if not reservation.is_within_allowed_period() and not (
-                reservation.special or reservation.event):
+        if not reservation.is_within_allowed_period() and not (reservation.special or reservation.event):
             num_days = reservation.reservation_future_limit_days
             return ngettext(
                 'Reservations can only be made {num_days} day ahead of time',
                 'Reservations can only be made {num_days} days ahead of time',
-                num_days).format(
-                num_days=num_days)
-        if self.request.user.has_perm(
-                "make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
+                num_days
+            ).format(num_days=num_days)
+        if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return _("The time slot or event, is no longer available")
         if not reservation.quota_can_create_reservation():
             return _("The reservation exceeds your quota")
@@ -101,8 +100,7 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
             context_data["comment"] = reservation.comment
-            context_data["can_change_start_time"] = reservation.can_change(
-                self.request.user)
+            context_data["can_change_start_time"] = reservation.can_change(self.request.user)
         # Otherwise populate with default information given to the view
         else:
             context_data["selected_machine"] = kwargs["machine"]
@@ -152,7 +150,8 @@ class CreateReservationView(ReservationCreateOrChangeView):
             end_time=form.cleaned_data["end_time"],
             user=self.request.user,
             machine=form.cleaned_data["machine"],
-            comment=form.cleaned_data["comment"])
+            comment=form.cleaned_data["comment"],
+        )
 
         if form.cleaned_data["event"]:
             reservation.event = form.cleaned_data["event"]
@@ -267,8 +266,8 @@ class FindFreeSlot(FormView):
     """
     View to find free time slots for reservations
     """
-    template_name = "make_queue/find_free_slot.html"
     form_class = FreeSlotForm
+    template_name = "make_queue/find_free_slot.html"
 
     def get_initial(self):
         return {"machine_type": MachineType.objects.first()}
@@ -297,34 +296,35 @@ class FindFreeSlot(FormView):
         reservations = list(
             Reservation.objects.filter(
                 end_time__gte=timezone.now(),
-                machine__pk=machine.pk).order_by("start_time"))
+                machine__pk=machine.pk,
+            ).order_by("start_time")
+        )
 
         # Find all periods between reservations
         for period_start, period_end in zip(reservations, reservations[1:]):
             duration = timedelta_to_hours(
                 period_end.start_time - period_start.end_time)
             if duration >= required_time:
-                periods.append(
-                    self.format_period(
-                        machine,
-                        period_start.end_time,
-                        period_end.start_time))
+                periods.append(self.format_period(
+                    machine,
+                    period_start.end_time,
+                    period_end.start_time
+                ))
 
         # Add remaining time after last reservation
         if reservations:
             periods.append(self.format_period(
                 machine, reservations[-1].end_time,
-                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)))
+                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)
+            ))
         # If the machine is not reserved anytime in the future, we include the
         # whole allowed period
         else:
-            periods.append(
-                self.format_period(
-                    machine,
-                    timezone.now(),
-                    timezone.now() +
-                    timezone.timedelta(
-                        days=Reservation.reservation_future_limit_days)))
+            periods.append(self.format_period(
+                machine,
+                timezone.now(),
+                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)
+            ))
         return periods
 
     def form_valid(self, form):
@@ -337,8 +337,7 @@ class FindFreeSlot(FormView):
         context = self.get_context_data()
 
         # Time should be expressed in hours
-        required_time = form.cleaned_data["hours"] + \
-            form.cleaned_data["minutes"] / 60
+        required_time = form.cleaned_data["hours"] + form.cleaned_data["minutes"] / 60
 
         periods = []
         for machine in form.cleaned_data["machine_type"].machines.all():

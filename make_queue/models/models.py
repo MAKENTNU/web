@@ -41,8 +41,8 @@ class MachineType(models.Model):
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
     usage_requirement = models.CharField(
-        max_length=4,
         choices=UsageRequirement.choices,
+        max_length=4,
         default=UsageRequirement.IS_AUTHENTICATED,
         verbose_name=_("Usage requirement"),
     )
@@ -97,10 +97,7 @@ class Machine(models.Model):
     )
     STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
 
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
-    location = models.CharField(max_length=40, verbose_name=_("Location"))
-    location_url = models.URLField(verbose_name=_("Location URL"))
     machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,
@@ -108,6 +105,9 @@ class Machine(models.Model):
         related_name="machines",
         verbose_name=_("Machine type"),
     )
+    location = models.CharField(max_length=40, verbose_name=_("Location"))
+    location_url = models.URLField(verbose_name=_("Location URL"))
+    status = models.CharField(choices=STATUS_CHOICES, max_length=2, default=AVAILABLE, verbose_name=_("Status"))
     priority = models.IntegerField(
         null=True,
         blank=True,
@@ -169,17 +169,22 @@ class MachineUsageRule(models.Model):
 
 
 class Quota(models.Model):
-    number_of_reservations = models.IntegerField(default=1, verbose_name=_("Number of reservations"))
-    diminishing = models.BooleanField(default=False, verbose_name=_("Diminishing"))
-    ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
     all = models.BooleanField(default=False, verbose_name=_("All users"))
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        null=True,
+        verbose_name=_("User"),
+    )
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.CASCADE,
         related_name="quotas",
         verbose_name=_("Machine type"),
     )
+    number_of_reservations = models.IntegerField(default=1, verbose_name=_("Number of reservations"))
+    diminishing = models.BooleanField(default=False, verbose_name=_("Diminishing"))
+    ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
 
     class Meta:
         permissions = (
@@ -241,17 +246,33 @@ class Quota(models.Model):
 
 
 class Reservation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reservation_future_limit_days = 28
+
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+    )
+    machine = models.ForeignKey(
+        to=Machine,
+        on_delete=models.CASCADE,
+    )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    event = models.ForeignKey(TimePlace, null=True, blank=True, on_delete=models.CASCADE)
+    event = models.ForeignKey(
+        to=TimePlace,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
     showed = models.NullBooleanField(default=None)
     special = models.BooleanField(default=False)
     special_text = models.CharField(max_length=64)
-    reservation_future_limit_days = 28
     comment = models.TextField(max_length=2000, default="")
-    machine = models.ForeignKey(Machine, on_delete=models.CASCADE)
-    quota = models.ForeignKey(Quota, on_delete=models.CASCADE, null=True)
+    quota = models.ForeignKey(
+        to=Quota,
+        on_delete=models.CASCADE,
+        null=True,
+    )
 
     def save(self, *args, **kwargs):
         if not self.validate():
@@ -357,6 +378,12 @@ class Reservation(models.Model):
 
 
 class ReservationRule(models.Model):
+    machine_type = models.ForeignKey(
+        to=MachineType,
+        on_delete=models.CASCADE,
+        related_name='reservation_rules',
+        verbose_name=_("Machine type"),
+    )
     start_time = models.TimeField(verbose_name=_("Start time"))
     end_time = models.TimeField(verbose_name=_("End time"))
     # Number of times passed by midnight between start and end time
@@ -364,12 +391,6 @@ class ReservationRule(models.Model):
     start_days = models.IntegerField(default=0, verbose_name=_("Start days"))
     max_hours = models.FloatField(verbose_name=_("Hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multiperiod"))
-    machine_type = models.ForeignKey(
-        to=MachineType,
-        on_delete=models.CASCADE,
-        related_name="reservation_rules",
-        verbose_name=_("Machine type"),
-    )
 
     def save(self, **kwargs):
         if not self.is_valid_rule():
@@ -399,9 +420,11 @@ class ReservationRule(models.Model):
             self.rule = rule
 
         def hours_inside(self, start_time, end_time):
-            return self.hours_overlap(self.start_time, self.end_time,
-                                      self.__to_inner_rep(start_time.weekday(), start_time.time()),
-                                      self.__to_inner_rep(end_time.weekday(), end_time.time()))
+            return self.hours_overlap(
+                self.start_time, self.end_time,
+                self.__to_inner_rep(start_time.weekday(), start_time.time()),
+                self.__to_inner_rep(end_time.weekday(), end_time.time())
+            )
 
         @staticmethod
         def hours_overlap(a, b, c, d):
@@ -416,7 +439,10 @@ class ReservationRule(models.Model):
             return day + time.hour / 24 + time.minute / (24 * 60) + time.second / (24 * 60 * 60)
 
         def overlap(self, other):
-            return self.hours_overlap(self.start_time, self.end_time, other.start_time, other.end_time) > 0
+            return self.hours_overlap(
+                self.start_time, self.end_time,
+                other.start_time, other.end_time
+            ) > 0
 
     def is_valid_rule(self, raise_error=False):
         # Check if the time period is a valid time period (within a week)

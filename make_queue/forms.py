@@ -28,8 +28,9 @@ class ReservationForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(ReservationForm, self).__init__(*args, **kwargs)
 
-        self.fields["machine_name"] = forms.ChoiceField(
-            choices=((machine.pk, machine.name) for machine in Machine.objects.all()))
+        self.fields["machine_name"] = forms.ChoiceField(choices=(
+            (machine.pk, machine.name) for machine in Machine.objects.all()
+        ))
 
     def clean(self):
         """
@@ -74,17 +75,14 @@ class RuleForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        rule = ReservationRule(machine_type=cleaned_data["machine_type"], max_hours=0, max_inside_border_crossed=0,
-                               start_time=cleaned_data["start_time"], end_time=cleaned_data["end_time"],
-                               days_changed=cleaned_data["days_changed"], start_days=self.get_start_days(cleaned_data))
-
+        rule = ReservationRule(
+            machine_type=cleaned_data["machine_type"], max_hours=0, max_inside_border_crossed=0,
+            start_time=cleaned_data["start_time"], end_time=cleaned_data["end_time"],
+            days_changed=cleaned_data["days_changed"], start_days=self.get_start_days(cleaned_data),
+        )
         rule.is_valid_rule(raise_error=True)
 
         return cleaned_data
-
-    @staticmethod
-    def get_start_days(cleaned_data):
-        return sum(cleaned_data[field_name] << shift for shift, field_name in enumerate(RuleForm.day_field_names))
 
     def save(self, commit=True):
         rule = super(RuleForm, self).save(commit=False)
@@ -93,9 +91,13 @@ class RuleForm(forms.ModelForm):
             rule.save()
         return rule
 
+    @staticmethod
+    def get_start_days(cleaned_data):
+        return sum(cleaned_data[field_name] << shift for shift, field_name in enumerate(RuleForm.day_field_names))
+
     class Meta:
         model = ReservationRule
-        fields = ["start_time", "end_time", "days_changed", "max_hours", "max_inside_border_crossed", "machine_type"]
+        fields = ["start_time", "days_changed", "end_time", "max_hours", "max_inside_border_crossed", "machine_type"]
         widgets = {
             "start_time": SemanticTimeInput(),
             "end_time": SemanticTimeInput(),
@@ -109,10 +111,12 @@ class QuotaForm(forms.ModelForm):
         def label_from_instance(self, obj):
             return f'{obj.get_full_name()} - {obj.username}'
 
-    user = UserModelChoiceField(queryset=User.objects.all(),
-                                widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
-                                label=_("User"),
-                                required=False)
+    user = UserModelChoiceField(
+        queryset=User.objects.all(),
+        widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
+        label=_("User"),
+        required=False,
+    )
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by("priority"),
         label=_("Machine type"),
@@ -124,6 +128,7 @@ class QuotaForm(forms.ModelForm):
         cleaned_data = super().clean()
         user = cleaned_data["user"]
         all_users = cleaned_data["all"]
+
         if user is None and not all_users:
             raise ValueError("User cannot be None when the quota is not for all users")
         if user is not None and all_users:
@@ -142,8 +147,10 @@ class Printer3DCourseForm(forms.ModelForm):
         super().__init__(**kwargs)
         self.fields["user"] = ModelChoiceField(
             queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
-            required=False, widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
-            label=Printer3DCourse._meta.get_field('user').verbose_name)
+            required=False,
+            widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
+            label=Printer3DCourse._meta.get_field('user').verbose_name,
+        )
         if self.instance.card_number is not None:
             self.initial["card_number"] = self.instance.card_number.number
 

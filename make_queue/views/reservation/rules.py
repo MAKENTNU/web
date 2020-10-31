@@ -23,34 +23,28 @@ class RulesOverviewView(TemplateView):
 
 
 class CreateReservationRuleView(PermissionRequiredMixin, CreateView):
+    permission_required = ("make_queue.add_reservation_rule",)
     model = ReservationRule
-    template_name = "make_queue/rule_create.html"
     form_class = RuleForm
-    permission_required = (
-        "make_queue.add_reservation_rule",
-    )
+    template_name = "make_queue/rule_create.html"
 
     def get_success_url(self):
         return reverse("machine_rules", args=[self.object.machine_type])
 
 
 class EditReservationRuleView(PermissionRequiredMixin, UpdateView):
+    permission_required = ("make_queue.change_reservation_rule",)
     model = ReservationRule
-    template_name = "make_queue/rule_edit.html"
     form_class = RuleForm
-    permission_required = (
-        "make_queue.change_reservation_rule",
-    )
+    template_name = "make_queue/rule_edit.html"
 
     def get_success_url(self):
         return reverse("machine_rules", args=[self.object.machine_type])
 
 
 class DeleteReservationRules(PermissionRequiredMixin, DeleteView):
+    permission_required = ("make_queue.delete_reservation_rule",)
     model = ReservationRule
-    permission_required = (
-        "make_queue.delete_reservation_rule",
-    )
 
     def get_success_url(self):
         return reverse("machine_rules", args=[self.object.machine_type])
@@ -68,14 +62,10 @@ class MachineUsageRulesView(TemplateView):
 
 
 class EditUsageRulesView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('make_queue.change_machineusagerule',)
     model = MachineUsageRule
+    fields = ('content',)
     template_name = 'contentbox/edit.html'
-    fields = (
-        'content',
-    )
-    permission_required = (
-        'make_queue.change_machineusagerule',
-    )
 
     def get_success_url(self):
         return reverse("machine_usage_rules", args=[self.object.machine_type])

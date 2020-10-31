@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load hosts %}
 
+
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE }}">
@@ -11,10 +12,11 @@
     <meta name="viewport" content="width=device-width"/>
     <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
     <meta name="theme-color" content="rgb(248, 200, 17)"/>
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700" rel="stylesheet"/>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700"/>
     <script type="text/javascript" src="{% host_url 'javascript-catalog' host "main" %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
     <link rel="stylesheet" type="text/css" href="{% static "lib/fomantic-ui/semantic.min.css" %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
     <script src="{% static "lib/jquery/jquery-3.1.1.min.js" %}"></script>
     <script src="{% static "lib/fomantic-ui/semantic.min.js" %}"></script>
     <script>const langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
@@ -23,6 +25,7 @@
     {% block head %}{% endblock head %}
 </head>
 <body>
+
 <div class="wrapper">
     <div class="content">
         {% block header %}
@@ -48,5 +51,6 @@
 
 {% block scripts %}
 {% endblock scripts %}
+
 </body>
 </html>

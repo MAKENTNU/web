@@ -3,6 +3,7 @@
 {% load static %}
 {% load form_utility %}
 
+
 {% block head %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static "make_queue/css/course_registration.css" %}">
@@ -18,7 +19,7 @@
         </h1>
 
         {% block messages %}
-            <div class="ui warning message hidden" id="username_not_found_warning">
+            <div id="username_not_found_warning" class="ui warning message hidden">
                 <i class="close icon"></i>
                 <div class="header">
                     {% trans "Could not find the user in the NTNU database" %}
@@ -98,7 +99,7 @@
                     {% trans "Submit" context "edit" %}
                 {% endblock %}
             </button>
-            <a href="{% url "course_panel" %}" class="ui right floated red button">
+            <a class="ui right floated red button" href="{% url "course_panel" %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>

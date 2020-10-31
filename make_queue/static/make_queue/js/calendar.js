@@ -109,7 +109,9 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
 
     popupContent.find(".button").on("mousedown touchstart", () => {
         // Create and submit a hidden form to create a new reservation
-        let form = $(`<form method='POST' action='${langPrefix}/reservation/create/${calendar.machine}/'>`).appendTo(popupContent);
+        let form = $(
+            `<form method='POST' action='${langPrefix}/reservation/create/${calendar.machine}/'>`,
+        ).appendTo(popupContent);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
         // Hide the form in case something fails
         $("<input class='make_hidden' name='start_time'>").val(startTime.djangoFormat()).appendTo(form);
@@ -486,7 +488,6 @@ ReservationCalendar.prototype.createPopup = function (reservationElement, reserv
         position: "top center",
         html: content,
     });
-
 };
 
 ReservationCalendar.prototype.updateReservations = function (data) {

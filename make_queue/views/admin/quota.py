@@ -1,8 +1,8 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from users.models import User
 from django.urls import reverse
 from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
 
+from users.models import User
 from make_queue.forms import QuotaForm
 from make_queue.models.models import Quota
 
@@ -27,12 +27,10 @@ class QuotaView(TemplateView):
 
 
 class CreateQuotaView(PermissionRequiredMixin, CreateView):
+    permission_required = ("make_queue.add_quota",)
     model = Quota
     form_class = QuotaForm
     template_name = "make_queue/quota/quota_create.html"
-    permission_required = (
-        "make_queue.add_quota",
-    )
 
     def get_success_url(self):
         if self.object.all:
@@ -41,12 +39,10 @@ class CreateQuotaView(PermissionRequiredMixin, CreateView):
 
 
 class EditQuotaView(PermissionRequiredMixin, UpdateView):
+    permission_required = ("make_queue.change_quota",)
     model = Quota
-    template_name = "make_queue/quota/quota_edit.html"
     form_class = QuotaForm
-    permission_required = (
-        "make_queue.change_quota",
-    )
+    template_name = "make_queue/quota/quota_edit.html"
 
     def get_success_url(self):
         if self.object.all:
@@ -55,10 +51,8 @@ class EditQuotaView(PermissionRequiredMixin, UpdateView):
 
 
 class DeleteQuotaView(PermissionRequiredMixin, DeleteView):
+    permission_required = ("make_queue.delete_quota",)
     model = Quota
-    permission_required = (
-        "make_queue.delete_quota",
-    )
 
     def get_success_url(self):
         if self.object.all:

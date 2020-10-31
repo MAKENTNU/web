@@ -108,7 +108,6 @@ class ProfilePageView(TemplateView):
         skill_dict = {}
         for userskill in profile.userskill_set.all():
             skill = userskill.skill
-
             if skill not in skill_dict or skill.skill_level > skill_dict[skill][0]:
                 skill_dict[skill] = userskill.skill_level
 
@@ -125,8 +124,8 @@ class ProfilePageView(TemplateView):
 
 
 class SuggestSkillView(PermissionRequiredMixin, TemplateView):
+    permission_required = ('checkin.add_suggestskill',)
     template_name = "checkin/suggest_skill.html"
-    permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
         suggestion = request.POST.get('suggested-skill')
@@ -176,8 +175,8 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
 
 class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
+    permission_required = ('checkin.add_suggestskill',)
     template_name = "checkin/suggest_skill.html"
-    permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
@@ -202,8 +201,8 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 
 class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
+    permission_required = ('checkin.delete_suggestskill',)
     template_name = "checkin/suggest_skill.html"
-    permission_required = 'checkin.delete_suggestskill'
 
     def post(self, request):
         data = {"suggestion_deleted": False, }

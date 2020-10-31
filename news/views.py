@@ -110,8 +110,8 @@ class ViewArticleView(TemplateView):
 
 
 class AdminArticleView(PermissionRequiredMixin, ListView):
-    template_name = 'news/admin_articles.html'
     model = Article
+    template_name = 'news/admin_articles.html'
     context_object_name = 'articles'
 
     def has_permission(self):
@@ -119,54 +119,49 @@ class AdminArticleView(PermissionRequiredMixin, ListView):
 
 
 class AdminEventsView(PermissionRequiredMixin, ListView):
-    template_name = 'news/admin_events.html'
     model = Event
+    template_name = 'news/admin_events.html'
     context_object_name = 'events'
 
     def has_permission(self):
         return has_any_event_permission(self.request.user)
 
     def get_queryset(self):
-        return Event.objects.annotate(latest_occurrence=Max("timeplace__end_time")).order_by("-latest_occurrence")
+        return Event.objects.annotate(
+            latest_occurrence=Max("timeplace__end_time"),
+        ).order_by("-latest_occurrence")
 
 
 class AdminEventView(DetailView):
-    template_name = 'news/admin_event.html'
     model = Event
+    template_name = 'news/admin_event.html'
 
 
 class EditArticleView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_article',)
     model = Article
-    template_name = 'news/article_edit.html'
     form_class = ArticleForm
-
-    permission_required = (
-        'news.change_article',
-    )
+    template_name = 'news/article_edit.html'
 
     def get_success_url(self):
         return reverse_lazy("admin-articles")
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_article',)
     model = Article
-    template_name = 'news/article_create.html'
     form_class = ArticleForm
-    permission_required = (
-        'news.add_article',
-    )
+    template_name = 'news/article_create.html'
 
     def get_success_url(self):
         return reverse_lazy("admin-articles")
 
 
 class EditEventView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_event',)
     model = Event
-    template_name = 'news/event_edit.html'
     form_class = EventForm
-    permission_required = (
-        'news.change_event',
-    )
+    template_name = 'news/event_edit.html'
     extra_context = {
         'Event': Event,  # for referencing event_type's choice values
     }
@@ -176,12 +171,10 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_event',)
     model = Event
-    template_name = 'news/event_create.html'
     form_class = EventForm
-    permission_required = (
-        'news.add_event',
-    )
+    template_name = 'news/event_create.html'
     extra_context = {
         'Event': Event,  # for referencing event_type's choice values
     }
@@ -191,12 +184,10 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
 
 
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news.change_timeplace',)
     model = TimePlace
-    template_name = 'news/timeplace_edit.html'
     form_class = TimePlaceForm
-    permission_required = (
-        'news.change_timeplace',
-    )
+    template_name = 'news/timeplace_edit.html'
 
     def get_form(self, form_class=None):
         form = self.form_class(**self.get_form_kwargs())
@@ -209,9 +200,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, View):
-    permission_required = (
-        'news.add_timeplace',
-    )
+    permission_required = ('news.add_timeplace',)
 
     def get(self, request, pk):
         timeplace = get_object_or_404(TimePlace, pk=pk)
@@ -229,12 +218,10 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
 
 
 class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
+    permission_required = ('news.add_timeplace',)
     model = TimePlace
-    template_name = "news/timeplace_create.html"
     form_class = TimePlaceForm
-    permission_required = (
-        'news.add_timeplace',
-    )
+    template_name = "news/timeplace_create.html"
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -249,10 +236,8 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
 
 
 class AdminArticleToggleView(PermissionRequiredMixin, View):
+    permission_required = ('news.change_article',)
     model = Article
-    permission_required = (
-        'news.change_article',
-    )
 
     def post(self, request):
         pk, toggle = request.POST.get('pk'), request.POST.get('toggle')
@@ -271,40 +256,30 @@ class AdminArticleToggleView(PermissionRequiredMixin, View):
 
 
 class AdminEventToggleView(AdminArticleToggleView):
+    permission_required = ('news.change_event',)
     model = Event
-    permission_required = (
-        'news.change_event',
-    )
 
 
 class AdminTimeplaceToggleView(AdminArticleToggleView):
+    permission_required = ('news.change_timeplace',)
     model = TimePlace
-    permission_required = (
-        'news.change_timeplace',
-    )
 
 
 class DeleteArticleView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_article',)
     model = Article
     success_url = reverse_lazy('admin-articles')
-    permission_required = (
-        'news.delete_article',
-    )
 
 
 class DeleteEventView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_event',)
     model = Event
     success_url = reverse_lazy('admin-events')
-    permission_required = (
-        'news.delete_event',
-    )
 
 
 class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news.delete_timeplace',)
     model = TimePlace
-    permission_required = (
-        'news.delete_timeplace',
-    )
 
     def get_success_url(self):
         return reverse_lazy("admin-event", args=(self.object.event.id,))
@@ -312,8 +287,8 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
 
 class EventRegistrationView(CreateView):
     model = EventTicket
-    template_name = "news/event_registration.html"
     form_class = EventRegistrationForm
+    template_name = "news/event_registration.html"
 
     @property
     def timeplace(self):
@@ -408,8 +383,8 @@ class AdminEventTicketView(TemplateView):
             raise Http404()
         context_data.update({
             "tickets": event.eventticket_set.order_by("-active").all(),
-            "object": event,
             "event": event,
+            "object": event,
             "ticket_emails": ",".join([ticket.email for ticket in event.eventticket_set.filter(active=True)])
         })
         return context_data

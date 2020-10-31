@@ -8,4 +8,4 @@ from card.models import CardNumberField
 class User(AbstractUser):
     ldap_full_name = models.CharField(max_length=150, blank=True, verbose_name=_('Full name from LDAP'))
 
-    card_number = CardNumberField(unique=True, null=True, blank=True)
+    card_number = CardNumberField(null=True, blank=True, unique=True)

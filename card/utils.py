@@ -26,5 +26,7 @@ def is_duplicate(card_number, username):
     :param username: username of user to exclude
     :return: True if card_number is duplicate
     """
-    return User.objects.filter(card_number=card_number).exclude(username=username).exists() \
-        or Printer3DCourse.objects.filter(_card_number=card_number).exclude(username=username).exists()
+    return (
+            User.objects.filter(card_number=card_number).exclude(username=username).exists()
+            or Printer3DCourse.objects.filter(_card_number=card_number).exclude(username=username).exists()
+    )

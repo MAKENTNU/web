@@ -4,6 +4,7 @@
 {% load thumbnail %}
 {% load permission_tags %}
 
+
 {% block title %}{{ equipment.title }}{% endblock title %}
 
 {% block og_title %}{{ title.title }}{% endblock og_title %}
@@ -13,7 +14,6 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment.css" %}"/>
 {% endblock head %}
-
 
 {% block body %}
     <div class="equipment">
@@ -31,7 +31,7 @@
                 {% block admin-page %}
                     {% if user|has_any_equipment_permissions %}
                         <br/>
-                        <a href="{% url "makerspace-equipment-edit" equipment.id %}" class="ui yellow button">
+                        <a class="ui yellow button" href="{% url "makerspace-equipment-edit" equipment.id %}">
                             <i class="ui edit icon"></i>{% trans "Edit" %}
                         </a>
                     {% endif %}

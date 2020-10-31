@@ -33,9 +33,10 @@ class ReservationCalendarView(TemplateView):
             context.update({
                 "can_create_reservations": machine.machine_type.can_user_use(self.request.user),
                 "can_create_more_reservations": Quota.can_make_new_reservation(self.request.user, machine.machine_type),
-                "can_ignore_rules": any(quota.can_create_more_reservations(self.request.user) for quota in
-                                        Quota.get_user_quotas(self.request.user, machine.machine_type).filter(
-                                            ignore_rules=True))
+                "can_ignore_rules": any(
+                    quota.can_create_more_reservations(self.request.user)
+                    for quota in Quota.get_user_quotas(self.request.user, machine.machine_type).filter(ignore_rules=True)
+                )
             })
 
         return context

@@ -62,7 +62,8 @@ function isNonReservedDate(date) {
      * Checks if the given date is inside any reservation
      */
     for (let index = 0; index < reservations.length; index++) {
-        if (date >= reservations[index].start_time && date < reservations[index].end_time) return false;
+        if (date >= reservations[index].start_time && date < reservations[index].end_time)
+            return false;
     }
     return true;
 }
@@ -73,11 +74,13 @@ function isCompletelyReserved(start, end) {
      */
     let maxDifference = 5 * 60 * 1000;
     let reservationsPeriod = reservationsInPeriod(start, end);
-    if (!reservationsPeriod.length) return false;
+    if (!reservationsPeriod.length)
+        return false;
     reservationsPeriod.sort((a, b) => a.start_time - b.start_time);
     let currentTime = start;
     for (let index = 0; index < reservationsPeriod.length; index++) {
-        if (reservationsPeriod[index].start_time > new Date(currentTime.valueOf() + maxDifference)) return false;
+        if (reservationsPeriod[index].start_time > new Date(currentTime.valueOf() + maxDifference))
+            return false;
         currentTime = reservationsPeriod[index].end_time;
     }
     return currentTime >= new Date(end.valueOf() - maxDifference);
@@ -146,8 +149,10 @@ $("#start_time").calendar({
         initialDate: new Date($("#start_time").find("input").val()),
         firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
-            if (date === undefined) return true;
-            if (mode === "minute") return !isNonReservedDate(date);
+            if (date === undefined)
+                return true;
+            if (mode === "minute")
+                return !isNonReservedDate(date);
             if (mode === "hour") {
                 date = new Date(date.valueOf());
                 date.setMinutes(0, 0, 0);
@@ -161,7 +166,8 @@ $("#start_time").calendar({
             return false;
         },
         onChange: function (value) {
-            if (value === undefined) return true;
+            if (value === undefined)
+                return true;
             let shouldChange = isNonReservedDate(value);
             if (shouldChange) {
                 $("#end_time").calendar("setting", 'maxDate', getMaxDateReservation(value));
@@ -240,7 +246,6 @@ $('form').submit(function (event) {
     $("#end_time").find("input").toggleClass("error_border", false);
     $("#event_pk").toggleClass("error_border", false);
 
-
     if ($("#machine_name_dropdown").dropdown("get value") === "default") {
         $("#machine_name_dropdown").toggleClass("error_border", true);
         is_valid = false;
@@ -261,7 +266,8 @@ $('form').submit(function (event) {
         is_valid = false;
     }
 
-    if (!is_valid) return event.preventDefault();
+    if (!is_valid)
+        return event.preventDefault();
 
     $("#start_time input").first().val(formatDate($("#start_time").calendar("get date")));
     $("#end_time input").first().val(formatDate($("#end_time").calendar("get date")));

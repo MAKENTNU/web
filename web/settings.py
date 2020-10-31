@@ -7,6 +7,9 @@ if 'test' in sys.argv:
     # Disable calls with severity level equal to or less than `CRITICAL` (i.e. everything)
     logging.disable(logging.CRITICAL)
 
+# Build paths inside the project like this: BASE_DIR / ...
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Default values
 DATABASE = 'sqlite'
 SECRET_KEY = ' '
@@ -43,9 +46,6 @@ try:
 except ImportError:
     pass
 
-# Build paths inside the project like this: BASE_DIR / ...
-BASE_DIR = Path(__file__).resolve().parent.parent
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_hosts',
+
     'groups',
     'web',
     'make_queue',

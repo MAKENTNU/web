@@ -20,14 +20,23 @@ class Member(models.Model):
             ("can_edit_group_membership", "Can edit the groups a member is part of, including (de)activation")
         )
 
-    user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=True, verbose_name=_("User"))
-    committees = models.ManyToManyField(Committee, blank=True, verbose_name=_("Committees"))
+    user = models.OneToOneField(
+        to=User,
+        on_delete=models.DO_NOTHING,
+        null=True,
+        verbose_name=_("User"),
+    )
+    committees = models.ManyToManyField(
+        to=Committee,
+        blank=True,
+        verbose_name=_("Committees"),
+    )
     role = models.CharField(max_length=64, blank=True, verbose_name=_("Role"))
     email = models.EmailField(blank=True, null=True, verbose_name=_("Email"))
     phone_number = PhoneNumberField(max_length=32, default="", blank=True, verbose_name=_("Phone number"))
     study_program = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Study program"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
-    date_quit = models.DateField(blank=True, null=True, verbose_name=_("Date quit"))
+    date_quit = models.DateField(null=True, blank=True, verbose_name=_("Date quit"))
     reason_quit = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Reason quit"))
     comment = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Comment"))
     active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -66,6 +75,7 @@ class Member(models.Model):
     def toggle_quit(self, quit_status, reason="", date_quit=timezone.now()):
         """
         Perform all the actions to set a member as quit or undo this action
+
         :param quit_status: Indicates if the member has quit
         :param reason: The reason why the member has quit
         :param date_quit: The date the member quit
@@ -83,6 +93,7 @@ class Member(models.Model):
     def toggle_retirement(self, retirement_status):
         """
         Performs all the actions to set a member as retired or to undo this action
+
         :param retirement_status: Indicates if the member has retired
         """
         self.retired = retirement_status
@@ -92,6 +103,7 @@ class Member(models.Model):
     def toggle_committee_membership(self, membership_status):
         """
         Adds or removes the user to all the committees of its membership
+
         :param membership_status: Indicates if the member should be a part of the commitees
         """
         for committee in self.committees.all():
@@ -103,6 +115,7 @@ class Member(models.Model):
     def toggle_membership(self, membership_status):
         """
         Toggle membership by removing/adding the member to the MAKE group (if it exists)
+
         :param membership_status: True if the user should be a member of MAKE and false otherwise
         """
         make = Group.objects.filter(name="MAKE")
@@ -148,14 +161,19 @@ class SystemAccess(models.Model):
         (WEBSITE, _("Website")),
     )
 
-    name = models.fields.CharField(max_length=32, choices=NAME_CHOICES, verbose_name=_("System"))
+    name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
-    member = models.ForeignKey(Member, models.CASCADE, verbose_name="Member")
+    member = models.ForeignKey(
+        to=Member,
+        on_delete=models.CASCADE,
+        verbose_name="Member",
+    )
 
     @property
     def change_url(self):
         """
         The URL to change the system access. Depends on the type of system
+
         :return: An URL for the page where the access can be changed. Is an empty string if it should not be changed
         """
         if not self.should_be_changed():

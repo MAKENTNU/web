@@ -44,7 +44,8 @@ class MachineAdmin(admin.ModelAdmin):
 
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
-admin.site.register(ReservationRule)
-admin.site.register(Reservation)
 admin.site.register(Quota)
+admin.site.register(Reservation)
+admin.site.register(ReservationRule)
+
 admin.site.register(Printer3DCourse)

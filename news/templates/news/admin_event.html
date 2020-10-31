@@ -3,13 +3,14 @@
 {% load news_tags %}
 {% load static %}
 
+
 {% block head %}
     <link rel="stylesheet" href="{% static "news/css/admin_event.css" %}">
 {% endblock %}
 
 {% block body %}
-
     <div class="ui container">
+
         <h1>
             {{ object.title }}
             <a class="ui yellow right floated button" href="{% url "event" object.id %}">
@@ -23,7 +24,7 @@
             {% endif %}
 
             {% if perms.news.delete_event %}
-                <a class="ui delete confirm red button right floated" href="{% url 'event-delete' event.id %}">
+                <a class="ui red delete right floated confirm button" href="{% url 'event-delete' event.id %}">
                     <i class="ui trash icon"></i>{% trans "Delete" %}
                 </a>
             {% endif %}
@@ -33,19 +34,19 @@
             <i class="ui angle double left icon"></i>{% trans "Admin page for events" %}
         </a>
 
-        <div class="ui info {% if not object.hidden %}hidden{% endif %} message" id="message-hidden">
+        <div id="message-hidden" class="ui info {% if not object.hidden %}hidden{% endif %} message">
             <div class="header">
                 {% trans "Hidden event" %}
             </div>
             {% trans "This event is hidden! Non-admin users will not be able to see the event or its occurrences." %}
         </div>
-        <div class="ui info {% if not object.featured %}hidden{% endif %} message" id="message-featured">
+        <div id="message-featured" class="ui info {% if not object.featured %}hidden{% endif %} message">
             <div class="header">
                 {% trans "Featured event" %}
             </div>
             {% trans "This event is featured! Any future occurrences may be shown on the front page." %}
         </div>
-        <div class="ui info {% if not object.private %}hidden{% endif %} message" id="message-private">
+        <div id="message-private" class="ui info {% if not object.private %}hidden{% endif %} message">
             <div class="header">
                 {% trans "Private event" %}
             </div>
@@ -57,9 +58,11 @@
                 <i class="ui ticket icon"></i> {% trans "Tickets" %}
             </h3>
             {% if event.number_of_tickets %}
-                <b><a href="{% url "event-tickets" pk=event.pk %}">
-                    {{ event.number_of_registered_tickets }}/{{ event.number_of_tickets }} {% trans "tickets reserved" %}
-                </a></b>
+                <b>
+                    <a href="{% url "event-tickets" pk=event.pk %}">
+                        {{ event.number_of_registered_tickets }}/{{ event.number_of_tickets }} {% trans "tickets reserved" %}
+                    </a>
+                </b>
             {% else %}
                 <b>{% trans "No registration required" %}</b>
             {% endif %}
@@ -106,8 +109,8 @@
                 {% endfor %}
             </div>
         </div>
-    </div>
 
+    </div>
 {% endblock %}
 
 {% block scripts %}

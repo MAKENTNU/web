@@ -23,9 +23,7 @@ class CommitteeDetailView(DetailView):
 
 
 class CommitteeAdminView(PermissionRequiredMixin, ListView):
+    permission_required = ('groups.change_committee',)
     model = Committee
-    context_object_name = 'committees'
     template_name = 'groups/committee_admin.html'
-    permission_required = (
-        'groups.change_committee',
-    )
+    context_object_name = 'committees'

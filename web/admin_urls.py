@@ -9,8 +9,8 @@ from web import settings
 admin.site.site_url = f"//{settings.PARENT_HOST}/"
 
 urlpatterns = [
-    path('robots.txt', TemplateView.as_view(template_name='web/admin_robots.txt', content_type='text/plain')),
     path('', admin.site.urls),
+    path('robots.txt', TemplateView.as_view(template_name='web/admin_robots.txt', content_type='text/plain')),
 ]
 
 # Disable admin page login if Dataporten is configured. In this

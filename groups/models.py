@@ -20,9 +20,9 @@ class InheritanceGroup(Group):
 
     parents = models.ManyToManyField(
         'self',
-        related_name='sub_groups',
         symmetrical=False,
         blank=True,
+        related_name='sub_groups',
     )
 
     own_permissions = models.ManyToManyField(
@@ -82,7 +82,7 @@ class Committee(models.Model):
     """
     A committee in the organization.
 
-    A committee gets its name and members through the:model:`groups.InheritanceGroup`
+    A committee gets its name and members through the :model:`groups.InheritanceGroup`
     given in the `group` field.
     """
 
@@ -93,12 +93,8 @@ class Committee(models.Model):
     )
     description = models.TextField(_('Description'))
     email = models.EmailField(_('Email'))
-    image = models.ImageField(_('Image'), blank=True)
-    clickbait = models.TextField(
-        max_length=300,
-        verbose_name=_('Clickbait'),
-        blank=True,
-    )
+    image = models.ImageField(blank=True, verbose_name=_('Image'))
+    clickbait = models.TextField(max_length=300, blank=True, verbose_name=_('Clickbait'))
 
     @property
     def name(self):
