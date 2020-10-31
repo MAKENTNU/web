@@ -1,3 +1,8 @@
+.make-bg-yellow.button.bordered {
+    border-left: 1px solid rgb(162, 130, 12);
+    border-right: 1px solid rgb(162, 130, 12);
+}
+
 .reservation_calendar .header {
     text-align: center;
 }
@@ -74,13 +79,13 @@ tr.wrapping {
 }
 
 .own.reservation {
-    background-color: #F8C811;
+    background-color: var(--make-yellow);
     border-top: 1px solid #D7AB0F;
     border-bottom: 1px solid #D7AB0F;
 }
 
 .make.reservation {
-    background-color: #DCDDDE;
+    background-color: var(--make-light-grey);
     border-top: 1px solid #BABBBC;
     border-bottom: 1px solid #BABBBC;
 }

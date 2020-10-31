@@ -3,7 +3,7 @@
 
 <div id="{{ widget.attrs.id }}" class="ui action input">
     <input type="text" readonly value="{{ widget.value.name }}">
-    <button id="{{ widget.attrs.id }}-button" class="ui right labeled icon yellow button">
+    <button id="{{ widget.attrs.id }}-button" class="ui right labeled icon make-bg-yellow button">
         {% trans "Upload image" %} <i class="ui upload icon"></i>
     </button>
     <input hidden type="file" name="{{ widget.name }}" accept="{{ widget.attrs.accept }}" formnovalidate data-required="{{ widget.attrs.required }}">

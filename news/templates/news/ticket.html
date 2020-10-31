@@ -30,7 +30,7 @@
                                         - {{ timeplace.end_time|date:"d. M H:i" }}
                                         <a class="left floated" href="{% url 'timeplace-ical' timeplace.id %}"
                                            target="_blank">
-                                            <i class="ui make_col_yellow large calendar plus outline icon"></i>
+                                            <i class="ui make-col-yellow large calendar plus outline icon"></i>
                                         </a>
                                     </div>
                                     <div class="description">
@@ -43,7 +43,7 @@
                 </div>
             {% else %}
                 <a class="left floated" href="{% url 'timeplace-ical' ticket.timeplace.id %}" target="_blank">
-                    <i class="ui make_col_yellow large calendar plus outline icon"></i>
+                    <i class="ui make-col-yellow large calendar plus outline icon"></i>
                 </a>
                 <b>
                     {{ ticket.timeplace.start_time|date:"d. M H:i" }} - {{ ticket.timeplace.end_time|date:"d. M H:i" }}

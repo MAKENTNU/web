@@ -15,7 +15,7 @@
             {{ machine.name }}
             {% if perms.make_queue.change_machine %}
                 <a href="{% url "edit_machine" machine.pk %}">
-                    <i class="ui yellow pencil icon"></i>
+                    <i class="ui make-col-yellow pencil icon"></i>
                 </a>
             {% endif %}
             {% if perms.make_queue.delete_machine %}

@@ -45,7 +45,7 @@
                 <div class="ui six wide field">
                     {# Using label with non-blocking space to keep the download button further down #}
                     <label>&nbsp;</label>
-                    <button class="ui right floated make_yellow button">
+                    <button class="ui right floated make-bg-yellow button">
                         {% trans "Download filtered users" %}
                     </button>
                 </div>
@@ -74,10 +74,10 @@
                     </div>
                     <div class="ui ten wide field">
                         <label>&nbsp;</label>
-                        <button id="clear-selected-users" class="ui right floated make_yellow button">
+                        <button id="clear-selected-users" class="ui right floated make-bg-yellow button">
                             {% trans "Clear selected users" %}
                         </button>
-                        <button id="show-selected-users" class="ui right floated make_yellow button">
+                        <button id="show-selected-users" class="ui right floated make-bg-yellow button">
                             {% trans "Toggle non-selected users" %}
                         </button>
                     </div>
@@ -105,7 +105,7 @@
                     <td>
                         {{ registration.name }}
                         <a href="{% url "edit_course_registration" registration.pk %}">
-                            <i class="ui yellow pencil icon"></i>
+                            <i class="ui make-col-yellow pencil icon"></i>
                         </a>
                         {% if perms.make_queue.delete_printer3dcourse %}
                             <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
@@ -162,7 +162,7 @@
     {# Modal for confirmation of bulk status update on selected users #}
     <div id="set-status-modal" class="ui modal">
         <div class="ui icon header">
-            <i class="yellow exclamation icon"></i>
+            <i class="make-col-yellow exclamation icon"></i>
             {% trans "Set status of users to" %} &quot;<i><span id="set-status-text"></span></i>&quot;
         </div>
 

@@ -22,7 +22,7 @@ def get_membership_statuses(member):
         statuses += [(_("Active"), "green")]
 
     if member.honorary:
-        statuses += [(_("Honorary"), "yellow")]
+        statuses += [(_("Honorary"), "make-bg-yellow")]
 
     return statuses
 
@@ -53,7 +53,7 @@ def get_committees(member):
         "Dev": "green",
         "Mentor": "red",
         "Event": "blue",
-        "PR": "yellow",
+        "PR": "make-bg-yellow",
         "Styret": "purple",
     }
     return sorted([(committee.name, colors[committee.name]) for committee in member.committees.all()]) or ""

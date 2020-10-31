@@ -17,7 +17,7 @@
         <h1>
             {% trans "Members list" %}
             {% if perms.internal.can_register_new_member %}
-                <a class="ui right floated yellow button" href="{% url "add-member" %}">
+                <a class="ui right floated make-bg-yellow button" href="{% url "add-member" %}">
                     <i class="ui plus icon"></i>{% trans "Add member" %}
                 </a>
             {% endif %}
@@ -41,7 +41,7 @@
                                 <i class="ui blue circle icon"></i>{% trans "Retired" %}
                             </div>
                             <div class="item" data-value="{% trans "Honorary" %}">
-                                <i class="ui yellow circle icon"></i>{% trans "Honorary" %}
+                                <i class="ui make-col-yellow circle icon"></i>{% trans "Honorary" %}
                             </div>
                             <div class="item" data-value="{% trans "Quit" %}">
                                 <i class="ui red circle icon"></i>{% trans "Quit" %}
@@ -65,7 +65,7 @@
                                 <i class="ui blue circle icon"></i>Event
                             </div>
                             <div class="item" data-value="PR">
-                                <i class="ui yellow circle icon"></i>PR
+                                <i class="ui make-col-yellow circle icon"></i>PR
                             </div>
                             <div class="item" data-value="Styret">
                                 <i class="ui purple circle icon"></i>Styret
@@ -160,13 +160,13 @@
         <div class="header">
             <span id="member-name-header"></span>
             <a id="member-edit">
-                <i class="ui yellow pencil icon"></i>
+                <i class="ui make-col-yellow pencil icon"></i>
             </a>
             <span id="member-status-header"></span>
         </div>
         <div class="scrolling content">
             <h4 class="ui horizontal divider header">
-                <i class="ui yellow user icon"></i>{% trans "Basic information" %}
+                <i class="ui make-col-yellow user icon"></i>{% trans "Basic information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
@@ -208,7 +208,7 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="ui yellow users icon"></i>{% trans "Membership information" %}
+                <i class="ui make-col-yellow users icon"></i>{% trans "Membership information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
@@ -264,7 +264,7 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="ui yellow key icon"></i>{% trans "System accesses" %}
+                <i class="ui make-col-yellow key icon"></i>{% trans "System accesses" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody id="member-system-accesses">
@@ -274,12 +274,12 @@
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
-                    <i class="ui wrench yellow icon"></i>{% trans "Actions" %}
+                    <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
                 </h4>
                 <a id="member-set-quit" class="ui red button">{% trans "Set member as quit" %}</a>
                 <a id="member-set-not-quit" class="ui green button">{% trans "Set member as not quit" %}</a>
-                <a id="member-set-retired" class="ui yellow button">{% trans "Set member as retired" %}</a>
-                <a id="member-set-not-retired" class="ui yellow button">{% trans "Set member as not retired" %}</a>
+                <a id="member-set-retired" class="ui make-bg-yellow button">{% trans "Set member as retired" %}</a>
+                <a id="member-set-not-retired" class="ui make-bg-yellow button">{% trans "Set member as not retired" %}</a>
             {% endif %}
         </div>
     </div>

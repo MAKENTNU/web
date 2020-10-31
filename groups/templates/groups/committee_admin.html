@@ -10,7 +10,7 @@
 
 {% block body %}
     <div style="height: 50px;"></div>
-    <h1 class="ui text-centered make_col_yellow header">
+    <h1 class="ui text-centered make-col-yellow header">
         {% trans "Committees" %}
     </h1>
     <div class="ui text container">
@@ -30,11 +30,11 @@
                         </i>
                         <div class="content">
                             <div class="header">
-                                <a class="inline-block make_col_blue header"
+                                <a class="inline-block make-col-blue header"
                                    href="{% url 'committee_detail' committee.id %}">{{ committee.name }}</a>
                                 <span>
                                     &nbsp;&nbsp;
-				    <a class="inline-block make_col_blue" href="{% url 'committee_edit' committee.id %}">
+				    <a class="inline-block make-col-blue" href="{% url 'committee_edit' committee.id %}">
 					<i class="ui edit icon"></i>
 				    </a>
                                 </span>

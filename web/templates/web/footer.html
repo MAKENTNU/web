@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="{% static "web/css/footer.css" %}">
 
 <div class="footer-wrapper">
-    <footer id="footer">
+    <footer id="footer" class="make-bg-blue">
         <div>
             <div class="logo">
                 <img src="{% static "web/img/logo_allwhite.svg" %}">
@@ -20,29 +20,29 @@
             {% endwith %}
         </div>
         <div class="ui social list">
-            <div class="item">
+            <div class="item make-bg-yellow">
                 <a href="http://www.facebook.com/MAKENTNU/" title="{% trans "Like us on Facebook!" %}" target="_blank">
-                    <i class="facebook f icon"></i>
+                    <i class="facebook f icon make-col-blue"></i>
                 </a>
             </div>
-            <div class="item">
+            <div class="item make-bg-yellow">
                 <a href="http://makentnu.slack.com/" title="{% trans "Chat with us on Slack!" %}" target="_blank">
-                    <i class="slack icon"></i>
+                    <i class="slack icon make-col-blue"></i>
                 </a>
             </div>
-            <div class="item">
+            <div class="item make-bg-yellow">
                 <a href="http://github.com/MAKENTNU" title="{% trans "Open a pull request on GitHub!" %}" target="_blank">
-                    <i class="github alternate icon"></i>
+                    <i class="github alternate icon make-col-blue"></i>
                 </a>
             </div>
-            <div class="item">
+            <div class="item make-bg-yellow">
                 <a href="{% url 'about' %}#footer" title="{% trans "Contact us by mail!" %}">
-                    <i class="mail icon"></i>
+                    <i class="mail icon make-col-blue"></i>
                 </a>
             </div>
-            <div class="item">
+            <div class="item make-bg-yellow">
                 <a href="https://www.instagram.com/makentnu/" title="{% trans "Follow us on Instagram!" %}" target="_blank">
-                    <i class="instagram icon"></i>
+                    <i class="instagram icon make-col-blue"></i>
                 </a>
             </div>
         </div>

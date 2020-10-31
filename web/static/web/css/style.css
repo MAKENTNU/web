@@ -1,4 +1,12 @@
 html, body {
+    --make-yellow: rgb(248, 200, 17);
+    --make-blue: rgb(12, 66, 106);
+    --make-turquoise: rgb(0, 235, 179);
+    --make-dark-grey: rgb(74, 75, 76);
+    --make-light-grey: rgb(220, 221, 222);
+
+    --make-yellow-darker: rgb(239, 184, 14);
+
     height: 100%;
     min-width: 320px;
     font-size: 14px; /* Same as Fomantic-UI */
@@ -55,21 +63,6 @@ li {
     height: 36px;
 }
 
-.make_yellow.button {
-    background-color: rgb(248, 200, 17) !important;
-    color: black !important;
-    font-weight: normal;
-}
-
-.make_yellow.button:hover {
-    background-color: rgb(228, 188, 15) !important;;
-}
-
-.make_yellow.button.bordered {
-    border-left: 1px solid rgb(162, 130, 12);
-    border-right: 1px solid rgb(162, 130, 12);
-}
-
 .noshadow {
     text-shadow: 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF !important;
 }
@@ -83,48 +76,61 @@ li {
     width: 100% !important;
 }
 
-.make_bg_yellow {
-    background-color: rgb(248, 200, 17) !important;
+.make-bg-yellow {
+    background-color: var(--make-yellow) !important;
 }
 
-.make_bg_blue {
-    background-color: rgb(12, 66, 106) !important;
+.make-bg-yellow.ui.button,
+.make-bg-yellow.ui.label {
+    color: white;
 }
 
-.make_bg_turquoise {
-    background-color: rgb(0, 235, 179) !important;
+.make-bg-yellow.ui.button {
+    box-shadow: 0 0 0 0 rgba(34, 36, 38, 0.15) inset; /* Same as Fomantic-UI's style for colored buttons */
 }
 
-.make_bg_dkgray,
-.ui.black.label.make_bg_dkgray,
-.ui.black.labels .label.make_bg_dkgray {
-    background-color: rgb(74, 75, 76) !important;
+.make-bg-yellow.button:hover {
+    background-color: var(--make-yellow-darker) !important;
 }
 
-.make_bg_ligray {
-    background-color: rgb(220, 221, 222) !important;
+.make-bg-blue {
+    background-color: var(--make-blue) !important;
 }
 
-.make_col_yellow {
-    color: rgb(248, 200, 17) !important;
+.make-bg-turquoise {
+    background-color: var(--make-turquoise) !important;
 }
 
-.make_col_blue,
-.ui.list .list > .item a.header.make_col_blue,
-.ui.list > .item a.header.make_col_blue {
-    color: rgb(12, 66, 106) !important;
+.make-bg-dkgrey,
+.ui.black.label.make-bg-dkgrey,
+.ui.black.labels .label.make-bg-dkgrey {
+    background-color: var(--make-dark-grey) !important;
 }
 
-.make_col_turquoise {
-    color: rgb(0, 235, 179) !important;
+.make-bg-ligrey {
+    background-color: var(--make-light-grey) !important;
 }
 
-.make_col_dkgray {
-    color: rgb(74, 75, 76) !important;
+.make-col-yellow {
+    color: var(--make-yellow) !important;
 }
 
-.make_col_ligray {
-    color: rgb(220, 221, 222) !important;
+.make-col-blue,
+.ui.list .list > .item a.header.make-col-blue,
+.ui.list > .item a.header.make-col-blue {
+    color: var(--make-blue) !important;
+}
+
+.make-col-turquoise {
+    color: var(--make-turquoise) !important;
+}
+
+.make-col-dkgrey {
+    color: var(--make-dark-grey) !important;
+}
+
+.make-col-ligrey {
+    color: var(--make-light-grey) !important;
 }
 
 .make_content_padding {

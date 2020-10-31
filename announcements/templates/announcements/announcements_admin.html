@@ -20,7 +20,7 @@
                             {{ announcement.get_classification_display }}
                             {% if perms.announcements.change_announcement %}
                                 <a href="{% url "edit_announcement" pk=announcement.pk %}">
-                                    <i class="yellow pencil icon"></i>
+                                    <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
                             {% if perms.announcements.delete_announcement %}
@@ -31,9 +31,9 @@
                         </div>
                         <div class="meta">
                             {% if announcement.site_wide %}
-                                <i class="ui yellow globe icon"></i>{% trans "Site-wide" %}
+                                <i class="ui make-col-yellow globe icon"></i>{% trans "Site-wide" %}
                             {% else %}
-                                <i class="ui yellow home icon"></i>{% trans "Front page" %}
+                                <i class="ui make-col-yellow home icon"></i>{% trans "Front page" %}
                             {% endif %}
                         </div>
                         <div class="description">{{ announcement.content }}</div>

@@ -49,14 +49,14 @@
                             {% endif %}
 
                             {% if event.private %}
-                                <span class="ui yellow mini label">
+                                <span class="ui make-bg-yellow mini label">
                                     {% trans "Internal" %}
                                 </span>
                             {% endif %}
                         </div>
                         <div class="description">{{ event.clickbait }}</div>
                     </div>
-                    <a class="ui yellow bottom attached button" href="{% url "admin-event" event.id %}">
+                    <a class="ui make-bg-yellow bottom attached button" href="{% url "admin-event" event.id %}">
                         {% trans "Admin" %}
                     </a>
                 </div>
