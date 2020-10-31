@@ -12,7 +12,7 @@
             </a>
 
             {% if perms.make_queue.change_machineusagerule %}
-                <a class="ui yellow button" style="margin-top: 20px"
+                <a class="ui make-bg-yellow button" style="margin-top: 20px"
                    href="{% url 'edit_machine_usage_rules' usage_rules.pk %}">
                     {% trans "Edit" %}
                 </a>

@@ -36,7 +36,7 @@
                 {% if perms.docs.change_page %}
                     <a class="explanation-popup" href="{% url "edit-page" pk=page %}" data-title="{% trans "Edit" %}"
                        data-content="{% trans "Click to edit the content of the page" %}">
-                        <i class="ui yellow edit icon"></i>
+                        <i class="ui make-col-yellow edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.docs.delete_page and page.title != "Documentation" %}

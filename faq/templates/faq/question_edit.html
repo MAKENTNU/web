@@ -29,13 +29,13 @@
         <div class="field">
             <label>{{ form.categories.label }}
                 <span data-content="{% trans "Choose one or multiple categories for the question" %}">
-                    <i class="ui yellow question circle icon"></i>
+                    <i class="ui make-col-yellow question circle icon"></i>
                 </span>
             </label>
             {{ form.categories }}
         </div>
 
-        <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}"/>
+        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
         <a class="ui right floated red button" href="{% url "faq-admin" %}">
             {% trans "Cancel" context "abort action" %}
         </a>

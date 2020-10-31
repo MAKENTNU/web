@@ -15,7 +15,7 @@
                 <div class="ui field">
                     <label>{{ form.link.label }}
                         <span data-content="{{ form.link.help_text }}">
-                            <i class="ui yellow question circle icon"></i>
+                            <i class="ui make-col-yellow question circle icon"></i>
                         </span>
                     </label>
                     {{ form.link }}
@@ -25,7 +25,7 @@
                 <div class="ui field">
                     <label>{{ form.display_from.label }}
                         <span data-content="{{ form.display_from.help_text }}">
-                            <i class="ui yellow question circle icon"></i>
+                            <i class="ui make-col-yellow question circle icon"></i>
                         </span>
                     </label>
                     {{ form.display_from }}
@@ -33,7 +33,7 @@
                 <div class="ui field">
                     <label>{{ form.display_to.label }}
                         <span data-content="{{ form.display_to.help_text }}">
-                            <i class="ui yellow question circle icon"></i>
+                            <i class="ui make-col-yellow question circle icon"></i>
                         </span>
                     </label>
                     {{ form.display_to }}
@@ -46,12 +46,12 @@
             <div class="ui field">
                 <label>{{ form.site_wide.label }}
                     <span data-content="{{ form.site_wide.help_text }}">
-                        <i class="ui yellow question circle icon"></i>
+                        <i class="ui make-col-yellow question circle icon"></i>
                     </span>
                 </label>
                 {{ form.site_wide }}
             </div>
-            <button class="ui right floated yellow button">
+            <button class="ui right floated make-bg-yellow button">
                 {% trans "Save" %}
             </button>
             <a class="ui right floated red button" href="{% url "announcement_admin" %}">

@@ -6,7 +6,7 @@
 
 
 {% block body %}
-    <h1 class="ui text-centered make_col_yellow header">
+    <h1 class="ui text-centered make-col-yellow header">
         {% trans "Equipment" %}
         <a href="{% url 'makerspace-equipment-create' %}" title="{% trans "Add new equipment" %}">
             <i class="ui add icon green"></i>
@@ -31,7 +31,7 @@
                             </a>
                         </i>
                         <div class="content">
-                            <a class="inline-block make_col_blue header" href="{% url 'makerspace-equipment-edit' equipment.id %}">
+                            <a class="inline-block make-col-blue header" href="{% url 'makerspace-equipment-edit' equipment.id %}">
                                 {{ equipment.title }}
                             </a>
                             {% if perms.makerspace.delete_equipment %}

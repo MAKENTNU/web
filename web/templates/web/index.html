@@ -35,7 +35,7 @@
             {% for event in events %}
                 <div class="item">
                     <div class="ui small clickable image" href="{% url 'event' event.event.id %}">
-                        <p class="ui yellow make_bg_yellow ribbon label">
+                        <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event.start_time|date:"d" }}<br>
                             {{ event.start_time|date:"M" }}
                         </p>

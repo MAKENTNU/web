@@ -32,7 +32,7 @@
                     {{ field.label }}
                     {% if field.help_text %}
                         <span data-content="{{ field.help_text }}">
-                            <i class="ui yellow question circle icon"></i>
+                            <i class="ui make-col-yellow question circle icon"></i>
                         </span>
                     {% endif %}
                 </label>
@@ -40,7 +40,7 @@
             </div>
         {% endfor %}
 
-        <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}"/>
+        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
         <a class="ui right floated red button" href="{% url "makerspace-equipment-admin" %}">
             {% trans "Cancel" context "abort action" %}
         </a>

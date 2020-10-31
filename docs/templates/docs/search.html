@@ -49,7 +49,7 @@
         {# Create buttons to allow changing page to one that is close to the current selected page #}
         <div class="ui buttons">
             {% for page_i in pages_to_show %}
-                <div class="ui yellow {% if page_i == page %}disabled{% endif %} button page-selector"
+                <div class="ui make-bg-yellow {% if page_i == page %}disabled{% endif %} button page-selector"
                      data-page="{{ page_i }}">
                     {{ page_i }}
                 </div>

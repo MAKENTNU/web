@@ -170,7 +170,7 @@
                         </a>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a class="ui make_bg_yellow button make_my_reservation_button_pad"
+                            <a class="ui make-bg-yellow button make_my_reservation_button_pad"
                                href="{% url 'change_reservation' reservation=reservation %}">
                                 {% trans "Change" %}
                             </a>

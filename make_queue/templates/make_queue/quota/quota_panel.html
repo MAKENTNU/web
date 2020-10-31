@@ -11,7 +11,7 @@
 
 {% block body %}
     <div class="ui container">
-        <a class="ui yellow button" href="{% url "create_quota" %}">
+        <a class="ui make-bg-yellow button" href="{% url "create_quota" %}">
             <i class="ui icon plus"></i>{% trans "New quota" %}
         </a>
         <div class="ui tabular pointing secondary menu">
@@ -29,7 +29,7 @@
                                 {% trans "Replenishing quota" %}
                             {% endif %}
                             <a href="{% url "edit_quota" quota.pk %}">
-                                <i class="ui yellow icon pencil"></i>
+                                <i class="ui make-col-yellow icon pencil"></i>
                             </a>
                             {% if perms.make_queue.delete_quota %}
                                 <a class="delete confirm" href="{% url "delete_quota" quota.pk %}">

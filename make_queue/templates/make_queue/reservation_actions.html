@@ -17,14 +17,14 @@
        data-content="{% trans "You have reached the maximum number of future reservations" %}"
             {% endif %}
     >
-        <i class="large middle aligned make_col_yellow plus icon"></i>
+        <i class="large middle aligned make-col-yellow plus icon"></i>
         <div class="content">
             <div class="header">{% trans "New reservation" %}</div>
             {% trans "Click to create a new reservation" %}
         </div>
     </a>
     <a class="item" href="{% url "my_reservations" %}">
-        <i class="large middle aligned make_col_yellow list ul icon"></i>
+        <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">
             <div class="header">{% trans "My reservations" %}</div>
             {% trans "Click to see your reservations" %}
@@ -33,9 +33,9 @@
     {% if other_machines %}
         <div class="ui right dropdown item">
             <div class="right floated content">
-                <i class="ui large make_col_yellow dropdown icon"></i>
+                <i class="ui large make-col-yellow dropdown icon"></i>
             </div>
-            <i class="large middle aligned make_col_yellow cogs icon"></i>
+            <i class="large middle aligned make-col-yellow cogs icon"></i>
             <div id="test" class="content">
                 <div class="header">{% trans "Other machines" %}</div>
                 {% trans "Click to see other machines" %}
@@ -57,7 +57,7 @@
         </div>
     {% else %}
         <a class="item" href="{% url "reservation_machines_overview" %}">
-            <i class="large middle aligned make_col_yellow cogs icon"></i>
+            <i class="large middle aligned make-col-yellow cogs icon"></i>
             <div class="content">
                 <div class="header">{% trans "Other machines" %}</div>
                 {% trans "Click to see other machines" %}

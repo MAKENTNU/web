@@ -69,7 +69,7 @@
                         <td id="vote-count">{{ suggestion.voters.count }}</td>
                         <td>
                             {% if request.user|can_force_suggestion %}
-                                <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
+                                <button class="ui make-bg-yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
                                     {% trans "Approve" %}
                                 </button>
                             {% else %}

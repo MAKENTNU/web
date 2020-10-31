@@ -101,7 +101,7 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
                         ${dateString}
                     </div>
                 </div>
-                <div class="ui bottom attached yellow button">
+                <div class="ui bottom attached make-bg-yellow button">
                     ${gettext("Reserve")}
                 </div>
             </div>
