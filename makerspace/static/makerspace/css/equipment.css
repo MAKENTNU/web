@@ -64,14 +64,6 @@
 }
 
 
-/* --- equipment.html --- */
-
-.equipment-description {
-    font-size: 16px;
-    line-height: 26px;
-}
-
-
 /* Switch to mobile layout */
 @media screen and (max-width: 992px) {
 
