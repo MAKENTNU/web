@@ -67,10 +67,6 @@ li {
     text-shadow: 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF !important;
 }
 
-.inline-block {
-    display: inline-block !important;
-}
-
 .cke,
 .django-ckeditor-widget {
     width: 100% !important;
@@ -115,9 +111,7 @@ li {
     color: var(--make-yellow) !important;
 }
 
-.make-col-blue,
-.ui.list .list > .item a.header.make-col-blue,
-.ui.list > .item a.header.make-col-blue {
+.make-col-blue {
     color: var(--make-blue) !important;
 }
 

@@ -5,7 +5,7 @@
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "groups/css/committee_admin.css" %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -14,30 +14,26 @@
     </h1>
     <div class="ui text container">
         {% if committees %}
-            <div class="ui divided list">
+            <div class="committee-list ui divided list">
                 {% for committee in committees %}
                     <div class="item">
-                        <i class="ui icon">
+
+                        <a class="image" href="{% url 'committee_detail' committee.pk %}">
                             {% if committee.image %}
-                                <img class="inline square_36" src="{{ committee.image.url }}">
+                                <img class="square_36" src="{{ committee.image.url }}">
                             {% else %}
                                 {# Use a transparent base64 encoded image #}
-                                <img class="inline square_36"
+                                <img class="square_36"
                                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
                                 />
                             {% endif %}
-                        </i>
+                        </a>
                         <div class="content">
-                            <div class="header">
-                                <a class="inline-block make-col-blue header"
-                                   href="{% url 'committee_detail' committee.id %}">{{ committee.name }}</a>
-                                <span>
-                                    &nbsp;&nbsp;
-				    <a class="inline-block make-col-blue" href="{% url 'committee_edit' committee.id %}">
-					<i class="ui edit icon"></i>
-				    </a>
-                                </span>
-                            </div>
+                            <h3>
+                                <a class="make-col-blue" href="{% url 'committee_detail' committee.pk %}">
+                                    {{ committee.name }}
+                                </a>
+                            </h3>
                             <div class="description">
                                 {% if committee.clickbait %}
                                     {{ committee.clickbait }}
@@ -46,6 +42,10 @@
                                 {% endif %}
                             </div>
                         </div>
+                        <a class="make-col-blue edit-button" href="{% url 'committee_edit' committee.pk %}">
+                            <i class="ui edit icon"></i>
+                        </a>
+
                     </div>
                 {% endfor %}
             </div>

@@ -285,7 +285,6 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: docs/templates/docs/documentation_page.html:43
-#: makerspace/templates/makerspace/equipment/admin_equipment.html:38
 #: news/templates/news/admin_articles.html:54
 #: news/templates/news/admin_event.html:27
 #: news/templates/news/admin_timeplace_listing.html:36
@@ -1516,10 +1515,6 @@ msgstr "Legg til nytt utstyr"
 #, python-format
 msgid "Image of %(equipment)s"
 msgstr "Bilde av %(equipment)s"
-
-#: makerspace/templates/makerspace/equipment/admin_equipment.html:39
-msgid "Click to delete"
-msgstr "Trykk for å slette"
 
 #: makerspace/templates/makerspace/equipment/admin_equipment_create.html:4
 #: makerspace/templates/makerspace/equipment/admin_equipment_create.html:5
