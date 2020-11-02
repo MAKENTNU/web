@@ -53,8 +53,12 @@
     border-left: 2px solid #008000;
 }
 
-.make_my_reservation_cards_padding {
+.make_my_reservation_tablet {
     padding: 2em 0 2em 0;
+}
+
+.make_my_reservation_tablet .card {
+    flex: auto;
 }
 
 .make_my_reservation_button_pad {
@@ -77,14 +81,18 @@
     padding-bottom: 1em;
 }
 
+.reservation-management-buttons .button {
+    margin-top: 0.5em;
+}
+
 .machine-title {
     vertical-align: sub;
     display: inline;
 }
 
 .machine-title-field {
-    padding-top: 2rem;
-    padding-bottom: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 .action.list > .item {
@@ -125,6 +133,21 @@
 .large.middle.aligned.cogs.icon {
     font-size: 1.3em;
     padding: 0;
+}
+
+
+/* Desktop layout (quota_panel.html) */
+@media screen and (min-width: 992px) {
+    .quotas .card,
+    #user-quotas .card {
+        width: max-content; /* 10px wider than Fomantic-UI, to fit the text */
+    }
+
+    .quotas .card .content,
+    #user-quotas .card .content {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 

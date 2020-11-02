@@ -138,7 +138,7 @@
             </tbody>
         </table>
 
-        <div class="ui cards make_my_reservation_cards_padding make_my_reservation_tablet">
+        <div class="ui cards make_my_reservation_tablet">
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
                 <div class="card {% if not future_reservation %}make_hidden{% endif %}"

@@ -150,7 +150,7 @@
     font-style: italic;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1199.98px) {
     .events {
         grid-template-columns: 1fr 20fr 1fr;
         grid-gap: 0;
@@ -163,7 +163,7 @@
 }
 
 /* Switch to mobile layout */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991.98px) {
     .articles {
         grid-template-columns: 1fr 20fr 1fr;
         margin-top: 20px;

@@ -157,6 +157,17 @@ tr.wrapping {
     bottom: 0;
 }
 
+.time-selection.popup {
+    width: 33vw;
+    padding: 0;
+    border: none;
+}
+
+.new-reservation-popup.card {
+    width: 50vw;
+    max-width: 290px; /* Same as Fomantic-UI's `width` on `.card` */
+}
+
 
 @media screen and (max-width: 600px) {
     .legend {
@@ -176,8 +187,4 @@ tr.wrapping {
     .reservation_calendar thead th:first-child {
         display: none;
     }
-}
-
-.default.reservation.popup {
-    padding: 0;
 }

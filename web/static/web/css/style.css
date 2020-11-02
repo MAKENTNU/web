@@ -138,6 +138,21 @@ li {
     height: 3em;
 }
 
+.title-with-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.title-with-buttons:not(:first-child) {
+    margin-top: 0.5em;
+}
+
+.title-with-buttons .button {
+    margin-top: 0.5em;
+}
+
 /*
  * Style for multilingual input
  */
@@ -161,10 +176,11 @@ li {
 
 /*
  * Extension of Fomantic UI mobile only, table only, etc. classes
+ * The `max-width` and `min-width` values are copied from Fomantic-UI.
  */
 
 /* Mobile */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 767.98px) {
     [class*="mobile hidden"],
     [class*="tablet only"]:not(.mobile),
     [class*="computer only"]:not(.mobile) {
@@ -174,7 +190,7 @@ li {
 
 
 /* Tablet / iPad Portrait */
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media only screen and (min-width: 768px) and (max-width: 991.98px) {
     [class*="mobile only"]:not(.tablet),
     [class*="tablet hidden"],
     [class*="computer only"]:not(.tablet) {
@@ -184,7 +200,7 @@ li {
 
 
 /* Mobile / Tablet / iPad Portrait */
-@media only screen and (max-width: 991px) {
+@media only screen and (max-width: 991.98px) {
     html, body {
         font-size: 12px;
     }

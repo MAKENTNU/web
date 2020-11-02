@@ -11,23 +11,26 @@
 {% block body %}
     <div class="ui container">
 
-        <h1>
+        <h1 class="title-with-buttons">
             {{ object.title }}
-            <a class="ui make-bg-yellow right floated button" href="{% url "event" object.id %}">
-                <i class="ui sticky note icon"></i>{% trans "Go to the event page" %}
-            </a>
 
-            {% if perms.news.change_event %}
-                <a class="ui blue right floated button" href="{% url 'event-edit' event.id %}">
-                    <i class="ui edit icon"></i>{% trans "Edit" %}
-                </a>
-            {% endif %}
+            <div class="admin-actions ui secondary menu">
+                {% if perms.news.delete_event %}
+                    <a class="ui red delete confirm button" href="{% url 'event-delete' event.id %}">
+                        <i class="ui trash icon"></i>{% trans "Delete" %}
+                    </a>
+                {% endif %}
 
-            {% if perms.news.delete_event %}
-                <a class="ui red delete right floated confirm button" href="{% url 'event-delete' event.id %}">
-                    <i class="ui trash icon"></i>{% trans "Delete" %}
+                {% if perms.news.change_event %}
+                    <a class="ui blue button" href="{% url 'event-edit' event.id %}">
+                        <i class="ui edit icon"></i>{% trans "Edit" %}
+                    </a>
+                {% endif %}
+
+                <a class="ui make-bg-yellow button" href="{% url "event" object.id %}">
+                    <i class="ui sticky note icon"></i>{% trans "Go to the event page" %}
                 </a>
-            {% endif %}
+            </div>
         </h1>
 
         <a href="{% url "admin-events" %}">
