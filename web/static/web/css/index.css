@@ -163,7 +163,7 @@
 }
 
 /* Switch to mobile layout */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991.98px) {
     .articles {
         grid-template-columns: 1fr 20fr 1fr;
         margin-top: 20px;

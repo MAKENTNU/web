@@ -14,7 +14,7 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>
+        <h1 class="title-with-buttons">
             {% trans "Members list" %}
             {% if perms.internal.can_register_new_member %}
                 <a class="ui right floated make-bg-yellow button" href="{% url "add-member" %}">
@@ -25,7 +25,7 @@
 
         <form class="ui form">
             <div class="ui fields">
-                <div class="ui multiple blue labeled button icon dropdown">
+                <div class="ui multiple blue labeled compact button icon dropdown">
                     <input type="hidden" name="filter-status">
                     <i class="ui filter icon"></i>
                     <span class="ui text">{% trans "Filter membership status" %}</span>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui multiple blue labeled button icon dropdown">
+                <div class="ui multiple blue labeled compact button icon dropdown">
                     <input type="hidden" name="filter-committee">
                     <i class="ui filter icon"></i>
                     <span class="ui text">{% trans "Filter committees" %}</span>
@@ -276,10 +276,12 @@
                 <h4 class="ui horizontal divider header">
                     <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
                 </h4>
-                <a id="member-set-quit" class="ui red button">{% trans "Set member as quit" %}</a>
-                <a id="member-set-not-quit" class="ui green button">{% trans "Set member as not quit" %}</a>
-                <a id="member-set-retired" class="ui make-bg-yellow button">{% trans "Set member as retired" %}</a>
-                <a id="member-set-not-retired" class="ui make-bg-yellow button">{% trans "Set member as not retired" %}</a>
+                <div class="member-action-buttons">
+                    <a id="member-set-quit" class="ui red button">{% trans "Set member as quit" %}</a>
+                    <a id="member-set-not-quit" class="ui green button">{% trans "Set member as not quit" %}</a>
+                    <a id="member-set-retired" class="ui make-bg-yellow button">{% trans "Set member as retired" %}</a>
+                    <a id="member-set-not-retired" class="ui make-bg-yellow button">{% trans "Set member as not retired" %}</a>
+                </div>
             {% endif %}
         </div>
     </div>

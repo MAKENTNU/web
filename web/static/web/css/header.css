@@ -136,9 +136,11 @@
     border: 2px solid var(--make-light-grey);
 }
 
+#makerspace-dropdown .menu > .item,
 #nav-user-dropdown .menu > .item {
-    /* Fixes weird centering of dropdown items, caused by Fomantic UI setting dropdown menu to `display: flex !important`
-       when it's too close to the right window edge */
+    /* For user dropdown: Fixes weird centering of dropdown items, caused by Fomantic-UI setting dropdown menu to `display: flex !important`
+           when it's too close to the right window edge.
+       For makerspace dropdown: Fixes dropdown items not covering the entire width of the dropdown. */
     align-self: auto;
 }
 
@@ -168,14 +170,14 @@
 }
 
 /* Narrower space between elements in navbar */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1199.98px) {
     #header {
         --nav-space-between: 1em;
     }
 }
 
 /* Switch to mobile layout with burger */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991.98px) {
     #header {
         --burger-space: minmax(calc(4em + var(--burger-margin)), 1fr);
 
@@ -244,20 +246,20 @@
 
 /*** Logo size changes ***/
 
-@media screen and (min-width: 1201px) {
+@media screen and (min-width: 1200px) {
     #header .logo img.large {
         display: block;
     }
 }
 
-@media screen and (max-width: 1200px) and (min-width: 993px) {
+@media screen and (max-width: 1199.98px) and (min-width: 992px) {
     #header .logo img.medium {
         display: block;
     }
 }
 
 /* Switch to mobile layout */
-@media screen and (max-width: 992px) and (min-width: 601px) {
+@media screen and (max-width: 991.98px) and (min-width: 601px) {
     #header .logo img.large {
         display: block;
     }

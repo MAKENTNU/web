@@ -4,7 +4,7 @@
     display: grid;
     grid-template-columns: 1fr 10fr 10fr 1fr;
     grid-row-gap: 30px;
-    margin: 80px 0;
+    margin: 3em 0;
 }
 
 .equipment-img {
@@ -65,7 +65,7 @@
 
 
 /* Switch to mobile layout */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991.98px) {
 
     /* --- equipment_list.html --- */
     .equipment-list {
@@ -76,6 +76,9 @@
 
     .equipment-text {
         grid-column: 2/3;
+    }
+
+    .equipment-text:not(:last-child) {
         margin-bottom: 60px;
     }
 

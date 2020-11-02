@@ -73,7 +73,7 @@ ReservationCalendar.prototype.onSelection = function () {
         html: this.selectionPopupContent(),
         // Allows the popup to stay open when the user does not hover over the selection
         on: "onload",
-    }).popup("show").popup("get popup").addClass("default reservation popup")
+    }).popup("show").popup("get popup").addClass("time-selection default popup");
 };
 
 ReservationCalendar.prototype.selectionPopupContent = function () {
@@ -94,7 +94,7 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
     }
 
     let popupContent = $(`
-            <div class="ui card">
+            <div class="new-reservation-popup ui card">
                 <div class="ui content">
                     <div class="header">${gettext("New reservation")}</div>
                     <div class="description">

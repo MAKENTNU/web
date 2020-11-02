@@ -1,8 +1,14 @@
 {% extends "web/base.html" %}
 {% load reservation_extra %}
 {% load quota %}
+{% load static %}
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "make_queue/css/rules.css" %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -30,10 +36,12 @@
             <tr>
                 <td>{% trans "Reservation duration spanning multiple periods" %}</td>
                 <td>
-                    <ul>
-                        <li><b>{% trans "Total time" %}:</b> {% trans "Largest &quot;single period&quot; value" %}</li>
-                        <li><b>{% trans "For each time period" %}:</b> {% trans "Card's &quot;multiperiod&quot; value" %}</li>
-                    </ul>
+                    <div>
+                        <b>{% trans "Total time" %}:</b> {% trans "Largest &quot;single period&quot; value" %}
+                    </div>
+                    <div>
+                        <b>{% trans "For each time period" %}:</b> {% trans "Card's &quot;multiperiod&quot; value" %}
+                    </div>
                 </td>
             </tr>
             </tbody>
@@ -103,9 +111,9 @@
                                     <b>{% trans "Ignores rules" %}</b>
                                 {% endif %}
                             </div>
-                            {% get_active_reservations quota user as active_reservations %}
-                            {% if active_reservations %}
-                                <div class="ui small feed">
+                            <div class="ui small feed">
+                                {% get_active_reservations quota user as active_reservations %}
+                                {% if active_reservations %}
                                     <h5 class="ui header">{% trans "Reservations connected to quota" %}:</h5>
                                     {% for reservation in active_reservations %}
                                         <div class="event">
@@ -116,10 +124,10 @@
                                             </div>
                                         </div>
                                     {% endfor %}
-                                </div>
-                            {% else %}
-                                <div>{% trans "No reservations connected to quota" %}</div>
-                            {% endif %}
+                                {% else %}
+                                    <div>{% trans "No reservations connected to quota" %}</div>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 {% endfor %}

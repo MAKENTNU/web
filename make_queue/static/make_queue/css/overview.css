@@ -38,3 +38,16 @@ a.wrapped.button {
     z-index: 301;
     width: 100%;
 }
+
+
+/* Mobile layout */
+@media screen and (max-width: 426px) {
+    .machine-info-and-actions .ui {
+        flex: 1 1 100%;
+    }
+
+    .machine-info-and-actions .stream.image {
+        margin: 2em auto !important; /* Overrides Fomantic-UI */
+        float: initial !important; /* Overrides Fomantic-UI */
+    }
+}

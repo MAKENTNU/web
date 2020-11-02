@@ -3,10 +3,12 @@
 }
 
 #footer {
+    --footer-icon-bubble-diameter: 3.5rem;
+
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
-    padding: 65px 40px 40px;
+    padding: 4rem 2rem;
     min-height: 200px;
 }
 
@@ -24,11 +26,13 @@
 }
 
 #footer .social.list .item {
-    display: inline-block;
-    padding: 17px 0 0 4px;
-    border-radius: 100px;
-    width: 50px;
-    height: 50px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border-radius: calc(2 * var(--footer-icon-bubble-diameter));
+    width: var(--footer-icon-bubble-diameter);
+    height: var(--footer-icon-bubble-diameter);
     margin: 4px;
 }
 
@@ -37,7 +41,9 @@
 }
 
 #footer .social.list i {
-    font-size: 28px;
+    margin: 0;
+    font-size: 2rem;
+    line-height: 2rem;
 }
 
 #footer .content {
@@ -78,7 +84,7 @@
 }
 
 
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991.98px) {
     #footer {
         grid-template-columns: 1fr;
         grid-gap: 30px;

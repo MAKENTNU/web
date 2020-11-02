@@ -18,7 +18,7 @@
             <a class="{% if not requested_user %}active{% endif %} item" data-tab="global">{% trans "Global" %}</a>
             <a class="{% if requested_user %}active{% endif %} item" data-tab="users">{% trans "Users" %}</a>
         </div>
-        <div class="ui tab {% if not requested_user %}active{% endif %}" data-tab="global">
+        <div class="quotas ui tab {% if not requested_user %}active{% endif %}" data-tab="global">
             {% for quota in global_quotas %}
                 <div class="ui card">
                     <div class="content">
@@ -38,7 +38,9 @@
                             {% endif %}
                         </div>
                         <div class="meta">{{ quota.machine_type.name }}</div>
-                        <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
+                        <span>
+                            <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
+                        </span>
                         {% if quota.ignore_rules %}
                             <b>{% trans "Ignores rules" %}</b>
                         {% endif %}
