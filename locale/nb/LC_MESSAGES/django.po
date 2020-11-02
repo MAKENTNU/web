@@ -517,11 +517,6 @@ msgstr "Svar"
 msgid "Questions"
 msgstr "Spørsmål"
 
-#: faq/templates/faq/faq_admin.html:29
-#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:39
-msgid "Click to delete"
-msgstr "Trykk for å slette"
-
 #: faq/templates/faq/faq_list.html:14
 msgid "Frequently Asked Questions"
 msgstr "Ofte stilte spørsmål"

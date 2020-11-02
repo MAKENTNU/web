@@ -1,0 +1,13 @@
+.committee-list .item {
+    display: flex !important; /* Overrides Fomantic-UI */
+    align-items: center;
+}
+
+.committee-list .item h3 {
+    margin: 0;
+}
+
+.committee-list .item .edit-button {
+    margin-left: auto;
+    font-size: 1.25em;
+}
