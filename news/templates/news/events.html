@@ -36,7 +36,13 @@
                             <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
-                            <span>{{ event.first_occurrence.place }}</span>
+                            {% if event.first_occurrence.place_url %}
+                                <a class="make-col-blue" href="{{ event.first_occurrence.place_url }}" target="_blank">
+                                    {{ event.first_occurrence.place }}
+                                </a>
+                            {% else %}
+                                {{ event.first_occurrence.place }}
+                            {% endif %}
                         </div>
                         <div class="description">
                             <p>{{ event.event.clickbait }}</p>
@@ -79,6 +85,13 @@
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
+                            {% if event.place_url %}
+                                <a class="make-col-blue" href="{{ event.place_url }}" target="_blank">
+                                    {{ event.place }}
+                                </a>
+                            {% else %}
+                                {{ event.place }}
+                            {% endif %}
                         </div>
                         <div class="description">
                             <p>{{ event.event.clickbait }}</p>
