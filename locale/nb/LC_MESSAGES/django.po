@@ -1499,6 +1499,12 @@ msgstr "Regler for bruk av"
 msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
+#: make_queue/templates/make_queue/usage_rules_edit.html:7
+#: make_queue/templates/make_queue/usage_rules_edit.html:19
+#, python-format
+msgid "Edit usage rules for %(machine_type)s"
+msgstr "Rediger bruksregler for %(machine_type)s"
+
 #: make_queue/templatetags/reservation_extra.py:57
 msgid "Mon"
 msgstr "Man"
