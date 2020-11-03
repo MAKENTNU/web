@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView, TemplateView
@@ -9,9 +10,13 @@ from django_hosts import reverse
 admin.site.site_url = f"//{settings.PARENT_HOST}/"
 
 urlpatterns = [
-    path("", admin.site.urls),
     path("robots.txt", TemplateView.as_view(template_name='web/admin_robots.txt', content_type='text/plain')),
 ]
+
+urlpatterns += i18n_patterns(
+    path("", admin.site.urls),
+    prefix_default_language=False,
+)
 
 # Disable admin page login if Dataporten is configured,
 # as in that case, all users would log in through Dataporten anyways
