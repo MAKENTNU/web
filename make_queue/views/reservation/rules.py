@@ -65,7 +65,8 @@ class EditUsageRulesView(PermissionRequiredMixin, UpdateView):
     permission_required = ('make_queue.change_machineusagerule',)
     model = MachineUsageRule
     fields = ('content',)
-    template_name = 'contentbox/edit.html'
+    template_name = 'make_queue/usage_rules_edit.html'
+    context_object_name = 'usage_rule'
 
     def get_success_url(self):
         return reverse("machine_usage_rules", args=[self.object.machine_type])
