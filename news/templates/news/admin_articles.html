@@ -48,7 +48,7 @@
                     </div>
                     <div class="ui two bottom attached buttons">
                         <a class="ui make-bg-yellow button" href="{% url "article-edit" article.id %}">
-                            <i class="ui pencil icon"></i>{% trans "Edit" %}
+                            <i class="ui edit icon"></i>{% trans "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
                             <a class="ui red delete confirm button" href="{% url "article-delete" article.id %}">

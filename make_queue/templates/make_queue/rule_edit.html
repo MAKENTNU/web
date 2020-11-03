@@ -93,9 +93,12 @@
                 </div>
             </div>
 
-            <button class="ui right floated blue button" type="submit">
+            <button class="ui right floated make-bg-yellow button" type="submit">
                 {% trans "Submit" context "edit" %}
             </button>
+            <a class="ui right floated red button" href="{% url 'machine_rules' rule.machine_type %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
         </form>
 
     </div>

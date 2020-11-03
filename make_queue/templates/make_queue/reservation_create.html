@@ -160,6 +160,9 @@
             <div class="float_fix">
                 <input class="ui right floated make-bg-yellow button" type="submit"
                        value="{% if new_reservation %}{% trans "Reserve" %}{% else %}{% trans "Change" %}{% endif %}">
+                <a class="ui right floated red button" href="{% current_calendar_url selected_machine %}">
+                    {% trans "Cancel" context "abort action" %}
+                </a>
             </div>
         </form>
 

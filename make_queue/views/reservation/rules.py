@@ -37,6 +37,7 @@ class EditReservationRuleView(PermissionRequiredMixin, UpdateView):
     model = ReservationRule
     form_class = RuleForm
     template_name = "make_queue/rule_edit.html"
+    context_object_name = 'rule'
 
     def get_success_url(self):
         return reverse("machine_rules", args=[self.object.machine_type])
