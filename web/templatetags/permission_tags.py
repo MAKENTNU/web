@@ -40,4 +40,4 @@ def has_any_equipment_permissions(user):
 
 @register.filter
 def has_any_faq_permissions(user):
-    return user.has_perm("can_add_questions")
+    return any(user.has_perm(f"faq.{action}_question") for action in ["add", "change", "delete"])
