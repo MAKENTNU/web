@@ -3,7 +3,7 @@
 
 <div class="{% announcement_css_class announcement %} announcement">
     {% if announcement.link %}
-        <a href="{{ announcement.link }}">
+        <a href="{{ announcement.link }}" target="_blank">
             {{ announcement.content }}
         </a>
     {% else %}

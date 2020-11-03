@@ -420,17 +420,10 @@ ReservationCalendar.prototype.addReservation = function (reservation) {
         if (reservation.displayText !== undefined) {
             this.createPopup(htmlElement, reservation);
         }
-
-        // If the reservation is an event, make the reservation in the calendar link to the given event
-        if (reservation.eventLink !== undefined) {
-            htmlElement.on("click touch", () => {
-                window.location = reservation.eventLink;
-            })
-        }
-    });
+    }, reservation.eventLink);
 };
 
-ReservationCalendar.prototype.drawReservation = function (startDate, endDate, classes, callback) {
+ReservationCalendar.prototype.drawReservation = function (startDate, endDate, classes, callback, linkToDisplay = null) {
     /**
      * Draws a reservation in the calendar. The `classes` parameter is the CSS classes given to each block displayed in
      * the calendar. The `callback` parameter is a function that is called with the given HTML element and date as
@@ -444,7 +437,10 @@ ReservationCalendar.prototype.drawReservation = function (startDate, endDate, cl
             // Find where the reservation should start and end in the given day
             let dayStartTime = (Math.max(date, startDate) - date) / millisecondsInDay * 100;
             let dayEndTime = (Math.min(date.nextDay(), endDate) - Math.max(date, startDate)) / millisecondsInDay * 100;
-            let reservationBlock = $(`<div class="${classes}" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`);
+            const reservationHtmlTag = linkToDisplay ? `a href="${linkToDisplay}" target="_blank"` : "div";
+            let reservationBlock = $(
+                `<${reservationHtmlTag} class="${classes}" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`,
+            );
             $(this.days[day]).append(reservationBlock);
 
             // Call any given callback function

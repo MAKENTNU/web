@@ -66,7 +66,7 @@ INSTALLED_APPS = [
 
     # Other third-party packages
     'social_django',
-    'ckeditor',
+    'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
     'sorl.thumbnail',
