@@ -59,6 +59,17 @@
                     {{ form.location_url }}
                 </div>
             </div>
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>
+                        {{ form.priority.label }}
+                        <span data-content="{{ form.priority.help_text }}">
+                            <i class="ui make-col-yellow question circle icon"></i>
+                        </span>
+                    </label>
+                    {{ form.priority }}
+                </div>
+            </div>
 
             <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
             <a class="ui right floated red button" href="{% url "reservation_machines_overview" %}">
@@ -73,5 +84,7 @@
                 .closest(".message")
                 .transition("fade");
         });
+
+        $("span[data-content]").popup();
     </script>
 {% endblock %}
