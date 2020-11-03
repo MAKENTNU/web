@@ -7,27 +7,25 @@ from django.http import HttpResponse
 from django.test import TestCase
 from django.utils import timezone
 
-from make_queue.fields import MachineTypeField
-from make_queue.forms import ReservationForm
-from make_queue.models.course import Printer3DCourse
-from make_queue.models.models import Machine, Quota, Reservation, ReservationRule
-from make_queue.tests.utility import request_with_user, post_request_with_user, template_view_get_context_data
-from make_queue.util.time import date_to_local, local_to_date
-from make_queue.views.admin.reservation import AdminReservationView
-from make_queue.views.reservation.reservation import ReservationCreateOrChangeView, MakeReservationView, \
-    ChangeReservationView, MarkReservationAsDone
 from news.models import Event, TimePlace
+from ...util.time import date_to_local, local_to_date
+from ...forms import ReservationForm
+from ...models.course import Printer3DCourse
+from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
+from ...tests.utility import post_request_with_user, request_with_user, template_view_get_context_data
+from ...views.admin.reservation import AdminReservationView
+from ...views.reservation.reservation import ChangeReservationView, MakeReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
 
 
 class BaseReservationCreateOrChangeViewTest(TestCase):
 
     def setUp(self):
         Reservation.reservation_future_limit_days = 7
-        self.machine_type_sewing = MachineTypeField.get_machine_type(2)
+        self.sewing_machine_type = MachineType.objects.get(pk=2)
         self.user = User.objects.create_user(username="test")
-        self.machine = Machine.objects.create(machine_model="Test", machine_type=self.machine_type_sewing)
+        self.machine = Machine.objects.create(machine_model="Test", machine_type=self.sewing_machine_type)
         self.event = Event.objects.create(title="Test_event")
-        Quota.objects.create(user=self.user, machine_type=self.machine_type_sewing, number_of_reservations=100,
+        Quota.objects.create(user=self.user, machine_type=self.sewing_machine_type, number_of_reservations=100,
                              ignore_rules=True)
         self.timeplace = TimePlace.objects.create(event=self.event,
                                                   start_time=timezone.localtime() + timedelta(hours=1),
@@ -83,7 +81,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         view = self.get_view()
         form = self.create_form(1, 2)
         self.assertTrue(form.is_valid())
-        machine = Machine.objects.create(machine_model="Test", machine_type=self.machine_type_sewing,
+        machine = Machine.objects.create(machine_model="Test", machine_type=self.sewing_machine_type,
                                          status=Machine.OUT_OF_ORDER, name="test out of order")
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=machine)
@@ -126,16 +124,14 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
                                                  end_time=timezone.now() + timedelta(hours=2),
                                                  event=self.timeplace, machine=self.machine, comment="Comment")
         context_data = view.get_context_data(reservation=reservation)
-        context_data["machine_types"] = [
-            {"literal": machine_type["literal"], "instances": list(machine_type["instances"])} for machine_type in
-            context_data["machine_types"]]
+        context_data["machine_types"] = set(context_data["machine_types"])
 
         self.assertEqual(context_data, {
-            "can_change_start_time": True, "events": [self.timeplace], "new_reservation": False, "machine_types": [{
-                "literal": machine_type.name,
-                "instances": list(Machine.objects.filter(machine_type=machine_type)),
-            } for machine_type in MachineTypeField.possible_machine_types if machine_type.can_user_use(self.user)
-            ],
+            "can_change_start_time": True, "events": [self.timeplace], "new_reservation": False,
+            "machine_types": {
+                machine_type for machine_type in MachineType.objects.all()
+                if machine_type.can_user_use(self.user)
+            },
             "start_time": reservation.start_time, "end_time": reservation.end_time, "selected_machine": self.machine,
             "event": self.timeplace, "special": False, "special_text": "",
             "maximum_days_in_advance": Reservation.reservation_future_limit_days, "comment": "Comment",
@@ -147,18 +143,15 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         view.new_reservation = True
         start_time = timezone.now() + timedelta(hours=1)
         context_data = view.get_context_data(machine=self.machine, start_time=start_time)
+        context_data["machine_types"] = set(context_data["machine_types"])
 
-        context_data["machine_types"] = [
-            {"literal": machine_type["literal"], "instances": list(machine_type["instances"])} for machine_type in
-            context_data["machine_types"]]
         self.assertEqual(context_data, {
             "can_change_start_time": True,
             "events": [self.timeplace], "new_reservation": True,
-            "machine_types": [{
-                "literal": machine_type.name,
-                "instances": list(Machine.objects.filter(machine_type=machine_type)),
-            } for machine_type in MachineTypeField.possible_machine_types if machine_type.can_user_use(self.user)
-            ],
+            "machine_types": {
+                machine_type for machine_type in MachineType.objects.all()
+                if machine_type.can_user_use(self.user)
+            },
             "start_time": start_time, "selected_machine": self.machine,
             "maximum_days_in_advance": Reservation.reservation_future_limit_days,
         })
@@ -274,7 +267,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         view = self.get_view()
         reservation = self.create_reservation(self.create_form(1, 2))
         old_machine = self.machine
-        self.machine = Machine.objects.create(name="M1", machine_model="Generic", machine_type=self.machine_type_sewing)
+        self.machine = Machine.objects.create(name="M1", machine_model="Generic", machine_type=self.sewing_machine_type)
         form = self.create_form(1, 3)
         self.assertTrue(form.is_valid())
         response = view.form_valid(form, reservation=reservation)
@@ -322,14 +315,14 @@ class ReservationAdminViewTest(TestCase):
 
     def test_get_admin_reservation(self):
         user = User.objects.create_user("test")
-        machine_type = MachineTypeField.get_machine_type(1)
-        Quota.objects.create(machine_type=machine_type, number_of_reservations=10, ignore_rules=True, user=user)
+        printer_machine_type = MachineType.objects.get(pk=1)
+        Quota.objects.create(machine_type=printer_machine_type, number_of_reservations=10, ignore_rules=True, user=user)
         permission = Permission.objects.get(codename="can_create_event_reservation")
         user.user_permissions.add(permission)
         event = Event.objects.create(title="Test_event")
         timeplace = TimePlace.objects.create(event=event, start_time=timezone.now() + timedelta(hours=1),
                                              end_time=timezone.now() + timedelta(hours=2))
-        printer = Machine.objects.create(machine_type=machine_type, machine_model="Ultimaker")
+        printer = Machine.objects.create(machine_type=printer_machine_type, machine_model="Ultimaker")
         Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(),
                                        date=timezone.now())
         special_reservation = Reservation.objects.create(start_time=timezone.now() + timedelta(hours=1),
@@ -350,7 +343,7 @@ class MarkReservationAsDoneTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("test")
-        self.machine_type = MachineTypeField.get_machine_type(2)
+        self.machine_type = MachineType.objects.get(pk=2)
         self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.AVAILABLE, name="Test")
         Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False,
                              all=True)

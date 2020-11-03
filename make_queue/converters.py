@@ -1,20 +1,20 @@
 from users.models import User
 from django.utils.datetime_safe import datetime
 
-from make_queue.fields import MachineTypeField
-from make_queue.models.models import Machine, Reservation
+from .models.models import Machine, MachineType, Reservation
 
 
-class MachineType:
+class SpecificMachineType:
     regex = "([0-9]+)"
 
     def to_python(self, value):
-        return MachineTypeField.get_machine_type(int(value))
+        try:
+            return MachineType.objects.get(pk=int(value))
+        except MachineType.DoesNotExist:
+            raise ValueError("No machine type for that key")
 
     def to_url(self, machine_type):
-        if type(machine_type) is list and machine_type:
-            return machine_type[0].id
-        return machine_type.id
+        return str(machine_type.pk)
 
 
 class SpecificMachine:

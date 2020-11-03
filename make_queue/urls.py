@@ -4,7 +4,7 @@ from django.urls import include, path, register_converter, re_path
 from make_queue.views import api, admin, quota, reservation
 from . import converters
 
-register_converter(converters.MachineType, "machine_type")
+register_converter(converters.SpecificMachineType, "machine_type")
 register_converter(converters.SpecificMachine, "machine")
 register_converter(converters.MachineReservation, "reservation")
 register_converter(converters.UserByUsername, "username")

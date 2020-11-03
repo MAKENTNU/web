@@ -42,8 +42,9 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            logging.error(
-                f"Failed sending plain text email from {message['from']} to {message['to']} with exception: {e}")
+            logging.getLogger('django.request').exception(
+                f"Failed sending plain text email from {message['from']} to {message['to']}.", exc_info=e,
+            )
 
     def send_html(self, message):
         """
@@ -55,7 +56,9 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            logging.error(f"Failed sending HTML email from {message['from']} to {message['to']} with exception: {e}")
+            logging.getLogger('django.request').exception(
+                f"Failed sending HTML email from {message['from']} to {message['to']}.", exc_info=e,
+            )
 
     def create_message(self, message):
         """

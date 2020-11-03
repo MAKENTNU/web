@@ -44,7 +44,7 @@ msgstr ""
 "Hvis valgt vil kunngjøringen vises på hele nettsiden, ellers vil den kun "
 "vises på forsiden."
 
-#: announcements/models.py:42 docs/models.py:26 news/models.py:40
+#: announcements/models.py:42 docs/models.py:26 news/models.py:41
 msgid "Content"
 msgstr "Innhold"
 
@@ -101,7 +101,7 @@ msgstr "Ny kunngjøring"
 #: internal/templates/internal/edit_member.html:81
 #: internal/templates/internal/system_access_edit.html:25
 #: make_queue/templates/make_queue/machine/machine_edit.html:62
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:30
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:42
 #: news/templates/news/article_edit.html:87
 #: news/templates/news/event_edit.html:122
 #: news/templates/news/timeplace_edit.html:72
@@ -121,7 +121,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/registration_edit.html:102
 #: make_queue/templates/make_queue/machine/machine_edit.html:65
 #: make_queue/templates/make_queue/quota/quota_edit.html:65
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:32
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:44
 #: news/templates/news/article_edit.html:89
 #: news/templates/news/event_edit.html:124
 #: news/templates/news/timeplace_edit.html:74
@@ -211,7 +211,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: checkin/templates/checkin/profile.html:103 internal/forms.py:56
-#: make_queue/forms.py:165
+#: make_queue/forms.py:168
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -307,8 +307,8 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:11 docs/models.py:14 makerspace/models.py:11
-#: news/models.py:37
+#: contentbox/models.py:11 docs/models.py:14 makerspace/models.py:22
+#: news/models.py:38
 msgid "Title"
 msgstr "Tittel"
 
@@ -536,21 +536,22 @@ msgstr "Ofte stilte spørsmål"
 msgid "group"
 msgstr "gruppe"
 
-#: groups/models.py:94 makerspace/models.py:14
+#: groups/models.py:94 makerspace/models.py:24
 msgid "Description"
 msgstr "Beskrivelse"
 
 #: groups/models.py:95 internal/models.py:26 internal/models.py:147
 #: internal/templates/internal/members.html:85
-#: internal/templates/internal/members.html:161 news/models.py:223
+#: internal/templates/internal/members.html:161 news/models.py:224
 msgid "Email"
 msgstr "E-post"
 
-#: groups/models.py:96 makerspace/models.py:13 news/models.py:48
+#: groups/models.py:96 makerspace/admin.py:22 makerspace/models.py:25
+#: news/models.py:49
 msgid "Image"
 msgstr "Bilde"
 
-#: groups/models.py:99 news/models.py:44
+#: groups/models.py:99 news/models.py:45
 msgid "Clickbait"
 msgstr "Lokketekst"
 
@@ -572,9 +573,9 @@ msgstr "Velg bruker"
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: internal/models.py:23 make_queue/forms.py:117
-#: make_queue/models/course.py:28 make_queue/models/models.py:94
-#: news/models.py:220
+#: internal/models.py:23 make_queue/forms.py:114
+#: make_queue/models/course.py:28 make_queue/models/models.py:176
+#: news/models.py:221
 msgid "User"
 msgstr "Bruker"
 
@@ -606,7 +607,7 @@ msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
 #: make_queue/templates/make_queue/make_reservation.html:101
-#: news/models.py:225 news/templates/news/admin_event_tickets.html:39
+#: news/models.py:226 news/templates/news/admin_event_tickets.html:39
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -723,7 +724,7 @@ msgstr "Filtrer medlemskapsstatus"
 #: internal/templates/internal/members.html:33
 #: internal/templates/internal/members.html:34
 #: internal/templates/internal/members.html:242
-#: internal/templatetags/member.py:22 news/models.py:224
+#: internal/templatetags/member.py:22 news/models.py:225
 #: news/templates/news/admin_event_tickets.html:19
 msgid "Active"
 msgstr "Aktiv"
@@ -747,9 +748,9 @@ msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/members.html:80
 #: internal/templates/internal/members.html:153
-#: make_queue/models/models.py:34
+#: make_queue/models/models.py:101
 #: make_queue/templates/make_queue/course/course_panel.html:91
-#: news/models.py:222
+#: news/models.py:223
 msgid "Name"
 msgstr "Navn"
 
@@ -760,7 +761,7 @@ msgstr "Komité"
 
 #: internal/templates/internal/members.html:83
 #: internal/templates/internal/members.html:193
-#: make_queue/models/course.py:33 make_queue/models/models.py:33
+#: make_queue/models/course.py:33 make_queue/models/models.py:100
 #: make_queue/templates/make_queue/course/course_panel.html:95
 #: make_queue/templates/make_queue/reservation_overview.html:53
 msgid "Status"
@@ -839,50 +840,40 @@ msgstr ""
 "Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde "
 "status \"pang\""
 
-#: make_queue/fields.py:38
-msgid "Select machine type"
-msgstr "Velg maskintype"
+#: make_queue/admin.py:22
+#: make_queue/templates/make_queue/reservation_machines.html:11
+#: make_queue/templates/make_queue/reservation_machines.html:16
+#: make_queue/templates/make_queue/reservations.html:28
+msgid "Machines"
+msgstr "Maskiner"
 
-#: make_queue/fields.py:44
-msgid "Workspaces"
-msgstr "Arbeidsplasser"
+#: make_queue/admin.py:41 make_queue/models/models.py:102
+#: make_queue/templates/make_queue/reservation_overview.html:32
+#: news/models.py:187
+msgid "Location"
+msgstr "Sted"
 
-#: make_queue/fields.py:51
-msgid "3D printers"
-msgstr "3D-printere"
-
-#: make_queue/fields.py:52
-msgid ""
-"You must have completed a 3D printer course to reserve the printers. If you "
-"have taken the course, but don't have access, contact 3dprint@makentnu.no"
-msgstr ""
-"Reservasjon av 3D-printere krever fullført 3D-printerkurs. Hvis du har hatt "
-"kurset, men ikke har tilgang, ta kontakt med 3dprint@makentnu.no"
-
-#: make_queue/fields.py:59
-msgid "Sewing machines"
-msgstr "Symaskiner"
-
-#: make_queue/fields.py:66
-msgid "3D scanners"
-msgstr "3D-skannere"
-
-#: make_queue/forms.py:116 make_queue/forms.py:142
+#: make_queue/forms.py:113 make_queue/forms.py:145
 #: make_queue/templates/make_queue/quota/quota_panel.html:48
 msgid "Select user"
 msgstr "Velg bruker"
 
-#: make_queue/forms.py:172 make_queue/models/models.py:38
-#: make_queue/models/models.py:95 make_queue/models/models.py:280
+#: make_queue/forms.py:118 make_queue/forms.py:175
+#: make_queue/forms.py:185 make_queue/models/models.py:109
+#: make_queue/models/models.py:181 make_queue/models/models.py:371
 #: make_queue/templates/make_queue/reservation_overview.html:39
 msgid "Machine type"
 msgstr "Maskintype"
 
-#: make_queue/forms.py:173
+#: make_queue/forms.py:119 make_queue/forms.py:186
+msgid "Select machine type"
+msgstr "Velg maskintype"
+
+#: make_queue/forms.py:178
 msgid "Duration in hours"
 msgstr "Varighet i timer"
 
-#: make_queue/forms.py:174
+#: make_queue/forms.py:179
 msgid "Duration in minutes"
 msgstr "Varighet i minutter"
 
@@ -907,87 +898,106 @@ msgstr "Kurs dato"
 msgid "Full name"
 msgstr "Fullt navn"
 
-#: make_queue/models/models.py:25
+#: make_queue/models/models.py:38
+msgid "Only has to be logged in"
+msgstr "Trenger bare å være innlogget"
+
+#: make_queue/models/models.py:39
+msgid "Taken the 3D printer course"
+msgstr "Tatt 3D-printerkurset"
+
+#: make_queue/models/models.py:47
+msgid "Usage requirement"
+msgstr "Brukskrav"
+
+#: make_queue/models/models.py:51 make_queue/models/models.py:114
+#: makerspace/models.py:29
+msgid "Priority"
+msgstr "Prioritet"
+
+#: make_queue/models/models.py:52
+msgid "The machine types are sorted ascending by this value."
+msgstr "Maskintypene sorteres stigende på denne verdien."
+
+#: make_queue/models/models.py:92
 msgid "Reserved"
 msgstr "Reservert"
 
-#: make_queue/models/models.py:26
+#: make_queue/models/models.py:93
 msgid "Available"
 msgstr "Ledig"
 
-#: make_queue/models/models.py:27
+#: make_queue/models/models.py:94
 msgid "In use"
 msgstr "I bruk"
 
-#: make_queue/models/models.py:28
+#: make_queue/models/models.py:95
 msgid "Out of order"
 msgstr "I ustand"
 
-#: make_queue/models/models.py:29
+#: make_queue/models/models.py:96
 msgid "Maintenance"
 msgstr "Vedlikehold"
 
-#: make_queue/models/models.py:35
-#: make_queue/templates/make_queue/reservation_overview.html:32
-#: news/models.py:186
-msgid "Location"
-msgstr "Sted"
-
-#: make_queue/models/models.py:36 news/models.py:191
+#: make_queue/models/models.py:103 news/models.py:192
 msgid "Location URL"
 msgstr "Sted-URL"
 
-#: make_queue/models/models.py:37
+#: make_queue/models/models.py:104
 msgid "Machine model"
 msgstr "Maskinmodell"
 
-#: make_queue/models/models.py:90
+#: make_queue/models/models.py:115
+msgid "If specified, the machines are sorted ascending by this value."
+msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
+
+#: make_queue/models/models.py:172
 msgid "Number of reservations"
 msgstr "Antall reservasjoner"
 
-#: make_queue/models/models.py:91
+#: make_queue/models/models.py:173
 msgid "Diminishing"
 msgstr "Oppbrukbar"
 
-#: make_queue/models/models.py:92
+#: make_queue/models/models.py:174
 #: make_queue/templates/make_queue/quota/quota_panel.html:38
 #: make_queue/templates/make_queue/quota/quota_user.html:22
 #: make_queue/templates/make_queue/rules.html:93
 msgid "Ignores rules"
 msgstr "Ignorerer regler"
 
-#: make_queue/models/models.py:93
+#: make_queue/models/models.py:175
 msgid "All users"
 msgstr "Alle brukere"
 
-#: make_queue/models/models.py:273
+#: make_queue/models/models.py:360
 #: make_queue/templates/make_queue/make_reservation.html:72
 #: make_queue/templates/make_queue/make_reservation.html:76
-#: news/models.py:177
+#: news/models.py:178
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/models/models.py:274
+#: make_queue/models/models.py:361
 #: make_queue/templates/make_queue/make_reservation.html:86
 #: make_queue/templates/make_queue/make_reservation.html:90
-#: news/models.py:181
+#: news/models.py:182
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/models/models.py:276
+#: make_queue/models/models.py:363
 msgid "Days"
 msgstr "Dager"
 
-#: make_queue/models/models.py:277
+#: make_queue/models/models.py:364
 #: make_queue/templates/make_queue/rule_edit.html:35
 msgid "Start days"
 msgstr "Start dager for regel perioder"
 
-#: make_queue/models/models.py:278
+#: make_queue/models/models.py:365
 msgid "Hours single period"
 msgstr "Timer enkelt periode"
 
-#: make_queue/models/models.py:279
+#: make_queue/models/models.py:366
 msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
@@ -1200,7 +1210,7 @@ msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/make_reservation.html:115
 #: make_queue/templates/make_queue/make_reservation.html:129
-#: news/models.py:234
+#: news/models.py:235
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1300,12 +1310,6 @@ msgstr "Klikk for å se andre maskiner"
 #: make_queue/templates/make_queue/reservation_actions.html:44
 msgid "Overview"
 msgstr "Oversikt"
-
-#: make_queue/templates/make_queue/reservation_machines.html:11
-#: make_queue/templates/make_queue/reservation_machines.html:16
-#: make_queue/templates/make_queue/reservations.html:28
-msgid "Machines"
-msgstr "Maskiner"
 
 #: make_queue/templates/make_queue/reservation_machines.html:37
 #: make_queue/templates/make_queue/reservation_overview.html:23
@@ -1534,6 +1538,15 @@ msgstr "Maskinen er under vedlikehold"
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
+#: makerspace/admin.py:19
+#, python-brace-format
+msgid "Image of {equipment}."
+msgstr "Bilde av {equipment}."
+
+#: makerspace/models.py:30
+msgid "If specified, the equipment is sorted ascending by this value."
+msgstr "Hvis spesifisert, sorteres utstyret stigende på denne verdien."
+
 #: makerspace/templates/makerspace/equipment/admin_equipment.html:10
 msgid "Add new equipment"
 msgstr "Legg til nytt utstyr"
@@ -1554,8 +1567,8 @@ msgstr "Trykk for å slette"
 msgid "New equipment"
 msgstr "Nytt utstyr"
 
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:5
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:10
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:6
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:15
 msgid "Edit equipment"
 msgstr "Rediger utstyr"
 
@@ -1591,58 +1604,58 @@ msgstr ""
 "Her kan du fylle inn eventuelle forespørsler eller opplysninger du ønsker å "
 "gi til arrangørene"
 
-#: news/models.py:52
+#: news/models.py:53
 msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
 
-#: news/models.py:56
+#: news/models.py:57
 msgid "Highlighted"
 msgstr "Fremhevet"
 
-#: news/models.py:60 news/models.py:195
+#: news/models.py:61 news/models.py:196
 #: news/templates/news/admin_articles.html:36
 #: news/templates/news/admin_events.html:46
 #: news/templates/news/admin_timeplace_listing.html:22
 msgid "Hidden"
 msgstr "Skjult"
 
-#: news/models.py:64
+#: news/models.py:65
 msgid "MAKE internal"
 msgstr "MAKE intern"
 
-#: news/models.py:104 news/models.py:173
+#: news/models.py:105 news/models.py:174
 msgid "Publishing time"
 msgstr "Publiseringstid"
 
-#: news/models.py:118 news/templates/news/event_edit.html:47
+#: news/models.py:119 news/templates/news/event_edit.html:47
 msgid "Repeating"
 msgstr "Gjentagende"
 
-#: news/models.py:119 news/templates/news/event_edit.html:59
+#: news/models.py:120 news/templates/news/event_edit.html:59
 msgid "Standalone"
 msgstr "Frittstående"
 
-#: news/models.py:126
+#: news/models.py:127
 msgid "Type of event"
 msgstr "Arrangementstype"
 
-#: news/models.py:128 news/models.py:197
+#: news/models.py:129 news/models.py:198
 msgid "Number of available tickets"
 msgstr "Antall tilgjengelige billetter"
 
-#: news/models.py:226 web/templatetags/language_tags.py:19
+#: news/models.py:227 web/templatetags/language_tags.py:19
 msgid "English"
 msgstr "Engelsk"
 
-#: news/models.py:226 web/templatetags/language_tags.py:18
+#: news/models.py:227 web/templatetags/language_tags.py:18
 msgid "Norwegian"
 msgstr "Norsk"
 
-#: news/models.py:227
+#: news/models.py:228
 msgid "Preferred language"
 msgstr "Foretrukket språk"
 
-#: news/models.py:233
+#: news/models.py:234
 msgid "Timeplace"
 msgstr "Tidspunkt"
 
@@ -2063,6 +2076,10 @@ msgstr ""
 #: news/views.py:360
 msgid "Your ticket!"
 msgstr "Din billett!"
+
+#: users/models.py:9
+msgid "Full name from LDAP"
+msgstr "Fullt navn fra LDAP"
 
 #: web/templates/web/404.html:5
 msgid "The page doesn't exist"

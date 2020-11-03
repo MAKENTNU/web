@@ -3,9 +3,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from make_queue.fields import MachineTypeField
-from make_queue.models.course import Printer3DCourse
-from make_queue.models.models import Machine, Reservation, Quota
+from ...models.course import Printer3DCourse
+from ...models.models import Machine, MachineType, Quota, Reservation
 
 
 class DeleteReservationViewTestCase(TestCase):
@@ -16,12 +15,12 @@ class DeleteReservationViewTestCase(TestCase):
         user2 = User.objects.create_user("user2", "user2@makentnu.no", "weak_pass")
         user2.save()
 
-        machine_type_printer = MachineTypeField.get_machine_type(1)
+        printer_machine_type = MachineType.objects.get(pk=1)
         Machine.objects.create(name="U1", location="Make", machine_model="Ultimaker 2", status=Machine.AVAILABLE,
-                               machine_type=machine_type_printer)
+                               machine_type=printer_machine_type)
 
-        Quota.objects.create(user=user1, number_of_reservations=2, ignore_rules=True, machine_type=machine_type_printer)
-        Quota.objects.create(user=user2, number_of_reservations=2, ignore_rules=True, machine_type=machine_type_printer)
+        Quota.objects.create(user=user1, number_of_reservations=2, ignore_rules=True, machine_type=printer_machine_type)
+        Quota.objects.create(user=user2, number_of_reservations=2, ignore_rules=True, machine_type=printer_machine_type)
 
         Printer3DCourse.objects.create(user=user1, username=user1.username, name=user1.get_full_name(),
                                        date=timezone.now())
