@@ -13,7 +13,7 @@
 
         {% if perms.contentbox.change_contentbox %}
             <a class="edit ui make-bg-yellow button" href="{% url 'contentbox_edit' contentbox.id %}">
-                {% trans "Edit" %}
+                <i class="ui edit icon"></i>{% trans "Edit" %}
             </a>
         {% endif %}
         {{ contentbox.content|safe }}
