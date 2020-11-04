@@ -267,7 +267,6 @@ class Reservation(models.Model):
         null=True,
         blank=True,
     )
-    showed = models.NullBooleanField(default=None)
     special = models.BooleanField(default=False)
     special_text = UnlimitedCharField(blank=True)
     comment = models.TextField(blank=True)
