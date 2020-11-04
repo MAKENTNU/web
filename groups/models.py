@@ -94,7 +94,7 @@ class Committee(models.Model):
     description = models.TextField(_('Description'))
     email = models.EmailField(_('Email'))
     image = models.ImageField(blank=True, verbose_name=_('Image'))
-    clickbait = models.TextField(max_length=300, blank=True, verbose_name=_('Clickbait'))
+    clickbait = models.TextField(blank=True, verbose_name=_('Clickbait'))
 
     @property
     def name(self):

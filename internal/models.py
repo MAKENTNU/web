@@ -10,6 +10,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from groups.models import Committee
 from internal.util import date_to_term
 from users.models import User
+from web.fields import UnlimitedCharField
 
 
 class Member(models.Model):
@@ -31,14 +32,14 @@ class Member(models.Model):
         blank=True,
         verbose_name=_("Committees"),
     )
-    role = models.CharField(max_length=64, blank=True, verbose_name=_("Role"))
-    email = models.EmailField(blank=True, null=True, verbose_name=_("Email"))
-    phone_number = PhoneNumberField(max_length=32, default="", blank=True, verbose_name=_("Phone number"))
-    study_program = models.CharField(max_length=32, default="", blank=True, verbose_name=_("Study program"))
+    role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
+    email = models.EmailField(blank=True, verbose_name=_("Email"))
+    phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
+    study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
     date_quit = models.DateField(null=True, blank=True, verbose_name=_("Date quit"))
-    reason_quit = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Reason quit"))
-    comment = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Comment"))
+    reason_quit = models.TextField(blank=True, verbose_name=_("Reason quit"))
+    comment = models.TextField(blank=True, verbose_name=_("Comment"))
     active = models.BooleanField(default=True, verbose_name=_("Is active"))
     guidance_exemption = models.BooleanField(default=False, verbose_name=_("Guidance exemption"))
     quit = models.BooleanField(default=False, verbose_name=_("Has quit"))

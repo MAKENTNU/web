@@ -10,14 +10,15 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from web.fields import URLTextField, UnlimitedCharField
 from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
 from web.multilingual.widgets import MultiLingualTextarea
 
 
 class NewsBase(models.Model):
-    title = MultiLingualTextField(max_length=100, verbose_name=_("Title"))
+    title = MultiLingualTextField(verbose_name=_("Title"))
     content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
-    clickbait = MultiLingualTextField(max_length=300, verbose_name=_('Clickbait'), widget=MultiLingualTextarea)
+    clickbait = MultiLingualTextField(verbose_name=_('Clickbait'), widget=MultiLingualTextarea)
     image = models.ImageField(verbose_name=_("Image"))
     contain = models.BooleanField(default=False, verbose_name=_("Don't crop the image"))
     featured = models.BooleanField(default=True, verbose_name=_("Highlighted"))
@@ -147,8 +148,8 @@ class TimePlace(models.Model):
     publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publishing time"))
     start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Start time"))
     end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("End time"))
-    place = models.CharField(max_length=100, blank=True, verbose_name=_("Location"))
-    place_url = models.CharField(max_length=200, blank=True, verbose_name=_("Location URL"))
+    place = UnlimitedCharField(blank=True, verbose_name=_("Location"))
+    place_url = URLTextField(blank=True, verbose_name=_("Location URL"))
     hidden = models.BooleanField(default=True, verbose_name=_("Hidden"))
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
 
