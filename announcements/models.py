@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from web.modelfields import URLTextField
 from web.multilingual.modelfields import MultiLingualTextField
 
 
@@ -38,9 +39,9 @@ class Announcement(models.Model):
     site_wide = models.BooleanField(verbose_name=_("Site-wide"),
                                     help_text=_("If selected, the announcement will be shown on all pages, otherwise it"
                                                 " is only shown on the front page."))
-    content = MultiLingualTextField(max_length=256, verbose_name=_("Content"))
-    link = models.CharField(max_length=2048, null=True, blank=True, verbose_name=_("Link"),
-                            help_text=_("An optional link to an information page."))
+    content = MultiLingualTextField(verbose_name=_("Content"))
+    link = URLTextField(blank=True, verbose_name=_("Link"),
+                        help_text=_("An optional link to an information page."))
     display_from = models.DateTimeField(default=timezone.localtime, verbose_name=_("Display from"),
                                         help_text=_("The date from which the announcement will be shown."))
     display_to = models.DateTimeField(null=True, blank=True, verbose_name=_("Display to"),

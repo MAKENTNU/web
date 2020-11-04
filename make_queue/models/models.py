@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 from users.models import User
+from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from ..models.course import Printer3DCourse
 
@@ -97,16 +98,16 @@ class Machine(models.Model):
     )
     STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
 
-    name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
-    machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
+    name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
+    machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.PROTECT,
         related_name="machines",
         verbose_name=_("Machine type"),
     )
-    location = models.CharField(max_length=40, verbose_name=_("Location"))
-    location_url = models.URLField(verbose_name=_("Location URL"))
+    location = UnlimitedCharField(verbose_name=_("Location"))
+    location_url = URLTextField(verbose_name=_("Location URL"))
     status = models.CharField(choices=STATUS_CHOICES, max_length=2, default=AVAILABLE, verbose_name=_("Status"))
     priority = models.IntegerField(
         null=True,
@@ -174,6 +175,7 @@ class Quota(models.Model):
         to=User,
         on_delete=models.CASCADE,
         null=True,
+        blank=True,
         verbose_name=_("User"),
     )
     machine_type = models.ForeignKey(
@@ -267,12 +269,13 @@ class Reservation(models.Model):
     )
     showed = models.NullBooleanField(default=None)
     special = models.BooleanField(default=False)
-    special_text = models.CharField(max_length=64)
-    comment = models.TextField(max_length=2000, default="")
+    special_text = UnlimitedCharField(blank=True)
+    comment = models.TextField(blank=True)
     quota = models.ForeignKey(
         to=Quota,
         on_delete=models.CASCADE,
         null=True,
+        blank=True,
     )
 
     class Meta:

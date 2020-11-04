@@ -21,10 +21,10 @@ class Printer3DCourse(models.Model):
         null=True,
         verbose_name=_("User"),
     )
-    username = UsernameField(max_length=32, unique=True, verbose_name=_("Username"))
+    username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("Username"))
     date = models.DateField(verbose_name=_("Course date"))
-    _card_number = CardNumberField(null=True, unique=True)  # Card number backing field. Use card_number property instead
-    name = models.CharField(max_length=256, verbose_name=_("Full name"))
+    _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
+    name = models.CharField(max_length=256, blank=True, verbose_name=_("Full name"))
     status = models.CharField(choices=STATUS_CHOICES, max_length=20, default="registered", verbose_name=_("Status"))
 
     class Meta:
