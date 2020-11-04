@@ -38,6 +38,11 @@ class Migration(migrations.Migration):
             field=web.modelfields.UnlimitedCharField(unique=True, verbose_name='Name'),
         ),
         migrations.AlterField(
+            model_name='machinetype',
+            name='name',
+            field=web.multilingual.modelfields.MultiLingualTextField(unique=True),
+        ),
+        migrations.AlterField(
             model_name='printer3dcourse',
             name='_card_number',
             field=card.modelfields.CardNumberField(blank=True, default='', error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, validators=[django.core.validators.RegexValidator('^\\d{10}$', 'Card number must be ten digits long.')], verbose_name='Card number'),
@@ -52,6 +57,11 @@ class Migration(migrations.Migration):
             model_name='printer3dcourse',
             name='username',
             field=make_queue.models.fields.UsernameField(blank=True, max_length=32, unique=True, verbose_name='Username'),
+        ),
+        migrations.AlterField(
+            model_name='quota',
+            name='machine_type',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.machinetype', verbose_name='Machine type'),
         ),
         migrations.AlterField(
             model_name='quota',
