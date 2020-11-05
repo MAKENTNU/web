@@ -5,18 +5,49 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView, DeleteView
 
-from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
-from internal.models import Member, SystemAccess
+from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm, SecretsForm
+from internal.models import Member, SystemAccess, SecretContent
 from make_queue.models.course import Printer3DCourse
 
 
 class Home(TemplateView):
     template_name = "internal/home.html"
 
-class SecretsView(TemplateView):
+
+class SecretsView(ListView):
     template_name = "internal/secrets.html"
+    model = SecretContent
+    context_object_name = 'secrets'
+
+
+class CreateSecretView(PermissionRequiredMixin, CreateView):
+    template_name = 'internal/secrets_create.html'
+    model = SecretContent
+    form_class = SecretsForm
+    context_object_name = 'secrets'
+    permission_required = 'internal.add_SecretContent'
+    success_url = reverse_lazy('secrets')
+
+
+class EditSecretView(PermissionRequiredMixin, UpdateView):
+    template_name = 'internal/secrets_edit.html'
+    model = SecretContent
+    form_class = SecretsForm
+    context_object_name = 'secrets'
+    permission_required = 'internal.change_SecretContent'
+    success_url = reverse_lazy('secrets')
+
+class DeleteSecretView(PermissionRequiredMixin, DeleteView):
+    model = SecretContent
+    success_url = reverse_lazy('secrets')
+    permission_required = 'internal.delete_SecretContent'
+
+    def delete(self, request, *args, **kwargs):
+        secret = self.get_object()
+        return super().delete(request, *args, **kwargs)
+
 
 class MembersListView(ListView):
     template_name = "internal/members.html"
@@ -154,4 +185,3 @@ class ToggleSystemAccessView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("members", args=(self.object.member.pk,))
-
