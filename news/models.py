@@ -74,18 +74,14 @@ class Article(NewsBase):
 
 
 class Event(NewsBase):
-    REPEATING = "R"
-    STANDALONE = "S"
-
-    EVENT_TYPE_CHOICES = (
-        (REPEATING, _("Repeating")),
-        (STANDALONE, _("Standalone")),
-    )
+    class Type(models.TextChoices):
+        REPEATING = "R", _("Repeating")
+        STANDALONE = "S", _("Standalone")
 
     event_type = models.CharField(
-        choices=EVENT_TYPE_CHOICES,
+        choices=Type.choices,
         max_length=1,
-        default=REPEATING,
+        default=Type.REPEATING,
         verbose_name=_("Type of event")
     )
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
@@ -101,11 +97,11 @@ class Event(NewsBase):
 
     @property
     def repeating(self):
-        return self.event_type == self.REPEATING
+        return self.event_type == self.Type.REPEATING
 
     @property
     def standalone(self):
-        return self.event_type == self.STANDALONE
+        return self.event_type == self.Type.STANDALONE
 
     def can_register(self, user):
         # When hidden, registration is always disabled
@@ -174,6 +170,10 @@ class TimePlace(models.Model):
 
 
 class EventTicket(models.Model):
+    class Language(models.TextChoices):
+        ENGLISH = "en", _("English")
+        NORWEGIAN = "nb", _("Norwegian")
+
     user = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,
@@ -202,7 +202,7 @@ class EventTicket(models.Model):
     _email = models.EmailField(db_column="email", verbose_name=_("Email"))
     active = models.BooleanField(default=True, verbose_name=_("Active"))
     comment = models.TextField(blank=True, verbose_name=_("Comment"))
-    language = models.CharField(choices=(("en", _("English")), ("nb", _("Norwegian"))), max_length=2, default="en",
+    language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
                                 verbose_name=_("Preferred language"))
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 

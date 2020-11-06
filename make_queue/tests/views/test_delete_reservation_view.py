@@ -16,7 +16,7 @@ class DeleteReservationViewTestCase(TestCase):
         user2.save()
 
         printer_machine_type = MachineType.objects.get(pk=1)
-        Machine.objects.create(name="U1", location="Make", machine_model="Ultimaker 2", status=Machine.AVAILABLE,
+        Machine.objects.create(name="U1", location="Make", machine_model="Ultimaker 2", status=Machine.Status.AVAILABLE,
                                machine_type=printer_machine_type)
 
         Quota.objects.create(user=user1, number_of_reservations=2, ignore_rules=True, machine_type=printer_machine_type)

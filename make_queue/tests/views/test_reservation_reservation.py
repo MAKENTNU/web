@@ -82,7 +82,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         form = self.create_form(1, 2)
         self.assertTrue(form.is_valid())
         machine = Machine.objects.create(machine_model="Test", machine_type=self.sewing_machine_type,
-                                         status=Machine.OUT_OF_ORDER, name="test out of order")
+                                         status=Machine.Status.OUT_OF_ORDER, name="test out of order")
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=machine)
         self.assertEqual(view.get_error_message(form, reservation),
@@ -352,7 +352,7 @@ class MarkReservationAsDoneTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user("test")
         self.machine_type = MachineType.objects.get(pk=2)
-        self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.AVAILABLE, name="Test")
+        self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.Status.AVAILABLE, name="Test")
         Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False,
                              all=True)
         ReservationRule.objects.create(start_time=time(0, 0), end_time=time(23, 59), start_days=1, days_changed=6,

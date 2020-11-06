@@ -35,15 +35,10 @@ class Profile(models.Model):
 
 
 class UserSkill(models.Model):
-    BEGINNER = 1
-    EXPERIENCED = 2
-    EXPERT = 3
-
-    LEVEL_CHOICES = (
-        (BEGINNER, _("Beginner")),
-        (EXPERIENCED, _("Experienced")),
-        (EXPERT, _("Expert")),
-    )
+    class Level(models.IntegerChoices):
+        BEGINNER = 1, _("Beginner")
+        EXPERIENCED = 2, _("Experienced")
+        EXPERT = 3, _("Expert")
 
     profile = models.ForeignKey(
         to=Profile,
@@ -53,7 +48,7 @@ class UserSkill(models.Model):
         to=Skill,
         on_delete=models.CASCADE,
     )
-    skill_level = models.IntegerField(choices=LEVEL_CHOICES)
+    skill_level = models.IntegerField(choices=Level.choices)
 
     class Meta:
         ordering = ('skill__title',)

@@ -19,11 +19,10 @@ class Printer3DCourse(models.Model):
             CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
         )
 
-    STATUS_CHOICES = (
-        ("registered", _("Registered")),
-        ("sent", _("Sent to Byggsikring")),
-        ("access", _("Access granted")),
-    )
+    class Status(models.TextChoices):
+        REGISTERED = "registered", _("Registered")
+        SENT = "sent", _("Sent to Byggsikring")
+        ACCESS = "access", _("Access granted")
 
     user = models.ForeignKey(
         to=User,
@@ -35,7 +34,7 @@ class Printer3DCourse(models.Model):
     date = models.DateField(verbose_name=_("Course date"))
     _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
     name = models.CharField(max_length=256, blank=True, verbose_name=_("Full name"))
-    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default="registered", verbose_name=_("Status"))
+    status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("Status"))
 
     @property
     def card_number(self):

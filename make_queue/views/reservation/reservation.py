@@ -339,7 +339,7 @@ class FindFreeSlot(FormView):
 
         periods = []
         for machine in form.cleaned_data["machine_type"].machines.all():
-            if not machine.get_status() == Machine.OUT_OF_ORDER:
+            if not machine.get_status() == Machine.Status.OUT_OF_ORDER:
                 periods += self.get_periods(machine, required_time)
 
         # Periods in the near future is more interesting than in the distant

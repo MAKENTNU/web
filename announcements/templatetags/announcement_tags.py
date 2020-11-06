@@ -8,9 +8,9 @@ register = template.Library()
 @register.simple_tag()
 def announcement_css_class(announcement):
     return {
-        Announcement.AnnouncementType.INFO: "info",
-        Announcement.AnnouncementType.WARNING: "warning",
-        Announcement.AnnouncementType.CRITICAL: "critical",
+        Announcement.Type.INFO: "info",
+        Announcement.Type.WARNING: "warning",
+        Announcement.Type.CRITICAL: "critical",
     }[announcement.classification]
 
 
