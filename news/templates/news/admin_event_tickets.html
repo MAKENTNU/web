@@ -51,7 +51,8 @@
             <input
                 class="input-monospace copyInput"
                 style="font-family: 'Courier New', Courier, monospace; width: 100%;"
-                value="{% for ticket in tickets %}{{ ticket.email }},{% endfor %}">
+                value="{% for ticket in tickets %}{{ ticket.email }},{% endfor %}"
+                readonly>
         </div>
     </div>
     <script>
