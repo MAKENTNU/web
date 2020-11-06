@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import InheritanceGroup, Committee
+from .models import Committee, InheritanceGroup
 
 
 @admin.register(InheritanceGroup)

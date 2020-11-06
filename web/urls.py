@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import permission_required
-from django.urls import path, re_path, include
+from django.urls import include, path, re_path
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
@@ -13,7 +13,7 @@ from social_core.utils import setting_name
 
 from contentbox.views import DisplayContentBoxView
 from dataporten.views import Logout, login_wrapper
-from web.views import IndexView, AdminPanelView, View404, view_500, AboutUsView
+from . import views
 
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
@@ -21,12 +21,12 @@ extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('robots.txt', TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
-    path('about/', AboutUsView.as_view(), name='about'),
+    path('about/', views.AboutUsView.as_view(), name='about'),
 ]
 
 urlpatterns += i18n_patterns(
-    path('', IndexView.as_view(), name='front-page'),
-    path('admin/', AdminPanelView.as_view(), name='adminpanel'),
+    path('', views.IndexView.as_view(), name='front-page'),
+    path('admin/', views.AdminPanelView.as_view(), name='adminpanel'),
     path('reservation/', include('make_queue.urls')),
     path('news/', include('news.urls')),
     path('contentbox/', include('contentbox.urls')),
@@ -70,5 +70,5 @@ urlpatterns += [
     path('ckeditor/browse/', never_cache(permission_required("contentbox.can_browse_image")(ckeditor_views.browse)), name='ckeditor_browse'),
 ]
 
-handler404 = View404.as_view()
-handler500 = view_500
+handler404 = views.View404.as_view()
+handler500 = views.view_500

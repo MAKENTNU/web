@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from internal.models import Member, Secret
 from web.multilingual.admin import MultiLingualFieldAdmin
 from util.admin_utils import TextFieldOverrideMixin
+from .models import Member, Secret
 
 
 class MemberAdmin(TextFieldOverrideMixin, admin.ModelAdmin):

@@ -2,13 +2,11 @@ import logging
 from abc import ABCMeta
 from math import ceil
 
-from django.db.models import Q
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.views.generic import RedirectView, TemplateView, FormView
-from django.utils.translation import gettext_lazy as _
-from django.utils.translation import ngettext
+from django.utils.translation import gettext_lazy as _, ngettext
+from django.views.generic import FormView, RedirectView, TemplateView
 
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace

@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from web.modelfields import URLTextField, UnlimitedCharField
-from web.multilingual.modelfields import MultiLingualTextField, MultiLingualRichTextUploadingField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
 
 

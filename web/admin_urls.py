@@ -1,9 +1,8 @@
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView, TemplateView
 from django_hosts import reverse
-
-from web import settings
 
 
 # Updates the "View site" link to this url

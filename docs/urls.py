@@ -5,26 +5,23 @@ from django.urls import path, register_converter
 from django.views.generic import TemplateView
 from django_hosts import reverse
 
-from docs import converters
-from docs.models import Page
-from docs.views import DocumentationPageView, EditDocumentationPageView, DeleteDocumentationPageView, \
-    HistoryDocumentationPageView, OldDocumentationPageContentView, CreateDocumentationPageView, SearchPagesView, \
-    ChangeDocumentationPageVersionView
+from . import converters, views
+from .models import Page
 
 
 register_converter(converters.PageByTitle, "page")
 register_converter(converters.ContentByPk, "content")
 
 unsafe_urlpatterns = [
-    path("", DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Documentation")[0].pk}, name="home"),
-    path("page/<page:pk>/", DocumentationPageView.as_view(), name="page"),
-    path("page/<page:pk>/history/", HistoryDocumentationPageView.as_view(), name="page-history"),
-    path("page/<page:pk>/history/change/", ChangeDocumentationPageVersionView.as_view(), name="change-page-version"),
-    path("page/<page:pk>/history/<content:content>/", OldDocumentationPageContentView.as_view(), name="old-page-content"),
-    path("page/new/create/", CreateDocumentationPageView.as_view(), name="create-page"),
-    path("page/<page:pk>/edit/", EditDocumentationPageView.as_view(), name="edit-page"),
-    path("page/<page:pk>/delete/", DeleteDocumentationPageView.as_view(), name="delete-page"),
-    path("search/", SearchPagesView.as_view(), name="search-pages"),
+    path("", views.DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Documentation")[0].pk}, name="home"),
+    path("page/<page:pk>/", views.DocumentationPageView.as_view(), name="page"),
+    path("page/<page:pk>/history/", views.HistoryDocumentationPageView.as_view(), name="page-history"),
+    path("page/<page:pk>/history/change/", views.ChangeDocumentationPageVersionView.as_view(), name="change-page-version"),
+    path("page/<page:pk>/history/<content:content>/", views.OldDocumentationPageContentView.as_view(), name="old-page-content"),
+    path("page/new/create/", views.CreateDocumentationPageView.as_view(), name="create-page"),
+    path("page/<page:pk>/edit/", views.EditDocumentationPageView.as_view(), name="edit-page"),
+    path("page/<page:pk>/delete/", views.DeleteDocumentationPageView.as_view(), name="delete-page"),
+    path("search/", views.SearchPagesView.as_view(), name="search-pages"),
 ]
 
 urlpatterns = [

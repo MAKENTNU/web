@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from make_queue.models.models import Reservation
+from ...models.models import Reservation
 
 
 class AdminReservationView(TemplateView):

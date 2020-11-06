@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime, time
+from datetime import datetime, time, timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission

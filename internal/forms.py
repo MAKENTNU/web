@@ -1,12 +1,12 @@
+from django import forms
 from django.forms import ModelForm, TextInput
 from django.utils.translation import gettext_lazy as _
-from django import forms
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
-from internal.models import Member, SystemAccess, Secret
 from users.models import User
-from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
+from web.widgets import SemanticDateInput, SemanticMultipleSelectInput, SemanticSearchableChoiceInput
+from .models import Member, Secret, SystemAccess
 
 
 class AddMemberForm(ModelForm):

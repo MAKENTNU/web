@@ -2,8 +2,8 @@ from typing import Union
 
 from django.test import TestCase
 
+from ..utility import template_view_get_context_data
 from ...models.models import Machine, MachineType
-from ...tests.utility import template_view_get_context_data
 from ...views.reservation.machine import MachineView
 
 

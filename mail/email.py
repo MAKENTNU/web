@@ -4,10 +4,9 @@ import os
 import smtplib
 
 from channels.consumer import SyncConsumer
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
-
-from web import settings
 
 
 class EmailConsumer(SyncConsumer):

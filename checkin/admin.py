@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from checkin.models import Skill, Profile, UserSkill, SuggestSkill
+from .models import Profile, Skill, SuggestSkill, UserSkill
 
 
 class ProfileAdmin(admin.ModelAdmin):

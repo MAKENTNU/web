@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from announcements.forms import AnnouncementForm
-from announcements.models import Announcement
+from .forms import AnnouncementForm
+from .models import Announcement
 
 
 class AnnouncementAdminView(PermissionRequiredMixin, ListView):

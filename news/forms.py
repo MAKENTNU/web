@@ -1,14 +1,12 @@
+from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, Textarea
 from django.utils.translation import gettext_lazy as _
 
-from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticDateTimeInput
-from web.widgets import SemanticFileInput
-from .models import Event
-from .models import TimePlace, EventTicket, Article
+from web.widgets import MazemapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
+from .models import Article, Event, EventTicket, TimePlace
 
 
-class TimePlaceForm(ModelForm):
+class TimePlaceForm(forms.ModelForm):
     class Meta:
         model = TimePlace
         fields = '__all__'
@@ -31,7 +29,7 @@ class TimePlaceForm(ModelForm):
         return cleaned_data
 
 
-class ArticleForm(ModelForm):
+class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
         fields = "__all__"
@@ -42,7 +40,7 @@ class ArticleForm(ModelForm):
         }
 
 
-class EventForm(ModelForm):
+class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = "__all__"
@@ -51,13 +49,13 @@ class EventForm(ModelForm):
         }
 
 
-class EventRegistrationForm(ModelForm):
+class EventRegistrationForm(forms.ModelForm):
     class Meta:
         model = EventTicket
         fields = ("comment", "language")
         widgets = {
             "language": SemanticSearchableChoiceInput(),
-            "comment": Textarea(attrs={
+            "comment": forms.Textarea(attrs={
                 "cols": "40",
                 "rows": "3",
                 "placeholder": _(

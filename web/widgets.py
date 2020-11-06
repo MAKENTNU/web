@@ -1,8 +1,6 @@
 import django.forms as forms
-from django.urls import reverse_lazy
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
-
-from web import settings
 
 
 class SemanticTimeInput(forms.TimeInput):

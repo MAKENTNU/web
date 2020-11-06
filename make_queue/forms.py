@@ -1,15 +1,14 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.forms import ModelChoiceField, IntegerField
+from django.forms import IntegerField, ModelChoiceField
 from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
-from web.widgets import SemanticTimeInput, SemanticChoiceInput, SemanticSearchableChoiceInput, SemanticDateInput, \
-    MazemapSearchInput
+from web.widgets import MazemapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticTimeInput
 from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
 from .models.models import Machine, MachineType, Quota, ReservationRule

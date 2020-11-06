@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from django.urls import reverse
 from django_ical.views import ICalFeed
 

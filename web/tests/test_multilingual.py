@@ -1,12 +1,12 @@
 import json
 
+from django.conf import settings
 from django.test import TestCase
 from django.utils import translation
 
-from web import settings
-from web.multilingual.data_structures import MultiLingualTextStructure
-from web.multilingual.formfields import MultiLingualFormField
-from web.multilingual.modelfields import MultiLingualTextField
+from ..multilingual.data_structures import MultiLingualTextStructure
+from ..multilingual.formfields import MultiLingualFormField
+from ..multilingual.modelfields import MultiLingualTextField
 
 
 class TestMultiLingualTextStructure(TestCase):
