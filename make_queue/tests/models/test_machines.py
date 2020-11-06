@@ -13,30 +13,30 @@ class TestGenericMachine(TestCase):
 
     def test_status(self):
         printer_machine_type = MachineType.objects.get(pk=1)
-        printer = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
+        printer = Machine.objects.create(name="C1", location="Printer room", status=Machine.Status.AVAILABLE,
                                          machine_model="Ultimaker 2 Extended", machine_type=printer_machine_type)
         user = User.objects.create_user("test")
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
         Quota.objects.create(machine_type=printer_machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
-        self.check_status(printer, Machine.AVAILABLE)
-        printer.status = Machine.OUT_OF_ORDER
-        self.check_status(printer, Machine.OUT_OF_ORDER)
-        printer.status = Machine.MAINTENANCE
-        self.check_status(printer, Machine.MAINTENANCE)
-        printer.status = Machine.RESERVED
-        self.check_status(printer, Machine.AVAILABLE)
+        self.check_status(printer, Machine.Status.AVAILABLE)
+        printer.status = Machine.Status.OUT_OF_ORDER
+        self.check_status(printer, Machine.Status.OUT_OF_ORDER)
+        printer.status = Machine.Status.MAINTENANCE
+        self.check_status(printer, Machine.Status.MAINTENANCE)
+        printer.status = Machine.Status.RESERVED
+        self.check_status(printer, Machine.Status.AVAILABLE)
 
         Reservation.objects.create(machine=printer, start_time=timezone.now(),
                                    end_time=timezone.now() + timedelta(hours=1), user=user)
 
-        self.check_status(printer, Machine.RESERVED)
-        printer.status = Machine.AVAILABLE
-        self.check_status(printer, Machine.RESERVED)
-        printer.status = Machine.OUT_OF_ORDER
-        self.check_status(printer, Machine.OUT_OF_ORDER)
-        printer.status = Machine.MAINTENANCE
-        self.check_status(printer, Machine.MAINTENANCE)
+        self.check_status(printer, Machine.Status.RESERVED)
+        printer.status = Machine.Status.AVAILABLE
+        self.check_status(printer, Machine.Status.RESERVED)
+        printer.status = Machine.Status.OUT_OF_ORDER
+        self.check_status(printer, Machine.Status.OUT_OF_ORDER)
+        printer.status = Machine.Status.MAINTENANCE
+        self.check_status(printer, Machine.Status.MAINTENANCE)
 
     def check_status(self, machine, status):
         self.assertEquals(machine.get_status(), status)

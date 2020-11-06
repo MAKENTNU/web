@@ -19,7 +19,7 @@ class CourseView(TemplateView):
         context_data = super().get_context_data(**kwargs)
         context_data.update({
             "registrations": Printer3DCourse.objects.order_by("name"),
-            "possible_statuses": Printer3DCourse.STATUS_CHOICES,
+            "possible_statuses": Printer3DCourse.Status.choices,
         })
         return context_data
 

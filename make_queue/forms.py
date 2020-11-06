@@ -199,9 +199,9 @@ class BaseMachineForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         status_choices = (
-            Machine.AVAILABLE,
-            Machine.OUT_OF_ORDER,
-            Machine.MAINTENANCE,
+            Machine.Status.AVAILABLE,
+            Machine.Status.OUT_OF_ORDER,
+            Machine.Status.MAINTENANCE,
         )
         self.fields["status"] = forms.ChoiceField(
             choices=[

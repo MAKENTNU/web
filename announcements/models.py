@@ -29,12 +29,12 @@ class Announcement(models.Model):
     there is no end time given. An announcement may also link to another page with more information.
     """
 
-    class AnnouncementType(models.TextChoices):
+    class Type(models.TextChoices):
         INFO = "I", _("Information")
         WARNING = "W", _("Warning")
         CRITICAL = "C", _("Critical")
 
-    classification = models.CharField(choices=AnnouncementType.choices, max_length=1, default=AnnouncementType.INFO,
+    classification = models.CharField(choices=Type.choices, max_length=1, default=Type.INFO,
                                       verbose_name=_("Type"))
     site_wide = models.BooleanField(verbose_name=_("Site-wide"),
                                     help_text=_("If selected, the announcement will be shown on all pages, otherwise it"

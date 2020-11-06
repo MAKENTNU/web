@@ -83,20 +83,14 @@ class MachineType(models.Model):
 
 
 class Machine(models.Model):
-    RESERVED = "R"
-    AVAILABLE = "F"
-    IN_USE = "I"
-    OUT_OF_ORDER = "O"
-    MAINTENANCE = "M"
+    class Status(models.TextChoices):
+        RESERVED = 'R', _("Reserved")
+        AVAILABLE = 'F', _("Available")
+        IN_USE = 'I', _("In use")
+        OUT_OF_ORDER = 'O', _("Out of order")
+        MAINTENANCE = 'M', _("Maintenance")
 
-    STATUS_CHOICES = (
-        (RESERVED, _("Reserved")),
-        (AVAILABLE, _("Available")),
-        (IN_USE, _("In use")),
-        (OUT_OF_ORDER, _("Out of order")),
-        (MAINTENANCE, _("Maintenance")),
-    )
-    STATUS_CHOICES_DICT = dict(STATUS_CHOICES)
+    STATUS_CHOICES_DICT = dict(Status.choices)
 
     name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
     machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
@@ -108,7 +102,7 @@ class Machine(models.Model):
     )
     location = UnlimitedCharField(verbose_name=_("Location"))
     location_url = URLTextField(verbose_name=_("Location URL"))
-    status = models.CharField(choices=STATUS_CHOICES, max_length=2, default=AVAILABLE, verbose_name=_("Status"))
+    status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("Status"))
     priority = models.IntegerField(
         null=True,
         blank=True,
@@ -136,25 +130,22 @@ class Machine(models.Model):
                 | self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time, end_time__gte=end_time))
 
     def get_status(self):
-        if self.status in (self.OUT_OF_ORDER, self.MAINTENANCE):
+        if self.status in (self.Status.OUT_OF_ORDER, self.Status.MAINTENANCE):
             return self.status
 
         if self.reservations_in_period(timezone.now(), timezone.now() + timedelta(seconds=1)):
-            return self.RESERVED
+            return self.Status.RESERVED
         else:
-            return self.AVAILABLE
+            return self.Status.AVAILABLE
 
     def _get_FIELD_display(self, field):
         if field.attname == "status":
-            return self._get_status_display()
+            return self.STATUS_CHOICES_DICT[self.get_status()]
         return super()._get_FIELD_display(field)
-
-    def _get_status_display(self):
-        return self.STATUS_CHOICES_DICT[self.get_status()]
 
     @property
     def is_reservable(self):
-        return self.get_status() in {self.AVAILABLE, self.RESERVED, self.IN_USE}
+        return self.get_status() in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE}
 
 
 class MachineUsageRule(models.Model):
@@ -357,11 +348,11 @@ class Reservation(models.Model):
 
     def check_machine_out_of_order(self):
         """Check if the machine is listed as out of order"""
-        return self.machine.get_status() == Machine.OUT_OF_ORDER
+        return self.machine.get_status() == Machine.Status.OUT_OF_ORDER
 
     def check_machine_maintenance(self):
         """Check if the machine is listed as maintenance"""
-        return self.machine.get_status() == Machine.MAINTENANCE
+        return self.machine.get_status() == Machine.Status.MAINTENANCE
 
     def can_delete(self, user):
         if user.has_perm("make_queue.delete_reservation"):
