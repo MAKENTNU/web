@@ -6,7 +6,6 @@ function delayPopup(popup) {
 
 $(document).ready(function () {
     $('.copyToken').click(function (){
-        console.log("hei")
         clearTimeout(popupTimer);
 
         var $input = $(this).closest('div').find('.copyInput');
