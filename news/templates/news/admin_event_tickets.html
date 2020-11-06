@@ -46,7 +46,12 @@
                 {% trans "No tickets have been registered for this event" %}
             {% endfor %}
         </div>
-        <h3>{% trans "Emails" %}<button class="copyToken"><i class="clipboard icon"></i></button></h3>
+        <h3>{% trans "Emails" %}
+            <button class="copyToken"><i class="clipboard icon"></i></button>
+            <span data-content="{% trans "Click to copy email of active participants to clipboard" %}">
+                <i class="ui yellow question circle icon"></i>
+            </span>
+        </h3>
         <div style="width: 100%;">
             <input
                 class="input-monospace copyInput"
@@ -87,5 +92,13 @@
                 delayPopup(this);
             });
         });
+    </script>
+    <script>
+        $(".message .close").click(function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
+        $("span[data-content]").popup();
     </script>
 {% endblock %}
