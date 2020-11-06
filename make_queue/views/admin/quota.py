@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
 
 from users.models import User
-from make_queue.forms import QuotaForm
-from make_queue.models.models import Quota
+from ...forms import QuotaForm
+from ...models.models import Quota
 
 
 class QuotaView(TemplateView):

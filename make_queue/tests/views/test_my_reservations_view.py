@@ -2,9 +2,9 @@ from django.test import TestCase
 from django.utils import timezone
 
 from users.models import User
+from ..utility import template_view_get_context_data
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation
-from ...tests.utility import template_view_get_context_data
 from ...views.reservation.overview import MyReservationsView
 
 

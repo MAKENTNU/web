@@ -4,10 +4,9 @@ import json
 from django.contrib import admin
 from django.db import models
 
-from web.multilingual.data_structures import MultiLingualTextStructure
-from web.multilingual.form import MultiLingualFormField, MultiLingualRichTextFormField, \
-    MultiLingualRichTextUploadingFormField
-from web.multilingual.widgets import MultiLingualTextInput, MultiLingualRichText, MultiLingualRichTextUploading
+from .data_structures import MultiLingualTextStructure
+from .form import MultiLingualFormField, MultiLingualRichTextFormField, MultiLingualRichTextUploadingFormField
+from .widgets import MultiLingualRichText, MultiLingualRichTextUploading, MultiLingualTextInput
 
 
 class MultiLingualTextField(models.TextField):

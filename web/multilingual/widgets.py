@@ -4,7 +4,7 @@ from ckeditor.widgets import CKEditorWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 
-from web.multilingual.data_structures import MultiLingualTextStructure
+from .data_structures import MultiLingualTextStructure
 
 
 class MultiLingualTextEdit(forms.MultiWidget):

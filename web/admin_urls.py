@@ -4,7 +4,7 @@ from django.urls import path
 from django.views.generic import RedirectView, TemplateView
 from django_hosts import reverse
 
-from web import settings
+from . import settings
 
 # Updates the "View site" link to this url
 admin.site.site_url = f"//{settings.PARENT_HOST}/"

@@ -1,4 +1,4 @@
-from django.http import JsonResponse, HttpResponseNotFound
+from django.http import HttpResponseNotFound, JsonResponse
 
 from dataporten.ldap_utils import get_user_details_from_username
 

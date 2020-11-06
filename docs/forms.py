@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from docs.models import Content, Page
+from .models import Content, Page
 
 
 class CreatePageForm(forms.ModelForm):

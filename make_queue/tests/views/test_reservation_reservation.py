@@ -1,4 +1,4 @@
-from datetime import timedelta, time
+from datetime import time, timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
@@ -9,10 +9,10 @@ from django.utils import timezone
 from news.models import Event, TimePlace
 from users.models import User
 from ...util.time import date_to_local, local_to_date
+from ..utility import post_request_with_user, request_with_user, template_view_get_context_data
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
-from ...tests.utility import post_request_with_user, request_with_user, template_view_get_context_data
 from ...views.admin.reservation import AdminReservationView
 from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
 

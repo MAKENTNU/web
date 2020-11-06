@@ -8,9 +8,9 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 
 from groups.models import Committee
-from internal.util import date_to_term
 from users.models import User
 from web.fields import UnlimitedCharField
+from .util import date_to_term
 
 
 class Member(models.Model):

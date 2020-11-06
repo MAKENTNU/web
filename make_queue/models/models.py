@@ -15,7 +15,7 @@ from news.models import TimePlace
 from users.models import User
 from web.fields import URLTextField, UnlimitedCharField
 from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
-from ..models.course import Printer3DCourse
+from .course import Printer3DCourse
 
 
 class MachineTypeQuerySet(models.QuerySet):

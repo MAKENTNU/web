@@ -1,4 +1,4 @@
-from docs.models import Page, Content
+from .models import Content, Page
 
 
 class PageByTitle:

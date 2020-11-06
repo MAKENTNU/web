@@ -5,7 +5,7 @@ from django.core.validators import RegexValidator
 from django.forms import CharField
 from django.utils.translation import gettext_lazy as _
 
-from card.widgets import CardNumberInput
+from .widgets import CardNumberInput
 
 card_number_validators = (
     RegexValidator(r"^\d{10}$", _("Card number must be ten digits long.")),

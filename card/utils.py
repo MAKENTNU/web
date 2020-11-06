@@ -1,8 +1,8 @@
 from django.core.exceptions import ValidationError
 
-from card.forms import card_number_validators
 from make_queue.models.course import Printer3DCourse
 from users.models import User
+from .forms import card_number_validators
 
 
 def is_valid(card_number):

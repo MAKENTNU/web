@@ -2,13 +2,13 @@ from math import ceil
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
-from django.views.generic import DetailView, FormView, DeleteView, TemplateView, UpdateView
+from django.views.generic import DeleteView, DetailView, FormView, TemplateView, UpdateView
 
-from docs.forms import PageContentForm, CreatePageForm, ChangePageVersionForm
-from docs.models import Page, Content
+from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
+from .models import Content, Page
 
 
 class DocumentationPageView(DetailView):

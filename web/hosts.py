@@ -3,7 +3,7 @@ from ckeditor_uploader import widgets as ckeditor_uploader_widgets
 from django.contrib.auth.views import SuccessURLAllowedHostsMixin
 from django_hosts import host
 
-from web import settings
+from . import settings
 
 # Overwrite Django's `reverse()` function, to make it work with subdomains
 ckeditor_uploader_widgets.reverse = django_hosts.reverse

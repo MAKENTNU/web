@@ -6,14 +6,14 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
 
 import card.utils
 from card.views import RFIDView
-from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from make_queue.models.course import Printer3DCourse
+from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
 class CheckInView(RFIDView):

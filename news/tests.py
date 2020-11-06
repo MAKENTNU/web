@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from .models import Article, Event, TimePlace, EventTicket
+from .models import Article, Event, EventTicket, TimePlace
 
 # A very small JPEG image without any content. Used for creation of simple images when creating an article
 simple_jpg = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \

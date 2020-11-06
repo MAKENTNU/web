@@ -6,10 +6,10 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.views.generic import TemplateView, View, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView, View
 
-from make_queue.forms import Printer3DCourseForm
-from make_queue.models.course import Printer3DCourse
+from ...forms import Printer3DCourseForm
+from ...models.course import Printer3DCourse
 
 
 class CourseView(TemplateView):

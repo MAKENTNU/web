@@ -1,15 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import ValidationError, PermissionDenied
-from django.http import HttpResponseRedirect, Http404
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
+from django.views.generic import CreateView, ListView, RedirectView, TemplateView, UpdateView
 
-from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
-from internal.models import Member, SystemAccess
 from make_queue.models.course import Printer3DCourse
+from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
+from .models import Member, SystemAccess
 
 
 class Home(TemplateView):

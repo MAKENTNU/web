@@ -5,55 +5,56 @@ from django.test import TestCase
 
 from ...models.models import MachineType, ReservationRule
 
+Period = ReservationRule.Period
+
 
 class PeriodTests(TestCase):
 
     def setUp(self):
-        self.period = ReservationRule.Period
         self.machine_type = MachineType.objects.get(pk=1)
 
     def test_hours_overlap_inside(self):
-        self.assertEqual(round(self.period.hours_overlap(0.25, 0.5, 0.25, 0.4), 2), 3.6)
-        self.assertEqual(round(self.period.hours_overlap(6, 1, 0, 1), 2), 24)
-        self.assertEqual(round(self.period.hours_overlap(6, 1, 6, 0), 2), 24)
-        self.assertEqual(round(self.period.hours_overlap(6, 1, 6.4, 0.6), 2), 28.8)
+        self.assertEqual(round(Period.hours_overlap(0.25, 0.5, 0.25, 0.4), 2), 3.6)
+        self.assertEqual(round(Period.hours_overlap(6, 1, 0, 1), 2), 24)
+        self.assertEqual(round(Period.hours_overlap(6, 1, 6, 0), 2), 24)
+        self.assertEqual(round(Period.hours_overlap(6, 1, 6.4, 0.6), 2), 28.8)
 
     def test_hours_overlap_outside(self):
-        self.assertEqual(self.period.hours_overlap(0.2, 0.4, 0, 0.2), 0)
-        self.assertEqual(self.period.hours_overlap(0.2, 0.4, 0.4, 0.8), 0)
-        self.assertEqual(self.period.hours_overlap(6, 1, 2, 3), 0)
-        self.assertEqual(self.period.hours_overlap(1, 2, 6, 1), 0)
+        self.assertEqual(Period.hours_overlap(0.2, 0.4, 0, 0.2), 0)
+        self.assertEqual(Period.hours_overlap(0.2, 0.4, 0.4, 0.8), 0)
+        self.assertEqual(Period.hours_overlap(6, 1, 2, 3), 0)
+        self.assertEqual(Period.hours_overlap(1, 2, 6, 1), 0)
 
     def test_hours_overlap_borders_crossed(self):
-        self.assertEqual(round(self.period.hours_overlap(0.2, 0.4, 0.1, 0.35), 2), 3.6)
-        self.assertEqual(round(self.period.hours_overlap(0.2, 0.4, 0.25, 1.6), 2), 3.6)
-        self.assertEqual(round(self.period.hours_overlap(0.2, 0.4, 6, 2), 2), 4.8)
-        self.assertEqual(round(self.period.hours_overlap(6, 1, 0.1, 0.35), 2), 6)
-        self.assertEqual(round(self.period.hours_overlap(6, 1, 5.25, 6.25), 2), 6)
-        self.assertEqual(round(self.period.hours_overlap(6, 1, 5.25, 1.25), 2), 48)
+        self.assertEqual(round(Period.hours_overlap(0.2, 0.4, 0.1, 0.35), 2), 3.6)
+        self.assertEqual(round(Period.hours_overlap(0.2, 0.4, 0.25, 1.6), 2), 3.6)
+        self.assertEqual(round(Period.hours_overlap(0.2, 0.4, 6, 2), 2), 4.8)
+        self.assertEqual(round(Period.hours_overlap(6, 1, 0.1, 0.35), 2), 6)
+        self.assertEqual(round(Period.hours_overlap(6, 1, 5.25, 6.25), 2), 6)
+        self.assertEqual(round(Period.hours_overlap(6, 1, 5.25, 1.25), 2), 48)
 
     def create_reservation_rule(self, start_time, end_time):
         return ReservationRule(start_time=start_time, end_time=end_time, start_days=0, max_hours=0,
                                max_inside_border_crossed=0, days_changed=0, machine_type=self.machine_type)
 
     def test_overlap_self(self):
-        period = self.period(0, self.create_reservation_rule(datetime.time(10, 0), datetime.time(14, 0)))
+        period = Period(0, self.create_reservation_rule(datetime.time(10, 0), datetime.time(14, 0)))
 
         self.assertTrue(period.overlap(period), "A period should overlap itself")
 
     def test_overlap_other(self):
-        period1 = self.period(0, self.create_reservation_rule(datetime.time(10, 0), datetime.time(14, 0)))
-        period2 = self.period(0, self.create_reservation_rule(datetime.time(8, 0), datetime.time(10, 0)))
+        period1 = Period(0, self.create_reservation_rule(datetime.time(10, 0), datetime.time(14, 0)))
+        period2 = Period(0, self.create_reservation_rule(datetime.time(8, 0), datetime.time(10, 0)))
 
         self.assertFalse(period1.overlap(period2), "A period that starts at another's end point should not overlap")
         self.assertFalse(period2.overlap(period1), "A period that ends at another's start point should not overlap")
 
-        period3 = self.period(0, self.create_reservation_rule(datetime.time(9, 0), datetime.time(11, 0)))
+        period3 = Period(0, self.create_reservation_rule(datetime.time(9, 0), datetime.time(11, 0)))
 
         self.assertTrue(period1.overlap(period3), "A period that starts within another should overlap")
         self.assertTrue(period3.overlap(period1), "A period that starts within another should overlap")
 
-        period4 = self.period(1, self.create_reservation_rule(datetime.time(8, 0), datetime.time(12, 0)))
+        period4 = Period(1, self.create_reservation_rule(datetime.time(8, 0), datetime.time(12, 0)))
 
         self.assertFalse(period1.overlap(period4), "Periods on distinct days should not overlap")
         self.assertFalse(period4.overlap(period1), "Periods on distinct days should not overlap")
@@ -70,10 +71,10 @@ class ReservationRuleTests(TestCase):
 
         time_periods = rule.time_periods()
         correct_timeperiods = [
-            rule.Period(0, rule),
-            rule.Period(2, rule),
-            rule.Period(4, rule),
-            rule.Period(5, rule)
+            Period(0, rule),
+            Period(2, rule),
+            Period(4, rule),
+            Period(5, rule)
         ]
 
         self.assertEqual(len(time_periods), len(correct_timeperiods))
@@ -83,7 +84,7 @@ class ReservationRuleTests(TestCase):
             self.assertEqual(calculated_period.end_time, correct_period.end_time)
             self.assertTrue(calculated_period.overlap(correct_period))
             self.assertEqual(
-                round(rule.Period.hours_overlap(calculated_period.start_time, calculated_period.end_time,
+                round(Period.hours_overlap(calculated_period.start_time, calculated_period.end_time,
                                                 correct_period.start_time, correct_period.end_time), 2), 20)
 
     def test_is_valid_rule_internal(self):

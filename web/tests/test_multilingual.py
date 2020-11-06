@@ -3,10 +3,10 @@ import json
 from django.test import TestCase
 from django.utils import translation
 
-from web import settings
-from web.multilingual.data_structures import MultiLingualTextStructure
-from web.multilingual.database import MultiLingualTextField
-from web.multilingual.form import MultiLingualFormField
+from .. import settings
+from ..multilingual.data_structures import MultiLingualTextStructure
+from ..multilingual.database import MultiLingualTextField
+from ..multilingual.form import MultiLingualFormField
 
 
 class TestMultiLingualTextStructure(TestCase):

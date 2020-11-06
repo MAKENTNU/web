@@ -4,8 +4,8 @@ from django.utils import timezone
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
-from make_queue.models.models import Machine
 from make_queue.util.time import date_to_local, get_day_name
+from ..models.models import Machine
 
 register = template.Library()
 

@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
-from django.views.generic import TemplateView, DeleteView, CreateView, UpdateView
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
 
 from ...forms import RuleForm
 from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRule

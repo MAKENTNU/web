@@ -4,7 +4,7 @@ from json import JSONDecodeError
 
 from django.utils.translation import get_language
 
-from web import settings
+from .. import settings
 
 
 class MultiLingualTextStructure:

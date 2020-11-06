@@ -3,24 +3,21 @@ from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Max
-from django.http import HttpResponseRedirect, JsonResponse, Http404
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.utils.translation import get_language
-from django.utils.translation import gettext
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, gettext, gettext_lazy as _
 from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView, ListView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView
 
 from mail import email
 from web import settings
 from web.templatetags.permission_tags import has_any_article_permission, has_any_event_permission
-from .forms import EventForm
-from .forms import TimePlaceForm, EventRegistrationForm, ArticleForm
-from .models import Article, Event, TimePlace, EventTicket
+from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
+from .models import Article, Event, EventTicket, TimePlace
 
 
 class ViewEventsView(TemplateView):

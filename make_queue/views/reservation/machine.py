@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
 
 from ...forms import BaseMachineForm, EditMachineForm
 from ...models.models import Machine, MachineType
