@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:35+0100\n"
+"POT-Creation-Date: 2020-11-07 13:43+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -566,7 +566,7 @@ msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
 #: make_queue/templates/make_queue/make_reservation.html:101
-#: news/models.py:226 news/templates/news/admin_event_tickets.html:39
+#: news/models.py:226 news/templates/news/admin_event_tickets.html:45
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -684,7 +684,7 @@ msgstr "Filtrer medlemskapsstatus"
 #: internal/templates/internal/members.html:34
 #: internal/templates/internal/members.html:242
 #: internal/templatetags/member.py:22 news/models.py:225
-#: news/templates/news/admin_event_tickets.html:19
+#: news/templates/news/admin_event_tickets.html:25
 msgid "Active"
 msgstr "Aktiv"
 
@@ -1714,12 +1714,12 @@ msgstr ""
 "Dette arrangementet er privat! Det vil bare vises for medlemmer av MAKE NTNU."
 
 #: news/templates/news/admin_event.html:57
-#: news/templates/news/admin_event_tickets.html:12
+#: news/templates/news/admin_event_tickets.html:18
 msgid "Tickets"
 msgstr "Billetter"
 
 #: news/templates/news/admin_event.html:61
-#: news/templates/news/admin_event_tickets.html:13
+#: news/templates/news/admin_event_tickets.html:19
 #: news/templates/news/admin_timeplace_listing.html:9
 msgid "tickets reserved"
 msgstr "billetter reservert"
@@ -1754,27 +1754,35 @@ msgstr "Ingen fremtidige forekomster finnes for dette arrangementet"
 msgid "No past occurrences exist for this event"
 msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
-#: news/templates/news/admin_event_tickets.html:9
+#: news/templates/news/admin_event_tickets.html:15
 msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"
 
-#: news/templates/news/admin_event_tickets.html:21
+#: news/templates/news/admin_event_tickets.html:27
 #: news/templates/news/ticket.html:6
 msgid "Canceled"
 msgstr "Kansellert"
 
-#: news/templates/news/admin_event_tickets.html:31
+#: news/templates/news/admin_event_tickets.html:37
 #: news/templates/news/ticket.html:55
 msgid "Ref #"
 msgstr "Ref #"
 
-#: news/templates/news/admin_event_tickets.html:35
+#: news/templates/news/admin_event_tickets.html:41
 msgid "Language"
 msgstr "Språk"
 
-#: news/templates/news/admin_event_tickets.html:46
+#: news/templates/news/admin_event_tickets.html:52
 msgid "No tickets have been registered for this event"
 msgstr "Ingen billetter har blitt registrert for dette arrangement"
+
+#: news/templates/news/admin_event_tickets.html:55
+msgid "Emails"
+msgstr "E-poster"
+
+#: news/templates/news/admin_event_tickets.html:57
+msgid "Click to copy email of active participants to clipboard"
+msgstr "Klikk her for å kopiere eposter til aktive deltagere til utklipstavlen"
 
 #: news/templates/news/admin_events.html:30
 #, python-format
