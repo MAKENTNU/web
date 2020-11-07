@@ -61,8 +61,8 @@
         <div style="width: 100%;">
             <input
                 class="input-monospace copyInput"
-                value="{% for ticket in tickets %}{% if ticket.active %}{{ ticket.email }},{% endif %}{% endfor %}"
-                readonly>
+                value="{{ ticket_emails }}"
+                readonly> 
         </div>
     </div>
     <script>

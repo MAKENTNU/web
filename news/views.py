@@ -410,6 +410,7 @@ class AdminEventTicketView(TemplateView):
             "tickets": event.eventticket_set.order_by("-active").all(),
             "object": event,
             "event": event,
+            "ticket_emails": event.eventticket_set.filter(active=True).values('email', flat=True)
         })
         return context_data
 
