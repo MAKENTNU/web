@@ -4,7 +4,7 @@ from django.contrib.auth.models import Permission
 register = template.Library()
 
 
-@register.filter(name='has_any_permissions')
+@register.filter
 def has_any_permissions(user):
     for group in user.groups.all():
         if Permission.objects.filter(group=group).exists():
@@ -12,13 +12,13 @@ def has_any_permissions(user):
     return Permission.objects.filter(user=user).exists()
 
 
-@register.filter(name="has_any_article_permission")
-def has_any_article_permission(user):
+@register.filter
+def has_any_article_permissions(user):
     return any(user.has_perm(f"news.{action}_article") for action in ["add", "change", "delete"])
 
 
-@register.filter(name="has_any_event_permission")
-def has_any_event_permission(user):
+@register.filter
+def has_any_event_permissions(user):
     models = "event", "timeplace"
     actions = "add", "change", "delete"
     for model in models:
@@ -28,8 +28,8 @@ def has_any_event_permission(user):
     return False
 
 
-@register.filter(name="has_any_makerspace_permission")
-def has_any_makerspace_permission(user):
+@register.filter
+def has_any_makerspace_permissions(user):
     return any(user.has_perm(f"makerspace.{action}_makerspace") for action in ["add", "change", "delete"])
 
 

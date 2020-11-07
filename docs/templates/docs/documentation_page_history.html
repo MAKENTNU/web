@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "History of" %} "{{ page.title }}"{% endblock %}
+{% block title %}{% trans "History of" %} "{{ page.title }}"{% endblock title %}
 
 {% block body %}
     <div class="ui container">
@@ -48,4 +48,4 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock body %}

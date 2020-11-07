@@ -29,7 +29,7 @@ class ReservationCreateOrChangeView(TemplateView):
         :return: The error message
         """
         if not reservation.is_within_allowed_period() and not (reservation.special or reservation.event):
-            num_days = reservation.reservation_future_limit_days
+            num_days = reservation.RESERVATION_FUTURE_LIMIT_DAYS
             return ngettext(
                 'Reservations can only be made {num_days} day ahead of time',
                 'Reservations can only be made {num_days} days ahead of time',
@@ -77,13 +77,13 @@ class ReservationCreateOrChangeView(TemplateView):
         # lists
         context_data = {
             "new_reservation": self.new_reservation,
-            "events": list(TimePlace.objects.filter(end_time__gte=timezone.localtime())),
+            "event_timeplaces": list(TimePlace.objects.filter(end_time__gte=timezone.localtime())),
             "machine_types": [
                 machine_type
                 for machine_type in MachineType.objects.prefetch_machines_and_default_order_by(machines_attr_name="instances")
                 if machine_type.can_user_use(self.request.user)
             ],
-            "maximum_days_in_advance": Reservation.reservation_future_limit_days,
+            "maximum_days_in_advance": Reservation.RESERVATION_FUTURE_LIMIT_DAYS,
         }
 
         # If we are given a reservation, populate the information relevant to
@@ -282,7 +282,7 @@ class FindFreeSlot(FormView):
             "duration": ceil(timedelta_to_hours(end_time - start_time)),
         }
 
-    def get_periods(self, machine, required_time):
+    def get_periods(self, machine: Machine, required_time):
         """
         Finds all future periods for the given machine with a minimum length
 
@@ -292,10 +292,7 @@ class FindFreeSlot(FormView):
         """
         periods = []
         reservations = list(
-            Reservation.objects.filter(
-                end_time__gte=timezone.now(),
-                machine__pk=machine.pk,
-            ).order_by("start_time")
+            machine.reservations.filter(end_time__gte=timezone.now()).order_by("start_time")
         )
 
         # Find all periods between reservations
@@ -313,7 +310,7 @@ class FindFreeSlot(FormView):
         if reservations:
             periods.append(self.format_period(
                 machine, reservations[-1].end_time,
-                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)
+                timezone.now() + timezone.timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
             ))
         # If the machine is not reserved anytime in the future, we include the
         # whole allowed period
@@ -321,7 +318,7 @@ class FindFreeSlot(FormView):
             periods.append(self.format_period(
                 machine,
                 timezone.now(),
-                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)
+                timezone.now() + timezone.timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
             ))
         return periods
 

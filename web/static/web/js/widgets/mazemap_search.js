@@ -1,6 +1,6 @@
 jQuery.fn.extend({
     mazemapSearch: function () {
-        let data = this.data();
+        const data = this.data();
         this.parent().search({
             searchDelay: 0,
             fullTextSearch: true,
@@ -11,7 +11,7 @@ jQuery.fn.extend({
                     `&rows=${data.maxresults}` +
                     `&campusid=${data.campusid}`,
 
-                // Convert MazeMap search results to fit Fomantic UI search format
+                // Convert MazeMap search results to fit Fomantic-UI search format
                 onResponse: (mazemapResponse => ({
                     results: mazemapResponse.result.map(item => ({
                         title: (
@@ -24,7 +24,7 @@ jQuery.fn.extend({
                 })),
             },
             templates: {
-                // Template for error messages. Default provided by Fomantic UI but with translations
+                // Template for error messages. Default provided by Fomantic-UI but with translations
                 message: (type, message) => (
                     `<div class="message empty">
                     <div class="header">
@@ -40,7 +40,7 @@ jQuery.fn.extend({
             onSelect: function (result, response) {
                 if (data.urlfield) {
                     $(`input[name=${data.urlfield}]`).val(
-                        `https://use.mazemap.com/?campusid=${data.campusid}&desttype=poi&dest=${result.id}`
+                        `https://use.mazemap.com/?campusid=${data.campusid}&desttype=poi&dest=${result.id}`,
                     );
                 }
             },

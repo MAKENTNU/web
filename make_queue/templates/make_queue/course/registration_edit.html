@@ -5,9 +5,8 @@
 
 
 {% block head %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static "make_queue/css/course_registration.css" %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static "make_queue/css/course_registration.css" %}"/>
+{% endblock head %}
 
 {% block body %}
 
@@ -15,11 +14,11 @@
         <h1>
             {% block form_title %}
                 {% trans "Edit course registration" %}
-            {% endblock %}
+            {% endblock form_title %}
         </h1>
 
         {% block messages %}
-            <div id="username_not_found_warning" class="ui warning message hidden">
+            <div id="username-not-found-warning" class="ui warning message hidden">
                 <i class="close icon"></i>
                 <div class="header">
                     {% trans "Could not find the user in the NTNU database" %}
@@ -36,7 +35,7 @@
                     <p>{% trans "Either the user has already taken the course, or the username of another user has been entered." %}</p>
                 </div>
             {% endif %}
-        {% endblock %}
+        {% endblock messages %}
         {% for error in form.card_number.errors %}
             <div class="ui error message">
                 <i class="close icon"></i>
@@ -47,7 +46,7 @@
         {% endfor %}
 
 
-        <form class="ui form" action="{% block form_action %}{% endblock %}" method="post">
+        <form class="ui form" action="{% block form_action %}{% endblock %}" method="POST">
             {% csrf_token %}
 
             <div class="ui horizontal divider">
@@ -97,7 +96,7 @@
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
-                {% endblock %}
+                {% endblock submit_button %}
             </button>
             <a class="ui right floated red button" href="{% url "course_panel" %}">
                 {% trans "Cancel" context "abort action" %}
@@ -119,16 +118,16 @@
         });
 
         $("input[name='username']").focusout((event) => {
-            $.ajax(`${langPrefix}/reservation/json/${$(event.target).val()}/`, {
+            $.ajax(`${LANG_PREFIX}/reservation/json/${$(event.target).val()}/`, {
                 success: function (data) {
                     $("input[name='name']").val(data["full_name"]);
-                    $('#username_not_found_warning').fadeOut();
+                    $("#username-not-found-warning").fadeOut();
                 },
                 error: function () {
-                    $('#username_not_found_warning').fadeIn();
+                    $("#username-not-found-warning").fadeIn();
                 },
             });
             $("#user").closest(".dropdown").dropdown("set selected", $(event.target).val());
         });
     </script>
-{% endblock %}
+{% endblock body %}

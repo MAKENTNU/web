@@ -8,7 +8,7 @@
         <h1>
             {% block form_title %}
                 {% trans "Change quota" %}
-            {% endblock %}
+            {% endblock form_title %}
         </h1>
 
         <div id="missing-fields-error-message" class="ui red message close hidden">
@@ -21,7 +21,7 @@
             {% trans "Must select specific user or all users." %}
         </div>
 
-        <form class="ui form" method="post" action="">
+        <form class="ui form" method="POST" action="">
             {% csrf_token %}
             <div class="two fields">
                 <div id="number-of-reservations-field" class="field">
@@ -61,7 +61,7 @@
             <button class="ui right floated make-bg-yellow button" type="submit">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
-                {% endblock %}
+                {% endblock submit_button %}
             </button>
             <a class="ui right floated red button" href="{% url "quota_panel" %}">
                 {% trans "Cancel" context "abort action" %}
@@ -70,36 +70,40 @@
     </div>
 
     <script>
+        const $userField = $("#user-field");
+
         $(".checkbox").checkbox();
         $("#checkbox-all-users").checkbox({
             fireOnInit: true,
             onChecked: function () {
-                $("#user-field").toggleClass("disabled", true).find("div.dropdown").dropdown("clear");
+                $userField.toggleClass("disabled", true).find("div.dropdown").dropdown("clear");
             },
             onUnchecked: function () {
-                $("#user-field").toggleClass("disabled", false);
+                $userField.toggleClass("disabled", false);
             },
         });
 
         $("form").submit(function () {
-            let user = $("#user-field").find("div.dropdown").dropdown("get value");
-            let allUsers = $("#checkbox-all-users").checkbox("is checked");
-            let numberOfReservationsEmpty = $("#number-of-reservations-field").find("input").val() === "";
-            let machineTypeEmpty = $("#machine-type-field").find("div.dropdown").dropdown("get value") === "";
-            let userEmpty = !allUsers && user === "";
+            const $numberOfReservationsField = $("#number-of-reservations-field");
+            const $machineTypeField = $("#machine-type-field");
 
+            const user = $userField.find("div.dropdown").dropdown("get value");
+            const allUsers = $("#checkbox-all-users").checkbox("is checked");
+            const numberOfReservationsEmpty = $numberOfReservationsField.find("input").val() === "";
+            const machineTypeEmpty = $machineTypeField.find("div.dropdown").dropdown("get value") === "";
+            const userEmpty = !allUsers && user === "";
 
             $("#select-user-error-message").toggleClass("hidden", !userEmpty);
             $("#missing-fields-error-message").toggleClass("hidden", !numberOfReservationsEmpty && !machineTypeEmpty);
 
-            $("#machine-type-field").toggleClass("error", machineTypeEmpty);
-            $("#number-of-reservations-field").toggleClass("error", numberOfReservationsEmpty);
-            $("#user-field").toggleClass("error", userEmpty);
+            $machineTypeField.toggleClass("error", machineTypeEmpty);
+            $numberOfReservationsField.toggleClass("error", numberOfReservationsEmpty);
+            $userField.toggleClass("error", userEmpty);
 
             return !(userEmpty || machineTypeEmpty || numberOfReservationsEmpty);
         });
 
-        $('.message .close')
+        $(".message .close")
             .on('click', function () {
                 $(this)
                     .closest('.message')
@@ -107,4 +111,4 @@
             });
     </script>
 
-{% endblock %}
+{% endblock body %}

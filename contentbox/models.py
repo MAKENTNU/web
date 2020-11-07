@@ -20,3 +20,5 @@ class ContentBox(models.Model):
             ("can_upload_image", "Can upload images in CKEditor"),
             ("can_browse_image", "Can browse images in CKEditor"),
         )
+        verbose_name = "content box"
+        verbose_name_plural = "content boxes"

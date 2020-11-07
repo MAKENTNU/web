@@ -1,4 +1,4 @@
-{% extends 'contentbox/display.html' %}
+{% extends "contentbox/display.html" %}
 {% load i18n %}
 {% load static %}
 
@@ -6,7 +6,7 @@
 {% block head %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static "makerspace/css/makerspace.css" %}"/>
-{% endblock %}
+{% endblock head %}
 
 {% block extra_post_content %}
     <br/>

@@ -15,7 +15,7 @@ class AnnouncementAdminView(PermissionRequiredMixin, ListView):
 
 class CreateAnnouncementView(PermissionRequiredMixin, CreateView):
     permission_required = ("announcements.add_announcement",)
-    model = Announcement,
+    model = Announcement
     form_class = AnnouncementForm
     template_name = "announcements/create_announcement.html"
     success_url = reverse_lazy("announcement_admin")

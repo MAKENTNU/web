@@ -24,8 +24,8 @@ class SemanticSearchableChoiceInput(forms.Select):
 
     def __init__(self, *args, **kwargs):
         super().__init__(attrs=kwargs.pop("attrs", {}))
-        self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
-        self.attrs["force_selection"] = kwargs.pop("force_selection", False)
+        self.attrs['prompt_text'] = kwargs.pop('prompt_text', self.prompt_text)
+        self.attrs['force_selection'] = kwargs.pop('force_selection', False)
 
 
 class SemanticMultipleSelectInput(forms.SelectMultiple):
@@ -34,7 +34,7 @@ class SemanticMultipleSelectInput(forms.SelectMultiple):
 
     def __init__(self, *args, **kwargs):
         super().__init__()
-        self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
+        self.attrs['prompt_text'] = kwargs.pop('prompt_text', self.prompt_text)
 
 
 class SemanticFileInput(forms.ClearableFileInput):
@@ -46,11 +46,11 @@ class MazemapSearchInput(forms.TextInput):
     Widget that enables MazeMap search functionality, including autofill of URL to MazeMap.
     """
     template_name = "web/forms/widgets/mazemap_search.html"
-    required_class_attr = "prompt"
+    required_class_attr = 'prompt'
     placeholder = _("Search places")
 
     class Media:
-        js = ('web/js/widgets/mazemap_search.js',)
+        js = ("web/js/widgets/mazemap_search.js",)
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
         """
@@ -61,14 +61,14 @@ class MazemapSearchInput(forms.TextInput):
         """
 
         default_attrs = {
-            "placeholder": self.placeholder,
-            "data-campusId": campus_id,
-            "data-maxResults": max_results,
-            "data-urlField": url_field,
+            'placeholder': self.placeholder,
+            'data-campusId': campus_id,
+            'data-maxResults': max_results,
+            'data-urlField': url_field,
         }
         if attrs:
             default_attrs.update(attrs)
 
-        default_attrs["class"] = f"{default_attrs.get('class', '')} {self.required_class_attr}"
+        default_attrs['class'] = f"{default_attrs.get('class', '')} {self.required_class_attr}"
 
         super().__init__(attrs=default_attrs)

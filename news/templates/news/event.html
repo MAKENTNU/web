@@ -1,19 +1,19 @@
-{% extends 'news/article.html' %}
+{% extends "news/article.html" %}
 {% load static %}
 {% load i18n %}
 {% load event_tags %}
 
 
-{% block event_classes %}lalign{% endblock event_classes %}
+{% block extra_classes %}lalign{% endblock extra_classes %}
 
-{% block admin-page %}
+{% block admin_page %}
     {% if perms.news.change_event %}
         <div>
-            <a class="ui make-bg-yellow button" href="{% url "admin-event" article.id %}">
+            <a class="ui make-bg-yellow button" href="{% url "admin-event" article.pk %}">
                 <i class="ui sticky note icon"></i>{% trans "Admin page" %}
             </a>
             {% if article.number_of_tickets and perms.news.change_event %}
-                <a href="{% url "event-tickets" article.id %}">
+                <a href="{% url "event-tickets" article.pk %}">
                     <span class="grey link text">
                         <i class="ui ticket icon"></i>
                         {{ article.number_of_registered_tickets }} / {{ article.number_of_tickets }}
@@ -22,7 +22,7 @@
             {% endif %}
         </div>
     {% endif %}
-{% endblock admin-page %}
+{% endblock admin_page %}
 
 
 {% block rail %}
@@ -36,58 +36,58 @@
             </div>
         {% endif %}
         <div class="ui sticky rail-content">
-            {% for event in timeplaces %}
+            {% for occurrence in timeplaces %}
                 <div class="ui card">
                     <div class="content">
                         <p>
                             <i class="ui make-col-yellow wait icon"></i>
-                            {{ event.start_time|date:"d. M, H:i" }} -
-                            {% if event.start_time.date == event.end_time.date %}
-                                {{ event.end_time|date:"H:i" }}
+                            {{ occurrence.start_time|date:"d. M, H:i" }} -
+                            {% if occurrence.start_time.date == occurrence.end_time.date %}
+                                {{ occurrence.end_time|date:"H:i" }}
                             {% else %}
-                                {{ event.end_time|date:"d. M, H:i" }}
+                                {{ occurrence.end_time|date:"d. M, H:i" }}
                             {% endif %}
                         </p>
-                        {% if event.place %}
-                            {% if event.place_url %}
+                        {% if occurrence.place %}
+                            {% if occurrence.place_url %}
                                 <p>
                                     <i class="ui make-col-yellow marker icon"></i>
-                                    <a class="place" href="{{ event.place_url }}" target="_blank">
-                                        {{ event.place }}
+                                    <a class="place" href="{{ occurrence.place_url }}" target="_blank">
+                                        {{ occurrence.place }}
                                     </a>
                                 </p>
                             {% else %}
                                 <p>
                                     <i class="ui make-col-yellow marker icon"></i>
-                                    {{ event.place }}
+                                    {{ occurrence.place }}
                                 </p>
                             {% endif %}
                         {% endif %}
 
-                        <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
+                        <a class="calendar-link" href="{% url 'timeplace-ical' occurrence.pk %}" target="_blank">
                             <i class="ui make-col-yellow large calendar outline icon"></i>
                         </a>
 
-                        {% if event.number_of_tickets and perms.news.change_event %}
+                        {% if occurrence.number_of_tickets and perms.news.change_event %}
                             <div class="right floated meta">
-                                <a href="{% url "timeplace-tickets" pk=event.pk %}">
+                                <a href="{% url "timeplace-tickets" pk=occurrence.pk %}">
                                     <i class="ui ticket icon"></i>
-                                    {{ event.number_of_registered_tickets }} / {{ event.number_of_tickets }}
+                                    {{ occurrence.number_of_registered_tickets }} / {{ occurrence.number_of_tickets }}
                                 </a>
                             </div>
                         {% endif %}
                     </div>
-                    {% if event.event.repeating %}
-                        {% if event.number_of_tickets %}
-                            {% get_ticket event user as ticket %}
+                    {% if occurrence.event.repeating %}
+                        {% if occurrence.number_of_tickets %}
+                            {% get_ticket occurrence user as ticket %}
                             {% if ticket %}
                                 <a class="ui green fluid button" href="{% url "ticket" pk=ticket.pk %}">
                                     {% trans "You are registered for this event" %}
                                 </a>
-                            {% elif event.number_of_registered_tickets < event.number_of_tickets %}
+                            {% elif occurrence.number_of_registered_tickets < occurrence.number_of_tickets %}
                                 <div class="ui two buttons">
                                     <a class="ui make-bg-yellow black button"
-                                       href="{% url "register-timeplace" event.id %}">
+                                       href="{% url "register-timeplace" occurrence.pk %}">
                                         {% trans "Registration" %}
                                     </a>
                                 </div>
@@ -104,7 +104,7 @@
                     {% endif %}
                 </div>
             {% endfor %}
-            {% if article.standalone and article.timeplace_set.future %}
+            {% if article.standalone and article.timeplaces.future %}
                 <div class="ui card">
                     {% if article.number_of_tickets %}
                         {% get_ticket article user as ticket %}
@@ -113,7 +113,7 @@
                                 {% trans "You are registered for this event" %}
                             </a>
                         {% elif article.number_of_registered_tickets < article.number_of_tickets %}
-                            <a class="ui make-bg-yellow black button" href="{% url "register-event" article.id %}">
+                            <a class="ui make-bg-yellow black button" href="{% url "register-event" article.pk %}">
                                 {% trans "Registration" %}
                             </a>
                         {% else %}
@@ -151,7 +151,7 @@
                         {% trans "You are registered for this event" %}
                     </a>
                 {% elif article.number_of_registered_tickets < article.number_of_tickets %}
-                    <a class="ui make-bg-yellow black fluid button" href="{% url "register-event" article.id %}"
+                    <a class="ui make-bg-yellow black fluid button" href="{% url "register-event" article.pk %}"
                        target="_blank">
                         {% trans "Registration" %}
                     </a>
@@ -168,10 +168,10 @@
         {% endif %}
     </div>
     <div class="ui styled accordion">
-        {% for event in timeplaces %}
+        {% for occurrence in timeplaces %}
             <div class="title">
                 <i class="dropdown icon"></i>
-                {{ event.start_time|date:"d. M" }}
+                {{ occurrence.start_time|date:"d. M" }}
             </div>
             <div class="content">
                 <div class="transition hidden">
@@ -179,52 +179,52 @@
                         <div class="content">
                             <p>
                                 <i class="ui make-col-yellow wait icon"></i>
-                                {% if event.start_time.date == event.end_time.date %}
-                                    {{ event.start_time|time:"H:i" }} - {{ event.end_time|time:"H:i" }}
+                                {% if occurrence.start_time.date == occurrence.end_time.date %}
+                                    {{ occurrence.start_time|time:"H:i" }} - {{ occurrence.end_time|time:"H:i" }}
                                 {% else %}
-                                    {{ event.start_time|date:"d. M, H:i" }} - {{ event.end_time|date:"d. M, H:i" }}
+                                    {{ occurrence.start_time|date:"d. M, H:i" }} - {{ occurrence.end_time|date:"d. M, H:i" }}
                                 {% endif %}
                             </p>
-                            {% if event.place %}
-                                {% if event.place_url %}
+                            {% if occurrence.place %}
+                                {% if occurrence.place_url %}
                                     <p>
                                         <i class="ui make-col-yellow marker icon"></i>
-                                        <a class="place" href="{{ event.place_url }}" target="_blank">
-                                            {{ event.place }}
+                                        <a class="place" href="{{ occurrence.place_url }}" target="_blank">
+                                            {{ occurrence.place }}
                                         </a>
                                     </p>
                                 {% else %}
                                     <p>
                                         <i class="ui make-col-yellow marker icon"></i>
-                                        {{ event.place }}
+                                        {{ occurrence.place }}
                                     </p>
                                 {% endif %}
                             {% endif %}
 
-                            <a class="calendar-link" href="{% url 'timeplace-ical' event.id %}" target="_blank">
+                            <a class="calendar-link" href="{% url 'timeplace-ical' occurrence.pk %}" target="_blank">
                                 <i class="ui make-col-yellow large calendar outline icon"></i>
                             </a>
 
-                            {% if event.number_of_tickets and perms.news.change_event %}
+                            {% if occurrence.number_of_tickets and perms.news.change_event %}
                                 <div class="right floated meta">
-                                    <a href="{% url "timeplace-tickets" pk=event.pk %}">
+                                    <a href="{% url "timeplace-tickets" pk=occurrence.pk %}">
                                         <i class="ui ticket icon"></i>
-                                        {{ event.number_of_registered_tickets }} / {{ event.number_of_tickets }}
+                                        {{ occurrence.number_of_registered_tickets }} / {{ occurrence.number_of_tickets }}
                                     </a>
                                 </div>
                             {% endif %}
                         </div>
 
-                        {% if event.event.repeating %}
-                            {% if event.number_of_tickets %}
-                                {% get_ticket event user as ticket %}
+                        {% if occurrence.event.repeating %}
+                            {% if occurrence.number_of_tickets %}
+                                {% get_ticket occurrence user as ticket %}
                                 {% if ticket %}
                                     <a class="ui bottom attached green button" href="{% url "ticket" pk=ticket.pk %}">
                                         {% trans "You are registered for this event" %}
                                     </a>
-                                {% elif event.number_of_registered_tickets < event.number_of_tickets %}
+                                {% elif occurrence.number_of_registered_tickets < occurrence.number_of_tickets %}
                                     <a class="ui make-bg-yellow bottom attached button"
-                                       href="{% url "register-timeplace" event.id %}">
+                                       href="{% url "register-timeplace" occurrence.pk %}">
                                         {% trans "Registration" %}
                                     </a>
                                 {% else %}
@@ -243,7 +243,7 @@
             </div>
         {% endfor %}
     </div>
-    <script>$('.ui.accordion').accordion('open', 0);</script>
+    <script>$(".ui.accordion").accordion('open', 0);</script>
 {% endblock event_accordion %}
 
 
@@ -251,35 +251,35 @@
     {{ block.super }}
     <script>
         {% comment %}
-            Fomantic UI sticky does not adjust the height of the context element when the sticky part is longer. In the
-            cases where this needs to be done, we must make sure that the change is performed after Fomantic UI has
-            performed their own changes. Hopefully this will be fixed at some point in Fomantic UI, and we can remove
+            Fomantic-UI sticky does not adjust the height of the context element when the sticky part is taller. In the
+            cases where this needs to be done, we must make sure that the change is performed after Fomantic-UI has
+            performed their own changes. Hopefully this will be fixed at some point in Fomantic-UI, and we can remove
             this stopgap solution. In most cases, the solution will not be needed, as the average number of occurrences
-            is low enough that the event content is heigher than the sticky part.
+            is low enough that the event content is taller than the sticky part.
         {% endcomment %}
 
-        $(document).ready(() => {
-            // Use a timeout of 50 to make sure that the Fomantic UI code is finished
+        $(document).ready(function () {
+            // Use a timeout of 50 to make sure that the Fomantic-UI code is finished
             setTimeout(() => {
-                let sticky = $(".ui.sticky.rail-content");
-                let context = $("#sticky");
+                const $sticky = $(".ui.sticky.rail-content");
+                const $context = $("#sticky");
 
                 function fixHeight() {
                     // If the height of the sticky is greater than the context (the event content), then increase the
-                    // height of the event to be equal (that is the sticky is simply a single scroll).
-                    if (sticky.height() > context.height()) {
-                        context.height(`${sticky.height()}px`);
+                    // height of the event to be equal (that is, the sticky is simply a single scroll).
+                    if ($sticky.height() > $context.height()) {
+                        $context.height(`${$sticky.height()}px`);
                     }
                 }
 
-                // The sticky code resets the height on each resizing of the window. Thus the change must be performed
+                // The sticky code resets the height on each resizing of the window. Thus, the change must be performed
                 // each time the window is resized. To catch any other cases as well, we use the "onReposition" action.
-                sticky.sticky("setting", "onReposition", () => {
-                    // Use a timeout of 50 to make sure that the Fomantic UI code is finished
+                $sticky.sticky("setting", "onReposition", () => {
+                    // Use a timeout of 50 to make sure that the Fomantic-UI code is finished
                     setTimeout(fixHeight, 50);
                 });
                 fixHeight();
-            }, 50)
+            }, 50);
         });
     </script>
-{% endblock %}
+{% endblock scripts %}

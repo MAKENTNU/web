@@ -1,6 +1,4 @@
 from users.models import User
-from django.utils.datetime_safe import datetime
-
 from .models.models import Machine, MachineType, Reservation
 
 
@@ -48,26 +46,6 @@ class Week:
 
     def to_url(self, week):
         return str(week)
-
-
-class Date:
-    regex = "([0-9]{4}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[01]))"
-
-    def to_python(self, value):
-        return datetime.strptime(value, "%Y/%m/%d")
-
-    def to_url(self, date):
-        return date.strftime(date, "%Y/%m/%d")
-
-
-class DateTime:
-    regex = "([0-9]{4}/([1-9]|1[0-2])/([1-9]|[1-2][0-9]|3[01])/([01][0-9]|2[0-3]):([0-5][0-9]))"
-
-    def to_python(self, value):
-        return datetime.strptime(value, "%Y/%m/%d/%H:%M")
-
-    def to_url(self, date):
-        return date.strftime(date, "%Y/%m/%d/%H:%M")
 
 
 class MachineReservation:

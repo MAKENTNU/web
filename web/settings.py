@@ -15,7 +15,7 @@ DATABASE = 'sqlite'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
-MEDIA_ROOT = '../media/'
+MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
@@ -264,6 +264,9 @@ CKEDITOR_CONFIGS = {
 PHONENUMBER_DEFAULT_REGION = 'NO'
 PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
 
+
+# See http://docs.djangoproject.com/en/dev/topics/logging for
+# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

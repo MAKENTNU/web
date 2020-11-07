@@ -16,7 +16,7 @@ class TestGenericMachine(TestCase):
         printer = Machine.objects.create(name="C1", location="Printer room", status=Machine.Status.AVAILABLE,
                                          machine_model="Ultimaker 2 Extended", machine_type=printer_machine_type)
         user = User.objects.create_user("test")
-        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
+        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.localdate())
         Quota.objects.create(machine_type=printer_machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
         self.check_status(printer, Machine.Status.AVAILABLE)

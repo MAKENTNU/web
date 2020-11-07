@@ -5,11 +5,11 @@
 {% load hosts %}
 
 
-{% block title %}{% trans "Members list" %}{% endblock %}
+{% block title %}{% trans "Members list" %}{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "internal/css/members.css" %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static "internal/css/members.css" %}"/>
+{% endblock head %}
 
 {% block body %}
 
@@ -26,7 +26,7 @@
         <form class="ui form">
             <div class="ui fields">
                 <div class="ui multiple blue labeled compact button icon dropdown">
-                    <input type="hidden" name="filter-status">
+                    <input type="hidden" name="filter-status"/>
                     <i class="ui filter icon"></i>
                     <span class="ui text">{% trans "Filter membership status" %}</span>
                     <div class="menu">
@@ -50,7 +50,7 @@
                     </div>
                 </div>
                 <div class="ui multiple blue labeled compact button icon dropdown">
-                    <input type="hidden" name="filter-committee">
+                    <input type="hidden" name="filter-committee"/>
                     <i class="ui filter icon"></i>
                     <span class="ui text">{% trans "Filter committees" %}</span>
                     <div class="menu">
@@ -91,7 +91,7 @@
                     {% trans "Status" %}<i id="member-sort-status" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "Joined" %}<i id="member-sort-joined" class="ui sort icon"></i>
+                    {% trans "Joined" %}<i id="member-sort-dateJoined" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
                     {% trans "Email" %}<i id="member-sort-email" class="ui sort icon"></i>
@@ -108,25 +108,45 @@
                 <tr data-pk="{{ member.pk }}"
                     data-phone="{{ member.phone_number }}"
                     data-name="{{ member.user.get_full_name }}"
-                    data-email="{% if member.email %}{{ member.email }}{% endif %}"
+                    data-email="{{ member.email }}"
                     data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
                     data-term-joined="{{ member.term_joined }}"
                     data-date-joined="{{ member.date_joined|date:"d.m.y" }}"
-                    data-term-quit="{% if member.quit %}{{ member.term_quit }}{% endif %}"
-                    data-date-quit="{% if member.quit %}{{ member.date_quit|date:"d.m.y" }}{% endif %}"
+                    data-term-quit="{{ member.term_quit|default:"" }}"
+                    data-date-quit="{{ member.date_quit|date:"d.m.y" }}"
                     data-reason-quit="{% if member.quit %}{{ member.reason_quit }}{% endif %}"
-                    data-status='{{ membership_status }}'
+                    data-status="{{ membership_status }}"
                     data-committees="{{ committees }}"
                     data-role="{{ member.role }}"
-                    data-guidance-exemption="{% if member.guidance_exemption %}{% trans "Yes" %}{% else %}{% trans "No" %}{% endif %}"
+                    data-guidance-exemption="
+                            {% if member.guidance_exemption %}
+                                {% trans "Yes" %}
+                            {% else %}
+                                {% trans "No" %}
+                            {% endif %}"
                     data-comment="{{ member.comment }}"
                     data-system-accesses="{% get_system_accesses member request.user %}"
-                    data-edit="{% if member.user == request.user or perms.internal.change_member %}{% url "edit-member" member.pk %}{% endif %}"
-                    data-quit="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}{% url "member-quit" member.pk %}{% endif %}"
-                    data-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{% url "member-undo-quit" member.pk %}{% endif %}"
-                    data-retire="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}{% url "member-retire" member.pk %}{% endif %}"
-                    data-undo-retire="{% if member.retired and perms.internal.can_edit_group_membership %}{% url "member-undo-retire" member.pk %}{% endif %}"
+                    data-edit-url="
+                            {% if member.user == request.user or perms.internal.change_member %}
+                                {% url "edit-member" member.pk %}
+                            {% endif %}"
+                    data-quit-url="
+                            {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
+                                {% url "member-quit" member.pk %}
+                            {% endif %}"
+                    data-undo-quit-url="
+                            {% if member.quit and perms.internal.can_edit_group_membership %}
+                                {% url "member-undo-quit" member.pk %}
+                            {% endif %}"
+                    data-retire-url="
+                            {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
+                                {% url "member-retire" member.pk %}
+                            {% endif %}"
+                    data-undo-retire-url="
+                            {% if member.retired and perms.internal.can_edit_group_membership %}
+                                {% url "member-undo-retire" member.pk %}
+                            {% endif %}"
                 >
                     <td>{{ member.user.get_full_name }}</td>
                     <td>
@@ -143,7 +163,7 @@
                     <td class="computer only">{{ member.term_joined }}</td>
                     <td class="mobile hidden">
                         {% if member.email %}
-                            <a href="mailto:{{ member.email }}">{{ member.email }}</a>
+                            {{ member.email|urlize }}
                         {% endif %}
                     </td>
                     <td class="computer only">
@@ -159,7 +179,7 @@
     <div id="detailed-member-info" class="ui longer modal">
         <div class="header">
             <span id="member-name-header"></span>
-            <a id="member-edit">
+            <a id="member-editUrl">
                 <i class="ui make-col-yellow pencil icon"></i>
             </a>
             <span id="member-status-header"></span>
@@ -196,13 +216,13 @@
                     <td>
                         <b>{% trans "Card number" %}</b>
                     </td>
-                    <td id="member-card-number"></td>
+                    <td id="member-cardNumber"></td>
                 </tr>
                 <tr>
                     <td>
                         <b>{% trans "Study program" %}</b>
                     </td>
-                    <td id="member-study-program"></td>
+                    <td id="member-studyProgram"></td>
                 </tr>
                 </tbody>
             </table>
@@ -216,19 +236,19 @@
                     <td class="six wide column">
                         <b>{% trans "Joined" %}</b>
                     </td>
-                    <td id="member-joined"></td>
+                    <td id="member-dateJoined"></td>
                 </tr>
                 <tr>
                     <td>
                         <b>{% trans "Quit" %}</b>
                     </td>
-                    <td id="member-quit"></td>
+                    <td id="member-dateQuit"></td>
                 </tr>
                 <tr>
                     <td>
                         <b>{% trans "Reason quit" %}</b>
                     </td>
-                    <td id="member-quit-reason"></td>
+                    <td id="member-reasonQuit"></td>
                 </tr>
                 <tr>
                     <td>
@@ -252,7 +272,7 @@
                     <td>
                         <b>{% trans "Guidance exemption" %}</b>
                     </td>
-                    <td id="member-guidance-exemption"></td>
+                    <td id="member-guidanceExemption"></td>
                 </tr>
                 <tr>
                     <td>
@@ -267,7 +287,7 @@
                 <i class="ui make-col-yellow key icon"></i>{% trans "System accesses" %}
             </h4>
             <table class="ui very basic unstackable celled table">
-                <tbody id="member-system-accesses">
+                <tbody id="member-systemAccesses">
 
                 </tbody>
             </table>
@@ -277,19 +297,18 @@
                     <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
                 </h4>
                 <div class="member-action-buttons">
-                    <a id="member-set-quit" class="ui red button">{% trans "Set member as quit" %}</a>
-                    <a id="member-set-not-quit" class="ui green button">{% trans "Set member as not quit" %}</a>
-                    <a id="member-set-retired" class="ui make-bg-yellow button">{% trans "Set member as retired" %}</a>
-                    <a id="member-set-not-retired" class="ui make-bg-yellow button">{% trans "Set member as not retired" %}</a>
+                    <a id="member-quitUrl" class="ui red button">{% trans "Set member as quit" %}</a>
+                    <a id="member-undoQuitUrl" class="ui green button">{% trans "Set member as not quit" %}</a>
+                    <a id="member-retireUrl" class="ui make-bg-yellow button">{% trans "Set member as retired" %}</a>
+                    <a id="member-undoRetireUrl" class="ui make-bg-yellow button">{% trans "Set member as not retired" %}</a>
                 </div>
             {% endif %}
         </div>
     </div>
 
-{% endblock %}
+{% endblock body %}
 
 {% block scripts %}
-    {{ super.block }}
     <script>
         $("div.ui.dropdown").dropdown();
         $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
@@ -313,4 +332,4 @@
             });
         {% endfor %}
     </script>
-{% endblock %}
+{% endblock scripts %}

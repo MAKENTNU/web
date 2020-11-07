@@ -234,14 +234,14 @@ class InheritanceGroupAdminTestCase(TestCase):
         admin = InheritanceGroupAdmin(InheritanceGroup, self.site)
         expected_fields = ['name', 'parents', 'own_permissions']
         form = admin.get_form(self.request)
-        self.assertEqual(list(form.base_fields), expected_fields)
+        self.assertListEqual(list(form.base_fields), expected_fields)
 
         expected_parents = InheritanceGroup.objects.all()
-        self.assertEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
 
         form = admin.get_form(self.request, obj=InheritanceGroup.objects.get(name='Dev'))
         expected_parents = InheritanceGroup.objects.get(name='Dev').get_available_parents()
-        self.assertEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
 
     def test_inherited_permissions(self):
         admin = InheritanceGroupAdmin(InheritanceGroup, self.site)

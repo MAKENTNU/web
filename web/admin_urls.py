@@ -18,9 +18,8 @@ urlpatterns += i18n_patterns(
     prefix_default_language=False,
 )
 
-# Disable admin page login if Dataporten is configured. In this
-# case, all users would log in through Dataporten anyways, so
-# there would be no passwords to login through the admin page login.
+# Disable admin page login if Dataporten is configured,
+# as in that case, all users would log in through Dataporten anyways
 if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
     urlpatterns.insert(0, path('login/', RedirectView.as_view(
         url=f"{reverse('login', host='main')}?next=//admin.{settings.PARENT_HOST}"

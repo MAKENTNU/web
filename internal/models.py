@@ -18,7 +18,7 @@ class Member(models.Model):
         permissions = (
             ("is_internal", "Is a member of MAKE NTNU"),
             ("can_register_new_member", "Can register new member"),
-            ("can_edit_group_membership", "Can edit the groups a member is part of, including (de)activation")
+            ("can_edit_group_membership", "Can edit the groups a member is part of, including (de)activation"),
         )
 
     user = models.OneToOneField(
@@ -61,7 +61,7 @@ class Member(models.Model):
                                             value=property_name == SystemAccess.WEBSITE)
 
             # Add user to the MAKE group
-            self.toggle_membership(True)
+            self.set_membership(True)
 
     @property
     def term_joined(self):
@@ -73,9 +73,9 @@ class Member(models.Model):
             return None
         return date_to_term(self.date_quit)
 
-    def toggle_quit(self, quit_status, reason="", date_quit=timezone.now()):
+    def set_quit(self, quit_status, reason="", date_quit=timezone.now()):
         """
-        Perform all the actions to set a member as quit or undo this action
+        Perform all the actions to set a member as quit or undo this action.
 
         :param quit_status: Indicates if the member has quit
         :param reason: The reason why the member has quit
@@ -88,22 +88,22 @@ class Member(models.Model):
             self.date_quit = None
 
         self.reason_quit = reason
-        self.toggle_committee_membership(not quit_status)
-        self.toggle_membership(not quit_status)
+        self.set_committee_membership(not quit_status)
+        self.set_membership(not quit_status)
 
-    def toggle_retirement(self, retirement_status):
+    def set_retirement(self, retirement_status):
         """
-        Performs all the actions to set a member as retired or to undo this action
+        Perform all the actions to set a member as retired or to undo this action.
 
         :param retirement_status: Indicates if the member has retired
         """
         self.retired = retirement_status
-        self.toggle_committee_membership(not retirement_status)
-        self.toggle_membership(True)
+        self.set_committee_membership(not retirement_status)
+        self.set_membership(True)
 
-    def toggle_committee_membership(self, membership_status):
+    def set_committee_membership(self, membership_status):
         """
-        Adds or removes the user to all the committees of its membership
+        Add or remove the user from all the committees of their membership.
 
         :param membership_status: Indicates if the member should be a part of the commitees
         """
@@ -113,9 +113,9 @@ class Member(models.Model):
             else:
                 committee.group.user_set.remove(self.user)
 
-    def toggle_membership(self, membership_status):
+    def set_membership(self, membership_status):
         """
-        Toggle membership by removing/adding the member to the MAKE group (if it exists)
+        Set membership by removing/adding the member to the MAKE group (if it exists).
 
         :param membership_status: True if the user should be a member of MAKE and false otherwise
         """
@@ -133,7 +133,7 @@ class Member(models.Model):
 @receiver(m2m_changed, sender=Member.committees.through)
 def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs):
     """
-    Makes sure that the member is added/removed from the correct groups as its committee membership changes
+    Makes sure that the member is added/removed from the correct groups as their committee membership changes.
     """
     if action == "pre_add":
         committees = Committee.objects.filter(pk__in=pk_set)
@@ -167,13 +167,13 @@ class SystemAccess(models.Model):
     member = models.ForeignKey(
         to=Member,
         on_delete=models.CASCADE,
-        verbose_name="Member",
+        verbose_name=_("Member"),
     )
 
     @property
     def change_url(self):
         """
-        The URL to change the system access. Depends on the type of system
+        The URL to change the system access. Depends on the type of system.
 
         :return: An URL for the page where the access can be changed. Is an empty string if it should not be changed
         """

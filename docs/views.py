@@ -46,7 +46,7 @@ class OldDocumentationPageContentView(DetailView):
         context_data.update({
             "old": True,
             "content": content,
-            "form": ChangePageVersionForm(initial={"current_content": content})
+            "form": ChangePageVersionForm(initial={"current_content": content}),
         })
         return context_data
 
@@ -99,7 +99,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
     def get_initial(self):
         page = self.get_page()
         return {
-            "content": page.current_content.content if page.current_content else ""
+            "content": page.current_content.content if page.current_content else "",
         }
 
     def get_context_data(self, **kwargs):
@@ -130,10 +130,8 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
 class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
     permission_required = ("docs.delete_page",)
     model = Page
+    queryset = Page.objects.exclude(title="Documentation")
     success_url = reverse_lazy("home")
-
-    def get_queryset(self):
-        return Page.objects.exclude(title="Documentation")
 
 
 class SearchPagesView(TemplateView):

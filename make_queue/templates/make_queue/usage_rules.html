@@ -19,10 +19,8 @@
             {% endif %}
         </div>
         <div>
-            {% autoescape off %}
-                {{ usage_rules.content }}
-            {% endautoescape %}
+            {{ usage_rules.content|safe }}
         </div>
     </div>
 
-{% endblock %}
+{% endblock body %}

@@ -1,4 +1,4 @@
-{% extends 'web/base.html' %}
+{% extends "web/base.html" %}
 {% load static %}
 {% load thumbnail %}
 {% load checkin_tags %}
@@ -6,7 +6,7 @@
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
+    <link rel="stylesheet" href="{% static "checkin/css/profile.css" %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -28,15 +28,15 @@
             </div>
             <br>
             <div class="ui container">
-                <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="post"
+                <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden>
+                    <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden/>
                 </form>
             </div>
         </div>
 
-        <br>
+        <br/>
 
         {% if make_member %}
 
@@ -61,19 +61,19 @@
                 {% endfor %}
             </div>
 
-            <br>
+            <br/>
 
             <div class="container">
-                <form class="ui form" action="" method="post">
+                <form class="ui form" action="" method="POST">
                     {% csrf_token %}
-                    <input id="rating-input" type="number" name="rating" value="1" hidden>
+                    <input id="rating-input" type="number" name="rating" value="1" hidden/>
                     <div class="inline fields">
                         <div class="ten wide field">
                             <label>{% trans "Add skills" %}</label>
                             <select class="ui fluid dropdown search" name="skill" required>
                                 <option value="">{% trans "Select/search" %}</option>
                                 {% for skill in all_skills %}
-                                    <option value="{{ skill.id }}">{{ skill|locale_title:request.LANGUAGE_CODE }}</option>
+                                    <option value="{{ skill.pk }}">{{ skill|locale_title:request.LANGUAGE_CODE }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -90,7 +90,7 @@
 
         {% endif %}
 
-        <br>
+        <br/>
 
         {% if not profile.user.card_number %}
             <div class="card-register">
@@ -99,7 +99,7 @@
                     {% trans "Place the card on the card reader and press the button below to register the card" %}
                 </p>
                 <button class="ui button register-profile">{% trans "Register" %}</button>
-                <div id="duplicate_error" class="ui negative small message" style="display: none;">
+                <div id="duplicate-error" class="ui negative small message" style="display: none;">
                     <i class="close icon"></i>
                     <div class="header">{% trans "Card number is already in use" %}</div>
                     <p>{% trans "Contact" %} <a href="mailto:dev@makentnu.no">styret@makentnu.no</a> {% trans "to fix the problem." %}</p>
@@ -112,25 +112,26 @@
 
 {% block scripts %}
     <script>
-        $('.ui.rating').rating();
-        $('.ui.dropdown').dropdown();
-        $('.rating.skill-lvl').rating('disable');
+        $(".ui.rating").rating();
+        $(".ui.dropdown").dropdown();
+        $(".rating.skill-lvl").rating('disable');
 
-        $('#star-rating').click(function () {
-            let rating = $(this).rating('get rating');
-            if (rating === $('#rating-input').val()) {
-                $('#rating-input').val(0);
+        $("#star-rating").click(function () {
+            const rating = $(this).rating('get rating');
+            const $ratingInput = $("#rating-input");
+            if (rating === $ratingInput.val()) {
+                $ratingInput.val(0);
                 $(this).rating('set rating', 0);
             } else {
-                $('#rating-input').val(rating);
+                $ratingInput.val(rating);
             }
         });
 
-        $('.register-profile').click(function () {
-            register_profile_post($(this));
+        $(".register-profile").click(function () {
+            registerProfilePost($(this));
         });
 
-        function register_profile_post(element) {
+        function registerProfilePost(element) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
@@ -163,18 +164,18 @@
                 },
                 error: function (jqXHR, error, errorthrown) {
                     if (jqXHR.status === 409) {
-                        $("#duplicate_error").fadeIn();
+                        $("#duplicate-error").fadeIn();
                     }
-                }
+                },
             });
         }
 
-        $('#profile-pic').click(function () {
-            $('#input-image').click();
+        $("#profile-pic").click(function () {
+            $("#input-image").click();
         });
 
-        $('#input-image').change(function () {
-            $('#image-form').submit();
+        $("#input-image").change(function () {
+            $("#image-form").submit();
         });
 
         $(".message .close").click(function () {

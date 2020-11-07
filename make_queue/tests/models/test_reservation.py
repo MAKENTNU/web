@@ -67,11 +67,11 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                            end_time=timezone.now() + timedelta_end, special=special, special_text=special_text)
 
     def set_reservation_future_limit_days(self, days):
-        self.reservation_future_limit_days = Reservation.reservation_future_limit_days
-        Reservation.reservation_future_limit_days = days
+        self.reservation_future_limit_days = Reservation.RESERVATION_FUTURE_LIMIT_DAYS
+        Reservation.RESERVATION_FUTURE_LIMIT_DAYS = days
 
     def reset_reservation_future_limit_days(self):
-        Reservation.reservation_future_limit_days = self.reservation_future_limit_days
+        Reservation.RESERVATION_FUTURE_LIMIT_DAYS = self.reservation_future_limit_days
 
     def give_user_event_permission(self):
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))

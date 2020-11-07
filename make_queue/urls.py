@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required, permission_required
-from django.urls import include, path, re_path, register_converter
+from django.urls import include, path, register_converter
 
 from . import converters
 from .views import admin, api, quota, reservation
@@ -8,10 +8,8 @@ register_converter(converters.SpecificMachineType, "machine_type")
 register_converter(converters.SpecificMachine, "machine")
 register_converter(converters.MachineReservation, "reservation")
 register_converter(converters.UserByUsername, "username")
-register_converter(converters.Date, "%Y/%m/%d")
 register_converter(converters.Year, "year")
 register_converter(converters.Week, "week")
-register_converter(converters.DateTime, "time")
 
 machine_url_patterns = [
     path('create/', permission_required("make_queue.add_machine")(reservation.machine.CreateMachineView.as_view()), name="create_machine"),
@@ -67,7 +65,7 @@ course_url_patterns = [
 ]
 
 urlpatterns = [
-    re_path('^', reservation.machine.MachineView.as_view(), name="reservation_machines_overview"),
+    path('', reservation.machine.MachineView.as_view(), name="reservation_machines_overview"),
     path('machine/', include(machine_url_patterns)),
     path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
     path('calendar/', include(calendar_url_patterns)),

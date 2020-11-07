@@ -1,4 +1,4 @@
-{% extends 'web/base.html' %}
+{% extends "web/base.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -9,14 +9,9 @@
     {{ form.media }}
 {% endblock head %}
 
-{% block scripts %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-{% endblock scripts %}
-
 {% block body %}
-    <h1 class="ui centered header">{% block form-header %}{% trans "Edit time" %}{% endblock %}</h1>
-    <form class="ui form text container" method="post" enctype="multipart/form-data">
+    <h1 class="ui centered header">{% block form_header %}{% trans "Edit time" %}{% endblock %}</h1>
+    <form class="ui form text container" method="POST" enctype="multipart/form-data">
         {% for error in form.non_field_errors %}
             <div class="ui negative message">
                 {{ error }}
@@ -71,7 +66,7 @@
             </div>
         </div>
 
-        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
+        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
         <a class="ui right floated red button" href="{% url "admin-event" form.event.initial %}">
             {% trans "Cancel" context "abort action" %}
         </a>

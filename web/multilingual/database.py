@@ -91,7 +91,7 @@ class MultiLingualFieldAdmin(admin.ModelAdmin):
 
             # Want to copy widget, as to not override the template for the normal forms
             widget = type("AdminMultiLingualTextField", (db_field.widget,), properties)
-            # Different template for admin page, without Fomantic UI
+            # Different template for admin page, without Fomantic-UI
             widget.template_name = "web/forms/widgets/admin_multi_lingual_text_field.html"
             return db_field.formfield(widget=widget, **kwargs)
         return super().formfield_for_dbfield(db_field, request, **kwargs)

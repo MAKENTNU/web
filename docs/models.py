@@ -8,11 +8,11 @@ from users.models import User
 
 class Page(models.Model):
     """Model for each individual documentation page"""
-    title_regex = r"^[0-9A-Za-z ():]+$"
-    title_validator = RegexValidator(regex=title_regex,
+    TITLE_REGEX = r"^[0-9A-Za-z ():]+$"
+    TITLE_VALIDATOR = RegexValidator(regex=TITLE_REGEX,
                                      message=_("Only numbers, letters, space, parenthesises and colon are allowed"))
 
-    title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[title_validator])
+    title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[TITLE_VALIDATOR])
     created_by = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,

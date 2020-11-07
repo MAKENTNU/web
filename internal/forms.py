@@ -29,7 +29,6 @@ class EditMemberForm(ModelForm):
 
     class Meta:
         model = Member
-        fields = "__all__"
         exclude = ["user", "date_joined", "date_quit", "quit", "reason_quit", "retired"]
 
         widgets = {

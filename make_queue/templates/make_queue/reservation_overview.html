@@ -6,12 +6,12 @@
 
 {% block title %}
     {{ machine.name }} - {{ machine.machine_model }}
-{% endblock %}
+{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'make_queue/css/overview.css' %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static "make_queue/css/general.css" %}"/>
+    <link rel="stylesheet" href="{% static "make_queue/css/overview.css" %}"/>
+{% endblock head %}
 
 {% block body %}
     {% can_use_machine machine user as can_use %}
@@ -76,7 +76,7 @@
                 </div>
                 <div id="fader"></div>
                 <i id="closefullscreen" class="ui times icon"></i>
-                <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
+                <link rel="stylesheet" href="{% static "make_queue/css/stream.css" %}"/>
                 <script>var streamID = "{% sanitize_stream_name machine %}";</script>
                 <script src="{% static "make_queue/js/stream.js" %}"></script>
             {% endif %}

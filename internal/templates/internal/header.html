@@ -6,7 +6,7 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
-<link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
+<link rel="stylesheet" href="{% static "web/css/header.css" %}"/>
 
 <header id="header">
     <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
@@ -75,14 +75,14 @@
 </form>
 
 <script>
-    $('#nav-user-dropdown').dropdown({action: "nothing"});
+    $("#nav-user-dropdown").dropdown({action: "nothing"});
 
     $(".lang-link").click(function (event) {
         event.preventDefault();
         $("#lang-form").submit();
     });
 
-    $('#burger').click(function () {
-        $('#header').toggleClass('active');
+    $("#burger").click(function () {
+        $("#header").toggleClass('active');
     });
 </script>

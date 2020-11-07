@@ -3,7 +3,7 @@ from django import template
 register = template.Library()
 
 
-@register.simple_tag()
+@register.simple_tag
 def get_absolute_uri_no_query(request):
     """
     Returns the absolute URI of the request with no query parameters

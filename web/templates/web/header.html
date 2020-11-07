@@ -7,8 +7,8 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
-<link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
-<link rel="stylesheet" type="text/css" href="{% static "announcements/css/announcement.css" %}">
+<link rel="stylesheet" href="{% static "web/css/header.css" %}"/>
+<link rel="stylesheet" href="{% static "announcements/css/announcement.css" %}"/>
 
 <header id="header">
     <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
@@ -83,7 +83,7 @@
                 <div class="make-bg-blue bubble-background"></div>
 
                 <nav class="menu transition" aria-label="User">
-                    {% if user|has_any_permissions or user.is_superuser %}
+                    {% if user|has_any_permissions %}
                         <a class="item" href="{% url 'adminpanel' %}">
                             <div class="text">{% trans "Administration" %}</div>
                         </a>
@@ -139,7 +139,7 @@
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>
-        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
+        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/> {# removes "/en" #}
     {% else %}
         <input name="language" type="hidden" value="en"/>
         <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
@@ -147,7 +147,7 @@
 </form>
 
 <script>
-    $('#nav-user-dropdown, #makerspace-dropdown')
+    $("#nav-user-dropdown, #makerspace-dropdown")
         .dropdown({
             action: "nothing",
             onShow: function () {
@@ -165,7 +165,7 @@
         $("#lang-form").submit();
     });
 
-    $('#burger').click(function () {
-        $('#header').toggleClass('active');
+    $("#burger").click(function () {
+        $("#header").toggleClass("active");
     });
 </script>

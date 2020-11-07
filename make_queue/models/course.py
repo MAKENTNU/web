@@ -18,6 +18,8 @@ class Printer3DCourse(models.Model):
         constraints = (
             CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
         )
+        verbose_name = _("3D printer course")
+        verbose_name_plural = _("3D printer courses")
 
     class Status(models.TextChoices):
         REGISTERED = "registered", _("Registered")

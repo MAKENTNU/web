@@ -5,7 +5,7 @@ from django_hosts import host
 
 from . import settings
 
-# Overwrite Django's `reverse()` function, to make it work with subdomains
+# Monkey patch Django's `reverse()` function, to make it work with subdomains
 ckeditor_uploader_widgets.reverse = django_hosts.reverse
 
 host_patterns = (
@@ -17,7 +17,7 @@ host_patterns = (
 
 # A list of all possible subdomains
 subdomains = (
-    "i", "internal", "internt", "admin", "docs", ""
+    "i", "internal", "internt", "admin", "docs", "",
 )
 
 # This allows the next parameter in login to redirect to pages on all the subdomains

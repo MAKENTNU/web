@@ -3,13 +3,12 @@
 
 
 {% block head %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static "web/css/error.css" %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static "web/css/error.css" %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui text container">
-        <h1 class="text-centered make-col-blue">{% block error-title %}{% endblock %}</h1>
-        <div class="error-text">{% block error-text %}{% endblock %}</div>
+        <h1 class="text-centered make-col-blue">{% block error_title %}{% endblock %}</h1>
+        <div class="error-text">{% block error_text %}{% endblock %}</div>
     </div>
-{% endblock %}
+{% endblock body %}

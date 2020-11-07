@@ -74,7 +74,7 @@ class ReservationRuleTests(TestCase):
             Period(0, rule),
             Period(2, rule),
             Period(4, rule),
-            Period(5, rule)
+            Period(5, rule),
         ]
 
         self.assertEqual(len(time_periods), len(correct_timeperiods))

@@ -12,7 +12,7 @@
 {% block og_description %}{% trans "A list of equipment" %}{% endblock og_description %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment.css" %}"/>
+    <link rel="stylesheet" href="{% static "makerspace/css/equipment.css" %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -28,14 +28,12 @@
                     alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
                 />
 
-                {% block admin-page %}
-                    {% if user|has_any_equipment_permissions %}
-                        <br/>
-                        <a class="ui make-bg-yellow button" href="{% url "makerspace-equipment-edit" equipment.id %}">
-                            <i class="ui edit icon"></i>{% trans "Edit" %}
-                        </a>
-                    {% endif %}
-                {% endblock admin-page %}
+                {% if user|has_any_equipment_permissions %}
+                    <br/>
+                    <a class="ui make-bg-yellow button" href="{% url "makerspace-equipment-edit" equipment.pk %}">
+                        <i class="ui edit icon"></i>{% trans "Edit" %}
+                    </a>
+                {% endif %}
 
                 <h1>{{ equipment.title }}</h1>
                 <p class="equipment-description">

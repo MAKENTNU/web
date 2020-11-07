@@ -1,80 +1,42 @@
-.make_collapsed:not(:first-child) {
-    padding-left: 0 !important;
-}
-
-.make_collapsed:not(:last-child) {
-    padding-right: 0 !important;
-}
-
-.make_collapsed_top_bottom:not(:first-child) {
-    padding-top: 0 !important;
-}
-
-.make_collapsed_top_bottom:not(:last-child) {
-    padding-bottom: 0 !important;
-}
-
-.make_collapsed_header {
+.make-collapsed-header {
     margin-bottom: 0 !important;
-}
-
-.make_collapsed_header_all {
-    margin-bottom: 0 !important;
-    margin-top: 0 !important;
-}
-
-.make_collapsed_top_bottom_all {
-    padding-bottom: 0 !important;
-    padding-top: 0 !important;
 }
 
 .large-text {
     font-size: 1.2em;
 }
 
-.make_row_fill {
+.make-row-fill {
     height: 100%;
 }
 
-.make_hidden {
-    display: none !important;
-}
-
-.make_non_visible {
-    visibility: hidden !important;
-}
-
-.make_right_floated {
+.make-right-floated {
     float: right;
     display: inline-block;
 }
 
-.make_my_reservation_event {
-    border-left: 2px solid #008000;
-}
-
-.make_my_reservation_tablet {
+.make-my-reservation-tablet {
     padding: 2em 0 2em 0;
 }
 
-.make_my_reservation_tablet .card {
+.make-my-reservation-tablet .card {
     flex: auto;
 }
 
-.make_my_reservation_button_pad {
+.make-my-reservation-button-pad {
     margin-top: -2em;
     padding-bottom: 1.2em !important;
 }
 
-.make_my_reservation_blue_link {
+.make-my-reservation-blue-link {
     color: #4183C4 !important;
 }
 
-.error_border {
-    border-color: #FF0000 !important;
+.error-border {
+    border-color: red !important;
 }
 
-.float_fix::after {
+.float-fix::after {
     content: "";
     display: block;
     clear: both;
@@ -152,14 +114,14 @@
 
 
 @media screen and (min-width: 800px) {
-    .make_my_reservation_tablet {
+    .make-my-reservation-tablet {
         display: none !important;
     }
 }
 
 
 @media screen and (max-width: 800px) {
-    .make_my_reservation_desktop {
+    .make-my-reservation-desktop {
         display: none !important;
     }
 }

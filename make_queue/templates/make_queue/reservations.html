@@ -1,4 +1,4 @@
-{% extends 'web/base.html' %}
+{% extends "web/base.html" %}
 {% load i18n %}
 {% load reservation_extra %}
 {% load static %}
@@ -10,11 +10,11 @@
     {% else %}
         {% trans "My reservations" %}
     {% endif %}
-{% endblock %}
+{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static "make_queue/css/general.css" %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -30,9 +30,9 @@
             <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
                 {% trans "Machines" %}
             </a>
-            <div class="make_right_floated make_row_fill">
+            <div class="make-right-floated make-row-fill">
                 <div class="field">
-                    <div id="hide_old_reservations" class="ui checkbox">
+                    <div id="hide-old-reservations" class="ui checkbox">
                         <input class="hidden" type="checkbox" checked/>
                         <label>{% trans "Hide previous reservations" %}</label>
                     </div>
@@ -40,8 +40,8 @@
             </div>
         </div>
 
-        <!-- Desktop table -->
-        <table class="ui table make_my_reservation_desktop">
+        {# Desktop table #}
+        <table class="ui table make-my-reservation-desktop">
             <thead>
             <tr>
                 <th>{% trans "Reservation" %}</th>
@@ -58,11 +58,11 @@
             <tbody>
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
-                <tr class="make_my_reservation_desktop {% if not future_reservation %}make_hidden{% endif %}"
+                <tr class="make-my-reservation-desktop {% if not future_reservation %}display-none{% endif %}"
                     data-is-future-reservation="{{ future_reservation }}">
 
                     <td>
-                        <div class="ui small header make_collapsed_header">{{ reservation.machine.name }}</div>
+                        <div class="ui small header make-collapsed-header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
                         <div>
                             <a href="{{ reservation.machine.location_url }}" target="_blank">
@@ -81,7 +81,7 @@
                     </td>
                     {% if reservation.event %}
                         <td>
-                            <b class="large-text">{{ reservation.event.event.title }}</b><br>
+                            <b class="large-text">{{ reservation.event.event.title }}</b><br/>
                             {{ reservation.event.start_time|date:"d/m/Y" }}
                         </td>
                     {% elif reservation.special %}
@@ -110,23 +110,23 @@
                         {% can_delete_reservation reservation user as can_delete %}
                         {% can_mark_reservation_as_finished reservation as can_mark_finished %}
                         {% if can_mark_finished %}
-                            <form method="post" action="{% url 'mark_reservation_done' %}">
+                            <form method="POST" action="{% url 'mark_reservation_done' %}">
                                 {% csrf_token %}
-                                <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                 <input class="ui button green" type="submit" value="{% trans "Mark as done" %}"/>
                                 {% if admin %}
-                                    <input class="make_hidden" type="text" name="next"
+                                    <input class="display-none" type="text" name="next"
                                            value="{% url 'admin_reservation' %}"/>
                                 {% endif %}
                             </form>
                         {% elif can_delete %}
-                            <form method="post" action="{% url 'delete_reservation' %}">
+                            <form method="POST" action="{% url 'delete_reservation' %}">
                                 {% csrf_token %}
-                                <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                 <input class="ui button red" type="submit"
-                                       value="{% trans "Cancel" context "cancel reservation" %}">
+                                       value="{% trans "Cancel" context "cancel reservation" %}"/>
                                 {% if admin %}
-                                    <input class="make_hidden" type="text" name="next"
+                                    <input class="display-none" type="text" name="next"
                                            value="{% url 'admin_reservation' %}"/>
                                 {% endif %}
                             </form>
@@ -138,17 +138,17 @@
             </tbody>
         </table>
 
-        <div class="ui cards make_my_reservation_tablet">
+        <div class="ui cards make-my-reservation-tablet">
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
-                <div class="card {% if not future_reservation %}make_hidden{% endif %}"
+                <div class="card {% if not future_reservation %}display-none{% endif %}"
                      data-is-future-reservation="{{ future_reservation }}">
 
                     <div class="content">
                         <div class="header">{{ reservation.machine.name }}</div>
                         <div class="meta">
                             {{ reservation.machine.model }}<br/>
-                            <a class="make_my_reservation_blue_link" href="{{ reservation.machine.location_url }}"
+                            <a class="make-my-reservation-blue-link" href="{{ reservation.machine.location_url }}"
                                target="_blank">
                                 <i class="location arrow icon"></i>{{ reservation.machine.location }}
                             </a>
@@ -164,13 +164,13 @@
                     </div>
 
                     <div class="ui bottom attached buttons">
-                        <a class="ui primary button make_my_reservation_button_pad"
+                        <a class="ui primary button make-my-reservation-button-pad"
                            href="{% calendar_url_reservation reservation %}">
                             {% trans "Calendar" %}
                         </a>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a class="ui make-bg-yellow button make_my_reservation_button_pad"
+                            <a class="ui make-bg-yellow button make-my-reservation-button-pad"
                                href="{% url 'change_reservation' reservation=reservation %}">
                                 {% trans "Change" %}
                             </a>
@@ -178,25 +178,25 @@
                         {% can_mark_reservation_as_finished reservation as can_mark_finished %}
                         {% can_delete_reservation reservation user as can_delete %}
                         {% if can_mark_finished %}
-                            <div class="ui green button reservation_mark_done">
+                            <div class="ui green button reservation-mark-done">
                                 {% trans "Done" %}
-                                <form method="post" action="{% url 'mark_reservation_done' %}">
+                                <form method="POST" action="{% url 'mark_reservation_done' %}">
                                     {% csrf_token %}
-                                    <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                    <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                     {% if admin %}
-                                        <input class="make_hidden" type="text" name="next"
+                                        <input class="display-none" type="text" name="next"
                                                value="{% url 'admin_reservation' %}"/>
                                     {% endif %}
                                 </form>
                             </div>
                         {% elif can_delete %}
-                            <div class="ui button red reservation_calendar_delete">
+                            <div class="ui button red reservation-calendar-delete">
                                 {% trans "Cancel" context "cancel reservation" %}
-                                <form method="post" action="{% url 'delete_reservation' %}">
+                                <form method="POST" action="{% url 'delete_reservation' %}">
                                     {% csrf_token %}
-                                    <input class="make_hidden" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                    <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                     {% if admin %}
-                                        <input class="make_hidden" type="text" name="next"
+                                        <input class="display-none" type="text" name="next"
                                                value="{% url 'admin_reservation' %}"/>
                                     {% endif %}
                                 </form>
@@ -209,5 +209,5 @@
         </div>
     </div>
 
-    <script src="{% static 'make_queue/js/my_reservations.js' %}"></script>
-{% endblock %}
+    <script src="{% static "make_queue/js/my_reservations.js" %}"></script>
+{% endblock body %}

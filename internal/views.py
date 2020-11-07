@@ -90,7 +90,7 @@ class MemberQuitView(UpdateView):
                 _("Member was not set to quit as the member has already quit or retired."),
             )
         else:
-            member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
+            member.set_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
             member.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -106,7 +106,7 @@ class MemberUndoQuitView(RedirectView):
                 _("Member's quit status was not undone, as the member had not quit."),
             )
         else:
-            member.toggle_quit(False)
+            member.set_quit(False)
             member.save()
         return reverse_lazy("members", args=(member.pk,))
 
@@ -122,7 +122,7 @@ class MemberRetireView(RedirectView):
                 _("Member was not set to retired as the member has already quit or retired."),
             )
         else:
-            member.toggle_retirement(True)
+            member.set_retirement(True)
             member.save()
         return reverse_lazy("members", args=(member.pk,))
 
@@ -138,7 +138,7 @@ class MemberUndoRetireView(RedirectView):
                 _("Member's retirement was not undone, as the member was not retired."),
             )
         else:
-            member.toggle_retirement(False)
+            member.set_retirement(False)
             member.save()
         return reverse_lazy("members", args=(member.pk,))
 

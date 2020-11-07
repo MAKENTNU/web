@@ -33,7 +33,6 @@ class AdminPanelView(UserPassesTestMixin, TemplateView):
         "make_queue.change_printer3dcourse",
         "groups.can_edit_group",
         "makerspace.add_equipment", "makerspace.change_equipment", "makerspace.delete_equipment",
-        "makerspace.change_makerspace",
     ]
 
     def test_func(self):

@@ -20,7 +20,6 @@ class ReservationExtraTestCases(TestCase):
     def test_calendar_reservation_url(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 12, 9, 12, 24))
         user = User.objects.create_user("user", "user@makentnu.no", "weak_pass")
-        user.save()
 
         printer_machine_type = MachineType.objects.get(pk=1)
         Quota.objects.create(user=user, number_of_reservations=2, ignore_rules=True,

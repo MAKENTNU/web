@@ -4,25 +4,25 @@
 
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "news/css/ticket.css" %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static "news/css/ticket.css" %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
-        {% if object.user == request.user or perms.news.view_eventticket %}
-            <h1>{% trans "Ticket for" %} "{{ object.event.title }}{{ object.timeplace.event.title }}"</h1>
+        {% if ticket.user == request.user or perms.news.view_eventticket %}
+            <h1>{% trans "Ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
             <div>
-                <b>{% trans "Registered to" %}:</b> {{ object.name }},
-                <a href="mailto:{{ object.email }}">{{ object.email }}</a>
+                <b>{% trans "Registered to" %}:</b> {{ ticket.name }},
+                {{ ticket.email|urlize }}
             </div>
 
-            {% include "news/ticket.html" with ticket=object %}
+            {% include "news/ticket.html" with ticket=ticket %}
         {% else %}
             <div class="ui error message">
                 {% trans "This ticket is registered to another account. Please" %}
-                <a href="{% url "login" %}?next={% url "ticket" pk=object.uuid %}">{% trans "login" %}</a>
+                <a href="{% url "login" %}?next={% url "ticket" pk=ticket.uuid %}">{% trans "login" %}</a>
                 {% trans "to the correct account to see your ticket." %}
             </div>
         {% endif %}
     </div>
-{% endblock %}
+{% endblock body %}

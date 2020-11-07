@@ -5,7 +5,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.urls import reverse
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView, View
 
 from ...forms import Printer3DCourseForm
@@ -30,6 +30,7 @@ class CreateRegistrationView(PermissionRequiredMixin, CreateView):
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = "make_queue/course/registration_create.html"
+    success_url = reverse_lazy("create_course_registration_success")
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -37,26 +38,19 @@ class CreateRegistrationView(PermissionRequiredMixin, CreateView):
             context_data["is_next"] = True
         return context_data
 
-    def get_success_url(self):
-        return reverse("create_course_registration_success")
-
 
 class EditRegistrationView(PermissionRequiredMixin, UpdateView):
     permission_required = ("make_queue.change_printer3dcourse",)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = "make_queue/course/registration_edit.html"
-
-    def get_success_url(self):
-        return reverse("course_panel")
+    success_url = reverse_lazy("course_panel")
 
 
 class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
     permission_required = ("make_queue.delete_printer3dcourse",)
     model = Printer3DCourse
-
-    def get_success_url(self):
-        return reverse("course_panel")
+    success_url = reverse_lazy("course_panel")
 
 
 class BulkStatusUpdate(View):

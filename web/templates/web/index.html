@@ -5,12 +5,12 @@
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+    <link rel="stylesheet" href="{% static "web/css/index.css" %}"/>
     <script src="{% static "web/js/image_link.js" %}"></script>
     <script src="{% static "lib/parallax/parallax.min.js" %}"></script>
 {% endblock head %}
 
-{% block padding-top %}{% endblock %}
+{% block padding_top %}{% endblock %}
 
 {% block header %}
     {{ block.super }}
@@ -20,7 +20,7 @@
     {% for announcement in announcements %}
         {% include "announcements/announcement.html" with announcement=announcement %}
     {% endfor %}
-{% endblock %}
+{% endblock header %}
 
 {% block body %}
     <div class="top">
@@ -88,11 +88,13 @@
             {% endfor %}
         </div>
     </div>
+{% endblock body %}
 
+{% block scripts %}
     <script>
-        $('.clickable').click(function () {
+        $(".clickable").click(function () {
             window.location.href = $(this).attr('href');
         });
-        $('.parallax-window').parallax({'speed': 0.5});
+        $(".parallax-window").parallax({'speed': 0.5});
     </script>
-{% endblock body %}
+{% endblock scripts %}

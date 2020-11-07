@@ -7,7 +7,7 @@ from web.fields import URLTextField
 from web.multilingual.database import MultiLingualTextField
 
 
-class AnnouncementManager(models.Manager):
+class AnnouncementQuerySet(models.QuerySet):
 
     def valid(self):
         """Finds all announcements that are currently valid"""
@@ -48,7 +48,7 @@ class Announcement(models.Model):
                                       help_text=_("The announcement will be shown until this date. If none is given, it"
                                                   " is shown indefinitely."))
 
-    objects = AnnouncementManager()
+    objects = AnnouncementQuerySet.as_manager()
 
     def __str__(self):
         return f"{self.get_classification_display()}: {self.content}"

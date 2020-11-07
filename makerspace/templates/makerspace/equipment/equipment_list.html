@@ -6,8 +6,7 @@
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment.css" %}"/>
-    <script src="{% static "web/js/image_link.js" %}"></script>
+    <link rel="stylesheet" href="{% static "makerspace/css/equipment.css" %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -19,7 +18,7 @@
             {% for equipment in equipment_list %}
 
                 {# For the images #}
-                <a class="equipment-img" href="{% url 'makerspace-equipment' equipment.id %}">
+                <a class="equipment-img" href="{% url 'makerspace-equipment' equipment.pk %}">
                     <img {% thumbnail equipment.image "250x250" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
                     {% empty %}
@@ -39,7 +38,7 @@
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}" alt=""/>
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}" alt=""/>
                     <h2 class="equipment-title">
-                        <a class="make-col-yellow" href="{% url 'makerspace-equipment' equipment.id %}">{{ equipment.title }}</a>
+                        <a class="make-col-yellow" href="{% url 'makerspace-equipment' equipment.pk %}">{{ equipment.title }}</a>
                     </h2>
                 </div>
 

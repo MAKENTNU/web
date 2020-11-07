@@ -1,15 +1,15 @@
-{% extends 'web/base.html' %}
+{% extends "web/base.html" %}
 {% load reservation_extra %}
 {% load static %}
 {% load i18n %}
 
 
-{% block title %}{% trans "Machines" %}{% endblock %}
+{% block title %}{% trans "Machines" %}{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static "make_queue/css/general.css" %}"/>
+    <link rel="stylesheet" href="{% static "make_queue/css/stream.css" %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -41,9 +41,9 @@
             </div>
             <div class="ui cards">
                 {% for machine in machine_type.existing_machines %}
-                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
+                    {% include "make_queue/machine_card.html" with machine=machine calendar_link=1 %}
                 {% endfor %}
             </div>
         {% endfor %}
     </div>
-{% endblock %}
+{% endblock body %}

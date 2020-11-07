@@ -2,7 +2,7 @@ from .models import Content, Page
 
 
 class PageByTitle:
-    regex = Page.title_regex[1:-1]
+    regex = Page.TITLE_REGEX[1:-1]
 
     def to_python(self, value):
         try:
