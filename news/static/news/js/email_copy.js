@@ -18,7 +18,7 @@ $(document).ready(function () {
 
         $(this)
             .popup({
-                title    : 'Successfully copied to clipboard!',
+                title: 'Successfully copied to clipboard!',
                 on: 'manual',
                 exclusive: true
             })
