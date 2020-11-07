@@ -410,7 +410,7 @@ class AdminEventTicketView(TemplateView):
             "tickets": event.eventticket_set.order_by("-active").all(),
             "object": event,
             "event": event,
-            "ticket_emails": event.eventticket_set.filter(active=True).values('email', flat=True)
+            "ticket_emails": ",".join(event.eventticket_set.filter(active=True).values_list('_email',flat=True))
         })
         return context_data
 
@@ -427,6 +427,7 @@ class AdminTimeplaceTicketView(TemplateView):
             "tickets": timeplace.eventticket_set.order_by("-active").all(),
             "event": timeplace.event,
             "object": timeplace,
+            "ticket_emails": ",".join(timeplace.eventticket_set.filter(active=True).values_list('_email',flat=True))
         })
         return context_data
 
