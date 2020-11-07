@@ -1782,7 +1782,7 @@ msgstr "E-poster"
 
 #: news/templates/news/admin_event_tickets.html:57
 msgid "Click to copy email of active participants to clipboard"
-msgstr "Klikk her for å kopiere eposter til aktive deltagere til utklipstavlen"
+msgstr "Klikk her for å kopiere eposter til aktive deltagere til utklippstavlen"
 
 #: news/templates/news/admin_events.html:30
 #, python-format
