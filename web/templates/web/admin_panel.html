@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 {% load permission_tags %}
@@ -8,7 +8,7 @@
     <div class="ui container">
         <h1>{% trans "Admin panel" %}</h1>
         <div class="ui four doubling stackable cards">
-            {% if user|has_any_article_permission or user.is_superuser %}
+            {% if user|has_any_article_permissions %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'admin-articles' %}">
                         <div class="center aligned header">
@@ -20,7 +20,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_event_permission or user.is_superuser %}
+            {% if user|has_any_event_permissions %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'admin-events' %}">
                         <div class="center aligned header">

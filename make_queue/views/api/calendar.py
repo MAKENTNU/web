@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.dateparse import parse_datetime
 
-from ...models.models import Reservation, ReservationRule
+from ...models.models import Machine
 
 
 def reservation_type(reservation, user):
@@ -15,12 +15,12 @@ def reservation_type(reservation, user):
     return "normal"
 
 
-def get_reservations(request, machine):
+def get_reservations(request, machine: Machine):
     start_date = parse_datetime(request.GET.get("startDate"))
     end_date = parse_datetime(request.GET.get("endDate"))
 
     reservations = []
-    for reservation in Reservation.objects.filter(machine=machine, start_time__lt=end_date, end_time__gt=start_date):
+    for reservation in machine.reservations.filter(start_time__lt=end_date, end_time__gt=start_date):
         reservation_data = {
             "start": reservation.start_time,
             "end": reservation.end_time,

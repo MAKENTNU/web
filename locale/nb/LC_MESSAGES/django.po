@@ -159,6 +159,32 @@ msgstr "Kortnummeret er allerede i bruk"
 msgid "Card number must be ten digits long."
 msgstr "Kortnummeret må være ti siffer langt"
 
+#: checkin/models.py:8 checkin/models.py:70
+#: checkin/templates/checkin/suggest_skill.html:17
+msgid "Title (Norwegian)"
+msgstr "Tittel (norsk)"
+
+#: checkin/models.py:9 checkin/models.py:71
+#: checkin/templates/checkin/suggest_skill.html:31
+msgid "Title (English)"
+msgstr "Tittel (engelsk)"
+
+#: checkin/models.py:10 checkin/models.py:76
+msgid "Illustration image"
+msgstr "Illustrasjonsbilde"
+
+#: checkin/models.py:28
+msgid "Profile picture"
+msgstr "Profilbilde"
+
+#: checkin/models.py:29
+msgid "Checked in"
+msgstr "Innsjekket"
+
+#: checkin/models.py:30
+msgid "Last checked in"
+msgstr "Sist sjekket inn"
+
 #: checkin/models.py:43
 msgid "Beginner"
 msgstr "Nybegynner"
@@ -243,16 +269,12 @@ msgid "Scan card"
 msgstr "Skann kort"
 
 #: checkin/templates/checkin/skills.html:15
-msgid "People with these skills are at<br>Makerverkstedet right now"
-msgstr "Folk med disse ferdighetene er på<br>Makerverkstedet akkurat nå"
+msgid "People with these skills are at<br/>Makerverkstedet right now"
+msgstr "Folk med disse ferdighetene er på<br/>Makerverkstedet akkurat nå"
 
 #: checkin/templates/checkin/suggest_skill.html:11
 msgid "Suggest new skills at Makerverkstedet"
 msgstr "Foreslå nye ferdigheter"
-
-#: checkin/templates/checkin/suggest_skill.html:17
-msgid "Title (norwegian)"
-msgstr "Tittel (norsk)"
 
 #: checkin/templates/checkin/suggest_skill.html:25
 #: docs/templates/docs/documentation_page_create.html:25
@@ -261,10 +283,6 @@ msgstr "Tittel (norsk)"
 #: make_queue/templates/make_queue/quota/quota_create.html:10
 msgid "Submit"
 msgstr "Legg til"
-
-#: checkin/templates/checkin/suggest_skill.html:31
-msgid "Title (english)"
-msgstr "Tittel (engelsk)"
 
 #: checkin/templates/checkin/suggest_skill.html:43
 msgid "Suggested skills"
@@ -671,6 +689,10 @@ msgstr "System"
 msgid "Access"
 msgstr "Tilgang"
 
+#: internal/models.py:171
+msgid "Member"
+msgstr "Medlem"
+
 #: internal/templates/internal/base.html:10
 #: internal/templates/internal/home.html:13
 msgid "MAKE NTNU Internal"
@@ -849,26 +871,26 @@ msgstr "Endre systemtilgang"
 msgid "Member was not set to quit as the member has already quit or retired."
 msgstr ""
 "Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
-"\"sluttet\" eller \"pang\""
+"&quot;sluttet&quot; eller &quot;pang&quot;"
 
 #: internal/views.py:139
 msgid "Member's quit status was not undone, as the member had not quit."
 msgstr ""
-"Medlemmet's \"sluttet\" status ble ikke gjort om siden medlemmet ikke hadde "
-"status \"sluttet\""
+"Medlemmet's &quot;sluttet&quot; status ble ikke gjort om siden medlemmet ikke "
+"hadde status &quot;sluttet&quot;"
 
 #: internal/views.py:155
 msgid ""
 "Member was not set to retired as the member has already quit or retired."
 msgstr ""
 "Medlemmet ble ikke markert som pang siden medlemmet allerede har status "
-"\"sluttet\" eller \"pang\""
+"&quot;sluttet&quot; eller &quot;pang&quot;"
 
 #: internal/views.py:171
 msgid "Member's retirement was not undone, as the member was not retired."
 msgstr ""
-"Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde "
-"status \"pang\""
+"Medlemmet's &quot;pang&quot; status ble ikke gjort om siden medlemmet ikke "
+"hadde status &quot;pang&quot;"
 
 #: make_queue/admin.py:22 make_queue/templates/make_queue/machine_list.html:7
 #: make_queue/templates/make_queue/machine_list.html:17
@@ -904,6 +926,14 @@ msgstr "Varighet i timer"
 #: make_queue/forms.py:182
 msgid "Duration in minutes"
 msgstr "Varighet i minutter"
+
+#: make_queue/models/course.py:16
+msgid "3D printer course"
+msgstr "3D-printerkurs"
+
+#: make_queue/models/course.py:17
+msgid "3D printer courses"
+msgstr "3D-printerkurs"
 
 #: make_queue/models/course.py:14
 msgid "Sent to Byggsikring"
@@ -2246,8 +2276,8 @@ msgid "You can find us here!"
 msgstr "Du kan finne oss her!"
 
 #: web/templates/web/footer.html:15
-msgid "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
-msgstr "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim"
+msgid "Makerverkstedet<br/>Realfagbygget U1<br/>7034 Trondheim"
+msgstr "Makerverkstedet<br/>Realfagbygget U1<br/>7034 Trondheim"
 
 #: web/templates/web/footer.html:24
 msgid "Like us on Facebook!"

@@ -1,6 +1,6 @@
 from abc import abstractmethod
-from datetime import timedelta
-from typing import Union
+from datetime import datetime, timedelta
+from typing import List, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
@@ -25,19 +25,19 @@ class MachineTypeQuerySet(models.QuerySet):
         Returns a ``QuerySet`` where all the ``MachineType``'s machines have been prefetched
         and can be accessed through the attribute with the same name as ``machines_attr_name``.
         """
-        return self.order_by("priority").prefetch_related(
-            Prefetch("machines",
+        return self.order_by('priority').prefetch_related(
+            Prefetch('machines',
                      queryset=Machine.objects.order_by(
-                         F("priority").asc(nulls_last=True),
-                         Lower("name"),
+                         F('priority').asc(nulls_last=True),
+                         Lower('name'),
                      ), to_attr=machines_attr_name)
         )
 
 
 class MachineType(models.Model):
     class UsageRequirement(models.TextChoices):
-        IS_AUTHENTICATED = "AUTH", _("Only has to be logged in")
-        TAKEN_3D_PRINTER_COURSE = "3DPR", _("Taken the 3D printer course")
+        IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
+        TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
@@ -56,7 +56,7 @@ class MachineType(models.Model):
     objects = MachineTypeQuerySet.as_manager()
 
     class Meta:
-        ordering = ("priority",)
+        ordering = ('priority',)
 
     def __str__(self):
         return str(self.name)
@@ -97,7 +97,7 @@ class Machine(models.Model):
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.PROTECT,
-        related_name="machines",
+        related_name='machines',
         verbose_name=_("Machine type"),
     )
     location = UnlimitedCharField(verbose_name=_("Location"))
@@ -113,21 +113,17 @@ class Machine(models.Model):
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
 
-    @abstractmethod
-    def get_reservation_set(self):
-        return Reservation.objects.filter(machine=self)
-
     def get_next_reservation(self):
-        return self.get_reservation_set().filter(start_time__gt=timezone.now()).order_by('start_time').first()
+        return self.reservations.filter(start_time__gt=timezone.now()).order_by('start_time').first()
 
     @abstractmethod
     def can_user_use(self, user):
         return self.machine_type.can_user_use(user)
 
-    def reservations_in_period(self, start_time, end_time):
-        return (self.get_reservation_set().filter(start_time__lte=start_time, end_time__gt=start_time)
-                | self.get_reservation_set().filter(start_time__gte=start_time, end_time__lte=end_time)
-                | self.get_reservation_set().filter(start_time__lt=end_time, start_time__gt=start_time, end_time__gte=end_time))
+    def reservations_in_period(self, start_time: datetime, end_time: datetime):
+        return (self.reservations.filter(start_time__lte=start_time, end_time__gt=start_time)
+                | self.reservations.filter(start_time__gte=start_time, end_time__lte=end_time)
+                | self.reservations.filter(start_time__lt=end_time, start_time__gt=start_time, end_time__gte=end_time))
 
     def get_status(self):
         if self.status in (self.Status.OUT_OF_ORDER, self.Status.MAINTENANCE):
@@ -139,7 +135,7 @@ class Machine(models.Model):
             return self.Status.AVAILABLE
 
     def _get_FIELD_display(self, field):
-        if field.attname == "status":
+        if field.attname == 'status':
             return self.STATUS_CHOICES_DICT[self.get_status()]
         return super()._get_FIELD_display(field)
 
@@ -150,12 +146,12 @@ class Machine(models.Model):
 
 class MachineUsageRule(models.Model):
     """
-    Allows for specification of rules for each type of machine
+    Allows for specification of rules for each type of machine.
     """
     machine_type = models.OneToOneField(
         to=MachineType,
         on_delete=models.CASCADE,
-        related_name="usage_rule",
+        related_name='usage_rule',
     )
     content = MultiLingualRichTextUploadingField()
 
@@ -167,12 +163,13 @@ class Quota(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        related_name='quotas',
         verbose_name=_("User"),
     )
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.CASCADE,
-        related_name="quotas",
+        related_name='quotas',
         verbose_name=_("Machine type"),
     )
     number_of_reservations = models.IntegerField(default=1, verbose_name=_("Number of reservations"))
@@ -181,44 +178,44 @@ class Quota(models.Model):
 
     class Meta:
         permissions = (
-            ("can_create_event_reservation", "Can create event reservation"),
-            ("can_edit_quota", "Can edit quotas"),
+            ('can_create_event_reservation', "Can create event reservation"),
+            ('can_edit_quota', "Can edit quotas"),
         )
 
     def get_active_reservations(self, user):
         if self.diminishing:
-            return self.reservation_set.all()
-        reservation_set = self.reservation_set if not self.all else self.reservation_set.filter(user=user)
-        return reservation_set.all().filter(end_time__gte=timezone.now())
+            return self.reservations.all()
+        reservations = self.reservations.filter(user=user) if self.all else self.reservations
+        return reservations.filter(end_time__gte=timezone.now())
 
     def can_create_more_reservations(self, user):
         return self.number_of_reservations != self.get_active_reservations(user).count()
 
-    def is_valid_in(self, reservation):
-        reservation_exists_or_can_make_more = (self.reservation_set.filter(pk=reservation.pk).exists()
+    def is_valid_in(self, reservation: 'Reservation'):
+        reservation_exists_or_can_make_more = (self.reservations.filter(pk=reservation.pk).exists()
                                                or self.can_create_more_reservations(reservation.user))
         ignore_rules_or_valid_time = (self.ignore_rules
                                       or ReservationRule.valid_time(reservation.start_time, reservation.end_time, reservation.machine.machine_type))
         return reservation_exists_or_can_make_more and ignore_rules_or_valid_time
 
-    @staticmethod
-    def can_make_new_reservation(user, machine_type):
-        return any(quota.can_create_more_reservations(user) for quota in Quota.get_user_quotas(user, machine_type))
+    @classmethod
+    def can_create_new_reservation(cls, user: User, machine_type: MachineType):
+        return any(quota.can_create_more_reservations(user) for quota in cls.get_user_quotas(user, machine_type))
 
     @staticmethod
-    def get_user_quotas(user, machine_type):
+    def get_user_quotas(user: User, machine_type: MachineType):
         return machine_type.quotas.filter(Q(user=user) | Q(all=True))
 
-    @staticmethod
-    def get_best_quota(reservation):
+    @classmethod
+    def get_best_quota(cls, reservation: 'Reservation'):
         """
         Selects the best quota for the given reservation,
-        by preferring non-diminishing quotas that do not ignore the rules
+        by preferring non-diminishing quotas that do not ignore the rules.
 
         :param reservation: The reservation to check
         :return: The best quota, that can handle the given reservation, or None if none can
         """
-        valid_quotas = [quota for quota in Quota.get_user_quotas(reservation.user, reservation.machine.machine_type) if
+        valid_quotas = [quota for quota in cls.get_user_quotas(reservation.user, reservation.machine.machine_type) if
                         quota.is_valid_in(reservation)]
 
         if not valid_quotas:
@@ -234,21 +231,23 @@ class Quota(models.Model):
 
         return best_quota
 
-    @staticmethod
-    def can_create_reservation(reservation):
-        return Quota.get_best_quota(reservation) is not None
+    @classmethod
+    def can_create_reservation(cls, reservation: 'Reservation'):
+        return cls.get_best_quota(reservation) is not None
 
 
 class Reservation(models.Model):
-    reservation_future_limit_days = 28
+    RESERVATION_FUTURE_LIMIT_DAYS = 28
 
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
+        related_name='reservations',
     )
     machine = models.ForeignKey(
         to=Machine,
         on_delete=models.CASCADE,
+        related_name='reservations',
     )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
@@ -257,6 +256,7 @@ class Reservation(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        related_name='machine_reservations',
     )
     special = models.BooleanField(default=False)
     special_text = UnlimitedCharField(blank=True)
@@ -266,11 +266,12 @@ class Reservation(models.Model):
         on_delete=models.CASCADE,
         null=True,
         blank=True,
+        related_name='reservations',
     )
 
     class Meta:
         permissions = (
-            ("can_view_reservation_user", "Can view reservation user"),
+            ('can_view_reservation_user', "Can view reservation user"),
         )
 
     def __str__(self):
@@ -286,7 +287,7 @@ class Reservation(models.Model):
         if not (self.event or self.special):
             self.quota = Quota.get_best_quota(self)
 
-        super(Reservation, self).save(*args, **kwargs)
+        super().save(*args, **kwargs)
 
     # A reservation should not be able to be moved, only extended
     def validate(self):
@@ -304,7 +305,7 @@ class Reservation(models.Model):
 
         # Event reservations are always valid, if the time is not already reserved
         if self.event or self.special:
-            return self.user.has_perm("make_queue.can_create_event_reservation")
+            return self.user.has_perm('make_queue.can_create_event_reservation')
 
         # Limit the amount of time forward in time a reservation can be made
         if not self.is_within_allowed_period():
@@ -331,36 +332,36 @@ class Reservation(models.Model):
         return self.quota_can_create_reservation()
 
     def starts_before_now(self):
-        """Check if the start time is before current time"""
+        """Check if the start time is before current time."""
         return self.start_time < timezone.now()
 
     def check_start_time_after_end_time(self):
-        """Check if start time is after end time"""
+        """Check if start time is after end time."""
         return self.start_time >= self.end_time
 
     def quota_can_create_reservation(self):
-        """Check if the user can make the given reservation/edit"""
+        """Check if the user can make the given reservation/edit."""
         return Quota.can_create_reservation(self)
 
     def is_within_allowed_period(self):
-        """Check if the reservation is made within the reservation_future_limit"""
-        return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
+        """Check if the reservation is made within the reservation_future_limit."""
+        return self.end_time <= timezone.now() + timedelta(days=self.RESERVATION_FUTURE_LIMIT_DAYS)
 
     def check_machine_out_of_order(self):
-        """Check if the machine is listed as out of order"""
+        """Check if the machine is listed as out of order."""
         return self.machine.get_status() == Machine.Status.OUT_OF_ORDER
 
     def check_machine_maintenance(self):
-        """Check if the machine is listed as maintenance"""
+        """Check if the machine is listed as maintenance."""
         return self.machine.get_status() == Machine.Status.MAINTENANCE
 
     def can_delete(self, user):
-        if user.has_perm("make_queue.delete_reservation"):
+        if user.has_perm('make_queue.delete_reservation'):
             return True
         return self.user == user and self.start_time > timezone.now()
 
     def can_change(self, user):
-        if (user.has_perm("make_queue.can_create_event_reservation")
+        if (user.has_perm('make_queue.can_create_event_reservation')
                 and (self.special or (self.event is not None))):
             return True
         if self.start_time < timezone.now():
@@ -391,22 +392,22 @@ class ReservationRule(models.Model):
             raise ValidationError("Rule is not valid")
         return super().save(**kwargs)
 
-    @staticmethod
-    def valid_time(start_time, end_time, machine_type):
+    @classmethod
+    def valid_time(cls, start_time: datetime, end_time: datetime, machine_type: MachineType) -> bool:
         """
         Checks if a reservation in the supplied period is allowed by the rules for the machine type.
 
-        :param start_time: The start time (datetime) of the reservation
-        :param end_time: The end time (datetime) of the reservation
+        :param start_time: The start time of the reservation
+        :param end_time: The end time of the reservation
         :param machine_type: The type of machine for the reservation
         :return: A boolean indicating if the reservation follows the rules
         """
         duration = timedelta_to_hours(end_time - start_time)
-        # Normal non rule ignoring reservations will not be longer than 1 week
+        # Normal reservations (i.e. that do not ignore rules) will not be longer than 1 week
         if duration > (7 * 24):
             return False
 
-        rules = ReservationRule.covered_rules(start_time, end_time, machine_type)
+        rules = cls.covered_rules(start_time, end_time, machine_type)
         # Only allow reservations when covered by at least one rule
         if not rules:
             return False
@@ -414,21 +415,20 @@ class ReservationRule(models.Model):
         # If the reservation is longer than allowed for all covered rules, then it cannot be allowed
         if duration > max(rule.max_hours for rule in rules):
             return False
-
         # If the reservation is shorter than allowed inside each of the covered rules, then it is always allowed
         if duration <= min(rule.max_hours for rule in rules):
             return True
 
-        # Check if the reservation adheres to the inter-rule maximums
+        # Check if the reservation adheres to the inter-rule maxima
         return all(rule.valid_time_in_rule(start_time, end_time, len(rules) > 1) for rule in rules)
 
     @staticmethod
-    def covered_rules(start_time, end_time, machine_type):
+    def covered_rules(start_time: datetime, end_time: datetime, machine_type: MachineType):
         """
         Finds the rules for the given machine type that are covered by the indicated period.
 
-        :param start_time: The start time (datetime) of the period
-        :param end_time: The end time (datetime) of the period
+        :param start_time: The start time of the period
+        :param end_time: The end time of the period
         :param machine_type: The type of machine
         :return: The rules for the machine type that are covered by the period
         """
@@ -436,16 +436,17 @@ class ReservationRule(models.Model):
         if timedelta_to_hours(end_time - start_time) > 7 * 24:
             return machine_type.reservation_rules.all()
 
-        return [rule for rule in machine_type.reservation_rules.all() if rule.hours_inside(start_time, end_time)]
+        return [rule for rule in machine_type.reservation_rules.all()
+                if rule.hours_inside(start_time, end_time)]
 
     class Period:
 
-        def __init__(self, start_day, rule):
-            self.start_time = self.__to_inner_rep(start_day, rule.start_time)
-            self.end_time = self.__to_inner_rep(start_day + rule.days_changed, rule.end_time)
+        def __init__(self, start_weekday: int, rule: 'ReservationRule'):
+            self.start_time = self.__to_inner_rep(start_weekday, rule.start_time)
+            self.end_time = self.__to_inner_rep(start_weekday + rule.days_changed, rule.end_time)
             self.rule = rule
 
-        def hours_inside(self, start_time, end_time):
+        def hours_inside(self, start_time: datetime, end_time: datetime) -> float:
             return self.hours_overlap(
                 self.start_time, self.end_time,
                 self.__to_inner_rep(start_time.weekday(), start_time.time()),
@@ -470,7 +471,7 @@ class ReservationRule(models.Model):
                 other.start_time, other.end_time
             ) > 0
 
-    def is_valid_rule(self, raise_error=False):
+    def is_valid_rule(self, raise_error=False) -> bool:
         # Check if the time period is a valid time period (within a week)
         if (self.start_time > self.end_time and not self.days_changed
                 or self.days_changed > 7
@@ -499,14 +500,14 @@ class ReservationRule(models.Model):
 
         return not other_overlap
 
-    def valid_time_in_rule(self, start_time, end_time, border_cross):
+    def valid_time_in_rule(self, start_time: datetime, end_time: datetime, border_cross: bool) -> bool:
         if border_cross:
             return self.hours_inside(start_time, end_time) <= self.max_inside_border_crossed
         return timedelta_to_hours(end_time - start_time) <= self.max_hours
 
-    def hours_inside(self, start_time, end_time):
+    def hours_inside(self, start_time: datetime, end_time: datetime) -> float:
         return sum(period.hours_inside(start_time, end_time) for period in self.time_periods())
 
-    def time_periods(self):
+    def time_periods(self) -> List[Period]:
         return [self.Period(day_index, self) for day_index, _ in
                 filter(lambda enumerate_obj: enumerate_obj[1] == "1", enumerate(format(self.start_days, "07b")[::-1]))]

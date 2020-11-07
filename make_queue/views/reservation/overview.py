@@ -4,12 +4,12 @@ from ...models.models import Reservation
 
 
 class MyReservationsView(TemplateView):
-    """View for seeing the users reservations"""
-    template_name = "make_queue/reservation_list.html"
+    """View for seeing the user's reservations."""
+    template_name = 'make_queue/reservation_list.html'
 
     def get_context_data(self):
         """
-        Creates a list of the user's reservations, that are not event reservations or MAKE NTNU reservations
+        Creates a list of the user's reservations, that are not event reservations or MAKE NTNU's reservations.
 
         :return: A list of the user's reservations
         """

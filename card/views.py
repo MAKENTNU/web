@@ -10,7 +10,7 @@ from . import utils
 @method_decorator(csrf_exempt, name="dispatch")
 class RFIDView(View):
     """
-    Base view class for receiving requests from RFID card readers
+    Base view class for receiving requests from RFID card readers.
     """
 
     def post(self, request):

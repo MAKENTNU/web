@@ -13,19 +13,19 @@ from .models import Content, Page
 
 class DocumentationPageView(DetailView):
     model = Page
-    template_name = "docs/documentation_page_detail.html"
+    template_name = 'docs/documentation_page_detail.html'
     context_object_name = "page"
 
 
 class HistoryDocumentationPageView(DetailView):
     model = Page
-    template_name = "docs/documentation_page_history.html"
+    template_name = 'docs/documentation_page_history.html'
     context_object_name = "page"
 
 
 class OldDocumentationPageContentView(DetailView):
     model = Page
-    template_name = "docs/documentation_page_detail.html"
+    template_name = 'docs/documentation_page_detail.html'
     context_object_name = "page"
 
     def dispatch(self, request, *args, **kwargs):
@@ -46,7 +46,7 @@ class OldDocumentationPageContentView(DetailView):
         context_data.update({
             "old": True,
             "content": content,
-            "form": ChangePageVersionForm(initial={"current_content": content})
+            "form": ChangePageVersionForm(initial={"current_content": content}),
         })
         return context_data
 
@@ -70,7 +70,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
     permission_required = ("docs.add_page",)
     model = Page
     form_class = CreatePageForm
-    template_name = "docs/documentation_page_create.html"
+    template_name = 'docs/documentation_page_create.html'
 
     def form_invalid(self, form):
         try:
@@ -91,7 +91,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
     permission_required = ("docs.change_page",)
     model = Content
     form_class = PageContentForm
-    template_name = "docs/documentation_page_edit.html"
+    template_name = 'docs/documentation_page_edit.html'
 
     def get_page(self):
         return Page.objects.get(pk=self.kwargs.get("pk"))
@@ -99,7 +99,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
     def get_initial(self):
         page = self.get_page()
         return {
-            "content": page.current_content.content if page.current_content else ""
+            "content": page.current_content.content if page.current_content else "",
         }
 
     def get_context_data(self, **kwargs):
@@ -130,14 +130,12 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
 class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
     permission_required = ("docs.delete_page",)
     model = Page
+    queryset = Page.objects.exclude(title="Documentation")
     success_url = reverse_lazy("home")
-
-    def get_queryset(self):
-        return Page.objects.exclude(title="Documentation")
 
 
 class SearchPagesView(TemplateView):
-    template_name = "docs/search.html"
+    template_name = 'docs/search.html'
     page_size = 10
 
     def pages_to_show(self, current_page, n_pages):

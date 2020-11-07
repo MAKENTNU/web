@@ -7,12 +7,14 @@ from django.utils.dateparse import parse_datetime, parse_time
 
 from ...models.models import MachineType, ReservationRule
 
+
 Period = ReservationRule.Period
 
 
 class PeriodTests(TestCase):
 
     def setUp(self):
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.machine_type = MachineType.objects.get(pk=1)
 
     def test_hours_overlap_inside(self):
@@ -65,6 +67,7 @@ class PeriodTests(TestCase):
 class ReservationRuleTests(TestCase):
 
     def setUp(self):
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.machine_type = MachineType.objects.get(pk=1)
 
     def test_time_periods(self):
@@ -76,7 +79,7 @@ class ReservationRuleTests(TestCase):
             Period(0, rule),
             Period(2, rule),
             Period(4, rule),
-            Period(5, rule)
+            Period(5, rule),
         ]
 
         self.assertEqual(len(time_periods), len(correct_timeperiods))
@@ -85,9 +88,9 @@ class ReservationRuleTests(TestCase):
             self.assertEqual(calculated_period.start_time, correct_period.start_time)
             self.assertEqual(calculated_period.end_time, correct_period.end_time)
             self.assertTrue(calculated_period.overlap(correct_period))
-            self.assertEqual(
-                round(Period.hours_overlap(calculated_period.start_time, calculated_period.end_time,
-                                                correct_period.start_time, correct_period.end_time), 2), 20)
+            hours_overlap = Period.hours_overlap(calculated_period.start_time, calculated_period.end_time,
+                                                 correct_period.start_time, correct_period.end_time)
+            self.assertEqual(round(hours_overlap, 2), 20)
 
     def test_is_valid_rule_internal(self):
         rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,

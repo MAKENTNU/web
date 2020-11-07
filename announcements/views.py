@@ -9,15 +9,15 @@ from .models import Announcement
 class AnnouncementAdminView(PermissionRequiredMixin, ListView):
     permission_required = ("announcements.change_announcement",)
     model = Announcement
-    template_name = "announcements/announcement_admin.html"
+    template_name = 'announcements/announcement_admin.html'
     context_object_name = "announcements"
 
 
 class CreateAnnouncementView(PermissionRequiredMixin, CreateView):
     permission_required = ("announcements.add_announcement",)
-    model = Announcement,
+    model = Announcement
     form_class = AnnouncementForm
-    template_name = "announcements/announcement_create.html"
+    template_name = 'announcements/announcement_create.html'
     success_url = reverse_lazy("announcement_admin")
 
 
@@ -25,7 +25,7 @@ class EditAnnouncementView(PermissionRequiredMixin, UpdateView):
     permission_required = ("announcements.change_announcement",)
     model = Announcement
     form_class = AnnouncementForm
-    template_name = "announcements/announcement_edit.html"
+    template_name = 'announcements/announcement_edit.html'
     success_url = reverse_lazy("announcement_admin")
 
 

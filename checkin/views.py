@@ -45,7 +45,7 @@ class ShowSkillsView(TemplateView):
     def get_context_data(self, **kwargs):
         """
         Creates dict with skill titles as keys and
-        the highest corresponding skill level as its pair value (quick fix) to show on website
+        the highest corresponding skill level as its pair value (quick fix) to show on website.
         """
         # skill_dict = UserSkill.objects.filter(profile__on_make=True).order_by("-skill_level")
 
@@ -53,13 +53,13 @@ class ShowSkillsView(TemplateView):
 
         for profile in Profile.objects.filter(on_make=True):
             self.check_out_expired(profile)
-            for userskill in profile.userskill_set.all():
-                skill = userskill.skill
+            for user_skill in profile.user_skills.all():
+                skill = user_skill.skill
 
                 if ((skill not in skill_dict
                      or skill.skill_level > skill_dict[skill][0])
                         and not self.is_checkin_expired(profile)):
-                    skill_dict[skill] = (userskill.skill_level, profile.last_checkin)
+                    skill_dict[skill] = (user_skill.skill_level, profile.last_checkin)
 
         context = super().get_context_data(**kwargs)
         context.update({
@@ -81,7 +81,7 @@ class ProfilePageView(TemplateView):
         profile = request.user.profile
         skill = get_object_or_404(Skill, id=skill_id)
 
-        if rating == int(rating) and 0 <= rating <= 3:
+        if 0 <= rating <= 3:
             if UserSkill.objects.filter(skill=skill, profile=profile).exists():
                 if rating == 0:
                     UserSkill.objects.filter(skill=skill, profile=profile).delete()
@@ -93,10 +93,7 @@ class ProfilePageView(TemplateView):
         return HttpResponseRedirect(reverse('profile'))
 
     def get_context_data(self, **kwargs):
-        if Profile.objects.filter(user=self.request.user).exists():
-            profile = Profile.objects.get(user=self.request.user)
-        else:
-            profile = Profile.objects.create(user=self.request.user)
+        profile, _created = Profile.objects.get_or_create(user=self.request.user)
 
         # Connect card number from course registration to user
         registration = Printer3DCourse.objects.filter(user__username=self.request.user.username).first()
@@ -105,19 +102,19 @@ class ProfilePageView(TemplateView):
             registration.save()
 
         img = profile.image
-        userskill_set = profile.userskill_set.all()
+        user_skills = profile.user_skills.all()
 
         skill_dict = {}
-        for userskill in profile.userskill_set.all():
-            skill = userskill.skill
+        for user_skill in user_skills:
+            skill = user_skill.skill
             if skill not in skill_dict or skill.skill_level > skill_dict[skill][0]:
-                skill_dict[skill] = userskill.skill_level
+                skill_dict[skill] = user_skill.skill_level
 
         context = super().get_context_data(**kwargs)
         context.update({
             'profile': profile,
             'image': img,
-            'userskill': userskill_set,
+            'userskill': user_skills,
             'skill_dict': skill_dict,
             'all_skills': Skill.objects.all(),
             'make_member': self.request.user.groups.filter(name="make").exists(),
@@ -127,7 +124,7 @@ class ProfilePageView(TemplateView):
 
 class SuggestSkillView(PermissionRequiredMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
-    template_name = "checkin/suggest_skill.html"
+    template_name = 'checkin/suggest_skill.html'
 
     def post(self, request):
         suggestion = request.POST.get('suggested-skill')
@@ -164,7 +161,7 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
             if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
                 Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
-                messages.error(request, _("Skill added!"))
+                messages.info(request, _("Skill added!"))
 
         return HttpResponseRedirect(reverse('suggest'))
 
@@ -178,12 +175,12 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
 class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
-    template_name = "checkin/suggest_skill.html"
+    template_name = 'checkin/suggest_skill.html'
 
     def post(self, request):
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
         forced = request.POST.get('forced') == "true"
-        data = {
+        response_dict = {
             'skill_passed': False,
             'user_exists': suggestion.voters.filter(user=request.user).exists(),
             'is_forced': forced,
@@ -191,20 +188,20 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
         if forced:
             Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
             suggestion.delete()
-            return JsonResponse(data)
+            return JsonResponse(response_dict)
 
         suggestion.voters.add(request.user.profile)
-        data['skill_passed'] = suggestion.voters.count() >= 5
-        if data['skill_passed']:
+        response_dict['skill_passed'] = suggestion.voters.count() >= 5
+        if response_dict['skill_passed']:
             Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
             suggestion.delete()
 
-        return JsonResponse(data)
+        return JsonResponse(response_dict)
 
 
 class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
     permission_required = ('checkin.delete_suggestskill',)
-    template_name = "checkin/suggest_skill.html"
+    template_name = 'checkin/suggest_skill.html'
 
     def post(self, request):
         data = {"suggestion_deleted": False, }
@@ -222,20 +219,20 @@ class RegisterCardView(RFIDView):
         else:
             RegisterProfile.objects.all().delete()
             RegisterProfile.objects.create(card_id=card_number, last_scan=timezone.now())
-            return HttpResponse('card scanned', status=200)
+            return HttpResponse("Card scanned", status=200)
 
 
 class RegisterProfileView(TemplateView):
 
     def post(self, request):
         scan_exists = RegisterProfile.objects.exists()
-        data = {
+        response_dict = {
             'scan_exists': scan_exists,
             'scan_is_recent': False,
         }
         if scan_exists:
             scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
-            data['scan_is_recent'] = scan_is_recent
+            response_dict['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 card_number = RegisterProfile.objects.first().card_id
                 is_duplicate = card_utils.is_duplicate(card_number, request.user.username)
@@ -244,12 +241,12 @@ class RegisterProfileView(TemplateView):
                 request.user.card_number = card_number
                 request.user.save()
         RegisterProfile.objects.all().delete()
-        return JsonResponse(data)
+        return JsonResponse(response_dict)
 
 
 class EditProfilePictureView(View):
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
         image = request.FILES.get('image')
         profile = request.user.profile
         profile.image = image

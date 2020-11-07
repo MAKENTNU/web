@@ -28,18 +28,20 @@ unsafe_urlpatterns = [
     path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name="delete-secret")
 ]
 
-urlpatterns = [
-    path("robots.txt", TemplateView.as_view(template_name='internal/robots.txt', content_type='text/plain')),
-    path("i18n/", decorator_include(
-        permission_required("internal.is_internal", login_url=reverse("login", host="main")),
-        "django.conf.urls.i18n"
-    )),
-]
+LOGIN_URL = reverse('login', host='main')
 
-urlpatterns += i18n_patterns(
+urlpatterns = i18n_patterns(
     path("", decorator_include(
-        permission_required("internal.is_internal", login_url=reverse("login", host="main")),
+        permission_required('internal.is_internal', login_url=LOGIN_URL),
         unsafe_urlpatterns
     )),
-    prefix_default_language=False
+    prefix_default_language=False,
 )
+
+urlpatterns += [
+    path("robots.txt", TemplateView.as_view(template_name='internal/robots.txt', content_type='text/plain')),
+    path("i18n/", decorator_include(
+        permission_required('internal.is_internal', login_url=LOGIN_URL),
+        'django.conf.urls.i18n'
+    )),
+]

@@ -6,7 +6,7 @@
         <i class="trash icon"></i>
         {% trans "Are sure you want to delete?" %}
     </div>
-    <form id="delete-form" method="post">{% csrf_token %}</form>
+    <form id="delete-form" method="POST">{% csrf_token %}</form>
     <div class="actions">
         <div class="ui red inverted delete button">
             <i class="trash icon"></i>
@@ -20,18 +20,18 @@
 </div>
 
 <script>
-    /*$('#delete-modal').modal({
+    /*$("#delete-modal").modal({
       'closable': false
     });*/
     function setupDeleteModal() {
-        $('.delete.confirm').click(function (e) {
+        $(".delete.confirm").click(function (e) {
             e.preventDefault();
             let url = $(this).attr('href');
-            $('#delete-form').attr('action', url);
-            $('#delete-modal .delete.button').click(function (e) {
-                $('#delete-form').submit();
+            $("#delete-form").attr('action', url);
+            $("#delete-modal .delete.button").click(function (e) {
+                $("#delete-form").submit();
             });
-            $('#delete-modal').modal('show');
+            $("#delete-modal").modal('show');
         });
     }
 

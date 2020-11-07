@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 
 
@@ -14,7 +14,7 @@
             {% endif %}
         </h1>
         <div class="ui relaxed divided list">
-            {% for question in question_list %}
+            {% for question in questions %}
                 <div class="item">
                     <div class="content">
                         <div class="ui header">
@@ -38,4 +38,4 @@
         </div>
 
     </div>
-{% endblock %}
+{% endblock body %}

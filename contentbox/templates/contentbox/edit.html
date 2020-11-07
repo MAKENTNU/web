@@ -6,8 +6,8 @@
 {% block title %}{% trans "Edit" %} {{ contentbox.title }}{% endblock title %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -31,13 +31,13 @@
             </script>
         {% endif %}
 
-        <form class="ui form text" method="post" enctype="multipart/form-data">
+        <form class="ui form text" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="field">
                 {{ form.content }}
             </div>
 
-            <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
+            <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
             <a class="ui right floated red button" href="{% url contentbox.title %}">
                 {% trans "Cancel" context "abort action" %}
             </a>

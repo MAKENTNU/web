@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from web.multilingual.admin import MultiLingualFieldAdmin
 from util.admin_utils import TextFieldOverrideMixin
+from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import Member, Secret
 
 

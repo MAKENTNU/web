@@ -36,7 +36,7 @@ class UrlTests(TestCase):
         self.assertRedirects(response, "/")
 
         # Previously indirectly caused decorating "set_language" with "permission_required" (see https://github.com/MAKENTNU/web/pull/297).
-        # [This test can potantially be removed]
+        # [This test can potentially be removed]
         self.user_client.get(reverse("home", host="internal", host_args=["internal"]),
                              HTTP_HOST=f"internal.{settings.PARENT_HOST}")
         # Should not redirect to login (caused by the above line)

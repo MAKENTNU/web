@@ -13,7 +13,7 @@ class StreamConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['stream_name']
-        self.room_group_name = 'stream_%s' % self.room_name
+        self.room_group_name = f'stream_{self.room_name}'
 
         # Join room group
         await self.channel_layer.group_add(

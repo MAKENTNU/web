@@ -15,6 +15,7 @@ class DeleteReservationViewTestCase(TestCase):
         user2 = User.objects.create_user("user2", "user2@makentnu.no", "weak_pass")
         user2.save()
 
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         printer_machine_type = MachineType.objects.get(pk=1)
         Machine.objects.create(name="U1", location="Make", machine_model="Ultimaker 2", status=Machine.Status.AVAILABLE,
                                machine_type=printer_machine_type)

@@ -10,13 +10,13 @@ from .data_structures import MultiLingualTextStructure
 
 class MultiLingualFormField(forms.MultiValueField):
     """
-    A multi-value field for a multilingual database field
+    A multi-value field for a multilingual database field.
     """
     field_class = forms.CharField
 
     def compress(self, data_list):
         """
-        Merges the input from the different form fields into a single value
+        Merges the input from the different form fields into a single value.
 
         :param data_list: A list of the inputs of the different fields
         :return: A MultiLingualTextStructure element

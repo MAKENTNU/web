@@ -10,7 +10,7 @@ from .models import Committee, InheritanceGroup
 
 
 def permission_to_perm(permission):
-    """Find the <app_label>.<codename> string for a permission object"""
+    """Find the <app_label>.<codename> string for a permission object."""
     return '.'.join([permission.content_type.app_label, permission.codename])
 
 
@@ -36,12 +36,11 @@ class PermGroupTestCase(TestCase):
         arr.parents.add(org)
         InheritanceGroup.objects.create(name='Leder').parents.add(mentor, dev, arr)
 
-        content_type = ContentType.objects.get_for_model(Article)
         for i in range(5):
             Permission.objects.create(
                 codename=f'perm{i}',
                 name=f'Perm {i}',
-                content_type=content_type,
+                content_type=ContentType.objects.get_for_model(Article),
             )
 
     def test_update_single_parent(self):
@@ -234,19 +233,19 @@ class InheritanceGroupAdminTestCase(TestCase):
         admin = InheritanceGroupAdmin(InheritanceGroup, self.site)
         expected_fields = ['name', 'parents', 'own_permissions']
         form = admin.get_form(self.request)
-        self.assertEqual(list(form.base_fields), expected_fields)
+        self.assertListEqual(list(form.base_fields), expected_fields)
 
         expected_parents = InheritanceGroup.objects.all()
-        self.assertEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
 
         form = admin.get_form(self.request, obj=InheritanceGroup.objects.get(name='Dev'))
         expected_parents = InheritanceGroup.objects.get(name='Dev').get_available_parents()
-        self.assertEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
 
     def test_inherited_permissions(self):
         admin = InheritanceGroupAdmin(InheritanceGroup, self.site)
         dev = InheritanceGroup.objects.get(name='Dev')
-        permissions = set(admin.inherited_permissions(dev))
+        permissions = set(admin.get_inherited_permissions(dev))
         for perm in dev.inherited_permissions:
             self.assertIn(str(perm), permissions)
 

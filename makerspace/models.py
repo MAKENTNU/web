@@ -16,9 +16,9 @@ class EquipmentQuerySet(models.QuerySet):
 
 
 class Equipment(models.Model):
-    title = MultiLingualTextField(unique=True, verbose_name=_('Title'))
-    description = MultiLingualRichTextUploadingField(verbose_name=_('Description'))
-    image = models.ImageField(upload_to='equipment', verbose_name=_('Image'))
+    title = MultiLingualTextField(unique=True, verbose_name=_("Title"))
+    description = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
+    image = models.ImageField(upload_to='equipment', verbose_name=_("Image"))
     priority = models.IntegerField(
         null=True,
         blank=True,

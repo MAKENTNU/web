@@ -8,12 +8,12 @@ from ...models.models import Quota
 
 
 class QuotaView(TemplateView):
-    """View for the quota admin panel that allows users to control the quotas of people"""
-    template_name = "make_queue/quota/quota_panel.html"
+    """View for the quota admin panel that allows users to control the quotas of people."""
+    template_name = 'make_queue/quota/quota_panel.html'
 
     def get_context_data(self, user=None, **kwargs):
         """
-        Creates the required context for the quota panel
+        Creates the required context for the quota panel.
 
         :return: A list of all users
         """
@@ -30,7 +30,7 @@ class CreateQuotaView(PermissionRequiredMixin, CreateView):
     permission_required = ("make_queue.add_quota",)
     model = Quota
     form_class = QuotaForm
-    template_name = "make_queue/quota/quota_create.html"
+    template_name = 'make_queue/quota/quota_create.html'
 
     def get_success_url(self):
         if self.object.all:
@@ -42,7 +42,7 @@ class EditQuotaView(PermissionRequiredMixin, UpdateView):
     permission_required = ("make_queue.change_quota",)
     model = Quota
     form_class = QuotaForm
-    template_name = "make_queue/quota/quota_edit.html"
+    template_name = 'make_queue/quota/quota_edit.html'
 
     def get_success_url(self):
         if self.object.all:

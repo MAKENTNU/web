@@ -1,30 +1,31 @@
-var popupTimer;
+let popupTimer;
 
-function delayPopup(popup) {
+function delayPopup($popup) {
     popupTimer = setTimeout(function () {
-        $(popup).popup('hide');
+        $popup.popup('hide');
     }, 4200);
 }
 
 $(document).ready(function () {
-    $('.copy-token').click(function () {
+    $(".copy-token").click(function () {
+        const $copyButton = $(this);
         clearTimeout(popupTimer);
 
-        var $input = $(this).closest('.emails-container').find('.copy-input');
-        /* Select the text field */
+        const $input = $copyButton.closest(".emails-container").find(".copy-input");
+        // Select the text field
         $input.select();
 
-        /* Copy the text inside the text field */
-        document.execCommand("copy");
+        // Copy the text inside the text field
+        document.execCommand('copy');
 
-        $(this)
+        $copyButton
             .popup({
-                title: gettext('Successfully copied to clipboard!'),
+                title: gettext("Successfully copied to clipboard!"),
                 on: 'manual',
-                exclusive: true
+                exclusive: true,
             })
             .popup('show');
         // Hide popup after 5 seconds
-        delayPopup(this);
+        delayPopup($copyButton);
     });
 });

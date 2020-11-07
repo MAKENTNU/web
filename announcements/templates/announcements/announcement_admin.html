@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 
 
@@ -24,7 +24,7 @@
                                 </a>
                             {% endif %}
                             {% if perms.announcements.delete_announcement %}
-                                <a class="delete confirm" href="{% url "delete_announcement" pk=announcement.pk%}">
+                                <a class="delete confirm" href="{% url "delete_announcement" pk=announcement.pk %}">
                                     <i class="red trash icon"></i>
                                 </a>
                             {% endif %}
@@ -52,4 +52,4 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock body %}

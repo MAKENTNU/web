@@ -3,21 +3,21 @@ from django import template
 register = template.Library()
 
 
-@register.filter(name='has_voter')
+@register.filter
 def has_voter(suggestion, user):
     return suggestion.voters.filter(user=user).exists()
 
 
-@register.filter(name='locale_title')
+@register.filter
 def locale_title(skill, language_code):
     return skill.locale_title(language_code)
 
 
-@register.filter(name='can_force_suggestion')
-def can_force(user):
+@register.filter
+def can_force_suggestion(user):
     return user.has_perm("checkin.can_force_suggestion")
 
 
-@register.filter(name='can_delete_suggestion')
-def can_delete(user):
+@register.filter
+def can_delete_suggestion(user):
     return user.has_perm("checkin.delete_suggestskill")

@@ -7,8 +7,8 @@ from ...models.models import Machine, MachineType
 
 
 class MachineView(TemplateView):
-    """View that shows all the machines"""
-    template_name = "make_queue/machine_list.html"
+    """View that shows all the machines."""
+    template_name = 'make_queue/machine_list.html'
 
     def get_context_data(self):
         """
@@ -17,8 +17,9 @@ class MachineView(TemplateView):
         :return: A queryset of all machine types which have at least one existing machine.
         """
         return {
-            "machine_types": MachineType.objects.prefetch_machines_and_default_order_by(machines_attr_name="existing_machines")
-                .filter(machines__isnull=False).distinct(),  # filtering through a many-related field (`machines`) can cause duplicates
+            'machine_types': MachineType.objects.prefetch_machines_and_default_order_by(
+                machines_attr_name='existing_machines',
+            ).filter(machines__isnull=False).distinct(),  # remove duplicates that can appear when filtering on values across tables
         }
 
 
@@ -26,7 +27,7 @@ class CreateMachineView(PermissionRequiredMixin, CreateView):
     permission_required = ('make_queue.add_machine',)
     model = Machine
     form_class = BaseMachineForm
-    template_name = "make_queue/machine/machine_create.html"
+    template_name = 'make_queue/machine/machine_create.html'
     success_url = reverse_lazy("reservation_machines_overview")
 
 
@@ -34,7 +35,7 @@ class EditMachineView(PermissionRequiredMixin, UpdateView):
     permission_required = ('make_queue.change_machine',)
     model = Machine
     form_class = EditMachineForm
-    template_name = "make_queue/machine/machine_edit.html"
+    template_name = 'make_queue/machine/machine_edit.html'
     success_url = reverse_lazy("reservation_machines_overview")
 
 

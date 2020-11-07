@@ -16,7 +16,7 @@ from dataporten.views import Logout, login_wrapper
 from . import views
 
 
-extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
+extra = "/" if getattr(settings, setting_name('TRAILING_SLASH'), True) else ""
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
@@ -52,14 +52,14 @@ if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
         path('logout/', Logout.as_view(), name='logout'),
 
         path('', include('social_django.urls', namespace='social')),
-        re_path(r'^complete/(?P<backend>[^/]+){0}$'.format(extra), login_wrapper),
+        re_path(rf'^complete/(?P<backend>[^/]+){extra}$', login_wrapper),
         prefix_default_language=False,
     )
 else:
     # If it is not configured, we would like to have a simple login page. So that
     # we can test with non-superusers without giving them access to the admin page.
     urlpatterns += i18n_patterns(
-        path('login/', auth_views.LoginView.as_view(template_name="web/login.html", redirect_authenticated_user=True), name='login'),
+        path('login/', auth_views.LoginView.as_view(template_name='web/login.html', redirect_authenticated_user=True), name='login'),
         path('logout/', auth_views.LogoutView.as_view(next_page="/"), name='logout'),
         prefix_default_language=False,
     )

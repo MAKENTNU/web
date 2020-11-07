@@ -1,13 +1,13 @@
-{% extends "docs/base.html" %}
+{% extends 'docs/base.html' %}
 {% load i18n %}
 {% load static %}
 
 
-{% block title %}{{ page.title }}{% endblock %}
+{% block title %}{{ page.title }}{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "docs/css/documentation_page_detail.css" %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'docs/css/documentation_page_detail.css' %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -50,13 +50,9 @@
         <h1>{{ page.title }}</h1>
 
         {% if content %}
-            {% autoescape off %}
-                {{ content.content }}
-            {% endautoescape %}
+            {{ content.content|safe }}
         {% elif page.current_content %}
-            {% autoescape off %}
-                {{ page.current_content.content }}
-            {% endautoescape %}
+            {{ page.current_content.content|safe }}
         {% else %}
             <i>
                 {% if perms.docs.change_page %}
@@ -77,7 +73,7 @@
             {{ form }}
         </form>
     {% endif %}
-{% endblock %}
+{% endblock body %}
 
 {% block scripts %}
     <script>
@@ -90,4 +86,4 @@
             });
         {% endif %}
     </script>
-{% endblock %}
+{% endblock scripts %}

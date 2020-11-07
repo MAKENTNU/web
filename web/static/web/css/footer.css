@@ -51,9 +51,8 @@
 }
 
 #footer p,
-#footer a,
-#footer i {
-    color: #FFFFFF !important;
+#footer a {
+    color: #FFF !important;
 }
 
 #footer .logo {
@@ -68,7 +67,7 @@
 
 .copyright {
     grid-column-start: 2;
-    color: #FFFFFF;
+    color: #FFF;
 }
 
 .two-cols {

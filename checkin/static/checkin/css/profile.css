@@ -19,7 +19,7 @@
 }
 
 .label .ui.star.rating .icon:not(.active) {
-    color: #000000;
+    color: #000;
     opacity: 0.7;
 }
 

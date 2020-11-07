@@ -13,6 +13,7 @@ class MyReservationsViewTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user("user", "user@makentnu.no")
 
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.printer_machine_type = MachineType.objects.get(pk=1)
 
         printer = Machine.objects.create(name="U1", machine_type=self.printer_machine_type,
@@ -26,7 +27,7 @@ class MyReservationsViewTestCase(TestCase):
                                    start_time=timezone.now(), end_time=timezone.now() + timezone.timedelta(hours=2))
 
     def test_get_user_reservations_single_reservation(self):
-        self.assertEqual(
+        self.assertListEqual(
             [Reservation.objects.get(user=self.user)],
             list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"])
         )
@@ -37,8 +38,8 @@ class MyReservationsViewTestCase(TestCase):
                                    start_time=timezone.now() + timezone.timedelta(hours=2),
                                    end_time=timezone.now() + timezone.timedelta(hours=4), event=None)
 
-        self.assertEqual(
-            list(Reservation.objects.filter(user=self.user).order_by("-start_time")),
+        self.assertListEqual(
+            list(self.user.reservations.order_by("-start_time")),
             list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"])
         )
 
@@ -54,7 +55,7 @@ class MyReservationsViewTestCase(TestCase):
                                    start_time=timezone.now(),
                                    end_time=timezone.now() + timezone.timedelta(hours=2), event=None)
 
-        self.assertEqual(
+        self.assertListEqual(
             [
                 Reservation.objects.get(user=self.user, machine__machine_type=sewing_machine_type),
                 Reservation.objects.get(user=self.user, machine__machine_type=self.printer_machine_type),

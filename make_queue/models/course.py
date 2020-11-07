@@ -10,9 +10,9 @@ from .fields import UsernameField
 
 class Printer3DCourse(models.Model):
     class Status(models.TextChoices):
-        REGISTERED = "registered", _("Registered")
-        SENT = "sent", _("Sent to Byggsikring")
-        ACCESS = "access", _("Access granted")
+        REGISTERED = 'registered', _("Registered")
+        SENT = 'sent', _("Sent to Byggsikring")
+        ACCESS = 'access', _("Access granted")
 
     user = models.ForeignKey(
         to=User,
@@ -28,8 +28,10 @@ class Printer3DCourse(models.Model):
 
     class Meta:
         constraints = (
-            CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
+            CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name='user_or_cardnumber_null'),
         )
+        verbose_name = _("3D printer course")
+        verbose_name_plural = _("3D printer courses")
 
     @property
     def card_number(self):
@@ -68,7 +70,7 @@ class Printer3DCourse(models.Model):
 
     def _connect_to_user(self):
         """
-        Connect to user with username if user exists
+        Connect to user with username if user exists.
         """
         try:
             self.user = User.objects.get(username=self.username)

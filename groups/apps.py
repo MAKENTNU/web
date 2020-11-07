@@ -5,4 +5,5 @@ class GroupsConfig(AppConfig):
     name = 'groups'
 
     def ready(self):
-        import groups.signals
+        # noinspection PyUnresolvedReferences
+        from . import signals

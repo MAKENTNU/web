@@ -28,7 +28,7 @@
                 {% if perms.news.change_timeplace %}
                     <a class="make-col-blue explanation-popup" data-title="{% trans "Edit" %}"
                        data-content="{% trans "If clicked, a form for editing the occurrence is shown." %}"
-                       href="{% url 'timeplace-edit' timeplace.id %}">
+                       href="{% url 'timeplace-edit' timeplace.pk %}">
                         <i class="ui edit icon"></i>
                     </a>
                 {% endif %}
@@ -36,7 +36,7 @@
                     <a class="delete confirm make-col-blue explanation-popup"
                        data-title="{% trans "Delete" %}"
                        data-content="{% trans "If clicked, the occurrence will be deleted." %}"
-                       href="{% url 'timeplace-delete' timeplace.id %}">
+                       href="{% url 'timeplace-delete' timeplace.pk %}">
                         <i class="ui delete icon"></i>
                     </a>
                 {% endif %}
@@ -44,7 +44,7 @@
                     <a class="make-col-blue explanation-popup"
                        data-title="{% trans "Duplicate" %}"
                        data-content="{% trans "If clicked, the occurrence is duplicated." %}"
-                       href="{% url 'timeplace-duplicate' timeplace.id %}">
+                       href="{% url 'timeplace-duplicate' timeplace.pk %}">
                         <i class="ui copy icon"></i>
                     </a>
                 {% endif %}

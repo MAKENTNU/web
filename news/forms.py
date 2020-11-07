@@ -33,7 +33,6 @@ class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
         fields = "__all__"
-        exclude = []
         widgets = {
             "publication_time": SemanticDateTimeInput(),
             "image": SemanticFileInput(),

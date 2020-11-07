@@ -7,6 +7,8 @@ from .models import ContentBox
 
 class DisplayContentBoxView(TemplateView):
     template_name = 'contentbox/display.html'
+
+    # The value of this field is set when calling the view's `as_view()` method
     title = ""
 
     def get_context_data(self, **kwargs):

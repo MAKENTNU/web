@@ -3,34 +3,34 @@
     border-right: 1px solid rgb(162, 130, 12);
 }
 
-.reservation_calendar .header {
+.reservation-calendar .header {
     text-align: center;
 }
 
-.reservation_calendar .large.header {
+.reservation-calendar .large.header {
     font-size: 1.2em;
 }
 
-.reservation_calendar .medium.header {
+.reservation-calendar .medium.header {
     font-size: 1.1em;
     font-weight: normal;
 }
 
-.reservation_calendar .height.adjuster {
+.reservation-calendar .height.adjuster {
     height: 0.5em;
 }
 
-.reservation_calendar .time.indicator {
+.reservation-calendar .time.indicator {
     text-align: center;
 }
 
-.reservation_calendar .time.indication.line {
+.reservation-calendar .time.indication.line {
     height: 12.5%;
     width: 100%;
-    border-bottom: 1px solid lightgray;
+    border-bottom: 1px solid lightgrey;
 }
 
-.reservation_calendar .current.time.indicator {
+.reservation-calendar .current.time.indicator {
     width: 100%;
     height: 2px;
     background-color: red;
@@ -92,8 +92,8 @@ tr.wrapping {
 
 .selection.reservation {
     background-color: #38CAFF;
-    border-top: 1px solid #369bce;
-    border-bottom: 1px solid #369bce;
+    border-top: 1px solid #369BCE;
+    border-bottom: 1px solid #369BCE;
 }
 
 .reservation.box {
@@ -111,7 +111,7 @@ tr.wrapping {
 .selection.time {
     font-size: 0.8em;
     position: absolute;
-    background-color: #ffffff;
+    background-color: #FFF;
     padding: 0.1em;
     border-radius: 1em;
     border: 1px solid lightgrey;
@@ -178,13 +178,13 @@ tr.wrapping {
 
 /* There is not enough space on mobile for a full month header in the table. Thus the second one with a three letter shorthand */
 @media screen and (min-width: 801px) {
-    .reservation_calendar thead th:nth-child(2) {
+    .reservation-calendar thead th:nth-child(2) {
         display: none;
     }
 }
 
 @media screen and (max-width: 800px) {
-    .reservation_calendar thead th:first-child {
+    .reservation-calendar thead th:first-child {
         display: none;
     }
 }

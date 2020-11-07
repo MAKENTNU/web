@@ -5,7 +5,7 @@ from .models import TimePlace
 
 
 class EventFeed(ICalFeed):
-    """An iCal feed of all the events available to the user"""
+    """An iCal feed of all the events available to the user."""
     file_name = 'events.ics'
     timezone = "CET"
 
@@ -49,7 +49,7 @@ class EventFeed(ICalFeed):
 
 
 class SingleEventFeed(EventFeed):
-    """An iCal feed of all occurences of a single event"""
+    """An iCal feed of all occurences of a single event."""
 
     def file_name(self, attrs):
         title = self.items(attrs).values_list('event__title', flat=True).first()
@@ -63,7 +63,7 @@ class SingleEventFeed(EventFeed):
 
 
 class SingleTimePlaceFeed(EventFeed):
-    """An iCal feed of a single occurences of an event"""
+    """An iCal feed of a single occurences of an event."""
 
     def file_name(self, attrs):
         title = self.items(attrs).values_list('event__title', flat=True).first()

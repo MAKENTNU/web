@@ -7,7 +7,7 @@ from .validators import page_title_validator
 
 
 class Page(models.Model):
-    """Model for each individual documentation page"""
+    """Model for each individual documentation page."""
 
     title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[page_title_validator])
     created_by = models.ForeignKey(

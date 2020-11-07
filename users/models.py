@@ -12,14 +12,13 @@ class User(AbstractUser):
 
     def get_short_full_name(self):
         """
-        Retrieves the users first and last name. This shortens the users name
-        when it has more than two names. For example, 'Ola Johan Nordmann"
+        Retrieves the user's first and last name. This shortens the user's name
+        when they have more than two names. For example, "Ola Johan Nordmann"
         would become "Ola Nordmann".
 
-        :return: A concatenation of the users two outermost names.
+        :return: A concatenation of the user's two outermost names.
         """
         names = self.get_full_name().split(" ")
         if len(names) <= 2:
             return self.get_full_name()
         return f"{names[0]} {names[-1]}"
-
