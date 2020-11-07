@@ -6,9 +6,11 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.crypto import get_random_string
+from django.template import RequestContext
 
 from users.models import User
-from .models import Article, Event, TimePlace
+from .models import Article, Event, TimePlace, EventTicket
 
 # A very small JPEG image without any content. Used for creation of simple images when creating an article
 simple_jpg = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
@@ -101,6 +103,10 @@ class ViewTestCase(TestCase):
             title='FUTURE',
             image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
         )
+        self.timeplace = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
+                                      end_time=timezone.localtime() + timedelta(minutes=10))
+
+        self.ticketholders = [EventTicket.objects.create(_email=f"{get_random_string(length=14)}@example.com", timeplace=self.timeplace) for i in range(4)]
 
     def test_admin(self):
         response = self.client.get(reverse('admin-articles'))
@@ -214,6 +220,15 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
+    def test_ticketholder(self):
+        self.add_permission("change_event")
+        self.ticketholders[0].active = False
+        expected_string = ','.join([ticketholder.email for ticketholder in self.ticketholders if ticketholder.active])
+        response = self.client.get(reverse('timeplace-tickets', args=[self.timeplace.pk]))
+        self.assertEqual(response.status_code, 200)
+        context = response.context
+        self.assertNotRegex(context["ticket_emails"],self.ticketholders[0].email)
+        self.assertEqual(expected_string, context["ticket_emails"])
 
 class HiddenPrivateTestCase(TestCase):
 
