@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-12-14 21:06+0100\n"
+"POT-Creation-Date: 2020-11-07 14:08+0100\n"
 "PO-Revision-Date: 2018-04-18 21:29+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -13,91 +13,50 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: make_queue/static/make_queue/js/make_reservation.js:328
-msgid "Choose time"
-msgstr "Velg tid"
-
-#: make_queue/static/make_queue/js/reservation_calendar.js:40
-msgid "New reservation"
-msgstr "Ny reservasjon"
-
-#: make_queue/static/make_queue/js/reservation_calendar.js:49
-msgid "Reserve"
-msgstr "Reserver"
-
-#: make_queue/static/make_queue/js/reservation_calendar.js:54
-msgid "Can't add more reservations"
-msgstr "Kan ikke lage flere reservasjoner"
-
-#: web/static/web/js/mazemap-search.js:31
-msgid "No Results"
-msgstr "Ingen resultater"
-
-#: web/static/js/mazemap-search.js:34
-msgid "Your search returned no results"
-msgstr "Søket ditt ga ingen resultater"
-
-#: internal/static/js/members.js:71
+#: internal/static/internal/js/members.js:72
 msgid "Change"
 msgstr "Endre"
 
-#: make_queue/static/js/calendar.js:67
-msgid "Sunday"
-msgstr "Søndag"
+#: make_queue/static/make_queue/js/calendar.js:99
+msgid "New reservation"
+msgstr "Ny reservasjon"
 
-#: make_queue/static/js/calendar.js:67
-msgid "Monday"
-msgstr "Mandag"
+#: make_queue/static/make_queue/js/calendar.js:105
+msgid "Reserve"
+msgstr "Reserver"
 
-#: make_queue/static/js/calendar.js:67
-msgid "Tuesday"
-msgstr "Tirsdag"
-
-#: make_queue/static/js/calendar.js:67
-msgid "Wednesday"
-msgstr "Onsdag"
-
-#: make_queue/static/js/calendar.js:67
-msgid "Thursday"
-msgstr "Torsdag"
-
-#: make_queue/static/js/calendar.js:67
-msgid "Friday"
-msgstr "Fredag"
-
-#: make_queue/static/js/calendar.js:67
-msgid "Saturday"
-msgstr "Lørdag"
-
-#: make_queue/static/js/calendar.js:162
+#: make_queue/static/make_queue/js/calendar.js:468
 msgid "Reservation"
 msgstr "Reservasjon"
 
-#: make_queue/static/js/calendar.js:163
+#: make_queue/static/make_queue/js/calendar.js:469
 msgid "Name"
 msgstr "Navn"
 
-#: make_queue/static/js/calendar.js:164
+#: make_queue/static/make_queue/js/calendar.js:470
 msgid "Email"
 msgstr "E-post"
 
-#: make_queue/static/js/calendar.js:165
+#: make_queue/static/make_queue/js/calendar.js:471
 msgid "Time"
 msgstr "Tidspunkt"
 
-#: make_queue/static/js/calendar.js:169
+#: make_queue/static/make_queue/js/calendar.js:475
 msgid "Comment"
 msgstr "Kommentar"
+
+#: make_queue/static/make_queue/js/make_reservation.js:278
+msgid "Choose time"
+msgstr "Velg tid"
+
+#: news/static/news/js/email_copy.js:21
+msgid "Successfully copied to clipboard!"
+msgstr "Kopiert til utklipstavlen"
 
 #: web/static/lib/fomantic-ui/semantic.min.js:11
 msgctxt "Sun"
 msgid "S"
 msgstr "S"
-
-#: web/static/lib/fomantic-ui/semantic.min.js:11
-msgctxt "Sat"
-msgid "S"
-msgstr "L"
 
 #: web/static/lib/fomantic-ui/semantic.min.js:11
 msgid "M"
@@ -114,6 +73,11 @@ msgstr "O"
 #: web/static/lib/fomantic-ui/semantic.min.js:11
 msgid "F"
 msgstr "F"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
+msgctxt "Sat"
+msgid "S"
+msgstr "L"
 
 #: web/static/lib/fomantic-ui/semantic.min.js:11
 msgid "January"
@@ -208,6 +172,10 @@ msgid "Dec"
 msgstr "Des"
 
 #: web/static/lib/fomantic-ui/semantic.min.js:11
+msgid "Today"
+msgstr "I dag"
+
+#: web/static/lib/fomantic-ui/semantic.min.js:11
 msgid "Now"
 msgstr "Nå"
 
@@ -215,6 +183,11 @@ msgstr "Nå"
 msgid "Week"
 msgstr "Uke"
 
-#: web/static/lib/fomantic-ui/semantic.min.js:11
-msgid "Today"
-msgstr "I dag"
+#: web/static/web/js/widgets/mazemap-search.js:31
+msgid "No Results"
+msgstr "Ingen resultater"
+
+#: web/static/web/js/widgets/mazemap-search.js:34
+msgid "Your search returned no results"
+msgstr "Søket ditt ga ingen resultater"
+
