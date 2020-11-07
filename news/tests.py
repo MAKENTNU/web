@@ -220,7 +220,7 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
-    def test_ticketholder(self):
+    def test_ticket_emails_only_returns_active_tickeholders(self):
         self.add_permission("change_event")
         expected_string = ','.join([ticketholder.email for ticketholder in self.ticketholders if ticketholder.active])
         
