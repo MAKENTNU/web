@@ -427,7 +427,7 @@ class AdminTimeplaceTicketView(TemplateView):
             "tickets": timeplace.eventticket_set.order_by("-active").all(),
             "event": timeplace.event,
             "object": timeplace,
-            "ticket_emails": ",".join(timeplace.eventticket_set.filter(active=True).values_list('_email',flat=True))
+            "ticket_emails": ",".join([ticket.email for ticket in timeplace.eventticket_set.filter(active=True)])
         })
         return context_data
 
