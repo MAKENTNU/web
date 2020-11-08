@@ -221,7 +221,7 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
-    def test_event_ticket_emails_only_returns_active_tickeholders(self):
+    def test_event_ticket_emails_only_returns_active_tickets_emails(self):
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -240,7 +240,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
 
-    def test_timeplace_ticket_emails_only_returns_active_tickeholders(self):
+    def test_timeplace_ticket_emails_only_returns_active_tickets_emails(self):
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
