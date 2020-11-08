@@ -106,8 +106,6 @@ class ViewTestCase(TestCase):
         self.timeplace = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
                                       end_time=timezone.localtime() + timedelta(minutes=10), number_of_tickets=29)
 
-        self.ticketholders = [EventTicket.objects.create(_email=f"{get_random_string(length=14)}@example.com", timeplace=self.timeplace, active=randint(0,1)) for i in range(4)]
-
     def test_admin(self):
         response = self.client.get(reverse('admin-articles'))
         self.assertNotEqual(response.status_code, 200)
@@ -220,15 +218,15 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
-    def test_ticket_emails_only_returns_active_tickeholders(self):
+    def test_timeplace_ticket_emails_only_returns_active_tickeholders(self):
+        ticketholders = [EventTicket.objects.create(_email=f"{get_random_string(length=14)}@example.com", timeplace=self.timeplace, active=randint(0,1)) for i in range(10)]
         self.add_permission("change_event")
-        expected_string = ','.join([ticketholder.email for ticketholder in self.ticketholders if ticketholder.active])
+        expected_string = ','.join([ticketholder.email for ticketholder in ticketholders if ticketholder.active])
         
         response = self.client.get(reverse('timeplace-tickets', args=[self.timeplace.pk]))
         
         self.assertEqual(response.status_code, 200)
-        context = response.context
-        self.assertEqual(expected_string, context["ticket_emails"])
+        self.assertEqual(expected_string, response.context["ticket_emails"])
 
 class HiddenPrivateTestCase(TestCase):
 
