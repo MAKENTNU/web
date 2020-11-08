@@ -102,6 +102,7 @@ class ViewTestCase(TestCase):
         self.event = Event.objects.create(
             title='FUTURE',
             image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            number_of_tickets=40,
         )
         self.timeplace = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
                                       end_time=timezone.localtime() + timedelta(minutes=10), number_of_tickets=29)
@@ -217,6 +218,16 @@ class ViewTestCase(TestCase):
         hidden = self.article.hidden
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
+
+    def test_event_ticket_emails_only_returns_active_tickeholders(self):
+        ticketholders = [EventTicket.objects.create(_email=f"{get_random_string(length=14)}@example.com", event=self.event, active=randint(0,1)) for i in range(10)]
+        self.add_permission("change_event")
+        expected_string = ','.join([ticketholder.email for ticketholder in ticketholders if ticketholder.active])
+        
+        response = self.client.get(reverse('event-tickets', args=[self.event.pk]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(expected_string, response.context["ticket_emails"])
 
     def test_timeplace_ticket_emails_only_returns_active_tickeholders(self):
         ticketholders = [EventTicket.objects.create(_email=f"{get_random_string(length=14)}@example.com", timeplace=self.timeplace, active=randint(0,1)) for i in range(10)]
