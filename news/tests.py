@@ -220,7 +220,7 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
     def test_event_ticket_emails_only_returns_active_tickeholders(self):
-        ticketholders = [EventTicket.objects.create(_email=f"{get_random_string(length=14)}@example.com", event=self.event, active=randint(0,1)) for i in range(10)]
+        ticketholders = create_ticketholders_for(event=self.event)
         self.add_permission("change_event")
         expected_string = ','.join([ticketholder.email for ticketholder in ticketholders if ticketholder.active])
         
@@ -230,7 +230,7 @@ class ViewTestCase(TestCase):
         self.assertEqual(expected_string, response.context["ticket_emails"])
 
     def test_timeplace_ticket_emails_only_returns_active_tickeholders(self):
-        ticketholders = [EventTicket.objects.create(_email=f"{get_random_string(length=14)}@example.com", timeplace=self.timeplace, active=randint(0,1)) for i in range(10)]
+        ticketholders = create_ticketholders_for(event=self.timeplace)
         self.add_permission("change_event")
         expected_string = ','.join([ticketholder.email for ticketholder in ticketholders if ticketholder.active])
         
@@ -327,3 +327,19 @@ class HiddenPrivateTestCase(TestCase):
         self.add_permission('change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
+
+def create_ticketholders_for(event, n_tickets=10):
+    """Creates a list of active and inactive ticketholders for `event`"""
+    ticketholders = []
+    for i_ticket in range(n_tickets):
+        username = get_random_string(length=14)
+        email = f"{username}@example.com"
+        user = User.objects.create_user(username=username,email=email)
+        if isinstance(event, Event):
+            ticketholder = EventTicket.objects.create(user=user, event=event, active=randint(0,1))
+        elif isinstance(event, TimePlace):
+            ticketholder = EventTicket.objects.create(user=user, timeplace=event, active=randint(0,1))
+        else:
+            raise NotImplementedError()
+        ticketholders.append(ticketholder)
+    return ticketholders
