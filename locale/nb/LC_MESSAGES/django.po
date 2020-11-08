@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-07 13:43+0100\n"
+"POT-Creation-Date: 2020-11-08 22:54+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -566,7 +566,7 @@ msgstr "Sluttårsak"
 
 #: internal/models.py:32 internal/templates/internal/members.html:209
 #: make_queue/templates/make_queue/make_reservation.html:101
-#: news/models.py:226 news/templates/news/admin_event_tickets.html:45
+#: news/models.py:226 news/templates/news/admin_event_tickets.html:57
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -684,7 +684,7 @@ msgstr "Filtrer medlemskapsstatus"
 #: internal/templates/internal/members.html:34
 #: internal/templates/internal/members.html:242
 #: internal/templatetags/member.py:22 news/models.py:225
-#: news/templates/news/admin_event_tickets.html:25
+#: news/templates/news/admin_event_tickets.html:37
 msgid "Active"
 msgstr "Aktiv"
 
@@ -819,7 +819,7 @@ msgstr "Velg bruker"
 
 #: make_queue/forms.py:118 make_queue/forms.py:175
 #: make_queue/forms.py:185 make_queue/models/models.py:109
-#: make_queue/models/models.py:181 make_queue/models/models.py:371
+#: make_queue/models/models.py:181 make_queue/models/models.py:370
 #: make_queue/templates/make_queue/reservation_overview.html:39
 msgid "Machine type"
 msgstr "Maskintype"
@@ -929,34 +929,34 @@ msgstr "Ignorerer regler"
 msgid "All users"
 msgstr "Alle brukere"
 
-#: make_queue/models/models.py:360
+#: make_queue/models/models.py:359
 #: make_queue/templates/make_queue/make_reservation.html:72
 #: make_queue/templates/make_queue/make_reservation.html:76
 #: news/models.py:178
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/models/models.py:361
+#: make_queue/models/models.py:360
 #: make_queue/templates/make_queue/make_reservation.html:86
 #: make_queue/templates/make_queue/make_reservation.html:90
 #: news/models.py:182
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/models/models.py:363
+#: make_queue/models/models.py:362
 msgid "Days"
 msgstr "Dager"
 
-#: make_queue/models/models.py:364
+#: make_queue/models/models.py:363
 #: make_queue/templates/make_queue/rule_edit.html:35
 msgid "Start days"
 msgstr "Start dager for regel perioder"
 
-#: make_queue/models/models.py:365
+#: make_queue/models/models.py:364
 msgid "Hours single period"
 msgstr "Timer enkelt periode"
 
-#: make_queue/models/models.py:366
+#: make_queue/models/models.py:365
 msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
@@ -1714,12 +1714,12 @@ msgstr ""
 "Dette arrangementet er privat! Det vil bare vises for medlemmer av MAKE NTNU."
 
 #: news/templates/news/admin_event.html:57
-#: news/templates/news/admin_event_tickets.html:18
+#: news/templates/news/admin_event_tickets.html:30
 msgid "Tickets"
 msgstr "Billetter"
 
 #: news/templates/news/admin_event.html:61
-#: news/templates/news/admin_event_tickets.html:19
+#: news/templates/news/admin_event_tickets.html:31
 #: news/templates/news/admin_timeplace_listing.html:9
 msgid "tickets reserved"
 msgstr "billetter reservert"
@@ -1758,31 +1758,32 @@ msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"
 
-#: news/templates/news/admin_event_tickets.html:27
+#: news/templates/news/admin_event_tickets.html:18
+msgid "Emails"
+msgstr "E-poster"
+
+#: news/templates/news/admin_event_tickets.html:20
+msgid "Click to copy the emails of the active tickets to the clipboard"
+msgstr ""
+"Klikk her for å kopiere e-postene til de aktive billettene til utklippstavlen"
+
+#: news/templates/news/admin_event_tickets.html:39
 #: news/templates/news/ticket.html:6
 msgid "Canceled"
 msgstr "Kansellert"
 
-#: news/templates/news/admin_event_tickets.html:37
+#: news/templates/news/admin_event_tickets.html:49
 #: news/templates/news/ticket.html:55
 msgid "Ref #"
 msgstr "Ref #"
 
-#: news/templates/news/admin_event_tickets.html:41
+#: news/templates/news/admin_event_tickets.html:53
 msgid "Language"
 msgstr "Språk"
 
-#: news/templates/news/admin_event_tickets.html:52
+#: news/templates/news/admin_event_tickets.html:64
 msgid "No tickets have been registered for this event"
 msgstr "Ingen billetter har blitt registrert for dette arrangement"
-
-#: news/templates/news/admin_event_tickets.html:55
-msgid "Emails"
-msgstr "E-poster"
-
-#: news/templates/news/admin_event_tickets.html:57
-msgid "Click to copy email of active participants to clipboard"
-msgstr "Klikk her for å kopiere eposter til aktive deltagere til utklippstavlen"
 
 #: news/templates/news/admin_events.html:30
 #, python-format
