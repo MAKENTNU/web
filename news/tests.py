@@ -104,8 +104,12 @@ class ViewTestCase(TestCase):
             image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
             number_of_tickets=40,
         )
-        self.timeplace = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
-                                      end_time=timezone.localtime() + timedelta(minutes=10), number_of_tickets=29)
+        self.timeplace = TimePlace.objects.create(
+            event=self.event,
+            start_time=timezone.localtime() + timedelta(minutes=5),
+            end_time=timezone.localtime() + timedelta(minutes=10),
+            number_of_tickets=29
+        )
 
     def test_admin(self):
         response = self.client.get(reverse('admin-articles'))
