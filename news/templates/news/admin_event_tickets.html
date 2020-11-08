@@ -15,6 +15,18 @@
             <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
         </a>
 
+        <h3>{% trans "Emails" %}
+            <button class="copyToken"><i class="clipboard icon"></i></button>
+            <span data-content="{% trans "Click to copy email of active participants to clipboard" %}">
+                <i class="ui yellow question circle icon"></i>
+            </span>
+        </h3>
+        <div style="width: 100%;">
+            <input
+                class="input-monospace copyInput"
+                value="{{ ticket_emails }}"
+                readonly> 
+        </div>
         <h3>{% trans "Tickets" %}</h3>
         <b>{{ object.number_of_registered_tickets }}/{{ object.number_of_tickets }} {% trans "tickets reserved" %}</b>
         <div class="ui relaxed divided list">
@@ -51,18 +63,6 @@
             {% empty %}
                 {% trans "No tickets have been registered for this event" %}
             {% endfor %}
-        </div>
-        <h3>{% trans "Emails" %}
-            <button class="copyToken"><i class="clipboard icon"></i></button>
-            <span data-content="{% trans "Click to copy email of active participants to clipboard" %}">
-                <i class="ui yellow question circle icon"></i>
-            </span>
-        </h3>
-        <div style="width: 100%;">
-            <input
-                class="input-monospace copyInput"
-                value="{{ ticket_emails }}"
-                readonly> 
         </div>
     </div>
     <script>
