@@ -5,10 +5,10 @@ function delayPopup(popup) {
 }
 
 $(document).ready(function () {
-    $('.copyToken').click(function (){
+    $('.copy-token').click(function (){
         clearTimeout(popupTimer);
 
-        var $input = $(this).closest('div').find('.copyInput');
+        var $input = $(this).closest('div').find('.copy-input');
 
         /* Select the text field */
         $input.select();
