@@ -259,6 +259,43 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
 
+    def test_event_ticket_emails_returns_tickets_email_after_reregistration(self):
+        username_and_ticket_state_tuples = [
+            ("user2", True),
+            ("user2", False),
+        ]
+
+        tickets = create_tickets_for(
+            event=self.event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        )
+        expected_ticket_emails = "user2@example.com"
+        self.add_permission("change_event")
+        
+        response = self.client.get(reverse('event-tickets', args=[self.event.pk]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
+
+    def test_timeplace_ticket_emails_returns_tickets_email_after_reregistration(self):
+        username_and_ticket_state_tuples = [
+            ("user2", True),
+            ("user2", False),
+        ]
+
+        tickets = create_tickets_for(
+            event=self.timeplace,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        )
+        expected_ticket_emails = "user2@example.com"
+        self.add_permission("change_event")
+        
+        response = self.client.get(reverse('timeplace-tickets', args=[self.timeplace.pk]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
+
+
 class HiddenPrivateTestCase(TestCase):
 
     def add_permission(self, codename):
