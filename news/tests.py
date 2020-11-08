@@ -6,8 +6,6 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.crypto import get_random_string
-from random import randint
 
 from users.models import User
 from .models import Article, Event, TimePlace, EventTicket
@@ -224,9 +222,20 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
     def test_event_ticket_emails_only_returns_active_tickeholders(self):
-        ticketholders = create_ticketholders_for(event=self.event)
+        username_and_ticket_state_tuples = [
+            ("user1", False),
+            ("user1", True),
+            ("user2", True),
+            ("user3", False),
+            ("user4", True),
+        ]
+
+        tickets = create_tickets_for(
+            event=self.event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        )
+        expected_string = "user1@example.com,user2@example.com,user4@example.com"
         self.add_permission("change_event")
-        expected_string = ','.join([ticketholder.email for ticketholder in ticketholders if ticketholder.active])
         
         response = self.client.get(reverse('event-tickets', args=[self.event.pk]))
         
@@ -234,9 +243,20 @@ class ViewTestCase(TestCase):
         self.assertEqual(expected_string, response.context["ticket_emails"])
 
     def test_timeplace_ticket_emails_only_returns_active_tickeholders(self):
-        ticketholders = create_ticketholders_for(event=self.timeplace)
+        username_and_ticket_state_tuples = [
+            ("user1", False),
+            ("user1", True),
+            ("user2", True),
+            ("user3", False),
+            ("user4", True),
+        ]
+
+        tickets = create_tickets_for(
+            event=self.timeplace,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        )
+        expected_string = "user1@example.com,user2@example.com,user4@example.com"
         self.add_permission("change_event")
-        expected_string = ','.join([ticketholder.email for ticketholder in ticketholders if ticketholder.active])
         
         response = self.client.get(reverse('timeplace-tickets', args=[self.timeplace.pk]))
         
@@ -332,18 +352,24 @@ class HiddenPrivateTestCase(TestCase):
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
-def create_ticketholders_for(event, n_tickets=10):
-    """Creates a list of active and inactive ticketholders for `event`"""
-    ticketholders = []
-    for i_ticket in range(n_tickets):
-        username = get_random_string(length=14)
-        email = f"{username}@example.com"
-        user = User.objects.create_user(username=username,email=email)
-        if isinstance(event, Event):
-            ticketholder = EventTicket.objects.create(user=user, event=event, active=randint(0,1))
-        elif isinstance(event, TimePlace):
-            ticketholder = EventTicket.objects.create(user=user, timeplace=event, active=randint(0,1))
-        else:
-            raise NotImplementedError()
-        ticketholders.append(ticketholder)
-    return ticketholders
+def create_tickets_for(event, username_and_ticket_state_tuples):
+    """Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
+
+    :param event: Event or TimePlace model that the ticket belongs to
+    :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
+
+    :return: List of tickets to ``event`` with the details from ``username_and_ticket_state_tuples``
+    """
+
+    event_arg_name = 'timeplace' if isinstance(event, TimePlace) else 'event'
+    tickets = []
+    for username, ticket_state in username_and_ticket_state_tuples:
+        user = User.objects.get_or_create(username=username, email=f"{username}@example.com")[0]
+        tickets.append(
+            EventTicket.objects.create(
+                user=user,
+                active=ticket_state,
+                **{event_arg_name: event},
+            )
+        )
+    return tickets
