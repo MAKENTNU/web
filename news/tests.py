@@ -343,3 +343,4 @@ def create_ticketholders_for(event, n_tickets=10):
             raise NotImplementedError()
         ticketholders.append(ticketholder)
     return ticketholders
+    
