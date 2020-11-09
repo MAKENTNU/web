@@ -288,6 +288,16 @@ class ViewTestCase(TestCase):
         )
 
     def assert_context_ticket_emails(self, url_name, event, username_and_ticket_state_tuples, expected_context_ticket_emails):
+        """Asserts that the `ticket_emails` in context at ``url_name`` equals ``expected_context_ticket_emails``
+        
+        :param url_name: Name of URL
+        :param event: Event or TimePlace that the tickets belong to
+        :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
+        :param expected_context_ticket_emails: The expected string of comma separated ticket emails
+
+        :return: Boolean based on `context['ticket_emails']` is `expected_context_ticket_emails` and status code is 200 
+        """
+
         tickets = self.create_tickets_for(
             event=event,
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
