@@ -221,7 +221,7 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
-    def test_event_ticket_emails_only_returns_active_tickets_emails(self):
+    def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
         url_name = "event-tickets"
         event = self.event
         username_and_ticket_state_tuples = [
@@ -238,7 +238,7 @@ class ViewTestCase(TestCase):
             expected_context_ticket_emails=expected_context_ticket_emails
         )
 
-    def test_timeplace_ticket_emails_only_returns_active_tickets_emails(self):
+    def test_timeplace_context_ticket_emails_only_returns_active_tickets_emails(self):
         url_name = "timeplace-tickets"
         event = self.timeplace
         username_and_ticket_state_tuples = [
@@ -255,7 +255,7 @@ class ViewTestCase(TestCase):
             expected_context_ticket_emails=expected_context_ticket_emails
         )
 
-    def test_event_ticket_emails_returns_tickets_email_after_reregistration(self):
+    def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
         url_name = "event-tickets"
         event = self.event
         username_and_ticket_state_tuples = [
@@ -271,7 +271,7 @@ class ViewTestCase(TestCase):
             expected_context_ticket_emails=expected_context_ticket_emails
         )
 
-    def test_timeplace_ticket_emails_returns_tickets_email_after_reregistration(self):
+    def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(self):
         url_name = "timeplace-tickets"
         event = self.timeplace
         username_and_ticket_state_tuples = [
