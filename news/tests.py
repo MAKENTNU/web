@@ -228,7 +228,7 @@ class ViewTestCase(TestCase):
             ("user4", True),
         ]
 
-        tickets = create_tickets_for(
+        tickets = self.create_tickets_for(
             event=self.event,
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
         )
@@ -247,7 +247,7 @@ class ViewTestCase(TestCase):
             ("user4", True),
         ]
 
-        tickets = create_tickets_for(
+        tickets = self.create_tickets_for(
             event=self.timeplace,
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
         )
@@ -265,7 +265,7 @@ class ViewTestCase(TestCase):
             ("user2", False),
         ]
 
-        tickets = create_tickets_for(
+        tickets = self.create_tickets_for(
             event=self.event,
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
         )
@@ -283,7 +283,7 @@ class ViewTestCase(TestCase):
             ("user2", False),
         ]
 
-        tickets = create_tickets_for(
+        tickets = self.create_tickets_for(
             event=self.timeplace,
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
         )
@@ -295,6 +295,28 @@ class ViewTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
 
+    @staticmethod
+    def create_tickets_for(event, username_and_ticket_state_tuples):
+        """Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
+
+        :param event: Event or TimePlace model that the ticket belongs to
+        :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
+
+        :return: List of tickets to ``event`` with the details from ``username_and_ticket_state_tuples``
+        """
+
+        event_arg_name = 'timeplace' if isinstance(event, TimePlace) else 'event'
+        tickets = []
+        for username, ticket_state in username_and_ticket_state_tuples:
+            user = User.objects.get_or_create(username=username, email=f"{username}@example.com")[0]
+            tickets.append(
+                EventTicket.objects.create(
+                    user=user,
+                    active=ticket_state,
+                    **{event_arg_name: event},
+                )
+            )
+        return tickets
 
 class HiddenPrivateTestCase(TestCase):
 
@@ -385,24 +407,3 @@ class HiddenPrivateTestCase(TestCase):
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
-def create_tickets_for(event, username_and_ticket_state_tuples):
-    """Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
-
-    :param event: Event or TimePlace model that the ticket belongs to
-    :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
-
-    :return: List of tickets to ``event`` with the details from ``username_and_ticket_state_tuples``
-    """
-
-    event_arg_name = 'timeplace' if isinstance(event, TimePlace) else 'event'
-    tickets = []
-    for username, ticket_state in username_and_ticket_state_tuples:
-        user = User.objects.get_or_create(username=username, email=f"{username}@example.com")[0]
-        tickets.append(
-            EventTicket.objects.create(
-                user=user,
-                active=ticket_state,
-                **{event_arg_name: event},
-            )
-        )
-    return tickets
