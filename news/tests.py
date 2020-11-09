@@ -222,78 +222,82 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
     def test_event_ticket_emails_only_returns_active_tickets_emails(self):
+        url_name = "event-tickets"
+        event = self.event
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
             ("user4", True),
         ]
+        expected_context_ticket_emails = "user2@example.com,user4@example.com"
 
-        tickets = self.create_tickets_for(
-            event=self.event,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
         )
-        expected_ticket_emails = "user2@example.com,user4@example.com"
-        self.add_permission("change_event")
-        
-        response = self.client.get(reverse('event-tickets', args=[self.event.pk]))
-        
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
 
     def test_timeplace_ticket_emails_only_returns_active_tickets_emails(self):
+        url_name = "timeplace-tickets"
+        event = self.timeplace
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
             ("user4", True),
         ]
+        expected_context_ticket_emails = "user2@example.com,user4@example.com"
 
-        tickets = self.create_tickets_for(
-            event=self.timeplace,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
         )
-        expected_ticket_emails = "user2@example.com,user4@example.com"
-        self.add_permission("change_event")
-        
-        response = self.client.get(reverse('timeplace-tickets', args=[self.timeplace.pk]))
-        
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
 
     def test_event_ticket_emails_returns_tickets_email_after_reregistration(self):
+        url_name = "event-tickets"
+        event = self.event
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),
         ]
+        expected_context_ticket_emails = "user2@example.com"
 
-        tickets = self.create_tickets_for(
-            event=self.event,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
         )
-        expected_ticket_emails = "user2@example.com"
-        self.add_permission("change_event")
-        
-        response = self.client.get(reverse('event-tickets', args=[self.event.pk]))
-        
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
 
     def test_timeplace_ticket_emails_returns_tickets_email_after_reregistration(self):
+        url_name = "timeplace-tickets"
+        event = self.timeplace
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),
         ]
+        expected_context_ticket_emails = "user2@example.com"
 
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
+        )
+
+    def assert_context_ticket_emails(self, url_name, event, username_and_ticket_state_tuples, expected_context_ticket_emails):
         tickets = self.create_tickets_for(
-            event=self.timeplace,
+            event=event,
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
         )
-        expected_ticket_emails = "user2@example.com"
         self.add_permission("change_event")
         
-        response = self.client.get(reverse('timeplace-tickets', args=[self.timeplace.pk]))
+        response = self.client.get(reverse(url_name, args=[event.pk]))
         
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(expected_ticket_emails, response.context["ticket_emails"])
+        self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
 
     @staticmethod
     def create_tickets_for(event, username_and_ticket_state_tuples):
