@@ -4,6 +4,7 @@ from typing import Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Lower
@@ -99,7 +100,18 @@ class Machine(models.Model):
 
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
-    stream_name = models.CharField(max_length=30, verbose_name=_("Stream Name"), default=None, blank=True, null=True)
+    stream_name = models.CharField(
+        max_length=30,
+        verbose_name=_("Stream Name"),
+        default=None, blank=True, null=True,
+        validators=[
+            RegexValidator(
+                regex="^[a-zA-Z0-9_-]*",
+                message=_("Enter an URL safe message"),
+                code="NOT_URL_SAFE"
+            )
+        ]
+    )
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
     machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
