@@ -6,7 +6,8 @@ from django.views.generic import TemplateView
 from django_hosts import reverse
 
 from internal.views import MembersListView, AddMemberView, EditMemberView, MemberUndoQuitView, MemberQuitView, \
-    MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, SecretsView, EditSecretView, CreateSecretView
+    MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, SecretsView, EditSecretView, CreateSecretView, \
+    DeleteSecretView
 
 unsafe_urlpatterns = [
     path("members", MembersListView.as_view(), name="members"),
@@ -22,7 +23,8 @@ unsafe_urlpatterns = [
     path("", MembersListView.as_view(), name="home"),
     path("secrets/", SecretsView.as_view(), name="secrets"),
     path("secrets/<int:pk>/edit/", EditSecretView.as_view(), name="edit-secret"),
-    path("secrets/create/", CreateSecretView.as_view(), name="create-secret")
+    path("secrets/create/", CreateSecretView.as_view(), name="create-secret"),
+    path("secrets/<int:pk>/delete/", DeleteSecretView.as_view(), name="delete-secret")
 ]
 
 urlpatterns = [

@@ -39,13 +39,13 @@ class EditSecretView(PermissionRequiredMixin, UpdateView):
     permission_required = 'internal.change_SecretContent'
     success_url = reverse_lazy('secrets')
 
+
 class DeleteSecretView(PermissionRequiredMixin, DeleteView):
     model = SecretContent
     success_url = reverse_lazy('secrets')
     permission_required = 'internal.delete_SecretContent'
 
     def delete(self, request, *args, **kwargs):
-        secret = self.get_object()
         return super().delete(request, *args, **kwargs)
 
 
