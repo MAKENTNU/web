@@ -1,7 +1,7 @@
 function setupSocket($elem) {
     let chatSocket = new WebSocket(
         `wss://${window.location.host}/ws/stream/`
-        + $elem.attr("data-stream").replace(/ /g, "-").replace(/ö/g, "o") + '/');
+        + $elem.attr("data-stream") + '/');
 
     chatSocket.image = $elem;
 
