@@ -99,6 +99,7 @@ class Machine(models.Model):
 
     status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
     name = models.CharField(max_length=30, unique=True, verbose_name=_("Name"))
+    stream_name = models.CharField(max_length=30, verbose_name=_("Stream Name"), default=None, blank=True, null=True)
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
     machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))

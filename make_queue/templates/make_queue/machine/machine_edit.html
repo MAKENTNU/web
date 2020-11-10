@@ -59,6 +59,13 @@
                 </div>
             </div>
 
+            <div class="ui two fields">
+                <div class="ui text field">
+                    <label>{{ form.stream_name.label }}</label>
+                    {{ form.stream_name }}
+                </div>
+            </div>
+
             <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
 
             <a href="{% url "reservation_machines_overview" %}" class="ui right floated red button">
