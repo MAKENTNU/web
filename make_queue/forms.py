@@ -202,6 +202,15 @@ class BaseMachineForm(forms.ModelForm):
             widget=SemanticSearchableChoiceInput(attrs={"required": True}),
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        if cleaned_data["machine_type"].has_stream and cleaned_data["stream_name"] is None:
+            self._errors['stream_name'] = [_("Stream Name cannot be empty")]
+            raise ValidationError(_("stream_name cannot be None"), code="stream_name_is_none")
+
+        return cleaned_data
+
     class Meta:
         model = Machine
         fields = "__all__"
