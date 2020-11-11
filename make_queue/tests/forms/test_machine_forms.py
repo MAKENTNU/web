@@ -11,7 +11,6 @@ class MachineFormTest(TestCase):
 
     def setUp(self):
         self.printer_machine_type = MachineType.objects.get(pk=1)
-        self.machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+", machine_type=self.printer_machine_type)
         self.valid_form_data = {
             "name": "Machine_test1",
             "status": "F",
