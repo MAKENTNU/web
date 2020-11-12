@@ -2169,10 +2169,8 @@ msgid "FAQ"
 msgstr "FAQ"
 
 #: web/templates/web/admin_panel.html:114
-#, fuzzy
-#| msgid "Here you can add or edit equipment at Makerverkstedet"
 msgid "Here you can add or edit frequently asked questions"
-msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
+msgstr "Her kan du legge til eller redigere ofte stilte spørsmål"
 
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
@@ -2273,8 +2271,3 @@ msgstr "Velg verdi"
 #: web/widgets.py:51
 msgid "Search places"
 msgstr "Søk etter steder"
-
-#~ msgid ""
-#~ "Hold control while choosing categories to choose several, hold shift "
-#~ "choosing consecutive"
-#~ msgstr "Hold ctrl "
