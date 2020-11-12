@@ -180,3 +180,6 @@ class Secret(models.Model):
     )
     content = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
     last_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.title)
