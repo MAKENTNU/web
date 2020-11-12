@@ -1,10 +1,14 @@
 from typing import Union
 
+from django.contrib.auth.models import Permission
 from django.test import TestCase
+from django.urls import reverse
 
+from users.models import User
 from ...models.models import Machine, MachineType
 from ...tests.utility import template_view_get_context_data
 from ...views.reservation.machine import MachineView
+from ...forms import EditMachineForm
 
 
 class MachineViewTest(TestCase):
@@ -74,3 +78,43 @@ class MachineViewTest(TestCase):
         for machine_type, correct_machine_order in zip(machine_types, correct_machine_orders):
             with self.subTest(machine_type=machine_type):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
+
+class EditMachineFormTest(TestCase):
+
+    def setUp(self):
+        username = 'TEST_USER'
+        password = 'TEST_PASS'
+        self.user = User.objects.create_user(username=username, password=password)
+        permission = Permission.objects.get(codename="change_machine")
+        self.user.user_permissions.add(permission)
+        self.client.login(username=username, password=password)
+
+    def test_context_data_has_EditMachineForm(self):
+        printer_machine_type = MachineType.objects.get(pk=1)
+        machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+", machine_type=printer_machine_type)
+        self.response = self.client.get(reverse("edit_machine", args=[machine.pk]))
+        
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTrue(isinstance(self.response.context_data["form"], EditMachineForm))
+
+    def test_editMachineForm_has_not_disabled_stream_name_when_3dprinter(self):
+        printer_machine_type_pk = 1
+        self.assert_stream_name_disabled(machine_type_pk=printer_machine_type_pk, expected=False)
+
+    def test_editMachineForm_has_disabled_stream_name_when_not_3dprinter(self):
+        not_printer_machine_type_pk = 2
+        self.assert_stream_name_disabled(machine_type_pk=not_printer_machine_type_pk, expected=True)
+
+    def assert_stream_name_disabled(self, machine_type_pk, expected):
+        machine_type = MachineType.objects.get(pk=machine_type_pk)
+        machine = Machine.objects.create(
+            name="noTest",
+            machine_model="machine model",
+            machine_type=machine_type
+            )
+        self.response = self.client.get(reverse("edit_machine", args=[machine.pk]))
+        
+        self.assertEqual(
+            self.response.context_data["form"]["stream_name"].field.disabled,
+            expected
+        )
