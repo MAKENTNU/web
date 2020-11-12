@@ -172,11 +172,11 @@ class SystemAccess(models.Model):
         return self.name != self.WEBSITE
 
 
-class SecretContent(models.Model):
+class Secret(models.Model):
     title = MultiLingualTextField(
         max_length=100,
         unique=True,
-        verbose_name=_("Title")
+        verbose_name=_("Title"),
     )
-    description = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
-    date = models.DateField(auto_now=True)
+    content = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
+    last_modified = models.DateTimeField(auto_now=True)

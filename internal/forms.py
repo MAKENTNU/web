@@ -4,7 +4,7 @@ from django import forms
 
 import card.utils
 from card.forms import CardNumberField
-from internal.models import Member, SystemAccess, SecretContent
+from internal.models import Member, SystemAccess, Secret
 from users.models import User
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
 
@@ -88,5 +88,5 @@ class ToggleSystemAccessForm(ModelForm):
 
 class SecretsForm(forms.ModelForm):
     class Meta:
-        model = SecretContent
+        model = Secret
         fields = "__all__"
