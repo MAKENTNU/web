@@ -1,15 +1,13 @@
-function showSecret(buttonId) {
-    let hiddenEl = document.getElementsByClassName("hidden")
-    let button = document.getElementsByTagName("button")
-    for (let i =0; i<hiddenEl.length; i++) {
-        if (hiddenEl[i].id == buttonId) {
-            hiddenEl[i].style.display = "inline"
-            button[i].style.display = "none"
+const SECRET_SHOW_DURATION_SECONDS = 10;
 
-            setTimeout(() => {
-                hiddenEl[i].style.display = "none"
-                button[i].style.display = "inline"
-            }, 5000)
-        }
-    }
-}
+$(".secret-button").click(function () {
+    const secretButton = $(this);
+    const secretId = secretButton.data("secret-id");
+    const secret = $(`#${secretId}`);
+    secret.removeClass("hidden");
+    secretButton.addClass("hidden");
+    setTimeout(() => {æ
+        secret.addClass("hidden");
+        secretButton.removeClass("hidden");
+    }, SECRET_SHOW_DURATION_SECONDS * 1000);
+});
