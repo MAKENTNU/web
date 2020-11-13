@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 
-def set_stream_name(self, apps, schema_editor):
+def set_stream_name(apps, schema_editor):
     Machine = apps.get_model('make_queue', 'Machine')
     db_alias = schema_editor.connection.alias
 
