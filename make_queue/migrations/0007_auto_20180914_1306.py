@@ -3,7 +3,6 @@
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import make_queue.fields
 
 
 class Migration(migrations.Migration):
@@ -72,7 +71,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='machine',
             name='machine_type',
-            field=make_queue.fields.MachineTypeField(choices=[(0, '3D-printer'), (1, 'Symaskin')], null=True),
+            field=models.IntegerField(choices=[(0, '3D-printer'), (1, 'Symaskin')], null=True),
         ),
         migrations.AddField(
             model_name='quota',
@@ -92,7 +91,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='quota',
             name='machine_type',
-            field=make_queue.fields.MachineTypeField(choices=[(0, '3D-printer'), (1, 'Symaskin')], null=True),
+            field=models.IntegerField(choices=[(0, '3D-printer'), (1, 'Symaskin')], null=True),
         ),
         migrations.AddField(
             model_name='quota',

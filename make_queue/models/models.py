@@ -1,17 +1,84 @@
 from abc import abstractmethod
 from datetime import timedelta
+from typing import Union
 
+from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Q
+from django.db.models import F, Prefetch, Q
+from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from make_queue.fields import MachineTypeField
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 from users.models import User
-from web.multilingual.database import MultiLingualRichTextUploadingField
+from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from ..models.course import Printer3DCourse
+
+
+class MachineTypeQuerySet(models.QuerySet):
+
+    def prefetch_machines_and_default_order_by(self, *, machines_attr_name: str):
+        """
+        Returns a ``QuerySet`` where all the ``MachineType``'s machines have been prefetched
+        and can be accessed through the attribute with the same name as ``machines_attr_name``.
+        """
+        return self.order_by("priority").prefetch_related(
+            Prefetch("machines",
+                     queryset=Machine.objects.order_by(
+                         F("priority").asc(nulls_last=True),
+                         Lower("name"),
+                     ), to_attr=machines_attr_name)
+        )
+
+
+class MachineType(models.Model):
+    class UsageRequirement(models.TextChoices):
+        IS_AUTHENTICATED = "AUTH", _("Only has to be logged in")
+        TAKEN_3D_PRINTER_COURSE = "3DPR", _("Taken the 3D printer course")
+
+    name = MultiLingualTextField(unique=True)
+    cannot_use_text = MultiLingualTextField(blank=True)
+    usage_requirement = models.CharField(
+        max_length=4,
+        choices=UsageRequirement.choices,
+        default=UsageRequirement.IS_AUTHENTICATED,
+        verbose_name=_("Usage requirement"),
+    )
+    has_stream = models.BooleanField(default=False)
+    priority = models.IntegerField(
+        verbose_name=_("Priority"),
+        help_text=_("The machine types are sorted ascending by this value."),
+    )
+
+    objects = MachineTypeQuerySet.as_manager()
+
+    class Meta:
+        ordering = ("priority",)
+
+    def __str__(self):
+        return str(self.name)
+
+    def can_user_use(self, user: User):
+        if self.usage_requirement == self.UsageRequirement.IS_AUTHENTICATED:
+            return user.is_authenticated
+        elif self.usage_requirement == self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
+            return self.can_use_3d_printer(user)
+        return False
+
+    @staticmethod
+    def can_use_3d_printer(user: Union[User, AnonymousUser]):
+        if not user.is_authenticated:
+            return False
+        if Printer3DCourse.objects.filter(user=user).exists():
+            return True
+        if Printer3DCourse.objects.filter(username=user.username).exists():
+            course_registration = Printer3DCourse.objects.get(username=user.username)
+            course_registration.user = user
+            course_registration.save()
+            return True
+        return False
 
 
 class Machine(models.Model):
@@ -35,7 +102,18 @@ class Machine(models.Model):
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
     machine_model = models.CharField(max_length=40, verbose_name=_("Machine model"))
-    machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
+    machine_type = models.ForeignKey(
+        to=MachineType,
+        on_delete=models.PROTECT,
+        related_name="machines",
+        verbose_name=_("Machine type"),
+    )
+    priority = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_("Priority"),
+        help_text=_("If specified, the machines are sorted ascending by this value."),
+    )
 
     @abstractmethod
     def get_reservation_set(self):
@@ -73,12 +151,20 @@ class Machine(models.Model):
     def _get_status_display(self):
         return self.STATUS_CHOICES_DICT[self.get_status()]
 
+    @property
+    def is_reservable(self):
+        return self.get_status() in {self.AVAILABLE, self.RESERVED, self.IN_USE}
+
 
 class MachineUsageRule(models.Model):
     """
     Allows for specification of rules for each type of machine
     """
-    machine_type = MachineTypeField(unique=True)
+    machine_type = models.OneToOneField(
+        to=MachineType,
+        on_delete=models.CASCADE,
+        related_name="usage_rule",
+    )
     content = MultiLingualRichTextUploadingField()
 
 
@@ -88,7 +174,12 @@ class Quota(models.Model):
     ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
     all = models.BooleanField(default=False, verbose_name=_("All users"))
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
-    machine_type = MachineTypeField(null=True, verbose_name=_("Machine type"))
+    machine_type = models.ForeignKey(
+        to=MachineType,
+        on_delete=models.CASCADE,
+        related_name="quotas",
+        verbose_name=_("Machine type"),
+    )
 
     class Meta:
         permissions = (
@@ -118,7 +209,7 @@ class Quota(models.Model):
 
     @staticmethod
     def get_user_quotas(user, machine_type):
-        return Quota.objects.filter(Q(user=user) | Q(all=True)).filter(machine_type=machine_type)
+        return machine_type.quotas.filter(Q(user=user) | Q(all=True))
 
     @staticmethod
     def get_best_quota(reservation):
@@ -194,6 +285,10 @@ class Reservation(models.Model):
         if not self.is_within_allowed_period():
             return False
 
+        # Check if machine is listed as out of order or maintenance
+        if self.check_machine_out_of_order() or self.check_machine_maintenance():
+            return False
+
         # Check if the user can change the reservation
         if self.pk:
             old_reservation = Reservation.objects.get(pk=self.pk)
@@ -225,6 +320,14 @@ class Reservation(models.Model):
     def is_within_allowed_period(self):
         """Check if the reservation is made within the reservation_future_limit"""
         return self.end_time <= timezone.now() + timedelta(days=self.reservation_future_limit_days)
+
+    def check_machine_out_of_order(self):
+        """Check if the machine is listed as out of order"""
+        return self.machine.get_status() == Machine.OUT_OF_ORDER
+
+    def check_machine_maintenance(self):
+        """Check if the machine is listed as maintenance"""
+        return self.machine.get_status() == Machine.MAINTENANCE
 
     def can_delete(self, user):
         if user.has_perm("make_queue.delete_reservation"):
@@ -261,7 +364,12 @@ class ReservationRule(models.Model):
     start_days = models.IntegerField(default=0, verbose_name=_("Start days"))
     max_hours = models.FloatField(verbose_name=_("Hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multiperiod"))
-    machine_type = MachineTypeField(verbose_name=_("Machine type"))
+    machine_type = models.ForeignKey(
+        to=MachineType,
+        on_delete=models.CASCADE,
+        related_name="reservation_rules",
+        verbose_name=_("Machine type"),
+    )
 
     def save(self, **kwargs):
         if not self.is_valid_rule():
@@ -273,7 +381,7 @@ class ReservationRule(models.Model):
         # Normal non rule ignoring reservations will not be longer than 1 week
         if timedelta_to_hours(end_time - start_time) > (7 * 24):
             return False
-        rules = [rule for rule in ReservationRule.objects.filter(machine_type=machine_type) if
+        rules = [rule for rule in machine_type.reservation_rules.all() if
                  rule.hours_inside(start_time, end_time)]
         if timedelta_to_hours(end_time - start_time) > max(rule.max_hours for rule in rules):
             return False
@@ -329,7 +437,7 @@ class ReservationRule(models.Model):
 
         # Check for overlap with other time periods
         other_time_periods = [time_period for rule in
-                              ReservationRule.objects.filter(machine_type=self.machine_type).exclude(pk=self.pk) for
+                              self.machine_type.reservation_rules.exclude(pk=self.pk) for
                               time_period in rule.time_periods()]
 
         other_overlap = any(t1.overlap(t2) for t1 in time_periods for t2 in other_time_periods)

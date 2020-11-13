@@ -9,12 +9,11 @@ from django.views.generic import RedirectView, TemplateView, FormView
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import ngettext
 
-from make_queue.fields import MachineTypeField
-from make_queue.forms import ReservationForm, FreeSlotForm
-from make_queue.models.models import Machine, Reservation
-from make_queue.templatetags.reservation_extra import calendar_url_reservation
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+from ...forms import FreeSlotForm, ReservationForm
+from ...models.models import Machine, MachineType, Reservation
+from ...templatetags.reservation_extra import calendar_url_reservation
 
 
 class ReservationCreateOrChangeView(TemplateView):
@@ -46,6 +45,10 @@ class ReservationCreateOrChangeView(TemplateView):
             return _("The start time can't be after the end time")
         if reservation.starts_before_now():
             return _("The reservation can't start in the past")
+        if reservation.check_machine_out_of_order():
+            return _("The machine is out of order")
+        if reservation.check_machine_maintenance():
+            return _("The machine is under maintenance")
         return _("The time slot is not available")
 
     def validate_and_save(self, reservation, form):
@@ -78,9 +81,9 @@ class ReservationCreateOrChangeView(TemplateView):
             "new_reservation": self.new_reservation,
             "events": list(TimePlace.objects.filter(end_time__gte=timezone.localtime())),
             "machine_types": [
-                {"literal": machine_type.name, "instances": Machine.objects.filter(machine_type=machine_type)}
-                for machine_type in MachineTypeField.possible_machine_types if
-                machine_type.can_user_use(self.request.user)
+                machine_type
+                for machine_type in MachineType.objects.prefetch_machines_and_default_order_by(machines_attr_name="instances")
+                if machine_type.can_user_use(self.request.user)
             ],
             "maximum_days_in_advance": Reservation.reservation_future_limit_days,
         }
@@ -201,10 +204,11 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
-        if not (kwargs["reservation"].can_change(request.user)
-                and kwargs["reservation"].can_change_end_time(request.user)):
+        reservation = kwargs["reservation"]
+        if reservation.can_change(request.user) or reservation.can_change_end_time(request.user):
+            return super().dispatch(request, *args, **kwargs)
+        else:
             return redirect("my_reservations")
-        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form, **kwargs):
         """
@@ -215,6 +219,10 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         reservation = kwargs["reservation"]
         # The user is not allowed to change the machine for a reservation
         if reservation.machine != form.cleaned_data["machine"]:
+            return redirect("my_reservations")
+
+        # If the reservation has begun, the user is not allowed to change the start time
+        if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
             return redirect("my_reservations")
 
         reservation.comment = form.cleaned_data["comment"]
@@ -260,6 +268,9 @@ class FindFreeSlot(FormView):
     """
     template_name = "make_queue/find_free_slot.html"
     form_class = FreeSlotForm
+
+    def get_initial(self):
+        return {"machine_type": MachineType.objects.first()}
 
     @staticmethod
     def format_period(machine, start_time, end_time):
@@ -329,8 +340,7 @@ class FindFreeSlot(FormView):
             form.cleaned_data["minutes"] / 60
 
         periods = []
-        for machine in Machine.objects.filter(
-                machine_type=form.cleaned_data["machine_type"]):
+        for machine in form.cleaned_data["machine_type"].machines.all():
             if not machine.get_status() == Machine.OUT_OF_ORDER:
                 periods += self.get_periods(machine, required_time)
 

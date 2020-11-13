@@ -9,8 +9,14 @@
             <div class="logo">
                 <img src="{% static "web/img/logo_allwhite.svg" %}">
             </div>
-            <a href="http://s.mazemap.com/2zleDaH" title="{% trans "You can find us here!" %}" target="_blank">{% trans "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim" %} </a>
-            <a href="http://s.mazemap.com/2zleDaH" target="blank"><i class="map marker alternate icon"></i></a>
+            {% with mazemap_link="https://use.mazemap.com/#config=default&v=1&zlevel=-1&center=10.406219,63.415816&zoom=19.3&campusid=1&sharepoitype=poi&sharepoi=1000098577&utm_medium=longurl" %}
+                <a href="{{ mazemap_link }}" title="{% trans "You can find us here!" %}" target="_blank">
+                    {% trans "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim" %}
+                </a>
+                <a href="{{ mazemap_link }}" target="_blank">
+                    <i class="map marker alternate icon"></i>
+                </a>
+            {% endwith %}
         </div>
         <div class="ui social list">
             <div class="item">

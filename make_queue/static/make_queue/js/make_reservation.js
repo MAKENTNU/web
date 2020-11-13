@@ -210,7 +210,7 @@ $('#machine_type_dropdown').dropdown('setting', 'onChange', function (selectedMa
 
         // Replace the shown machine items from the last selected machine type with the ones from the currently selected machine type
         $('#machine_name_dropdown .menu .item').toggleClass("make_hidden", true);
-        $(`#machine_name_dropdown .menu .item.${selectedMachineType}`).toggleClass("make_hidden", false);
+        $(`#machine_name_dropdown .menu .item.machine_type_${selectedMachineType}`).toggleClass("make_hidden", false);
     }
 }).dropdown("set selected", $('.selected_machine_type').data("value"));
 
