@@ -1,8 +1,10 @@
 {% extends "web/base.html" %}
+{% load static %}
 {% load i18n %}
 
 {% block head %}
     {{ form.media }}
+    <script type="text/javascript" src="{% static "make_queue/js/create_machine.js" %}"></script>
 {% endblock %}
 
 {% block body %}
