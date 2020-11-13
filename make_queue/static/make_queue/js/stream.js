@@ -16,7 +16,7 @@ function setupSocket($elem) {
     };
 }
 
-$(`#${streamID}`).each(function () {
+$('.stream.image').each(function () {
     setupSocket($(this));
 }).click(function () {
     $(this).toggleClass('fullscreen');
