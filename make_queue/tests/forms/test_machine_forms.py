@@ -94,5 +94,5 @@ class EditMachineFormTest(TestCase):
     #     form_data["stream_name"] = ""
     #
     #     form = BaseMachineForm(data=form_data)
-
-        self.assertTrue(form.is_valid())
+    #
+    #     self.assertTrue(form.is_valid())
