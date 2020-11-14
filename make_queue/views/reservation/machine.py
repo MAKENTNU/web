@@ -9,18 +9,12 @@ from ...models.models import Machine, MachineType
 class MachineView(TemplateView):
     """View that shows all the machines."""
     template_name = 'make_queue/machine_list.html'
-
-    def get_context_data(self):
-        """
-        Creates the context required for the template.
-
-        :return: A queryset of all machine types which have at least one existing machine.
-        """
-        return {
-            'machine_types': MachineType.objects.prefetch_machines_and_default_order_by(
-                machines_attr_name='existing_machines',
-            ).filter(machines__isnull=False).distinct(),  # remove duplicates that can appear when filtering on values across tables
-        }
+    extra_context = {
+        # Retrieves all machine types that have at least one existing machine
+        'machine_types': MachineType.objects.prefetch_machines_and_default_order_by(
+            machines_attr_name='existing_machines',
+        ).filter(machines__isnull=False).distinct(),  # remove duplicates that can appear when filtering on values across tables
+    }
 
 
 class CreateMachineView(PermissionRequiredMixin, CreateView):

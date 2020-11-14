@@ -18,7 +18,8 @@ class User(AbstractUser):
 
         :return: A concatenation of the user's two outermost names.
         """
-        names = self.get_full_name().split(" ")
+        full_name = self.get_full_name()
+        names = full_name.split(" ")
         if len(names) <= 2:
-            return self.get_full_name()
+            return full_name
         return f"{names[0]} {names[-1]}"

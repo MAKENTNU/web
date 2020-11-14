@@ -1,5 +1,5 @@
 import logging
-from abc import ABCMeta
+from abc import ABC
 from math import ceil
 
 from django.shortcuts import redirect, render
@@ -15,9 +15,8 @@ from ...models.models import Machine, MachineType, Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation
 
 
-class ReservationCreateOrChangeView(TemplateView):
+class ReservationCreateOrChangeView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
-    __metaclass__ = ABCMeta
 
     template_name = 'make_queue/reservation_edit.html'
 

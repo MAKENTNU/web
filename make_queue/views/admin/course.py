@@ -14,14 +14,10 @@ from ...models.course import Printer3DCourse
 
 class CourseView(TemplateView):
     template_name = 'make_queue/course/course_registration_list.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data.update({
-            'registrations': Printer3DCourse.objects.order_by('name'),
-            'possible_statuses': Printer3DCourse.Status.choices,
-        })
-        return context_data
+    extra_context = {
+        'registrations': Printer3DCourse.objects.order_by('name'),
+        'possible_statuses': Printer3DCourse.Status.choices,
+    }
 
 
 class CreateRegistrationView(PermissionRequiredMixin, CreateView):

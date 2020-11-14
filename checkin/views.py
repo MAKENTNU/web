@@ -125,6 +125,9 @@ class ProfilePageView(TemplateView):
 class SuggestSkillView(PermissionRequiredMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
     template_name = 'checkin/suggest_skill.html'
+    extra_context = {
+        'suggestions': SuggestSkill.objects.all(),
+    }
 
     def post(self, request):
         suggestion = request.POST.get('suggested-skill')
@@ -164,13 +167,6 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
                 messages.info(request, _("Skill added!"))
 
         return HttpResponseRedirect(reverse('suggest'))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'suggestions': SuggestSkill.objects.all(),
-        })
-        return context
 
 
 class VoteSuggestionView(PermissionRequiredMixin, TemplateView):

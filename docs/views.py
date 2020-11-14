@@ -8,13 +8,14 @@ from django.utils.datetime_safe import datetime
 from django.views.generic import DeleteView, DetailView, FormView, TemplateView, UpdateView
 
 from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
-from .models import Content, Page
+from .models import Content, MAIN_PAGE_TITLE, Page
 
 
 class DocumentationPageView(DetailView):
     model = Page
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = "page"
+    extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
 
 
 class HistoryDocumentationPageView(DetailView):
@@ -27,6 +28,7 @@ class OldDocumentationPageContentView(DetailView):
     model = Page
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = "page"
+    extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
 
     def dispatch(self, request, *args, **kwargs):
         # A check to make sure that the given content is related to the given page. As to make sure that the database
@@ -130,7 +132,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
 class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
     permission_required = ("docs.delete_page",)
     model = Page
-    queryset = Page.objects.exclude(title="Documentation")
+    queryset = Page.objects.exclude(title=MAIN_PAGE_TITLE)
     success_url = reverse_lazy("home")
 
 

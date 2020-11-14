@@ -1,23 +1,21 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import path, reverse
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import DetailView, UpdateView
 
 from .models import ContentBox
 
 
-class DisplayContentBoxView(TemplateView):
+class DisplayContentBoxView(DetailView):
+    model = ContentBox
     template_name = 'contentbox/display.html'
+    context_object_name = 'contentbox'
 
     # The value of this field is set when calling the view's `as_view()` method
     title = ""
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_object(self, queryset=None):
         contentbox, _created = ContentBox.objects.get_or_create(title=self.title)
-        context.update({
-            'contentbox': contentbox,
-        })
-        return context
+        return contentbox
 
     @classmethod
     def get_path(cls, title: str):

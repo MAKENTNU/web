@@ -26,11 +26,7 @@ class MachineTypeQuerySet(models.QuerySet):
         and can be accessed through the attribute with the same name as ``machines_attr_name``.
         """
         return self.order_by('priority').prefetch_related(
-            Prefetch('machines',
-                     queryset=Machine.objects.order_by(
-                         F('priority').asc(nulls_last=True),
-                         Lower('name'),
-                     ), to_attr=machines_attr_name)
+            Prefetch('machines', queryset=Machine.objects.default_order_by(), to_attr=machines_attr_name)
         )
 
 
@@ -82,6 +78,16 @@ class MachineType(models.Model):
         return False
 
 
+class MachineQuerySet(models.QuerySet):
+
+    def default_order_by(self):
+        return self.order_by(
+            'machine_type__priority',
+            F('priority').asc(nulls_last=True),
+            Lower('name'),
+        )
+
+
 class Machine(models.Model):
     class Status(models.TextChoices):
         RESERVED = 'R', _("Reserved")
@@ -109,6 +115,8 @@ class Machine(models.Model):
         verbose_name=_("Priority"),
         help_text=_("If specified, the machines are sorted ascending by this value."),
     )
+
+    objects = MachineQuerySet.as_manager()
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"

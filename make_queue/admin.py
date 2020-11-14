@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.db.models import Count
-from django.db.models.functions import Lower
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
@@ -33,7 +32,6 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     list_filter = ('machine_type', 'machine_model', 'location', 'status')
     search_fields = ('name', 'machine_model', 'machine_type__name', 'location', 'location_url')
     list_editable = ('status', 'priority')
-    ordering = ('machine_type__priority', 'priority', Lower('name'))
     list_select_related = ('machine_type',)
 
     def get_location(self, machine: Machine):
@@ -41,6 +39,9 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
 
     get_location.short_description = _("Location")
     get_location.admin_order_field = 'location'
+
+    def get_queryset(self, request):
+        return super().get_queryset(request).default_order_by()
 
 
 class ReservationAdmin(TextFieldOverrideMixin, admin.ModelAdmin):

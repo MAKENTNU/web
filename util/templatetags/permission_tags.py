@@ -1,5 +1,6 @@
 from django import template
 from django.contrib.auth.models import Permission
+from django.db.models import Q
 
 from users.models import User
 
@@ -8,10 +9,7 @@ register = template.Library()
 
 @register.filter
 def has_any_permissions(user: User):
-    for group in user.groups.all():
-        if Permission.objects.filter(group=group).exists():
-            return True
-    return Permission.objects.filter(user=user).exists()
+    return Permission.objects.filter(Q(group__user=user) | Q(user=user)).exists()
 
 
 @register.filter
