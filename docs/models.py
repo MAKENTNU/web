@@ -6,6 +6,9 @@ from django.utils.translation import gettext_lazy as _
 from users.models import User
 
 
+MAIN_PAGE_TITLE = "Documentation"
+
+
 class Page(models.Model):
     """Model for each individual documentation page"""
     TITLE_REGEX = r"^[0-9A-Za-z ():]+$"

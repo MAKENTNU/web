@@ -2,19 +2,13 @@ import json
 from datetime import timedelta
 
 from django.contrib.auth.models import Permission
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
+from util.test_utils import MOCK_JPG_FILE
 from .models import Article, Event, EventTicket, TimePlace
-
-# A very small JPEG image without any content. Used for creation of simple images when creating an article
-simple_jpg = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
-             b'\x04\x04\x08\x06\x06\x05\x06\t\x08\n\n\t\x08\t\t\n\x0c\x0f\x0c\n\x0b\x0e\x0b\t\t\r\x11\r\x0e\x0f\x10' \
-             b'\x10\x11\x10\n\x0c\x12\x13\x12\x10\x13\x0f\x10\x10\x10\xff\xc9\x00\x0b\x08\x00\x01\x00\x01\x01\x01\x11' \
-             b'\x00\xff\xcc\x00\x06\x00\x10\x10\x05\xff\xda\x00\x08\x01\x01\x00\x00?\x00\xd2\xcf \xff\xd9'
 
 
 class ModelTestCase(TestCase):
@@ -96,12 +90,12 @@ class ViewTestCase(TestCase):
 
         self.article = Article.objects.create(
             title='PUBLISHED',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             publication_time=timezone.localtime() - timedelta(days=1),
         )
         self.event = Event.objects.create(
             title='FUTURE',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             number_of_tickets=40,
         )
         self.timeplace = TimePlace.objects.create(
@@ -321,14 +315,14 @@ class HiddenPrivateTestCase(TestCase):
 
         self.article = Article.objects.create(
             title='',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             publication_time=timezone.now() - timedelta(days=1),
             hidden=True,
             private=False,
         )
         self.event = Event.objects.create(
             title='',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             hidden=True,
             private=False,
         )

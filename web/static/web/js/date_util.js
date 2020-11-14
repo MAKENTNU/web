@@ -1,3 +1,34 @@
+const MONTH_TRANSLATIONS = [
+    // Have to call `gettext()` with every string to make them appear in the .po file
+    gettext("January"),
+    gettext("February"),
+    gettext("March"),
+    gettext("April"),
+    gettext("May"),
+    gettext("June"),
+    gettext("July"),
+    gettext("August"),
+    gettext("September"),
+    gettext("October"),
+    gettext("November"),
+    gettext("December"),
+];
+
+const DAY_TRANSLATIONS = [
+    // Have to call `gettext()` with every string to make them appear in the .po file
+    gettext("Sunday"),
+    gettext("Monday"),
+    gettext("Tuesday"),
+    gettext("Wednesday"),
+    gettext("Thursday"),
+    gettext("Friday"),
+    gettext("Saturday"),
+];
+
+const SHORT_MONTH_TRANSLATIONS = MONTH_TRANSLATIONS.map((month) => month.slice(0, 3));
+const SHORT_DAY_TRANSLATIONS = DAY_TRANSLATIONS.map((day) => day.slice(0, 3));
+
+
 Date.prototype.startOfWeek = function () {
     /**
      * Finds the start of the current week
@@ -81,21 +112,6 @@ Date.prototype.getMonthText = function () {
     /**
      * Returns the full name of the current month translated
      */
-    const MONTH_TRANSLATIONS = [
-        // Have to call `gettext()` with every string to make them appear in the .po file
-        gettext("January"),
-        gettext("February"),
-        gettext("March"),
-        gettext("April"),
-        gettext("May"),
-        gettext("June"),
-        gettext("July"),
-        gettext("August"),
-        gettext("September"),
-        gettext("October"),
-        gettext("November"),
-        gettext("December"),
-    ];
     return MONTH_TRANSLATIONS[this.getMonth()];
 };
 
@@ -103,23 +119,13 @@ Date.prototype.getMonthTextShort = function () {
     /**
      * Returns the three first letters in the translated name of the current month
      */
-    return this.getMonthText().slice(0, 3);
+    return SHORT_MONTH_TRANSLATIONS[this.getMonth()];
 };
 
 Date.prototype.getDayText = function () {
     /**
      * Returns the full translated name of the current day
      */
-    const DAY_TRANSLATIONS = [
-        // Have to call `gettext()` with every string to make them appear in the .po file
-        gettext("Sunday"),
-        gettext("Monday"),
-        gettext("Tuesday"),
-        gettext("Wednesday"),
-        gettext("Thursday"),
-        gettext("Friday"),
-        gettext("Saturday"),
-    ];
     return DAY_TRANSLATIONS[this.getDay()];
 };
 
@@ -127,5 +133,5 @@ Date.prototype.getDayTextShort = function () {
     /**
      * Returns the three first letters in the translated name of the current day
      */
-    return this.getDayText().slice(0, 3);
+    return SHORT_DAY_TRANSLATIONS[this.getDay()];
 };

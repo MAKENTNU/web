@@ -38,35 +38,37 @@ function showDetailedMemberInformation(member) {
     /**
      * Displays the selected members information in a popup modal
      */
-    $memberInfoModal.find("#member-name, #member-name-header").text(member.data.name);
-    $memberInfoModal.find("#member-phone").text(member.data.phone)
-        .attr("href", `tel:${member.data.phone}`);
-    $memberInfoModal.find("#member-email").text(member.data.email)
-        .attr("href", `mailto:${member.data.email}`);
-    $memberInfoModal.find("#member-cardNumber").text(member.data.cardNumber);
-    $memberInfoModal.find("#member-studyProgram").text(member.data.studyProgram);
+    const textAttributeNamesToValues = {
+        "name-header": member.data.name,
+        name: member.data.name,
+        phone: member.data.phone,
+        email: member.data.email,
+        cardNumber: member.data.cardNumber,
+        studyProgram: member.data.studyProgram,
+        dateJoined: `${member.data.termJoined} (${member.data.dateJoined})`,
+        dateQuit: `${member.data.termQuit} (${member.data.dateQuit})`,
+        reasonQuit: member.data.reasonQuit,
+        role: member.data.role,
+        guidanceExemption: member.data.guidanceExemption,
+        comment: member.data.comment,
+    };
+    for (let textAttribute of Object.keys(textAttributeNamesToValues)) {
+        $memberInfoModal.find(`#member-${textAttribute}`)
+            .text(textAttributeNamesToValues[textAttribute]);
+    }
 
-    $memberInfoModal.find("#member-dateJoined").text(`${member.data.termJoined} (${member.data.dateJoined})`);
-    $memberInfoModal.find("#member-role").text(member.data.role)
-        .parent().toggleClass("display-none", member.data.role.isEmpty());
-    $memberInfoModal.find("#member-dateQuit").text(`${member.data.termQuit} (${member.data.dateQuit})`)
-        .parent().toggleClass("display-none", member.data.dateQuit.isEmpty());
-    $memberInfoModal.find("#member-reasonQuit").text(member.data.reasonQuit)
-        .parent().toggleClass("display-none", member.data.reasonQuit.isEmpty());
-    $memberInfoModal.find("#member-comment").text(member.data.comment)
-        .parent().toggleClass("display-none", member.data.comment.isEmpty());
-    $memberInfoModal.find("#member-guidanceExemption").text(member.data.guidanceExemption);
+    for (let urlAttribute of ["editUrl", "quitUrl", "undoQuitUrl", "retireUrl", "undoRetireUrl"]) {
+        $memberInfoModal.find(`#member-${urlAttribute}`)
+            .attr("href", member.data[urlAttribute])
+            .toggleClass("display-none", member.data[urlAttribute].isEmpty());
+    }
+    $memberInfoModal.find("#member-phone").attr("href", `tel:${member.data.phone}`);
+    $memberInfoModal.find("#member-email").attr("href", `mailto:${member.data.email}`);
 
-    $memberInfoModal.find("#member-editUrl").attr("href", member.data.editUrl)
-        .toggleClass("display-none", member.data.editUrl.isEmpty());
-    $memberInfoModal.find("#member-quitUrl").attr("href", member.data.quitUrl)
-        .toggleClass("display-none", member.data.quitUrl.isEmpty());
-    $memberInfoModal.find("#member-undoQuitUrl").attr("href", member.data.undoQuitUrl)
-        .toggleClass("display-none", member.data.undoQuitUrl.isEmpty());
-    $memberInfoModal.find("#member-retireUrl").attr("href", member.data.retireUrl)
-        .toggleClass("display-none", member.data.retireUrl.isEmpty());
-    $memberInfoModal.find("#member-undoRetireUrl").attr("href", member.data.undoRetireUrl)
-        .toggleClass("display-none", member.data.undoRetireUrl.isEmpty());
+    for (let hideableAttribute of ["dateQuit", "reasonQuit", "role", "comment"]) {
+        $memberInfoModal.find(`#member-${hideableAttribute}`)
+            .parent().toggleClass("display-none", member.data[hideableAttribute].isEmpty());
+    }
 
     const $memberStatusElement = $memberInfoModal.find("#member-status, #member-status-header");
     $memberStatusElement.empty();
@@ -236,27 +238,11 @@ function setup() {
         state.members.push(member);
     });
 
-    $("#member-sort-name").parent().click((e) => setSort(
-        "name", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-committees").parent().click((e) => setSort(
-        "committees", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-status").parent().click((e) => setSort(
-        "status", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-dateJoined").parent().click((e) => setSort(
-        "dateJoined", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-email").parent().click((e) => setSort(
-        "email", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-role").parent().click((e) => setSort(
-        "role", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-phone").parent().click((e) => setSort(
-        "phone", $(e.target).find(".icon"),
-    ));
+    for (let sortAttribute of ["name", "committees", "status", "dateJoined", "email", "role", "phone"]) {
+        $(`#member-sort-${sortAttribute}`).closest("th").click((e) => setSort(
+            sortAttribute, $(e.target).find(".icon"),
+        ));
+    }
 
     filter();
     sort();

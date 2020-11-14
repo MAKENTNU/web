@@ -6,13 +6,13 @@ from django.views.generic import TemplateView
 from django_hosts import reverse
 
 from . import converters, views
-from .models import Page
+from .models import MAIN_PAGE_TITLE, Page
 
 register_converter(converters.PageByTitle, "page")
 register_converter(converters.ContentByPk, "content")
 
 unsafe_urlpatterns = [
-    path("", views.DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Documentation")[0].pk}, name="home"),
+    path("", views.DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title=MAIN_PAGE_TITLE)[0].pk}, name="home"),
     path("page/<page:pk>/", views.DocumentationPageView.as_view(), name="page"),
     path("page/<page:pk>/history/", views.HistoryDocumentationPageView.as_view(), name="page-history"),
     path("page/<page:pk>/history/change/", views.ChangeDocumentationPageVersionView.as_view(), name="change-page-version"),

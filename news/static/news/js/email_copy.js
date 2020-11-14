@@ -6,26 +6,24 @@ function delayPopup($popup) {
     }, 4200);
 }
 
-$(document).ready(function () {
-    $(".copy-token").click(function () {
-        const $copyButton = $(this);
-        clearTimeout(popupTimer);
+$(".copy-token").click(function () {
+    const $copyButton = $(this);
+    clearTimeout(popupTimer);
 
-        const $input = $copyButton.closest("div").find(".copy-input");
-        // Select the text field
-        $input.select();
+    const $input = $copyButton.closest("div").find(".copy-input");
+    // Select the text field
+    $input.select();
 
-        // Copy the text inside the text field
-        document.execCommand('copy');
+    // Copy the text inside the text field
+    document.execCommand('copy');
 
-        $copyButton
-            .popup({
-                title: gettext("Successfully copied to clipboard!"),
-                on: 'manual',
-                exclusive: true,
-            })
-            .popup('show');
-        // Hide popup after 5 seconds
-        delayPopup($copyButton);
-    });
+    $copyButton
+        .popup({
+            title: gettext("Successfully copied to clipboard!"),
+            on: 'manual',
+            exclusive: true,
+        })
+        .popup('show');
+    // Hide popup after 5 seconds
+    delayPopup($copyButton);
 });

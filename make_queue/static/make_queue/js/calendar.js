@@ -110,13 +110,12 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
     $popupContent.find(".button").on("mousedown touchstart", () => {
         // Create and submit a hidden form to create a new reservation
         const $form = $(
-            `<form method="POST" action="${LANG_PREFIX}/reservation/create/${calendar.machine}/">`,
+            `<form class="display-none" method="POST" action="${LANG_PREFIX}/reservation/create/${calendar.machine}/">`,
         ).appendTo($popupContent);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo($form);
-        // Hide the form in case something fails
-        $('<input class="display-none" name="start_time"/>').val(startTime.djangoFormat()).appendTo($form);
-        $('<input class="display-none" name="end_time"/>').val(endTime.djangoFormat()).appendTo($form);
-        $('<input class="display-none" name="machine_name"/>').val(calendar.machine).appendTo($form);
+        $('<input name="start_time"/>').val(startTime.djangoFormat()).appendTo($form);
+        $('<input name="end_time"/>').val(endTime.djangoFormat()).appendTo($form);
+        $('<input name="machine_name"/>').val(calendar.machine).appendTo($form);
         $form.submit();
 
         // Don't allow other events to be run, like deselection
