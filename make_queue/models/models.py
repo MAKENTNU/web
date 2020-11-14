@@ -4,7 +4,7 @@ from typing import Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
-from django.core.validators import validate_slug
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Lower
@@ -104,7 +104,13 @@ class Machine(models.Model):
         max_length=30,
         verbose_name=_("Stream Name"),
         default=None, blank=True, null=True,
-        validators=[validate_slug]
+        validators=[
+            RegexValidator(
+                regex="^[a-zA-Z0-9_-]+$",
+                message=_("Enter an URL safe stream name"),
+                code="NOT_URL_SAFE"
+            )
+        ]
     )
     location = models.CharField(max_length=40, verbose_name=_("Location"))
     location_url = models.URLField(verbose_name=_("Location URL"))
