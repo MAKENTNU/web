@@ -107,7 +107,7 @@ class Machine(models.Model):
         validators=[
             RegexValidator(
                 regex="^[a-zA-Z0-9_-]+$",
-                message=_("Enter an URL safe stream name"),
+                message=_("Stream name can only consist of english letters, numbers, hyphens or underscores."),
                 code="NOT_URL_SAFE"
             )
         ]
