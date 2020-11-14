@@ -5,7 +5,7 @@
 {% load hosts %}
 
 
-{% block title %}{% trans "Members list" %}{% endblock title %}
+{% block title %}{% trans "Member list" %}{% endblock title %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'internal/css/member_list.css' %}"/>
@@ -15,7 +15,7 @@
 
     <div class="ui container">
         <h1 class="title-with-buttons">
-            {% trans "Members list" %}
+            {% trans "Member list" %}
             {% if perms.internal.can_register_new_member %}
                 <a class="ui right floated make-bg-yellow button" href="{% url "add-member" %}">
                     <i class="ui plus icon"></i>{% trans "Add member" %}
@@ -102,7 +102,7 @@
                     {% trans "Joined" %}<i id="member-sort-dateJoined" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Email" %}<i id="member-sort-email" class="ui sort icon"></i>
+                    {% trans "Contact email" %}<i id="member-sort-email" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
                     {% trans "Phone number" %}<i id="member-sort-phone" class="ui sort icon"></i>
@@ -222,7 +222,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Email" %}</b>
+                        <b>{% trans "Contact email" %}</b>
                     </td>
                     <td>
                         <b><a id="member-email"></a></b>

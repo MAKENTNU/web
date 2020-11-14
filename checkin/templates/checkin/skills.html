@@ -24,9 +24,12 @@
                             {% empty %}
                                 src="{{ skill.image.url }}"
                             {% endthumbnail %}
+                                alt="{% blocktrans trimmed with skill=skill|locale_title:request.LANGUAGE_CODE %}Illustration image of {{ skill }}{% endblocktrans %}"
                             />
                         {% else %}
-                            <img src="{% static 'checkin/img/placeholder_skill.svg' %}"/>
+                            <img src="{% static 'checkin/img/placeholder_skill.svg' %}"
+                                 alt="{% trans "Placeholder image" %}"
+                            />
                         {% endif %}
 
                     </div>

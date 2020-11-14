@@ -401,9 +401,9 @@ class ReservationRule(models.Model):
     end_time = models.TimeField(verbose_name=_("End time"))
     # Number of times passed by midnight between start and end time
     days_changed = models.IntegerField(verbose_name=_("Days"))
-    start_days = models.IntegerField(default=0, verbose_name=_("Start days"))
+    start_days = models.IntegerField(default=0, verbose_name=_("Start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("Hours single period"))
-    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multiperiod"))
+    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multi-period"))
 
     def save(self, **kwargs):
         if not self.is_valid_rule():

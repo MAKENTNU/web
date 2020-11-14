@@ -14,9 +14,9 @@
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% url 'home' %}">
-            <img class="large" src="{% static 'web/img/logo_white.svg' %}">
-            <img class="medium" src="{% static 'web/img/logo_make.svg' %}">
-            <img class="small" src="{% static 'web/img/logo_m.svg' %}">
+            <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
         </a>
     </div>
 
@@ -44,7 +44,7 @@
                     <div class="text">{% trans "Public pages" %}</div>
                 </a>
                 <a class="item" href="{% host_url 'logout' host 'main' %}">
-                    <div class="text">{% trans "Logout" %}</div>
+                    <div class="text">{% trans "Log out" %}</div>
                 </a>
             </nav>
 

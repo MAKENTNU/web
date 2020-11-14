@@ -69,8 +69,7 @@ def card_text_from_machine_status(machine: Machine):
     if (machine.get_status() == Machine.Status.AVAILABLE
             and next_reservation is not None
             and (next_reservation.start_time - timezone.localtime()).days < 1):
-        # Uses old format scheme due to gettext not having automatic detection of translations in f-strings
-        status = "{:} {:} {:}".format(status, _('for'), timeuntil(next_reservation.start_time))
+        status = _("{machine_status} for {duration}").format(machine_status=status, duration=timeuntil(next_reservation.start_time))
     return status
 
 

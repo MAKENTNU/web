@@ -36,7 +36,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
                 num_days
             ).format(num_days=num_days)
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
-            return _("The time slot or event, is no longer available")
+            return _("The time slot or event is no longer available")
         if reservation.check_machine_out_of_order():
             return _("The machine is out of order")
         if reservation.check_machine_maintenance():

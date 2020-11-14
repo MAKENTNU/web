@@ -16,9 +16,9 @@
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% url 'front-page' %}">
-            <img class="large" src="{% static 'web/img/logo_white.svg' %}">
-            <img class="medium" src="{% static 'web/img/logo_make.svg' %}">
-            <img class="small" src="{% static 'web/img/logo_m.svg' %}">
+            <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
         </a>
     </div>
 
@@ -103,14 +103,14 @@
                         <div class="text">{% trans "My tickets" %}</div>
                     </a>
                     <a class="item" href="{% url 'logout' %}?next={{ request.path }}">
-                        <div class="text">{% trans "Logout" %}</div>
+                        <div class="text">{% trans "Log out" %}</div>
                     </a>
                 </nav>
 
             </div>
         {% else %}
             <a class="item" href="{% url 'login' %}{{ login_next_param }}">
-                <div class="text">{% trans "Login" %}</div>
+                <div class="text">{% trans "Log in" %}</div>
                 <div class="make-bg-blue bubble-background"></div>
             </a>
         {% endif %}

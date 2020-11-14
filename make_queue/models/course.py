@@ -11,7 +11,7 @@ from .fields import UsernameField
 class Printer3DCourse(models.Model):
     class Status(models.TextChoices):
         REGISTERED = 'registered', _("Registered")
-        SENT = 'sent', _("Sent to Byggsikring")
+        SENT = 'sent', _("Sent to Building security")
         ACCESS = 'access', _("Access granted")
 
     user = models.ForeignKey(
