@@ -49,35 +49,83 @@ msgstr "Kommentar"
 msgid "Choose time"
 msgstr "Velg tid"
 
-#: news/static/news/js/email_copy.js:21
+#: news/static/news/js/email_copy.js:22
 msgid "Successfully copied to clipboard!"
-msgstr "Kopiert til utklippstavlen"
+msgstr "Kopiert til utklippstavlen!"
 
-#: web/static/web/js/date_util.js:98
+#: web/static/web/js/date_util.js:86
+msgid "January"
+msgstr "Januar"
+
+#: web/static/web/js/date_util.js:87
+msgid "February"
+msgstr "Februar"
+
+#: web/static/web/js/date_util.js:88
+msgid "March"
+msgstr "Mars"
+
+#: web/static/web/js/date_util.js:89
+msgid "April"
+msgstr "April"
+
+#: web/static/web/js/date_util.js:90
+msgid "May"
+msgstr "Mai"
+
+#: web/static/web/js/date_util.js:91
+msgid "June"
+msgstr "Juni"
+
+#: web/static/web/js/date_util.js:92
+msgid "July"
+msgstr "Juli"
+
+#: web/static/web/js/date_util.js:93
+msgid "August"
+msgstr "August"
+
+#: web/static/web/js/date_util.js:94
+msgid "September"
+msgstr "September"
+
+#: web/static/web/js/date_util.js:95
+msgid "October"
+msgstr "Oktober"
+
+#: web/static/web/js/date_util.js:96
+msgid "November"
+msgstr "November"
+
+#: web/static/web/js/date_util.js:97
+msgid "December"
+msgstr "Desember"
+
+#: web/static/web/js/date_util.js:115
 msgid "Sunday"
 msgstr "Søndag"
 
-#: web/static/web/js/date_util.js:98
+#: web/static/web/js/date_util.js:116
 msgid "Monday"
 msgstr "Mandag"
 
-#: web/static/web/js/date_util.js:98
+#: web/static/web/js/date_util.js:117
 msgid "Tuesday"
 msgstr "Tirsdag"
 
-#: web/static/web/js/date_util.js:98
+#: web/static/web/js/date_util.js:118
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: web/static/web/js/date_util.js:98
+#: web/static/web/js/date_util.js:119
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: web/static/web/js/date_util.js:98
+#: web/static/web/js/date_util.js:120
 msgid "Friday"
 msgstr "Fredag"
 
-#: web/static/web/js/date_util.js:98
+#: web/static/web/js/date_util.js:121
 msgid "Saturday"
 msgstr "Lørdag"
 

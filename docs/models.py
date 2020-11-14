@@ -13,7 +13,7 @@ class Page(models.Model):
     """Model for each individual documentation page"""
     TITLE_REGEX = r"^[0-9A-Za-z ():]+$"
     TITLE_VALIDATOR = RegexValidator(regex=TITLE_REGEX,
-                                     message=_("Only numbers, letters, space, parenthesises and colon are allowed"))
+                                     message=_("Only numbers, letters, spaces, parentheses and colons are allowed."))
 
     title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[TITLE_VALIDATOR])
     created_by = models.ForeignKey(

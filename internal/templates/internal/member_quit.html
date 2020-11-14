@@ -9,7 +9,7 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{% trans "Set member" %} "{{ form.instance.user.get_full_name }}" {% trans "as quit" %}</h1>
+        <h1>{% blocktrans with name=form.instance.user.get_full_name %}Set member {{ name }} as quit{% endblocktrans %}</h1>
         <form class="ui form" method="POST" action="">
             {% csrf_token %}
             <div class="ui two fields">

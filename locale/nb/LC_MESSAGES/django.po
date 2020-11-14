@@ -134,7 +134,7 @@ msgstr "Rediger kunngjøring"
 
 #: card/forms.py:11
 msgid "Card number must be ten digits long."
-msgstr "Kortnummeret må være ti siffer langt"
+msgstr "Kortnummeret må være ti siffer langt."
 
 #: card/forms.py:24 card/models.py:14 checkin/models.py:96
 #: internal/templates/internal/members.html:165
@@ -196,9 +196,16 @@ msgstr "Min profil"
 msgid "Change picture"
 msgstr "Endre bilde"
 
+msgid "Placeholder image"
+msgstr "Plassholderbilde"
+
 #: checkin/templates/checkin/profile.html:44
 msgid "My skills"
 msgstr "Mine ferdigheter"
+
+#, python-format
+msgid "Illustration image of %(skill)s"
+msgstr "Illustrasjonsbilde av %(skill)s"
 
 #: checkin/templates/checkin/profile.html:71
 msgid "Add skills"
@@ -268,10 +275,6 @@ msgstr "Folk med disse ferdighetene er på<br/>Makerverkstedet akkurat nå"
 msgid "Suggest new skills at Makerverkstedet"
 msgstr "Foreslå nye ferdigheter"
 
-#: checkin/templates/checkin/suggest_skill.html:16
-msgid "Title (norwegian)"
-msgstr "Tittel (norsk)"
-
 #: checkin/templates/checkin/suggest_skill.html:24
 #: docs/templates/docs/create_documentation_page.html:22
 #: internal/templates/internal/add_member.html:23
@@ -279,10 +282,6 @@ msgstr "Tittel (norsk)"
 #: make_queue/templates/make_queue/quota/quota_create.html:9
 msgid "Submit"
 msgstr "Legg til"
-
-#: checkin/templates/checkin/suggest_skill.html:30
-msgid "Title (english)"
-msgstr "Tittel (engelsk)"
 
 #: checkin/templates/checkin/suggest_skill.html:41
 msgid "Suggested skills"
@@ -363,8 +362,8 @@ msgid "The content does not belong to the given page"
 msgstr "Dette innholdet hører ikke til denne siden"
 
 #: docs/models.py:13
-msgid "Only numbers, letters, space, parenthesises and colon are allowed"
-msgstr "Kun tall, bokstaver, mellomrom, paranteser og kolon er lov"
+msgid "Only numbers, letters, spaces, parentheses and colons are allowed."
+msgstr "Kun tall, bokstaver, mellomrom, parenteser og kolon er tillatt."
 
 #: docs/models.py:24
 msgid "Page"
@@ -388,31 +387,20 @@ msgstr "MAKE NTNU"
 #: docs/templates/docs/create_documentation_page.html:4
 #: docs/templates/docs/create_documentation_page.html:8
 msgid "Create a New Page"
-msgstr "Lage en ny side"
+msgstr "Lag en ny side"
 
 #: docs/templates/docs/documentation_page.html:16
 msgid "You are viewing an old version of this page"
 msgstr "Du ser på en gammel versjon av denne siden"
 
-#: docs/templates/docs/documentation_page.html:18
-msgid ""
-"You are viewing an old version of this page, where the last edit was made by"
-msgstr ""
-"Du ser på en gammel versjon av denne siden, hvor siste endring ble gjort av"
-
 #: docs/templates/docs/documentation_page.html:19
-#: docs/templates/docs/documentation_page_history.html:33
-msgid "Anonymous"
-msgstr "Anonym"
-
-#: docs/templates/docs/documentation_page.html:20
-msgid "on"
-msgstr "den"
-
-#: docs/templates/docs/documentation_page.html:20
-#: make_queue/templates/make_queue/rules.html:104
-msgid "at"
-msgstr "på tidspunktet"
+#, python-format
+msgid ""
+"You are viewing an old version of this page, where the last edit was made by "
+"%(name)s on %(date)s at %(time)s."
+msgstr ""
+"Du ser på en gammel versjon av denne siden, hvor siste endring ble gjort av "
+"%(name)s den %(date)s kl. %(time)s."
 
 #: docs/templates/docs/documentation_page.html:21
 msgid "To view the current version, click"
@@ -444,21 +432,18 @@ msgstr "Klikk for å endre innholdet til siden"
 msgid "Click to delete the page"
 msgstr "Klikk for å slette siden"
 
-#: docs/templates/docs/documentation_page.html:62
-msgid "No content exists for this page, do you wish to"
-msgstr "Det eksisterer ingen innhold for denne siden, ønsker du å"
-
-#: docs/templates/docs/documentation_page.html:63
-msgid "create"
-msgstr "lage"
-
-#: docs/templates/docs/documentation_page.html:64
-msgid "some"
-msgstr "noe innhold"
+#: docs/templates/docs/documentation_page.html:61
+#, python-format
+msgid ""
+"No content exists for this page. Do you wish to %(link_start)screate"
+"%(link_end)s some?"
+msgstr ""
+"Det eksisterer ikke noe innhold for denne siden. Ønsker du å "
+"%(link_start)slage%(link_end)s noe innhold?"
 
 #: docs/templates/docs/documentation_page.html:66
 msgid "No content exists for this page"
-msgstr "Det eksisterer ingen innhold for denne siden"
+msgstr "Det eksisterer ikke noe innhold for denne siden"
 
 #: docs/templates/docs/documentation_page_history.html:4
 #: docs/templates/docs/documentation_page_history.html:8
@@ -471,20 +456,24 @@ msgstr "Laget av"
 
 #: docs/templates/docs/documentation_page_history.html:28
 msgid "Edited by"
-msgstr "Rediger av"
+msgstr "Redigert av"
+
+#: docs/templates/docs/documentation_page_history.html:34 docs/views.py:50
+msgid "Anonymous"
+msgstr "Anonym"
 
 #: docs/templates/docs/documentation_page_history.html:38
 msgid "Current Version"
 msgstr "Nåværende versjon"
 
-#: docs/templates/docs/edit_documentation_page.html:16
-#: docs/templates/docs/search.html:32
-msgid "No content"
-msgstr "Ingen innhold"
-
 #: docs/templates/docs/edit_documentation_page.html:17
-msgid "The page is currently empty, please add some content"
-msgstr "Siden er for øyeblikket tom, vennligst legg til noe innhold"
+#: docs/templates/docs/search.html:33
+msgid "No content"
+msgstr "Ikke noe innhold"
+
+#: docs/templates/docs/edit_documentation_page.html:18
+msgid "The page is currently empty. Please add some content"
+msgstr "Siden er for øyeblikket tom. Vennligst legg til noe innhold"
 
 #: docs/templates/docs/edit_documentation_page.html:25
 #: make_queue/templates/make_queue/course/registration_edit.html:98
@@ -506,8 +495,14 @@ msgstr "Ny side"
 
 #: docs/templates/docs/header.html:24 docs/templates/docs/header.html:25
 #: docs/templates/docs/header.html:26
-msgid "Logo"
-msgstr "Logo"
+#: internal/templates/internal/header.html:17
+#: internal/templates/internal/header.html:18
+#: internal/templates/internal/header.html:19
+#: news/templates/email/ticket.html:18 web/templates/web/footer.html:11
+#: web/templates/web/header.html:19 web/templates/web/header.html:20
+#: web/templates/web/header.html:21 web/templates/web/index.html:32
+msgid "MAKE NTNU's logo"
+msgstr "MAKE NTNUs logo"
 
 #: docs/templates/docs/search.html:40
 msgid ""
@@ -545,6 +540,13 @@ msgstr "Lokketekst"
 msgid "Committees"
 msgstr "Komiteer"
 
+#: groups/templates/groups/committee_admin.html:24
+#: groups/templates/groups/committee_detail.html:10
+#: groups/templates/groups/committee_list.html:18
+#, python-format
+msgid "%(name)s committee image"
+msgstr "%(name)s komitébilde"
+
 #: groups/templates/groups/committee_form.html:5
 msgid "Edit committee"
 msgstr "Rediger komité"
@@ -567,6 +569,11 @@ msgstr "Bruker"
 #: internal/templates/internal/members.html:201
 msgid "Role"
 msgstr "Rolle"
+
+#: internal/models.py:37 internal/templates/internal/members.html:97
+#: internal/templates/internal/members.html:213
+msgid "Contact email"
+msgstr "Kontakt-e-post"
 
 #: internal/models.py:27 internal/templates/internal/members.html:86
 #: internal/templates/internal/members.html:157
@@ -669,7 +676,7 @@ msgstr "Endre informasjon for"
 #: internal/templates/internal/edit_member.html:50
 #: internal/templates/internal/members.html:176
 msgid "Membership information"
-msgstr "Medlemsskapsinformasjon"
+msgstr "Medlemskapsinformasjon"
 
 #: internal/templates/internal/header.html:27
 msgid "Members"
@@ -681,16 +688,13 @@ msgstr "Offentlige sider"
 
 #: internal/templates/internal/header.html:43
 #: web/templates/web/header.html:102
-msgid "Logout"
+msgid "Log out"
 msgstr "Logg ut"
 
 #: internal/templates/internal/member_quit.html:7
-msgid "Set member"
-msgstr "Sett medlem"
-
-#: internal/templates/internal/member_quit.html:7
-msgid "as quit"
-msgstr "som sluttet"
+#, python-format
+msgid "Set member %(name)s as quit"
+msgstr "Sett medlem %(name)s som sluttet"
 
 #: internal/templates/internal/member_quit.html:20
 msgid "Set quit"
@@ -804,29 +808,36 @@ msgid "Change system access"
 msgstr "Endre systemtilgang"
 
 #: internal/views.py:91
-msgid "Member was not set to quit as the member has already quit or retired."
+msgid ""
+"Member was not set as quit, as the member already has the status “quit” or "
+"“retired”."
 msgstr ""
 "Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
-"&quot;sluttet&quot; eller &quot;pang&quot;"
+"«sluttet» eller «pang»."
 
 #: internal/views.py:105
-msgid "Member's quit status was not undone, as the member had not quit."
+msgid ""
+"Member's “quit” status was not undone, as the member did not have the status "
+"“quit”."
 msgstr ""
-"Medlemmet's &quot;sluttet&quot; status ble ikke gjort om siden medlemmet ikke "
-"hadde status &quot;sluttet&quot;"
+"Medlemmets «sluttet»-status ble ikke gjort om siden medlemmet ikke hadde "
+"status «sluttet»."
 
 #: internal/views.py:119
 msgid ""
-"Member was not set to retired as the member has already quit or retired."
+"Member was not set as retired, as the member already has the status “quit” "
+"or “retired”."
 msgstr ""
 "Medlemmet ble ikke markert som pang siden medlemmet allerede har status "
-"&quot;sluttet&quot; eller &quot;pang&quot;"
+"«sluttet» eller «pang»."
 
 #: internal/views.py:133
-msgid "Member's retirement was not undone, as the member was not retired."
+msgid ""
+"Member's retirement was not undone, as the member did not have the status "
+"“retired”."
 msgstr ""
-"Medlemmet's &quot;pang&quot; status ble ikke gjort om siden medlemmet ikke "
-"hadde status &quot;pang&quot;"
+"Medlemmets «pang»-status ble ikke gjort om siden medlemmet ikke hadde status "
+"«pang»."
 
 #: make_queue/admin.py:22
 #: make_queue/templates/make_queue/reservation_machines.html:11
@@ -924,7 +935,7 @@ msgstr "Brukernavn"
 
 #: make_queue/models/course.py:30
 msgid "Course date"
-msgstr "Kurs dato"
+msgstr "Kursdato"
 
 #: make_queue/models/course.py:32
 msgid "Full name"
@@ -971,13 +982,13 @@ msgstr "I ustand"
 msgid "Maintenance"
 msgstr "Vedlikehold"
 
-#: make_queue/models/models.py:103 news/models.py:192
-msgid "Location URL"
-msgstr "Sted-URL"
-
 #: make_queue/models/models.py:104
 msgid "Machine model"
 msgstr "Maskinmodell"
+
+#: make_queue/models/models.py:112 news/models.py:187
+msgid "Location URL"
+msgstr "Sted-URL"
 
 #: make_queue/models/models.py:115
 msgid "If specified, the machines are sorted ascending by this value."
@@ -987,6 +998,10 @@ msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 #, python-brace-format
 msgid "Usage rules for {machine_type}"
 msgstr "Bruksregler for {machine_type}"
+
+#: make_queue/models/models.py:173
+msgid "All users"
+msgstr "Alle brukere"
 
 #: make_queue/models/models.py:172
 msgid "Number of reservations"
@@ -1003,10 +1018,6 @@ msgstr "Oppbrukbar"
 msgid "Ignores rules"
 msgstr "Ignorerer regler"
 
-#: make_queue/models/models.py:175
-msgid "All users"
-msgstr "Alle brukere"
-
 #: make_queue/models/models.py:203
 #, python-brace-format
 msgid "Quota for {user} on {machine_type}"
@@ -1017,14 +1028,14 @@ msgstr "Kvote for {user} på {machine_type}"
 #: make_queue/templates/make_queue/reservation_create.html:76
 #: news/models.py:178
 msgid "Start time"
-msgstr "Start-tidspunkt"
+msgstr "Starttidspunkt"
 
 #: make_queue/models/models.py:360
 #: make_queue/templates/make_queue/reservation_create.html:86
 #: make_queue/templates/make_queue/reservation_create.html:90
 #: news/models.py:182
 msgid "End time"
-msgstr "Slutt-tidspunkt"
+msgstr "Sluttidspunkt"
 
 #: make_queue/models/models.py:362
 msgid "Days"
@@ -1032,10 +1043,10 @@ msgstr "Dager"
 
 #: make_queue/models/models.py:364
 msgid "Hours single period"
-msgstr "Timer enkelt periode"
+msgstr "Timer enkeltperiode"
 
 #: make_queue/models/models.py:365
-msgid "Hours multiperiod"
+msgid "Hours multi-period"
 msgstr "Timer fler-periode"
 
 #: make_queue/templates/make_queue/calendar.html:17
@@ -1111,7 +1122,7 @@ msgstr "Nullstill valg av brukere"
 
 #: make_queue/templates/make_queue/course/course_panel.html:80
 msgid "Toggle non-selected users"
-msgstr "Veksle visning av ikke valgte brukere"
+msgstr "Veksle visning av ikke-valgte brukere"
 
 #: make_queue/templates/make_queue/course/course_panel.html:94
 #: web/templates/web/forms/widgets/semantic_date.html:8
@@ -1179,7 +1190,7 @@ msgstr "En bruker med dette brukernavnet er allerede registrert"
 #: make_queue/templates/make_queue/course/registration_edit.html:35
 msgid ""
 "Either the user has already taken the course, or the username of another "
-"user has been entered."
+"user has been entered"
 msgstr ""
 "Enten har brukeren allerede tatt kurset, eller brukernavnet til en annen "
 "bruker har blitt skrevet inn"
@@ -1217,57 +1228,16 @@ msgstr "Legg til maskin"
 msgid "Edit machine"
 msgstr "Rediger maskin"
 
+#: make_queue/templates/make_queue/machine_card.html:12
+#: make_queue/templates/make_queue/reservation_overview.html:97
+#, python-format
+msgid "Live stream of the machine %(name)s"
+msgstr "Livestream av maskinen %(name)s"
+
 #: make_queue/templates/make_queue/machine_card.html:39
 #: make_queue/templates/make_queue/reservations.html:48
 msgid "View in calendar"
 msgstr "Se i kalender"
-
-#: make_queue/templates/make_queue/reservation_create.html:21
-#: make_queue/templates/make_queue/reservation_actions.html:21
-msgid "New reservation"
-msgstr "Ny reservasjon"
-
-#: make_queue/templates/make_queue/reservation_create.html:23
-msgid "Edit reservation"
-msgstr "Endre reservasjon"
-
-#: make_queue/templates/make_queue/reservation_create.html:32
-msgid "Equipment type"
-msgstr "Utstyrstype"
-
-#: make_queue/templates/make_queue/reservation_create.html:37
-msgid "Select equipment type"
-msgstr "Velg utstyrstype"
-
-#: make_queue/templates/make_queue/reservation_create.html:51
-#: makerspace/templates/makerspace/equipment/admin_equipment.html:9
-#: makerspace/templates/makerspace/makerspace.html:18
-#: web/templates/web/admin_panel.html:99 web/templates/web/header.html:52
-msgid "Equipment"
-msgstr "Utstyr"
-
-#: make_queue/templates/make_queue/reservation_create.html:55
-msgid "Select machine"
-msgstr "Velg maskin"
-
-#: make_queue/templates/make_queue/reservation_create.html:133
-msgid "Select event"
-msgstr "Velg arrangement"
-
-#: make_queue/templates/make_queue/reservation_create.html:151
-msgid "Reservation text"
-msgstr "Reservasjonstekst"
-
-#: make_queue/templates/make_queue/reservation_create.html:161
-msgid "Reserve"
-msgstr "Reserver"
-
-#: make_queue/templates/make_queue/reservation_create.html:161
-#: make_queue/templates/make_queue/reservations.html:49
-#: make_queue/templates/make_queue/reservations.html:98
-#: make_queue/templates/make_queue/reservations.html:166
-msgid "Change"
-msgstr "Endre"
 
 #: make_queue/templates/make_queue/quota/quota_create.html:5
 #: make_queue/templates/make_queue/quota/quota_panel.html:14
@@ -1326,6 +1296,11 @@ msgid "You have reached the maximum number of future reservations"
 msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
 
 #: make_queue/templates/make_queue/reservation_actions.html:22
+#: make_queue/templates/make_queue/reservation_create.html:35
+msgid "New reservation"
+msgstr "Ny reservasjon"
+
+#: make_queue/templates/make_queue/reservation_actions.html:22
 msgid "Click to create a new reservation"
 msgstr "Klikk for å lage en ny reservasjon"
 
@@ -1339,13 +1314,60 @@ msgid "Other machines"
 msgstr "Andre maskiner"
 
 #: make_queue/templates/make_queue/reservation_actions.html:40
-#: make_queue/templates/make_queue/reservation_actions.html:60
-msgid "Click to see other machines"
-msgstr "Klikk for å se andre maskiner"
+#, python-format
+msgid "Click to view other %(machine_type_name_plural)s"
+msgstr "Klikk for å se andre %(machine_type_name_plural)s"
 
 #: make_queue/templates/make_queue/reservation_actions.html:44
 msgid "Overview"
 msgstr "Oversikt"
+
+#: make_queue/templates/make_queue/reservation_actions.html:66
+msgid "Click to view other machines"
+msgstr "Klikk for å se andre maskiner"
+
+#: make_queue/templates/make_queue/reservation_create.html:37
+msgid "Edit reservation"
+msgstr "Endre reservasjon"
+
+#: make_queue/templates/make_queue/reservation_create.html:46
+msgid "Equipment type"
+msgstr "Utstyrstype"
+
+#: make_queue/templates/make_queue/reservation_create.html:50
+msgid "Select equipment type"
+msgstr "Velg utstyrstype"
+
+#: make_queue/templates/make_queue/reservation_create.html:64
+#: makerspace/templates/makerspace/equipment/admin_equipment.html:15
+#: makerspace/templates/makerspace/makerspace.html:17
+#: web/templates/web/admin_panel.html:99 web/templates/web/header.html:53
+msgid "Equipment"
+msgstr "Utstyr"
+
+#: make_queue/templates/make_queue/reservation_create.html:68
+msgid "Select machine"
+msgstr "Velg maskin"
+
+#: make_queue/templates/make_queue/reservation_create.html:146
+msgid "Select event"
+msgstr "Velg arrangement"
+
+#: make_queue/templates/make_queue/reservation_create.html:164
+#: make_queue/templates/make_queue/reservation_create.html:166
+msgid "Reservation text"
+msgstr "Reservasjonstekst"
+
+#: make_queue/templates/make_queue/reservation_create.html:174
+msgid "Reserve"
+msgstr "Reserver"
+
+#: make_queue/templates/make_queue/reservation_create.html:174
+#: make_queue/templates/make_queue/reservations.html:53
+#: make_queue/templates/make_queue/reservations.html:104
+#: make_queue/templates/make_queue/reservations.html:175
+msgid "Change"
+msgstr "Endre"
 
 #: make_queue/templates/make_queue/reservation_machines.html:37
 #: make_queue/templates/make_queue/reservation_overview.html:23
@@ -1386,13 +1408,10 @@ msgctxt "cancel reservation"
 msgid "Cancel"
 msgstr "Kanseller"
 
-#: make_queue/templates/make_queue/reservations.html:110
-msgid "Mark as done"
-msgstr "Marker som ferdig"
-
-#: make_queue/templates/make_queue/reservations.html:173
-msgid "Done"
-msgstr "Ferdig"
+#: make_queue/templates/make_queue/reservations.html:116
+#: make_queue/templates/make_queue/reservations.html:182
+msgid "Finish now"
+msgstr "Ferdig nå"
 
 #: make_queue/templates/make_queue/rule_create.html:6
 #, python-format
@@ -1446,8 +1465,8 @@ msgid "Reservation duration within a single period"
 msgstr "Reservasjonslengde innenfor én periode"
 
 #: make_queue/templates/make_queue/rules.html:21
-msgid "Card's &quot;single period&quot; value, see cards below"
-msgstr "Kortet sin &quot;enkelt-periode&quot;-verdi, se kortene under"
+msgid "Card's “single period” value; see cards below"
+msgstr "Kortets «enkeltperiode»-verdi; se kortene under"
 
 #: make_queue/templates/make_queue/rules.html:25
 msgid "Reservation duration spanning multiple periods"
@@ -1458,20 +1477,20 @@ msgid "Total time"
 msgstr "Total tid"
 
 #: make_queue/templates/make_queue/rules.html:28
-msgid "Largest &quot;single period&quot; value"
-msgstr "Største &quot;enkelt-periode&quot;-verdi"
+msgid "Largest “single period” value"
+msgstr "Største «enkeltperiode»-verdi"
 
 #: make_queue/templates/make_queue/rules.html:29
 msgid "For each time period"
 msgstr "For hver tidsperiode"
 
 #: make_queue/templates/make_queue/rules.html:29
-msgid "Card's &quot;multiperiod&quot; value"
-msgstr "Kortet sin &quot;fler-periode&quot;-verdi"
+msgid "Card's “multi-period” value"
+msgstr "Kortets «fler-periode»-verdi"
 
 #: make_queue/templates/make_queue/rules.html:50
 msgid "Single period"
-msgstr "Enkelt-periode"
+msgstr "Enkeltperiode"
 
 #: make_queue/templates/make_queue/rules.html:50
 #: make_queue/templates/make_queue/rules.html:53
@@ -1479,7 +1498,7 @@ msgid "hours"
 msgstr "timer"
 
 #: make_queue/templates/make_queue/rules.html:52
-msgid "Multiperiod"
+msgid "Multi-period"
 msgstr "Fler-periode"
 
 #: make_queue/templates/make_queue/rules.html:56
@@ -1497,6 +1516,11 @@ msgstr "Personlig"
 #: make_queue/templates/make_queue/rules.html:99
 msgid "Reservations connected to quota"
 msgstr "Reservasjoner tilknyttet kvoten"
+
+#: make_queue/templates/make_queue/rules.html:124
+#, python-format
+msgid "%(machine_name)s at %(time)s"
+msgstr "%(machine_name)s på tidspunktet %(time)s"
 
 #: make_queue/templates/make_queue/rules.html:111
 msgid "No reservations connected to quota"
@@ -1546,8 +1570,9 @@ msgid "Sun"
 msgstr "Søn"
 
 #: make_queue/templatetags/reservation_extra.py:70
-msgid "for"
-msgstr "i"
+#, python-brace-format
+msgid "{machine_status} for {duration}"
+msgstr "{machine_status} i {duration}"
 
 #: make_queue/views/reservation/reservation.py:36
 #, python-brace-format
@@ -1557,8 +1582,8 @@ msgstr[0] "Reservasjoner kan bare lages {num_days} dag frem i tid"
 msgstr[1] "Reservasjoner kan bare lages {num_days} dager frem i tid"
 
 #: make_queue/views/reservation/reservation.py:42
-msgid "The time slot or event, is no longer available"
-msgstr "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
+msgid "The time slot or event is no longer available"
+msgstr "Tidspunktet eller arrangementet er ikke lenger tilgjengelig"
 
 #: make_queue/views/reservation/reservation.py:44
 msgid "The reservation exceeds your quota"
@@ -1693,13 +1718,17 @@ msgstr "Engelsk"
 msgid "Norwegian"
 msgstr "Norsk"
 
-#: news/models.py:228
+#: news/models.py:232
+msgid "Timeplace"
+msgstr "Tidspunkt"
+
+#: news/models.py:249
 msgid "Preferred language"
 msgstr "Foretrukket språk"
 
-#: news/models.py:234
-msgid "Timeplace"
-msgstr "Tidspunkt"
+#: news/templates/email/ticket.html:27
+msgid "Event image"
+msgstr "Arrangementsbilde"
 
 #: news/templates/email/ticket.html:24
 msgid "Your ticket for"
@@ -1804,8 +1833,9 @@ msgstr "Billetter"
 #: news/templates/news/admin_event.html:61
 #: news/templates/news/admin_event_tickets.html:31
 #: news/templates/news/admin_timeplace_listing.html:9
-msgid "tickets reserved"
-msgstr "billetter reservert"
+#, python-format
+msgid "%(num_registered_tickets)s/%(num_tickets)s tickets reserved"
+msgstr "%(num_registered_tickets)s/%(num_tickets)s billetter reservert"
 
 #: news/templates/news/admin_event.html:64
 #: news/templates/news/admin_timeplace_listing.html:12
@@ -1842,13 +1872,15 @@ msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"
 
 #: news/templates/news/admin_event_tickets.html:18
-msgid "Emails"
-msgstr "E-poster"
+msgid "Email Addresses of Participants"
+msgstr "E-postadresser til deltakere"
 
 #: news/templates/news/admin_event_tickets.html:20
-msgid "Click to copy the emails of the active tickets to the clipboard"
+msgid ""
+"Click to copy the email addresses of the active tickets to the clipboard"
 msgstr ""
-"Klikk her for å kopiere e-postene til de aktive billettene til utklippstavlen"
+"Klikk her for å kopiere e-postadressene til de aktive billettene til "
+"utklippstavlen"
 
 #: news/templates/news/admin_event_tickets.html:39
 #: news/templates/news/ticket.html:6
@@ -2093,8 +2125,8 @@ msgid "This ticket is registered to another account. Please"
 msgstr "Denne billetten er knyttet til en annen bruker. Vennligst"
 
 #: news/templates/news/ticket_overview.html:22
-msgid "login"
-msgstr "Logg inn"
+msgid "log in"
+msgstr "logg inn"
 
 #: news/templates/news/ticket_overview.html:23
 msgid "to the correct account to see your ticket."
@@ -2237,7 +2269,7 @@ msgid "Open a pull request on GitHub!"
 msgstr "Åpne en pull request på GitHub!"
 
 #: web/templates/web/footer.html:34
-msgid "Contact us by mail!"
+msgid "Contact us by email!"
 msgstr "Kontakt oss på e-post!"
 
 #: web/templates/web/footer.html:37
@@ -2301,7 +2333,7 @@ msgid "Internal pages"
 msgstr "Internsider"
 
 #: web/templates/web/header.html:109 web/templates/web/login.html:27
-msgid "Login"
+msgid "Log in"
 msgstr "Logg inn"
 
 #: web/widgets.py:16 web/widgets.py:26

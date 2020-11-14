@@ -8,7 +8,7 @@
     <footer id="footer" class="make-bg-blue">
         <div>
             <div class="logo">
-                <img src="{% static "web/img/logo_allwhite.svg" %}">
+                <img src="{% static "web/img/logo_allwhite.svg" %}" alt="{% trans "MAKE NTNU's logo" %}"/>
             </div>
             {% with mazemap_link="https://use.mazemap.com/#config=default&v=1&zlevel=-1&center=10.406219,63.415816&zoom=19.3&campusid=1&sharepoitype=poi&sharepoi=1000098577&utm_medium=longurl" %}
                 <a href="{{ mazemap_link }}" title="{% trans "You can find us here!" %}" target="_blank">
@@ -36,7 +36,7 @@
                 </a>
             </div>
             <div class="item make-bg-yellow">
-                <a href="{% url 'about' %}#footer" title="{% trans "Contact us by mail!" %}">
+                <a href="{% url 'about' %}#footer" title="{% trans "Contact us by email!" %}">
                     <i class="mail icon make-col-blue"></i>
                 </a>
             </div>

@@ -8,6 +8,7 @@
     {% if machine.machine_type.has_stream %}
         <img id="stream-{% sanitize_stream_name machine %}" class="stream image" name="{% sanitize_stream_name machine %}"
              src="{% static "make_queue/img/no_stream.jpg" %}"
+             alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
         />
     {% endif %}
     <div class="content">

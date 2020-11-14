@@ -30,17 +30,17 @@
             <tr>
                 <td>{% trans "Reservation duration within a single period" %}</td>
                 <td>
-                    {% trans "Card's &quot;single period&quot; value, see cards below" %}
+                    {% trans "Card's “single period” value; see cards below" %}
                 </td>
             </tr>
             <tr>
                 <td>{% trans "Reservation duration spanning multiple periods" %}</td>
                 <td>
                     <div>
-                        <b>{% trans "Total time" %}:</b> {% trans "Largest &quot;single period&quot; value" %}
+                        <b>{% trans "Total time" %}:</b> {% trans "Largest “single period” value" %}
                     </div>
                     <div>
-                        <b>{% trans "For each time period" %}:</b> {% trans "Card's &quot;multiperiod&quot; value" %}
+                        <b>{% trans "For each time period" %}:</b> {% trans "Card's “multi-period” value" %}
                     </div>
                 </td>
             </tr>
@@ -67,7 +67,7 @@
                             {% trans "Single period" %}:
                             <b>{{ rule.max_hours|floatformat:0 }} {% trans "hours" %}</b>
                             <br/>
-                            {% trans "Multiperiod" %}:
+                            {% trans "Multi-period" %}:
                             <b>{{ rule.max_inside_border_crossed|floatformat:0 }} {% trans "hours" %}</b>
                         </div>
                         <h4 class="subheader">
@@ -120,7 +120,11 @@
                                         <div class="event">
                                             <div class="content">
                                                 <div class="summary">
-                                                    {{ reservation.machine.name }} {% trans "at" %} {{ reservation.start_time|date:"d/m/y H:i" }}
+                                                    {% with start_time=reservation.start_time|date:"d/m/y H:i" %}
+                                                        {% blocktrans trimmed with machine_name=reservation.machine.name time=start_time %}
+                                                            {{ machine_name }} at {{ time }}
+                                                        {% endblocktrans %}
+                                                    {% endwith %}
                                                 </div>
                                             </div>
                                         </div>

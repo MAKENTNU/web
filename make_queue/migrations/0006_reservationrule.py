@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
                 ('start_time', models.TimeField(verbose_name='Start time')),
                 ('end_time', models.TimeField(verbose_name='End time')),
                 ('days_changed', models.IntegerField(verbose_name='Days')),
-                ('start_days', models.IntegerField(default=0, verbose_name='Start days')),
+                ('start_days', models.IntegerField(default=0, verbose_name='Start days for rule periods')),
                 ('max_hours', models.FloatField(verbose_name='Hours inside')),
                 ('max_inside_border_crossed', models.FloatField(verbose_name='Hours across borders')),
                 ('machine_type', models.CharField(choices=[('3D-printer', '3D-printer'), ('Symaskin', 'Symaskin')], max_length=30, verbose_name='Machine type')),

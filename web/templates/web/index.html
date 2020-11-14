@@ -1,5 +1,6 @@
 {% extends "web/base.html" %}
 {% load static %}
+{% load i18n %}
 {% load thumbnail %}
 {% load announcement_tags %}
 
@@ -25,8 +26,8 @@
 {% block body %}
     <div class="top">
         <div class="topimg large parallax-window" data-parallax="scroll" data-image-src="{% static "web/img/topimg_2.jpg" %}"></div>
-        <img class="topimg small" src="{% static "web/img/topimg_small.jpg" %}">
-        <img class="toplogo" src="{% static "web/img/logo_black.svg" %}">
+        <img class="topimg small" src="{% static "web/img/topimg_small.jpg" %}" alt=""/>
+        <img class="toplogo" src="{% static "web/img/logo_black.svg" %}" alt="{% trans "MAKE NTNU's logo" %}"/>
     </div>
 
     <div style="height: 50px;"></div>
