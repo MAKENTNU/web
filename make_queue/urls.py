@@ -13,18 +13,18 @@ register_converter(converters.Week, "week")
 
 machine_url_patterns = [
     path('create/', permission_required("make_queue.add_machine")(reservation.machine.CreateMachineView.as_view()), name="create_machine"),
-    path('edit/<int:pk>/', permission_required("make_queue.change_machine")(reservation.machine.EditMachineView.as_view()), name="edit_machine"),
-    path('delete/<int:pk>/', permission_required("make_queue.delete_machine")(reservation.machine.DeleteMachineView.as_view()),
+    path('<int:pk>/edit/', permission_required("make_queue.change_machine")(reservation.machine.EditMachineView.as_view()), name="edit_machine"),
+    path('<int:pk>/delete/', permission_required("make_queue.delete_machine")(reservation.machine.DeleteMachineView.as_view()),
          name="delete_machine"),
 ]
 
 calendar_url_patterns = [
-    path('<machine:machine>/reservations', api.calendar.get_reservations, name="api_reservations"),
-    path('<machine:machine>/rules', api.calendar.get_reservation_rules, name="api_reservation_rules"),
+    path('<machine:machine>/reservations/', api.calendar.get_reservations, name="api_reservations"),
+    path('<machine:machine>/rules/', api.calendar.get_reservation_rules, name="api_reservation_rules"),
 ]
 
 json_urlpatterns = [
-    path('<machine:machine>', login_required(api.reservation.get_machine_data), name="reservation_json"),
+    path('<machine:machine>/', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<machine:machine>/<reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
     path('<str:username>/', permission_required("make_queue.add_printer3dcourse")(api.user_info.get_user_info_from_username), name="user_json"),
 ]
@@ -32,17 +32,17 @@ json_urlpatterns = [
 rules_url_patterns = [
     path('<machine_type:machine_type>/', reservation.rules.RulesOverviewView.as_view(), name="machine_rules"),
     path('create/', reservation.rules.CreateReservationRuleView.as_view(), name="create_machine_rule"),
-    path('edit/<int:pk>/', reservation.rules.EditReservationRuleView.as_view(), name="edit_machine_rule"),
-    path('delete/<int:pk>/', reservation.rules.DeleteReservationRules.as_view(), name="delete_machine_rule"),
+    path('<int:pk>/edit/', reservation.rules.EditReservationRuleView.as_view(), name="edit_machine_rule"),
+    path('<int:pk>/delete/', reservation.rules.DeleteReservationRules.as_view(), name="delete_machine_rule"),
     path('usage/<machine_type:machine_type>/', reservation.rules.MachineUsageRulesView.as_view(), name="machine_usage_rules"),
-    path('usage/edit/<int:pk>/', reservation.rules.EditUsageRulesView.as_view(), name="edit_machine_usage_rules"),
+    path('usage/<int:pk>/edit/', reservation.rules.EditUsageRulesView.as_view(), name="edit_machine_usage_rules"),
 ]
 
 quota_url_patterns = [
     path('', permission_required("make_queue.change_quota", raise_exception=True)(admin.quota.QuotaView.as_view()), name="quota_panel"),
     path('create/', permission_required("make_queue.add_quota")(admin.quota.CreateQuotaView.as_view()), name="create_quota"),
-    path('update/<int:pk>/', permission_required("make_queue.change_quota")(admin.quota.EditQuotaView.as_view()), name="edit_quota"),
-    path('delete/<int:pk>/', permission_required("make_queue.delete_quota")(admin.quota.DeleteQuotaView.as_view()), name="delete_quota"),
+    path('<int:pk>/update/', permission_required("make_queue.change_quota")(admin.quota.EditQuotaView.as_view()), name="edit_quota"),
+    path('<int:pk>/delete/', permission_required("make_queue.delete_quota")(admin.quota.DeleteQuotaView.as_view()), name="delete_quota"),
     path('user/<username:user>/', permission_required("make_queue.change_quota", raise_exception=True)(quota.user.GetUserQuotaView.as_view()),
          name="quotas_user"),
     path('<username:user>/', permission_required("make_queue.change_quota", raise_exception=True)(admin.quota.QuotaView.as_view()),
@@ -58,16 +58,16 @@ course_url_patterns = [
          name="create_course_registration"),
     path('create/success/', permission_required("make_queue.add_printer3dcourse")(admin.course.CreateRegistrationView.as_view(is_next=True)),
          name="create_course_registration_success"),
-    path('edit/<int:pk>/', permission_required("make_queue.change_printer3dcourse")(admin.course.EditRegistrationView.as_view()),
+    path('<int:pk>/edit/', permission_required("make_queue.change_printer3dcourse")(admin.course.EditRegistrationView.as_view()),
          name="edit_course_registration"),
-    path('delete/<int:pk>/', permission_required("make_queue.delete_printer3dcourse")(admin.course.DeleteRegistrationView.as_view()),
+    path('<int:pk>/delete/', permission_required("make_queue.delete_printer3dcourse")(admin.course.DeleteRegistrationView.as_view()),
          name="delete_course_registration"),
 ]
 
 urlpatterns = [
     path('', reservation.machine.MachineView.as_view(), name="reservation_machines_overview"),
     path('machine/', include(machine_url_patterns)),
-    path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
+    path('<year:year>/<week:week>/<machine:machine>/', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
     path('calendar/', include(calendar_url_patterns)),
     path('json/', include(json_urlpatterns)),
     path('create/<machine:machine>/', login_required(reservation.reservation.CreateReservationView.as_view()), name="create_reservation"),
