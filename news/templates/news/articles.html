@@ -16,14 +16,17 @@
     <div class="ui container">
         <div class="articles">
             {% for article in articles %}
-                {% thumbnail article.image "600" crop="center" as im %}
-                    <img class="article-img clickable {% cycle 'float-right' 'float-left' %}
+                <img {% thumbnail article.image "600" crop="center" as image_thumb %}
+                    src="{{ image_thumb.url }}"
+                {% empty %}
+                    src="{{ article.image.url }}"
+                {% endthumbnail %}
+                    class="article-img clickable {% cycle "float-right" "float-left" %}
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}"
-                         src="{{ im.url }}" href="{% url 'article' article.id %}"
-                         {% if article.contain %}style="object-fit: contain;"{% endif %}
-                    />
-                {% endthumbnail %}
+                    {% if article.contain %}style="object-fit: contain;"{% endif %}
+                    href="{% url 'article' article.pk %}"
+                />
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}">

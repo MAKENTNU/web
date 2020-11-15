@@ -56,9 +56,13 @@
                         <td>
                             <h5 class="ui header image">
                                 {% if suggestion.image %}
-                                    {% thumbnail suggestion.image "64x64" crop="center" as im %}
-                                        <img class="ui mini rounded image" src="{{ im.url }}">
+                                    <img {% thumbnail suggestion.image "64x64" crop="center" as image_thumb %}
+                                        src="{{ image_thumb.url }}"
+                                    {% empty %}
+                                        src="{{ suggestion.image.url }}"
                                     {% endthumbnail %}
+                                        class="ui mini rounded image"
+                                    />
                                 {% else %}
                                     <img class="ui mini rounded image" src="{% static "checkin/img/placeholder_skill.svg" %}"/>
                                 {% endif %}

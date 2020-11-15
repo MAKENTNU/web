@@ -17,9 +17,13 @@
 {% block body %}
     <div class="article {% block extra_classes %}{% endblock extra_classes %}">
         <div id="sticky" class="ui text container basic segment">
-            {% thumbnail article.image "800" crop="center" as im %}
-                <img src="{{ im.url }}" {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
+            <img {% thumbnail article.image "800" crop="center" as image_thumb %}
+                src="{{ image_thumb.url }}"
+            {% empty %}
+                src="{{ article.image.url }}"
             {% endthumbnail %}
+                {% if article.contain %}style="object-fit: contain; height: auto;"{% endif %}
+            />
 
             {% block rail %}
             {% endblock rail %}
