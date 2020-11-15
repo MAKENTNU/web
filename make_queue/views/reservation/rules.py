@@ -43,10 +43,23 @@ class RulesOverviewView(MachineTypeBasedView, ListView):
         return context_data
 
 
-class BaseReservationRulePostView(ModelFormMixin, ABC):
+class BaseReservationRulePostView(MachineTypeBasedView, ModelFormMixin, ABC):
     model = ReservationRule
     form_class = RuleForm
     context_object_name = 'rule'
+
+    def get_queryset(self):
+        return self.machine_type.reservation_rules.all()
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # If the request contains posted data:
+        if 'data' in kwargs:
+            # Forcefully pass the machine type from the URL path to the form
+            data = kwargs['data'].copy()
+            data['machine_type'] = self.machine_type
+            kwargs['data'] = data
+        return kwargs
 
     def get_success_url(self):
         return reverse('machine_rules', args=[self.object.machine_type])
@@ -80,12 +93,15 @@ class MachineUsageRulesView(MachineTypeBasedView, DetailView):
         return usage_rule
 
 
-class EditUsageRulesView(PermissionRequiredMixin, UpdateView):
+class EditUsageRulesView(PermissionRequiredMixin, MachineTypeBasedView, UpdateView):
     permission_required = ('make_queue.change_machineusagerule',)
     model = MachineUsageRule
     fields = ('content',)
     template_name = "make_queue/usage_rules_edit.html"
     context_object_name = 'usage_rule'
+
+    def get_object(self, queryset=None):
+        return self.machine_type.usage_rule
 
     def get_success_url(self):
         return reverse('machine_usage_rules', args=[self.object.machine_type])

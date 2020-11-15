@@ -947,6 +947,11 @@ msgstr "Maskinmodell"
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 
+#: make_queue/models/models.py:166
+#, python-brace-format
+msgid "Usage rules for {machine_type}"
+msgstr "Bruksregler for {machine_type}"
+
 #: make_queue/models/models.py:172
 msgid "Number of reservations"
 msgstr "Antall reservasjoner"
@@ -1354,13 +1359,15 @@ msgstr "Marker som ferdig"
 msgid "Done"
 msgstr "Ferdig"
 
-#: make_queue/templates/make_queue/rule_create.html:5
-msgid "New rule"
-msgstr "Ny regel"
+#: make_queue/templates/make_queue/rule_create.html:6
+#, python-format
+msgid "New rule for %(machine_type)s"
+msgstr "Ny regel for %(machine_type)s"
 
-#: make_queue/templates/make_queue/rule_edit.html:10
-msgid "Rule"
-msgstr "Regel"
+#: make_queue/templates/make_queue/rule_edit.html:11
+#, python-format
+msgid "Rule for %(machine_type)s"
+msgstr "Regel for %(machine_type)s"
 
 #: make_queue/templates/make_queue/rule_edit.html:40
 msgid "Monday"
@@ -1390,13 +1397,14 @@ msgstr "Lørdag"
 msgid "Sunday"
 msgstr "Søndag"
 
-#: make_queue/templates/make_queue/rules.html:9
-msgid "Rules for"
-msgstr "Regler for"
+#: make_queue/templates/make_queue/rules.html:16
+#, python-format
+msgid "Reservation rules for %(machine_type)s"
+msgstr "Reservasjonsregler for %(machine_type)s"
 
-#: make_queue/templates/make_queue/rules.html:13
-msgid "Rules for usage"
-msgstr "Regler for bruk"
+#: make_queue/templates/make_queue/rules.html:25
+msgid "Usage rules"
+msgstr "Bruksregler"
 
 #: make_queue/templates/make_queue/rules.html:19
 msgid "Reservation duration within a single period"
@@ -1459,9 +1467,10 @@ msgstr "Reservasjoner tilknyttet kvoten"
 msgid "No reservations connected to quota"
 msgstr "Ingen reservasjoner knyttet til kvoten"
 
-#: make_queue/templates/make_queue/usage_rules.html:8
-msgid "Rules for usage of the"
-msgstr "Regler for bruk av"
+#: make_queue/templates/make_queue/usage_rules.html:9
+#, python-format
+msgid "Usage rules for %(machine_type)s"
+msgstr "Bruksregler for %(machine_type)s"
 
 #: make_queue/templates/make_queue/usage_rules.html:11
 msgid "Quota and detailed rules for reservation duration"

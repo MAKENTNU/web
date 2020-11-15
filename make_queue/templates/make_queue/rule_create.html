@@ -3,5 +3,5 @@
 
 
 {% block form_title %}
-    {% trans "New rule" %}
+    {% blocktrans with machine_type=machine_type %}New rule for {{ machine_type }}{% endblocktrans %}
 {% endblock form_title %}

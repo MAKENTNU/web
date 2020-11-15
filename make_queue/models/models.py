@@ -162,6 +162,9 @@ class MachineUsageRule(models.Model):
     )
     content = MultiLingualRichTextUploadingField()
 
+    def __str__(self):
+        return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)
+
 
 class Quota(models.Model):
     all = models.BooleanField(default=False, verbose_name=_("All users"))
