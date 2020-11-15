@@ -62,6 +62,8 @@ class ReservationForm(forms.Form):
 class RuleForm(forms.ModelForm):
     day_field_names = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
+    machine_type = forms.ModelChoiceField(MachineType.objects.all(), widget=forms.HiddenInput())
+
     class Meta:
         model = ReservationRule
         fields = ['start_time', 'days_changed', 'end_time', 'max_hours', 'max_inside_border_crossed', 'machine_type']

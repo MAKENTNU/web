@@ -1020,6 +1020,11 @@ msgstr "Sted-URL"
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 
+#: make_queue/models/models.py:166
+#, python-brace-format
+msgid "Usage rules for {machine_type}"
+msgstr "Bruksregler for {machine_type}"
+
 #: make_queue/models/models.py:168
 msgid "All users"
 msgstr "Alle brukere"
@@ -1424,12 +1429,14 @@ msgid "Done"
 msgstr "Ferdig"
 
 #: make_queue/templates/make_queue/rule_create.html:6
-msgid "New rule"
-msgstr "Ny regel"
+#, python-format
+msgid "New rule for %(machine_type)s"
+msgstr "Ny regel for %(machine_type)s"
 
 #: make_queue/templates/make_queue/rule_edit.html:11
-msgid "Rule"
-msgstr "Regel"
+#, python-format
+msgid "Rule for %(machine_type)s"
+msgstr "Regel for %(machine_type)s"
 
 #: make_queue/templates/make_queue/rule_edit.html:41
 msgid "Monday"
@@ -1460,12 +1467,13 @@ msgid "Sunday"
 msgstr "Søndag"
 
 #: make_queue/templates/make_queue/rule_list.html:16
-msgid "Rules for"
-msgstr "Regler for"
+#, python-format
+msgid "Reservation rules for %(machine_type)s"
+msgstr "Reservasjonsregler for %(machine_type)s"
 
 #: make_queue/templates/make_queue/rule_list.html:25
-msgid "Rules for usage"
-msgstr "Regler for bruk"
+msgid "Usage rules"
+msgstr "Bruksregler"
 
 #: make_queue/templates/make_queue/rule_list.html:31
 msgid "Reservation duration within a single period"
@@ -1529,8 +1537,9 @@ msgid "No reservations connected to quota"
 msgstr "Ingen reservasjoner knyttet til kvoten"
 
 #: make_queue/templates/make_queue/usage_rules_detail.html:8
-msgid "Rules for usage of the"
-msgstr "Regler for bruk av"
+#, python-format
+msgid "Usage rules for %(machine_type)s"
+msgstr "Bruksregler for %(machine_type)s"
 
 #: make_queue/templates/make_queue/usage_rules_detail.html:11
 msgid "Quota and detailed rules for reservation duration"

@@ -31,12 +31,16 @@ json_urlpatterns = [
 ]
 
 rules_urlpatterns = [
-    path('<MachineType:machine_type>/', reservation.rules.RulesOverviewView.as_view(), name="machine_rules"),
+    path('', reservation.rules.RulesOverviewView.as_view(), name="machine_rules"),
     path('create/', reservation.rules.CreateReservationRuleView.as_view(), name="create_machine_rule"),
     path('<int:pk>/edit/', reservation.rules.EditReservationRuleView.as_view(), name="edit_machine_rule"),
     path('<int:pk>/delete/', reservation.rules.DeleteReservationRules.as_view(), name="delete_machine_rule"),
-    path('usage/<MachineType:machine_type>/', reservation.rules.MachineUsageRulesView.as_view(), name="machine_usage_rules"),
-    path('usage/<int:pk>/edit/', reservation.rules.EditUsageRulesView.as_view(), name="edit_machine_usage_rules"),
+    path('usage/', reservation.rules.MachineUsageRulesView.as_view(), name="machine_usage_rules"),
+    path('usage/edit/', reservation.rules.EditUsageRulesView.as_view(), name="edit_machine_usage_rules"),
+]
+
+specific_machinetype_urlpatterns = [
+    path('rules/', include(rules_urlpatterns)),
 ]
 
 quota_urlpatterns = [
@@ -80,7 +84,7 @@ urlpatterns = [
          permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.AdminReservationView.as_view()),
          name="admin_reservation"),
     path('slot/', reservation.reservation.FindFreeSlot.as_view(), name="find_free_slot"),
-    path('rules/', include(rules_urlpatterns)),
+    path('machinetypes/<MachineType:machine_type>/', include(specific_machinetype_urlpatterns)),
     path('quota/', include(quota_urlpatterns)),
     path('course/', include(course_urlpatterns)),
 ]
