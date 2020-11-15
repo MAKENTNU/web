@@ -379,12 +379,12 @@ ReservationCalendar.prototype.update = function () {
     this.updateInformationHeaders();
     const calendar = this;
 
-    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/reservations`, {
+    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/reservations/`, {
         startDate: this.date.djangoFormat(),
         endDate: this.date.nextWeek().djangoFormat(),
     }, (data) => calendar.updateReservations.apply(calendar, [data]), "json");
 
-    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/rules`, {}, (data) => {
+    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/rules/`, {}, (data) => {
         calendar.reservationRules = data.rules;
     });
 };
