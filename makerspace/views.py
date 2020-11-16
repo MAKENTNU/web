@@ -1,8 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from contentbox.views import DisplayContentBoxView
+from util.views import PureDeleteView
 from web.templatetags.permission_tags import has_any_equipment_permissions
 from .forms import EquipmentForm
 from .models import Equipment
@@ -61,7 +62,7 @@ class EditEquipmentView(PermissionRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class DeleteEquipmentView(PermissionRequiredMixin, DeleteView):
+class DeleteEquipmentView(PermissionRequiredMixin, PureDeleteView):
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
     success_url = reverse_lazy('makerspace-equipment-admin')

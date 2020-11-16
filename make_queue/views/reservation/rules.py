@@ -3,10 +3,11 @@ from abc import ABC
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
 from django.views import View
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import ModelFormMixin
 
+from util.views import PureDeleteView
 from ...forms import RuleForm
 from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRule
 
@@ -75,7 +76,7 @@ class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRulePostVi
     template_name = "make_queue/rule_edit.html"
 
 
-class DeleteReservationRules(PermissionRequiredMixin, DeleteView):
+class DeleteReservationRules(PermissionRequiredMixin, PureDeleteView):
     permission_required = ('make_queue.delete_reservation_rule',)
     model = ReservationRule
 
