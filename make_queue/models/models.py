@@ -5,7 +5,7 @@ from typing import List, Union
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import F, Prefetch, Q
+from django.db.models import ExpressionWrapper, F, Prefetch, Q
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -252,6 +252,14 @@ class Quota(models.Model):
         return Quota.get_best_quota(reservation) is not None
 
 
+class ReservationQuerySet(models.QuerySet):
+
+    def annotate_durations(self):
+        return self.annotate(
+            duration=ExpressionWrapper(F('end_time') - F('start_time'), output_field=models.DurationField()),
+        )
+
+
 class Reservation(models.Model):
     RESERVATION_FUTURE_LIMIT_DAYS = 28
 
@@ -284,6 +292,8 @@ class Reservation(models.Model):
         blank=True,
         related_name='reservations',
     )
+
+    objects = ReservationQuerySet.as_manager()
 
     def save(self, *args, **kwargs):
         if not self.validate():

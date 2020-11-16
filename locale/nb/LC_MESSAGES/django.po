@@ -849,6 +849,34 @@ msgstr "<alle brukere>"
 msgid "<nobody>"
 msgstr "<ingen>"
 
+#: make_queue/admin.py:81
+msgid "Total registered reservations"
+msgstr "Totalt antall registrerte reservasjoner"
+
+#: make_queue/admin.py:87
+msgid "Active reservations"
+msgstr "Aktive reservasjoner"
+
+#: make_queue/admin.py:121
+msgid "Duration"
+msgstr "Varighet"
+
+#: make_queue/admin.py:134
+#: make_queue/templates/make_queue/reservation_create.html:129
+#: make_queue/templates/make_queue/reservation_create.html:142
+#: news/models.py:240
+msgid "Event"
+msgstr "Arrangement"
+
+#: make_queue/admin.py:147 web/templates/web/admin_panel.html:51
+msgid "Quota"
+msgstr "Kvote"
+
+#: make_queue/admin.py:171 make_queue/models/models.py:429 
+#: make_queue/templates/make_queue/rule_edit.html:35
+msgid "Start days for rule periods"
+msgstr "Startdager for regelperioder"
+
 #: make_queue/forms.py:113 make_queue/forms.py:145
 #: make_queue/templates/make_queue/quota/quota_panel.html:48
 msgid "Select user"
@@ -1001,11 +1029,6 @@ msgstr "Slutt-tidspunkt"
 #: make_queue/models/models.py:362
 msgid "Days"
 msgstr "Dager"
-
-#: make_queue/models/models.py:363
-#: make_queue/templates/make_queue/rule_edit.html:35
-msgid "Start days"
-msgstr "Start dager for regel perioder"
 
 #: make_queue/models/models.py:364
 msgid "Hours single period"
@@ -1226,12 +1249,6 @@ msgstr "Utstyr"
 #: make_queue/templates/make_queue/reservation_create.html:55
 msgid "Select machine"
 msgstr "Velg maskin"
-
-#: make_queue/templates/make_queue/reservation_create.html:115
-#: make_queue/templates/make_queue/reservation_create.html:129
-#: news/models.py:235
-msgid "Event"
-msgstr "Arrangement"
 
 #: make_queue/templates/make_queue/reservation_create.html:133
 msgid "Select event"
@@ -2162,10 +2179,6 @@ msgid ""
 msgstr ""
 "Her kan du se reservasjoner av maskiner for arrangementer og andre MAKE NTNU-"
 "sammenhenger"
-
-#: web/templates/web/admin_panel.html:51
-msgid "Quota"
-msgstr "Kvote"
 
 #: web/templates/web/admin_panel.html:54
 msgid ""
