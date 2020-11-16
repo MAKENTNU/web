@@ -33,10 +33,9 @@
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
-                    <a class="delete confirm make-col-blue explanation-popup"
-                       data-title="{% trans "Delete" %}"
-                       data-content="{% trans "If clicked, the occurrence will be deleted." %}"
-                       href="{% url 'timeplace-delete' timeplace.pk %}">
+                    <a class="delete-modal-button make-col-blue explanation-popup"
+                       data-title="{% trans "Delete" %}" data-content="{% trans "If clicked, the occurrence will be deleted." %}"
+                       data-url="{% url 'timeplace-delete' timeplace.pk %}" data-obj-name="{{ timeplace }}">
                         <i class="ui delete icon"></i>
                     </a>
                 {% endif %}

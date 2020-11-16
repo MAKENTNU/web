@@ -192,6 +192,13 @@ class Quota(models.Model):
             ('can_edit_quota', "Can edit quotas"),
         )
 
+    def __str__(self):
+        if self.all:
+            user_str = _("<all users>")
+        else:
+            user_str = self.user.get_full_name() if self.user else _("<nobody>")
+        return _("Quota for {user} on {machine_type}").format(user=user_str, machine_type=self.machine_type)
+
     def get_active_reservations(self, user):
         if self.diminishing:
             return self.reservations.all()

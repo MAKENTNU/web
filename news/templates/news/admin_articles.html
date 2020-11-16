@@ -50,7 +50,9 @@
                             <i class="ui edit icon"></i>{% trans "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
-                            <a class="ui red delete confirm button" href="{% url "article-delete" article.pk %}">
+                            <a class="delete-modal-button ui red button"
+                               data-url="{% url "article-delete" article.pk %}"
+                               data-obj-name="{{ article }}">
                                 <i class="ui trash icon"></i>{% trans "Delete" %}
                             </a>
                         {% endif %}

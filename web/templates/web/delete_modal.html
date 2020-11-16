@@ -1,10 +1,11 @@
+{% load static %}
 {% load i18n %}
 
 
 <div id="delete-modal" class="ui basic small modal">
     <div class="ui icon header">
         <i class="trash icon"></i>
-        {% trans "Are sure you want to delete?" %}
+        <span class="prompt">{% trans "Are you sure you want to delete?" %}</span>
     </div>
     <form id="delete-form" method="POST">{% csrf_token %}</form>
     <div class="actions">
@@ -19,21 +20,4 @@
     </div>
 </div>
 
-<script>
-    /*$("#delete-modal").modal({
-      'closable': false
-    });*/
-    function setupDeleteModal() {
-        $(".delete.confirm").click(function (e) {
-            e.preventDefault();
-            let url = $(this).attr('href');
-            $("#delete-form").attr('action', url);
-            $("#delete-modal .delete.button").click(function (e) {
-                $("#delete-form").submit();
-            });
-            $("#delete-modal").modal('show');
-        });
-    }
-
-    setupDeleteModal();
-</script>
+<script async src="{% static "web/js/delete_modal.js" %}"></script>

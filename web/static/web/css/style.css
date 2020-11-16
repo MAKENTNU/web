@@ -139,6 +139,10 @@ li {
     margin-top: 0.5em;
 }
 
+.delete-modal-button {
+    cursor: pointer;
+}
+
 /*
  * Style for multilingual input
  */

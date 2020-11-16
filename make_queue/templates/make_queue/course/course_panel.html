@@ -102,7 +102,11 @@
                             <i class="ui make-col-yellow pencil icon"></i>
                         </a>
                         {% if perms.make_queue.delete_printer3dcourse %}
-                            <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
+                            <a class="delete-modal-button"
+                               data-url="{% url "delete_course_registration" registration.pk %}"
+                               data-prompt="{% blocktrans trimmed with user=registration.get_user_display_name %}
+                                                Are you sure you want to delete the course registration of {{ user }}?
+                                            {% endblocktrans %}">
                                 <i class="ui red trash icon"></i>
                             </a>
                         {% endif %}
