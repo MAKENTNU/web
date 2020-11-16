@@ -7,6 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
 from django.views.generic import DeleteView, DetailView, FormView, TemplateView, UpdateView
 
+from util.views import PreventGetRequestsMixin
 from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
 
@@ -129,7 +130,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
         return redirect
 
 
-class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
+class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ("docs.delete_page",)
     model = Page
     queryset = Page.objects.exclude(title=MAIN_PAGE_TITLE)

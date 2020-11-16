@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, RedirectView, TemplateView, UpdateView
 
 from make_queue.models.course import Printer3DCourse
+from util.views import PreventGetRequestsMixin
 from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, SecretsForm, ToggleSystemAccessForm
 from .models import Member, Secret, SystemAccess
 
@@ -40,7 +41,7 @@ class EditSecretView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('secrets')
 
 
-class DeleteSecretView(PermissionRequiredMixin, DeleteView):
+class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('internal.delete_secret',)
     model = Secret
     success_url = reverse_lazy('secrets')

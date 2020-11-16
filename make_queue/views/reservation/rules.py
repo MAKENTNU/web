@@ -7,6 +7,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import ModelFormMixin
 
+from util.views import PreventGetRequestsMixin
 from ...forms import RuleForm
 from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRule
 
@@ -75,7 +76,7 @@ class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRulePostVi
     template_name = 'make_queue/rule_edit.html'
 
 
-class DeleteReservationRules(PermissionRequiredMixin, DeleteView):
+class DeleteReservationRules(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_reservation_rule',)
     model = ReservationRule
 

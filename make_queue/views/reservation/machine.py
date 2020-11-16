@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+from util.views import PreventGetRequestsMixin
 from ...forms import BaseMachineForm, EditMachineForm
 from ...models.models import Machine, MachineType
 
@@ -35,7 +36,7 @@ class EditMachineView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy("reservation_machines_overview")
 
 
-class DeleteMachineView(PermissionRequiredMixin, DeleteView):
+class DeleteMachineView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_machine',)
     model = Machine
     success_url = reverse_lazy("reservation_machines_overview")
