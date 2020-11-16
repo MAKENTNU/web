@@ -81,6 +81,10 @@ msgstr "Fredag"
 msgid "Saturday"
 msgstr "Lørdag"
 
+#: web/static/web/js/delete_modal.js:16
+msgid "Are you sure you want to delete “%(objName)s”?"
+msgstr "Er du sikker på at du vil slette «%(objName)s»?"
+
 #: web/static/web/js/forms/widgets/mazemap_search.js:31
 msgid "No Results"
 msgstr "Ingen resultater"

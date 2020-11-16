@@ -19,7 +19,9 @@
                 </a>
             {% endif %}
             {% if perms.make_queue.delete_machine %}
-                <a class="delete confirm" href="{% url "delete_machine" machine.pk %}">
+                <a class="delete-modal-button"
+                   data-url="{% url "delete_machine" machine.pk %}"
+                   data-obj-name="{{ machine.name }}">
                     <i class="ui red trash icon"></i>
                 </a>
             {% endif %}

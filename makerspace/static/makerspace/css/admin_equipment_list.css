@@ -7,6 +7,6 @@
     margin: 0;
 }
 
-.equipment-list .item .delete.confirm {
+.equipment-list .item .delete-modal-button {
     margin-left: auto;
 }

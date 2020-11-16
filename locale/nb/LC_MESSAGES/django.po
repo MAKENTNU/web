@@ -914,6 +914,14 @@ msgstr "Maskiner"
 msgid "Location"
 msgstr "Sted"
 
+#: make_queue/admin.py:70 make_queue/models/models.py:200
+msgid "<all users>"
+msgstr "<alle brukere>"
+
+#: make_queue/admin.py:72 make_queue/models/models.py:202
+msgid "<nobody>"
+msgstr "<ingen>"
+
 #: make_queue/forms.py:109 make_queue/forms.py:153
 #: make_queue/templates/make_queue/quota/quota_panel.html:55
 msgid "Select user"
@@ -1043,6 +1051,11 @@ msgstr "Oppbrukbar"
 #: make_queue/templates/make_queue/rule_list.html:111
 msgid "Ignores rules"
 msgstr "Ignorerer regler"
+
+#: make_queue/models/models.py:200
+#, python-brace-format
+msgid "Quota for {user} on {machine_type}"
+msgstr "Kvote for {user} på {machine_type}"
 
 #: make_queue/models/models.py:390
 #: make_queue/templates/make_queue/reservation_edit.html:73
@@ -1195,6 +1208,11 @@ msgstr "Veksle visning av ikke valgte brukere"
 #: web/templates/web/forms/widgets/semantic_datetime.html:9
 msgid "Date"
 msgstr "Dato"
+
+#: make_queue/templates/make_queue/course/course_panel.html:113
+#, python-format
+msgid "Are you sure you want to delete the course registration of %(user)s?"
+msgstr "Er du sikker på at du vil slette kursregistreringen til %(user)s?"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:114
 msgid "Connected to user"
@@ -2292,7 +2310,7 @@ msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
 
 #: web/templates/web/delete_modal.html:7
-msgid "Are sure you want to delete?"
+msgid "Are you sure you want to delete?"
 msgstr "Er du sikker på at du vil slette?"
 
 #: web/templates/web/footer.html:14

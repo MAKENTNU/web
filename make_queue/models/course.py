@@ -48,6 +48,10 @@ class Printer3DCourse(models.Model):
         else:
             self._card_number = card_number
 
+    def get_user_display_name(self):
+        full_name = self.user.get_full_name() if self.user else self.name
+        return str(full_name or self.user or self.username)
+
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.pk is None:  # Creation of new object
             self._connect_to_user()
