@@ -170,6 +170,11 @@ class SystemAccess(models.Model):
         verbose_name=_("Member"),
     )
 
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(fields=('name', 'member'), name="%(class)s_unique_name_per_member"),
+        )
+
     @property
     def change_url(self):
         """
