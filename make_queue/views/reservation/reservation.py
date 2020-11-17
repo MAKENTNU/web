@@ -8,8 +8,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, RedirectView, TemplateView
 
-from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+from util.locale_utils import timedelta_to_hours
 from ...forms import FreeSlotForm, ReservationForm
 from ...models.models import Machine, MachineType, Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation
