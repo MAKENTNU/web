@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from util.locale_utils import short_date_format
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
@@ -156,7 +157,7 @@ class TimePlace(models.Model):
         ordering = ('start_time',)
 
     def __str__(self):
-        return '%s - %s' % (self.event.title, self.start_time.strftime('%Y.%m.%d'))
+        return f"{self.event.title} - {short_date_format(self.start_time)}"
 
     def number_of_registered_tickets(self):
         return self.tickets.filter(active=True).count()
