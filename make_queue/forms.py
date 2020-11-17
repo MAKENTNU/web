@@ -37,24 +37,28 @@ class ReservationForm(forms.Form):
         :return: A dictionary of clean data
         """
         cleaned_data = super().clean()
+        machine_pk = cleaned_data.get('machine_name')
+        has_event = cleaned_data.get('event')
+        event_pk = cleaned_data.get('event_pk')
+        is_special = cleaned_data.get('special')
 
         # Check that the given machine exists
-        machine_query = Machine.objects.filter(pk=cleaned_data['machine_name'])
-
-        if not machine_query.exists():
+        try:
+            cleaned_data['machine'] = Machine.objects.get(pk=machine_pk)
+        except Machine.DoesNotExist:
             raise forms.ValidationError("Machine name and machine type do not match")
 
-        cleaned_data['machine'] = machine_query.first()
-
         # If the reservation is an event, check that it exists
-        if cleaned_data['event']:
-            event_query = TimePlace.objects.filter(pk=cleaned_data['event_pk'])
+        if has_event:
+            if not event_pk:
+                raise forms.ValidationError('Event must be specified when the "Event" checkbox is checked')
+            if is_special:
+                raise forms.ValidationError("Cannot be both special and event")
+
+            event_query = TimePlace.objects.filter(pk=event_pk)
             if not event_query.exists():
                 raise forms.ValidationError("Event must exist")
             cleaned_data['event'] = event_query.first()
-
-        if cleaned_data['event'] and cleaned_data['special']:
-            raise forms.ValidationError("Cannot be both special and event")
 
         return cleaned_data
 
@@ -83,6 +87,8 @@ class RuleForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        if self.errors:
+            return cleaned_data
 
         rule = ReservationRule(
             machine_type=cleaned_data["machine_type"], max_hours=0, max_inside_border_crossed=0,
@@ -125,8 +131,8 @@ class QuotaForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        user = cleaned_data['user']
-        all_users = cleaned_data['all']
+        user = cleaned_data.get('user')
+        all_users = cleaned_data.get('all')
 
         if user is None and not all_users:
             raise forms.ValidationError("User cannot be None when the quota is not for all users")
