@@ -171,6 +171,11 @@ class SystemAccess(models.Model):
     name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
 
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(fields=('name', 'member'), name="%(class)s_unique_name_per_member"),
+        )
+
     @property
     def change_url(self):
         """
