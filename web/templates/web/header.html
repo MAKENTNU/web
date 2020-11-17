@@ -88,10 +88,10 @@
                             <div class="text">{% trans "Administration" %}</div>
                         </a>
                     {% endif %}
-                    <a class="item" href="{% url 'profile' %}">
-                        <div class="text">{% trans "Profile" %}</div>
-                    </a>
                     {% if perms.internal.is_internal %}
+                        <a class="item" href="{% url 'profile' %}">
+                            <div class="text">{% trans "Profile" %}</div>
+                        </a>
                         <a class="item" href="{% host_url "home" host "internal" "internt" %}">
                             <div class="text">{% trans "Internal pages" %}</div>
                         </a>

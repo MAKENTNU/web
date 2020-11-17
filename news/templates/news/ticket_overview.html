@@ -10,7 +10,7 @@
 {% block body %}
     <div class="ui container">
         {% if ticket.user == request.user or perms.news.view_eventticket %}
-            <h1>{% trans "Ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"</h1>
+            <h1>{% trans "Ticket for" %} "{% firstof ticket.timeplace.event.title ticket.event.title %}"</h1>
             <div>
                 <b>{% trans "Registered to" %}:</b> {{ ticket.name }},
                 {{ ticket.email|urlize }}

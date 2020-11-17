@@ -1639,6 +1639,10 @@ msgstr "Nytt utstyr"
 msgid "Edit equipment"
 msgstr "Rediger utstyr"
 
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:17
+msgid "Admin page for equipment"
+msgstr "Administrasjonsside for utstyr"
+
 #: makerspace/templates/makerspace/equipment/equipment.html:11
 msgid "A list of equipment"
 msgstr "En utstyrsliste"
@@ -1784,13 +1788,13 @@ msgstr "Fremhevet"
 msgid "Internal"
 msgstr "Intern"
 
-#: news/templates/news/admin_event.html:16
-msgid "Go to the event page"
-msgstr "Gå til arrangementsiden"
-
 #: news/templates/news/admin_event.html:33
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
+
+#: news/templates/news/admin_event.html:37
+msgid "Go to the event page"
+msgstr "Gå til arrangementsiden"
 
 #: news/templates/news/admin_event.html:38
 msgid "Hidden event"

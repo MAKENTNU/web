@@ -83,7 +83,7 @@ class ReservationFormTest(TestCase):
             "end_time": timezone.now() + timedelta(hours=2),
             "machine_name": self.machine.pk,
             "special": True,
-            "special_text": "23 characters is enough",
+            "special_text": "a" * 201,
         }
 
         form = ReservationForm(data=form_data)

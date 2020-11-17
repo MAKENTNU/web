@@ -115,7 +115,7 @@
                     data-date-joined="{{ member.date_joined|date:"d.m.y" }}"
                     data-term-quit="{{ member.term_quit|default:"" }}"
                     data-date-quit="{{ member.date_quit|date:"d.m.y" }}"
-                    data-reason-quit="{% if member.quit %}{{ member.reason_quit }}{% endif %}"
+                    data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
                     data-status="{{ membership_status }}"
                     data-committees="{{ committees }}"
                     data-role="{{ member.role }}"
@@ -167,7 +167,9 @@
                         {% endif %}
                     </td>
                     <td class="computer only">
-                        <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
+                        {% if member.phone_number %}
+                            <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
