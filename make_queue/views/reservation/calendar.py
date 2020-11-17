@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from make_queue.util.time import year_and_week_to_monday
+from util.locale_utils import year_and_week_to_monday
 from ...models.models import Machine, Quota
 
 

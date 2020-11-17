@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from make_queue.util.time import local_to_date
+from util.locale_utils import local_to_date
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation
 from ...templatetags.reservation_extra import (

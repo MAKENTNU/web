@@ -10,9 +10,9 @@ from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 from users.models import User
+from util.locale_utils import timedelta_to_hours
 from web.fields import URLTextField, UnlimitedCharField
 from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse

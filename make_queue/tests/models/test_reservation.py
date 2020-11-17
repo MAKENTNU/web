@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from news.models import Event, TimePlace
 from users.models import User
-from ...util.time import local_to_date
+from util.locale_utils import local_to_date
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 

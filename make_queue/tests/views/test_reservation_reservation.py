@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from news.models import Event, TimePlace
 from users.models import User
-from ...util.time import date_to_local, local_to_date
+from util.locale_utils import date_to_local, local_to_date
 from ..utility import post_request_with_user, request_with_user, template_view_get_context_data
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse

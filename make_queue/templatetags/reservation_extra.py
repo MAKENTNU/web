@@ -7,7 +7,7 @@ from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from make_queue.util.time import date_to_local, get_day_name
+from util.locale_utils import date_to_local, get_day_name
 from ..models.models import Machine, Reservation, ReservationRule
 
 register = template.Library()

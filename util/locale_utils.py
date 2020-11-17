@@ -1,9 +1,11 @@
 from calendar import day_name
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.utils import timezone, translation
-from django.utils.datetime_safe import datetime
-from django.utils.translation import ugettext
+from django.utils.translation import gettext
+
+
+DEFAULT_TIMEZONE = timezone.get_default_timezone()
 
 
 def is_valid_week(year, week):
@@ -50,7 +52,7 @@ def date_to_local(date):
     :param date: The date to convert to the default server timezone
     :return: The unlocalized date in the default server timezone
     """
-    return timezone.localtime(date, timezone.get_default_timezone())
+    return timezone.localtime(date, DEFAULT_TIMEZONE)
 
 
 def local_to_date(date):
@@ -60,7 +62,7 @@ def local_to_date(date):
     :param date: The date to localize
     :return: The localized date
     """
-    return timezone.make_aware(date, timezone.get_default_timezone())
+    return timezone.make_aware(date, DEFAULT_TIMEZONE)
 
 
 def timedelta_to_hours(timedelta_obj):
@@ -83,6 +85,6 @@ def get_day_name(day_no, locale):
     """
     previous_lang = translation.get_language()
     translation.activate(locale)
-    locale_day_name = ugettext(day_name[day_no])
+    locale_day_name = gettext(day_name[day_no])
     translation.activate(previous_lang)
     return locale_day_name
