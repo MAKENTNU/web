@@ -36,9 +36,10 @@ class ChangePageVersionForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        current_content = cleaned_data["current_content"]
 
         # Make sure that the content belongs to the given page
-        if cleaned_data["current_content"].page != self.instance:
+        if current_content and current_content.page != self.instance:
             self.add_error("current_content", _("The content does not belong to the given page"))
 
         return cleaned_data
