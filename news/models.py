@@ -10,6 +10,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from util.locale_utils import short_date_format
 from web.fields import URLTextField, UnlimitedCharField
 from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
@@ -153,7 +154,7 @@ class TimePlace(models.Model):
     objects = TimePlaceQuerySet.as_manager()
 
     def __str__(self):
-        return '%s - %s' % (self.event.title, self.start_time.strftime('%Y.%m.%d'))
+        return f"{self.event.title} - {short_date_format(self.start_time)}"
 
     class Meta:
         ordering = ('start_time',)

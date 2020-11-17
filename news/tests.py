@@ -34,7 +34,7 @@ class ModelTestCase(TestCase):
         title = 'Test event'
         event = Event.objects.create(title=title)
         time_place = self.create_time_place(event, publication_time_adjust_days=0, start_time_adjust_seconds=0)
-        date_str = timezone.localdate().strftime('%Y.%m.%d')
+        date_str = timezone.localdate().strftime("%d.%m.%Y")
         self.assertEqual(str(time_place), f"{title} - {date_str}")
 
     def test_article_queryset(self):

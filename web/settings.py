@@ -2,6 +2,10 @@ import logging
 import sys
 from pathlib import Path
 
+from django.conf.locale.en import formats as en_formats
+from django.conf.locale.nb import formats as nb_formats
+
+
 # Disable logging when testing
 if 'test' in sys.argv:
     # Disable calls with severity level equal to or less than `CRITICAL` (i.e. everything)
@@ -212,6 +216,14 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Set time format for English to match the Norwegian format
+for format_name in ('TIME_FORMAT', 'DATETIME_FORMAT', 'SHORT_DATETIME_FORMAT'):
+    format_str: str = getattr(en_formats, format_name)
+    setattr(en_formats, format_name, format_str.replace('P', 'H:i'))
+
+nb_formats.DECIMAL_SEPARATOR = '.'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/

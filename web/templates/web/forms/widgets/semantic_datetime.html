@@ -10,7 +10,7 @@
                 {% if widget.value %}
                value="{{ widget.value }}"
                 {% elif not widget.attrs.default_blank %}
-               value="{% set_current_date_only %}"
+               value="{% set_current_date %}"
                 {% endif %} name="{{ widget.name }}"
         />
     </div>

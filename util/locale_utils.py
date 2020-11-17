@@ -3,9 +3,28 @@ from datetime import datetime, timedelta
 
 from django.utils import timezone, translation
 from django.utils.translation import gettext
+from django.utils.formats import date_format
 
 
 DEFAULT_TIMEZONE = timezone.get_default_timezone()
+
+
+def as_local(value: datetime):
+    return value.astimezone(DEFAULT_TIMEZONE)
+
+
+def _date_format(value, format_):
+    if isinstance(value, datetime) and value.tzinfo != DEFAULT_TIMEZONE:
+        value = as_local(value)
+    return date_format(value, format_)
+
+
+def short_date_format(value):
+    return _date_format(value, "SHORT_DATE_FORMAT")
+
+
+def short_datetime_format(value):
+    return _date_format(value, "SHORT_DATETIME_FORMAT")
 
 
 def is_valid_week(year, week):

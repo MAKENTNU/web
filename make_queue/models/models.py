@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 from news.models import TimePlace
 from users.models import User
-from util.locale_utils import timedelta_to_hours
+from util.locale_utils import short_datetime_format, timedelta_to_hours
 from web.fields import URLTextField, UnlimitedCharField
 from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
@@ -393,8 +393,8 @@ class Reservation(models.Model):
         )
 
     def __str__(self):
-        start_time = self.start_time.strftime("%d/%m/%Y - %H:%M")
-        end_time = self.end_time.strftime("%d/%m/%Y - %H:%M")
+        start_time = short_datetime_format(self.start_time)
+        end_time = short_datetime_format(self.end_time)
         return f"{self.user.get_full_name()} har reservert {self.machine.name} fra {start_time} til {end_time}"
 
 
