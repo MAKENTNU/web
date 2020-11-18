@@ -103,6 +103,11 @@ tr.wrapping {
     display: inline-block;
 }
 
+.make-right-floated {
+    float: right;
+    display: inline-block;
+}
+
 .legend.item {
     display: inline-block;
     padding-right: 0.5em;

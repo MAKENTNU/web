@@ -1,0 +1,13 @@
+/* Desktop layout */
+@media screen and (min-width: 992px) {
+    .quotas .card,
+    #user-quotas .card {
+        width: max-content; /* 10px wider than Fomantic-UI, to fit the text */
+    }
+
+    .quotas .card .content,
+    #user-quotas .card .content {
+        display: flex;
+        flex-direction: column;
+    }
+}

@@ -13,7 +13,7 @@
 {% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_list.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -148,7 +148,7 @@
                         <div class="header">{{ reservation.machine.name }}</div>
                         <div class="meta">
                             {{ reservation.machine.model }}<br/>
-                            <a class="make-my-reservation-blue-link" href="{{ reservation.machine.location_url }}"
+                            <a class="ui" href="{{ reservation.machine.location_url }}"
                                target="_blank">
                                 <i class="location arrow icon"></i>{{ reservation.machine.location }}
                             </a>
