@@ -222,7 +222,6 @@ class BaseMachineForm(forms.ModelForm):
 
 
 class EditMachineForm(BaseMachineForm):
-    machine_type = None
 
     class Meta(BaseMachineForm.Meta):
-        exclude = ["machine_type", "machine_model"]
+        exclude = ["machine_model"]
