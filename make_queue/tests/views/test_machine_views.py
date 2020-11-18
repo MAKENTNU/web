@@ -79,7 +79,7 @@ class MachineViewTest(TestCase):
             with self.subTest(machine_type=machine_type):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
 
-class EditMachineFormTest(TestCase):
+class CreateAndEditMachineViewTest(TestCase):
 
     def setUp(self):
         username = 'TEST_USER'
@@ -90,9 +90,13 @@ class EditMachineFormTest(TestCase):
         self.user.user_permissions.add(create_permission, change_permission)
         self.client.login(username=username, password=password)
 
-    def test_context_data_has_EditMachineForm(self):
+    def test_editMachine_context_data_has_EditMachineForm(self):
         printer_machine_type = MachineType.objects.get(pk=1)
-        machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+", machine_type=printer_machine_type)
+        machine = Machine.objects.create(
+            name="Test",
+            machine_model="Ultimaker 2+",
+            machine_type=printer_machine_type
+        )
         self.response = self.client.get(reverse("edit_machine", args=[machine.pk]))
         
         self.assertEqual(self.response.status_code, 200)
