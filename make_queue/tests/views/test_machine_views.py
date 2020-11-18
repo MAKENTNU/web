@@ -8,7 +8,7 @@ from users.models import User
 from ...models.models import Machine, MachineType
 from ...tests.utility import template_view_get_context_data
 from ...views.reservation.machine import MachineView
-from ...forms import EditMachineForm
+from ...forms import EditMachineForm, BaseMachineForm
 
 
 class MachineViewTest(TestCase):
@@ -85,8 +85,9 @@ class EditMachineFormTest(TestCase):
         username = 'TEST_USER'
         password = 'TEST_PASS'
         self.user = User.objects.create_user(username=username, password=password)
-        permission = Permission.objects.get(codename="change_machine")
-        self.user.user_permissions.add(permission)
+        change_permission = Permission.objects.get(codename="change_machine")
+        create_permission = Permission.objects.get(codename="add_machine")
+        self.user.user_permissions.add(create_permission, change_permission)
         self.client.login(username=username, password=password)
 
     def test_context_data_has_EditMachineForm(self):
@@ -96,3 +97,9 @@ class EditMachineFormTest(TestCase):
         
         self.assertEqual(self.response.status_code, 200)
         self.assertTrue(isinstance(self.response.context_data["form"], EditMachineForm))
+
+    def test_createMachine_context_data_has_baseMachineForm(self):
+        self.response = self.client.get(reverse("create_machine"))
+        
+        self.assertEqual(self.response.status_code, 200)
+        self.assertTrue(isinstance(self.response.context_data["form"], BaseMachineForm))
