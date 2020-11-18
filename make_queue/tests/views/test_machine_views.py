@@ -96,26 +96,3 @@ class EditMachineFormTest(TestCase):
         
         self.assertEqual(self.response.status_code, 200)
         self.assertTrue(isinstance(self.response.context_data["form"], EditMachineForm))
-
-    def test_editMachineForm_has_not_disabled_stream_name_when_3dprinter(self):
-        printer_machine_type_pk = 1
-        self.assert_stream_name_disabled(machine_type_pk=printer_machine_type_pk, expected=False)
-
-    # Disabled because unimplemented
-    # def test_editMachineForm_has_disabled_stream_name_when_not_3dprinter(self):
-    #     not_printer_machine_type_pk = 2
-    #     self.assert_stream_name_disabled(machine_type_pk=not_printer_machine_type_pk, expected=True)
-
-    def assert_stream_name_disabled(self, machine_type_pk, expected):
-        machine_type = MachineType.objects.get(pk=machine_type_pk)
-        machine = Machine.objects.create(
-            name="noTest",
-            machine_model="machine model",
-            machine_type=machine_type
-            )
-        self.response = self.client.get(reverse("edit_machine", args=[machine.pk]))
-        
-        self.assertEqual(
-            self.response.context_data["form"]["stream_name"].field.disabled,
-            expected
-        )
