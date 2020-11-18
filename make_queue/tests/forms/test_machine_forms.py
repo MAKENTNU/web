@@ -83,7 +83,7 @@ class EditMachineFormTest(TestCase):
         form_data = self.valid_form_data
         form_data["stream_name"] = ""
 
-        form = BaseMachineForm(data=form_data)
+        form = EditMachineForm(data=form_data)
 
         self.assertFalse(form.is_valid())
 
@@ -93,6 +93,6 @@ class EditMachineFormTest(TestCase):
     #     self.machine.machine_type = MachineType.objects.get(pk=2)
     #     form_data["stream_name"] = ""
     #
-    #     form = BaseMachineForm(data=form_data)
+    #     form = EditMachineForm(data=form_data)
     #
     #     self.assertTrue(form.is_valid())
