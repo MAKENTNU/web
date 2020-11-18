@@ -1,0 +1,45 @@
+.make-collapsed-header {
+    margin-bottom: 0 !important;
+}
+
+.large-text {
+    font-size: 1.2em;
+}
+
+.make-right-floated {
+    float: right;
+    display: inline-block;
+}
+
+.make-row-fill {
+    height: 100%;
+}
+
+.make-my-reservation-tablet {
+    padding: 2em 0 2em 0;
+}
+
+.make-my-reservation-tablet .card {
+    flex: auto;
+}
+
+.make-my-reservation-button-pad {
+    margin-top: -2em;
+    padding-bottom: 1.2em !important;
+}
+
+
+/* Desktop layout */
+@media screen and (min-width: 800px) {
+    .make-my-reservation-tablet {
+        display: none !important;
+    }
+}
+
+
+/* Tablet and mobile layout */
+@media screen and (max-width: 800px) {
+    .make-my-reservation-desktop {
+        display: none !important;
+    }
+}

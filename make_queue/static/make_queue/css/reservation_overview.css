@@ -1,3 +1,13 @@
+.machine-title {
+    vertical-align: sub;
+    display: inline;
+}
+
+.machine-title-field {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
 a.wrapped.button {
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;

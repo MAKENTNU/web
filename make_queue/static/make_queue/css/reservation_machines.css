@@ -1,0 +1,13 @@
+.machine-title {
+    vertical-align: sub;
+    display: inline;
+}
+
+.reservation-management-buttons .button {
+    margin-top: 0.5em;
+}
+
+.machine-title-field {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}

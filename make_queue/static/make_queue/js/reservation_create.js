@@ -1,4 +1,7 @@
-/* `maximumDay` must be defined when linking this script */
+/*
+ * Linking `reservation_create.css` is required when linking this script.
+ * `maximumDay` must also be defined.
+*/
 var maximumDay;
 
 const reservations = [];
