@@ -29,6 +29,11 @@
                 return new Date(year, month, day);
             },
         },
+        text: {
+            {# The referenced constants are defined in `date_util.js`, which is linked through the Django widget's media #}
+            months: MONTH_TRANSLATIONS,
+            monthsShort: SHORT_MONTH_TRANSLATIONS,
+        },
     });
 
     $("form").submit(function () {

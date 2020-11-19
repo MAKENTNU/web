@@ -9,9 +9,15 @@ class SemanticTimeInput(forms.TimeInput):
 class SemanticDateInput(forms.DateInput):
     template_name = "web/forms/widgets/semantic_date.html"
 
+    class Media:
+        js = ("web/js/date_util.js",)
+
 
 class SemanticDateTimeInput(forms.DateTimeInput):
     template_name = "web/forms/widgets/semantic_datetime.html"
+
+    class Media:
+        js = ("web/js/date_util.js",)
 
 
 class SemanticChoiceInput(forms.Select):
