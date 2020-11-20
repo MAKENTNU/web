@@ -16,7 +16,8 @@ class CommitteeDetailView(DetailView):
     context_object_name = 'committee'
 
 
-class EditCommitteeView(UpdateView):
+class EditCommitteeView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('groups.change_committee',)
     model = Committee
     fields = ('clickbait', 'description', 'email', 'image')
     success_url = reverse_lazy('committee_list')
