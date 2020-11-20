@@ -6,7 +6,7 @@ $(".secret-button").click(function () {
     const secret = $(`#${secretId}`);
     secret.removeClass("hidden");
     secretButton.addClass("hidden");
-    setTimeout(() => {æ
+    setTimeout(() => {
         secret.addClass("hidden");
         secretButton.removeClass("hidden");
     }, SECRET_SHOW_DURATION_SECONDS * 1000);
