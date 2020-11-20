@@ -1,3 +1,4 @@
+import logging
 import sys
 import uuid
 from io import BytesIO
@@ -83,8 +84,8 @@ class NewsBase(models.Model):
                     self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
                                                       sys.getsizeof(output), None)
                 # Should not close image, as Django uses the image and closes it by default
-            except IOError:
-                pass
+            except IOError as e:
+                logging.getLogger('django.request').exception(e)
 
         super(NewsBase, self).save(**kwargs)
 

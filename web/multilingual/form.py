@@ -1,4 +1,5 @@
 import copy
+import logging
 
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingFormField
@@ -25,8 +26,8 @@ class MultiLingualFormField(forms.MultiValueField):
             # Non required fields may not have enough values
             try:
                 structure[language] = data_list[index]
-            except IndexError:
-                pass
+            except IndexError as e:
+                logging.getLogger('django.request').exception(e)
         return structure
 
     def __init__(self, *args, **kwargs):
