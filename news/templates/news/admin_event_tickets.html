@@ -1,5 +1,11 @@
 {% extends "web/base.html" %}
+{% load static %}
 {% load i18n %}
+
+{% block head %}
+    <script type="text/javascript" src="{% static "news/js/email_copy.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin_event_tickets.css" %}">
+{% endblock head %}
 
 {% block body %}
 
@@ -9,6 +15,18 @@
             <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
         </a>
 
+        <h3>{% trans "Emails" %}
+            <button class="copy-token"><i class="clipboard icon"></i></button>
+            <span data-content="{% trans "Click to copy the emails of the active tickets to the clipboard" %}.">
+                <i class="ui yellow question circle icon"></i>
+            </span>
+        </h3>
+        <div>
+            <input
+                class="input-monospace copy-input"
+                value="{{ ticket_emails }}"
+                readonly> 
+        </div>
         <h3>{% trans "Tickets" %}</h3>
         <b>{{ object.number_of_registered_tickets }}/{{ object.number_of_tickets }} {% trans "tickets reserved" %}</b>
         <div class="ui relaxed divided list">
@@ -47,5 +65,12 @@
             {% endfor %}
         </div>
     </div>
-
+    <script>
+        $(".message .close").click(function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
+        $("span[data-content]").popup();
+    </script>
 {% endblock %}
