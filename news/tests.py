@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from .models import Article, Event, TimePlace
+from .models import Article, Event, TimePlace, EventTicket
 
 # A very small JPEG image without any content. Used for creation of simple images when creating an article
 simple_jpg = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
@@ -100,6 +100,13 @@ class ViewTestCase(TestCase):
         self.event = Event.objects.create(
             title='FUTURE',
             image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            number_of_tickets=40,
+        )
+        self.timeplace = TimePlace.objects.create(
+            event=self.event,
+            start_time=timezone.localtime() + timedelta(minutes=5),
+            end_time=timezone.localtime() + timedelta(minutes=10),
+            number_of_tickets=29
         )
 
     def test_admin(self):
@@ -214,6 +221,116 @@ class ViewTestCase(TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
+    def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
+        url_name = "event-tickets"
+        event = self.event
+        username_and_ticket_state_tuples = [
+            ("user2", True),
+            ("user3", False),
+            ("user4", True),
+        ]
+        expected_context_ticket_emails = "user2@example.com,user4@example.com"
+
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
+        )
+
+    def test_timeplace_context_ticket_emails_only_returns_active_tickets_emails(self):
+        url_name = "timeplace-tickets"
+        event = self.timeplace
+        username_and_ticket_state_tuples = [
+            ("user2", True),
+            ("user3", False),
+            ("user4", True),
+        ]
+        expected_context_ticket_emails = "user2@example.com,user4@example.com"
+
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
+        )
+
+    def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
+        url_name = "event-tickets"
+        event = self.event
+        username_and_ticket_state_tuples = [
+            ("user2", True),
+            ("user2", False),
+        ]
+        expected_context_ticket_emails = "user2@example.com"
+
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
+        )
+
+    def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(self):
+        url_name = "timeplace-tickets"
+        event = self.timeplace
+        username_and_ticket_state_tuples = [
+            ("user2", True),
+            ("user2", False),
+        ]
+        expected_context_ticket_emails = "user2@example.com"
+
+        self.assert_context_ticket_emails(
+            url_name=url_name,
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
+            expected_context_ticket_emails=expected_context_ticket_emails
+        )
+
+    def assert_context_ticket_emails(self, url_name, event, username_and_ticket_state_tuples, expected_context_ticket_emails):
+        """Asserts that the `ticket_emails` in context at ``url_name`` equals ``expected_context_ticket_emails``
+        
+        :param url_name: Name of URL
+        :param event: Event or TimePlace that the tickets belong to
+        :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
+        :param expected_context_ticket_emails: The expected string of comma separated ticket emails
+
+        :return: Boolean based on `context['ticket_emails']` is `expected_context_ticket_emails` and status code is 200 
+        """
+
+        tickets = self.create_tickets_for(
+            event=event,
+            username_and_ticket_state_tuples=username_and_ticket_state_tuples
+        )
+        self.add_permission("change_event")
+        
+        response = self.client.get(reverse(url_name, args=[event.pk]))
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
+
+    @staticmethod
+    def create_tickets_for(event, username_and_ticket_state_tuples):
+        """Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
+
+        :param event: Event or TimePlace model that the ticket belongs to
+        :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
+
+        :return: List of tickets to ``event`` with the details from ``username_and_ticket_state_tuples``
+        """
+
+        event_arg_name = 'timeplace' if isinstance(event, TimePlace) else 'event'
+        tickets = []
+        for username, ticket_state in username_and_ticket_state_tuples:
+            user = User.objects.get_or_create(username=username, email=f"{username}@example.com")[0]
+            tickets.append(
+                EventTicket.objects.create(
+                    user=user,
+                    active=ticket_state,
+                    **{event_arg_name: event},
+                )
+            )
+        return tickets
 
 class HiddenPrivateTestCase(TestCase):
 
@@ -303,3 +420,4 @@ class HiddenPrivateTestCase(TestCase):
         self.add_permission('change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
+

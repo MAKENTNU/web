@@ -11,6 +11,8 @@ from groups.models import Committee
 from internal.util import date_to_term
 from users.models import User
 
+from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+
 
 class Member(models.Model):
     class Meta:
@@ -168,3 +170,16 @@ class SystemAccess(models.Model):
 
     def should_be_changed(self):
         return self.name != self.WEBSITE
+
+
+class Secret(models.Model):
+    title = MultiLingualTextField(
+        max_length=100,
+        unique=True,
+        verbose_name=_("Title"),
+    )
+    content = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
+    last_modified = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return str(self.title)
