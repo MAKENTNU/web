@@ -1,4 +1,5 @@
 import json
+import logging
 from json import JSONDecodeError
 
 from django.utils.translation import get_language
@@ -15,17 +16,27 @@ class MultiLingualTextStructure:
     def __init__(self, linear_content, use_default_for_empty):
         self.use_default_for_empty = use_default_for_empty
         self.languages = {language: "" for language in self.supported_languages}
+        self.set_content_for_languages(linear_content)
+
+    def set_content_for_languages(self, linear_content):
+        if not isinstance(linear_content, str):
+            logging.getLogger('django.request').exception(
+                f"Cannot set content to '{linear_content}'; {type(str)} expected, but received {type(linear_content)}"
+            )
+            return
+        if not linear_content:
+            return
         try:
-            # Try to decode the data as JSON
-            for language, value in json.loads(linear_content).items():
-                self.languages[language] = value
-        except JSONDecodeError:
+            json_dict = json.loads(linear_content)
+        except JSONDecodeError as e:
             # If for some reason (i.e. old or corrupt data) the content given is not JSON,
             # use it as content for the default language.
             self.languages[settings.LANGUAGE_CODE] = linear_content
-        except TypeError:
-            # If none or other incompatible type is passed
-            pass
+            logging.getLogger('django.request').exception(e)
+            return
+
+        for language, value in json_dict.items():
+            self.languages[language] = value
 
     def __str__(self):
         """

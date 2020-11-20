@@ -27,7 +27,14 @@
                     </div>
                 {% endfor %}
 
-                <label>{{ field.label }}</label>
+                <label>
+                    {{ field.label }}
+                    {% if field.help_text %}
+                        <span data-content="{{ field.help_text }}">
+                            <i class="ui yellow question circle icon"></i>
+                        </span>
+                    {% endif %}
+                </label>
                 {{ field }}
             </div>
         {% endfor %}
@@ -44,5 +51,7 @@
                 .closest(".message")
                 .transition("fade");
         });
+
+        $("span[data-content]").popup();
     </script>
 {% endblock body %}

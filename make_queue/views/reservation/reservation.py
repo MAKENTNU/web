@@ -1,3 +1,4 @@
+import logging
 from abc import ABCMeta
 from math import ceil
 
@@ -131,8 +132,8 @@ class ReservationCreateOrChangeView(TemplateView):
             form = ReservationForm(request.POST)
             if form.is_valid():
                 return self.form_valid(form, **kwargs)
-        except Exception:
-            pass
+        except Exception as e:
+            logging.getLogger('django.request').exception(e)
         return self.get(request, **kwargs)
 
 

@@ -29,7 +29,7 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
+          sudo apt update && sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
 
       - name: Install Python Dependencies
         run: |
