@@ -27,11 +27,13 @@ class Member(models.Model):
         to=User,
         on_delete=models.DO_NOTHING,
         null=True,
+        related_name='member',
         verbose_name=_("User"),
     )
     committees = models.ManyToManyField(
         to=Committee,
         blank=True,
+        related_name='members',
         verbose_name=_("Committees"),
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
@@ -169,6 +171,7 @@ class SystemAccess(models.Model):
     member = models.ForeignKey(
         to=Member,
         on_delete=models.CASCADE,
+        related_name='system_accesses',
         verbose_name=_("Member"),
     )
 

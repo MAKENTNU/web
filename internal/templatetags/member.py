@@ -39,7 +39,7 @@ def get_system_accesses(member, user):
         prop.value,
         [_("No"), _("Yes")][prop.value],
         prop.change_url if member.user == user or user.has_perm("internal.change_systemaccess") else "",
-    ) for prop in member.systemaccess_set.all()]
+    ) for prop in member.system_accesses.all()]
 
 
 @register.simple_tag

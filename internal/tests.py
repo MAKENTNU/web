@@ -78,14 +78,14 @@ class UrlTests(PermissionsTestCase):
         self._test_editor_url(self.get_url("member-retire", [self.member.pk]))
         self._test_editor_url(self.get_url("member-undo-retire", [self.member.pk]))
 
-        for system_access in self.member.systemaccess_set.all():
+        for system_access in self.member.system_accesses.all():
             # No one is allowed to change their "website" access. Other than that,
             # all members can edit their own accesses, but only editors can edit other members'.
             allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
             self._test_url_permissions(self.get_url("toggle-system-access", [system_access.pk]),
                                        allowed_clients=allowed_clients)
 
-        for system_access in self.member_editor.systemaccess_set.all():
+        for system_access in self.member_editor.system_accesses.all():
             # No one is allowed to change their "website" access
             allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
             self._test_url_permissions(self.get_url("toggle-system-access", [system_access.pk]),

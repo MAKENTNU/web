@@ -13,6 +13,7 @@ class UsernameField(models.CharField):
         return super().get_prep_value(value).lower()
 
 
+# `3DPrinterCourse` would be a syntactically invalid name :(
 class Printer3DCourse(models.Model):
     class Meta:
         constraints = (
@@ -26,10 +27,11 @@ class Printer3DCourse(models.Model):
         SENT = "sent", _("Sent to Byggsikring")
         ACCESS = "access", _("Access granted")
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         to=User,
         on_delete=models.CASCADE,
         null=True,
+        related_name='printer_3d_course',
         verbose_name=_("User"),
     )
     username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("Username"))

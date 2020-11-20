@@ -68,7 +68,7 @@ class MachineType(models.Model):
     def can_use_3d_printer(user: Union[User, AnonymousUser]):
         if not user.is_authenticated:
             return False
-        if Printer3DCourse.objects.filter(user=user).exists():
+        if hasattr(user, 'printer_3d_course'):
             return True
         if Printer3DCourse.objects.filter(username=user.username).exists():
             course_registration = Printer3DCourse.objects.get(username=user.username)

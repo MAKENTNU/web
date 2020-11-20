@@ -28,6 +28,7 @@ class InheritanceGroup(Group):
     own_permissions = models.ManyToManyField(
         to=Permission,
         blank=True,
+        related_name='inheritance_groups',
     )
 
     def update_permissions(self):
@@ -89,6 +90,7 @@ class Committee(models.Model):
     group = models.OneToOneField(
         to=InheritanceGroup,
         on_delete=models.CASCADE,
+        related_name='committee',
         verbose_name=_("group"),
     )
     description = models.TextField(verbose_name=_("Description"))

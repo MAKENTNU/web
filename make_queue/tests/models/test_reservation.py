@@ -82,6 +82,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_not_allowed_user_cannot_create_reservation(self):
         self.course_registration.delete()
+        self.user.refresh_from_db()
         self.assertFalse(self.printer_machine_type.can_user_use(self.user))
         self.check_reservation_invalid(
             self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
