@@ -544,6 +544,10 @@ msgstr "Velg kategorier"
 msgid "Category"
 msgstr "Kategori"
 
+#: faq/models.py:8
+msgid "Categories"
+msgstr "Kategorier"
+
 #: faq/models.py:15
 msgid "Question"
 msgstr "Spørsmål"
@@ -573,6 +577,14 @@ msgstr "Endre spørsmål"
 #: faq/templates/faq/question_edit.html:31
 msgid "Choose one or more categories"
 msgstr "Velg én eller flere kategorier"
+
+#: groups/models.py:26
+msgid "parents"
+msgstr "foreldre"
+
+#: groups/models.py:33
+msgid "own permissions"
+msgstr "egne rettigheter"
 
 #: groups/models.py:91
 msgid "group"

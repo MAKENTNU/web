@@ -91,14 +91,14 @@ class UrlTests(PermissionsTestCase):
             self.member.refresh_from_db()
             self.assertTrue(assertion(self.member))
 
-        for system_access in self.member.systemaccess_set.all():
+        for system_access in self.member.system_accesses.all():
             # No one is allowed to change their `WEBSITE` access. Other than that,
             # all members can edit their own accesses, but only editors can edit other members'.
             allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
             self._test_url_permissions(self.get_path("toggle-system-access", [system_access.pk]),
                                        allowed_clients=allowed_clients)
 
-        for system_access in self.member_editor.systemaccess_set.all():
+        for system_access in self.member_editor.system_accesses.all():
             # No one is allowed to change their `WEBSITE` access
             allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
             self._test_url_permissions(self.get_path("toggle-system-access", [system_access.pk]),

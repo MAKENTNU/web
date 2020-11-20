@@ -155,19 +155,19 @@ class PermGroupTestCase(TestCase):
         self.assertTrue(user2.has_perm(perm1_str))
         self.assertTrue(user2.has_perm(perm2_str))
 
-    def test_get_sub_group(self):
+    def test_get_all_children(self):
         org = InheritanceGroup.objects.get(name='Org')
         arr = InheritanceGroup.objects.get(name='Arrangement')
         dev = InheritanceGroup.objects.get(name='Dev')
         web = InheritanceGroup.objects.create(name='Web')
         web.parents.add(dev)
 
-        self.assertIn(dev, org.get_sub_groups())
-        self.assertIn(arr, org.get_sub_groups())
-        self.assertIn(web, org.get_sub_groups())
-        self.assertIn(web, dev.get_sub_groups())
-        self.assertNotIn(arr, dev.get_sub_groups())
-        self.assertNotIn(dev, arr.get_sub_groups())
+        self.assertIn(dev, org.get_all_children())
+        self.assertIn(arr, org.get_all_children())
+        self.assertIn(web, org.get_all_children())
+        self.assertIn(web, dev.get_all_children())
+        self.assertNotIn(arr, dev.get_all_children())
+        self.assertNotIn(dev, arr.get_all_children())
 
     def test_get_all_parents(self):
         org = InheritanceGroup.objects.get(name='Org')
