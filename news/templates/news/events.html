@@ -37,7 +37,7 @@
 
                     <div class="content">
                         <div class="word-breaking header">
-                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             {% if event.first_occurrence.place_url %}
@@ -77,7 +77,7 @@
                             {% endif %}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
+                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.pk %}"
                                  {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
                             />
                         {% endthumbnail %}
@@ -85,7 +85,7 @@
 
                     <div class="content">
                         <div class="word-breaking header">
-                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>

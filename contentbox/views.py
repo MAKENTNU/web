@@ -9,6 +9,8 @@ class DisplayContentBoxView(DetailView):
     model = ContentBox
     template_name = 'contentbox/display.html'
     context_object_name = 'contentbox'
+
+    # The value of this field is set when calling the view's `as_view()` method
     title = ""
 
     def get_object(self, queryset=None):

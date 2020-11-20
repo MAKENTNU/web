@@ -4,11 +4,11 @@ from django.utils import timezone
 register = template.Library()
 
 
-@register.filter(name="past")
+@register.filter
 def past(timeplaces):
     return timeplaces.filter(end_time__lte=timezone.now()).order_by("-end_time")
 
 
-@register.filter(name="future")
+@register.filter
 def future(timeplaces):
     return timeplaces.filter(end_time__gt=timezone.now())

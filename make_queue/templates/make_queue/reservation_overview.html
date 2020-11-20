@@ -90,7 +90,7 @@
 
         {% include "make_queue/calendar.html" %}
         <script>
-            new ReservationCalendar($(".reservation_calendar"), {
+            new ReservationCalendar($(".reservation-calendar"), {
                 machine: {{ machine.pk }},
                 selection: {% if can_create_reservations and can_create_more_reservations %}true{% else %}false{% endif %},
                 canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},

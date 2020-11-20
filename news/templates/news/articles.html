@@ -38,7 +38,7 @@
                     {% endif %}
                     <div>
                         <h2 class="word-breaking">
-                            <a href="{% url 'article' article.id %}">{{ article.title }}</a>
+                            <a href="{% url 'article' article.pk %}">{{ article.title }}</a>
                         </h2>
                         <p>{{ article.clickbait }}</p>
                     </div>
