@@ -44,7 +44,9 @@ def login_wrapper(request, backend, *args, **kwargs):
             # ...or if the user has not set a different name after account creation:
             or user.get_full_name().strip() == user.ldap_full_name.strip()):
         _update_full_name_if_different(user, social_data)
-        _update_ldap_full_name_if_different(user, social_data)
+    # Update the LDAP name after the full name has (potentially) been set.
+    # This is only important if the user has not logged in before, as the full name has not yet been set.
+    _update_ldap_full_name_if_different(user, social_data)
 
     # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
     ldap_data = get_user_details_from_email(user.email, use_cached=False)
