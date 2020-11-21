@@ -4,16 +4,20 @@ from django.template.defaultfilters import urlize
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
-from util.admin_utils import DefaultAdminWidgetsMixin
+from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin
 from .models import User
 
 
-class UserAdmin(DefaultAdminWidgetsMixin, DjangoUserAdmin):
+class UserAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, DjangoUserAdmin):
     list_display = (
         'username', 'get_email', 'first_name', 'last_name', 'card_number', 'is_staff', 'is_superuser',
         'date_joined', 'last_login',
     )
-    search_fields = ('username', 'first_name', 'last_name', 'ldap_full_name', 'email', 'card_number')
+    search_fields = (
+        'card_number',
+        # The user search fields are appended in `UserSearchFieldsMixin`
+    )
+    user_lookup, name_for_full_name_lookup = '', 'full_name'
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),

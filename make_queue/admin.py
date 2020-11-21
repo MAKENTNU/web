@@ -3,7 +3,7 @@ from django.db.models import Count
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from util.admin_utils import DefaultAdminWidgetsMixin
+from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
 from .models.reservation import Quota, Reservation, ReservationRule
@@ -76,14 +76,15 @@ class ReservationRuleAdmin(admin.ModelAdmin):
     readonly_fields = ('last_modified',)
 
 
-class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
+class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin):
     list_display = ('username', 'user', 'name', 'date', 'status', 'advanced_course', 'last_modified')
     list_filter = ('status', 'advanced_course')
     search_fields = (
-        'user__username', 'user__first_name', 'user__last_name',
         'username', 'name',
         'user__card_number', '_card_number',
+        # The user search fields are appended in `UserSearchFieldsMixin`
     )
+    user_lookup, name_for_full_name_lookup = 'user__', 'user_full_name'
     list_editable = ('status', 'advanced_course')
     ordering = ('date', 'username')
     list_select_related = ('user',)

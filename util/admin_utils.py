@@ -13,6 +13,7 @@ from sorl.thumbnail.admin.current import AdminImageWidget
 
 from card.modelfields import CardNumberField
 from card.widgets import CardNumberInput
+from users.models import User
 from util.html_utils import escape_to_named_characters
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.admin import create_multi_lingual_admin_formfield
@@ -49,6 +50,20 @@ def search_escaped_and_unescaped(super_obj: admin.ModelAdmin, request, input_que
 
     result_queryset = input_queryset.filter(pk__in={cb.pk for cb in combined_searched_querysets})
     return result_queryset, use_distinct_result
+
+
+# noinspection PyUnresolvedReferences
+class UserSearchFieldsMixin:
+    user_lookup: str  # e.g. 'user__'
+    name_for_full_name_lookup: str  # e.g. 'full_name'; used in `User.get_user_search_fields()` and `User.annotate_full_name()`
+
+    def get_search_fields(self, request):
+        search_fields = super().get_search_fields(request)
+        return search_fields + User.get_user_search_fields(self.user_lookup, annotated_full_name_lookup=self.name_for_full_name_lookup)
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset = User.annotate_full_name(queryset, self.user_lookup, lookup_name=self.name_for_full_name_lookup)
+        return super().get_search_results(request, queryset, search_term)
 
 
 # noinspection PyUnresolvedReferences

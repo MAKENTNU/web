@@ -1,5 +1,9 @@
+from typing import Tuple
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Value
+from django.db.models.functions import Concat
 from django.utils.translation import gettext_lazy as _
 
 from card.modelfields import CardNumberField
@@ -23,3 +27,22 @@ class User(AbstractUser):
         if len(names) <= 2:
             return full_name
         return f"{names[0]} {names[-1]}"
+
+    @staticmethod
+    def get_user_search_fields(prefix='user__', *, annotated_full_name_lookup: str = None) -> Tuple[str, ...]:
+        search_fields = []
+        search_fields_to_prefix = ['username', 'ldap_full_name', 'email']
+        if annotated_full_name_lookup:
+            search_fields += [annotated_full_name_lookup]
+        else:
+            search_fields_to_prefix += ['first_name', 'last_name']
+        return tuple(
+            search_fields
+            + [f'{prefix}{field}' for field in search_fields_to_prefix]
+        )
+
+    @staticmethod
+    def annotate_full_name(queryset: models.QuerySet['User'], prefix='user__', *, lookup_name: str):
+        return queryset.annotate(**{
+            lookup_name: Concat(f'{prefix}first_name', Value(' '), f'{prefix}last_name'),
+        })
