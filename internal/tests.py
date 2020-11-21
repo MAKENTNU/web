@@ -1,7 +1,7 @@
 from typing import Set
 from urllib.parse import urlparse
 
-from django.test import Client, override_settings
+from django.test import Client
 from django_hosts import reverse
 
 from users.models import User
@@ -23,10 +23,11 @@ class UrlTests(PermissionsTestCase):
         self.member = Member.objects.create(user=member_user)
         self.member_editor = Member.objects.create(user=member_editor_user)
 
-        self.anon_client = Client()
-        self.non_member_client = Client()
-        self.member_client = Client()
-        self.member_editor_client = Client()
+        client_defaults = {'SERVER_NAME': 'internal.testserver'}
+        self.anon_client = Client(**client_defaults)
+        self.non_member_client = Client(**client_defaults)
+        self.member_client = Client(**client_defaults)
+        self.member_editor_client = Client(**client_defaults)
 
         self.all_clients = {self.anon_client, self.non_member_client, self.member_client, self.member_editor_client}
 
@@ -41,9 +42,9 @@ class UrlTests(PermissionsTestCase):
     def _test_url_permissions(self, path: str, allowed_clients: Set[Client]):
         disallowed_clients = self.all_clients - allowed_clients
         for client in disallowed_clients:
-            self.assertNotEqual(client.get(path, follow=True).status_code, 200)
+            self.assertGreaterEqual(client.get(path).status_code, 300)
         for client in allowed_clients:
-            self.assertEqual(client.get(path, follow=True).status_code, 200)
+            self.assertEqual(client.get(path).status_code, 200)
 
     def _test_internal_url(self, path: str):
         self._test_url_permissions(path, {self.member_client, self.member_editor_client})
@@ -61,7 +62,6 @@ class UrlTests(PermissionsTestCase):
         self.assertRedirects(self.member_client.post(path, data), expected_redirect_url)
         self.assertRedirects(self.member_editor_client.post(path, data), expected_redirect_url)
 
-    @override_settings(DEFAULT_HOST="internal")
     def test_permissions(self):
         self._test_internal_url(self.get_path("members"))
         self._test_internal_url(self.get_path("members", [self.member.pk]))
@@ -74,9 +74,6 @@ class UrlTests(PermissionsTestCase):
                                    allowed_clients={self.member_editor_client})
 
         self._test_editor_url(self.get_path("member-quit", [self.member.pk]))
-        self._test_editor_url(self.get_path("member-undo-quit", [self.member.pk]))
-        self._test_editor_url(self.get_path("member-retire", [self.member.pk]))
-        self._test_editor_url(self.get_path("member-undo-retire", [self.member.pk]))
 
         for system_access in self.member.system_accesses.all():
             # No one is allowed to change their "website" access. Other than that,
