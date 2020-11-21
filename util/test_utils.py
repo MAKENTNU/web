@@ -5,6 +5,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import Permission
 from django.test import TestCase
 
+from users.models import User
 
 # A very small JPEG image without any content; used for mocking a valid image while testing
 MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
@@ -47,6 +48,8 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
 
 class PermissionsTestCase(TestCase):
 
-    def add_permission(self, codename):
-        permission = Permission.objects.get(codename=codename)
-        self.user.user_permissions.add(permission)
+    @staticmethod
+    def add_permissions(user: User, *codenames: str):
+        for codename in codenames:
+            permission = Permission.objects.get(codename=codename)
+            user.user_permissions.add(permission)

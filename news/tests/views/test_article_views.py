@@ -26,7 +26,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('admin-articles'))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permission('change_article')
+        self.add_permissions(self.user, 'change_article')
         response = self.client.get(reverse('admin-articles'))
         self.assertEqual(response.status_code, 200)
 
@@ -42,7 +42,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article-create'))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permission('add_article')
+        self.add_permissions(self.user, 'add_article')
         response = self.client.get(reverse('article-create'))
         self.assertEqual(response.status_code, 200)
 
@@ -50,7 +50,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article-edit', kwargs={'pk': self.article.pk}))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permission('change_article')
+        self.add_permissions(self.user, 'change_article')
         response = self.client.get(reverse('article-edit', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -60,7 +60,7 @@ class ArticleViewTests(PermissionsTestCase):
             self.assertEqual(response.status_code, 200)
             return json.loads(response.content)
 
-        self.add_permission('change_article')
+        self.add_permissions(self.user, 'change_article')
         self.assertEquals(toggle(-1, 'hidden'), {})
         self.assertEquals(toggle(self.article.pk, 'ajfal'), {})
 
@@ -77,7 +77,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permission('can_view_private')
+        self.add_permissions(self.user, 'can_view_private')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -92,7 +92,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permission('change_article')
+        self.add_permissions(self.user, 'change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -102,6 +102,6 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permission('change_article')
+        self.add_permissions(self.user, 'change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)

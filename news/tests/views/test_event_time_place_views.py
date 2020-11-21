@@ -42,7 +42,7 @@ class ViewTestCase(PermissionsTestCase):
         response = self.client.get(reverse('event-create'))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permission('add_event')
+        self.add_permissions(self.user, 'add_event')
         response = self.client.get(reverse('event-create'))
         self.assertEqual(response.status_code, 200)
 
@@ -50,7 +50,7 @@ class ViewTestCase(PermissionsTestCase):
         response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permission('change_event')
+        self.add_permissions(self.user, 'change_event')
         response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -60,8 +60,8 @@ class ViewTestCase(PermissionsTestCase):
         response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permission('add_timeplace')
-        self.add_permission('change_timeplace')
+        self.add_permissions(self.user, 'add_timeplace')
+        self.add_permissions(self.user, 'change_timeplace')
         response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
 
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
@@ -74,8 +74,8 @@ class ViewTestCase(PermissionsTestCase):
         self.assertEqual(new.end_time, new_end_time)
 
     def test_timplace_duplicate_old(self):
-        self.add_permission('add_timeplace')
-        self.add_permission('change_timeplace')
+        self.add_permissions(self.user, 'add_timeplace')
+        self.add_permissions(self.user, 'change_timeplace')
 
         start_time = timezone.localtime() - timedelta(weeks=2, days=3)
         end_time = start_time + timedelta(days=1)
@@ -103,7 +103,7 @@ class ViewTestCase(PermissionsTestCase):
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permission('change_event')
+        self.add_permissions(self.user, 'change_event')
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -117,7 +117,7 @@ class ViewTestCase(PermissionsTestCase):
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permission('can_view_private')
+        self.add_permissions(self.user, 'can_view_private')
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -175,7 +175,7 @@ class ViewTestCase(PermissionsTestCase):
         """
 
         self.create_tickets_for(event, username_and_ticket_state_tuples)
-        self.add_permission("change_event")
+        self.add_permissions(self.user, "change_event")
 
         response = self.client.get(reverse(url_name, args=[event.pk]))
         self.assertEqual(response.status_code, 200)

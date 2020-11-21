@@ -1,15 +1,15 @@
 from typing import Set
 from urllib.parse import urlparse
 
-from django.contrib.auth.models import Permission
 from django.test import Client, TestCase, override_settings
 from django_hosts import reverse
 
 from users.models import User
 from .models import Member, SystemAccess
+from util.test_utils import PermissionsTestCase
 
 
-class UrlTests(TestCase):
+class UrlTests(PermissionsTestCase):
 
     def setUp(self):
         password = "TEST_PASS"
@@ -33,12 +33,6 @@ class UrlTests(TestCase):
         self.non_member_client.login(username=non_member_user, password=password)
         self.member_client.login(username=member_user, password=password)
         self.member_editor_client.login(username=member_editor_user, password=password)
-
-    @staticmethod
-    def add_permissions(user: User, *codenames: str):
-        for codename in codenames:
-            permission = Permission.objects.get(codename=codename)
-            user.user_permissions.add(permission)
 
     @staticmethod
     def get_url(name: str, args=None):
