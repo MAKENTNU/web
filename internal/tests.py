@@ -1,13 +1,17 @@
 from typing import Set
 from urllib.parse import urlparse
 
-from django.test import Client, override_settings
+from django.test import Client
 from django_hosts import reverse
 
 from users.models import User
 from util.test_utils import PermissionsTestCase
 from .forms import MemberStatusForm
 from .models import Member, SystemAccess
+
+
+# Makes sure that the subdomain of all requests is `internal`
+INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': 'internal.testserver'}
 
 
 class UrlTests(PermissionsTestCase):
@@ -24,10 +28,10 @@ class UrlTests(PermissionsTestCase):
         self.member = Member.objects.create(user=member_user)
         self.member_editor = Member.objects.create(user=member_editor_user)
 
-        self.anon_client = Client()
-        self.non_member_client = Client()
-        self.member_client = Client()
-        self.member_editor_client = Client()
+        self.anon_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.non_member_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.member_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.member_editor_client = Client(**INTERNAL_CLIENT_DEFAULTS)
 
         self.all_clients = {self.anon_client, self.non_member_client, self.member_client, self.member_editor_client}
 
@@ -42,9 +46,9 @@ class UrlTests(PermissionsTestCase):
     def _test_url_permissions(self, path: str, allowed_clients: Set[Client]):
         disallowed_clients = self.all_clients - allowed_clients
         for client in disallowed_clients:
-            self.assertNotEqual(client.get(path, follow=True).status_code, 200)
+            self.assertGreaterEqual(client.get(path).status_code, 300)
         for client in allowed_clients:
-            self.assertEqual(client.get(path, follow=True).status_code, 200)
+            self.assertEqual(client.get(path).status_code, 200)
 
     def _test_internal_url(self, path: str):
         self._test_url_permissions(path, {self.member_client, self.member_editor_client})
@@ -65,7 +69,6 @@ class UrlTests(PermissionsTestCase):
             self.assertRedirects(self.member_client.post(path, data), expected_redirect_url)
         self.assertRedirects(self.member_editor_client.post(path, data), expected_redirect_url)
 
-    @override_settings(DEFAULT_HOST="internal")
     def test_permissions(self):
         self._test_internal_url(self.get_path("members"))
         self._test_internal_url(self.get_path("members", [self.member.pk]))
