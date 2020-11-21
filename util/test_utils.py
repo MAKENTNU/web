@@ -1,8 +1,8 @@
 import functools
 from typing import Any, Dict, Tuple
 
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import Permission
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 from users.models import User
@@ -45,6 +45,7 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
         return wrapper
 
     return decorator
+
 
 class PermissionsTestCase(TestCase):
 

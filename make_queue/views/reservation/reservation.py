@@ -1,5 +1,6 @@
 import logging
 from abc import ABC
+from datetime import timedelta
 from math import ceil
 
 from django.shortcuts import redirect, render
@@ -323,7 +324,7 @@ class FindFreeSlot(FormView):
         if reservations:
             periods.append(self.format_period(
                 machine, reservations[-1].end_time,
-                timezone.now() + timezone.timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
+                timezone.now() + timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
             ))
         # If the machine is not reserved anytime in the future, we include the
         # whole allowed period
@@ -331,7 +332,7 @@ class FindFreeSlot(FormView):
             periods.append(self.format_period(
                 machine,
                 timezone.now(),
-                timezone.now() + timezone.timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
+                timezone.now() + timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
             ))
         return periods
 

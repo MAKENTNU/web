@@ -1,7 +1,7 @@
 from typing import Set
 from urllib.parse import urlparse
 
-from django.test import Client, TestCase, override_settings
+from django.test import Client, override_settings
 from django_hosts import reverse
 
 from users.models import User

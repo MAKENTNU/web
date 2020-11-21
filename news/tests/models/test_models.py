@@ -5,6 +5,7 @@ from django.utils import timezone
 
 from ...models import Article, Event, TimePlace
 
+
 class ModelTestCase(TestCase):
 
     @staticmethod

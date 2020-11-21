@@ -54,7 +54,8 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                        days_changed=6, start_days=1, max_hours=self.max_time_reservation,
                                        max_inside_border_crossed=self.max_time_reservation)
 
-    def save_past_reservation(self, reservation):
+    @staticmethod
+    def save_past_reservation(reservation):
         validate_function = reservation.validate
         reservation.validate = lambda: True
         reservation.save()

@@ -13,6 +13,7 @@ class CommitteeList(ListView):
 
 class CommitteeDetailView(DetailView):
     model = Committee
+    template_name = 'groups/committee_detail.html'
     context_object_name = 'committee'
 
 
