@@ -2460,6 +2460,22 @@ msgstr ""
 msgid "Your ticket!"
 msgstr "Din billett!"
 
+#: users/admin.py:21
+msgid "personal info"
+msgstr "personlig informasjon"
+
+#: users/admin.py:22
+msgid "other info"
+msgstr "annen informasjon"
+
+#: users/admin.py:23
+msgid "permissions"
+msgstr "rettigheter"
+
+#: users/admin.py:26
+msgid "important dates"
+msgstr "viktige datoer"
+
 #: users/models.py:9
 msgid "Full name from LDAP"
 msgstr "Fullt navn fra LDAP"
