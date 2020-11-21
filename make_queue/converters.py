@@ -11,7 +11,7 @@ class SpecificMachineType:
         except MachineType.DoesNotExist:
             raise ValueError("No machine type for that key")
 
-    def to_url(self, machine_type):
+    def to_url(self, machine_type: MachineType):
         return str(machine_type.pk)
 
 
@@ -24,7 +24,7 @@ class SpecificMachine:
         except Machine.DoesNotExist:
             raise ValueError("No machine for that key")
 
-    def to_url(self, machine):
+    def to_url(self, machine: Machine):
         return str(machine.pk)
 
 
@@ -34,7 +34,7 @@ class Year:
     def to_python(self, value):
         return int(value)
 
-    def to_url(self, year):
+    def to_url(self, year: int):
         return str(year)
 
 
@@ -44,7 +44,7 @@ class Week:
     def to_python(self, value):
         return int(value)
 
-    def to_url(self, week):
+    def to_url(self, week: int):
         return str(week)
 
 
@@ -57,7 +57,7 @@ class MachineReservation:
         except Reservation.DoesNotExist:
             raise ValueError("No reservation for that key")
 
-    def to_url(self, reservation):
+    def to_url(self, reservation: Reservation):
         return str(reservation.pk)
 
 
@@ -70,5 +70,5 @@ class UserByUsername:
         except User.DoesNotExist:
             raise ValueError("No user with that username")
 
-    def to_url(self, user):
+    def to_url(self, user: User):
         return user.username

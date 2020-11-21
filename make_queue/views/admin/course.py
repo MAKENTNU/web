@@ -6,9 +6,9 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, TemplateView, UpdateView, View
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView, View
 
-from util.views import PureDeleteView
+from util.views import PreventGetRequestsMixin
 from ...forms import Printer3DCourseForm
 from ...models.course import Printer3DCourse
 
@@ -48,7 +48,7 @@ class EditRegistrationView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy("course_panel")
 
 
-class DeleteRegistrationView(PermissionRequiredMixin, PureDeleteView):
+class DeleteRegistrationView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ("make_queue.delete_printer3dcourse",)
     model = Printer3DCourse
     success_url = reverse_lazy("course_panel")

@@ -10,9 +10,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 from groups.models import Committee
 from users.models import User
 from web.fields import UnlimitedCharField
-from .util import date_to_term
-
 from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from .util import date_to_term
 
 
 class Member(models.Model):
@@ -166,14 +165,14 @@ class SystemAccess(models.Model):
         (WEBSITE, _("Website")),
     )
 
-    name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
-    value = models.fields.BooleanField(verbose_name=_("Access"))
     member = models.ForeignKey(
         to=Member,
         on_delete=models.CASCADE,
         related_name='system_accesses',
         verbose_name=_("Member"),
     )
+    name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
+    value = models.fields.BooleanField(verbose_name=_("Access"))
 
     class Meta:
         constraints = (

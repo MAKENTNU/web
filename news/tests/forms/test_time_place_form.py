@@ -4,11 +4,12 @@ from django.test import TestCase
 from django.utils import timezone
 
 from util.test_utils import MOCK_JPG_FILE
-from ...models import Event
 from ...forms import TimePlaceForm
+from ...models import Event
+
 
 class FormTestCase(TestCase):
-    
+
     def setUp(self):
         event = Event.objects.create(
             title='',

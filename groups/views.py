@@ -11,16 +11,16 @@ class CommitteeList(ListView):
     context_object_name = 'committees'
 
 
+class CommitteeDetailView(DetailView):
+    model = Committee
+    context_object_name = 'committee'
+
+
 class EditCommitteeView(PermissionRequiredMixin, UpdateView):
     permission_required = ('groups.change_committee',)
     model = Committee
     fields = ('clickbait', 'description', 'email', 'image')
     success_url = reverse_lazy('committee_list')
-
-
-class CommitteeDetailView(DetailView):
-    model = Committee
-    context_object_name = 'committee'
 
 
 class CommitteeAdminView(PermissionRequiredMixin, ListView):

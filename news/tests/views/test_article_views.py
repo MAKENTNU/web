@@ -4,9 +4,10 @@ from datetime import timedelta
 from django.urls import reverse
 from django.utils import timezone
 
-from ...models import Article
-from util.test_utils import MOCK_JPG_FILE, PermissionsTestCase
 from users.models import User
+from util.test_utils import MOCK_JPG_FILE, PermissionsTestCase
+from ...models import Article
+
 
 class ArticleViewTests(PermissionsTestCase):
 
@@ -67,7 +68,7 @@ class ArticleViewTests(PermissionsTestCase):
         hidden = self.article.hidden
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
-    
+
     def test_private_article(self):
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)

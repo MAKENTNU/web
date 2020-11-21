@@ -1,8 +1,8 @@
 import functools
 from typing import Any, Dict, Tuple
 
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import Permission
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 
 from users.models import User

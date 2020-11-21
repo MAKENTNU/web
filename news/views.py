@@ -11,10 +11,10 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language, gettext, gettext_lazy as _
 from django.views import View
-from django.views.generic import CreateView, DetailView, ListView, RedirectView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView
 
 from mail import email
-from util.views import PureDeleteView
+from util.views import PreventGetRequestsMixin
 from web import settings
 from web.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
 from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
@@ -162,7 +162,7 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
     }
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.pk,))
+        return reverse("admin-event", args=(self.object.pk,))
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
@@ -175,7 +175,7 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
     }
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.pk,))
+        return reverse("admin-event", args=(self.object.pk,))
 
 
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
@@ -191,7 +191,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
         return form
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.event.pk,))
+        return reverse("admin-event", args=(self.object.event.pk,))
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, View):
@@ -227,7 +227,7 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
         return form
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.event.pk,))
+        return reverse("admin-event", args=(self.object.event.pk,))
 
 
 class AdminArticleToggleView(PermissionRequiredMixin, View):
@@ -260,24 +260,24 @@ class AdminTimeplaceToggleView(AdminArticleToggleView):
     model = TimePlace
 
 
-class DeleteArticleView(PermissionRequiredMixin, PureDeleteView):
+class DeleteArticleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_article',)
     model = Article
     success_url = reverse_lazy('admin-articles')
 
 
-class DeleteEventView(PermissionRequiredMixin, PureDeleteView):
+class DeleteEventView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_event',)
     model = Event
     success_url = reverse_lazy('admin-events')
 
 
-class DeleteTimePlaceView(PermissionRequiredMixin, PureDeleteView):
+class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_timeplace',)
     model = TimePlace
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.event.pk,))
+        return reverse("admin-event", args=(self.object.event.pk,))
 
 
 class EventRegistrationView(CreateView):
@@ -344,7 +344,7 @@ class EventRegistrationView(CreateView):
         return context_data
 
     def get_success_url(self):
-        return reverse_lazy("ticket", args=(self.object.uuid,))
+        return reverse("ticket", args=(self.object.uuid,))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

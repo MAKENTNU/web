@@ -15,6 +15,7 @@ from contentbox.views import DisplayContentBoxView
 from dataporten.views import Logout, login_wrapper
 from . import views
 
+
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 urlpatterns = [
@@ -34,10 +35,10 @@ urlpatterns += i18n_patterns(
     path('committees/', include('groups.urls')),
     path('announcements/', include('announcements.urls')),
     path('makerspace/', include('makerspace.urls')),
+    DisplayContentBoxView.get_path('email'),
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),
-    DisplayContentBoxView.get_path('email'),
 
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,

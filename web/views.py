@@ -7,7 +7,7 @@ from news.models import Article, TimePlace
 
 
 class IndexView(TemplateView):
-    template_name = 'web/index.html'
+    template_name = "web/index.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -24,16 +24,16 @@ class IndexView(TemplateView):
 
 
 class AdminPanelView(UserPassesTestMixin, TemplateView):
-    template_name = 'web/admin_panel.html'
+    template_name = "web/admin_panel.html"
     possible_permissions = [
-        "news.add_article", "news.change_article", "news.delete_article",
-        "news.add_event", "news.change_event", "news.delete_event",
-        "news.add_timeplace", "news.change_timeplace", "news.delete_timeplace",
-        "make_queue.can_create_event_reservation",
-        "make_queue.change_quota",
-        "make_queue.change_printer3dcourse",
-        "groups.can_edit_group",
-        "makerspace.add_equipment", "makerspace.change_equipment", "makerspace.delete_equipment",
+        'news.add_article', 'news.change_article', 'news.delete_article',
+        'news.add_event', 'news.change_event', 'news.delete_event',
+        'news.add_timeplace', 'news.change_timeplace', 'news.delete_timeplace',
+        'make_queue.can_create_event_reservation',
+        'make_queue.change_quota',
+        'make_queue.change_printer3dcourse',
+        'groups.can_edit_group',
+        'makerspace.add_equipment', 'makerspace.change_equipment', 'makerspace.delete_equipment',
     ]
 
     def test_func(self):
@@ -41,7 +41,7 @@ class AdminPanelView(UserPassesTestMixin, TemplateView):
 
 
 class View404(TemplateView):
-    template_name = 'web/404.html'
+    template_name = "web/404.html"
 
     def get(self, request, *args, **kwargs):
         return self.render_to_response({}, status=404)
@@ -52,5 +52,5 @@ def view_500(request):
 
 
 class AboutUsView(DisplayContentBoxView):
-    template_name = 'web/about.html'
+    template_name = "web/about.html"
     title = 'about'

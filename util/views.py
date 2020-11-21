@@ -1,10 +1,7 @@
 from django.http import Http404
-from django.views.generic import DeleteView
 
 
-class PureDeleteView(DeleteView):
+class PreventGetRequestsMixin:
 
-    def get(self, request, *args, **kwargs):
-        # Prevent GET requests to a delete confirmation page,
-        # as this view uses a delete confirmation modal instead of a dedicated page
+    def get(self, *args, **kwargs):
         raise Http404()

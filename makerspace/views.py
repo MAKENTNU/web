@@ -1,36 +1,36 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from contentbox.views import DisplayContentBoxView
-from util.views import PureDeleteView
+from util.views import PreventGetRequestsMixin
 from web.templatetags.permission_tags import has_any_equipment_permissions
 from .forms import EquipmentForm
 from .models import Equipment
 
 
 class MakerspaceView(DisplayContentBoxView):
-    template_name = 'makerspace/makerspace.html'
+    template_name = "makerspace/makerspace.html"
     title = 'makerspace'
 
 
 class EquipmentView(DetailView):
     model = Equipment
-    template_name = 'makerspace/equipment/equipment.html'
+    template_name = "makerspace/equipment/equipment.html"
     context_object_name = 'equipment'
 
 
 class EquipmentListView(ListView):
     model = Equipment
     queryset = Equipment.objects.default_order_by()
-    template_name = 'makerspace/equipment/equipment_list.html'
+    template_name = "makerspace/equipment/equipment_list.html"
     context_object_name = 'equipment_list'
 
 
 class AdminEquipmentView(PermissionRequiredMixin, ListView):
     model = Equipment
     queryset = Equipment.objects.default_order_by()
-    template_name = 'makerspace/equipment/admin_equipment.html'
+    template_name = "makerspace/equipment/admin_equipment.html"
     context_object_name = 'equipment_list'
 
     def has_permission(self):
@@ -41,7 +41,7 @@ class CreateEquipmentView(PermissionRequiredMixin, CreateView):
     permission_required = ('makerspace.add_equipment',)
     model = Equipment
     form_class = EquipmentForm
-    template_name = 'makerspace/equipment/admin_equipment_create.html'
+    template_name = "makerspace/equipment/admin_equipment_create.html"
     context_object_name = 'equipment'
     success_url = reverse_lazy('makerspace-equipment-admin')
 
@@ -50,7 +50,7 @@ class EditEquipmentView(PermissionRequiredMixin, UpdateView):
     permission_required = ('makerspace.change_equipment',)
     model = Equipment
     form_class = EquipmentForm
-    template_name = 'makerspace/equipment/admin_equipment_edit.html'
+    template_name = "makerspace/equipment/admin_equipment_edit.html"
     context_object_name = 'equipment'
     success_url = reverse_lazy('makerspace-equipment-admin')
 
@@ -62,7 +62,7 @@ class EditEquipmentView(PermissionRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class DeleteEquipmentView(PermissionRequiredMixin, PureDeleteView):
+class DeleteEquipmentView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
     success_url = reverse_lazy('makerspace-equipment-admin')

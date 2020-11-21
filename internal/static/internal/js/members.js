@@ -78,7 +78,7 @@ function showDetailedMemberInformation(member) {
         ),
     ));
 
-    const $memberSystemAccessesElement = $memberInfoModal.find("#member-systemAccesses");
+    const $memberSystemAccessesElement = $memberInfoModal.find("#member-system-accesses");
     $memberSystemAccessesElement.empty();
     $memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`
         <tr>

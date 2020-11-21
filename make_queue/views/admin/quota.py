@@ -1,9 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
-from django.views.generic import CreateView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
 
 from users.models import User
-from util.views import PureDeleteView
+from util.views import PreventGetRequestsMixin
 from ...forms import QuotaForm
 from ...models.models import Quota
 
@@ -51,7 +51,7 @@ class EditQuotaView(PermissionRequiredMixin, UpdateView):
         return reverse("quota_panel", kwargs={"user": self.object.user})
 
 
-class DeleteQuotaView(PermissionRequiredMixin, PureDeleteView):
+class DeleteQuotaView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ("make_queue.delete_quota",)
     model = Quota
 

@@ -1,13 +1,11 @@
-import json
 from datetime import timedelta
 
-from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
 from util.test_utils import MOCK_JPG_FILE, PermissionsTestCase
-from ...models import Article, Event, EventTicket, TimePlace
+from ...models import Event, EventTicket, TimePlace
 
 
 class ViewTestCase(PermissionsTestCase):
@@ -108,7 +106,6 @@ class ViewTestCase(PermissionsTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_private_event(self):
-        
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
