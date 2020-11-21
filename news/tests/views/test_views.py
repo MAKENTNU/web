@@ -8,73 +8,7 @@ from django.utils import timezone
 
 from users.models import User
 from util.test_utils import MOCK_JPG_FILE
-from .models import Article, Event, EventTicket, TimePlace
-from .forms import TimePlaceForm
-
-
-class ModelTestCase(TestCase):
-
-    @staticmethod
-    def create_time_place(event, *, publication_time_adjust_days, start_time_adjust_seconds,
-                          hidden=TimePlace._meta.get_field("hidden").default):
-        now = timezone.localtime()
-        start_time = now + timedelta(seconds=start_time_adjust_seconds)
-        return TimePlace.objects.create(
-            event=event,
-            publication_time=now + timedelta(days=publication_time_adjust_days),
-            start_time=start_time,
-            end_time=start_time + timedelta(minutes=1),
-            hidden=hidden,
-        )
-
-    def test_str(self):
-        article = Article.objects.create(title='TEST_TITLE')
-        self.assertEqual(article.title, 'TEST_TITLE')
-        self.assertEqual(article.title, str(article))
-
-        title = 'Test event'
-        event = Event.objects.create(title=title)
-        time_place = self.create_time_place(event, publication_time_adjust_days=0, start_time_adjust_seconds=0)
-        date_str = timezone.localdate().strftime("%d.%m.%Y")
-        self.assertEqual(str(time_place), f"{title} - {date_str}")
-
-    def test_article_queryset(self):
-        Article.objects.create(
-            title='NOT PUBLISHED',
-            publication_time=timezone.localtime() + timedelta(days=1),
-        )
-        Article.objects.create(
-            title='NOT PUBLISHED',
-            publication_time=timezone.localtime() + timedelta(seconds=1),
-        )
-        published1 = Article.objects.create(
-            title='PUBLISHED',
-            publication_time=timezone.localtime() - timedelta(days=1),
-        )
-        published2 = Article.objects.create(
-            title='PUBLISHED',
-            publication_time=timezone.localtime() - timedelta(seconds=1),
-        )
-        self.assertEqual(Article.objects.published().count(), 2)
-        self.assertSetEqual(set(Article.objects.published()), {published1, published2})
-
-    def test_timeplace_queryset(self):
-        event = Event.objects.create(title='', hidden=False)
-        hidden_event = Event.objects.create(title='', hidden=True)
-
-        event_not_published = self.create_time_place(event, publication_time_adjust_days=1, start_time_adjust_seconds=1, hidden=False)
-        event_future = self.create_time_place(event, publication_time_adjust_days=-1, start_time_adjust_seconds=1, hidden=False)
-        event_past = self.create_time_place(event, publication_time_adjust_days=-1, start_time_adjust_seconds=-100, hidden=False)
-
-        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=1)
-        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=-1)
-        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=1, hidden=False)
-        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=-1, hidden=False)
-
-        self.assertEqual(TimePlace.objects.future().count(), 1)
-        self.assertEqual(TimePlace.objects.past().count(), 1)
-        self.assertEqual(TimePlace.objects.future().first(), event_future)
-        self.assertEqual(TimePlace.objects.past().first(), event_past)
+from ...models import Article, Event, EventTicket, TimePlace
 
 
 class ViewTestCase(TestCase):
@@ -392,44 +326,3 @@ class HiddenPrivateTestCase(TestCase):
         self.add_permission('change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
-
-class FormTestCase(TestCase):
-    
-    def setUp(self):
-        event = Event.objects.create(
-            title='',
-            image=MOCK_JPG_FILE,
-            hidden=True,
-            private=False,
-        )
-        self.valid_time_place_form_data = {
-            "event": event,
-            "publication_time": timezone.now() + timedelta(days=1),
-            "start_time": timezone.now() + timedelta(days=2),
-            "end_time": timezone.now() + timedelta(days=2, hours=2),
-            "place": "Makerverkstedet",
-            "place_url": "https://www.makentnu.no",
-            "hidden": False,
-            "number_of_tickets": 30,
-        }
-
-    def test_valid_time_place_form_data_is_valid(self):
-        form = TimePlaceForm(data=self.valid_time_place_form_data)
-
-        self.assertTrue(form.is_valid())
-
-    def test_time_place_form_data_with_start_time_none_is_not_valid(self):
-        form_data = self.valid_time_place_form_data
-        form_data["start_time"] = None
-
-        form = TimePlaceForm(data=form_data)
-
-        self.assertFalse(form.is_valid())
-
-    def test_time_place_form_data_with_end_time_none_is_not_valid(self):
-        form_data = self.valid_time_place_form_data
-        form_data["end_time"] = None
-
-        form = TimePlaceForm(data=form_data)
-
-        self.assertFalse(form.is_valid())
