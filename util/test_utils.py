@@ -2,6 +2,8 @@ import functools
 from typing import Any, Dict, Tuple
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth.models import Permission
+from django.test import TestCase
 
 
 # A very small JPEG image without any content; used for mocking a valid image while testing
@@ -42,3 +44,9 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
         return wrapper
 
     return decorator
+
+class PermissionsTestCase(TestCase):
+
+    def add_permission(self, codename):
+        permission = Permission.objects.get(codename=codename)
+        self.user.user_permissions.add(permission)
