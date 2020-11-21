@@ -59,11 +59,22 @@ function showDetailedMemberInformation(member) {
             .text(textAttributeNamesToValues[textAttribute]);
     }
 
-    for (let urlAttribute of ["editUrl", "quitUrl", "undoQuitUrl", "retireUrl", "undoRetireUrl"]) {
-        $memberInfoModal.find(`#member-${urlAttribute}`)
-            .attr("href", member.data[urlAttribute])
-            .toggleClass("display-none", member.data[urlAttribute].isEmpty());
+    for (let editAttribute of ["editUrl", "setQuitUrl", "canUndoQuit", "canSetRetired", "canUndoRetired"]) {
+        $memberInfoModal.find(`#member-${editAttribute}-button`)
+            .toggleClass("display-none", member.data[editAttribute].isEmpty());
     }
+    $memberInfoModal.find("#member-editUrl-button").attr("href", member.data["editUrl"]);
+    $memberInfoModal.find("#member-setQuitUrl-button").attr("href", member.data["setQuitUrl"]);
+    $memberInfoModal.find("#edit-member-status-form")
+        .attr("action", member.data.editStatusUrl)
+        .find(".button[type=submit]")
+        .click(function (event) {
+            event.preventDefault(); // cancel form submission
+            const $clickedButton = $(event.target);
+            $memberInfoModal.find("#member-status-action").val($clickedButton.data("status-action"));
+            $memberInfoModal.find("#edit-member-status-form").submit();
+        });
+
     $memberInfoModal.find("#member-phone").attr("href", `tel:${member.data.phone}`);
     $memberInfoModal.find("#member-email").attr("href", `mailto:${member.data.email}`);
 
@@ -241,10 +252,11 @@ function setup() {
                 comment: $.trim($row.data("comment")),
                 guidanceExemption: $.trim($row.data("guidance-exemption")),
                 editUrl: $.trim($row.data("edit-url")),
-                quitUrl: $.trim($row.data("quit-url")),
-                undoQuitUrl: $.trim($row.data("undo-quit-url")),
-                retireUrl: $.trim($row.data("retire-url")),
-                undoRetireUrl: $.trim($row.data("undo-retire-url")),
+                setQuitUrl: $.trim($row.data("set-quit-url")),
+                canUndoQuit: $.trim($row.data("can-undo-quit")),
+                canSetRetired: $.trim($row.data("can-set-retired")),
+                canUndoRetired: $.trim($row.data("can-undo-retired")),
+                editStatusUrl: $.trim($row.data("edit-status-url")),
                 // Membership status is a list of pairs of status name and color: [('Active', 'green')]. Need to parse this list.
                 status: $row.data("status").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
                     .filter(status => status !== ", ")

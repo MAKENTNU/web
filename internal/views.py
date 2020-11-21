@@ -4,12 +4,11 @@ from django.core.exceptions import PermissionDenied
 from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, ListView, RedirectView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
 from make_queue.models.course import Printer3DCourse
 from util.views import PreventGetRequestsMixin
-from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, SecretsForm, ToggleSystemAccessForm
+from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, SecretsForm, ToggleSystemAccessForm
 from .models import Member, Secret, SystemAccess
 
 
@@ -54,6 +53,9 @@ class MembersListView(ListView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        context_data.update({
+            'StatusAction': MemberStatusForm.StatusAction,
+        })
         if 'pk' in self.kwargs:
             context_data.update({
                 'selected_member': get_object_or_404(Member, pk=self.kwargs['pk']),
@@ -107,72 +109,30 @@ class EditMemberView(PermissionRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class MemberQuitView(UpdateView):
+class MemberQuitView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('internal.can_edit_group_membership',)
     model = Member
     form_class = MemberQuitForm
     template_name = 'internal/member_quit.html'
-    success_url = reverse_lazy('members')
 
-    def form_valid(self, form):
-        member = form.instance
-        if member.retired or member.quit:
-            # Fail gracefully
-            messages.add_message(
-                self.request, messages.WARNING,
-                _("Member was not set as quit, as the member already has the status “quit” or “retired”."),
-            )
-        else:
-            member.set_quit(True, form.cleaned_data['reason_quit'], form.cleaned_data['date_quit'])
-            member.save()
+    def get_success_url(self):
+        return reverse('members', args=(self.object.pk,))
+
+
+class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
+    permission_required = ('internal.can_edit_group_membership',)
+    model = Member
+    form_class = MemberStatusForm
+
+    def form_invalid(self, form):
+        if '__all__' in form.errors:
+            for error in form.errors['__all__'].data:
+                if error.code == 'warning_message':
+                    messages.add_message(self.request, messages.WARNING, error.message)
         return HttpResponseRedirect(self.get_success_url())
 
-
-class MemberUndoQuitView(RedirectView):
-
-    def get_redirect_url(self, pk, **kwargs):
-        member = get_object_or_404(Member, pk=pk)
-        if not member.quit:
-            # Fail gracefully
-            messages.add_message(
-                self.request, messages.WARNING,
-                _("Member's “quit” status was not undone, as the member did not have the status “quit”."),
-            )
-        else:
-            member.set_quit(False)
-            member.save()
-        return reverse_lazy('members', args=(member.pk,))
-
-
-class MemberRetireView(RedirectView):
-
-    def get_redirect_url(self, pk, **kwargs):
-        member = get_object_or_404(Member, pk=pk)
-        if member.quit or member.retired:
-            # Fail gracefully
-            messages.add_message(
-                self.request, messages.WARNING,
-                _("Member was not set as retired, as the member already has the status “quit” or “retired”."),
-            )
-        else:
-            member.set_retirement(True)
-            member.save()
-        return reverse_lazy('members', args=(member.pk,))
-
-
-class MemberUndoRetireView(RedirectView):
-
-    def get_redirect_url(self, pk, **kwargs):
-        member = get_object_or_404(Member, pk=pk)
-        if not member.retired:
-            # Fail gracefully
-            messages.add_message(
-                self.request, messages.WARNING,
-                _("Member's retirement was not undone, as the member did not have the status “retired”."),
-            )
-        else:
-            member.set_retirement(False)
-            member.save()
-        return reverse_lazy('members', args=(member.pk,))
+    def get_success_url(self):
+        return reverse('members', args=(self.object.pk,))
 
 
 class ToggleSystemAccessView(UpdateView):
