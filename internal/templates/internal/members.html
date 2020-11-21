@@ -131,22 +131,14 @@
                             {% if member.user == request.user or perms.internal.change_member %}
                                 {% url "edit-member" member.pk %}
                             {% endif %}"
-                    data-quit-url="
+                    data-set-quit-url="
                             {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
                                 {% url "member-quit" member.pk %}
                             {% endif %}"
-                    data-undo-quit-url="
-                            {% if member.quit and perms.internal.can_edit_group_membership %}
-                                {% url "member-undo-quit" member.pk %}
-                            {% endif %}"
-                    data-retire-url="
-                            {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
-                                {% url "member-retire" member.pk %}
-                            {% endif %}"
-                    data-undo-retire-url="
-                            {% if member.retired and perms.internal.can_edit_group_membership %}
-                                {% url "member-undo-retire" member.pk %}
-                            {% endif %}"
+                    data-can-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-can-set-retired="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-can-undo-retired="{% if member.retired and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-edit-status-url="{% url "edit-member-status" member.pk %}"
                 >
                     <td>{{ member.user.get_full_name }}</td>
                     <td>
@@ -181,7 +173,7 @@
     <div id="detailed-member-info" class="ui longer modal">
         <div class="header">
             <span id="member-name-header"></span>
-            <a id="member-editUrl">
+            <a id="member-editUrl-button">
                 <i class="ui make-col-yellow pencil icon"></i>
             </a>
             <span id="member-status-header"></span>
@@ -298,12 +290,25 @@
                 <h4 class="ui horizontal divider header">
                     <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
                 </h4>
-                <div class="member-action-buttons">
-                    <a id="member-quitUrl" class="ui red button">{% trans "Set member as quit" %}</a>
-                    <a id="member-undoQuitUrl" class="ui green button">{% trans "Set member as not quit" %}</a>
-                    <a id="member-retireUrl" class="ui make-bg-yellow button">{% trans "Set member as retired" %}</a>
-                    <a id="member-undoRetireUrl" class="ui make-bg-yellow button">{% trans "Set member as not retired" %}</a>
-                </div>
+                <form id="edit-member-status-form" class="member-action-buttons" method="POST">
+                    {% csrf_token %}
+                    <a id="member-setQuitUrl-button" class="ui red button">
+                        {% trans "Set member as quit" %}
+                    </a>
+                    <button id="member-canUndoQuit-button" class="ui green button" type="submit"
+                            data-status-action="{{ StatusAction.UNDO_QUIT }}">
+                        {% trans "Set member as not quit" %}
+                    </button>
+                    <button id="member-canSetRetired-button" class="ui make-bg-yellow button" type="submit"
+                            data-status-action="{{ StatusAction.RETIRE }}">
+                        {% trans "Set member as retired" %}
+                    </button>
+                    <button id="member-canUndoRetired-button" class="ui make-bg-yellow button" type="submit"
+                            data-status-action="{{ StatusAction.UNDO_RETIRE }}">
+                        {% trans "Set member as not retired" %}
+                    </button>
+                    <input id="member-status-action" class="ui green button" type="hidden" name="status_action"/>
+                </form>
             {% endif %}
         </div>
     </div>

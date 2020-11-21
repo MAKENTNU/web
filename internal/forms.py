@@ -1,4 +1,5 @@
 from django import forms
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 import card.utils
@@ -65,6 +66,76 @@ class MemberQuitForm(forms.ModelForm):
             'date_quit': SemanticDateInput(),
             'reason_quit': forms.TextInput(),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        member = self.instance
+        if member.retired or member.quit:
+            raise forms.ValidationError(
+                _("Member was not set as quit, as the member already has the status “quit” or “retired”."),
+                code='warning_message',
+            )
+        return cleaned_data
+
+    def save(self, commit=True):
+        super().save(commit=False)
+        member = self.instance
+        # The form's `instance` contains the cleaned data
+        member.set_quit(True, member.reason_quit, member.date_quit)
+        member.save()
+        return member
+
+
+class MemberStatusForm(forms.ModelForm):
+    class Meta:
+        model = Member
+        fields = ['status_action']
+
+    class StatusAction(models.TextChoices):
+        UNDO_QUIT = 'UQ', "Undo quit"
+        RETIRE = 'R', "Retire"
+        UNDO_RETIRE = 'UR', "Undo retire"
+
+    status_action = forms.ChoiceField(choices=StatusAction.choices, required=True)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        status_action = cleaned_data.get('status_action')
+        if not status_action:
+            return cleaned_data
+
+        member = self.instance
+        if status_action == self.StatusAction.UNDO_QUIT and not member.quit:
+            raise forms.ValidationError(
+                _("Member's “quit” status was not undone, as the member did not have the status “quit”."),
+                code='warning_message',
+            )
+        elif status_action == self.StatusAction.RETIRE and (member.quit or member.retired):
+            raise forms.ValidationError(
+                _("Member was not set as retired, as the member already has the status “quit” or “retired”."),
+                code='warning_message',
+            )
+        elif status_action == self.StatusAction.UNDO_RETIRE and not member.retired:
+            raise forms.ValidationError(
+                _("Member's retirement was not undone, as the member did not have the status “retired”."),
+                code='warning_message',
+            )
+        return cleaned_data
+
+    def save(self, commit=True):
+        super().save(commit=False)
+        status_action = self.cleaned_data['status_action']
+
+        member = self.instance
+        if status_action == self.StatusAction.UNDO_QUIT:
+            member.set_quit(False)
+        elif status_action == self.StatusAction.RETIRE:
+            member.set_retirement(True)
+        elif status_action == self.StatusAction.UNDO_RETIRE:
+            member.set_retirement(False)
+        member.save()
+        return member
 
 
 class ToggleSystemAccessForm(forms.ModelForm):

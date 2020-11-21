@@ -6,6 +6,7 @@ from django_hosts import reverse
 
 from users.models import User
 from util.test_utils import PermissionsTestCase
+from .forms import MemberStatusForm
 from .models import Member, SystemAccess
 
 
@@ -52,14 +53,17 @@ class UrlTests(PermissionsTestCase):
     def _test_editor_url(self, path: str):
         self._test_url_permissions(path, {self.member_editor_client})
 
-    def _test_internal_post_url(self, path: str, data: dict, *, expected_redirect_url: str):
+    def _test_internal_post_url(self, path: str, data: dict, *, member_requires_edit_perm=True, expected_redirect_url: str):
         # Unauthorized users should be redirected to login
         response = self.anon_client.post(path, data)
         self.assertTrue(urlparse(response.url).path.startswith("/login/"))
         response = self.non_member_client.post(path, data)
         self.assertTrue(urlparse(response.url).path.startswith("/login/"))
 
-        self.assertRedirects(self.member_client.post(path, data), expected_redirect_url)
+        if member_requires_edit_perm:
+            self.assertGreaterEqual(self.member_client.post(path, data).status_code, 400)
+        else:
+            self.assertRedirects(self.member_client.post(path, data), expected_redirect_url)
         self.assertRedirects(self.member_editor_client.post(path, data), expected_redirect_url)
 
     def test_permissions(self):
@@ -74,6 +78,18 @@ class UrlTests(PermissionsTestCase):
                                    allowed_clients={self.member_editor_client})
 
         self._test_editor_url(self.get_path("member-quit", [self.member.pk]))
+
+        path_data_assertion_tuples = (
+            ("member-quit", {'date_quit': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
+            ("edit-member-status", {'status_action': MemberStatusForm.StatusAction.UNDO_QUIT}, lambda member: not member.quit),
+            ("edit-member-status", {'status_action': MemberStatusForm.StatusAction.RETIRE}, lambda member: member.retired),
+            ("edit-member-status", {'status_action': MemberStatusForm.StatusAction.UNDO_RETIRE}, lambda member: not member.retired),
+        )
+        for path, data, assertion in path_data_assertion_tuples:
+            self._test_internal_post_url(self.get_path(path, [self.member.pk]), data,
+                                         expected_redirect_url=f"/members/{self.member.pk}/")
+            self.member.refresh_from_db()
+            self.assertTrue(assertion(self.member))
 
         for system_access in self.member.system_accesses.all():
             # No one is allowed to change their "website" access. Other than that,
@@ -90,5 +106,5 @@ class UrlTests(PermissionsTestCase):
 
         self._test_internal_url(self.get_path("home"))
 
-        self._test_internal_post_url(self.get_path("set_language"), {"language": "en"}, expected_redirect_url="/en/")
-        self._test_internal_post_url(self.get_path("set_language"), {"language": "nb"}, expected_redirect_url="/")
+        self._test_internal_post_url(self.get_path("set_language"), {"language": "en"}, member_requires_edit_perm=False, expected_redirect_url="/en/")
+        self._test_internal_post_url(self.get_path("set_language"), {"language": "nb"}, member_requires_edit_perm=False, expected_redirect_url="/")
