@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from users.admin import get_user_search_fields
 from web.multilingual.database import MultiLingualFieldAdmin
 from .models.course import Printer3DCourse
 from .models.models import Machine, MachineType, MachineUsageRule, Quota, Reservation, ReservationQuerySet, ReservationRule
@@ -58,7 +59,7 @@ class QuotaAdmin(admin.ModelAdmin):
         'get_total_reservations', 'get_active_reservations',
     )
     list_filter = ('machine_type', 'diminishing', 'ignore_rules')
-    search_fields = ('user__username', 'user__first_name', 'user__last_name', 'machine_type__name')
+    search_fields = (*get_user_search_fields('user__'), 'machine_type__name')
     list_editable = ('number_of_reservations',)
     ordering = ('user',)
     list_select_related = ('user', 'machine_type')
@@ -99,7 +100,7 @@ class ReservationAdmin(admin.ModelAdmin):
     list_display = ('get_user', 'machine', 'start_time', 'get_duration', 'end_time', 'get_event', 'special_text', 'comment', 'get_quota')
     list_filter = ('machine', 'machine__machine_type', 'machine__machine_model', 'special')
     search_fields = (
-        'user__username', 'user__first_name', 'user__last_name',
+        *get_user_search_fields('user__'),
         'machine__name', 'machine__machine_type__name', 'machine__machine_model',
         'event__event__title',
         'special_text', 'comment',
@@ -175,7 +176,7 @@ class Printer3DCourseAdmin(admin.ModelAdmin):
     list_display = ('get_user', 'date', 'get_card_number', 'status')
     list_filter = ('status',)
     search_fields = (
-        'user__username', 'user__first_name', 'user__last_name',
+        *get_user_search_fields('user__'),
         'username', 'name',
         'user__card_number', '_card_number',
     )

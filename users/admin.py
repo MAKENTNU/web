@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext_lazy as _
@@ -5,9 +7,14 @@ from django.utils.translation import gettext_lazy as _
 from .models import User
 
 
+def get_user_search_fields(prefix='user__') -> Tuple[str, ...]:
+    return tuple(f'{prefix}{field}' for field in
+                 ('username', 'first_name', 'last_name', 'ldap_full_name', 'email'))
+
+
 class UserAdmin(DjangoUserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'card_number', 'is_staff', 'is_superuser')
-    search_fields = ('username', 'first_name', 'last_name', 'ldap_full_name', 'email', 'card_number')
+    search_fields = (*get_user_search_fields(prefix=''), 'card_number')
 
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
