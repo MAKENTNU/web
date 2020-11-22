@@ -14,6 +14,10 @@ from .models import Member, SystemAccess
 INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': 'internal.testserver'}
 
 
+def reverse_internal(viewname: str, **kwargs):
+    return reverse(viewname, kwargs=kwargs, host='internal', host_args=['internal'])
+
+
 class UrlTests(PermissionsTestCase):
 
     def setUp(self):
@@ -40,47 +44,50 @@ class UrlTests(PermissionsTestCase):
         self.member_editor_client.login(username=member_editor_user, password=password)
 
     @staticmethod
-    def get_path(name: str, args=None):
-        return reverse(name, args, host="internal", host_args=["internal"])
+    def generic_request(client: Client, method: str, path: str, data: dict = None):
+        if method == 'GET':
+            return client.get(path)
+        elif method == 'POST':
+            return client.post(path, data)
+        else:
+            raise ValueError(f'Method "{method}" not supported')
 
-    def _test_url_permissions(self, path: str, allowed_clients: Set[Client]):
+    def _test_url_permissions(self, method: str, path: str, data: dict = None, *, allowed_clients: Set[Client], expected_redirect_url: str = None):
         disallowed_clients = self.all_clients - allowed_clients
         for client in disallowed_clients:
-            self.assertGreaterEqual(client.get(path).status_code, 300)
+            response = self.generic_request(client, method, path)
+            # Non-member users should be redirected to login:
+            if client in {self.anon_client, self.non_member_client}:
+                self.assertEqual(response.status_code, 302)
+                self.assertTrue(urlparse(response.url).path.startswith("/login/"))
+            # Disallowed members should be rejected:
+            else:
+                self.assertGreaterEqual(response.status_code, 400)
         for client in allowed_clients:
-            self.assertEqual(client.get(path).status_code, 200)
+            response = self.generic_request(client, method, path, data)
+            if expected_redirect_url:
+                self.assertRedirects(response, expected_redirect_url)
+            else:
+                self.assertEqual(response.status_code, 200)
 
-    def _test_internal_url(self, path: str):
-        self._test_url_permissions(path, {self.member_client, self.member_editor_client})
+    def _test_internal_url(self, method: str, path: str, data: dict = None, *, expected_redirect_url: str = None):
+        self._test_url_permissions(method, path, data, allowed_clients={self.member_client, self.member_editor_client},
+                                   expected_redirect_url=expected_redirect_url)
 
-    def _test_editor_url(self, path: str):
-        self._test_url_permissions(path, {self.member_editor_client})
-
-    def _test_internal_post_url(self, path: str, data: dict, *, member_requires_edit_perm=True, expected_redirect_url: str):
-        # Unauthorized users should be redirected to login
-        response = self.anon_client.post(path, data)
-        self.assertTrue(urlparse(response.url).path.startswith("/login/"))
-        response = self.non_member_client.post(path, data)
-        self.assertTrue(urlparse(response.url).path.startswith("/login/"))
-
-        if member_requires_edit_perm:
-            self.assertGreaterEqual(self.member_client.post(path, data).status_code, 400)
-        else:
-            self.assertRedirects(self.member_client.post(path, data), expected_redirect_url)
-        self.assertRedirects(self.member_editor_client.post(path, data), expected_redirect_url)
+    def _test_editor_url(self, method: str, path: str, data: dict = None, *, expected_redirect_url: str = None):
+        self._test_url_permissions(method, path, data, allowed_clients={self.member_editor_client},
+                                   expected_redirect_url=expected_redirect_url)
 
     def test_permissions(self):
-        self._test_internal_url(self.get_path("members"))
-        self._test_internal_url(self.get_path("members", [self.member.pk]))
-        self._test_editor_url(self.get_path("add-member"))
+        self._test_internal_url('GET', reverse_internal("members"))
+        self._test_internal_url('GET', reverse_internal("members", pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal("add-member"))
 
         # All members can edit themselves, but only editors can edit other members
-        self._test_url_permissions(self.get_path("edit-member", [self.member.pk]),
-                                   allowed_clients={self.member_client, self.member_editor_client})
-        self._test_url_permissions(self.get_path("edit-member", [self.member_editor.pk]),
-                                   allowed_clients={self.member_editor_client})
+        self._test_internal_url('GET', reverse_internal("edit-member", pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal("edit-member", pk=self.member_editor.pk))
 
-        self._test_editor_url(self.get_path("member-quit", [self.member.pk]))
+        self._test_editor_url('GET', reverse_internal("member-quit", pk=self.member.pk))
 
         path_data_assertion_tuples = (
             ("member-quit", {'date_quit': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
@@ -89,25 +96,28 @@ class UrlTests(PermissionsTestCase):
             ("edit-member-status", {'status_action': MemberStatusForm.StatusAction.UNDO_RETIRE}, lambda member: not member.retired),
         )
         for path, data, assertion in path_data_assertion_tuples:
-            self._test_internal_post_url(self.get_path(path, [self.member.pk]), data,
-                                         expected_redirect_url=f"/members/{self.member.pk}/")
-            self.member.refresh_from_db()
-            self.assertTrue(assertion(self.member))
+            with self.subTest(path=path, data=data):
+                self._test_editor_url('POST', reverse_internal(path, pk=self.member.pk), data,
+                                      expected_redirect_url=f"/members/{self.member.pk}/")
+                self.member.refresh_from_db()
+                self.assertTrue(assertion(self.member))
 
         for system_access in self.member.system_accesses.all():
-            # No one is allowed to change their `WEBSITE` access. Other than that,
-            # all members can edit their own accesses, but only editors can edit other members'.
-            allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions(self.get_path("toggle-system-access", [system_access.pk]),
-                                       allowed_clients=allowed_clients)
+            with self.subTest(system_access=system_access):
+                # No one is allowed to change their `WEBSITE` access. Other than that,
+                # all members can edit their own accesses, but only editors can edit other members'.
+                allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
+                self._test_url_permissions('GET', reverse_internal("toggle-system-access", pk=system_access.pk),
+                                           allowed_clients=allowed_clients)
 
         for system_access in self.member_editor.system_accesses.all():
-            # No one is allowed to change their `WEBSITE` access
-            allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions(self.get_path("toggle-system-access", [system_access.pk]),
-                                       allowed_clients=allowed_clients)
+            with self.subTest(system_access=system_access):
+                # No one is allowed to change their `WEBSITE` access
+                allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
+                self._test_url_permissions('GET', reverse_internal("toggle-system-access", pk=system_access.pk),
+                                           allowed_clients=allowed_clients)
 
-        self._test_internal_url(self.get_path("home"))
+        self._test_internal_url('GET', reverse_internal("home"))
 
-        self._test_internal_post_url(self.get_path("set_language"), {"language": "en"}, member_requires_edit_perm=False, expected_redirect_url="/en/")
-        self._test_internal_post_url(self.get_path("set_language"), {"language": "nb"}, member_requires_edit_perm=False, expected_redirect_url="/")
+        self._test_internal_url('POST', reverse_internal("set_language"), {"language": "en"}, expected_redirect_url="/en/")
+        self._test_internal_url('POST', reverse_internal("set_language"), {"language": "nb"}, expected_redirect_url="/")
