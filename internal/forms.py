@@ -138,21 +138,10 @@ class MemberStatusForm(forms.ModelForm):
         return member
 
 
-class ToggleSystemAccessForm(forms.ModelForm):
+class SystemAccessValueForm(forms.ModelForm):
     class Meta:
         model = SystemAccess
-        fields = '__all__'
-
-        widgets = {
-            'name': SemanticSearchableChoiceInput(),
-            'member': SemanticSearchableChoiceInput(),
-        }
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.fields['name'].disabled = True
-        self.fields['member'].disabled = True
-        self.fields['member'].label_from_instance = lambda member: member.user.get_full_name()
+        fields = ('value',)
 
 
 class SecretsForm(forms.ModelForm):

@@ -192,7 +192,7 @@ class SystemAccess(models.Model):
         # In the future it would be beneficial to create automated processes for adding, removing and revoking
         # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
         # channels, or using GSuite APIs to add and remove people from mailing lists.
-        return reverse("toggle-system-access", args=(self.pk,))
+        return reverse("edit-system-access", args=(self.member.pk, self.pk))
 
     def should_be_changed(self):
         return self.name != self.WEBSITE

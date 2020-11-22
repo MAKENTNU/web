@@ -91,17 +91,29 @@ function showDetailedMemberInformation(member) {
 
     const $memberSystemAccessesElement = $memberInfoModal.find("#member-system-accesses");
     $memberSystemAccessesElement.empty();
-    $memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`
-        <tr>
-            <td class="six wide column"><b>${access.name}</b></td>
-            <td>
-                <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
-                <a class="right floated orange link" href="${access.changeUrl}">
-                    ${access.changeUrl.isEmpty() ? "" : gettext("Change")}
-                </a>
-            </td>
-        </tr>
-    `)));
+    $memberSystemAccessesElement.append(member.data.systemAccesses.map(access => {
+        const toggleForm = access.changeUrl.isEmpty() ? "" : `
+            <div class="ui right floated toggle checkbox">
+                <input type="checkbox" value="${!access.value}" ${access.value ? "checked" : ""}
+                       data-change-url="${access.changeUrl}"/>
+                <label></label>
+            </div>
+        `;
+        return $(`
+            <tr>
+                <td class="six wide column"><b>${access.name}</b></td>
+                <td>
+                    <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
+                    ${toggleForm}
+                </td>
+            </tr>
+        `);
+    }));
+    $memberSystemAccessesElement.find(".toggle.checkbox input").click(function () {
+        const $toggle = $(this);
+        $toggle.attr("name", "value");
+        $("#edit-system-access-form").attr("action", $toggle.data("change-url")).submit();
+    });
 
     const $memberCommitteesElement = $memberInfoModal.find("#member-committee");
     $memberCommitteesElement.empty();

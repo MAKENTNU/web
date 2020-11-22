@@ -101,14 +101,16 @@ class UrlTests(PermissionsTestCase):
             # No one is allowed to change their "website" access. Other than that,
             # all members can edit their own accesses, but only editors can edit other members'.
             allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions('GET', self.reverse("toggle-system-access", pk=system_access.pk),
-                                       allowed_clients=allowed_clients)
+            self._test_url_permissions('POST', self.reverse("edit-system-access", member_pk=self.member.pk, pk=system_access.pk),
+                                       {'value': True}, allowed_clients=allowed_clients,
+                                       expected_redirect_url=f"/members/{self.member.pk}/")
 
         for system_access in self.member_editor.system_accesses.all():
             # No one is allowed to change their "website" access
             allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions('GET', self.reverse("toggle-system-access", pk=system_access.pk),
-                                       allowed_clients=allowed_clients)
+            self._test_url_permissions('POST', self.reverse("edit-system-access", member_pk=self.member_editor.pk, pk=system_access.pk),
+                                       {'value': True}, allowed_clients=allowed_clients,
+                                       expected_redirect_url=f"/members/{self.member_editor.pk}/")
 
         self._test_internal_url('GET', self.reverse("home"))
 

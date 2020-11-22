@@ -99,7 +99,6 @@ msgstr "Ny kunngjøring"
 #: groups/templates/groups/committee_form.html:31
 #: internal/templates/internal/edit_member.html:84
 #: internal/templates/internal/secrets_edit.html:32
-#: internal/templates/internal/system_access_edit.html:28
 #: make_queue/templates/make_queue/machine/machine_edit.html:74
 #: make_queue/templates/make_queue/usage_rules_edit.html:44
 #: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:48
@@ -118,7 +117,6 @@ msgstr "Lagre"
 #: internal/templates/internal/edit_member.html:87
 #: internal/templates/internal/member_quit.html:26
 #: internal/templates/internal/secrets_edit.html:34
-#: internal/templates/internal/system_access_edit.html:31
 #: make_queue/templates/make_queue/course/course_panel.html:183
 #: make_queue/templates/make_queue/course/registration_edit.html:103
 #: make_queue/templates/make_queue/machine/machine_edit.html:76
@@ -849,9 +847,6 @@ msgid "Edit secrets"
 msgstr "Rediger hemmeligheter"
 
 #: internal/templates/internal/system_access_edit.html:6
-msgid "Change system access"
-msgstr "Endre systemtilgang"
-
 #: internal/views.py:90
 msgid ""
 "Member was not set as quit, as the member already has the status “quit” or "

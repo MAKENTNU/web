@@ -280,11 +280,14 @@
             <h4 class="ui horizontal divider header">
                 <i class="ui make-col-yellow key icon"></i>{% trans "System accesses" %}
             </h4>
-            <table class="ui very basic unstackable celled table">
-                <tbody id="member-system-accesses">
+            <form id="edit-system-access-form" method="POST">
+                {% csrf_token %}
+                <table class="ui very basic unstackable celled table">
+                    <tbody id="member-system-accesses">
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </form>
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
