@@ -13,10 +13,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/static/internal/js/member_list.js:102
-msgid "Change"
-msgstr "Endre"
-
 #: make_queue/static/make_queue/js/calendar.js:99
 msgid "New reservation"
 msgstr "Ny reservasjon"

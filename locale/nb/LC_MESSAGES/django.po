@@ -949,10 +949,6 @@ msgstr "Klikk for å vise - bare hvis du er alene!"
 msgid "Last edited:"
 msgstr "Sist redigert:"
 
-#: internal/templates/internal/system_access_edit.html:7
-msgid "Change system access"
-msgstr "Endre systemtilgang"
-
 #: make_queue/admin.py:22
 #: make_queue/templates/make_queue/machine_list.html:7
 #: make_queue/templates/make_queue/machine_list.html:17
