@@ -5,9 +5,9 @@ from django.test import Client
 from django_hosts import reverse
 
 from users.models import User
-from util.test_utils import PermissionsTestCase
+from util.test_utils import Get, PermissionsTestCase, assert_requesting_paths_succeeds
 from .forms import MemberStatusForm
-from .models import Member, SystemAccess
+from .models import Member, Secret, SystemAccess
 
 
 # Makes sure that the subdomain of all requests is `internal`
@@ -123,3 +123,17 @@ class UrlTests(PermissionsTestCase):
 
         self._test_internal_url('POST', reverse_internal("set_language"), {"language": "en"}, expected_redirect_url="/en/")
         self._test_internal_url('POST', reverse_internal("set_language"), {"language": "nb"}, expected_redirect_url="/")
+
+    def test_all_non_member_get_request_paths_succeed(self):
+        secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
+        secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
+
+        path_predicates = [
+            Get(reverse_internal('home'), public=False),
+            Get(reverse_internal('secrets'), public=False),
+            Get(reverse_internal('create-secret'), public=False),
+            Get(reverse_internal('edit-secret', pk=secret1.pk), public=False),
+            Get(reverse_internal('edit-secret', pk=secret2.pk), public=False),
+            Get('/robots.txt', public=True, translated=False),
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'internal')

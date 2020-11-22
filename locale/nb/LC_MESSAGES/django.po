@@ -767,6 +767,11 @@ msgstr "System"
 msgid "Access"
 msgstr "Tilgang"
 
+#: internal/models.py:183
+#, python-brace-format
+msgid "Access for {member} to {name}: {has_access}"
+msgstr "Tilgang for {member} til {name}: {has_access}"
+
 #: internal/templates/internal/base.html:10
 #: internal/templates/internal/home.html:13
 msgid "MAKE NTNU Internal"

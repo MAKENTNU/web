@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Permission
 from django.test import Client, TestCase
-from django.urls import reverse
+from django_hosts import reverse
 
 from users.models import User
 from web.urls import urlpatterns as base_urlpatterns
