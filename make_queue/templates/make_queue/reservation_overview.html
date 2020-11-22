@@ -21,7 +21,11 @@
             <div class="ui huge header machine-title">
                 {{ machine.name }}
             </div>
-            <a href="{% url "machine_usage_rules" machine.machine_type %}">({% trans "Rules" %})</a>
+            <div class="ui content">
+                <a class="ui primary button" href="{% url 'machine_usage_rules' machine.machine_type %}">
+                    {% trans "Rules" %}
+                </a>
+            </div>
         </div>
 
         <div class="machine-info-and-actions ui three column padded grid vpad">
