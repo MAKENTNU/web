@@ -5,9 +5,9 @@ from django.test import Client
 from django_hosts import reverse
 
 from users.models import User
-from util.test_utils import PermissionsTestCase
+from util.test_utils import PermissionsTestCase, assert_requesting_paths_succeeds
 from .forms import MemberStatusForm
-from .models import Member, SystemAccess
+from .models import Member, Secret, SystemAccess
 
 
 class UrlTests(PermissionsTestCase):
@@ -98,21 +98,36 @@ class UrlTests(PermissionsTestCase):
             self.assertTrue(assertion(self.member))
 
         for system_access in self.member.system_accesses.all():
-            # No one is allowed to change their "website" access. Other than that,
-            # all members can edit their own accesses, but only editors can edit other members'.
-            allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions('POST', self.reverse("edit-system-access", member_pk=self.member.pk, pk=system_access.pk),
-                                       {'value': True}, allowed_clients=allowed_clients,
-                                       expected_redirect_url=f"/members/{self.member.pk}/")
+            with self.subTest(system_access=system_access):
+                # No one is allowed to change their "website" access. Other than that,
+                # all members can edit their own accesses, but only editors can edit other members'.
+                allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
+                self._test_url_permissions('POST', self.reverse("edit-system-access", member_pk=self.member.pk, pk=system_access.pk),
+                                           {'value': True}, allowed_clients=allowed_clients,
+                                           expected_redirect_url=f"/members/{self.member.pk}/")
 
         for system_access in self.member_editor.system_accesses.all():
-            # No one is allowed to change their "website" access
-            allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions('POST', self.reverse("edit-system-access", member_pk=self.member_editor.pk, pk=system_access.pk),
-                                       {'value': True}, allowed_clients=allowed_clients,
-                                       expected_redirect_url=f"/members/{self.member_editor.pk}/")
+            with self.subTest(system_access=system_access):
+                # No one is allowed to change their "website" access
+                allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
+                self._test_url_permissions('POST', self.reverse("edit-system-access", member_pk=self.member_editor.pk, pk=system_access.pk),
+                                           {'value': True}, allowed_clients=allowed_clients,
+                                           expected_redirect_url=f"/members/{self.member_editor.pk}/")
 
         self._test_internal_url('GET', self.reverse("home"))
 
         self._test_internal_url('POST', self.reverse("set_language"), {"language": "en"}, expected_redirect_url="/en/")
         self._test_internal_url('POST', self.reverse("set_language"), {"language": "nb"}, expected_redirect_url="/")
+
+    def test_all_non_member_get_request_paths_succeed(self):
+        secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
+        secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
+
+        paths_to_must_be_authenticated = {
+            self.reverse('secrets'): True,
+            self.reverse('create-secret'): True,
+            self.reverse('edit-secret', pk=secret1.pk): True,
+            self.reverse('edit-secret', pk=secret2.pk): True,
+            '/robots.txt': False,
+        }
+        assert_requesting_paths_succeeds(self, paths_to_must_be_authenticated, 'internal')

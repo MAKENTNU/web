@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Permission
 from django.test import TestCase
-from django.urls import reverse
+from django_hosts import reverse
 
 from users.models import User
 from web.urls import urlpatterns as base_urlpatterns
@@ -49,7 +49,7 @@ class ModelAndViewTests(TestCase):
                 self.assertEqual(response.context['contentbox'].title, multi_path_contentbox_title)
 
     def test_edit_without_permission_is_rejected(self):
-        response = self.client.get(f'/contentbox/{self.contentbox1.pk}/edit/')
+        response = self.client.get(reverse('contentbox_edit', kwargs={'pk': self.contentbox1.pk}))
         self.assertNotEqual(response.status_code, 200)
 
     def test_edit_with_permission_succeeds(self):
@@ -60,5 +60,5 @@ class ModelAndViewTests(TestCase):
         user.user_permissions.add(permission)
         self.client.login(username=username, password=password)
 
-        response = self.client.get(f'/contentbox/{self.contentbox1.pk}/edit/')
+        response = self.client.get(reverse('contentbox_edit', kwargs={'pk': self.contentbox1.pk}))
         self.assertEqual(response.status_code, 200)

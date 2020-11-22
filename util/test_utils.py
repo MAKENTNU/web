@@ -3,7 +3,7 @@ from typing import Any, Dict, Tuple
 
 from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import TestCase
+from django.test import Client, SimpleTestCase, TestCase
 
 from users.models import User
 
@@ -45,6 +45,26 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
         return wrapper
 
     return decorator
+
+
+def assert_requesting_paths_succeeds(self: SimpleTestCase, paths_to_must_be_authenticated: Dict[str, bool], subdomain=''):
+    password = "1234"
+    superuser = User.objects.create_user("superuser", "admin@makentnu.no", password,
+                                         is_superuser=True, is_staff=True)
+
+    server_name = f'{subdomain}.testserver' if subdomain else 'testserver'  # 'testserver' is Django's default server name
+    superuser_client = Client(SERVER_NAME=server_name)
+    superuser_client.login(username=superuser.username, password=password)
+    anon_client = Client(SERVER_NAME=server_name)
+
+    for path, must_be_authenticated in paths_to_must_be_authenticated.items():
+        with self.subTest(path=path):
+            if must_be_authenticated:
+                self.assertGreaterEqual(anon_client.get(path).status_code, 300)
+            else:
+                self.assertEqual(anon_client.get(path).status_code, 200)
+            self.assertEqual(superuser_client.get(path).status_code, 200)
+
 
 class PermissionsTestCase(TestCase):
 

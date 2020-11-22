@@ -2,7 +2,9 @@ from django.conf import settings
 from django.test import Client, TestCase
 from django_hosts import reverse
 
+from news.tests.test_urls import UrlTests as NewsUrlTests
 from users.models import User
+from util.test_utils import assert_requesting_paths_succeeds
 
 
 class UrlTests(TestCase):
@@ -16,13 +18,23 @@ class UrlTests(TestCase):
         self.user_client = Client()
         self.user_client.login(username=username, password=password)
 
-    def test_index(self):
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
+        # Populate the front page
+        NewsUrlTests.init_objs(self)
 
-    def test_about(self):
-        response = self.client.get("/about/")
-        self.assertEqual(response.status_code, 200)
+    def test_all_get_request_paths_succeed(self):
+        paths_to_must_be_authenticated = {
+            '/robots.txt': False,
+            reverse('front-page'): False,
+            reverse('adminpanel'): True,
+            reverse('about'): False,
+            reverse('apply'): False,
+            '/søk/': False,
+            '/sok/': False,
+            reverse('cookies'): False,
+            reverse('privacypolicy'): False,
+            reverse('ckeditor_browse'): True,
+        }
+        assert_requesting_paths_succeeds(self, paths_to_must_be_authenticated)
 
     def test_set_language(self):
         response = self.anon_client.post(reverse("set_language"), {"language": "en"})

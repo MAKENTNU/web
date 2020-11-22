@@ -679,6 +679,11 @@ msgstr "Tilgang"
 msgid "Member"
 msgstr "Medlem"
 
+#: internal/models.py:190
+#, python-brace-format
+msgid "Access for {member} to {name}: {has_access}"
+msgstr "Tilgang for {member} til {name}: {has_access}"
+
 #: internal/templates/internal/add_member.html:11
 msgid "Add new member"
 msgstr "Legg til nytt medlem"
