@@ -382,10 +382,10 @@ class Reservation(models.Model):
             return True
         if self.start_time < timezone.now():
             return False
-        return self.user == user
+        return self.user == user or user.is_superuser
 
     def can_change_end_time(self, user):
-        return self.end_time > timezone.now() and self.user == user
+        return self.end_time > timezone.now() and (self.user == user or user.is_superuser)
 
     class Meta:
         permissions = (
