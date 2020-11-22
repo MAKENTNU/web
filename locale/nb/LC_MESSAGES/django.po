@@ -1349,6 +1349,11 @@ msgstr "Om maskinen"
 msgid "Model"
 msgstr "Modell"
 
+#: make_queue/templates/make_queue/machine_detail.html:26
+#: make_queue/templates/make_queue/machine_list.html:42
+msgid "Show rules"
+msgstr "Vis regler"
+
 #: make_queue/templates/make_queue/quota/quota_create.html:6
 #: make_queue/templates/make_queue/quota/quota_panel.html:15
 msgid "New quota"
