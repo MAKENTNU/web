@@ -949,8 +949,8 @@ msgid "Click to show - only if you're alone!"
 msgstr "Klikk for å vise - bare hvis du er alene!"
 
 #: internal/templates/internal/secret_list.html:42
-msgid "Last edited:"
-msgstr "Sist redigert:"
+msgid "Last modified"
+msgstr "Sist endret"
 
 #: make_queue/admin.py:22
 #: make_queue/templates/make_queue/machine_list.html:7
