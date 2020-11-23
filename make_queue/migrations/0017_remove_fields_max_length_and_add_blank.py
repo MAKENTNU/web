@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('make_queue', '0015_machinetype'),
+        ('make_queue', '0016_auto_20201103_1431'),
     ]
 
     operations = [

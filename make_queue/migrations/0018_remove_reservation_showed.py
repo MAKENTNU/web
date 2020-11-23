@@ -6,7 +6,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('make_queue', '0016_remove_fields_max_length_and_add_blank'),
+        ('make_queue', '0017_remove_fields_max_length_and_add_blank'),
     ]
 
     operations = [

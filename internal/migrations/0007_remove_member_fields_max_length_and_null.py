@@ -8,7 +8,7 @@ import web.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internal', '0005_remove_member_card_number'),
+        ('internal', '0006_secret'),
     ]
 
     operations = [

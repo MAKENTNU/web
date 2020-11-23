@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('news', '0004_auto_20180307_1352'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('make_queue', '0017_remove_reservation_showed'),
+        ('make_queue', '0018_remove_reservation_showed'),
     ]
 
     operations = [

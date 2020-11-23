@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internal', '0006_remove_member_fields_max_length_and_null'),
+        ('internal', '0007_remove_member_fields_max_length_and_null'),
     ]
 
     operations = [
