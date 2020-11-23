@@ -7,6 +7,7 @@ from django_hosts import reverse
 
 from . import views
 
+
 unsafe_urlpatterns = [
     # TODO: Change to the HomeView when there is actually some content to show there
     path("", views.MembersListView.as_view(), name="home"),
@@ -22,6 +23,10 @@ unsafe_urlpatterns = [
     path("members/<int:pk>/retire/undo/", permission_required("internal.can_edit_group_membership")(views.MemberUndoRetireView.as_view()),
          name="member-undo-retire"),
     path("members/access/<int:pk>/change/", views.ToggleSystemAccessView.as_view(), name="toggle-system-access"),
+    path("secrets/", views.SecretsView.as_view(), name="secrets"),
+    path("secrets/create/", views.CreateSecretView.as_view(), name="create-secret"),
+    path("secrets/<int:pk>/edit/", views.EditSecretView.as_view(), name="edit-secret"),
+    path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name="delete-secret"),
 ]
 
 urlpatterns = [

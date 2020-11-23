@@ -98,6 +98,7 @@ msgstr "Ny kunngjøring"
 #: contentbox/templates/contentbox/edit.html:40
 #: groups/templates/groups/committee_form.html:31
 #: internal/templates/internal/edit_member.html:84
+#: internal/templates/internal/secrets_edit.html:32
 #: internal/templates/internal/system_access_edit.html:28
 #: make_queue/templates/make_queue/machine/machine_edit.html:74
 #: make_queue/templates/make_queue/usage_rules_edit.html:44
@@ -116,12 +117,14 @@ msgstr "Lagre"
 #: internal/templates/internal/add_member.html:33
 #: internal/templates/internal/edit_member.html:87
 #: internal/templates/internal/member_quit.html:26
+#: internal/templates/internal/secrets_edit.html:34
 #: internal/templates/internal/system_access_edit.html:31
 #: make_queue/templates/make_queue/course/course_panel.html:183
 #: make_queue/templates/make_queue/course/registration_edit.html:103
 #: make_queue/templates/make_queue/machine/machine_edit.html:76
 #: make_queue/templates/make_queue/quota/quota_edit.html:67
 #: make_queue/templates/make_queue/reservation_create.html:164
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:37
 #: make_queue/templates/make_queue/rule_edit.html:96
 #: make_queue/templates/make_queue/usage_rules_edit.html:46
 #: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:50
@@ -342,8 +345,8 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:11 docs/models.py:18 makerspace/models.py:19
-#: news/models.py:20
+#: contentbox/models.py:11 docs/models.py:14 internal/models.py:179
+#: makerspace/models.py:11 news/models.py:37
 msgid "Title"
 msgstr "Tittel"
 
@@ -530,11 +533,12 @@ msgstr ""
 msgid "group"
 msgstr "gruppe"
 
-#: groups/models.py:94 makerspace/models.py:20
+#: groups/models.py:94 internal/models.py:181 makerspace/models.py:14
 msgid "Description"
 msgstr "Beskrivelse"
 
-#: groups/models.py:95 internal/models.py:161 news/models.py:207
+#: groups/models.py:95 internal/models.py:28 internal/models.py:149
+#: news/models.py:207
 msgid "Email"
 msgstr "E-post"
 
@@ -564,7 +568,7 @@ msgstr "%(name)s komitébilde"
 msgid "Edit committee"
 msgstr "Rediger komité"
 
-#: internal/forms.py:16
+#: internal/forms.py:17
 msgid "Choose user"
 msgstr "Velg bruker"
 
@@ -573,6 +577,7 @@ msgid "Choose committees"
 msgstr "Velg komiteer"
 
 #: internal/models.py:28 make_queue/admin.py:75 make_queue/admin.py:115
+#: make_queue/forms.py:114
 #: make_queue/admin.py:191 make_queue/forms.py:126
 #: make_queue/models/course.py:33 make_queue/models/models.py:177
 #: news/models.py:185
@@ -697,11 +702,15 @@ msgstr "Medlemskapsinformasjon"
 msgid "Members"
 msgstr "Medlemmer"
 
-#: internal/templates/internal/header.html:40
+#: internal/templates/internal/header.html:31
+msgid "Secrets"
+msgstr "Hemmeligheter"
+
+#: internal/templates/internal/header.html:44
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:43
+#: internal/templates/internal/header.html:47
 #: web/templates/web/header.html:103
 msgid "Log out"
 msgstr "Logg ut"
@@ -818,7 +827,28 @@ msgstr "Sett medlem som pang"
 msgid "Set member as not retired"
 msgstr "Sett medlem som ikke pang"
 
-#: internal/templates/internal/system_access_edit.html:7
+#: internal/templates/internal/secrets.html:13
+msgid "Internal secrets"
+msgstr "Internhemmeligheter"
+
+#: internal/templates/internal/secrets.html:34
+msgid "Press if you're alone"
+msgstr "Trykk her hvis du er alene"
+
+#: internal/templates/internal/secrets.html:39
+msgid "Last edited:"
+msgstr "Sist redigert:"
+
+#: internal/templates/internal/secrets_create.html:4
+#: internal/templates/internal/secrets_create.html:5
+msgid "New secret"
+msgstr "Ny hemmelighet"
+
+#: internal/templates/internal/secrets_edit.html:5
+msgid "Edit secrets"
+msgstr "Rediger hemmeligheter"
+
+#: internal/templates/internal/system_access_edit.html:6
 msgid "Change system access"
 msgstr "Endre systemtilgang"
 
@@ -2207,6 +2237,14 @@ msgid ""
 msgstr ""
 "Beklager, noe gikk galt mens vi håndterte forespørselen din. En av våre "
 "utviklere vil se på problemet så fort som mulig. Vennligst prøv igjen senere."
+
+#: web/templates/web/about.html:18
+msgid "Email list"
+msgstr "E-post liste"
+
+#: web/templates/web/about.html:19
+msgid "a list of relevant email addresses where you can contact us"
+msgstr "en liste over relevante e-poster hvor du kan kontakte oss"
 
 #: web/templates/web/admin_panel.html:9
 msgid "Admin panel"

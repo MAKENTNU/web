@@ -20,6 +20,7 @@ extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('robots.txt', TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
+    path('about/', views.AboutUsView.as_view(), name='about'),
 ]
 
 urlpatterns += i18n_patterns(
@@ -33,10 +34,10 @@ urlpatterns += i18n_patterns(
     path('committees/', include('groups.urls')),
     path('announcements/', include('announcements.urls')),
     path('makerspace/', include('makerspace.urls')),
-    DisplayContentBoxView.get_path('about'),
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),
+    DisplayContentBoxView.get_path('email'),
 
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
