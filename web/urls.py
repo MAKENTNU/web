@@ -23,6 +23,11 @@ urlpatterns = [
     path('robots.txt', TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
 ]
 
+about_urlpatterns = [
+    path('', views.AboutUsView.as_view(), name='about'),
+    DisplayContentBoxView.get_path('contact'),
+]
+
 urlpatterns += i18n_patterns(
     path('', views.IndexView.as_view(), name='front-page'),
     path('admin/', views.AdminPanelView.as_view(), name='adminpanel'),
@@ -33,10 +38,9 @@ urlpatterns += i18n_patterns(
     path('checkin/', include('checkin.urls')),
     path('committees/', include('groups.urls')),
     path('announcements/', include('announcements.urls')),
-    path('about/', views.AboutUsView.as_view(), name='about'),
+    path('about/', include(about_urlpatterns)),
     path('makerspace/', include('makerspace.urls')),
     path('faq/', include('faq.urls')),
-    DisplayContentBoxView.get_path('email'),
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),
