@@ -2,6 +2,7 @@ import datetime
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils.dateparse import parse_datetime
 
 from ...models.models import MachineType, ReservationRule
 
@@ -186,13 +187,17 @@ class ReservationRuleTests(TestCase):
                          """)
 
     def test_is_valid_time(self):
+        period1 = (parse_datetime("2018-11-05 12:00"),
+                   parse_datetime("2018-11-05 18:00"))
+        self.assertFalse(ReservationRule.valid_time(*period1, self.machine_type),
+                         "Periods should not be valid when no rules exist")
+
         ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
                         start_days=1, max_inside_border_crossed=5, machine_type=self.machine_type, max_hours=10).save()
         ReservationRule(start_time=datetime.time(6, 0), end_time=datetime.time(12, 0), days_changed=2,
                         start_days=2, max_inside_border_crossed=16, machine_type=self.machine_type, max_hours=16).save()
 
-        self.assertTrue(ReservationRule.valid_time(datetime.datetime(2018, 11, 5, 12, 0),
-                                                   datetime.datetime(2018, 11, 5, 18, 0), self.machine_type),
+        self.assertTrue(ReservationRule.valid_time(*period1, self.machine_type),
                         "Periods that cover only one rule, should be valid if they are valid in that rule")
         self.assertFalse(ReservationRule.valid_time(datetime.datetime(2018, 11, 5, 12, 0),
                                                     datetime.datetime(2018, 11, 5, 23, 0), self.machine_type),
@@ -221,3 +226,7 @@ class ReservationRuleTests(TestCase):
                                                    datetime.datetime(2018, 11, 6, 10, 0), self.machine_type),
                         "A period may be valid, even though not all of its rules are valid, if it is still less than"
                         "the shortest maximum length of any of its rules.")
+
+        self.assertFalse(ReservationRule.valid_time(parse_datetime("2018-11-05 12:00"),
+                                                    parse_datetime("2018-11-05 12:00"), self.machine_type),
+                         "Empty periods should not be valid")
