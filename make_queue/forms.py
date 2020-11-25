@@ -69,7 +69,7 @@ class ReservationForm(forms.Form):
 class RuleForm(forms.ModelForm):
     day_field_names = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 
-    machine_type = forms.ModelChoiceField(MachineType.objects.all(), disabled=True, widget=forms.HiddenInput())
+    machine_type = forms.ModelChoiceField(MachineType.objects.all(), widget=forms.HiddenInput())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

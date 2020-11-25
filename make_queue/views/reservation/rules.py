@@ -58,7 +58,7 @@ class BaseReservationRulePostView(MachineTypeBasedView, ModelFormMixin, ABC):
         if 'data' in kwargs:
             # Forcefully pass the machine type from the URL path to the form
             data = kwargs['data'].copy()
-            data['machine_type'] = self.machine_type
+            data['machine_type'] = self.machine_type.pk
             kwargs['data'] = data
         return kwargs
 
