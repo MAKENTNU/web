@@ -29,6 +29,11 @@
                 {% trans "MAKE NTNU reservations" %}
             {% else %}
                 {% trans "My reservations" %}
+                {% if perms.make_queue.can_create_event_reservation %}
+                    <a class="ui primary button" href="{% url 'admin_reservation' %}">
+                        {% trans "View MAKE's reservations" %}
+                    </a>
+                {% endif %}
             {% endif %}
         </div>
 
@@ -52,7 +57,7 @@
             <tr>
                 <th>{% trans "Reservation" %}</th>
                 <th>{% trans "Time" %}</th>
-                {% if is_MAKE %}
+                {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
                     <th>{% trans "Information" %}</th>
                 {% endif %}
                 <th>{% trans "View in calendar" %}</th>
@@ -85,12 +90,14 @@
                             <div>{{ reservation.end_time|date:"d.m.Y - H:i" }}</div>
                         {% endif %}
                     </td>
-                    {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
-                    {% if reservation_text %}
+                    {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
                         <td>
-                            <div class="ui small header">{{ reservation_text }}</div>
-                            {% if reservation.event %}
-                                {{ reservation.event.start_time|date:"d.m.Y" }}
+                            {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
+                            {% if reservation_text %}
+                                <div class="ui small header">{{ reservation_text }}</div>
+                                {% if reservation.event %}
+                                    {{ reservation.event.start_time|date:"d.m.Y" }}
+                                {% endif %}
                             {% endif %}
                         </td>
                     {% endif %}
@@ -154,6 +161,17 @@
                         {% else %}
                             <div>{{ reservation.start_time|date:"d.m.Y - H:i" }}</div>
                             <div>{{ reservation.end_time|date:"d.m.Y - H:i" }}</div>
+                        {% endif %}
+
+                        {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
+                            {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
+                            {% if reservation_text %}
+                                <div class="ui vertical segment"></div>
+                                <div class="ui small header">{{ reservation_text }}</div>
+                                {% if reservation.event %}
+                                    {{ reservation.event.start_time|date:"d.m.Y" }}
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
                     </div>
 

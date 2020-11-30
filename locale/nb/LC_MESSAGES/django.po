@@ -1495,6 +1495,10 @@ msgstr "Endre"
 msgid "MAKE NTNU reservations"
 msgstr "MAKE NTNU-reservasjoner"
 
+#: make_queue/templates/make_queue/reservation_list.html:34
+msgid "View MAKE's reservations"
+msgstr "Se MAKEs reservasjoner"
+
 #: make_queue/templates/make_queue/reservation_list.html:37
 msgid "Hide previous reservations"
 msgstr "Skjul tidligere reservasjoner"
