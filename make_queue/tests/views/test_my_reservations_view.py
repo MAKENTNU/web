@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from users.models import User
-from ..utility import template_view_get_context_data
+from ..utility import request_with_user
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation
 from ...views.reservation.overview import MyReservationsView
@@ -28,7 +28,7 @@ class MyReservationsViewTestCase(TestCase):
     def test_get_user_reservations_single_reservation(self):
         self.assertListEqual(
             [Reservation.objects.get(user=self.user)],
-            list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"])
+            list(MyReservationsView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )
 
     def test_get_user_reservations_multiple_reservations(self):
@@ -39,7 +39,7 @@ class MyReservationsViewTestCase(TestCase):
 
         self.assertListEqual(
             list(self.user.reservations.order_by("-start_time")),
-            list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"])
+            list(MyReservationsView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )
 
     def test_get_user_reservations_different_types(self):
@@ -59,5 +59,5 @@ class MyReservationsViewTestCase(TestCase):
                 Reservation.objects.get(user=self.user, machine__machine_type=sewing_machine_type),
                 Reservation.objects.get(user=self.user, machine__machine_type=self.printer_machine_type),
             ],
-            list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"])
+            list(MyReservationsView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )
