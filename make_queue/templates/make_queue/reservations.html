@@ -14,6 +14,11 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static "make_queue/css/reservations.css" %}"/>
+    <script>
+        {# `csrfToken` is used in `my_reservations.js` #}
+        var csrfToken = "{{ csrf_token }}";
+    </script>
+    <script defer src="{% static "make_queue/js/my_reservations.js" %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -59,8 +64,8 @@
             <tbody>
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
-                <tr class="reservation-list-desktop {% if not future_reservation %}display-none{% endif %}"
-                    data-is-future-reservation="{{ future_reservation }}">
+                <tr class="reservation-list-desktop reservation-pk-{{ reservation.pk }}
+                           {% if not future_reservation %}past-reservation display-none{% endif %}">
 
                     <td>
                         <div class="ui small header">{{ reservation.machine.name }}</div>
@@ -110,26 +115,15 @@
                         {% can_delete_reservation reservation user as can_delete %}
                         {% can_mark_reservation_finished reservation as can_mark_finished %}
                         {% if can_mark_finished %}
-                            <form method="POST" action="{% url 'mark_reservation_finished' %}">
-                                {% csrf_token %}
-                                <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
-                                <input class="ui button green" type="submit" value="{% trans "Finish now" %}"/>
-                                {% if admin %}
-                                    <input class="display-none" type="text" name="next"
-                                           value="{% url 'admin_reservation' %}"/>
-                                {% endif %}
-                            </form>
+                            <input class="mark-reservation-finished ui green button" type="submit"
+                                   data-pk="{{ reservation.pk }}"
+                                   data-url="{% url 'mark_reservation_finished' reservation.pk %}"
+                                   value="{% trans "Finish now" %}"/>
                         {% elif can_delete %}
-                            <form method="POST" action="{% url 'delete_reservation' %}">
-                                {% csrf_token %}
-                                <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
-                                <input class="ui button red" type="submit"
-                                       value="{% trans "Cancel" context "cancel reservation" %}"/>
-                                {% if admin %}
-                                    <input class="display-none" type="text" name="next"
-                                           value="{% url 'admin_reservation' %}"/>
-                                {% endif %}
-                            </form>
+                            <input class="delete-reservation ui red button" type="submit"
+                                   data-pk="{{ reservation.pk }}"
+                                   data-url="{% url 'delete_reservation' reservation.pk %}"
+                                   value="{% trans "Cancel" context "cancel reservation" %}"/>
                         {% endif %}
                     </td>
 
@@ -142,8 +136,8 @@
         <div class="ui cards reservation-list-tablet">
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
-                <div class="card {% if not future_reservation %}display-none{% endif %}"
-                     data-is-future-reservation="{{ future_reservation }}">
+                <div class="card reservation-pk-{{ reservation.pk }}
+                            {% if not future_reservation %}past-reservation display-none{% endif %}">
 
                     <div class="content">
                         <div class="header">{{ reservation.machine.name }}</div>
@@ -176,29 +170,15 @@
                         {% can_mark_reservation_finished reservation as can_mark_finished %}
                         {% can_delete_reservation reservation user as can_delete %}
                         {% if can_mark_finished %}
-                            <div class="ui green button reservation-mark-done">
-                                {% trans "Finish now" %}
-                                <form method="POST" action="{% url 'mark_reservation_finished' %}">
-                                    {% csrf_token %}
-                                    <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
-                                    {% if admin %}
-                                        <input class="display-none" type="text" name="next"
-                                               value="{% url 'admin_reservation' %}"/>
-                                    {% endif %}
-                                </form>
-                            </div>
+                            <input class="mark-reservation-finished ui green button" type="submit"
+                                   data-pk="{{ reservation.pk }}"
+                                   data-url="{% url 'mark_reservation_finished' reservation.pk %}"
+                                   value="{% trans "Finish now" %}"/>
                         {% elif can_delete %}
-                            <div class="ui button red reservation-calendar-delete">
-                                {% trans "Cancel" context "cancel reservation" %}
-                                <form method="POST" action="{% url 'delete_reservation' %}">
-                                    {% csrf_token %}
-                                    <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
-                                    {% if admin %}
-                                        <input class="display-none" type="text" name="next"
-                                               value="{% url 'admin_reservation' %}"/>
-                                    {% endif %}
-                                </form>
-                            </div>
+                            <input class="delete-reservation ui red button" type="submit"
+                                   data-pk="{{ reservation.pk }}"
+                                   data-url="{% url 'delete_reservation' reservation.pk %}"
+                                   value="{% trans "Cancel" context "cancel reservation" %}"/>
                         {% endif %}
                     </div>
 
@@ -207,6 +187,4 @@
         </div>
 
     </div>
-
-    <script src="{% static "make_queue/js/my_reservations.js" %}"></script>
 {% endblock body %}
