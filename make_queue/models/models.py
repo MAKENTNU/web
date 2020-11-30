@@ -75,7 +75,7 @@ class MachineType(models.Model):
             course_registration.user = user
             course_registration.save()
             return True
-        return False
+        return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
 
 
 class MachineQuerySet(models.QuerySet):
