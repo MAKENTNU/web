@@ -94,17 +94,17 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
     }
 
     const $popupContent = $(`
-            <div class="new-reservation-popup ui card">
-                <div class="ui content">
-                    <div class="header">${gettext("New reservation")}</div>
-                    <div class="description">
-                        ${dateString}
-                    </div>
-                </div>
-                <div class="ui bottom attached make-bg-yellow button">
-                    ${gettext("Reserve")}
+        <div class="new-reservation-popup ui card">
+            <div class="ui content">
+                <div class="header">${gettext("New reservation")}</div>
+                <div class="description">
+                    ${dateString}
                 </div>
             </div>
+                <div class="ui bottom attached make-bg-yellow button">
+                    ${gettext("Reserve")}
+            </div>
+        </div>
     `);
 
     $popupContent.find(".button").on("mousedown touchstart", () => {

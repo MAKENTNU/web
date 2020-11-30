@@ -19,44 +19,48 @@ class DeleteReservationViewTestCase(TestCase):
         self.client2.login(username=self.user2.username, password=password)
 
         printer_machine_type = MachineType.objects.get(pk=1)
-        Machine.objects.create(name="U1", location="Make", machine_model="Ultimaker 2", status=Machine.Status.AVAILABLE,
-                               machine_type=printer_machine_type)
+        self.machine1 = Machine.objects.create(
+            name="U1", machine_model="Ultimaker 2", machine_type=printer_machine_type,
+            location="MAKE", status=Machine.Status.AVAILABLE,
+        )
 
         Quota.objects.create(user=self.user1, number_of_reservations=2, ignore_rules=True, machine_type=printer_machine_type)
         Quota.objects.create(user=self.user2, number_of_reservations=2, ignore_rules=True, machine_type=printer_machine_type)
 
-        Printer3DCourse.objects.create(user=self.user1, username=self.user1.username, name=self.user1.get_full_name(),
-                                       date=timezone.now())
-        Printer3DCourse.objects.create(user=self.user2, username=self.user2.username, name=self.user2.get_full_name(),
-                                       date=timezone.now())
+        now = timezone.localtime()
+        Printer3DCourse.objects.create(user=self.user1, username=self.user1.username, name=self.user1.get_full_name(), date=now)
+        Printer3DCourse.objects.create(user=self.user2, username=self.user2.username, name=self.user2.get_full_name(), date=now)
 
-        self.reservation = Reservation.objects.create(user=self.user1,
-                                                      machine=Machine.objects.get(name="U1"),
-                                                      start_time=timezone.now() + timezone.timedelta(hours=2),
-                                                      end_time=timezone.now() + timezone.timedelta(hours=4),
-                                                      event=None)
+        self.reservation = Reservation.objects.create(
+            user=self.user1,
+            machine=self.machine1,
+            start_time=now + timezone.timedelta(hours=2),
+            end_time=now + timezone.timedelta(hours=4),
+        )
 
     def test_delete_single_reservation(self):
         response = self.client1.post(reverse('delete_reservation'),
                                      {'pk': self.reservation.pk})
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(response.status_code, 302)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
     def test_delete_other_users_reservation(self):
         response = self.client2.post(reverse('delete_reservation'),
                                      {'pk': self.reservation.pk})
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(response.status_code, 302)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
     def test_delete_one_of_users_reservations(self):
-        reservation2 = Reservation.objects.create(user=User.objects.get(username=self.user1.username),
-                                                  machine=Machine.objects.get(name="U1"),
-                                                  start_time=timezone.now() + timezone.timedelta(hours=6),
-                                                  end_time=timezone.now() + timezone.timedelta(hours=8),
-                                                  event=None)
+        now = timezone.localtime()
+        reservation2 = Reservation.objects.create(
+            user=self.user1,
+            machine=self.machine1,
+            start_time=now + timezone.timedelta(hours=6),
+            end_time=now + timezone.timedelta(hours=8),
+        )
 
         response = self.client1.post(reverse('delete_reservation'),
                                      {'pk': self.reservation.pk})
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(response.status_code, 302)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
         self.assertTrue(Reservation.objects.filter(pk=reservation2.pk).exists())

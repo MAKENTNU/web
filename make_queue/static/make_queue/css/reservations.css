@@ -1,45 +1,37 @@
-.make-collapsed-header {
-    margin-bottom: 0 !important;
-}
-
-.large-text {
-    font-size: 1.2em;
-}
-
-.make-right-floated {
+.right-floated {
     float: right;
     display: inline-block;
-}
-
-.make-row-fill {
-    height: 100%;
-}
-
-.make-my-reservation-tablet {
-    padding: 2em 0 2em 0;
-}
-
-.make-my-reservation-tablet .card {
-    flex: auto;
-}
-
-.make-my-reservation-button-pad {
-    margin-top: -2em;
-    padding-bottom: 1.2em !important;
 }
 
 
 /* Desktop layout */
 @media screen and (min-width: 800px) {
-    .make-my-reservation-tablet {
+    .reservation-list-tablet {
         display: none !important;
+    }
+
+    .reservation-list-desktop .header {
+        margin-bottom: 0 !important; /* Overrides Fomantic-UI */
     }
 }
 
 
 /* Tablet and mobile layout */
 @media screen and (max-width: 800px) {
-    .make-my-reservation-desktop {
+    .reservation-list-desktop {
         display: none !important;
+    }
+
+    .reservation-list-tablet {
+        padding: 2em 0;
+    }
+
+    .reservation-list-tablet .card {
+        flex: auto;
+    }
+
+    .reservation-list-tablet .card .bottom.buttons .button {
+        padding-top: 1em !important; /* Overrides Fomantic-UI */
+        padding-bottom: 1em !important; /* Overrides Fomantic-UI */
     }
 }

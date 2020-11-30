@@ -18,6 +18,7 @@
 
 {% block body %}
     <div class="ui container">
+
         <div class="ui huge header">
             {% if admin %}
                 {% trans "MAKE NTNU reservations" %}
@@ -27,10 +28,10 @@
         </div>
 
         <div class="ui vertical segment">
-            <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
+            <a class="ui primary button" href="{% url 'reservation_machines_overview' %}">
                 {% trans "Machines" %}
             </a>
-            <div class="make-right-floated make-row-fill">
+            <div class="right-floated">
                 <div class="field">
                     <div id="hide-old-reservations" class="ui checkbox">
                         <input class="hidden" type="checkbox" checked/>
@@ -41,7 +42,7 @@
         </div>
 
         {# Desktop table #}
-        <table class="ui table make-my-reservation-desktop">
+        <table class="ui table reservation-list-desktop">
             <thead>
             <tr>
                 <th>{% trans "Reservation" %}</th>
@@ -58,11 +59,11 @@
             <tbody>
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
-                <tr class="make-my-reservation-desktop {% if not future_reservation %}display-none{% endif %}"
+                <tr class="reservation-list-desktop {% if not future_reservation %}display-none{% endif %}"
                     data-is-future-reservation="{{ future_reservation }}">
 
                     <td>
-                        <div class="ui small header make-collapsed-header">{{ reservation.machine.name }}</div>
+                        <div class="ui small header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.model }}</div>
                         <div>
                             <a href="{{ reservation.machine.location_url }}" target="_blank">
@@ -72,26 +73,25 @@
                     </td>
                     <td>
                         {% if reservation.start_time.date == reservation.end_time.date %}
-                            <div>{{ reservation.start_time|date:"d/m/y" }}</div>
+                            <div>{{ reservation.start_time|date:"d.m.Y" }}</div>
                             <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
                         {% else %}
-                            <div>{{ reservation.start_time|date:"d/m/Y - H:i" }}</div>
-                            <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
+                            <div>{{ reservation.start_time|date:"d.m.Y - H:i" }}</div>
+                            <div>{{ reservation.end_time|date:"d.m.Y - H:i" }}</div>
                         {% endif %}
                     </td>
-                    {% if reservation.event %}
+                    {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
+                    {% if reservation_text %}
                         <td>
-                            <b class="large-text">{{ reservation.event.event.title }}</b><br/>
-                            {{ reservation.event.start_time|date:"d/m/Y" }}
-                        </td>
-                    {% elif reservation.special %}
-                        <td>
-                            <b class="large-text">{{ reservation.special_text }}</b>
+                            <div class="ui small header">{{ reservation_text }}</div>
+                            {% if reservation.event %}
+                                {{ reservation.event.start_time|date:"d.m.Y" }}
+                            {% endif %}
                         </td>
                     {% endif %}
                     <td>
                         <a href="{% calendar_url_reservation reservation %}">
-                            <div class="ui button primary">
+                            <div class="ui primary button">
                                 {% trans "Calendar" %}
                             </div>
                         </a>
@@ -99,8 +99,8 @@
                     <td>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a href="{% url 'change_reservation' reservation=reservation %}">
-                                <div class="ui button primary">
+                            <a href="{% url 'change_reservation' reservation %}">
+                                <div class="ui make-bg-yellow button">
                                     {% trans "Change" %}
                                 </div>
                             </a>
@@ -138,7 +138,8 @@
             </tbody>
         </table>
 
-        <div class="ui cards make-my-reservation-tablet">
+        {# Mobile/tablet cards #}
+        <div class="ui cards reservation-list-tablet">
             {% for reservation in reservations %}
                 {% is_future_reservation reservation as future_reservation %}
                 <div class="card {% if not future_reservation %}display-none{% endif %}"
@@ -154,24 +155,21 @@
                             </a>
                         </div>
                         {% if reservation.start_time.date == reservation.end_time.date %}
-                            <div>{{ reservation.start_time|date:"d/m/y" }}</div>
-                            <div>{{ reservation.start_time|date:"H:i" }}
-                                - {{ reservation.end_time|date:"H:i" }}</div>
+                            <div>{{ reservation.start_time|date:"d.m.Y" }}</div>
+                            <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
                         {% else %}
-                            <div>{{ reservation.start_time|date:"d/m/Y - H:i" }}</div>
-                            <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
+                            <div>{{ reservation.start_time|date:"d.m.Y - H:i" }}</div>
+                            <div>{{ reservation.end_time|date:"d.m.Y - H:i" }}</div>
                         {% endif %}
                     </div>
 
                     <div class="ui bottom attached buttons">
-                        <a class="ui primary button make-my-reservation-button-pad"
-                           href="{% calendar_url_reservation reservation %}">
+                        <a class="ui primary button" href="{% calendar_url_reservation reservation %}">
                             {% trans "Calendar" %}
                         </a>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a class="ui make-bg-yellow button make-my-reservation-button-pad"
-                               href="{% url 'change_reservation' reservation=reservation %}">
+                            <a class="ui make-bg-yellow button" href="{% url 'change_reservation' reservation %}">
                                 {% trans "Change" %}
                             </a>
                         {% endif %}
@@ -207,6 +205,7 @@
                 </div>
             {% endfor %}
         </div>
+
     </div>
 
     <script src="{% static "make_queue/js/my_reservations.js" %}"></script>

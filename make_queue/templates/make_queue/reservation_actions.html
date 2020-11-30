@@ -6,6 +6,7 @@
 
 <h3>{% trans "Actions" %}</h3>
 <div class="ui relaxed divided selection action list">
+    {% can_use_machine user machine as can_use %}
     <a class="item enable_popup
             {% if not can_use or not machine.is_reservable or not can_create_more_reservations %}
                 disable
