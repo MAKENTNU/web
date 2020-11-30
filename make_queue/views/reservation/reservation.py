@@ -3,6 +3,7 @@ from abc import ABC
 from datetime import timedelta
 from math import ceil
 
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -142,9 +143,12 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
         return self.get(request, **kwargs)
 
 
-class CreateReservationView(ReservationCreateOrChangeView):
+class CreateReservationView(PermissionRequiredMixin, ReservationCreateOrChangeView):
     """View for creating a new reservation."""
     new_reservation = True
+
+    def has_permission(self):
+        return self.kwargs['machine'].can_user_use(self.request.user)
 
     def form_valid(self, form, **kwargs):
         """
