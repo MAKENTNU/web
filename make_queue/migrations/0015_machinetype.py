@@ -62,6 +62,14 @@ default_machine_types = (
         has_stream=False,
         priority=5,
     ),
+    MachineTypeStruct(
+        pk=5,
+        name={"en": "Dress form", "nb": "Sømbyste"},
+        cannot_use_text="",
+        usage_requirement="AUTH",
+        has_stream=False,
+        priority=40,
+    ),
 )
 
 
