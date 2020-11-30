@@ -4,6 +4,7 @@ from unittest.mock import patch
 from django.contrib.auth.models import Permission
 from django.http import HttpResponse
 from django.test import TestCase
+from django.urls import reverse
 from django.utils import timezone
 
 from news.models import Event, TimePlace
@@ -14,7 +15,7 @@ from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 from ...views.admin.reservation import AdminReservationView
-from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, MarkReservationFinishedView, ReservationCreateOrChangeView
+from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, ReservationCreateOrChangeView
 
 
 class BaseReservationCreateOrChangeViewTest(TestCase):
@@ -400,6 +401,7 @@ class MarkReservationFinishedTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("test")
+        self.client.force_login(self.user)
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.machine_type = MachineType.objects.get(pk=2)
         self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.Status.AVAILABLE, name="Test")
@@ -414,23 +416,12 @@ class MarkReservationFinishedTest(TestCase):
             end_time=self.now + timedelta(hours=2),
         )
 
-    def get_view(self):
-        view = MarkReservationFinishedView()
-        view.request = request_with_user(self.user)
-        return view
-
-    def post_to_view(self, reservation):
-        view = self.get_view()
-        request = post_request_with_user(self.user, {"pk": reservation.pk})
-        return view.post(request)
+    def post_to(self, reservation: Reservation):
+        return self.client.post(reverse('mark_reservation_finished', args=[reservation.pk]))
 
     def test_get_request_fails(self):
-        view = self.get_view()
-        request = request_with_user(self.user)
-        response = view.get(request)
-
-        # Get is not allowed, so a redirect will be given
-        self.assertEqual(response.status_code, 302)
+        response = self.client.get(reverse('mark_reservation_finished', args=[self.reservation1.pk]))
+        self.assertGreaterEqual(response.status_code, 400)
 
     @patch('django.utils.timezone.now')
     def test_valid_post_request_succeeds(self, now_mock):
@@ -438,16 +429,15 @@ class MarkReservationFinishedTest(TestCase):
         now_mock.return_value = self.now + timedelta(hours=1, minutes=1)
         self.assertTrue(self.reservation1.can_change_end_time(self.user))
 
-        response = self.post_to_view(self.reservation1)
-        # Will always be redirected
-        self.assertEqual(response.status_code, 302)
+        response = self.post_to(self.reservation1)
+        self.assertEqual(response.status_code, 200)
         self.reservation1.refresh_from_db()
         self.assertEqual(self.reservation1.end_time, timezone.now())
 
     def test_finishing_before_start_fails(self):
         original_end_time = self.reservation1.end_time
-        response = self.post_to_view(self.reservation1)
-        self.assertEqual(response.status_code, 302)
+        response = self.post_to(self.reservation1)
+        self.assertGreaterEqual(response.status_code, 400)
         self.reservation1.refresh_from_db()
         self.assertEqual(self.reservation1.end_time, original_end_time,
                          "Marking a reservation in the future as finished should not be possible")
@@ -458,8 +448,8 @@ class MarkReservationFinishedTest(TestCase):
         now_mock.return_value = self.now + timedelta(hours=3)
 
         original_end_time = self.reservation1.end_time
-        response = self.post_to_view(self.reservation1)
-        self.assertEqual(response.status_code, 302)
+        response = self.post_to(self.reservation1)
+        self.assertGreaterEqual(response.status_code, 400)
         self.reservation1.refresh_from_db()
         self.assertEqual(self.reservation1.end_time, original_end_time,
                          "Marking a reservation in the past as finished should not do anything")
@@ -483,7 +473,7 @@ class MarkReservationFinishedTest(TestCase):
 
         # Set "now" to 3 minutes before `reservation2` ends and `reservation3` starts
         now_mock.return_value = self.now + timedelta(hours=5, minutes=57)
-        response = self.post_to_view(reservation2)
-        self.assertEqual(response.status_code, 302)
+        response = self.post_to(reservation2)
+        self.assertEqual(response.status_code, 200)
         reservation2.refresh_from_db()
         self.assertEqual(reservation2.end_time, timezone.now())

@@ -1727,6 +1727,26 @@ msgstr "Reservasjonen kan ikke starte i fortiden"
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
+#: make_queue/views/reservation/reservation.py:182
+msgid ""
+"Cannot delete reservation when it has already started. Mark it as finished "
+"instead."
+msgstr ""
+"Kan ikke slette reservasjonen når den allerede har startet. Sett den som "
+"ferdig istedenfor."
+
+#: make_queue/views/reservation/reservation.py:184
+msgid "Cannot delete reservation when it has already ended."
+msgstr "Kan ikke slette reservasjonen når den allerede er over."
+
+#: make_queue/views/reservation/reservation.py:250
+msgid "Cannot mark reservation as finished when it has not started yet."
+msgstr "Kan ikke sette reservasjonen som ferdig når den ikke har startet ennå."
+
+#: make_queue/views/reservation/reservation.py:252
+msgid "Cannot mark reservation as finished when it has already ended."
+msgstr "Kan ikke sette reservasjonen som ferdig når den allerede er over."
+
 #: makerspace/admin.py:17
 #, python-brace-format
 msgid "Image of {equipment}."

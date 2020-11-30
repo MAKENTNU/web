@@ -4,17 +4,18 @@ from datetime import timedelta
 from math import ceil
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
-from django.views.generic import FormView, RedirectView, TemplateView
+from django.views.generic import DeleteView, FormView, TemplateView, UpdateView
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
+from util.view_utils import PreventGetRequestsMixin
 from ...forms import FreeSlotForm, ReservationForm
 from ...models.models import Machine, MachineType, Reservation, ReservationRule
-from ...templatetags.reservation_extra import calendar_url_reservation
+from ...templatetags.reservation_extra import calendar_url_reservation, can_delete_reservation, can_mark_reservation_finished
 
 
 class ReservationCreateOrChangeView(TemplateView, ABC):
@@ -175,37 +176,29 @@ class CreateReservationView(PermissionRequiredMixin, ReservationCreateOrChangeVi
         return self.validate_and_save(reservation, form)
 
 
-class DeleteReservationView(RedirectView):
-    """View for deleting a reservation (Cannot be DeleteView due to the abstract inheritance of reservations)."""
-    http_method_names = ["post"]
+class DeleteReservationView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    model = Reservation
 
-    def get_redirect_url(self, *args, **kwargs):
-        """
-        Gives the redirect url for when the reservation is deleted.
+    def has_permission(self):
+        user = self.request.user
+        return (user.has_perm('make_queue.delete_reservation')
+                or user == self.get_object().user)
 
-        :return: The redirect url
-        """
-        if "next" in self.request.POST:
-            return self.request.POST.get("next")
-        return reverse("my_reservations")
+    def delete(self, request, *args, **kwargs):
+        reservation = self.get_object()
+        if not can_delete_reservation(reservation, self.request.user):
+            now = timezone.now()
+            if reservation.start_time <= now:
+                if reservation.end_time > now:
+                    message = _("Cannot delete reservation when it has already started. Mark it as finished instead.")
+                else:
+                    message = _("Cannot delete reservation when it has already ended.")
+            else:
+                message = None
+            return JsonResponse({'message': message} if message else {}, status=400)
 
-    def dispatch(self, request, *args, **kwargs):
-        """
-        Delete the reservation if it can be deleted by the current user and exists.
-
-        :param request: The HTTP POST request
-        """
-        if "pk" in request.POST:
-            pk = request.POST.get("pk")
-
-            try:
-                reservation = Reservation.objects.get(pk=pk)
-                if reservation.can_delete(request.user):
-                    reservation.delete()
-            except Reservation.DoesNotExist:
-                pass
-
-        return super().dispatch(request, *args, **kwargs)
+        reservation.delete()
+        return HttpResponse(status=200)
 
 
 class ChangeReservationView(ReservationCreateOrChangeView):
@@ -254,28 +247,29 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         return self.validate_and_save(reservation, form)
 
 
-class MarkReservationFinishedView(RedirectView):
-    url = reverse_lazy("my_reservations")
+class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
+    model = Reservation
 
-    def get_redirect_url(self, *args, next_url=None, **kwargs):
-        if next_url is not None:
-            return next_url
-        return super().get_redirect_url(*args, **kwargs)
+    def has_permission(self):
+        user = self.request.user
+        return (user.has_perm('make_queue.change_reservation')
+                or user == self.get_object().user)
 
     def post(self, request, *args, **kwargs):
-        pk = request.POST.get("pk", default=0)
-        reservations = Reservation.objects.filter(pk=pk)
-        if not reservations.exists():
-            return self.get(request, *args, **kwargs)
+        reservation = self.get_object()
+        if not can_mark_reservation_finished(reservation):
+            now = timezone.now()
+            if reservation.start_time > now:
+                message = _("Cannot mark reservation as finished when it has not started yet.")
+            elif reservation.end_time <= now:
+                message = _("Cannot mark reservation as finished when it has already ended.")
+            else:
+                message = None
+            return JsonResponse({'message': message} if message else {}, status=400)
 
-        reservation = reservations.first()
-        if not reservation.can_change_end_time(request.user) or reservation.start_time >= timezone.now():
-            return self.get(request, *args, **kwargs)
-
-        reservation.end_time = timezone.now()
+        reservation.end_time = timezone.localtime()
         reservation.save()
-
-        return self.get(request, *args, **kwargs)
+        return HttpResponse(status=200)
 
 
 class FindFreeSlot(FormView):

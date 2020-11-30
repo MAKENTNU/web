@@ -41,19 +41,17 @@ class DeleteReservationViewTestCase(TestCase):
             end_time=now + timedelta(hours=4),
         )
 
-    def test_delete_single_reservation(self):
-        response = self.client1.post(reverse('delete_reservation'),
-                                     {'pk': self.reservation.pk})
-        self.assertEqual(response.status_code, 302)
+    def test_delete_own_reservation_succeeds(self):
+        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
-    def test_delete_other_users_reservation(self):
-        response = self.client2.post(reverse('delete_reservation'),
-                                     {'pk': self.reservation.pk})
-        self.assertEqual(response.status_code, 302)
+    def test_delete_other_users_reservation_fails(self):
+        response = self.client2.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        self.assertGreaterEqual(response.status_code, 400)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
-    def test_delete_one_of_users_reservations(self):
+    def test_delete_only_one_among_multiple_reservations_succeeds(self):
         now = timezone.localtime()
         reservation2 = Reservation.objects.create(
             user=self.user1,
@@ -62,8 +60,20 @@ class DeleteReservationViewTestCase(TestCase):
             end_time=now + timedelta(hours=8),
         )
 
-        response = self.client1.post(reverse('delete_reservation'),
-                                     {'pk': self.reservation.pk})
-        self.assertEqual(response.status_code, 302)
+        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        self.assertEqual(response.status_code, 200)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
         self.assertTrue(Reservation.objects.filter(pk=reservation2.pk).exists())
+
+    def test_delete_reservation_after_start_fails(self):
+        now = timezone.localtime()
+        Reservation.objects.filter(pk=self.reservation.pk).update(start_time=now)
+        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        self.assertGreaterEqual(response.status_code, 400)
+        self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
+
+        # Setting the start time to the future should allow deletion
+        Reservation.objects.filter(pk=self.reservation.pk).update(start_time=now + timedelta(hours=1))
+        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
