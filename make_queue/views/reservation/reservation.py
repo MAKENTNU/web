@@ -239,7 +239,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         return self.validate_and_save(reservation, form)
 
 
-class MarkReservationAsDone(RedirectView):
+class MarkReservationFinishedView(RedirectView):
     url = reverse_lazy("my_reservations")
 
     def get_redirect_url(self, *args, next_url=None, **kwargs):

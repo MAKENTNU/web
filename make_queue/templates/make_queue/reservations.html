@@ -108,9 +108,9 @@
                     </td>
                     <td>
                         {% can_delete_reservation reservation user as can_delete %}
-                        {% can_mark_reservation_as_finished reservation as can_mark_finished %}
+                        {% can_mark_reservation_finished reservation as can_mark_finished %}
                         {% if can_mark_finished %}
-                            <form method="POST" action="{% url 'mark_reservation_done' %}">
+                            <form method="POST" action="{% url 'mark_reservation_finished' %}">
                                 {% csrf_token %}
                                 <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                 <input class="ui button green" type="submit" value="{% trans "Finish now" %}"/>
@@ -175,12 +175,12 @@
                                 {% trans "Change" %}
                             </a>
                         {% endif %}
-                        {% can_mark_reservation_as_finished reservation as can_mark_finished %}
+                        {% can_mark_reservation_finished reservation as can_mark_finished %}
                         {% can_delete_reservation reservation user as can_delete %}
                         {% if can_mark_finished %}
                             <div class="ui green button reservation-mark-done">
                                 {% trans "Finish now" %}
-                                <form method="POST" action="{% url 'mark_reservation_done' %}">
+                                <form method="POST" action="{% url 'mark_reservation_finished' %}">
                                     {% csrf_token %}
                                     <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                     {% if admin %}

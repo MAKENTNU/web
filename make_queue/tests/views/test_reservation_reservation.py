@@ -14,7 +14,7 @@ from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 from ...views.admin.reservation import AdminReservationView
-from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
+from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, MarkReservationFinishedView, ReservationCreateOrChangeView
 
 
 class BaseReservationCreateOrChangeViewTest(TestCase):
@@ -347,7 +347,7 @@ class ReservationAdminViewTest(TestCase):
         self.assertSetEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
 
 
-class MarkReservationAsDoneTest(TestCase):
+class MarkReservationFinishedTest(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("test")
@@ -359,7 +359,7 @@ class MarkReservationAsDoneTest(TestCase):
                                        max_inside_border_crossed=6, max_hours=6, machine_type=self.machine_type)
 
     def get_view(self):
-        view = MarkReservationAsDone()
+        view = MarkReservationFinishedView()
         view.request = request_with_user(self.user)
         return view
 
