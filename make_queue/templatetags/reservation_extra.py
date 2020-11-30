@@ -131,7 +131,7 @@ def can_delete_reservation(reservation: Reservation, user: User):
 
 
 @register.simple_tag
-def can_mark_reservation_as_finished(reservation: Reservation):
+def can_mark_reservation_finished(reservation: Reservation):
     return reservation.start_time < timezone.now() < reservation.end_time
 
 
