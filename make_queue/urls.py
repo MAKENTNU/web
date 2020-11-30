@@ -76,7 +76,7 @@ urlpatterns = [
     path('calendar/', include(calendar_urlpatterns)),
     path('json/', include(json_urlpatterns)),
     path('create/<Machine:machine>/', login_required(reservation.reservation.CreateReservationView.as_view()), name="create_reservation"),
-    path('change/<Reservation:reservation>/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
+    path('<Reservation:reservation>/change/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
     path('finish/', login_required(reservation.reservation.MarkReservationFinishedView.as_view()), name="mark_reservation_finished"),
     path('delete/', login_required(reservation.reservation.DeleteReservationView.as_view()), name="delete_reservation"),
     path('me/', login_required(reservation.overview.MyReservationsView.as_view()), name="my_reservations"),

@@ -89,7 +89,7 @@ def date_to_percentage(date_: datetime):
 
 
 @register.simple_tag
-def can_use_machine(machine: Machine, user: User):
+def can_use_machine(user: User, machine: Machine):
     return machine.can_user_use(user)
 
 

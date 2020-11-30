@@ -6,7 +6,7 @@
 }
 
 
-/* Styles for `reservation_edit.js` */
+/* Styles for elements created in `reservation_edit.js` */
 .error-border {
     border-color: red !important;
 }
