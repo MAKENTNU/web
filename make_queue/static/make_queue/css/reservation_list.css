@@ -24,10 +24,7 @@
 
     .reservation-list-tablet {
         padding: 2em 0;
-    }
-
-    .reservation-list-tablet .card {
-        flex: auto;
+        align-items: flex-start;
     }
 
     .reservation-list-tablet .card .bottom.buttons .button {

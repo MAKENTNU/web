@@ -10,8 +10,27 @@
     font-size: 1.2em;
 }
 
+.cards {
+    align-items: flex-start;
+}
+
 .ticket.card {
+    width: auto !important; /* Overrides Fomantic-UI */
+    min-width: 290px; /* Same as Fomantic-UI's `width` on `.card` */
     overflow: hidden;
+}
+
+.ticket.card .time-place.content {
+    display: grid;
+    grid-template-columns: 3em max-content;
+}
+
+.ticket.card .time-place.content .calendar-button {
+    grid-row: 1/3;
+}
+
+.ticket.card .time-place.content .place.description {
+    grid-row: 2/2;
 }
 
 .ticket.card .extra.content {

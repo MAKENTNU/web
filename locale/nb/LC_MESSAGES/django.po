@@ -2262,8 +2262,9 @@ msgid "Reactivate ticket"
 msgstr "Reaktiver"
 
 #: news/templates/news/ticket_detail.html:13
-msgid "Ticket for"
-msgstr "Billett for"
+#, python-format
+msgid "Ticket for “%(title)s”"
+msgstr "Billett for «%(title)s»"
 
 #: news/templates/news/ticket_detail.html:15
 msgid "Registered to"
