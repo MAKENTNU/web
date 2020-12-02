@@ -2182,23 +2182,24 @@ msgstr "Kanseller"
 msgid "Reactivate ticket"
 msgstr "Reaktiver"
 
-#: news/templates/news/ticket_overview.html:13
-msgid "Ticket for"
-msgstr "Billett for"
+#: news/templates/news/ticket_overview.html:14
+#, python-format
+msgid "Ticket for “%(title)s”"
+msgstr "Billett for «%(title)s»"
 
-#: news/templates/news/ticket_overview.html:15
+#: news/templates/news/ticket_overview.html:16
 msgid "Registered to"
 msgstr "Registrert på"
 
-#: news/templates/news/ticket_overview.html:22
+#: news/templates/news/ticket_overview.html:26
 msgid "This ticket is registered to another account. Please"
 msgstr "Denne billetten er knyttet til en annen bruker. Vennligst"
 
-#: news/templates/news/ticket_overview.html:23
+#: news/templates/news/ticket_overview.html:27
 msgid "log in"
 msgstr "logg inn"
 
-#: news/templates/news/ticket_overview.html:24
+#: news/templates/news/ticket_overview.html:28
 msgid "to the correct account to see your ticket."
 msgstr "til den riktige brukeren for å se billetten din."
 

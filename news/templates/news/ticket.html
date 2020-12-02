@@ -1,6 +1,8 @@
 {% load i18n %}
 
 
+{# Linking `ticket.css` is required when including this template #}
+
 <div class="ui ticket card">
     {% if not ticket.active %}
         <div class="ui red cancel label">
@@ -24,17 +26,17 @@
                     {% for timeplace in ticket.event.timeplaces.all %}
                         {% if not timeplace.hidden %}
                             <div class="ui item">
-                                <div class="content">
+                                <div class="time-place content">
+                                    <a class="calendar-button" href="{% url 'timeplace-ical' timeplace.pk %}" target="_blank">
+                                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                                    </a>
                                     <div class="header">
-                                        {{ timeplace.start_time|date:"d. M H:i" }}
-                                        - {{ timeplace.end_time|date:"d. M H:i" }}
-                                        <a class="left floated" href="{% url 'timeplace-ical' timeplace.pk %}"
-                                           target="_blank">
-                                            <i class="ui make-col-yellow large calendar plus outline icon"></i>
-                                        </a>
+                                        {{ timeplace.start_time|date:"d. M H:i" }} &ndash; {{ timeplace.end_time|date:"d. M H:i" }}
                                     </div>
-                                    <div class="description">
-                                        <a href="{{ timeplace.place_url }}">{{ timeplace.place }}</a>
+                                    <div class="place description">
+                                        <a href="{{ timeplace.place_url }}" target="_blank">
+                                            {{ timeplace.place }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -42,12 +44,14 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <a class="left floated" href="{% url 'timeplace-ical' ticket.timeplace.pk %}" target="_blank">
-                    <i class="ui make-col-yellow large calendar plus outline icon"></i>
-                </a>
-                <b>
-                    {{ ticket.timeplace.start_time|date:"d. M H:i" }} - {{ ticket.timeplace.end_time|date:"d. M H:i" }}
-                </b>
+                <div class="time-place content">
+                    <a class="calendar-button" href="{% url 'timeplace-ical' ticket.timeplace.pk %}" target="_blank">
+                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                    </a>
+                    <b>
+                        {{ ticket.timeplace.start_time|date:"d. M H:i" }} &ndash; {{ ticket.timeplace.end_time|date:"d. M H:i" }}
+                    </b>
+                </div>
             {% endif %}
         </div>
     </div>
