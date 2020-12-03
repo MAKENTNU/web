@@ -1,8 +1,9 @@
 {% extends "web/base.html" %}
-{% load reservation_extra %}
-{% load quota %}
 {% load static %}
 {% load i18n %}
+{% load datetime_tags %}
+{% load reservation_extra %}
+{% load quota %}
 {% get_current_language as LANGUAGE_CODE %}
 
 
@@ -77,7 +78,7 @@
                             <div>
                                 {% rule_period_start_text period LANGUAGE_CODE as start %}
                                 {% rule_period_end_text period LANGUAGE_CODE as end %}
-                                {{ start|capfirst }} - {{ end|capfirst }}
+                                {{ start|capfirst }} &ndash; {{ end|capfirst }}
                             </div>
                         {% endfor %}
                     </div>
@@ -121,7 +122,7 @@
                                         <div class="event">
                                             <div class="content">
                                                 <div class="summary">
-                                                    {% with start_time=reservation.start_time|date:"d/m/y H:i" %}
+                                                    {% with start_time=reservation.start_time|short_datetime %}
                                                         {% blocktrans trimmed with machine_name=reservation.machine.name time=start_time %}
                                                             {{ machine_name }} at {{ time }}
                                                         {% endblocktrans %}

@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load static %}
 {% load i18n %}
+{% load datetime_tags %}
 {% load semantic_ui_calendar_extra %}
 {% load reservation_extra %}
 
@@ -139,9 +140,9 @@
                                     <div class="item" data-value="{{ event_timeplace.pk }}">
                                         <b>{{ event_timeplace.event.title }}</b><br/>
                                         {% if event_timeplace.start_time.date == event_timeplace.end_time.date %}
-                                            {{ event_timeplace.start_time|date:"d/m/Y - H:i" }}
+                                            {{ event_timeplace.start_time|short_datetime }}
                                         {% else %}
-                                            {{ event_timeplace.start_time|date:"d/m/Y" }} - {{ event_timeplace.end_time|date:"d/m/Y" }}
+                                            {{ event_timeplace.start_time|short_date }} &ndash; {{ event_timeplace.end_time|short_date }}
                                         {% endif %}
                                     </div>
                                 {% endfor %}

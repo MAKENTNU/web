@@ -1,5 +1,6 @@
 {% extends "docs/base.html" %}
 {% load i18n %}
+{% load datetime_tags %}
 
 
 {% block title %}{% trans "History of" %} "{{ page.title }}"{% endblock title %}
@@ -41,7 +42,7 @@
                             </i>
                         </div>
                         <div class="description">
-                            {{ content.changed|date:"d N Y H:i" }}
+                            {{ content.changed|long_datetime }}
                         </div>
                     </div>
                 </div>

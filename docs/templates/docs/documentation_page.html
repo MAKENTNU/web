@@ -1,6 +1,7 @@
 {% extends "docs/base.html" %}
 {% load i18n %}
 {% load static %}
+{% load datetime_tags %}
 
 
 {% block title %}{{ page.title }}{% endblock title %}
@@ -16,7 +17,7 @@
                 <div class="ui header">
                     {% trans "You are viewing an old version of this page" %}
                 </div>
-                {% blocktrans trimmed with name=last_edit_name date=content.changed|date:"d.m.Y" time=content.changed|date:"H:i" %}
+                {% blocktrans trimmed with name=last_edit_name date=content.changed|short_date time=content.changed|only_time %}
                     You are viewing an old version of this page, where the last edit was made by {{ name }}
                     on {{ date }} at {{ time }}.
                 {% endblocktrans %}
