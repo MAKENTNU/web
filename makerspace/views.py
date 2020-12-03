@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from contentbox.views import DisplayContentBoxView
-from web.templatetags.permission_tags import has_any_equipment_permissions
+from util.templatetags.permission_tags import has_any_equipment_permissions
 from .forms import EquipmentForm
 from .models import Equipment
 
