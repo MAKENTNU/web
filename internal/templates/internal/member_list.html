@@ -1,6 +1,7 @@
 {% extends 'internal/base.html' %}
 {% load i18n %}
 {% load static %}
+{% load datetime_tags %}
 {% load member %}
 {% load hosts %}
 
@@ -120,8 +121,8 @@
                     data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
                     data-term-joined="{{ member.term_joined }}"
-                    data-date-joined="{{ member.date_joined|date:"d.m.y" }}"
-                    data-date-quit="{{ member.date_quit|date:"d.m.y" }}"
+                    data-date-joined="{{ member.date_joined|short_date }}"
+                    data-date-quit="{{ member.date_quit|short_date }}"
                     data-term-quit="{{ member.term_quit|default:"" }}"
                     data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
                     data-status="{{ membership_status }}"

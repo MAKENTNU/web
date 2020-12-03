@@ -20,11 +20,31 @@ def _date_format(value, format_):
 
 
 def short_date_format(value):
-    return _date_format(value, "SHORT_DATE_FORMAT")
+    return _date_format(value, 'SHORT_DATE_FORMAT')
 
 
 def short_datetime_format(value):
-    return _date_format(value, "SHORT_DATETIME_FORMAT")
+    return _date_format(value, 'SHORT_DATETIME_FORMAT')
+
+
+def long_date_format(value):
+    return _date_format(value, 'DATE_FORMAT')
+
+
+def long_datetime_format(value):
+    return _date_format(value, 'DATETIME_FORMAT')
+
+
+def time_format(value):
+    return _date_format(value, 'TIME_FORMAT')
+
+
+def iso_date_format(value):
+    return _date_format(value, "Y-m-d")
+
+
+def iso_datetime_format(value):
+    return _date_format(value, "Y-m-d H:i")
 
 
 def is_valid_week(year, week):

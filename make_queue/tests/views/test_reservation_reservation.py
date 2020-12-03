@@ -9,7 +9,7 @@ from django.utils import timezone
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.locale_utils import date_to_local, local_to_date
+from util.locale_utils import iso_datetime_format, local_to_date
 from ..utility import post_request_with_user, request_with_user
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
@@ -44,10 +44,10 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
     def create_form_data(self, start_time_diff, end_time_diff, event=None, special=False, special_text=""):
         now = timezone.localtime()
         return {
-            "start_time": date_to_local(now + timedelta(hours=start_time_diff)).strftime("%d.%m.%Y %H:%M:%S"),
-            "end_time": date_to_local(now + timedelta(hours=end_time_diff)).strftime("%d.%m.%Y %H:%M:%S"),
-            "event": event is not None, "event_pk": 0 if event is None else event.pk, "special": special,
-            "special_text": special_text, "machine_name": self.machine.pk,
+            'start_time': iso_datetime_format(now + timedelta(hours=start_time_diff)),
+            'end_time': iso_datetime_format(now + timedelta(hours=end_time_diff)),
+            'event': event is not None, 'event_pk': 0 if event is None else event.pk, 'special': special,
+            'special_text': special_text, 'machine_name': self.machine.pk,
         }
 
 

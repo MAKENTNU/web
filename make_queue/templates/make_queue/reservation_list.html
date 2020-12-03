@@ -1,7 +1,8 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
-{% load reservation_extra %}
 {% load static %}
+{% load datetime_tags %}
+{% load reservation_extra %}
 
 
 {% block title %}
@@ -83,11 +84,11 @@
                     </td>
                     <td>
                         {% if reservation.start_time.date == reservation.end_time.date %}
-                            <div>{{ reservation.start_time|date:"d.m.Y" }}</div>
-                            <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
+                            <div>{{ reservation.start_time|short_date }}</div>
+                            <div>{{ reservation.start_time|only_time }} &ndash; {{ reservation.end_time|only_time }}</div>
                         {% else %}
-                            <div>{{ reservation.start_time|date:"d.m.Y - H:i" }}</div>
-                            <div>{{ reservation.end_time|date:"d.m.Y - H:i" }}</div>
+                            <div>{{ reservation.start_time|short_datetime }}</div>
+                            <div>&ndash;&nbsp; {{ reservation.end_time|short_datetime }}</div>
                         {% endif %}
                     </td>
                     {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
@@ -96,7 +97,7 @@
                             {% if reservation_text %}
                                 <div class="ui small header">{{ reservation_text }}</div>
                                 {% if reservation.event %}
-                                    {{ reservation.event.start_time|date:"d.m.Y" }}
+                                    {{ reservation.event.start_time|short_date }}
                                 {% endif %}
                             {% endif %}
                         </td>
@@ -156,11 +157,11 @@
                             </a>
                         </div>
                         {% if reservation.start_time.date == reservation.end_time.date %}
-                            <div>{{ reservation.start_time|date:"d.m.Y" }}</div>
-                            <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
+                            <div>{{ reservation.start_time|short_date }}</div>
+                            <div>{{ reservation.start_time|only_time }} &ndash; {{ reservation.end_time|only_time }}</div>
                         {% else %}
-                            <div>{{ reservation.start_time|date:"d.m.Y - H:i" }}</div>
-                            <div>{{ reservation.end_time|date:"d.m.Y - H:i" }}</div>
+                            <div>{{ reservation.start_time|short_datetime }}</div>
+                            <div>&ndash;&nbsp; {{ reservation.end_time|short_datetime }}</div>
                         {% endif %}
 
                         {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
@@ -169,7 +170,7 @@
                                 <div class="ui vertical segment"></div>
                                 <div class="ui small header">{{ reservation_text }}</div>
                                 {% if reservation.event %}
-                                    {{ reservation.event.start_time|date:"d.m.Y" }}
+                                    {{ reservation.event.start_time|short_date }}
                                 {% endif %}
                             {% endif %}
                         {% endif %}

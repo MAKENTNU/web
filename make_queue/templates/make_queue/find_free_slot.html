@@ -1,5 +1,6 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
+{% load datetime_tags %}
 {% load reservation_extra %}
 
 
@@ -51,7 +52,7 @@
                                 {{ slot.machine.name }}
                             </div>
                             <div class="description">
-                                {{ slot.start_time|date:"d F H:i" }} - {{ slot.end_time|date:"d F H:i" }}
+                                {{ slot.start_time|long_datetime_no_year }} &ndash; {{ slot.end_time|long_datetime_no_year }}
                             </div>
                         </div>
                     </a>
