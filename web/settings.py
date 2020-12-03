@@ -50,36 +50,43 @@ try:
 except ImportError:
     pass
 
-# Application definition
 
 INSTALLED_APPS = [
+    # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_hosts',
 
-    'groups',
-    'web',
-    'make_queue',
-    'social_django',
-    'phonenumber_field',
-    'news',
-    'mail',
-    'ckeditor',
-    'ckeditor_uploader',
-    'contentbox',
-    'checkin',
-    'sorl.thumbnail',
+    # Third-party packages with significant effect on Django's functionality
+    'django_hosts',
     'channels',
-    'makerspace',
-    'internal',
-    'docs',
-    'users',
-    'card',
+
+    # The main entrypoint app
+    'web',
+
+    # Other third-party packages
+    'social_django',
+    'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
+    'ckeditor_uploader',
+    'phonenumber_field',
+    'sorl.thumbnail',
+
+    # Project apps, listed alphabetically
     'announcements',
+    'card',
+    'checkin',
+    'contentbox',
+    'docs',
+    'groups',
+    'internal',
+    'mail',
+    'make_queue',
+    'makerspace',
+    'news',
+    'users',
 ]
 
 MIDDLEWARE = [
