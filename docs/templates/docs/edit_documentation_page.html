@@ -3,7 +3,9 @@
 {% load static %}
 
 
-{% block title %}{% trans "Edit" %} "{{ page.title }}"{% endblock title %}
+{% block title %}
+    {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
+{% endblock title %}
 
 {% block head %}
     <script src="{% static "ckeditor/ckeditor-init.js" %}"></script>
@@ -17,7 +19,9 @@
             <div class="header">{% trans "No content" %}</div>
             {% trans "The page is currently empty. Please add some content" %}.
         </div>
-        <h1>{% trans "Edit" %} "{{ page.title }}"</h1>
+        <h1>
+            {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
+        </h1>
         <form id="edit-form" class="ui form" method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="ui field">
