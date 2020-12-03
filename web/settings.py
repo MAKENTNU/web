@@ -46,35 +46,43 @@ except ImportError:
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Application definition
 
 INSTALLED_APPS = [
+    # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-party packages with significant effect on Django's functionality
     'django_hosts',
-    'groups',
+    'channels',
+
+    # The main entrypoint app
     'web',
-    'make_queue',
+
+    # Other third-party packages
     'social_django',
-    'phonenumber_field',
-    'news',
-    'mail',
     'ckeditor',
     'ckeditor_uploader',
-    'contentbox',
-    'checkin',
+    'phonenumber_field',
     'sorl.thumbnail',
-    'channels',
-    'makerspace',
-    'internal',
-    'docs',
-    'users',
-    'card',
+
+    # Project apps, listed alphabetically
     'announcements',
+    'card',
+    'checkin',
+    'contentbox',
+    'docs',
+    'groups',
+    'internal',
+    'mail',
+    'make_queue',
+    'makerspace',
+    'news',
+    'users',
 ]
 
 MIDDLEWARE = [
