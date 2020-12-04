@@ -11,8 +11,8 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from util.locale_utils import short_date_format
-from web.fields import URLTextField, UnlimitedCharField
-from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.modelfields import URLTextField, UnlimitedCharField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
 
 

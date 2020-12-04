@@ -3,11 +3,12 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-import card
-from card.forms import CardNumberField
+from card import utils as card_utils
+from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
 from web.widgets import MazemapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticTimeInput
+from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
 from .models.models import Machine, MachineType, Quota, ReservationRule
 
@@ -115,11 +116,6 @@ class RuleForm(forms.ModelForm):
 
 
 class QuotaForm(forms.ModelForm):
-    class UserModelChoiceField(forms.ModelChoiceField):
-
-        def label_from_instance(self, obj):
-            return f"{obj.get_full_name()} - {obj.username}"
-
     user = UserModelChoiceField(
         queryset=User.objects.all(),
         widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
@@ -179,7 +175,7 @@ class Printer3DCourseForm(forms.ModelForm):
     def is_valid(self):
         card_number = self.data['card_number']
         username = self.data['username']
-        is_duplicate = card.utils.is_duplicate(card_number, username)
+        is_duplicate = card_utils.is_duplicate(card_number, username)
         if is_duplicate:
             self.add_error('card_number', _("Card number is already in use"))
         return super().is_valid() and not is_duplicate

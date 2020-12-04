@@ -2,7 +2,7 @@ from django.core.exceptions import ValidationError
 
 from make_queue.models.course import Printer3DCourse
 from users.models import User
-from .forms import card_number_validators
+from .formfields import CardNumberField
 
 
 def is_valid(card_number):
@@ -11,7 +11,7 @@ def is_valid(card_number):
     :param card_number: The card number to check
     :return: True if value passes all validators
     """
-    for validator in card_number_validators:
+    for validator in CardNumberField.default_validators:
         try:
             validator(card_number)
         except ValidationError:

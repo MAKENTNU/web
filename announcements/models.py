@@ -3,8 +3,8 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from web.fields import URLTextField
-from web.multilingual.database import MultiLingualTextField
+from web.modelfields import URLTextField
+from web.multilingual.modelfields import MultiLingualTextField
 
 
 class AnnouncementQuerySet(models.QuerySet):

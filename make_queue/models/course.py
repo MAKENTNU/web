@@ -3,14 +3,9 @@ from django.db.models.constraints import CheckConstraint
 from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
 
-from card.models import CardNumberField
+from card.modelfields import CardNumberField
 from users.models import User
-
-
-class UsernameField(models.CharField):
-
-    def get_prep_value(self, value):
-        return super().get_prep_value(value).lower()
+from .fields import UsernameField
 
 
 # `3DPrinterCourse` would be a syntactically invalid name :(

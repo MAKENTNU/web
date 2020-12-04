@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import phonenumber_field.modelfields
-import web.fields
+import web.modelfields
 
 
 class Migration(migrations.Migration):
@@ -35,11 +35,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='member',
             name='role',
-            field=web.fields.UnlimitedCharField(blank=True, verbose_name='Role'),
+            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='Role'),
         ),
         migrations.AlterField(
             model_name='member',
             name='study_program',
-            field=web.fields.UnlimitedCharField(blank=True, verbose_name='Study program'),
+            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='Study program'),
         ),
     ]

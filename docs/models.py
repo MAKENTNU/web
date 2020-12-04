@@ -1,9 +1,9 @@
 from ckeditor_uploader.fields import RichTextUploadingField
-from django.core.validators import RegexValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from .validators import page_title_validator
 
 
 MAIN_PAGE_TITLE = "Documentation"
@@ -11,11 +11,8 @@ MAIN_PAGE_TITLE = "Documentation"
 
 class Page(models.Model):
     """Model for each individual documentation page"""
-    TITLE_REGEX = r"^[0-9A-Za-z ():]+$"
-    TITLE_VALIDATOR = RegexValidator(regex=TITLE_REGEX,
-                                     message=_("Only numbers, letters, spaces, parentheses and colons are allowed."))
 
-    title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[TITLE_VALIDATOR])
+    title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[page_title_validator])
     created_by = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,

@@ -1,8 +1,9 @@
 from .models import Content, Page
+from .validators import page_title_regex
 
 
 class PageByTitle:
-    regex = Page.TITLE_REGEX[1:-1]
+    regex = page_title_regex[1:-1]
 
     def to_python(self, value):
         try:

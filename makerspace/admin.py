@@ -3,7 +3,7 @@ from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 
 from util import html_utils
-from web.multilingual.database import MultiLingualFieldAdmin
+from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import Equipment
 
 

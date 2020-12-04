@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
 
-import card.utils
+from card import utils as card_utils
 from card.views import RFIDView
 from make_queue.models.course import Printer3DCourse
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
@@ -233,7 +233,7 @@ class RegisterProfileView(TemplateView):
             response_dict['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 card_number = RegisterProfile.objects.first().card_id
-                is_duplicate = card.utils.is_duplicate(card_number, request.user.username)
+                is_duplicate = card_utils.is_duplicate(card_number, request.user.username)
                 if is_duplicate:
                     return HttpResponse(status=409)
                 request.user.card_number = card_number

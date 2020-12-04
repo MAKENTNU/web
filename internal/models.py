@@ -9,8 +9,8 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 from groups.models import Committee
 from users.models import User
-from web.fields import UnlimitedCharField
-from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.modelfields import UnlimitedCharField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .util import date_to_term
 
 

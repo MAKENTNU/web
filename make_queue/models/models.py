@@ -13,8 +13,8 @@ from django.utils.translation import gettext_lazy as _
 from news.models import TimePlace
 from users.models import User
 from util.locale_utils import short_datetime_format, timedelta_to_hours
-from web.fields import URLTextField, UnlimitedCharField
-from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.modelfields import URLTextField, UnlimitedCharField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
 
 
