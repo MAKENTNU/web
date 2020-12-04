@@ -12,6 +12,16 @@ from util.locale_utils import long_date_format, long_datetime_format, short_date
 register = Library()
 
 
+@register.simple_tag
+def formatted_localtime(*, shift_hours=0):
+    return (timezone.localtime() + timezone.timedelta(hours=shift_hours)).strftime("%Y-%m-%d %H:%M")
+
+
+@register.simple_tag
+def localdate():
+    return str(timezone.localdate())
+
+
 def _format_helper(value, format_func: Callable[[Any], str]):
     if value in {None, ""}:
         return ""

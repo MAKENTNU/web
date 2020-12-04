@@ -2,7 +2,6 @@
 {% load static %}
 {% load i18n %}
 {% load datetime_tags %}
-{% load semantic_ui_calendar_extra %}
 {% load reservation_extra %}
 
 
@@ -79,7 +78,7 @@
                                    value="{% if start_time %}
                                                {{ start_time|date:"Y-m-d H:i" }}
                                           {% else %}
-                                               {% set_current_date %}
+                                               {% formatted_localtime %}
                                           {% endif %}"
                             />
                         </div>
@@ -94,7 +93,7 @@
                                    value="{% if end_time %}
                                                {{ end_time|date:"Y-m-d H:i" }}
                                           {% else %}
-                                               {% set_current_date 2 %}
+                                               {% formatted_localtime shift_hours=2 %}
                                           {% endif %}"
                             />
                         </div>

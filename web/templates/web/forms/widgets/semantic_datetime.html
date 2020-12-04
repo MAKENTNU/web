@@ -1,6 +1,6 @@
 {% load i18n %}
 {% load static %}
-{% load semantic_ui_calendar_extra %}
+{% load datetime_tags %}
 
 
 <div id="{{ widget.name }}" class="ui calendar">
@@ -10,7 +10,7 @@
                 {% if widget.value %}
                value="{{ widget.value }}"
                 {% elif not widget.attrs.default_blank %}
-               value="{% set_current_date %}"
+               value="{% formatted_localtime %}"
                 {% endif %} name="{{ widget.name }}"
         />
     </div>
