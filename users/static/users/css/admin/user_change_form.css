@@ -1,0 +1,12 @@
+.field-card_number .ui.labeled.input {
+    display: inline-flex;
+    align-items: center;
+}
+
+.field-card_number .ui.labeled.input :not(:first-child) {
+    margin-left: 0.5em;
+}
+
+.field-card_number .red.label {
+    color: red;
+}
