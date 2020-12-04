@@ -30,8 +30,7 @@ class EditMemberForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        exclude = ['user', 'date_joined', 'date_quit', 'quit', 'reason_quit', 'retired']
-
+        exclude = ['user', 'date_joined', 'date_quit', 'reason_quit', 'quit', 'retired']
         widgets = {
             'comment': forms.TextInput(),
             'committees': SemanticMultipleSelectInput(prompt_text=_("Choose committees")),

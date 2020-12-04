@@ -2,8 +2,8 @@ from calendar import day_name
 from datetime import datetime, timedelta
 
 from django.utils import timezone, translation
-from django.utils.translation import gettext
 from django.utils.formats import date_format
+from django.utils.translation import gettext
 
 
 DEFAULT_TIMEZONE = timezone.get_default_timezone()

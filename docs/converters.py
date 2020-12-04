@@ -3,7 +3,7 @@ from .validators import page_title_regex
 
 
 class PageByTitle:
-    regex = page_title_regex[1:-1]
+    regex = page_title_regex.strip(r"^$")
 
     def to_python(self, value):
         try:

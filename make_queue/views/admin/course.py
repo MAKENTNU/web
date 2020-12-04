@@ -19,39 +19,39 @@ class CourseView(TemplateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update({
-            "registrations": Printer3DCourse.objects.order_by("name"),
-            "possible_statuses": Printer3DCourse.Status.choices,
+            'registrations': Printer3DCourse.objects.order_by('name'),
+            'possible_statuses': Printer3DCourse.Status.choices,
         })
         return context_data
 
 
 class CreateRegistrationView(PermissionRequiredMixin, CreateView):
     is_next = False
-    permission_required = ("make_queue.add_printer3dcourse",)
+    permission_required = ('make_queue.add_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = "make_queue/course/registration_create.html"
-    success_url = reverse_lazy("create_course_registration_success")
+    success_url = reverse_lazy('create_course_registration_success')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         if self.is_next:
-            context_data["is_next"] = True
+            context_data['is_next'] = True
         return context_data
 
 
 class EditRegistrationView(PermissionRequiredMixin, UpdateView):
-    permission_required = ("make_queue.change_printer3dcourse",)
+    permission_required = ('make_queue.change_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = "make_queue/course/registration_edit.html"
-    success_url = reverse_lazy("course_panel")
+    success_url = reverse_lazy('course_panel')
 
 
 class DeleteRegistrationView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ("make_queue.delete_printer3dcourse",)
+    permission_required = ('make_queue.delete_printer3dcourse',)
     model = Printer3DCourse
-    success_url = reverse_lazy("course_panel")
+    success_url = reverse_lazy('course_panel')
 
 
 class BulkStatusUpdate(View):
@@ -60,19 +60,19 @@ class BulkStatusUpdate(View):
     """
 
     def post(self, request):
-        status = request.POST.get("status")
-        registrations = list(map(int, request.POST.getlist("users")))
+        status = request.POST.get('status')
+        registrations = list(map(int, request.POST.getlist('users')))
         Printer3DCourse.objects.filter(pk__in=registrations).update(status=status)
 
-        return redirect("course_panel")
+        return redirect('course_panel')
 
 
 class CourseXLSXView(View):
 
     def post(self, request):
-        search_string = request.POST.get("search_text")
-        status_filter = request.POST.get("status_filter")
-        selected = request.POST.get("selected")
+        search_string = request.POST.get('search_text')
+        status_filter = request.POST.get('status_filter')
+        selected = request.POST.get('selected')
 
         # If selected is set, we want to include only these registrations
         if selected:
@@ -85,7 +85,7 @@ class CourseXLSXView(View):
         # Use an in-memory output file, to avoid having to clean up the disk
         output_file = io.BytesIO()
 
-        workbook = xlsxwriter.Workbook(output_file, {"in_memory": True})
+        workbook = xlsxwriter.Workbook(output_file, {'in_memory': True})
         worksheet = workbook.add_worksheet("Kursdeltagere")
 
         # Styles

@@ -1,5 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
@@ -48,22 +47,22 @@ class ReservationForm(forms.Form):
             machine_query = Machine.objects.filter(pk=machine_pk)
 
             if not machine_query.exists():
-                raise ValidationError("Machine name and machine type do not match")
+                raise forms.ValidationError("Machine name and machine type do not match")
 
             cleaned_data['machine'] = machine_query.first()
 
         # If the reservation is an event, check that it exists
         if has_event:
             if not event_pk:
-                raise ValidationError('Event must be specified when the "Event" checkbox is checked')
+                raise forms.ValidationError('Event must be specified when the "Event" checkbox is checked')
 
             event_query = TimePlace.objects.filter(pk=event_pk)
             if not event_query.exists():
-                raise ValidationError("Event must exist")
+                raise forms.ValidationError("Event must exist")
             cleaned_data['event'] = event_query.first()
 
         if has_event and cleaned_data['special']:
-            raise ValidationError("Cannot be both special and event")
+            raise forms.ValidationError("Cannot be both special and event")
 
         return cleaned_data
 
@@ -136,9 +135,9 @@ class QuotaForm(forms.ModelForm):
         all_users = cleaned_data['all']
 
         if user is None and not all_users:
-            raise ValidationError("User cannot be None when the quota is not for all users")
+            raise forms.ValidationError("User cannot be None when the quota is not for all users")
         if user is not None and all_users:
-            raise ValidationError("User cannot be set when the all users is set")
+            raise forms.ValidationError("User cannot be set when the all users is set")
         return cleaned_data
 
     class Meta:
