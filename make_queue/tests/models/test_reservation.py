@@ -10,7 +10,8 @@ from news.models import Event, TimePlace
 from users.models import User
 from util.locale_utils import local_to_date
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation, ReservationRule
 
 
 class GeneralReservationTestCase(TestCase):

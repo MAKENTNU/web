@@ -2,7 +2,8 @@ from django.test import TestCase
 
 from users.models import User
 from ..utility import template_view_get_context_data
-from ...models.models import MachineType, Quota
+from ...models.machine import MachineType
+from ...models.reservation import Quota
 from ...views.admin.quota import QuotaView
 from ...views.quota.user import GetUserQuotaView
 

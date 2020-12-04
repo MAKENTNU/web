@@ -3,7 +3,7 @@ from typing import Union
 from django.test import TestCase
 
 from ..utility import template_view_get_context_data
-from ...models.models import Machine, MachineType
+from ...models.machine import Machine, MachineType
 from ...views.reservation.machine import MachineView
 
 

@@ -9,7 +9,8 @@ from django.utils.translation import gettext_lazy as _
 from users.admin import get_user_search_fields
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .models.course import Printer3DCourse
-from .models.models import Machine, MachineType, MachineUsageRule, Quota, Reservation, ReservationQuerySet, ReservationRule
+from .models.machine import Machine, MachineType, MachineUsageRule
+from .models.reservation import Quota, Reservation, ReservationQuerySet, ReservationRule
 
 
 class MachineTypeAdmin(MultiLingualFieldAdmin):

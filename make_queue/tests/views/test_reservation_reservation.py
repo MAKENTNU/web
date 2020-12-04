@@ -13,7 +13,8 @@ from util.locale_utils import date_to_local, local_to_date
 from ..utility import post_request_with_user, request_with_user, template_view_get_context_data
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation, ReservationRule
 from ...views.admin.reservation import AdminReservationView
 from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, ReservationCreateOrChangeView
 

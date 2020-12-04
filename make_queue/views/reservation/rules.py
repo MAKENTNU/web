@@ -9,7 +9,8 @@ from django.views.generic.edit import DeleteView, ModelFormMixin
 
 from util.views import PreventGetRequestsMixin
 from ...forms import RuleForm
-from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRule
+from ...models.machine import MachineType, MachineUsageRule
+from ...models.reservation import Quota, ReservationRule
 
 
 class MachineTypeBasedView(ContextMixin, View, ABC):

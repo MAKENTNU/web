@@ -10,7 +10,8 @@ from users.models import User
 from web.widgets import MazemapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticTimeInput
 from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
-from .models.models import Machine, MachineType, Quota, ReservationRule
+from .models.machine import Machine, MachineType
+from .models.reservation import Quota, ReservationRule
 
 
 class ReservationForm(forms.Form):

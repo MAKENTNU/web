@@ -4,7 +4,8 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.dateparse import parse_datetime
 
-from ...models.models import MachineType, ReservationRule
+from ...models.machine import MachineType
+from ...models.reservation import ReservationRule
 
 Period = ReservationRule.Period
 

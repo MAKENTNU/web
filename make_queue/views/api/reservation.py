@@ -1,7 +1,8 @@
 from django.http import JsonResponse
 from django.utils import timezone
 
-from ...models.models import Machine, Quota, ReservationRule
+from ...models.machine import Machine
+from ...models.reservation import Quota, ReservationRule
 
 
 def get_machine_data(request, machine: Machine, reservation=None):

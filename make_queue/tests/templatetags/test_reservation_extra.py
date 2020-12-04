@@ -8,7 +8,8 @@ from django.utils import timezone
 from users.models import User
 from util.locale_utils import local_to_date
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation
 from ...templatetags.reservation_extra import (
     calendar_url_reservation, current_calendar_url, date_to_percentage, get_current_time_of_day, invert, is_current_date,
 )

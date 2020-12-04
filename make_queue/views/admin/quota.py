@@ -5,7 +5,7 @@ from django.views.generic import CreateView, DeleteView, TemplateView, UpdateVie
 from users.models import User
 from util.views import PreventGetRequestsMixin
 from ...forms import QuotaForm
-from ...models.models import Quota
+from ...models.reservation import Quota
 
 
 class QuotaView(TemplateView):
