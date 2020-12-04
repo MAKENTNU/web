@@ -168,17 +168,23 @@ class Printer3DCourseForm(forms.ModelForm):
             'username': forms.TextInput(attrs={'autofocus': 'autofocus'}),
         }
 
-    def save(self, commit=True):
-        self.instance.card_number = self.cleaned_data['card_number']
-        return super().save(commit)
+    def clean(self):
+        cleaned_data = super().clean()
+        card_number = cleaned_data['card_number']
+        username = cleaned_data['username']
 
-    def is_valid(self):
-        card_number = self.data['card_number']
-        username = self.data['username']
-        is_duplicate = card_utils.is_duplicate(card_number, username)
-        if is_duplicate:
-            self.add_error('card_number', _("Card number is already in use"))
-        return super().is_valid() and not is_duplicate
+        if card_number and username:
+            if card_utils.is_duplicate(card_number, username):
+                raise forms.ValidationError({
+                    'card_number': _("Card number is already in use"),
+                })
+        return cleaned_data
+
+    def save(self, commit=True):
+        course = super().save(commit=False)
+        course.card_number = self.cleaned_data['card_number']
+        course.save()
+        return course
 
 
 class FreeSlotForm(forms.Form):
