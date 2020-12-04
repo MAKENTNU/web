@@ -8,7 +8,7 @@ from django.views.generic import CreateView, DeleteView, ListView, TemplateView,
 
 from make_queue.models.course import Printer3DCourse
 from util.views import PreventGetRequestsMixin
-from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, SecretsForm, ToggleSystemAccessForm
+from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, ToggleSystemAccessForm
 from .models import Member, Secret, SystemAccess
 
 
@@ -86,27 +86,27 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
 
 class EditMemberView(PermissionRequiredMixin, UpdateView):
     model = Member
-    form_class = EditMemberForm
     template_name = 'internal/member_edit.html'
 
     def has_permission(self):
         return (self.request.user == self.get_object().user
                 or self.request.user.has_perm('internal.can_edit_group_membership'))
 
-    def get_form(self, form_class=None):
-        if form_class is None:
-            form_class = self.get_form_class()
-        return form_class(self.request.user, **self.get_form_kwargs())
+    def get_form_class(self):
+        if not self.request.user.has_perm('internal.can_edit_group_membership'):
+            return RestrictedEditMemberForm
+        return EditMemberForm
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.object.user:
+            kwargs['initial'].update({
+                'card_number': self.object.user.card_number,
+            })
+        return kwargs
 
     def get_success_url(self):
         return reverse('members', args=(self.object.pk,))
-
-    def form_valid(self, form):
-        user = self.object.user
-        card_number = form.cleaned_data['card_number']
-        user.card_number = card_number
-        user.save()
-        return super().form_valid(form)
 
 
 class MemberQuitView(PermissionRequiredMixin, UpdateView):

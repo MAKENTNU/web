@@ -36,24 +36,25 @@ class EditMemberForm(forms.ModelForm):
             'committees': SemanticMultipleSelectInput(prompt_text=_("Choose committees")),
         }
 
-    def __init__(self, user, **kwargs):
-        super().__init__(**kwargs)
+    def clean_card_number(self):
+        card_number = self.cleaned_data['card_number']
+        if card_number:
+            if card_utils.is_duplicate(card_number, self.instance.user.username):
+                raise forms.ValidationError(_("Card number is already in use"))
+        return card_number
 
-        member = kwargs['instance']
-        if member.user.card_number:
-            self.initial['card_number'] = member.user.card_number
+    def save(self, commit=True):
+        member = super().save(commit=commit)
+        user = member.user
+        user.card_number = self.cleaned_data['card_number']
+        user.save()
+        return member
 
-        if not user.has_perm('internal.can_edit_group_membership'):
-            for field_name in ['committees', 'role', 'comment', 'guidance_exemption', 'active', 'honorary']:
-                del self.fields[field_name]
 
-    def is_valid(self):
-        card_number = self.data['card_number']
-        username = self.instance.user.username
-        is_duplicate = card_utils.is_duplicate(card_number, username)
-        if is_duplicate:
-            self.add_error('card_number', _("Card number is already in use"))
-        return super().is_valid() and not is_duplicate
+class RestrictedEditMemberForm(EditMemberForm):
+    class Meta:
+        model = Member
+        fields = ['email', 'phone_number', 'study_program', 'card_number']
 
 
 class MemberQuitForm(forms.ModelForm):
