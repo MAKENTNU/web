@@ -14,7 +14,8 @@ from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import FreeSlotForm, ReservationForm
-from ...models.models import Machine, MachineType, Reservation, ReservationRule
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation, can_delete_reservation, can_mark_reservation_finished
 
 

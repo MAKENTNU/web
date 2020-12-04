@@ -1,5 +1,6 @@
 from users.models import User
-from .models.models import Machine, MachineType, Reservation
+from .models.machine import Machine, MachineType
+from .models.reservation import Reservation
 
 
 class SpecificMachineType:

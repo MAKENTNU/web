@@ -1,6 +1,6 @@
 from django.views.generic import ListView
 
-from ...models.models import Reservation
+from ...models.reservation import Reservation
 
 
 class AdminReservationView(ListView):

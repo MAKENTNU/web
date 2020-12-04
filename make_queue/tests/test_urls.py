@@ -10,7 +10,8 @@ from news.models import Event, TimePlace
 from users.models import User
 from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 from ..models.course import Printer3DCourse
-from ..models.models import Machine, MachineType, MachineUsageRule, Quota, Reservation, ReservationRule
+from ..models.machine import Machine, MachineType, MachineUsageRule
+from ..models.reservation import Quota, Reservation, ReservationRule
 
 
 class UrlTests(TestCase):

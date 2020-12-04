@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.dateparse import parse_datetime
 
-from ...models.models import Machine
+from ...models.machine import Machine
 
 
 def reservation_type(reservation, user):

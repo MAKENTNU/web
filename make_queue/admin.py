@@ -6,7 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from util.admin_utils import TextFieldOverrideMixin
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .models.course import Printer3DCourse
-from .models.models import Machine, MachineType, Quota, Reservation, ReservationRule
+from .models.machine import Machine, MachineType
+from .models.reservation import Quota, Reservation, ReservationRule
 
 
 class MachineTypeAdmin(MultiLingualFieldAdmin):

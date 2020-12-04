@@ -4,7 +4,7 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import BaseMachineForm, EditMachineForm
-from ...models.models import Machine, MachineType
+from ...models.machine import Machine, MachineType
 
 
 class MachineView(ListView):

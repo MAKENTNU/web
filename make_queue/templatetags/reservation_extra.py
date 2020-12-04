@@ -9,7 +9,8 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from util.locale_utils import date_to_local, get_day_name
-from ..models.models import Machine, Quota, Reservation, ReservationRule
+from ..models.machine import Machine
+from ..models.reservation import Quota, Reservation, ReservationRule
 
 register = template.Library()
 
