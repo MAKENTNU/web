@@ -10,7 +10,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from web.multilingual.database import MultiLingualTextField, MultiLingualRichTextUploadingField
+from web.multilingual.modelfields import MultiLingualTextField, MultiLingualRichTextUploadingField
 from web.multilingual.widgets import MultiLingualTextarea
 
 

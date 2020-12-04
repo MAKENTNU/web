@@ -13,7 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 from users.models import User
-from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from ..models.course import Printer3DCourse
 
 

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from card.models import CardNumberField, CardNumber
+from card.modelfields import CardNumberField, CardNumber
 
 
 class CardNumberModelFieldTest(TestCase):
