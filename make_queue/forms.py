@@ -157,7 +157,7 @@ class Printer3DCourseForm(forms.ModelForm):
             label=Printer3DCourse._meta.get_field('user').verbose_name,
         )
         if self.instance.card_number is not None:
-            self.initial['card_number'] = self.instance.card_number.number
+            self.initial['card_number'] = self.instance.card_number
 
     class Meta:
         model = Printer3DCourse

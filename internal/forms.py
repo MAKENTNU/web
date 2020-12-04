@@ -42,7 +42,7 @@ class EditMemberForm(forms.ModelForm):
 
         member = kwargs['instance']
         if member.user.card_number:
-            self.initial['card_number'] = member.user.card_number.number
+            self.initial['card_number'] = member.user.card_number
 
         if not user.has_perm('internal.can_edit_group_membership'):
             for field_name in ['committees', 'role', 'comment', 'guidance_exemption', 'active', 'honorary']:
