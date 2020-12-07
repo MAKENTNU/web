@@ -100,7 +100,7 @@
                     {% trans "Status" %}<i id="member-sort-status" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "Joined" %}<i id="member-sort-dateJoined" class="ui sort icon"></i>
+                    {% trans "Joined" %}<i id="member-sort-dateJoinedSortable" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
                     {% trans "Contact email" %}<i id="member-sort-email" class="ui sort icon"></i>
@@ -122,6 +122,7 @@
                     data-study-program="{{ member.study_program }}"
                     data-term-joined="{{ member.term_joined }}"
                     data-date-joined="{{ member.date_joined|short_date }}"
+                    data-date-joined-sortable="{{ member.date_joined|iso_date }}"
                     data-date-quit="{{ member.date_quit|short_date }}"
                     data-term-quit="{{ member.term_quit|default:"" }}"
                     data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
