@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from news.models import Event, TimePlace
 from users.models import User
-from ..utility import post_request_with_user, request_with_user, template_view_get_context_data
+from ..utility import post_request_with_user, request_with_user
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
@@ -345,8 +345,8 @@ class ReservationAdminViewTest(TestCase):
                                                        user=user, machine=printer,
                                                        end_time=timezone.now() + timedelta(hours=4))
 
-        context_data = template_view_get_context_data(AdminReservationView, request_user=user)
-        self.assertEqual(context_data["admin"], True)
+        context_data = AdminReservationView.as_view()(request_with_user(user)).context_data
+        self.assertEqual(context_data["is_MAKE"], True)
         self.assertSetEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
 
 

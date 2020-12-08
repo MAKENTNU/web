@@ -2,7 +2,7 @@ from typing import Union
 
 from django.test import TestCase
 
-from ..utility import template_view_get_context_data
+from ..utility import request_with_user
 from ...models.models import Machine, MachineType
 from ...views.reservation.machine import MachineView
 
@@ -10,16 +10,16 @@ from ...views.reservation.machine import MachineView
 class MachineViewTest(TestCase):
 
     def test_no_machines(self):
-        context_data = template_view_get_context_data(MachineView)
-        self.assertIn("machine_types", context_data)
-        self.assertFalse(context_data["machine_types"].exists())
+        context_data = MachineView.as_view()(request_with_user(None)).context_data
+        self.assertIn('machine_types', context_data)
+        self.assertFalse(context_data['machine_types'].exists())
 
     def test_one_type_of_machine(self):
         printer_machine_type = MachineType.objects.get(pk=1)
         printer1 = Machine.objects.create(name="test1", machine_type=printer_machine_type)
         printer2 = Machine.objects.create(name="test2", machine_type=printer_machine_type)
 
-        machine_types = list(template_view_get_context_data(MachineView)["machine_types"])
+        machine_types = list(MachineView.as_view()(request_with_user(None)).context_data['machine_types'])
         self.assertEqual(len(machine_types), 1)
         machine_type_0 = machine_types[0]
         self.assertEqual(machine_type_0.pk, printer_machine_type.pk)
@@ -33,7 +33,7 @@ class MachineViewTest(TestCase):
         printer2 = Machine.objects.create(name="test2", machine_type=printer_machine_type)
         sewing = Machine.objects.create(name="test", machine_type=sewing_machine_type)
 
-        machine_types = list(template_view_get_context_data(MachineView)["machine_types"])
+        machine_types = list(MachineView.as_view()(request_with_user(None)).context_data['machine_types'])
         self.assertEqual(len(machine_types), 2)
         machine_type_0, machine_type_1 = machine_types
         self.assertEqual(machine_type_0.pk, printer_machine_type.pk)
@@ -70,7 +70,7 @@ class MachineViewTest(TestCase):
                 machine_b, machine_c, machine_d,
             ])
 
-        machine_types = list(template_view_get_context_data(MachineView)["machine_types"])
+        machine_types = list(MachineView.as_view()(request_with_user(None)).context_data['machine_types'])
         for machine_type, correct_machine_order in zip(machine_types, correct_machine_orders):
             with self.subTest(machine_type=machine_type):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)

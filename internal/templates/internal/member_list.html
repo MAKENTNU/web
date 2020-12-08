@@ -110,7 +110,7 @@
             </tr>
             </thead>
             <tbody id="member-table-content">
-            {% for member in object_list %}
+            {% for member in members %}
                 {% get_committees member as committees %}
                 {% get_membership_statuses member as membership_status %}
                 <tr data-pk="{{ member.pk }}"

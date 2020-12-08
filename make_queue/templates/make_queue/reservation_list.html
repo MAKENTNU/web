@@ -5,7 +5,7 @@
 
 
 {% block title %}
-    {% if admin %}
+    {% if is_MAKE %}
         {% trans "MAKE NTNU reservations" %}
     {% else %}
         {% trans "My reservations" %}
@@ -19,7 +19,7 @@
 {% block body %}
     <div class="ui container">
         <div class="ui huge header">
-            {% if admin %}
+            {% if is_MAKE %}
                 {% trans "MAKE NTNU reservations" %}
             {% else %}
                 {% trans "My reservations" %}
@@ -46,7 +46,7 @@
             <tr>
                 <th>{% trans "Reservation" %}</th>
                 <th>{% trans "Time" %}</th>
-                {% if admin %}
+                {% if is_MAKE %}
                     <th>{% trans "Information" %}</th>
                 {% endif %}
                 <th>{% trans "View in calendar" %}</th>
@@ -114,7 +114,7 @@
                                 {% csrf_token %}
                                 <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                 <input class="ui button green" type="submit" value="{% trans "Mark as done" %}"/>
-                                {% if admin %}
+                                {% if is_MAKE %}
                                     <input class="display-none" type="text" name="next"
                                            value="{% url 'admin_reservation' %}"/>
                                 {% endif %}
@@ -125,7 +125,7 @@
                                 <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
                                 <input class="ui button red" type="submit"
                                        value="{% trans "Cancel" context "cancel reservation" %}"/>
-                                {% if admin %}
+                                {% if is_MAKE %}
                                     <input class="display-none" type="text" name="next"
                                            value="{% url 'admin_reservation' %}"/>
                                 {% endif %}
@@ -183,7 +183,7 @@
                                 <form method="POST" action="{% url 'mark_reservation_done' %}">
                                     {% csrf_token %}
                                     <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
-                                    {% if admin %}
+                                    {% if is_MAKE %}
                                         <input class="display-none" type="text" name="next"
                                                value="{% url 'admin_reservation' %}"/>
                                     {% endif %}
@@ -195,7 +195,7 @@
                                 <form method="POST" action="{% url 'delete_reservation' %}">
                                     {% csrf_token %}
                                     <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
-                                    {% if admin %}
+                                    {% if is_MAKE %}
                                         <input class="display-none" type="text" name="next"
                                                value="{% url 'admin_reservation' %}"/>
                                     {% endif %}

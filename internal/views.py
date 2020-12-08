@@ -49,9 +49,10 @@ class DeleteSecretView(PermissionRequiredMixin, DeleteView):
 class MembersListView(ListView):
     model = Member
     template_name = 'internal/member_list.html'
+    context_object_name = 'members'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context_data = super().get_context_data(object_list=object_list, **kwargs)
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
         if 'pk' in self.kwargs:
             context_data.update({
                 'selected_member': get_object_or_404(Member, pk=self.kwargs['pk']),
