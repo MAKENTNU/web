@@ -181,6 +181,14 @@
             {% endfor %}
             </tbody>
         </table>
+
+        <span>
+            {% trans "Displaying" %}
+            <b>
+                <span id="displayed-members-count">{{ members|length }}</span>/{{ members|length }}
+            </b>
+            {% trans "registered members" %}
+        </span>
     </div>
 
     {# Modal for showing detailed information about the user #}

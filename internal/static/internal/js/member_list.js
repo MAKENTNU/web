@@ -138,13 +138,16 @@ function filter() {
 
     const $table = $("#member-table-content");
 
+    let displayedMembersCount = 0;
     $.each(state.members, (index, member) => {
         member.$element.remove();
         if (filters.every(el => el(member))) {
             $table.append(member.$element);
             member.$element.click(() => showDetailedMemberInformation(member));
+            displayedMembersCount++;
         }
     });
+    $("#displayed-members-count").text(displayedMembersCount);
 }
 
 function setSort(attributeName, $element) {

@@ -810,6 +810,10 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nei"
 
+#: internal/templates/internal/member_list.html:178
+msgid "registered members"
+msgstr "registrerte medlemmer"
+
 #: internal/templates/internal/member_list.html:197
 msgid "Basic information"
 msgstr "Grunnleggende informasjon"
