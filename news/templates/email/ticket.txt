@@ -5,4 +5,4 @@
 {% blocktrans with title=event_title %}Your ticket for “{{ title }}”{% endblocktrans %}
 
 {% trans "Thank you for registering for this event. You can view your ticket at the following URL" %}: {{ site }}{% url 'ticket_detail' ticket.pk %}
-{% trans "If you want to cancel your registration, you can do so by visiting the following URL" %}: {{ site }}{% url "cancel-ticket" ticket.pk %}
+{% trans "If you want to cancel your registration, you can do so by visiting the following URL" %}: {{ site }}{% url 'cancel_ticket' ticket.pk %}

@@ -11,7 +11,7 @@
     <div class="ui container">
         <h1 class="ui text-centered">
             {% trans "Articles" %}
-            <a href="{% url 'article-create' %}">
+            <a href="{% url 'article_create' %}">
                 <i class="ui green add icon"></i>
             </a>
         </h1>
@@ -46,12 +46,12 @@
                         <div class="description">{{ article.clickbait }}</div>
                     </div>
                     <div class="ui two bottom attached buttons">
-                        <a class="ui make-bg-yellow button" href="{% url "article-edit" article.pk %}">
+                        <a class="ui make-bg-yellow button" href="{% url 'article_edit' article.pk %}">
                             <i class="ui edit icon"></i>{% trans "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
                             <a class="delete-modal-button ui red button"
-                               data-url="{% url "article-delete" article.pk %}"
+                               data-url="{% url 'article_delete' article.pk %}"
                                data-obj-name="{{ article }}">
                                 <i class="ui trash icon"></i>{% trans "Delete" %}
                             </a>

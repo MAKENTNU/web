@@ -40,7 +40,7 @@
             <a href="{{ site }}{% url 'ticket_detail' ticket.pk %}">{% trans "here" %}</a>.
 
             {% trans "If you want to cancel your registration, you can do so by clicking" %}
-            <a href="{{ site }}{% url "cancel-ticket" ticket.pk %}">{% trans "here" %}</a>.
+            <a href="{{ site }}{% url 'cancel_ticket' ticket.pk %}">{% trans "here" %}</a>.
         </td>
     </tr>
     <tr style="width: 100%">

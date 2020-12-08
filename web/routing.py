@@ -7,7 +7,7 @@ from make_queue.views.stream.stream import StreamConsumer
 
 
 websocket_urlpatterns = [
-    path('ws/stream/<str:stream_name>/', StreamConsumer),
+    path("ws/stream/<str:stream_name>/", StreamConsumer),
 ]
 
 channel_routes = {

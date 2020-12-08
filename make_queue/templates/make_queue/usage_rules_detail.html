@@ -9,7 +9,7 @@
             {% blocktrans with machine_type=machine_type %}Usage rules for {{ machine_type }}{% endblocktrans %}
         </h1>
         <div style="margin-bottom: 10px">
-            <a class="ui blue button" href="{% url "reservation_rule_list" machine_type %}">
+            <a class="ui blue button" href="{% url 'reservation_rule_list' machine_type %}">
                 {% trans "Quota and detailed rules for reservation duration" %}
             </a>
 

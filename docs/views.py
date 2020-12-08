@@ -36,12 +36,12 @@ class OldDocumentationPageContentView(DetailView):
         # A check to make sure that the given content is related to the given page. As to make sure that the database
         # stays in a correct state.
         if self.get_object() != self.get_content().page:
-            return HttpResponseRedirect(reverse('page_detail', kwargs={"pk": self.get_object()}))
+            return HttpResponseRedirect(reverse('page_detail', kwargs={'pk': self.get_object()}))
         else:
             return super().dispatch(request, *args, **kwargs)
 
     def get_content(self):
-        return self.kwargs.get("content")
+        return self.kwargs.get('content')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -57,22 +57,22 @@ class OldDocumentationPageContentView(DetailView):
 
 
 class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
-    permission_required = ("docs.change_page",)
+    permission_required = ('docs.change_page',)
     model = Page
     form_class = ChangePageVersionForm
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse("page-history", kwargs={"pk": self.get_object()}))
+        return HttpResponseRedirect(reverse('page_history', kwargs={'pk': self.get_object()}))
 
     def get_success_url(self):
-        return reverse('page_detail', kwargs={"pk": self.get_object()})
+        return reverse('page_detail', kwargs={'pk': self.get_object()})
 
     def form_invalid(self, form):
         return HttpResponseForbidden()
 
 
 class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
-    permission_required = ("docs.add_page",)
+    permission_required = ('docs.add_page',)
     model = Page
     form_class = CreatePageForm
     template_name = 'docs/documentation_page_create.html'
@@ -80,7 +80,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
     def form_invalid(self, form):
         try:
             page = Page.objects.get(title=form.data["title"])
-            return HttpResponseRedirect(reverse('page_detail', kwargs={"pk": page}))
+            return HttpResponseRedirect(reverse('page_detail', kwargs={'pk': page}))
         except Page.DoesNotExist:
             return super().form_invalid(form)
 
@@ -89,17 +89,17 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
             title=form.cleaned_data["title"],
             created_by=self.request.user,
         )
-        return HttpResponseRedirect(reverse("edit-page", kwargs={"pk": page}))
+        return HttpResponseRedirect(reverse('edit_page', kwargs={'pk': page}))
 
 
 class EditDocumentationPageView(PermissionRequiredMixin, FormView):
-    permission_required = ("docs.change_page",)
+    permission_required = ('docs.change_page',)
     model = Content
     form_class = PageContentForm
     template_name = 'docs/documentation_page_edit.html'
 
     def get_page(self):
-        return Page.objects.get(pk=self.kwargs.get("pk"))
+        return Page.objects.get(pk=self.kwargs.get('pk'))
 
     def get_initial(self):
         page = self.get_page()
@@ -115,7 +115,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
         return context_data
 
     def get_success_url(self):
-        return reverse('page_detail', kwargs={"pk": self.get_page()})
+        return reverse('page_detail', kwargs={'pk': self.get_page()})
 
     def form_valid(self, form):
         redirect = super().form_valid(form)
@@ -133,10 +133,10 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
 
 
 class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ("docs.delete_page",)
+    permission_required = ('docs.delete_page',)
     model = Page
     queryset = Page.objects.exclude(title=MAIN_PAGE_TITLE)
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy('home')
 
 
 class SearchPagesView(TemplateView):

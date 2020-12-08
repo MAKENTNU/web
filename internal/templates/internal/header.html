@@ -40,7 +40,7 @@
             <div class="make-bg-blue bubble-background"></div>
 
             <nav class="menu transition" aria-label="User">
-                <a class="item" href="{% host_url 'front-page' host 'main' %}">
+                <a class="item" href="{% host_url 'front_page' host 'main' %}">
                     <div class="text">{% trans "Public pages" %}</div>
                 </a>
                 <a class="item" href="{% host_url 'logout' host 'main' %}">
@@ -67,7 +67,7 @@
 </header>
 
 {# This form is hidden, but is submitted through jQuery #}
-<form id="lang-form" action="{% url "set_language" %}" method="POST">
+<form id="lang-form" action="{% url 'set_language' %}" method="POST">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>

@@ -28,37 +28,37 @@ class QuotaPanelView(TemplateView):
 
 
 class CreateQuotaView(PermissionRequiredMixin, CreateView):
-    permission_required = ("make_queue.add_quota",)
+    permission_required = ('make_queue.add_quota',)
     model = Quota
     form_class = QuotaForm
     template_name = 'make_queue/quota/quota_create.html'
 
     def get_success_url(self):
         if self.object.all:
-            return reverse("quota_panel")
+            return reverse('quota_panel')
         else:
-            return reverse("quota_panel", kwargs={"user": self.object.user})
+            return reverse('quota_panel', kwargs={'user': self.object.user})
 
 
 class EditQuotaView(PermissionRequiredMixin, UpdateView):
-    permission_required = ("make_queue.change_quota",)
+    permission_required = ('make_queue.change_quota',)
     model = Quota
     form_class = QuotaForm
     template_name = 'make_queue/quota/quota_edit.html'
 
     def get_success_url(self):
         if self.object.all:
-            return reverse("quota_panel")
+            return reverse('quota_panel')
         else:
-            return reverse("quota_panel", kwargs={"user": self.object.user})
+            return reverse('quota_panel', kwargs={'user': self.object.user})
 
 
 class DeleteQuotaView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ("make_queue.delete_quota",)
+    permission_required = ('make_queue.delete_quota',)
     model = Quota
 
     def get_success_url(self):
         if self.object.all:
-            return reverse("quota_panel")
+            return reverse('quota_panel')
         else:
-            return reverse("quota_panel", kwargs={"user": self.object.user})
+            return reverse('quota_panel', kwargs={'user': self.object.user})

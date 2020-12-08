@@ -37,33 +37,33 @@ class ViewTestCase(PermissionsTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_event_create(self):
-        response = self.client.get(reverse('event-create'))
+        response = self.client.get(reverse('event_create'))
         self.assertNotEqual(response.status_code, 200)
 
         self.add_permissions(self.user, 'add_event')
-        response = self.client.get(reverse('event-create'))
+        response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, 200)
 
     def test_event_edit(self):
-        response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
         self.assertNotEqual(response.status_code, 200)
 
         self.add_permissions(self.user, 'change_event')
-        response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
     def test_timeplace_duplicate(self):
         tp = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
                                       end_time=timezone.localtime() + timedelta(minutes=10))
-        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, 200)
 
         self.add_permissions(self.user, 'add_timeplace')
         self.add_permissions(self.user, 'change_timeplace')
-        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
 
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
-        self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
+        self.assertRedirects(response, reverse('timeplace_edit', args=[new.pk]))
 
         new_start_time = tp.start_time + timedelta(weeks=1)
         new_end_time = tp.end_time + timedelta(weeks=1)
@@ -87,7 +87,7 @@ class ViewTestCase(PermissionsTestCase):
             hidden=False,
         )
 
-        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, 200)
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
 

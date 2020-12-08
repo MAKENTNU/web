@@ -139,16 +139,16 @@
                     data-system-accesses="{% get_system_accesses member request.user %}"
                     data-edit-url="
                             {% if member.user == request.user or perms.internal.change_member %}
-                                {% url "edit-member" member.pk %}
+                                {% url 'edit_member' member.pk %}
                             {% endif %}"
                     data-set-quit-url="
                             {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
-                                {% url "member-quit" member.pk %}
+                                {% url 'member_quit' member.pk %}
                             {% endif %}"
                     data-can-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
                     data-can-set-retired="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
                     data-can-undo-retired="{% if member.retired and perms.internal.can_edit_group_membership %}true{% endif %}"
-                    data-edit-status-url="{% url "edit-member-status" member.pk %}"
+                    data-edit-status-url="{% url 'edit_member_status' member.pk %}"
                 >
                     <td>{{ member.user.get_short_full_name }}</td>
                     <td class="label-cell">

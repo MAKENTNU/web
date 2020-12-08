@@ -9,18 +9,18 @@ from . import views
 
 
 unsafe_urlpatterns = [
-    path("", views.HomeView.as_view(), name="home"),
+    path("", views.HomeView.as_view(), name='home'),
     path("members/", views.MemberListView.as_view(), name='member_list'),
     path("members/<int:pk>/", views.MemberListView.as_view(), name='member_list'),
     path("members/create/", views.CreateMemberView.as_view(), name='create_member'),
-    path("members/<int:pk>/edit/", views.EditMemberView.as_view(), name="edit-member"),
-    path("members/<int:pk>/edit/status/", views.EditMemberStatusView.as_view(), name="edit-member-status"),
-    path("members/<int:pk>/edit/status/quit/", views.MemberQuitView.as_view(), name="member-quit"),
-    path("members/<int:member_pk>/access/<int:pk>/edit/", views.EditSystemAccessView.as_view(), name="edit-system-access"),
+    path("members/<int:pk>/edit/", views.EditMemberView.as_view(), name='edit_member'),
+    path("members/<int:pk>/edit/status/", views.EditMemberStatusView.as_view(), name='edit_member_status'),
+    path("members/<int:pk>/edit/status/quit/", views.MemberQuitView.as_view(), name='member_quit'),
+    path("members/<int:member_pk>/access/<int:pk>/edit/", views.EditSystemAccessView.as_view(), name='edit_system_access'),
     path("secrets/", views.SecretListView.as_view(), name='secret_list'),
-    path("secrets/<int:pk>/edit/", views.EditSecretView.as_view(), name="edit-secret"),
-    path("secrets/create/", views.CreateSecretView.as_view(), name="create-secret"),
-    path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name="delete-secret")
+    path("secrets/create/", views.CreateSecretView.as_view(), name='create_secret'),
+    path("secrets/<int:pk>/edit/", views.EditSecretView.as_view(), name='edit_secret'),
+    path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name='delete_secret'),
 ]
 
 LOGIN_URL = reverse('login', host='main')

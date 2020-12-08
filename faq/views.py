@@ -29,7 +29,7 @@ class FAQCreateView(PermissionRequiredMixin, CreateView):
     form_class = QuestionForm
     template_name = 'faq/question_create.html'
     context_object_name = 'question'
-    success_url = reverse_lazy("faq_admin_list")
+    success_url = reverse_lazy('faq_admin_list')
 
 
 class FAQEditView(PermissionRequiredMixin, UpdateView):
@@ -38,7 +38,7 @@ class FAQEditView(PermissionRequiredMixin, UpdateView):
     form_class = QuestionForm
     template_name = 'faq/question_edit.html'
     context_object_name = 'question'
-    success_url = reverse_lazy("faq_admin_list")
+    success_url = reverse_lazy('faq_admin_list')
 
 
 class FAQDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

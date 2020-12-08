@@ -16,7 +16,7 @@
         <div class="ui huge header">
             {% trans "Machines" %}
             {% if perms.make_queue.add_machine %}
-                <a href="{% url "create_machine" %}" data-tooltip="{% trans "Add" %}">
+                <a href="{% url 'create_machine' %}" data-tooltip="{% trans "Add" %}">
                     <i class="ui green plus icon"></i>
                 </a>
             {% endif %}
@@ -26,7 +26,7 @@
                 <a class="ui primary button" href="{% url 'my_reservations_list' %}">
                     {% trans "My reservations" %}
                 </a>
-                <a class="ui primary button" href="{% url "find_free_slot" %}">
+                <a class="ui primary button" href="{% url 'find_free_slot' %}">
                     {% trans "Find free reservation slots" %}
                 </a>
             </div>

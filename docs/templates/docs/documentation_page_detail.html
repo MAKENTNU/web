@@ -30,13 +30,13 @@
             </div>
         {% endif %}
         <h3 class="edit tools">
-            <a class="explanation-popup" href="{% url "page-history" pk=page %}" data-title="{% trans "History" %}"
+            <a class="explanation-popup" href="{% url 'page_history' pk=page %}" data-title="{% trans "History" %}"
                data-content="{% trans "Click to view the content history of the page" %}">
                 <i class="ui blue archive icon"></i>
             </a>
             {% if not old %}
                 {% if perms.docs.change_page %}
-                    <a class="explanation-popup" href="{% url "edit-page" pk=page %}" data-title="{% trans "Edit" %}"
+                    <a class="explanation-popup" href="{% url 'edit_page' pk=page %}" data-title="{% trans "Edit" %}"
                        data-content="{% trans "Click to edit the content of the page" %}">
                         <i class="ui make-col-yellow edit icon"></i>
                     </a>
@@ -44,7 +44,7 @@
                 {% if perms.docs.delete_page and page.title != MAIN_PAGE_TITLE %}
                     <a class="delete-modal-button explanation-popup"
                        data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}"
-                       data-url="{% url "delete-page" pk=page %}" data-obj-name="{{ page }}">
+                       data-url="{% url 'delete_page' pk=page %}" data-obj-name="{{ page }}">
                         <i class="ui red trash icon"></i>
                     </a>
                 {% endif %}
@@ -59,7 +59,7 @@
         {% else %}
             <i>
                 {% if perms.docs.change_page %}
-                    {% url "edit-page" pk=page as edit_page_url %}
+                    {% url 'edit_page' pk=page as edit_page_url %}
                     {% blocktrans trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
                         No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
                     {% endblocktrans %}
@@ -72,7 +72,7 @@
 
     {% if form and old and perms.docs.change_page %}
         <form id="change-version-form" class="hidden form" method="POST"
-              action="{% url "change-page-version" pk=page %}">
+              action="{% url 'change_page_version' pk=page %}">
             {% csrf_token %}
             {{ form }}
         </form>

@@ -54,7 +54,7 @@
                 </h4>
                 {% for other_machine in other_machines %}
                     <a class="item"
-                       href="{% url "machine_detail" machine=other_machine year=year week=week %}">
+                       href="{% url 'machine_detail' machine=other_machine year=year week=week %}">
                         {{ other_machine.name }}
                     </a>
                 {% endfor %}

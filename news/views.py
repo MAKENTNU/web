@@ -209,7 +209,7 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
         timeplace.hidden = True
         timeplace.pk = None
         timeplace.save()
-        return HttpResponseRedirect(reverse('timeplace-edit', args=(timeplace.pk,)))
+        return HttpResponseRedirect(reverse('timeplace_edit', args=(timeplace.pk,)))
 
 
 class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
@@ -220,7 +220,7 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        event = get_object_or_404(Event, pk=self.kwargs["event_pk"])
+        event = get_object_or_404(Event, pk=self.kwargs['event_pk'])
         form.fields["event"].initial = event.pk
         if event.standalone:
             del form.fields["number_of_tickets"]

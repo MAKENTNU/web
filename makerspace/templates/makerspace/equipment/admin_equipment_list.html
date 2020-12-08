@@ -12,7 +12,7 @@
 {% block body %}
     <h1 class="ui text-centered make-col-yellow header">
         {% trans "Equipment" %}
-        <a href="{% url 'makerspace-equipment-create' %}" title="{% trans "Add new equipment" %}">
+        <a href="{% url 'makerspace_equipment_create' %}" title="{% trans "Add new equipment" %}">
             <i class="ui add icon green"></i>
         </a>
     </h1>
@@ -22,7 +22,7 @@
                 {% for equipment in equipment_list %}
                     <div class="item">
 
-                        <a class="image" href="{% url 'makerspace-equipment-edit' equipment.pk %}">
+                        <a class="image" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
                             <img {% thumbnail equipment.image "36x36" crop="center" as image_thumb %}
                                 src="{{ image_thumb.url }}"
                             {% empty %}
@@ -33,13 +33,13 @@
                             />
                         </a>
                         <h3>
-                            <a class="make-col-blue" href="{% url 'makerspace-equipment-edit' equipment.pk %}">
+                            <a class="make-col-blue" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
                                 {{ equipment.title }}
                             </a>
                         </h3>
                         {% if perms.makerspace.delete_equipment %}
                             <a class="delete-modal-button"
-                               data-url="{% url 'makerspace-equipment-delete' equipment.pk %}"
+                               data-url="{% url 'makerspace_equipment_delete' equipment.pk %}"
                                data-obj-name="{{ equipment }}">
                                 <i class="large red delete icon"></i>
                             </a>

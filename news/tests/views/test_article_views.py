@@ -40,24 +40,24 @@ class ArticleViewTests(PermissionsTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_article_create(self):
-        response = self.client.get(reverse('article-create'))
+        response = self.client.get(reverse('article_create'))
         self.assertNotEqual(response.status_code, 200)
 
         self.add_permissions(self.user, 'add_article')
-        response = self.client.get(reverse('article-create'))
+        response = self.client.get(reverse('article_create'))
         self.assertEqual(response.status_code, 200)
 
     def test_article_edit(self):
-        response = self.client.get(reverse('article-edit', kwargs={'pk': self.article.pk}))
+        response = self.client.get(reverse('article_edit', kwargs={'pk': self.article.pk}))
         self.assertNotEqual(response.status_code, 200)
 
         self.add_permissions(self.user, 'change_article')
-        response = self.client.get(reverse('article-edit', kwargs={'pk': self.article.pk}))
+        response = self.client.get(reverse('article_edit', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
     def test_admin_article_toggle_view(self):
         def toggle(pk, attr):
-            response = self.client.post(reverse('article-toggle'), {'pk': pk, 'toggle': attr})
+            response = self.client.post(reverse('article_toggle'), {'pk': pk, 'toggle': attr})
             self.assertEqual(response.status_code, 200)
             return json.loads(response.content)
 

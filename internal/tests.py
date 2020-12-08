@@ -84,16 +84,16 @@ class UrlTests(PermissionsTestCase):
         self._test_editor_url('GET', reverse_internal('create_member'))
 
         # All members can edit themselves, but only editors can edit other members
-        self._test_internal_url('GET', reverse_internal("edit-member", pk=self.member.pk))
-        self._test_editor_url('GET', reverse_internal("edit-member", pk=self.member_editor.pk))
+        self._test_internal_url('GET', reverse_internal('edit_member', pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal('edit_member', pk=self.member_editor.pk))
 
-        self._test_editor_url('GET', reverse_internal("member-quit", pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal('member_quit', pk=self.member.pk))
 
         path_data_assertion_tuples = (
-            ("member-quit", {'date_quit': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
-            ("edit-member-status", {'status_action': MemberStatusForm.StatusAction.UNDO_QUIT}, lambda member: not member.quit),
-            ("edit-member-status", {'status_action': MemberStatusForm.StatusAction.RETIRE}, lambda member: member.retired),
-            ("edit-member-status", {'status_action': MemberStatusForm.StatusAction.UNDO_RETIRE}, lambda member: not member.retired),
+            ('member_quit', {'date_quit': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
+            ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.UNDO_QUIT}, lambda member: not member.quit),
+            ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.RETIRE}, lambda member: member.retired),
+            ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.UNDO_RETIRE}, lambda member: not member.retired),
         )
         for path, data, assertion in path_data_assertion_tuples:
             with self.subTest(path=path, data=data):
@@ -107,7 +107,7 @@ class UrlTests(PermissionsTestCase):
                 # No one is allowed to change their `WEBSITE` access. Other than that,
                 # all members can edit their own accesses, but only editors can edit other members'.
                 allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-                self._test_url_permissions('POST', reverse_internal("edit-system-access", member_pk=self.member.pk, pk=system_access.pk),
+                self._test_url_permissions('POST', reverse_internal('edit_system_access', member_pk=self.member.pk, pk=system_access.pk),
                                            {'value': True}, allowed_clients=allowed_clients,
                                            expected_redirect_url=f"/members/{self.member.pk}/")
 
@@ -115,14 +115,14 @@ class UrlTests(PermissionsTestCase):
             with self.subTest(system_access=system_access):
                 # No one is allowed to change their `WEBSITE` access
                 allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-                self._test_url_permissions('POST', reverse_internal("edit-system-access", member_pk=self.member_editor.pk, pk=system_access.pk),
+                self._test_url_permissions('POST', reverse_internal('edit_system_access', member_pk=self.member_editor.pk, pk=system_access.pk),
                                            {'value': True}, allowed_clients=allowed_clients,
                                            expected_redirect_url=f"/members/{self.member_editor.pk}/")
 
-        self._test_internal_url('GET', reverse_internal("home"))
+        self._test_internal_url('GET', reverse_internal('home'))
 
-        self._test_internal_url('POST', reverse_internal("set_language"), {"language": "en"}, expected_redirect_url="/en/")
-        self._test_internal_url('POST', reverse_internal("set_language"), {"language": "nb"}, expected_redirect_url="/")
+        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'en'}, expected_redirect_url="/en/")
+        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'nb'}, expected_redirect_url="/")
 
     def test_all_non_member_get_request_paths_succeed(self):
         secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
@@ -131,9 +131,9 @@ class UrlTests(PermissionsTestCase):
         path_predicates = [
             Get(reverse_internal('home'), public=False),
             Get(reverse_internal('secret_list'), public=False),
-            Get(reverse_internal('create-secret'), public=False),
-            Get(reverse_internal('edit-secret', pk=secret1.pk), public=False),
-            Get(reverse_internal('edit-secret', pk=secret2.pk), public=False),
+            Get(reverse_internal('create_secret'), public=False),
+            Get(reverse_internal('edit_secret', pk=secret1.pk), public=False),
+            Get(reverse_internal('edit_secret', pk=secret2.pk), public=False),
             Get('/robots.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'internal')

@@ -29,14 +29,14 @@ def get_reservations(request, machine: Machine):
 
         if reservation.event:
             reservation_data.update({
-                "eventLink": reverse('event_detail', kwargs={"pk": reservation.event.event.pk}),
+                "eventLink": reverse('event_detail', kwargs={'pk': reservation.event.event.pk}),
                 "displayText": str(reservation.event.event.title),
             })
         elif reservation.special:
             reservation_data.update({
                 "displayText": reservation.special_text,
             })
-        elif request.user.has_perm("make_queue.can_view_reservation_user"):
+        elif request.user.has_perm('make_queue.can_view_reservation_user'):
             reservation_data.update({
                 "user": reservation.user.get_full_name(),
                 "email": reservation.user.email,

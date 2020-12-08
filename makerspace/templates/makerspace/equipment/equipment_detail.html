@@ -25,7 +25,7 @@
 
                 {% if user|has_any_equipment_permissions %}
                     <br/>
-                    <a class="ui make-bg-yellow button" href="{% url "makerspace-equipment-edit" equipment.pk %}">
+                    <a class="ui make-bg-yellow button" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
                         <i class="ui edit icon"></i>{% trans "Edit" %}
                     </a>
                 {% endif %}

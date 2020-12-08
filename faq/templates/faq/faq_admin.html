@@ -8,7 +8,7 @@
         <h1>
             {% trans "Questions" %}
             {% if perms.faq.add_question %}
-                <a href="{% url "faq_create" %}">
+                <a href="{% url 'faq_create' %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -20,7 +20,7 @@
                         <div class="ui header">
                             {{ question.title }}
                             {% if perms.faq.change_question %}
-                                <a href="{% url "faq_edit" pk=question.pk %}">
+                                <a href="{% url 'faq_edit' pk=question.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}

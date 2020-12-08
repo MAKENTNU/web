@@ -15,7 +15,7 @@
 
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
-        <a href="{% url 'front-page' %}">
+        <a href="{% url 'front_page' %}">
             <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
             <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
             <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
@@ -49,7 +49,7 @@
                 <a class="item" href="{% url 'makerspace' %}">
                     <div class="text">{% trans "About" %}</div>
                 </a>
-                <a class="item" href="{% url 'makerspace-equipment-list' %}">
+                <a class="item" href="{% url 'makerspace_equipment_list' %}">
                     <div class="text">{% trans "Equipment" %}</div>
                 </a>
                 <a class="item" href="{% url 'faq_list' %}">
@@ -95,7 +95,7 @@
                         <a class="item" href="{% url 'profile' %}">
                             <div class="text">{% trans "Profile" %}</div>
                         </a>
-                        <a class="item" href="{% host_url "home" host "internal" "internt" %}">
+                        <a class="item" href="{% host_url 'home' host 'internal' 'internt' %}">
                             <div class="text">{% trans "Internal pages" %}</div>
                         </a>
                     {% endif %}

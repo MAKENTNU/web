@@ -30,14 +30,14 @@
                 {% if perms.news.change_timeplace %}
                     <a class="make-col-blue explanation-popup" data-title="{% trans "Edit" %}"
                        data-content="{% trans "If clicked, a form for editing the occurrence is shown." %}"
-                       href="{% url 'timeplace-edit' timeplace.pk %}">
+                       href="{% url 'timeplace_edit' timeplace.pk %}">
                         <i class="ui edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
                     <a class="delete-modal-button make-col-blue explanation-popup"
                        data-title="{% trans "Delete" %}" data-content="{% trans "If clicked, the occurrence will be deleted." %}"
-                       data-url="{% url 'timeplace-delete' timeplace.pk %}" data-obj-name="{{ timeplace }}">
+                       data-url="{% url 'timeplace_delete' timeplace.pk %}" data-obj-name="{{ timeplace }}">
                         <i class="ui delete icon"></i>
                     </a>
                 {% endif %}
@@ -45,7 +45,7 @@
                     <a class="make-col-blue explanation-popup"
                        data-title="{% trans "Duplicate" %}"
                        data-content="{% trans "If clicked, the occurrence is duplicated." %}"
-                       href="{% url 'timeplace-duplicate' timeplace.pk %}">
+                       href="{% url 'timeplace_duplicate' timeplace.pk %}">
                         <i class="ui copy icon"></i>
                     </a>
                 {% endif %}

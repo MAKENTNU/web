@@ -69,7 +69,7 @@ class CreateMemberView(PermissionRequiredMixin, CreateView):
     template_name = 'internal/member_create.html'
 
     def get_success_url(self):
-        return reverse('edit-member', args=(self.object.pk,))
+        return reverse('edit_member', args=(self.object.pk,))
 
     def form_valid(self, form):
         user = form.cleaned_data['user']

@@ -33,7 +33,7 @@
                 {% endif %}
             </div>
             <div class="ui container">
-                <form id="image-form" class="ui form" method="POST" action="{% url "profile_picture" %}"
+                <form id="image-form" class="ui form" method="POST" action="{% url 'profile_picture' %}"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden/>
@@ -97,7 +97,7 @@
                         </div>
                     </div>
                 </form>
-                <a href="{% url "suggest" %}">{% trans "Suggest new skills" %}</a>
+                <a href="{% url 'suggest' %}">{% trans "Suggest new skills" %}</a>
             </div>
 
         {% endif %}

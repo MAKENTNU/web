@@ -31,8 +31,8 @@ def current_calendar_url(machine: Machine):
 
 @register.simple_tag
 def calendar_url_timestamp(machine: Machine, time: datetime):
-    return reverse("machine_detail",
-                   kwargs={"year": time.year, "week": time.isocalendar()[1], "machine": machine})
+    return reverse('machine_detail',
+                   kwargs={'year': time.year, 'week': time.isocalendar()[1], 'machine': machine})
 
 
 @register.simple_tag

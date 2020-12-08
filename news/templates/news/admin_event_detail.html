@@ -21,14 +21,14 @@
             <div class="admin-actions ui secondary menu">
                 {% if perms.news.delete_event %}
                     <a class="delete-modal-button ui red button"
-                       data-url="{% url 'event-delete' event.pk %}"
+                       data-url="{% url 'event_delete' event.pk %}"
                        data-obj-name="{{ event }}">
                         <i class="ui trash icon"></i>{% trans "Delete" %}
                     </a>
                 {% endif %}
 
                 {% if perms.news.change_event %}
-                    <a class="ui blue button" href="{% url 'event-edit' event.pk %}">
+                    <a class="ui blue button" href="{% url 'event_edit' event.pk %}">
                         <i class="ui edit icon"></i>{% trans "Edit" %}
                     </a>
                 {% endif %}
