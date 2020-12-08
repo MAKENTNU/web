@@ -8,7 +8,7 @@ from ..utility import request_with_user
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
-from ...views.reservation.overview import MyReservationsView
+from ...views.reservation.reservation import MyReservationsView
 
 
 class MyReservationsViewTestCase(TestCase):

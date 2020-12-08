@@ -4,11 +4,12 @@ from datetime import timedelta
 from math import ceil
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
-from django.views.generic import DeleteView, FormView, TemplateView, UpdateView
+from django.views.generic import DeleteView, FormView, ListView, TemplateView, UpdateView
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
@@ -271,6 +272,19 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
         reservation.end_time = timezone.localtime()
         reservation.save()
         return HttpResponse(status=200)
+
+
+class MyReservationsView(ListView):
+    """View for seeing the user's reservations."""
+    model = Reservation
+    template_name = 'make_queue/reservation_list.html'
+    context_object_name = 'reservations'
+
+    def get_queryset(self):
+        filter_query = Q(user=self.request.user)
+        if not self.request.user.has_perm('make_queue.can_create_event_reservation'):
+            filter_query &= Q(event=None, special=False)
+        return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
 
 
 class FindFreeSlot(FormView):
