@@ -26,7 +26,7 @@
             {% endif %}
         </div>
     </a>
-    <a class="item" href="{% url "my_reservations" %}">
+    <a class="item" href="{% url 'my_reservations_list' %}">
         <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">
             <div class="header">{% trans "My reservations" %}</div>
@@ -46,7 +46,7 @@
                 {% endblocktrans %}
             </div>
             <div class="ui transition bottom hidden menu">
-                <a class="ui item" href="{% url "reservation_machines_overview" %}">
+                <a class="ui item" href="{% url 'machine_list' %}">
                     {% trans "Overview" %}
                 </a>
                 <h4 class="ui header">
@@ -54,14 +54,14 @@
                 </h4>
                 {% for other_machine in other_machines %}
                     <a class="item"
-                       href="{% url "reservation_calendar" machine=other_machine year=year week=week %}">
+                       href="{% url "machine_detail" machine=other_machine year=year week=week %}">
                         {{ other_machine.name }}
                     </a>
                 {% endfor %}
             </div>
         </div>
     {% else %}
-        <a class="item" href="{% url "reservation_machines_overview" %}">
+        <a class="item" href="{% url 'machine_list' %}">
             <i class="large middle aligned make-col-yellow cogs icon"></i>
             <div class="content">
                 <div class="header">{% trans "Other machines" %}</div>

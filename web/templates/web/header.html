@@ -27,15 +27,15 @@
     {# `aria-label` should be used in conjunction with `role="navigation"`, which the `nav` tag specifies implicitly #}
     {# See https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/Navigation_Role #}
     <nav id="nav" class="ui secondary huge inverted menu" aria-label="Main">
-        <a class="item" href="{% url 'events' %}">
+        <a class="item" href="{% url 'event_list' %}">
             <div class="text">{% trans "Events" %}</div>
             <div class="make-bg-yellow bubble-background"></div>
         </a>
-        <a class="item" href="{% url 'articles' %}">
+        <a class="item" href="{% url 'article_list' %}">
             <div class="text">{% trans "Articles" %}</div>
             <div class="make-bg-turquoise bubble-background"></div>
         </a>
-        <a class="item" href="{% url 'reservation_machines_overview' %}">
+        <a class="item" href="{% url 'machine_list' %}">
             <div class="text">{% trans "Reservations" %}</div>
             <div class="make-bg-blue bubble-background"></div>
         </a>
@@ -52,7 +52,7 @@
                 <a class="item" href="{% url 'makerspace-equipment-list' %}">
                     <div class="text">{% trans "Equipment" %}</div>
                 </a>
-                <a class="item" href="{% url 'faq' %}">
+                <a class="item" href="{% url 'faq_list' %}">
                     <div class="text">{% trans "FAQ" %}</div>
                 </a>
                 <a class="item" href="{% url 'rules' %}">
@@ -99,7 +99,7 @@
                             <div class="text">{% trans "Internal pages" %}</div>
                         </a>
                     {% endif %}
-                    <a class="item" href="{% url 'my-tickets' %}">
+                    <a class="item" href="{% url 'my_tickets_list' %}">
                         <div class="text">{% trans "My tickets" %}</div>
                     </a>
                     <a class="item" href="{% url 'logout' %}?next={{ request.path }}">

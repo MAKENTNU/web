@@ -20,11 +20,11 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
-            Get(reverse('faq'), public=True),
-            Get(reverse('faq-admin'), public=False),
-            Get(reverse('faq-create'), public=False),
+            Get(reverse('faq_list'), public=True),
+            Get(reverse('faq_admin_list'), public=False),
+            Get(reverse('faq_create'), public=False),
             *[
-                Get(reverse('faq-edit', kwargs={'pk': question.pk}), public=False)
+                Get(reverse('faq_edit', kwargs={'pk': question.pk}), public=False)
                 for question in self.questions
             ],
         ]

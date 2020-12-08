@@ -3,7 +3,7 @@ from django.views.generic import ListView
 from ...models.reservation import Reservation
 
 
-class AdminReservationView(ListView):
+class MAKEReservationsListView(ListView):
     """View to see all reservations that are either event reservations or MAKE NTNU's reservations."""
     model = Reservation
     queryset = Reservation.objects.exclude(event=None, special=False).order_by('-end_time', '-start_time')

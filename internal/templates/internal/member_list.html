@@ -18,7 +18,7 @@
         <h1 class="title-with-buttons">
             {% trans "Member list" %}
             {% if perms.internal.can_register_new_member %}
-                <a class="ui right floated make-bg-yellow button" href="{% url "add-member" %}">
+                <a class="ui right floated make-bg-yellow button" href="{% url 'create_member' %}">
                     <i class="ui plus icon"></i>{% trans "Add member" %}
                 </a>
             {% endif %}

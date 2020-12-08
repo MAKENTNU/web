@@ -13,7 +13,7 @@ from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
 
 
-class DocumentationPageView(DetailView):
+class DocumentationPageDetailView(DetailView):
     model = Page
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = "page"
@@ -36,7 +36,7 @@ class OldDocumentationPageContentView(DetailView):
         # A check to make sure that the given content is related to the given page. As to make sure that the database
         # stays in a correct state.
         if self.get_object() != self.get_content().page:
-            return HttpResponseRedirect(reverse("page", kwargs={"pk": self.get_object()}))
+            return HttpResponseRedirect(reverse('page_detail', kwargs={"pk": self.get_object()}))
         else:
             return super().dispatch(request, *args, **kwargs)
 
@@ -65,7 +65,7 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
         return HttpResponseRedirect(reverse("page-history", kwargs={"pk": self.get_object()}))
 
     def get_success_url(self):
-        return reverse("page", kwargs={"pk": self.get_object()})
+        return reverse('page_detail', kwargs={"pk": self.get_object()})
 
     def form_invalid(self, form):
         return HttpResponseForbidden()
@@ -80,7 +80,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
     def form_invalid(self, form):
         try:
             page = Page.objects.get(title=form.data["title"])
-            return HttpResponseRedirect(reverse("page", kwargs={"pk": page}))
+            return HttpResponseRedirect(reverse('page_detail', kwargs={"pk": page}))
         except Page.DoesNotExist:
             return super().form_invalid(form)
 
@@ -115,7 +115,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
         return context_data
 
     def get_success_url(self):
-        return reverse("page", kwargs={"pk": self.get_page()})
+        return reverse('page_detail', kwargs={"pk": self.get_page()})
 
     def form_valid(self, form):
         redirect = super().form_valid(form)

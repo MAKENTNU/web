@@ -45,7 +45,7 @@ class ReservationExtraTestCases(TestCase):
         )
 
         self.assertEqual(
-            reverse('reservation_calendar', kwargs={'year': 2017, 'week': 52, 'machine': printer}),
+            reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'machine': printer}),
             current_calendar_url(printer)
         )
 

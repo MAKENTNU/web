@@ -20,7 +20,7 @@ from ...models.reservation import Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation, can_delete_reservation, can_mark_reservation_finished
 
 
-class ReservationCreateOrChangeView(TemplateView, ABC):
+class CreateOrEditReservationView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
 
     template_name = 'make_queue/reservation_edit.html'
@@ -146,7 +146,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
         return self.get(request, **kwargs)
 
 
-class CreateReservationView(PermissionRequiredMixin, ReservationCreateOrChangeView):
+class CreateReservationView(PermissionRequiredMixin, CreateOrEditReservationView):
     """View for creating a new reservation."""
     new_reservation = True
 
@@ -203,7 +203,7 @@ class DeleteReservationView(PermissionRequiredMixin, PreventGetRequestsMixin, De
         return HttpResponse(status=200)
 
 
-class ChangeReservationView(ReservationCreateOrChangeView):
+class EditReservationView(CreateOrEditReservationView):
     """View for changing a reservation (Cannot be UpdateView due to the abstract inheritance of reservations)."""
     new_reservation = False
 
@@ -218,7 +218,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         if reservation.can_change(request.user) or reservation.can_change_end_time(request.user):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
     def form_valid(self, form, **kwargs):
         """
@@ -230,11 +230,11 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         reservation = kwargs["reservation"]
         # The user is not allowed to change the machine for a reservation
         if reservation.machine != form.cleaned_data["machine"]:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
         # If the reservation has begun, the user is not allowed to change the start time
         if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
         reservation.comment = form.cleaned_data["comment"]
 
@@ -274,7 +274,7 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
         return HttpResponse(status=200)
 
 
-class MyReservationsView(ListView):
+class MyReservationsListView(ListView):
     """View for seeing the user's reservations."""
     model = Reservation
     template_name = 'make_queue/reservation_list.html'
@@ -287,7 +287,7 @@ class MyReservationsView(ListView):
         return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
 
 
-class FindFreeSlot(FormView):
+class FindFreeSlotView(FormView):
     """
     View to find free time slots for reservations.
     """

@@ -18,7 +18,7 @@
             {% for equipment in equipment_list %}
 
                 {# For the images #}
-                <a class="equipment-img" href="{% url 'makerspace-equipment' equipment.pk %}">
+                <a class="equipment-img" href="{% url 'makerspace_equipment_detail' equipment.pk %}">
                     <img {% thumbnail equipment.image "250x250" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
                     {% empty %}
@@ -40,7 +40,7 @@
                         <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
                     {% endif %}
                     <h2 class="word-breaking equipment-title">
-                        <a class="make-col-yellow" href="{% url 'makerspace-equipment' equipment.pk %}">{{ equipment.title }}</a>
+                        <a class="make-col-yellow" href="{% url 'makerspace_equipment_detail' equipment.pk %}">{{ equipment.title }}</a>
                     </h2>
                 </div>
 

@@ -31,7 +31,7 @@
             <button class="ui right floated make-bg-yellow button">
                 {% trans "Submit" context "edit" %}
             </button>
-            <a class="ui right floated red button" href="{% url "page" pk=page %}">
+            <a class="ui right floated red button" href="{% url 'page_detail' pk=page %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>

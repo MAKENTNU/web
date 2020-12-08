@@ -16,8 +16,8 @@ from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
-from ...views.admin.reservation import AdminReservationView
-from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, ReservationCreateOrChangeView
+from ...views.admin.reservation import MAKEReservationsListView
+from ...views.reservation.reservation import CreateOrEditReservationView, CreateReservationView, EditReservationView
 
 
 class BaseReservationCreateOrChangeViewTest(TestCase):
@@ -36,7 +36,7 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
                                                   end_time=timezone.localtime() + timedelta(hours=2))
 
     def get_view(self):
-        view = ReservationCreateOrChangeView()
+        view = CreateOrEditReservationView()
         view.request = request_with_user(self.user)
         return view
 
@@ -255,7 +255,7 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
 class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     def get_view(self):
-        view = ChangeReservationView()
+        view = EditReservationView()
         view.request = request_with_user(self.user)
         return view
 
@@ -364,7 +364,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
 class ReservationAdminViewTest(TestCase):
 
-    def test_get_admin_reservation(self):
+    def test_get_MAKE_reservations(self):
         user = User.objects.create_user("test")
         printer_machine_type = MachineType.objects.get(pk=1)
         Quota.objects.create(machine_type=printer_machine_type, number_of_reservations=10, ignore_rules=True, user=user)
@@ -394,7 +394,7 @@ class ReservationAdminViewTest(TestCase):
             event=timeplace,
         )
 
-        context_data = AdminReservationView.as_view()(request_with_user(user)).context_data
+        context_data = MAKEReservationsListView.as_view()(request_with_user(user)).context_data
         self.assertEqual(context_data["is_MAKE"], True)
         self.assertSetEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
 

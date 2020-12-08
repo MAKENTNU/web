@@ -14,9 +14,9 @@
     <div class="content">
         <div class="header">
             <a href="{% if ticket.event %}
-                        {% url "event" ticket.event.pk %}
+                        {% url 'event_detail' ticket.event.pk %}
                     {% else %}
-                        {% url "event" ticket.timeplace.event.pk %}
+                        {% url 'event_detail' ticket.timeplace.event.pk %}
                     {% endif %}">
                 {% firstof ticket.timeplace.event.title ticket.event.title %}
             </a>
@@ -59,7 +59,7 @@
     <div class="extra content">
         <div class="right floated">
             <b>{% trans "Ref #" %}:</b>
-            <a href="{% url "ticket" pk=ticket.pk %}">
+            <a href="{% url 'ticket_detail' pk=ticket.pk %}">
                 {{ ticket.uuid }}
             </a>
         </div>

@@ -29,11 +29,11 @@ class ViewTestCase(PermissionsTestCase):
         )
 
     def test_events(self):
-        response = self.client.get(reverse('events'))
+        response = self.client.get(reverse('event_list'))
         self.assertEqual(response.status_code, 200)
 
     def test_event(self):
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
     def test_event_create(self):
@@ -98,28 +98,28 @@ class ViewTestCase(PermissionsTestCase):
         self.event.hidden = True
         self.event.save()
 
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 404)
 
         self.add_permissions(self.user, 'change_event')
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
     def test_private_event(self):
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
         self.event.private = True
         self.event.save()
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 404)
 
         self.add_permissions(self.user, 'can_view_private')
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, 200)
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = "event-tickets"
+        url_name = 'event_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -130,7 +130,7 @@ class ViewTestCase(PermissionsTestCase):
         self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_timeplace_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = "timeplace-tickets"
+        url_name = 'timeplace_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -141,7 +141,7 @@ class ViewTestCase(PermissionsTestCase):
         self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = "event-tickets"
+        url_name = 'event_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),
@@ -151,7 +151,7 @@ class ViewTestCase(PermissionsTestCase):
         self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = "timeplace-tickets"
+        url_name = 'timeplace_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),

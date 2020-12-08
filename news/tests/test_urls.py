@@ -68,33 +68,33 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
-            Get(reverse('admin-articles'), public=False),
-            Get(reverse('admin-events'), public=False),
-            Get(reverse('admin-event', kwargs={'pk': self.event1.pk}), public=False),
-            Get(reverse('admin-event', kwargs={'pk': self.event2.pk}), public=False),
-            Get(reverse('articles'), public=True),
+            Get(reverse('admin_article_list'), public=False),
+            Get(reverse('admin_event_list'), public=False),
+            Get(reverse('admin_event_detail', kwargs={'pk': self.event1.pk}), public=False),
+            Get(reverse('admin_event_detail', kwargs={'pk': self.event2.pk}), public=False),
+            Get(reverse('article_list'), public=True),
             Get(reverse('article-create'), public=False),
             Get(reverse('article-edit', kwargs={'pk': self.article1.pk}), public=False),
             Get(reverse('article-edit', kwargs={'pk': self.article2.pk}), public=False),
-            Get(reverse('article', kwargs={'pk': self.article1.pk}), public=True),
-            Get(reverse('article', kwargs={'pk': self.article2.pk}), public=False),  # this article is private
-            Get(reverse('events'), public=True),
+            Get(reverse('article_detail', kwargs={'pk': self.article1.pk}), public=True),
+            Get(reverse('article_detail', kwargs={'pk': self.article2.pk}), public=False),  # this article is private
+            Get(reverse('event_list'), public=True),
             Get(reverse('event-create'), public=False),
             Get(reverse('event-edit', kwargs={'pk': self.event1.pk}), public=False),
             Get(reverse('event-edit', kwargs={'pk': self.event2.pk}), public=False),
-            Get(reverse('event-tickets', kwargs={'pk': self.event2.pk}), public=False),  # can't test `event1`, as it has no tickets
-            Get(reverse('event', kwargs={'pk': self.event1.pk}), public=True),
-            Get(reverse('event', kwargs={'pk': self.event2.pk}), public=False),  # this event is private
+            Get(reverse('event_ticket_list', kwargs={'pk': self.event2.pk}), public=False),  # can't test `event1`, as it has no tickets
+            Get(reverse('event_detail', kwargs={'pk': self.event1.pk}), public=True),
+            Get(reverse('event_detail', kwargs={'pk': self.event2.pk}), public=False),  # this event is private
             Get(reverse('register-event', kwargs={'event_pk': self.event1.pk}), public=False),
             Get(reverse('register-event', kwargs={'event_pk': self.event2.pk}), public=False),
             *[
                 Get(reverse('timeplace-edit', kwargs={'pk': timeplace.pk}), public=False)
                 for timeplace in self.timeplaces
             ],
-            Get(reverse('timeplace-new', kwargs={'event_pk': self.event1.pk}), public=False),
-            Get(reverse('timeplace-new', kwargs={'event_pk': self.event2.pk}), public=False),
+            Get(reverse('timeplace_create', kwargs={'event_pk': self.event1.pk}), public=False),
+            Get(reverse('timeplace_create', kwargs={'event_pk': self.event2.pk}), public=False),
             *[
-                Get(reverse('timeplace-tickets', kwargs={'pk': timeplace.pk}), public=False)
+                Get(reverse('timeplace_ticket_list', kwargs={'pk': timeplace.pk}), public=False)
                 for timeplace in self.timeplaces if timeplace != self.timeplace3  # can't test `timeplace3`, as it has no tickets
             ],
             *[
@@ -106,9 +106,9 @@ class UrlTests(TestCase):
                 for timeplace in self.timeplaces if timeplace != self.timeplace3  # can't test `timeplace3`, as it has no tickets
             ],
             *[
-                Get(reverse('ticket', kwargs={'pk': ticket.pk}), public=False)
+                Get(reverse('ticket_detail', kwargs={'pk': ticket.pk}), public=False)
                 for ticket in self.tickets
             ],
-            Get(reverse('my-tickets'), public=False),
+            Get(reverse('my_tickets_list'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)

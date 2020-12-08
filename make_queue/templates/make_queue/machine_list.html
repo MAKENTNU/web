@@ -23,7 +23,7 @@
         </div>
         {% if request.user.is_authenticated %}
             <div class="reservation-management-buttons">
-                <a class="ui primary button" href="{% url 'my_reservations' %}">
+                <a class="ui primary button" href="{% url 'my_reservations_list' %}">
                     {% trans "My reservations" %}
                 </a>
                 <a class="ui primary button" href="{% url "find_free_slot" %}">
@@ -38,7 +38,7 @@
                     {{ machine_type.name }}
                 </div>
                 <div class="ui content">
-                    <a class="ui primary button" href="{% url 'machine_usage_rules' machine_type %}">
+                    <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine_type %}">
                         {% trans "Show rules" %}
                     </a>
                 </div>

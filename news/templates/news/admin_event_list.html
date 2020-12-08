@@ -19,11 +19,11 @@
         <div class="ui four doubling stackable cards">
             {% for event in events %}
                 <div class="ui card">
-                    <a class="image" href="{% url "event" event.pk %}">
+                    <a class="image" href="{% url 'event_detail' event.pk %}">
                         <img src="{{ event.image.url }}"/>
                     </a>
                     <div class="content">
-                        <a class="header" href="{% url "event" event.pk %}">{{ event.title }}</a>
+                        <a class="header" href="{% url 'event_detail' event.pk %}">{{ event.title }}</a>
                         <div class="meta">
                             {% with event.timeplaces|future|length as num_future_occurrences %}
                                 {% if num_future_occurrences %}
@@ -56,7 +56,7 @@
                         </div>
                         <div class="description">{{ event.clickbait }}</div>
                     </div>
-                    <a class="ui make-bg-yellow bottom attached button" href="{% url "admin-event" event.pk %}">
+                    <a class="ui make-bg-yellow bottom attached button" href="{% url 'admin_event_detail' event.pk %}">
                         {% trans "Admin" %}
                     </a>
                 </div>

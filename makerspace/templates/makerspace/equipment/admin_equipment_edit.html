@@ -13,7 +13,7 @@
 {% block body %}
     <div class="ui text container">
 
-        <a href="{% url "makerspace-equipment-admin" %}">
+        <a href="{% url 'makerspace_admin_equipment_list' %}">
             <i class="ui angle double left icon"></i>{% trans "Admin page for equipment" %}
         </a>
         <h1 class="ui centered header">
@@ -46,7 +46,7 @@
             {% endfor %}
 
             <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
-            <a class="ui right floated red button" href="{% url "makerspace-equipment-admin" %}">
+            <a class="ui right floated red button" href="{% url 'makerspace_admin_equipment_list' %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>

@@ -19,11 +19,11 @@
         <div class="ui three doubling stackable cards">
             {% for article in articles %}
                 <div class="ui card">
-                    <a class="image" href="{% url "article" article.pk %}">
+                    <a class="image" href="{% url 'article_detail' article.pk %}">
                         <img src="{{ article.image.url }}" alt="{% trans "Article image" %}"/>
                     </a>
                     <div class="content">
-                        <a class="header" href="{% url "article" article.pk %}">{{ article.title }}</a>
+                        <a class="header" href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
                         <div class="meta">
                             {% if article.featured %}
                                 <div class="ui green mini label">

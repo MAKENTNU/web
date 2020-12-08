@@ -4,8 +4,8 @@ from users.models import User
 from ..utility import template_view_get_context_data
 from ...models.machine import MachineType
 from ...models.reservation import Quota
-from ...views.admin.quota import QuotaView
-from ...views.quota.user import GetUserQuotaView
+from ...views.admin.quota import QuotaPanelView
+from ...views.quota.user import UserQuotaListView
 
 
 class TestGetQuotaView(TestCase):
@@ -18,7 +18,7 @@ class TestGetQuotaView(TestCase):
         quota2 = Quota.objects.create(user=user, machine_type=machine_type, number_of_reservations=2)
         Quota.objects.create(user=user2, machine_type=machine_type, number_of_reservations=2)
 
-        context_data = template_view_get_context_data(GetUserQuotaView, request_user=user, user=user)
+        context_data = template_view_get_context_data(UserQuotaListView, request_user=user, user=user)
         context_data["user_quotas"] = list(context_data["user_quotas"])
 
         self.assertDictEqual(context_data, {"user_quotas": [quota2]})
@@ -40,13 +40,13 @@ class TestQuotaPanelView(TestCase):
                                            number_of_reservations=1)
 
     def test_without_user(self):
-        context_data = template_view_get_context_data(QuotaView, request_user=self.user)
+        context_data = template_view_get_context_data(QuotaPanelView, request_user=self.user)
         self.assertListEqual(list(context_data["users"]), [self.user, self.user2])
         self.assertListEqual(list(context_data["global_quotas"]), [self.quota1, self.quota2])
         self.assertEqual(context_data["requested_user"], None)
 
     def test_with_user(self):
-        context_data = template_view_get_context_data(QuotaView, request_user=self.user, user=self.user)
+        context_data = template_view_get_context_data(QuotaPanelView, request_user=self.user, user=self.user)
         self.assertListEqual(list(context_data["users"]), [self.user, self.user2])
         self.assertListEqual(list(context_data["global_quotas"]), [self.quota1, self.quota2])
         self.assertEqual(context_data["requested_user"], self.user)

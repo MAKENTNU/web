@@ -29,7 +29,7 @@ def get_reservations(request, machine: Machine):
 
         if reservation.event:
             reservation_data.update({
-                "eventLink": reverse("event", kwargs={"pk": reservation.event.event.pk}),
+                "eventLink": reverse('event_detail', kwargs={"pk": reservation.event.event.pk}),
                 "displayText": str(reservation.event.event.title),
             })
         elif reservation.special:

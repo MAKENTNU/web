@@ -79,9 +79,9 @@ class UrlTests(PermissionsTestCase):
                                    expected_redirect_url=expected_redirect_url)
 
     def test_permissions(self):
-        self._test_internal_url('GET', reverse_internal("members"))
-        self._test_internal_url('GET', reverse_internal("members", pk=self.member.pk))
-        self._test_editor_url('GET', reverse_internal("add-member"))
+        self._test_internal_url('GET', reverse_internal('member_list'))
+        self._test_internal_url('GET', reverse_internal('member_list', pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal('create_member'))
 
         # All members can edit themselves, but only editors can edit other members
         self._test_internal_url('GET', reverse_internal("edit-member", pk=self.member.pk))
@@ -130,7 +130,7 @@ class UrlTests(PermissionsTestCase):
 
         path_predicates = [
             Get(reverse_internal('home'), public=False),
-            Get(reverse_internal('secrets'), public=False),
+            Get(reverse_internal('secret_list'), public=False),
             Get(reverse_internal('create-secret'), public=False),
             Get(reverse_internal('edit-secret', pk=secret1.pk), public=False),
             Get(reverse_internal('edit-secret', pk=secret2.pk), public=False),

@@ -33,7 +33,7 @@ class UrlTests(TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             Get(self.reverse('home'), public=False),
-            Get(self.reverse('page', pk=self.page1), public=False),
+            Get(self.reverse('page_detail', pk=self.page1), public=False),
             Get(self.reverse('page-history', pk=self.page1), public=False),
             Get(self.reverse('old-page-content', pk=self.page1, content=self.content1), public=False),
             Get(self.reverse('old-page-content', pk=self.page1, content=self.content2), public=False),

@@ -31,7 +31,7 @@
             {% else %}
                 {% trans "My reservations" %}
                 {% if perms.make_queue.can_create_event_reservation %}
-                    <a class="ui primary button" href="{% url 'admin_reservation' %}">
+                    <a class="ui primary button" href="{% url 'MAKE_reservations_list' %}">
                         {% trans "View MAKE's reservations" %}
                     </a>
                 {% endif %}
@@ -39,7 +39,7 @@
         </div>
 
         <div class="ui vertical segment">
-            <a class="ui primary button" href="{% url 'reservation_machines_overview' %}">
+            <a class="ui primary button" href="{% url 'machine_list' %}">
                 {% trans "Machines" %}
             </a>
             <div class="right-floated">
@@ -112,7 +112,7 @@
                     <td>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a href="{% url 'change_reservation' reservation %}">
+                            <a href="{% url 'edit_reservation' reservation %}">
                                 <div class="ui make-bg-yellow button">
                                     {% trans "Change" %}
                                 </div>
@@ -182,7 +182,7 @@
                         </a>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a class="ui make-bg-yellow button" href="{% url 'change_reservation' reservation %}">
+                            <a class="ui make-bg-yellow button" href="{% url 'edit_reservation' reservation %}">
                                 {% trans "Change" %}
                             </a>
                         {% endif %}

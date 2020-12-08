@@ -34,7 +34,7 @@
             {% block admin_page %}
                 {% if perms.news.change_article %}
                     <div>
-                        <a class="ui make-bg-yellow button" href="{% url "admin-articles" %}">
+                        <a class="ui make-bg-yellow button" href="{% url 'admin_article_list' %}">
                             <i class="ui sticky note icon"></i>{% trans "Admin page" %}
                         </a>
                     </div>

@@ -12,7 +12,7 @@
 
     <div class="ui container">
         <h1>{{ event.title }}</h1>
-        <a href="{% url "admin-event" event.pk %}">
+        <a href="{% url 'admin_event_detail' event.pk %}">
             <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
         </a>
 
@@ -51,7 +51,7 @@
                         <div class="description">
                             <div>
                                 <b>{% trans "Ref #" %}:</b>
-                                <a href="{% url "ticket" ticket.pk %}">{{ ticket.uuid }}</a>
+                                <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.uuid }}</a>
                             </div>
                             <div>
                                 <b>{% trans "Language" %}</b> {{ ticket.get_language_display }}

@@ -6,7 +6,7 @@ from ...models.reservation import Quota
 from ...templatetags.reservation_extra import reservation_denied_message
 
 
-class ReservationCalendarView(TemplateView):
+class MachineDetailView(TemplateView):
     """Main view for showing the reservation calendar for a machine."""
     template_name = 'make_queue/machine_detail.html'
 

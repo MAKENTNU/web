@@ -3,7 +3,7 @@ from django.views.generic import TemplateView
 from users.models import User
 
 
-class GetUserQuotaView(TemplateView):
+class UserQuotaListView(TemplateView):
     """View for getting a rendered version of the quota of a specific user."""
     template_name = 'make_queue/quota/quota_user.html'
 
