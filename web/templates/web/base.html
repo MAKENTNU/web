@@ -32,6 +32,11 @@
     <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+
+    {% block analytics %}
+        <script defer src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+        <script defer src="{% static 'web/js/gtag_init.js' %}"></script>
+    {% endblock analytics %}
     {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>
@@ -62,17 +67,6 @@
     {% endblock footer %}
 </div>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-    gtag('config', 'UA-113882146-1');
-</script>
 {% block extra_scripts %}
 {% endblock extra_scripts %}
 
