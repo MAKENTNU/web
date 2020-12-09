@@ -58,11 +58,11 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".page-selector").click((event) => {
             $("#page-form-page-input").val($(event.target).data("page"));
             $("#page-form").submit();
         });
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

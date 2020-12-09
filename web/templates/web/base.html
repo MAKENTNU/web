@@ -32,7 +32,7 @@
     <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
-    {% block head %}{% endblock head %}
+    {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>
 
@@ -73,8 +73,8 @@
     gtag('js', new Date());
     gtag('config', 'UA-113882146-1');
 </script>
-{% block scripts %}
-{% endblock scripts %}
+{% block extra_scripts %}
+{% endblock extra_scripts %}
 
 </body>
 </html>

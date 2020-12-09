@@ -6,9 +6,9 @@
 
 {% block title %}{{ page.title }}{% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'docs/css/documentation_page_detail.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -79,7 +79,7 @@
     {% endif %}
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".explanation-popup").popup();
 
@@ -90,4 +90,4 @@
             });
         {% endif %}
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

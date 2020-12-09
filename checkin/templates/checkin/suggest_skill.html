@@ -111,7 +111,7 @@
 
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".add-voter").click(function () {
             addVoterPost($(this), $(this).data("pk"), $(this).data("forced"));
@@ -174,4 +174,4 @@
             });
         }
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

@@ -3,10 +3,10 @@
 {% load static %}
 
 
-{% block head %}
+{% block extra_head %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'makerspace/css/makerspace.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block extra_post_content %}
     <br/>

@@ -5,11 +5,11 @@
 
 {% block title %}{% trans "Edit article" %}{% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     {{ form.media }}
     <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui centered header">

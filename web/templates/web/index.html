@@ -5,11 +5,11 @@
 {% load announcement_tags %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
     <script src="{% static 'web/js/image_link.js' %}"></script>
     <script src="{% static 'lib/parallax/parallax.min.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block padding_top %}{% endblock %}
 
@@ -96,11 +96,11 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".clickable").click(function () {
             window.location.href = $(this).attr('href');
         });
         $(".parallax-window").parallax({'speed': 0.5});
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

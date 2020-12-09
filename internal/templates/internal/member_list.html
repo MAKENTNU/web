@@ -8,9 +8,9 @@
 
 {% block title %}{% trans "Member list" %}{% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'internal/css/member_list.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
 
@@ -336,7 +336,7 @@
 
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $("div.ui.dropdown").dropdown();
         $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
@@ -360,4 +360,4 @@
             });
         {% endfor %}
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

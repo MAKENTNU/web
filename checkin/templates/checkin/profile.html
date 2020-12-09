@@ -5,9 +5,9 @@
 {% load i18n %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'checkin/css/profile.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui text container">
@@ -122,7 +122,7 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".ui.rating").rating();
         $(".ui.dropdown").dropdown();
@@ -196,4 +196,4 @@
                 .transition("fade");
         });
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

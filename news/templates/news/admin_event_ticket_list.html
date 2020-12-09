@@ -3,10 +3,10 @@
 {% load i18n %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/admin_event_ticket_list.css' %}"/>
     <script defer src="{% static 'news/js/email_copy.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
 
@@ -72,7 +72,7 @@
 
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".message .close").click(function () {
             $(this)
@@ -81,4 +81,4 @@
         });
         $("span[data-content]").popup();
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

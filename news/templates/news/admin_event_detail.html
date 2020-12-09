@@ -4,9 +4,9 @@
 {% load static %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/admin_event_detail.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -117,7 +117,7 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".tabular.menu .item").tab();
         $(".explanation-popup").popup();
@@ -160,4 +160,4 @@
             });
         }
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

@@ -12,9 +12,9 @@
 {% block og_description %}{{ article.clickbait }}{% endblock og_description %}
 {% block description %}{{ article.clickbait }}{% endblock description %}
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/article_detail.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="article {% block extra_classes %}{% endblock extra_classes %}">

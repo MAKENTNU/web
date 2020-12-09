@@ -3,9 +3,9 @@
 {% load static %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'faq/css/faq_list.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -40,8 +40,8 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $('.ui.accordion').accordion();
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}
