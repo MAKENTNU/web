@@ -106,12 +106,6 @@
     </div>
 
     <script>
-        $(".message .close").click(function () {
-            $(this)
-                .closest(".message")
-                .fadeOut();
-        });
-
         $(".clear-dropdown").click(function () {
             $(this).closest("div.ui.field").find("div.dropdown")
                 .dropdown("clear")

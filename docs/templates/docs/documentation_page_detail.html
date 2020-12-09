@@ -81,8 +81,6 @@
 
 {% block extra_scripts %}
     <script>
-        $(".explanation-popup").popup();
-
         {% if old and perms.docs.change_page %}
             $("#change-current-version").click(() => {
                 $("#change-version-form").submit();

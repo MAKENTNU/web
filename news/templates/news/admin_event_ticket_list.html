@@ -71,14 +71,3 @@
     </div>
 
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(".message .close").click(function () {
-            $(this)
-                .closest(".message")
-                .transition("fade");
-        });
-        $("span[data-content]").popup();
-    </script>
-{% endblock extra_scripts %}

@@ -24,11 +24,6 @@
                 <div class="header">{% trans "Missing language" %}</div>
                 <div class="content">{% trans "One or more languages has no content" %}</div>
             </div>
-            <script>
-                $(".message .close").click(function () {
-                    $(this).closest(".message").fadeOut();
-                });
-            </script>
         {% endif %}
 
         <form class="ui form text" method="POST" enctype="multipart/form-data">

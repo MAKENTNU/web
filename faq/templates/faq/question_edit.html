@@ -40,13 +40,4 @@
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
-
-    <script>
-        $(".message .close").click(function () {
-            $(this)
-                .closest(".message")
-                .transition("fade");
-        });
-        $("span[data-content]").popup();
-    </script>
 {% endblock body %}

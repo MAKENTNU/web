@@ -77,14 +77,4 @@
             </a>
         </form>
     </div>
-
-    <script>
-        $(".message .close").click(function () {
-            $(this)
-                .closest(".message")
-                .transition("fade");
-        });
-
-        $("span[data-content]").popup();
-    </script>
 {% endblock body %}
