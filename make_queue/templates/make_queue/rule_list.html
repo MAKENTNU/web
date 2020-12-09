@@ -115,10 +115,10 @@
                                 {% endif %}
                             </div>
                             <div class="ui small feed">
-                                {% get_active_reservations quota user as active_reservations %}
-                                {% if active_reservations %}
+                                {% get_unfinished_reservations quota user as unfinished_reservations %}
+                                {% if unfinished_reservations %}
                                     <h5 class="ui header">{% trans "Reservations connected to quota" %}:</h5>
-                                    {% for reservation in active_reservations %}
+                                    {% for reservation in unfinished_reservations %}
                                         <div class="event">
                                             <div class="content">
                                                 <div class="summary">
