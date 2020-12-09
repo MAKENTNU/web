@@ -389,6 +389,10 @@ msgstr "Tidspunkt endret"
 msgid "Made by"
 msgstr "Gjort av"
 
+#: docs/templates/docs/base.html:5
+msgid "MAKE NTNU Docs"
+msgstr "MAKE NTNU dokumentasjon"
+
 #: docs/templates/docs/base.html:10
 #: make_queue/templates/make_queue/calendar.html:87
 #: make_queue/templates/make_queue/reservation_edit.html:119
@@ -773,7 +777,7 @@ msgstr "Tilgang for {member} til {name}: {has_access}"
 #: internal/templates/internal/base.html:10
 #: internal/templates/internal/home.html:13
 msgid "MAKE NTNU Internal"
-msgstr "MAKE NTNU Internsider"
+msgstr "MAKE NTNU internsider"
 
 #: internal/templates/internal/header.html:27
 msgid "Members"

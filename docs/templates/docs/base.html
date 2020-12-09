@@ -1,56 +1,15 @@
-{% load static %}
+{% extends 'web/base.html' %}
 {% load i18n %}
-{% load hosts %}
 
 
-<!DOCTYPE html>
-{% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}">
-<head>
-    <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width"/>
-    <link rel="shortcut icon" type="image/png" href="{% static 'web/img/favicon.png' %}"/>
-    <meta name="theme-color" content="rgb(248, 200, 17)"/>
+{% block title %}{% trans "MAKE NTNU Docs" %}{% endblock title %}
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700"/>
-    <script src="{% host_url 'javascript_catalog' host 'main' %}"></script>
-    <link rel="stylesheet" href="{% static 'lib/fomantic-ui/semantic.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
-    <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
-    <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
-    <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
-    {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
-    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
-    {% block extra_head %}{% endblock extra_head %}
-</head>
-<body>
+{% block open_graph_meta %}{% endblock open_graph_meta %}
 
-<div class="wrapper">
-    <div class="content">
-        {% block header %}
-            {% include 'docs/header.html' %}
-        {% endblock header %}
+{% block analytics %}{% endblock analytics %}
 
-        {% block padding_top %}
-            <div class="make-content-padding"></div>
-        {% endblock padding_top %}
+{% block header %}
+    {% include 'docs/header.html' %}
+{% endblock header %}
 
-        <main id="main">
-            {% block body %}
-            {% endblock body %}
-        </main>
-
-        {% block padding_bottom %}
-            <div class="make-content-padding"></div>
-        {% endblock padding_bottom %}
-    </div>
-
-    {% include 'web/delete_modal.html' %}
-</div>
-
-{% block extra_scripts %}
-{% endblock extra_scripts %}
-
-</body>
-</html>
+{% block footer %}{% endblock footer %}
