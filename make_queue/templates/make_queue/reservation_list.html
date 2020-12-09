@@ -95,7 +95,15 @@
                         <td>
                             {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
                             {% if reservation_text %}
-                                <div class="ui small header">{{ reservation_text }}</div>
+                                <div class="ui small header">
+                                    {% if reservation.event %}
+                                        <a href="{% url 'admin_event_detail' reservation.event.event.pk %}" target="_blank">
+                                            {{ reservation_text }}
+                                        </a>
+                                    {% else %}
+                                        {{ reservation_text }}
+                                    {% endif %}
+                                </div>
                                 {% if reservation.event %}
                                     {{ reservation.event.start_time|short_date }}
                                 {% endif %}
@@ -168,7 +176,15 @@
                             {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
                             {% if reservation_text %}
                                 <div class="ui vertical segment"></div>
-                                <div class="ui small header">{{ reservation_text }}</div>
+                                <div class="ui small header">
+                                    {% if reservation.event %}
+                                        <a href="{% url 'admin_event_detail' reservation.event.event.pk %}" target="_blank">
+                                            {{ reservation_text }}
+                                        </a>
+                                    {% else %}
+                                        {{ reservation_text }}
+                                    {% endif %}
+                                </div>
                                 {% if reservation.event %}
                                     {{ reservation.event.start_time|short_date }}
                                 {% endif %}
