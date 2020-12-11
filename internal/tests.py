@@ -90,9 +90,9 @@ class UrlTests(PermissionsTestCase):
         self._test_editor_url('GET', reverse_internal('member_quit', pk=self.member.pk))
 
         path_data_assertion_tuples = (
-            ('member_quit', {'date_quit': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
+            ('member_quit', {'date_quit_or_retired': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
             ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.UNDO_QUIT}, lambda member: not member.quit),
-            ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.RETIRE}, lambda member: member.retired),
+            ('member_retire', {'date_quit_or_retired': "2002-01-01"}, lambda member: member.retired),
             ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.UNDO_RETIRE}, lambda member: not member.retired),
         )
         for path, data, assertion in path_data_assertion_tuples:

@@ -7,7 +7,9 @@ from django.views.generic import CreateView, DeleteView, ListView, TemplateView,
 
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import PreventGetRequestsMixin
-from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, SystemAccessValueForm
+from .forms import (
+    AddMemberForm, EditMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, SystemAccessValueForm,
+)
 from .models import Member, Secret, SystemAccess
 
 
@@ -109,14 +111,19 @@ class EditMemberView(PermissionRequiredMixin, UpdateView):
         return reverse('member_list', args=(self.object.pk,))
 
 
-class MemberQuitView(PermissionRequiredMixin, UpdateView):
+class MemberRetireView(PermissionRequiredMixin, UpdateView):
     permission_required = ('internal.can_edit_group_membership',)
     model = Member
-    form_class = MemberQuitForm
-    template_name = 'internal/member_quit.html'
+    form_class = MemberRetireForm
+    template_name = 'internal/member_retire.html'
 
     def get_success_url(self):
         return reverse('member_list', args=(self.object.pk,))
+
+
+class MemberQuitView(MemberRetireView):
+    form_class = MemberQuitForm
+    template_name = 'internal/member_quit.html'
 
 
 class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):

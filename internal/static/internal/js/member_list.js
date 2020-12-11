@@ -48,7 +48,7 @@ function showDetailedMemberInformation(member) {
         cardNumber: member.data.cardNumber,
         studyProgram: member.data.studyProgram,
         dateJoined: `${member.data.termJoined} (${member.data.dateJoined})`,
-        dateQuit: `${member.data.termQuit} (${member.data.dateQuit})`,
+        dateQuitOrRetired: `${member.data.termQuitOrRetired} (${member.data.dateQuitOrRetired})`,
         reasonQuit: member.data.reasonQuit,
         role: member.data.role,
         guidanceExemption: member.data.guidanceExemption,
@@ -59,12 +59,15 @@ function showDetailedMemberInformation(member) {
             .text(textAttributeNamesToValues[textAttribute]);
     }
 
-    for (let editAttribute of ["editUrl", "setQuitUrl", "canUndoQuit", "canSetRetired", "canUndoRetired"]) {
+    for (let editAttribute of ["editUrl", "setQuitUrl", "canUndoQuit", "setRetiredUrl", "canUndoRetired"]) {
         $memberInfoModal.find(`#member-${editAttribute}-button`)
             .toggleClass("display-none", member.data[editAttribute].isEmpty());
     }
-    $memberInfoModal.find("#member-editUrl-button").attr("href", member.data["editUrl"]);
-    $memberInfoModal.find("#member-setQuitUrl-button").attr("href", member.data["setQuitUrl"]);
+    for (let urlAttribute of ["editUrl", "setQuitUrl", "setRetiredUrl"]) {
+        $memberInfoModal.find(`#member-${urlAttribute}-button`)
+            .attr("href", member.data[urlAttribute]);
+    }
+    $memberInfoModal.find(`#member-dateQuitOrRetiredLabel`).text(member.data.dateQuitOrRetiredLabel);
     $memberInfoModal.find("#edit-member-status-form")
         .attr("action", member.data.editStatusUrl)
         .find(".button[type=submit]")
@@ -78,7 +81,7 @@ function showDetailedMemberInformation(member) {
     $memberInfoModal.find("#member-phone").attr("href", `tel:${member.data.phone}`);
     $memberInfoModal.find("#member-email").attr("href", `mailto:${member.data.email}`);
 
-    for (let hideableAttribute of ["dateQuit", "reasonQuit", "role", "comment"]) {
+    for (let hideableAttribute of ["dateQuitOrRetired", "reasonQuit", "role", "comment"]) {
         $memberInfoModal.find(`#member-${hideableAttribute}`)
             .parent().toggleClass("display-none", member.data[hideableAttribute].isEmpty());
     }
@@ -258,8 +261,9 @@ function setup() {
                 dateJoined: $row.data("date-joined"),
                 dateJoinedSortable: $row.data("date-joined-sortable"),
                 termJoined: $row.data("term-joined"),
-                dateQuit: $row.data("date-quit"),
-                termQuit: $.trim($row.data("term-quit")),
+                dateQuitOrRetired: $row.data("date-quit-or-retired"),
+                dateQuitOrRetiredLabel: $.trim($row.data("date-quit-or-retired-label")),
+                termQuitOrRetired: $.trim($row.data("term-quit-or-retired")),
                 reasonQuit: $.trim($row.data("reason-quit")),
                 role: $.trim($row.data("role")),
                 comment: $.trim($row.data("comment")),
@@ -267,7 +271,7 @@ function setup() {
                 editUrl: $.trim($row.data("edit-url")),
                 setQuitUrl: $.trim($row.data("set-quit-url")),
                 canUndoQuit: $.trim($row.data("can-undo-quit")),
-                canSetRetired: $.trim($row.data("can-set-retired")),
+                setRetiredUrl: $.trim($row.data("set-retired-url")),
                 canUndoRetired: $.trim($row.data("can-undo-retired")),
                 editStatusUrl: $.trim($row.data("edit-status-url")),
                 // Membership status is a list of pairs of status name and color: [('Active', 'green')]. Need to parse this list.

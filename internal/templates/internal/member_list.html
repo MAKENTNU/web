@@ -123,8 +123,14 @@
                     data-term-joined="{{ member.term_joined }}"
                     data-date-joined="{{ member.date_joined|short_date }}"
                     data-date-joined-sortable="{{ member.date_joined|iso_date }}"
-                    data-date-quit="{{ member.date_quit|short_date }}"
-                    data-term-quit="{{ member.term_quit|default:"" }}"
+                    data-date-quit-or-retired="{{ member.date_quit_or_retired|short_date }}"
+                    data-date-quit-or-retired-label="
+                            {% if member.retired %}
+                                {% trans "Date retired" %}
+                            {% elif member.quit %}
+                                {% trans "Date quit" %}
+                            {% endif %}"
+                    data-term-quit-or-retired="{{ member.term_quit_or_retired|default:"" }}"
                     data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
                     data-status="{{ membership_status }}"
                     data-committees="{{ committees }}"
@@ -146,7 +152,10 @@
                                 {% url 'member_quit' member.pk %}
                             {% endif %}"
                     data-can-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
-                    data-can-set-retired="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-set-retired-url="
+                            {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
+                                {% url 'member_retire' member.pk %}
+                            {% endif %}"
                     data-can-undo-retired="{% if member.retired and perms.internal.can_edit_group_membership %}true{% endif %}"
                     data-edit-status-url="{% url 'edit_member_status' member.pk %}"
                 >
@@ -252,9 +261,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Quit" %}</b>
+                        <b id="member-dateQuitOrRetiredLabel"></b>
                     </td>
-                    <td id="member-dateQuit"></td>
+                    <td id="member-dateQuitOrRetired"></td>
                 </tr>
                 <tr>
                     <td>
@@ -320,10 +329,9 @@
                             data-status-action="{{ StatusAction.UNDO_QUIT }}">
                         {% trans "Set member as not quit" %}
                     </button>
-                    <button id="member-canSetRetired-button" class="ui make-bg-yellow button" type="submit"
-                            data-status-action="{{ StatusAction.RETIRE }}">
+                    <a id="member-setRetiredUrl-button" class="ui make-bg-yellow button">
                         {% trans "Set member as retired" %}
-                    </button>
+                    </a>
                     <button id="member-canUndoRetired-button" class="ui make-bg-yellow button" type="submit"
                             data-status-action="{{ StatusAction.UNDO_RETIRE }}">
                         {% trans "Set member as not retired" %}

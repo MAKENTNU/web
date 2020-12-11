@@ -631,14 +631,6 @@ msgstr ""
 "Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
 "«sluttet» eller «pang»."
 
-#: internal/forms.py:109
-msgid ""
-"Member's “quit” status was not undone, as the member did not have the status "
-"“quit”."
-msgstr ""
-"Medlemmets «sluttet»-status ble ikke gjort om siden medlemmet ikke hadde "
-"status «sluttet»."
-
 #: internal/forms.py:114
 msgid ""
 "Member was not set as retired, as the member already has the status “quit” "
@@ -646,6 +638,14 @@ msgid ""
 msgstr ""
 "Medlemmet ble ikke markert som pang siden medlemmet allerede har status "
 "«sluttet» eller «pang»."
+
+#: internal/forms.py:131
+msgid ""
+"Member's “quit” status was not undone, as the member did not have the status "
+"“quit”."
+msgstr ""
+"Medlemmets «sluttet»-status ble ikke gjort om siden medlemmet ikke hadde "
+"status «sluttet»."
 
 #: internal/forms.py:119
 msgid ""
@@ -685,8 +685,8 @@ msgid "Date joined"
 msgstr "Startdato"
 
 #: internal/models.py:38
-msgid "Date quit"
-msgstr "Sluttdato"
+msgid "Date quit or retired"
+msgstr "Dato sluttet eller panget"
 
 #: internal/models.py:39 internal/templates/internal/member_list.html:261
 msgid "Reason quit"
@@ -881,6 +881,14 @@ msgstr "Status"
 msgid "Joined"
 msgstr "Ble med"
 
+#: internal/templates/internal/member_list.html:129
+msgid "Date retired"
+msgstr "Pangdato"
+
+#: internal/templates/internal/member_list.html:131
+msgid "Date quit"
+msgstr "Sluttdato"
+
 #: internal/templates/internal/member_list.html:134
 #: internal/templatetags/member.py:43
 msgid "Yes"
@@ -937,6 +945,15 @@ msgstr "Sett medlem %(name)s som sluttet"
 #: internal/templates/internal/member_quit.html:25
 msgid "Set quit"
 msgstr "Sett sluttet"
+
+#: internal/templates/internal/member_retire.html:14
+#, python-format
+msgid "Set member %(name)s as retired"
+msgstr "Sett medlem %(name)s som pang"
+
+#: internal/templates/internal/member_retire.html:23
+msgid "Set retired"
+msgstr "Sett panget"
 
 #: internal/templates/internal/secret_create.html:5
 #: internal/templates/internal/secret_create.html:6

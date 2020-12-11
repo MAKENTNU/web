@@ -35,7 +35,7 @@ class Member(models.Model):
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
     study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
-    date_quit = models.DateField(null=True, blank=True, verbose_name=_("Date quit"))
+    date_quit_or_retired = models.DateField(null=True, blank=True, verbose_name=_("Date quit or retired"))
     reason_quit = models.TextField(blank=True, verbose_name=_("Reason quit"))
     comment = models.TextField(blank=True, verbose_name=_("Comment"))
     active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -76,36 +76,42 @@ class Member(models.Model):
         return date_to_term(self.date_joined)
 
     @property
-    def term_quit(self):
-        if self.date_quit is None:
+    def term_quit_or_retired(self):
+        if self.date_quit_or_retired is None:
             return None
-        return date_to_term(self.date_quit)
+        return date_to_term(self.date_quit_or_retired)
 
-    def set_quit(self, quit_status: bool, reason="", date_quit=timezone.now()):
+    def set_quit(self, quit_status: bool, reason="", date_quit_or_retired=timezone.now()):
         """
         Perform all the actions to set a member as quit or undo this action.
 
         :param quit_status: Indicates if the member has quit
         :param reason: The reason why the member has quit
-        :param date_quit: The date the member quit
+        :param date_quit_or_retired: The date the member quit
         """
         self.quit = quit_status
         if self.quit:
-            self.date_quit = date_quit
+            self.date_quit_or_retired = date_quit_or_retired
         else:
-            self.date_quit = None
+            self.date_quit_or_retired = None
 
         self.reason_quit = reason
         self.set_committee_membership(not quit_status)
         self.set_membership(not quit_status)
 
-    def set_retirement(self, retirement_status: bool):
+    def set_retirement(self, retirement_status: bool, date_quit_or_retired=timezone.now()):
         """
         Perform all the actions to set a member as retired or to undo this action.
 
         :param retirement_status: Indicates if the member has retired
+        :param date_quit_or_retired: The date the member retired
         """
         self.retired = retirement_status
+        if self.retired:
+            self.date_quit_or_retired = date_quit_or_retired
+        else:
+            self.date_quit_or_retired = None
+
         self.set_committee_membership(not retirement_status)
         self.set_membership(True)
 
