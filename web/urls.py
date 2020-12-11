@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import permission_required
-from django.urls import include, path, re_path
+from django.urls import include, path, re_path, reverse_lazy
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
@@ -73,6 +73,15 @@ urlpatterns += [
     path('ckeditor/upload/', permission_required("contentbox.can_upload_image")(ckeditor_views.upload), name='ckeditor_upload'),
     path('ckeditor/browse/', never_cache(permission_required("contentbox.can_browse_image")(ckeditor_views.browse)), name='ckeditor_browse'),
 ]
+
+# --- Old URLs ---
+# URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs
+urlpatterns += i18n_patterns(
+    path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
+    path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
+    path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+    prefix_default_language=False,
+)
 
 handler404 = views.View404.as_view()
 handler500 = views.view_500
