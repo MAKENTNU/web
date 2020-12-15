@@ -764,6 +764,16 @@ msgstr "Tilgang"
 msgid "Access for {member} to {name}: {has_access}"
 msgstr "Tilgang for {member} til {name}: {has_access}"
 
+#: internal/models.py:225
+#: make_queue/models/machine.py:45 make_queue/models/machine.py:115
+#: makerspace/models.py:25
+msgid "Priority"
+msgstr "Prioritet"
+
+#: internal/models.py:226
+msgid "If specified, the secrets are sorted ascending by this value."
+msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
+
 #: internal/templates/internal/base.html:6
 #: internal/templates/internal/home.html:13
 msgid "MAKE NTNU Internal"
@@ -1032,11 +1042,6 @@ msgstr "Tatt 3D-printerkurset"
 #: make_queue/models/machine.py:41
 msgid "Usage requirement"
 msgstr "Brukskrav"
-
-#: make_queue/models/machine.py:45 make_queue/models/machine.py:112
-#: makerspace/models.py:25
-msgid "Priority"
-msgstr "Prioritet"
 
 #: make_queue/models/machine.py:46
 msgid "The machine types are sorted ascending by this value."

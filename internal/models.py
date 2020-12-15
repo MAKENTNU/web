@@ -1,5 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db import models
+from django.db.models import F
+from django.db.models.functions import Lower
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.urls import reverse
@@ -201,6 +203,15 @@ class SystemAccess(models.Model):
         return self.name != self.WEBSITE
 
 
+class SecretQuerySet(models.QuerySet):
+
+    def default_order_by(self):
+        return self.order_by(
+            F('priority').asc(nulls_last=True),
+            Lower('title'),
+        )
+
+
 class Secret(models.Model):
     title = MultiLingualTextField(
         max_length=100,
@@ -208,7 +219,15 @@ class Secret(models.Model):
         verbose_name=_("Title"),
     )
     content = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
+    priority = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_("Priority"),
+        help_text=_("If specified, the secrets are sorted ascending by this value."),
+    )
     last_modified = models.DateTimeField(auto_now=True)
+
+    objects = SecretQuerySet.as_manager()
 
     def __str__(self):
         return str(self.title)

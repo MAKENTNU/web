@@ -17,6 +17,7 @@ class HomeView(TemplateView):
 
 class SecretListView(ListView):
     model = Secret
+    queryset = Secret.objects.default_order_by()
     template_name = 'internal/secret_list.html'
     context_object_name = 'secrets'
 
