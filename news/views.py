@@ -594,6 +594,7 @@ class MyTicketsListView(ListView):
     context_object_name = 'tickets'
 
     def get_queryset(self):
+        # Prefetching `timeplace__event` instead of selecting related, to prevent debug error messages when `timeplace` is `None`
         return self.request.user.event_tickets.prefetch_related(
             'event__timeplaces__event', 'timeplace__event',
         )

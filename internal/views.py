@@ -51,6 +51,7 @@ class EditInternalContentBoxView(EditContentBoxView):
 
 class MemberListView(ListView):
     model = Member
+    queryset = Member.objects.select_related('user').prefetch_related('committees__group', 'system_accesses')
     template_name = 'internal/member_list.html'
     context_object_name = 'members'
 
