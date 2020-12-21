@@ -122,6 +122,4 @@ class PermissionsTestCase(TestCase):
 
     @staticmethod
     def add_permissions(user: User, *codenames: str):
-        for codename in codenames:
-            permission = Permission.objects.get(codename=codename)
-            user.user_permissions.add(permission)
+        user.user_permissions.add(*Permission.objects.filter(codename__in=codenames))

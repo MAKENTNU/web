@@ -27,6 +27,7 @@ class NewsBase(models.Model):
     private = models.BooleanField(default=False, verbose_name=_("Internal"))
 
     class Meta:
+        abstract = True
         permissions = (
             ('can_view_private', "Can view private news"),
         )
@@ -70,7 +71,7 @@ class Article(NewsBase):
 
     objects = ArticleQuerySet.as_manager()
 
-    class Meta:
+    class Meta(NewsBase.Meta):
         ordering = ('-publication_time',)
 
 
