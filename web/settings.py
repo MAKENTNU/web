@@ -2,8 +2,11 @@ import logging
 import sys
 from pathlib import Path
 
+import django.views.static
 from django.conf.locale.en import formats as en_formats
 from django.conf.locale.nb import formats as nb_formats
+
+from .static import serve_interpolated
 
 
 # Disable logging when testing
@@ -258,9 +261,11 @@ nb_formats.DECIMAL_SEPARATOR = '.'
 STATIC_ROOT = BASE_DIR.parent / 'static'
 STATIC_URL = '/static/'
 
-# ManifestStaticFilesStorage appends every static file's MD5 hash to its filename,
+# This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
 # which avoids waiting for browsers' cache to update if a file's contents change
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'web.static.InterpolatingManifestStaticFilesStorage'
+# Monkey patch view used for serving static and media files (for development only; Nginx is used in production)
+django.views.static.serve = serve_interpolated
 
 
 # Code taken from https://github.com/django-ckeditor/django-ckeditor/issues/404#issuecomment-687778492
