@@ -11,7 +11,19 @@ MANIFEST_HEX_SUFFIX_REGEX = r"\.[0-9a-f]{12}"
 
 class InterpolatedStaticFilesTests(LiveServerTestCase):
     interpolated_files_to_before_and_after_strings = {
-        # TODO: add files here when they've been created
+        **{
+            f'{favicons_base_folder}/img/favicons/browserconfig.interpolated.xml': [
+                ("{% get_relative_static './mstile-150x150.png' %}", rf'\./mstile-150x150{MANIFEST_HEX_SUFFIX_REGEX}\.png')
+            ]
+            for favicons_base_folder in ('web', 'internal', 'admin')
+        },
+        **{
+            f'{favicons_base_folder}/img/favicons/site.interpolated.webmanifest': [
+                ("{% get_relative_static './android-chrome-192x192.png' %}", rf'\./android-chrome-192x192{MANIFEST_HEX_SUFFIX_REGEX}\.png'),
+                ("{% get_relative_static './android-chrome-512x512.png' %}", rf'\./android-chrome-512x512{MANIFEST_HEX_SUFFIX_REGEX}\.png'),
+            ]
+            for favicons_base_folder in ('web', 'internal', 'admin')
+        },
     }
 
     # Requesting static files does for some reason not work with `self.client.get()` - even when subclassing `StaticLiveServerTestCase`

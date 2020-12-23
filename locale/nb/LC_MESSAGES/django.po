@@ -777,6 +777,11 @@ msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
 msgid "MAKE NTNU Internal"
 msgstr "MAKE NTNU internsider"
 
+#: internal/templates/internal/favicon.html:5
+#: internal/templates/internal/favicon.html:7
+msgid "MAKE Internal"
+msgstr "MAKE internsider"
+
 #: internal/templates/internal/header.html:12
 msgid "Members"
 msgstr "Medlemmer"
@@ -2328,6 +2333,10 @@ msgstr "Django administrasjonsside"
 #: web/templates/admin/base_site.html:9
 msgid "Django administration"
 msgstr "Django-administrasjon"
+
+#: web/templates/admin/favicon.html:7 web/templates/admin/favicon.html:9
+msgid "MAKE Admin"
+msgstr "MAKE admin"
 
 #: web/templates/web/404.html:6
 msgid "The page doesn't exist"

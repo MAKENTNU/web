@@ -3,6 +3,8 @@
 
 
 {% block extrahead %}
+    {% include 'admin/favicon.html' with favicons_folder='admin/img/favicons' %}
+
     <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
 {% endblock extrahead %}
 
