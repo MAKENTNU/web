@@ -132,7 +132,9 @@ ALLOWED_REDIRECT_HOSTS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'web/templates',  # for overriding Django admin templates
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

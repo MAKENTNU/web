@@ -2321,6 +2321,14 @@ msgstr "Din billett!"
 msgid "Full name from LDAP"
 msgstr "Fullt navn fra LDAP"
 
+#: web/templates/admin/base_site.html:5
+msgid "Django site admin"
+msgstr "Django administrasjonsside"
+
+#: web/templates/admin/base_site.html:9
+msgid "Django administration"
+msgstr "Django-administrasjon"
+
 #: web/templates/web/404.html:6
 msgid "The page doesn't exist"
 msgstr "Siden finnes ikke"
