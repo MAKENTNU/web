@@ -31,9 +31,39 @@
             </div>
             <div class="ui two fields">
                 <div class="ui field">
+                    <label>{{ form.gmail.label }}</label>
+                    {{ form.gmail }}
+                </div>
+                <div class="ui field">
+                    {# TODO: reduce code duplication for the error messages #}
+                    <label>{{ form.MAKE_email.label }}</label>
+                    {{ form.MAKE_email }}
+                    {% for error in form.MAKE_email.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui two fields">
+                <div class="ui field">
                     <label>{{ form.study_program.label }}</label>
                     {{ form.study_program }}
                 </div>
+                <div class="ui field">
+                    {# TODO: reduce code duplication for the error messages #}
+                    <label>{{ form.ntnu_starting_semester.label }}</label>
+                    {{ form.ntnu_starting_semester }}
+                    {% for error in form.ntnu_starting_semester.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui two fields">
                 <div class="ui field">
                     <label>{{ form.card_number.label }}</label>
                     {{ form.card_number }}
@@ -43,6 +73,16 @@
                             <b>{{ error|escape }}</b>
                         </div>
                     {% endfor %}
+                </div>
+            </div>
+
+            <h4 class="ui horizontal divider header">
+                <i class="info circle icon"></i>{% trans "Extra information" %}
+            </h4>
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.github_username.label }}</label>
+                    {{ form.github_username }}
                 </div>
             </div>
 

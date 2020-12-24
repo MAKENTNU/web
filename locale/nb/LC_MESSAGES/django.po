@@ -671,6 +671,14 @@ msgstr "Rolle"
 msgid "Contact email"
 msgstr "Kontakt-e-post"
 
+#: internal/models.py:37 internal/templates/internal/member_list.html:243
+msgid "Gmail"
+msgstr "Gmail"
+
+#: internal/models.py:39 internal/templates/internal/member_list.html:251
+msgid "MAKE email"
+msgstr "MAKE-e-post"
+
 #: internal/models.py:35 internal/templates/internal/member_list.html:109
 #: internal/templates/internal/member_list.html:213
 msgid "Phone number"
@@ -679,6 +687,14 @@ msgstr "Telefonnummer"
 #: internal/models.py:36 internal/templates/internal/member_list.html:235
 msgid "Study program"
 msgstr "Studieprogram"
+
+#: internal/models.py:42 internal/templates/internal/member_list.html:271
+msgid "starting semester at NTNU"
+msgstr "startsemester på NTNU"
+
+#: internal/models.py:43
+msgid "Must be in the format [V/H][year], e.g. “V17” or “H2017”."
+msgstr "Må være på formatet [V/H][år], f.eks. «V17» eller «H2017»."
 
 #: internal/models.py:37
 msgid "Date joined"
@@ -722,6 +738,10 @@ msgstr "Pang"
 #: internal/templatetags/member.py:26
 msgid "Honorary"
 msgstr "Æresmedlem"
+
+#: internal/models.py:54 internal/templates/internal/member_list.html:341
+msgid "GitHub username"
+msgstr "GitHub-brukernavn"
 
 #: internal/models.py:162
 msgid "Drive"
@@ -806,6 +826,11 @@ msgstr "Legg til nytt medlem"
 #: internal/templates/internal/member_edit.html:13
 msgid "Change information for"
 msgstr "Endre informasjon for"
+
+#: internal/templates/internal/member_edit.html:80
+#: internal/templates/internal/member_list.html:335
+msgid "Extra information"
+msgstr "Ekstrainformasjon"
 
 #: internal/templates/internal/member_edit.html:51
 #: internal/templates/internal/member_list.html:243
@@ -976,6 +1001,10 @@ msgstr "Sist endret"
 #: internal/templates/internal/secret_list.html:47
 msgid "Click to show - only if you're alone!"
 msgstr "Klikk for å vise - bare hvis du er alene!"
+
+#: internal/validators.py:12
+msgid "Enter a valid email address ending in “@makentnu.no”."
+msgstr "Oppgi en gyldig e-postadresse som slutter med «@makentnu.no»."
 
 #: internal/validators.py:9
 msgid "Enter a valid format for a semester."

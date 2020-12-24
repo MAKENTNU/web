@@ -13,7 +13,9 @@ from groups.models import Committee
 from users.models import User
 from web.modelfields import UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
-from .util import date_to_semester
+from .modelfields import SemesterField
+from .util import date_to_semester, year_to_semester
+from .validators import WhitelistedEmailValidator
 
 
 class Member(models.Model):
@@ -32,8 +34,13 @@ class Member(models.Model):
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
     contact_email = models.EmailField(blank=True, verbose_name=_("Contact email"))
+    gmail = models.EmailField(blank=True, verbose_name=_("Gmail"))
+    MAKE_email = models.EmailField(blank=True, validators=[WhitelistedEmailValidator(valid_domains=["makentnu.no"])],
+                                   verbose_name=_("MAKE email"))
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
     study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
+    ntnu_starting_semester = SemesterField(null=True, blank=True, verbose_name=_("starting semester at NTNU"),
+                                           help_text=_('Must be in the format [V/H][year], e.g. “V17” or “H2017”.'))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
     date_quit_or_retired = models.DateField(null=True, blank=True, verbose_name=_("Date quit or retired"))
     reason_quit = models.TextField(blank=True, verbose_name=_("Reason quit"))
@@ -43,6 +50,8 @@ class Member(models.Model):
     quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
     retired = models.BooleanField(default=False, verbose_name=_("Retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
+    # Our code shouldn't have to keep track of GitHub's username length constraints, so we should not limit the length
+    github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
 
     class Meta:
         permissions = (
@@ -68,6 +77,12 @@ class Member(models.Model):
 
             # Add user to the MAKE group
             self.set_membership(True)
+
+    @property
+    def ntnu_starting_semester_display(self):
+        if not self.ntnu_starting_semester:
+            return ""
+        return year_to_semester(self.ntnu_starting_semester)
 
     @property
     def semester_joined(self):

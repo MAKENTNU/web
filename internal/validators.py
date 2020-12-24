@@ -1,8 +1,22 @@
 import re
+from typing import Collection
 
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
+from django.core.validators import EmailValidator, RegexValidator
+from django.utils.deconstruct import deconstructible
 from django.utils.translation import gettext_lazy as _
+
+
+@deconstructible
+class WhitelistedEmailValidator(EmailValidator):
+    message = _("Enter a valid email address ending in “@makentnu.no”.")
+
+    def __init__(self, valid_domains: Collection[str], **kwargs):
+        super().__init__(**kwargs)
+        self.valid_domains = set(valid_domains)
+
+    def validate_domain_part(self, domain_part):
+        return domain_part in self.valid_domains
 
 
 semester_string_regex = re.compile(r'^([VH])(\d{2}|\d{4})$', re.IGNORECASE)

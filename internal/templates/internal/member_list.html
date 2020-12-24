@@ -118,8 +118,13 @@
                     data-phone="{{ member.phone_number }}"
                     data-name="{{ member.user.get_full_name }}"
                     data-contact-email="{{ member.contact_email }}"
+                    data-gmail="{{ member.gmail }}"
+                    data-make-email="{{ member.MAKE_email }}" {# HTML attributes cannot be uppercase #}
                     data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
+                    data-ntnu-starting-semester="{{ member.ntnu_starting_semester_display }}"
+                    data-github-username="{{ member.github_username }}"
+
                     data-semester-joined="{{ member.semester_joined }}"
                     data-date-joined="{{ member.date_joined|short_date }}"
                     data-date-joined-sortable="{{ member.date_joined|iso_date }}"
@@ -235,6 +240,22 @@
                 </tr>
                 <tr>
                     <td>
+                        <b>{% trans "Gmail" %}</b>
+                    </td>
+                    <td>
+                        <b><a id="member-gmail"></a></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "MAKE email" %}</b>
+                    </td>
+                    <td>
+                        <b><a id="member-MAKEEmail"></a></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
                         <b>{% trans "Card number" %}</b>
                     </td>
                     <td id="member-cardNumber"></td>
@@ -244,6 +265,12 @@
                         <b>{% trans "Study program" %}</b>
                     </td>
                     <td id="member-studyProgram"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "starting semester at NTNU"|capfirst %}</b>
+                    </td>
+                    <td id="member-ntnuStartingSemester"></td>
                 </tr>
                 </tbody>
             </table>
@@ -300,6 +327,22 @@
                         <b>{% trans "Comment" %}</b>
                     </td>
                     <td id="member-comment"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h4 class="ui horizontal divider header">
+                <i class="make-col-yellow info circle icon"></i>{% trans "Extra information" %}
+            </h4>
+            <table class="ui very basic unstackable celled table">
+                <tbody>
+                <tr>
+                    <td class="six wide column">
+                        <b>{% trans "GitHub username" %}</b>
+                    </td>
+                    <td>
+                        <b><a id="member-githubUsername"></a></b>
+                    </td>
                 </tr>
                 </tbody>
             </table>

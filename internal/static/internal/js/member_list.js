@@ -45,8 +45,13 @@ function showDetailedMemberInformation(member) {
         name: member.data.name,
         phone: member.data.phone,
         contactEmail: member.data.contactEmail,
+        gmail: member.data.gmail,
+        MAKEEmail: member.data.MAKEEmail,
         cardNumber: member.data.cardNumber,
         studyProgram: member.data.studyProgram,
+        ntnuStartingSemester: member.data.ntnuStartingSemester,
+        githubUsername: member.data.githubUsername,
+
         dateJoined: `${member.data.semesterJoined} (${member.data.dateJoined})`,
         dateQuitOrRetired: `${member.data.semesterQuitOrRetired} (${member.data.dateQuitOrRetired})`,
         reasonQuit: member.data.reasonQuit,
@@ -78,12 +83,19 @@ function showDetailedMemberInformation(member) {
             $memberInfoModal.find("#edit-member-status-form").submit();
         });
 
+    for (let emailAttribute of ["contactEmail", "gmail", "MAKEEmail"]) {
+        $memberInfoModal.find(`#member-${emailAttribute}`)
+            .attr("href", `mailto:${member.data[emailAttribute]}`)
+            .attr("target", "_blank");
+    }
     $memberInfoModal.find("#member-phone").attr("href", `tel:${member.data.phone}`);
-    $memberInfoModal.find("#member-contactEmail").attr("href", `mailto:${member.data.contactEmail}`);
+    $memberInfoModal.find("#member-githubUsername")
+        .attr("href", `https://github.com/${member.data.githubUsername}`)
+        .attr("target", "_blank");
 
-    for (let hideableAttribute of ["dateQuitOrRetired", "reasonQuit", "role", "comment"]) {
+    for (let hideableAttribute of ["MAKEEmail", "dateQuitOrRetired", "reasonQuit", "role", "comment"]) {
         $memberInfoModal.find(`#member-${hideableAttribute}`)
-            .parent().toggleClass("display-none", member.data[hideableAttribute].isEmpty());
+            .closest("tr").toggleClass("display-none", member.data[hideableAttribute].isEmpty());
     }
 
     const $memberStatusElement = $memberInfoModal.find("#member-status, #member-status-header");
@@ -256,8 +268,13 @@ function setup() {
                 name: $row.data("name"),
                 phone: $row.data("phone"),
                 contactEmail: $row.data("contact-email"),
+                gmail: $row.data("gmail"),
+                MAKEEmail: $row.data("make-email"),
                 cardNumber: $row.data("card-number"),
                 studyProgram: $row.data("study-program"),
+                ntnuStartingSemester: $row.data("ntnu-starting-semester"),
+                githubUsername: $row.data("github-username"),
+
                 dateJoined: $row.data("date-joined"),
                 dateJoinedSortable: $row.data("date-joined-sortable"),
                 semesterJoined: $row.data("semester-joined"),
