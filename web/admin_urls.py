@@ -1,6 +1,8 @@
+from decorator_include import decorator_include
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
+from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import path
 from django.views.generic import RedirectView, TemplateView
 from django_hosts import reverse
@@ -11,6 +13,10 @@ admin.site.site_url = f"//{settings.PARENT_HOST}/"
 
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='web/admin_robots.txt', content_type='text/plain')),
+    path("i18n/", decorator_include(
+        staff_member_required,
+        'django.conf.urls.i18n'
+    )),
 ]
 
 urlpatterns += i18n_patterns(
