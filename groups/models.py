@@ -2,6 +2,8 @@ from django.contrib.auth.models import Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from util.storage import OverwriteStorage, UploadToUtils
+
 
 class InheritanceGroup(Group):
     """
@@ -98,7 +100,8 @@ class Committee(models.Model):
     clickbait = models.TextField(blank=True, verbose_name=_("Clickbait"))
     description = models.TextField(verbose_name=_("Description"))
     email = models.EmailField(verbose_name=_("Email"))
-    image = models.ImageField(blank=True, verbose_name=_("Image"))
+    image = models.ImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('committees'),
+                              blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("Image"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def __str__(self):

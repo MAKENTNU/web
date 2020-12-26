@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from users.models import User
 from util.locale_utils import short_date_format
 from util.logging_utils import get_request_logger
+from util.storage import OverwriteStorage, UploadToUtils
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
@@ -26,6 +27,11 @@ class NewsBaseQuerySet(models.QuerySet):
         return self.filter(hidden_news_query)
 
 
+def news_subclass_directory_path(instance: 'NewsBase', filename: str):
+    model_name = instance._meta.model_name
+    return f"news/{model_name}s/{filename}"
+
+
 class NewsBase(models.Model):
     """
     The abstract class that contains the common fields and methods of ``Article`` and ``Event``.
@@ -35,7 +41,8 @@ class NewsBase(models.Model):
     title = MultiLingualTextField(verbose_name=_("Title"))
     content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
     clickbait = MultiLingualTextField(verbose_name=_("Clickbait"), widget=MultiLingualTextarea)
-    image = models.ImageField(verbose_name=_("Image"))
+    image = models.ImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func(news_subclass_directory_path),
+                              max_length=200, storage=OverwriteStorage(), verbose_name=_("Image"))
     image_description = MultiLingualTextField(verbose_name=_("image description"),
                                               help_text=_("This should be a concise visual description of the image,"
                                                           " which is mainly useful for people using a screen reader."))

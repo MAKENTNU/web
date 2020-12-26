@@ -102,7 +102,7 @@ INSTALLED_APPS = [
     'news',
     'users',
 
-    'util',  # not a "real" app, just a collection of utilities
+    'util',
 
     # Should be placed last,
     # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
