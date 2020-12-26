@@ -211,10 +211,10 @@ msgstr "Fredag"
 msgid "Saturday"
 msgstr "Lørdag"
 
-#: web/static/web/js/widgets/mazemap_search.js:31
+#: web/static/web/js/forms/widgets/mazemap_search.js:31
 msgid "No Results"
 msgstr "Ingen resultater"
 
-#: web/static/web/js/widgets/mazemap_search.js:34
+#: web/static/web/js/forms/widgets/mazemap_search.js:34
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"
