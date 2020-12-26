@@ -1,0 +1,13 @@
+{# Linking `language_form.js` is required when including this template #}
+
+{# This form is hidden, but is submitted through jQuery #}
+<form id="lang-form" method="POST" action="{% url 'set_language' %}">
+    {% csrf_token %}
+    {% if LANGUAGE_CODE == "en" %}
+        <input name="language" type="hidden" value="nb"/>
+        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/> {# removes "/en" #}
+    {% else %}
+        <input name="language" type="hidden" value="en"/>
+        <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
+    {% endif %}
+</form>
