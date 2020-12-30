@@ -28,7 +28,7 @@ class UrlTests(PermissionsTestCase):
 
         self.add_permissions(member_user, 'is_internal')
         self.add_permissions(member_editor_user, 'is_internal',
-                             'can_register_new_member', 'can_edit_group_membership', 'change_systemaccess')
+                             'add_member', 'can_edit_group_membership', 'change_systemaccess')
         self.member = Member.objects.create(user=member_user)
         self.member_editor = Member.objects.create(user=member_editor_user)
 

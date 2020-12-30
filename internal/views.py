@@ -66,7 +66,7 @@ class MemberListView(ListView):
 
 
 class CreateMemberView(PermissionRequiredMixin, CreateView):
-    permission_required = ('internal.can_register_new_member',)
+    permission_required = ('internal.add_member',)
     model = Member
     form_class = AddMemberForm
     template_name = 'internal/member_create.html'
