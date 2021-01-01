@@ -35,16 +35,16 @@ class Announcement(models.Model):
         CRITICAL = "C", _("Critical")
 
     classification = models.CharField(choices=Type.choices, max_length=1, default=Type.INFO,
-                                      verbose_name=_("Type"))
-    site_wide = models.BooleanField(verbose_name=_("Site-wide"),
+                                      verbose_name=_("type"))
+    site_wide = models.BooleanField(verbose_name=_("site-wide"),
                                     help_text=_("If selected, the announcement will be shown on all pages, otherwise it"
                                                 " is only shown on the front page."))
-    content = MultiLingualTextField(verbose_name=_("Content"))
-    link = URLTextField(blank=True, verbose_name=_("Link"),
+    content = MultiLingualTextField(verbose_name=_("content"))
+    link = URLTextField(blank=True, verbose_name=_("link"),
                         help_text=_("An optional link to an information page."))
-    display_from = models.DateTimeField(default=timezone.localtime, verbose_name=_("Display from"),
+    display_from = models.DateTimeField(default=timezone.localtime, verbose_name=_("display from"),
                                         help_text=_("The date from which the announcement will be shown."))
-    display_to = models.DateTimeField(null=True, blank=True, verbose_name=_("Display to"),
+    display_to = models.DateTimeField(null=True, blank=True, verbose_name=_("display to"),
                                       help_text=_("The announcement will be shown until this date. If none is given, it"
                                                   " is shown indefinitely."))
 

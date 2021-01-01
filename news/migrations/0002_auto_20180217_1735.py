@@ -17,6 +17,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='timeplace',
             name='hidden',
-            field=models.BooleanField(default=True, verbose_name='Skjult'),
+            field=models.BooleanField(default=True, verbose_name='skjult'),
         ),
     ]

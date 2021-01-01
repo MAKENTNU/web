@@ -60,7 +60,7 @@
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'quota_panel' %}">
                         <div class="center aligned header">
-                            <i class="ui grey clock outline icon"></i>{% trans "Quota" %}
+                            <i class="ui grey clock outline icon"></i>{% trans "quota"|capfirst %}
                         </div>
                         <div class="description">
                             {% trans "Here you can create and edit both global and personal quotas for reservations of machines" %}.
@@ -72,7 +72,7 @@
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'committee_admin' %}">
                         <div class="center aligned header">
-                            <i class="ui grey users icon"></i>{% trans "Committees" %}
+                            <i class="ui grey users icon"></i>{% trans "committees"|capfirst %}
                         </div>
                         <div class="description">
                             {% trans "Here you can edit the committees' description, image and email" %}.

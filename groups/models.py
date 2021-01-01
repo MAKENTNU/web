@@ -94,10 +94,10 @@ class Committee(models.Model):
         related_name='committee',
         verbose_name=_("group"),
     )
-    clickbait = models.TextField(blank=True, verbose_name=_("Clickbait"))
-    description = models.TextField(verbose_name=_("Description"))
-    email = models.EmailField(verbose_name=_("Email"))
-    image = models.ImageField(blank=True, verbose_name=_("Image"))
+    clickbait = models.TextField(blank=True, verbose_name=_("clickbait"))
+    description = models.TextField(verbose_name=_("description"))
+    email = models.EmailField(verbose_name=_("email"))
+    image = models.ImageField(blank=True, verbose_name=_("image"))
 
     def __str__(self):
         return self.name

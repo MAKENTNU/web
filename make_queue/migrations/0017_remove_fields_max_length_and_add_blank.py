@@ -20,22 +20,22 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='machine',
             name='location',
-            field=web.modelfields.UnlimitedCharField(verbose_name='Location'),
+            field=web.modelfields.UnlimitedCharField(verbose_name='location'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='location_url',
-            field=web.modelfields.URLTextField(verbose_name='Location URL'),
+            field=web.modelfields.URLTextField(verbose_name='location URL'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='machine_model',
-            field=web.modelfields.UnlimitedCharField(verbose_name='Machine model'),
+            field=web.modelfields.UnlimitedCharField(verbose_name='machine model'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='name',
-            field=web.modelfields.UnlimitedCharField(unique=True, verbose_name='Name'),
+            field=web.modelfields.UnlimitedCharField(unique=True, verbose_name='name'),
         ),
         migrations.AlterField(
             model_name='machinetype',
@@ -45,28 +45,28 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='printer3dcourse',
             name='_card_number',
-            field=card.modelfields.CardNumberField(blank=True, default='', error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, verbose_name='Card number'),
+            field=card.modelfields.CardNumberField(blank=True, default='', error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, verbose_name='card number'),
             preserve_default=False,
         ),
         migrations.AlterField(
             model_name='printer3dcourse',
             name='name',
-            field=models.CharField(blank=True, max_length=256, verbose_name='Full name'),
+            field=models.CharField(blank=True, max_length=256, verbose_name='full name'),
         ),
         migrations.AlterField(
             model_name='printer3dcourse',
             name='username',
-            field=make_queue.models.fields.UsernameField(blank=True, max_length=32, unique=True, verbose_name='Username'),
+            field=make_queue.models.fields.UsernameField(blank=True, max_length=32, unique=True, verbose_name='username'),
         ),
         migrations.AlterField(
             model_name='quota',
             name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.machinetype', verbose_name='Machine type'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.machinetype', verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='quota',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='user'),
         ),
         migrations.AlterField(
             model_name='reservation',

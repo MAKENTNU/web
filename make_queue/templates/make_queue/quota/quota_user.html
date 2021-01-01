@@ -26,7 +26,7 @@
                 <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
             </span>
             {% if quota.ignore_rules %}
-                <b>{% trans "Ignores rules" %}</b>
+                <b>{% trans "ignores rules"|capfirst %}</b>
             {% endif %}
         </div>
     </div>

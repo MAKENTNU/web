@@ -17,7 +17,7 @@ class EquipmentAdmin(MultiLingualFieldAdmin):
             alt_text=_("Image of {equipment}.").format(equipment=equipment.title),
         )
 
-    get_image.short_description = _("Image")
+    get_image.short_description = _("image")
 
     def get_queryset(self, request):
         return super().get_queryset(request).default_order_by()

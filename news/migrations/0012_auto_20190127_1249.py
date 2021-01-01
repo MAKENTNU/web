@@ -18,11 +18,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EventTicket',
             fields=[
-                ('name', models.CharField(max_length=128, verbose_name='Name')),
-                ('email', models.EmailField(max_length=254, verbose_name='Email')),
-                ('active', models.BooleanField(default=True, verbose_name='Active')),
-                ('comment', models.TextField(blank=True, verbose_name='Comment')),
-                ('language', models.CharField(choices=[('en', 'English'), ('nb', 'Norwegian')], default='en', max_length=2, verbose_name='Preferred language')),
+                ('name', models.CharField(max_length=128, verbose_name='name')),
+                ('email', models.EmailField(max_length=254, verbose_name='email')),
+                ('active', models.BooleanField(default=True, verbose_name='active')),
+                ('comment', models.TextField(blank=True, verbose_name='comment')),
+                ('language', models.CharField(choices=[('en', 'English'), ('nb', 'Norwegian')], default='en', max_length=2, verbose_name='preferred language')),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
             ],
             options={
@@ -32,31 +32,31 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='number_of_tickets',
-            field=models.IntegerField(default=0, verbose_name='Number of available tickets'),
+            field=models.IntegerField(default=0, verbose_name='number of available tickets'),
         ),
         migrations.AddField(
             model_name='timeplace',
             name='number_of_tickets',
-            field=models.IntegerField(default=0, verbose_name='Number of available tickets'),
+            field=models.IntegerField(default=0, verbose_name='number of available tickets'),
         ),
         migrations.AlterField(
             model_name='timeplace',
             name='end_time',
-            field=models.TimeField(default=datetime.time(0, 0), verbose_name='End time'),
+            field=models.TimeField(default=datetime.time(0, 0), verbose_name='end time'),
         ),
         migrations.AddField(
             model_name='eventticket',
             name='event',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='news.Event', verbose_name='Event'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='news.Event', verbose_name='event'),
         ),
         migrations.AddField(
             model_name='eventticket',
             name='timeplace',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='news.TimePlace', verbose_name='Timeplace'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='news.TimePlace', verbose_name='timeplace'),
         ),
         migrations.AddField(
             model_name='eventticket',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='User'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='user'),
         ),
     ]

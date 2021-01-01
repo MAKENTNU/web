@@ -24,7 +24,7 @@
                     {% empty %}
                         src="{{ image.url }}"
                     {% endthumbnail %}
-                        id="profile-pic" alt="{% trans "Profile picture" %}"
+                        id="profile-pic" alt="{% trans "profile picture"|capfirst %}"
                     />
                 {% else %}
                     <img id="profile-pic" src="{% static 'checkin/img/placeholder_profile.png' %}"

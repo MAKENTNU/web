@@ -68,7 +68,7 @@
             <div class="ui two fields">
                 <div class="ui field">
                     <label>
-                        {{ form.user.label }}
+                        {{ form.user.label|capfirst }}
                         <span class="clear-dropdown">{% trans "Clear selection" %}</span>
                     </label>
                     {{ form.user }}

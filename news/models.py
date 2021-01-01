@@ -27,14 +27,14 @@ class NewsBaseQuerySet(models.QuerySet):
 
 
 class NewsBase(models.Model):
-    title = MultiLingualTextField(verbose_name=_("Title"))
-    content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
-    clickbait = MultiLingualTextField(verbose_name=_("Clickbait"), widget=MultiLingualTextarea)
-    image = models.ImageField(verbose_name=_("Image"))
-    contain = models.BooleanField(default=False, verbose_name=_("Don't crop the image"))
-    featured = models.BooleanField(default=True, verbose_name=_("Featured"))
-    hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))
-    private = models.BooleanField(default=False, verbose_name=_("Internal"))
+    title = MultiLingualTextField(verbose_name=_("title"))
+    content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
+    clickbait = MultiLingualTextField(verbose_name=_("clickbait"), widget=MultiLingualTextarea)
+    image = models.ImageField(verbose_name=_("image"))
+    contain = models.BooleanField(default=False, verbose_name=_("don't crop the image"))
+    featured = models.BooleanField(default=True, verbose_name=_("featured"))
+    hidden = models.BooleanField(default=False, verbose_name=_("hidden"))
+    private = models.BooleanField(default=False, verbose_name=_("internal"))
 
     objects = NewsBaseQuerySet.as_manager()
 
@@ -79,7 +79,7 @@ class ArticleQuerySet(NewsBaseQuerySet):
 
 
 class Article(NewsBase):
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publication time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"))
 
     objects = ArticleQuerySet.as_manager()
 
@@ -116,9 +116,9 @@ class Event(NewsBase):
         choices=Type.choices,
         max_length=1,
         default=Type.REPEATING,
-        verbose_name=_("Type of event"),
+        verbose_name=_("type of event"),
     )
-    number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
+    number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
 
     objects = EventQuerySet.as_manager()
 
@@ -178,13 +178,13 @@ class TimePlace(models.Model):
         on_delete=models.CASCADE,
         related_name='timeplaces',
     )
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publication time"))
-    start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Start time"))
-    end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("End time"))
-    place = UnlimitedCharField(blank=True, verbose_name=_("Location"))
-    place_url = URLTextField(blank=True, verbose_name=_("Location URL"))
-    hidden = models.BooleanField(default=True, verbose_name=_("Hidden"))
-    number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"))
+    start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("start time"))
+    end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("end time"))
+    place = UnlimitedCharField(blank=True, verbose_name=_("location"))
+    place_url = URLTextField(blank=True, verbose_name=_("location URL"))
+    hidden = models.BooleanField(default=True, verbose_name=_("hidden"))
+    number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
 
     objects = TimePlaceQuerySet.as_manager()
 
@@ -217,7 +217,7 @@ class EventTicket(models.Model):
         null=True,
         blank=True,
         related_name='event_tickets',
-        verbose_name=_("User"),
+        verbose_name=_("user"),
     )
     # Since timeplaces can be added/removed from standalone events, it is easier to use two foreign keys, instead of
     # using a many-to-many field for timeplaces
@@ -227,7 +227,7 @@ class EventTicket(models.Model):
         null=True,
         blank=True,
         related_name='tickets',
-        verbose_name=_("Timeplace"),
+        verbose_name=_("timeplace"),
     )
     event = models.ForeignKey(
         to=Event,
@@ -235,15 +235,15 @@ class EventTicket(models.Model):
         null=True,
         blank=True,
         related_name='tickets',
-        verbose_name=_("Event"),
+        verbose_name=_("event"),
     )
     # For backwards compatibility, name and email are no longer set. Getting name and email from user.
-    _name = models.CharField(max_length=128, db_column='name', verbose_name=_("Name"))
-    _email = models.EmailField(db_column='email', verbose_name=_("Email"))
-    active = models.BooleanField(default=True, verbose_name=_("Active"))
-    comment = models.TextField(blank=True, verbose_name=_("Comment"))
+    _name = models.CharField(max_length=128, db_column='name', verbose_name=_("name"))
+    _email = models.EmailField(db_column='email', verbose_name=_("email"))
+    active = models.BooleanField(default=True, verbose_name=_("active"))
+    comment = models.TextField(blank=True, verbose_name=_("comment"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
-                                verbose_name=_("Preferred language"))
+                                verbose_name=_("preferred language"))
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     class Meta:

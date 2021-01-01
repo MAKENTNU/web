@@ -30,19 +30,19 @@
                             {% endif %}
                             {% if event.featured %}
                                 <span class="ui green mini label">
-                                    {% trans "Featured" %}
+                                    {% trans "featured"|capfirst %}
                                 </span>
                             {% endif %}
 
                             {% if event.hidden %}
                                 <span class="ui red mini label">
-                                    {% trans "Hidden" %}
+                                    {% trans "hidden"|capfirst %}
                                 </span>
                             {% endif %}
 
                             {% if event.private %}
                                 <span class="ui make-bg-yellow mini label">
-                                    {% trans "Internal" %}
+                                    {% trans "internal"|capfirst %}
                                 </span>
                             {% endif %}
                         </div>

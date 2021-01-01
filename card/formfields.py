@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 from .validators import card_number_input_validator
@@ -15,7 +16,8 @@ class CardNumberField(forms.CharField):
     def __init__(self, **kwargs):
         super().__init__(**{
             'empty_value': None,
-            'label': _("Card number"),
+            # `capfirst()` to avoid duplicate translation differing only in case
+            'label': capfirst(_("card number")),
             **kwargs,
         })
 

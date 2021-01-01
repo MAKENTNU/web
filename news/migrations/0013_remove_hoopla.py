@@ -22,6 +22,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newsbase',
             name='content',
-            field=web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='Content'),
+            field=web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='content'),
         ),
     ]

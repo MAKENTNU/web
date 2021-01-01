@@ -38,11 +38,11 @@ class MachineType(models.Model):
         choices=UsageRequirement.choices,
         max_length=4,
         default=UsageRequirement.IS_AUTHENTICATED,
-        verbose_name=_("Usage requirement"),
+        verbose_name=_("usage requirement"),
     )
     has_stream = models.BooleanField(default=False)
     priority = models.IntegerField(
-        verbose_name=_("Priority"),
+        verbose_name=_("priority"),
         help_text=_("The machine types are sorted ascending by this value."),
     )
 
@@ -95,21 +95,21 @@ class Machine(models.Model):
 
     STATUS_CHOICES_DICT = dict(Status.choices)
 
-    name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
-    machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
+    name = UnlimitedCharField(unique=True, verbose_name=_("name"))
+    machine_model = UnlimitedCharField(verbose_name=_("machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.PROTECT,
         related_name='machines',
-        verbose_name=_("Machine type"),
+        verbose_name=_("machine type"),
     )
-    location = UnlimitedCharField(verbose_name=_("Location"))
-    location_url = URLTextField(verbose_name=_("Location URL"))
-    status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("Status"))
+    location = UnlimitedCharField(verbose_name=_("location"))
+    location_url = URLTextField(verbose_name=_("location URL"))
+    status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("status"))
     priority = models.IntegerField(
         null=True,
         blank=True,
-        verbose_name=_("Priority"),
+        verbose_name=_("priority"),
         help_text=_("If specified, the machines are sorted ascending by this value."),
     )
 

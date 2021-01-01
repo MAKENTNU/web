@@ -15,8 +15,8 @@ class Migration(migrations.Migration):
             name='Secret',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', web.multilingual.modelfields.MultiLingualTextField(max_length=100, unique=True, verbose_name='Title')),
-                ('content', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='Description')),
+                ('title', web.multilingual.modelfields.MultiLingualTextField(max_length=100, unique=True, verbose_name='title')),
+                ('content', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='description')),
                 ('last_modified', models.DateTimeField(auto_now=True)),
             ],
         ),

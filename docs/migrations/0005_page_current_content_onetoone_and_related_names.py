@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='content',
             name='made_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='doc_page_contents_created', to=settings.AUTH_USER_MODEL, verbose_name='Made by'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='doc_page_contents_created', to=settings.AUTH_USER_MODEL, verbose_name='made by'),
         ),
         migrations.AlterField(
             model_name='page',

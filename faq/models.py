@@ -5,28 +5,28 @@ from web.multilingual.modelfields import MultiLingualRichTextUploadingField, Mul
 
 
 class Category(models.Model):
-    name = MultiLingualTextField(unique=True, verbose_name=_("Category"))
+    name = MultiLingualTextField(unique=True, verbose_name=_("category"))
 
     class Meta:
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
+        verbose_name = _("category")
+        verbose_name_plural = _("categories")
 
     def __str__(self):
         return str(self.name)
 
 
 class Question(models.Model):
-    title = MultiLingualTextField(unique=True, verbose_name=_("Question"))
-    answer = MultiLingualRichTextUploadingField(verbose_name=_("Answer"))
+    title = MultiLingualTextField(unique=True, verbose_name=_("question"))
+    answer = MultiLingualRichTextUploadingField(verbose_name=_("answer"))
     categories = models.ManyToManyField(
         to=Category,
         related_name='questions',
-        verbose_name=_("Categories"),
+        verbose_name=_("categories"),
     )
 
     class Meta:
-        verbose_name = _("Question")
-        verbose_name_plural = _("Questions")
+        verbose_name = _("question")
+        verbose_name_plural = _("questions")
 
     def __str__(self):
         return str(self.title)

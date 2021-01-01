@@ -38,9 +38,9 @@
                 <div class="item">
                     <span class="right floated ">
                         {% if ticket.active %}
-                            <span class="ui green label">{% trans "Active" %}</span>
+                            <span class="ui green label">{% trans "active"|capfirst %}</span>
                         {% else %}
-                            <span class="ui red label">{% trans "Canceled" %}</span>
+                            <span class="ui red label">{% trans "canceled"|capfirst %}</span>
                         {% endif %}
                     </span>
                     <i class="ui very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
@@ -54,11 +54,11 @@
                                 <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.uuid }}</a>
                             </div>
                             <div>
-                                <b>{% trans "Language" %}</b> {{ ticket.get_language_display }}
+                                <b>{% trans "language"|capfirst %}</b> {{ ticket.get_language_display }}
                             </div>
                             {% if ticket.comment %}
                                 <div>
-                                    <b>{% trans "Comment" %}:</b> {{ ticket.comment }}
+                                    <b>{% trans "comment"|capfirst %}:</b> {{ ticket.comment }}
                                 </div>
                             {% endif %}
                         </div>

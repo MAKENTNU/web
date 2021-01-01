@@ -7,7 +7,7 @@
 <div class="ui ticket card">
     {% if not ticket.active %}
         <div class="ui red cancel label">
-            {% trans "Canceled" %}
+            {% trans "canceled"|capfirst %}
         </div>
     {% endif %}
 

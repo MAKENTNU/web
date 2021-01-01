@@ -6,7 +6,7 @@
     <div class="ui container">
 
         <h1>
-            {% trans "Questions" %}
+            {% trans "questions"|capfirst %}
             {% if perms.faq.add_question %}
                 <a href="{% url 'faq_create' %}">
                     <i class="green plus icon"></i>

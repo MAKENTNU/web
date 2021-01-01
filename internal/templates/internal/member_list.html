@@ -37,20 +37,20 @@
                         <span class="ui text">{% trans "Filter membership status" %}</span>
                         <div class="menu">
                             <div class="scrolling menu">
-                                <div class="item" data-value="{% trans "Active" %}">
-                                    <i class="ui green circle icon"></i>{% trans "Active" %}
+                                <div class="item" data-value="{% trans "active"|capfirst %}">
+                                    <i class="ui green circle icon"></i>{% trans "active"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Inactive" %}">
-                                    <i class="ui grey circle icon"></i>{% trans "Inactive" %}
+                                <div class="item" data-value="{% trans "inactive"|capfirst %}">
+                                    <i class="ui grey circle icon"></i>{% trans "inactive"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Retired" %}">
-                                    <i class="ui blue circle icon"></i>{% trans "Retired" %}
+                                <div class="item" data-value="{% trans "retired"|capfirst %}">
+                                    <i class="ui blue circle icon"></i>{% trans "retired"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Honorary" %}">
-                                    <i class="ui make-col-yellow circle icon"></i>{% trans "Honorary" %}
+                                <div class="item" data-value="{% trans "honorary"|capfirst %}">
+                                    <i class="ui make-col-yellow circle icon"></i>{% trans "honorary"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Quit" %}">
-                                    <i class="ui red circle icon"></i>{% trans "Quit" %}
+                                <div class="item" data-value="{% trans "quit"|capfirst %}">
+                                    <i class="ui red circle icon"></i>{% trans "quit"|capfirst %}
                                 </div>
                             </div>
                         </div>
@@ -88,25 +88,25 @@
             <thead>
             <tr>
                 <th>
-                    {% trans "Name" %}<i id="member-sort-name" class="ui sort icon"></i>
+                    {% trans "name"|capfirst %}<i id="member-sort-name" class="ui sort icon"></i>
                 </th>
                 <th>
-                    {% trans "Committee" %}<i id="member-sort-committees" class="ui up sort icon"></i>
+                    {% trans "committee"|capfirst %}<i id="member-sort-committees" class="ui up sort icon"></i>
                 </th>
                 <th>
-                    {% trans "Role" %}<i id="member-sort-role" class="ui sort icon"></i>
+                    {% trans "role"|capfirst %}<i id="member-sort-role" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Status" %}<i id="member-sort-status" class="ui sort icon"></i>
+                    {% trans "status"|capfirst %}<i id="member-sort-status" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "Joined" %}<i id="member-sort-dateJoinedSortable" class="ui sort icon"></i>
+                    {% trans "joined"|capfirst %}<i id="member-sort-dateJoinedSortable" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Contact email" %}<i id="member-sort-contactEmail" class="ui sort icon"></i>
+                    {% trans "contact email"|capfirst %}<i id="member-sort-contactEmail" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "Phone number" %}<i id="member-sort-phone" class="ui sort icon"></i>
+                    {% trans "phone number"|capfirst %}<i id="member-sort-phone" class="ui sort icon"></i>
                 </th>
             </tr>
             </thead>
@@ -218,13 +218,13 @@
                 <tbody>
                 <tr>
                     <td class="six wide column">
-                        <b>{% trans "Name" %}</b>
+                        <b>{% trans "name"|capfirst %}</b>
                     </td>
                     <td id="member-name"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Phone number" %}</b>
+                        <b>{% trans "phone number"|capfirst %}</b>
                     </td>
                     <td>
                         <b><a id="member-phone"></a></b>
@@ -232,7 +232,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Contact email" %}</b>
+                        <b>{% trans "contact email"|capfirst %}</b>
                     </td>
                     <td>
                         <b><a id="member-contactEmail"></a></b>
@@ -256,13 +256,13 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Card number" %}</b>
+                        <b>{% trans "card number"|capfirst %}</b>
                     </td>
                     <td id="member-cardNumber"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Study program" %}</b>
+                        <b>{% trans "study program"|capfirst %}</b>
                     </td>
                     <td id="member-studyProgram"></td>
                 </tr>
@@ -282,7 +282,7 @@
                 <tbody>
                 <tr>
                     <td class="six wide column">
-                        <b>{% trans "Joined" %}</b>
+                        <b>{% trans "joined"|capfirst %}</b>
                     </td>
                     <td id="member-dateJoined"></td>
                 </tr>
@@ -294,37 +294,37 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Reason quit" %}</b>
+                        <b>{% trans "reason quit"|capfirst %}</b>
                     </td>
                     <td id="member-reasonQuit"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Status" %}</b>
+                        <b>{% trans "status"|capfirst %}</b>
                     </td>
                     <td id="member-status"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Committee" %}</b>
+                        <b>{% trans "committee"|capfirst %}</b>
                     </td>
                     <td id="member-committee"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Role" %}</b>
+                        <b>{% trans "role"|capfirst %}</b>
                     </td>
                     <td id="member-role"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Guidance exemption" %}</b>
+                        <b>{% trans "guidance exemption"|capfirst %}</b>
                     </td>
                     <td id="member-guidanceExemption"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Comment" %}</b>
+                        <b>{% trans "comment"|capfirst %}</b>
                     </td>
                     <td id="member-comment"></td>
                 </tr>
@@ -348,7 +348,7 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="ui make-col-yellow key icon"></i>{% trans "System accesses" %}
+                <i class="ui make-col-yellow key icon"></i>{% trans "system accesses"|capfirst %}
             </h4>
             <form id="edit-system-access-form" method="POST">
                 {% csrf_token %}
@@ -390,7 +390,7 @@
 {% block extra_scripts %}
     <script>
         $("div.ui.dropdown").dropdown();
-        $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
+        $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "active"|capfirst %}"]);
     </script>
     <script src="{% static 'internal/js/member_list.js' %}"></script>
     {% if selected_member %}

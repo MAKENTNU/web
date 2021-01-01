@@ -20,7 +20,7 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
     def get_num_machines(self, machine_type: MachineType):
         return machine_type.machines__count
 
-    get_num_machines.short_description = _("Machines")
+    get_num_machines.short_description = _("machines")
     get_num_machines.admin_order_field = 'machines__count'
 
     def get_queryset(self, request):
@@ -38,7 +38,7 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     def get_location(self, machine: Machine):
         return format_html('<a href="{}" target="_blank">{}</a>', machine.location_url, machine.location)
 
-    get_location.short_description = _("Location")
+    get_location.short_description = _("location")
     get_location.admin_order_field = 'location'
 
     def get_queryset(self, request):

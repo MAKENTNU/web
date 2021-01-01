@@ -8,7 +8,7 @@ class ContentBox(models.Model):
     title = models.CharField(
         max_length=100,
         unique=True,
-        verbose_name=_("Title"),
+        verbose_name=_("title"),
     )
     content = MultiLingualRichTextUploadingField()
 

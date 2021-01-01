@@ -99,9 +99,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', web.multilingual.modelfields.MultiLingualTextField(max_length=30, unique=True)),
                 ('cannot_use_text', web.multilingual.modelfields.MultiLingualTextField(blank=True)),
-                ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course')], default='AUTH', max_length=4, verbose_name='Usage requirement')),
+                ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course')], default='AUTH', max_length=4, verbose_name='usage requirement')),
                 ('has_stream', models.BooleanField(default=False)),
-                ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='Priority')),
+                ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='priority')),
             ],
             options={
                 'ordering': ('priority',),
@@ -111,7 +111,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='machine',
             name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='machines', to='make_queue.MachineType', verbose_name='Machine type'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='machines', to='make_queue.MachineType', verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='machineusagerule',
@@ -121,11 +121,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quota',
             name='machine_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='Machine type'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='reservationrule',
             name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservation_rules', to='make_queue.MachineType', verbose_name='Machine type'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservation_rules', to='make_queue.MachineType', verbose_name='machine type'),
         ),
     ]
