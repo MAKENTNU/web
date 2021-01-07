@@ -12,11 +12,11 @@ def get_membership_statuses(member):
     :return: A list of one or two tuples (two if honorary member)
     """
     statuses = []
-    if member.quit:
+    if member.status == 'Q':
         statuses += [(_("Quit"), "red")]
-    elif member.retired:
+    elif member.status == 'R':
         statuses += [(_("Retired"), "blue")]
-    elif not member.active:
+    elif member.status == 'I':
         statuses += [(_("Inactive"), "grey")]
     else:
         statuses += [(_("Active"), "green")]

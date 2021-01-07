@@ -22,6 +22,12 @@ class Member(models.Model):
             ("can_edit_group_membership", "Can edit the groups a member is part of, including (de)activation")
         )
 
+    class Status(models.TextChoices):
+        ACTIVE = ('A', _('Active'))
+        INACTIVE = ('I', _('Inactive'))
+        QUIT = ('Q', _('Quit'))
+        RETIRED = ('R', 'Retired')
+
     user = models.OneToOneField(User, on_delete=models.DO_NOTHING, null=True, verbose_name=_("User"))
     committees = models.ManyToManyField(Committee, blank=True, verbose_name=_("Committees"))
     role = models.CharField(max_length=64, blank=True, verbose_name=_("Role"))
@@ -32,10 +38,9 @@ class Member(models.Model):
     date_quit = models.DateField(blank=True, null=True, verbose_name=_("Date quit"))
     reason_quit = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Reason quit"))
     comment = models.TextField(max_length=256, default="", blank=True, verbose_name=_("Comment"))
-    active = models.BooleanField(default=True, verbose_name=_("Is active"))
+    status = models.CharField(max_length=1, choices=Status.choices, default=Status.ACTIVE)
     guidance_exemption = models.BooleanField(default=False, verbose_name=_("Guidance exemption"))
-    quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
-    retired = models.BooleanField(default=False, verbose_name=_("Retired"))
+    
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
@@ -54,6 +59,7 @@ class Member(models.Model):
 
             # Add user to the MAKE group
             self.toggle_membership(True)
+      
 
     @property
     def term_joined(self):
@@ -72,8 +78,9 @@ class Member(models.Model):
         :param reason: The reason why the member has quit
         :param date_quit: The date the member quit
         """
-        self.quit = quit_status
-        if self.quit:
+        print("TEST", quit_status)
+        self.status = quit_status
+        if self.status == 'Q': 
             self.date_quit = date_quit
         else:
             self.date_quit = None
@@ -87,7 +94,7 @@ class Member(models.Model):
         Performs all the actions to set a member as retired or to undo this action
         :param retirement_status: Indicates if the member has retired
         """
-        self.retired = retirement_status
+        self.status = retirement_status
         self.toggle_committee_membership(not retirement_status)
         self.toggle_membership(True)
 

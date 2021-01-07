@@ -118,7 +118,7 @@ class MemberQuitView(UpdateView):
 
     def form_valid(self, form):
         member = form.instance
-        if member.retired or member.quit:
+        if member.status == 'R' or member.status == 'Q':
             # Fail gracefully
             messages.add_message(self.request, messages.WARNING,
                                  _("Member was not set to quit as the member has already quit or retired."))
@@ -132,7 +132,7 @@ class MemberUndoQuitView(RedirectView):
 
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
-        if not member.quit:
+        if not member.status == 'R':
             # Fail gracefully
             messages.add_message(self.request, messages.WARNING,
                                  _("Member's quit status was not undone, as the member had not quit."))
@@ -146,7 +146,7 @@ class MemberRetireView(RedirectView):
 
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
-        if member.quit or member.retired:
+        if member.status == 'Q' or member.status == 'R':
             # Fail gracefully
             messages.add_message(self.request, messages.WARNING,
                                  _("Member was not set to retired as the member has already quit or retired."))
@@ -160,7 +160,7 @@ class MemberUndoRetireView(RedirectView):
 
     def get_redirect_url(self, pk, **kwargs):
         member = get_object_or_404(Member, pk=pk)
-        if not member.retired:
+        if not member.status == 'R':
             # Fail gracefully
             messages.add_message(self.request, messages.WARNING,
                                  _("Member's retirement was not undone, as the member was not retired."))
