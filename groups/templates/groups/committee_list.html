@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% load i18n %}
+{% load static %}
+{% load html_tags %}
 
 
 {% block body %}
@@ -26,7 +27,7 @@
                         </a>
                     </div>
                     <div class="meta">
-                        {{ committee.email|urlize }}
+                        {{ committee.email|urlize_target_blank }}
                     </div>
                     <div class="description">
                         {% if committee.clickbait %}

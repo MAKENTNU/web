@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% load i18n %}
+{% load static %}
+{% load html_tags %}
 
 
 {% block extra_head %}
@@ -46,7 +47,7 @@
                     <i class="ui very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
                     <div class="ui content">
                         <div class="header">
-                            {{ ticket.name }} - {{ ticket.email|urlize }}
+                            {{ ticket.name }} - {{ ticket.email|urlize_target_blank }}
                         </div>
                         <div class="description">
                             <div>

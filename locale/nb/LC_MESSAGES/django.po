@@ -261,13 +261,10 @@ msgstr "Registrer"
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
-#: checkin/templates/checkin/profile.html:117
-msgid "Contact"
-msgstr "Kontakt"
-
-#: checkin/templates/checkin/profile.html:117
-msgid "to fix the problem."
-msgstr "for å fikse problemet."
+#: checkin/templates/checkin/profile.html:120
+#, python-format
+msgid "Contact %(email)s to fix the problem."
+msgstr "Kontakt %(email)s for å fikse problemet."
 
 #: checkin/templates/checkin/profile.html:164
 #: make_queue/models/course.py:14

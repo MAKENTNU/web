@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 {% load datetime_tags %}
+{% load html_tags %}
 {% load member %}
 {% load hosts %}
 
@@ -179,7 +180,7 @@
                     <td class="computer only">{{ member.semester_joined }}</td>
                     <td class="mobile hidden">
                         {% if member.contact_email %}
-                            {{ member.contact_email|urlize }}
+                            {{ member.contact_email|urlize_target_blank }}
                         {% endif %}
                     </td>
                     <td class="computer only">

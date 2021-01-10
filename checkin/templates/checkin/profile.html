@@ -1,8 +1,9 @@
 {% extends 'web/base.html' %}
+{% load i18n %}
 {% load static %}
 {% load thumbnail %}
+{% load html_tags %}
 {% load checkin_tags %}
-{% load i18n %}
 
 
 {% block extra_head %}
@@ -114,7 +115,11 @@
                 <div id="duplicate-error" class="ui negative small message" style="display: none;">
                     <i class="close icon"></i>
                     <div class="header">{% trans "Card number is already in use" %}</div>
-                    <p>{% trans "Contact" %} <a href="mailto:dev@makentnu.no">styret@makentnu.no</a> {% trans "to fix the problem." %}</p>
+                    <p>
+                        {% blocktrans trimmed with email="dev@makentnu.no"|urlize_target_blank %}
+                            Contact {{ email }} to fix the problem.
+                        {% endblocktrans %}
+                    </p>
                 </div>
             </div>
         {% endif %}
