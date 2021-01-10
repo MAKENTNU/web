@@ -135,5 +135,6 @@ class UrlTests(PermissionsTestCase):
             Get(reverse_internal('edit_secret', pk=secret1.pk), public=False),
             Get(reverse_internal('edit_secret', pk=secret2.pk), public=False),
             Get('/robots.txt', public=True, translated=False),
+            Get('/.well-known/security.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'internal')

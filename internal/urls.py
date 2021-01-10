@@ -36,6 +36,7 @@ urlpatterns = i18n_patterns(
 
 urlpatterns += [
     path("robots.txt", TemplateView.as_view(template_name='internal/robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
     path("i18n/", decorator_include(
         permission_required('internal.is_internal', login_url=LOGIN_URL),
         'django.conf.urls.i18n'

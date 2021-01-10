@@ -24,6 +24,7 @@ class UrlTests(TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
+            Get('/.well-known/security.txt', public=True, translated=False),
             Get(reverse('front_page'), public=True),
             Get(reverse('adminpanel'), public=False),
             Get(reverse('about'), public=True),

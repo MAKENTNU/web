@@ -13,6 +13,7 @@ admin.site.site_url = f"//{settings.PARENT_HOST}/"
 
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='web/admin_robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
     path("i18n/", decorator_include(
         staff_member_required,
         'django.conf.urls.i18n'

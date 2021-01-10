@@ -28,6 +28,7 @@ LOGIN_URL = reverse('login', host='main')
 
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='docs/robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
     path("i18n/", decorator_include(
         permission_required('docs.view_page', login_url=LOGIN_URL),
         'django.conf.urls.i18n'

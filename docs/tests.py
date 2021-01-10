@@ -41,6 +41,7 @@ class UrlTests(TestCase):
             Get(self.reverse('edit_page', pk=self.page1), public=False),
             Get(self.reverse('search_pages'), public=False),
             Get('/robots.txt', public=True, translated=False),
+            Get('/.well-known/security.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'docs')
 
