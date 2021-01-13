@@ -186,6 +186,7 @@ function updateDisplay() {
     const endIndex = (state.page + 1) * state.elementsPerPage;
 
     let numRegistrationsFiltered = 0;
+    let displayedRegistrationsCount = 0;
 
     let lastInsertedElement = null;
 
@@ -202,12 +203,15 @@ function updateDisplay() {
                 lastInsertedElement.after(registration.$element);
             }
             lastInsertedElement = registration.$element;
+
+            displayedRegistrationsCount++;
         } else {
             registration.$element.toggleClass("display-none", true);
         }
 
         numRegistrationsFiltered++;
     }
+    $("#displayed-registrations-count").text(displayedRegistrationsCount);
 
     // Removes old numbers in pagination bar and adds new ones
     $("#pagination-bar").children().slice(2, -2).remove();

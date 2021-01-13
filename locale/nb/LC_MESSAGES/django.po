@@ -1226,6 +1226,10 @@ msgstr "Koblet til bruker"
 msgid "Displaying"
 msgstr "Viser"
 
+#: make_queue/templates/make_queue/course/course_registration_list.html:154
+msgid "Filter matches"
+msgstr "Filter matcher"
+
 #: make_queue/templates/make_queue/course/course_registration_list.html:158
 msgid "registrations"
 msgstr "registreringer"

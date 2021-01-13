@@ -155,9 +155,17 @@
             </a>
         </div>
         <span>
-            {% trans "Displaying" %}
+            {% trans "Filter matches" %}
             <b>
                 <span id="num-registrations-filtered">{{ registrations|length }}</span>/{{ registrations|length }}
+            </b>
+            {% trans "registrations" %}
+        </span>
+        <br/>
+        <span>
+            {% trans "Displaying" %}
+            <b>
+                <span id="displayed-registrations-count">{{ registrations|length }}</span>/{{ registrations|length }}
             </b>
             {% trans "registrations" %}
         </span>
