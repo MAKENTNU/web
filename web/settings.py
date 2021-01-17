@@ -41,6 +41,7 @@ PARENT_HOST = "makentnu.localhost:8000"
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 EMAIL_SITE_URL = "https://makentnu.no"  # (custom setting)
 
+# Set local settings
 try:
     from .local_settings import *
 except ImportError:
@@ -305,3 +306,10 @@ useful for checking e.g. that a request doesn't query the database more times th
 #     'level': 'DEBUG',
 #     'handlers': ['console'],
 # }
+
+
+# [SHOULD ALWAYS COME LAST] Override the settings above
+try:
+    from .local_settings_post import *
+except ImportError:
+    pass
