@@ -7,22 +7,25 @@ if 'test' in sys.argv:
     # Disable calls with severity level equal to or less than `CRITICAL` (i.e. everything)
     logging.disable(logging.CRITICAL)
 
+# Build paths inside the project like this: BASE_DIR / ...
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Default values
 DATABASE = 'sqlite'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
-MEDIA_ROOT = '../media/'
+MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
 LOGOUT_URL = '/'
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'
-CHECKIN_KEY = ''
-REDIS_IP = '127.0.0.1'
-REDIS_PORT = 6379
-STREAM_KEY = ''
+CHECKIN_KEY = ''  # (custom setting)
+REDIS_IP = '127.0.0.1'  # (custom setting)
+REDIS_PORT = 6379  # (custom setting)
+STREAM_KEY = ''  # (custom setting)
 
 # When using more than one subdomain, the session cookie domain has to be set so
 # that the subdomains can use the same session. Currently points to "makentnu.localhost"
@@ -30,51 +33,57 @@ STREAM_KEY = ''
 # are required to have two dots in them.
 SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 
-# For django-hosts to redirect correctly across subdomains, we have to specify the
+# For `django-hosts` to redirect correctly across subdomains, we have to specify the
 # host we are running on. This currently points to "makentnu.localhost:8000", and should
 # be changed in production
 PARENT_HOST = "makentnu.localhost:8000"
 
-EVENT_TICKET_EMAIL = "ticket@makentnu.no"
-EMAIL_SITE_URL = "https://makentnu.no"
+EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
+EMAIL_SITE_URL = "https://makentnu.no"  # (custom setting)
 
+# Set local settings
 try:
     from .local_settings import *
 except ImportError:
     pass
 
-# Build paths inside the project like this: BASE_DIR / ...
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Application definition
 
 INSTALLED_APPS = [
+    # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-party packages with significant effect on Django's functionality
     'django_hosts',
-    'groups',
+    'channels',
+
+    # The main entrypoint app
     'web',
-    'make_queue',
+
+    # Other third-party packages
     'social_django',
-    'phonenumber_field',
-    'news',
-    'mail',
     'ckeditor',
     'ckeditor_uploader',
-    'contentbox',
-    'checkin',
+    'phonenumber_field',
     'sorl.thumbnail',
-    'channels',
-    'makerspace',
-    'internal',
-    'docs',
-    'users',
-    'card',
+
+    # Project apps, listed alphabetically
     'announcements',
+    'card',
+    'checkin',
+    'contentbox',
+    'docs',
+    'groups',
+    'internal',
+    'mail',
+    'make_queue',
+    'makerspace',
+    'news',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -90,9 +99,24 @@ MIDDLEWARE = [
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
+
 ROOT_URLCONF = 'web.urls'
-ROOT_HOSTCONF = "web.hosts"
-DEFAULT_HOST = "main"
+
+# `django-hosts` configuration:
+ROOT_HOSTCONF = 'web.hosts'
+DEFAULT_HOST = 'main'
+# All hosted subdomains - defined in `web/hosts.py`
+ALL_SUBDOMAINS = (  # (custom setting)
+    'i', 'internal', 'internt', 'admin', 'docs', '',
+)
+# Tells `social-auth-core` (requirement of `python-social-auth`) to allow
+# redirection to these host domains after logging in.
+# (Undocumented setting; only found in this file:
+# https://github.com/python-social-auth/social-core/blob/d66a2469609c7cfd6639b524981689db2f2d5540/social_core/actions.py#L22)
+ALLOWED_REDIRECT_HOSTS = [
+    f'{subdomain}.{PARENT_HOST}' for subdomain in ALL_SUBDOMAINS
+]
+
 
 TEMPLATES = [
     {
@@ -127,7 +151,7 @@ CHANNEL_LAYERS = {
 }
 
 # Database
-# https://docs.djangoproject.com/en/1.11/ref/settings/#databases
+# https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
 if DATABASE == 'postgres':
     DATABASES = {
@@ -149,7 +173,7 @@ else:
     }
 
 # Password validation
-# https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -191,7 +215,7 @@ SOCIAL_AUTH_DATAPORTEN_FEIDE_KEY = SOCIAL_AUTH_DATAPORTEN_KEY
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SECRET = SOCIAL_AUTH_DATAPORTEN_SECRET
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.11/topics/i18n/
+# https://docs.djangoproject.com/en/stable/topics/i18n/
 
 LANGUAGE_CODE = 'nb'
 
@@ -213,7 +237,7 @@ USE_L10N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.11/howto/static-files/
+# https://docs.djangoproject.com/en/stable/howto/static-files/
 
 STATIC_ROOT = BASE_DIR.parent / 'static'
 STATIC_URL = '/static/'
@@ -250,6 +274,9 @@ CKEDITOR_CONFIGS = {
 PHONENUMBER_DEFAULT_REGION = 'NO'
 PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
 
+
+# See https://docs.djangoproject.com/en/stable/topics/logging/ for
+# more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -281,3 +308,19 @@ LOGGING = {
         },
     },
 }
+
+"""
+Uncomment to print all database queries to the console;
+useful for checking e.g. that a request doesn't query the database more times than necessary.
+"""
+# LOGGING['loggers']['django.db.backends'] = {
+#     'level': 'DEBUG',
+#     'handlers': ['console'],
+# }
+
+
+# [SHOULD ALWAYS COME LAST] Override the settings above
+try:
+    from .local_settings_post import *
+except ImportError:
+    pass
