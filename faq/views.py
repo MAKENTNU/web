@@ -8,7 +8,7 @@ from web.templatetags.permission_tags import has_any_faq_permissions
 
 
 class FAQPageView(ListView):
-    template_name = 'faq/faqlist.html'
+    template_name = 'faq/faq_list.html'
     context_object_name = 'categories'
 
     def get_queryset(self):
@@ -18,7 +18,7 @@ class FAQPageView(ListView):
 class CreateQuestionView(PermissionRequiredMixin, CreateView):
     model = Question
     form_class = QuestionForm
-    template_name = "faq/admin_question_create.html"
+    template_name = "faq/question_create.html"
     context_object_name = 'question'
     success_url = reverse_lazy("FAQ-admin")
 
@@ -28,7 +28,7 @@ class CreateQuestionView(PermissionRequiredMixin, CreateView):
 
 class FAQAdminView(PermissionRequiredMixin, ListView):
     model = Question
-    template_name = "faq/faqadmin.html"
+    template_name = "faq/faq_admin.html"
     context_object_name = "questionlist"
 
     def has_permission(self):
@@ -38,7 +38,7 @@ class FAQAdminView(PermissionRequiredMixin, ListView):
 class EditQuestionView(PermissionRequiredMixin, UpdateView):
     model = Question
     form_class = QuestionForm
-    template_name = "faq/edit_question.html"
+    template_name = "faq/question_edit.html"
     context_object_name = 'question'
     success_url = reverse_lazy("FAQ-admin")
 
