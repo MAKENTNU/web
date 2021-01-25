@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from internal.models import Member, Secret
+from internal.models import Member, Secret, GuidanceHours
 from web.multilingual.database import MultiLingualFieldAdmin
 
 
@@ -11,3 +11,4 @@ class SecretAdmin(MultiLingualFieldAdmin):
 
 admin.site.register(Member)
 admin.site.register(Secret, SecretAdmin)
+admin.site.register(GuidanceHours)

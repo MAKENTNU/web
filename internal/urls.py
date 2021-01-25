@@ -7,7 +7,7 @@ from django_hosts import reverse
 
 from internal.views import MembersListView, AddMemberView, EditMemberView, MemberUndoQuitView, MemberQuitView, \
     MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, SecretsView, EditSecretView, CreateSecretView, \
-    DeleteSecretView
+    DeleteSecretView, GuidanceHoursView, EditGuidanceHoursView
 
 unsafe_urlpatterns = [
     path("members", MembersListView.as_view(), name="members"),
@@ -21,6 +21,8 @@ unsafe_urlpatterns = [
     path("members/access/<int:pk>/change", ToggleSystemAccessView.as_view(), name="toggle-system-access"),
     # TODO: Change to the HomeView when there is actually some content to show there
     path("", MembersListView.as_view(), name="home"),
+    path("guidance-hours/", GuidanceHoursView.as_view(), name="guidance-hours"),
+    path("guidance-hours/<int:pk>/edit/", EditGuidanceHoursView.as_view(), name="edit-guidance-hours"),
     path("secrets/", SecretsView.as_view(), name="secrets"),
     path("secrets/<int:pk>/edit/", EditSecretView.as_view(), name="edit-secret"),
     path("secrets/create/", CreateSecretView.as_view(), name="create-secret"),

@@ -7,8 +7,8 @@ from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView, DeleteView
 
-from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm, SecretsForm
-from internal.models import Member, SystemAccess, Secret
+from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm, SecretsForm, EditGuidanceHoursForm
+from internal.models import Member, SystemAccess, Secret, GuidanceHours
 from make_queue.models.course import Printer3DCourse
 
 
@@ -16,6 +16,39 @@ class Home(TemplateView):
     template_name = "internal/home.html"
 
 
+class GuidanceHoursView(ListView):
+    template_name = "internal/guidance_hours.html"
+    model = GuidanceHours
+    context_object_name = 'guidance_hours'
+
+    def get_queryset(self):
+        week_days = {
+            'Monday': [],
+            'Tuesday': [],
+            'Wednesday': [],
+            'Thursday': [],
+            'Friday': [],
+        }
+
+        for hour in GuidanceHours.objects.all():
+            week_days.setdefault(hour.day, []).append(hour)
+
+        return week_days
+
+    def get_context_data(self, **kwargs):
+        context = super(GuidanceHoursView, self).get_context_data(**kwargs)
+        context["members"] = Member.objects.filter(guidance_exemption=False) 
+
+        return context
+
+        
+class EditGuidanceHoursView(UpdateView):
+    template_name = "internal/edit_guidance_hours.html"
+    model = GuidanceHours
+    form_class = EditGuidanceHoursForm
+    success_url = reverse_lazy('guidance-hours')
+
+    
 class SecretsView(ListView):
     template_name = "internal/secrets.html"
     model = Secret
