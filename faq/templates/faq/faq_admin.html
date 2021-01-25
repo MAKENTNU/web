@@ -6,7 +6,7 @@
         <h1>
             {% trans "Questions" %}
             {% if perms.faq.add_question %}
-                <a href="{% url "FAQ-create" %}">
+                <a href="{% url "faq-create" %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -18,7 +18,7 @@
                         <div class="ui header">
                             {{ question.title }}
                             {% if perms.faq.change_question %}
-                                <a href="{% url "FAQ-edit" pk=question.pk %}">
+                                <a href="{% url "faq-edit" pk=question.pk %}">
                                     <i class="yellow pencil icon"></i>
                                 </a>
                             {% endif %}
@@ -27,7 +27,7 @@
                                 <a class="delete confirm"
                                    data-title="{% trans "Delete" %}"
                                    data-content="{% trans "Click to delete" %}."
-                                   href="{% url 'FAQ-question-delete' question.id %}">
+                                   href="{% url 'faq-question-delete' question.id %}">
                                     <i class="ui delete icon red"></i>
                                 </a>
                             {% endif %}
