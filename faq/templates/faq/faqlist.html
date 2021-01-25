@@ -16,21 +16,21 @@
         <div class="ui styled accordion" id="outeraccordion">
             {% for category in categories %}
                 <div class="active title">
-                       <i class="dropdown icon"></i>
-                        <p>
-                            {{ category.name }}
-                        </p>
+                    <i class="dropdown icon"></i>
+                    <p>
+                        {{ category.name }}
+                    </p>
                 </div>
                 <div class="content">
-                {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
-                    <div class ="styled accordion">
+                    {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
+                    <div class="styled accordion">
                         {% for question in category.questions.all %}
                             <div class="active title">
-                               <i class="dropdown icon"></i>
-                                    <div class="make_col_blue">{{ question.title }}</div>
+                                <i class="dropdown icon"></i>
+                                <div class="make_col_blue">{{ question.title }}</div>
                             </div>
                             <div class="content">
-                                    {{ question.answer|safe }}
+                                {{ question.answer|safe }}
                             </div>
                         {% endfor %}
                     </div>

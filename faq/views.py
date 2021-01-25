@@ -1,12 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import render
-from django.views.generic import DetailView, ListView, CreateView, UpdateView, DeleteView
-from contentbox.views import DisplayContentBoxView
-from django.http import HttpResponse
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 # Create your views here.
-from faq.forms import QuestionForm
-from faq.models import Question, Category
+from .forms import QuestionForm
+from .models import Question, Category
 from web.templatetags.permission_tags import has_any_faq_permissions
 
 
