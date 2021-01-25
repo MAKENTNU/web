@@ -12,7 +12,7 @@
             {% endif %}
         </h1>
         <div class="ui relaxed divided list">
-            {% for question in questionlist %}
+            {% for question in question_list %}
                 <div class="item">
                     <div class="content">
                         <div class="ui header">
@@ -27,7 +27,7 @@
                                 <a class="delete confirm"
                                    data-title="{% trans "Delete" %}"
                                    data-content="{% trans "Click to delete" %}."
-                                   href="{% url 'faq-question-delete' question.id %}">
+                                   href="{% url 'faq-question-delete' question.pk %}">
                                     <i class="ui delete icon red"></i>
                                 </a>
                             {% endif %}

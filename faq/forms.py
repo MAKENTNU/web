@@ -7,7 +7,7 @@ from .models import Question
 class QuestionForm(forms.ModelForm):
     class Meta:
         model = Question
-        fields = ["title", "answer", "categories"]
+        fields = '__all__'
         widgets = {
             "categories": SemanticMultipleSelectInput(prompt_text=_("Choose categories")),
         }

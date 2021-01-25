@@ -29,7 +29,7 @@ class CreateQuestionView(PermissionRequiredMixin, CreateView):
 class FAQAdminView(PermissionRequiredMixin, ListView):
     model = Question
     template_name = "faq/faq_admin.html"
-    context_object_name = "questionlist"
+    context_object_name = "question_list"
 
     def has_permission(self):
         return has_any_faq_permissions(self.request.user)
@@ -50,6 +50,3 @@ class DeleteQuestionView(PermissionRequiredMixin, DeleteView):
     model = Question
     success_url = reverse_lazy('faq-admin')
     permission_required = 'faq.delete_question'
-
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)

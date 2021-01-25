@@ -4,16 +4,16 @@
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "faq/css/faq_list.css" %}"/>
+    <link rel="stylesheet" href="{% static "faq/css/faq_list.css" %}"/>
 {% endblock head %}
 
 
 {% block body %}
     <div class="ui container">
-        <h1 class="ui text-centered make_col_blue header" id="pagetitle">
+        <h1 class="ui text-centered make_col_blue header" id="page-title">
             {% trans "Frequently Asked Questions" %}
         </h1>
-        <div class="ui styled accordion" id="outeraccordion">
+        <div class="ui styled accordion" id="outer-accordion">
             {% for category in categories %}
                 <div class="active title">
                     <i class="dropdown icon"></i>

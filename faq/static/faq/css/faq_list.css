@@ -1,4 +1,4 @@
-#outeraccordion {
+#outer-accordion {
     width: 100%;
     font-size: 150%;
 }
@@ -7,6 +7,6 @@
     display: flex;
 }
 
-#pagetitle {
+#page-title {
     margin-bottom: 5%;
 }
