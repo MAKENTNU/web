@@ -7,7 +7,6 @@ from web.multilingual.database import MultiLingualRichTextUploadingField, MultiL
 
 class Category(models.Model):
     name = MultiLingualTextField(
-        max_length=200,
         unique=True,
         verbose_name=_('Category'),
     )
@@ -18,7 +17,6 @@ class Category(models.Model):
 
 class Question(models.Model):
     title = MultiLingualTextField(
-        max_length=255,
         unique=True,
         verbose_name=_('Question'),
     )
