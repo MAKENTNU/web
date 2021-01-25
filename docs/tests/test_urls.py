@@ -6,7 +6,7 @@ from django_hosts import reverse
 
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds
-from .models import Content, Page
+from ..models import Content, Page
 
 
 class UrlTests(TestCase):

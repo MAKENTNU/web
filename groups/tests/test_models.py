@@ -1,14 +1,10 @@
-from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
-from django_hosts import reverse
 
 from news.models import Article
 from users.models import User
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
-from .admin import InheritanceGroupAdmin
-from .models import Committee, InheritanceGroup
+from ..models import Committee, InheritanceGroup
 
 
 def permission_to_perm(permission):
@@ -16,16 +12,7 @@ def permission_to_perm(permission):
     return '.'.join([permission.content_type.app_label, permission.codename])
 
 
-class MockRequest:
-    pass
-
-
-class MockSuperUser:
-
-    def has_perm(self, *args, **kwargs):
-        return True
-
-
+# See the `0008_add_default_inheritancegroups_and_committees.py` migration for which InheritanceGroups are created by default
 class PermGroupTestCase(TestCase):
 
     def setUp(self):
@@ -216,42 +203,7 @@ class PermGroupTestCase(TestCase):
                 self.assertIn(perm, inherited_permissions)
 
 
-class InheritanceGroupAdminTestCase(TestCase):
-
-    def setUp(self):
-        self.site = AdminSite()
-        self.request = MockRequest()
-        self.request.user = MockSuperUser()
-        org = InheritanceGroup.objects.create(name='Org')
-        mentor = InheritanceGroup.objects.create(name='Mentor')
-        mentor.parents.add(org)
-        dev = InheritanceGroup.objects.create(name='Dev')
-        dev.parents.add(org)
-        arr = InheritanceGroup.objects.create(name='Arrangement')
-        arr.parents.add(org)
-        InheritanceGroup.objects.create(name='Leder').parents.add(mentor, dev, arr)
-
-    def test_get_form(self):
-        admin = InheritanceGroupAdmin(InheritanceGroup, self.site)
-        expected_fields = ['name', 'parents', 'own_permissions']
-        form = admin.get_form(self.request)
-        self.assertListEqual(list(form.base_fields), expected_fields)
-
-        expected_parents = InheritanceGroup.objects.all()
-        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
-
-        form = admin.get_form(self.request, obj=InheritanceGroup.objects.get(name='Dev'))
-        expected_parents = InheritanceGroup.objects.get(name='Dev').get_available_parents()
-        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
-
-    def test_inherited_permissions(self):
-        admin = InheritanceGroupAdmin(InheritanceGroup, self.site)
-        dev = InheritanceGroup.objects.get(name='Dev')
-        permissions = set(admin.get_inherited_permissions(dev))
-        for perm in dev.inherited_permissions:
-            self.assertIn(str(perm), permissions)
-
-
+# See the `0008_add_default_inheritancegroups_and_committees.py` migration for which Committees are created by default
 class CommitteeTestCase(TestCase):
 
     def setUp(self):
@@ -272,25 +224,3 @@ class CommitteeTestCase(TestCase):
         )
         self.assertEqual(dev.name, 'Dev')
         self.assertEqual(str(dev), 'Dev')
-
-
-class UrlTests(TestCase):
-
-    def setUp(self):
-        self.group1 = InheritanceGroup.objects.create(name="Group 1")
-        self.committee1 = Committee.objects.create(
-            group=self.group1,
-            description="Lorem ipsum dolor sit amet",
-            email="committee1@makentnu.no",
-            image=MOCK_JPG_FILE,
-            clickbait="Wow!",
-        )
-
-    def test_all_get_request_paths_succeed(self):
-        path_predicates = [
-            Get(reverse('committee_list'), public=True),
-            Get(reverse('committee_detail', kwargs={'pk': self.committee1.pk}), public=True),
-            Get(reverse('committee_edit', kwargs={'pk': self.committee1.pk}), public=False),
-            Get(reverse('committee_admin'), public=False),
-        ]
-        assert_requesting_paths_succeeds(self, path_predicates)

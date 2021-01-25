@@ -6,8 +6,8 @@ from django_hosts import reverse
 
 from users.models import User
 from util.test_utils import Get, PermissionsTestCase, assert_requesting_paths_succeeds
-from .forms import MemberStatusForm
-from .models import Member, Secret, SystemAccess
+from ..forms import MemberStatusForm
+from ..models import Member, Secret, SystemAccess
 
 
 # Makes sure that the subdomain of all requests is `internal`

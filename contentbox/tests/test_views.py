@@ -4,8 +4,8 @@ from django_hosts import reverse
 
 from users.models import User
 from web.urls import urlpatterns as base_urlpatterns
-from .models import ContentBox
-from .views import DisplayContentBoxView
+from ..models import ContentBox
+from ..views import DisplayContentBoxView
 
 
 TEST_TITLE = 'test_title'

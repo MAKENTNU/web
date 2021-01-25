@@ -9,8 +9,8 @@ from social_django.models import UserSocialAuth
 
 from users.models import User
 from util.test_utils import mock_module_attrs
-from . import views
-from .social import DataportenOAuth2
+from .. import views
+from ..social import DataportenOAuth2
 
 
 def mock_complete(*args, **kwargs):
