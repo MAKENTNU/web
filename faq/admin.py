@@ -8,4 +8,8 @@ class QuestionAdmin(MultiLingualFieldAdmin):
     filter_horizontal = ('categories',)
 
 
+class CategoryAdmin(MultiLingualFieldAdmin):
+    pass
+
+
 admin.site.register(Question, QuestionAdmin)
