@@ -4,7 +4,7 @@ from django import forms
 
 import card.utils
 from card.forms import CardNumberField
-from internal.models import Member, SystemAccess, Secret
+from internal.models import Member, SystemAccess, Secret, GuidanceHours
 from users.models import User
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
 
@@ -56,6 +56,17 @@ class EditMemberForm(ModelForm):
         if is_duplicate:
             self.add_error("card_number", _("Card number is already in use"))
         return super().is_valid() and not is_duplicate
+
+
+class EditGuidanceHoursForm(ModelForm):
+    class Meta:
+        model = GuidanceHours
+        fields = ['slot_one', 'slot_two', 'slot_three', 'slot_four']
+
+        widgets = {}
+
+        for field in fields:
+            widgets[field] = SemanticSearchableChoiceInput(additional_class="clearable make_bg_blue", prompt_text=_("Sign up"))
 
 
 class MemberQuitForm(ModelForm):

@@ -14,10 +14,12 @@ class SemanticChoiceInput(forms.Select):
 class SemanticSearchableChoiceInput(forms.Select):
     template_name = "web/forms/widgets/semantic_search_select.html"
     prompt_text = _("Choose value")
+    extra_attr = None
 
     def __init__(self, *args, **kwargs):
         super().__init__(attrs=kwargs.pop("attrs", {}))
         self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
+        self.attrs["extra_attr"] = kwargs.pop("extra_attr", self.extra_attr)
         self.attrs["force_selection"] = kwargs.pop("force_selection", False)
 
 
