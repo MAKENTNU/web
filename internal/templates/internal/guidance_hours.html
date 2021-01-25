@@ -1,0 +1,74 @@
+{% extends "internal/base.html" %}
+{% load i18n %}
+{% load member %}
+
+{% block head %}
+<style>
+    .box{
+        padding: 8px;
+        width: 15rem;
+    }
+</style>
+
+{% endblock head %}
+
+
+{% block body %}
+    <div class="ui container">
+    
+    {% for day, hours in guidance_hours.items %}
+        <table class="ui celled inverted make_bg_blue table">
+                <thead>
+                    <tr>
+                        <th> {% trans 'Time' %} </th>
+                        <th> {% trans day  %} </th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+   
+            {% for hour in hours %} 
+                <tbody>
+                    <tr>         
+                        <td>{{ hour.start_time }}-{{ hour.end_time }}<a href="{% url 'edit-guidance-hours' hour.pk  %}"> </a> </td>
+                        {% for slot in hour.get_slots %}
+                        {% get_committees slot as committees %} 
+                            <td class="member-info" 
+                                data-content="{{ slot.phone_number }}"
+                                data-variation="medium"
+                                data-committees="{{ committees }}"
+                                data-slot="{{ slot }}"
+                                >
+                                    <div class='box'>
+                                    {{ slot }}
+                                    </div>
+                            </td>
+                           
+                        {% endfor %}
+                         <td> <a href="{% url 'edit-guidance-hours' hour.pk  %}"><i class="ui yellow edit pencil icon"> </i></a></td> 
+                    </tr>
+                </tbody>
+            
+            {% endfor %}
+       
+        </table>
+    {% endfor %}
+    
+    </div>
+
+{% endblock body %}
+
+{% block scripts %}
+
+<script>
+
+    $('.member-info').hover(function(){
+        $('member-info').popup({content: '', html:'<div class="ui yellow label">PR</div>'})
+
+    })
+
+</script>
+
+{% endblock scripts %}

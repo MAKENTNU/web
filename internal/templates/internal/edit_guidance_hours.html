@@ -1,0 +1,46 @@
+{% extends 'internal/base.html' %}
+{% load i18n %}
+
+
+{% block head %}
+    <style>
+        .ui.selection.dropdown {
+        color: white !important;
+    }
+    </style>
+{% endblock head %}
+
+
+{% block body %}
+    <div class="ui container">
+        <table class="ui celled inverted make_bg_blue table">
+            <thead>
+                <tr>
+                    <th> {% trans "Time" %} </th>
+                    <th> {% trans object.day %} </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>{{ object.start_time }}-{{ object.end_time}} </td> 
+                       
+                    <form method="post" action=""> {% csrf_token %}
+                        {% for slot in form %}
+                            <td>
+                                {{ slot }}
+                            </td>
+                        {% endfor %}
+                        <input class="ui yellow button" type="submit" value="{% trans "Save" %}"/>
+                    </form>
+                </tr>
+
+            </tbody>
+        </table>
+
+    </div>
+
+{% endblock body %}
