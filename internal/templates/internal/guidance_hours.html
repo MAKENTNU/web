@@ -34,11 +34,9 @@
                     <tr>         
                         <td>{{ hour.start_time }}-{{ hour.end_time }}<a href="{% url 'edit-guidance-hours' hour.pk  %}"> </a> </td>
                         {% for slot in hour.get_slots %}
-                        {% get_committees slot as committees %} 
                             <td class="member-info" 
                                 data-content="{{ slot.phone_number }}"
                                 data-variation="medium"
-                                data-committees="{{ committees }}"
                                 data-slot="{{ slot }}"
                                 >
                                     <div class='box'>
