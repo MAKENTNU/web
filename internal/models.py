@@ -13,6 +13,8 @@ from users.models import User
 
 from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
 
+from simple_history.models import HistoricalRecords
+
 
 class Member(models.Model):
     class Meta:
@@ -123,6 +125,34 @@ class Member(models.Model):
 
     def __str__(self):
         return self.user.get_full_name()
+
+class GuidanceHours(models.Model):
+    class Meta:
+        verbose_name_plural = 'Guidance hours'
+        ordering = ('start_time',)
+    class WeekDay(models.TextChoices):
+        MONDAY = ('Monday', _('Monday'))
+        TUESDAY = ('Tuesday', _('Tuesday'))
+        WEDNESDAY = ('Wednesday', _('Wednesday'))
+        THURSDAY = ('Thursday', _('Thursday'))
+        FRIDAY = ('Friday', _('Friday'))
+
+    day = models.CharField(max_length=9, choices=WeekDay.choices)
+    start_time = models.TimeField(blank=True)
+    end_time = models.TimeField(blank=True)
+    slot_one = models.ForeignKey(Member, null=True, blank=True, related_name="slot_one", verbose_name=_("Slot one"), on_delete=models.SET_NULL)
+    slot_two = models.ForeignKey(Member, null=True, blank=True, related_name="slot_two", verbose_name=_("Slot two"), on_delete=models.SET_NULL)
+    slot_three = models.ForeignKey(Member, null=True, blank=True, related_name="slot_three", verbose_name=_("Slot three"), on_delete=models.SET_NULL)
+    slot_four = models.ForeignKey(Member, null=True, blank=True, related_name="slot_four", verbose_name=_("Slot four"), on_delete=models.SET_NULL)
+    history = HistoricalRecords()
+
+    
+    @property
+    def get_slots(self):
+        return [self.slot_one, self.slot_two, self.slot_three, self.slot_four]
+    
+    def __str__(self):
+        return f'{self.day} {self.start_time.strftime("%H:%M")}-{self.end_time.strftime("%H:%M")}'
 
 
 @receiver(m2m_changed, sender=Member.committees.through)

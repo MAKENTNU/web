@@ -75,6 +75,7 @@ INSTALLED_APPS = [
     'users',
     'card',
     'announcements',
+    'simple_history',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +89,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django_hosts.middleware.HostsResponseMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 ROOT_URLCONF = 'web.urls'
