@@ -1,12 +1,12 @@
-#outeraccordion{
-  width: 100%;
-  font-size: 150%;
+#outeraccordion {
+    width: 100%;
+    font-size: 150%;
 }
 
-.ui.accordion .title:not(.ui){
-  display: flex;
+.ui.accordion .title:not(.ui) {
+    display: flex;
 }
 
-#pagetitle{
-  margin-bottom: 5%;
+#pagetitle {
+    margin-bottom: 5%;
 }
