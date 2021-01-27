@@ -19,7 +19,7 @@
             {{ title }}
             {% if perms.make_queue.add_reservation_rule %}
                 <a href="{% url 'create_reservation_rule' machine_type %}">
-                    <i class="ui green plus icon"></i>
+                    <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </h1>
@@ -56,13 +56,13 @@
                         <div class="meta">
                             {% if perms.change_reservation_rule %}
                                 <a href="{% url 'edit_reservation_rule' machine_type rule.pk %}">
-                                    <i class="ui make-col-yellow icon pencil"></i>
+                                    <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
                             {% if perms.delete_reservation_rule %}
                                 <a class="delete-modal-button"
                                    data-url="{% url 'delete_reservation_rule' machine_type rule.pk %}">
-                                    <i class="ui red icon trash"></i>
+                                    <i class="red trash icon"></i>
                                 </a>
                             {% endif %}
                         </div>

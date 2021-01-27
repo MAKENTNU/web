@@ -23,7 +23,7 @@
             {{ timeplace.start_time|long_datetime }}
             <span>
                 &nbsp;&nbsp;
-                    <i class="ui {% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle explanation-popup"
+                    <i class="{% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle explanation-popup"
                        data-title="{% trans "hidden"|capfirst %}" data-pk="{{ timeplace.pk }}"
                        data-toggle="hidden" data-model="timeplace"
                        data-content="{% trans "If selected, the occurrence is hidden for non-admin users." %}">
@@ -33,14 +33,14 @@
                     <a class="make-col-blue explanation-popup" data-title="{% trans "Edit" %}"
                        data-content="{% trans "If clicked, a form for editing the occurrence is shown." %}"
                        href="{% url 'timeplace_edit' timeplace.pk %}">
-                        <i class="ui edit icon"></i>
+                        <i class="edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
                     <a class="delete-modal-button make-col-blue explanation-popup"
                        data-title="{% trans "Delete" %}" data-content="{% trans "If clicked, the occurrence will be deleted." %}"
                        data-url="{% url 'timeplace_delete' timeplace.pk %}" data-obj-name="{{ timeplace }}">
-                        <i class="ui delete icon"></i>
+                        <i class="delete icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.add_timeplace %}
@@ -48,7 +48,7 @@
                        data-title="{% trans "Duplicate" %}"
                        data-content="{% trans "If clicked, the occurrence is duplicated." %}"
                        href="{% url 'timeplace_duplicate' timeplace.pk %}">
-                        <i class="ui copy icon"></i>
+                        <i class="copy icon"></i>
                     </a>
                 {% endif %}
             </span>

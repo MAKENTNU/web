@@ -156,7 +156,7 @@ $("th").click(function () {
     sort();
 
     const sortDirection = state.sortOrder ? "down" : "up";
-    $(this).append($(`<i class="ui icon sort ${sortDirection}"></i>`));
+    $(this).append($(`<i class="sort ${sortDirection} icon"></i>`));
 });
 
 

@@ -29,7 +29,7 @@
                             <div class="ui item">
                                 <div class="time-place content">
                                     <a class="calendar-button" href="{% url 'timeplace_ical' timeplace.pk %}" target="_blank">
-                                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                                        <i class="large make-col-yellow calendar plus outline icon"></i>
                                     </a>
                                     <div class="header">
                                         {{ timeplace.start_time|long_datetime_no_year }} &ndash; {{ timeplace.end_time|long_datetime_no_year }}
@@ -47,7 +47,7 @@
             {% else %}
                 <div class="time-place content">
                     <a class="calendar-button" href="{% url 'timeplace_ical' ticket.timeplace.pk %}" target="_blank">
-                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                        <i class="large make-col-yellow calendar plus outline icon"></i>
                     </a>
                     <b>
                         {{ ticket.timeplace.start_time|long_datetime_no_year }} &ndash; {{ ticket.timeplace.end_time|long_datetime_no_year }}

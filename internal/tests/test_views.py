@@ -33,7 +33,7 @@ class InternalContentBoxTests(TestCase):
 
         def assert_edit_button_in_response(should_button_be_present: bool, client: Client):
             response_html = client.get(self.home_url).content.decode()
-            self.assertInHTML('<i class="ui edit icon">', response_html, count=1 if should_button_be_present else 0)
+            self.assertInHTML('<i class="edit icon">', response_html, count=1 if should_button_be_present else 0)
             self.assertEqual(home_content_box_edit_path in response_html, should_button_be_present)
 
         assert_edit_button_in_response(False, self.internal_user_client)
