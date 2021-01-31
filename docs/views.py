@@ -12,7 +12,7 @@ from docs.models import Page, Content
 
 
 class DocumentationPageView(DetailView):
-    template_name = "docs/documentation_page.html"
+    template_name = "docs/documentation_page_detail.html"
     model = Page
     context_object_name = "page"
 
@@ -24,7 +24,7 @@ class HistoryDocumentationPageView(DetailView):
 
 
 class OldDocumentationPageContentView(DetailView):
-    template_name = "docs/documentation_page.html"
+    template_name = "docs/documentation_page_detail.html"
     model = Page
     context_object_name = "page"
 
@@ -67,7 +67,7 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
 
 
 class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
-    template_name = "docs/create_documentation_page.html"
+    template_name = "docs/documentation_page_create.html"
     model = Page
     form_class = CreatePageForm
     permission_required = ("docs.add_page",)
@@ -88,7 +88,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
 
 
 class EditDocumentationPageView(PermissionRequiredMixin, FormView):
-    template_name = "docs/edit_documentation_page.html"
+    template_name = "docs/documentation_page_edit.html"
     model = Content
     form_class = PageContentForm
     permission_required = ("docs.change_page",)

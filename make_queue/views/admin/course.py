@@ -13,7 +13,7 @@ from make_queue.models.course import Printer3DCourse
 
 
 class CourseView(TemplateView):
-    template_name = "make_queue/course/course_panel.html"
+    template_name = "make_queue/course/course_registration_list.html"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -28,7 +28,7 @@ class CreateRegistrationView(PermissionRequiredMixin, CreateView):
     is_next = False
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = "make_queue/course/registration_create.html"
+    template_name = "make_queue/course/course_registration_create.html"
     permission_required = (
         "make_queue.add_printer3dcourse",
     )
@@ -46,7 +46,7 @@ class CreateRegistrationView(PermissionRequiredMixin, CreateView):
 class EditRegistrationView(PermissionRequiredMixin, UpdateView):
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = "make_queue/course/registration_edit.html"
+    template_name = "make_queue/course/course_registration_edit.html"
     permission_required = (
         "make_queue.change_printer3dcourse",
     )

@@ -236,7 +236,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         response = view.dispatch(view.request, reservation=reservation)
         # Response should be the edit page for the reservation, as no form is posted with the data
         self.assertEqual(200, response.status_code)
-        self.assertEqual(["make_queue/reservation_create.html"], response.template_name)
+        self.assertEqual(["make_queue/reservation_edit.html"], response.template_name)
 
     @patch("django.utils.timezone.now")
     def test_post_unchangeable_reservation(self, now_mock):

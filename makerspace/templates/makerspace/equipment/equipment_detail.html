@@ -8,11 +8,6 @@
 
 {% block og_title %}{{ title.title }}{% endblock og_title %}
 {% block og_image %}{{ title.image.url }}{% endblock og_image %}
-{% block og_description %}{% trans "A list of equipment" %}{% endblock og_description %}
-
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment.css" %}"/>
-{% endblock head %}
 
 
 {% block body %}

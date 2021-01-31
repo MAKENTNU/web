@@ -20,7 +20,7 @@ from ...templatetags.reservation_extra import calendar_url_reservation
 class ReservationCreateOrChangeView(TemplateView):
     """Base abstract class for the reservation create or change view"""
     __metaclass__ = ABCMeta
-    template_name = "make_queue/reservation_create.html"
+    template_name = "make_queue/reservation_edit.html"
 
     def get_error_message(self, form, reservation):
         """

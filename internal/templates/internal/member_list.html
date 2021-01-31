@@ -7,7 +7,7 @@
 {% block title %}{% trans "Members list" %}{% endblock %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "internal/css/members.css" %}">
+    <link rel="stylesheet" href="{% static "internal/css/member_list.css" %}">
 {% endblock %}
 
 {% block body %}
@@ -241,7 +241,7 @@
         $("div.ui.dropdown").dropdown();
         $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
     </script>
-    <script src="{% static "internal/js/members.js" %}"></script>
+    <script src="{% static "internal/js/member_list.js" %}"></script>
     {% if selected_member %}
         <script>
             showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}));

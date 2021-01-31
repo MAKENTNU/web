@@ -7,7 +7,7 @@ from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRu
 
 
 class RulesOverviewView(TemplateView):
-    template_name = "make_queue/rules.html"
+    template_name = "make_queue/rule_list.html"
 
     def get_context_data(self, machine_type: MachineType, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -57,7 +57,7 @@ class DeleteReservationRules(PermissionRequiredMixin, DeleteView):
 
 
 class MachineUsageRulesView(TemplateView):
-    template_name = "make_queue/usage_rules.html"
+    template_name = "make_queue/usage_rules_detail.html"
 
     def get_context_data(self, machine_type, **kwargs):
         context_data = super().get_context_data(**kwargs)

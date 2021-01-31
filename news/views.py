@@ -24,7 +24,7 @@ from .models import Article, Event, TimePlace, EventTicket
 
 
 class ViewEventsView(TemplateView):
-    template_name = 'news/events.html'
+    template_name = 'news/event_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -69,7 +69,7 @@ class ViewEventsView(TemplateView):
 
 
 class ViewArticlesView(ListView):
-    template_name = 'news/articles.html'
+    template_name = 'news/article_list.html'
     context_object_name = "articles"
 
     def get_queryset(self):
@@ -77,7 +77,7 @@ class ViewArticlesView(ListView):
 
 
 class ViewEventView(TemplateView):
-    template_name = 'news/event.html'
+    template_name = 'news/event_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -95,7 +95,7 @@ class ViewEventView(TemplateView):
 
 
 class ViewArticleView(TemplateView):
-    template_name = 'news/article.html'
+    template_name = 'news/article_detail.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,7 +110,7 @@ class ViewArticleView(TemplateView):
 
 
 class AdminArticleView(PermissionRequiredMixin, ListView):
-    template_name = 'news/admin_articles.html'
+    template_name = 'news/admin_article_list.html'
     model = Article
     context_object_name = 'articles'
 
@@ -119,7 +119,7 @@ class AdminArticleView(PermissionRequiredMixin, ListView):
 
 
 class AdminEventsView(PermissionRequiredMixin, ListView):
-    template_name = 'news/admin_events.html'
+    template_name = 'news/admin_event_list.html'
     model = Event
     context_object_name = 'events'
 
@@ -131,7 +131,7 @@ class AdminEventsView(PermissionRequiredMixin, ListView):
 
 
 class AdminEventView(DetailView):
-    template_name = 'news/admin_event.html'
+    template_name = 'news/admin_event_detail.html'
     model = Event
 
 
@@ -387,11 +387,11 @@ class EventRegistrationView(CreateView):
 
 class TicketView(LoginRequiredMixin, DetailView):
     model = EventTicket
-    template_name = "news/ticket_overview.html"
+    template_name = "news/ticket_detail.html"
 
 
 class MyTicketsView(ListView):
-    template_name = "news/my_tickets.html"
+    template_name = "news/my_tickets_list.html"
     context_object_name = "tickets"
 
     def get_queryset(self):
@@ -399,7 +399,7 @@ class MyTicketsView(ListView):
 
 
 class AdminEventTicketView(TemplateView):
-    template_name = "news/admin_event_tickets.html"
+    template_name = "news/admin_event_ticket_list.html"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
@@ -416,7 +416,7 @@ class AdminEventTicketView(TemplateView):
 
 
 class AdminTimeplaceTicketView(TemplateView):
-    template_name = "news/admin_event_tickets.html"
+    template_name = "news/admin_event_ticket_list.html"
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()

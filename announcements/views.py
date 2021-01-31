@@ -8,7 +8,7 @@ from announcements.models import Announcement
 
 class AnnouncementAdminView(PermissionRequiredMixin, ListView):
     model = Announcement
-    template_name = "announcements/announcements_admin.html"
+    template_name = "announcements/announcement_admin.html"
     context_object_name = "announcements"
     permission_required = (
         "announcements.change_announcement",
@@ -17,7 +17,7 @@ class AnnouncementAdminView(PermissionRequiredMixin, ListView):
 
 class CreateAnnouncementView(PermissionRequiredMixin, CreateView):
     model = Announcement,
-    template_name = "announcements/create_announcement.html"
+    template_name = "announcements/announcement_create.html"
     form_class = AnnouncementForm
     permission_required = (
         "announcements.add_announcement",
@@ -27,7 +27,7 @@ class CreateAnnouncementView(PermissionRequiredMixin, CreateView):
 
 class EditAnnouncementView(PermissionRequiredMixin, UpdateView):
     model = Announcement
-    template_name = "announcements/edit_announcement.html"
+    template_name = "announcements/announcement_edit.html"
     form_class = AnnouncementForm
     permission_required = (
         "announcements.change_announcement",

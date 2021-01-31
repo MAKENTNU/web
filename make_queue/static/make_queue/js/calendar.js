@@ -1,4 +1,4 @@
-// Requires reservation_rules.js and date_util.js
+// Requires reservation_rule_utils.js and date_utils.js
 
 function ReservationCalendar(element, properties) {
     /**

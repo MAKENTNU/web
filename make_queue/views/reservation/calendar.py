@@ -6,7 +6,7 @@ from make_queue.util.time import year_and_week_to_monday
 
 class ReservationCalendarView(TemplateView):
     """Main view for showing the reservation calendar for a machine"""
-    template_name = "make_queue/reservation_overview.html"
+    template_name = "make_queue/machine_detail.html"
 
     def get_context_data(self, year, week, machine):
         """

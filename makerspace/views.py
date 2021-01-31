@@ -15,7 +15,7 @@ class MakerspaceView(DisplayContentBoxView):
 
 class EquipmentView(DetailView):
     model = Equipment
-    template_name = 'makerspace/equipment/equipment.html'
+    template_name = 'makerspace/equipment/equipment_detail.html'
     context_object_name = 'equipment'
 
 
@@ -29,7 +29,7 @@ class EquipmentListView(ListView):
 class AdminEquipmentView(PermissionRequiredMixin, ListView):
     model = Equipment
     queryset = Equipment.objects.default_order_by()
-    template_name = 'makerspace/equipment/admin_equipment.html'
+    template_name = 'makerspace/equipment/admin_equipment_list.html'
     context_object_name = 'equipment_list'
 
     def has_permission(self):
