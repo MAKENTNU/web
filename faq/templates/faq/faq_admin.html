@@ -6,7 +6,7 @@
         <h1>
             {% trans "Questions" %}
             {% if perms.faq.add_question %}
-                <a href="{% url "faq-create" %}">
+                <a href="{% url "faq-question-create" %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -18,7 +18,45 @@
                         <div class="ui header">
                             {{ question.title }}
                             {% if perms.faq.change_question %}
-                                <a href="{% url "faq-edit" pk=question.pk %}">
+                                <a href="{% url "faq-question-edit" pk=question.pk %}">
+                                    <i class="yellow pencil icon"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if perms.faq.delete_question %}
+                                <a class="delete confirm"
+                                   data-title="{% trans "Delete" %}"
+                                   data-content="{% trans "Click to delete" %}."
+                                   href="{% url 'faq-question-delete' question.pk %}">
+                                    <i class="ui delete icon red"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="description">{{ question.answer|safe }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+
+    <div class="ui container">
+        <h1>
+            {% trans "Categories" %}
+            {% if perms.faq.add_question %}
+                <a href="{% url "faq-question-create" %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+        <div class="ui relaxed divided list">
+            {% for category in category_list %}
+                <div class="item">
+                    <div class="content">
+                        <div class="ui header">
+                            {{ question.title }}
+                            {% if perms.faq.change_question %}
+                                <a href="{% url "faq-category-edit" pk=category.pk %}">
                                     <i class="yellow pencil icon"></i>
                                 </a>
                             {% endif %}

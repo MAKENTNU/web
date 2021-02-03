@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 # Create your views here.
-from .forms import QuestionForm
+from .forms import QuestionForm, CategoryForm
 from .models import Question, Category
 from web.templatetags.permission_tags import has_any_faq_permissions
 
@@ -50,3 +50,14 @@ class DeleteQuestionView(PermissionRequiredMixin, DeleteView):
     model = Question
     success_url = reverse_lazy('faq-admin')
     permission_required = 'faq.delete_question'
+
+
+class EditCategoryView(PermissionRequiredMixin, UpdateView):
+    model = Category
+    form_class = CategoryForm
+    template_name = "faq/category_edit.html.html"
+    context_object_name = 'category'
+    success_url = reverse_lazy("faq-admin")
+
+    def has_permission(self):
+        return has_any_faq_permissions(self.request.user)
