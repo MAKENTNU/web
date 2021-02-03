@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load news_tags %}
 
 
 <div class="item">
@@ -21,7 +20,7 @@
             {{ timeplace.start_time|date:"d. M Y H:i" }}
             <span>
                 &nbsp;&nbsp;
-                    <i class="ui {{ timeplace.hidden|color }} eye slash icon toggle explanation-popup"
+                    <i class="ui {% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle explanation-popup"
                        data-title="{% trans "Hidden" %}" data-pk="{{ timeplace.pk }}"
                        data-toggle="hidden" data-model="timeplace"
                        data-content="{% trans "If selected, the occurrence is hidden for non-admin users." %}">

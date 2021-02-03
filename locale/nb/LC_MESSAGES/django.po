@@ -1724,6 +1724,10 @@ msgstr "Nytt utstyr"
 msgid "Edit equipment"
 msgstr "Rediger utstyr"
 
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:17
+msgid "Admin page for equipment"
+msgstr "Administrasjonsside for utstyr"
+
 #: makerspace/templates/makerspace/equipment/admin_equipment_list.html:15
 msgid "Add new equipment"
 msgstr "Legg til nytt utstyr"
@@ -1867,13 +1871,13 @@ msgstr "Artikler"
 msgid "Article image"
 msgstr "Artikkelbilde"
 
-#: news/templates/news/admin_event_detail.html:31
-msgid "Go to the event page"
-msgstr "Gå til arrangementsiden"
-
 #: news/templates/news/admin_event_detail.html:37
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
+
+#: news/templates/news/admin_event_detail.html:37
+msgid "Go to the event page"
+msgstr "Gå til arrangementsiden"
 
 #: news/templates/news/admin_event_detail.html:42
 msgid "Hidden event"

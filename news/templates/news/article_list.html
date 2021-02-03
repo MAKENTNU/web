@@ -30,12 +30,14 @@
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}">
-                    <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}">
-                    <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}">
-                    <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}">
-                    <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}">
+                    {% if forloop.first or forloop.last %}
+                        <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}" alt=""/>
+                        <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}" alt=""/>
+                        <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
+                        <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
+                    {% endif %}
                     <div>
-                        <h2>
+                        <h2 class="word-breaking">
                             <a href="{% url 'article' article.pk %}">{{ article.title }}</a>
                         </h2>
                         <p>{{ article.clickbait }}</p>

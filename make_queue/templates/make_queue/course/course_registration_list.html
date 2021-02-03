@@ -96,10 +96,13 @@
             </thead>
             <tbody>
             {% for registration in registrations %}
-                <tr data-name="{{ registration.name }}" data-username="{{ registration.username }}"
+                <tr class="display-none o v e r r i d e"
+                    data-pk="{{ registration.pk }}"
+                    data-name="{{ registration.name }}"
+                    data-username="{{ registration.username }}"
                     data-card-number="{{ registration.card_number|default:"" }}"
-                    data-date="{{ registration.date|date:"Y-m-d" }}" data-pk="{{ registration.pk }}"
-                    data-status="{{ registration.status }}" class="display-none">
+                    data-date="{{ registration.date|date:"Y-m-d" }}"
+                    data-status="{{ registration.status }}">
                     <td>
                         {{ registration.name }}
                         <a href="{% url "edit_course_registration" registration.pk %}">

@@ -2,3 +2,8 @@
     display: inline-block !important; /* Overrides Fomantic-UI */
     margin: 0 !important; /* Overrides Fomantic-UI */
 }
+
+.create-new-occurrence {
+    clear: both;
+    overflow: auto;
+}

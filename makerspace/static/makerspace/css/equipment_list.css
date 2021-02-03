@@ -82,6 +82,14 @@
         text-align: center;
     }
 
+    .equipment-title:first-child {
+        margin-top: 1em; /* Overrides Fomantic-UI */
+    }
+
+    .equipment-title:last-child {
+        margin-bottom: 0.5em; /* Overrides Fomantic-UI */
+    }
+
     .txtborder.tl,
     .txtborder.tr,
     .txtborder.bl,
