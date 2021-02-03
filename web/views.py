@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from contentbox.views import DisplayContentBoxView
 from news.models import Article, TimePlace
 
 
@@ -49,3 +50,8 @@ class View404(TemplateView):
 
 def view_500(request):
     return render(request, template_name="web/500.html", status=500)
+
+
+class AboutUsView(DisplayContentBoxView):
+    template_name = 'web/about.html'
+    title = 'about'

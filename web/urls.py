@@ -13,13 +13,14 @@ from social_core.utils import setting_name
 
 from contentbox.views import DisplayContentBoxView
 from dataporten.views import Logout, login_wrapper
-from web.views import IndexView, AdminPanelView, View404, view_500
+from web.views import IndexView, AdminPanelView, View404, view_500, AboutUsView
 
 extra = getattr(settings, setting_name('TRAILING_SLASH'), True) and '/' or ''
 
 urlpatterns = [
     path('i18n/', include('django.conf.urls.i18n')),
     path('robots.txt', TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
+    path('about/', AboutUsView.as_view(), name='about'),
 ]
 
 urlpatterns += i18n_patterns(
@@ -38,6 +39,7 @@ urlpatterns += i18n_patterns(
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),
+    DisplayContentBoxView.get_path('email'),
     path('jsi18n/', JavaScriptCatalog.as_view(), name='javascript-catalog'),
     prefix_default_language=False,
 )
