@@ -77,15 +77,13 @@ INSTALLED_APPS = [
     'checkin',
     'contentbox',
     'docs',
+    'faq',
     'groups',
     'internal',
     'mail',
     'make_queue',
     'makerspace',
     'news',
-    'faq',
-    'internal',
-    'docs',
     'users',
 ]
 
