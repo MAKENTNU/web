@@ -1,10 +1,10 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-# Create your views here.
-from .forms import QuestionForm
-from .models import Question, Category
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+
 from web.templatetags.permission_tags import has_any_faq_permissions
+from .forms import QuestionForm
+from .models import Category, Question
 
 
 class FAQPageView(ListView):
