@@ -85,6 +85,8 @@ INSTALLED_APPS = [
     'makerspace',
     'news',
     'users',
+
+    'util',  # not a "real" app, just a collection of utilities
 ]
 
 MIDDLEWARE = [

@@ -51,7 +51,7 @@ class MazemapSearchInput(forms.TextInput):
     placeholder = _("Search places")
 
     class Media:
-        js = ('web/js/widgets/mazemap-search.js',)
+        js = ("web/js/forms/widgets/mazemap_search.js",)
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
         """

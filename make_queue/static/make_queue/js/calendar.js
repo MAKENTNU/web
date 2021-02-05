@@ -1,4 +1,4 @@
-// Requires reservation_rules.js and date_util.js
+// Requires reservation_rule_utils.js and date_utils.js
 
 function ReservationCalendar(element, properties) {
     /**
@@ -109,7 +109,7 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
 
     popupContent.find(".button").on("mousedown touchstart", () => {
         // Create and submit a hidden form to create a new reservation
-        let form = $(`<form method='POST' action='${langPrefix}/reservation/make/${calendar.machine}/'>`).appendTo(popupContent);
+        let form = $(`<form method='POST' action='${langPrefix}/reservation/create/${calendar.machine}/'>`).appendTo(popupContent);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
         // Hide the form in case something fails
         $("<input class='make_hidden' name='start_time'>").val(startTime.djangoFormat()).appendTo(form);

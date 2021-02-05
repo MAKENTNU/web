@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.database import MultiLingualTextField
+from web.multilingual.modelfields import MultiLingualTextField
 
 
 class AnnouncementManager(models.Manager):

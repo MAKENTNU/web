@@ -17,13 +17,13 @@ class Home(TemplateView):
 
 
 class SecretsView(ListView):
-    template_name = "internal/secrets.html"
+    template_name = "internal/secret_list.html"
     model = Secret
     context_object_name = 'secrets'
 
 
 class CreateSecretView(PermissionRequiredMixin, CreateView):
-    template_name = 'internal/secrets_create.html'
+    template_name = 'internal/secret_create.html'
     model = Secret
     form_class = SecretsForm
     context_object_name = 'secrets'
@@ -32,7 +32,7 @@ class CreateSecretView(PermissionRequiredMixin, CreateView):
 
 
 class EditSecretView(PermissionRequiredMixin, UpdateView):
-    template_name = 'internal/secrets_edit.html'
+    template_name = 'internal/secret_edit.html'
     model = Secret
     form_class = SecretsForm
     context_object_name = 'secrets'
@@ -50,7 +50,7 @@ class DeleteSecretView(PermissionRequiredMixin, DeleteView):
 
 
 class MembersListView(ListView):
-    template_name = "internal/members.html"
+    template_name = "internal/member_list.html"
     model = Member
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -63,7 +63,7 @@ class MembersListView(ListView):
 
 
 class AddMemberView(PermissionRequiredMixin, CreateView):
-    template_name = "internal/add_member.html"
+    template_name = "internal/member_create.html"
     model = Member
     form_class = AddMemberForm
     permission_required = (
@@ -86,7 +86,7 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
 
 
 class EditMemberView(UserPassesTestMixin, UpdateView):
-    template_name = "internal/edit_member.html"
+    template_name = "internal/member_edit.html"
     model = Member
     form_class = EditMemberForm
 

@@ -10,8 +10,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from groups.models import Committee
 from internal.util import date_to_term
 from users.models import User
-
-from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
 class Member(models.Model):

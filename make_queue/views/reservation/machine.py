@@ -8,7 +8,7 @@ from ...models.models import Machine, MachineType
 
 class MachineView(TemplateView):
     """View that shows all the machines"""
-    template_name = "make_queue/reservation_machines.html"
+    template_name = "make_queue/machine_list.html"
 
     def get_context_data(self):
         """

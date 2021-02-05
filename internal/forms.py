@@ -2,8 +2,8 @@ from django.forms import ModelForm, TextInput
 from django.utils.translation import gettext_lazy as _
 from django import forms
 
-import card.utils
-from card.forms import CardNumberField
+from card import utils as card_utils
+from card.formfields import CardNumberField
 from internal.models import Member, SystemAccess, Secret
 from users.models import User
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
@@ -52,7 +52,7 @@ class EditMemberForm(ModelForm):
     def is_valid(self):
         card_number = self.data["card_number"]
         username = self.instance.user.username
-        is_duplicate = card.utils.is_duplicate(card_number, username)
+        is_duplicate = card_utils.is_duplicate(card_number, username)
         if is_duplicate:
             self.add_error("card_number", _("Card number is already in use"))
         return super().is_valid() and not is_duplicate

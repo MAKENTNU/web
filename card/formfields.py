@@ -1,23 +1,19 @@
 import re
 
+from django import forms
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
-from django.forms import CharField
 from django.utils.translation import gettext_lazy as _
 
-from card.widgets import CardNumberInput
-
-card_number_validators = (
-    RegexValidator(r"^\d{10}$", _("Card number must be ten digits long.")),
-)
+from .validators import card_number_validator
+from .widgets import CardNumberInput
 
 
-class CardNumberField(CharField):
+class CardNumberField(forms.CharField):
     """
     Custom form field for card numbers
     """
     widget = CardNumberInput
-    default_validators = card_number_validators
+    default_validators = [card_number_validator]
 
     def __init__(self, **kwargs):
         super().__init__(**{

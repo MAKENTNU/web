@@ -61,8 +61,7 @@ calendar_url_patterns = [
 urlpatterns = [
     path('calendar/', include(calendar_url_patterns)),
     path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
-    path('make/<machine:machine>/', login_required(reservation.reservation.MakeReservationView.as_view()), name="make_reservation"),
-    path('make/<time:start_time>/<machine:machine>/', login_required(reservation.reservation.MakeReservationView.as_view()), name="make_reservation"),
+    path('create/<machine:machine>/', login_required(reservation.reservation.CreateReservationView.as_view()), name="create_reservation"),
     path('me/', login_required(reservation.overview.MyReservationsView.as_view()), name="my_reservations"),
     path('admin/', permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.AdminReservationView.as_view()), name="admin_reservation"),
     path('delete/', login_required(reservation.reservation.DeleteReservationView.as_view()), name="delete_reservation"),

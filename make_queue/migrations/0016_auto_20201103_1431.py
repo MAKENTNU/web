@@ -2,7 +2,7 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import web.multilingual.database
+import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='machinetype',
             name='name',
-            field=web.multilingual.database.MultiLingualTextField(unique=True),
+            field=web.multilingual.modelfields.MultiLingualTextField(unique=True),
         ),
         migrations.AlterField(
             model_name='quota',

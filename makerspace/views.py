@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from contentbox.views import DisplayContentBoxView
-from web.templatetags.permission_tags import has_any_equipment_permissions
+from util.templatetags.permission_tags import has_any_equipment_permissions
 from .forms import EquipmentForm
 from .models import Equipment
 
@@ -15,7 +15,7 @@ class MakerspaceView(DisplayContentBoxView):
 
 class EquipmentView(DetailView):
     model = Equipment
-    template_name = 'makerspace/equipment/equipment.html'
+    template_name = 'makerspace/equipment/equipment_detail.html'
     context_object_name = 'equipment'
 
 
@@ -29,7 +29,7 @@ class EquipmentListView(ListView):
 class AdminEquipmentView(PermissionRequiredMixin, ListView):
     model = Equipment
     queryset = Equipment.objects.default_order_by()
-    template_name = 'makerspace/equipment/admin_equipment.html'
+    template_name = 'makerspace/equipment/admin_equipment_list.html'
     context_object_name = 'equipment_list'
 
     def has_permission(self):

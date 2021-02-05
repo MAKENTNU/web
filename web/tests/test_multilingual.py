@@ -5,8 +5,8 @@ from django.utils import translation
 
 from web import settings
 from web.multilingual.data_structures import MultiLingualTextStructure
-from web.multilingual.database import MultiLingualTextField
-from web.multilingual.form import MultiLingualFormField
+from web.multilingual.formfields import MultiLingualFormField
+from web.multilingual.modelfields import MultiLingualTextField
 
 
 class TestMultiLingualTextStructure(TestCase):
