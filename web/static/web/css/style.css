@@ -7,6 +7,8 @@ html, body {
 
     --make-yellow-darker: rgb(239, 184, 14);
 
+    --header-height: 100px;
+
     height: 100%;
     min-width: 320px;
     font-size: 14px; /* Same as Fomantic-UI */
@@ -39,6 +41,25 @@ li {
     -webkit-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;
+}
+
+.skip-to-main-content {
+    position: absolute;
+    top: calc(var(--header-height) - 1em);
+    left: -100%;
+    padding: 1em;
+    border-radius: 0.5em;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: underline;
+    color: var(--make-yellow);
+    background-color: var(--make-blue);
+    border: 4px solid var(--make-turquoise);
+    z-index: 100;
+}
+
+.skip-to-main-content:focus {
+    left: 0.5em;
 }
 
 .wrapper {

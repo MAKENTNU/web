@@ -6,8 +6,6 @@
 
     --burger-margin: 2em;
 
-    --header-height: 100px;
-
     /* nav */
     --nav-space-between: 2em;
     --bubble-background-extra-width: calc(1.5 * var(--nav-space-between));

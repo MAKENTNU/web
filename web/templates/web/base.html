@@ -37,6 +37,8 @@
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
 
+    <script defer src="{% static 'web/js/base.js' %}"></script>
+
     {% block analytics %}
         <script defer src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
         <script defer src="{% static 'web/js/gtag_init.js' %}"></script>
@@ -54,6 +56,11 @@
     {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>
+
+{# Should always be the first child of `<body>` #}
+<a class="skip-to-main-content" href="">
+    {% trans "Skip to main content" %}
+</a>
 
 <div class="wrapper">
     <div class="content">

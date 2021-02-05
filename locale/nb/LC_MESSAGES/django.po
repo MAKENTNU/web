@@ -2418,6 +2418,10 @@ msgstr ""
 msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
 
+#: web/templates/web/base.html:62
+msgid "Skip to main content"
+msgstr "Hopp til hovedinnhold"
+
 #: web/templates/web/delete_modal.html:10
 msgid "Are you sure you want to delete?"
 msgstr "Er du sikker på at du vil slette?"
