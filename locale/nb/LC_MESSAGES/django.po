@@ -3,11 +3,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-06 15:17+0100\n"
+"POT-Creation-Date: 2021-02-03 16:38+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
-"Language: nb\n"
+"Language: nb/n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -96,12 +96,13 @@ msgstr "Ny kunngjøring"
 
 #: announcements/templates/announcements/create_announcement.html:54
 #: contentbox/templates/contentbox/edit.html:39
+#: faq/templates/faq/question_edit.html:38
 #: groups/templates/groups/committee_form.html:30
 #: internal/templates/internal/edit_member.html:81
 #: internal/templates/internal/secrets_edit.html:32
 #: internal/templates/internal/system_access_edit.html:25
 #: make_queue/templates/make_queue/machine/machine_edit.html:62
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:35
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:42
 #: news/templates/news/article_edit.html:87
 #: news/templates/news/event_edit.html:122
 #: news/templates/news/timeplace_edit.html:72
@@ -111,6 +112,7 @@ msgstr "Lagre"
 #: announcements/templates/announcements/create_announcement.html:57
 #: docs/templates/docs/create_documentation_page.html:24
 #: docs/templates/docs/edit_documentation_page.html:27
+#: faq/templates/faq/question_edit.html:40
 #: groups/templates/groups/committee_form.html:33
 #: internal/templates/internal/add_member.html:25
 #: internal/templates/internal/edit_member.html:82
@@ -121,7 +123,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/registration_edit.html:102
 #: make_queue/templates/make_queue/machine/machine_edit.html:65
 #: make_queue/templates/make_queue/quota/quota_edit.html:65
-#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:37
+#: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:44
 #: news/templates/news/article_edit.html:89
 #: news/templates/news/event_edit.html:124
 #: news/templates/news/timeplace_edit.html:74
@@ -287,6 +289,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: docs/templates/docs/documentation_page.html:43
+#: faq/templates/faq/faq_admin.html:28
 #: makerspace/templates/makerspace/equipment/admin_equipment.html:38
 #: news/templates/news/admin_articles.html:54
 #: news/templates/news/admin_event.html:27
@@ -308,7 +311,7 @@ msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
 #: contentbox/models.py:11 docs/models.py:14 internal/models.py:179
-#: makerspace/models.py:11 news/models.py:37
+#: makerspace/models.py:22 news/models.py:38
 msgid "Title"
 msgstr "Tittel"
 
@@ -493,11 +496,54 @@ msgstr ""
 "The finnes ingen dokumenter som samsvarer med det søket. Vennligst prøv et "
 "annet søk."
 
+#: faq/forms.py:12
+msgid "Choose categories"
+msgstr "Velg kategori"
+
+#: faq/models.py:11
+msgid "Category"
+msgstr "Kategori"
+
+#: faq/models.py:21
+msgid "Question"
+msgstr "Spørsmål"
+
+#: faq/models.py:25
+msgid "Answer"
+msgstr "Svar"
+
+#: faq/templates/faq/faq_admin.html:7
+msgid "Questions"
+msgstr "Spørsmål"
+
+#: faq/templates/faq/faq_admin.html:29
+#: makerspace/templates/makerspace/equipment/admin_equipment.html:39
+msgid "Click to delete"
+msgstr "Trykk for å slette"
+
+#: faq/templates/faq/faq_list.html:14
+msgid "Frequently Asked Questions"
+msgstr "Ofte stilte spørsmål"
+
+#: faq/templates/faq/question_create.html:4
+#: faq/templates/faq/question_create.html:5
+msgid "New Question"
+msgstr "Nytt Spørsmål"
+
+#: faq/templates/faq/question_edit.html:5
+#: faq/templates/faq/question_edit.html:14
+msgid "Edit Question"
+msgstr "Endre Spørsmål"
+
+#: faq/templates/faq/question_edit.html:31
+msgid "Choose one or multiple categories for the question"
+msgstr "Velg en eller flere kategorier"
+
 #: groups/models.py:92
 msgid "group"
 msgstr "gruppe"
 
-#: groups/models.py:94 internal/models.py:181 makerspace/models.py:14
+#: groups/models.py:94 internal/models.py:181 makerspace/models.py:24
 msgid "Description"
 msgstr "Beskrivelse"
 
@@ -657,7 +703,7 @@ msgid "Public pages"
 msgstr "Offentlige sider"
 
 #: internal/templates/internal/header.html:47
-#: web/templates/web/header.html:102
+#: web/templates/web/header.html:106
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -846,7 +892,7 @@ msgstr "Velg bruker"
 
 #: make_queue/forms.py:118 make_queue/forms.py:175
 #: make_queue/forms.py:185 make_queue/models/models.py:109
-#: make_queue/models/models.py:181 make_queue/models/models.py:370
+#: make_queue/models/models.py:181 make_queue/models/models.py:371
 #: make_queue/templates/make_queue/reservation_overview.html:39
 msgid "Machine type"
 msgstr "Maskintype"
@@ -956,34 +1002,34 @@ msgstr "Ignorerer regler"
 msgid "All users"
 msgstr "Alle brukere"
 
-#: make_queue/models/models.py:359
+#: make_queue/models/models.py:360
 #: make_queue/templates/make_queue/make_reservation.html:72
 #: make_queue/templates/make_queue/make_reservation.html:76
 #: news/models.py:178
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
-#: make_queue/models/models.py:360
+#: make_queue/models/models.py:361
 #: make_queue/templates/make_queue/make_reservation.html:86
 #: make_queue/templates/make_queue/make_reservation.html:90
 #: news/models.py:182
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
-#: make_queue/models/models.py:362
+#: make_queue/models/models.py:363
 msgid "Days"
 msgstr "Dager"
 
-#: make_queue/models/models.py:363
+#: make_queue/models/models.py:364
 #: make_queue/templates/make_queue/rule_edit.html:35
 msgid "Start days"
 msgstr "Start dager for regel perioder"
 
-#: make_queue/models/models.py:364
+#: make_queue/models/models.py:365
 msgid "Hours single period"
 msgstr "Timer enkelt periode"
 
-#: make_queue/models/models.py:365
+#: make_queue/models/models.py:366
 msgid "Hours multiperiod"
 msgstr "Timer fler-periode"
 
@@ -1185,7 +1231,7 @@ msgstr "Velg utstyrstype"
 
 #: make_queue/templates/make_queue/make_reservation.html:51
 #: makerspace/templates/makerspace/equipment/admin_equipment.html:9
-#: makerspace/templates/makerspace/makerspace.html:18
+#: makerspace/templates/makerspace/makerspace.html:17
 #: web/templates/web/admin_panel.html:99 web/templates/web/header.html:52
 msgid "Equipment"
 msgstr "Utstyr"
@@ -1299,8 +1345,8 @@ msgstr "Oversikt"
 
 #: make_queue/templates/make_queue/reservation_machines.html:37
 #: make_queue/templates/make_queue/reservation_overview.html:23
-#: makerspace/templates/makerspace/makerspace.html:24
-#: web/templates/web/header.html:55
+#: makerspace/templates/makerspace/makerspace.html:23
+#: web/templates/web/header.html:58
 msgid "Rules"
 msgstr "Regler"
 
@@ -1544,10 +1590,6 @@ msgstr "Legg til nytt utstyr"
 msgid "Image of %(equipment)s"
 msgstr "Bilde av %(equipment)s"
 
-#: makerspace/templates/makerspace/equipment/admin_equipment.html:39
-msgid "Click to delete"
-msgstr "Trykk for å slette"
-
 #: makerspace/templates/makerspace/equipment/admin_equipment_create.html:4
 #: makerspace/templates/makerspace/equipment/admin_equipment_create.html:5
 msgid "New equipment"
@@ -1566,7 +1608,7 @@ msgstr "En utstyrsliste"
 msgid "Available equipment at Makerverkstedet"
 msgstr "Tilgjengelig utstyr på Makerverkstedet"
 
-#: makerspace/templates/makerspace/makerspace.html:19
+#: makerspace/templates/makerspace/makerspace.html:18
 msgid ""
 "an overview of the various equipment at the workshop, and instructions on "
 "how to use it"
@@ -1574,7 +1616,7 @@ msgstr ""
 "en oversikt over det forskjellige utstyret på verkstedet, og tilhørende "
 "bruksanvisninger"
 
-#: makerspace/templates/makerspace/makerspace.html:25
+#: makerspace/templates/makerspace/makerspace.html:24
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
@@ -2012,7 +2054,7 @@ msgstr "Tidligere arrangementer"
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
 
-#: news/templates/news/my_tickets.html:11 web/templates/web/header.html:99
+#: news/templates/news/my_tickets.html:11 web/templates/web/header.html:103
 msgid "My tickets"
 msgstr "Mine billetter"
 
@@ -2168,6 +2210,14 @@ msgstr ""
 msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
 
+#: web/templates/web/admin_panel.html:111 web/templates/web/header.html:55
+msgid "FAQ"
+msgstr "FAQ"
+
+#: web/templates/web/admin_panel.html:114
+msgid "Here you can add or edit frequently asked questions"
+msgstr "Her kan du legge til eller redigere ofte stilte spørsmål"
+
 #: web/templates/web/delete_modal.html:5
 msgid "Are sure you want to delete?"
 msgstr "Er du sikker på at du vil slette?"
@@ -2240,23 +2290,23 @@ msgstr "Makerverkstedet"
 msgid "About"
 msgstr "Om"
 
-#: web/templates/web/header.html:61
+#: web/templates/web/header.html:65
 msgid "About us"
 msgstr "Om oss"
 
-#: web/templates/web/header.html:87
+#: web/templates/web/header.html:91
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:91
+#: web/templates/web/header.html:95
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:95
+#: web/templates/web/header.html:99
 msgid "Internal pages"
 msgstr "Internsider"
 
-#: web/templates/web/header.html:109 web/templates/web/login.html:27
+#: web/templates/web/header.html:113 web/templates/web/login.html:27
 msgid "Login"
 msgstr "Logg inn"
 

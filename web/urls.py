@@ -34,6 +34,8 @@ urlpatterns += i18n_patterns(
     path('committees/', include('groups.urls')),
     path('announcements/', include('announcements.urls')),
     path('makerspace/', include('makerspace.urls')),
+    path('faq/', include('faq.urls')),
+    DisplayContentBoxView.get_path('about'),
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),

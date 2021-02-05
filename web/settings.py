@@ -77,6 +77,7 @@ INSTALLED_APPS = [
     'checkin',
     'contentbox',
     'docs',
+    'faq',
     'groups',
     'internal',
     'mail',
