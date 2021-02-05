@@ -1,0 +1,12 @@
+#outer-accordion {
+    width: 100%;
+    font-size: 150%;
+}
+
+.ui.accordion .title:not(.ui) {
+    display: flex;
+}
+
+#page-title {
+    margin-bottom: 5%;
+}

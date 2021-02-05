@@ -44,6 +44,18 @@
                     </a>
                 </div>
             {% endif %}
+            {% if user|has_any_faq_permissions %}
+                <div class="ui yellow card">
+                    <a href="{% url 'faq-admin' %}" class="content">
+                        <div class="center aligned header">
+                            <i class="ui grey question circle outline icon"></i>{% trans "FAQ" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can add or edit frequently asked questions" %}.
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
             {% if perms.make_queue.change_quota %}
                 <div class="ui yellow card">
                     <a href="{% url 'quota_panel' %}" class="content">

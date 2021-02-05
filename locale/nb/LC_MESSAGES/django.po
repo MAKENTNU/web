@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-06 15:17+0100\n"
+"POT-Creation-Date: 2021-02-03 16:38+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -77,7 +77,7 @@ msgstr ""
 "et sluttidspunkt vil kunngjøringen vises evig."
 
 #: announcements/templates/announcements/announcement_admin.html:7
-#: web/templates/web/admin_panel.html:87
+#: web/templates/web/admin_panel.html:99
 msgid "Announcements"
 msgstr "Kunngjøringer"
 
@@ -96,6 +96,7 @@ msgstr "Ny kunngjøring"
 
 #: announcements/templates/announcements/announcement_create.html:54
 #: contentbox/templates/contentbox/edit.html:39
+#: faq/templates/faq/question_edit.html:38
 #: groups/templates/groups/committee_form.html:30
 #: internal/templates/internal/member_edit.html:81
 #: internal/templates/internal/secret_edit.html:32
@@ -111,6 +112,7 @@ msgstr "Lagre"
 #: announcements/templates/announcements/announcement_create.html:57
 #: docs/templates/docs/documentation_page_create.html:24
 #: docs/templates/docs/documentation_page_edit.html:27
+#: faq/templates/faq/question_edit.html:40
 #: groups/templates/groups/committee_form.html:33
 #: internal/templates/internal/member_create.html:25
 #: internal/templates/internal/member_edit.html:82
@@ -288,6 +290,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:88
 #: docs/templates/docs/documentation_page_detail.html:43
+#: faq/templates/faq/faq_admin.html:28
 #: makerspace/templates/makerspace/equipment/admin_equipment_list.html:38
 #: news/templates/news/admin_article_list.html:54
 #: news/templates/news/admin_event_detail.html:27
@@ -494,6 +497,49 @@ msgstr ""
 msgid "Only numbers, letters, spaces, parentheses and colons are allowed."
 msgstr "Kun tall, bokstaver, mellomrom, parenteser og kolon er tillatt."
 
+#: faq/forms.py:13
+msgid "Choose categories"
+msgstr "Velg kategori"
+
+#: faq/models.py:10
+msgid "Category"
+msgstr "Kategori"
+
+#: faq/models.py:20
+msgid "Question"
+msgstr "Spørsmål"
+
+#: faq/models.py:24
+msgid "Answer"
+msgstr "Svar"
+
+#: faq/templates/faq/faq_admin.html:7
+msgid "Questions"
+msgstr "Spørsmål"
+
+#: faq/templates/faq/faq_admin.html:29
+#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:39
+msgid "Click to delete"
+msgstr "Trykk for å slette"
+
+#: faq/templates/faq/faq_list.html:14
+msgid "Frequently Asked Questions"
+msgstr "Ofte stilte spørsmål"
+
+#: faq/templates/faq/question_create.html:4
+#: faq/templates/faq/question_create.html:5
+msgid "New Question"
+msgstr "Nytt Spørsmål"
+
+#: faq/templates/faq/question_edit.html:5
+#: faq/templates/faq/question_edit.html:14
+msgid "Edit Question"
+msgstr "Endre Spørsmål"
+
+#: faq/templates/faq/question_edit.html:31
+msgid "Choose one or multiple categories for the question"
+msgstr "Velg en eller flere kategorier"
+
 #: groups/models.py:92
 msgid "group"
 msgstr "gruppe"
@@ -519,7 +565,7 @@ msgstr "Lokketekst"
 
 #: groups/templates/groups/committee_admin.html:13
 #: groups/templates/groups/committee_list.html:8 internal/models.py:25
-#: web/templates/web/admin_panel.html:63
+#: web/templates/web/admin_panel.html:75
 msgid "Committees"
 msgstr "Komiteer"
 
@@ -645,7 +691,7 @@ msgid "Public pages"
 msgstr "Offentlige sider"
 
 #: internal/templates/internal/header.html:47
-#: web/templates/web/header.html:102
+#: web/templates/web/header.html:105
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -1063,7 +1109,7 @@ msgid "Registration status"
 msgstr "Registreringsstatus"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:15
-#: web/templates/web/admin_panel.html:75
+#: web/templates/web/admin_panel.html:87
 msgid "Course registrations"
 msgstr "Kursregistreringer"
 
@@ -1170,7 +1216,7 @@ msgstr "Se i kalender"
 #: make_queue/templates/make_queue/machine_detail.html:23
 #: make_queue/templates/make_queue/machine_list.html:37
 #: makerspace/templates/makerspace/makerspace.html:24
-#: web/templates/web/header.html:55
+#: web/templates/web/header.html:58
 msgid "Rules"
 msgstr "Regler"
 
@@ -1280,7 +1326,7 @@ msgstr "Velg utstyrstype"
 #: make_queue/templates/make_queue/reservation_edit.html:51
 #: makerspace/templates/makerspace/equipment/admin_equipment_list.html:9
 #: makerspace/templates/makerspace/makerspace.html:18
-#: web/templates/web/admin_panel.html:99 web/templates/web/header.html:52
+#: web/templates/web/admin_panel.html:111 web/templates/web/header.html:52
 msgid "Equipment"
 msgstr "Utstyr"
 
@@ -1339,7 +1385,7 @@ msgstr "Kanseller"
 
 #: make_queue/templates/make_queue/reservation_list.html:110
 msgid "Mark as done"
-msgstr ""
+msgstr "Marker som ferdig"
 
 #: make_queue/templates/make_queue/reservation_list.html:173
 msgid "Done"
@@ -1554,10 +1600,6 @@ msgstr "Legg til nytt utstyr"
 #, python-format
 msgid "Image of %(equipment)s"
 msgstr "Bilde av %(equipment)s"
-
-#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:39
-msgid "Click to delete"
-msgstr "Trykk for å slette"
 
 #: makerspace/templates/makerspace/equipment/equipment_list.html:15
 msgid "Available equipment at Makerverkstedet"
@@ -2022,7 +2064,7 @@ msgid "Register for the event"
 msgstr "Meld deg på arrangementet"
 
 #: news/templates/news/my_tickets_list.html:11
-#: web/templates/web/header.html:99
+#: web/templates/web/header.html:102
 msgid "My tickets"
 msgstr "Mine billetter"
 
@@ -2142,11 +2184,19 @@ msgstr ""
 "Her kan du se reservasjoner av maskiner for arrangementer og andre MAKE NTNU-"
 "sammenhenger"
 
-#: web/templates/web/admin_panel.html:51
+#: web/templates/web/admin_panel.html:51 web/templates/web/header.html:55
+msgid "FAQ"
+msgstr "FAQ"
+
+#: web/templates/web/admin_panel.html:54
+msgid "Here you can add or edit frequently asked questions"
+msgstr "Her kan du legge til eller redigere ofte stilte spørsmål"
+
+#: web/templates/web/admin_panel.html:63
 msgid "Quota"
 msgstr "Kvote"
 
-#: web/templates/web/admin_panel.html:54
+#: web/templates/web/admin_panel.html:66
 msgid ""
 "Here you can create and edit both global and personal quotas for "
 "reservations of machines"
@@ -2154,11 +2204,11 @@ msgstr ""
 "Her kan du lage og endre både globale og personlige kvoter for reservasjoner "
 "av maskiner"
 
-#: web/templates/web/admin_panel.html:66
+#: web/templates/web/admin_panel.html:78
 msgid "Here you can edit the committees' description, image and email"
 msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse"
 
-#: web/templates/web/admin_panel.html:78
+#: web/templates/web/admin_panel.html:90
 msgid ""
 "Here you can add and edit information about persons who have taken the 3D "
 "printer course"
@@ -2166,7 +2216,7 @@ msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
 "printerkurset"
 
-#: web/templates/web/admin_panel.html:90
+#: web/templates/web/admin_panel.html:102
 msgid ""
 "Here you can create and modify announcements to be shown on either the front "
 "page or the entire website"
@@ -2174,7 +2224,7 @@ msgstr ""
 "Her kan du legge til og endre kunngjøringer som kan vises på forsiden eller "
 "på hele nettsiden"
 
-#: web/templates/web/admin_panel.html:102
+#: web/templates/web/admin_panel.html:114
 msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
 
@@ -2250,23 +2300,23 @@ msgstr "Makerverkstedet"
 msgid "About"
 msgstr "Om"
 
-#: web/templates/web/header.html:61
+#: web/templates/web/header.html:64
 msgid "About us"
 msgstr "Om oss"
 
-#: web/templates/web/header.html:87
+#: web/templates/web/header.html:90
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:91
+#: web/templates/web/header.html:94
 msgid "Profile"
 msgstr "Profil"
 
-#: web/templates/web/header.html:95
+#: web/templates/web/header.html:98
 msgid "Internal pages"
 msgstr "Internsider"
 
-#: web/templates/web/header.html:109 web/templates/web/login.html:27
+#: web/templates/web/header.html:112 web/templates/web/login.html:27
 msgid "Login"
 msgstr "Logg inn"
 
