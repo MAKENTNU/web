@@ -1,7 +1,4 @@
-{# Linking `language_form.js` is required when including this template #}
-
-{# This form is hidden, but is submitted through jQuery #}
-<form id="lang-form" method="POST" action="{% url 'set_language' %}">
+<form class="set-language-form ui form" method="POST" action="{% url 'set_language' %}">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>
@@ -10,4 +7,8 @@
         <input name="language" type="hidden" value="en"/>
         <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
     {% endif %}
+    <button class="ui inverted make-col-ligrey button" type="submit">
+        {% include 'web/forms/language_form_text.html' %}
+        <i class="globe icon"></i>
+    </button>
 </form>
