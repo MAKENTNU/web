@@ -29,10 +29,5 @@ class Question(models.Model):
         related_name='questions',
     )
 
-    class Meta:
-        permissions = (
-            ("can_add_question", "Can add questions"),
-        )
-
     def __str__(self):
         return str(self.title)

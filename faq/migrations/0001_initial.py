@@ -27,8 +27,5 @@ class Migration(migrations.Migration):
                 ('answer', web.multilingual.database.MultiLingualRichTextUploadingField(verbose_name='Answer')),
                 ('categories', models.ManyToManyField(related_name='questions', to='faq.Category')),
             ],
-            options={
-                'permissions': (('can_add_question', 'Can add questions'),),
-            },
         ),
     ]
