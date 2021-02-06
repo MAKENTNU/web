@@ -67,7 +67,7 @@ class Migration(migrations.Migration):
             model_name='printer3dcourse',
             name='_card_number',
             field=card.modelfields.CardNumberField(max_length=10, null=True, unique=True, validators=[
-                django.core.validators.RegexValidator('\\d{10}', 'Card number must be ten digits long')],
+                django.core.validators.RegexValidator('^\\d{10}$', 'Card number must be ten digits long.')],
                                               verbose_name='Card number'),
         ),
         migrations.RunPython(to_cardnumberfield, to_integerfield),  # Do conversion
