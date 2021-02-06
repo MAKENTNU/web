@@ -1,5 +1,5 @@
 from django.contrib.auth.decorators import login_required, permission_required
-from django.urls import include, path, register_converter, re_path
+from django.urls import include, path, register_converter
 
 from make_queue.views import api, admin, quota, reservation
 from . import converters
@@ -68,7 +68,7 @@ course_url_patterns = [
 ]
 
 urlpatterns = [
-    re_path('^', reservation.machine.MachineView.as_view(), name="reservation_machines_overview"),
+    path('', reservation.machine.MachineView.as_view(), name="reservation_machines_overview"),
     path('machine/', include(machine_url_patterns)),
     path('<year:year>/<week:week>/<machine:machine>', reservation.calendar.ReservationCalendarView.as_view(), name="reservation_calendar"),
     path('calendar/', include(calendar_url_patterns)),
