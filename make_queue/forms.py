@@ -164,6 +164,17 @@ class Printer3DCourseForm(forms.ModelForm):
         if self.instance.card_number is not None:
             self.initial['card_number'] = self.instance.card_number
 
+    def clean_card_number(self):
+        card_number: str = self.cleaned_data['card_number']
+        if card_number:
+            # This accident prevention was requested by the Mentor committee.
+            # Phone number is from https://innsida.ntnu.no/wiki/-/wiki/Norsk/Vakthold+og+assistanse+utenfor+arbeidstid
+            if card_number.lstrip("0") == "91897373":
+                raise forms.ValidationError(
+                    _("The card number was detected to be the phone number of Building security at NTNU. Please enter a valid card number.")
+                )
+        return card_number
+
     def clean(self):
         cleaned_data = super().clean()
         card_number = cleaned_data.get('card_number')

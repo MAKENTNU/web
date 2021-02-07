@@ -970,6 +970,14 @@ msgstr "Maskintype"
 msgid "Select machine type"
 msgstr "Velg maskintype"
 
+#: make_queue/forms.py:174
+msgid ""
+"The card number was detected to be the phone number of Building security at "
+"NTNU. Please enter a valid card number."
+msgstr ""
+"Kortnummeret ble oppdaget å være telefonnummeret til Vakt og service på "
+"NTNU. Vennligst fyll inn et gyldig kortnummer."
+
 #: make_queue/forms.py:180
 msgid "Duration in hours"
 msgstr "Varighet i timer"
