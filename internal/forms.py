@@ -66,7 +66,7 @@ class EditGuidanceHoursForm(ModelForm):
         widgets = {}
 
         for field in fields:
-            widgets[field] = SemanticSearchableChoiceInput(additional_class="clearable make_bg_blue", prompt_text=_("Sign up"))
+            widgets[field] = SemanticSearchableChoiceInput(extra_attr="clearable make_bg_blue", prompt_text=_("Sign up"))
 
 
 class MemberQuitForm(ModelForm):

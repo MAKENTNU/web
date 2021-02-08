@@ -1,6 +1,14 @@
 {% extends 'internal/base.html' %}
 {% load i18n %}
+{% load static %}
 
+{%block head%}
+<style>
+    .ui.selection.dropdown {
+        color: white;
+    }
+</style>
+{%endblock head%}
 
 {% block body %}
     <div class="ui container">
