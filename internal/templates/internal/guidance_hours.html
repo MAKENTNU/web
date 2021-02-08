@@ -37,7 +37,7 @@
                     <tr>         
                         <td>{{ hour.start_time }}-{{ hour.end_time }}<a href="{% url 'edit-guidance-hours' hour.pk  %}"> </a> </td>
                         {% for slot in hour.get_slots %}
-                        
+
                             <td class="member-info"
                                 data-variation="medium"          
                                 {% if slot != None %}
@@ -47,7 +47,7 @@
                                         {% for committee_name, color in committees %}
                                             <div class='ui {{ color }} label'> {{ committee_name }} </div>
                                         {% endfor %}
-                                        <div> {{ slot.phone_number }} </div>
+                                        <div> {% trans "Telephone: " %} {{ slot.phone_number }} </div>
                                     </div>"
                                 {% endif %}
                             >
