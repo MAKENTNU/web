@@ -8,6 +8,9 @@
         padding: 8px;
         width: 15rem;
     }
+    .popup-wrapper {
+        line-height: 2rem;
+    }
 </style>
 
 {% endblock head %}
@@ -34,14 +37,24 @@
                     <tr>         
                         <td>{{ hour.start_time }}-{{ hour.end_time }}<a href="{% url 'edit-guidance-hours' hour.pk  %}"> </a> </td>
                         {% for slot in hour.get_slots %}
-                            <td class="member-info" 
-                                data-content="{{ slot.phone_number }}"
-                                data-variation="medium"
-                                data-slot="{{ slot }}"
-                                >
-                                    <div class='box'>
-                                    {{ slot }}
-                                    </div>
+                        
+                            <td class="member-info"
+                                data-variation="medium"          
+                                {% if slot != None %}
+                                {% get_committees slot as committees %}       
+                                    data-html="
+                                    <div class='popup-wrapper'>
+                                        {% for committee_name, color in committees %}
+                                            <div class='ui {{ color }} label'> {{ committee_name }} </div>
+                                        {% endfor %}
+                                        <div> {{ slot.phone_number }} </div>
+                                    </div>"
+                                {% endif %}
+                            >
+
+                                <div class='box'>
+                                {{ slot | default_if_none:"" }}
+                                </div>
                             </td>
                            
                         {% endfor %}
@@ -53,20 +66,13 @@
        
         </table>
     {% endfor %}
-    
     </div>
-
 {% endblock body %}
 
 {% block scripts %}
 
 <script>
-
-    $('.member-info').hover(function(){
-        $('member-info').popup({content: '', html:'<div class="ui yellow label">PR</div>'})
-
-    })
-
+    $(".member-info").popup();
 </script>
 
 {% endblock scripts %}
