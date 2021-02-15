@@ -3,7 +3,7 @@ from django.db.models import F
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
 class EquipmentQuerySet(models.QuerySet):

@@ -20,7 +20,7 @@ from ...templatetags.reservation_extra import calendar_url_reservation
 class ReservationCreateOrChangeView(TemplateView):
     """Base abstract class for the reservation create or change view"""
     __metaclass__ = ABCMeta
-    template_name = "make_queue/make_reservation.html"
+    template_name = "make_queue/reservation_edit.html"
 
     def get_error_message(self, form, reservation):
         """
@@ -40,7 +40,7 @@ class ReservationCreateOrChangeView(TemplateView):
         if self.request.user.has_perm(
                 "make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return _("The time slot or event, is no longer available")
-        if not reservation.quota_can_make_reservation():
+        if not reservation.quota_can_create_reservation():
             return _("The reservation exceeds your quota")
         if reservation.check_start_time_after_end_time():
             return _("The start time can't be after the end time")
@@ -137,7 +137,7 @@ class ReservationCreateOrChangeView(TemplateView):
         return self.get(request, **kwargs)
 
 
-class MakeReservationView(ReservationCreateOrChangeView):
+class CreateReservationView(ReservationCreateOrChangeView):
     """View for creating a new reservation"""
     new_reservation = True
 

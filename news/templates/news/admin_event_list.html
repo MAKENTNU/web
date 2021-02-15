@@ -1,0 +1,65 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% load i18n %}
+{% load news_tags %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin_list.css" %}">
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="ui text-centered header">
+            {% trans "Events" %}
+            <a class=explanation-popup" href="{% url 'event-create' %}">
+                <i class="ui green add icon"></i>
+            </a>
+        </h1>
+        <div class="ui four doubling stackable cards">
+            {% for event in events %}
+                <div class="ui card">
+                    <a class="image" href="{% url "event" event.id %}">
+                        <img src="{{ event.image.url }}">
+                    </a>
+                    <div class="content">
+                        <a class="header" href="{% url "event" event.id %}">{{ event.title }}</a>
+                        <div class="meta">
+                            {% with event.timeplace_set|future|length as num_future_occurrences %}
+                                {% if num_future_occurrences %}
+                                    <div>
+                                        {% blocktrans trimmed count counter=num_future_occurrences %}
+                                            1 future occurrence
+                                        {% plural %}
+                                            {{ counter }} future occurrences
+                                        {% endblocktrans %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            {% if event.featured %}
+                                <span class="ui green mini label">
+                                    {% trans "Featured" %}
+                                </span>
+                            {% endif %}
+
+                            {% if event.hidden %}
+                                <span class="ui red mini label">
+                                    {% trans "Hidden" %}
+                                </span>
+                            {% endif %}
+
+                            {% if event.private %}
+                                <span class="ui yellow mini label">
+                                    {% trans "Internal" %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="description">{{ event.clickbait }}</div>
+                    </div>
+                    <a class="ui yellow bottom attached button" href="{% url "admin-event" event.id %}">
+                        {% trans "Admin" %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

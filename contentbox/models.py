@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.database import MultiLingualRichTextUploadingField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField
 
 
 class ContentBox(models.Model):

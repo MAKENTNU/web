@@ -5,10 +5,10 @@ from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView
+from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView, DeleteView
 
-from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm
-from internal.models import Member, SystemAccess
+from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm, SecretsForm
+from internal.models import Member, SystemAccess, Secret
 from make_queue.models.course import Printer3DCourse
 
 
@@ -16,8 +16,41 @@ class Home(TemplateView):
     template_name = "internal/home.html"
 
 
+class SecretsView(ListView):
+    template_name = "internal/secret_list.html"
+    model = Secret
+    context_object_name = 'secrets'
+
+
+class CreateSecretView(PermissionRequiredMixin, CreateView):
+    template_name = 'internal/secret_create.html'
+    model = Secret
+    form_class = SecretsForm
+    context_object_name = 'secrets'
+    permission_required = 'internal.add_secret'
+    success_url = reverse_lazy('secrets')
+
+
+class EditSecretView(PermissionRequiredMixin, UpdateView):
+    template_name = 'internal/secret_edit.html'
+    model = Secret
+    form_class = SecretsForm
+    context_object_name = 'secrets'
+    permission_required = 'internal.change_secret'
+    success_url = reverse_lazy('secrets')
+
+
+class DeleteSecretView(PermissionRequiredMixin, DeleteView):
+    model = Secret
+    success_url = reverse_lazy('secrets')
+    permission_required = 'internal.delete_secret'
+
+    def delete(self, request, *args, **kwargs):
+        return super().delete(request, *args, **kwargs)
+
+
 class MembersListView(ListView):
-    template_name = "internal/members.html"
+    template_name = "internal/member_list.html"
     model = Member
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -30,7 +63,7 @@ class MembersListView(ListView):
 
 
 class AddMemberView(PermissionRequiredMixin, CreateView):
-    template_name = "internal/add_member.html"
+    template_name = "internal/member_create.html"
     model = Member
     form_class = AddMemberForm
     permission_required = (
@@ -53,7 +86,7 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
 
 
 class EditMemberView(UserPassesTestMixin, UpdateView):
-    template_name = "internal/edit_member.html"
+    template_name = "internal/member_edit.html"
     model = Member
     form_class = EditMemberForm
 

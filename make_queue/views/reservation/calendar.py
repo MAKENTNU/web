@@ -6,7 +6,7 @@ from make_queue.util.time import year_and_week_to_monday
 
 class ReservationCalendarView(TemplateView):
     """Main view for showing the reservation calendar for a machine"""
-    template_name = "make_queue/reservation_overview.html"
+    template_name = "make_queue/machine_detail.html"
 
     def get_context_data(self, year, week, machine):
         """
@@ -19,8 +19,8 @@ class ReservationCalendarView(TemplateView):
         """
         context = super().get_context_data()
         context.update({
-            "can_make_reservations": False,
-            "can_make_more_reservations": False,
+            "can_create_reservations": False,
+            "can_create_more_reservations": False,
             "can_ignore_rules": False,
             "other_machines": Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type),
             "machine": machine,
@@ -31,9 +31,9 @@ class ReservationCalendarView(TemplateView):
 
         if self.request.user.is_authenticated:
             context.update({
-                "can_make_reservations": machine.machine_type.can_user_use(self.request.user),
-                "can_make_more_reservations": Quota.can_make_new_reservation(self.request.user, machine.machine_type),
-                "can_ignore_rules": any(quota.can_make_more_reservations(self.request.user) for quota in
+                "can_create_reservations": machine.machine_type.can_user_use(self.request.user),
+                "can_create_more_reservations": Quota.can_make_new_reservation(self.request.user, machine.machine_type),
+                "can_ignore_rules": any(quota.can_create_more_reservations(self.request.user) for quota in
                                         Quota.get_user_quotas(self.request.user, machine.machine_type).filter(
                                             ignore_rules=True))
             })

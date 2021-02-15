@@ -1,0 +1,24 @@
+{% extends "make_queue/course/course_registration_edit.html" %}
+{% load i18n %}
+
+{% block form_title %}
+    {% trans "Add course registration" %}
+{% endblock %}
+
+{% block submit_button %}
+    {% trans "Submit" %}
+{% endblock %}
+
+{% block messages %}
+    {{ block.super }}
+    {% if is_next %}
+        <div class="ui positive message">
+            <i class="ui close icon"></i>
+            {% trans "Registration of course participation successful" %}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block form_action %}
+    {% url "create_course_registration" %}
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% load i18n %}
+{% load reservation_extra %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}">
+{% endblock %}
+
+{% block title %}
+    {{ machine.name }} - {{ machine.machine_model }}
+{% endblock %}
+
+{% block body %}
+    {% can_use_machine machine user as can_use %}
+    <div class="ui container">
+        {% csrf_token %}
+        <div class="ui machine-title-field">
+            <div class="ui huge header machine-title">
+                {{ machine.name }}
+            </div>
+            <a href="{% url "machine_usage_rules" machine.machine_type %}">({% trans "Rules" %})</a>
+        </div>
+        <div class="ui three column padded grid vpad">
+            <div class="ui five wide no padding column">
+                <h3>{% trans "About the machine" %}</h3>
+                <div class="ui relaxed list">
+                    <div class="item">
+                        <i class="ui large middle aligned make_col_yellow location arrow icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Location" %}</div>
+                            <a href="{{ machine.location_url }}">{{ machine.location }}</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="ui large middle aligned make_col_yellow cog icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Machine type" %}</div>
+                            {{ machine.machine_type.name }}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="ui large middle aligned make_col_yellow wrench icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Model" %}</div>
+                            {{ machine.machine_model }}
+                        </div>
+                    </div>
+                    <div class="item">
+                        <i class="ui large middle make_col_yellow aligned info circle icon"></i>
+                        <div class="content">
+                            <div class="header">{% trans "Status" %}</div>
+                            <b>
+                                <span class="ui {% card_color_from_machine_status machine %} text">
+                                    {% card_text_from_machine_status machine %}
+                                </span>
+                            </b>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ui right floated no padding column tablet computer only">
+                {% include "make_queue/reservation_actions.html" %}
+            </div>
+
+            {% if machine.machine_type.has_stream %}
+                <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
+                    <img class="ui right floated stream medium image" id="{% sanitize_stream_name machine %}" name="{{ machine.name }}"
+                         src="{% static "make_queue/img/no_stream.jpg" %}">
+                </div>
+                <div id="fader"></div>
+                <i id="closefullscreen" class="ui times icon"></i>
+                <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
+                <script>var streamID = "{% sanitize_stream_name machine %}";</script>
+                <script src="{% static "make_queue/js/stream.js" %}"></script>
+            {% endif %}
+
+            <div class="ui right floated {% if machine.machine_type.has_stream %}sixteen{% else %}ten{% endif %} wide mobile only no padding column">
+                {% include "make_queue/reservation_actions.html" %}
+            </div>
+
+        </div>
+        {% include "make_queue/calendar.html" %}
+        <script>
+            new ReservationCalendar($(".reservation_calendar"), {
+                machine: {{ machine.pk }},
+                selection: {% if can_create_reservations and can_create_more_reservations %}true{% else %}false{% endif %},
+                canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
+                date: new Date(Date.parse("{{ date|date:"c" }}")),
+            });
+        </script>
+    </div>
+{% endblock body %}

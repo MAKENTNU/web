@@ -5,7 +5,7 @@ from make_queue.models.models import Reservation
 
 class AdminReservationView(TemplateView):
     """View to see all reservations that are either event reservations or MAKE NTNU reservations"""
-    template_name = "make_queue/reservations.html"
+    template_name = "make_queue/reservation_list.html"
 
     def get_context_data(self):
         """

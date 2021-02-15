@@ -3,9 +3,9 @@
 {% load static %}
 
 <link rel="stylesheet" href="{% static "make_queue/css/calendar.css" %}">
-<script src="{% static "web/js/date-util.js" %}"></script>
+<script src="{% static "web/js/date_utils.js" %}"></script>
 <script src="{% static "make_queue/js/calendar.js" %}"></script>
-<script src="{% static "make_queue/js/reservation_rules.js" %}"></script>
+<script src="{% static "make_queue/js/reservation_rule_utils.js" %}"></script>
 
 {# Needed to be able to create a reservation #}
 {% csrf_token %}

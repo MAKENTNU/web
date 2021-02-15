@@ -3,15 +3,15 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.database import MultiLingualTextField
+from web.multilingual.modelfields import MultiLingualTextField
 
 
 class AnnouncementManager(models.Manager):
 
     def valid(self):
         """Finds all announcements that are currently valid"""
-        return self.filter(display_from__lte=timezone.localtime().now()).filter(
-            Q(display_to__isnull=True) | Q(display_to__gt=timezone.localtime().now()))
+        return self.filter(display_from__lte=timezone.localtime()).filter(
+            Q(display_to__isnull=True) | Q(display_to__gt=timezone.localtime()))
 
     def valid_site_wide(self):
         """Finds all currently valid announcements that should be displayed site-wide"""
@@ -42,7 +42,7 @@ class Announcement(models.Model):
     content = MultiLingualTextField(max_length=256, verbose_name=_("Content"))
     link = models.CharField(max_length=2048, verbose_name=_("Link"), blank=True, null=True,
                             help_text=_("An optional link to an information page."))
-    display_from = models.DateTimeField(default=timezone.localtime().now, verbose_name=_("Display from"),
+    display_from = models.DateTimeField(default=timezone.localtime, verbose_name=_("Display from"),
                                         help_text=_("The date from which the announcement will be shown."))
     display_to = models.DateTimeField(blank=True, null=True, verbose_name=_("Display to"),
                                       help_text=_("The announcement will be shown until this date. If none is given, it"
