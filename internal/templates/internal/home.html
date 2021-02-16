@@ -1,5 +1,16 @@
 {% extends "internal/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "internal/css/home.css" %}">
+{% endblock %}
 
 {% block body %}
+    <div class="main">
+
+        <h1>{% trans "MAKE NTNU Internal" %}</h1>
+
+    </div>
 
 {% endblock %}
