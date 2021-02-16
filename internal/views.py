@@ -12,7 +12,7 @@ from internal.models import Member, SystemAccess, Secret
 from make_queue.models.course import Printer3DCourse
 
 
-class Home(TemplateView):
+class HomeView(TemplateView):
     template_name = "internal/home.html"
 
 

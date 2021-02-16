@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django_hosts import reverse
 
 from internal.views import MembersListView, AddMemberView, EditMemberView, MemberUndoQuitView, MemberQuitView, \
-    MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, Home, SecretsView, EditSecretView, CreateSecretView, \
+    MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, HomeView, SecretsView, EditSecretView, CreateSecretView, \
     DeleteSecretView
 
 unsafe_urlpatterns = [
@@ -19,8 +19,7 @@ unsafe_urlpatterns = [
     path("members/<int:pk>/retire", permission_required("internal.can_edit_group_membership")(MemberRetireView.as_view()), name="member-retire"),
     path("members/<int:pk>/retire/undo", permission_required("internal.can_edit_group_membership")(MemberUndoRetireView.as_view()), name="member-undo-retire"),
     path("members/access/<int:pk>/change", ToggleSystemAccessView.as_view(), name="toggle-system-access"),
-    path("", Home.as_view(), name="home"),
-    path("", MembersListView.as_view(), name="home"),
+    path("", HomeView.as_view(), name="home"),
     path("secrets/", SecretsView.as_view(), name="secrets"),
     path("secrets/<int:pk>/edit/", EditSecretView.as_view(), name="edit-secret"),
     path("secrets/create/", CreateSecretView.as_view(), name="create-secret"),
