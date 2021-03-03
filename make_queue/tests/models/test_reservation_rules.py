@@ -237,3 +237,10 @@ class ReservationRuleTests(TestCase):
 
         is_valid = ReservationRule.valid_time(start_time, end_time, self.machine_type)
         self.assertFalse(is_valid, "A period should not be valid if it is not covered by any rules.")
+
+        # Create an empty period
+        start_time = datetime.datetime(2021, 3, 1, 10, 5)
+        end_time = datetime.datetime(2021, 3, 1, 10, 5)
+        is_valid = ReservationRule.valid_time(start_time, end_time, self.machine_type)
+
+        self.assertFalse(is_valid, "A period should not be valid if it is empty, i.e., not coverd by any rules.")
