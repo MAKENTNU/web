@@ -383,6 +383,11 @@ class ReservationRule(models.Model):
             return False
         rules = [rule for rule in machine_type.reservation_rules.all() if
                  rule.hours_inside(start_time, end_time)]
+
+        # Only allow reservations when covered by at least one rule
+        if not rules:
+            return False
+
         if timedelta_to_hours(end_time - start_time) > max(rule.max_hours for rule in rules):
             return False
 

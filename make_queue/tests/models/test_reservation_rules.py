@@ -220,3 +220,20 @@ class ReservationRuleTests(TestCase):
                                                    datetime.datetime(2018, 11, 6, 10, 0), self.machine_type),
                         "A period may be valid, even though not all of its rules are valid, if it is still less than"
                         "the shortest maximum length of any of its rules.")
+
+    def test_is_valid_time_no_rules(self):
+        """
+        Tests to check that `ReservationRule.valid_time` works correctly when there are no rules or a period is not
+        covered by any rules.
+        """
+        start_time = datetime.datetime(2021, 3, 3, 12, 0)
+        end_time = datetime.datetime(2021, 3, 3, 18, 0)
+        is_valid = ReservationRule.valid_time(start_time, end_time, self.machine_type)
+
+        self.assertFalse(is_valid, "A period should not be valid if there are no rules.")
+
+        ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(11, 0), days_changed=0,
+                        start_days=1, max_inside_border_crossed=5, machine_type=self.machine_type, max_hours=10).save()
+
+        is_valid = ReservationRule.valid_time(start_time, end_time, self.machine_type)
+        self.assertFalse(is_valid, "A period should not be valid if it is not covered by any rules.")
