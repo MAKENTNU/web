@@ -392,7 +392,7 @@ class ReservationRule(models.Model):
         if duration > (7 * 24):
             return False
 
-        rules = [rule for rule in machine_type.reservation_rules.all() if rule.hours_inside(start_time, end_time)]
+        rules = ReservationRule.covered_rules(start_time, end_time, machine_type)
 
         # Only allow reservations when covered by at least one rule
         if not rules:
@@ -408,6 +408,22 @@ class ReservationRule(models.Model):
 
         # Check if the reservation adheres to the inter-rule maximums
         return all(rule.valid_time_in_rule(start_time, end_time, len(rules) > 1) for rule in rules)
+
+    @staticmethod
+    def covered_rules(start_time, end_time, machine_type):
+        """
+        Finds the rules for the given machine type that are covered by the indicated period.
+
+        :param start_time: The start time (datetime) of the period
+        :param end_time: The end time (datetime) of the period
+        :param machine_type: The type of machine
+        :return: The rules for the machine type that are covered by the period
+        """
+        # If the reservation is longer than a week, it covers all rules
+        if timedelta_to_hours(end_time - start_time) > 7 * 24:
+            return machine_type.reservation_rules.all()
+
+        return [rule for rule in machine_type.reservation_rules.all() if rule.hours_inside(start_time, end_time)]
 
     class Period:
 

@@ -13,7 +13,7 @@ from django.utils.translation import ngettext
 from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 from ...forms import FreeSlotForm, ReservationForm
-from ...models.models import Machine, MachineType, Reservation
+from ...models.models import Machine, MachineType, Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation
 
 
@@ -42,6 +42,9 @@ class ReservationCreateOrChangeView(TemplateView):
             return _("The time slot or event, is no longer available")
         if reservation.start_time == reservation.end_time:
             return _("The reservation cannot start and end at the same time")
+        if not ReservationRule.covered_rules(reservation.start_time, reservation.end_time,
+                                             reservation.machine.machine_type):
+            return _("It is not possible to reserve the machine during these hours. Check the rules for when the machine is reservable")
         if not reservation.quota_can_create_reservation():
             return _("The reservation exceeds your quota")
         if reservation.check_start_time_after_end_time():
@@ -85,7 +88,8 @@ class ReservationCreateOrChangeView(TemplateView):
             "events": list(TimePlace.objects.filter(end_time__gte=timezone.localtime())),
             "machine_types": [
                 machine_type
-                for machine_type in MachineType.objects.prefetch_machines_and_default_order_by(machines_attr_name="instances")
+                for machine_type in
+                MachineType.objects.prefetch_machines_and_default_order_by(machines_attr_name="instances")
                 if machine_type.can_user_use(self.request.user)
             ],
             "maximum_days_in_advance": Reservation.reservation_future_limit_days,
@@ -340,7 +344,7 @@ class FindFreeSlot(FormView):
 
         # Time should be expressed in hours
         required_time = form.cleaned_data["hours"] + \
-            form.cleaned_data["minutes"] / 60
+                        form.cleaned_data["minutes"] / 60
 
         periods = []
         for machine in form.cleaned_data["machine_type"].machines.all():
