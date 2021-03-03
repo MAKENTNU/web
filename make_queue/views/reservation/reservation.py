@@ -40,6 +40,10 @@ class ReservationCreateOrChangeView(TemplateView):
         if self.request.user.has_perm(
                 "make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return _("The time slot or event, is no longer available")
+        if reservation.check_machine_out_of_order():
+            return _("The machine is out of order")
+        if reservation.check_machine_maintenance():
+            return _("The machine is under maintenance")
         if reservation.start_time == reservation.end_time:
             return _("The reservation cannot start and end at the same time")
         if not ReservationRule.covered_rules(reservation.start_time, reservation.end_time,
@@ -51,10 +55,6 @@ class ReservationCreateOrChangeView(TemplateView):
             return _("The start time can't be after the end time")
         if reservation.starts_before_now():
             return _("The reservation can't start in the past")
-        if reservation.check_machine_out_of_order():
-            return _("The machine is out of order")
-        if reservation.check_machine_maintenance():
-            return _("The machine is under maintenance")
         return _("The time slot is not available")
 
     def validate_and_save(self, reservation, form):
