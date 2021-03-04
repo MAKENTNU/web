@@ -6,8 +6,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+from contentbox.views import DisplayContentBoxView
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import (
@@ -16,8 +17,12 @@ from .forms import (
 from .models import Member, Secret, SystemAccess
 
 
-class HomeView(TemplateView):
+class HomeView(DisplayContentBoxView):
     template_name = 'internal/home.html'
+    extra_context = {
+        'base_template': 'internal/base.html',
+        'change_perm': 'contentbox.change_internal_contentbox',
+    }
 
 
 class SecretListView(ListView):

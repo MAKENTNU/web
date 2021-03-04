@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 from django.test import Client, TestCase
 from django_hosts import reverse
 
+from contentbox.models import ContentBox
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds
 from ..forms import MemberStatusForm
@@ -126,11 +127,13 @@ class UrlTests(TestCase):
         self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'nb'}, expected_redirect_url="/")
 
     def test_all_non_member_get_request_paths_succeed(self):
+        home_content_box = ContentBox.objects.create(title='home')
         secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
         secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
 
         path_predicates = [
-            Get(reverse_internal('home'), public=False),
+            Get(reverse_internal(home_content_box.title), public=False),
+            Get(reverse_internal('contentbox_edit', pk=home_content_box.pk), public=False),
             Get(reverse_internal('secret_list'), public=False),
             Get(reverse_internal('create_secret'), public=False),
             Get(reverse_internal('edit_secret', pk=secret1.pk), public=False),

@@ -16,6 +16,8 @@ class ContentBox(models.Model):
         permissions = (
             ('can_upload_image', "Can upload images in CKEditor"),
             ('can_browse_image', "Can browse images in CKEditor"),
+            # Internal content boxes should have a permission that is separate from the public content boxes'
+            ('change_internal_contentbox', "Can change internal content boxes"),
         )
         verbose_name = "content box"
         verbose_name_plural = "content boxes"

@@ -5,11 +5,16 @@ from django.urls import path
 from django.views.generic import TemplateView
 from django_hosts import reverse
 
+from contentbox.urls import get_content_box_urlpatterns
 from . import views
 
 
 internal_urlpatterns = [
-    path("", views.HomeView.as_view(), name='home'),
+    path("", views.HomeView.as_view(title='home'), name='home'),
+    path("contentbox/", decorator_include(
+        permission_required('contentbox.change_internal_contentbox', raise_exception=True),
+        get_content_box_urlpatterns(base_template='internal/base.html')
+    )),
 ]
 
 member_urlpatterns = [
