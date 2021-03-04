@@ -1,4 +1,4 @@
-{% extends 'web/base.html' %}
+{% extends base_template %}
 {% load i18n %}
 {% load static %}
 
@@ -11,7 +11,7 @@
     <div class="contentbox ui container">
         {% block extra_pre_content %}{% endblock %}
 
-        {% if perms.contentbox.change_contentbox %}
+        {% if change_perm in perms %}
             <a class="edit ui make-bg-yellow button" href="{% url 'contentbox_edit' contentbox.pk %}">
                 <i class="ui edit icon"></i>{% trans "Edit" %}
             </a>

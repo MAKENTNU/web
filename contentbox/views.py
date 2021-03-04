@@ -9,6 +9,10 @@ class DisplayContentBoxView(DetailView):
     model = ContentBox
     template_name = 'contentbox/display.html'
     context_object_name = 'contentbox'
+    extra_context = {
+        'base_template': 'web/base.html',
+        'change_perm': 'contentbox.change_contentbox',
+    }
 
     # The value of this field is set when calling the view's `as_view()` method
     title = ""
@@ -35,6 +39,9 @@ class EditContentBoxView(PermissionRequiredMixin, UpdateView):
     model = ContentBox
     fields = ('content',)
     template_name = 'contentbox/edit.html'
+    extra_context = {
+        'base_template': 'web/base.html',
+    }
 
     def get_success_url(self):
         return reverse(self.object.title)
