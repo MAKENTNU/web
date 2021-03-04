@@ -40,6 +40,13 @@
     display: none !important;
 }
 
+/* Tables on mobile have very specific rules that use !important */
+@media only screen and (max-width: 767px) {
+    .ui.table > tbody > tr.make_hidden {
+        display: none !important;
+    }
+}
+
 .make_non_visible {
     visibility: hidden !important;
 }
