@@ -4,12 +4,8 @@ from django.test import TestCase
 
 from news.models import Article
 from users.models import User
+from util.auth_utils import perm_to_str
 from ..models import Committee, InheritanceGroup
-
-
-def permission_to_perm(permission):
-    """Find the <app_label>.<codename> string for a permission object."""
-    return '.'.join([permission.content_type.app_label, permission.codename])
 
 
 # See the `0008_add_default_inheritancegroups_and_committees.py` migration for which InheritanceGroups are created by default
@@ -129,8 +125,8 @@ class PermGroupTestCase(TestCase):
         dev = InheritanceGroup.objects.get(name='Dev')
         perm1 = Permission.objects.get(codename='perm1')
         perm2 = Permission.objects.get(codename='perm2')
-        perm1_str = permission_to_perm(perm1)
-        perm2_str = permission_to_perm(perm2)
+        perm1_str = perm_to_str(perm1)
+        perm2_str = perm_to_str(perm2)
         org.own_permissions.add(perm1)
 
         user1 = user_model.objects.create_user('Test1', 'test1@test.com', '1234')
