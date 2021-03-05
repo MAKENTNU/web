@@ -114,9 +114,14 @@ function filter() {
         (member) => searchAllows(state.searchValue, member.data.name.toLowerCase()),
     ]
 
+    let table = $("#member-table-content");
+
     $.each(state.members, (index, member) => {
-        let shouldShow = filters.every(el => el(member));
-        member.element.toggleClass("make_hidden", !shouldShow);
+        member.element.remove();
+        if(filters.every(el => el(member))) {
+            table.append(member.element);
+            member.element.click(() => showDetailedMemberInformation(member));
+        }
     });
 }
 
@@ -222,7 +227,6 @@ function setup() {
             element: row,
         };
 
-        row.click(() => showDetailedMemberInformation(member));
         member.element = row;
         state.members.push(member);
     });

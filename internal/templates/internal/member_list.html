@@ -92,7 +92,7 @@
                 <th class="computer only">{% trans "Phone number" %}<i class="ui sort icon" id="member-sort-phone"></i></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="member-table-content">
             {% for member in object_list %}
                 {% get_committees member as committees %}
                 {% get_membership_statuses member as membership_status %}
@@ -119,7 +119,7 @@
                     data-quit="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}{% url "member-quit" member.pk %}{% endif %}"
                     data-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{% url "member-undo-quit" member.pk %}{% endif %}"
                 >
-                    <td>{{ member.user.get_full_name }}</td>
+                    <td>{{ member.user.get_short_full_name }}</td>
                     <td>
                         {% for committee_name, color in committees %}
                             <div class="ui {{ color }} label">{{ committee_name }}</div>
