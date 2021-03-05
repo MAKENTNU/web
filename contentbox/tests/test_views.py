@@ -50,7 +50,7 @@ class ModelAndViewTests(TestCase):
 
     def test_visiting_edit_page_is_only_allowed_for_users_with_permission(self):
         user = User.objects.create_user(username="user1")
-        user.user_permissions.add(Permission.objects.get(codename='change_contentbox'))
+        user.add_perms('contentbox.change_contentbox')
         user_client = Client()
         user_client.force_login(user)
         anon_client = Client()

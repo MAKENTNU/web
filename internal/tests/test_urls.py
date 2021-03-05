@@ -1,11 +1,11 @@
 from typing import Set
 from urllib.parse import urlparse
 
-from django.test import Client
+from django.test import Client, TestCase
 from django_hosts import reverse
 
 from users.models import User
-from util.test_utils import Get, PermissionsTestCase, assert_requesting_paths_succeeds
+from util.test_utils import Get, assert_requesting_paths_succeeds
 from ..forms import MemberStatusForm
 from ..models import Member, Secret, SystemAccess
 
@@ -18,7 +18,7 @@ def reverse_internal(viewname: str, **kwargs):
     return reverse(viewname, kwargs=kwargs, host='internal', host_args=['internal'])
 
 
-class UrlTests(PermissionsTestCase):
+class UrlTests(TestCase):
 
     def setUp(self):
         password = "TEST_PASS"
@@ -26,10 +26,10 @@ class UrlTests(PermissionsTestCase):
         member_user = User.objects.create_user(username="MEMBER", password=password)
         member_editor_user = User.objects.create_user(username="MEMBER_EDITOR", password=password)
 
-        internal_perms = ('is_internal', 'view_member', 'view_secret')
-        self.add_permissions(member_user, *internal_perms)
-        self.add_permissions(member_editor_user, *internal_perms,
-                             'add_member', 'can_edit_group_membership', 'change_systemaccess')
+        internal_perms = ('internal.is_internal', 'internal.view_member', 'internal.view_secret')
+        member_user.add_perms(*internal_perms)
+        member_editor_user.add_perms(*internal_perms,
+                                     'internal.add_member', 'internal.can_edit_group_membership', 'internal.change_systemaccess')
         self.member = Member.objects.create(user=member_user)
         self.member_editor = Member.objects.create(user=member_editor_user)
 

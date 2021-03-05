@@ -1,7 +1,6 @@
 from datetime import timedelta
 from unittest.mock import patch
 
-from django.contrib.auth.models import Permission
 from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
@@ -77,7 +76,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
             start_time=form.cleaned_data["start_time"],
             end_time=form.cleaned_data["end_time"],
         )
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
         self.assertEqual(view.get_error_message(form, reservation),
                          "Tidspunktet eller arrangementet er ikke lenger tilgjengelig")
 
@@ -147,7 +146,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
     def test_get_context_data_reservation(self):
         view = self.get_view()
         view.new_reservation = False
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
         now = timezone.localtime()
         reservation = Reservation.objects.create(
             machine=self.machine, user=self.user,
@@ -224,7 +223,7 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         view = self.get_view()
         form = self.create_form(start_time_diff=1, end_time_diff=2, event=self.timeplace)
         self.assertTrue(form.is_valid())
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
         view.form_valid(form)
         self.assertTrue(Machine.objects.count(), 1)
 
@@ -232,7 +231,7 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         view = self.get_view()
         form = self.create_form(start_time_diff=1, end_time_diff=2, special=True, special_text="Test special")
         self.assertTrue(form.is_valid())
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
         view.form_valid(form)
         self.assertTrue(Machine.objects.count(), 1)
 
@@ -322,7 +321,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
     def test_form_valid_event_reservation(self, now_mock):
         now_mock.return_value = parse_datetime_localized("2018-08-12 12:00")
 
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
         view = self.get_view()
         now = timezone.localtime()
         reservation = Reservation.objects.create(
@@ -345,7 +344,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
     def test_form_valid_special_reservation(self, now_mock):
         now_mock.return_value = parse_datetime_localized("2018-08-12 12:00")
 
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
         view = self.get_view()
         now = timezone.localtime()
         reservation = Reservation.objects.create(
@@ -368,8 +367,7 @@ class ReservationAdminViewTest(TestCase):
         user = User.objects.create_user("test")
         printer_machine_type = MachineType.objects.get(pk=1)
         Quota.objects.create(machine_type=printer_machine_type, number_of_reservations=10, ignore_rules=True, user=user)
-        permission = Permission.objects.get(codename="can_create_event_reservation")
-        user.user_permissions.add(permission)
+        user.add_perms('make_queue.can_create_event_reservation')
         event = Event.objects.create(title="Test_event")
         now = timezone.localtime()
         timeplace = TimePlace.objects.create(event=event, start_time=now + timedelta(hours=1),

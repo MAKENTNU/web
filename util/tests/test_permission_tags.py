@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Group, Permission
+from django.contrib.auth.models import Group
 from django.test import TestCase
 
 from users.models import User
@@ -15,7 +15,7 @@ class HasAnyPermissionTest(TestCase):
         self.assertFalse(has_any_permissions(self.user))
 
     def test_has_user_permission(self):
-        self.user.user_permissions.add(Permission.objects.get(name="Can add group"))
+        self.user.add_perms('auth.add_group')
         self.assertTrue(has_any_permissions(self.user))
 
     def test_has_group_permission(self):

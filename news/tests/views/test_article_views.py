@@ -1,15 +1,16 @@
 import json
 from datetime import timedelta
 
+from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from util.test_utils import MOCK_JPG_FILE, PermissionsTestCase
+from util.test_utils import MOCK_JPG_FILE
 from ...models import Article
 
 
-class ArticleViewTests(PermissionsTestCase):
+class ArticleViewTests(TestCase):
 
     def setUp(self):
         username = 'TEST_USER'
@@ -27,7 +28,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('admin_article_list'))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permissions(self.user, 'change_article')
+        self.user.add_perms('news.change_article')
         response = self.client.get(reverse('admin_article_list'))
         self.assertEqual(response.status_code, 200)
 
@@ -43,7 +44,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article_create'))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permissions(self.user, 'add_article')
+        self.user.add_perms('news.add_article')
         response = self.client.get(reverse('article_create'))
         self.assertEqual(response.status_code, 200)
 
@@ -51,7 +52,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article_edit', kwargs={'pk': self.article.pk}))
         self.assertNotEqual(response.status_code, 200)
 
-        self.add_permissions(self.user, 'change_article')
+        self.user.add_perms('news.change_article')
         response = self.client.get(reverse('article_edit', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -61,7 +62,7 @@ class ArticleViewTests(PermissionsTestCase):
             self.assertEqual(response.status_code, 200)
             return json.loads(response.content)
 
-        self.add_permissions(self.user, 'change_article')
+        self.user.add_perms('news.change_article')
         self.assertEquals(toggle(-1, 'hidden'), {})
         self.assertEquals(toggle(self.article.pk, 'ajfal'), {})
 
@@ -78,7 +79,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article_detail', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permissions(self.user, 'can_view_private')
+        self.user.add_perms('news.can_view_private')
         response = self.client.get(reverse('article_detail', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -93,7 +94,7 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article_detail', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permissions(self.user, 'change_article')
+        self.user.add_perms('news.change_article')
         response = self.client.get(reverse('article_detail', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
 
@@ -103,6 +104,6 @@ class ArticleViewTests(PermissionsTestCase):
         response = self.client.get(reverse('article_detail', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 404)
 
-        self.add_permissions(self.user, 'change_article')
+        self.user.add_perms('news.change_article')
         response = self.client.get(reverse('article_detail', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)

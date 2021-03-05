@@ -3,9 +3,8 @@ from abc import ABC
 from typing import Any, Collection, Dict, List, Set, Tuple, TypeVar
 from urllib.parse import urlparse
 
-from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, SimpleTestCase, TestCase
+from django.test import Client, SimpleTestCase
 from django.utils import translation
 
 from users.models import User
@@ -126,10 +125,3 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
 
     # Reactivate the previously set language, as requests to translated URLs change the active language
     translation.activate(previous_language)
-
-
-class PermissionsTestCase(TestCase):
-
-    @staticmethod
-    def add_permissions(user: User, *codenames: str):
-        user.user_permissions.add(*Permission.objects.filter(codename__in=codenames))

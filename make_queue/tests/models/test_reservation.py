@@ -1,7 +1,6 @@
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -78,7 +77,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         Reservation.RESERVATION_FUTURE_LIMIT_DAYS = self.reservation_future_limit_days
 
     def give_user_event_permission(self):
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
 
     def test_can_create_reservation(self):
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
@@ -268,7 +267,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_can_user_with_event_reservation_change_other_user_non_event_reservation(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.add_perms('make_queue.can_create_event_reservation')
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
@@ -278,7 +277,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     def test_can_user_with_event_reservation_change_other_user_event_reservation(self):
         self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.add_perms('make_queue.can_create_event_reservation')
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
@@ -288,7 +287,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     def test_can_user_with_event_reservation_change_other_user_special_reservation(self):
         self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.add_perms('make_queue.can_create_event_reservation')
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
