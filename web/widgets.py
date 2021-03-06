@@ -2,6 +2,8 @@ import django.forms as forms
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
+from web import settings
+
 
 class SemanticTimeInput(forms.TimeInput):
     template_name = "web/forms/widgets/semantic_time.html"
@@ -40,6 +42,13 @@ class SemanticDateTimeInput(forms.DateTimeInput):
 
 class SemanticFileInput(forms.ClearableFileInput):
     template_name = "web/forms/widgets/semantic_file.html"
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context.update({
+            "FILE_MAX_SIZE": settings.FILE_MAX_SIZE,
+        })
+        return context
 
 
 class MazemapSearchInput(forms.TextInput):
