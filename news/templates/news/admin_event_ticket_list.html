@@ -16,13 +16,13 @@
             <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
         </a>
 
-        <h3>
-            {% trans "Emails" %}
-            <button class="copy-token"><i class="clipboard icon"></i></button>
+        <h3>{% trans "Emails" %}</h3>
+        <div class="copy-emails-button-container">
+            <button class="copy-token ui make-bg-yellow icon button"><i class="clipboard icon"></i></button>
             <span data-content="{% trans "Click to copy the emails of the active tickets to the clipboard" %}.">
-                <i class="ui yellow question circle icon"></i>
+                <i class="ui make-col-yellow question circle icon"></i>
             </span>
-        </h3>
+        </div>
         <div>
             <input readonly class="input-monospace copy-input" value="{{ ticket_emails }}"/>
         </div>
