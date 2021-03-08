@@ -6,6 +6,7 @@
 {% load announcement_tags %}
 {% get_current_language as LANGUAGE_CODE %}
 
+
 <link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
 <link rel="stylesheet" type="text/css" href="{% static "announcements/css/announcement.css" %}">
 
@@ -28,21 +29,21 @@
     <nav id="nav" class="ui secondary huge inverted menu" aria-label="Main">
         <a class="item" href="{% url 'events' %}">
             <div class="text">{% trans "Events" %}</div>
-            <div class="make_bg_yellow bubble-background"></div>
+            <div class="make-bg-yellow bubble-background"></div>
         </a>
         <a class="item" href="{% url 'articles' %}">
             <div class="text">{% trans "Articles" %}</div>
-            <div class="make_bg_turquoise bubble-background"></div>
+            <div class="make-bg-turquoise bubble-background"></div>
         </a>
         <a class="item" href="{% url 'reservation_machines_overview' %}">
             <div class="text">{% trans "Reservations" %}</div>
-            <div class="make_bg_blue bubble-background"></div>
+            <div class="make-bg-blue bubble-background"></div>
         </a>
 
         <div id="makerspace-dropdown" class="ui dropdown item">
             <div class="text">{% trans "Makerverkstedet" %}</div>
             <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
-            <div class="make_bg_turquoise bubble-background"></div>
+            <div class="make-bg-turquoise bubble-background"></div>
 
             <nav class="menu transition" aria-label="Makerverkstedet">
                 <a class="item" href="{% url 'makerspace' %}">
@@ -62,7 +63,7 @@
 
         <a class="item" href="{% url 'about' %}">
             <div class="text">{% trans "About us" %}</div>
-            <div class="make_bg_yellow bubble-background"></div>
+            <div class="make-bg-yellow bubble-background"></div>
         </a>
 
         {% comment "Apply page" %}
@@ -73,7 +74,7 @@
 
         <a class="item" href="{% url 'apply' %}">
             <div class="text">Søk verv</div>
-            <div class="make_bg_blue bubble-background"></div>
+            <div class="make-bg-blue bubble-background"></div>
         </a>
     </nav>
 
@@ -82,7 +83,7 @@
             <div id="nav-user-dropdown" class="ui dropdown item">
                 <div class="text">{{ user.first_name|first_word }}</div>
                 <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
-                <div class="make_bg_blue bubble-background"></div>
+                <div class="make-bg-blue bubble-background"></div>
 
                 <nav class="menu transition" aria-label="User">
                     {% if user|has_any_permissions or user.is_superuser %}
@@ -110,7 +111,7 @@
         {% else %}
             <a class="item" href="{% url 'login' %}{{ login_next_param }}">
                 <div class="text">{% trans "Login" %}</div>
-                <div class="make_bg_blue bubble-background"></div>
+                <div class="make-bg-blue bubble-background"></div>
             </a>
         {% endif %}
 
@@ -149,7 +150,18 @@
 </form>
 
 <script>
-    $('#nav-user-dropdown, #makerspace-dropdown').dropdown({action: "nothing"});
+    $('#nav-user-dropdown, #makerspace-dropdown')
+        .dropdown({
+            action: "nothing",
+            onShow: function () {
+                // When not mobile layout:
+                if (!window.matchMedia("(max-width: 991.98px)").matches) {
+                    // Fixes Fomantic-UI not adding this class when the username is within a certain length range
+                    // (seems to happen when the dropdown menu is wider than approx. 150px)
+                    $(this).find("nav.menu").addClass("left");
+                }
+            },
+        });
 
     $(".lang-link").click(function (event) {
         event.preventDefault();

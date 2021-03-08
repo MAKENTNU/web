@@ -22,7 +22,6 @@ class TimePlaceForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-
         start_time = cleaned_data.get("start_time")
         end_time = cleaned_data.get("end_time")
 
@@ -43,6 +42,15 @@ class ArticleForm(ModelForm):
         }
 
 
+class EventForm(ModelForm):
+    class Meta:
+        model = Event
+        fields = "__all__"
+        widgets = {
+            "image": SemanticFileInput(),
+        }
+
+
 class EventRegistrationForm(ModelForm):
     class Meta:
         model = EventTicket
@@ -55,13 +63,4 @@ class EventRegistrationForm(ModelForm):
                 "placeholder": _(
                     "Here you can enter any requests or information you want to provide to the organizers"),
             }),
-        }
-
-
-class EventForm(ModelForm):
-    class Meta:
-        model = Event
-        fields = "__all__"
-        widgets = {
-            "image": SemanticFileInput(),
         }

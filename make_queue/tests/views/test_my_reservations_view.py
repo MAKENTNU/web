@@ -1,7 +1,7 @@
-from users.models import User
 from django.test import TestCase
 from django.utils import timezone
 
+from users.models import User
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation
 from ...tests.utility import template_view_get_context_data
@@ -26,8 +26,10 @@ class MyReservationsViewTestCase(TestCase):
                                    start_time=timezone.now(), end_time=timezone.now() + timezone.timedelta(hours=2))
 
     def test_get_user_reservations_single_reservation(self):
-        self.assertEqual([Reservation.objects.get(user=self.user)],
-                         list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"]))
+        self.assertEqual(
+            [Reservation.objects.get(user=self.user)],
+            list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"])
+        )
 
     def test_get_user_reservations_multiple_reservations(self):
         Reservation.objects.create(user=self.user,
@@ -35,9 +37,10 @@ class MyReservationsViewTestCase(TestCase):
                                    start_time=timezone.now() + timezone.timedelta(hours=2),
                                    end_time=timezone.now() + timezone.timedelta(hours=4), event=None)
 
-        self.assertEqual(list(Reservation.objects.filter(user=self.user).order_by("-start_time")),
-                         list(template_view_get_context_data(MyReservationsView, request_user=self.user)[
-                                  "reservations"]))
+        self.assertEqual(
+            list(Reservation.objects.filter(user=self.user).order_by("-start_time")),
+            list(template_view_get_context_data(MyReservationsView, request_user=self.user)["reservations"])
+        )
 
     def test_get_user_reservations_different_types(self):
         sewing_machine_type = MachineType.objects.get(pk=2)

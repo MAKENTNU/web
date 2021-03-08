@@ -4,6 +4,7 @@
 {% load thumbnail %}
 {% load i18n %}
 
+
 {% block body %}
 
     <div class="ui text container">
@@ -37,6 +38,7 @@
         </form>
 
         <br>
+
         {% if suggestions %}
             <h3>{% trans "Suggested skills" %}</h3>
             <table class="ui very basic collapsing celled table">
@@ -55,10 +57,10 @@
                             <h5 class="ui header image">
                                 {% if suggestion.image %}
                                     {% thumbnail suggestion.image "64x64" crop="center" as im %}
-                                        <img src="{{ im.url }}" class="ui mini rounded image">
+                                        <img class="ui mini rounded image" src="{{ im.url }}">
                                     {% endthumbnail %}
                                 {% else %}
-                                    <img src="{% static "checkin/img/placeholder_skill.svg" %}" class="ui mini rounded image"/>
+                                    <img class="ui mini rounded image" src="{% static "checkin/img/placeholder_skill.svg" %}"/>
                                 {% endif %}
                                 <div class="content">{{ suggestion.title }}/{{ suggestion.title_en }}</div>
                             </h5>
@@ -67,7 +69,7 @@
                         <td id="vote-count">{{ suggestion.voters.count }}</td>
                         <td>
                             {% if request.user|can_force_suggestion %}
-                                <button class="ui yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
+                                <button class="ui make-bg-yellow button add-voter" pk="{{ suggestion.pk }}" forced="true">
                                     {% trans "Approve" %}
                                 </button>
                             {% else %}
@@ -101,7 +103,6 @@
 
 {% block scripts %}
     <script>
-
         $('.add-voter').click(function () {
             add_voter_post($(this), $(this).attr('pk'), $(this).attr('forced'));
         });
@@ -159,7 +160,6 @@
                     if (data["suggestion_deleted"]) {
                         element.parents('tr').remove();
                     }
-
                 },
             });
         }

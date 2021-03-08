@@ -66,7 +66,7 @@ INSTALLED_APPS = [
 
     # Other third-party packages
     'social_django',
-    'ckeditor',
+    'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
     'sorl.thumbnail',
@@ -249,6 +249,15 @@ STATIC_URL = '/static/'
 # which avoids waiting for browsers' cache to update if a file's contents change
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
+
+# Code taken from https://github.com/django-ckeditor/django-ckeditor/issues/404#issuecomment-687778492
+def static_lazy(path):
+    from django.templatetags.static import static
+    from django.utils.functional import lazy
+
+    return lazy(lambda: static(path), str)()
+
+
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {
@@ -265,6 +274,10 @@ CKEDITOR_CONFIGS = {
         ],
         'toolbar': 'main',
         'tabSpaces': 4,
+        'contentsCss': [
+            static_lazy('ckeditor/ckeditor/customstyles.css'),
+            static_lazy('ckeditor/ckeditor/contents.css'),  # CKEditor's default styles
+        ],
         'extraPlugins': ','.join([
             'codesnippet',
             'uploadimage',

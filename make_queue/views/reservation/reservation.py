@@ -20,25 +20,25 @@ from ...templatetags.reservation_extra import calendar_url_reservation
 class ReservationCreateOrChangeView(TemplateView):
     """Base abstract class for the reservation create or change view"""
     __metaclass__ = ABCMeta
+
     template_name = "make_queue/reservation_edit.html"
 
     def get_error_message(self, form, reservation):
         """
         Generates the correct error message for the given form
+
         :param reservation: The reservation to generate an error message for
         :param form: The form to generate an error message for
         :return: The error message
         """
-        if not reservation.is_within_allowed_period() and not (
-                reservation.special or reservation.event):
+        if not reservation.is_within_allowed_period() and not (reservation.special or reservation.event):
             num_days = reservation.reservation_future_limit_days
             return ngettext(
                 'Reservations can only be made {num_days} day ahead of time',
                 'Reservations can only be made {num_days} days ahead of time',
-                num_days).format(
-                num_days=num_days)
-        if self.request.user.has_perm(
-                "make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
+                num_days
+            ).format(num_days=num_days)
+        if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
             return _("The time slot or event, is no longer available")
         if reservation.check_machine_out_of_order():
             return _("The machine is out of order")
@@ -60,10 +60,11 @@ class ReservationCreateOrChangeView(TemplateView):
     def validate_and_save(self, reservation, form):
         """
         Tries to validate and save the given reservation
+
         :param reservation: The reservation to validate and save
         :param form: The form used to create/change the reservation
         :return: Either a redirect to the new/changed reservation in the calendar or an error message indicating why
-                    the reservation cannot be validated
+                 the reservation cannot be validated
         """
         if not reservation.validate():
             context_data = self.get_context_data(reservation=reservation)
@@ -75,8 +76,9 @@ class ReservationCreateOrChangeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         """
-        Creates the context data required for the make reservation template. If reservation is given as a keyword
-        argument, the view is made for that reservation
+        Creates the context data required for the make reservation template.
+        If reservation is given as a keyword argument, the view is made for that reservation
+
         :param kwargs: The request arguments for creating the context data
         :return: The context data needed for the template
         """
@@ -107,8 +109,7 @@ class ReservationCreateOrChangeView(TemplateView):
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
             context_data["comment"] = reservation.comment
-            context_data["can_change_start_time"] = reservation.can_change(
-                self.request.user)
+            context_data["can_change_start_time"] = reservation.can_change(self.request.user)
         # Otherwise populate with default information given to the view
         else:
             context_data["selected_machine"] = kwargs["machine"]
@@ -120,8 +121,9 @@ class ReservationCreateOrChangeView(TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         """
-        If the request is a post request use the handle_post method, otherwise use the default method of the template
-        view
+        If the request is a post request use the handle_post method,
+        otherwise use the default method of the template view
+
         :param request: The HTTP request
         :return: HTTP response
         """
@@ -132,6 +134,7 @@ class ReservationCreateOrChangeView(TemplateView):
     def handle_post(self, request, **kwargs):
         """
         Handles and validates update requests
+
         :param request: The HTTP request
         """
         try:
@@ -150,6 +153,7 @@ class CreateReservationView(ReservationCreateOrChangeView):
     def form_valid(self, form, **kwargs):
         """
         Creates a reservation from a valid ReservationForm
+
         :param form: The valid reservation form
         :return: HTTP response
         """
@@ -158,7 +162,8 @@ class CreateReservationView(ReservationCreateOrChangeView):
             end_time=form.cleaned_data["end_time"],
             user=self.request.user,
             machine=form.cleaned_data["machine"],
-            comment=form.cleaned_data["comment"])
+            comment=form.cleaned_data["comment"],
+        )
 
         if form.cleaned_data["event"]:
             reservation.event = form.cleaned_data["event"]
@@ -177,6 +182,7 @@ class DeleteReservationView(RedirectView):
     def get_redirect_url(self, *args, **kwargs):
         """
         Gives the redirect url for when the reservation is deleted
+
         :return: The redirect url
         """
         if "next" in self.request.POST:
@@ -186,6 +192,7 @@ class DeleteReservationView(RedirectView):
     def dispatch(self, request, *args, **kwargs):
         """
         Delete the reservation if it can be deleted by the current user and exists
+
         :param request: The HTTP POST request
         """
         if "pk" in request.POST:
@@ -208,6 +215,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
     def dispatch(self, request, *args, **kwargs):
         """
         Redirects the user to it's reservation page if the given reservation cannot be changed
+
         :param request: The HTTP request
         """
         # User must be able to change the given reservation
@@ -220,6 +228,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
     def form_valid(self, form, **kwargs):
         """
         Handles updating the reservation if the form is valid, otherwise render the form view with an error code
+
         :param form: The valid form
         :return HTTP Response
         """
@@ -273,8 +282,8 @@ class FindFreeSlot(FormView):
     """
     View to find free time slots for reservations
     """
-    template_name = "make_queue/find_free_slot.html"
     form_class = FreeSlotForm
+    template_name = "make_queue/find_free_slot.html"
 
     def get_initial(self):
         return {"machine_type": MachineType.objects.first()}
@@ -303,34 +312,35 @@ class FindFreeSlot(FormView):
         reservations = list(
             Reservation.objects.filter(
                 end_time__gte=timezone.now(),
-                machine__pk=machine.pk).order_by("start_time"))
+                machine__pk=machine.pk,
+            ).order_by("start_time")
+        )
 
         # Find all periods between reservations
         for period_start, period_end in zip(reservations, reservations[1:]):
             duration = timedelta_to_hours(
                 period_end.start_time - period_start.end_time)
             if duration >= required_time:
-                periods.append(
-                    self.format_period(
-                        machine,
-                        period_start.end_time,
-                        period_end.start_time))
+                periods.append(self.format_period(
+                    machine,
+                    period_start.end_time,
+                    period_end.start_time
+                ))
 
         # Add remaining time after last reservation
         if reservations:
             periods.append(self.format_period(
                 machine, reservations[-1].end_time,
-                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)))
+                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)
+            ))
         # If the machine is not reserved anytime in the future, we include the
         # whole allowed period
         else:
-            periods.append(
-                self.format_period(
-                    machine,
-                    timezone.now(),
-                    timezone.now() +
-                    timezone.timedelta(
-                        days=Reservation.reservation_future_limit_days)))
+            periods.append(self.format_period(
+                machine,
+                timezone.now(),
+                timezone.now() + timezone.timedelta(days=Reservation.reservation_future_limit_days)
+            ))
         return periods
 
     def form_valid(self, form):
@@ -343,8 +353,7 @@ class FindFreeSlot(FormView):
         context = self.get_context_data()
 
         # Time should be expressed in hours
-        required_time = form.cleaned_data["hours"] + \
-                        form.cleaned_data["minutes"] / 60
+        required_time = form.cleaned_data["hours"] + form.cleaned_data["minutes"] / 60
 
         periods = []
         for machine in form.cleaned_data["machine_type"].machines.all():

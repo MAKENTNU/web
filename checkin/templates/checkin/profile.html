@@ -4,6 +4,7 @@
 {% load checkin_tags %}
 {% load i18n %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
 {% endblock head %}
@@ -53,7 +54,7 @@
                             <img class="skill-image" src="{% static "checkin/img/placeholder_skill.svg" %}"/>
                         {% endif %}
                         <span>{{ skill|locale_title:request.LANGUAGE_CODE }}</span>
-                        <div class="detail make_bg_blue">
+                        <div class="detail make-bg-blue">
                             <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
                         </div>
                     </div>
@@ -65,7 +66,7 @@
             <div class="container">
                 <form class="ui form" action="" method="post">
                     {% csrf_token %}
-                    <input name="rating" type="number" id="rating-input" value="1" hidden>
+                    <input id="rating-input" type="number" name="rating" value="1" hidden>
                     <div class="inline fields">
                         <div class="ten wide field">
                             <label>{% trans "Add skills" %}</label>

@@ -2,9 +2,10 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block head %}
-    <script type="text/javascript" src="{% static "news/js/email_copy.js" %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "news/css/admin_event_ticket_list.css" %}">
+    <script type="text/javascript" src="{% static "news/js/email_copy.js" %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -15,20 +16,21 @@
             <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
         </a>
 
-        <h3>{% trans "Emails" %}
-            <button class="copy-token"><i class="clipboard icon"></i></button>
+        <h3>{% trans "Emails" %}</h3>
+        <div class="copy-emails-button-container">
+            <button class="copy-token ui make-bg-yellow icon button"><i class="clipboard icon"></i></button>
             <span data-content="{% trans "Click to copy the emails of the active tickets to the clipboard" %}.">
-                <i class="ui yellow question circle icon"></i>
+                <i class="ui make-col-yellow question circle icon"></i>
             </span>
-        </h3>
-        <div>
-            <input
-                class="input-monospace copy-input"
-                value="{{ ticket_emails }}"
-                readonly> 
         </div>
+        <div>
+            <input readonly class="input-monospace copy-input" value="{{ ticket_emails }}"/>
+        </div>
+
         <h3>{% trans "Tickets" %}</h3>
-        <b>{{ object.number_of_registered_tickets }}/{{ object.number_of_tickets }} {% trans "tickets reserved" %}</b>
+        <b>
+            {{ object.number_of_registered_tickets }}/{{ object.number_of_tickets }} {% trans "tickets reserved" %}
+        </b>
         <div class="ui relaxed divided list">
             {% for ticket in tickets %}
                 <div class="item">
@@ -65,6 +67,7 @@
             {% endfor %}
         </div>
     </div>
+
     <script>
         $(".message .close").click(function () {
             $(this)

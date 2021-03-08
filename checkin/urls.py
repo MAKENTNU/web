@@ -4,6 +4,7 @@ from django.urls import path
 from checkin.views import CheckInView, ShowSkillsView, ProfilePageView, SuggestSkillView, RegisterProfileView, \
     VoteSuggestionView, RegisterCardView, EditProfilePictureView, DeleteSuggestionView
 
+
 urlpatterns = [
     path('', ShowSkillsView.as_view()),
     path('profile/', login_required(ProfilePageView.as_view()), name="profile"),

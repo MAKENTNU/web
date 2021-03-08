@@ -1,7 +1,7 @@
 {% extends "web/base.html" %}
-
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
+
 
 {% block body %}
     <div class="ui container">
@@ -12,9 +12,9 @@
             </a>
 
             {% if perms.make_queue.change_machineusagerule %}
-                <a class="ui yellow button" style="margin-top: 20px"
+                <a class="ui make-bg-yellow button" style="margin-top: 20px"
                    href="{% url 'edit_machine_usage_rules' usage_rules.pk %}">
-                    {% trans "Edit" %}
+                    <i class="ui edit icon"></i>{% trans "Edit" %}
                 </a>
             {% endif %}
         </div>

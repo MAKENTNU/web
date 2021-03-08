@@ -1,6 +1,7 @@
 {% extends "internal/base.html" %}
 {% load i18n %}
 
+
 {% block body %}
     <style>
         .ui.checkbox.field input[type=checkbox] {
@@ -78,8 +79,13 @@
                     </div>
                 </div>
             {% endif %}
-            <button class="ui right floated yellow button">{% trans "Save" %}</button>
-            <a href="{% url "members" %}" class="ui right floated red button">{% trans "Cancel" context "abort action" %}</a>
+
+            <button class="ui right floated make-bg-yellow button">
+                {% trans "Save" %}
+            </button>
+            <a class="ui right floated red button" href="{% url "members" %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
         </form>
     </div>
 

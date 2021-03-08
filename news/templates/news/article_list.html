@@ -3,13 +3,14 @@
 {% load i18n %}
 {% load thumbnail %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
     <script src="{% static "web/js/image_link.js" %}"></script>
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui text-centered make_col_blue header">
+    <h1 class="ui text-centered make-col-blue header">
         {% trans "Articles" %}
     </h1>
     <div class="ui container">
@@ -20,7 +21,8 @@
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}"
                          src="{{ im.url }}" href="{% url 'article' article.id %}"
-                         {% if article.contain %}style="object-fit: contain;" {% endif %}>
+                         {% if article.contain %}style="object-fit: contain;"{% endif %}
+                    />
                 {% endthumbnail %}
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
