@@ -130,6 +130,19 @@ $("#status_set").parent().dropdown({
 $("#search").on("input", function () {
     state.search_value = $(this).val().toLowerCase();
     filter();
+}).on("keydown", function (event) {
+    // We do not want to trigger form submit on pressing the enter key. The
+    // default functionality is search, and pressing the enter key should
+    // emulate that.
+    if (event.key === "Enter") {
+        // Loose focus of the input field. This is important for mobile as
+        // hitting enter is equivalent to hitting "search".
+        $(this).blur();
+
+        // Prevent form submission
+        event.preventDefault();
+        return false;
+    }
 });
 
 // Each table header element can be clicked to change the sorting of the table

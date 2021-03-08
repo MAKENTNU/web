@@ -3,14 +3,11 @@
 {% load static %}
 
 
+{% block head %}
+    <link rel="stylesheet" href="{% static "make_queue/css/general.css" %}">
+{% endblock head %}
+
 {% block body %}
-
-    <style>
-        .make_hidden {
-            display: none;
-        }
-    </style>
-
     <div class="ui container">
         <h1>
             {% trans "Course registrations" %}

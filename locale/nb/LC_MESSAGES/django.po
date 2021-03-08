@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-03 16:38+0100\n"
+"POT-Creation-Date: 2021-03-08 01:09+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -122,10 +122,10 @@ msgstr "Lagre"
 #: internal/templates/internal/secret_edit.html:34
 #: internal/templates/internal/system_access_edit.html:31
 #: make_queue/templates/make_queue/course/course_registration_edit.html:103
-#: make_queue/templates/make_queue/course/course_registration_list.html:187
+#: make_queue/templates/make_queue/course/course_registration_list.html:183
 #: make_queue/templates/make_queue/machine/machine_edit.html:76
 #: make_queue/templates/make_queue/quota/quota_edit.html:67
-#: make_queue/templates/make_queue/reservation_edit.html:164
+#: make_queue/templates/make_queue/reservation_edit.html:158
 #: make_queue/templates/make_queue/rule_edit.html:100
 #: make_queue/templates/make_queue/usage_rules_edit.html:46
 #: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:45
@@ -143,7 +143,7 @@ msgstr "Rediger kunngjøring"
 
 #: card/formfields.py:20 card/modelfields.py:15
 #: internal/templates/internal/member_list.html:197
-#: make_queue/templates/make_queue/course/course_registration_list.html:94
+#: make_queue/templates/make_queue/course/course_registration_list.html:90
 msgid "Card number"
 msgstr "Kortnummer"
 
@@ -193,7 +193,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile.html:84
-#: make_queue/templates/make_queue/course/course_registration_list.html:17
+#: make_queue/templates/make_queue/course/course_registration_list.html:13
 #: make_queue/templates/make_queue/machine_list.html:19
 msgid "Add"
 msgstr "Legg til"
@@ -362,7 +362,7 @@ msgstr "Gjort av"
 
 #: docs/templates/docs/base.html:10
 #: make_queue/templates/make_queue/calendar.html:87
-#: make_queue/templates/make_queue/reservation_edit.html:124
+#: make_queue/templates/make_queue/reservation_edit.html:118
 #: web/templates/web/base.html:10
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
@@ -614,7 +614,7 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:35 internal/templates/internal/member_list.html:259
-#: make_queue/templates/make_queue/reservation_edit.html:104
+#: make_queue/templates/make_queue/reservation_edit.html:98
 #: news/models.py:203 news/templates/news/admin_event_ticket_list.html:59
 msgid "Comment"
 msgstr "Kommentar"
@@ -750,7 +750,7 @@ msgstr "Filtrer komiteer"
 #: internal/templates/internal/member_list.html:82
 #: internal/templates/internal/member_list.html:175
 #: make_queue/models/models.py:100
-#: make_queue/templates/make_queue/course/course_registration_list.html:92
+#: make_queue/templates/make_queue/course/course_registration_list.html:88
 #: news/models.py:200
 msgid "Name"
 msgstr "Navn"
@@ -763,7 +763,7 @@ msgstr "Komité"
 #: internal/templates/internal/member_list.html:91
 #: internal/templates/internal/member_list.html:235
 #: make_queue/models/course.py:28 make_queue/models/models.py:110
-#: make_queue/templates/make_queue/course/course_registration_list.html:96
+#: make_queue/templates/make_queue/course/course_registration_list.html:92
 #: make_queue/templates/make_queue/machine_detail.html:56
 msgid "Status"
 msgstr "Status"
@@ -920,7 +920,7 @@ msgid "Access granted"
 msgstr "Tilgang gitt"
 
 #: make_queue/models/course.py:24
-#: make_queue/templates/make_queue/course/course_registration_list.html:93
+#: make_queue/templates/make_queue/course/course_registration_list.html:89
 msgid "Username"
 msgstr "Brukernavn"
 
@@ -1012,8 +1012,8 @@ msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:389
-#: make_queue/templates/make_queue/reservation_edit.html:88
-#: make_queue/templates/make_queue/reservation_edit.html:92
+#: make_queue/templates/make_queue/reservation_edit.html:85
+#: make_queue/templates/make_queue/reservation_edit.html:89
 #: news/models.py:149
 msgid "End time"
 msgstr "Slutt-tidspunkt"
@@ -1109,82 +1109,82 @@ msgstr "Nullstill valg"
 msgid "Registration status"
 msgstr "Registreringsstatus"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:16
+#: make_queue/templates/make_queue/course/course_registration_list.html:12
 #: web/templates/web/admin_panel.html:87
 msgid "Course registrations"
 msgstr "Kursregistreringer"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:26
+#: make_queue/templates/make_queue/course/course_registration_list.html:22
 msgid "Filter users based on name"
 msgstr "Filtrer brukere basert på navn"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:27
+#: make_queue/templates/make_queue/course/course_registration_list.html:23
 msgid "Search name and username"
 msgstr "Søk på navn og brukernavn"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:31
+#: make_queue/templates/make_queue/course/course_registration_list.html:27
 msgid "Filter users based on status"
 msgstr "Filtrer brukere basert på status"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:37
+#: make_queue/templates/make_queue/course/course_registration_list.html:33
 msgid "All"
 msgstr "Alle"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:49
+#: make_queue/templates/make_queue/course/course_registration_list.html:45
 msgid "Download filtered users"
 msgstr "Last ned filtrerte brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:58
+#: make_queue/templates/make_queue/course/course_registration_list.html:54
 msgid "user(s) selected"
 msgstr "bruker(e) valgt"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:63
+#: make_queue/templates/make_queue/course/course_registration_list.html:59
 msgid "Set status for all selected users"
 msgstr "Sett status for alle valgte brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:67
+#: make_queue/templates/make_queue/course/course_registration_list.html:63
 msgid "Select status"
 msgstr "Velg status"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:78
+#: make_queue/templates/make_queue/course/course_registration_list.html:74
 msgid "Clear selected users"
 msgstr "Nullstill valg av brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:81
+#: make_queue/templates/make_queue/course/course_registration_list.html:77
 msgid "Toggle non-selected users"
 msgstr "Veksle visning av ikke valgte brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:95
+#: make_queue/templates/make_queue/course/course_registration_list.html:91
 #: web/templates/web/forms/widgets/semantic_date.html:9
 #: web/templates/web/forms/widgets/semantic_datetime.html:9
 msgid "Date"
 msgstr "Dato"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:116
+#: make_queue/templates/make_queue/course/course_registration_list.html:112
 msgid "Connected to user"
 msgstr "Koblet til bruker"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:156
+#: make_queue/templates/make_queue/course/course_registration_list.html:152
 msgid "Displaying"
 msgstr "Viser"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:160
+#: make_queue/templates/make_queue/course/course_registration_list.html:156
 msgid "registrations"
 msgstr "registreringer"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:168
+#: make_queue/templates/make_queue/course/course_registration_list.html:164
 msgid "Set status of users to"
 msgstr "Sett status for brukere til"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:177
+#: make_queue/templates/make_queue/course/course_registration_list.html:173
 msgid "You are changing the status for the following users"
 msgstr "Du vil endre status for følgende brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:179
+#: make_queue/templates/make_queue/course/course_registration_list.html:175
 msgid "Are you sure you want to do this?"
 msgstr "Er du sikker på at du vil gjøre dette?"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:184
+#: make_queue/templates/make_queue/course/course_registration_list.html:180
 msgid "Set status"
 msgstr "Sett status"
 
@@ -1335,25 +1335,25 @@ msgstr "Utstyr"
 msgid "Select machine"
 msgstr "Velg maskin"
 
-#: make_queue/templates/make_queue/reservation_edit.html:117
-#: make_queue/templates/make_queue/reservation_edit.html:130
+#: make_queue/templates/make_queue/reservation_edit.html:111
+#: make_queue/templates/make_queue/reservation_edit.html:124
 #: news/models.py:197
 msgid "Event"
 msgstr "Arrangement"
 
-#: make_queue/templates/make_queue/reservation_edit.html:134
+#: make_queue/templates/make_queue/reservation_edit.html:128
 msgid "Select event"
 msgstr "Velg arrangement"
 
-#: make_queue/templates/make_queue/reservation_edit.html:152
+#: make_queue/templates/make_queue/reservation_edit.html:146
 msgid "Reservation text"
 msgstr "Reservasjonstekst"
 
-#: make_queue/templates/make_queue/reservation_edit.html:162
+#: make_queue/templates/make_queue/reservation_edit.html:156
 msgid "Reserve"
 msgstr "Reserver"
 
-#: make_queue/templates/make_queue/reservation_edit.html:162
+#: make_queue/templates/make_queue/reservation_edit.html:156
 #: make_queue/templates/make_queue/reservation_list.html:53
 #: make_queue/templates/make_queue/reservation_list.html:104
 #: make_queue/templates/make_queue/reservation_list.html:175
@@ -1555,26 +1555,38 @@ msgid "The time slot or event, is no longer available"
 msgstr "Tidspunktet eller eventen, er ikke lengre tilgjengelig"
 
 #: make_queue/views/reservation/reservation.py:44
-msgid "The reservation exceeds your quota"
-msgstr "Reservasjonen går over kvoten din"
-
-#: make_queue/views/reservation/reservation.py:46
-msgid "The start time can't be after the end time"
-msgstr "Starttiden kan ikke være etter sluttiden"
-
-#: make_queue/views/reservation/reservation.py:48
-msgid "The reservation can't start in the past"
-msgstr "Reservasjonen kan ikke starte i fortiden"
-
-#: make_queue/views/reservation/reservation.py:50
 msgid "The machine is out of order"
 msgstr "Maskinen er i ustand"
 
-#: make_queue/views/reservation/reservation.py:52
+#: make_queue/views/reservation/reservation.py:46
 msgid "The machine is under maintenance"
 msgstr "Maskinen er under vedlikehold"
 
+#: make_queue/views/reservation/reservation.py:48
+msgid "The reservation cannot start and end at the same time"
+msgstr "Reservasjonen kan ikke starte og slutte på samme tidspunkt"
+
+#: make_queue/views/reservation/reservation.py:51
+msgid ""
+"It is not possible to reserve the machine during these hours. Check the "
+"rules for when the machine is reservable"
+msgstr ""
+"Det er ikke mulig å reservere maskinen på dette tidspunktet. Sjekk reglene "
+"for hvilke perioder det er mulig å reservere maskinen i"
+
 #: make_queue/views/reservation/reservation.py:53
+msgid "The reservation exceeds your quota"
+msgstr "Reservasjonen går over kvoten din"
+
+#: make_queue/views/reservation/reservation.py:55
+msgid "The start time can't be after the end time"
+msgstr "Starttiden kan ikke være etter sluttiden"
+
+#: make_queue/views/reservation/reservation.py:57
+msgid "The reservation can't start in the past"
+msgstr "Reservasjonen kan ikke starte i fortiden"
+
+#: make_queue/views/reservation/reservation.py:58
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
@@ -1842,7 +1854,7 @@ msgstr "Admin"
 msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"
 
-#: news/templates/news/admin_event_ticket_list.html:20
+#: news/templates/news/admin_event_ticket_list.html:19
 msgid "Emails"
 msgstr "E-poster"
 

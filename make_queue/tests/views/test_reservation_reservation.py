@@ -56,7 +56,9 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
-        self.assertEqual(view.get_error_message(form, reservation), "Tidspunktet er ikke tilgjengelig")
+        self.assertEqual(view.get_error_message(form, reservation),
+                         "Det er ikke mulig å reservere maskinen på dette tidspunktet. Sjekk reglene for hvilke "
+                         "perioder det er mulig å reservere maskinen i")
 
     def test_get_error_message_event(self):
         view = self.get_view()

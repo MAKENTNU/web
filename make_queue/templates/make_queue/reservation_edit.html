@@ -75,11 +75,8 @@
                         <div class="ui input {% if not can_change_start_time %}disabled{% endif %} left icon">
                             <i class="calendar icon"></i>
                             <input name="start_time" type="text" placeholder="{% trans "Start time" %}"
-                                   value="{% if start_time %}
-                                               {{ start_time|date:"Y-m-d H:i" }}
-                                          {% else %}
-                                               {% set_current_date %}
-                                          {% endif %}"
+                                   {# Do not place the if-else on separate lines, as it introduces whitespace #}
+                                   value="{% if start_time %}{{ start_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date %}{% endif %}"
                             />
                         </div>
                     </div>
@@ -90,11 +87,8 @@
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
                             <input name="end_time" type="text" placeholder="{% trans "End time" %}"
-                                   value="{% if end_time %}
-                                               {{ end_time|date:"Y-m-d H:i" }}
-                                          {% else %}
-                                               {% set_current_date 2 %}
-                                          {% endif %}"
+                                   {# Do not place the if-else on separate lines, as it introduces whitespace #}
+                                   value="{% if end_time %}{{ end_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date 2 %}{% endif %}"
                             />
                         </div>
                     </div>
