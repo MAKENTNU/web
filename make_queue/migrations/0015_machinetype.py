@@ -5,7 +5,7 @@ from typing import Union
 from django.db import migrations, models
 import django.db.models.deletion
 
-import web.multilingual.database
+import web.multilingual.modelfields
 from web.multilingual.data_structures import MultiLingualTextStructure
 
 
@@ -89,8 +89,8 @@ class Migration(migrations.Migration):
             name='MachineType',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', web.multilingual.database.MultiLingualTextField(max_length=30, unique=True)),
-                ('cannot_use_text', web.multilingual.database.MultiLingualTextField(blank=True)),
+                ('name', web.multilingual.modelfields.MultiLingualTextField(max_length=30, unique=True)),
+                ('cannot_use_text', web.multilingual.modelfields.MultiLingualTextField(blank=True)),
                 ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course')], default='AUTH', max_length=4, verbose_name='Usage requirement')),
                 ('has_stream', models.BooleanField(default=False)),
                 ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='Priority')),

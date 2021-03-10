@@ -10,7 +10,7 @@
         <div class="ui four doubling stackable cards">
             {% if user|has_any_article_permission or user.is_superuser %}
                 <div class="ui yellow card">
-                    <a href="{% url 'admin-articles' %}" class="content">
+                    <a class="content" href="{% url 'admin-articles' %}">
                         <div class="center aligned header">
                             <i class="ui grey newspaper outline icon"></i>{% trans "Articles" %}
                         </div>
@@ -22,7 +22,7 @@
             {% endif %}
             {% if user|has_any_event_permission or user.is_superuser %}
                 <div class="ui yellow card">
-                    <a href="{% url 'admin-events' %}" class="content">
+                    <a class="content" href="{% url 'admin-events' %}">
                         <div class="center aligned header">
                             <i class="ui grey calendar outline icon"></i>{% trans "Events" %}
                         </div>
@@ -34,7 +34,7 @@
             {% endif %}
             {% if perms.make_queue.can_create_event_reservation %}
                 <div class="ui yellow card">
-                    <a href="{% url 'admin_reservation' %}" class="content">
+                    <a class="content" href="{% url 'admin_reservation' %}">
                         <div class="center aligned header">
                             <i class="ui grey cogs icon"></i>{% trans "Reservations" %}
                         </div>
@@ -44,9 +44,21 @@
                     </a>
                 </div>
             {% endif %}
+            {% if user|has_any_faq_permissions %}
+                <div class="ui yellow card">
+                    <a class="content" href="{% url 'faq-admin' %}">
+                        <div class="center aligned header">
+                            <i class="ui grey question circle outline icon"></i>{% trans "FAQ" %}
+                        </div>
+                        <div class="description">
+                            {% trans "Here you can add or edit frequently asked questions" %}.
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
             {% if perms.make_queue.change_quota %}
                 <div class="ui yellow card">
-                    <a href="{% url 'quota_panel' %}" class="content">
+                    <a class="content" href="{% url 'quota_panel' %}">
                         <div class="center aligned header">
                             <i class="ui grey clock outline icon"></i>{% trans "Quota" %}
                         </div>
@@ -58,7 +70,7 @@
             {% endif %}
             {% if perms.groups.can_edit_group %}
                 <div class="ui yellow card">
-                    <a href="{% url 'committee_admin' %}" class="content">
+                    <a class="content" href="{% url 'committee_admin' %}">
                         <div class="center aligned header">
                             <i class="ui grey users icon"></i>{% trans "Committees" %}
                         </div>
@@ -70,7 +82,7 @@
             {% endif %}
             {% if perms.make_queue.change_printer3dcourse %}
                 <div class="ui yellow card">
-                    <a href="{% url 'course_panel' %}" class="content">
+                    <a class="content" href="{% url 'course_panel' %}">
                         <div class="center aligned header">
                             <i class="ui grey user plus icon"></i>{% trans "Course registrations" %}
                         </div>
@@ -82,7 +94,7 @@
             {% endif %}
             {% if perms.announcements.change_announcement %}
                 <div class="ui yellow card">
-                    <a href="{% url 'announcement_admin' %}" class="content">
+                    <a class="content" href="{% url 'announcement_admin' %}">
                         <div class="center aligned header">
                             <i class="ui grey bullhorn icon"></i>{% trans "Announcements" %}
                         </div>
@@ -94,7 +106,7 @@
             {% endif %}
             {% if user|has_any_equipment_permissions %}
                 <div class="ui yellow card">
-                    <a href="{% url 'makerspace-equipment-admin' %}" class="content">
+                    <a class="content" href="{% url 'makerspace-equipment-admin' %}">
                         <div class="center aligned header">
                             <i class="ui grey tools icon"></i>{% trans "Equipment" %}
                         </div>

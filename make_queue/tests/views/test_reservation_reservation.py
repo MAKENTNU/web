@@ -2,19 +2,19 @@ from datetime import timedelta, time
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
-from users.models import User
 from django.http import HttpResponse
 from django.test import TestCase
 from django.utils import timezone
 
 from news.models import Event, TimePlace
+from users.models import User
 from ...util.time import date_to_local, local_to_date
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 from ...tests.utility import post_request_with_user, request_with_user, template_view_get_context_data
 from ...views.admin.reservation import AdminReservationView
-from ...views.reservation.reservation import ChangeReservationView, MakeReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
+from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
 
 
 class BaseReservationCreateOrChangeViewTest(TestCase):
@@ -56,7 +56,9 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         reservation = Reservation(user=self.user, start_time=form.cleaned_data["start_time"],
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
-        self.assertEqual(view.get_error_message(form, reservation), "Tidspunktet er ikke tilgjengelig")
+        self.assertEqual(view.get_error_message(form, reservation),
+                         "Det er ikke mulig å reservere maskinen på dette tidspunktet. Sjekk reglene for hvilke "
+                         "perioder det er mulig å reservere maskinen i")
 
     def test_get_error_message_event(self):
         view = self.get_view()
@@ -120,9 +122,11 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         view = self.get_view()
         view.new_reservation = False
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
-        reservation = Reservation.objects.create(user=self.user, start_time=timezone.now() + timedelta(hours=1),
-                                                 end_time=timezone.now() + timedelta(hours=2),
-                                                 event=self.timeplace, machine=self.machine, comment="Comment")
+        reservation = Reservation.objects.create(
+            start_time=timezone.now() + timedelta(hours=1),
+            end_time=timezone.now() + timedelta(hours=2),
+            user=self.user, event=self.timeplace, machine=self.machine, comment="Comment",
+        )
         context_data = view.get_context_data(reservation=reservation)
         context_data["machine_types"] = set(context_data["machine_types"])
 
@@ -174,10 +178,10 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(1, valid_form_calls["calls"])
 
 
-class MakeReservationViewTest(BaseReservationCreateOrChangeViewTest):
+class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     def get_view(self):
-        view = MakeReservationView()
+        view = CreateReservationView()
         view.request = request_with_user(self.user)
         return view
 
@@ -236,14 +240,16 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         response = view.dispatch(view.request, reservation=reservation)
         # Response should be the edit page for the reservation, as no form is posted with the data
         self.assertEqual(200, response.status_code)
-        self.assertEqual(["make_queue/make_reservation.html"], response.template_name)
+        self.assertEqual(["make_queue/reservation_edit.html"], response.template_name)
 
     @patch("django.utils.timezone.now")
     def test_post_unchangeable_reservation(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+
         view = self.get_view()
         view.request.method = "POST"
         reservation = self.create_reservation(self.create_form(1, 2))
+
         now_mock.return_value = timezone.now() + timedelta(hours=2, minutes=1)
         response = view.dispatch(view.request, reservation=reservation)
         # An unchangeable reservation should have redirect
@@ -252,6 +258,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
     @patch("django.utils.timezone.now")
     def test_form_valid_normal_reservation(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+
         view = self.get_view()
         reservation = self.create_reservation(self.create_form(1, 2))
         form = self.create_form(1, 3)
@@ -264,6 +271,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
     @patch("django.utils.timezone.now")
     def test_form_valid_changed_machine(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+
         view = self.get_view()
         reservation = self.create_reservation(self.create_form(1, 2))
         old_machine = self.machine
@@ -279,6 +287,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
     @patch("django.utils.timezone.now")
     def test_form_valid_event_reservation(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         view = self.get_view()
         reservation = Reservation.objects.create(start_time=timezone.now() + timedelta(hours=1),
@@ -297,6 +306,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
     @patch("django.utils.timezone.now")
     def test_form_valid_special_reservation(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         view = self.get_view()
         reservation = Reservation.objects.create(start_time=timezone.now() + timedelta(hours=1),
@@ -371,8 +381,10 @@ class MarkReservationAsDoneTest(TestCase):
     @patch("django.utils.timezone.now")
     def test_post_valid(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+
         reservation = Reservation.objects.create(machine=self.machine, start_time=timezone.now() + timedelta(hours=1),
                                                  end_time=timezone.now() + timedelta(hours=2), user=self.user)
+
         now_mock.return_value = timezone.now() + timedelta(hours=1.1)
         self.assertTrue(reservation.can_change_end_time(self.user))
         response = self.post_to_view(reservation)
@@ -393,8 +405,10 @@ class MarkReservationAsDoneTest(TestCase):
     @patch("django.utils.timezone.now")
     def test_post_after_reservation(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+
         reservation = Reservation.objects.create(machine=self.machine, start_time=timezone.now() + timedelta(hours=1),
                                                  end_time=timezone.now() + timedelta(hours=2), user=self.user)
+
         now_mock.return_value = timezone.now() + timedelta(hours=3)
         response = self.post_to_view(reservation)
         self.assertEqual(302, response.status_code)
@@ -404,11 +418,13 @@ class MarkReservationAsDoneTest(TestCase):
     @patch("django.utils.timezone.now")
     def test_special_case(self, now_mock):
         now_mock.return_value = local_to_date(timezone.datetime(2018, 11, 16, 10, 0, 0))
+
         reservation = Reservation.objects.create(machine=self.machine, start_time=timezone.now() + timedelta(minutes=1),
                                                  end_time=timezone.now() + timedelta(hours=6), user=self.user)
         reservation2 = Reservation.objects.create(machine=self.machine, start_time=timezone.now() + timedelta(hours=6),
                                                   end_time=timezone.now() + timedelta(hours=6, minutes=26),
                                                   user=User.objects.create_user("test2"))
+
         now_mock.return_value = local_to_date(timezone.datetime(2018, 11, 16, 15, 56, 0))
         response = self.post_to_view(reservation)
         self.assertEqual(302, response.status_code)

@@ -1,0 +1,45 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "faq/css/faq_list.css" %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 id="page-title" class="ui text-centered make-col-blue header">
+            {% trans "Frequently Asked Questions" %}
+        </h1>
+        <div id="outer-accordion" class="ui styled accordion">
+            {% for category in categories %}
+                <div class="active title">
+                    <i class="dropdown icon"></i>
+                    <p>
+                        {{ category.name }}
+                    </p>
+                </div>
+                <div class="content">
+                    {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
+                    <div class="styled accordion">
+                        {% for question in category.questions.all %}
+                            <div class="active title">
+                                <i class="dropdown icon"></i>
+                                <div class="make-col-blue">{{ question.title }}</div>
+                            </div>
+                            <div class="content">
+                                {{ question.answer|safe }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        $('.ui.accordion').accordion();
+    </script>
+{% endblock body %}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from internal.models import Member, Secret
-from web.multilingual.database import MultiLingualFieldAdmin
+from web.multilingual.admin import MultiLingualFieldAdmin
 
 
 class SecretAdmin(MultiLingualFieldAdmin):

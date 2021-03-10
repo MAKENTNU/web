@@ -6,21 +6,24 @@ from django.views.generic import TemplateView
 from django_hosts import reverse
 
 from internal.views import MembersListView, AddMemberView, EditMemberView, MemberUndoQuitView, MemberQuitView, \
-    MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, SecretsView, EditSecretView, CreateSecretView, \
+    MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, HomeView, SecretsView, EditSecretView, CreateSecretView, \
     DeleteSecretView
 
+
 unsafe_urlpatterns = [
+    path("", HomeView.as_view(), name="home"),
     path("members", MembersListView.as_view(), name="members"),
     path("members/<int:pk>", MembersListView.as_view(), name="members"),
     path("members/add", AddMemberView.as_view(), name="add-member"),
     path("members/<int:pk>/edit", EditMemberView.as_view(), name="edit-member"),
     path("members/<int:pk>/quit", permission_required("internal.can_edit_group_membership")(MemberQuitView.as_view()), name="member-quit"),
-    path("members/<int:pk>/quit/undo", permission_required("internal.can_edit_group_membership")(MemberUndoQuitView.as_view()), name="member-undo-quit"),
-    path("members/<int:pk>/retire", permission_required("internal.can_edit_group_membership")(MemberRetireView.as_view()), name="member-retire"),
-    path("members/<int:pk>/retire/undo", permission_required("internal.can_edit_group_membership")(MemberUndoRetireView.as_view()), name="member-undo-retire"),
+    path("members/<int:pk>/quit/undo", permission_required("internal.can_edit_group_membership")(MemberUndoQuitView.as_view()),
+         name="member-undo-quit"),
+    path("members/<int:pk>/retire", permission_required("internal.can_edit_group_membership")(MemberRetireView.as_view()),
+         name="member-retire"),
+    path("members/<int:pk>/retire/undo", permission_required("internal.can_edit_group_membership")(MemberUndoRetireView.as_view()),
+         name="member-undo-retire"),
     path("members/access/<int:pk>/change", ToggleSystemAccessView.as_view(), name="toggle-system-access"),
-    # TODO: Change to the HomeView when there is actually some content to show there
-    path("", MembersListView.as_view(), name="home"),
     path("secrets/", SecretsView.as_view(), name="secrets"),
     path("secrets/<int:pk>/edit/", EditSecretView.as_view(), name="edit-secret"),
     path("secrets/create/", CreateSecretView.as_view(), name="create-secret"),

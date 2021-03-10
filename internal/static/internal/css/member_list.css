@@ -1,0 +1,30 @@
+.make_hidden {
+    display: none !important;
+}
+
+#member-table tbody tr,
+#member-table thead th {
+    cursor: pointer;
+}
+
+/* For when the objects eventually stack on top of each other on a mobile screen */
+#member-table .label,
+form .multiple.labeled.dropdown {
+    margin-top: 5px;
+}
+
+.right.floated.link {
+    float: right;
+}
+
+.orange.link {
+    color: orange;
+}
+
+#member-status-header {
+    float: right;
+}
+
+.member-action-buttons .button {
+    margin-top: 0.5em;
+}

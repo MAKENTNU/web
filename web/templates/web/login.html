@@ -1,6 +1,7 @@
 {% extends "web/base.html" %}
 {% load i18n %}
 
+
 {% comment %}
     This is a simple login page only intended to be used when testing locally.
     When running the page in production, we want to only use login through dataporten,
@@ -24,8 +25,13 @@
                     {{ form.password }}
                 </div>
             </div>
-            <button class="ui right floated yellow button">{% trans "Login" %}</button>
-            <a class="ui right floated red button" href="{% url "front-page" %}">{% trans "Cancel" context "abort action" %}</a>
+
+            <button class="ui right floated make-bg-yellow button">
+                {% trans "Login" %}
+            </button>
+            <a class="ui right floated red button" href="{% url "front-page" %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
         </form>
     </div>
 

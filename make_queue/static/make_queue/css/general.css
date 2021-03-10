@@ -40,6 +40,13 @@
     display: none !important;
 }
 
+/* Tables on mobile have very specific rules that use !important */
+@media only screen and (max-width: 767px) {
+    .ui.table > tbody > tr.make_hidden {
+        display: none !important;
+    }
+}
+
 .make_non_visible {
     visibility: hidden !important;
 }
@@ -53,14 +60,12 @@
     border-left: 2px solid #008000;
 }
 
-@media screen and (max-width: 800px) {
-    .make_my_reservation_desktop {
-        display: none !important;
-    }
+.make_my_reservation_tablet {
+    padding: 2em 0 2em 0;
 }
 
-.make_my_reservation_cards_padding {
-    padding: 2em 0 2em 0;
+.make_my_reservation_tablet .card {
+    flex: auto;
 }
 
 .make_my_reservation_button_pad {
@@ -83,10 +88,8 @@
     padding-bottom: 1em;
 }
 
-@media screen and (min-width: 800px) {
-    .make_my_reservation_tablet {
-        display: none !important;
-    }
+.reservation-management-buttons .button {
+    margin-top: 0.5em;
 }
 
 .machine-title {
@@ -95,8 +98,8 @@
 }
 
 .machine-title-field {
-    padding-top: 2rem;
-    padding-bottom: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
 }
 
 .action.list > .item {
@@ -137,4 +140,33 @@
 .large.middle.aligned.cogs.icon {
     font-size: 1.3em;
     padding: 0;
+}
+
+
+/* Desktop layout (quota_panel.html) */
+@media screen and (min-width: 992px) {
+    .quotas .card,
+    #user-quotas .card {
+        width: max-content; /* 10px wider than Fomantic-UI, to fit the text */
+    }
+
+    .quotas .card .content,
+    #user-quotas .card .content {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+
+@media screen and (min-width: 800px) {
+    .make_my_reservation_tablet {
+        display: none !important;
+    }
+}
+
+
+@media screen and (max-width: 800px) {
+    .make_my_reservation_desktop {
+        display: none !important;
+    }
 }

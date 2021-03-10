@@ -4,14 +4,14 @@
 {% load thumbnail %}
 {% load css_tags %}
 
+
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment.css" %}"/>
-    <script src="{% static "web/js/image-link.js" %}"></script>
+    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment_list.css" %}"/>
+    <script src="{% static "web/js/image_link.js" %}"></script>
 {% endblock head %}
 
-
 {% block body %}
-    <h1 class="ui text-centered make_col_blue header">
+    <h1 class="ui text-centered make-col-blue header">
         {% trans "Available equipment at Makerverkstedet" %}
     </h1>
     <div class="ui container">
@@ -39,7 +39,7 @@
                     <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}" alt=""/>
                     <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}" alt=""/>
                     <h2 class="equipment-title">
-                        <a class="make_col_yellow" href="{% url 'makerspace-equipment' equipment.id %}">{{ equipment.title }}</a>
+                        <a class="make-col-yellow" href="{% url 'makerspace-equipment' equipment.id %}">{{ equipment.title }}</a>
                     </h2>
                 </div>
 

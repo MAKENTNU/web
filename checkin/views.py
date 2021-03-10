@@ -10,7 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
 
-import card.utils
+from card import utils as card_utils
 from card.views import RFIDView
 from checkin.models import Profile, Skill, UserSkill, SuggestSkill, RegisterProfile
 from make_queue.models.course import Printer3DCourse
@@ -43,8 +43,10 @@ class ShowSkillsView(TemplateView):
             profile.save()
 
     def get_context_data(self, **kwargs):
-        """ Creates dict with skill titles as keys and
-         the highest corresponding skill level as its pair value (quick fix) to show on website """
+        """
+        Creates dict with skill titles as keys and
+        the highest corresponding skill level as its pair value (quick fix) to show on website
+        """
         # skill_dict = UserSkill.objects.filter(profile__on_make=True).order_by("-skill_level")
 
         skill_dict = {}
@@ -108,7 +110,6 @@ class ProfilePageView(TemplateView):
         skill_dict = {}
         for userskill in profile.userskill_set.all():
             skill = userskill.skill
-
             if skill not in skill_dict or skill.skill_level > skill_dict[skill][0]:
                 skill_dict[skill] = userskill.skill_level
 
@@ -125,8 +126,8 @@ class ProfilePageView(TemplateView):
 
 
 class SuggestSkillView(PermissionRequiredMixin, TemplateView):
+    permission_required = ('checkin.add_suggestskill',)
     template_name = "checkin/suggest_skill.html"
-    permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
         suggestion = request.POST.get('suggested-skill')
@@ -176,8 +177,8 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
 
 class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
+    permission_required = ('checkin.add_suggestskill',)
     template_name = "checkin/suggest_skill.html"
-    permission_required = 'checkin.add_suggestskill'
 
     def post(self, request):
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
@@ -202,8 +203,8 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 
 class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
+    permission_required = ('checkin.delete_suggestskill',)
     template_name = "checkin/suggest_skill.html"
-    permission_required = 'checkin.delete_suggestskill'
 
     def post(self, request):
         data = {"suggestion_deleted": False, }
@@ -237,7 +238,7 @@ class RegisterProfileView(TemplateView):
             data['scan_is_recent'] = scan_is_recent
             if scan_is_recent:
                 card_number = RegisterProfile.objects.first().card_id
-                is_duplicate = card.utils.is_duplicate(card_number, request.user.username)
+                is_duplicate = card_utils.is_duplicate(card_number, request.user.username)
                 if is_duplicate:
                     return HttpResponse(status=409)
                 request.user.card_number = card_number

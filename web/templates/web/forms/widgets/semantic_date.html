@@ -2,7 +2,8 @@
 {% load static %}
 {% load semantic_ui_calendar_extra %}
 
-<div class="ui calendar" id="{{ widget.name }}">
+
+<div id="{{ widget.name }}" class="ui calendar">
     <div class="ui input left icon">
         <i class="calendar icon"></i>
         <input type="text" placeholder="{% trans "Date" %}"
@@ -10,7 +11,8 @@
                value="{{ widget.value }}"
                 {% else %}
                value="{% set_current_date_only %}"
-                {% endif %} name="{{ widget.name }}">
+                {% endif %} name="{{ widget.name }}"
+        />
     </div>
 </div>
 

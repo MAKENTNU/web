@@ -1,0 +1,99 @@
+{% extends "internal/base.html" %}
+{% load i18n %}
+
+
+{% block body %}
+    <style>
+        .ui.checkbox.field input[type=checkbox] {
+            /* Fixes offset too far to the left set by Fomantic UI */
+            left: auto !important;
+        }
+    </style>
+    <div class="ui container">
+        <h2>{% trans "Change information for" %}: {{ form.instance.user.get_full_name }}</h2>
+        <form class="ui form" method="POST" action="">
+            {% csrf_token %}
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.email.label }}</label>
+                    {{ form.email }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.phone_number.label }}</label>
+                    {{ form.phone_number }}
+                    {% for error in form.phone_number.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error|escape }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.study_program.label }}</label>
+                    {{ form.study_program }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.card_number.label }}</label>
+                    {{ form.card_number }}
+                    {% for error in form.card_number.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error|escape }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% if perms.internal.can_edit_group_membership %}
+                <h4 class="ui horizontal divider header">
+                    <i class="ui group icon"></i>{% trans "Membership information" %}
+                </h4>
+                <div class="ui two fields">
+                    <div class="ui field">
+                        <label>{{ form.committees.label }}</label>
+                        {{ form.committees }}
+                    </div>
+                    <div class="ui field">
+                        <label>{{ form.role.label }}</label>
+                        {{ form.role }}
+                    </div>
+                </div>
+                <div class="ui field">
+                    <label>{{ form.comment.label }}</label>
+                    {{ form.comment }}
+                </div>
+                <div class="ui three fields">
+                    <div class="ui checkbox field">
+                        {{ form.guidance_exemption }}
+                        <label>{{ form.guidance_exemption.label }}</label>
+                    </div>
+                    <div class="ui checkbox field">
+                        {{ form.active }}
+                        <label>{{ form.active.label }}</label>
+                    </div>
+                    <div class="ui checkbox field">
+                        {{ form.honorary }}
+                        <label>{{ form.honorary.label }}</label>
+                    </div>
+                </div>
+            {% endif %}
+
+            <button class="ui right floated make-bg-yellow button">
+                {% trans "Save" %}
+            </button>
+            <a class="ui right floated red button" href="{% url "members" %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
+        </form>
+    </div>
+
+    <script>
+        $(".message .close").click(function () {
+            $(this)
+                .closest(".message")
+                .transition("fade");
+        });
+    </script>
+{% endblock %}

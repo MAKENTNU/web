@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from contentbox.views import DisplayContentBoxView
-from web.templatetags.permission_tags import has_any_equipment_permissions
+from util.templatetags.permission_tags import has_any_equipment_permissions
 from .forms import EquipmentForm
 from .models import Equipment
 
@@ -15,7 +15,7 @@ class MakerspaceView(DisplayContentBoxView):
 
 class EquipmentView(DetailView):
     model = Equipment
-    template_name = 'makerspace/equipment/equipment.html'
+    template_name = 'makerspace/equipment/equipment_detail.html'
     context_object_name = 'equipment'
 
 
@@ -29,7 +29,7 @@ class EquipmentListView(ListView):
 class AdminEquipmentView(PermissionRequiredMixin, ListView):
     model = Equipment
     queryset = Equipment.objects.default_order_by()
-    template_name = 'makerspace/equipment/admin_equipment.html'
+    template_name = 'makerspace/equipment/admin_equipment_list.html'
     context_object_name = 'equipment_list'
 
     def has_permission(self):
@@ -37,20 +37,20 @@ class AdminEquipmentView(PermissionRequiredMixin, ListView):
 
 
 class CreateEquipmentView(PermissionRequiredMixin, CreateView):
+    permission_required = ('makerspace.add_equipment',)
     model = Equipment
     form_class = EquipmentForm
     template_name = 'makerspace/equipment/admin_equipment_create.html'
     context_object_name = 'equipment'
-    permission_required = 'makerspace.add_equipment'
     success_url = reverse_lazy('makerspace-equipment-admin')
 
 
 class EditEquipmentView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('makerspace.change_equipment',)
     model = Equipment
     form_class = EquipmentForm
     template_name = 'makerspace/equipment/admin_equipment_edit.html'
     context_object_name = 'equipment'
-    permission_required = 'makerspace.change_equipment'
     success_url = reverse_lazy('makerspace-equipment-admin')
 
     # Delete the old image file if a new image is being uploaded:
@@ -62,9 +62,9 @@ class EditEquipmentView(PermissionRequiredMixin, UpdateView):
 
 
 class DeleteEquipmentView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('makerspace.delete_equipment',)
     model = Equipment
     success_url = reverse_lazy('makerspace-equipment-admin')
-    permission_required = 'makerspace.delete_equipment'
 
     # Delete the image file before deleting the object:
     def delete(self, request, *args, **kwargs):

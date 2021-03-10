@@ -7,6 +7,14 @@ class SemanticTimeInput(forms.TimeInput):
     template_name = "web/forms/widgets/semantic_time.html"
 
 
+class SemanticDateInput(forms.DateInput):
+    template_name = "web/forms/widgets/semantic_date.html"
+
+
+class SemanticDateTimeInput(forms.DateTimeInput):
+    template_name = "web/forms/widgets/semantic_datetime.html"
+
+
 class SemanticChoiceInput(forms.Select):
     template_name = "web/forms/widgets/semantic_select.html"
 
@@ -30,14 +38,6 @@ class SemanticMultipleSelectInput(forms.SelectMultiple):
         self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
 
 
-class SemanticDateInput(forms.DateInput):
-    template_name = "web/forms/widgets/semantic_date.html"
-
-
-class SemanticDateTimeInput(forms.DateTimeInput):
-    template_name = "web/forms/widgets/semantic_datetime.html"
-
-
 class SemanticFileInput(forms.ClearableFileInput):
     template_name = "web/forms/widgets/semantic_file.html"
 
@@ -51,7 +51,7 @@ class MazemapSearchInput(forms.TextInput):
     placeholder = _("Search places")
 
     class Media:
-        js = ('web/js/widgets/mazemap-search.js',)
+        js = ("web/js/forms/widgets/mazemap_search.js",)
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
         """
