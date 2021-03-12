@@ -37,12 +37,13 @@ class MachineType(models.Model):
     class UsageRequirement(models.TextChoices):
         IS_AUTHENTICATED = "AUTH", _("Only has to be logged in")
         TAKEN_3D_PRINTER_COURSE = "3DPR", _("Taken the 3D printer course")
+        TAKEN_ADVANCED_3D_PRINTER_COURSE = "A3DPR", _("Taken the advanced 3D printer course")
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
     usage_requirement = models.CharField(
         choices=UsageRequirement.choices,
-        max_length=4,
+        max_length=5,
         default=UsageRequirement.IS_AUTHENTICATED,
         verbose_name=_("Usage requirement"),
     )
@@ -65,6 +66,8 @@ class MachineType(models.Model):
             return user.is_authenticated
         elif self.usage_requirement == self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
             return self.can_use_3d_printer(user)
+        elif self.usage_requirement == self.UsageRequirement.TAKEN_ADVANCED_3D_PRINTER_COURSE:
+            return self.can_use_advanced_3d_printer(user)
         return False
 
     @staticmethod
@@ -78,6 +81,20 @@ class MachineType(models.Model):
             course_registration.user = user
             course_registration.save()
             return True
+        return False
+
+    @staticmethod
+    def can_use_advanced_3d_printer(user: Union[User, AnonymousUser]):
+        if not user.is_authenticated:
+            return False
+        if Printer3DCourse.objects.filter(user=user).exists():
+            course_registration = Printer3DCourse.objects.get(user=user)
+            return course_registration.advanced_course
+        if Printer3DCourse.objects.filter(username=user.username).exists():
+            course_registration = Printer3DCourse.objects.get(username=user.username)
+            course_registration.user = user
+            course_registration.save()
+            return course_registration.advanced_course
         return False
 
 

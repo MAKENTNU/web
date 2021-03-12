@@ -94,6 +94,13 @@
                 </div>
             </div>
 
+            <div class ="ui one field">
+                <div class="ui field">
+                    <label>{{ form.advanced_course.label }}</label>
+                    {{ form.advanced_course }}
+                </div>
+            </div>
+
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
