@@ -36,6 +36,7 @@ class EmailConsumer(SyncConsumer):
     def send_text(self, message):
         """
         For sending a plaintext message
+
         :param message: The message dictionary
         """
         msg = self.create_message(message)
@@ -49,6 +50,7 @@ class EmailConsumer(SyncConsumer):
     def send_html(self, message):
         """
         For sending a HTML rendered message
+
         :param message: The message dictionary
         """
         msg = self.create_message(message)

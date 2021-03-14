@@ -1,6 +1,7 @@
 {% extends "docs/base.html" %}
 {% load i18n %}
 
+
 {% block title %}{% trans "Create a New Page" %}{% endblock %}
 
 {% block body %}
@@ -19,8 +20,11 @@
                 <label>{{ form.title.label }}:</label>
                 {{ form.title }}
             </div>
-            <button class="ui right floated yellow button">{% trans "Submit" %}</button>
-            <a href="{% url "home" %}" class="ui right floated red button">
+
+            <button class="ui right floated make-bg-yellow button">
+                {% trans "Submit" %}
+            </button>
+            <a class="ui right floated red button" href="{% url "home" %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>

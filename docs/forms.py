@@ -7,25 +7,19 @@ from docs.models import Content, Page
 class CreatePageForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = (
-            "title",
-        )
+        fields = ("title",)
 
 
 class PageContentForm(forms.ModelForm):
     class Meta:
         model = Content
-        fields = (
-            "content",
-        )
+        fields = ("content",)
 
 
 class ChangePageVersionForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = (
-            "current_content",
-        )
+        fields = ("current_content",)
 
     def __init__(self, *args, **kwargs):
         super(ChangePageVersionForm, self).__init__(*args, **kwargs)

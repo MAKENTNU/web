@@ -2,9 +2,9 @@ from datetime import timedelta
 from unittest import mock
 
 import pytz
-from users.models import User
 from django.test import TestCase
 
+from users.models import User
 from make_queue.util.time import local_to_date
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation
@@ -42,9 +42,10 @@ class ReservationExtraTestCases(TestCase):
             name="U1", location="S1", machine_model="Ultimaker", machine_type=printer_machine_type, status=Machine.AVAILABLE,
         )
 
-        self.assertEqual(reverse('reservation_calendar',
-                                 kwargs={'year': 2017, 'week': 52, 'machine': printer}),
-                         current_calendar_url(printer))
+        self.assertEqual(
+            reverse('reservation_calendar', kwargs={'year': 2017, 'week': 52, 'machine': printer}),
+            current_calendar_url(printer)
+        )
 
     @mock.patch('django.utils.timezone.now')
     def test_is_current_data(self, now_mock):

@@ -23,30 +23,22 @@ class MachineView(TemplateView):
 
 
 class CreateMachineView(PermissionRequiredMixin, CreateView):
-    template_name = "make_queue/machine/machine_create.html"
+    permission_required = ('make_queue.add_machine',)
     model = Machine
     form_class = BaseMachineForm
+    template_name = "make_queue/machine/machine_create.html"
     success_url = reverse_lazy("reservation_machines_overview")
-    permission_required = (
-        'make_queue.add_machine',
-    )
 
 
 class EditMachineView(PermissionRequiredMixin, UpdateView):
-    template_name = "make_queue/machine/machine_edit.html"
+    permission_required = ('make_queue.change_machine',)
     model = Machine
     form_class = EditMachineForm
+    template_name = "make_queue/machine/machine_edit.html"
     success_url = reverse_lazy("reservation_machines_overview")
-
-    permission_required = (
-        'make_queue.change_machine',
-    )
 
 
 class DeleteMachineView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('make_queue.delete_machine',)
     model = Machine
     success_url = reverse_lazy("reservation_machines_overview")
-
-    permission_required = (
-        'make_queue.delete_machine',
-    )

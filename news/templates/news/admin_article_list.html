@@ -3,6 +3,7 @@
 {% load i18n %}
 {% load news_tags %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "news/css/admin_list.css" %}">
 {% endblock head %}
@@ -38,7 +39,7 @@
                             {% endif %}
 
                             {% if article.private %}
-                                <div class="ui yellow mini label">
+                                <div class="ui make-bg-yellow mini label">
                                     {% trans "Internal" %}
                                 </div>
                             {% endif %}
@@ -46,8 +47,8 @@
                         <div class="description">{{ article.clickbait }}</div>
                     </div>
                     <div class="ui two bottom attached buttons">
-                        <a class="ui yellow button" href="{% url "article-edit" article.id %}">
-                            <i class="ui pencil icon"></i>{% trans "Edit" %}
+                        <a class="ui make-bg-yellow button" href="{% url "article-edit" article.id %}">
+                            <i class="ui edit icon"></i>{% trans "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
                             <a class="ui red delete confirm button" href="{% url "article-delete" article.id %}">

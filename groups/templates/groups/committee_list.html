@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block body %}
     <div class="ui text container">
         <h1>
@@ -18,7 +19,7 @@
                 </a>
                 <div class="content">
                     <div class="header">
-                        <a class="make_col_blue" href="{% url 'committee_detail' committee.id %}">
+                        <a class="make-col-blue" href="{% url 'committee_detail' committee.id %}">
                             {{ committee.name|capfirst }}
                         </a>
                     </div>

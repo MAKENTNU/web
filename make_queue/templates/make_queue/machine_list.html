@@ -3,12 +3,13 @@
 {% load static %}
 {% load i18n %}
 
+
+{% block title %}{% trans "Machines" %}{% endblock %}
+
 {% block head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
 {% endblock %}
-
-{% block title %}{% trans "Machines" %}{% endblock %}
 
 {% block body %}
     <div class="ui container">
@@ -21,12 +22,14 @@
             {% endif %}
         </div>
         {% if request.user.is_authenticated %}
-            <a href="{% url 'my_reservations' %}" class="ui primary button">
-                {% trans "My reservations" %}
-            </a>
-            <a href="{% url "find_free_slot" %}" class="ui primary button">
-                {% trans "Find free reservation slots" %}
-            </a>
+            <div class="reservation-management-buttons">
+                <a class="ui primary button" href="{% url 'my_reservations' %}">
+                    {% trans "My reservations" %}
+                </a>
+                <a class="ui primary button" href="{% url "find_free_slot" %}">
+                    {% trans "Find free reservation slots" %}
+                </a>
+            </div>
         {% endif %}
 
         {% for machine_type in machine_types %}

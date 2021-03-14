@@ -20,15 +20,18 @@ class InheritanceGroup(Group):
 
     parents = models.ManyToManyField(
         'self',
-        related_name='sub_groups',
         symmetrical=False,
         blank=True,
+        related_name='sub_groups',
     )
-
     own_permissions = models.ManyToManyField(
         Permission,
         blank=True,
     )
+
+    @property
+    def inherited_permissions(self):
+        return set(self.permissions.all()) - set(self.own_permissions.all())
 
     def update_permissions(self):
         """Update the permissions of this and all sub-groups."""
@@ -41,10 +44,6 @@ class InheritanceGroup(Group):
 
         for sub in self.sub_groups.all():
             sub.update_permissions()
-
-    @property
-    def inherited_permissions(self):
-        return set(self.permissions.all()) - set(self.own_permissions.all())
 
     def get_sub_groups(self):
         """Return a queryset of all groups that inherit from this group."""
@@ -82,7 +81,7 @@ class Committee(models.Model):
     """
     A committee in the organization.
 
-    A committee gets its name and members through the:model:`groups.InheritanceGroup`
+    A committee gets its name and members through the :model:`groups.InheritanceGroup`
     given in the `group` field.
     """
 
@@ -91,18 +90,14 @@ class Committee(models.Model):
         on_delete=models.CASCADE,
         verbose_name=_('group'),
     )
+    clickbait = models.TextField(max_length=300, blank=True, verbose_name=_('Clickbait'))
     description = models.TextField(_('Description'))
     email = models.EmailField(_('Email'))
-    image = models.ImageField(_('Image'), blank=True)
-    clickbait = models.TextField(
-        max_length=300,
-        verbose_name=_('Clickbait'),
-        blank=True,
-    )
+    image = models.ImageField(blank=True, verbose_name=_('Image'))
+
+    def __str__(self):
+        return self.name
 
     @property
     def name(self):
         return self.group.name
-
-    def __str__(self):
-        return self.name

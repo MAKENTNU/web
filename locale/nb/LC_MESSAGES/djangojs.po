@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/static/internal/js/member_list.js:72
+#: internal/static/internal/js/member_list.js:87
 msgid "Change"
 msgstr "Endre"
 
@@ -25,31 +25,31 @@ msgstr "Ny reservasjon"
 msgid "Reserve"
 msgstr "Reserver"
 
-#: make_queue/static/make_queue/js/calendar.js:468
+#: make_queue/static/make_queue/js/calendar.js:466
 msgid "Reservation"
 msgstr "Reservasjon"
 
-#: make_queue/static/make_queue/js/calendar.js:469
+#: make_queue/static/make_queue/js/calendar.js:467
 msgid "Name"
 msgstr "Navn"
 
-#: make_queue/static/make_queue/js/calendar.js:470
+#: make_queue/static/make_queue/js/calendar.js:468
 msgid "Email"
 msgstr "E-post"
 
-#: make_queue/static/make_queue/js/calendar.js:471
+#: make_queue/static/make_queue/js/calendar.js:469
 msgid "Time"
 msgstr "Tidspunkt"
 
-#: make_queue/static/make_queue/js/calendar.js:475
+#: make_queue/static/make_queue/js/calendar.js:473
 msgid "Comment"
 msgstr "Kommentar"
 
-#: make_queue/static/make_queue/js/reservation_edit.js:278
+#: make_queue/static/make_queue/js/reservation_edit.js:284
 msgid "Choose time"
 msgstr "Velg tid"
 
-#: news/static/news/js/email_copy.js:21
+#: news/static/news/js/email_copy.js:22
 msgid "Successfully copied to clipboard!"
 msgstr "Kopiert til utklippstavlen"
 

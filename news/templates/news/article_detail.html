@@ -15,7 +15,7 @@
 {% endblock head %}
 
 {% block body %}
-    <div class="article{% block event_classes %}{% endblock event_classes %}">
+    <div class="article {% block event_classes %}{% endblock event_classes %}">
         <div id="sticky" class="ui text container basic segment">
             {% thumbnail article.image "800" crop="center" as im %}
                 <img src="{{ im.url }}" {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
@@ -28,7 +28,7 @@
             {% block admin-page %}
                 {% if perms.news.change_article %}
                     <div>
-                        <a href="{% url "admin-articles" %}" class="ui yellow button">
+                        <a class="ui make-bg-yellow button" href="{% url "admin-articles" %}">
                             <i class="ui sticky note icon"></i>{% trans "Admin page" %}
                         </a>
                     </div>

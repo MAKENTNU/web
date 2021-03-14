@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block title %}{% trans "Edit time" %}{% endblock title %}
 
 {% block head %}
@@ -53,7 +54,7 @@
         <div class="field">
             <label>{% trans "Publishing" %}
                 <span data-content="{% trans "The occurrence will not be shown before this date" %}">
-                    <i class="ui yellow question circle icon"></i>
+                    <i class="ui make-col-yellow question circle icon"></i>
                 </span>
             </label>
             {{ form.publication_time }}
@@ -64,13 +65,14 @@
                 {{ form.hidden }}
                 <label>{{ form.hidden.label }}
                     <span data-content="{% trans "If selected, the occurrence will be hidden, even after the publication date" %}">
-                        <i class="ui yellow question circle icon"></i>
+                        <i class="ui make-col-yellow question circle icon"></i>
                     </span>
                 </label>
             </div>
         </div>
-        <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
-        <a href="{% url "admin-event" form.event.initial %}" class="ui red right floated button">
+
+        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
+        <a class="ui right floated red button" href="{% url "admin-event" form.event.initial %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
