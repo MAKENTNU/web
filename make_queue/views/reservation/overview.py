@@ -13,5 +13,6 @@ class MyReservationsView(TemplateView):
 
         :return: A list of the user's reservations
         """
-        return {"reservations": Reservation.objects.filter(user=self.request.user, event=None, special=False).order_by(
-            "-end_time", "-start_time")}
+        return {
+            "reservations": Reservation.objects.filter(user=self.request.user, event=None, special=False).order_by("-end_time", "-start_time"),
+        }

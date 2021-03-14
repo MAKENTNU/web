@@ -15,17 +15,22 @@ class Printer3DCourse(models.Model):
         ("access", _("Access granted")),
     )
 
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        null=True,
+        verbose_name=_("User"),
+    )
+    username = UsernameField(max_length=32, unique=True, verbose_name=_("Username"))
+    date = models.DateField(verbose_name=_("Course date"))
+    _card_number = CardNumberField(null=True, unique=True)  # Card number backing field. Use card_number property instead
+    name = models.CharField(max_length=256, verbose_name=_("Full name"))
+    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default="registered", verbose_name=_("Status"))
+
     class Meta:
         constraints = (
             CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
         )
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, verbose_name=_("User"))
-    username = UsernameField(max_length=32, verbose_name=_("Username"), unique=True)
-    date = models.DateField(verbose_name=_("Course date"))
-    _card_number = CardNumberField(unique=True, null=True)  # Card number backing field. Use card_number property instead
-    name = models.CharField(max_length=256, verbose_name=_("Full name"))
-    status = models.CharField(choices=STATUS_CHOICES, default="registered", max_length=20, verbose_name=_("Status"))
 
     @property
     def card_number(self):

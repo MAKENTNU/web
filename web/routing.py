@@ -5,6 +5,7 @@ from django.urls import path
 from mail.email import EmailConsumer
 from make_queue.views.stream.stream import StreamConsumer
 
+
 websocket_urlpatterns = [
     path('ws/stream/<str:stream_name>/', StreamConsumer),
 ]

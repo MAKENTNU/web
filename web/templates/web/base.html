@@ -2,13 +2,14 @@
 {% load i18n %}
 {% load uri_tags %}
 
+
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=0.8"/>
+    <meta name="viewport" content="width=device-width"/>
     <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
     <meta property="og:site_name" content="MAKE NTNU"/>
     <meta property="og:image"
@@ -22,7 +23,7 @@
     <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
     <meta name="theme-color" content="rgb(248, 200, 17)"/>
 
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700"/>
     <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
     <link rel="stylesheet" type="text/css" href="{% static "lib/fomantic-ui/semantic.min.css" %}"/>
     <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
@@ -34,44 +35,46 @@
     {% block head %}{% endblock head %}
 </head>
 <body>
-    <div class="wrapper">
-        <div class="content">
-            {% block header %}
-                {% include "web/header.html" %}
-            {% endblock header %}
 
-            {% block padding-top %}
-                <div class="make_content_padding"></div>
-            {% endblock %}
+<div class="wrapper">
+    <div class="content">
+        {% block header %}
+            {% include "web/header.html" %}
+        {% endblock header %}
 
-            <main id="main">
-                {% block body %}
-                {% endblock body %}
-            </main>
-
-            {% block padding-bottom %}
-                <div class="make_content_padding"></div>
-            {% endblock padding-bottom %}
-        </div>
-
-        {% include "web/delete_modal.html" %}
-        {% block footer %}
-            {% include "web/footer.html" %}
+        {% block padding-top %}
+            <div class="make_content_padding"></div>
         {% endblock %}
+
+        <main id="main">
+            {% block body %}
+            {% endblock body %}
+        </main>
+
+        {% block padding-bottom %}
+            <div class="make_content_padding"></div>
+        {% endblock padding-bottom %}
     </div>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
+    {% include "web/delete_modal.html" %}
+    {% block footer %}
+        {% include "web/footer.html" %}
+    {% endblock %}
+</div>
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
 
-        gtag('js', new Date());
-        gtag('config', 'UA-113882146-1');
-    </script>
-    {% block scripts %}
-    {% endblock scripts %}
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'UA-113882146-1');
+</script>
+{% block scripts %}
+{% endblock scripts %}
+
 </body>
 </html>

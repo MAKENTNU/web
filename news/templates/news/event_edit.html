@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block title %}{% trans "Edit event" %}{% endblock title %}
 
 {% block head %}
@@ -23,7 +24,7 @@
         <div class="field">
             <label>{{ form.content.label }}
                 <span data-content="{% trans "The main description of the event" %}">
-                    <i class="ui yellow question circle icon"></i>
+                    <i class="ui make-col-yellow question circle icon"></i>
                 </span>
             </label>
             {{ form.content }}
@@ -31,7 +32,7 @@
         <div class="field">
             <label>{{ form.clickbait.label }}
                 <span data-content="{% trans "A short text designed to bait users into clicking the event" %}">
-                    <i class="ui yellow question circle icon"></i>
+                    <i class="ui make-col-yellow question circle icon"></i>
                 </span>
             </label>
             {{ form.clickbait }}
@@ -46,7 +47,7 @@
                                    {% if form.event_type.value == Event.REPEATING %}checked{% endif %}>
                             <label for="repeating">{% trans "Repeating" %}
                                 <span data-content="{% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}">
-                                    <i class="ui yellow question circle icon"></i>
+                                    <i class="ui make-col-yellow question circle icon"></i>
                                 </span>
                             </label>
                         </div>
@@ -58,7 +59,7 @@
                                    {% if form.event_type.value == Event.STANDALONE %}checked{% endif %}>
                             <label for="standalone">{% trans "Standalone" %}
                                 <span data-content="{% trans "Used for events that happen once, e.g. a weekend-long happening. All occurrences of the event will have a common registration." %}">
-                                    <i class="ui yellow question circle icon"></i>
+                                    <i class="ui make-col-yellow question circle icon"></i>
                                 </span>
                             </label>
                         </div>
@@ -93,7 +94,7 @@
                     {{ form.featured }}
                     <label>{{ form.featured.label }}
                         <span data-content="{% trans "If selected, the event may be shown on the front page." %}">
-                            <i class="ui yellow question circle icon"></i>
+                            <i class="ui make-col-yellow question circle icon"></i>
                         </span>
                     </label>
                 </div>
@@ -103,7 +104,7 @@
                     {{ form.hidden }}
                     <label>{{ form.hidden.label }}
                         <span data-content="{% trans "If selected, the event will only be visible to admin users." %}">
-                            <i class="ui yellow question circle icon"></i>
+                            <i class="ui make-col-yellow question circle icon"></i>
                         </span>
                     </label>
                 </div>
@@ -113,14 +114,17 @@
                     {{ form.private }}
                     <label>{{ form.private.label }}
                         <span data-content="{% trans "If selected, the event will only be visible to members of MAKE NTNU" %}">
-                            <i class="ui yellow question circle icon"></i>
+                            <i class="ui make-col-yellow question circle icon"></i>
                         </span>
                     </label>
                 </div>
             </div>
         </div>
-        <input class="ui yellow right floated submit button" type="submit" value="{% trans "Save" %}">
-        <a href="{% block cancel-url %}{% url "admin-event" form.instance.id %}{% endblock %}" class="ui red right floated button">
+
+        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
+        <a class="ui right floated red button"
+           href="{% block cancel-url %}{% url "admin-event" form.instance.id %}{% endblock %}"
+        >
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>

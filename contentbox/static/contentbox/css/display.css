@@ -1,12 +1,12 @@
 .contentbox {
     position: relative;
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .contentbox .edit.button {
     position: absolute;
-    top: -50px;
+    top: -3rem;
     left: 0;
 }
 

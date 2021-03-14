@@ -2,6 +2,7 @@
 {% load reservation_extra %}
 {% load static %}
 
+
 <link rel="stylesheet" href="{% static "make_queue/css/calendar.css" %}">
 <script src="{% static "web/js/date_utils.js" %}"></script>
 <script src="{% static "make_queue/js/calendar.js" %}"></script>
@@ -11,18 +12,19 @@
 {% csrf_token %}
 
 <div class="reservation_calendar">
+
     <div class="ui top attached buttons">
-        <div class="ui make_yellow labeled icon previous button">
+        <div class="ui make-bg-yellow labeled icon previous button">
             <i class="left chevron icon"></i>
             {% trans "Previous" %}
         </div>
 
-        <div class="ui make_yellow bordered current button">
+        <div class="ui make-bg-yellow bordered current button">
             <i class="calendar icon"></i>
             {% trans "Today" %}
         </div>
 
-        <div class="ui make_yellow right labeled icon next button">
+        <div class="ui make-bg-yellow right labeled icon next button">
             <i class="right chevron icon"></i>
             {% trans "Next" %}
         </div>

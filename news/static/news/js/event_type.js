@@ -15,5 +15,4 @@ $(function () {
     $('input[type=radio][name=event_type]').change(function () {
         update_event_type();
     });
-
 });

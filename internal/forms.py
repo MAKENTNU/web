@@ -32,7 +32,6 @@ class EditMemberForm(ModelForm):
         model = Member
         fields = "__all__"
         exclude = ["user", "date_joined", "date_quit", "quit", "reason_quit", "retired"]
-
         widgets = {
             "comment": TextInput(),
             "committees": SemanticMultipleSelectInput(prompt_text=_("Choose committees")),
@@ -62,7 +61,6 @@ class MemberQuitForm(ModelForm):
     class Meta:
         model = Member
         fields = ["date_quit", "reason_quit"]
-
         widgets = {
             "date_quit": SemanticDateInput(),
             "reason_quit": TextInput(),
@@ -73,7 +71,6 @@ class ToggleSystemAccessForm(ModelForm):
     class Meta:
         model = SystemAccess
         fields = "__all__"
-
         widgets = {
             "name": SemanticSearchableChoiceInput(),
             "member": SemanticSearchableChoiceInput(),

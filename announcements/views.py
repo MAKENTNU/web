@@ -7,37 +7,29 @@ from announcements.models import Announcement
 
 
 class AnnouncementAdminView(PermissionRequiredMixin, ListView):
+    permission_required = ("announcements.change_announcement",)
     model = Announcement
     template_name = "announcements/announcement_admin.html"
     context_object_name = "announcements"
-    permission_required = (
-        "announcements.change_announcement",
-    )
 
 
 class CreateAnnouncementView(PermissionRequiredMixin, CreateView):
+    permission_required = ("announcements.add_announcement",)
     model = Announcement,
-    template_name = "announcements/announcement_create.html"
     form_class = AnnouncementForm
-    permission_required = (
-        "announcements.add_announcement",
-    )
+    template_name = "announcements/announcement_create.html"
     success_url = reverse_lazy("announcement_admin")
 
 
 class EditAnnouncementView(PermissionRequiredMixin, UpdateView):
+    permission_required = ("announcements.change_announcement",)
     model = Announcement
-    template_name = "announcements/announcement_edit.html"
     form_class = AnnouncementForm
-    permission_required = (
-        "announcements.change_announcement",
-    )
+    template_name = "announcements/announcement_edit.html"
     success_url = reverse_lazy("announcement_admin")
 
 
 class DeleteAnnouncementView(PermissionRequiredMixin, DeleteView):
+    permission_required = ("announcements.delete_announcement",)
     model = Announcement
-    permission_required = (
-        "announcements.delete_announcement",
-    )
     success_url = reverse_lazy("announcement_admin")

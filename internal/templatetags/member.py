@@ -8,6 +8,7 @@ register = template.Library()
 def get_membership_statuses(member):
     """
     Returns a list of tuples (Membership status, Display color) of the statuses of the membership of the given member
+
     :param member: The member to retrieve statuses for
     :return: A list of one or two tuples (two if honorary member)
     """
@@ -22,7 +23,7 @@ def get_membership_statuses(member):
         statuses += [(_("Active"), "green")]
 
     if member.honorary:
-        statuses += [(_("Honorary"), "yellow")]
+        statuses += [(_("Honorary"), "make-bg-yellow")]
 
     return statuses
 
@@ -31,6 +32,7 @@ def get_membership_statuses(member):
 def get_system_accesses(member, user):
     """
     Returns a list of tuples (Name of system, Has access) of the systems the member could have access to
+
     :param member: The member to check accesses for
     :return: A list of system accesses with their state
     """
@@ -46,6 +48,7 @@ def get_system_accesses(member, user):
 def get_committees(member):
     """
     Returns a list of tuples (Committee name, Display color) of the committees the given member is a part of
+
     :param member: The member to find committees for
     :return: A list of committees with display color
     """
@@ -53,7 +56,7 @@ def get_committees(member):
         "Dev": "green",
         "Mentor": "red",
         "Event": "blue",
-        "PR": "yellow",
+        "PR": "make-bg-yellow",
         "Styret": "purple",
     }
     return sorted([(committee.name, colors[committee.name]) for committee in member.committees.all()]) or ""

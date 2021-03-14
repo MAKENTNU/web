@@ -1,6 +1,6 @@
-from users.models import User
 from django.test import TestCase
 
+from users.models import User
 from ...models.models import MachineType, Quota
 from ...tests.utility import template_view_get_context_data
 from ...views.admin.quota import QuotaView

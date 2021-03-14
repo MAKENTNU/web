@@ -3,12 +3,13 @@
 {% load i18n %}
 {% load thumbnail %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
 {% endblock head %}
 
 {% block body %}
-    <h1 class="ui text-centered make_col_blue header">
+    <h1 class="ui text-centered make-col-blue header">
         {% trans "Upcoming events" %}
     </h1>
     {% if future %}
@@ -16,7 +17,7 @@
             {% for event in future %}
                 <div class="item">
                     <div class="ui small image">
-                        <p class="ui yellow make_bg_yellow ribbon label">
+                        <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event.first_occurrence.start_time|date:"d M" }}
                             {% if event.number_of_occurrences > 1 %}
                                 <br><span>+{{ event.number_of_occurrences|add:-1 }} {% if event.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
@@ -25,7 +26,8 @@
 
                         {% thumbnail event.event.image "300" crop="center" as im %}
                             <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            />
                         {% endthumbnail %}
                     </div>
 
@@ -34,7 +36,13 @@
                             <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
-                            <span>{{ event.first_occurrence.place }}</span>
+                            {% if event.first_occurrence.place_url %}
+                                <a class="make-col-blue" href="{{ event.first_occurrence.place_url }}" target="_blank">
+                                    {{ event.first_occurrence.place }}
+                                </a>
+                            {% else %}
+                                {{ event.first_occurrence.place }}
+                            {% endif %}
                         </div>
                         <div class="description">
                             <p>{{ event.event.clickbait }}</p>
@@ -50,7 +58,7 @@
     {% endif %}
 
 
-    <h1 class="ui text-centered make_col_blue header">
+    <h1 class="ui text-centered make-col-blue header">
         {% trans "Previous events" %}
     </h1>
     {% if past %}
@@ -58,7 +66,7 @@
             {% for event in past %}
                 <div class="item">
                     <div class="ui small image">
-                        <p class="ui yellow make_bg_yellow ribbon label">
+                        <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event.last_occurrence.start_time|date:"d M Y" }}
                             {% if event.number_of_occurrences > 1 %}
                                 <br><span>+{{ event.number_of_occurrences|add:-1 }} {% if event.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
@@ -66,7 +74,8 @@
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
                             <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            />
                         {% endthumbnail %}
                     </div>
 
@@ -76,6 +85,13 @@
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
+                            {% if event.place_url %}
+                                <a class="make-col-blue" href="{{ event.place_url }}" target="_blank">
+                                    {{ event.place }}
+                                </a>
+                            {% else %}
+                                {{ event.place }}
+                            {% endif %}
                         </div>
                         <div class="description">
                             <p>{{ event.event.clickbait }}</p>

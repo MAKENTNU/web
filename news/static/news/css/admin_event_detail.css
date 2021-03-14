@@ -3,3 +3,8 @@
     margin-bottom: -4px;
     margin-right: 0.3em;
 }
+
+.admin-actions {
+    display: inline-block !important; /* Overrides Fomantic-UI */
+    margin: 0 !important; /* Overrides Fomantic-UI */
+}

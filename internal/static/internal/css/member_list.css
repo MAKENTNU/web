@@ -38,3 +38,7 @@
 #member-status-header {
     float: right;
 }
+
+.member-action-buttons .button {
+    margin-top: 0.5em;
+}

@@ -12,11 +12,11 @@ class ContentBox(models.Model):
     )
     content = MultiLingualRichTextUploadingField()
 
-    def __str__(self):
-        return self.title
-
     class Meta:
         permissions = (
             ("can_upload_image", "Can upload images in CKEditor"),
             ("can_browse_image", "Can browse images in CKEditor"),
         )
+
+    def __str__(self):
+        return self.title

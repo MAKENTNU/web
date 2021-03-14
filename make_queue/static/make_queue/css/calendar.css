@@ -1,3 +1,8 @@
+.make-bg-yellow.button.bordered {
+    border-left: 1px solid rgb(162, 130, 12);
+    border-right: 1px solid rgb(162, 130, 12);
+}
+
 .reservation_calendar .header {
     text-align: center;
 }
@@ -74,13 +79,13 @@ tr.wrapping {
 }
 
 .own.reservation {
-    background-color: #F8C811;
+    background-color: var(--make-yellow);
     border-top: 1px solid #D7AB0F;
     border-bottom: 1px solid #D7AB0F;
 }
 
 .make.reservation {
-    background-color: #DCDDDE;
+    background-color: var(--make-light-grey);
     border-top: 1px solid #BABBBC;
     border-bottom: 1px solid #BABBBC;
 }
@@ -103,7 +108,7 @@ tr.wrapping {
     padding-right: 0.5em;
 }
 
-.time.selection {
+.selection.time {
     font-size: 0.8em;
     position: absolute;
     background-color: #ffffff;
@@ -118,12 +123,12 @@ tr.wrapping {
     -ms-user-select: none;
 }
 
-.start.time.selection {
+.selection.start.time {
     left: 0;
     top: -0.7em;
 }
 
-.end.time.selection {
+.selection.end.time {
     right: 0;
     bottom: -0.7em;
 }
@@ -152,6 +157,18 @@ tr.wrapping {
     bottom: 0;
 }
 
+.time-selection.popup {
+    width: 33vw;
+    padding: 0;
+    border: none;
+}
+
+.new-reservation-popup.card {
+    width: 50vw;
+    max-width: 290px; /* Same as Fomantic-UI's `width` on `.card` */
+}
+
+
 @media screen and (max-width: 600px) {
     .legend {
         display: grid;
@@ -170,8 +187,4 @@ tr.wrapping {
     .reservation_calendar thead th:first-child {
         display: none;
     }
-}
-
-.default.reservation.popup {
-    padding: 0;
 }

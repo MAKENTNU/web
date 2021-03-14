@@ -11,21 +11,20 @@ from docs.views import DocumentationPageView, EditDocumentationPageView, DeleteD
     HistoryDocumentationPageView, OldDocumentationPageContentView, CreateDocumentationPageView, SearchPagesView, \
     ChangeDocumentationPageVersionView
 
+
 register_converter(converters.PageByTitle, "page")
 register_converter(converters.ContentByPk, "content")
 
 unsafe_urlpatterns = [
+    path("", DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Documentation")[0].pk}, name="home"),
     path("page/<page:pk>/", DocumentationPageView.as_view(), name="page"),
     path("page/<page:pk>/history/", HistoryDocumentationPageView.as_view(), name="page-history"),
     path("page/<page:pk>/history/change/", ChangeDocumentationPageVersionView.as_view(), name="change-page-version"),
-    path("page/<page:pk>/history/<content:content>/", OldDocumentationPageContentView.as_view(),
-         name="old-page-content"),
+    path("page/<page:pk>/history/<content:content>/", OldDocumentationPageContentView.as_view(), name="old-page-content"),
     path("page/new/create/", CreateDocumentationPageView.as_view(), name="create-page"),
     path("page/<page:pk>/edit/", EditDocumentationPageView.as_view(), name="edit-page"),
     path("page/<page:pk>/delete/", DeleteDocumentationPageView.as_view(), name="delete-page"),
     path("search/", SearchPagesView.as_view(), name="search-pages"),
-    path("", DocumentationPageView.as_view(), {"pk": Page.objects.get_or_create(title="Documentation")[0].pk},
-         name="home"),
 ]
 
 urlpatterns = [

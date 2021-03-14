@@ -288,14 +288,15 @@ class ViewTestCase(TestCase):
         )
 
     def assert_context_ticket_emails(self, url_name, event, username_and_ticket_state_tuples, expected_context_ticket_emails):
-        """Asserts that the `ticket_emails` in context at ``url_name`` equals ``expected_context_ticket_emails``
-        
+        """
+        Asserts that the `ticket_emails` in context at ``url_name`` equals ``expected_context_ticket_emails``
+
         :param url_name: Name of URL
         :param event: Event or TimePlace that the tickets belong to
         :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
         :param expected_context_ticket_emails: The expected string of comma separated ticket emails
 
-        :return: Boolean based on `context['ticket_emails']` is `expected_context_ticket_emails` and status code is 200 
+        :return: Boolean based on `context['ticket_emails']` is `expected_context_ticket_emails` and status code is 200
         """
 
         tickets = self.create_tickets_for(
@@ -303,15 +304,15 @@ class ViewTestCase(TestCase):
             username_and_ticket_state_tuples=username_and_ticket_state_tuples
         )
         self.add_permission("change_event")
-        
+
         response = self.client.get(reverse(url_name, args=[event.pk]))
-        
         self.assertEqual(response.status_code, 200)
         self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
 
     @staticmethod
     def create_tickets_for(event, username_and_ticket_state_tuples):
-        """Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
+        """
+        Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
 
         :param event: Event or TimePlace model that the ticket belongs to
         :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
@@ -331,6 +332,7 @@ class ViewTestCase(TestCase):
                 )
             )
         return tickets
+
 
 class HiddenPrivateTestCase(TestCase):
 
@@ -420,4 +422,3 @@ class HiddenPrivateTestCase(TestCase):
         self.add_permission('change_article')
         response = self.client.get(reverse('article', kwargs={'pk': self.article.pk}))
         self.assertEqual(response.status_code, 200)
-

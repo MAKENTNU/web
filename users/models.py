@@ -8,7 +8,7 @@ from card.modelfields import CardNumberField
 class User(AbstractUser):
     ldap_full_name = models.CharField(max_length=150, blank=True, verbose_name=_('Full name from LDAP'))
 
-    card_number = CardNumberField(unique=True, null=True, blank=True)
+    card_number = CardNumberField(null=True, blank=True, unique=True)
 
     def get_short_full_name(self):
         """
@@ -22,3 +22,4 @@ class User(AbstractUser):
         if len(names) <= 2:
             return self.get_full_name()
         return f"{names[0]} {names[-1]}"
+
