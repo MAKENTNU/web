@@ -91,7 +91,7 @@
                 <th data-column-name="cardNumber">{% trans "Card number" %}</th>
                 <th data-column-name="date">{% trans "Date" %}</th>
                 <th data-column-name="status">{% trans "Status" %}</th>
-                <th data-column-name="advancedCourse">{% trans "Advanced course" %}</th>
+                <th data-column-name="advancedCourse">{% trans "Advanced 3D-printing course?" %}</th>
             </tr>
             </thead>
             <tbody>
@@ -131,7 +131,12 @@
                     <td class="{% if registration.status != "access" %}warning{% endif %}">
                         {{ registration.get_status_display }}
                     </td>
-                    <td>{{ registration.advanced_course }}</td>
+                    <td>{% if registration.advanced_course %}
+                        {% trans "Yes" %}
+                        {% else %}
+                        {% trans "No" %}
+                        {% endif %}
+                    </td>
                 </tr>
 
             {% endfor %}
