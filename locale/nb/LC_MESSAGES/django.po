@@ -147,8 +147,7 @@ msgstr "Rediger kunngjøring"
 msgid "Card number"
 msgstr "Kortnummer"
 
-#: card/formfields.py:29
-#: card/templates/card/widgets/card_number_input.html:11
+#: card/formfields.py:29 card/templates/card/widgets/card_number_input.html:11
 msgid "Card number must be between seven and ten digits long."
 msgstr "Kortnummeret må være mellom syv og ti siffer langt."
 
@@ -231,8 +230,7 @@ msgstr "Kontakt"
 msgid "to fix the problem."
 msgstr "for å fikse problemet."
 
-#: checkin/templates/checkin/profile.html:151
-#: make_queue/models/course.py:13
+#: checkin/templates/checkin/profile.html:151 make_queue/models/course.py:13
 msgid "Registered"
 msgstr "Registrert"
 
@@ -614,8 +612,8 @@ msgid "Reason quit"
 msgstr "Sluttårsak"
 
 #: internal/models.py:35 internal/templates/internal/member_list.html:259
-#: make_queue/templates/make_queue/reservation_edit.html:98
-#: news/models.py:203 news/templates/news/admin_event_ticket_list.html:59
+#: make_queue/templates/make_queue/reservation_edit.html:98 news/models.py:203
+#: news/templates/news/admin_event_ticket_list.html:59
 msgid "Comment"
 msgstr "Kommentar"
 
@@ -691,8 +689,7 @@ msgstr "Hemmeligheter"
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:47
-#: web/templates/web/header.html:106
+#: internal/templates/internal/header.html:47 web/templates/web/header.html:106
 msgid "Logout"
 msgstr "Logg ut"
 
@@ -876,16 +873,14 @@ msgstr ""
 "Medlemmet's \"pang\" status ble ikke gjort om siden medlemmet ikke hadde "
 "status \"pang\""
 
-#: make_queue/admin.py:22
-#: make_queue/templates/make_queue/machine_list.html:7
+#: make_queue/admin.py:22 make_queue/templates/make_queue/machine_list.html:7
 #: make_queue/templates/make_queue/machine_list.html:17
 #: make_queue/templates/make_queue/reservation_list.html:31
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/admin.py:41 make_queue/models/models.py:125
-#: make_queue/templates/make_queue/machine_detail.html:35
-#: news/models.py:150
+#: make_queue/admin.py:41 make_queue/models/models.py:108
+#: make_queue/templates/make_queue/machine_detail.html:35 news/models.py:150
 msgid "Location"
 msgstr "Sted"
 
@@ -1016,15 +1011,13 @@ msgstr "Ignorerer regler"
 
 #: make_queue/models/models.py:405
 #: make_queue/templates/make_queue/reservation_edit.html:73
-#: make_queue/templates/make_queue/reservation_edit.html:77
-#: news/models.py:148
+#: make_queue/templates/make_queue/reservation_edit.html:77 news/models.py:148
 msgid "Start time"
 msgstr "Start-tidspunkt"
 
 #: make_queue/models/models.py:406
 #: make_queue/templates/make_queue/reservation_edit.html:85
-#: make_queue/templates/make_queue/reservation_edit.html:89
-#: news/models.py:149
+#: make_queue/templates/make_queue/reservation_edit.html:89 news/models.py:149
 msgid "End time"
 msgstr "Slutt-tidspunkt"
 
@@ -1175,30 +1168,37 @@ msgid "Advanced 3D-printing course?"
 msgstr "Avansert 3D-printerkurs?"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:115
+#: make_queue/templates/make_queue/course/course_registration_list.html:113
 msgid "Connected to user"
 msgstr "Koblet til bruker"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:161
+#: make_queue/templates/make_queue/course/course_registration_list.html:153
 msgid "Displaying"
 msgstr "Viser"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:165
+#: make_queue/templates/make_queue/course/course_registration_list.html:157
 msgid "registrations"
 msgstr "registreringer"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:173
+#: make_queue/templates/make_queue/course/course_registration_list.html:165
 msgid "Set status of users to"
 msgstr "Sett status for brukere til"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:182
+#: make_queue/templates/make_queue/course/course_registration_list.html:174
 msgid "You are changing the status for the following users"
 msgstr "Du vil endre status for følgende brukere"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:184
+#: make_queue/templates/make_queue/course/course_registration_list.html:176
 msgid "Are you sure you want to do this?"
 msgstr "Er du sikker på at du vil gjøre dette?"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:189
+#: make_queue/templates/make_queue/course/course_registration_list.html:181
 msgid "Set status"
 msgstr "Sett status"
 
@@ -1350,8 +1350,7 @@ msgid "Select machine"
 msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/reservation_edit.html:111
-#: make_queue/templates/make_queue/reservation_edit.html:124
-#: news/models.py:197
+#: make_queue/templates/make_queue/reservation_edit.html:124 news/models.py:197
 msgid "Event"
 msgstr "Arrangement"
 
@@ -2012,8 +2011,7 @@ msgstr "Utsolgt"
 msgid "No registration"
 msgstr "Ingen påmelding"
 
-#: news/templates/news/event_edit.html:6
-#: news/templates/news/event_edit.html:16
+#: news/templates/news/event_edit.html:6 news/templates/news/event_edit.html:16
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
@@ -2325,6 +2323,10 @@ msgstr "Se gammelt bilde"
 msgid "An image is required"
 msgstr "Et bilde er krevd"
 
+#: web/templates/web/forms/widgets/semantic_file.html:18
+msgid "The image is too big"
+msgstr "Bildet er for stort"
+
 #: web/templates/web/header.html:44
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
@@ -2353,10 +2355,10 @@ msgstr "Internsider"
 msgid "Login"
 msgstr "Logg inn"
 
-#: web/widgets.py:24 web/widgets.py:34
+#: web/widgets.py:26 web/widgets.py:36
 msgid "Choose value"
 msgstr "Velg verdi"
 
-#: web/widgets.py:51
+#: web/widgets.py:60
 msgid "Search places"
 msgstr "Søk etter steder"

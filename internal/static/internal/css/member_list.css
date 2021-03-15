@@ -8,9 +8,23 @@
 }
 
 /* For when the objects eventually stack on top of each other on a mobile screen */
-#member-table .label,
-form .multiple.labeled.dropdown {
-    margin-top: 5px;
+@media only screen and (max-width: 767px) {
+    #member-table .label,
+    form .multiple.labeled.dropdown {
+        margin-top: 5px;
+        margin-left: 0.5em;
+    }
+}
+
+/* Allows for some right aligned elements in the filter fields flexbox */
+#filter-fields::after {
+    content: '';
+    flex-grow: 1;
+    order: 0;
+}
+
+#membership-field, #committee-field {
+    order: 1;
 }
 
 .right.floated.link {
