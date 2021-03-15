@@ -24,8 +24,13 @@
         </h1>
 
         <form class="ui form">
-            <div class="ui fields">
-                <div class="ui multiple blue labeled compact button icon dropdown">
+            <div class="ui fields" id="filter-fields">
+                <div class="ui six wide field">
+                    <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
+                           name="search-text">
+                </div>
+
+                <div class="ui multiple blue labeled compact button icon dropdown" id="membership-field">
                     <input type="hidden" name="filter-status">
                     <i class="ui filter icon"></i>
                     <span class="ui text">{% trans "Filter membership status" %}</span>
@@ -49,7 +54,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="ui multiple blue labeled compact button icon dropdown">
+                <div class="ui multiple blue labeled compact button icon dropdown" id="committee-field">
                     <input type="hidden" name="filter-committee">
                     <i class="ui filter icon"></i>
                     <span class="ui text">{% trans "Filter committees" %}</span>
@@ -73,6 +78,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </form>
         <table id="member-table" class="ui celled unstackable selectable striped table">
@@ -101,7 +107,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="member-table-content">
             {% for member in object_list %}
                 {% get_committees member as committees %}
                 {% get_membership_statuses member as membership_status %}
@@ -128,7 +134,7 @@
                     data-retire="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}{% url "member-retire" member.pk %}{% endif %}"
                     data-undo-retire="{% if member.retired and perms.internal.can_edit_group_membership %}{% url "member-undo-retire" member.pk %}{% endif %}"
                 >
-                    <td>{{ member.user.get_full_name }}</td>
+                    <td>{{ member.user.get_short_full_name }}</td>
                     <td>
                         {% for committee_name, color in committees %}
                             <div class="ui {{ color }} label">{{ committee_name }}</div>

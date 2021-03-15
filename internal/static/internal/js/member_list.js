@@ -5,6 +5,7 @@ let state = {
     members: [],
     statusFilter: [],
     committeeFilter: [],
+    searchValue: "",
     sortBy: "committees",
     sortDirection: -1,
     sortElement: $("#member-sort-committees"),
@@ -108,6 +109,13 @@ function filterAllows(filterValues, toMatch) {
     return filterValues.isEmpty() || filterValues.some(value => toMatch.includes(value));
 }
 
+function searchAllows(searchValue, toMatch) {
+    /**
+     * Checks if the search value is empty or if there is at least one match on the value
+     */
+    return searchValue.isEmpty() || toMatch.includes(searchValue);
+}
+
 function getFilterValues(field) {
     /**
      * Creates a list of values that the given filter field is set to
@@ -120,10 +128,20 @@ function filter() {
     /**
      * Filters the displayed rows based on the given state
      */
+    let filters = [
+        (member) => filterAllows(state.statusFilter, member.data.status.map(status => status.name)),
+        (member) => filterAllows(state.committeeFilter, member.data.committees.map(committee => committee.name)),
+        (member) => searchAllows(state.searchValue, member.data.name.toLowerCase()),
+    ]
+
+    let table = $("#member-table-content");
+
     $.each(state.members, (index, member) => {
-        let shouldShow = filterAllows(state.statusFilter, member.data.status.map(status => status.name))
-            && filterAllows(state.committeeFilter, member.data.committees.map(committee => committee.name));
-        member.element.toggleClass("make_hidden", !shouldShow);
+        member.element.remove();
+        if(filters.every(el => el(member))) {
+            table.append(member.element);
+            member.element.click(() => showDetailedMemberInformation(member));
+        }
     });
 }
 
@@ -175,6 +193,13 @@ function setup() {
         filter();
     });
     state.committeeFilter = getFilterValues(committeeInput);
+
+    let searchInput = $("input[name=search-text]");
+    searchInput.on("input", () => {
+        state.searchValue = searchInput.val().toLowerCase();
+        filter();
+    })
+    state.searchValue = searchInput.val().toLowerCase();
 
     // Package member information
     $("#member-table tbody tr").each((index, row) => {
@@ -231,7 +256,6 @@ function setup() {
             element: row,
         };
 
-        row.click(() => showDetailedMemberInformation(member));
         member.element = row;
         state.members.push(member);
     });
