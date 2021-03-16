@@ -62,6 +62,19 @@ default_machine_types = (
         has_stream=False,
         priority=5,
     ),
+    MachineTypeStruct(
+        pk=5,
+        name={"en": "Special 3D printers", "nb": "Spesial-3D-printere"},
+        cannot_use_text={
+            "en": "You must have completed an advanced 3D printer course to reserve the printers."
+                  " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
+            "nb": "Reservasjon av 3D-printere krever fullført avansert 3D-printerkurs."
+                  " Hvis du har hatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+        },
+        usage_requirement="A3DPR",
+        has_stream=True,
+        priority=15,
+    ),
 )
 
 

@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='printer3dcourse',
             name='advanced_course',
-            field=models.BooleanField(default=False, null=True, verbose_name='Advanced course'),
+            field=models.BooleanField(default=False, verbose_name='Advanced course'),
         ),
         migrations.AlterField(
             model_name='machinetype',

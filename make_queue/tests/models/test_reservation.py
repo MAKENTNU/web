@@ -31,7 +31,16 @@ class GeneralReservationTestCase(TestCase):
             self.fail(error_message)
 
 
-class GeneralReservationTestCases(GeneralReservationTestCase):
+class ReservationTestCasesHelperMethods(GeneralReservationTestCase):
+    def create_reservation(self, timedelta_start, timedelta_end, event=None, user=None, machine=None, special=False,
+                           special_text=""):
+        machine = self.machine if machine is None else machine
+        user = self.user if user is None else user
+        return Reservation(user=user, machine=machine, event=event, start_time=timezone.now() + timedelta_start,
+                           end_time=timezone.now() + timedelta_end, special=special, special_text=special_text)
+
+
+class GeneralReservationTestCases(ReservationTestCasesHelperMethods):
 
     def setUp(self):
         event = Event.objects.create(title="TEST EVENT")
@@ -58,13 +67,6 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         reservation.validate = lambda: True
         reservation.save()
         reservation.validate = validate_function
-
-    def create_reservation(self, timedelta_start, timedelta_end, event=None, user=None, machine=None, special=False,
-                           special_text=""):
-        machine = self.machine if machine is None else machine
-        user = self.user if user is None else user
-        return Reservation(user=user, machine=machine, event=event, start_time=timezone.now() + timedelta_start,
-                           end_time=timezone.now() + timedelta_end, special=special, special_text=special_text)
 
     def set_reservation_future_limit_days(self, days):
         self.reservation_future_limit_days = Reservation.reservation_future_limit_days
@@ -335,3 +337,41 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
             self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1), event=self.timeplace),
             "Event reservations are always valid no matter how far in the future they are")
         self.reset_reservation_future_limit_days()
+
+
+class AdvancedMachineReservationTestCases(ReservationTestCasesHelperMethods):
+
+    def setUp(self):
+        event = Event.objects.create(title="TEST EVENT")
+        self.timeplace = TimePlace.objects.create(publication_time=timezone.now(),
+                                                  start_time=timezone.now() + timedelta(seconds=1),
+                                                  end_time=timezone.now() + timedelta(minutes=1),
+                                                  event=event)
+        self.printer_machine_type = MachineType.objects.get(pk=5)
+        self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
+                                              machine_type=self.printer_machine_type)
+        self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
+        self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
+                                               machine_type=self.printer_machine_type)
+        self.course_registration = Printer3DCourse.objects.create(user=self.user, username=self.user.username,
+                                                                  date=datetime.now().date(),
+                                                                  name=self.user.get_full_name())
+        self.max_time_reservation = 5
+        ReservationRule.objects.create(machine_type=self.printer_machine_type, start_time=time(0, 0), end_time=time(23, 59),
+                                       days_changed=6, start_days=1, max_hours=self.max_time_reservation,
+                                       max_inside_border_crossed=self.max_time_reservation)
+
+    def test_booking_advanced_printer_without_any_course(self):
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2), user=user2),
+                                       "Uses that cannot use a machine, should not be able to reserve it")
+
+    def test_booking_advanced_printer_with_normal_course(self):
+        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                       "Uses that cannot use a machine, should not be able to reserve it")
+
+    def test_booking_advanced_printer_with_advanced_course(self):
+        self.course_registration.advanced_course = True
+        self.course_registration.save()
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                     "Uses that cannot use a machine, should not be able to reserve it")

@@ -940,6 +940,7 @@ msgid "Full name"
 msgstr "Fullt navn"
 
 #: make_queue/models/course.py:29
+#: make_queue/templates/make_queue/course/course_registration_edit.html:100
 msgid "Advanced course"
 msgstr "Avansert kurs"
 
