@@ -1,5 +1,6 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
+from django.shortcuts import get_object_or_404
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
 # Create your views here.
 from .forms import QuestionForm, CategoryForm
@@ -15,49 +16,72 @@ class FAQPageView(ListView):
         return Category.objects.prefetch_related('questions')
 
 
+class FAQAdminPanelView(PermissionRequiredMixin, TemplateView):
+    template_name = 'faq/faq_admin_panel.html'
+
+    def has_permission(self):
+        return has_any_faq_permissions(self.request.user)
+
+
+class QuestionAdminView(PermissionRequiredMixin, ListView):
+    permission_required = ('faq.edit_question',)
+    model = Question
+    template_name = 'faq/admin_question_list.html'
+    context_object_name = 'questions'
+    queryset = Question.objects.order_by('title')
+
+
+class CategoryAdminView(PermissionRequiredMixin, ListView):
+    permission_required = ('faq.edit_category',)
+    model = Category
+    template_name = 'faq/admin_category_list.html'
+    context_object_name = 'categories'
+    queryset = Category.objects.order_by('name')
+
+
 class CreateQuestionView(PermissionRequiredMixin, CreateView):
+    permission_required = ('faq.create_question',)
     model = Question
     form_class = QuestionForm
-    template_name = "faq/question_create.html"
+    template_name = 'faq/admin_question_create.html'
     context_object_name = 'question'
-    success_url = reverse_lazy("faq-admin")
-
-    def has_permission(self):
-        return has_any_faq_permissions(self.request.user)
-
-
-class FAQAdminView(PermissionRequiredMixin, ListView):
-    model = Question
-    template_name = "faq/faq_admin.html"
-    context_object_name = "question_list"
-
-    def has_permission(self):
-        return has_any_faq_permissions(self.request.user)
+    success_url = reverse_lazy('faq-question-list')
 
 
 class EditQuestionView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('faq.edit_question',)
     model = Question
     form_class = QuestionForm
-    template_name = "faq/question_edit.html"
+    template_name = 'faq/admin_question_edit.html'
     context_object_name = 'question'
-    success_url = reverse_lazy("faq-admin")
-
-    def has_permission(self):
-        return has_any_faq_permissions(self.request.user)
+    success_url = reverse_lazy('faq-question-list')
 
 
 class DeleteQuestionView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('faq.delete_question',)
     model = Question
-    success_url = reverse_lazy('faq-admin')
-    permission_required = 'faq.delete_question'
+    success_url = reverse_lazy('faq-question-list')
+
+
+class CreateCategoryView(PermissionRequiredMixin, CreateView):
+    permission_required = ('faq.create_category',)
+    model = Category
+    form_class = CategoryForm
+    template_name = 'faq/admin_category_create.html'
+    context_object_name = 'category'
+    success_url = reverse_lazy('faq-category-list')
 
 
 class EditCategoryView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('faq.edit_category',)
     model = Category
     form_class = CategoryForm
-    template_name = "faq/category_edit.html.html"
+    template_name = 'faq/admin_category_edit.html'
     context_object_name = 'category'
-    success_url = reverse_lazy("faq-admin")
+    success_url = reverse_lazy('faq-category-list')
 
-    def has_permission(self):
-        return has_any_faq_permissions(self.request.user)
+
+class DeleteCategoryView(PermissionRequiredMixin, DeleteView):
+    permission_required = ('faq.delete_category',)
+    model = Category
+    success_url = reverse_lazy('faq-category-list')
