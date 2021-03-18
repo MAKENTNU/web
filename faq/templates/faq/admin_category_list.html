@@ -1,0 +1,48 @@
+{% extends "web/base.html" %}
+{%  load static %}
+{% load i18n %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "faq/css/faq_admin_list.css" %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="faq-title">
+            <a href="{% url "faq-admin" %}">
+                <i class="blue chevron circle left icon"></i>
+            </a>
+            {% trans "Categories" %}
+            {% if perms.faq.add_question %}
+                <a href="{% url "faq-category-create" %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+        <div class="ui relaxed divided list">
+            {% for category in categories %}
+                <div class="item">
+                    <div class="content">
+                        <div class="ui header">
+                            {{ category.name }}
+                            {% if perms.faq.change_question %}
+                                <a href="{% url "faq-category-edit" pk=category.pk %}">
+                                    <i class="yellow pencil icon"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if perms.faq.delete_question %}
+                                <a class="delete confirm"
+                                   data-title="{% trans "Delete" %}"
+                                   data-content="{% trans "Click to delete" %}."
+                                   href="{% url "faq-category-delete" category.pk %}">
+                                    <i class="ui delete icon red"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

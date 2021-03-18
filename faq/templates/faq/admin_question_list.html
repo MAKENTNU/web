@@ -1,0 +1,43 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>
+            <a href="{% url "faq-admin" %}">
+                <i class="green chevron circle left icon"></i>
+            </a>
+            {% trans "Questions" %}
+            {% if perms.faq.add_question %}
+                <a href="{% url "faq-question-create" %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+        <div class="ui relaxed divided list">
+            {% for question in questions %}
+                <div class="item">
+                    <div class="content">
+                        <div class="ui header">
+                            {{ question.title }}
+                            {% if perms.faq.change_question %}
+                                <a href="{% url "faq-question-edit" pk=question.pk %}">
+                                    <i class="yellow pencil icon"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if perms.faq.delete_question %}
+                                <a class="delete confirm"
+                                   data-title="{% trans "Delete" %}"
+                                   data-content="{% trans "Click to delete" %}."
+                                   href="{% url "faq-question-delete" question.pk %}">
+                                    <i class="ui delete icon red"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
