@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/static/internal/js/members.js:72
+#: internal/static/internal/js/member_list.js:87
 msgid "Change"
 msgstr "Endre"
 
@@ -25,31 +25,31 @@ msgstr "Ny reservasjon"
 msgid "Reserve"
 msgstr "Reserver"
 
-#: make_queue/static/make_queue/js/calendar.js:468
+#: make_queue/static/make_queue/js/calendar.js:466
 msgid "Reservation"
 msgstr "Reservasjon"
 
-#: make_queue/static/make_queue/js/calendar.js:469
+#: make_queue/static/make_queue/js/calendar.js:467
 msgid "Name"
 msgstr "Navn"
 
-#: make_queue/static/make_queue/js/calendar.js:470
+#: make_queue/static/make_queue/js/calendar.js:468
 msgid "Email"
 msgstr "E-post"
 
-#: make_queue/static/make_queue/js/calendar.js:471
+#: make_queue/static/make_queue/js/calendar.js:469
 msgid "Time"
 msgstr "Tidspunkt"
 
-#: make_queue/static/make_queue/js/calendar.js:475
+#: make_queue/static/make_queue/js/calendar.js:473
 msgid "Comment"
 msgstr "Kommentar"
 
-#: make_queue/static/make_queue/js/make_reservation.js:278
+#: make_queue/static/make_queue/js/reservation_edit.js:284
 msgid "Choose time"
 msgstr "Velg tid"
 
-#: news/static/news/js/email_copy.js:21
+#: news/static/news/js/email_copy.js:22
 msgid "Successfully copied to clipboard!"
 msgstr "Kopiert til utklippstavlen"
 
@@ -183,38 +183,38 @@ msgstr "Nå"
 msgid "Week"
 msgstr "Uke"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_utils.js:98
 msgid "Sunday"
 msgstr "Søndag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_utils.js:98
 msgid "Monday"
 msgstr "Mandag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_utils.js:98
 msgid "Tuesday"
 msgstr "Tirsdag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_utils.js:98
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_utils.js:98
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_utils.js:98
 msgid "Friday"
 msgstr "Fredag"
 
-#: web/static/web/js/date-util.js:98
+#: web/static/web/js/date_utils.js:98
 msgid "Saturday"
 msgstr "Lørdag"
 
-#: web/static/web/js/widgets/mazemap-search.js:31
+#: web/static/web/js/forms/widgets/mazemap_search.js:31
 msgid "No Results"
 msgstr "Ingen resultater"
 
-#: web/static/web/js/widgets/mazemap-search.js:34
+#: web/static/web/js/forms/widgets/mazemap_search.js:34
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"

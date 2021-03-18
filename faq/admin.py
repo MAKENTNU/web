@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from web.multilingual.database import MultiLingualFieldAdmin
-from .models import Question, Category
+from web.multilingual.admin import MultiLingualFieldAdmin
+from .models import Category, Question
 
 
 class QuestionAdmin(MultiLingualFieldAdmin):

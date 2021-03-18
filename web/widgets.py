@@ -2,9 +2,19 @@ import django.forms as forms
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 
+from web import settings
+
 
 class SemanticTimeInput(forms.TimeInput):
     template_name = "web/forms/widgets/semantic_time.html"
+
+
+class SemanticDateInput(forms.DateInput):
+    template_name = "web/forms/widgets/semantic_date.html"
+
+
+class SemanticDateTimeInput(forms.DateTimeInput):
+    template_name = "web/forms/widgets/semantic_datetime.html"
 
 
 class SemanticChoiceInput(forms.Select):
@@ -30,16 +40,15 @@ class SemanticMultipleSelectInput(forms.SelectMultiple):
         self.attrs["prompt_text"] = kwargs.pop("prompt_text", self.prompt_text)
 
 
-class SemanticDateInput(forms.DateInput):
-    template_name = "web/forms/widgets/semantic_date.html"
-
-
-class SemanticDateTimeInput(forms.DateTimeInput):
-    template_name = "web/forms/widgets/semantic_datetime.html"
-
-
 class SemanticFileInput(forms.ClearableFileInput):
     template_name = "web/forms/widgets/semantic_file.html"
+
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+        context.update({
+            "FILE_MAX_SIZE": settings.FILE_MAX_SIZE,
+        })
+        return context
 
 
 class MazemapSearchInput(forms.TextInput):
@@ -51,7 +60,7 @@ class MazemapSearchInput(forms.TextInput):
     placeholder = _("Search places")
 
     class Media:
-        js = ('web/js/widgets/mazemap-search.js',)
+        js = ("web/js/forms/widgets/mazemap_search.js",)
 
     def __init__(self, campus_id=1, max_results=5, url_field=None, attrs=None):
         """

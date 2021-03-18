@@ -12,20 +12,20 @@ from docs.models import Page, Content
 
 
 class DocumentationPageView(DetailView):
-    template_name = "docs/documentation_page.html"
     model = Page
+    template_name = "docs/documentation_page_detail.html"
     context_object_name = "page"
 
 
 class HistoryDocumentationPageView(DetailView):
-    template_name = "docs/documentation_page_history.html"
     model = Page
+    template_name = "docs/documentation_page_history.html"
     context_object_name = "page"
 
 
 class OldDocumentationPageContentView(DetailView):
-    template_name = "docs/documentation_page.html"
     model = Page
+    template_name = "docs/documentation_page_detail.html"
     context_object_name = "page"
 
     def dispatch(self, request, *args, **kwargs):
@@ -52,9 +52,9 @@ class OldDocumentationPageContentView(DetailView):
 
 
 class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
+    permission_required = ("docs.change_page",)
     model = Page
     form_class = ChangePageVersionForm
-    permission_required = ("docs.change_page",)
 
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse("page-history", kwargs={"pk": self.get_object()}))
@@ -67,10 +67,10 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
 
 
 class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
-    template_name = "docs/create_documentation_page.html"
+    permission_required = ("docs.add_page",)
     model = Page
     form_class = CreatePageForm
-    permission_required = ("docs.add_page",)
+    template_name = "docs/documentation_page_create.html"
 
     def form_invalid(self, form):
         try:
@@ -88,10 +88,10 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
 
 
 class EditDocumentationPageView(PermissionRequiredMixin, FormView):
-    template_name = "docs/edit_documentation_page.html"
+    permission_required = ("docs.change_page",)
     model = Content
     form_class = PageContentForm
-    permission_required = ("docs.change_page",)
+    template_name = "docs/documentation_page_edit.html"
 
     def get_page(self):
         return Page.objects.get(pk=self.kwargs.get("pk"))
@@ -128,9 +128,9 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
 
 
 class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
+    permission_required = ("docs.delete_page",)
     model = Page
     success_url = reverse_lazy("home")
-    permission_required = ("docs.delete_page",)
 
     def get_queryset(self):
         return Page.objects.exclude(title="Documentation")

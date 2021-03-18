@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block body %}
 
     <div class="ui container">
@@ -91,7 +92,13 @@
                     {{ form.machine_type }}
                 </div>
             </div>
-            <button type="submit" class="ui blue button right floated">{% trans "Submit" context "edit" %}</button>
+
+            <button class="ui right floated make-bg-yellow button" type="submit">
+                {% trans "Submit" context "edit" %}
+            </button>
+            <a class="ui right floated red button" href="{% url 'machine_rules' rule.machine_type %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
         </form>
 
     </div>

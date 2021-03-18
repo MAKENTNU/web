@@ -1,4 +1,4 @@
-// Requires reservation_rules.js and date_util.js
+// Requires reservation_rule_utils.js and date_utils.js
 
 function ReservationCalendar(element, properties) {
     /**
@@ -73,7 +73,7 @@ ReservationCalendar.prototype.onSelection = function () {
         html: this.selectionPopupContent(),
         // Allows the popup to stay open when the user does not hover over the selection
         on: "onload",
-    }).popup("show").popup("get popup").addClass("default reservation popup")
+    }).popup("show").popup("get popup").addClass("time-selection default popup");
 };
 
 ReservationCalendar.prototype.selectionPopupContent = function () {
@@ -94,14 +94,14 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
     }
 
     let popupContent = $(`
-            <div class="ui card">
+            <div class="new-reservation-popup ui card">
                 <div class="ui content">
                     <div class="header">${gettext("New reservation")}</div>
                     <div class="description">
                         ${dateString}
                     </div>
                 </div>
-                <div class="ui bottom attached yellow button">
+                <div class="ui bottom attached make-bg-yellow button">
                     ${gettext("Reserve")}
                 </div>
             </div>
@@ -109,7 +109,9 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
 
     popupContent.find(".button").on("mousedown touchstart", () => {
         // Create and submit a hidden form to create a new reservation
-        let form = $(`<form method='POST' action='${langPrefix}/reservation/make/${calendar.machine}/'>`).appendTo(popupContent);
+        let form = $(
+            `<form method='POST' action='${langPrefix}/reservation/create/${calendar.machine}/'>`,
+        ).appendTo(popupContent);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
         // Hide the form in case something fails
         $("<input class='make_hidden' name='start_time'>").val(startTime.djangoFormat()).appendTo(form);
@@ -418,17 +420,10 @@ ReservationCalendar.prototype.addReservation = function (reservation) {
         if (reservation.displayText !== undefined) {
             this.createPopup(htmlElement, reservation);
         }
-
-        // If the reservation is an event, make the reservation in the calendar link to the given event
-        if (reservation.eventLink !== undefined) {
-            htmlElement.on("click touch", () => {
-                window.location = reservation.eventLink;
-            })
-        }
-    });
+    }, reservation.eventLink);
 };
 
-ReservationCalendar.prototype.drawReservation = function (startDate, endDate, classes, callback) {
+ReservationCalendar.prototype.drawReservation = function (startDate, endDate, classes, callback, linkToDisplay = null) {
     /**
      * Draws a reservation in the calendar. The `classes` parameter is the CSS classes given to each block displayed in
      * the calendar. The `callback` parameter is a function that is called with the given HTML element and date as
@@ -442,7 +437,10 @@ ReservationCalendar.prototype.drawReservation = function (startDate, endDate, cl
             // Find where the reservation should start and end in the given day
             let dayStartTime = (Math.max(date, startDate) - date) / millisecondsInDay * 100;
             let dayEndTime = (Math.min(date.nextDay(), endDate) - Math.max(date, startDate)) / millisecondsInDay * 100;
-            let reservationBlock = $(`<div class="${classes}" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`);
+            const reservationHtmlTag = linkToDisplay ? `a href="${linkToDisplay}" target="_blank"` : "div";
+            let reservationBlock = $(
+                `<${reservationHtmlTag} class="${classes}" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`,
+            );
             $(this.days[day]).append(reservationBlock);
 
             // Call any given callback function
@@ -486,7 +484,6 @@ ReservationCalendar.prototype.createPopup = function (reservationElement, reserv
         position: "top center",
         html: content,
     });
-
 };
 
 ReservationCalendar.prototype.updateReservations = function (data) {

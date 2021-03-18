@@ -31,14 +31,10 @@ class DisplayContentBoxView(TemplateView):
 
 
 class EditContentBoxView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('contentbox.change_contentbox',)
     model = ContentBox
+    fields = ('content',)
     template_name = 'contentbox/edit.html'
-    fields = (
-        'content',
-    )
-    permission_required = (
-        'contentbox.change_contentbox',
-    )
 
     def get_success_url(self):
         return reverse(self.object.title)

@@ -4,7 +4,7 @@ from django.db.models.functions import Lower
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.database import MultiLingualFieldAdmin
+from web.multilingual.admin import MultiLingualFieldAdmin
 from .models.course import Printer3DCourse
 from .models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 
@@ -44,7 +44,8 @@ class MachineAdmin(admin.ModelAdmin):
 
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
-admin.site.register(ReservationRule)
-admin.site.register(Reservation)
 admin.site.register(Quota)
+admin.site.register(Reservation)
+admin.site.register(ReservationRule)
+
 admin.site.register(Printer3DCourse)

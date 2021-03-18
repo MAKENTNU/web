@@ -1,0 +1,93 @@
+{% extends "docs/base.html" %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}{{ page.title }}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "docs/css/documentation_page_detail.css" %}">
+{% endblock %}
+
+{% block body %}
+    <div class="ui container">
+        {% if old %}
+            <div class="ui warning message">
+                <div class="ui header">
+                    {% trans "You are viewing an old version of this page" %}
+                </div>
+                {% trans "You are viewing an old version of this page, where the last edit was made by" %}
+                {% if content.made_by %}{{ content.made_by.get_full_name }}{% else %}{% trans "Anonymous" %}{% endif %}
+                {% trans "on" %} {{ content.changed|date:"d.m.Y" }} {% trans "at" %} {{ content.changed|date:"H:i" }}.
+                {% trans "To view the current version, click" %}
+                <a href="{% url "page" pk=page %}">{% trans "here" %}</a>.
+                {% if perms.docs.change_page %}
+                    {% trans "To change the current version to this one, click" %}
+                    <a id="change-current-version" href="">{% trans "here" %}</a>.
+                {% endif %}
+            </div>
+        {% endif %}
+        <h3 class="edit tools">
+            <a class="explanation-popup" href="{% url "page-history" pk=page %}" data-title="{% trans "History" %}"
+               data-content="{% trans "Click to view the content history of the page" %}">
+                <i class="ui blue archive icon"></i>
+            </a>
+            {% if not old %}
+                {% if perms.docs.change_page %}
+                    <a class="explanation-popup" href="{% url "edit-page" pk=page %}" data-title="{% trans "Edit" %}"
+                       data-content="{% trans "Click to edit the content of the page" %}">
+                        <i class="ui make-col-yellow edit icon"></i>
+                    </a>
+                {% endif %}
+                {% if perms.docs.delete_page and page.title != "Documentation" %}
+                    <a class="delete confirm explanation-popup" href="{% url "delete-page" pk=page %}"
+                       data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}">
+                        <i class="ui red trash icon"></i>
+                    </a>
+                {% endif %}
+            {% endif %}
+        </h3>
+        <h1>{{ page.title }}</h1>
+
+        {% if content %}
+            {% autoescape off %}
+                {{ content.content }}
+            {% endautoescape %}
+        {% elif page.current_content %}
+            {% autoescape off %}
+                {{ page.current_content.content }}
+            {% endautoescape %}
+        {% else %}
+            <i>
+                {% if perms.docs.change_page %}
+                    {% trans "No content exists for this page, do you wish to" %}
+                    <a href="{% url "edit-page" pk=page %}">{% trans "create" %}</a>
+                    {% trans "some" %}?
+                {% else %}
+                    {% trans "No content exists for this page" %}!
+                {% endif %}
+            </i>
+        {% endif %}
+    </div>
+
+    {% if form and old and perms.docs.change_page %}
+        <form id="change-version-form" class="hidden form" method="POST"
+              action="{% url "change-page-version" pk=page %}">
+            {% csrf_token %}
+            {{ form }}
+        </form>
+    {% endif %}
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(".explanation-popup").popup();
+
+        {% if old and perms.docs.change_page %}
+            $("#change-current-version").click(() => {
+                $("#change-version-form").submit();
+                return false;
+            });
+        {% endif %}
+    </script>
+{% endblock %}

@@ -1,0 +1,120 @@
+a.place {
+    color: #0C426A !important;
+    line-height: 16px !important;
+}
+
+.ui.icon.make_yellow {
+    color: #F8C700 !important;
+}
+
+.accordion p,
+.card p {
+    margin: 0 !important;
+}
+
+.card {
+    border: none !important;
+    box-shadow: 0 0 0 0 #000000, 0 0 0 1px #EEEEEE !important;
+    border-radius: 0 !important;
+}
+
+.ui.card .button {
+    border-radius: 0 !important;
+    margin-bottom: -1px !important;
+}
+
+.article {
+    margin: 50px 0 !important;
+}
+
+.lalign {
+    width: calc(100% - 315px);
+}
+
+.article > .container > img {
+    object-fit: cover;
+    width: 100%;
+    max-height: 400px;
+}
+
+.publication_time {
+    font-size: 1rem;
+    font-weight: 400;
+    margin-left: 10px;
+}
+
+.normal.card {
+    display: none;
+    float: right;
+    margin-top: 34px;
+    margin-left: 20px;
+}
+
+.left.rail {
+    padding: 39px 0 !important;
+    margin-right: 20px !important;
+}
+
+.rail-content {
+    padding-top: 17px;
+    padding-bottom: 17px;
+}
+
+.event.article {
+    transform: translateX(-150px);
+}
+
+.attend {
+    position: absolute;
+    right: 10px;
+    top: 2px;
+}
+
+.accordion {
+    display: none;
+}
+
+.accordion .content {
+    position: relative;
+}
+
+.calendar-link {
+    position: absolute;
+    top: 1em;
+    right: 0.25em;
+}
+
+.grey.link.text {
+    float: right;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.grey.link.text:hover {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+@media screen and (max-width: 1024px) {
+    .right.rail {
+        display: none;
+    }
+
+    .lalign {
+        width: 100%;
+    }
+
+    .normal.card {
+        display: flex;
+        float: none;
+        margin-left: 0;
+    }
+
+    .accordion {
+        display: inline;
+    }
+
+    .accordion .calendar-link {
+        top: 0.4em;
+        right: 0;
+    }
+
+}

@@ -1,11 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
-from django.shortcuts import get_object_or_404
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
 from django.urls import reverse_lazy
-# Create your views here.
 from .forms import QuestionForm, CategoryForm
 from .models import Question, Category
-from web.templatetags.permission_tags import has_any_faq_permissions
+from util.templatetags.permission_tags import has_any_faq_permissions
 
 
 class FAQPageView(ListView):

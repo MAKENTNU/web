@@ -26,6 +26,7 @@ CHECKIN_KEY = ''  # (custom setting)
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
 STREAM_KEY = ''  # (custom setting)
+FILE_MAX_SIZE = 26214400  # 25 MiB (custom setting, the max on the server is 50 MiB)
 
 # When using more than one subdomain, the session cookie domain has to be set so
 # that the subdomains can use the same session. Currently points to "makentnu.localhost"
@@ -66,7 +67,7 @@ INSTALLED_APPS = [
 
     # Other third-party packages
     'social_django',
-    'ckeditor',
+    'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
     'sorl.thumbnail',
@@ -85,6 +86,8 @@ INSTALLED_APPS = [
     'makerspace',
     'news',
     'users',
+
+    'util',  # not a "real" app, just a collection of utilities
 ]
 
 MIDDLEWARE = [
@@ -247,6 +250,15 @@ STATIC_URL = '/static/'
 # which avoids waiting for browsers' cache to update if a file's contents change
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
+
+# Code taken from https://github.com/django-ckeditor/django-ckeditor/issues/404#issuecomment-687778492
+def static_lazy(path):
+    from django.templatetags.static import static
+    from django.utils.functional import lazy
+
+    return lazy(lambda: static(path), str)()
+
+
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
 CKEDITOR_IMAGE_BACKEND = 'pillow'
 CKEDITOR_CONFIGS = {
@@ -263,6 +275,10 @@ CKEDITOR_CONFIGS = {
         ],
         'toolbar': 'main',
         'tabSpaces': 4,
+        'contentsCss': [
+            static_lazy('ckeditor/ckeditor/customstyles.css'),
+            static_lazy('ckeditor/ckeditor/contents.css'),  # CKEditor's default styles
+        ],
         'extraPlugins': ','.join([
             'codesnippet',
             'uploadimage',

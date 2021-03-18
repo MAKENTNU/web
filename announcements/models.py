@@ -3,7 +3,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.database import MultiLingualTextField
+from web.multilingual.modelfields import MultiLingualTextField
 
 
 class AnnouncementManager(models.Manager):
@@ -27,26 +27,27 @@ class Announcement(models.Model):
     Model for general announcements. All announcements are time-based, but can be shown for an indefinite time period if
     there is no end time given. An announcement may also link to another page with more information.
     """
-    objects = AnnouncementManager()
 
     class AnnouncementType(models.TextChoices):
         INFO = "I", _("Information")
         WARNING = "W", _("Warning")
         CRITICAL = "C", _("Critical")
 
-    classification = models.CharField(max_length=1, choices=AnnouncementType.choices, default=AnnouncementType.INFO,
+    classification = models.CharField(choices=AnnouncementType.choices, max_length=1, default=AnnouncementType.INFO,
                                       verbose_name=_("Type"))
     site_wide = models.BooleanField(verbose_name=_("Site-wide"),
                                     help_text=_("If selected, the announcement will be shown on all pages, otherwise it"
                                                 " is only shown on the front page."))
     content = MultiLingualTextField(max_length=256, verbose_name=_("Content"))
-    link = models.CharField(max_length=2048, verbose_name=_("Link"), blank=True, null=True,
+    link = models.CharField(max_length=2048, null=True, blank=True, verbose_name=_("Link"),
                             help_text=_("An optional link to an information page."))
     display_from = models.DateTimeField(default=timezone.localtime, verbose_name=_("Display from"),
                                         help_text=_("The date from which the announcement will be shown."))
-    display_to = models.DateTimeField(blank=True, null=True, verbose_name=_("Display to"),
+    display_to = models.DateTimeField(null=True, blank=True, verbose_name=_("Display to"),
                                       help_text=_("The announcement will be shown until this date. If none is given, it"
                                                   " is shown indefinitely."))
+
+    objects = AnnouncementManager()
 
     def __str__(self):
         return f"{self.get_classification_display()}: {self.content}"

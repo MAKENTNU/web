@@ -3,9 +3,10 @@
 {% load thumbnail %}
 {% load announcement_tags %}
 
+
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
-    <script src="{% static "web/js/image-link.js" %}"></script>
+    <script src="{% static "web/js/image_link.js" %}"></script>
     <script src="{% static "lib/parallax/parallax.min.js" %}"></script>
 {% endblock head %}
 
@@ -34,13 +35,14 @@
             {% for event in events %}
                 <div class="item">
                     <div class="ui small clickable image" href="{% url 'event' event.event.id %}">
-                        <p class="ui yellow make_bg_yellow ribbon label">
+                        <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event.start_time|date:"d" }}<br>
                             {{ event.start_time|date:"M" }}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
                             <img src="{{ im.url }}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;" {% endif %}>
+                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            />
                         {% endthumbnail %}
                     </div>
 
@@ -59,7 +61,7 @@
             {% endfor %}
         </div>
     </div>
-    
+
     <div class="ui container">
         <div class="articles">
             {% for article in articles %}
@@ -68,7 +70,8 @@
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}"
                          src="{{ im.url }}" href="{% url 'article' article.id %}"
-                         {% if article.contain %}style="object-fit: contain;" {% endif %}>
+                         {% if article.contain %}style="object-fit: contain;"{% endif %}
+                    />
                 {% endthumbnail %}
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
@@ -85,7 +88,7 @@
             {% endfor %}
         </div>
     </div>
-    
+
     <script>
         $('.clickable').click(function () {
             window.location.href = $(this).attr('href');

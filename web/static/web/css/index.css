@@ -40,21 +40,10 @@
 .events .header a {
     color: rgb(248, 200, 17);
     text-transform: uppercase;
-    font-size: 32px;
 }
 
 .article-text h2 {
     text-align: center;
-}
-
-.article-text p,
-.events .description p {
-    font-size: 16px;
-    line-height: 26px;
-}
-
-.events .header a {
-    font-size: 24px;
 }
 
 .txtborder {
@@ -161,7 +150,7 @@
     font-style: italic;
 }
 
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1199.98px) {
     .events {
         grid-template-columns: 1fr 20fr 1fr;
         grid-gap: 0;
@@ -174,7 +163,7 @@
 }
 
 /* Switch to mobile layout */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991.98px) {
     .articles {
         grid-template-columns: 1fr 20fr 1fr;
         margin-top: 20px;
