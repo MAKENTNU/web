@@ -24,63 +24,65 @@
         </h1>
 
         <form class="ui form">
-            <div class="ui fields" id="filter-fields">
+            <div id="filter-fields" class="ui fields">
                 <div class="ui six wide field">
-                    <input type="text" placeholder="{% trans "Search name and username" %}" id="search"
-                           name="search-text">
+                    <input id="search" type="text" name="search-text" placeholder="{% trans "Search name and username" %}"/>
                 </div>
+                <div id="filter-dropdowns" class="ui fields field">
 
-                <div class="ui multiple blue labeled compact button icon dropdown" id="membership-field">
-                    <input type="hidden" name="filter-status">
-                    <i class="ui filter icon"></i>
-                    <span class="ui text">{% trans "Filter membership status" %}</span>
-                    <div class="menu">
-                        <div class="scrolling menu">
-                            <div class="item" data-value="{% trans "Active" %}">
-                                <i class="ui green circle icon"></i>{% trans "Active" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Inactive" %}">
-                                <i class="ui grey circle icon"></i>{% trans "Inactive" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Retired" %}">
-                                <i class="ui blue circle icon"></i>{% trans "Retired" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Honorary" %}">
-                                <i class="ui make-col-yellow circle icon"></i>{% trans "Honorary" %}
-                            </div>
-                            <div class="item" data-value="{% trans "Quit" %}">
-                                <i class="ui red circle icon"></i>{% trans "Quit" %}
+                    <div class="ui multiple blue labeled compact button icon dropdown">
+                        <input type="hidden" name="filter-status">
+                        <i class="ui filter icon"></i>
+                        <span class="ui text">{% trans "Filter membership status" %}</span>
+                        <div class="menu">
+                            <div class="scrolling menu">
+                                <div class="item" data-value="{% trans "Active" %}">
+                                    <i class="ui green circle icon"></i>{% trans "Active" %}
+                                </div>
+                                <div class="item" data-value="{% trans "Inactive" %}">
+                                    <i class="ui grey circle icon"></i>{% trans "Inactive" %}
+                                </div>
+                                <div class="item" data-value="{% trans "Retired" %}">
+                                    <i class="ui blue circle icon"></i>{% trans "Retired" %}
+                                </div>
+                                <div class="item" data-value="{% trans "Honorary" %}">
+                                    <i class="ui make-col-yellow circle icon"></i>{% trans "Honorary" %}
+                                </div>
+                                <div class="item" data-value="{% trans "Quit" %}">
+                                    <i class="ui red circle icon"></i>{% trans "Quit" %}
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="ui multiple blue labeled compact button icon dropdown" id="committee-field">
-                    <input type="hidden" name="filter-committee">
-                    <i class="ui filter icon"></i>
-                    <span class="ui text">{% trans "Filter committees" %}</span>
-                    <div class="menu">
-                        <div class="scrolling menu">
-                            <div class="item" data-value="Dev">
-                                <i class="ui green circle icon"></i>Dev
-                            </div>
-                            <div class="item" data-value="Mentor">
-                                <i class="ui red circle icon"></i>Mentor
-                            </div>
-                            <div class="item" data-value="Event">
-                                <i class="ui blue circle icon"></i>Event
-                            </div>
-                            <div class="item" data-value="PR">
-                                <i class="ui make-col-yellow circle icon"></i>PR
-                            </div>
-                            <div class="item" data-value="Styret">
-                                <i class="ui purple circle icon"></i>Styret
+                    <div class="ui multiple blue labeled compact button icon dropdown">
+                        <input type="hidden" name="filter-committee">
+                        <i class="ui filter icon"></i>
+                        <span class="ui text">{% trans "Filter committees" %}</span>
+                        <div class="menu">
+                            <div class="scrolling menu">
+                                <div class="item" data-value="Dev">
+                                    <i class="ui green circle icon"></i>Dev
+                                </div>
+                                <div class="item" data-value="Mentor">
+                                    <i class="ui red circle icon"></i>Mentor
+                                </div>
+                                <div class="item" data-value="Event">
+                                    <i class="ui blue circle icon"></i>Event
+                                </div>
+                                <div class="item" data-value="PR">
+                                    <i class="ui make-col-yellow circle icon"></i>PR
+                                </div>
+                                <div class="item" data-value="Styret">
+                                    <i class="ui purple circle icon"></i>Styret
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
+                </div>
             </div>
         </form>
+
         <table id="member-table" class="ui celled unstackable selectable striped table">
             <thead>
             <tr>
@@ -135,13 +137,13 @@
                     data-undo-retire="{% if member.retired and perms.internal.can_edit_group_membership %}{% url "member-undo-retire" member.pk %}{% endif %}"
                 >
                     <td>{{ member.user.get_short_full_name }}</td>
-                    <td>
+                    <td class="label-cell">
                         {% for committee_name, color in committees %}
                             <div class="ui {{ color }} label">{{ committee_name }}</div>
                         {% endfor %}
                     </td>
                     <td>{{ member.role }}</td>
-                    <td class="mobile hidden">
+                    <td class="label-cell mobile hidden">
                         {% for status_name, color in membership_status %}
                             <div class="ui {{ color }} label">{{ status_name }}</div>
                         {% endfor %}

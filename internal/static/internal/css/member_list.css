@@ -2,29 +2,31 @@
     display: none !important;
 }
 
+#filter-fields {
+    --row-gap: 5px;
+
+    justify-content: space-between;
+    row-gap: var(--row-gap);
+}
+
+#filter-dropdowns {
+    row-gap: var(--row-gap);
+}
+
 #member-table tbody tr,
 #member-table thead th {
     cursor: pointer;
 }
 
-/* For when the objects eventually stack on top of each other on a mobile screen */
-@media only screen and (max-width: 767px) {
-    #member-table .label,
-    form .multiple.labeled.dropdown {
-        margin-top: 5px;
-        margin-left: 0.5em;
-    }
+#member-table .label-cell {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 5px;
+    row-gap: 5px;
 }
 
-/* Allows for some right aligned elements in the filter fields flexbox */
-#filter-fields::after {
-    content: '';
-    flex-grow: 1;
-    order: 0;
-}
-
-#membership-field, #committee-field {
-    order: 1;
+#member-table .label-cell .label {
+    margin: 0;
 }
 
 .right.floated.link {
