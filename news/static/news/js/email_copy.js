@@ -10,7 +10,7 @@ $(document).ready(function () {
     $('.copy-token').click(function () {
         clearTimeout(popupTimer);
 
-        var $input = $(this).closest('div').find('.copy-input');
+        var $input = $(this).closest('.emails-container').find('.copy-input');
         /* Select the text field */
         $input.select();
 
