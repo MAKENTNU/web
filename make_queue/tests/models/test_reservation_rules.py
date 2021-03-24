@@ -1,7 +1,9 @@
 import datetime
+from datetime import timedelta
 
 from django.core.exceptions import ValidationError
 from django.test import TestCase
+from django.utils.dateparse import parse_datetime, parse_time
 
 from ...models.models import MachineType, ReservationRule
 
@@ -226,21 +228,23 @@ class ReservationRuleTests(TestCase):
         Tests to check that `ReservationRule.valid_time` works correctly when there are no rules or a period is not
         covered by any rules.
         """
-        start_time = datetime.datetime(2021, 3, 3, 12, 0)
-        end_time = datetime.datetime(2021, 3, 3, 18, 0)
+        start_time = parse_datetime("2021-03-03 12:00")
+        end_time = start_time + timedelta(hours=6)
         is_valid = ReservationRule.valid_time(start_time, end_time, self.machine_type)
-
         self.assertFalse(is_valid, "A period should not be valid if there are no rules.")
 
-        ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(11, 0), days_changed=0,
-                        start_days=1, max_inside_border_crossed=5, machine_type=self.machine_type, max_hours=10).save()
-
+        rule1 = ReservationRule(start_time=parse_time("10:00"), end_time=parse_time("11:00"), days_changed=0,
+                                start_days=127, max_inside_border_crossed=5, machine_type=self.machine_type, max_hours=10)
+        rule1.save()
         is_valid = ReservationRule.valid_time(start_time, end_time, self.machine_type)
         self.assertFalse(is_valid, "A period should not be valid if it is not covered by any rules.")
 
-        # Create an empty period
-        start_time = datetime.datetime(2021, 3, 1, 10, 5)
-        end_time = datetime.datetime(2021, 3, 1, 10, 5)
-        is_valid = ReservationRule.valid_time(start_time, end_time, self.machine_type)
+        rule1.start_time = parse_time("12:00")
+        rule1.end_time = parse_time("18:00")
+        rule1.save()
+        self.assertTrue(ReservationRule.valid_time(start_time, end_time, self.machine_type))
 
+        # Create an empty period
+        start_time = parse_datetime("2021-03-01 12:05")
+        is_valid = ReservationRule.valid_time(start_time, start_time, self.machine_type)
         self.assertFalse(is_valid, "A period should not be valid if it is empty, i.e., not coverd by any rules.")
