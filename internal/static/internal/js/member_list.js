@@ -2,7 +2,8 @@ const $memberInfoModal = $("#detailed-member-info");
 
 // Global state to reduce number of jQuery calls
 const state = {
-    members: [],
+    allMembers: [],
+    displayedMembers: [],
     statusFilter: [],
     committeeFilter: [],
     searchValue: "",
@@ -136,18 +137,13 @@ function filter() {
         (member) => searchAllows(state.searchValue, member.data.name.toLowerCase()),
     ];
 
-    const $table = $("#member-table-content");
-
-    let displayedMembersCount = 0;
-    $.each(state.members, (index, member) => {
-        member.$element.remove();
-        if (filters.every(el => el(member))) {
-            $table.append(member.$element);
-            member.$element.click(() => showDetailedMemberInformation(member));
-            displayedMembersCount++;
-        }
+    state.displayedMembers = [];
+    $.each(state.allMembers, (index, member) => {
+        if (filters.every(filter => filter(member)))
+            state.displayedMembers.push(member);
     });
-    $("#displayed-members-count").text(displayedMembersCount);
+    updateDisplayedTableRows();
+    $("#displayed-members-count").text(state.displayedMembers.length);
 }
 
 function setSort(attributeName, $element) {
@@ -170,15 +166,33 @@ function sort() {
     /**
      * Sorts the table based on the current state
      */
-    state.members.sort(function (a, b) {
+    state.displayedMembers.sort(function (a, b) {
         return compareElements(a.data[state.sortBy], b.data[state.sortBy]);
     });
 
-    if (state.sortDirection === -1) {
-        state.members.reverse();
+    if (state.sortDirection === -1)
+        state.displayedMembers.reverse();
+
+    updateDisplayedTableRows(true);
+}
+
+function updateDisplayedTableRows(onlyOrderChange = false) {
+    const $table = $("#member-table-content");
+
+    function appendDisplayedMembers() {
+        $table.append(state.displayedMembers.map((member) => member.$element));
     }
 
-    $("#member-table tbody").append(state.members.map((member) => member.$element));
+    if (onlyOrderChange) {
+        // `append()` moves elements (instead of cloning) if they're already present in the DOM
+        appendDisplayedMembers();
+    } else {
+        $table.empty();
+        appendDisplayedMembers();
+        $.each(state.displayedMembers, (index, member) => {
+            member.$element.click(() => showDetailedMemberInformation(member));
+        });
+    }
 }
 
 function setup() {
@@ -262,7 +276,7 @@ function setup() {
         };
 
         member.$element = $row;
-        state.members.push(member);
+        state.allMembers.push(member);
     });
 
     for (let sortAttribute of ["name", "committees", "status", "dateJoined", "email", "role", "phone"]) {

@@ -332,7 +332,7 @@
     <script src="{% static 'internal/js/member_list.js' %}"></script>
     {% if selected_member %}
         <script>
-            showDetailedMemberInformation(state.members.find(
+            showDetailedMemberInformation(state.allMembers.find(
                 (member) => member.data.pk === {{ selected_member.pk }}
             ));
         </script>
