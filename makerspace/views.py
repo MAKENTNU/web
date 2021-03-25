@@ -4,7 +4,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 
 from contentbox.views import DisplayContentBoxView
 from util.templatetags.permission_tags import has_any_equipment_permissions
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from .forms import EquipmentForm
 from .models import Equipment
 

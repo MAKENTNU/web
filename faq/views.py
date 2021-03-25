@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.templatetags.permission_tags import has_any_faq_permissions
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from .forms import QuestionForm
 from .models import Category, Question
 

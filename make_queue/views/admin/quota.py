@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
 
 from users.models import User
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from ...forms import QuotaForm
 from ...models.models import Quota
 

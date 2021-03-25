@@ -7,7 +7,7 @@ from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
 from make_queue.models.course import Printer3DCourse
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, ToggleSystemAccessForm
 from .models import Member, Secret, SystemAccess
 

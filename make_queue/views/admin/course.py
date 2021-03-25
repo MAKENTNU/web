@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView, View
 
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from ...forms import Printer3DCourseForm
 from ...models.course import Printer3DCourse
 
