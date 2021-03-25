@@ -78,8 +78,8 @@ urlpatterns += [
 # URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
-    path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
-    path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+    path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_rules', permanent=True)),
+    path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules', permanent=True)),
     prefix_default_language=False,
 )
 
