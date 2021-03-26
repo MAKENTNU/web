@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 
@@ -19,10 +19,8 @@
             {% endif %}
         </div>
         <div>
-            {% autoescape off %}
-                {{ usage_rules.content }}
-            {% endautoescape %}
+            {{ usage_rules.content|safe }}
         </div>
     </div>
 
-{% endblock %}
+{% endblock body %}

@@ -1,14 +1,14 @@
-let memberInfoModal = $("#detailed-member-info");
+const $memberInfoModal = $("#detailed-member-info");
 
 // Global state to reduce number of jQuery calls
-let state = {
+const state = {
     members: [],
     statusFilter: [],
     committeeFilter: [],
     searchValue: "",
     sortBy: "committees",
     sortDirection: -1,
-    sortElement: $("#member-sort-committees"),
+    $sortElement: $("#member-sort-committees"),
 };
 
 String.prototype.isEmpty = function () {
@@ -26,7 +26,7 @@ function compareElements(a, b) {
         return a.localeCompare(b);
     if (Array.isArray(a)) {
         for (let index = 0; index < Math.min(a.length, b.length); index++) {
-            let elementComparision = a[index].name.localeCompare(b[index].name);
+            const elementComparision = a[index].name.localeCompare(b[index].name);
             if (elementComparision !== 0)
                 return elementComparision;
         }
@@ -39,47 +39,49 @@ function showDetailedMemberInformation(member) {
     /**
      * Displays the selected members information in a popup modal
      */
-    memberInfoModal.find("#member-name, #member-name-header").text(member.data.name);
-    memberInfoModal.find("#member-phone").text(member.data.phone)
-        .attr("href", `tel:${member.data.phone}`);
-    memberInfoModal.find("#member-email").text(member.data.email)
-        .attr("href", `mailto:${member.data.email}`);
-    memberInfoModal.find("#member-card-number").text(member.data.cardNumber);
-    memberInfoModal.find("#member-study-program").text(member.data.studyProgram);
+    const textAttributeNamesToValues = {
+        "name-header": member.data.name,
+        name: member.data.name,
+        phone: member.data.phone,
+        email: member.data.email,
+        cardNumber: member.data.cardNumber,
+        studyProgram: member.data.studyProgram,
+        dateJoined: `${member.data.termJoined} (${member.data.dateJoined})`,
+        dateQuit: `${member.data.termQuit} (${member.data.dateQuit})`,
+        reasonQuit: member.data.reasonQuit,
+        role: member.data.role,
+        guidanceExemption: member.data.guidanceExemption,
+        comment: member.data.comment,
+    };
+    for (let textAttribute of Object.keys(textAttributeNamesToValues)) {
+        $memberInfoModal.find(`#member-${textAttribute}`)
+            .text(textAttributeNamesToValues[textAttribute]);
+    }
 
-    memberInfoModal.find("#member-joined").text(`${member.data.termJoined} (${member.data.dateJoined})`);
-    memberInfoModal.find("#member-role").text(member.data.role)
-        .parent().toggleClass("make_hidden", member.data.role.isEmpty());
-    memberInfoModal.find("#member-quit").text(`${member.data.termQuit} (${member.data.dateQuit})`)
-        .parent().toggleClass("make_hidden", member.data.dateQuit.isEmpty());
-    memberInfoModal.find("#member-quit-reason").text(member.data.reasonQuit)
-        .parent().toggleClass("make_hidden", member.data.reasonQuit.isEmpty());
-    memberInfoModal.find("#member-comment").text(member.data.comment)
-        .parent().toggleClass("make_hidden", member.data.comment.isEmpty());
-    memberInfoModal.find("#member-guidance-exemption").text(member.data.guidanceExemption);
+    for (let urlAttribute of ["editUrl", "quitUrl", "undoQuitUrl", "retireUrl", "undoRetireUrl"]) {
+        $memberInfoModal.find(`#member-${urlAttribute}`)
+            .attr("href", member.data[urlAttribute])
+            .toggleClass("display-none", member.data[urlAttribute].isEmpty());
+    }
+    $memberInfoModal.find("#member-phone").attr("href", `tel:${member.data.phone}`);
+    $memberInfoModal.find("#member-email").attr("href", `mailto:${member.data.email}`);
 
-    memberInfoModal.find("#member-edit").attr("href", member.data.editUrl)
-        .toggleClass("make_hidden", member.data.editUrl.isEmpty());
-    memberInfoModal.find("#member-set-quit").attr("href", member.data.quitUrl)
-        .toggleClass("make_hidden", member.data.quitUrl.isEmpty());
-    memberInfoModal.find("#member-set-not-quit").attr("href", member.data.undoQuitUrl)
-        .toggleClass("make_hidden", member.data.undoQuitUrl.isEmpty());
-    memberInfoModal.find("#member-set-retired").attr("href", member.data.retireUrl)
-        .toggleClass("make_hidden", member.data.retireUrl.isEmpty());
-    memberInfoModal.find("#member-set-not-retired").attr("href", member.data.undoRetireUrl)
-        .toggleClass("make_hidden", member.data.undoRetireUrl.isEmpty());
+    for (let hideableAttribute of ["dateQuit", "reasonQuit", "role", "comment"]) {
+        $memberInfoModal.find(`#member-${hideableAttribute}`)
+            .parent().toggleClass("display-none", member.data[hideableAttribute].isEmpty());
+    }
 
-    let memberStatusElement = memberInfoModal.find("#member-status, #member-status-header");
-    memberStatusElement.empty();
-    memberStatusElement.append(member.data.status.map(
+    const $memberStatusElement = $memberInfoModal.find("#member-status, #member-status-header");
+    $memberStatusElement.empty();
+    $memberStatusElement.append(member.data.status.map(
         status => $(
             `<div class="ui ${status.color} label">${status.name}</div>`,
         ),
     ));
 
-    let memberSystemAccessesElement = memberInfoModal.find("#member-system-accesses");
-    memberSystemAccessesElement.empty();
-    memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`
+    const $memberSystemAccessesElement = $memberInfoModal.find("#member-system-accesses");
+    $memberSystemAccessesElement.empty();
+    $memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`
         <tr>
             <td class="six wide column"><b>${access.name}</b></td>
             <td>
@@ -91,15 +93,15 @@ function showDetailedMemberInformation(member) {
         </tr>
     `)));
 
-    let memberCommitteesElement = memberInfoModal.find("#member-committee");
-    memberCommitteesElement.empty();
-    memberCommitteesElement.append(member.data.committees.map(
+    const $memberCommitteesElement = $memberInfoModal.find("#member-committee");
+    $memberCommitteesElement.empty();
+    $memberCommitteesElement.append(member.data.committees.map(
         committee => $(
-            `<div class="ui ${committee.color} label">${committee.name}</div>"`,
+            `<div class="ui ${committee.color} label">${committee.name}</div>`,
         ),
     ));
 
-    memberInfoModal.modal("show");
+    $memberInfoModal.modal("show");
 }
 
 function filterAllows(filterValues, toMatch) {
@@ -128,36 +130,36 @@ function filter() {
     /**
      * Filters the displayed rows based on the given state
      */
-    let filters = [
+    const filters = [
         (member) => filterAllows(state.statusFilter, member.data.status.map(status => status.name)),
         (member) => filterAllows(state.committeeFilter, member.data.committees.map(committee => committee.name)),
         (member) => searchAllows(state.searchValue, member.data.name.toLowerCase()),
-    ]
+    ];
 
-    let table = $("#member-table-content");
+    const $table = $("#member-table-content");
 
     $.each(state.members, (index, member) => {
-        member.element.remove();
-        if(filters.every(el => el(member))) {
-            table.append(member.element);
-            member.element.click(() => showDetailedMemberInformation(member));
+        member.$element.remove();
+        if (filters.every(el => el(member))) {
+            $table.append(member.$element);
+            member.$element.click(() => showDetailedMemberInformation(member));
         }
     });
 }
 
-function setSort(attributeName, element) {
+function setSort(attributeName, $element) {
     /**
      * Toggles which attribute the table will be sorted by
      */
-    state.sortElement.toggleClass(state.sortDirection === 1 ? "down" : "up", false);
+    state.$sortElement.toggleClass(state.sortDirection === 1 ? "down" : "up", false);
     if (attributeName === state.sortBy) {
         state.sortDirection *= -1;
     } else {
         state.sortBy = attributeName;
         state.sortDirection = 1;
-        state.sortElement = element;
+        state.$sortElement = $element;
     }
-    state.sortElement.toggleClass(state.sortDirection === 1 ? "down" : "up", true);
+    state.$sortElement.toggleClass(state.sortDirection === 1 ? "down" : "up", true);
     sort();
 }
 
@@ -173,61 +175,61 @@ function sort() {
         state.members.reverse();
     }
 
-    $("#member-table tbody").append(state.members.map((member) => member.element));
+    $("#member-table tbody").append(state.members.map((member) => member.$element));
 }
 
 function setup() {
     /**
      * Setup of the global state and actions
      */
-    let statusInput = $("input[name=filter-status]");
-    statusInput.change(() => {
-        state.statusFilter = getFilterValues(statusInput);
+    const $statusInput = $("input[name=filter-status]");
+    $statusInput.change(() => {
+        state.statusFilter = getFilterValues($statusInput);
         filter();
     });
-    state.statusFilter = getFilterValues(statusInput);
+    state.statusFilter = getFilterValues($statusInput);
 
-    let committeeInput = $("input[name=filter-committee]");
-    committeeInput.change(() => {
-        state.committeeFilter = getFilterValues(committeeInput);
+    const $committeeInput = $("input[name=filter-committee]");
+    $committeeInput.change(() => {
+        state.committeeFilter = getFilterValues($committeeInput);
         filter();
     });
-    state.committeeFilter = getFilterValues(committeeInput);
+    state.committeeFilter = getFilterValues($committeeInput);
 
-    let searchInput = $("input[name=search-text]");
-    searchInput.on("input", () => {
-        state.searchValue = searchInput.val().toLowerCase();
+    const $searchInput = $("input[name=search-text]");
+    $searchInput.on("input", () => {
+        state.searchValue = $searchInput.val().toLowerCase();
         filter();
-    })
-    state.searchValue = searchInput.val().toLowerCase();
+    });
+    state.searchValue = $searchInput.val().toLowerCase();
 
     // Package member information
     $("#member-table tbody tr").each((index, row) => {
-        row = $(row);
+        const $row = $(row);
 
-        let member = {
+        const member = {
             data: {
-                pk: row.data("pk"),
-                name: row.data("name"),
-                phone: row.data("phone"),
-                email: row.data("email"),
-                cardNumber: row.data("card-number"),
-                studyProgram: row.data("study-program"),
-                dateJoined: row.data("date-joined"),
-                termJoined: row.data("term-joined"),
-                dateQuit: row.data("date-quit"),
-                termQuit: row.data("term-quit"),
-                reasonQuit: row.data("reason-quit"),
-                role: row.data("role"),
-                comment: row.data("comment"),
-                guidanceExemption: row.data("guidance-exemption"),
-                editUrl: row.data("edit"),
-                quitUrl: row.data("quit"),
-                undoQuitUrl: row.data("undo-quit"),
-                retireUrl: row.data("retire"),
-                undoRetireUrl: row.data("undo-retire"),
+                pk: $row.data("pk"),
+                name: $row.data("name"),
+                phone: $row.data("phone"),
+                email: $row.data("email"),
+                cardNumber: $row.data("card-number"),
+                studyProgram: $row.data("study-program"),
+                dateJoined: $row.data("date-joined"),
+                termJoined: $row.data("term-joined"),
+                dateQuit: $row.data("date-quit"),
+                termQuit: $.trim($row.data("term-quit")),
+                reasonQuit: $.trim($row.data("reason-quit")),
+                role: $.trim($row.data("role")),
+                comment: $.trim($row.data("comment")),
+                guidanceExemption: $.trim($row.data("guidance-exemption")),
+                editUrl: $.trim($row.data("edit-url")),
+                quitUrl: $.trim($row.data("quit-url")),
+                undoQuitUrl: $.trim($row.data("undo-quit-url")),
+                retireUrl: $.trim($row.data("retire-url")),
+                undoRetireUrl: $.trim($row.data("undo-retire-url")),
                 // Membership status is a list of pairs of status name and color: [('Active', 'green')]. Need to parse this list.
-                status: row.data("status").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
+                status: $row.data("status").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
                     .filter(status => status !== ", ")
                     .map(status => status.split(", "))
                     .map(status => ({
@@ -235,7 +237,7 @@ function setup() {
                         color: status[1],
                     })),
                 // System accesses is a list of quads of name, value, displayText and changeUrl: [("Website", "True", "Yes", "https://...")]. Need to parse this list
-                systemAccesses: row.data("system-accesses").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
+                systemAccesses: $row.data("system-accesses").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
                     .filter(access => access !== ", ")
                     .map(access => access.split(", "))
                     .map(access => ({
@@ -245,7 +247,7 @@ function setup() {
                         changeUrl: access[3],
                     })),
                 // Committees is a list of pairs of name and color: [('Dev', 'green')]. Need to parse this list
-                committees: row.data("committees").slice(1, -1).replace(/'/g, "").match(/[^()]*/g)
+                committees: $row.data("committees").slice(1, -1).replace(/'/g, "").match(/[^()]*/g)
                     .filter(committee => committee !== ", " && !committee.isEmpty())
                     .map(committee => committee.split(", "))
                     .map(committee => ({
@@ -253,34 +255,18 @@ function setup() {
                         color: committee[1],
                     })),
             },
-            element: row,
+            $element: $row,
         };
 
-        member.element = row;
+        member.$element = $row;
         state.members.push(member);
     });
 
-    $("#member-sort-name").parent().click((e) => setSort(
-        "name", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-committees").parent().click((e) => setSort(
-        "committees", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-status").parent().click((e) => setSort(
-        "status", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-joined").parent().click((e) => setSort(
-        "dateJoined", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-email").parent().click((e) => setSort(
-        "email", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-role").parent().click((e) => setSort(
-        "role", $(e.target).find(".icon"),
-    ));
-    $("#member-sort-phone").parent().click((e) => setSort(
-        "phone", $(e.target).find(".icon"),
-    ));
+    for (let sortAttribute of ["name", "committees", "status", "dateJoined", "email", "role", "phone"]) {
+        $(`#member-sort-${sortAttribute}`).closest("th").click((e) => setSort(
+            sortAttribute, $(e.target).find(".icon"),
+        ));
+    }
 
     filter();
     sort();

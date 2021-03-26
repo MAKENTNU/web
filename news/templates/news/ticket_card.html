@@ -11,9 +11,9 @@
     <div class="content">
         <div class="header">
             <a href="{% if ticket.event %}
-                        {% url "event" ticket.event.id %}
+                        {% url "event" ticket.event.pk %}
                     {% else %}
-                        {% url "event" ticket.timeplace.event.id %}
+                        {% url "event" ticket.timeplace.event.pk %}
                     {% endif %}">
                 {{ ticket.event.title }}{{ ticket.timeplace.event.title }}
             </a>
@@ -21,14 +21,14 @@
         <div class="description">
             {% if ticket.event %}
                 <div class="ui relaxed list">
-                    {% for timeplace in ticket.event.timeplace_set.all %}
+                    {% for timeplace in ticket.event.timeplaces.all %}
                         {% if not timeplace.hidden %}
                             <div class="ui item">
                                 <div class="content">
                                     <div class="header">
                                         {{ timeplace.start_time|date:"d. M H:i" }}
                                         - {{ timeplace.end_time|date:"d. M H:i" }}
-                                        <a class="left floated" href="{% url 'timeplace-ical' timeplace.id %}"
+                                        <a class="left floated" href="{% url 'timeplace-ical' timeplace.pk %}"
                                            target="_blank">
                                             <i class="ui make-col-yellow large calendar plus outline icon"></i>
                                         </a>
@@ -42,7 +42,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <a class="left floated" href="{% url 'timeplace-ical' ticket.timeplace.id %}" target="_blank">
+                <a class="left floated" href="{% url 'timeplace-ical' ticket.timeplace.pk %}" target="_blank">
                     <i class="ui make-col-yellow large calendar plus outline icon"></i>
                 </a>
                 <b>

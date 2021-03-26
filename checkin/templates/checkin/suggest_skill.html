@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load checkin_tags %}
 {% load thumbnail %}
@@ -10,16 +10,16 @@
     <div class="ui text container">
         <h1>{% trans "Suggest new skills at Makerverkstedet" %}</h1>
 
-        <form class="ui form" action="" method="post" enctype="multipart/form-data">
+        <form class="ui form" action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="inline fields">
                 <div class="ten wide field">
-                    <label>{% trans "Title (norwegian)" %}</label>
-                    <input required type="text" name="suggested-skill" placeholder="Ferdighet">
+                    <label>{% trans "Title (Norwegian)" %}</label>
+                    <input required type="text" name="suggested-skill" placeholder="Ferdighet"/>
                 </div>
                 <div class="five wide field">
-                    <input required id="skill-image" type="file" name="image"
-                           accept="image/jpeg, image/png, image/svg, image/gif">
+                    <input id="skill-image" type="file" name="image"
+                           accept="image/jpeg, image/png, image/svg, image/gif"/>
                 </div>
                 <div class="three wide field">
                     <button class="ui button" type="submit">{% trans "Submit" %}</button>
@@ -28,8 +28,8 @@
 
             <div class="inline fields">
                 <div class="nine wide field">
-                    <label>{% trans "Title (english)" %}</label>
-                    <input required type="text" name="suggested-skill-english" placeholder="Skill">
+                    <label>{% trans "Title (English)" %}</label>
+                    <input required type="text" name="suggested-skill-english" placeholder="Skill"/>
                 </div>
             </div>
             {% for message in messages %}
@@ -37,7 +37,7 @@
             {% endfor %}
         </form>
 
-        <br>
+        <br/>
 
         {% if suggestions %}
             <h3>{% trans "Suggested skills" %}</h3>
@@ -60,7 +60,7 @@
                                         <img class="ui mini rounded image" src="{{ im.url }}">
                                     {% endthumbnail %}
                                 {% else %}
-                                    <img class="ui mini rounded image" src="{% static "checkin/img/placeholder_skill.svg" %}"/>
+                                    <img class="ui mini rounded image" src="{% static 'checkin/img/placeholder_skill.svg' %}"/>
                                 {% endif %}
                                 <div class="content">{{ suggestion.title }}/{{ suggestion.title_en }}</div>
                             </h5>
@@ -103,15 +103,15 @@
 
 {% block scripts %}
     <script>
-        $('.add-voter').click(function () {
-            add_voter_post($(this), $(this).attr('pk'), $(this).attr('forced'));
+        $(".add-voter").click(function () {
+            addVoterPost($(this), $(this).attr('pk'), $(this).attr('forced'));
         });
 
-        $('.delete-suggestion').click(function () {
-            delete_suggestion_post($(this), $(this).attr('pk'));
+        $(".delete-suggestion").click(function () {
+            deleteSuggestionPost($(this), $(this).attr('pk'));
         });
 
-        function add_voter_post(element, pk, forced) {
+        function addVoterPost($element, pk, forced) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
@@ -126,24 +126,24 @@
                 },
                 success: function (data) {
                     if (data['is_forced']) {
-                        element.parents('tr').remove();
+                        $element.closest('tr').remove();
                     }
-                    element.addClass('green');
-                    element.addClass('disabled');
-                    element.html('{% trans "Voted!" %}');
+                    $element.addClass('green');
+                    $element.addClass('disabled');
+                    $element.html('{% trans "Voted!" %}');
 
                     if (!data['user_exists']) {
-                        let incrementedCount = parseInt(element.parent().siblings('#vote-count').html()) + 1;
-                        element.parent().siblings('#vote-count').html(incrementedCount);
+                        const incrementedCount = parseInt($element.parent().siblings('#vote-count').html()) + 1;
+                        $element.parent().siblings('#vote-count').html(incrementedCount);
                     }
                     if (data['skill_passed']) {
-                        element.parents('tr').remove();
+                        $element.closest('tr').remove();
                     }
                 },
             });
         }
 
-        function delete_suggestion_post(element, pk) {
+        function deleteSuggestionPost($element, pk) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
@@ -158,7 +158,7 @@
                 },
                 success: function (data) {
                     if (data["suggestion_deleted"]) {
-                        element.parents('tr').remove();
+                        $element.closest('tr').remove();
                     }
                 },
             });

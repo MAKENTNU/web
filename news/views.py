@@ -3,24 +3,21 @@ from datetime import timedelta
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.conf import settings
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Max
-from django.http import HttpResponseRedirect, JsonResponse, Http404
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.utils.translation import get_language
-from django.utils.translation import gettext
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language, gettext, gettext_lazy as _
 from django.views import View
-from django.views.generic import UpdateView, CreateView, TemplateView, DeleteView, DetailView, RedirectView, ListView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView
 
 from mail import email
-from util.templatetags.permission_tags import has_any_article_permission, has_any_event_permission
-from web import settings
-from .forms import EventForm
-from .forms import TimePlaceForm, EventRegistrationForm, ArticleForm
-from .models import Article, Event, TimePlace, EventTicket
+from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
+from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
+from .models import Article, Event, EventTicket, TimePlace
 
 
 class ViewEventsView(TemplateView):
@@ -39,13 +36,13 @@ class ViewEventsView(TemplateView):
                     future.append({
                         "first_occurrence": event.get_future_occurrences().first(),
                         "event": event,
-                        "number_of_occurrences": event.timeplace_set.count(),
+                        "number_of_occurrences": event.timeplaces.count(),
                     })
                 else:
                     past.append({
                         "last_occurrence": event.get_past_occurrences().first(),
                         "event": event,
-                        "number_of_occurrences": event.timeplace_set.count(),
+                        "number_of_occurrences": event.timeplaces.count(),
                     })
             else:
                 for occurrence in event.get_future_occurrences():
@@ -84,8 +81,8 @@ class ViewEventView(TemplateView):
         event = get_object_or_404(Event, pk=kwargs['pk'])
         context.update({
             'article': event,
-            'timeplaces': event.timeplace_set.all() if event.standalone else event.timeplace_set.future(),
-            'is_old': not event.timeplace_set.future().exists(),
+            'timeplaces': event.timeplaces.all() if event.standalone else event.timeplaces.future(),
+            'is_old': not event.timeplaces.future().exists(),
             'last_occurrence': event.get_past_occurrences().first(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')
@@ -115,7 +112,7 @@ class AdminArticleView(PermissionRequiredMixin, ListView):
     context_object_name = 'articles'
 
     def has_permission(self):
-        return has_any_article_permission(self.request.user)
+        return has_any_article_permissions(self.request.user)
 
 
 class AdminEventsView(PermissionRequiredMixin, ListView):
@@ -124,17 +121,18 @@ class AdminEventsView(PermissionRequiredMixin, ListView):
     context_object_name = 'events'
 
     def has_permission(self):
-        return has_any_event_permission(self.request.user)
+        return has_any_event_permissions(self.request.user)
 
     def get_queryset(self):
         return Event.objects.annotate(
-            latest_occurrence=Max("timeplace__end_time"),
-        ).order_by("-latest_occurrence")
+            latest_occurrence=Max('timeplaces__end_time'),
+        ).order_by('-latest_occurrence')
 
 
 class AdminEventView(DetailView):
     model = Event
     template_name = 'news/admin_event_detail.html'
+    context_object_name = 'event'
 
 
 class EditArticleView(PermissionRequiredMixin, UpdateView):
@@ -142,9 +140,7 @@ class EditArticleView(PermissionRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForm
     template_name = 'news/article_edit.html'
-
-    def get_success_url(self):
-        return reverse_lazy("admin-articles")
+    success_url = reverse_lazy("admin-articles")
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
@@ -152,9 +148,7 @@ class CreateArticleView(PermissionRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForm
     template_name = 'news/article_create.html'
-
-    def get_success_url(self):
-        return reverse_lazy("admin-articles")
+    success_url = reverse_lazy("admin-articles")
 
 
 class EditEventView(PermissionRequiredMixin, UpdateView):
@@ -163,11 +157,11 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
     form_class = EventForm
     template_name = 'news/event_edit.html'
     extra_context = {
-        'Event': Event,  # for referencing event_type's choice values
+        'Event': Event,  # for referencing Event.Type's choice values
     }
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.id,))
+        return reverse("admin-event", args=(self.object.pk,))
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
@@ -176,11 +170,11 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
     form_class = EventForm
     template_name = 'news/event_create.html'
     extra_context = {
-        'Event': Event,  # for referencing event_type's choice values
+        'Event': Event,  # for referencing Event.Type's choice values
     }
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.id,))
+        return reverse("admin-event", args=(self.object.pk,))
 
 
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
@@ -196,7 +190,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
         return form
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.event.id,))
+        return reverse("admin-event", args=(self.object.event.pk,))
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, View):
@@ -221,7 +215,7 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
     permission_required = ('news.add_timeplace',)
     model = TimePlace
     form_class = TimePlaceForm
-    template_name = "news/timeplace_create.html"
+    template_name = 'news/timeplace_create.html'
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
@@ -232,7 +226,7 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
         return form
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.event.id,))
+        return reverse("admin-event", args=(self.object.event.pk,))
 
 
 class AdminArticleToggleView(PermissionRequiredMixin, View):
@@ -282,13 +276,13 @@ class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
     model = TimePlace
 
     def get_success_url(self):
-        return reverse_lazy("admin-event", args=(self.object.event.id,))
+        return reverse("admin-event", args=(self.object.event.pk,))
 
 
 class EventRegistrationView(CreateView):
     model = EventTicket
     form_class = EventRegistrationForm
-    template_name = "news/event_registration.html"
+    template_name = 'news/event_registration.html'
 
     @property
     def timeplace(self):
@@ -311,8 +305,7 @@ class EventRegistrationView(CreateView):
             event = self.event or self.timeplace.event
             return HttpResponseRedirect(reverse("event", kwargs={"pk": event.pk}))
 
-        ticket = EventTicket.objects.filter(user=self.request.user, active=True,
-                                            timeplace=self.timeplace, event=self.event)
+        ticket = self.request.user.event_tickets.filter(active=True, timeplace=self.timeplace, event=self.event)
         if ticket.exists():
             return HttpResponseRedirect(reverse_lazy("ticket", kwargs={"pk": ticket.first().pk}))
         return super().dispatch(request, args, kwargs)
@@ -330,8 +323,8 @@ class EventRegistrationView(CreateView):
         async_to_sync(get_channel_layer().send)(
             "email", {
                 "type": "send_html",
-                "html_render": email.render_html({"ticket": ticket}, "email/ticket.html"),
-                "text": email.render_text({"ticket": ticket}, text_template_name="email/ticket.txt"),
+                "html_render": email.render_html({"ticket": ticket}, 'email/ticket.html'),
+                "text": email.render_text({"ticket": ticket}, text_template_name='email/ticket.txt'),
                 "subject": gettext("Your ticket!"),
                 "from": settings.EVENT_TICKET_EMAIL,
                 "to": ticket.email,
@@ -350,7 +343,7 @@ class EventRegistrationView(CreateView):
         return context_data
 
     def get_success_url(self):
-        return reverse_lazy("ticket", args=(self.object.uuid,))
+        return reverse("ticket", args=(self.object.uuid,))
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -362,19 +355,20 @@ class EventRegistrationView(CreateView):
 
 class TicketView(LoginRequiredMixin, DetailView):
     model = EventTicket
-    template_name = "news/ticket_detail.html"
+    template_name = 'news/ticket_detail.html'
+    context_object_name = 'ticket'
 
 
 class MyTicketsView(ListView):
-    template_name = "news/my_tickets_list.html"
-    context_object_name = "tickets"
+    template_name = 'news/my_tickets_list.html'
+    context_object_name = 'tickets'
 
     def get_queryset(self):
-        return EventTicket.objects.filter(user=self.request.user)
+        return self.request.user.event_tickets.all()
 
 
 class AdminEventTicketView(TemplateView):
-    template_name = "news/admin_event_ticket_list.html"
+    template_name = 'news/admin_event_ticket_list.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
@@ -382,16 +376,16 @@ class AdminEventTicketView(TemplateView):
         if not event.number_of_tickets:
             raise Http404()
         context_data.update({
-            "tickets": event.eventticket_set.order_by("-active").all(),
+            "tickets": event.tickets.order_by("-active"),
             "event": event,
             "object": event,
-            "ticket_emails": ",".join([ticket.email for ticket in event.eventticket_set.filter(active=True)])
+            "ticket_emails": ",".join(ticket.email for ticket in event.tickets.filter(active=True)),
         })
         return context_data
 
 
 class AdminTimeplaceTicketView(TemplateView):
-    template_name = "news/admin_event_ticket_list.html"
+    template_name = 'news/admin_event_ticket_list.html'
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
@@ -399,10 +393,10 @@ class AdminTimeplaceTicketView(TemplateView):
         if not timeplace.number_of_tickets:
             raise Http404()
         context_data.update({
-            "tickets": timeplace.eventticket_set.order_by("-active").all(),
+            "tickets": timeplace.tickets.order_by("-active"),
             "event": timeplace.event,
             "object": timeplace,
-            "ticket_emails": ",".join([ticket.email for ticket in timeplace.eventticket_set.filter(active=True)])
+            "ticket_emails": ",".join(ticket.email for ticket in timeplace.tickets.filter(active=True)),
         })
         return context_data
 

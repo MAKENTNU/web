@@ -38,17 +38,16 @@ function hoursInsideRule(rule, startTime, endTime) {
 
 function getPeriodIn(rules, date, direction) {
     date = (date.getDay() + 6) % 7 + date.getHours() / 24 + date.getMinutes() / (24 * 60);
-    for (let ruleIndex = 0; ruleIndex < rules.length; ruleIndex++) {
-        let rule = rules[ruleIndex];
-        for (let periodIndex = 0; periodIndex < rule.periods.length; periodIndex++) {
-            if (direction === 1 && rule.periods[periodIndex][0] === date) {
+    for (let rule of rules) {
+        for (let period of rule.periods) {
+            if (direction === 1 && period[0] === date) {
                 continue;
-            } else if (direction === 0 && rule.periods[periodIndex][1] === date) {
+            } else if (direction === 0 && period[1] === date) {
                 continue;
             }
-            if (inside(rule.periods[periodIndex][0], rule.periods[periodIndex][1], date, 7)) {
+            if (inside(period[0], period[1], date, 7)) {
                 return {
-                    "period": rule.periods[periodIndex],
+                    "period": period,
                     "max_inside": rule.max_inside,
                     "max_crossed": rule.max_crossed,
                 };
@@ -61,7 +60,7 @@ function getRulesCovered(rules, startTime, endTime) {
     /**
      * Returns the rules which overlap with the period [startTime, endTime]
      */
-    let insideRules = [];
+    const insideRules = [];
     rules.forEach(function (rule) {
         if (hoursInsideRule(rule, startTime, endTime)) {
             insideRules.push(rule);
@@ -74,17 +73,17 @@ function isValidForRules(rules, startTime, endTime) {
     /**
      * Checks if the period [startTime, endTime] is valid for the given set of rules
      */
-    let coveredRules = getRulesCovered(rules, startTime, endTime);
+    const coveredRules = getRulesCovered(rules, startTime, endTime);
     if (coveredRules.length === 1) {
-        let hoursInside = hoursInsideRule(coveredRules[0], startTime, endTime);
+        const hoursInside = hoursInsideRule(coveredRules[0], startTime, endTime);
         return coveredRules[0].max_inside >= Number(hoursInside.toFixed(2));
     }
 
     // If the reservation is shorter than the maximum inside for any of the rules, it should also be valid for
     // the whole duration, even though it breaks with one or more of the max_crossed rules.
     let minTime = 7 * 24;
-    for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
-        minTime = Math.min(minTime, coveredRules[ruleIndex].max_inside);
+    for (let coveredRule of coveredRules) {
+        minTime = Math.min(minTime, coveredRule.max_inside);
     }
 
     if (minTime >= (endTime.valueOf() - startTime.valueOf()) / (60 * 60 * 1000)) {
@@ -92,10 +91,10 @@ function isValidForRules(rules, startTime, endTime) {
     }
 
     let maxTime = 0;
-    for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
-        maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
-        let hoursInside = hoursInsideRule(coveredRules[ruleIndex], startTime, endTime);
-        if (coveredRules[ruleIndex].max_crossed < Number(hoursInside.toFixed(2))) {
+    for (let coveredRule of coveredRules) {
+        maxTime = Math.max(maxTime, coveredRule.max_inside);
+        const hoursInside = hoursInsideRule(coveredRule, startTime, endTime);
+        if (coveredRule.max_crossed < Number(hoursInside.toFixed(2))) {
             return false;
         }
     }
@@ -110,14 +109,14 @@ function modifyToFirstValid(rules, startTime, endTime, modificationDirection) {
     // Check if the period is valid for the set of rules
     while (!isValidForRules(rules, startTime, endTime)) {
         // Get all rules the start/end time overlap
-        let coveredRules = getRulesCovered(rules, startTime, endTime);
+        const coveredRules = getRulesCovered(rules, startTime, endTime);
 
         // Check if the total time of the reservation is greater than what is allowed by the covered rules
         let maxTime = 0;
         let minTime = 7 * 24;
-        for (let ruleIndex = 0; ruleIndex < coveredRules.length; ruleIndex++) {
-            maxTime = Math.max(maxTime, coveredRules[ruleIndex].max_inside);
-            minTime = Math.min(minTime, coveredRules[ruleIndex].max_inside);
+        for (let coveredRule of coveredRules) {
+            maxTime = Math.max(maxTime, coveredRule.max_inside);
+            minTime = Math.min(minTime, coveredRule.max_inside);
         }
 
         // Modify the start/end time based on the maximum allowed time for the covered rules
@@ -131,7 +130,7 @@ function modifyToFirstValid(rules, startTime, endTime, modificationDirection) {
         }
 
         // If the period is still not valid, this means that we have to remove the rules one by one
-        let period = getPeriodIn(rules, modificationDirection ? endTime : startTime, modificationDirection);
+        const period = getPeriodIn(rules, modificationDirection ? endTime : startTime, modificationDirection);
         if (modificationDirection) {
             let currentOverlap = overlap(period.period[0], period.period[1], period.period[0], dateToWeekRep(endTime), 7) * 24;
             // Discard precision beyond seconds, as the calculation is prone to floating point accuracy errors
@@ -154,7 +153,7 @@ function modifyToFirstValid(rules, startTime, endTime, modificationDirection) {
                 endTime = new Date(endTime.valueOf() - currentOverlap * 60 * 60 * 1000);
             }
         } else {
-            let currentOverlap = overlap(period.period[0], period.period[1], dateToWeekRep(startTime), period.period[1], 7) * 24;
+            const currentOverlap = overlap(period.period[0], period.period[1], dateToWeekRep(startTime), period.period[1], 7) * 24;
             if (currentOverlap > period.max_inside) {
                 // If the overlap with the current time period is greater than the maximum allowed inside then
                 // shrink till it is equal to that.

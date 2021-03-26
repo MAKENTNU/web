@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load checkin_tags %}
 {% load i18n %}
@@ -6,13 +6,13 @@
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/checkin.css" %}"/>
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'checkin/css/checkin.css' %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui text container">
         <h2 class="make-col-blue">
-            {% trans "People with these skills are at<br>Makerverkstedet right now" %}:
+            {% trans "People with these skills are at<br/>Makerverkstedet right now" %}:
         </h2>
         <div class="ui feed">
             {% for skill, leveltime in skill_dict %}
@@ -23,7 +23,7 @@
                                 <img src="{{ im.url }}"/>
                             {% endthumbnail %}
                         {% else %}
-                            <img src="{% static "checkin/img/placeholder_skill.svg" %}"/>
+                            <img src="{% static 'checkin/img/placeholder_skill.svg' %}"/>
                         {% endif %}
 
                     </div>
@@ -36,11 +36,11 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock body %}
 
 {% block scripts %}
     <script>
-        $('.ui.rating').rating();
-        $('.rating.skill-lvl').rating('disable');
+        $(".ui.rating").rating();
+        $(".rating.skill-lvl").rating('disable');
     </script>
-{% endblock %}
+{% endblock scripts %}

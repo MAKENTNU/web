@@ -2,14 +2,13 @@ import json
 import logging
 from json import JSONDecodeError
 
+from django.conf import settings
 from django.utils.translation import get_language
-
-from web import settings
 
 
 class MultiLingualTextStructure:
     """
-    Data structure to keep track of multilingual string data
+    Data structure to keep track of multilingual string data.
     """
     supported_languages = list(map(lambda language: language[0], settings.LANGUAGES))
 
@@ -50,7 +49,7 @@ class MultiLingualTextStructure:
 
     def __getitem__(self, key):
         """
-        Returns the string for the given language
+        Returns the string for the given language.
         """
         value = self.languages[key]
         if value or not self.use_default_for_empty:
@@ -61,7 +60,7 @@ class MultiLingualTextStructure:
 
     def __setitem__(self, key, item: str):
         """
-        Sets the content of the given language to the given string
+        Sets the content of the given language to the given string.
         """
         self.languages[key] = item
 

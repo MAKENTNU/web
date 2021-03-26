@@ -2,31 +2,27 @@ import json
 from datetime import timedelta
 
 from django.contrib.auth.models import Permission
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from .models import Article, Event, TimePlace, EventTicket
-
-# A very small JPEG image without any content. Used for creation of simple images when creating an article
-simple_jpg = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
-             b'\x04\x04\x08\x06\x06\x05\x06\t\x08\n\n\t\x08\t\t\n\x0c\x0f\x0c\n\x0b\x0e\x0b\t\t\r\x11\r\x0e\x0f\x10' \
-             b'\x10\x11\x10\n\x0c\x12\x13\x12\x10\x13\x0f\x10\x10\x10\xff\xc9\x00\x0b\x08\x00\x01\x00\x01\x01\x01\x11' \
-             b'\x00\xff\xcc\x00\x06\x00\x10\x10\x05\xff\xda\x00\x08\x01\x01\x00\x00?\x00\xd2\xcf \xff\xd9'
+from util.test_utils import MOCK_JPG_FILE
+from .models import Article, Event, EventTicket, TimePlace
 
 
 class ModelTestCase(TestCase):
 
     @staticmethod
-    def create_time_place(event, publication_time_adjust_days, start_time_adjust_seconds,
+    def create_time_place(event, *, publication_time_adjust_days, start_time_adjust_seconds,
                           hidden=TimePlace._meta.get_field("hidden").default):
+        now = timezone.localtime()
+        start_time = now + timedelta(seconds=start_time_adjust_seconds)
         return TimePlace.objects.create(
             event=event,
-            publication_time=timezone.localtime() + timedelta(days=publication_time_adjust_days),
-            start_time=timezone.localtime() + timedelta(seconds=start_time_adjust_seconds),
-            end_time=timezone.localtime() + timedelta(minutes=1, seconds=start_time_adjust_seconds),
+            publication_time=now + timedelta(days=publication_time_adjust_days),
+            start_time=start_time,
+            end_time=start_time + timedelta(minutes=1),
             hidden=hidden,
         )
 
@@ -37,11 +33,11 @@ class ModelTestCase(TestCase):
 
         title = 'Test event'
         event = Event.objects.create(title=title)
-        time_place = self.create_time_place(event, 0, 0)
-        date_str = timezone.now().date().strftime('%Y.%m.%d')
+        time_place = self.create_time_place(event, publication_time_adjust_days=0, start_time_adjust_seconds=0)
+        date_str = timezone.localdate().strftime('%Y.%m.%d')
         self.assertEqual(str(time_place), f"{title} - {date_str}")
 
-    def test_article_manager(self):
+    def test_article_queryset(self):
         Article.objects.create(
             title='NOT PUBLISHED',
             publication_time=timezone.localtime() + timedelta(days=1),
@@ -59,25 +55,25 @@ class ModelTestCase(TestCase):
             publication_time=timezone.localtime() - timedelta(seconds=1),
         )
         self.assertEqual(Article.objects.published().count(), 2)
-        self.assertEqual(set(Article.objects.published()), {published1, published2})
+        self.assertSetEqual(set(Article.objects.published()), {published1, published2})
 
-    def test_event_manager(self):
+    def test_timeplace_queryset(self):
         event = Event.objects.create(title='', hidden=False)
         hidden_event = Event.objects.create(title='', hidden=True)
 
-        not_published = self.create_time_place(event, 1, 1, False)
-        future = self.create_time_place(event, -1, 1, False)
-        past = self.create_time_place(event, -1, -100, False)
+        event_not_published = self.create_time_place(event, publication_time_adjust_days=1, start_time_adjust_seconds=1, hidden=False)
+        event_future = self.create_time_place(event, publication_time_adjust_days=-1, start_time_adjust_seconds=1, hidden=False)
+        event_past = self.create_time_place(event, publication_time_adjust_days=-1, start_time_adjust_seconds=-100, hidden=False)
 
-        self.create_time_place(hidden_event, -1, 1)
-        self.create_time_place(hidden_event, -1, -1)
-        self.create_time_place(hidden_event, -1, 1, False)
-        self.create_time_place(hidden_event, -1, -1, False)
+        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=1)
+        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=-1)
+        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=1, hidden=False)
+        self.create_time_place(hidden_event, publication_time_adjust_days=-1, start_time_adjust_seconds=-1, hidden=False)
 
         self.assertEqual(TimePlace.objects.future().count(), 1)
         self.assertEqual(TimePlace.objects.past().count(), 1)
-        self.assertEqual(TimePlace.objects.future().first(), future)
-        self.assertEqual(TimePlace.objects.past().first(), past)
+        self.assertEqual(TimePlace.objects.future().first(), event_future)
+        self.assertEqual(TimePlace.objects.past().first(), event_past)
 
 
 class ViewTestCase(TestCase):
@@ -94,19 +90,19 @@ class ViewTestCase(TestCase):
 
         self.article = Article.objects.create(
             title='PUBLISHED',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             publication_time=timezone.localtime() - timedelta(days=1),
         )
         self.event = Event.objects.create(
             title='FUTURE',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             number_of_tickets=40,
         )
         self.timeplace = TimePlace.objects.create(
             event=self.event,
             start_time=timezone.localtime() + timedelta(minutes=5),
             end_time=timezone.localtime() + timedelta(minutes=10),
-            number_of_tickets=29
+            number_of_tickets=29,
         )
 
     def test_admin(self):
@@ -223,7 +219,6 @@ class ViewTestCase(TestCase):
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
         url_name = "event-tickets"
-        event = self.event
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -231,16 +226,10 @@ class ViewTestCase(TestCase):
         ]
         expected_context_ticket_emails = "user2@example.com,user4@example.com"
 
-        self.assert_context_ticket_emails(
-            url_name=url_name,
-            event=event,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
-            expected_context_ticket_emails=expected_context_ticket_emails
-        )
+        self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_timeplace_context_ticket_emails_only_returns_active_tickets_emails(self):
         url_name = "timeplace-tickets"
-        event = self.timeplace
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -248,61 +237,41 @@ class ViewTestCase(TestCase):
         ]
         expected_context_ticket_emails = "user2@example.com,user4@example.com"
 
-        self.assert_context_ticket_emails(
-            url_name=url_name,
-            event=event,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
-            expected_context_ticket_emails=expected_context_ticket_emails
-        )
+        self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
         url_name = "event-tickets"
-        event = self.event
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),
         ]
         expected_context_ticket_emails = "user2@example.com"
 
-        self.assert_context_ticket_emails(
-            url_name=url_name,
-            event=event,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
-            expected_context_ticket_emails=expected_context_ticket_emails
-        )
+        self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(self):
         url_name = "timeplace-tickets"
-        event = self.timeplace
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),
         ]
         expected_context_ticket_emails = "user2@example.com"
 
-        self.assert_context_ticket_emails(
-            url_name=url_name,
-            event=event,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples,
-            expected_context_ticket_emails=expected_context_ticket_emails
-        )
+        self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def assert_context_ticket_emails(self, url_name, event, username_and_ticket_state_tuples, expected_context_ticket_emails):
         """
-        Asserts that the `ticket_emails` in context at ``url_name`` equals ``expected_context_ticket_emails``
+        Asserts that the ``ticket_emails`` in context at ``url_name`` equals ``expected_context_ticket_emails``.
 
-        :param url_name: Name of URL
+        :param url_name: Name of URL path
         :param event: Event or TimePlace that the tickets belong to
-        :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
+        :param username_and_ticket_state_tuples: List of tuples in the format ``(username: str, ticket_state: boolean)``
         :param expected_context_ticket_emails: The expected string of comma separated ticket emails
 
-        :return: Boolean based on `context['ticket_emails']` is `expected_context_ticket_emails` and status code is 200
+        :return: Boolean based on whether ``context['ticket_emails'] == expected_context_ticket_emails`` and status code is 200
         """
 
-        tickets = self.create_tickets_for(
-            event=event,
-            username_and_ticket_state_tuples=username_and_ticket_state_tuples
-        )
+        self.create_tickets_for(event, username_and_ticket_state_tuples)
         self.add_permission("change_event")
 
         response = self.client.get(reverse(url_name, args=[event.pk]))
@@ -315,7 +284,7 @@ class ViewTestCase(TestCase):
         Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
 
         :param event: Event or TimePlace model that the ticket belongs to
-        :param username_and_ticket_state_tuples: List of tuples on the format `(username: str, ticket_state: boolean)`
+        :param username_and_ticket_state_tuples: List of tuples in the format ``(username: str, ticket_state: boolean)``
 
         :return: List of tickets to ``event`` with the details from ``username_and_ticket_state_tuples``
         """
@@ -348,14 +317,14 @@ class HiddenPrivateTestCase(TestCase):
 
         self.article = Article.objects.create(
             title='',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             publication_time=timezone.now() - timedelta(days=1),
             hidden=True,
             private=False,
         )
         self.event = Event.objects.create(
             title='',
-            image=SimpleUploadedFile(name='img.jpg', content=simple_jpg, content_type='image/jpeg'),
+            image=MOCK_JPG_FILE,
             hidden=True,
             private=False,
         )

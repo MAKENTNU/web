@@ -2,15 +2,14 @@ import json
 
 from django.db import models
 
-from web.multilingual.data_structures import MultiLingualTextStructure
-from web.multilingual.formfields import MultiLingualFormField, MultiLingualRichTextFormField, \
-    MultiLingualRichTextUploadingFormField
-from web.multilingual.widgets import MultiLingualTextInput, MultiLingualRichText, MultiLingualRichTextUploading
+from .data_structures import MultiLingualTextStructure
+from .formfields import MultiLingualFormField, MultiLingualRichTextFormField, MultiLingualRichTextUploadingFormField
+from .widgets import MultiLingualRichText, MultiLingualRichTextUploading, MultiLingualTextInput
 
 
 class MultiLingualTextField(models.TextField):
     """
-    A database field for multilingual text fields
+    A database field for multilingual text fields.
     """
     widget = MultiLingualTextInput
     form_class = MultiLingualFormField
@@ -24,7 +23,7 @@ class MultiLingualTextField(models.TextField):
 
     def to_python(self, value):
         """
-        Deserialization of the given value
+        Deserialization of the given value.
         """
         if value is None:
             return value
@@ -34,7 +33,7 @@ class MultiLingualTextField(models.TextField):
 
     def get_prep_value(self, value):
         """
-        Converts the given value to a value that can be saved in the database
+        Converts the given value to a value that can be saved in the database.
         """
         if value is None:
             return value
@@ -45,13 +44,13 @@ class MultiLingualTextField(models.TextField):
 
     def from_db_value(self, value, expression, connection):
         """
-        Converts the database value to the python representation
+        Converts the database value to the Python representation.
         """
         return MultiLingualTextStructure(value, self.use_default_if_empty)
 
     def formfield(self, **kwargs):
         """
-        Sets up the form field
+        Sets up the form field.
         """
         defaults = {"form_class": self.form_class, "widget": self.widget}
         defaults.update(kwargs)

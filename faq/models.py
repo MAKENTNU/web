@@ -5,15 +5,15 @@ from web.multilingual.modelfields import MultiLingualRichTextUploadingField, Mul
 
 
 class Category(models.Model):
-    name = MultiLingualTextField(unique=True, verbose_name=_('Category'))
+    name = MultiLingualTextField(unique=True, verbose_name=_("Category"))
 
     def __str__(self):
         return str(self.name)
 
 
 class Question(models.Model):
-    title = MultiLingualTextField(unique=True, verbose_name=_('Question'))
-    answer = MultiLingualRichTextUploadingField(verbose_name=_('Answer'))
+    title = MultiLingualTextField(unique=True, verbose_name=_("Question"))
+    answer = MultiLingualRichTextUploadingField(verbose_name=_("Answer"))
     categories = models.ManyToManyField(
         to=Category,
         related_name='questions',

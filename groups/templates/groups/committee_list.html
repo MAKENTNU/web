@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 
@@ -12,21 +12,19 @@
     <div class="committees ui divided items text container basic segment">
         {% for committee in committees %}
             <div class="item">
-                <a class="image" href="{% url 'committee_detail' committee.id %}">
+                <a class="image" href="{% url 'committee_detail' committee.pk %}">
                     {% if committee.image %}
                         <img src="{{ committee.image.url }}"/>
                     {% endif %}
                 </a>
                 <div class="content">
                     <div class="header">
-                        <a class="make-col-blue" href="{% url 'committee_detail' committee.id %}">
+                        <a class="make-col-blue" href="{% url 'committee_detail' committee.pk %}">
                             {{ committee.name|capfirst }}
                         </a>
                     </div>
                     <div class="meta">
-                        <a href="mailto:{{ committee.email }}">
-                            {{ committee.email }}
-                        </a>
+                        {{ committee.email|urlize }}
                     </div>
                     <div class="description">
                         {% if committee.clickbait %}

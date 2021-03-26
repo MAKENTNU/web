@@ -1,29 +1,29 @@
 from django.contrib import messages
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import ValidationError, PermissionDenied
-from django.http import HttpResponseRedirect, Http404
+from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, RedirectView, DeleteView
+from django.views.generic import CreateView, DeleteView, ListView, RedirectView, TemplateView, UpdateView
 
-from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm, SecretsForm
-from internal.models import Member, SystemAccess, Secret
 from make_queue.models.course import Printer3DCourse
+from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, SecretsForm, ToggleSystemAccessForm
+from .models import Member, Secret, SystemAccess
 
 
 class HomeView(TemplateView):
-    template_name = "internal/home.html"
+    template_name = 'internal/home.html'
 
 
 class SecretsView(ListView):
     model = Secret
-    template_name = "internal/secret_list.html"
+    template_name = 'internal/secret_list.html'
     context_object_name = 'secrets'
 
 
 class CreateSecretView(PermissionRequiredMixin, CreateView):
-    permission_required = 'internal.add_secret'
+    permission_required = ('internal.add_secret',)
     model = Secret
     form_class = SecretsForm
     template_name = 'internal/secret_create.html'
@@ -32,7 +32,7 @@ class CreateSecretView(PermissionRequiredMixin, CreateView):
 
 
 class EditSecretView(PermissionRequiredMixin, UpdateView):
-    permission_required = 'internal.change_secret'
+    permission_required = ('internal.change_secret',)
     model = Secret
     form_class = SecretsForm
     template_name = 'internal/secret_edit.html'
@@ -41,35 +41,33 @@ class EditSecretView(PermissionRequiredMixin, UpdateView):
 
 
 class DeleteSecretView(PermissionRequiredMixin, DeleteView):
-    permission_required = 'internal.delete_secret'
+    permission_required = ('internal.delete_secret',)
     model = Secret
     success_url = reverse_lazy('secrets')
-
-    def delete(self, request, *args, **kwargs):
-        return super().delete(request, *args, **kwargs)
 
 
 class MembersListView(ListView):
     model = Member
-    template_name = "internal/member_list.html"
+    template_name = 'internal/member_list.html'
+    context_object_name = 'members'
 
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context_data = super().get_context_data(object_list=object_list, **kwargs)
-        if "pk" in self.kwargs:
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        if 'pk' in self.kwargs:
             context_data.update({
-                "selected_member": get_object_or_404(Member, pk=int(self.kwargs["pk"])),
+                'selected_member': get_object_or_404(Member, pk=self.kwargs['pk']),
             })
         return context_data
 
 
 class AddMemberView(PermissionRequiredMixin, CreateView):
-    permission_required = ("internal.can_register_new_member",)
+    permission_required = ('internal.can_register_new_member',)
     model = Member
     form_class = AddMemberForm
-    template_name = "internal/member_create.html"
+    template_name = 'internal/member_create.html'
 
     def get_success_url(self):
-        return reverse_lazy("edit-member", args=(self.object.pk,))
+        return reverse('edit-member', args=(self.object.pk,))
 
     def form_valid(self, form):
         user = form.cleaned_data['user']
@@ -83,14 +81,14 @@ class AddMemberView(PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EditMemberView(UserPassesTestMixin, UpdateView):
+class EditMemberView(PermissionRequiredMixin, UpdateView):
     model = Member
     form_class = EditMemberForm
-    template_name = "internal/member_edit.html"
+    template_name = 'internal/member_edit.html'
 
-    def test_func(self):
-        return self.request.user == self.get_object().user or self.request.user.has_perm(
-            "internal.can_edit_group_membership")
+    def has_permission(self):
+        return (self.request.user == self.get_object().user
+                or self.request.user.has_perm('internal.can_edit_group_membership'))
 
     def get_form(self, form_class=None):
         if form_class is None:
@@ -98,11 +96,11 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
         return form_class(self.request.user, **self.get_form_kwargs())
 
     def get_success_url(self):
-        return reverse("members", args=(self.object.pk,))
+        return reverse('members', args=(self.object.pk,))
 
     def form_valid(self, form):
         user = self.object.user
-        card_number = form.cleaned_data["card_number"]
+        card_number = form.cleaned_data['card_number']
         user.card_number = card_number
         user.save()
         return super().form_valid(form)
@@ -111,8 +109,8 @@ class EditMemberView(UserPassesTestMixin, UpdateView):
 class MemberQuitView(UpdateView):
     model = Member
     form_class = MemberQuitForm
-    template_name = "internal/member_quit.html"
-    success_url = reverse_lazy("members")
+    template_name = 'internal/member_quit.html'
+    success_url = reverse_lazy('members')
 
     def form_valid(self, form):
         member = form.instance
@@ -123,7 +121,7 @@ class MemberQuitView(UpdateView):
                 _("Member was not set to quit as the member has already quit or retired."),
             )
         else:
-            member.toggle_quit(True, form.cleaned_data["reason_quit"], form.cleaned_data["date_quit"])
+            member.set_quit(True, form.cleaned_data['reason_quit'], form.cleaned_data['date_quit'])
             member.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -139,9 +137,9 @@ class MemberUndoQuitView(RedirectView):
                 _("Member's quit status was not undone, as the member had not quit."),
             )
         else:
-            member.toggle_quit(False)
+            member.set_quit(False)
             member.save()
-        return reverse_lazy("members", args=(member.pk,))
+        return reverse_lazy('members', args=(member.pk,))
 
 
 class MemberRetireView(RedirectView):
@@ -155,9 +153,9 @@ class MemberRetireView(RedirectView):
                 _("Member was not set to retired as the member has already quit or retired."),
             )
         else:
-            member.toggle_retirement(True)
+            member.set_retirement(True)
             member.save()
-        return reverse_lazy("members", args=(member.pk,))
+        return reverse_lazy('members', args=(member.pk,))
 
 
 class MemberUndoRetireView(RedirectView):
@@ -171,23 +169,23 @@ class MemberUndoRetireView(RedirectView):
                 _("Member's retirement was not undone, as the member was not retired."),
             )
         else:
-            member.toggle_retirement(False)
+            member.set_retirement(False)
             member.save()
-        return reverse_lazy("members", args=(member.pk,))
+        return reverse_lazy('members', args=(member.pk,))
 
 
 class ToggleSystemAccessView(UpdateView):
     model = SystemAccess
     form_class = ToggleSystemAccessForm
-    template_name = "internal/system_access_edit.html"
+    template_name = 'internal/system_access_edit.html'
 
     def get_context_data(self, **kwargs):
         if (self.object.member.user != self.request.user
-                and not self.request.user.has_perm("internal.change_systemaccess")):
+                and not self.request.user.has_perm('internal.change_systemaccess')):
             raise PermissionDenied("The requesting user does not have permission to change others' system accesses")
         if not self.object.should_be_changed():
             raise Http404("System access should not be changed")
         return super().get_context_data(**kwargs)
 
     def get_success_url(self):
-        return reverse_lazy("members", args=(self.object.member.pk,))
+        return reverse('members', args=(self.object.member.pk,))

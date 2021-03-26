@@ -1,12 +1,12 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
-    <script src="{% static "web/js/image_link.js" %}"></script>
+    <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
+    <script src="{% static 'web/js/image_link.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -27,13 +27,13 @@
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}">
-                    <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
-                    <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
-                    <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
-                    <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
+                    <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}">
+                    <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}">
+                    <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}">
+                    <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}">
                     <div>
                         <h2>
-                            <a href="{% url 'article' article.id %}">{{ article.title }}</a>
+                            <a href="{% url 'article' article.pk %}">{{ article.title }}</a>
                         </h2>
                         <p>{{ article.clickbait }}</p>
                     </div>

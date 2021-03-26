@@ -4,12 +4,12 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Machines" %}{% endblock %}
+{% block title %}{% trans "Machines" %}{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -46,4 +46,4 @@
             </div>
         {% endfor %}
     </div>
-{% endblock %}
+{% endblock body %}

@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 
@@ -9,7 +9,7 @@
         <h1>
             {% block form_title %}
                 {% trans "Rule" %}
-            {% endblock %}
+            {% endblock form_title %}
         </h1>
         {% for error in form.non_field_errors %}
             <div class="ui red message">
@@ -17,7 +17,7 @@
                 <p>{{ error }}</p>
             </div>
         {% endfor %}
-        <form class="ui form" method="post">
+        <form class="ui form" method="POST">
             {% csrf_token %}
             <div class="ui three fields">
                 <div class="ui field">
@@ -108,4 +108,4 @@
         });
     </script>
 
-{% endblock %}
+{% endblock body %}

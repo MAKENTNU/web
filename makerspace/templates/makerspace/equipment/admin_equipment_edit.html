@@ -6,8 +6,8 @@
 {% block title %}{% trans "Edit equipment" %}{% endblock title %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -15,7 +15,7 @@
         {% block form_header %}{% trans "Edit equipment" %}{% endblock form_header %}
     </h1>
 
-    <form class="ui form text container" method="post" enctype="multipart/form-data">
+    <form class="ui form text container" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -45,7 +45,9 @@
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
+{% endblock body %}
 
+{% block scripts %}
     <script>
         $(".message .close").click(function () {
             $(this)
@@ -55,4 +57,4 @@
 
         $("span[data-content]").popup();
     </script>
-{% endblock body %}
+{% endblock scripts %}

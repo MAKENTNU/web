@@ -1,17 +1,17 @@
 import json
 
+from django.conf import settings
 from django.test import TestCase
 from django.utils import translation
 
-from web import settings
-from web.multilingual.data_structures import MultiLingualTextStructure
-from web.multilingual.formfields import MultiLingualFormField
-from web.multilingual.modelfields import MultiLingualTextField
+from ..multilingual.data_structures import MultiLingualTextStructure
+from ..multilingual.formfields import MultiLingualFormField
+from ..multilingual.modelfields import MultiLingualTextField
 
 
 class TestMultiLingualTextStructure(TestCase):
     """
-    Tests for the MultiLingualTextStructure class
+    Tests for the MultiLingualTextStructure class.
     """
 
     def setUp(self):
@@ -30,7 +30,7 @@ class TestMultiLingualTextStructure(TestCase):
     def test_constructor_serialized_json(self):
         """
         Tests if the constructor handles JSON correctly. That is, set the the content of each language to the value
-        given in the serialized json
+        given in the serialized json.
         """
         content = json.dumps({
             "nb": "test-nb",
@@ -43,7 +43,7 @@ class TestMultiLingualTextStructure(TestCase):
     def test_constructor_string(self):
         """
         Tests if the constructor handles corrupt data (i.e. a string) correctly. That is, set the content of the
-        default language to this string
+        default language to this string.
         """
         structure = MultiLingualTextStructure("test-nb", True)
         self.assertEqual(structure["nb"], "test-nb")
@@ -51,7 +51,7 @@ class TestMultiLingualTextStructure(TestCase):
 
     def test_constructor_None(self):
         """
-        Tests if the constructor handles the none value correctly. That is the same as if the structure is empty
+        Tests if the constructor handles the ``None`` value correctly. That is, the same as if the structure is empty.
         """
         structure = MultiLingualTextStructure(None, True)
         self.assertEqual(structure["nb"], "")
@@ -59,7 +59,7 @@ class TestMultiLingualTextStructure(TestCase):
 
     def test_str(self):
         """
-        Tests the to string method. It should return the value of the current language of the thread
+        Tests the ``__str__()`` method. It should return the value of the current language of the thread.
         """
         previous_language = translation.get_language()
         content = json.dumps({
@@ -96,14 +96,14 @@ class TestMultiLingualTextStructure(TestCase):
 
 class TestMultiLingualTextField(TestCase):
     """
-    Tests for the MultiLingualTextField class. Most tests assumes that the MultiLingualTextStructure class
-    works correctly
+    Tests for the ``MultiLingualTextField`` class. Most tests assume that the ``MultiLingualTextStructure`` class
+    works correctly.
     """
 
     def test_to_python(self):
         """
-        Tests the to_python method. Which should return None (if None given), the object if MultiLingualTextStructure or
-        the object converted to MultiLingualTextStructure otherwise.
+        Tests the ``to_python()`` method. It should return ``None`` (if ``None`` given), the object if ``MultiLingualTextStructure``,
+        or the object converted to ``MultiLingualTextStructure`` otherwise.
         """
         field = MultiLingualTextField()
         self.assertEqual(None, field.to_python(None), "to_python of None should always return None.")
@@ -126,8 +126,8 @@ class TestMultiLingualTextField(TestCase):
 
     def test_get_prep_value(self):
         """
-        Tests the get_prep_value method. This should return None (if None given), serialized json of its content if
-        MultiLingualTextStructure is given or just the value otherwise.
+        Tests the ``get_prep_value()`` method. This should return ``None`` (if ``None`` given), serialized json of its content if
+        ``MultiLingualTextStructure`` is given, or just the value otherwise.
         """
         field = MultiLingualTextField()
         self.assertEqual(None, field.get_prep_value(None), "get_prep_value of None should always return None.")
@@ -145,7 +145,7 @@ class TestMultiLingualTextField(TestCase):
 
     def test_from_db_value(self):
         """
-        Tests the from_db_value method. Which should always return a MultiLingualTextStructure.
+        Tests the ``from_db_value()`` method. Which should always return a ``MultiLingualTextStructure``.
         """
         field = MultiLingualTextField()
 
@@ -172,7 +172,7 @@ class TestMultiLingualTextField(TestCase):
 
 class TestMultiLingualFormField(TestCase):
     """
-    Tests for the MultiLingualFormField class. Tests assume that the MultiLingualTextStructure class works correctly.
+    Tests for the ``MultiLingualFormField`` class. Tests assume that the ``MultiLingualTextStructure`` class works correctly.
     """
 
     def setUp(self):
@@ -188,7 +188,7 @@ class TestMultiLingualFormField(TestCase):
 
     def test_compress(self):
         """
-        Tests the compress method. We can assume that the data passed is valid data, as the data is cleaned for each
+        Tests the ``compress()`` method. We can assume that the data passed is valid data, as the data is cleaned for each
         individual field before being passed to the method.
         """
         form_field = MultiLingualFormField()
