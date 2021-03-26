@@ -120,7 +120,7 @@
                     data-email="{{ member.email }}"
                     data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
-                    data-term-joined="{{ member.term_joined }}"
+                    data-semester-joined="{{ member.semester_joined }}"
                     data-date-joined="{{ member.date_joined|short_date }}"
                     data-date-joined-sortable="{{ member.date_joined|iso_date }}"
                     data-date-quit-or-retired="{{ member.date_quit_or_retired|short_date }}"
@@ -130,7 +130,7 @@
                             {% elif member.quit %}
                                 {% trans "Date quit" %}
                             {% endif %}"
-                    data-term-quit-or-retired="{{ member.term_quit_or_retired|default:"" }}"
+                    data-semester-quit-or-retired="{{ member.semester_quit_or_retired|default:"" }}"
                     data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
                     data-status="{{ membership_status }}"
                     data-committees="{{ committees }}"
@@ -171,7 +171,7 @@
                             <div class="ui {{ color }} label">{{ status_name }}</div>
                         {% endfor %}
                     </td>
-                    <td class="computer only">{{ member.term_joined }}</td>
+                    <td class="computer only">{{ member.semester_joined }}</td>
                     <td class="mobile hidden">
                         {% if member.email %}
                             {{ member.email|urlize }}

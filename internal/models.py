@@ -13,7 +13,7 @@ from groups.models import Committee
 from users.models import User
 from web.modelfields import UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
-from .util import date_to_term
+from .util import date_to_semester
 
 
 class Member(models.Model):
@@ -72,14 +72,14 @@ class Member(models.Model):
             self.set_membership(True)
 
     @property
-    def term_joined(self):
-        return date_to_term(self.date_joined)
+    def semester_joined(self):
+        return date_to_semester(self.date_joined)
 
     @property
-    def term_quit_or_retired(self):
+    def semester_quit_or_retired(self):
         if self.date_quit_or_retired is None:
             return None
-        return date_to_term(self.date_quit_or_retired)
+        return date_to_semester(self.date_quit_or_retired)
 
     def set_quit(self, quit_status: bool, reason="", date_quit_or_retired=timezone.now()):
         """
