@@ -54,7 +54,7 @@ class EditMemberForm(forms.ModelForm):
 class RestrictedEditMemberForm(EditMemberForm):
     class Meta:
         model = Member
-        fields = ['email', 'phone_number', 'study_program', 'card_number']
+        fields = ['contact_email', 'phone_number', 'study_program', 'card_number']
 
 
 class MemberRetireForm(forms.ModelForm):

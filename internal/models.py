@@ -31,7 +31,7 @@ class Member(models.Model):
         verbose_name=_("Committees"),
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
-    email = models.EmailField(blank=True, verbose_name=_("Contact email"))
+    contact_email = models.EmailField(blank=True, verbose_name=_("Contact email"))
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
     study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
@@ -60,8 +60,6 @@ class Member(models.Model):
         super().save(force_insert, force_update, using, update_fields)
 
         if is_creation:
-            self.email = self.user.email
-
             # Setup all properties for new members
             for property_name, value in SystemAccess.NAME_CHOICES:
                 # All members will be registered on the website when added to the member list

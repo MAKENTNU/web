@@ -103,7 +103,7 @@
                     {% trans "Joined" %}<i id="member-sort-dateJoinedSortable" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Contact email" %}<i id="member-sort-email" class="ui sort icon"></i>
+                    {% trans "Contact email" %}<i id="member-sort-contactEmail" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
                     {% trans "Phone number" %}<i id="member-sort-phone" class="ui sort icon"></i>
@@ -117,7 +117,7 @@
                 <tr data-pk="{{ member.pk }}"
                     data-phone="{{ member.phone_number }}"
                     data-name="{{ member.user.get_full_name }}"
-                    data-email="{{ member.email }}"
+                    data-contact-email="{{ member.contact_email }}"
                     data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
                     data-semester-joined="{{ member.semester_joined }}"
@@ -173,8 +173,8 @@
                     </td>
                     <td class="computer only">{{ member.semester_joined }}</td>
                     <td class="mobile hidden">
-                        {% if member.email %}
-                            {{ member.email|urlize }}
+                        {% if member.contact_email %}
+                            {{ member.contact_email|urlize }}
                         {% endif %}
                     </td>
                     <td class="computer only">
@@ -230,7 +230,7 @@
                         <b>{% trans "Contact email" %}</b>
                     </td>
                     <td>
-                        <b><a id="member-email"></a></b>
+                        <b><a id="member-contactEmail"></a></b>
                     </td>
                 </tr>
                 <tr>

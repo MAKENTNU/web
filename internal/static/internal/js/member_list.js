@@ -44,7 +44,7 @@ function showDetailedMemberInformation(member) {
         "name-header": member.data.name,
         name: member.data.name,
         phone: member.data.phone,
-        email: member.data.email,
+        contactEmail: member.data.contactEmail,
         cardNumber: member.data.cardNumber,
         studyProgram: member.data.studyProgram,
         dateJoined: `${member.data.semesterJoined} (${member.data.dateJoined})`,
@@ -79,7 +79,7 @@ function showDetailedMemberInformation(member) {
         });
 
     $memberInfoModal.find("#member-phone").attr("href", `tel:${member.data.phone}`);
-    $memberInfoModal.find("#member-email").attr("href", `mailto:${member.data.email}`);
+    $memberInfoModal.find("#member-contactEmail").attr("href", `mailto:${member.data.contactEmail}`);
 
     for (let hideableAttribute of ["dateQuitOrRetired", "reasonQuit", "role", "comment"]) {
         $memberInfoModal.find(`#member-${hideableAttribute}`)
@@ -255,7 +255,7 @@ function setup() {
                 pk: $row.data("pk"),
                 name: $row.data("name"),
                 phone: $row.data("phone"),
-                email: $row.data("email"),
+                contactEmail: $row.data("contact-email"),
                 cardNumber: $row.data("card-number"),
                 studyProgram: $row.data("study-program"),
                 dateJoined: $row.data("date-joined"),
@@ -308,7 +308,7 @@ function setup() {
         state.allMembers.push(member);
     });
 
-    for (let sortAttribute of ["name", "committees", "status", "dateJoinedSortable", "email", "role", "phone"]) {
+    for (let sortAttribute of ["name", "committees", "status", "dateJoinedSortable", "contactEmail", "role", "phone"]) {
         $(`#member-sort-${sortAttribute}`).closest("th").click((e) => setSort(
             sortAttribute, $(e.target).find(".icon"),
         ));
