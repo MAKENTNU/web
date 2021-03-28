@@ -977,6 +977,10 @@ msgstr "Sist endret"
 msgid "Click to show - only if you're alone!"
 msgstr "Klikk for å vise - bare hvis du er alene!"
 
+#: internal/validators.py:9
+msgid "Enter a valid format for a semester."
+msgstr "Oppgi et gyldig format for et semester."
+
 #: make_queue/admin.py:23
 #: make_queue/templates/make_queue/machine_list.html:7
 #: make_queue/templates/make_queue/machine_list.html:17
