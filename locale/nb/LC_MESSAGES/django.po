@@ -143,14 +143,14 @@ msgstr "Rediger kunngjøring"
 msgid "Card number"
 msgstr "Kortnummer"
 
-#: card/formfields.py:29
-#: card/templates/card/widgets/card_number_input.html:11
-msgid "Card number must be between seven and ten digits long."
-msgstr "Kortnummeret må være mellom syv og ti siffer langt."
-
 #: card/modelfields.py:19
 msgid "Card number already in use"
 msgstr "Kortnummeret er allerede i bruk"
+
+#: card/templates/card/widgets/card_number_input.html:11
+#: card/validators.py:6
+msgid "Card number must be between seven and ten digits long."
+msgstr "Kortnummeret må være mellom syv og ti siffer langt."
 
 #: card/validators.py:5
 msgid "Card number must be ten digits long."

@@ -45,7 +45,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='printer3dcourse',
             name='_card_number',
-            field=card.modelfields.CardNumberField(blank=True, default='', error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, validators=[django.core.validators.RegexValidator('^\\d{10}$', 'Card number must be ten digits long.')], verbose_name='Card number'),
+            field=card.modelfields.CardNumberField(blank=True, default='', error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, verbose_name='Card number'),
             preserve_default=False,
         ),
         migrations.AlterField(
