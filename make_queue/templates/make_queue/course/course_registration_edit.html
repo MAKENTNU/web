@@ -132,7 +132,9 @@
         $("input[name='username']").focusout((event) => {
             $.ajax(`${langPrefix}/reservation/json/${$(event.target).val()}/`, {
                 success: function (data) {
-                    $("input[name='name']").val(data["full_name"]);
+                    if (data["full_name"] !== ""){
+                         $("input[name='name']").val(data["full_name"]);
+                    }
                     $('#username_not_found_warning').fadeOut();
                 },
                 error: function () {
