@@ -1402,14 +1402,6 @@ msgstr "Maksimalt antall aktive reservasjoner"
 msgid "User has no personal quotas"
 msgstr "Brukeren har ingen personlige kvoter"
 
-#: make_queue/templates/make_queue/reservation_actions.html:15
-msgid "You must be logged in to create new reservations"
-msgstr "Du må være logget inn for å kunne lage nye reservasjoner"
-
-#: make_queue/templates/make_queue/reservation_actions.html:19
-msgid "You have reached the maximum number of future reservations"
-msgstr "Du har nådd maksimalt antall fremtidige reservasjoner"
-
 #: make_queue/templates/make_queue/reservation_actions.html:24
 #: make_queue/templates/make_queue/reservation_edit.html:23
 msgid "New reservation"
@@ -1683,6 +1675,19 @@ msgstr "Søn"
 #, python-brace-format
 msgid "{machine_status} for {duration}"
 msgstr "{machine_status} i {duration}"
+
+#: make_queue/templatetags/reservation_extra.py:94
+msgid "You must be logged in to create reservations."
+msgstr "Du må være logget inn for å kunne lage reservasjoner."
+
+#: make_queue/templatetags/reservation_extra.py:99
+#, python-brace-format
+msgid "The machine has status “{status}”."
+msgstr "Maskinen har status «{status}»."
+
+#: make_queue/templatetags/reservation_extra.py:101
+msgid "You have reached the maximum number of future reservations."
+msgstr "Du har nådd maksimalt antall fremtidige reservasjoner."
 
 #: make_queue/views/reservation/reservation.py:35
 #, python-brace-format

@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from datetime import datetime, timedelta
-from typing import List, Union
+from typing import List, Tuple, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
@@ -147,9 +147,11 @@ class Machine(models.Model):
             return self.STATUS_CHOICES_DICT[self.get_status()]
         return super()._get_FIELD_display(field)
 
-    @property
-    def is_reservable(self):
-        return self.get_status() in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE}
+    def reservable_status_display_tuple(self) -> Tuple[bool, str]:
+        return (
+            self.get_status() in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE},
+            self.get_status_display(),
+        )
 
 
 class MachineUsageRule(models.Model):
