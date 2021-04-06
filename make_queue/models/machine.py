@@ -160,7 +160,7 @@ class MachineUsageRule(models.Model):
         on_delete=models.CASCADE,
         related_name='usage_rule',
     )
-    content = MultiLingualRichTextUploadingField()
+    content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
 
     def __str__(self):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)

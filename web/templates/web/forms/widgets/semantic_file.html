@@ -1,7 +1,7 @@
 {% load i18n %}
 
 
-<div id="{{ widget.attrs.id }}" class="ui action input">
+<div id="{{ widget.attrs.id }}" class="file-upload ui action input">
     <input type="text" readonly value="{{ widget.value.name }}"/>
     <button id="{{ widget.attrs.id }}-button" class="ui right labeled icon make-bg-yellow button">
         {% trans "Upload image" %} <i class="ui upload icon"></i>

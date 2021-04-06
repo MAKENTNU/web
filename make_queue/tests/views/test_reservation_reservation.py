@@ -90,7 +90,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
             end_time=form.cleaned_data["end_time"],
         )
         self.assertEqual(view.get_error_message(form, reservation),
-                         "Reservasjoner kan bare lages 7 dager frem i tid")
+                         "Reservasjoner kan bare lages 7 dager fram i tid")
 
     def test_get_error_message_machine_out_of_order(self):
         view = self.get_view()

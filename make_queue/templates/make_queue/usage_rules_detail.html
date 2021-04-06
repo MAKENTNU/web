@@ -3,10 +3,12 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
+{% block title %}{{ title }}{% endblock title %}
+
 {% block body %}
     <div class="ui container">
         <h1>
-            {% blocktrans with machine_type=machine_type %}Usage rules for {{ machine_type }}{% endblocktrans %}
+            {{ title }}
         </h1>
         <div style="margin-bottom: 10px">
             <a class="ui blue button" href="{% url 'reservation_rule_list' machine_type %}">

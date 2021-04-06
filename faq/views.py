@@ -1,9 +1,12 @@
+from abc import ABC
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.templatetags.permission_tags import has_any_faq_permissions
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import QuestionForm
 from .models import Category, Question
 
@@ -23,22 +26,25 @@ class FAQAdminListView(PermissionRequiredMixin, ListView):
         return has_any_faq_permissions(self.request.user)
 
 
-class FAQCreateView(PermissionRequiredMixin, CreateView):
+class QuestionEditMixin(CustomFieldsetFormMixin, ABC):
+    model = Question
+    form_class = QuestionForm
+    success_url = reverse_lazy('faq_admin_list')
+
+    back_button_link = success_url
+    back_button_text = _("Admin page for questions")
+
+
+class FAQCreateView(PermissionRequiredMixin, QuestionEditMixin, CreateView):
     permission_required = ('faq.add_question',)
-    model = Question
-    form_class = QuestionForm
-    template_name = 'faq/question_create.html'
-    context_object_name = 'question'
-    success_url = reverse_lazy('faq_admin_list')
+
+    form_title = _("New Question")
 
 
-class FAQEditView(PermissionRequiredMixin, UpdateView):
+class FAQEditView(PermissionRequiredMixin, QuestionEditMixin, UpdateView):
     permission_required = ('faq.change_question',)
-    model = Question
-    form_class = QuestionForm
-    template_name = 'faq/question_edit.html'
-    context_object_name = 'question'
-    success_url = reverse_lazy('faq_admin_list')
+
+    form_title = _("Edit Question")
 
 
 class FAQDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

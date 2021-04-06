@@ -79,7 +79,8 @@ class ArticleQuerySet(NewsBaseQuerySet):
 
 
 class Article(NewsBase):
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"),
+                                            help_text=_("The article will be hidden until this date."))
 
     objects = ArticleQuerySet.as_manager()
 
@@ -178,12 +179,14 @@ class TimePlace(models.Model):
         on_delete=models.CASCADE,
         related_name='timeplaces',
     )
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"),
+                                            help_text=_("The occurrence will not be shown before this date."))
     start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("start time"))
     end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("end time"))
     place = UnlimitedCharField(blank=True, verbose_name=_("location"))
     place_url = URLTextField(blank=True, verbose_name=_("location URL"))
-    hidden = models.BooleanField(default=True, verbose_name=_("hidden"))
+    hidden = models.BooleanField(default=True, verbose_name=_("hidden"),
+                                 help_text=_("If selected, the occurrence will be hidden, even after the publication date."))
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
 
     objects = TimePlaceQuerySet.as_manager()

@@ -2,12 +2,11 @@
 {% load i18n %}
 
 
+{% block title %}{{ title }}{% endblock title %}
+
 {% block body %}
     <div class="ui container">
-        <h2>
-            {% firstof timeplace.event.title event.title as event_title %}
-            {% blocktrans with title=event_title %}Register for the event “{{ title }}”{% endblocktrans %}
-        </h2>
+        <h2>{{ title }}</h2>
 
         {% for error in form.non_field_errors %}
             <div class="ui error message">

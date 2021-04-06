@@ -4,6 +4,7 @@ import logging
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingFormField
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .data_structures import MultiLingualTextStructure
 
@@ -13,6 +14,9 @@ class MultiLingualFormField(forms.MultiValueField):
     A multi-value field for a multilingual database field.
     """
     field_class = forms.CharField
+    default_error_messages = {
+        'required': _("One or more languages have no content."),
+    }
 
     def __init__(self, *args, **kwargs):
         defaults = {

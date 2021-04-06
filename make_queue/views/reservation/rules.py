@@ -2,12 +2,13 @@ from abc import ABC
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import ModelFormMixin
 
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
 from ...forms import ReservationRuleForm
 from ...models.machine import MachineType, MachineUsageRule
 from ...models.reservation import Quota, ReservationRule
@@ -36,44 +37,59 @@ class ReservationRuleListView(MachineTypeBasedView, ListView):
         return self.machine_type.reservation_rules.all()
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if not self.request.user.is_anonymous:
+        context_data = super().get_context_data(**{
+            # This translation is here instead of in the template, to avoid two translation entries
+            # differing only in format syntax (`{var}` vs `%(var)s`)
+            'title': _("Reservation rules for {machine_type}").format(machine_type=self.machine_type),
+            **kwargs,
+        })
+        if self.request.user.is_authenticated:
             context_data.update({
                 'quotas': Quota.get_user_quotas(self.request.user, self.machine_type),
             })
         return context_data
 
 
-class BaseReservationRulePostView(MachineTypeBasedView, ModelFormMixin, ABC):
+class BaseReservationRuleEditView(MachineTypeBasedView, CustomFieldsetFormMixin, ModelFormMixin, ABC):
     model = ReservationRule
     form_class = ReservationRuleForm
-    context_object_name = 'rule'
+
+    narrow = False
+    centered_title = False
+    custom_fieldsets = [
+        {'fields': ('start_time', 'days_changed', 'end_time'), 'layout_class': "three"},
+        {'fields': ('start_days', 'max_hours', 'max_inside_border_crossed'), 'layout_class': "three"},
+    ]
 
     def get_queryset(self):
         return self.machine_type.reservation_rules.all()
 
     def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        # If the request contains posted data:
-        if 'data' in kwargs:
-            # Forcefully pass the machine type from the URL path to the form
-            data = kwargs['data'].copy()
-            data['machine_type'] = self.machine_type.pk
-            kwargs['data'] = data
-        return kwargs
+        # Forcefully pass the machine type from the URL to the form
+        return insert_form_field_values(super().get_form_kwargs(), ('machine_type', self.machine_type.pk))
+
+    def get_back_button_link(self):
+        return self.get_success_url()
+
+    def get_back_button_text(self):
+        return _("Reservation rules for {machine_type}").format(machine_type=self.machine_type)
 
     def get_success_url(self):
-        return reverse('reservation_rule_list', args=[self.object.machine_type])
+        return reverse('reservation_rule_list', args=[self.machine_type])
 
 
-class CreateReservationRuleView(PermissionRequiredMixin, BaseReservationRulePostView, CreateView):
+class CreateReservationRuleView(PermissionRequiredMixin, BaseReservationRuleEditView, CreateView):
     permission_required = ('make_queue.add_reservation_rule',)
-    template_name = 'make_queue/rule_create.html'
+
+    def get_form_title(self):
+        return _("New Rule for {machine_type}").format(machine_type=self.machine_type)
 
 
-class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRulePostView, UpdateView):
+class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRuleEditView, UpdateView):
     permission_required = ('make_queue.change_reservation_rule',)
-    template_name = 'make_queue/rule_edit.html'
+
+    def get_form_title(self):
+        return _("Rule for {machine_type}").format(machine_type=self.machine_type)
 
 
 class DeleteReservationRuleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -92,6 +108,14 @@ class MachineUsageRulesDetailView(MachineTypeBasedView, DetailView):
     def get_object(self, queryset=None):
         usage_rule, _created = MachineUsageRule.objects.get_or_create(machine_type=self.machine_type)
         return usage_rule
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**{
+            # This translation is here instead of in the template, to avoid two translation entries
+            # differing only in format syntax (`{var}` vs `%(var)s`)
+            'title': _("Usage rules for {machine_type}").format(machine_type=self.machine_type),
+            **kwargs,
+        })
 
 
 class EditUsageRulesView(PermissionRequiredMixin, MachineTypeBasedView, UpdateView):

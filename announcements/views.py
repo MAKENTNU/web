@@ -1,8 +1,11 @@
+from abc import ABC
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import AnnouncementForm
 from .models import Announcement
 
@@ -14,20 +17,32 @@ class AnnouncementAdminView(PermissionRequiredMixin, ListView):
     context_object_name = "announcements"
 
 
-class CreateAnnouncementView(PermissionRequiredMixin, CreateView):
+class AnnouncementEditMixin(CustomFieldsetFormMixin, ABC):
+    model = Announcement
+    form_class = AnnouncementForm
+    success_url = reverse_lazy('announcement_admin')
+
+    narrow = False
+    centered_title = False
+    back_button_link = success_url
+    back_button_text = _("Admin page for announcements")
+    custom_fieldsets = [
+        {'fields': ('classification', 'link'), 'layout_class': "two"},
+        {'fields': ('display_from', 'display_to'), 'layout_class': "two"},
+        {'fields': ('content', 'site_wide')},
+    ]
+
+
+class CreateAnnouncementView(PermissionRequiredMixin, AnnouncementEditMixin, CreateView):
     permission_required = ('announcements.add_announcement',)
-    model = Announcement
-    form_class = AnnouncementForm
-    template_name = 'announcements/announcement_create.html'
-    success_url = reverse_lazy('announcement_admin')
+
+    form_title = _("New Announcement")
 
 
-class EditAnnouncementView(PermissionRequiredMixin, UpdateView):
+class EditAnnouncementView(PermissionRequiredMixin, AnnouncementEditMixin, UpdateView):
     permission_required = ('announcements.change_announcement',)
-    model = Announcement
-    form_class = AnnouncementForm
-    template_name = 'announcements/announcement_edit.html'
-    success_url = reverse_lazy('announcement_admin')
+
+    form_title = _("Edit Announcement")
 
 
 class DeleteAnnouncementView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

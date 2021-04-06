@@ -1,8 +1,11 @@
+from abc import ABC
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from ...forms import BaseMachineForm, EditMachineForm
 from ...models.machine import Machine, MachineType
 
@@ -20,20 +23,42 @@ class MachineListView(ListView):
     context_object_name = 'machine_types'
 
 
-class CreateMachineView(PermissionRequiredMixin, CreateView):
+class MachineEditMixin(CustomFieldsetFormMixin, ABC):
+    model = Machine
+    success_url = reverse_lazy('machine_list')
+
+    narrow = False
+    back_button_link = success_url
+    back_button_text = _("Machine list")
+
+    should_include_machine_type: bool
+
+    def get_custom_fieldsets(self):
+        return [
+            {'fields': ('name', 'machine_type' if self.should_include_machine_type else None), 'layout_class': "two"},
+            {'fields': ('machine_model',), 'layout_class': "two"},
+            {'fields': ('location', 'location_url'), 'layout_class': "two"},
+            {'fields': ('priority', 'status'), 'layout_class': "two"},
+        ]
+
+
+class CreateMachineView(PermissionRequiredMixin, MachineEditMixin, CreateView):
     permission_required = ('make_queue.add_machine',)
-    model = Machine
     form_class = BaseMachineForm
-    template_name = 'make_queue/machine/machine_create.html'
-    success_url = reverse_lazy('machine_list')
+
+    form_title = _("Create Machine")
+    save_button_text = _("Add")
+
+    should_include_machine_type = True
 
 
-class EditMachineView(PermissionRequiredMixin, UpdateView):
+class EditMachineView(PermissionRequiredMixin, MachineEditMixin, UpdateView):
     permission_required = ('make_queue.change_machine',)
-    model = Machine
     form_class = EditMachineForm
-    template_name = 'make_queue/machine/machine_edit.html'
-    success_url = reverse_lazy('machine_list')
+
+    form_title = _("Edit Machine")
+
+    should_include_machine_type = False
 
 
 class DeleteMachineView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

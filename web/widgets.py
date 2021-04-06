@@ -49,6 +49,11 @@ class SemanticMultipleSelectInput(forms.SelectMultiple):
 class SemanticFileInput(forms.ClearableFileInput):
     template_name = 'web/forms/widgets/semantic_file.html'
 
+    class Media:
+        css = {
+            'all': ('web/css/forms/widgets/semantic_file.css',),
+        }
+
     def get_context(self, name, value, attrs):
         context = super().get_context(name, value, attrs)
         context.update({

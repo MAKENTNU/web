@@ -140,10 +140,17 @@ class QuotaForm(forms.ModelForm):
         user = cleaned_data.get('user')
         all_users = cleaned_data.get('all')
 
-        if user is None and not all_users:
-            raise forms.ValidationError("User cannot be None when the quota is not for all users")
-        if user is not None and all_users:
-            raise forms.ValidationError("User cannot be set when the all users is set")
+        user_error_message = None
+        if not user and not all_users:
+            user_error_message = _("User must be set when “All users” is not set.")
+        if user and all_users:
+            user_error_message = _("User cannot be set when “All users” is set.")
+        if user_error_message:
+            # Can't raise ValidationError when adding errors for both a specific field and the whole form (field=None)
+            self.add_error('user', user_error_message)
+            self.add_error(None, _("Must select either specific user or all users."))
+            return
+
         return cleaned_data
 
 
