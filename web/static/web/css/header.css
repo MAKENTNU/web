@@ -68,7 +68,7 @@
 #side-nav > .item:hover,
 #nav-user-dropdown.active,
 #makerspace-dropdown.active {
-    /* Disables property from Fomantic UI */
+    /* Disables property from Fomantic-UI */
     background-color: transparent;
 }
 
@@ -146,7 +146,7 @@
 
 #nav-user-dropdown .menu > .item:hover,
 #makerspace-dropdown .menu > .item:hover {
-    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic UI */
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic-UI */
 }
 
 #side-nav .lang-link {
@@ -235,7 +235,7 @@
     }
 
     #header.active #nav-user-dropdown .menu {
-        /* Fixes Fomantic UI de-centering the dropdown menu */
+        /* Fixes Fomantic-UI de-centering the dropdown menu */
         left: initial;
     }
 

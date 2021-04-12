@@ -23,20 +23,20 @@
         monthFirst: false,
         parser: {
             date: function (text, settings) {
-                let year = parseInt(text.slice(0, 4));
-                let month = parseInt(text.slice(5, 7)) - 1;
-                let day = parseInt(text.slice(8, 10));
+                const year = parseInt(text.slice(0, 4));
+                const month = parseInt(text.slice(5, 7)) - 1;
+                const day = parseInt(text.slice(8, 10));
                 return new Date(year, month, day);
             },
         },
     });
 
     $("form").submit(function () {
-        let zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
-        let date = $("#{{ widget.name }}").calendar("get date");
-        let year = date.getFullYear();
-        let month = zeroPadDateElement(date.getMonth() + 1);
-        let day = zeroPadDateElement(date.getDate());
+        const zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
+        const date = $("#{{ widget.name }}").calendar("get date");
+        const year = date.getFullYear();
+        const month = zeroPadDateElement(date.getMonth() + 1);
+        const day = zeroPadDateElement(date.getDate());
         $("#{{ widget.name }} input").val(`${year}-${month}-${day}`);
     });
 </script>

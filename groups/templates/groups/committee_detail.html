@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 
@@ -15,9 +15,9 @@
 
         {% if committee.clickbait %}
             <p>{{ committee.clickbait }}</p>
-            <br>
+            <br/>
         {% endif %}
 
         {{ committee.description|safe }}
     </div>
-{% endblock %}
+{% endblock body %}

@@ -1,11 +1,11 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
+    <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -33,7 +33,7 @@
 
                     <div class="content">
                         <div class="header">
-                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             {% if event.first_occurrence.place_url %}
@@ -73,7 +73,7 @@
                             {% endif %}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
+                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.pk %}"
                                  {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
                             />
                         {% endthumbnail %}
@@ -81,7 +81,7 @@
 
                     <div class="content">
                         <div class="header">
-                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>

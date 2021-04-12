@@ -10,5 +10,5 @@ class QuestionForm(forms.ModelForm):
         model = Question
         fields = '__all__'
         widgets = {
-            "categories": SemanticMultipleSelectInput(prompt_text=_("Choose categories")),
+            'categories': SemanticMultipleSelectInput(prompt_text=_("Choose categories")),
         }

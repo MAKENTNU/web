@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.db.models import Count
-from django.db.models.functions import Lower
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from util.admin_utils import TextFieldOverrideMixin
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .models.course import Printer3DCourse
 from .models.models import Machine, MachineType, Quota, Reservation, ReservationRule
@@ -27,12 +27,11 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
         return qs.annotate(Count('machines'))  # facilitates querying `machines__count`
 
 
-class MachineAdmin(admin.ModelAdmin):
+class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'status', 'priority')
     list_filter = ('machine_type', 'machine_model', 'location', 'status')
     search_fields = ('name', 'machine_model', 'machine_type__name', 'location', 'location_url')
     list_editable = ('status', 'priority')
-    ordering = ('machine_type__priority', 'priority', Lower('name'))
     list_select_related = ('machine_type',)
 
     def get_location(self, machine: Machine):
@@ -41,11 +40,18 @@ class MachineAdmin(admin.ModelAdmin):
     get_location.short_description = _("Location")
     get_location.admin_order_field = 'location'
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).default_order_by()
+
+
+class ReservationAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
+    pass
+
 
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Quota)
-admin.site.register(Reservation)
+admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(ReservationRule)
 
 admin.site.register(Printer3DCourse)

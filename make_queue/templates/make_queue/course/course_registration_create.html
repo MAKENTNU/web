@@ -1,14 +1,14 @@
-{% extends "make_queue/course/course_registration_edit.html" %}
+{% extends 'make_queue/course/course_registration_edit.html' %}
 {% load i18n %}
 
 
 {% block form_title %}
     {% trans "Add course registration" %}
-{% endblock %}
+{% endblock form_title %}
 
 {% block submit_button %}
     {% trans "Submit" %}
-{% endblock %}
+{% endblock submit_button %}
 
 {% block messages %}
     {{ block.super }}
@@ -18,8 +18,8 @@
             {% trans "Registration of course participation successful" %}
         </div>
     {% endif %}
-{% endblock %}
+{% endblock messages %}
 
 {% block form_action %}
     {% url "create_course_registration" %}
-{% endblock %}
+{% endblock form_action %}

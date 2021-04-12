@@ -1,11 +1,11 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin_event_ticket_list.css" %}">
-    <script type="text/javascript" src="{% static "news/js/email_copy.js" %}"></script>
+    <link rel="stylesheet" href="{% static 'news/css/admin_event_ticket_list.css' %}"/>
+    <script defer src="{% static 'news/js/email_copy.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -17,19 +17,21 @@
         </a>
 
         <h3>{% trans "Emails" %}</h3>
-        <div class="copy-emails-button-container">
-            <button class="copy-token ui make-bg-yellow icon button"><i class="clipboard icon"></i></button>
-            <span data-content="{% trans "Click to copy the emails of the active tickets to the clipboard" %}.">
-                <i class="ui make-col-yellow question circle icon"></i>
-            </span>
-        </div>
-        <div>
-            <input readonly class="input-monospace copy-input" value="{{ ticket_emails }}"/>
+        <div class="emails-container">
+            <div class="copy-button-container">
+                <button class="copy-token ui make-bg-yellow icon button"><i class="clipboard icon"></i></button>
+                <span data-content="{% trans "Click to copy the emails of the active tickets to the clipboard" %}.">
+                    <i class="ui make-col-yellow question circle icon"></i>
+                </span>
+            </div>
+            <input readonly class="copy-input input-monospace" value="{{ ticket_emails }}"/>
         </div>
 
         <h3>{% trans "Tickets" %}</h3>
         <b>
-            {{ object.number_of_registered_tickets }}/{{ object.number_of_tickets }} {% trans "tickets reserved" %}
+            {% blocktrans trimmed with num_registered_tickets=object.number_of_registered_tickets num_tickets=object.number_of_tickets %}
+                {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
+            {% endblocktrans %}
         </b>
         <div class="ui relaxed divided list">
             {% for ticket in tickets %}
@@ -44,7 +46,7 @@
                     <i class="ui very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
                     <div class="ui content">
                         <div class="header">
-                            {{ ticket.name }} - <a href="mailto:{{ ticket.email }}">{{ ticket.email }}</a>
+                            {{ ticket.name }} - {{ ticket.email|urlize }}
                         </div>
                         <div class="description">
                             <div>
@@ -68,6 +70,9 @@
         </div>
     </div>
 
+{% endblock body %}
+
+{% block scripts %}
     <script>
         $(".message .close").click(function () {
             $(this)
@@ -76,4 +81,4 @@
         });
         $("span[data-content]").popup();
     </script>
-{% endblock %}
+{% endblock scripts %}

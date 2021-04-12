@@ -1,22 +1,19 @@
 from django.contrib import admin
 
-from checkin.models import Skill, Profile, UserSkill, SuggestSkill
+from .models import Profile, Skill, SuggestSkill, UserSkill
 
 
 class ProfileAdmin(admin.ModelAdmin):
-    model = Profile
     list_display = ('__str__',)
 
     readonly_fields = ('last_checkin',)
 
 
 class UserSkillAdmin(admin.ModelAdmin):
-    model = UserSkill
     list_display = ('profile', 'skill', 'skill_level')
 
 
 class SuggestSkillAdmin(admin.ModelAdmin):
-    model = SuggestSkill
     list_display = ('title', 'title_en')
 
 

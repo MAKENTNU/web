@@ -10,7 +10,7 @@ from .widgets import CardNumberInput
 
 class CardNumberField(forms.CharField):
     """
-    Custom form field for card numbers
+    Custom form field for card numbers.
     """
     widget = CardNumberInput
     default_validators = [card_number_validator]

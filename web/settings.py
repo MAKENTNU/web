@@ -26,6 +26,7 @@ CHECKIN_KEY = ''  # (custom setting)
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
 STREAM_KEY = ''  # (custom setting)
+FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is 50 MiB)
 
 # When using more than one subdomain, the session cookie domain has to be set so
 # that the subdomains can use the same session. Currently points to "makentnu.localhost"

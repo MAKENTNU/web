@@ -3,11 +3,11 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Access" %}{% endblock %}
+{% block title %}{% trans "Access" %}{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -50,7 +50,7 @@
         </div>
         <div class="ui {% if requested_user %}active{% endif %} tab" data-tab="users">
             <div class="ui fluid search selection dropdown">
-                <input id="user" type="hidden" name="user">
+                <input id="user" type="hidden" name="user"/>
                 <i class="ui dropdown icon"></i>
                 <div class="default text">{% trans "Select user" %}</div>
                 <div class="menu">
@@ -59,7 +59,7 @@
                     {% endfor %}
                 </div>
             </div>
-            <div class="make_content_padding"></div>
+            <div class="make-content-padding"></div>
             <div id="user-quotas">
 
             </div>
@@ -67,9 +67,9 @@
     </div>
     <script src="{% static 'make_queue/js/quota_panel.js' %}"></script>
     <script>
-        $('.tabular.menu .item').tab();
+        $(".tabular.menu .item").tab();
         {% if requested_user %}
             $("#user").parent().dropdown("set selected", "{{ requested_user.username }}");
         {% endif %}
     </script>
-{% endblock %}
+{% endblock body %}

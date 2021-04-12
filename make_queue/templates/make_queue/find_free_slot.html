@@ -1,16 +1,15 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 {% load reservation_extra %}
 
 
 {% block head %}
-    {{ block.super }}
     <style>
         .list {
             max-width: 60em;
         }
     </style>
-{% endblock %}
+{% endblock head %}
 
 {% block body %}
 
@@ -60,4 +59,4 @@
             </div>
         {% endif %}
     </div>
-{% endblock %}
+{% endblock body %}

@@ -1,11 +1,11 @@
 from django.urls import path
 
-from .views import CommitteeList, EditCommitteeView, CommitteeDetailView, CommitteeAdminView
+from . import views
 
 
 urlpatterns = [
-    path('', CommitteeList.as_view(), name='committee_list'),
-    path('<int:pk>/', CommitteeDetailView.as_view(), name='committee_detail'),
-    path('<int:pk>/edit', EditCommitteeView.as_view(), name='committee_edit'),
-    path('admin/', CommitteeAdminView.as_view(), name='committee_admin'),
+    path('', views.CommitteeList.as_view(), name='committee_list'),
+    path('<int:pk>/', views.CommitteeDetailView.as_view(), name='committee_detail'),
+    path('<int:pk>/edit', views.EditCommitteeView.as_view(), name='committee_edit'),
+    path('admin/', views.CommitteeAdminView.as_view(), name='committee_admin'),
 ]

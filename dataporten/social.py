@@ -48,13 +48,13 @@ class DataportenOAuth2(BaseOAuth2):
         return user
 
     def check_correct_audience(self, audience):
-        """Assert that Dataporten sends back our own client ID as audience"""
+        """Assert that Dataporten sends back our own client ID as audience."""
         client_id, _ = self.get_key_and_secret()
         if audience != client_id:
             raise AuthException('Wrong audience')
 
     def user_data(self, access_token, *args, **kwargs):
-        """Loads user data from service"""
+        """Loads user data from service."""
         url = f'{self.BASE_URL}/userinfo'
         response = self.get_json(
             url,

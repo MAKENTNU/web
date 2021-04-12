@@ -1,13 +1,13 @@
-{% extends "docs/base.html" %}
+{% extends 'docs/base.html' %}
 {% load i18n %}
 {% load static %}
 
 
-{% block title %}{% trans "Edit" %} "{{ page.title }}"{% endblock %}
+{% block title %}{% trans "Edit" %} "{{ page.title }}"{% endblock title %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -32,21 +32,21 @@
             </a>
         </form>
     </div>
-{% endblock %}
+{% endblock body %}
 
 {% block scripts %}
     <script>
         $("#edit-form").submit(() => {
-            let filled = CKEDITOR.instances["id_content"].getData() !== "";
-            let error_message = $("#empty-content-error")
-            if (!filled && error_message.hasClass("hidden")) {
-                error_message.transition("fade");
+            const filled = CKEDITOR.instances["id_content"].getData() !== "";
+            const $errorMessage = $("#empty-content-error");
+            if (!filled && $errorMessage.hasClass("hidden")) {
+                $errorMessage.transition("fade");
             }
             return filled;
         });
 
-        $('.message .close').on('click', function () {
+        $(".message .close").on('click', function () {
             $(this).closest('.message').transition("fade");
         });
     </script>
-{% endblock %}
+{% endblock scripts %}

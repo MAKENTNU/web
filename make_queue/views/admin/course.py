@@ -5,79 +5,69 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.urls import reverse
-from django.views.generic import TemplateView, View, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView, View
 
-from make_queue.forms import Printer3DCourseForm
-from make_queue.models.course import Printer3DCourse
+from ...forms import Printer3DCourseForm
+from ...models.course import Printer3DCourse
 
 
 class CourseView(TemplateView):
-    template_name = "make_queue/course/course_registration_list.html"
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data.update({
-            "registrations": Printer3DCourse.objects.order_by("name"),
-            "possible_statuses": Printer3DCourse.STATUS_CHOICES,
-        })
-        return context_data
+    template_name = 'make_queue/course/course_registration_list.html'
+    extra_context = {
+        'registrations': Printer3DCourse.objects.order_by('name'),
+        'possible_statuses': Printer3DCourse.Status.choices,
+    }
 
 
 class CreateRegistrationView(PermissionRequiredMixin, CreateView):
     is_next = False
-    permission_required = ("make_queue.add_printer3dcourse",)
+    permission_required = ('make_queue.add_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = "make_queue/course/course_registration_create.html"
+    template_name = 'make_queue/course/course_registration_create.html'
+    success_url = reverse_lazy('create_course_registration_success')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         if self.is_next:
-            context_data["is_next"] = True
+            context_data['is_next'] = True
         return context_data
-
-    def get_success_url(self):
-        return reverse("create_course_registration_success")
 
 
 class EditRegistrationView(PermissionRequiredMixin, UpdateView):
-    permission_required = ("make_queue.change_printer3dcourse",)
+    permission_required = ('make_queue.change_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = "make_queue/course/course_registration_edit.html"
-
-    def get_success_url(self):
-        return reverse("course_panel")
+    template_name = 'make_queue/course/course_registration_edit.html'
+    success_url = reverse_lazy('course_panel')
 
 
 class DeleteRegistrationView(PermissionRequiredMixin, DeleteView):
-    permission_required = ("make_queue.delete_printer3dcourse",)
+    permission_required = ('make_queue.delete_printer3dcourse',)
     model = Printer3DCourse
-
-    def get_success_url(self):
-        return reverse("course_panel")
+    success_url = reverse_lazy('course_panel')
 
 
 class BulkStatusUpdate(View):
     """
-    Provides a method for bulk updating the status of course registrations
+    Provides a method for bulk-updating the status of course registrations.
     """
 
     def post(self, request):
-        status = request.POST.get("status")
-        registrations = list(map(int, request.POST.getlist("users")))
+        status = request.POST.get('status')
+        registrations = list(map(int, request.POST.getlist('users')))
         Printer3DCourse.objects.filter(pk__in=registrations).update(status=status)
 
-        return redirect("course_panel")
+        return redirect('course_panel')
 
 
 class CourseXLSXView(View):
 
     def post(self, request):
-        search_string = request.POST.get("search_text")
-        status_filter = request.POST.get("status_filter")
-        selected = request.POST.get("selected")
+        search_string = request.POST.get('search_text')
+        status_filter = request.POST.get('status_filter')
+        selected = request.POST.get('selected')
 
         # If selected is set, we want to include only these registrations
         if selected:
@@ -90,7 +80,7 @@ class CourseXLSXView(View):
         # Use an in-memory output file, to avoid having to clean up the disk
         output_file = io.BytesIO()
 
-        workbook = xlsxwriter.Workbook(output_file, {"in_memory": True})
+        workbook = xlsxwriter.Workbook(output_file, {'in_memory': True})
         worksheet = workbook.add_worksheet("Kursdeltagere")
 
         # Styles
@@ -136,7 +126,7 @@ class CourseXLSXView(View):
         output_file.seek(0)
 
         response = HttpResponse(output_file.read(),
-                                content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
         response['Content-Disposition'] = 'attachment; filename="Kursdeltagere.xlsx"'
 

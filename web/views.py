@@ -26,15 +26,14 @@ class IndexView(TemplateView):
 class AdminPanelView(UserPassesTestMixin, TemplateView):
     template_name = 'web/admin_panel.html'
     possible_permissions = [
-        "news.add_article", "news.change_article", "news.delete_article",
-        "news.add_event", "news.change_event", "news.delete_event",
-        "news.add_timeplace", "news.change_timeplace", "news.delete_timeplace",
-        "make_queue.can_create_event_reservation",
-        "make_queue.change_quota",
-        "make_queue.change_printer3dcourse",
-        "groups.can_edit_group",
-        "makerspace.add_equipment", "makerspace.change_equipment", "makerspace.delete_equipment",
-        "makerspace.change_makerspace",
+        'news.add_article', 'news.change_article', 'news.delete_article',
+        'news.add_event', 'news.change_event', 'news.delete_event',
+        'news.add_timeplace', 'news.change_timeplace', 'news.delete_timeplace',
+        'make_queue.can_create_event_reservation',
+        'make_queue.change_quota',
+        'make_queue.change_printer3dcourse',
+        'groups.can_edit_group',
+        'makerspace.add_equipment', 'makerspace.change_equipment', 'makerspace.delete_equipment',
     ]
 
     def test_func(self):
@@ -49,7 +48,7 @@ class View404(TemplateView):
 
 
 def view_500(request):
-    return render(request, template_name="web/500.html", status=500)
+    return render(request, template_name='web/500.html', status=500)
 
 
 class AboutUsView(DisplayContentBoxView):

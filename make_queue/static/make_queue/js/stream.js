@@ -1,12 +1,12 @@
 function setupSocket($elem) {
-    let chatSocket = new WebSocket(
+    const chatSocket = new WebSocket(
         `wss://${window.location.host}/ws/stream/`
         + $elem.attr("name").replace(/ /g, "-").replace(/ö/g, "o") + '/');
 
     chatSocket.image = $elem;
 
     chatSocket.onmessage = function (e) {
-        let data = JSON.parse(e.data);
+        const data = JSON.parse(e.data);
         chatSocket.image.attr('src', `data:image/jpeg;base64,${data['image']}`);
     };
 
@@ -20,16 +20,17 @@ $(`#${streamID}`).each(function () {
     setupSocket($(this));
 }).click(function () {
     $(this).toggleClass('fullscreen');
-    $('#fader').toggleClass('fullscreen');
-    $('#closefullscreen').toggleClass('fullscreen');
+    $("#fader").toggleClass('fullscreen');
+    $("#closefullscreen").toggleClass('fullscreen');
 });
 
+// The following code is scoped within a block, to avoid variable name collisions when linking this script multiple times
 {
-    let closeFullscreen = function () {
-        $('.fullscreen').each(function () {
+    function closeFullscreen() {
+        $(".fullscreen").each(function () {
             $(this).removeClass('fullscreen');
         });
-    };
+    }
 
     $("html").keydown(function (event) {
         if (event.key === "Escape") {
@@ -37,5 +38,5 @@ $(`#${streamID}`).each(function () {
         }
     });
 
-    $('#closefullscreen').click(closeFullscreen);
+    $("#closefullscreen").click(closeFullscreen);
 }

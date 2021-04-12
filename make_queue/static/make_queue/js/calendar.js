@@ -1,6 +1,6 @@
-// Requires reservation_rule_utils.js and date_utils.js
+/* Requires reservation_rule_utils.js and date_utils.js */
 
-function ReservationCalendar(element, properties) {
+function ReservationCalendar($element, properties) {
     /**
      * Creates a new ReservationCalendar object. The properties field is a dictionary of properties:
      *
@@ -17,9 +17,9 @@ function ReservationCalendar(element, properties) {
         this.date = properties.date.startOfWeek();
     }
 
-    this.informationHeaders = element.find("thead th").toArray();
-    this.days = element.find("tbody .day .reservations").toArray();
-    this.element = element;
+    this.informationHeaders = $element.find("thead th").toArray();
+    this.days = $element.find("tbody .day .reservations").toArray();
+    this.$element = $element;
     this.machine = properties.machine;
     this.selection = properties.selection;
     this.canBreakRules = properties.canBreakRules;
@@ -37,24 +37,24 @@ function ReservationCalendar(element, properties) {
 
 ReservationCalendar.prototype.init = function () {
     /**
-     * Initialises the calendar
+     * Initializes the calendar.
      */
     // Run the update function to retrieve reservations
     this.update();
-    this.element.find(".next.button").click(() => {
+    this.$element.find(".next.button").click(() => {
         this.showDate(this.date.nextWeek());
     });
 
-    this.element.find(".current.button").click(() => {
+    this.$element.find(".current.button").click(() => {
         this.showDate(new Date().startOfWeek());
     });
 
-    this.element.find(".previous.button").click(() => {
+    this.$element.find(".previous.button").click(() => {
         this.showDate(this.date.previousWeek());
     });
 
     // Update the red line indicating the current time every minute
-    let calendar = this;
+    const calendar = this;
     setInterval(() => calendar.updateCurrentTimeIndication(), 60 * 1000);
 
     if (this.selection) {
@@ -68,7 +68,7 @@ ReservationCalendar.prototype.onSelection = function () {
      * selectionPopupContent function. Both this function and selectionPopupContent can be overridden, which is the
      * reason for their separation.
      */
-    $(this.element.find(".selection.reservation").first()).popup({
+    $(this.$element.find(".selection.reservation").first()).popup({
         position: "right center",
         html: this.selectionPopupContent(),
         // Allows the popup to stay open when the user does not hover over the selection
@@ -82,9 +82,9 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
      * information about the selection and a button to create a reservation using the selection.
      */
     let dateString;
-    let startTime = this.getSelectionStartTime();
-    let endTime = this.getSelectionEndTime();
-    let calendar = this;
+    const startTime = this.getSelectionStartTime();
+    const endTime = this.getSelectionEndTime();
+    const calendar = this;
 
     // Use a shorthand notation if the start and end time is on the same day
     if (startTime.getDate() === endTime.getDate()) {
@@ -93,7 +93,7 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
         dateString = `${startTime.dateString()} ${startTime.timeString()} - ${endTime.dateString()} ${endTime.timeString()}`;
     }
 
-    let popupContent = $(`
+    const $popupContent = $(`
             <div class="new-reservation-popup ui card">
                 <div class="ui content">
                     <div class="header">${gettext("New reservation")}</div>
@@ -107,23 +107,22 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
             </div>
     `);
 
-    popupContent.find(".button").on("mousedown touchstart", () => {
+    $popupContent.find(".button").on("mousedown touchstart", () => {
         // Create and submit a hidden form to create a new reservation
-        let form = $(
-            `<form method='POST' action='${langPrefix}/reservation/create/${calendar.machine}/'>`,
-        ).appendTo(popupContent);
-        $("input[name=csrfmiddlewaretoken]").clone().appendTo(form);
-        // Hide the form in case something fails
-        $("<input class='make_hidden' name='start_time'>").val(startTime.djangoFormat()).appendTo(form);
-        $("<input class='make_hidden' name='end_time'>").val(endTime.djangoFormat()).appendTo(form);
-        $("<input class='make_hidden' name='machine_name'>").val(calendar.machine).appendTo(form);
-        form.submit();
+        const $form = $(
+            `<form class="display-none" method="POST" action="${LANG_PREFIX}/reservation/create/${calendar.machine}/">`,
+        ).appendTo($popupContent);
+        $("input[name=csrfmiddlewaretoken]").clone().appendTo($form);
+        $('<input name="start_time"/>').val(startTime.djangoFormat()).appendTo($form);
+        $('<input name="end_time"/>').val(endTime.djangoFormat()).appendTo($form);
+        $('<input name="machine_name"/>').val(calendar.machine).appendTo($form);
+        $form.submit();
 
-        // Don't allow other events, like the deselection to be ran
+        // Don't allow other events to be run, like deselection
         return false;
     });
 
-    return popupContent;
+    return $popupContent;
 };
 
 ReservationCalendar.prototype.setupSelection = function () {
@@ -135,7 +134,7 @@ ReservationCalendar.prototype.setupSelection = function () {
     this.selectionEnd = null;
     this.selecting = false;
 
-    let calendar = this;
+    const calendar = this;
 
     for (let day = 0; day < 7; day++) {
         // Start selection when the mouse is clicked
@@ -145,7 +144,7 @@ ReservationCalendar.prototype.setupSelection = function () {
             calendar.selectionEnd = calendar.selectionStart;
             return false;
         }).on("mousemove touchmove", (event) => {
-            // Update the selection when any of the days are hovered over
+            // Update the selection when dragging over any of the day columns
             if (calendar.selecting) {
                 calendar.selectionEnd = calendar.getHoverDate(event, day);
                 calendar.updateSelection();
@@ -170,7 +169,7 @@ ReservationCalendar.prototype.setupSelection = function () {
     }
 
     // The part of the calendar that shows the timestamps should set the selection date to the start of the week
-    this.element.find(".time.information").on("mousemove touchmove", () => {
+    this.$element.find(".time.information").on("mousemove touchmove", () => {
         if (calendar.selecting) {
             calendar.selectionEnd = calendar.date;
             calendar.updateSelection();
@@ -178,13 +177,13 @@ ReservationCalendar.prototype.setupSelection = function () {
     });
 
     // Hovering over the footer will set the selection to the end of the day hovered under
-    let footer = this.element.find("tfoot");
-    footer.on("mousemove touchmove", (event) => {
+    const $footer = this.$element.find("tfoot");
+    $footer.on("mousemove touchmove", (event) => {
         if (calendar.selecting) {
             // Handle both touch and mouse correctly
-            let xPosition = event.touches === undefined ? event.pageX : event.touches[0].pageX;
-            let hoverPosition = (xPosition - footer.offset().left) / footer.width();
-            let dayHoveredUnder = Math.floor(hoverPosition * 8);
+            const xPosition = event.touches === undefined ? event.pageX : event.touches[0].pageX;
+            const hoverPosition = (xPosition - $footer.offset().left) / $footer.width();
+            const dayHoveredUnder = Math.floor(hoverPosition * 8);
             calendar.selectionEnd = calendar.date.nextDays(dayHoveredUnder);
             calendar.updateSelection();
         }
@@ -204,40 +203,40 @@ ReservationCalendar.prototype.setupSelection = function () {
         if (!calendar.selecting && calendar.selectionStart != null) {
             calendar.resetSelection();
         }
-    })
+    });
 };
 
 ReservationCalendar.prototype.resetSelection = function () {
     /**
-     * Resets the selection if any
+     * Resets the selection, if any.
      */
     this.selecting = false;
     this.selectionStart = null;
     this.selectionEnd = null;
-    this.element.find(".selection.reservation").remove();
+    this.$element.find(".selection.reservation").remove();
 };
 
 ReservationCalendar.prototype.updateSelection = function () {
     /**
-     * Updates the shown selection
+     * Updates the shown selection.
      */
-    let calendar = this;
+    const calendar = this;
     // Only draw the selection if the selection dates are set
     if (this.selectionStart != null) {
-        let startTime = this.getSelectionStartTime();
-        let endTime = this.getSelectionEndTime();
-        this.element.find(".selection.reservation").remove();
+        const startTime = this.getSelectionStartTime();
+        const endTime = this.getSelectionEndTime();
+        this.$element.find(".selection.reservation").remove();
         // A selection can be shown in the same way as the other reservations, just with other classes and callback
-        this.drawReservation(startTime, endTime, "selection reservation", (element, day) => {
+        this.drawReservation(startTime, endTime, "selection reservation", ($element, day) => {
             // If this is the first day of the selection, add the start time indicator
             if (day <= startTime && startTime < day.nextDay()) {
-                element.append($(`<div class='selection start time'>${startTime.timeString()}</div>`));
+                $element.append($(`<div class="selection start time">${startTime.timeString()}</div>`));
 
                 // Add an element for expanding the selection if the selection is finished
                 if (!this.selecting) {
-                    let expander = $(`<div class='selection expand top'>`);
-                    element.append(expander);
-                    expander.on("mousedown touchstart", () => {
+                    const $expander = $(`<div class="selection expand top">`);
+                    $element.append($expander);
+                    $expander.on("mousedown touchstart", () => {
                         // Modification is done by simply starting the selection anew, now with the selection bound to
                         // the end time
                         calendar.selectionStart = endTime;
@@ -252,13 +251,13 @@ ReservationCalendar.prototype.updateSelection = function () {
 
             // If this is the last day of the selection, add the end time indicator
             if (day < endTime && endTime <= day.nextDay()) {
-                element.append($(`<div class='selection end time'>${endTime.timeString()}</div>`))
+                $element.append($(`<div class="selection end time">${endTime.timeString()}</div>`));
 
                 // Add an element for expanding the selection if the selection is finished
                 if (!this.selecting) {
-                    let expander = $(`<div class='selection expand bottom'>`);
-                    element.append(expander);
-                    expander.on("mousedown touchstart", () => {
+                    const $expander = $(`<div class="selection expand bottom">`);
+                    $element.append($expander);
+                    $expander.on("mousedown touchstart", () => {
                         // Modification is done by simply starting the selection anew, now with the selection bound to
                         // the start time
                         calendar.selectionStart = startTime;
@@ -276,28 +275,28 @@ ReservationCalendar.prototype.updateSelection = function () {
 
 ReservationCalendar.prototype.getHoverDate = function (event, day) {
     /**
-     * Calculate the date for the given hover event. The `day` parameter is the day of the week
+     * Calculate the date for the given hover event. The `day` parameter is the day of the week.
      */
-    let numberOfMillisecondsInDay = 24 * 60 * 60 * 1000;
+    const numberOfMillisecondsInDay = 24 * 60 * 60 * 1000;
     let date = this.date.nextDays(day);
-    let dayElement = $(event.target).closest(".day");
+    const $dayElement = $(event.target).closest(".day");
     // Handle both touch and mouse
-    let yPosition = event.touches === undefined ? event.pageY : event.touches[0].pageY;
-    let timeOfDay = (yPosition - dayElement.offset().top) / dayElement.height();
+    const yPosition = event.touches === undefined ? event.pageY : event.touches[0].pageY;
+    const timeOfDay = (yPosition - $dayElement.offset().top) / $dayElement.height();
     date = new Date(date.valueOf() + timeOfDay * numberOfMillisecondsInDay);
     return date;
 };
 
 ReservationCalendar.prototype.getSelectionStartTime = function () {
     /**
-     * Simple endpoint for getting the start time of the selection without handling getSelectionTimes
+     * Simple endpoint for getting the start time of the selection without handling getSelectionTimes.
      */
     return this.getSelectionTimes()[0];
 };
 
 ReservationCalendar.prototype.getSelectionEndTime = function () {
     /**
-     * Simple endpoint for getting the end time of the selection without handling getSelectionTimes
+     * Simple endpoint for getting the end time of the selection without handling getSelectionTimes.
      */
     return this.getSelectionTimes()[1];
 };
@@ -347,15 +346,15 @@ ReservationCalendar.prototype.getSelectionTimes = function () {
 
 ReservationCalendar.prototype.roundTime = function (time) {
     /**
-     * Rounds the given date to the next 5th minute (11:00:01 -> 11:05:00)
+     * Rounds the given date to the next 5th minute (11:00:01 -> 11:05:00).
      */
-    let millisecondsIn5Minutes = 5 * 60 * 1000;
+    const millisecondsIn5Minutes = 5 * 60 * 1000;
     return new Date(Math.ceil(time / millisecondsIn5Minutes) * millisecondsIn5Minutes);
 };
 
 ReservationCalendar.prototype.changeMachine = function (machine) {
     /**
-     * Changes the machine used for finding reservations and updates the calendar
+     * Changes the machine used for finding reservations and updates the calendar.
      */
     this.machine = machine;
     this.update();
@@ -363,14 +362,14 @@ ReservationCalendar.prototype.changeMachine = function (machine) {
 
 ReservationCalendar.prototype.updateCanBreakRules = function (canbreakRules) {
     /**
-     * Setter for the canBreakRules property
+     * Setter for the canBreakRules property.
      */
     this.canBreakRules = canbreakRules;
 };
 
 ReservationCalendar.prototype.showDate = function (date) {
     /**
-     * Shows the given date in the calendar
+     * Shows the given date in the calendar.
      */
     this.date = date.startOfWeek();
     this.update();
@@ -378,7 +377,7 @@ ReservationCalendar.prototype.showDate = function (date) {
 
 ReservationCalendar.prototype.update = function () {
     this.updateInformationHeaders();
-    let calendar = this;
+    const calendar = this;
 
     $.get(`${window.location.origin}/reservation/calendar/${this.machine}/reservations`, {
         startDate: this.date.djangoFormat(),
@@ -387,38 +386,40 @@ ReservationCalendar.prototype.update = function () {
 
     $.get(`${window.location.origin}/reservation/calendar/${this.machine}/rules`, {}, (data) => {
         calendar.reservationRules = data.rules;
-    })
+    });
 };
 
 ReservationCalendar.prototype.updateCurrentTimeIndication = function () {
     /**
-     * Moves the time indication line from its current position to the position of the current time
+     * Moves the time indicator from its current position to the position of the current time
      */
-    this.element.find(".current.time.indicator").remove();
-    let hoursInDay = 24;
-    let minutesInDay = hoursInDay * 60;
-    let secondsInDay = minutesInDay * 60;
+    this.$element.find(".current.time.indicator").remove();
+    const hoursInDay = 24;
+    const minutesInDay = hoursInDay * 60;
+    const secondsInDay = minutesInDay * 60;
 
-    let currentTime = new Date();
+    const currentTime = new Date();
     if (currentTime >= this.date && currentTime < this.date.nextWeek()) {
-        let timeOfDay = (currentTime.getHours() / hoursInDay + currentTime.getMinutes() / minutesInDay + currentTime.getSeconds() / secondsInDay) * 100;
-        let timeIndication = $(`<div class="current time indicator" style="top: ${timeOfDay}%;">`);
+        const timeOfDay = (currentTime.getHours() / hoursInDay + currentTime.getMinutes() / minutesInDay + currentTime.getSeconds() / secondsInDay) * 100;
+        const $timeIndicator = $(
+            `<div class="current time indicator" style="top: ${timeOfDay}%;">`,
+        );
 
-        $(this.days[(currentTime.getDay() + 6) % 7]).append(timeIndication);
+        $(this.days[(currentTime.getDay() + 6) % 7]).append($timeIndicator);
     }
 };
 
 ReservationCalendar.prototype.addReservation = function (reservation) {
     /**
-     * Adds the given reservation to the calendar
+     * Adds the given reservation to the calendar.
      */
     reservation.start = new Date(Date.parse(reservation.start));
     reservation.end = new Date(Date.parse(reservation.end));
 
-    this.drawReservation(reservation.start, reservation.end, `${reservation.type} reservation`, (htmlElement) => {
+    this.drawReservation(reservation.start, reservation.end, `${reservation.type} reservation`, ($htmlElement) => {
         // If the reservation has some text to display on hover, create a popup
         if (reservation.displayText !== undefined) {
-            this.createPopup(htmlElement, reservation);
+            this.createPopup($htmlElement, reservation);
         }
     }, reservation.eventLink);
 };
@@ -430,37 +431,37 @@ ReservationCalendar.prototype.drawReservation = function (startDate, endDate, cl
      * arguments each time this function creates a new HTML element for the reservation.
      */
     let date = this.date;
-    let millisecondsInDay = 24 * 60 * 60 * 1000;
+    const millisecondsInDay = 24 * 60 * 60 * 1000;
     // Iterate each day of the week since the reservation may go over several days
     for (let day = 0; day < 7; day++) {
         if (endDate > date && startDate < date.nextDay()) {
             // Find where the reservation should start and end in the given day
-            let dayStartTime = (Math.max(date, startDate) - date) / millisecondsInDay * 100;
-            let dayEndTime = (Math.min(date.nextDay(), endDate) - Math.max(date, startDate)) / millisecondsInDay * 100;
+            const dayStartTime = (Math.max(date, startDate) - date) / millisecondsInDay * 100;
+            const dayEndTime = (Math.min(date.nextDay(), endDate) - Math.max(date, startDate)) / millisecondsInDay * 100;
             const reservationHtmlTag = linkToDisplay ? `a href="${linkToDisplay}" target="_blank"` : "div";
-            let reservationBlock = $(
+            const $reservationBlock = $(
                 `<${reservationHtmlTag} class="${classes}" style="top: ${dayStartTime}%; height: ${dayEndTime}%;">`,
             );
-            $(this.days[day]).append(reservationBlock);
+            $(this.days[day]).append($reservationBlock);
 
             // Call any given callback function
             if (callback !== undefined) {
-                callback(reservationBlock, date);
+                callback($reservationBlock, date);
             }
         }
         date = date.nextDay();
     }
 };
 
-ReservationCalendar.prototype.createPopup = function (reservationElement, reservation) {
+ReservationCalendar.prototype.createPopup = function ($reservationElement, reservation) {
     /**
-     * Creates a popup for a given reservation
+     * Creates a popup (tooltip) for a given reservation.
      */
     let content;
 
+    // If the backend hands us extensive data on the reservation (for admins):
     if (reservation.user !== undefined) {
-        // If the backend hands us extensive data on the reservation (for admins)
-        let duration = `${reservation.start.getDayTextShort()} ${reservation.start.timeString()} - ${reservation.end.getDayTextShort()} ${reservation.end.timeString()}`;
+        const duration = `${reservation.start.getDayTextShort()} ${reservation.start.timeString()} - ${reservation.end.getDayTextShort()} ${reservation.end.timeString()}`;
 
         content = `
             <div class="header">${gettext("Reservation")}</div>
@@ -470,7 +471,7 @@ ReservationCalendar.prototype.createPopup = function (reservationElement, reserv
         `;
 
         if (reservation.displayText !== "") {
-            content += `<div><b>${gettext("Comment")}:</b></div><div>${reservation.displayText}</div>`
+            content += `<div><b>${gettext("Comment")}:</b></div><div>${reservation.displayText}</div>`;
         }
     } else if (reservation.eventLink !== undefined) {
         // Events should show the name of the event
@@ -480,7 +481,7 @@ ReservationCalendar.prototype.createPopup = function (reservationElement, reserv
         content = reservation.displayText;
     }
 
-    reservationElement.popup({
+    $reservationElement.popup({
         position: "top center",
         html: content,
     });
@@ -497,7 +498,7 @@ ReservationCalendar.prototype.updateReservations = function (data) {
     this.updateCurrentTimeIndication();
 
     // Add all new reservations
-    let calendar = this;
+    const calendar = this;
     data.reservations.forEach((reservation) => calendar.addReservation.apply(calendar, [reservation]));
 
     this.reservations = data.reservations;
@@ -506,7 +507,7 @@ ReservationCalendar.prototype.updateReservations = function (data) {
 
 ReservationCalendar.prototype.updateInformationHeaders = function () {
     /**
-     * Updates the information shown in the table headers to the information of the current week
+     * Updates the information shown in the table headers to the information of the current week.
      */
     this.informationHeaders[0].querySelector(".large.header").textContent = this.date.getMonthText();
     this.informationHeaders[0].querySelector(".medium.header").textContent = this.date.getWeekNumber();

@@ -1,5 +1,12 @@
-.make_hidden {
-    display: none !important;
+#filter-fields {
+    --row-gap: 5px;
+
+    justify-content: space-between;
+    row-gap: var(--row-gap);
+}
+
+#filter-dropdowns {
+    row-gap: var(--row-gap);
 }
 
 #member-table tbody tr,
@@ -7,10 +14,15 @@
     cursor: pointer;
 }
 
-/* For when the objects eventually stack on top of each other on a mobile screen */
-#member-table .label,
-form .multiple.labeled.dropdown {
-    margin-top: 5px;
+#member-table .label-cell {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 5px;
+    row-gap: 5px;
+}
+
+#member-table .label-cell .label {
+    margin: 0;
 }
 
 .right.floated.link {

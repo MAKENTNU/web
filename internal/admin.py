@@ -1,7 +1,12 @@
 from django.contrib import admin
 
-from internal.models import Member, Secret
+from util.admin_utils import TextFieldOverrideMixin
 from web.multilingual.admin import MultiLingualFieldAdmin
+from .models import Member, Secret
+
+
+class MemberAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
+    pass
 
 
 class SecretAdmin(MultiLingualFieldAdmin):
@@ -9,5 +14,5 @@ class SecretAdmin(MultiLingualFieldAdmin):
     search_fields = ('title', 'content')
 
 
-admin.site.register(Member)
+admin.site.register(Member, MemberAdmin)
 admin.site.register(Secret, SecretAdmin)
