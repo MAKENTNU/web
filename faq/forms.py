@@ -1,6 +1,7 @@
 from django import forms
-from web.widgets import SemanticMultipleSelectInput
 from django.utils.translation import gettext_lazy as _
+
+from web.widgets import SemanticMultipleSelectInput
 from .models import Question, Category
 
 
@@ -17,4 +18,3 @@ class CategoryForm(forms.ModelForm):
     class Meta:
         model = Category
         fields = '__all__'
-

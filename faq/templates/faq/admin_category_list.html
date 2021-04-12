@@ -13,7 +13,7 @@
                 <i class="blue chevron circle left icon"></i>
             </a>
             {% trans "Categories" %}
-            {% if perms.faq.add_question %}
+            {% if perms.faq.add_category %}
                 <a href="{% url "faq-category-create" %}">
                     <i class="green plus icon"></i>
                 </a>
@@ -25,13 +25,13 @@
                     <div class="content">
                         <div class="ui header">
                             {{ category.name }}
-                            {% if perms.faq.change_question %}
+                            {% if perms.faq.change_category %}
                                 <a href="{% url "faq-category-edit" pk=category.pk %}">
-                                    <i class="yellow pencil icon"></i>
+                                    <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
 
-                            {% if perms.faq.delete_question %}
+                            {% if perms.faq.delete_category %}
                                 <a class="delete confirm"
                                    data-title="{% trans "Delete" %}"
                                    data-content="{% trans "Click to delete" %}."

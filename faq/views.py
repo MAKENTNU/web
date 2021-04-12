@@ -1,9 +1,10 @@
-from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, TemplateView
+
+from util.templatetags.permission_tags import has_any_faq_permissions
 from .forms import QuestionForm, CategoryForm
 from .models import Question, Category
-from util.templatetags.permission_tags import has_any_faq_permissions
 
 
 class FAQPageView(ListView):
@@ -22,7 +23,7 @@ class FAQAdminPanelView(PermissionRequiredMixin, TemplateView):
 
 
 class QuestionAdminView(PermissionRequiredMixin, ListView):
-    permission_required = ('faq.edit_question',)
+    permission_required = ('faq.change_question',)
     model = Question
     template_name = 'faq/admin_question_list.html'
     context_object_name = 'questions'
@@ -30,7 +31,7 @@ class QuestionAdminView(PermissionRequiredMixin, ListView):
 
 
 class CategoryAdminView(PermissionRequiredMixin, ListView):
-    permission_required = ('faq.edit_category',)
+    permission_required = ('faq.change_category',)
     model = Category
     template_name = 'faq/admin_category_list.html'
     context_object_name = 'categories'
@@ -38,7 +39,7 @@ class CategoryAdminView(PermissionRequiredMixin, ListView):
 
 
 class CreateQuestionView(PermissionRequiredMixin, CreateView):
-    permission_required = ('faq.create_question',)
+    permission_required = ('faq.add_question',)
     model = Question
     form_class = QuestionForm
     template_name = 'faq/admin_question_create.html'
@@ -47,7 +48,7 @@ class CreateQuestionView(PermissionRequiredMixin, CreateView):
 
 
 class EditQuestionView(PermissionRequiredMixin, UpdateView):
-    permission_required = ('faq.edit_question',)
+    permission_required = ('faq.change_question',)
     model = Question
     form_class = QuestionForm
     template_name = 'faq/admin_question_edit.html'
@@ -62,7 +63,7 @@ class DeleteQuestionView(PermissionRequiredMixin, DeleteView):
 
 
 class CreateCategoryView(PermissionRequiredMixin, CreateView):
-    permission_required = ('faq.create_category',)
+    permission_required = ('faq.add_category',)
     model = Category
     form_class = CategoryForm
     template_name = 'faq/admin_category_create.html'
@@ -71,7 +72,7 @@ class CreateCategoryView(PermissionRequiredMixin, CreateView):
 
 
 class EditCategoryView(PermissionRequiredMixin, UpdateView):
-    permission_required = ('faq.edit_category',)
+    permission_required = ('faq.change_category',)
     model = Category
     form_class = CategoryForm
     template_name = 'faq/admin_category_edit.html'

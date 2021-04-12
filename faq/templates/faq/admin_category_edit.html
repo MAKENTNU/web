@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% extends "web/base.html" %}
+{% extends "web/base.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -26,8 +22,8 @@
             {{ form.name }}
         </div>
 
-        <input class="ui yellow right floated submit button" type="submit" value="{% trans "Save" %}"/>
-        <a href="{% url "faq-admin" %}" class="ui red right floated button">
+        <input class="ui make-bg-yellow right floated submit button" type="submit" value="{% trans "Save" %}"/>
+        <a class="ui right floated red button" href="{% url 'faq-admin' %}" >
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
