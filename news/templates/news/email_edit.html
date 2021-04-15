@@ -1,0 +1,40 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Create email" %}{% endblock title %}
+
+{% block head %}
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script type="text/javascript" src="{% static "news/js/event_type.js" %}"></script>
+{% endblock head %}
+
+{% block body %}
+    <h1 class="ui centered header">
+        {% block form_header %}{% trans "Create email" %}{% endblock form_header %}
+    </h1>
+    <form class="ui form text container" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="field">
+            <label>{{ form.title.label }}</label>
+            {{ form.title }}
+        </div>
+        <div class="field">
+            <label>{{ form.content.label }}
+                <span data-content="{% trans "The main content of the email." %}">
+                    <i class="ui yellow question circle icon"></i>
+                </span>
+            </label>
+            {{ form.content }}
+        </div> 
+        <input class="ui yellow right floated submit button" type="submit" value="{% trans "Send" %}">
+        <a href="{% block cancel-url %}{% url "admin-event" form.instance.id %}{% endblock %}" class="ui red right floated button">
+            {% trans "Cancel" context "abort action" %}
+        </a>
+    </form>
+
+    <script>
+        $("span[data-content]").popup();
+    </script>
+{% endblock body %}
