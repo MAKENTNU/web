@@ -70,6 +70,25 @@ class SimpleModelAndViewTests(TestCase):
         self.assertGreaterEqual(anon_client.get(edit_url).status_code, 300)
         self.assertEqual(user_client.get(edit_url).status_code, 200)
 
+    def test_edit_page_contains_correct_error_messages(self):
+        user = User.objects.create_user(username="user1")
+        user.add_perms('contentbox.change_contentbox')
+        self.client.force_login(user)
+        edit_url = reverse('contentbox_edit', args=[self.content_box1.pk])
+
+        def assert_response_contains_error_message(posted_content: str, error: bool):
+            data = {
+                'content_0': posted_content,
+                'content_1': posted_content,
+            }
+            response = self.client.post(edit_url, data=data)
+            # The form will redirect if valid, and stay on the same page if not
+            self.assertEqual(response.status_code, 200 if error else 302)
+            self.assertInHTML("Manglende språk", response.content.decode(), count=1 if error else 0)
+
+        assert_response_contains_error_message("", True)
+        assert_response_contains_error_message("asdf", False)
+
 
 INTERNAL_TEST_TITLE = 'internal_test_title'
 internal_change_perm = 'contentbox.perm1'

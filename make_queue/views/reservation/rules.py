@@ -118,15 +118,25 @@ class MachineUsageRulesDetailView(MachineTypeBasedView, DetailView):
         })
 
 
-class EditUsageRulesView(PermissionRequiredMixin, MachineTypeBasedView, UpdateView):
+class EditUsageRulesView(PermissionRequiredMixin, CustomFieldsetFormMixin, MachineTypeBasedView, UpdateView):
     permission_required = ('make_queue.change_machineusagerule',)
     model = MachineUsageRule
     fields = ('content',)
-    template_name = 'make_queue/usage_rules_edit.html'
-    context_object_name = 'usage_rule'
+    template_name = 'contentbox/edit.html'
+
+    narrow = False
 
     def get_object(self, queryset=None):
         return self.machine_type.usage_rule
 
+    def get_form_title(self):
+        return _("Edit usage rules for {machine_type}").format(machine_type=self.machine_type)
+
+    def get_back_button_link(self):
+        return self.get_success_url()
+
+    def get_back_button_text(self):
+        return _("View usage rules for {machine_type}").format(machine_type=self.machine_type)
+
     def get_success_url(self):
-        return reverse('machine_usage_rules_detail', args=[self.object.machine_type])
+        return reverse('machine_usage_rules_detail', args=[self.machine_type])

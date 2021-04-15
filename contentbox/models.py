@@ -10,7 +10,7 @@ class ContentBox(models.Model):
         unique=True,
         verbose_name=_("title"),
     )
-    content = MultiLingualRichTextUploadingField()
+    content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
 
     class Meta:
         permissions = (

@@ -1,7 +1,9 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import path, reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, UpdateView
 
+from util.view_utils import CustomFieldsetFormMixin
 from .models import ContentBox
 
 
@@ -34,14 +36,22 @@ class DisplayContentBoxView(DetailView):
         )
 
 
-class EditContentBoxView(PermissionRequiredMixin, UpdateView):
+class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
     permission_required = ('contentbox.change_contentbox',)
     model = ContentBox
     fields = ('content',)
     template_name = 'contentbox/edit.html'
-    extra_context = {
-        'base_template': 'web/base.html',
-    }
+
+    narrow = False
+
+    def get_form_title(self):
+        return _("Edit “{title}”").format(title=self.object.title)
+
+    def get_back_button_link(self):
+        return self.get_success_url()
+
+    def get_back_button_text(self):
+        return _("View “{title}”").format(title=self.object.title)
 
     def get_success_url(self):
         return reverse(self.object.title)

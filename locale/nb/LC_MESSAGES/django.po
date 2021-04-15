@@ -329,27 +329,15 @@ msgstr "Rediger"
 msgid "Missing language"
 msgstr "Manglende språk"
 
-#: contentbox/templates/contentbox/edit.html:25
-#: make_queue/templates/make_queue/usage_rules_edit.html:29
-msgid "One or more languages have no content."
-msgstr "Ett eller flere språk mangler innhold."
+#: contentbox/views.py:48 docs/views.py:127
+#, python-brace-format
+msgid "Edit “{title}”"
+msgstr "Rediger «{title}»"
 
-#: contentbox/templates/contentbox/edit.html:35
-#: make_queue/templates/make_queue/usage_rules_edit.html:39
-#: util/view_utils.py:31
-msgid "Save"
-msgstr "Lagre"
-
-#: contentbox/templates/contentbox/edit.html:37
-#: make_queue/templates/make_queue/course/course_registration_edit.html:105
-#: make_queue/templates/make_queue/course/course_registration_list.html:201
-#: make_queue/templates/make_queue/reservation_edit.html:160
-#: make_queue/templates/make_queue/usage_rules_edit.html:41
-#: web/templates/web/delete_modal.html:20
-#: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
-msgctxt "abort action"
-msgid "Cancel"
-msgstr "Avbryt"
+#: contentbox/views.py:54 docs/views.py:133
+#, python-brace-format
+msgid "View “{title}”"
+msgstr "Se «{title}»"
 
 #: docs/forms.py:25
 msgid "The page is currently empty; please add some content."
@@ -497,16 +485,6 @@ msgstr "Lag en ny side"
 #: docs/views.py:84
 msgid "Documentation home page"
 msgstr "Hjemmeside for dokumentasjon"
-
-#: docs/views.py:128
-#, python-brace-format
-msgid "Edit “{title}”"
-msgstr "Rediger «{title}»"
-
-#: docs/views.py:134
-#, python-brace-format
-msgid "View “{title}”"
-msgstr "Se «{title}»"
 
 #: faq/forms.py:13
 msgid "Choose categories"
@@ -1327,6 +1305,15 @@ msgctxt "edit"
 msgid "Submit"
 msgstr "Lagre"
 
+#: make_queue/templates/make_queue/course/course_registration_edit.html:105
+#: make_queue/templates/make_queue/course/course_registration_list.html:201
+#: make_queue/templates/make_queue/reservation_edit.html:160
+#: web/templates/web/delete_modal.html:20
+#: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
+msgctxt "abort action"
+msgid "Cancel"
+msgstr "Avbryt"
+
 #: make_queue/templates/make_queue/course/course_registration_list.html:15
 #: web/templates/web/admin_panel.html:87
 msgid "Course registrations"
@@ -1669,12 +1656,6 @@ msgstr "Ingen reservasjoner knyttet til kvoten"
 msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
-#: make_queue/templates/make_queue/usage_rules_edit.html:9
-#: make_queue/templates/make_queue/usage_rules_edit.html:21
-#, python-format
-msgid "Edit usage rules for %(machine_type)s"
-msgstr "Rediger bruksregler for %(machine_type)s"
-
 #: make_queue/templatetags/reservation_extra.py:62
 msgid "Mon"
 msgstr "Man"
@@ -1832,6 +1813,16 @@ msgstr "Ny regel for {machine_type}"
 #, python-brace-format
 msgid "Rule for {machine_type}"
 msgstr "Regel for {machine_type}"
+
+#: make_queue/views/reservation/rules.py:134
+#, python-brace-format
+msgid "Edit usage rules for {machine_type}"
+msgstr "Rediger bruksregler for {machine_type}"
+
+#: make_queue/views/reservation/rules.py:140
+#, python-brace-format
+msgid "View usage rules for {machine_type}"
+msgstr "Se bruksregler for {machine_type}"
 
 #: makerspace/admin.py:17
 #, python-brace-format
@@ -2389,6 +2380,14 @@ msgstr "Meld deg på arrangementet «{title}»"
 #: users/models.py:11
 msgid "full name from LDAP"
 msgstr "fullt navn fra LDAP"
+
+#: util/view_utils.py:31
+msgid "Save"
+msgstr "Lagre"
+
+#: web/multilingual/formfields.py:18
+msgid "One or more languages have no content."
+msgstr "Ett eller flere språk mangler innhold."
 
 #: web/templates/admin/base_site.html:12
 msgid "Django site admin"
