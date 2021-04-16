@@ -1,6 +1,6 @@
 import functools
 from abc import ABC
-from typing import Any, Dict, List, Tuple
+from typing import Any, Collection, Dict, List, Set, Tuple, TypeVar
 from urllib.parse import urlparse
 
 from django.contrib.auth.models import Permission
@@ -48,6 +48,16 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
         return wrapper
 
     return decorator
+
+
+T = TypeVar('T')
+
+
+def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
+    collection_list = list(collection)
+    collection_set = set(collection_list)
+    self.assertEqual(len(collection_set), len(collection_list))
+    return collection_set
 
 
 class PathPredicate(ABC):

@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Max
+from django.db.models import Count, Max, Prefetch, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -26,52 +26,57 @@ class EventListView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        past, future = [], []
-        for event in Event.objects.filter(hidden=False):
-            if event.private and not self.request.user.has_perm('news.can_view_private'):
+
+        future = Event.objects.future().visible_to(self.request.user).prefetch_related(
+            'timeplaces',
+            Prefetch('timeplaces',
+                     queryset=TimePlace.objects.published().future().order_by('start_time'),
+                     to_attr='future_timeplaces')
+        )
+        future_event_dicts = []
+        for event in future:
+            if not event.future_timeplaces:
                 continue
-            if not event.get_future_occurrences().exists() and not event.get_past_occurrences().exists():
-                continue
-            if event.standalone:
-                if event.get_future_occurrences().exists():
-                    future.append({
-                        "first_occurrence": event.get_future_occurrences().first(),
-                        "event": event,
-                        "number_of_occurrences": event.timeplaces.count(),
-                    })
-                else:
-                    past.append({
-                        "last_occurrence": event.get_past_occurrences().first(),
-                        "event": event,
-                        "number_of_occurrences": event.timeplaces.count(),
-                    })
+            if event.event_type == Event.Type.STANDALONE:
+                future_event_dicts.append({
+                    'event': event,
+                    'shown_occurrence': event.future_timeplaces[0],
+                    'number_of_occurrences': event.timeplaces.count(),
+                })
             else:
-                for occurrence in event.get_future_occurrences():
-                    future.append({
-                        "first_occurrence": occurrence,
-                        "event": event,
-                        "number_of_occurrences": 1,
-                    })
-                if event.get_past_occurrences().exists():
-                    past.append({
-                        "last_occurrence": event.get_past_occurrences().first(),
-                        "event": event,
-                        "number_of_occurrences": event.get_past_occurrences().count(),
+                for timeplace in event.future_timeplaces:
+                    future_event_dicts.append({
+                        'event': event,
+                        'shown_occurrence': timeplace,
+                        'number_of_occurrences': 1,
                     })
 
+        past = Event.objects.past().visible_to(self.request.user).annotate(
+            latest_occurrence=Max('timeplaces__start_time'),
+        ).order_by('-latest_occurrence').prefetch_related(
+            Prefetch('timeplaces',
+                     queryset=TimePlace.objects.published().past().order_by('-start_time'),
+                     to_attr='past_timeplaces')
+        )
+        past_event_dicts = [{
+            'event': event,
+            'shown_occurrence': event.past_timeplaces[0],
+            'number_of_occurrences': len(event.past_timeplaces),
+        } for event in past if event.past_timeplaces]
+
         context.update({
-            'past': sorted(past, key=lambda event: event["last_occurrence"].start_time, reverse=True),
-            'future': sorted(future, key=lambda event: event["first_occurrence"].start_time),
+            'future_event_dicts': sorted(future_event_dicts, key=lambda timeplace_: timeplace_['shown_occurrence'].start_time),
+            'past_event_dicts': past_event_dicts,
         })
         return context
 
 
 class ArticleListView(ListView):
     template_name = 'news/article_list.html'
-    context_object_name = "articles"
+    context_object_name = 'articles'
 
     def get_queryset(self):
-        return Article.objects.published()
+        return Article.objects.published().visible_to(self.request.user)
 
 
 class EventDetailView(TemplateView):
@@ -80,10 +85,11 @@ class EventDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         event = get_object_or_404(Event, pk=kwargs['pk'])
+        future_timeplaces = event.timeplaces.published().future()
         context.update({
-            'article': event,
-            'timeplaces': event.timeplaces.all() if event.standalone else event.timeplaces.future(),
-            'is_old': not event.timeplaces.future().exists(),
+            'news_obj': event,
+            'timeplaces': event.timeplaces.all() if event.standalone else future_timeplaces,
+            'is_old': not future_timeplaces.exists(),
             'last_occurrence': event.get_past_occurrences().first(),
         })
         if (event.hidden and not self.request.user.has_perm('news.change_event')
@@ -99,7 +105,7 @@ class ArticleDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         article = get_object_or_404(Article, pk=kwargs['pk'])
         context.update({
-            'article': article,
+            'news_obj': article,
         })
         if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')
                 or article.private and not self.request.user.has_perm('news.can_view_private')):
@@ -127,13 +133,22 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
     def get_queryset(self):
         return Event.objects.annotate(
             latest_occurrence=Max('timeplaces__end_time'),
-        ).order_by('-latest_occurrence')
+            num_future_occurrences=Count('timeplaces', filter=Q(timeplaces__end_time__gt=timezone.localtime())),
+        ).order_by('-latest_occurrence').prefetch_related('timeplaces')
 
 
 class AdminEventDetailView(DetailView):
     model = Event
     template_name = 'news/admin_event_detail.html'
     context_object_name = 'event'
+
+    def get_context_data(self, **kwargs):
+        event: Event = self.object
+        return super().get_context_data(**{
+            'future_timeplaces': event.timeplaces.future().order_by('start_time'),
+            'past_timeplaces': event.timeplaces.past().order_by('-start_time'),
+            **kwargs,
+        })
 
 
 class EditArticleView(PermissionRequiredMixin, UpdateView):

@@ -2080,11 +2080,6 @@ msgstr "Klikk for å duplisere forekomsten."
 msgid "New article"
 msgstr "Ny artikkel"
 
-#: news/templates/news/article_detail.html:38
-#: news/templates/news/event_detail.html:14
-msgid "Admin page"
-msgstr "Administrasjonspanel"
-
 #: news/templates/news/article_edit.html:6
 #: news/templates/news/article_edit.html:16
 msgid "Edit article"
@@ -2134,6 +2129,10 @@ msgstr "Hvis valgt vil artikkelen bare vises for medlemmer av MAKE NTNU."
 #: news/templates/news/event_create.html:6
 msgid "New event"
 msgstr "Nytt arrangement"
+
+#: news/templates/news/event_detail.html:19
+msgid "Admin page"
+msgstr "Administrasjonspanel"
 
 #: news/templates/news/event_detail.html:31
 #: news/templates/news/event_detail.html:147
@@ -2230,16 +2229,6 @@ msgstr "Hvis valgt vil arrangementet bare vises for medlemmer av MAKE NTNU."
 msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
-#: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77
-msgid "dates"
-msgstr "datoer"
-
-#: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77
-msgid "date"
-msgstr "dato"
-
 #: news/templates/news/event_list.html:61
 msgid "No upcoming events"
 msgstr "Ingen kommende arrangementer"
@@ -2251,6 +2240,19 @@ msgstr "Tidligere arrangementer"
 #: news/templates/news/event_list.html:110
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
+
+#: news/templates/news/event_list_contents.html:26
+msgid "dates"
+msgstr "datoer"
+
+#: news/templates/news/event_list_contents.html:26
+msgid "date"
+msgstr "dato"
+
+#: news/templates/news/event_list_contents.html:36
+#, python-format
+msgid "Illustration image for %(event)s"
+msgstr "Illustrasjonsbilde for %(event)s"
 
 #: news/templates/news/event_registration.html:9
 #, python-format

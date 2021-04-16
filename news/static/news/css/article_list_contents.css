@@ -1,0 +1,133 @@
+.articles {
+    display: grid;
+    grid-template-columns: 1fr 10fr 10fr 1fr;
+    grid-auto-flow: dense;
+    margin: 50px 0;
+}
+
+.article-img-container,
+.article-text {
+    position: relative;
+}
+
+.article-img-container {
+    grid-column: 2/3;
+}
+
+.article-img-container img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+}
+
+.article-img-container img.contain {
+    object-fit: contain;
+}
+
+.article-text {
+    overflow-wrap: break-word;
+    overflow: hidden;
+    display: grid;
+    align-items: center;
+}
+
+.article-img-container.float-left,
+.article-text.float-left {
+    grid-column: 3/4;
+}
+
+.article-img-container.float-right,
+.article-text.float-right {
+    grid-column: 2/3;
+}
+
+.article-text.first .txtborder.tr,
+.article-text.last.float-right .txtborder.bl,
+.article-text.last.float-left .txtborder.br {
+    display: inline;
+}
+
+.article-text .txtborder {
+    position: absolute;
+    display: none;
+    width: 50px !important;
+    height: 50px !important;
+}
+
+.article-text .txtborder.tl {
+    top: 0;
+    left: 0;
+}
+
+.article-text .txtborder.tr {
+    top: 0;
+    right: 0;
+}
+
+.article-text .txtborder.bl {
+    bottom: 0;
+    left: 0;
+}
+
+.article-text .txtborder.br {
+    bottom: 0;
+    right: 0;
+}
+
+.article-title {
+    text-align: center;
+    margin-bottom: 5px;
+}
+
+.article-title a {
+    text-transform: uppercase;
+}
+
+.article-text p {
+    padding: 0 50px 50px;
+}
+
+
+/* Switch to mobile layout */
+@media screen and (max-width: 991.98px) {
+    .articles {
+        grid-template-rows: auto;
+        grid-template-columns: 1fr 20fr 1fr;
+        margin-top: 20px;
+        margin-bottom: 0;
+    }
+
+    .article-img-container,
+    .article-text {
+        grid-column: 2/3 !important;
+    }
+
+    .article-text {
+        height: auto;
+        max-height: 300px;
+        align-items: flex-start;
+    }
+
+    .article-text .txtborder.tl,
+    .article-text .txtborder.tr,
+    .article-text .txtborder.bl,
+    .article-text .txtborder.br {
+        display: none !important;
+    }
+
+    .article-text a,
+    .article-text p,
+    .article-title {
+        margin-left: 0 !important;
+        padding: 0 !important;
+    }
+
+    .article-title {
+        text-align: left;
+        margin-top: 20px !important;
+    }
+
+    .article-text p {
+        padding-bottom: 80px !important;
+    }
+}

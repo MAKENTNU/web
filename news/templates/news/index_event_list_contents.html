@@ -1,0 +1,11 @@
+{% extends 'news/event_list_contents.html' %}
+
+
+{% block title %}{% endblock %}
+
+{% block ribbon_label %}
+    {{ event_dict.shown_occurrence.start_time|date:"d" }}<br/>
+    {{ event_dict.shown_occurrence.start_time|date:"M" }}
+{% endblock ribbon_label %}
+
+{% block no_events %}{% endblock %}

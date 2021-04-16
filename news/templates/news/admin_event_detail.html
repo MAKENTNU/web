@@ -1,11 +1,17 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
-{% load news_tags %}
 {% load static %}
 
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/admin_event_detail.css' %}"/>
+    <script>
+        {# `csrfToken`, `privateEventIcon` and `publicEventIcon` are used in `admin_event_detail.js` #}
+        var csrfToken = "{{ csrf_token }}";
+        var privateEventIcon = "{% static 'web/img/m_yellow.svg' %}";
+        var publicEventIcon = "{% static 'web/img/m_grey.svg' %}";
+    </script>
+    <script defer src="{% static 'news/js/admin_event_detail.js' %}"></script>
 {% endblock extra_head %}
 
 {% block body %}
@@ -88,16 +94,16 @@
         </div>
         <div class="ui tabular pointing secondary menu">
             <a class="active item" data-tab="future">{% trans "Future" %}
-                <div class="ui blue label">{{ event.timeplaces|future|length }}</div>
+                <div class="ui blue label">{{ future_timeplaces.count }}</div>
             </a>
             <a class="item" data-tab="past">{% trans "Past" %}
-                <div class="ui red label">{{ event.timeplaces|past|length }}</div>
+                <div class="ui red label">{{ past_timeplaces.count }}</div>
             </a>
         </div>
 
         <div class="ui active tab segment" data-tab="future">
             <div class="ui relaxed divided list">
-                {% for timeplace in event.timeplaces|future %}
+                {% for timeplace in future_timeplaces %}
                     {% include 'news/admin_timeplace_listing.html' %}
                 {% empty %}
                     {% trans "No future occurrences exist for this event" %}
@@ -106,7 +112,7 @@
         </div>
         <div class="ui bottom attached tab segment" data-tab="past">
             <div class="ui relaxed divided list">
-                {% for timeplace in event.timeplaces|past %}
+                {% for timeplace in past_timeplaces %}
                     {% include 'news/admin_timeplace_listing.html' %}
                 {% empty %}
                     {% trans "No past occurrences exist for this event" %}
@@ -116,47 +122,3 @@
 
     </div>
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(".tabular.menu .item").tab();
-
-        $(".toggle").click(function () {
-            toggle_post($(this), $(this).data('pk'), $(this).data('model'), $(this).data('toggle'));
-        });
-
-        function toggle_post(element, pk, model, toggle) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                },
-            });
-            $.ajax({
-                type: "POST",
-                url: `/news/admin/toggle/${model}/`,
-                data: {
-                    'pk': pk,
-                    'toggle': toggle,
-                },
-                success: function (data) {
-                    if (!data['color']) {
-                        return;
-                    }
-                    if (toggle === 'private') {
-                        if (data['color'] === 'yellow') {
-                            element.attr('src', "{% static 'web/img/m_yellow.svg' %}");
-                        } else {
-                            element.attr('src', "{% static 'web/img/m_grey.svg' %}");
-                        }
-                    } else {
-                        element.removeClass('yellow grey').addClass(data['color']);
-                    }
-
-                    if (model === "event") {
-                        $(`#message-${toggle}`).toggleClass("hidden", data["color"] === "grey");
-                    }
-                },
-            });
-        }
-    </script>
-{% endblock extra_scripts %}

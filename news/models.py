@@ -6,6 +6,7 @@ from io import BytesIO
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -14,6 +15,15 @@ from util.locale_utils import short_date_format
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
+
+
+class NewsBaseQuerySet(models.QuerySet):
+
+    def visible_to(self, user: User):
+        hidden_news_query = Q(hidden=False)
+        if not user.has_perm('news.can_view_private'):
+            hidden_news_query &= Q(private=False)
+        return self.filter(hidden_news_query)
 
 
 class NewsBase(models.Model):
@@ -25,6 +35,8 @@ class NewsBase(models.Model):
     featured = models.BooleanField(default=True, verbose_name=_("Featured"))
     hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))
     private = models.BooleanField(default=False, verbose_name=_("Internal"))
+
+    objects = NewsBaseQuerySet.as_manager()
 
     class Meta:
         abstract = True
@@ -60,7 +72,7 @@ class NewsBase(models.Model):
         super().save(**kwargs)
 
 
-class ArticleQuerySet(models.QuerySet):
+class ArticleQuerySet(NewsBaseQuerySet):
 
     def published(self):
         return self.filter(hidden=False, publication_time__lte=timezone.localtime())
@@ -73,6 +85,26 @@ class Article(NewsBase):
 
     class Meta(NewsBase.Meta):
         ordering = ('-publication_time',)
+
+
+class EventQuerySet(NewsBaseQuerySet):
+
+    def future(self):
+        return self.filter(
+            timeplaces__end_time__gt=timezone.localtime()
+        ).distinct()  # remove duplicates that can appear when filtering on values across tables
+
+    def past(self):
+        now = timezone.localtime()
+        return self.filter(
+            # Any repeating event with at least one timeplace that's already ended...
+            Q(event_type=Event.Type.REPEATING, timeplaces__end_time__lte=now)
+            # ...or any standalone event with timeplaces [this predicate is completed by the `exclude()` call below]...
+            | Q(event_type=Event.Type.STANDALONE, timeplaces__isnull=False)
+        ).exclude(
+            # ...but exclude standalone events with at least one timeplace that has not ended
+            Q(event_type=Event.Type.STANDALONE, timeplaces__end_time__gt=now)
+        ).distinct()  # remove duplicates that can appear when filtering on values across tables
 
 
 class Event(NewsBase):
@@ -88,11 +120,13 @@ class Event(NewsBase):
     )
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
 
+    objects = EventQuerySet.as_manager()
+
     def get_future_occurrences(self):
-        return self.timeplaces.future().order_by('start_time')
+        return self.timeplaces.published().future().order_by('start_time')
 
     def get_past_occurrences(self):
-        return self.timeplaces.past().order_by('-start_time')
+        return self.timeplaces.published().past().order_by('-start_time')
 
     def number_of_registered_tickets(self):
         return self.tickets.filter(active=True).count()
@@ -132,10 +166,10 @@ class TimePlaceQuerySet(models.QuerySet):
         return self.filter(hidden=False, event__hidden=False).filter(publication_time__lte=timezone.localtime())
 
     def future(self):
-        return self.published().filter(end_time__gt=timezone.localtime())
+        return self.filter(end_time__gt=timezone.localtime())
 
     def past(self):
-        return self.published().filter(end_time__lte=timezone.localtime())
+        return self.filter(end_time__lte=timezone.localtime())
 
 
 class TimePlace(models.Model):

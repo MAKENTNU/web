@@ -1,0 +1,61 @@
+.events {
+    display: grid;
+    grid-template-columns: 1fr 10fr 10fr 1fr;
+    grid-auto-flow: dense;
+    grid-gap: 30px;
+    margin: 3em 0 6em !important; /* Overrides Fomantic-UI */
+}
+
+.events .item {
+    margin: 0 !important;
+}
+
+.events .item:nth-of-type(even) {
+    grid-column: 3/4;
+}
+
+.events .item:nth-of-type(odd) {
+    grid-column: 2/3;
+}
+
+.events img {
+    object-fit: cover;
+    width: auto !important;
+}
+
+.events img.contain {
+    object-fit: contain;
+}
+
+.event-title {
+    line-height: 0.8em;
+}
+
+.event-title a {
+    text-transform: uppercase;
+}
+
+.no-events {
+    text-align: center;
+    font-style: italic;
+}
+
+
+@media screen and (max-width: 1199.98px) {
+    .events {
+        grid-template-columns: 1fr 20fr 1fr;
+        grid-gap: 0;
+    }
+
+    .events .item {
+        grid-column: 2/3 !important;
+        padding-bottom: 40px !important;
+    }
+}
+
+
+@media only screen and (max-width: 767.98px) {
+    .events .event-img.o.v.e.r.r.i.d.e {
+        max-width: 65vw !important; /* Overrides Fomantic-UI */
+    }
+}
