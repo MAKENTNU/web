@@ -1814,6 +1814,42 @@ msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 msgid "The event cannot end before it starts"
 msgstr "Arrangementet kan ikke slutte før det starter"
 
+#: news/forms.py:49
+msgid "the article"
+msgstr "artikkelen"
+
+#: news/forms.py:50
+msgid "The main content of the article."
+msgstr "Brødteksten til artikkelen."
+
+#: news/forms.py:52
+msgid "the event"
+msgstr "arrangementet"
+
+#: news/forms.py:53
+msgid "The main description of the event."
+msgstr "Brødteksten til arrangementet."
+
+#: news/forms.py:56
+#, python-brace-format
+msgid "A short text designed to bait users into clicking {the_type}."
+msgstr "En kort tekst for å lokke brukerne til å klikke på {the_type}."
+
+#: news/forms.py:57
+#, python-brace-format
+msgid "If selected, {the_type} may be shown on the front page."
+msgstr "Hvis valgt kan {the_type} bli vist på forsiden."
+
+#: news/forms.py:58
+#, python-brace-format
+msgid "If selected, {the_type} will only be visible to admin users."
+msgstr "Hvis valgt vil {the_type} bare være synlig for administratorer."
+
+#: news/forms.py:59
+#, python-brace-format
+msgid "If selected, {the_type} will only be visible to members of MAKE NTNU."
+msgstr "Hvis valgt vil {the_type} bare vises for medlemmer av MAKE NTNU."
+
 #: news/forms.py:61
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
@@ -2085,13 +2121,9 @@ msgstr "Ny artikkel"
 msgid "Edit article"
 msgstr "Rediger artikkel"
 
-#: news/templates/news/article_edit.html:26
-msgid "The main content of the article"
-msgstr "Brødteksten til artikkelen"
-
-#: news/templates/news/article_edit.html:34
-msgid "A short text designed to bait users into clicking the article"
-msgstr "En kort tekst for å lure brukerne til å klikke på artikkelen"
+#: news/templates/news/article_edit.html:14
+msgid "Admin page for articles"
+msgstr "Administrasjonsside for artikler"
 
 #: news/templates/news/article_edit.html:41
 #: news/templates/news/timeplace_edit.html:50
@@ -2101,29 +2133,6 @@ msgstr "Publisering"
 #: news/templates/news/article_edit.html:42
 msgid "The article will be hidden until this date"
 msgstr "Artikkelen vil være skjult før publiseringstidspunktet"
-
-#: news/templates/news/article_edit.html:49
-#: news/templates/news/event_edit.html:83
-msgid "Preferred format is"
-msgstr "Foretrukket format er"
-
-#: news/templates/news/article_edit.html:56
-#: news/templates/news/event_edit.html:90
-#: news/templates/news/timeplace_edit.html:57
-msgid "Attributes"
-msgstr "Egenskaper"
-
-#: news/templates/news/article_edit.html:62
-msgid "If selected, the article may be shown on the front page."
-msgstr "Hvis valgt vil artikkelen vises på forsiden."
-
-#: news/templates/news/article_edit.html:72
-msgid "If selected, the article will only be visible to admin users."
-msgstr "Hvis valgt vil artikkelen bare være synlig for administratorer."
-
-#: news/templates/news/article_edit.html:82
-msgid "If selected, the article will only be visible to members of MAKE NTNU."
-msgstr "Hvis valgt vil artikkelen bare vises for medlemmer av MAKE NTNU."
 
 #: news/templates/news/event_create.html:5
 #: news/templates/news/event_create.html:6
@@ -2176,14 +2185,6 @@ msgstr "Ingen påmelding"
 msgid "Edit event"
 msgstr "Rediger arrangement"
 
-#: news/templates/news/event_edit.html:26
-msgid "The main description of the event"
-msgstr "Brødteksten til arrangementet"
-
-#: news/templates/news/event_edit.html:34
-msgid "A short text designed to bait users into clicking the event"
-msgstr "En kort tekst for å lure brukerne til å klikke på arrangementet"
-
 #: news/templates/news/event_edit.html:49
 msgid ""
 "Used for repeating events where the user is to register for one of several "
@@ -2212,18 +2213,6 @@ msgid ""
 msgstr ""
 "Bare brukt til frittstående arrangementer. For gjentagende arrangementer er "
 "billettene administrert per tidspunkt."
-
-#: news/templates/news/event_edit.html:96
-msgid "If selected, the event may be shown on the front page."
-msgstr "Hvis valgt kan arrangementet bli vist på forsiden."
-
-#: news/templates/news/event_edit.html:106
-msgid "If selected, the event will only be visible to admin users."
-msgstr "Hvis valgt vil arrangementet bare være synlig for administratorer."
-
-#: news/templates/news/event_edit.html:116
-msgid "If selected, the event will only be visible to members of MAKE NTNU"
-msgstr "Hvis valgt vil arrangementet bare vises for medlemmer av MAKE NTNU."
 
 #: news/templates/news/event_list.html:14
 msgid "Upcoming events"
@@ -2263,6 +2252,15 @@ msgstr "Meld deg på arrangementet «%(title)s»"
 #: web/templates/web/header.html:105
 msgid "My tickets"
 msgstr "Mine billetter"
+
+#: news/templates/news/news_base_edit.html:49
+msgid "Preferred format is"
+msgstr "Foretrukket format er"
+
+#: news/templates/news/news_base_edit.html:57
+#: news/templates/news/timeplace_edit.html:57
+msgid "Attributes"
+msgstr "Egenskaper"
 
 #: news/templates/news/ticket_card.html:71
 msgid "Cancel ticket"

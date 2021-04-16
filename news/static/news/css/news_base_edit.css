@@ -1,0 +1,6 @@
+/* Ensures that this input field does not push the upload button
+   farther to the right than the edge of the content */
+#id_image input[type=text] {
+    width: 100%;
+    flex: auto;
+}

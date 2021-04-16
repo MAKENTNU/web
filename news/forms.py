@@ -1,8 +1,12 @@
+from abc import ABCMeta
+from typing import Type
+
 from django import forms
+from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
 from web.widgets import MazemapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
-from .models import Article, Event, EventTicket, TimePlace
+from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
 class TimePlaceForm(forms.ModelForm):
@@ -29,23 +33,46 @@ class TimePlaceForm(forms.ModelForm):
         return cleaned_data
 
 
-class ArticleForm(forms.ModelForm):
-    class Meta:
-        model = Article
-        fields = "__all__"
+class NewsBaseForm(forms.ModelForm):
+    class Meta(ABCMeta):
+        model: Model
+        fields = '__all__'
         widgets = {
-            "publication_time": SemanticDateTimeInput(),
-            "image": SemanticFileInput(),
+            'image': SemanticFileInput(),
         }
+
+        @staticmethod
+        def get_help_texts(news_class: Type[NewsBase]):
+            the_type, content_help_text = None, None
+            if news_class is Article:
+                the_type = _("the article")
+                content_help_text = _("The main content of the article.")
+            elif news_class is Event:
+                the_type = _("the event")
+                content_help_text = _("The main description of the event.")
+            return {
+                'content': content_help_text,
+                'clickbait': _("A short text designed to bait users into clicking {the_type}.").format(the_type=the_type),
+                'featured': _("If selected, {the_type} may be shown on the front page.").format(the_type=the_type),
+                'hidden': _("If selected, {the_type} will only be visible to admin users.").format(the_type=the_type),
+                'private': _("If selected, {the_type} will only be visible to members of MAKE NTNU.").format(the_type=the_type),
+            }
+
+
+class ArticleForm(NewsBaseForm):
+    class Meta(NewsBaseForm.Meta):
+        model = Article
+        widgets = {
+            **NewsBaseForm.Meta.widgets,
+            'publication_time': SemanticDateTimeInput(),
+        }
+        help_texts = NewsBaseForm.Meta.get_help_texts(model)
 
 
 class EventForm(forms.ModelForm):
-    class Meta:
+    class Meta(NewsBaseForm.Meta):
         model = Event
-        fields = "__all__"
-        widgets = {
-            "image": SemanticFileInput(),
-        }
+        help_texts = NewsBaseForm.Meta.get_help_texts(model)
 
 
 class EventRegistrationForm(forms.ModelForm):
