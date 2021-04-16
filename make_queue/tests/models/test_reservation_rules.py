@@ -1,11 +1,10 @@
-import datetime
 from datetime import timedelta
 from typing import Tuple
 
-from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.dateparse import parse_datetime, parse_time
 
+from ...forms import ReservationRuleForm
 from ...models.machine import MachineType
 from ...models.reservation import ReservationRule
 
@@ -57,28 +56,24 @@ class PeriodTests(TestCase):
         self.assertEqual(self.round_hours_overlap((7, 2),
                                                   (6.25, 2.25)), 48)
 
-    def create_reservation_rule(self, start_time, end_time):
-        return ReservationRule(start_time=start_time, end_time=end_time, start_days=[], max_hours=0,
-                               max_inside_border_crossed=0, days_changed=0, machine_type=self.machine_type)
-
     def test_overlap_self(self):
-        period = Period(1, self.create_reservation_rule(datetime.time(10, 0), datetime.time(14, 0)))
+        period = Period(1, parse_time("10:00"), parse_time("14:00"), 0)
 
         self.assertTrue(period.overlap(period), "A period should overlap itself")
 
     def test_overlap_other(self):
-        period1 = Period(1, self.create_reservation_rule(datetime.time(10, 0), datetime.time(14, 0)))
-        period2 = Period(1, self.create_reservation_rule(datetime.time(8, 0), datetime.time(10, 0)))
+        period1 = Period(1, parse_time("10:00"), parse_time("14:00"), 0)
+        period2 = Period(1, parse_time("8:00"), parse_time("10:00"), 0)
 
         self.assertFalse(period1.overlap(period2), "A period that starts at another's end point should not overlap")
         self.assertFalse(period2.overlap(period1), "A period that ends at another's start point should not overlap")
 
-        period3 = Period(1, self.create_reservation_rule(datetime.time(9, 0), datetime.time(11, 0)))
+        period3 = Period(1, parse_time("9:00"), parse_time("11:00"), 0)
 
         self.assertTrue(period1.overlap(period3), "A period that starts within another should overlap")
         self.assertTrue(period3.overlap(period1), "A period that starts within another should overlap")
 
-        period4 = Period(2, self.create_reservation_rule(datetime.time(8, 0), datetime.time(12, 0)))
+        period4 = Period(2, parse_time("8:00"), parse_time("12:00"), 0)
 
         self.assertFalse(period1.overlap(period4), "Periods on distinct days should not overlap")
         self.assertFalse(period4.overlap(period1), "Periods on distinct days should not overlap")
@@ -91,20 +86,20 @@ class ReservationRuleTests(TestCase):
         self.machine_type = MachineType.objects.get(pk=1)
 
     def test_time_periods(self):
-        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
+        rule = ReservationRule(start_time=parse_time("10:00"), end_time=parse_time("6:00"), days_changed=1,
                                start_days=[1, 3, 5, 6], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
 
-        time_periods = rule.time_periods()
-        correct_timeperiods = [
-            Period(1, rule),
-            Period(3, rule),
-            Period(5, rule),
-            Period(6, rule),
+        time_periods = rule.time_periods
+        correct_time_periods = [
+            Period.from_rule(1, rule),
+            Period.from_rule(3, rule),
+            Period.from_rule(5, rule),
+            Period.from_rule(6, rule),
         ]
 
-        self.assertEqual(len(time_periods), len(correct_timeperiods))
+        self.assertEqual(len(time_periods), len(correct_time_periods))
 
-        for calculated_period, correct_period in zip(time_periods, correct_timeperiods):
+        for calculated_period, correct_period in zip(time_periods, correct_time_periods):
             self.assertEqual(calculated_period.exact_start_weekday, correct_period.exact_start_weekday)
             self.assertEqual(calculated_period.exact_end_weekday, correct_period.exact_end_weekday)
             self.assertTrue(calculated_period.overlap(correct_period))
@@ -112,64 +107,61 @@ class ReservationRuleTests(TestCase):
                                                  (correct_period.exact_start_weekday, correct_period.exact_end_weekday))
             self.assertEqual(round(hours_overlap, 2), 20)
 
-    def test_is_valid_rule_internal(self):
-        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
-                               start_days=[1, 3, 5, 6], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
-        self.assertTrue(rule.is_valid_rule(),
-                        "A rule with a difference of less than 24h between start_time and end_time should not overlap with it self")
+    def test_form_validation_for_single_rules_validates_expectedly(self):
+        form_data = {
+            'start_time': parse_time("10:00"), 'end_time': parse_time("6:00"), 'days_changed': 1,
+            'start_days': [1, 3, 5, 6], 'max_inside_border_crossed': 0, 'machine_type': self.machine_type, 'max_hours': 0,
+        }
+        self.assertTrue(ReservationRuleForm(data=form_data).is_valid(),
+                        "A rule with a difference of less than 24h between start_time and end_time should not overlap with itself")
 
-        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(12, 0), days_changed=1,
-                               start_days=[1, 2], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
+        form_data = {
+            'start_time': parse_time("10:00"), 'end_time': parse_time("12:00"), 'days_changed': 1,
+            'start_days': [1, 2], 'max_inside_border_crossed': 0, 'machine_type': self.machine_type, 'max_hours': 0,
+        }
+        self.assertFalse(ReservationRuleForm(data=form_data).is_valid(),
+                         "A rule with periods of more than 24h cannot have two successive days")
 
-        self.assertFalse(rule.is_valid_rule(), "A rule with periods of more than 24h cannot have two successive days")
+        form_data = {
+            'start_time': parse_time("10:00"), 'end_time': parse_time("12:00"), 'days_changed': 1,
+            'start_days': [1, 7], 'max_inside_border_crossed': 0, 'machine_type': self.machine_type, 'max_hours': 0,
+        }
+        self.assertFalse(ReservationRuleForm(data=form_data).is_valid(),
+                         "A rule with periods of more than 24h cannot have two successive days")
 
-        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(12, 0), days_changed=1,
-                               start_days=[1, 7], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
+        form_data = {
+            'start_time': parse_time("10:00"), 'end_time': parse_time("12:00"), 'days_changed': 7,
+            'start_days': [1], 'max_inside_border_crossed': 0, 'machine_type': self.machine_type, 'max_hours': 0,
+        }
+        self.assertFalse(ReservationRuleForm(data=form_data).is_valid(), "A rule cannot cover more than a week")
 
-        self.assertFalse(rule.is_valid_rule(), "A rule with periods of more than 24h cannot have two successive days")
-        try:
-            rule.is_valid_rule(raise_error=True)
-            self.fail("An exception should have been raised for a check on a non valid rule with raise_error set")
-        except ValidationError:
-            pass
+        form_data = {
+            'start_time': parse_time("10:00"), 'end_time': parse_time("12:00"), 'days_changed': 0,
+            'start_days': [], 'max_inside_border_crossed': 0, 'machine_type': self.machine_type, 'max_hours': 0,
+        }
+        self.assertFalse(ReservationRuleForm(data=form_data).is_valid(), "A rule must specify at least one start day")
+        form_data['start_days'] = [1]
+        self.assertTrue(ReservationRuleForm(data=form_data).is_valid())
 
-        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(12, 0), days_changed=7,
-                               start_days=[1], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
+    def test_form_validation_between_multiple_rules_validates_expectedly(self):
+        ReservationRule.objects.create(
+            start_time=parse_time("10:00"), end_time=parse_time("6:00"), days_changed=1,
+            start_days=[1, 3, 5, 6], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0,
+        )
 
-        self.assertFalse(rule.is_valid_rule(), "A rule cannot cover more than a week")
-        try:
-            rule.is_valid_rule(raise_error=True)
-            self.fail("An exception should have been raised for a check on a non valid rule with raise_error set")
-        except ValidationError:
-            pass
+        form_data = {
+            'start_time': parse_time("12:00"), 'end_time': parse_time("18:00"), 'days_changed': 0,
+            'start_days': [2, 7], 'max_inside_border_crossed': 0, 'machine_type': self.machine_type, 'max_hours': 0,
+        }
+        self.assertTrue(ReservationRuleForm(data=form_data).is_valid())
 
-    def test_is_valid_rule_external(self):
-        ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
-                        start_days=[1, 3, 5, 6], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0).save()
-
-        rule = ReservationRule(start_time=datetime.time(12, 0), end_time=datetime.time(18, 0), days_changed=0,
-                               start_days=[2, 7], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
-
-        self.assertTrue(rule.is_valid_rule())
-
-        rule = ReservationRule(start_time=datetime.time(5, 0), end_time=datetime.time(12, 0), days_changed=0,
-                               start_days=[2], max_inside_border_crossed=0, machine_type=self.machine_type, max_hours=0)
-
-        self.assertFalse(rule.is_valid_rule())
-        try:
-            rule.is_valid_rule(raise_error=True)
-            self.fail("An exception should have been raised for a check on a non valid rule with raise_error set")
-        except ValidationError:
-            pass
-
-        try:
-            rule.save()
-            self.fail("Valid rules should not be saveable")
-        except ValidationError:
-            pass
-
-        rule.machine_type = MachineType.objects.get(pk=2)
-        self.assertTrue(rule.is_valid_rule(),
+        form_data = {
+            'start_time': parse_time("5:00"), 'end_time': parse_time("12:00"), 'days_changed': 0,
+            'start_days': [2], 'max_inside_border_crossed': 0, 'machine_type': self.machine_type, 'max_hours': 0,
+        }
+        self.assertFalse(ReservationRuleForm(data=form_data).is_valid())
+        form_data['machine_type'] = MachineType.objects.get(pk=2)
+        self.assertTrue(ReservationRuleForm(data=form_data).is_valid(),
                         "Rules for different machine types should not effect the validity of each other")
 
     def test_is_valid_time_in_rule_no_border_cross(self):

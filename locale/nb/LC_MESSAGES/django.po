@@ -1020,6 +1020,21 @@ msgstr "maskiner"
 msgid "location"
 msgstr "sted"
 
+#: make_queue/forms.py:95
+msgid ""
+"Period is either too long (7+ days) or start time is earlier than end time."
+msgstr ""
+"Perioden er enten for lang (7+ dager) eller starttiden er før sluttiden."
+
+#: make_queue/forms.py:104
+msgid "Rule has internal overlap of time periods."
+msgstr "Tidsperiodene innad i regelen overlapper hverandre."
+
+#: make_queue/forms.py:114
+msgid "Rule time periods overlap with time periods of other rules."
+msgstr ""
+"Tidsperiodene til regelen overlapper med tidsperiodene til andre regler."
+
 #: make_queue/forms.py:119 make_queue/forms.py:164
 #: make_queue/templates/make_queue/quota/quota_panel.html:57
 msgid "Select user"
@@ -1211,6 +1226,10 @@ msgstr "sluttidspunkt"
 #: make_queue/models/reservation.py:250
 msgid "days"
 msgstr "dager"
+
+#: make_queue/models/reservation.py:264
+msgid "Number of times midnight is passed between start and end time."
+msgstr "Antall ganger midnatt passeres mellom start- og sluttid."
 
 #: make_queue/models/reservation.py:251
 #: make_queue/templates/make_queue/rule_edit.html:36
