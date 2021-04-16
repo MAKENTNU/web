@@ -4,20 +4,15 @@
 
 
 <div class="ui container">
-    <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
-        {% if profile.image %}
-            <img {% thumbnail profile.image "150x150" crop="center" as image_thumb %}
-                src="{{ image_thumb.url }}"
-            {% empty %}
-                src="{{ profile.image.url }}"
-            {% endthumbnail %}
-                id="profile-pic" alt="{% trans "profile picture"|capfirst %}"
-            />
+    <div class="ui image" data-tooltip="{% translate "Change picture" %}" data-position="right center">
+        <img id="profile-pic" {% if profile.image %}
+             src="{{ profile.image.url }}"
+             alt="{% blocktranslate with user=profile.user.get_full_name %}The profile picture of {{ user }}{% endblocktranslate %}"
         {% else %}
-            <img id="profile-pic" src="{% static 'checkin/img/placeholder_profile.png' %}"
-                 alt="{% trans "Placeholder image" %}"
-            />
+             src="{% static 'checkin/img/placeholder_profile.png' %}"
+             alt="{% translate "Placeholder image" %}"
         {% endif %}
+        />
     </div>
     <div class="ui container">
         <form id="image-form" class="ui form" method="POST" action="{% url 'profile_picture' %}"

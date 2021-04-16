@@ -208,6 +208,11 @@ msgstr "Skann kort"
 msgid "Change picture"
 msgstr "Endre bilde"
 
+#: checkin/templates/checkin/profile_internal.html:10
+#, python-format
+msgid "The profile picture of %(user)s"
+msgstr "Profilbildet til %(user)s"
+
 #: checkin/templates/checkin/profile_internal.html:18
 #: checkin/templates/checkin/profile_internal.html:51
 #: checkin/templates/checkin/skills.html:31
