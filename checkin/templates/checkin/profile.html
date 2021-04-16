@@ -73,7 +73,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: '/checkin/register/profile/',
+                url: "{% url 'register_profile' %}",
                 data: {},
                 success: function (data) {
                     if (data["scan_exists"]) {

@@ -175,17 +175,17 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
         if suggestion.strip() and not suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
         elif not suggestion.strip() and suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
         elif not suggestion.strip() and not suggestion_english.strip():
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
 
         if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(
                 title_en=suggestion_english).exists():
             messages.error(request, _("Skill already exists!"))
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
         else:
             if SuggestSkill.objects.filter(title=suggestion).exists():
                 s = SuggestSkill.objects.get(title=suggestion)
@@ -204,7 +204,7 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.info(request, _("Skill added!"))
 
-        return HttpResponseRedirect(reverse('suggest'))
+        return HttpResponseRedirect(reverse('suggest_skill'))
 
 
 class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
