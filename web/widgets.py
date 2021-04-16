@@ -1,3 +1,5 @@
+from enum import Enum
+
 import django.forms as forms
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
@@ -53,6 +55,59 @@ class SemanticFileInput(forms.ClearableFileInput):
             "FILE_MAX_SIZE": settings.FILE_MAX_SIZE,
         })
         return context
+
+
+class Direction(Enum):
+    HORIZONTAL = 'H'
+    VERTICAL = 'V'
+
+
+class DirectionalCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
+    # The values go from 2 to 16, to match Fomantic-UI's CSS classes
+    NUMBERS_TO_WORDS = {
+        2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine",
+        10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen",
+    }
+
+    template_name = 'web/forms/widgets/directional_checkbox_select.html'
+    option_template_name = 'web/forms/widgets/directional_checkbox_option.html'
+
+    def __init__(self, direction: Direction, container_classes=None, option_classes=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.direction = direction
+        self.container_classes = container_classes
+        self.option_classes = option_classes
+
+    def get_container_classes(self):
+        if self.container_classes:
+            return self.container_classes
+        else:
+            if self.direction == Direction.HORIZONTAL:
+                return f"{self.NUMBERS_TO_WORDS.get(len(self.choices), '')} fields"
+            elif self.direction == Direction.VERTICAL:
+                return "list"
+        return ""
+
+    def get_option_classes(self):
+        if self.option_classes:
+            return self.option_classes
+        else:
+            if self.direction == Direction.HORIZONTAL:
+                return "field"
+            elif self.direction == Direction.VERTICAL:
+                return "item"
+        return ""
+
+    def get_context(self, *args, **kwargs):
+        context = super().get_context(*args, **kwargs)
+        context['widget']['container_classes'] = self.get_container_classes()
+        return context
+
+    def create_option(self, *args, **kwargs):
+        options = super().create_option(*args, **kwargs)
+        options['option_classes'] = self.get_option_classes()
+        options['is_vertical'] = self.direction == Direction.VERTICAL
+        return options
 
 
 class MazemapSearchInput(forms.TextInput):

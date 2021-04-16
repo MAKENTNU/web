@@ -407,7 +407,7 @@ class MarkReservationFinishedTest(TestCase):
         self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.Status.AVAILABLE, name="Test")
         Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False,
                              all=True)
-        ReservationRule.objects.create(start_time=parse_time("00:00"), end_time=parse_time("23:59"), start_days=1, days_changed=6,
+        ReservationRule.objects.create(start_time=parse_time("00:00"), end_time=parse_time("23:59"), start_days=[1], days_changed=6,
                                        max_inside_border_crossed=6, max_hours=6, machine_type=self.machine_type)
         self.now = timezone.localtime()
         self.reservation1 = Reservation.objects.create(

@@ -7,7 +7,10 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
-from web.widgets import MazemapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticTimeInput
+from web.widgets import (
+    Direction, DirectionalCheckboxSelectMultiple, MazemapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput,
+    SemanticTimeInput,
+)
 from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType
@@ -65,27 +68,16 @@ class ReservationForm(forms.Form):
         return cleaned_data
 
 
-class RuleForm(forms.ModelForm):
-    day_field_names = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-
-    machine_type = forms.ModelChoiceField(MachineType.objects.all(), widget=forms.HiddenInput())
-
+class ReservationRuleForm(forms.ModelForm):
     class Meta:
         model = ReservationRule
-        fields = ['start_time', 'days_changed', 'end_time', 'max_hours', 'max_inside_border_crossed', 'machine_type']
+        fields = ['start_time', 'days_changed', 'end_time', 'start_days', 'max_hours', 'max_inside_border_crossed', 'machine_type']
         widgets = {
             'start_time': SemanticTimeInput(),
             'end_time': SemanticTimeInput(),
-            'machine_type': SemanticChoiceInput(),
+            'start_days': DirectionalCheckboxSelectMultiple(Direction.VERTICAL),
+            'machine_type': forms.HiddenInput(),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        rule_obj = kwargs["instance"]
-        for shift, field_name in enumerate(self.day_field_names):
-            self.fields[field_name] = forms.BooleanField(required=False)
-            if rule_obj is not None:
-                self.fields[field_name].initial = rule_obj.start_days & (1 << shift) > 0
 
     def clean(self):
         cleaned_data = super().clean()
@@ -93,24 +85,12 @@ class RuleForm(forms.ModelForm):
             return cleaned_data
 
         rule = ReservationRule(
-            machine_type=cleaned_data["machine_type"], max_hours=0, max_inside_border_crossed=0,
-            start_time=cleaned_data["start_time"], end_time=cleaned_data["end_time"],
-            days_changed=cleaned_data["days_changed"], start_days=self._get_start_days(cleaned_data),
+            pk=self.instance.pk,  # needed for the validation; will be `None` if this is a create form
+            **cleaned_data,
         )
         rule.is_valid_rule(raise_error=True)
 
         return cleaned_data
-
-    def save(self, commit=True):
-        rule = super().save(commit=False)
-        rule.start_days = self._get_start_days(self.cleaned_data)
-        if commit:
-            rule.save()
-        return rule
-
-    @staticmethod
-    def _get_start_days(cleaned_data):
-        return sum(cleaned_data[field_name] << shift for shift, field_name in enumerate(RuleForm.day_field_names))
 
 
 class QuotaForm(forms.ModelForm):

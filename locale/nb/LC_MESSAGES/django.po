@@ -1166,6 +1166,34 @@ msgstr "<ingen>"
 msgid "Quota for {user} on {machine_type}"
 msgstr "Kvote for {user} på {machine_type}"
 
+#: make_queue/models/reservation.py:245
+msgid "Monday"
+msgstr "Mandag"
+
+#: make_queue/models/reservation.py:246
+msgid "Tuesday"
+msgstr "Tirsdag"
+
+#: make_queue/models/reservation.py:247
+msgid "Wednesday"
+msgstr "Onsdag"
+
+#: make_queue/models/reservation.py:248
+msgid "Thursday"
+msgstr "Torsdag"
+
+#: make_queue/models/reservation.py:249
+msgid "Friday"
+msgstr "Fredag"
+
+#: make_queue/models/reservation.py:250
+msgid "Saturday"
+msgstr "Lørdag"
+
+#: make_queue/models/reservation.py:251
+msgid "Sunday"
+msgstr "Søndag"
+
 #: make_queue/models/reservation.py:247
 #: make_queue/templates/make_queue/reservation_edit.html:73
 #: make_queue/templates/make_queue/reservation_edit.html:77
@@ -1575,34 +1603,6 @@ msgstr "Ny regel for %(machine_type)s"
 #, python-format
 msgid "Rule for %(machine_type)s"
 msgstr "Regel for %(machine_type)s"
-
-#: make_queue/templates/make_queue/rule_edit.html:41
-msgid "Monday"
-msgstr "Mandag"
-
-#: make_queue/templates/make_queue/rule_edit.html:47
-msgid "Tuesday"
-msgstr "Tirsdag"
-
-#: make_queue/templates/make_queue/rule_edit.html:53
-msgid "Wednesday"
-msgstr "Onsdag"
-
-#: make_queue/templates/make_queue/rule_edit.html:59
-msgid "Thursday"
-msgstr "Torsdag"
-
-#: make_queue/templates/make_queue/rule_edit.html:65
-msgid "Friday"
-msgstr "Fredag"
-
-#: make_queue/templates/make_queue/rule_edit.html:71
-msgid "Saturday"
-msgstr "Lørdag"
-
-#: make_queue/templates/make_queue/rule_edit.html:77
-msgid "Sunday"
-msgstr "Søndag"
 
 #: make_queue/templates/make_queue/rule_list.html:17
 #, python-format

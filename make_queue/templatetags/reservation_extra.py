@@ -8,7 +8,7 @@ from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from util.locale_utils import date_to_local, get_day_name
+from util.locale_utils import date_to_local, exact_weekday_to_day_name
 from ..models.machine import Machine
 from ..models.reservation import Quota, Reservation, ReservationRule
 
@@ -110,14 +110,14 @@ def invert(expression):
 
 
 @register.simple_tag
-def rule_period_start_text(period: ReservationRule.Period, locale):
-    start_day_name = get_day_name(int(period.start_time // 1), locale)
+def rule_period_start_text(period: ReservationRule.Period):
+    start_day_name = exact_weekday_to_day_name(period.exact_start_weekday)
     return f"{start_day_name} {time_format(period.rule.start_time)}"
 
 
 @register.simple_tag
-def rule_period_end_text(period: ReservationRule.Period, locale):
-    end_day_name = get_day_name(int(period.end_time // 1) % 7, locale)
+def rule_period_end_text(period: ReservationRule.Period):
+    end_day_name = exact_weekday_to_day_name(period.exact_end_weekday)
     return f"{end_day_name} {time_format(period.rule.end_time)}"
 
 

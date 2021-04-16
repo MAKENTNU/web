@@ -76,8 +76,8 @@
                         </h4>
                         {% for period in rule.time_periods %}
                             <div>
-                                {% rule_period_start_text period LANGUAGE_CODE as start %}
-                                {% rule_period_end_text period LANGUAGE_CODE as end %}
+                                {% rule_period_start_text period as start %}
+                                {% rule_period_end_text period as end %}
                                 {{ start|capfirst }} &ndash; {{ end|capfirst }}
                             </div>
                         {% endfor %}

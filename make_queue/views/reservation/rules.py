@@ -8,7 +8,7 @@ from django.views.generic.base import ContextMixin
 from django.views.generic.edit import ModelFormMixin
 
 from util.view_utils import PreventGetRequestsMixin
-from ...forms import RuleForm
+from ...forms import ReservationRuleForm
 from ...models.machine import MachineType, MachineUsageRule
 from ...models.reservation import Quota, ReservationRule
 
@@ -46,7 +46,7 @@ class ReservationRuleListView(MachineTypeBasedView, ListView):
 
 class BaseReservationRulePostView(MachineTypeBasedView, ModelFormMixin, ABC):
     model = ReservationRule
-    form_class = RuleForm
+    form_class = ReservationRuleForm
     context_object_name = 'rule'
 
     def get_queryset(self):

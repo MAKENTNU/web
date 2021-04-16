@@ -3,6 +3,7 @@ django-hosts==4.0
 django-ckeditor==6.0.*
 django-decorator-include>=3.0
 django_ical>=1.7.0
+django-multiselectfield>=0.1.12
 django-phonenumber-field>=5.0.0
 sorl-thumbnail>=12.7.0
 

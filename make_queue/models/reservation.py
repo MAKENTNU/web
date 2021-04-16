@@ -1,11 +1,13 @@
-from datetime import datetime, timedelta
-from typing import List
+from datetime import datetime, time, timedelta
+from typing import List, Tuple
 
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
+from django.utils.formats import time_format
 from django.utils.translation import gettext_lazy as _
+from multiselectfield import MultiSelectField
 
 from news.models import TimePlace
 from users.models import User
@@ -238,6 +240,18 @@ class Reservation(models.Model):
 
 
 class ReservationRule(models.Model):
+    class Day(models.IntegerChoices):
+        # Values match the ones returned by `datetime.isoweekday()`
+        MONDAY = 1, _("Monday")
+        TUESDAY = 2, _("Tuesday")
+        WEDNESDAY = 3, _("Wednesday")
+        THURSDAY = 4, _("Thursday")
+        FRIDAY = 5, _("Friday")
+        SATURDAY = 6, _("Saturday")
+        SUNDAY = 7, _("Sunday")
+
+    DAY_INDEX_TO_NAME = dict(Day.choices)
+
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.CASCADE,
@@ -248,14 +262,20 @@ class ReservationRule(models.Model):
     end_time = models.TimeField(verbose_name=_("end time"))
     # Number of times passed by midnight between start and end time
     days_changed = models.IntegerField(verbose_name=_("days"))
-    start_days = models.IntegerField(default=0, verbose_name=_("start days for rule periods"))
+    start_days = MultiSelectField(choices=Day.choices, verbose_name=_("start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("hours multi-period"))
 
     def save(self, **kwargs):
-        if not self.is_valid_rule():
-            raise ValidationError("Rule is not valid")
+        self.is_valid_rule(raise_error=True)
         return super().save(**kwargs)
+
+    def __str__(self):
+        start_time = time_format(self.start_time)
+        end_time = time_format(self.end_time)
+        # TODO: translate this and Reservation.__str__()
+        days_str = f"{self.days_changed} {'dag' if self.days_changed == 1 else 'dager'}"
+        return f"Regel for {self.machine_type}: {start_time}-{end_time} på {self.start_days}; {days_str}"
 
     @classmethod
     def valid_time(cls, start_time: datetime, end_time: datetime, machine_type: MachineType) -> bool:
@@ -307,34 +327,42 @@ class ReservationRule(models.Model):
     class Period:
 
         def __init__(self, start_weekday: int, rule: 'ReservationRule'):
-            self.start_time = self.__to_inner_rep(start_weekday, rule.start_time)
-            self.end_time = self.__to_inner_rep(start_weekday + rule.days_changed, rule.end_time)
+            self.exact_start_weekday = start_weekday + self.to_exact_num_days(rule.start_time)
+            self.exact_end_weekday = start_weekday + rule.days_changed + self.to_exact_num_days(rule.end_time)
             self.rule = rule
 
         def hours_inside(self, start_time: datetime, end_time: datetime) -> float:
+            exact_start_weekday = start_time.isoweekday() + self.to_exact_num_days(start_time.time())
+            exact_end_weekday = end_time.isoweekday() + self.to_exact_num_days(end_time.time())
             return self.hours_overlap(
-                self.start_time, self.end_time,
-                self.__to_inner_rep(start_time.weekday(), start_time.time()),
-                self.__to_inner_rep(end_time.weekday(), end_time.time())
+                (self.exact_start_weekday, self.exact_end_weekday),
+                (exact_start_weekday, exact_end_weekday)
             )
 
         @staticmethod
-        def hours_overlap(a, b, c, d):
-            b, c, d = (b - a) % 7, (c - a) % 7, (d - a) % 7
+        def hours_overlap(exact_weekday_range1: Tuple[float, float], exact_weekday_range2: Tuple[float, float]) -> float:
+            start_weekday_1, end_weekday_1 = exact_weekday_range1
+            start_weekday_2, end_weekday_2 = exact_weekday_range2
 
-            if c > d:
-                return min(b, d) * 24
-            return (min(b, d) - min(b, c)) * 24
+            # TODO: give variables proper names, or rewrite algorithm
+            a = (end_weekday_1 - start_weekday_1) % 7
+            b = (start_weekday_2 - start_weekday_1) % 7
+            c = (end_weekday_2 - start_weekday_1) % 7
+
+            if b > c:
+                return min(a, c) * 24
+            return (min(a, c) - min(a, b)) * 24
 
         @staticmethod
-        def __to_inner_rep(day, time):
-            return day + time.hour / 24 + time.minute / (24 * 60) + time.second / (24 * 60 * 60)
+        def to_exact_num_days(time_: time) -> float:
+            return time_.hour / 24 + time_.minute / (24 * 60) + time_.second / (24 * 60 * 60)
 
         def overlap(self, other):
-            return self.hours_overlap(
-                self.start_time, self.end_time,
-                other.start_time, other.end_time
-            ) > 0
+            hours_overlap = self.hours_overlap(
+                (self.exact_start_weekday, self.exact_end_weekday),
+                (other.exact_start_weekday, other.exact_end_weekday)
+            )
+            return hours_overlap > 0
 
     def is_valid_rule(self, raise_error=False) -> bool:
         # Check if the time period is a valid time period (within a week)
@@ -348,7 +376,7 @@ class ReservationRule(models.Model):
         # Check for internal overlap
         time_periods = self.time_periods()
         if any(t1.overlap(t2) for t1 in time_periods for t2 in time_periods if
-               t1.end_time != t2.end_time and t1.start_time != t2.end_time):
+               t1.exact_end_weekday != t2.exact_end_weekday and t1.exact_start_weekday != t2.exact_end_weekday):
             if raise_error:
                 raise ValidationError("Rule has internal overlap of time periods.")
             return False
@@ -374,5 +402,4 @@ class ReservationRule(models.Model):
         return sum(period.hours_inside(start_time, end_time) for period in self.time_periods())
 
     def time_periods(self) -> List[Period]:
-        return [self.Period(day_index, self) for day_index, _ in
-                filter(lambda enumerate_obj: enumerate_obj[1] == "1", enumerate(format(self.start_days, "07b")[::-1]))]
+        return [self.Period(int(day_index), self) for day_index in self.start_days]

@@ -3,6 +3,7 @@ from django.urls import reverse
 from django.utils.dateparse import parse_datetime
 
 from ...models.machine import Machine
+from ...models.reservation import ReservationRule
 
 
 def reservation_type(reservation, user):
@@ -48,7 +49,10 @@ def get_reservations(request, machine: Machine):
     return JsonResponse({"reservations": reservations})
 
 
-def get_reservation_rules(request, machine):
+def get_reservation_rules(request, machine: Machine):
+    def get_start_day_indices(rule: ReservationRule):
+        return (int(day_index_str) - 1 for day_index_str in rule.start_days)
+
     return JsonResponse({
         "rules": [
             {
@@ -57,7 +61,7 @@ def get_reservation_rules(request, machine):
                         day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
                         (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
                     ]
-                    for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
+                    for day in get_start_day_indices(rule)
                 ],
                 "max_inside": rule.max_hours,
                 "max_crossed": rule.max_inside_border_crossed,
