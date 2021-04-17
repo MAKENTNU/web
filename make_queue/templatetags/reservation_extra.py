@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import datetime
 
 from django import template
 from django.templatetags.static import static
@@ -8,7 +8,7 @@ from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from util.locale_utils import TIME_STRINGS, date_to_local
+from util.locale_utils import TIME_STRINGS
 from ..models.machine import Machine
 from ..models.reservation import Quota, Reservation
 
@@ -52,11 +52,6 @@ def card_color_from_machine_status(machine: Machine):
 
 
 @register.simple_tag
-def is_current_date(date_: date):
-    return timezone.localdate() == date_
-
-
-@register.simple_tag
 def shorthand_days():
     return [_("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat"), _("Sun")]
 
@@ -75,20 +70,6 @@ def card_text_from_machine_status(machine: Machine):
             duration=timeuntil(next_reservation.start_time, time_strings=TIME_STRINGS),
         )
     return status
-
-
-@register.simple_tag
-def get_current_time_of_day():
-    return date_to_percentage(timezone.localtime())
-
-
-@register.simple_tag
-def date_to_percentage(date_: datetime):
-    try:
-        date_ = date_to_local(date_)
-    except ValueError:
-        pass
-    return (date_.hour / 24 + date_.minute / (24 * 60)) * 100
 
 
 @register.simple_tag
@@ -114,11 +95,6 @@ def invert(expression):
 @register.simple_tag
 def can_change_reservation(reservation: Reservation, user: User):
     return reservation.can_change(user) or reservation.can_change_end_time(user)
-
-
-@register.simple_tag
-def can_change_reservation_end_time(reservation: Reservation, user: User):
-    return reservation.can_change_end_time(user)
 
 
 @register.simple_tag
