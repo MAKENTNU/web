@@ -2,20 +2,29 @@ from calendar import day_name
 from datetime import datetime, timedelta
 
 from django.utils import timezone, translation
+from django.utils.dateparse import parse_datetime
 from django.utils.formats import date_format
+from django.utils.timezone import make_aware
 from django.utils.translation import gettext
 
 
 DEFAULT_TIMEZONE = timezone.get_default_timezone()
 
 
-def as_local(value: datetime):
-    return value.astimezone(DEFAULT_TIMEZONE)
+def parse_datetime_localized(value):
+    return make_aware(parse_datetime(value))
+
+
+def attempt_as_local(value):
+    if (isinstance(value, datetime)
+            # Each timezone has its own `tzinfo` subclass
+            and type(value.tzinfo) is not type(DEFAULT_TIMEZONE)):
+        value = value.astimezone(DEFAULT_TIMEZONE)
+    return value
 
 
 def _date_format(value, format_):
-    if isinstance(value, datetime) and value.tzinfo != DEFAULT_TIMEZONE:
-        value = as_local(value)
+    value = attempt_as_local(value)
     return date_format(value, format_)
 
 

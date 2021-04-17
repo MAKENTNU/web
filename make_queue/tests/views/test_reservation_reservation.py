@@ -1,4 +1,4 @@
-from datetime import time, timedelta
+from datetime import timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
@@ -6,10 +6,11 @@ from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.dateparse import parse_time
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.locale_utils import iso_datetime_format, local_to_date
+from util.locale_utils import iso_datetime_format, parse_datetime_localized
 from ..utility import post_request_with_user, request_with_user
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
@@ -276,7 +277,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     @patch("django.utils.timezone.now")
     def test_post_unchangeable_reservation(self, now_mock):
-        now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+        now_mock.return_value = parse_datetime_localized("2018-08-12 12:00")
 
         view = self.get_view()
         view.request.method = "POST"
@@ -289,7 +290,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     @patch("django.utils.timezone.now")
     def test_form_valid_normal_reservation(self, now_mock):
-        now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+        now_mock.return_value = parse_datetime_localized("2018-08-12 12:00")
 
         view = self.get_view()
         reservation = self.create_reservation(self.create_form(start_time_diff=1, end_time_diff=2))
@@ -302,7 +303,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     @patch("django.utils.timezone.now")
     def test_form_valid_changed_machine(self, now_mock):
-        now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+        now_mock.return_value = parse_datetime_localized("2018-08-12 12:00")
 
         view = self.get_view()
         reservation = self.create_reservation(self.create_form(start_time_diff=1, end_time_diff=2))
@@ -318,7 +319,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     @patch("django.utils.timezone.now")
     def test_form_valid_event_reservation(self, now_mock):
-        now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+        now_mock.return_value = parse_datetime_localized("2018-08-12 12:00")
 
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         view = self.get_view()
@@ -341,7 +342,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
 
     @patch("django.utils.timezone.now")
     def test_form_valid_special_reservation(self, now_mock):
-        now_mock.return_value = local_to_date(timezone.datetime(2018, 8, 12, 12, 0, 0))
+        now_mock.return_value = parse_datetime_localized("2018-08-12 12:00")
 
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         view = self.get_view()
@@ -407,7 +408,7 @@ class MarkReservationFinishedTest(TestCase):
         self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.Status.AVAILABLE, name="Test")
         Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False,
                              all=True)
-        ReservationRule.objects.create(start_time=time(0, 0), end_time=time(23, 59), start_days=1, days_changed=6,
+        ReservationRule.objects.create(start_time=parse_time("00:00"), end_time=parse_time("23:59"), start_days=1, days_changed=6,
                                        max_inside_border_crossed=6, max_hours=6, machine_type=self.machine_type)
         self.now = timezone.localtime()
         self.reservation1 = Reservation.objects.create(
