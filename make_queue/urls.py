@@ -7,7 +7,7 @@ from .views import admin, api, quota, reservation
 
 register_converter(converters.SpecificMachineType, 'MachineType')
 register_converter(converters.SpecificMachine, 'Machine')
-register_converter(converters.MachineReservation, 'Reservation')
+register_converter(converters.SpecificReservation, 'Reservation')
 register_converter(converters.UserByUsername, 'username')
 register_converter(converters.Year, 'year')
 register_converter(converters.Week, 'week')

@@ -9,8 +9,8 @@ from . import converters, views
 from .models import MAIN_PAGE_TITLE, Page
 
 
-register_converter(converters.PageByTitle, 'Page')
-register_converter(converters.ContentByPk, 'Content')
+register_converter(converters.SpecificPageByTitle, 'Page')
+register_converter(converters.SpecificContent, 'Content')
 
 unsafe_urlpatterns = [
     path("", views.DocumentationPageDetailView.as_view(), {'pk': Page.objects.get_or_create(title=MAIN_PAGE_TITLE)[0].pk}, name='home'),
