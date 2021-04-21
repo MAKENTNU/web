@@ -17,7 +17,7 @@
                 <div class="ui header">
                     {% trans "You are viewing an old version of this page" %}
                 </div>
-                {% blocktrans trimmed with name=last_edit_name date=content.changed|short_date time=content.changed|only_time %}
+                {% blocktrans trimmed with name=last_edit_name date=content.last_modified|short_date time=content.last_modified|only_time %}
                     You are viewing an old version of this page, where the last edit was made by {{ name }}
                     on {{ date }} at {{ time }}.
                 {% endblocktrans %}

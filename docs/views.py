@@ -124,7 +124,6 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
             content = Content.objects.create(
                 content=form.cleaned_data["content"],
                 page=self.get_page(),
-                changed=datetime.now(),
                 made_by=self.request.user,
             )
             page.current_content = content

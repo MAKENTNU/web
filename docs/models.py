@@ -42,7 +42,6 @@ class Content(models.Model):
         related_name='content_history',
         verbose_name=_("page"),
     )
-    changed = models.DateTimeField(verbose_name=_("time changed"))
     content = RichTextUploadingField(verbose_name=_("content"))
     made_by = models.ForeignKey(
         to=User,
@@ -52,3 +51,4 @@ class Content(models.Model):
         related_name='doc_page_contents_created',
         verbose_name=_("made by"),
     )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))

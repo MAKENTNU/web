@@ -378,13 +378,13 @@ msgstr "Dette innholdet hører ikke til denne siden"
 msgid "page"
 msgstr "side"
 
-#: docs/models.py:45
-msgid "time changed"
-msgstr "tidspunkt endret"
-
 #: docs/models.py:53
 msgid "made by"
 msgstr "gjort av"
+
+#: docs/models.py:54 internal/templates/internal/secret_list.html:43
+msgid "last modified"
+msgstr "sist endret"
 
 #: docs/templates/docs/base.html:6
 msgid "MAKE NTNU Docs"
@@ -990,10 +990,6 @@ msgstr "Rediger hemmelighet"
 #: internal/templates/internal/secret_list.html:15
 msgid "Internal secrets"
 msgstr "Internhemmeligheter"
-
-#: internal/templates/internal/secret_list.html:43
-msgid "Last modified"
-msgstr "Sist endret"
 
 #: internal/templates/internal/secret_list.html:47
 msgid "Click to show - only if you're alone!"

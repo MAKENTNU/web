@@ -20,12 +20,12 @@ class UrlTests(TestCase):
         )
         self.content1 = Content.objects.create(
             page=self.page1,
-            changed=now - timedelta(days=1),
+            last_modified=now - timedelta(days=1),
             content="Lorem ipsum dolor sit amet",
         )
         self.content2 = Content.objects.create(
             page=self.page1,
-            changed=now,
+            last_modified=now,
             content="LoReM iPsUm DoLoR sIt aMeT",
             made_by=self.user1,
         )
