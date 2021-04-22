@@ -161,11 +161,8 @@
             });
 
             $.ajax({
-                type: "POST",
-                url: '/checkin/suggest/delete/',
-                data: {
-                    'pk': pk,
-                },
+                type: "DELETE",
+                url: `/checkin/suggest/${pk}/delete/`,
                 success: function (data) {
                     if (data["suggestion_deleted"]) {
                         $element.closest("tr").remove();

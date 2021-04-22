@@ -11,10 +11,11 @@ from django.utils import timezone
 from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import DeleteView, TemplateView
 
 from card import utils as card_utils
 from card.views import RFIDView
+from util.view_utils import PreventGetRequestsMixin
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
@@ -232,17 +233,13 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
         return JsonResponse(response_dict)
 
 
-class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
+class DeleteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('checkin.delete_suggestskill',)
-    template_name = 'checkin/suggest_skill.html'
+    model = SuggestSkill
 
-    def post(self, request):
-        data = {"suggestion_deleted": False, }
-        SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).delete()
-        if not SuggestSkill.objects.filter(pk=int(request.POST.get('pk'))).exists():
-            data["suggestion_deleted"] = True
-
-        return JsonResponse(data)
+    def delete(self, request, *args, **kwargs):
+        self.get_object().delete()
+        return JsonResponse({'suggestion_deleted': True})
 
 
 class RegisterCardView(RFIDView):

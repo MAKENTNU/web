@@ -13,5 +13,5 @@ urlpatterns = [
     path("register/profile/", login_required(views.RegisterProfileView.as_view()), name='register_profile'),
     path("suggest/", login_required(views.SuggestSkillView.as_view()), name='suggest'),
     path("suggest/vote/", login_required(views.VoteSuggestionView.as_view()), name='vote'),
-    path("suggest/delete/", login_required(views.DeleteSuggestionView.as_view()), name='delete'),
+    path("suggest/<int:pk>/delete/", login_required(views.DeleteSuggestionView.as_view()), name='delete'),
 ]
