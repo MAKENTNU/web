@@ -5,7 +5,7 @@
 {% load hosts %}
 
 
-{% block title %}{% trans "Members list" %}{% endblock title %}
+{% block title %}{% trans "Member list" %}{% endblock title %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'internal/css/member_list.css' %}"/>
@@ -15,7 +15,7 @@
 
     <div class="ui container">
         <h1 class="title-with-buttons">
-            {% trans "Members list" %}
+            {% trans "Member list" %}
             {% if perms.internal.can_register_new_member %}
                 <a class="ui right floated make-bg-yellow button" href="{% url "add-member" %}">
                     <i class="ui plus icon"></i>{% trans "Add member" %}
@@ -102,7 +102,7 @@
                     {% trans "Joined" %}<i id="member-sort-dateJoined" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Email" %}<i id="member-sort-email" class="ui sort icon"></i>
+                    {% trans "Contact email" %}<i id="member-sort-email" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
                     {% trans "Phone number" %}<i id="member-sort-phone" class="ui sort icon"></i>
@@ -123,7 +123,7 @@
                     data-date-joined="{{ member.date_joined|date:"d.m.y" }}"
                     data-date-quit="{{ member.date_quit|date:"d.m.y" }}"
                     data-term-quit="{{ member.term_quit|default:"" }}"
-                    data-reason-quit="{% if member.quit %}{{ member.reason_quit }}{% endif %}"
+                    data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
                     data-status="{{ membership_status }}"
                     data-committees="{{ committees }}"
                     data-role="{{ member.role }}"
@@ -175,12 +175,22 @@
                         {% endif %}
                     </td>
                     <td class="computer only">
-                        <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
+                        {% if member.phone_number %}
+                            <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+
+        <span>
+            {% trans "Displaying" %}
+            <b>
+                <span id="displayed-members-count">{{ members|length }}</span>/{{ members|length }}
+            </b>
+            {% trans "registered members" %}
+        </span>
     </div>
 
     {# Modal for showing detailed information about the user #}
@@ -214,7 +224,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Email" %}</b>
+                        <b>{% trans "Contact email" %}</b>
                     </td>
                     <td>
                         <b><a id="member-email"></a></b>
@@ -324,7 +334,7 @@
     <script src="{% static 'internal/js/member_list.js' %}"></script>
     {% if selected_member %}
         <script>
-            showDetailedMemberInformation(state.members.find(
+            showDetailedMemberInformation(state.allMembers.find(
                 (member) => member.data.pk === {{ selected_member.pk }}
             ));
         </script>

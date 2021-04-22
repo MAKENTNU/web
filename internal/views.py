@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, RedirectView, TemplateView, UpdateView
 
 from make_queue.models.course import Printer3DCourse
+from util.views import PreventGetRequestsMixin
 from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, SecretsForm, ToggleSystemAccessForm
 from .models import Member, Secret, SystemAccess
 
@@ -40,7 +41,7 @@ class EditSecretView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('secrets')
 
 
-class DeleteSecretView(PermissionRequiredMixin, DeleteView):
+class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('internal.delete_secret',)
     model = Secret
     success_url = reverse_lazy('secrets')
@@ -118,7 +119,7 @@ class MemberQuitView(UpdateView):
             # Fail gracefully
             messages.add_message(
                 self.request, messages.WARNING,
-                _("Member was not set to quit as the member has already quit or retired."),
+                _("Member was not set as quit, as the member already has the status “quit” or “retired”."),
             )
         else:
             member.set_quit(True, form.cleaned_data['reason_quit'], form.cleaned_data['date_quit'])
@@ -134,7 +135,7 @@ class MemberUndoQuitView(RedirectView):
             # Fail gracefully
             messages.add_message(
                 self.request, messages.WARNING,
-                _("Member's quit status was not undone, as the member had not quit."),
+                _("Member's “quit” status was not undone, as the member did not have the status “quit”."),
             )
         else:
             member.set_quit(False)
@@ -150,7 +151,7 @@ class MemberRetireView(RedirectView):
             # Fail gracefully
             messages.add_message(
                 self.request, messages.WARNING,
-                _("Member was not set to retired as the member has already quit or retired."),
+                _("Member was not set as retired, as the member already has the status “quit” or “retired”."),
             )
         else:
             member.set_retirement(True)
@@ -166,7 +167,7 @@ class MemberUndoRetireView(RedirectView):
             # Fail gracefully
             messages.add_message(
                 self.request, messages.WARNING,
-                _("Member's retirement was not undone, as the member was not retired."),
+                _("Member's retirement was not undone, as the member did not have the status “retired”."),
             )
         else:
             member.set_retirement(False)

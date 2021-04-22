@@ -34,6 +34,13 @@ li {
     line-height: 1.65rem;
 }
 
+.word-breaking {
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
 .wrapper {
     display: table;
     width: 100%;
@@ -56,10 +63,6 @@ li {
 .square_36 {
     width: 36px;
     height: 36px;
-}
-
-.noshadow {
-    text-shadow: 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF !important;
 }
 
 .cke,
@@ -138,6 +141,10 @@ li {
 
 .title-with-buttons .button {
     margin-top: 0.5em;
+}
+
+.delete-modal-button {
+    cursor: pointer;
 }
 
 /*

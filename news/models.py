@@ -21,9 +21,9 @@ class NewsBase(models.Model):
     clickbait = MultiLingualTextField(verbose_name=_("Clickbait"), widget=MultiLingualTextarea)
     image = models.ImageField(verbose_name=_("Image"))
     contain = models.BooleanField(default=False, verbose_name=_("Don't crop the image"))
-    featured = models.BooleanField(default=True, verbose_name=_("Highlighted"))
+    featured = models.BooleanField(default=True, verbose_name=_("Featured"))
     hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))
-    private = models.BooleanField(default=False, verbose_name=_("MAKE internal"))
+    private = models.BooleanField(default=False, verbose_name=_("Internal"))
 
     class Meta:
         permissions = (
@@ -65,7 +65,7 @@ class ArticleQuerySet(models.QuerySet):
 
 
 class Article(NewsBase):
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publishing time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publication time"))
 
     objects = ArticleQuerySet.as_manager()
 
@@ -142,7 +142,7 @@ class TimePlace(models.Model):
         on_delete=models.CASCADE,
         related_name='timeplaces',
     )
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publishing time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publication time"))
     start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Start time"))
     end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("End time"))
     place = UnlimitedCharField(blank=True, verbose_name=_("Location"))

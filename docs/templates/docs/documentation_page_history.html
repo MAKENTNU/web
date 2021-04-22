@@ -2,11 +2,15 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "History of" %} "{{ page.title }}"{% endblock title %}
+{% block title %}
+    {% blocktrans with title=page.title %}History of “{{ title }}”{% endblocktrans %}
+{% endblock title %}
 
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "History of" %} "{{ page.title }}"</h1>
+        <h1>
+            {% blocktrans with title=page.title %}History of “{{ title }}”{% endblocktrans %}
+        </h1>
         <div class="ui relaxed divided list">
             {% for content in page.content_history.all reversed %}
                 {% if content == page.current_content %}

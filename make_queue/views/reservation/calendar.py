@@ -22,7 +22,7 @@ class ReservationCalendarView(TemplateView):
             'can_create_reservations': False,
             'can_create_more_reservations': False,
             'can_ignore_rules': False,
-            'other_machines': Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type),
+            'other_machines': Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type).default_order_by(),
             'machine': machine,
             'year': year,
             'week': week,

@@ -20,7 +20,7 @@ class ReservationForm(forms.Form):
     event = forms.BooleanField(required=False)
     event_pk = forms.CharField(required=False)
     special = forms.BooleanField(required=False)
-    special_text = forms.CharField(required=False, max_length=20)
+    special_text = forms.CharField(required=False, max_length=200)
     comment = forms.CharField(required=False, max_length=2000, initial="")
 
     def __init__(self, *args, **kwargs):
@@ -61,6 +61,8 @@ class ReservationForm(forms.Form):
 
 class RuleForm(forms.ModelForm):
     day_field_names = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+    machine_type = forms.ModelChoiceField(MachineType.objects.all(), widget=forms.HiddenInput())
 
     class Meta:
         model = ReservationRule
@@ -206,7 +208,7 @@ class BaseMachineForm(forms.ModelForm):
                 (c, Machine.STATUS_CHOICES_DICT[c])
                 for c in status_choices
             ],
-            widget=SemanticSearchableChoiceInput(attrs={'required': True}),
+            widget=SemanticChoiceInput(attrs={'required': True}),
         )
 
 

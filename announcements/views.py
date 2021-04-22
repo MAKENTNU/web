@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+from util.views import PreventGetRequestsMixin
 from .forms import AnnouncementForm
 from .models import Announcement
 
@@ -29,7 +30,7 @@ class EditAnnouncementView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy("announcement_admin")
 
 
-class DeleteAnnouncementView(PermissionRequiredMixin, DeleteView):
+class DeleteAnnouncementView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ("announcements.delete_announcement",)
     model = Announcement
     success_url = reverse_lazy("announcement_admin")

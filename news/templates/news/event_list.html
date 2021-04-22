@@ -24,15 +24,19 @@
                             {% endif %}
                         </p>
 
-                        {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
-                            />
+                        <img {% thumbnail event.event.image "300" crop="center" as image_thumb %}
+                            src="{{ image_thumb.url }}"
+                        {% empty %}
+                            src="{{ event.event.image.url }}"
                         {% endthumbnail %}
+                            class="clickable"
+                            {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            href="{% url 'event' event.event.pk %}"
+                        />
                     </div>
 
                     <div class="content">
-                        <div class="header">
+                        <div class="word-breaking header">
                             <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
@@ -80,7 +84,7 @@
                     </div>
 
                     <div class="content">
-                        <div class="header">
+                        <div class="word-breaking header">
                             <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">

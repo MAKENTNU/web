@@ -163,6 +163,9 @@ class MachineUsageRule(models.Model):
     )
     content = MultiLingualRichTextUploadingField()
 
+    def __str__(self):
+        return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)
+
 
 class Quota(models.Model):
     all = models.BooleanField(default=False, verbose_name=_("All users"))
@@ -189,6 +192,13 @@ class Quota(models.Model):
             ('can_create_event_reservation', "Can create event reservation"),
             ('can_edit_quota', "Can edit quotas"),
         )
+
+    def __str__(self):
+        if self.all:
+            user_str = _("<all users>")
+        else:
+            user_str = self.user.get_full_name() if self.user else _("<nobody>")
+        return _("Quota for {user} on {machine_type}").format(user=user_str, machine_type=self.machine_type)
 
     def get_active_reservations(self, user):
         if self.diminishing:
@@ -391,9 +401,9 @@ class ReservationRule(models.Model):
     end_time = models.TimeField(verbose_name=_("End time"))
     # Number of times passed by midnight between start and end time
     days_changed = models.IntegerField(verbose_name=_("Days"))
-    start_days = models.IntegerField(default=0, verbose_name=_("Start days"))
+    start_days = models.IntegerField(default=0, verbose_name=_("Start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("Hours single period"))
-    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multiperiod"))
+    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multi-period"))
 
     def save(self, **kwargs):
         if not self.is_valid_rule():
