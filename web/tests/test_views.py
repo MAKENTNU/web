@@ -9,11 +9,11 @@ from django_hosts import reverse
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.test_utils import MOCK_JPG_FILE
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
 from web.views import IndexView
 
 
-class IndexViewTests(TestCase):
+class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
     def setUp(self):
         self.path = reverse('front_page')
 

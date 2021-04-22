@@ -6,11 +6,11 @@ from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from util.test_utils import MOCK_JPG_FILE, PermissionsTestCase
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE, PermissionsTestCase
 from ...models import Article
 
 
-class ArticleViewTests(PermissionsTestCase):
+class ArticleViewTests(CleanUpTempFilesTestMixin, PermissionsTestCase):
 
     def setUp(self):
         username = 'TEST_USER'

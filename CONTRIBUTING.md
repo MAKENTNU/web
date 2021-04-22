@@ -700,6 +700,8 @@ there do exist scenarios where *not* getting rid of a code smell would be the mo
     - [Missing empty field check](#missing-empty-field-check)
     - [Missing error messages](#missing-error-messages)
     - [Improperly validating user input](#improperly-validating-user-input)
+  + [For each test class](#for-each-test-class)
+    - [Test cases not cleaning up media files](#test-cases-not-cleaning-up-media-files)
   + [For each function/method](#for-each-functionmethod-1)
     - [Mismatching overridden method signature](#mismatching-overridden-method-signature)
     - [Missing call to overridden method](#missing-call-to-overridden-method)
@@ -1069,6 +1071,15 @@ this related code smell](#missing-appropriate-constraint-on-field-or-combination
 All other validation should normally be done in the form's
 [`clean()` method](https://docs.djangoproject.com/en/stable/ref/forms/api/#django.forms.Form.clean)
 and/or `clean_<field name>()` methods (see the steps for [form and field validation](https://docs.djangoproject.com/en/stable/ref/forms/validation/)).
+
+
+
+### For each test class
+
+#### Test cases not cleaning up media files
+When using temporary files (like [`test_utils.MOCK_JPG_FILE`](/util/test_utils.py), which is a `SimpleUploadedFile`) in tests,
+these files should always be removed after the tests have run.
+This can be done by simply letting the test case class extend [`test_utils.CleanUpTempFilesTestMixin`](/util/test_utils.py).
 
 
 

@@ -6,10 +6,10 @@ from django_hosts import reverse
 
 from news.models import Article, Event, EventTicket, TimePlace
 from users.models import User
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     @staticmethod
     def init_objs(self: TestCase):
