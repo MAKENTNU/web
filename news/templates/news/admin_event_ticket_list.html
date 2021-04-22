@@ -12,10 +12,10 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{{ event.title }}</h1>
         <a href="{% url 'admin_event_detail' event.pk %}">
             <i class="angle double left icon"></i>{% trans "Event admin page" %}
         </a>
+        <h1>{{ event.title }}</h1>
 
         <h3>{% trans "Email Addresses of Ticket Holders" %}</h3>
         <div class="emails-container">
@@ -30,7 +30,7 @@
 
         <h3>{% trans "Tickets" %}</h3>
         <b>
-            {% blocktrans trimmed with num_registered_tickets=object.number_of_registered_tickets num_tickets=object.number_of_tickets %}
+            {% blocktrans trimmed with num_registered_tickets=focused_object.number_of_registered_tickets num_tickets=focused_object.number_of_tickets %}
                 {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
             {% endblocktrans %}
         </b>

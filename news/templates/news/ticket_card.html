@@ -28,7 +28,7 @@
                         {% if not timeplace.hidden %}
                             <div class="ui item">
                                 <div class="time-place content">
-                                    <a class="calendar-button" href="{% url 'timeplace_ical' timeplace.pk %}" target="_blank">
+                                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.event timeplace.pk %}" target="_blank">
                                         <i class="large make-col-yellow calendar plus outline icon"></i>
                                     </a>
                                     <div class="header">
@@ -46,7 +46,7 @@
                 </div>
             {% else %}
                 <div class="time-place content">
-                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.timeplace.pk %}" target="_blank">
+                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.timeplace.event ticket.timeplace.pk %}" target="_blank">
                         <i class="large make-col-yellow calendar plus outline icon"></i>
                     </a>
                     <b>
@@ -72,8 +72,13 @@
             </a>
         {% endif %}
     {% elif perms.news.cancel_ticket %}
-        <a class="ui green bottom attached button" href="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
+        <button class="ui green bottom attached button" type="submit"
+                onclick="$('#reactivate-form-{{ ticket.pk }}').submit();">
             {% trans "Reactivate ticket" %}
-        </a>
+        </button>
+        <form id="reactivate-form-{{ ticket.pk }}"
+              method="POST" action="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
+            {% csrf_token %}
+        </form>
     {% endif %}
 </div>

@@ -1,8 +1,9 @@
 from ckeditor_uploader import views as ckeditor_views
+from decorator_include import decorator_include
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import include, path, re_path, reverse_lazy
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
@@ -14,6 +15,7 @@ from social_core.utils import setting_name
 from contentbox.urls import get_content_box_urlpatterns
 from contentbox.views import DisplayContentBoxView
 from dataporten.views import Logout, login_wrapper
+from news import urls as news_urls
 from . import views
 
 
@@ -25,6 +27,11 @@ urlpatterns = [
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
 ]
 
+admin_urlpatterns = [
+    path("", views.AdminPanelView.as_view(), name='adminpanel'),
+    path("news/", include(news_urls.adminpatterns)),
+]
+
 about_urlpatterns = [
     path("", views.AboutUsView.as_view(title='about'), name='about'),
     DisplayContentBoxView.get_path('contact'),
@@ -32,7 +39,7 @@ about_urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path("", views.IndexView.as_view(), name='front_page'),
-    path("admin/", views.AdminPanelView.as_view(), name='adminpanel'),
+    path("admin/", decorator_include(login_required, admin_urlpatterns)),
     path("reservation/", include('make_queue.urls')),
     path("news/", include('news.urls')),
     path("contentbox/", include(get_content_box_urlpatterns(base_template='web/base.html'))),
@@ -82,6 +89,11 @@ urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
     path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
     path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+
+    path("news/article/<Article:article>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
+    path("news/event/<Event:event>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
+    path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='ticket_detail', permanent=True)),
+    path("news/ticket/me/", RedirectView.as_view(pattern_name='my_tickets_list', permanent=True)),
     prefix_default_language=False,
 )
 

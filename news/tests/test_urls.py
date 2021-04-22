@@ -1,3 +1,4 @@
+from abc import ABC
 from datetime import timedelta
 
 from django.test import TestCase
@@ -9,10 +10,10 @@ from users.models import User
 from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 
 
-class UrlTests(TestCase):
+class NewsTestBase(ABC):
 
-    @staticmethod
-    def init_objs(self: TestCase):
+    # noinspection PyAttributeOutsideInit
+    def init_objs(self):
         self.article1 = Article.objects.create(
             title="Article 1", content="Lorem ipsum dolor sit amet", clickbait="Pleeasee!", image=MOCK_JPG_FILE,
             featured=True, hidden=False, private=False,
@@ -63,46 +64,49 @@ class UrlTests(TestCase):
         )
         self.tickets = (self.ticket1, self.ticket2, self.ticket3, self.ticket4, self.ticket5)
 
+
+class UrlTests(NewsTestBase, TestCase):
+
     def setUp(self):
-        self.init_objs(self)
+        self.init_objs()
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             Get(reverse('admin_article_list'), public=False),
             Get(reverse('admin_event_list'), public=False),
-            Get(reverse('admin_event_detail', kwargs={'pk': self.event1.pk}), public=False),
-            Get(reverse('admin_event_detail', kwargs={'pk': self.event2.pk}), public=False),
+            Get(reverse('admin_event_detail', kwargs={'event': self.event1}), public=False),
+            Get(reverse('admin_event_detail', kwargs={'event': self.event2}), public=False),
             Get(reverse('article_list'), public=True),
             Get(reverse('article_create'), public=False),
-            Get(reverse('article_edit', kwargs={'pk': self.article1.pk}), public=False),
-            Get(reverse('article_edit', kwargs={'pk': self.article2.pk}), public=False),
-            Get(reverse('article_detail', kwargs={'pk': self.article1.pk}), public=True),
-            Get(reverse('article_detail', kwargs={'pk': self.article2.pk}), public=False),  # this article is private
+            Get(reverse('article_edit', kwargs={'article': self.article1}), public=False),
+            Get(reverse('article_edit', kwargs={'article': self.article2}), public=False),
+            Get(reverse('article_detail', kwargs={'article': self.article1}), public=True),
+            Get(reverse('article_detail', kwargs={'article': self.article2}), public=False),  # this article is private
             Get(reverse('event_list'), public=True),
             Get(reverse('event_create'), public=False),
-            Get(reverse('event_edit', kwargs={'pk': self.event1.pk}), public=False),
-            Get(reverse('event_edit', kwargs={'pk': self.event2.pk}), public=False),
-            Get(reverse('event_ticket_list', kwargs={'pk': self.event2.pk}), public=False),  # can't test `event1`, as it has no tickets
-            Get(reverse('event_detail', kwargs={'pk': self.event1.pk}), public=True),
-            Get(reverse('event_detail', kwargs={'pk': self.event2.pk}), public=False),  # this event is private
-            Get(reverse('register_event', kwargs={'event_pk': self.event1.pk}), public=False),
-            Get(reverse('register_event', kwargs={'event_pk': self.event2.pk}), public=False),
+            Get(reverse('event_edit', kwargs={'event': self.event1}), public=False),
+            Get(reverse('event_edit', kwargs={'event': self.event2}), public=False),
+            Get(reverse('event_ticket_list', kwargs={'event': self.event2}), public=False),  # can't test `event1`, as it has no tickets
+            Get(reverse('event_detail', kwargs={'event': self.event1}), public=True),
+            Get(reverse('event_detail', kwargs={'event': self.event2}), public=False),  # this event is private
+            Get(reverse('register_event', kwargs={'event': self.event1}), public=False),
+            Get(reverse('register_event', kwargs={'event': self.event2}), public=False),
             *[
-                Get(reverse('timeplace_edit', kwargs={'pk': timeplace.pk}), public=False)
+                Get(reverse('timeplace_edit', kwargs={'event': timeplace.event, 'pk': timeplace.pk}), public=False)
                 for timeplace in self.timeplaces
             ],
-            Get(reverse('timeplace_create', kwargs={'event_pk': self.event1.pk}), public=False),
-            Get(reverse('timeplace_create', kwargs={'event_pk': self.event2.pk}), public=False),
+            Get(reverse('timeplace_create', kwargs={'event': self.event1}), public=False),
+            Get(reverse('timeplace_create', kwargs={'event': self.event2}), public=False),
             *[
-                Get(reverse('timeplace_ticket_list', kwargs={'pk': timeplace.pk}), public=False)
+                Get(reverse('timeplace_ticket_list', kwargs={'event': timeplace.event, 'pk': timeplace.pk}), public=False)
                 for timeplace in self.timeplaces if timeplace != self.timeplace3  # can't test `timeplace3`, as it has no tickets
             ],
             *[
-                Get(reverse('timeplace_ical', kwargs={'pk': timeplace.pk}), public=True)
+                Get(reverse('timeplace_ical', kwargs={'event': timeplace.event, 'pk': timeplace.pk}), public=True)
                 for timeplace in self.timeplaces
             ],
             *[
-                Get(reverse('register_timeplace', kwargs={'timeplace_pk': timeplace.pk}), public=False)
+                Get(reverse('register_timeplace', kwargs={'event': timeplace.event, 'time_place_pk': timeplace.pk}), public=False)
                 for timeplace in self.timeplaces if timeplace != self.timeplace3  # can't test `timeplace3`, as it has no tickets
             ],
             *[

@@ -1998,14 +1998,18 @@ msgid "Your ticket for “%(title)s”"
 msgstr "Din billett til «%(title)s»"
 
 #: news/templates/email/ticket.html:39
-msgid "Thank you for registering for this event. You can view your ticket"
+msgid "Thank you for registering for this event. You can view your ticket on"
 msgstr ""
-"Takk for at du meldte deg på dette arrangementet. Du kan se billetten din"
+"Takk for at du meldte deg på dette arrangementet. Du kan se billetten din på"
+
+#: news/templates/email/ticket.html:40 news/templates/email/ticket.html:43
+msgid "this page"
+msgstr "denne siden"
 
 #: news/templates/email/ticket.html:42
-msgid "If you want to cancel your registration, you can do so by clicking"
+msgid "If you want to cancel your registration, you can do so by going to"
 msgstr ""
-"Hvis du ønsker å avbestille billetten din, så kan du gjøre dette ved å trykke"
+"Hvis du ønsker å avbestille billetten din, kan du gjøre dette ved å gå til"
 
 #: news/templates/email/ticket.html:48
 msgid "The reference number for your ticket is"
@@ -2024,8 +2028,8 @@ msgid ""
 "If you want to cancel your registration, you can do so by visiting the "
 "following URL"
 msgstr ""
-"Hvis du ønsker å avbestille billetten din, så kan du gjøre dette ved å "
-"besøke følgende adresse"
+"Hvis du ønsker å avbestille billetten din, kan du gjøre dette ved å besøke "
+"følgende adresse"
 
 #: news/templates/news/admin_article_list.html:8
 #: news/templates/news/article_list.html:13
@@ -2288,6 +2292,15 @@ msgstr "Mine billetter"
 msgid "Preferred format is"
 msgstr "Foretrukket format er"
 
+#: news/templates/news/ticket_cancel.html:6
+#, python-format
+msgid "Cancel your ticket for “%(event)s”"
+msgstr "Kanseller billetten din for «%(event)s»"
+
+#: news/templates/news/ticket_cancel.html:15
+msgid "Yes, I'm sure"
+msgstr "Ja, jeg er sikker"
+
 #: news/templates/news/ticket_card.html:71
 msgid "Cancel ticket"
 msgstr "Kanseller"
@@ -2354,12 +2367,6 @@ msgstr "Rediger forekomst"
 msgid "New Occurrence"
 msgstr "Ny forekomst"
 
-#: news/views.py:400
-msgid "Could not register you for the event, please try again later."
-msgstr ""
-"Det var ikke mulig å melde deg på arrangementet på dette tidspunktet. "
-"Vennligst prøv igjen ved en senere anledning."
-
 #: news/views.py:413
 msgid "Your ticket!"
 msgstr "Din billett!"
@@ -2368,6 +2375,20 @@ msgstr "Din billett!"
 #, python-brace-format
 msgid "Register for the event “{title}”"
 msgstr "Meld deg på arrangementet «{title}»"
+
+#: news/views.py:543
+#, python-brace-format
+msgid " at {time}"
+msgstr " den {time}"
+
+#: news/views.py:546
+#, python-brace-format
+msgid ""
+"Are you sure you want to cancel your ticket for<br/"
+">“{event}”{at_time_string}?"
+msgstr ""
+"Er du sikker på at du vil kansellere billetten din for<br/"
+">«{event}»{at_time_string}?"
 
 #: users/models.py:11
 msgid "full name from LDAP"
