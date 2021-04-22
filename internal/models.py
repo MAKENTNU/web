@@ -24,7 +24,7 @@ from .validators import WhitelistedEmailValidator, discord_username_validator
 class Member(models.Model):
     user = models.OneToOneField(
         to=User,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         null=True,
         related_name='member',
         verbose_name=_("user"),
