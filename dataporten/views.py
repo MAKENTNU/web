@@ -48,8 +48,12 @@ def login_wrapper(request, backend, *args, **kwargs):
     # This is only important if the user has not logged in before, as the full name has not yet been set.
     _update_ldap_full_name_if_different(user, social_data)
 
-    # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
-    ldap_data = get_user_details_from_email(user.email, use_cached=False)
+    try:
+        # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
+        ldap_data = get_user_details_from_email(user.email, use_cached=False)
+    except Exception as e:
+        logging.getLogger('django.request').exception("Looking up user details through LDAP failed.", exc_info=e)
+        ldap_data = {}
     _update_username_if_different(user, ldap_data)
 
     return response
@@ -71,7 +75,7 @@ def _update_ldap_full_name_if_different(user: User, social_data: dict):
 
 
 def _update_username_if_different(user: User, ldap_data: dict):
-    potentially_new_username = ldap_data['username'] if ldap_data else user.email.split("@")[0]
+    potentially_new_username = ldap_data.get('username') or user.email.split("@")[0]
     if user.username != potentially_new_username:
         user.username = potentially_new_username
         user.save()
