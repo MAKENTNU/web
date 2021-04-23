@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 15:35+0200\n"
+"POT-Creation-Date: 2021-04-23 15:43+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -382,7 +382,6 @@ msgstr "For å se den nåværende versjonen, klikk"
 
 #: docs/templates/docs/documentation_page_detail.html:25
 #: docs/templates/docs/documentation_page_detail.html:28
-#: news/templates/email/ticket.html:40 news/templates/email/ticket.html:43
 msgid "here"
 msgstr "her"
 
@@ -1302,6 +1301,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/course_registration_edit.html:105
 #: make_queue/templates/make_queue/course/course_registration_list.html:201
 #: make_queue/templates/make_queue/reservation_edit.html:160
+#: news/templates/news/ticket_cancel.html:17
 #: web/templates/web/delete_modal.html:20
 #: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
 msgctxt "abort action"
@@ -2041,7 +2041,7 @@ msgstr "Artikler"
 msgid "Article image"
 msgstr "Artikkelbilde"
 
-#: news/templates/news/admin_event_detail.html:21 news/views.py:229
+#: news/templates/news/admin_event_detail.html:21 news/views.py:275
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
 
@@ -2134,7 +2134,7 @@ msgstr[1] "%(counter)s framtidige forekomster"
 msgid "Admin"
 msgstr "Admin"
 
-#: news/templates/news/admin_event_ticket_list.html:17
+#: news/templates/news/admin_event_ticket_list.html:16
 msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"
 
@@ -2246,7 +2246,7 @@ msgstr ""
 "vil være en felles registrering for alle tidspunktene til arrangementet."
 
 #: news/templates/news/event_edit.html:53
-#: news/templates/news/timeplace_edit.html:15
+#: news/templates/news/timeplace_edit.html:7
 msgid "A value of zero indicates that no registration is required"
 msgstr "En verdi på 0 vil si at arrangementet ikke krever påmelding"
 
@@ -2297,7 +2297,7 @@ msgstr "Foretrukket format er"
 msgid "Cancel your ticket for “%(event)s”"
 msgstr "Kanseller billetten din for «%(event)s»"
 
-#: news/templates/news/ticket_cancel.html:15
+#: news/templates/news/ticket_cancel.html:19
 msgid "Yes, I'm sure"
 msgstr "Ja, jeg er sikker"
 
@@ -2305,7 +2305,7 @@ msgstr "Ja, jeg er sikker"
 msgid "Cancel ticket"
 msgstr "Kanseller"
 
-#: news/templates/news/ticket_card.html:76
+#: news/templates/news/ticket_card.html:77
 msgid "Reactivate ticket"
 msgstr "Reaktiver"
 
@@ -2330,58 +2330,58 @@ msgstr "logg inn"
 msgid "to the correct account to see your ticket."
 msgstr "til den riktige brukeren for å se billetten din."
 
-#: news/views.py:165 news/views.py:253
+#: news/views.py:211 news/views.py:308
 msgid "Attributes"
 msgstr "Egenskaper"
 
-#: news/views.py:180
+#: news/views.py:226
 msgid "Admin page for articles"
 msgstr "Administrasjonsside for artikler"
 
-#: news/views.py:189
+#: news/views.py:235
 msgid "Edit Article"
 msgstr "Rediger artikkel"
 
-#: news/views.py:195
+#: news/views.py:241
 msgid "New Article"
 msgstr "Ny artikkel"
 
-#: news/views.py:219
+#: news/views.py:265
 msgid "Edit Event"
 msgstr "Rediger arrangement"
 
-#: news/views.py:222 news/views.py:245
+#: news/views.py:268 news/views.py:300
 #, python-brace-format
 msgid "Admin page for “{event_title}”"
 msgstr "Administrasjonsside for «{event_title}»"
 
-#: news/views.py:228
+#: news/views.py:274
 msgid "New Event"
 msgstr "Nytt arrangement"
 
-#: news/views.py:264
+#: news/views.py:319
 msgid "Edit Occurrence"
 msgstr "Rediger forekomst"
 
-#: news/views.py:282
+#: news/views.py:325
 msgid "New Occurrence"
 msgstr "Ny forekomst"
 
-#: news/views.py:413
+#: news/views.py:446
 msgid "Your ticket!"
 msgstr "Din billett!"
 
-#: news/views.py:427
+#: news/views.py:460
 #, python-brace-format
 msgid "Register for the event “{title}”"
 msgstr "Meld deg på arrangementet «{title}»"
 
-#: news/views.py:543
+#: news/views.py:547
 #, python-brace-format
 msgid " at {time}"
 msgstr " den {time}"
 
-#: news/views.py:546
+#: news/views.py:550
 #, python-brace-format
 msgid ""
 "Are you sure you want to cancel your ticket for<br/"
