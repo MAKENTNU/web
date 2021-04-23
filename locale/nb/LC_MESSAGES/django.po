@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 02:45+0200\n"
+"POT-Creation-Date: 2021-04-23 02:49+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -1164,7 +1164,8 @@ msgstr "Neste"
 
 #: make_queue/templates/make_queue/calendar.html:87
 #: make_queue/templates/make_queue/reservation_edit.html:118
-#: web/templates/web/base.html:11
+#: web/templates/web/base.html:11 web/templates/web/favicon.html:14
+#: web/templates/web/favicon.html:16
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
 
@@ -2326,11 +2327,11 @@ msgstr "Din billett!"
 msgid "Full name from LDAP"
 msgstr "Fullt navn fra LDAP"
 
-#: web/templates/admin/base_site.html:5
+#: web/templates/admin/base_site.html:12
 msgid "Django site admin"
 msgstr "Django administrasjonsside"
 
-#: web/templates/admin/base_site.html:9
+#: web/templates/admin/base_site.html:16
 msgid "Django administration"
 msgstr "Django-administrasjon"
 
@@ -2438,7 +2439,7 @@ msgstr ""
 msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
 
-#: web/templates/web/base.html:62
+#: web/templates/web/base.html:63
 msgid "Skip to main content"
 msgstr "Hopp til hovedinnhold"
 
