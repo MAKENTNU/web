@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('make_queue', '0016_auto_20201103_1431'),
+        ('make_queue', '0019_add_related_names'),
     ]
 
     operations = [
