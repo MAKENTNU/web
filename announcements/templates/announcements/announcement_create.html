@@ -1,6 +1,10 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 
+
+{% block head %}
+    {{ form.media }}
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -63,4 +67,4 @@
     <script>
         $("span[data-content]").popup();
     </script>
-{% endblock %}
+{% endblock body %}

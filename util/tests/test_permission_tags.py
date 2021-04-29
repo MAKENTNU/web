@@ -1,4 +1,4 @@
-from django.contrib.auth.models import Permission, Group
+from django.contrib.auth.models import Group, Permission
 from django.test import TestCase
 
 from users.models import User

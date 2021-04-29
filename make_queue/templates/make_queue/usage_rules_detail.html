@@ -1,28 +1,28 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 
 
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "Rules for usage of the" %} {{ usage_rules.machine_type.name }}</h1>
+        <h1>
+            {% blocktrans with machine_type=machine_type %}Usage rules for {{ machine_type }}{% endblocktrans %}
+        </h1>
         <div style="margin-bottom: 10px">
-            <a class="ui blue button" href="{% url "machine_rules" usage_rules.machine_type %}">
+            <a class="ui blue button" href="{% url "machine_rules" machine_type %}">
                 {% trans "Quota and detailed rules for reservation duration" %}
             </a>
 
             {% if perms.make_queue.change_machineusagerule %}
                 <a class="ui make-bg-yellow button" style="margin-top: 20px"
-                   href="{% url 'edit_machine_usage_rules' usage_rules.pk %}">
+                   href="{% url 'edit_machine_usage_rules' machine_type %}">
                     <i class="ui edit icon"></i>{% trans "Edit" %}
                 </a>
             {% endif %}
         </div>
         <div>
-            {% autoescape off %}
-                {{ usage_rules.content }}
-            {% endautoescape %}
+            {{ usage_rules.content|safe }}
         </div>
     </div>
 
-{% endblock %}
+{% endblock body %}

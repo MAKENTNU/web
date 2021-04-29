@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 
 
@@ -14,7 +14,7 @@
             {% endif %}
         </h1>
         <div class="ui relaxed divided list">
-            {% for question in question_list %}
+            {% for question in questions %}
                 <div class="item">
                     <div class="content">
                         <div class="ui header">
@@ -26,7 +26,9 @@
                             {% endif %}
 
                             {% if perms.faq.delete_question %}
-                                <a class="delete confirm" href="{% url 'faq-question-delete' question.pk %}">
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'faq-question-delete' question.pk %}"
+                                   data-obj-name="{{ question }}">
                                     <i class="large red delete icon"></i>
                                 </a>
                             {% endif %}
@@ -38,4 +40,4 @@
         </div>
 
     </div>
-{% endblock %}
+{% endblock body %}

@@ -13,23 +13,23 @@
     <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
     <meta property="og:site_name" content="MAKE NTNU"/>
     <meta property="og:image"
-          content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}"/>
+          content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static 'web/img/make_thumb.png' %}{% endblock og_image %}"/>
     <meta property="og:description"
           content="{% block og_description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock og_description %}"/>
     <meta property="description"
           content="{% block description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock description %}"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
-    <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'web/img/favicon.png' %}"/>
     <meta name="theme-color" content="rgb(248, 200, 17)"/>
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700"/>
-    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static "lib/fomantic-ui/semantic.min.css" %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
-    <script src="{% static "lib/jquery/jquery-3.1.1.min.js" %}"></script>
-    <script src="{% static "lib/fomantic-ui/semantic.min.js" %}"></script>
-    <script>const langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
+    <script src="{% url 'javascript-catalog' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/fomantic-ui/semantic.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
+    <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
+    <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
     {% block head %}{% endblock head %}
@@ -39,27 +39,27 @@
 <div class="wrapper">
     <div class="content">
         {% block header %}
-            {% include "web/header.html" %}
+            {% include 'web/header.html' %}
         {% endblock header %}
 
-        {% block padding-top %}
-            <div class="make_content_padding"></div>
-        {% endblock %}
+        {% block padding_top %}
+            <div class="make-content-padding"></div>
+        {% endblock padding_top %}
 
         <main id="main">
             {% block body %}
             {% endblock body %}
         </main>
 
-        {% block padding-bottom %}
-            <div class="make_content_padding"></div>
-        {% endblock padding-bottom %}
+        {% block padding_bottom %}
+            <div class="make-content-padding"></div>
+        {% endblock padding_bottom %}
     </div>
 
-    {% include "web/delete_modal.html" %}
+    {% include 'web/delete_modal.html' %}
     {% block footer %}
-        {% include "web/footer.html" %}
-    {% endblock %}
+        {% include 'web/footer.html' %}
+    {% endblock footer %}
 </div>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>

@@ -1,13 +1,13 @@
-{% extends "docs/base.html" %}
+{% extends 'docs/base.html' %}
 {% load i18n %}
 {% load static %}
 
 
-{% block title %}{{ page.title }}{% endblock %}
+{% block title %}{{ page.title }}{% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "docs/css/documentation_page_detail.css" %}">
-{% endblock %}
+    <link rel="stylesheet" href="{% static 'docs/css/documentation_page_detail.css' %}"/>
+{% endblock head %}
 
 {% block body %}
     <div class="ui container">
@@ -16,9 +16,10 @@
                 <div class="ui header">
                     {% trans "You are viewing an old version of this page" %}
                 </div>
-                {% trans "You are viewing an old version of this page, where the last edit was made by" %}
-                {% if content.made_by %}{{ content.made_by.get_full_name }}{% else %}{% trans "Anonymous" %}{% endif %}
-                {% trans "on" %} {{ content.changed|date:"d.m.Y" }} {% trans "at" %} {{ content.changed|date:"H:i" }}.
+                {% blocktrans trimmed with name=last_edit_name date=content.changed|date:"d.m.Y" time=content.changed|date:"H:i" %}
+                    You are viewing an old version of this page, where the last edit was made by {{ name }}
+                    on {{ date }} at {{ time }}.
+                {% endblocktrans %}
                 {% trans "To view the current version, click" %}
                 <a href="{% url "page" pk=page %}">{% trans "here" %}</a>.
                 {% if perms.docs.change_page %}
@@ -39,9 +40,10 @@
                         <i class="ui make-col-yellow edit icon"></i>
                     </a>
                 {% endif %}
-                {% if perms.docs.delete_page and page.title != "Documentation" %}
-                    <a class="delete confirm explanation-popup" href="{% url "delete-page" pk=page %}"
-                       data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}">
+                {% if perms.docs.delete_page and page.title != MAIN_PAGE_TITLE %}
+                    <a class="delete-modal-button explanation-popup"
+                       data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}"
+                       data-url="{% url "delete-page" pk=page %}" data-obj-name="{{ page }}">
                         <i class="ui red trash icon"></i>
                     </a>
                 {% endif %}
@@ -50,19 +52,16 @@
         <h1>{{ page.title }}</h1>
 
         {% if content %}
-            {% autoescape off %}
-                {{ content.content }}
-            {% endautoescape %}
+            {{ content.content|safe }}
         {% elif page.current_content %}
-            {% autoescape off %}
-                {{ page.current_content.content }}
-            {% endautoescape %}
+            {{ page.current_content.content|safe }}
         {% else %}
             <i>
                 {% if perms.docs.change_page %}
-                    {% trans "No content exists for this page, do you wish to" %}
-                    <a href="{% url "edit-page" pk=page %}">{% trans "create" %}</a>
-                    {% trans "some" %}?
+                    {% url "edit-page" pk=page as edit_page_url %}
+                    {% blocktrans trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
+                        No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
+                    {% endblocktrans %}
                 {% else %}
                     {% trans "No content exists for this page" %}!
                 {% endif %}
@@ -77,7 +76,7 @@
             {{ form }}
         </form>
     {% endif %}
-{% endblock %}
+{% endblock body %}
 
 {% block scripts %}
     <script>
@@ -90,4 +89,4 @@
             });
         {% endif %}
     </script>
-{% endblock %}
+{% endblock scripts %}

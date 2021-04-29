@@ -1,13 +1,14 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 {% load static %}
 
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "make_queue/css/general.css" %}">
+    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}"/>
 {% endblock head %}
 
 {% block body %}
+
     <div class="ui container">
         <h1>
             {% trans "Course registrations" %}
@@ -16,29 +17,29 @@
             </a>
         </h1>
 
-        <form id="download_users" class="ui form" method="POST" action="{% url "download_course_registrations" %}">
+        <form id="download-users" class="ui form" method="POST" action="{% url "download_course_registrations" %}">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
                     <label>{% trans "Filter users based on name" %}</label>
                     <input id="search" type="text" placeholder="{% trans "Search name and username" %}"
-                           name="search_text">
+                           name="search_text"/>
                 </div>
                 <div class="ui four wide field">
                     <label>{% trans "Filter users based on status" %}</label>
                     <div class="ui selection dropdown">
-                        <input id="status_filter" type="hidden" name="status_filter" value="">
+                        <input id="status-filter" type="hidden" name="status_filter" value=""/>
                         <i class="ui dropdown icon"></i>
                         <div class="default text"></div>
                         <div class="menu">
                             <div class="item" data-value="">{% trans "All" %}</div>
-                            {% for choice in possible_statuses %}
-                                <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                            {% for value, name in possible_statuses %}
+                                <div class="item" data-value="{{ value }}">{{ name }}</div>
                             {% endfor %}
                         </div>
                     </div>
                 </div>
-                <input id="selected" type="hidden" name="selected">
+                <input id="selected" type="hidden" name="selected"/>
                 <div class="ui six wide field">
                     {# Using label with non-blocking space to keep the download button further down #}
                     <label>&nbsp;</label>
@@ -50,7 +51,7 @@
         </form>
 
         {# Prepopulated area to be shown when one or more rows are selected #}
-        <div id="selected-actions" class="make_hidden ui secondary segment">
+        <div id="selected-actions" class="display-none ui secondary segment">
             <h4>
                 <span id="num-selected"></span> {% trans "user(s) selected" %}
             </h4>
@@ -59,12 +60,12 @@
                     <div class="ui six wide field">
                         <label>{% trans "Set status for all selected users" %}</label>
                         <div class="ui selection dropdown">
-                            <input id="status_set" type="hidden" name="status_set" value="">
+                            <input id="status-set" type="hidden" name="status_set" value=""/>
                             <i class="ui dropdown icon"></i>
                             <div class="default text">{% trans "Select status" %}</div>
                             <div class="menu">
-                                {% for choice in possible_statuses %}
-                                    <div class="item" data-value="{{ choice.0 }}">{{ choice.1 }}</div>
+                                {% for value, name in possible_statuses %}
+                                    <div class="item" data-value="{{ value }}">{{ name }}</div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -96,7 +97,7 @@
             </thead>
             <tbody>
             {% for registration in registrations %}
-                <tr class="make_hidden"
+                <tr class="display-none o v e r r i d e"
                     data-pk="{{ registration.pk }}"
                     data-name="{{ registration.name }}"
                     data-username="{{ registration.username }}"
@@ -111,7 +112,11 @@
                             <i class="ui make-col-yellow pencil icon"></i>
                         </a>
                         {% if perms.make_queue.delete_printer3dcourse %}
-                            <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
+                            <a class="delete-modal-button"
+                               data-url="{% url "delete_course_registration" registration.pk %}"
+                               data-prompt="{% blocktrans trimmed with user=registration.get_user_display_name %}
+                                                Are you sure you want to delete the course registration of {{ user }}?
+                                            {% endblocktrans %}">
                                 <i class="ui red trash icon"></i>
                             </a>
                         {% endif %}
@@ -163,9 +168,17 @@
             </a>
         </div>
         <span>
+            {% trans "Filter matches" %}
+            <b>
+                <span id="num-registrations-filtered">{{ registrations|length }}</span>/{{ registrations|length }}
+            </b>
+            {% trans "registrations" %}
+        </span>
+        <br/>
+        <span>
             {% trans "Displaying" %}
             <b>
-                <span id="number-displayed">{{ registrations|length }}</span>/{{ registrations|length }}
+                <span id="displayed-registrations-count">{{ registrations|length }}</span>/{{ registrations|length }}
             </b>
             {% trans "registrations" %}
         </span>
@@ -180,7 +193,7 @@
 
         <form method="POST" action="{% url "bulk_status_update" %}">
             {% csrf_token %}
-            <input id="status" type="hidden" value="" name="status">
+            <input id="status" type="hidden" value="" name="status"/>
         </form>
 
         <div class="content">
@@ -199,5 +212,5 @@
         </div>
     </div>
 
-    <script src="{% static "make_queue/js/course_registration_list.js" %}"></script>
-{% endblock %}
+    <script src="{% static 'make_queue/js/course_registration_list.js' %}"></script>
+{% endblock body %}

@@ -109,7 +109,7 @@ class Migration(migrations.Migration):
                 ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='Priority')),
             ],
             options={
-                'ordering': ['priority'],
+                'ordering': ('priority',),
             },
         ),
         migrations.RunPython(create_default_machine_types, migrations.RunPython.noop),

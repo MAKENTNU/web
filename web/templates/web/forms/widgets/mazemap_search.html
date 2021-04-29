@@ -1,8 +1,8 @@
 <div class="ui search fluid">
-    {% include "django/forms/widgets/text.html" %}
+    {% include 'django/forms/widgets/text.html' %}
     <div class="results"></div>
 </div>
 
 <script>
-    $('input[name={{ widget.name }}]').mazemapSearch();
+    $("input[name={{ widget.name }}]").mazemapSearch();
 </script>

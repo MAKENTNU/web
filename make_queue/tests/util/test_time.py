@@ -2,8 +2,9 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
 
-from make_queue.util.time import year_and_week_to_monday, is_valid_week, get_next_week, local_to_date, date_to_local, \
-    get_day_name, timedelta_to_hours
+from ...util.time import (
+    date_to_local, get_day_name, get_next_week, is_valid_week, local_to_date, timedelta_to_hours, year_and_week_to_monday,
+)
 
 
 class WeekUtilTest(TestCase):

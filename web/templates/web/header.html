@@ -7,8 +7,8 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
-<link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
-<link rel="stylesheet" type="text/css" href="{% static "announcements/css/announcement.css" %}">
+<link rel="stylesheet" href="{% static 'web/css/header.css' %}"/>
+<link rel="stylesheet" href="{% static 'announcements/css/announcement.css' %}"/>
 
 <header id="header">
     <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
@@ -16,9 +16,9 @@
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% url 'front-page' %}">
-            <img class="large" src="{% static "web/img/logo_white.svg" %}">
-            <img class="medium" src="{% static "web/img/logo_make.svg" %}">
-            <img class="small" src="{% static "web/img/logo_m.svg" %}">
+            <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
         </a>
     </div>
 
@@ -86,15 +86,15 @@
                 <div class="make-bg-blue bubble-background"></div>
 
                 <nav class="menu transition" aria-label="User">
-                    {% if user|has_any_permissions or user.is_superuser %}
+                    {% if user|has_any_permissions %}
                         <a class="item" href="{% url 'adminpanel' %}">
                             <div class="text">{% trans "Administration" %}</div>
                         </a>
                     {% endif %}
-                    <a class="item" href="{% url 'profile' %}">
-                        <div class="text">{% trans "Profile" %}</div>
-                    </a>
                     {% if perms.internal.is_internal %}
+                        <a class="item" href="{% url 'profile' %}">
+                            <div class="text">{% trans "Profile" %}</div>
+                        </a>
                         <a class="item" href="{% host_url "home" host "internal" "internt" %}">
                             <div class="text">{% trans "Internal pages" %}</div>
                         </a>
@@ -103,14 +103,14 @@
                         <div class="text">{% trans "My tickets" %}</div>
                     </a>
                     <a class="item" href="{% url 'logout' %}?next={{ request.path }}">
-                        <div class="text">{% trans "Logout" %}</div>
+                        <div class="text">{% trans "Log out" %}</div>
                     </a>
                 </nav>
 
             </div>
         {% else %}
             <a class="item" href="{% url 'login' %}{{ login_next_param }}">
-                <div class="text">{% trans "Login" %}</div>
+                <div class="text">{% trans "Log in" %}</div>
                 <div class="make-bg-blue bubble-background"></div>
             </a>
         {% endif %}
@@ -134,7 +134,7 @@
 {# Show all site-wide announcements #}
 {% site_wide_announcements as announcements %}
 {% for announcement in announcements %}
-    {% include "announcements/announcement.html" with announcement=announcement %}
+    {% include 'announcements/announcement.html' with announcement=announcement %}
 {% endfor %}
 
 {# This form is hidden, but is submitted through jQuery #}
@@ -142,7 +142,7 @@
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>
-        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/>
+        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/> {# removes "/en" #}
     {% else %}
         <input name="language" type="hidden" value="en"/>
         <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
@@ -150,7 +150,7 @@
 </form>
 
 <script>
-    $('#nav-user-dropdown, #makerspace-dropdown')
+    $("#nav-user-dropdown, #makerspace-dropdown")
         .dropdown({
             action: "nothing",
             onShow: function () {
@@ -168,7 +168,7 @@
         $("#lang-form").submit();
     });
 
-    $('#burger').click(function () {
-        $('#header').toggleClass('active');
+    $("#burger").click(function () {
+        $("#header").toggleClass("active");
     });
 </script>

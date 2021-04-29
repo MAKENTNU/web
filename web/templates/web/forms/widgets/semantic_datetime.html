@@ -17,11 +17,12 @@
 </div>
 
 <script>
-    (function () {
-        let widget = $("#{{ widget.name }}");
+    {# The following code is scoped within a block, to avoid variable name collisions when including this template multiple times #}
+    {
+        const $widget = $("#{{ widget.name }}");
 
-        $(document).ready(() => {
-            widget.calendar({
+        $(document).ready(function () {
+            $widget.calendar({
                 type: "datetime",
                 ampm: false,
                 firstDayOfWeek: 1,
@@ -32,20 +33,25 @@
                 {% if widget.attrs.end_calendar %}
                     endCalendar: $("#{{ widget.attrs.end_calendar }}"),
                 {% endif %}
+                text: {
+                    {# The referenced constants are defined in `date_utils.js`, which is linked through the Django widget's media #}
+                    months: MONTH_TRANSLATIONS,
+                    monthsShort: SHORT_MONTH_TRANSLATIONS,
+                },
             });
         });
 
-        widget.closest("form").submit(function () {
-            let pad = (val) => (val < 10) ? `0${val}` : val;
-            let date = widget.calendar("get date");
+        $widget.closest("form").submit(function () {
+            const pad = (val) => (val < 10) ? `0${val}` : val;
+            const date = $widget.calendar("get date");
             if (date === null)
                 return;
-            let year = date.getFullYear();
-            let month = pad(date.getMonth() + 1);
-            let day = pad(date.getDate());
-            let hours = pad(date.getHours());
-            let minutes = pad(date.getMinutes());
-            widget.find("input").val(`${year}-${month}-${day} ${hours}:${minutes}`);
+            const year = date.getFullYear();
+            const month = pad(date.getMonth() + 1);
+            const day = pad(date.getDate());
+            const hours = pad(date.getHours());
+            const minutes = pad(date.getMinutes());
+            $widget.find("input").val(`${year}-${month}-${day} ${hours}:${minutes}`);
         });
-    })();
+    }
 </script>

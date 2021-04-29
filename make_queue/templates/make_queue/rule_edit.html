@@ -1,4 +1,4 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 
@@ -8,8 +8,8 @@
     <div class="ui container">
         <h1>
             {% block form_title %}
-                {% trans "Rule" %}
-            {% endblock %}
+                {% blocktrans with machine_type=machine_type %}Rule for {{ machine_type }}{% endblocktrans %}
+            {% endblock form_title %}
         </h1>
         {% for error in form.non_field_errors %}
             <div class="ui red message">
@@ -17,7 +17,7 @@
                 <p>{{ error }}</p>
             </div>
         {% endfor %}
-        <form class="ui form" method="post">
+        <form class="ui form" method="POST">
             {% csrf_token %}
             <div class="ui three fields">
                 <div class="ui field">
@@ -33,7 +33,7 @@
                     {{ form.end_time }}
                 </div>
             </div>
-            <h4>{% trans "Start days" %}</h4>
+            <h4>{% trans "Start days for rule periods" %}</h4>
             <div class="ui seven fields">
                 <div class="ui field">
                     <div class="ui checkbox">
@@ -87,16 +87,12 @@
                     <label>{{ form.max_inside_border_crossed.label }}</label>
                     {{ form.max_inside_border_crossed }}
                 </div>
-                <div class="ui field">
-                    <label>{{ form.machine_type.label }}</label>
-                    {{ form.machine_type }}
-                </div>
             </div>
 
             <button class="ui right floated make-bg-yellow button" type="submit">
                 {% trans "Submit" context "edit" %}
             </button>
-            <a class="ui right floated red button" href="{% url 'machine_rules' rule.machine_type %}">
+            <a class="ui right floated red button" href="{% url 'machine_rules' machine_type %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
@@ -108,4 +104,4 @@
         });
     </script>
 
-{% endblock %}
+{% endblock body %}

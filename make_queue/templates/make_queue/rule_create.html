@@ -1,7 +1,7 @@
-{% extends "make_queue/rule_edit.html" %}
+{% extends 'make_queue/rule_edit.html' %}
 {% load i18n %}
 
 
 {% block form_title %}
-    {% trans "New rule" %}
-{% endblock %}
+    {% blocktrans with machine_type=machine_type %}New rule for {{ machine_type }}{% endblocktrans %}
+{% endblock form_title %}

@@ -6,6 +6,6 @@ from .models import InheritanceGroup
 
 @receiver(m2m_changed, sender=InheritanceGroup.parents.through)
 @receiver(m2m_changed, sender=InheritanceGroup.own_permissions.through)
-def update_permissions(instance, action, reverse, **kwargs):
-    if not reverse and action in ['post_add', 'post_remove', 'post_clear']:
+def update_permissions(instance: InheritanceGroup, action, reverse, **kwargs):
+    if not reverse and action in {'post_add', 'post_remove', 'post_clear'}:
         instance.update_permissions()

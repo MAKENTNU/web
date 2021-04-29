@@ -4,7 +4,7 @@
 
 
 {% block head %}
-    <link rel="stylesheet" href="{% static "faq/css/faq_list.css" %}"/>
+    <link rel="stylesheet" href="{% static 'faq/css/faq_list.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -38,8 +38,10 @@
             {% endfor %}
         </div>
     </div>
+{% endblock body %}
 
+{% block scripts %}
     <script>
         $('.ui.accordion').accordion();
     </script>
-{% endblock body %}
+{% endblock scripts %}

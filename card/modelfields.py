@@ -6,7 +6,7 @@ from .validators import card_number_validator
 
 class CardNumberField(models.CharField):
     """
-    Custom field for card numbers, doing some extra validation
+    Custom field for card numbers, doing some extra validation.
     """
     default_validators = [card_number_validator]
 

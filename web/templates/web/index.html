@@ -1,16 +1,17 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
+{% load i18n %}
 {% load thumbnail %}
 {% load announcement_tags %}
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
-    <script src="{% static "web/js/image_link.js" %}"></script>
-    <script src="{% static "lib/parallax/parallax.min.js" %}"></script>
+    <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
+    <script src="{% static 'web/js/image_link.js' %}"></script>
+    <script src="{% static 'lib/parallax/parallax.min.js' %}"></script>
 {% endblock head %}
 
-{% block padding-top %}{% endblock %}
+{% block padding_top %}{% endblock %}
 
 {% block header %}
     {{ block.super }}
@@ -18,15 +19,15 @@
     {# Show non-site-wide announcements on the front page #}
     {% non_site_wide_announcements as announcements %}
     {% for announcement in announcements %}
-        {% include "announcements/announcement.html" with announcement=announcement %}
+        {% include 'announcements/announcement.html' with announcement=announcement %}
     {% endfor %}
-{% endblock %}
+{% endblock header %}
 
 {% block body %}
     <div class="top">
-        <div class="topimg large parallax-window" data-parallax="scroll" data-image-src="{% static "web/img/topimg_2.jpg" %}"></div>
-        <img class="topimg small" src="{% static "web/img/topimg_small.jpg" %}">
-        <img class="toplogo" src="{% static "web/img/logo_black.svg" %}">
+        <div class="top-img large parallax-window" data-parallax="scroll" data-image-src="{% static 'web/img/topimg_2.jpg' %}"></div>
+        <img class="top-img small" src="{% static 'web/img/topimg_small.jpg' %}" alt=""/>
+        <img class="top-logo" src="{% static 'web/img/logo_black.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
     </div>
 
     <div style="height: 50px;"></div>
@@ -34,21 +35,23 @@
         <div class="ui items events">
             {% for event in events %}
                 <div class="item">
-                    <div class="ui small clickable image" href="{% url 'event' event.event.id %}">
+                    <div class="ui small clickable image" href="{% url 'event' event.event.pk %}">
                         <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event.start_time|date:"d" }}<br>
                             {{ event.start_time|date:"M" }}
                         </p>
-                        {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
-                            />
+                        <img {% thumbnail event.event.image "300" crop="center" as image_thumb %}
+                            src="{{ image_thumb.url }}"
+                        {% empty %}
+                            src="{{ event.event.image.url }}"
                         {% endthumbnail %}
+                            {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                        />
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>
@@ -65,34 +68,39 @@
     <div class="ui container">
         <div class="articles">
             {% for article in articles %}
-                {% thumbnail article.image "600" crop="center" as im %}
-                    <img class="article-img clickable {% cycle 'float-right' 'float-left' %}
-			    {% if forloop.first %}article-first{% endif %}
-			    {% if forloop.last %}article-last{% endif %}"
-                         src="{{ im.url }}" href="{% url 'article' article.id %}"
-                         {% if article.contain %}style="object-fit: contain;"{% endif %}
-                    />
+                <img {% thumbnail article.image "600" crop="center" as image_thumb %}
+                    src="{{ image_thumb.url }}"
+                {% empty %}
+                    src="{{ article.image.url }}"
                 {% endthumbnail %}
+                    class="article-img clickable {% cycle "float-right" "float-left" %}
+ 			    {% if forloop.first %}article-first{% endif %}
+ 			    {% if forloop.last %}article-last{% endif %}"
+                    {% if article.contain %}style="object-fit: contain;"{% endif %}
+                    href="{% url 'article' article.pk %}"
+                />
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}">
-                    <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}">
-                    <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}">
-                    <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}">
-                    <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}">
+                    <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}" alt=""/>
+                    <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}" alt=""/>
+                    <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
+                    <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
                     <div>
-                        <h2><a href="{% url 'article' article.id %}">{{ article.title }}</a></h2>
+                        <h2><a href="{% url 'article' article.pk %}">{{ article.title }}</a></h2>
                         <p>{{ article.clickbait }}</p>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
+{% endblock body %}
 
+{% block scripts %}
     <script>
-        $('.clickable').click(function () {
+        $(".clickable").click(function () {
             window.location.href = $(this).attr('href');
         });
-        $('.parallax-window').parallax({'speed': 0.5});
+        $(".parallax-window").parallax({'speed': 0.5});
     </script>
-{% endblock body %}
+{% endblock scripts %}

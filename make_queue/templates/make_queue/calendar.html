@@ -3,15 +3,15 @@
 {% load static %}
 
 
-<link rel="stylesheet" href="{% static "make_queue/css/calendar.css" %}">
-<script src="{% static "web/js/date_utils.js" %}"></script>
-<script src="{% static "make_queue/js/calendar.js" %}"></script>
-<script src="{% static "make_queue/js/reservation_rule_utils.js" %}"></script>
+<link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}"/>
+<script src="{% static 'web/js/date_utils.js' %}"></script>
+<script src="{% static 'make_queue/js/calendar.js' %}"></script>
+<script src="{% static 'make_queue/js/reservation_rule_utils.js' %}"></script>
 
 {# Needed to be able to create a reservation #}
 {% csrf_token %}
 
-<div class="reservation_calendar">
+<div class="reservation-calendar">
 
     <div class="ui top attached buttons">
         <div class="ui make-bg-yellow labeled icon previous button">
@@ -81,7 +81,7 @@
         <tfoot>
         <tr>
             <th colspan="8">
-                <div class="legend make_right_floated">
+                <div class="legend make-right-floated">
                     <div class="legend item">
                         <div class="make reservation box"></div>
                         {% trans "MAKE NTNU" %}

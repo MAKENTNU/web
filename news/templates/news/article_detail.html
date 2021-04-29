@@ -11,21 +11,25 @@
 {% block description %}{{ article.clickbait }}{% endblock description %}
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "news/css/article_detail.css" %}">
+    <link rel="stylesheet" href="{% static 'news/css/article_detail.css' %}"/>
 {% endblock head %}
 
 {% block body %}
-    <div class="article {% block event_classes %}{% endblock event_classes %}">
+    <div class="article {% block extra_classes %}{% endblock extra_classes %}">
         <div id="sticky" class="ui text container basic segment">
-            {% thumbnail article.image "800" crop="center" as im %}
-                <img src="{{ im.url }}" {% if article.contain %}style="object-fit: contain; height: auto;" {% endif %}>
+            <img {% thumbnail article.image "800" crop="center" as image_thumb %}
+                src="{{ image_thumb.url }}"
+            {% empty %}
+                src="{{ article.image.url }}"
             {% endthumbnail %}
+                {% if article.contain %}style="object-fit: contain; height: auto;"{% endif %}
+            />
 
             {% block rail %}
             {% endblock rail %}
 
 
-            {% block admin-page %}
+            {% block admin_page %}
                 {% if perms.news.change_article %}
                     <div>
                         <a class="ui make-bg-yellow button" href="{% url "admin-articles" %}">
@@ -33,11 +37,11 @@
                         </a>
                     </div>
                 {% endif %}
-            {% endblock admin-page %}
+            {% endblock admin_page %}
             <h1>
                 {{ article.title }}
                 {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
-                <span class="publication_time">{{ article.publication_time|date:"d.m.Y" }}</span>
+                <span class="publication-time">{{ article.publication_time|date:"d.m.Y" }}</span>
 
             </h1>
             <div>
@@ -55,7 +59,7 @@
         </div>
     </div>
     <script>
-        $('.ui.sticky').sticky({
+        $(".ui.sticky").sticky({
             context: '#sticky',
         });
     </script>

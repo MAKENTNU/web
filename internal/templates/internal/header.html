@@ -6,7 +6,7 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
-<link rel="stylesheet" type="text/css" href="{% static "web/css/header.css" %}">
+<link rel="stylesheet" href="{% static 'web/css/header.css' %}"/>
 
 <header id="header">
     <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
@@ -14,20 +14,20 @@
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% url 'home' %}">
-            <img class="large" src="{% static "web/img/logo_white.svg" %}">
-            <img class="medium" src="{% static "web/img/logo_make.svg" %}">
-            <img class="small" src="{% static "web/img/logo_m.svg" %}">
+            <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
         </a>
     </div>
 
     <i id="burger" class="big inverted sidebar icon"></i>
 
     <nav id="nav" class="ui secondary huge inverted menu" aria-label="Main">
-        <a class="item" href="{% url "members" %}">
+        <a class="item" href="{% url 'members' %}">
             <div class="text">{% trans "Members" %}</div>
             <div class="make-bg-blue bubble-background"></div>
         </a>
-         <a class="item" href="{% url "secrets" %}">
+        <a class="item" href="{% url 'secrets' %}">
             <div class="text">{% trans "Secrets" %}</div>
             <div class="make-bg-blue bubble-background"></div>
         </a>
@@ -40,11 +40,11 @@
             <div class="make-bg-blue bubble-background"></div>
 
             <nav class="menu transition" aria-label="User">
-                <a class="item" href="{% host_url "front-page" host "main" %}">
+                <a class="item" href="{% host_url 'front-page' host 'main' %}">
                     <div class="text">{% trans "Public pages" %}</div>
                 </a>
-                <a class="item" href="{% host_url 'logout' host "main" %}">
-                    <div class="text">{% trans "Logout" %}</div>
+                <a class="item" href="{% host_url 'logout' host 'main' %}">
+                    <div class="text">{% trans "Log out" %}</div>
                 </a>
             </nav>
 
@@ -79,14 +79,14 @@
 </form>
 
 <script>
-    $('#nav-user-dropdown').dropdown({action: "nothing"});
+    $("#nav-user-dropdown").dropdown({action: "nothing"});
 
     $(".lang-link").click(function (event) {
         event.preventDefault();
         $("#lang-form").submit();
     });
 
-    $('#burger').click(function () {
-        $('#header').toggleClass('active');
+    $("#burger").click(function () {
+        $("#header").toggleClass('active');
     });
 </script>

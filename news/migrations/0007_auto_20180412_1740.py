@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='article',
             name='pub_time',
-            field=models.TimeField(default=datetime.time(0, 0), verbose_name='Publishing time'),
+            field=models.TimeField(default=datetime.time(0, 0), verbose_name='Publication time'),
         ),
         migrations.AlterField(
             model_name='event',
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newsbase',
             name='featured',
-            field=models.BooleanField(default=True, verbose_name='Highlighted'),
+            field=models.BooleanField(default=True, verbose_name='Featured'),
         ),
         migrations.AlterField(
             model_name='newsbase',
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newsbase',
             name='private',
-            field=models.BooleanField(default=False, verbose_name='MAKE internal'),
+            field=models.BooleanField(default=False, verbose_name='Internal'),
         ),
         migrations.AlterField(
             model_name='newsbase',
@@ -90,7 +90,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='timeplace',
             name='pub_time',
-            field=models.TimeField(default=datetime.time(0, 0), verbose_name='Publishing time'),
+            field=models.TimeField(default=datetime.time(0, 0), verbose_name='Publication time'),
         ),
         migrations.AlterField(
             model_name='timeplace',

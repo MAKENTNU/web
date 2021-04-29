@@ -19,7 +19,7 @@ def is_valid_week(year, week):
 
 def year_and_week_to_monday(year, week):
     """
-    Returns the a datetime object for the monday in the given week and year
+    Returns the a datetime object for the monday in the given week and year.
 
     :param year: The year to get the date for
     :param week: The week to get the date for
@@ -30,7 +30,7 @@ def year_and_week_to_monday(year, week):
 
 def get_next_week(year, week, shift_direction):
     """
-    Finds the next week and its year shifted in the given direction
+    Finds the next week and its year shifted in the given direction.
 
     :param year: The current year
     :param week: The current week
@@ -45,7 +45,7 @@ def get_next_week(year, week, shift_direction):
 
 def date_to_local(date):
     """
-    Converts a localized date to an unlocalized date in the default server timezone
+    Converts a localized date to an unlocalized date in the default server timezone.
 
     :param date: The date to convert to the default server timezone
     :return: The unlocalized date in the default server timezone
@@ -55,7 +55,7 @@ def date_to_local(date):
 
 def local_to_date(date):
     """
-    Converts an unlocalized date to a localized date by assuming it is in the default server timezone
+    Converts an unlocalized date to a localized date by assuming it is in the default server timezone.
 
     :param date: The date to localize
     :return: The localized date
@@ -65,7 +65,7 @@ def local_to_date(date):
 
 def timedelta_to_hours(timedelta_obj):
     """
-    Converts a timedelta object into a float indicating the number of hours the timedelta covers
+    Converts a timedelta object into a float indicating the number of hours the timedelta covers.
 
     :param timedelta_obj: The timedelta object
     :return: The number of hours it covers
@@ -75,7 +75,7 @@ def timedelta_to_hours(timedelta_obj):
 
 def get_day_name(day_no, locale):
     """
-    Gets the name of the given day [0, 6] in the given locale
+    Gets the name of the given day [0, 6] in the given locale.
     
     :param day_no: The day in the week in the range [0, 6], with Monday being 0
     :param locale: The language code

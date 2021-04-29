@@ -9,11 +9,10 @@ from .fields import UsernameField
 
 
 class Printer3DCourse(models.Model):
-    STATUS_CHOICES = (
-        ("registered", _("Registered")),
-        ("sent", _("Sent to Byggsikring")),
-        ("access", _("Access granted")),
-    )
+    class Status(models.TextChoices):
+        REGISTERED = 'registered', _("Registered")
+        SENT = 'sent', _("Sent to Building security")
+        ACCESS = 'access', _("Access granted")
 
     user = models.ForeignKey(
         to=User,
@@ -21,17 +20,19 @@ class Printer3DCourse(models.Model):
         null=True,
         verbose_name=_("User"),
     )
-    username = UsernameField(max_length=32, unique=True, verbose_name=_("Username"))
+    username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("Username"))
     date = models.DateField(verbose_name=_("Course date"))
-    _card_number = CardNumberField(null=True, unique=True)  # Card number backing field. Use card_number property instead
-    name = models.CharField(max_length=256, verbose_name=_("Full name"))
-    status = models.CharField(choices=STATUS_CHOICES, max_length=20, default="registered", verbose_name=_("Status"))
+    _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
+    name = models.CharField(max_length=256, blank=True, verbose_name=_("Full name"))
+    status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("Status"))
     advanced_course = models.BooleanField(default=False, verbose_name=_("advanced course"))
 
     class Meta:
         constraints = (
-            CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
+            CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name='user_or_cardnumber_null'),
         )
+        verbose_name = _("3D printer course")
+        verbose_name_plural = _("3D printer courses")
 
     @property
     def card_number(self):
@@ -47,6 +48,10 @@ class Printer3DCourse(models.Model):
             self._card_number = None
         else:
             self._card_number = card_number
+
+    def get_user_display_name(self):
+        full_name = self.user.get_full_name() if self.user else self.name
+        return str(full_name or self.user or self.username)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.pk is None:  # Creation of new object
@@ -70,7 +75,7 @@ class Printer3DCourse(models.Model):
 
     def _connect_to_user(self):
         """
-        Connect to user with username if user exists
+        Connect to user with username if user exists.
         """
         try:
             self.user = User.objects.get(username=self.username)

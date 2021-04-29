@@ -1,5 +1,5 @@
 function update_event_type() {
-    let isStandalone = $('#standalone').prop('checked');
+    const isStandalone = $("#standalone").prop('checked');
     $("#id_number_of_tickets").parent().toggleClass("disabled", !isStandalone);
     if (isStandalone) {
         $("#info-message-tickets").show();
@@ -12,7 +12,7 @@ function update_event_type() {
 
 $(function () {
     update_event_type();
-    $('input[type=radio][name=event_type]').change(function () {
+    $("input[type=radio][name=event_type]").change(function () {
         update_event_type();
     });
 });

@@ -1,11 +1,10 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
-{% load news_tags %}
 
 
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "news/css/admin_list.css" %}">
+    <link rel="stylesheet" href="{% static 'news/css/admin_list.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -20,11 +19,11 @@
         <div class="ui three doubling stackable cards">
             {% for article in articles %}
                 <div class="ui card">
-                    <a class="image" href="{% url "article" article.id %}">
-                        <img src="{{ article.image.url }}" alt="{% trans "Article image" %}">
+                    <a class="image" href="{% url "article" article.pk %}">
+                        <img src="{{ article.image.url }}" alt="{% trans "Article image" %}"/>
                     </a>
                     <div class="content">
-                        <a class="header" href="{% url "article" article.id %}">{{ article.title }}</a>
+                        <a class="header" href="{% url "article" article.pk %}">{{ article.title }}</a>
                         <div class="meta">
                             {% if article.featured %}
                                 <div class="ui green mini label">
@@ -47,11 +46,13 @@
                         <div class="description">{{ article.clickbait }}</div>
                     </div>
                     <div class="ui two bottom attached buttons">
-                        <a class="ui make-bg-yellow button" href="{% url "article-edit" article.id %}">
+                        <a class="ui make-bg-yellow button" href="{% url "article-edit" article.pk %}">
                             <i class="ui edit icon"></i>{% trans "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
-                            <a class="ui red delete confirm button" href="{% url "article-delete" article.id %}">
+                            <a class="delete-modal-button ui red button"
+                               data-url="{% url "article-delete" article.pk %}"
+                               data-obj-name="{{ article }}">
                                 <i class="ui trash icon"></i>{% trans "Delete" %}
                             </a>
                         {% endif %}

@@ -12,40 +12,44 @@ from ...models.models import Machine, MachineType, Quota, Reservation
 class TestGenericMachine(TestCase):
 
     def test_status(self):
-        printer_machine_type = MachineType.objects.get(pk=1)
-        printer = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
-                                         machine_model="Ultimaker 2 Extended", machine_type=printer_machine_type)
         user = User.objects.create_user("test")
-        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.datetime.now().date())
-        Quota.objects.create(machine_type=printer_machine_type, user=user, ignore_rules=True, number_of_reservations=1)
+        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.localdate())
 
-        self.check_status(printer, Machine.AVAILABLE)
-        printer.status = Machine.OUT_OF_ORDER
-        self.check_status(printer, Machine.OUT_OF_ORDER)
-        printer.status = Machine.MAINTENANCE
-        self.check_status(printer, Machine.MAINTENANCE)
-        printer.status = Machine.RESERVED
-        self.check_status(printer, Machine.AVAILABLE)
+        for machine_type in MachineType.objects.all():
+            with self.subTest(machine_type=machine_type):
+                machine = Machine.objects.create(name=f"{machine_type.name} 1", location="Makerverkstedet",
+                                                 machine_model="Generic machine", machine_type=machine_type)
+                Quota.objects.create(machine_type=machine_type, user=user, ignore_rules=True, number_of_reservations=1)
 
-        Reservation.objects.create(machine=printer, start_time=timezone.now(),
-                                   end_time=timezone.now() + timedelta(hours=1), user=user)
+                for set_status, expected_status in {
+                    Machine.Status.AVAILABLE: Machine.Status.AVAILABLE,
+                    Machine.Status.OUT_OF_ORDER: Machine.Status.OUT_OF_ORDER,
+                    Machine.Status.MAINTENANCE: Machine.Status.MAINTENANCE,
+                    Machine.Status.RESERVED: Machine.Status.AVAILABLE,
+                }.items():
+                    self.assert_status_is_as_expected_after_being_set(machine, set_status, expected_status)
 
-        self.check_status(printer, Machine.RESERVED)
-        printer.status = Machine.AVAILABLE
-        self.check_status(printer, Machine.RESERVED)
-        printer.status = Machine.OUT_OF_ORDER
-        self.check_status(printer, Machine.OUT_OF_ORDER)
-        printer.status = Machine.MAINTENANCE
-        self.check_status(printer, Machine.MAINTENANCE)
+                Reservation.objects.create(machine=machine, start_time=timezone.localtime(),
+                                           end_time=timezone.localtime() + timedelta(hours=1), user=user)
 
-    def check_status(self, machine, status):
-        self.assertEquals(machine.get_status(), status)
-        self.assertEquals(machine.get_status_display(), Machine.STATUS_CHOICES_DICT[status])
+                for set_status, expected_status in {
+                    Machine.Status.RESERVED: Machine.Status.RESERVED,
+                    Machine.Status.AVAILABLE: Machine.Status.RESERVED,
+                    Machine.Status.OUT_OF_ORDER: Machine.Status.OUT_OF_ORDER,
+                    Machine.Status.MAINTENANCE: Machine.Status.MAINTENANCE,
+                }.items():
+                    self.assert_status_is_as_expected_after_being_set(machine, set_status, expected_status)
+
+    def assert_status_is_as_expected_after_being_set(self, machine: Machine, set_status: Machine.Status, expexted_status: Machine.Status):
+        machine.status = set_status
+        self.assertEquals(machine.get_status(), expexted_status)
+        self.assertEquals(machine.get_status_display(), Machine.STATUS_CHOICES_DICT[expexted_status])
 
 
 class TestCanUse3DPrinter(TestCase):
 
     def setUp(self):
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.machine_type = MachineType.objects.get(pk=1)
 
     def test_can_user_3d_printer_not_authenticated(self):
