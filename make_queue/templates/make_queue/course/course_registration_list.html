@@ -91,16 +91,20 @@
                 <th data-column-name="cardNumber">{% trans "Card number" %}</th>
                 <th data-column-name="date">{% trans "Date" %}</th>
                 <th data-column-name="status">{% trans "Status" %}</th>
-                <th data-column-name="advancedCourse">{% trans "Advanced 3D-printing course?" %}</th>
+                <th data-column-name="advancedCourse">{% trans "Advanced" %}</th>
             </tr>
             </thead>
             <tbody>
             {% for registration in registrations %}
-                <tr data-name="{{ registration.name }}" data-username="{{ registration.username }}"
+                <tr class="make_hidden"
+                    data-pk="{{ registration.pk }}"
+                    data-name="{{ registration.name }}"
+                    data-username="{{ registration.username }}"
                     data-card-number="{{ registration.card_number|default:"" }}"
-                    data-date="{{ registration.date|date:"Y-m-d" }}" data-pk="{{ registration.pk }}"
-                    data-status="{{ registration.status }}" class="make_hidden"
-                    data-advanced-course="{{ registration.advanced_course }}">
+                    data-date="{{ registration.date|date:"Y-m-d" }}"
+                    data-status="{{ registration.status }}"
+                    data-advanced-course="{{ registration.advanced_course }}"
+                >
                     <td>
                         {{ registration.name }}
                         <a href="{% url "edit_course_registration" registration.pk %}">
@@ -131,10 +135,11 @@
                     <td class="{% if registration.status != "access" %}warning{% endif %}">
                         {{ registration.get_status_display }}
                     </td>
-                    <td>{% if registration.advanced_course %}
-                        {% trans "Yes" %}
+                    <td>
+                        {% if registration.advanced_course %}
+                            {% trans "Yes" %}
                         {% else %}
-                        {% trans "No" %}
+                            {% trans "No" %}
                         {% endif %}
                     </td>
                 </tr>

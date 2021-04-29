@@ -50,7 +50,6 @@ class Printer3DCourseAdmin(admin.ModelAdmin):
     ordering = ('date', 'username')
 
 
-
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Quota)

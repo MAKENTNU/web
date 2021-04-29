@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-15 15:26+0100\n"
+"POT-Creation-Date: 2021-04-29 17:55+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -121,8 +121,8 @@ msgstr "Lagre"
 #: internal/templates/internal/member_quit.html:22
 #: internal/templates/internal/secret_edit.html:34
 #: internal/templates/internal/system_access_edit.html:31
-#: make_queue/templates/make_queue/course/course_registration_edit.html:110
-#: make_queue/templates/make_queue/course/course_registration_list.html:192
+#: make_queue/templates/make_queue/course/course_registration_edit.html:113
+#: make_queue/templates/make_queue/course/course_registration_list.html:197
 #: make_queue/templates/make_queue/machine/machine_edit.html:76
 #: make_queue/templates/make_queue/quota/quota_edit.html:67
 #: make_queue/templates/make_queue/reservation_edit.html:158
@@ -452,7 +452,7 @@ msgid "The page is currently empty, please add some content"
 msgstr "Siden er for øyeblikket tom, vennligst legg til noe innhold"
 
 #: docs/templates/docs/documentation_page_edit.html:28
-#: make_queue/templates/make_queue/course/course_registration_edit.html:106
+#: make_queue/templates/make_queue/course/course_registration_edit.html:109
 #: make_queue/templates/make_queue/quota/quota_edit.html:63
 #: make_queue/templates/make_queue/rule_edit.html:97
 msgctxt "edit"
@@ -780,13 +780,14 @@ msgstr "Ble med"
 
 #: internal/templates/internal/member_list.html:128
 #: internal/templatetags/member.py:42
-#: make_queue/templates/make_queue/course/course_registration_list.html:135
+#: make_queue/templates/make_queue/course/course_registration_edit.html:102
+#: make_queue/templates/make_queue/course/course_registration_list.html:140
 msgid "Yes"
 msgstr "Ja"
 
 #: internal/templates/internal/member_list.html:128
 #: internal/templatetags/member.py:42
-#: make_queue/templates/make_queue/course/course_registration_list.html:137
+#: make_queue/templates/make_queue/course/course_registration_list.html:142
 msgid "No"
 msgstr "Nei"
 
@@ -940,7 +941,6 @@ msgid "Full name"
 msgstr "Fullt navn"
 
 #: make_queue/models/course.py:29
-#: make_queue/templates/make_queue/course/course_registration_edit.html:100
 msgid "advanced course"
 msgstr "avansert kurs"
 
@@ -1173,34 +1173,34 @@ msgid "Date"
 msgstr "Dato"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:94
-msgid "Advanced 3D-printing course?"
-msgstr "Avansert 3D-printerkurs?"
+msgid "Advanced"
+msgstr "Avansert"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:115
+#: make_queue/templates/make_queue/course/course_registration_list.html:119
 msgid "Connected to user"
 msgstr "Koblet til bruker"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:161
+#: make_queue/templates/make_queue/course/course_registration_list.html:166
 msgid "Displaying"
 msgstr "Viser"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:165
+#: make_queue/templates/make_queue/course/course_registration_list.html:170
 msgid "registrations"
 msgstr "registreringer"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:173
+#: make_queue/templates/make_queue/course/course_registration_list.html:178
 msgid "Set status of users to"
 msgstr "Sett status for brukere til"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:182
+#: make_queue/templates/make_queue/course/course_registration_list.html:187
 msgid "You are changing the status for the following users"
 msgstr "Du vil endre status for følgende brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:184
+#: make_queue/templates/make_queue/course/course_registration_list.html:189
 msgid "Are you sure you want to do this?"
 msgstr "Er du sikker på at du vil gjøre dette?"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:189
+#: make_queue/templates/make_queue/course/course_registration_list.html:194
 msgid "Set status"
 msgstr "Sett status"
 

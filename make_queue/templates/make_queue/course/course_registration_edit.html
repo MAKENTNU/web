@@ -102,7 +102,6 @@
                         <label>{% trans "Yes" %}</label>
                     </div>
                 </div>
-
             </div>
 
             <button class="ui right floated make-bg-yellow button">
@@ -132,9 +131,9 @@
         $("input[name='username']").focusout((event) => {
             $.ajax(`${langPrefix}/reservation/json/${$(event.target).val()}/`, {
                 success: function (data) {
-                    if (data["full_name"] !== ""){
-                         $("input[name='name']").val(data["full_name"]);
-                    }
+                    const fullName = data["full_name"];
+                    if (fullName)
+                        $("input[name='name']").val(fullName);
                     $('#username_not_found_warning').fadeOut();
                 },
                 error: function () {
