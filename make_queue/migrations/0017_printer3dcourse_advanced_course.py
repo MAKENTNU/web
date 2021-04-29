@@ -13,11 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='printer3dcourse',
             name='advanced_course',
-            field=models.BooleanField(default=False, verbose_name='Advanced course'),
-        ),
-        migrations.AlterField(
-            model_name='machinetype',
-            name='usage_requirement',
-            field=models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course'), ('A3DPR', 'Taken the advanced 3D printer course')], default='AUTH', max_length=5, verbose_name='Usage requirement'),
+            field=models.BooleanField(default=False, verbose_name='advanced course'),
         ),
     ]

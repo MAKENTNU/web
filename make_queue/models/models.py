@@ -37,13 +37,13 @@ class MachineType(models.Model):
     class UsageRequirement(models.TextChoices):
         IS_AUTHENTICATED = "AUTH", _("Only has to be logged in")
         TAKEN_3D_PRINTER_COURSE = "3DPR", _("Taken the 3D printer course")
-        TAKEN_ADVANCED_3D_PRINTER_COURSE = "A3DPR", _("Taken advanced 3D printer course")
+        TAKEN_ADVANCED_3D_PRINTER_COURSE = "A3DP", _("Taken the advanced 3D printer course")
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
     usage_requirement = models.CharField(
         choices=UsageRequirement.choices,
-        max_length=5,
+        max_length=4,
         default=UsageRequirement.IS_AUTHENTICATED,
         verbose_name=_("Usage requirement"),
     )
