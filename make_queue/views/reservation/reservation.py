@@ -25,7 +25,7 @@ from ...templatetags.reservation_extra import calendar_url_reservation, can_dele
 #  so that it's more extendable, and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
 class CreateOrEditReservationView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
-    template_name = 'make_queue/reservation_edit.html'
+    template_name = 'make_queue/reservation_form.html'
 
     def get_error_message(self, form, reservation):
         """

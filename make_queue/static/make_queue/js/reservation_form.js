@@ -1,5 +1,5 @@
 /*
- * Linking `reservation_edit.css` is required when linking this script.
+ * Linking `reservation_form.css` is required when linking this script.
  * `maximumDay` must also be defined.
 */
 var maximumDay;

@@ -35,7 +35,7 @@ class CheckInView(RFIDView):
 
 
 class ShowSkillsView(TemplateView):
-    template_name = 'checkin/skills.html'
+    template_name = 'checkin/user_skill_list.html'
     expiry_time = (60 * 60) * 3
 
     def is_checkin_expired(self, profile):
@@ -81,7 +81,7 @@ class CompletedCourseMessageStruct:
 
 
 class ProfilePageView(TemplateView):
-    template_name = 'checkin/profile.html'
+    template_name = 'checkin/profile_detail.html'
 
     def post(self, request):
         try:

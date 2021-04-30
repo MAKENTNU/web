@@ -4,11 +4,11 @@
 {% load form_tags %}
 
 
-{# TODO: make this template extend web/edit_form.html #}
+{# TODO: make this template extend web/generic_form.html #}
 
 {% block extra_head %}
     {{ form.media }}
-    <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_edit.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_form.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}

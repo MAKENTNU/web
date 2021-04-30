@@ -43,7 +43,7 @@ class EditCourseRegistrationView(PermissionRequiredMixin, UpdateView):
     permission_required = ('make_queue.change_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = 'make_queue/course/course_registration_edit.html'
+    template_name = 'make_queue/course/course_registration_form.html'
     success_url = reverse_lazy('course_registration_list')
 
 

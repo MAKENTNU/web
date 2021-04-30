@@ -20,7 +20,7 @@
     {# Show non-site-wide announcements on the front page #}
     {% non_site_wide_announcements as announcements %}
     {% for announcement in announcements %}
-        {% include 'announcements/announcement.html' with announcement=announcement %}
+        {% include 'announcements/announcement_banner.html' with announcement=announcement %}
     {% endfor %}
 {% endblock header %}
 

@@ -104,7 +104,7 @@
         <div class="ui active tab segment" data-tab="future">
             <div class="ui relaxed divided list">
                 {% for timeplace in future_timeplaces %}
-                    {% include 'news/event/admin_timeplace_listing.html' %}
+                    {% include 'news/event/admin_time_place_listing.html' %}
                 {% empty %}
                     {% trans "No future occurrences exist for this event" %}
                 {% endfor %}
@@ -113,7 +113,7 @@
         <div class="ui bottom attached tab segment" data-tab="past">
             <div class="ui relaxed divided list">
                 {% for timeplace in past_timeplaces %}
-                    {% include 'news/event/admin_timeplace_listing.html' %}
+                    {% include 'news/event/admin_time_place_listing.html' %}
                 {% empty %}
                     {% trans "No past occurrences exist for this event" %}
                 {% endfor %}

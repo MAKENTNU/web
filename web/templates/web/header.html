@@ -6,7 +6,7 @@
 {% load announcement_tags %}
 
 
-{# Linking `web/header.css`, `announcement.css` and `web/header.js` is required when including this template #}
+{# Linking `web/header.css`, `announcement_banner.css` and `web/header.js` is required when including this template #}
 
 <header id="header">
     <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
@@ -133,6 +133,6 @@
     {# Show all site-wide announcements #}
     {% site_wide_announcements as announcements %}
     {% for announcement in announcements %}
-        {% include 'announcements/announcement.html' with announcement=announcement %}
+        {% include 'announcements/announcement_banner.html' with announcement=announcement %}
     {% endfor %}
 {% endblock announcements %}

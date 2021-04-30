@@ -117,7 +117,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
 class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, SpecificPageBasedViewMixin, UpdateView):
     permission_required = ('docs.change_page',)
     form_class = PageContentForm
-    template_name = 'docs/documentation_page_edit.html'
+    template_name = 'docs/documentation_page_form.html'
 
     base_template = 'docs/base.html'
     narrow = False

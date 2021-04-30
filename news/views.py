@@ -357,7 +357,7 @@ class TimePlaceRelatedViewMixin(EventRelatedViewMixin):
 class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC):
     model = TimePlace
     form_class = TimePlaceForm
-    template_name = 'news/event/timeplace_edit.html'
+    template_name = 'news/event/time_place_form.html'
 
     def get_form_kwargs(self):
         # Forcefully pass the event from the URL to the form
