@@ -48,10 +48,18 @@ class ReservationAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     pass
 
 
+class Printer3DCourseAdmin(admin.ModelAdmin):
+    list_display = ('username', 'user', 'name', 'date', 'status', 'advanced_course')
+    list_filter = ('status', 'advanced_course')
+    search_fields = ('username', 'user', 'name')
+    list_editable = ('status', 'advanced_course')
+    ordering = ('date', 'username')
+
+
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(Quota)
 admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(ReservationRule)
 
-admin.site.register(Printer3DCourse)
+admin.site.register(Printer3DCourse, Printer3DCourseAdmin)
