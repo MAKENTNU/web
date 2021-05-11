@@ -16,11 +16,12 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
     list_editable = ('priority',)
     ordering = ('priority',)
 
+    @admin.display(
+        ordering='machines__count',
+        description=_("Machines"),
+    )
     def get_num_machines(self, machine_type: MachineType):
         return machine_type.machines__count
-
-    get_num_machines.short_description = _("Machines")
-    get_num_machines.admin_order_field = 'machines__count'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -34,11 +35,12 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     list_editable = ('status', 'priority')
     list_select_related = ('machine_type',)
 
+    @admin.display(
+        ordering='location',
+        description=_("Location"),
+    )
     def get_location(self, machine: Machine):
         return format_html('<a href="{}" target="_blank">{}</a>', machine.location_url, machine.location)
-
-    get_location.short_description = _("Location")
-    get_location.admin_order_field = 'location'
 
     def get_queryset(self, request):
         return super().get_queryset(request).default_order_by()
