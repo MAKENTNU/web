@@ -35,11 +35,8 @@ class ReservationFormTest(TestCase):
         }
 
         form = ReservationForm(data=form_data)
-        try:
-            form.is_valid()
-            self.fail("Reservations should not be allowed for machines that do not exist")
-        except KeyError:
-            pass
+        self.assertFalse(form.is_valid(),
+                         "Reservations should not be allowed for machines that do not exist")
 
     def test_event_reservation(self):
         form_data = {

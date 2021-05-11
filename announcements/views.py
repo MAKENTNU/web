@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from .forms import AnnouncementForm
 from .models import Announcement
 

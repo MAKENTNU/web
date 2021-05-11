@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-03-24 17:21+0100\n"
+"POT-Creation-Date: 2021-04-23 00:56+0200\n"
 "PO-Revision-Date: 2018-04-18 21:29+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: internal/static/internal/js/member_list.js:91
+#: internal/static/internal/js/member_list.js:102
 msgid "Change"
 msgstr "Endre"
 
@@ -45,7 +45,7 @@ msgstr "Tidspunkt"
 msgid "Comment"
 msgstr "Kommentar"
 
-#: make_queue/static/make_queue/js/reservation_edit.js:293
+#: make_queue/static/make_queue/js/reservation_edit.js:296
 msgid "Choose time"
 msgstr "Velg tid"
 

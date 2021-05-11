@@ -7,7 +7,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, U
 from django.views.generic.base import ContextMixin
 from django.views.generic.edit import ModelFormMixin
 
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from ...forms import RuleForm
 from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRule
 

@@ -16,7 +16,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, R
 
 from mail import email
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
 from .models import Article, Event, EventTicket, TimePlace
 

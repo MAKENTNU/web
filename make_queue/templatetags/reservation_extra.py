@@ -3,11 +3,12 @@ from datetime import date, datetime
 from django import template
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.formats import time_format
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
-from make_queue.util.time import date_to_local, get_day_name
 from users.models import User
+from util.locale_utils import date_to_local, get_day_name
 from ..models.models import Machine, Reservation, ReservationRule
 
 register = template.Library()
@@ -104,12 +105,14 @@ def invert(expression):
 
 @register.simple_tag
 def rule_period_start_text(period: ReservationRule.Period, locale):
-    return get_day_name(int(period.start_time // 1), locale) + " " + period.rule.start_time.strftime("%H:%M")
+    start_day_name = get_day_name(int(period.start_time // 1), locale)
+    return f"{start_day_name} {time_format(period.rule.start_time)}"
 
 
 @register.simple_tag
 def rule_period_end_text(period: ReservationRule.Period, locale):
-    return get_day_name(int(period.end_time // 1) % 7, locale) + " " + period.rule.end_time.strftime("%H:%M")
+    end_day_name = get_day_name(int(period.end_time // 1) % 7, locale)
+    return f"{end_day_name} {time_format(period.rule.end_time)}"
 
 
 @register.simple_tag

@@ -9,7 +9,10 @@ register = template.Library()
 
 @register.filter
 def has_any_permissions(user: User):
-    return Permission.objects.filter(Q(group__user=user) | Q(user=user)).exists()
+    return (
+            Permission.objects.filter(Q(group__user=user) | Q(user=user)).exists()
+            or user.is_superuser
+    )
 
 
 @register.filter

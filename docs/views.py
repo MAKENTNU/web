@@ -8,7 +8,7 @@ from django.utils.datetime_safe import datetime
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, DetailView, FormView, TemplateView, UpdateView
 
-from util.views import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin
 from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
 
