@@ -1,4 +1,3 @@
-import logging
 import sys
 import uuid
 from io import BytesIO
@@ -10,6 +9,8 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from util.locale_utils import short_date_format
+from util.logging_utils import get_request_logger
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
@@ -21,9 +22,9 @@ class NewsBase(models.Model):
     clickbait = MultiLingualTextField(verbose_name=_("Clickbait"), widget=MultiLingualTextarea)
     image = models.ImageField(verbose_name=_("Image"))
     contain = models.BooleanField(default=False, verbose_name=_("Don't crop the image"))
-    featured = models.BooleanField(default=True, verbose_name=_("Highlighted"))
+    featured = models.BooleanField(default=True, verbose_name=_("Featured"))
     hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))
-    private = models.BooleanField(default=False, verbose_name=_("MAKE internal"))
+    private = models.BooleanField(default=False, verbose_name=_("Internal"))
 
     class Meta:
         permissions = (
@@ -53,7 +54,7 @@ class NewsBase(models.Model):
                                                       sys.getsizeof(output), None)
                 # Should not close image, as Django uses the image and closes it by default
             except IOError as e:
-                logging.getLogger('django.request').exception(e)
+                get_request_logger().exception(e)
 
         super().save(**kwargs)
 
@@ -65,7 +66,7 @@ class ArticleQuerySet(models.QuerySet):
 
 
 class Article(NewsBase):
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publishing time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publication time"))
 
     objects = ArticleQuerySet.as_manager()
 
@@ -142,7 +143,7 @@ class TimePlace(models.Model):
         on_delete=models.CASCADE,
         related_name='timeplaces',
     )
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publishing time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Publication time"))
     start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("Start time"))
     end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("End time"))
     place = UnlimitedCharField(blank=True, verbose_name=_("Location"))
@@ -156,7 +157,7 @@ class TimePlace(models.Model):
         ordering = ('start_time',)
 
     def __str__(self):
-        return '%s - %s' % (self.event.title, self.start_time.strftime('%Y.%m.%d'))
+        return f"{self.event.title} - {short_date_format(self.start_time)}"
 
     def number_of_registered_tickets(self):
         return self.tickets.filter(active=True).count()

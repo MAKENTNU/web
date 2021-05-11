@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
 
-from ...util.time import (
+from ..locale_utils import (
     date_to_local, get_day_name, get_next_week, is_valid_week, local_to_date, timedelta_to_hours, year_and_week_to_monday,
 )
 

@@ -20,7 +20,7 @@ class ReservationForm(forms.Form):
     event = forms.BooleanField(required=False)
     event_pk = forms.CharField(required=False)
     special = forms.BooleanField(required=False)
-    special_text = forms.CharField(required=False, max_length=20)
+    special_text = forms.CharField(required=False, max_length=200)
     comment = forms.CharField(required=False, max_length=2000, initial="")
 
     def __init__(self, *args, **kwargs):
@@ -37,30 +37,36 @@ class ReservationForm(forms.Form):
         :return: A dictionary of clean data
         """
         cleaned_data = super().clean()
+        machine_pk = cleaned_data.get('machine_name')
+        has_event = cleaned_data.get('event')
+        event_pk = cleaned_data.get('event_pk')
+        is_special = cleaned_data.get('special')
 
         # Check that the given machine exists
-        machine_query = Machine.objects.filter(pk=cleaned_data['machine_name'])
-
-        if not machine_query.exists():
+        try:
+            cleaned_data['machine'] = Machine.objects.get(pk=machine_pk)
+        except Machine.DoesNotExist:
             raise forms.ValidationError("Machine name and machine type do not match")
 
-        cleaned_data['machine'] = machine_query.first()
-
         # If the reservation is an event, check that it exists
-        if cleaned_data['event']:
-            event_query = TimePlace.objects.filter(pk=cleaned_data['event_pk'])
+        if has_event:
+            if not event_pk:
+                raise forms.ValidationError('Event must be specified when the "Event" checkbox is checked')
+            if is_special:
+                raise forms.ValidationError("Cannot be both special and event")
+
+            event_query = TimePlace.objects.filter(pk=event_pk)
             if not event_query.exists():
                 raise forms.ValidationError("Event must exist")
             cleaned_data['event'] = event_query.first()
-
-        if cleaned_data['event'] and cleaned_data['special']:
-            raise forms.ValidationError("Cannot be both special and event")
 
         return cleaned_data
 
 
 class RuleForm(forms.ModelForm):
     day_field_names = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+
+    machine_type = forms.ModelChoiceField(MachineType.objects.all(), widget=forms.HiddenInput())
 
     class Meta:
         model = ReservationRule
@@ -81,6 +87,8 @@ class RuleForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
+        if self.errors:
+            return cleaned_data
 
         rule = ReservationRule(
             machine_type=cleaned_data["machine_type"], max_hours=0, max_inside_border_crossed=0,
@@ -123,8 +131,8 @@ class QuotaForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        user = cleaned_data['user']
-        all_users = cleaned_data['all']
+        user = cleaned_data.get('user')
+        all_users = cleaned_data.get('all')
 
         if user is None and not all_users:
             raise forms.ValidationError("User cannot be None when the quota is not for all users")
@@ -154,19 +162,36 @@ class Printer3DCourseForm(forms.ModelForm):
             label=Printer3DCourse._meta.get_field('user').verbose_name,
         )
         if self.instance.card_number is not None:
-            self.initial['card_number'] = self.instance.card_number.number
+            self.initial['card_number'] = self.instance.card_number
+
+    def clean_card_number(self):
+        card_number: str = self.cleaned_data['card_number']
+        if card_number:
+            # This accident prevention was requested by the Mentor committee.
+            # Phone number is from https://innsida.ntnu.no/wiki/-/wiki/Norsk/Vakthold+og+assistanse+utenfor+arbeidstid
+            if card_number.lstrip("0") == "91897373":
+                raise forms.ValidationError(
+                    _("The card number was detected to be the phone number of Building security at NTNU. Please enter a valid card number.")
+                )
+        return card_number
+
+    def clean(self):
+        cleaned_data = super().clean()
+        card_number = cleaned_data.get('card_number')
+        username = cleaned_data.get('username')
+
+        if card_number and username:
+            if card_utils.is_duplicate(card_number, username):
+                raise forms.ValidationError({
+                    'card_number': _("Card number is already in use"),
+                })
+        return cleaned_data
 
     def save(self, commit=True):
-        self.instance.card_number = self.cleaned_data['card_number']
-        return super().save(commit)
-
-    def is_valid(self):
-        card_number = self.data['card_number']
-        username = self.data['username']
-        is_duplicate = card_utils.is_duplicate(card_number, username)
-        if is_duplicate:
-            self.add_error('card_number', _("Card number is already in use"))
-        return super().is_valid() and not is_duplicate
+        course = super().save(commit=False)
+        course.card_number = self.cleaned_data['card_number']
+        course.save()
+        return course
 
 
 class FreeSlotForm(forms.Form):
@@ -206,7 +231,7 @@ class BaseMachineForm(forms.ModelForm):
                 (c, Machine.STATUS_CHOICES_DICT[c])
                 for c in status_choices
             ],
-            widget=SemanticSearchableChoiceInput(attrs={'required': True}),
+            widget=SemanticChoiceInput(attrs={'required': True}),
         )
 
 

@@ -1,4 +1,3 @@
-import logging
 from abc import ABC
 from math import ceil
 
@@ -8,8 +7,9 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import FormView, RedirectView, TemplateView
 
-from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
+from util.locale_utils import timedelta_to_hours
+from util.logging_utils import log_request_exception
 from ...forms import FreeSlotForm, ReservationForm
 from ...models.models import Machine, MachineType, Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation
@@ -36,7 +36,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
                 num_days
             ).format(num_days=num_days)
         if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
-            return _("The time slot or event, is no longer available")
+            return _("The time slot or event is no longer available")
         if reservation.check_machine_out_of_order():
             return _("The machine is out of order")
         if reservation.check_machine_maintenance():
@@ -137,7 +137,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
             if form.is_valid():
                 return self.form_valid(form, **kwargs)
         except Exception as e:
-            logging.getLogger('django.request').exception(e)
+            log_request_exception("Validating reservation failed.", e, request)
         return self.get(request, **kwargs)
 
 

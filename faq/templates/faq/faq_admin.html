@@ -26,7 +26,9 @@
                             {% endif %}
 
                             {% if perms.faq.delete_question %}
-                                <a class="delete confirm" href="{% url 'faq-question-delete' question.pk %}">
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'faq-question-delete' question.pk %}"
+                                   data-obj-name="{{ question }}">
                                     <i class="large red delete icon"></i>
                                 </a>
                             {% endif %}

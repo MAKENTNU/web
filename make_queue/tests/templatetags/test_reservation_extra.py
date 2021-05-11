@@ -5,8 +5,8 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from make_queue.util.time import local_to_date
 from users.models import User
+from util.locale_utils import local_to_date
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation
 from ...templatetags.reservation_extra import (

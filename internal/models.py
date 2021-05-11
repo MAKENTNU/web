@@ -27,7 +27,7 @@ class Member(models.Model):
         verbose_name=_("Committees"),
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
-    email = models.EmailField(blank=True, verbose_name=_("Email"))
+    email = models.EmailField(blank=True, verbose_name=_("Contact email"))
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
     study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
@@ -60,7 +60,7 @@ class Member(models.Model):
 
             # Setup all properties for new members
             for property_name, value in SystemAccess.NAME_CHOICES:
-                # All members will be registered on the website when added to the members list
+                # All members will be registered on the website when added to the member list
                 SystemAccess.objects.create(name=property_name, member=self,
                                             value=property_name == SystemAccess.WEBSITE)
 
@@ -170,6 +170,11 @@ class SystemAccess(models.Model):
     )
     name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(fields=('name', 'member'), name="%(class)s_unique_name_per_member"),
+        )
 
     @property
     def change_url(self):

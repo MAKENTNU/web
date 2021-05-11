@@ -35,11 +35,8 @@ class ReservationFormTest(TestCase):
         }
 
         form = ReservationForm(data=form_data)
-        try:
-            form.is_valid()
-            self.fail("Reservations should not be allowed for machines that do not exist")
-        except KeyError:
-            pass
+        self.assertFalse(form.is_valid(),
+                         "Reservations should not be allowed for machines that do not exist")
 
     def test_event_reservation(self):
         form_data = {
@@ -84,7 +81,7 @@ class ReservationFormTest(TestCase):
             "end_time": timezone.now() + timedelta(hours=2),
             "machine_name": self.machine.pk,
             "special": True,
-            "special_text": "23 characters is enough",
+            "special_text": "a" * 201,
         }
 
         form = ReservationForm(data=form_data)

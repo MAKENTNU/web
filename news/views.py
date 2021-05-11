@@ -16,6 +16,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, R
 
 from mail import email
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
+from util.view_utils import PreventGetRequestsMixin
 from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
 from .models import Article, Event, EventTicket, TimePlace
 
@@ -259,19 +260,19 @@ class AdminTimeplaceToggleView(AdminArticleToggleView):
     model = TimePlace
 
 
-class DeleteArticleView(PermissionRequiredMixin, DeleteView):
+class DeleteArticleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_article',)
     model = Article
     success_url = reverse_lazy('admin-articles')
 
 
-class DeleteEventView(PermissionRequiredMixin, DeleteView):
+class DeleteEventView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_event',)
     model = Event
     success_url = reverse_lazy('admin-events')
 
 
-class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
+class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_timeplace',)
     model = TimePlace
 

@@ -9,8 +9,8 @@
 {% endblock title %}
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_actions.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -72,6 +72,7 @@
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
                     <img id="{% sanitize_stream_name machine %}" class="ui right floated stream medium image" name="{{ machine.name }}"
                          src="{% static 'make_queue/img/no_stream.jpg' %}"
+                         alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
                 </div>
                 <div id="fader"></div>

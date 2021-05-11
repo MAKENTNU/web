@@ -1,5 +1,4 @@
 {% load i18n %}
-{% load news_tags %}
 
 
 <div class="item">
@@ -7,7 +6,9 @@
         <span class="ui right floated">
             {% if timeplace.number_of_tickets %}
                 <a href="{% url "timeplace-tickets" pk=timeplace.pk %}">
-                    {{ timeplace.number_of_registered_tickets }}/{{ timeplace.number_of_tickets }} {% trans "tickets reserved" %}
+                    {% blocktrans trimmed with num_registered_tickets=timeplace.number_of_registered_tickets num_tickets=timeplace.number_of_tickets %}
+                        {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
+                    {% endblocktrans %}
                 </a>
             {% else %}
                 <b>{% trans "No registration required" %}</b>
@@ -19,7 +20,7 @@
             {{ timeplace.start_time|date:"d. M Y H:i" }}
             <span>
                 &nbsp;&nbsp;
-                    <i class="ui {{ timeplace.hidden|color }} eye slash icon toggle explanation-popup"
+                    <i class="ui {% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle explanation-popup"
                        data-title="{% trans "Hidden" %}" data-pk="{{ timeplace.pk }}"
                        data-toggle="hidden" data-model="timeplace"
                        data-content="{% trans "If selected, the occurrence is hidden for non-admin users." %}">
@@ -33,10 +34,9 @@
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
-                    <a class="delete confirm make-col-blue explanation-popup"
-                       data-title="{% trans "Delete" %}"
-                       data-content="{% trans "If clicked, the occurrence will be deleted." %}"
-                       href="{% url 'timeplace-delete' timeplace.pk %}">
+                    <a class="delete-modal-button make-col-blue explanation-popup"
+                       data-title="{% trans "Delete" %}" data-content="{% trans "If clicked, the occurrence will be deleted." %}"
+                       data-url="{% url 'timeplace-delete' timeplace.pk %}" data-obj-name="{{ timeplace }}">
                         <i class="ui delete icon"></i>
                     </a>
                 {% endif %}

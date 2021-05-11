@@ -23,8 +23,9 @@ class TimePlaceForm(forms.ModelForm):
         start_time = cleaned_data.get("start_time")
         end_time = cleaned_data.get("end_time")
 
-        if start_time > end_time:
-            raise ValidationError(_("The event cannot end before it starts"))
+        if start_time and end_time:
+            if start_time > end_time:
+                raise ValidationError(_("The event cannot end before it starts"))
 
         return cleaned_data
 

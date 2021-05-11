@@ -1,12 +1,11 @@
-import logging
-
 from django.conf import settings
 from django.contrib.auth import logout
-from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.views import View
 from social_django import views as social_views
 
 from users.models import User
+from util.logging_utils import log_request_exception
 from . import ldap_utils
 
 # Assign these functions to module-level variables, to facilitate testing (through monkey patching)
@@ -33,8 +32,7 @@ def login_wrapper(request, backend, *args, **kwargs):
     try:
         response = complete(request, backend, *args, **kwargs)
     except Exception as e:
-        logging.getLogger('django.request').exception("Authentication through Dataporten failed.", exc_info=e)
-        return HttpResponseForbidden()
+        raise RuntimeError("Authentication through Dataporten failed.") from e
 
     user: User = request.user
     social_data = user.social_auth.first().extra_data
@@ -44,10 +42,16 @@ def login_wrapper(request, backend, *args, **kwargs):
             # ...or if the user has not set a different name after account creation:
             or user.get_full_name().strip() == user.ldap_full_name.strip()):
         _update_full_name_if_different(user, social_data)
-        _update_ldap_full_name_if_different(user, social_data)
+    # Update the LDAP name after the full name has (potentially) been set.
+    # This is only important if the user has not logged in before, as the full name has not yet been set.
+    _update_ldap_full_name_if_different(user, social_data)
 
-    # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
-    ldap_data = get_user_details_from_email(user.email, use_cached=False)
+    try:
+        # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
+        ldap_data = get_user_details_from_email(user.email, use_cached=False)
+    except Exception as e:
+        log_request_exception("Looking up user details through LDAP failed.", e, request)
+        ldap_data = {}
     _update_username_if_different(user, ldap_data)
 
     return response
@@ -69,7 +73,7 @@ def _update_ldap_full_name_if_different(user: User, social_data: dict):
 
 
 def _update_username_if_different(user: User, ldap_data: dict):
-    potentially_new_username = ldap_data['username'] if ldap_data else user.email.split("@")[0]
+    potentially_new_username = ldap_data.get('username') or user.email.split("@")[0]
     if user.username != potentially_new_username:
         user.username = potentially_new_username
         user.save()

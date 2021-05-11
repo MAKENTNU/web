@@ -8,11 +8,11 @@ from django.utils import timezone
 
 from news.models import Event, TimePlace
 from users.models import User
+from util.locale_utils import date_to_local, local_to_date
 from ..utility import post_request_with_user, request_with_user
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
-from ...util.time import date_to_local, local_to_date
 from ...views.admin.reservation import AdminReservationView
 from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, MarkReservationAsDone, ReservationCreateOrChangeView
 
@@ -69,7 +69,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
                                   end_time=form.cleaned_data["end_time"], machine=self.machine)
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         self.assertEqual(view.get_error_message(form, reservation),
-                         "Tidspunktet eller eventen, er ikke lengre tilgjengelig")
+                         "Tidspunktet eller arrangementet er ikke lenger tilgjengelig")
 
     def test_get_error_message_too_far_in_the_future(self):
         view = self.get_view()

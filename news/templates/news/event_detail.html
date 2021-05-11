@@ -13,11 +13,9 @@
                 <i class="ui sticky note icon"></i>{% trans "Admin page" %}
             </a>
             {% if article.number_of_tickets and perms.news.change_event %}
-                <a href="{% url "event-tickets" article.pk %}">
-                    <span class="grey link text">
-                        <i class="ui ticket icon"></i>
-                        {{ article.number_of_registered_tickets }} / {{ article.number_of_tickets }}
-                    </span>
+                <a class="grey link text" href="{% url "event-tickets" article.pk %}">
+                    <i class="ui ticket icon"></i>
+                    {{ article.number_of_registered_tickets }} / {{ article.number_of_tickets }}
                 </a>
             {% endif %}
         </div>

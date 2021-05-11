@@ -89,7 +89,8 @@ a.place {
     color: rgba(0, 0, 0, 0.4);
 }
 
-.grey.link.text:hover {
+.grey.link.text:hover,
+.grey.link.text:focus {
     color: rgba(0, 0, 0, 0.6);
 }
 

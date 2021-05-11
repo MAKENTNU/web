@@ -2,6 +2,8 @@
 {% load reservation_extra %}
 
 
+{# Linking `reservation_actions.css` is required when including this template #}
+
 <h3>{% trans "Actions" %}</h3>
 <div class="ui relaxed divided selection action list">
     <a class="item enable_popup
@@ -38,7 +40,9 @@
             <i class="large middle aligned make-col-yellow cogs icon"></i>
             <div id="test" class="content">
                 <div class="header">{% trans "Other machines" %}</div>
-                {% trans "Click to see other machines" %}
+                {% blocktrans trimmed with machine_type_name_plural=machine.machine_type.name %}
+                    Click to view other {{ machine_type_name_plural }}
+                {% endblocktrans %}
             </div>
             <div class="ui transition bottom hidden menu">
                 <a class="ui item" href="{% url "reservation_machines_overview" %}">
@@ -60,7 +64,7 @@
             <i class="large middle aligned make-col-yellow cogs icon"></i>
             <div class="content">
                 <div class="header">{% trans "Other machines" %}</div>
-                {% trans "Click to see other machines" %}
+                {% trans "Click to view other machines" %}
             </div>
         </a>
     {% endif %}

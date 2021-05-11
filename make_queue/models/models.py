@@ -10,9 +10,9 @@ from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from make_queue.util.time import timedelta_to_hours
 from news.models import TimePlace
 from users.models import User
+from util.locale_utils import short_datetime_format, timedelta_to_hours
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
@@ -34,6 +34,7 @@ class MachineType(models.Model):
     class UsageRequirement(models.TextChoices):
         IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
         TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
+        TAKEN_ADVANCED_3D_PRINTER_COURSE = "A3DP", _("Taken the advanced 3D printer course")
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
@@ -62,6 +63,8 @@ class MachineType(models.Model):
             return user.is_authenticated
         elif self.usage_requirement == self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
             return self.can_use_3d_printer(user)
+        elif self.usage_requirement == self.UsageRequirement.TAKEN_ADVANCED_3D_PRINTER_COURSE:
+            return self.can_use_advanced_3d_printer(user)
         return False
 
     @staticmethod
@@ -75,6 +78,20 @@ class MachineType(models.Model):
             course_registration.user = user
             course_registration.save()
             return True
+        return False
+
+    @staticmethod
+    def can_use_advanced_3d_printer(user: Union[User, AnonymousUser]):
+        if not user.is_authenticated:
+            return False
+        if Printer3DCourse.objects.filter(user=user).exists():
+            course_registration = Printer3DCourse.objects.get(user=user)
+            return course_registration.advanced_course
+        if Printer3DCourse.objects.filter(username=user.username).exists():
+            course_registration = Printer3DCourse.objects.get(username=user.username)
+            course_registration.user = user
+            course_registration.save()
+            return course_registration.advanced_course
         return False
 
 
@@ -163,6 +180,9 @@ class MachineUsageRule(models.Model):
     )
     content = MultiLingualRichTextUploadingField()
 
+    def __str__(self):
+        return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)
+
 
 class Quota(models.Model):
     all = models.BooleanField(default=False, verbose_name=_("All users"))
@@ -189,6 +209,13 @@ class Quota(models.Model):
             ('can_create_event_reservation', "Can create event reservation"),
             ('can_edit_quota', "Can edit quotas"),
         )
+
+    def __str__(self):
+        if self.all:
+            user_str = _("<all users>")
+        else:
+            user_str = self.user.get_full_name() if self.user else _("<nobody>")
+        return _("Quota for {user} on {machine_type}").format(user=user_str, machine_type=self.machine_type)
 
     def get_active_reservations(self, user):
         if self.diminishing:
@@ -283,8 +310,8 @@ class Reservation(models.Model):
         )
 
     def __str__(self):
-        start_time = self.start_time.strftime("%d/%m/%Y - %H:%M")
-        end_time = self.end_time.strftime("%d/%m/%Y - %H:%M")
+        start_time = short_datetime_format(self.start_time)
+        end_time = short_datetime_format(self.end_time)
         return f"{self.user.get_full_name()} har reservert {self.machine.name} fra {start_time} til {end_time}"
 
     def save(self, *args, **kwargs):
@@ -391,9 +418,9 @@ class ReservationRule(models.Model):
     end_time = models.TimeField(verbose_name=_("End time"))
     # Number of times passed by midnight between start and end time
     days_changed = models.IntegerField(verbose_name=_("Days"))
-    start_days = models.IntegerField(default=0, verbose_name=_("Start days"))
+    start_days = models.IntegerField(default=0, verbose_name=_("Start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("Hours single period"))
-    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multiperiod"))
+    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multi-period"))
 
     def save(self, **kwargs):
         if not self.is_valid_rule():

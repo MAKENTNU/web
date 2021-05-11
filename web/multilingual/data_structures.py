@@ -1,9 +1,10 @@
 import json
-import logging
 from json import JSONDecodeError
 
 from django.conf import settings
 from django.utils.translation import get_language
+
+from util.logging_utils import get_request_logger
 
 
 class MultiLingualTextStructure:
@@ -19,8 +20,9 @@ class MultiLingualTextStructure:
 
     def set_content_for_languages(self, linear_content):
         if not isinstance(linear_content, str):
-            logging.getLogger('django.request').exception(
-                f"Cannot set content to '{linear_content}'; {type(str)} expected, but received {type(linear_content)}"
+            get_request_logger().exception(
+                f"Cannot set content to:\n{linear_content}"
+                f"\n{type(str)} expected, but received {type(linear_content)}"
             )
             return
         if not linear_content:
@@ -31,7 +33,7 @@ class MultiLingualTextStructure:
             # If for some reason (i.e. old or corrupt data) the content given is not JSON,
             # use it as content for the default language.
             self.languages[settings.LANGUAGE_CODE] = linear_content
-            logging.getLogger('django.request').exception(e)
+            get_request_logger().exception(f"Unable to decode as JSON:\n{linear_content}", exc_info=e)
             return
 
         for language, value in json_dict.items():
