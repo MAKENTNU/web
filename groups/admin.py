@@ -20,10 +20,9 @@ class InheritanceGroupAdmin(admin.ModelAdmin):
     filter_horizontal = ('parents', 'own_permissions')
     readonly_fields = ('get_inherited_permissions',)
 
+    @admin.display(description="Inherited permissions")
     def get_inherited_permissions(self, inheritance_group: InheritanceGroup):
         return "\n".join(map(str, inheritance_group.inherited_permissions))
-
-    get_inherited_permissions.short_description = "Inherited permissions"
 
     def get_form(self, request, obj: InheritanceGroup = None, **kwargs):
         form = super().get_form(request, obj, **kwargs)

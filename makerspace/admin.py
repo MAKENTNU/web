@@ -11,13 +11,12 @@ class EquipmentAdmin(MultiLingualFieldAdmin):
     search_fields = ('title', 'description')
     list_editable = ('priority',)
 
+    @admin.display(description=_("Image"))
     def get_image(self, equipment: Equipment):
         return html_utils.tag_media_img(
             equipment.image.url, url_host_name='main',
             alt_text=_("Image of {equipment}.").format(equipment=equipment.title),
         )
-
-    get_image.short_description = _("Image")
 
     def get_queryset(self, request):
         return super().get_queryset(request).default_order_by()
