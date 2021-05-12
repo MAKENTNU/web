@@ -348,7 +348,7 @@ class AdvancedMachineReservationTestCases(GeneralReservationTestCase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
-        super().init_objs(MachineType.objects.get(pk=5))
+        super().init_objs(MachineType.objects.get(pk=6))
 
     def test_booking_advanced_printer_without_any_course(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
