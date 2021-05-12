@@ -1,12 +1,11 @@
-import logging
-
 from django.conf import settings
 from django.contrib.auth import logout
-from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.views import View
 from social_django import views as social_views
 
 from users.models import User
+from util.logging_utils import log_request_exception
 from . import ldap_utils
 
 # Assign these functions to module-level variables, to facilitate testing (through monkey patching)
@@ -33,8 +32,7 @@ def login_wrapper(request, backend, *args, **kwargs):
     try:
         response = complete(request, backend, *args, **kwargs)
     except Exception as e:
-        logging.getLogger('django.request').exception("Authentication through Dataporten failed.", exc_info=e)
-        return HttpResponseForbidden()
+        raise RuntimeError("Authentication through Dataporten failed.") from e
 
     user: User = request.user
     social_data = user.social_auth.first().extra_data
@@ -52,7 +50,7 @@ def login_wrapper(request, backend, *args, **kwargs):
         # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
         ldap_data = get_user_details_from_email(user.email, use_cached=False)
     except Exception as e:
-        logging.getLogger('django.request').exception("Looking up user details through LDAP failed.", exc_info=e)
+        log_request_exception("Looking up user details through LDAP failed.", e, request)
         ldap_data = {}
     _update_username_if_different(user, ldap_data)
 

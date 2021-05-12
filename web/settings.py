@@ -16,6 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Default values
 DATABASE = 'sqlite'
+# TODO: change to `BigAutoField` when `social-auth-app-django` fixes its own `DEFAULT_AUTO_FIELD`
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']

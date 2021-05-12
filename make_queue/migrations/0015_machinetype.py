@@ -62,6 +62,19 @@ default_machine_types = (
         has_stream=False,
         priority=5,
     ),
+    MachineTypeStruct(
+        pk=5,
+        name={"en": "Special 3D printers", "nb": "Spesial-3D-printere"},
+        cannot_use_text={
+            "en": "You must have completed an advanced 3D printer course to reserve the printers."
+                  " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
+            "nb": "Reservasjon av 3D-printere krever fullført avansert 3D-printerkurs."
+                  " Hvis du har hatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+        },
+        usage_requirement="A3DP",
+        has_stream=True,
+        priority=15,
+    ),
 )
 
 
@@ -91,7 +104,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', web.multilingual.modelfields.MultiLingualTextField(max_length=30, unique=True)),
                 ('cannot_use_text', web.multilingual.modelfields.MultiLingualTextField(blank=True)),
-                ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course')], default='AUTH', max_length=4, verbose_name='Usage requirement')),
+                ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course'), ('A3DP', 'Taken the advanced 3D printer course')], default='AUTH', max_length=4, verbose_name='Usage requirement')),
                 ('has_stream', models.BooleanField(default=False)),
                 ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='Priority')),
             ],
