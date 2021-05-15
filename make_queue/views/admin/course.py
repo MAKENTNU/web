@@ -1,11 +1,13 @@
 import io
 
 import xlsxwriter
+from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from util.view_utils import PreventGetRequestsMixin
@@ -25,18 +27,16 @@ class Printer3DCourseListView(ListView):
 
 
 class CreateCourseRegistrationView(PermissionRequiredMixin, CreateView):
-    is_next = False
     permission_required = ('make_queue.add_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = 'make_queue/course/course_registration_create.html'
-    success_url = reverse_lazy('create_course_registration_success')
+    # Redirect back to the same view, to make it easier to create multiple registrations
+    success_url = reverse_lazy('create_course_registration')
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if self.is_next:
-            context_data['is_next'] = True
-        return context_data
+    def form_valid(self, form):
+        messages.success(self.request, _("Registration of course participation successful"))
+        return super().form_valid(form)
 
 
 class EditCourseRegistrationView(PermissionRequiredMixin, UpdateView):

@@ -61,8 +61,6 @@ course_urlpatterns = [
          name='download_course_registrations'),
     path("create/", permission_required('make_queue.add_printer3dcourse')(course.CreateCourseRegistrationView.as_view()),
          name='create_course_registration'),
-    path("create/success/", permission_required('make_queue.add_printer3dcourse')(course.CreateCourseRegistrationView.as_view(is_next=True)),
-         name='create_course_registration_success'),
     path("<int:pk>/edit/", permission_required('make_queue.change_printer3dcourse')(course.EditCourseRegistrationView.as_view()),
          name='edit_course_registration'),
     path("<int:pk>/delete/", permission_required('make_queue.delete_printer3dcourse')(course.DeleteCourseRegistrationView.as_view()),

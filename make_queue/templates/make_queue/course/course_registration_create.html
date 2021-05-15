@@ -12,12 +12,12 @@
 
 {% block messages %}
     {{ block.super }}
-    {% if is_next %}
-        <div class="ui positive message">
+    {% for message in messages %}
+        <div class="ui {{ message.tags }} message">
             <i class="close icon"></i>
-            {% trans "Registration of course participation successful" %}
+            {{ message }}
         </div>
-    {% endif %}
+    {% endfor %}
 {% endblock messages %}
 
 {% block form_action %}

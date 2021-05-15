@@ -191,7 +191,6 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # course_urlpatterns
             Get(reverse('course_registration_list'), public=False),
             Get(reverse('create_course_registration'), public=False),
-            Get(reverse('create_course_registration_success'), public=False),
             Get(reverse('edit_course_registration', args=[self.course1.pk]), public=False),
             Get(reverse('edit_course_registration', args=[self.course2.pk]), public=False),
         ]
