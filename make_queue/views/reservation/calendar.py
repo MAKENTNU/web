@@ -1,9 +1,10 @@
+from django.http import HttpResponseRedirect
 from django.views.generic import DetailView
 
 from util.locale_utils import year_and_week_to_monday
 from ...models.machine import Machine
 from ...models.reservation import Quota
-from ...templatetags.reservation_extra import reservation_denied_message
+from ...templatetags.reservation_extra import current_calendar_url, reservation_denied_message
 
 
 class MachineDetailView(DetailView):
@@ -11,6 +12,13 @@ class MachineDetailView(DetailView):
     model = Machine
     template_name = 'make_queue/machine_detail.html'
     context_object_name = 'machine'
+
+    redirect_to_current_week = False
+
+    def get(self, request, *args, **kwargs):
+        if self.redirect_to_current_week:
+            return HttpResponseRedirect(current_calendar_url(self.get_object()))
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         return Machine.objects.visible_to(self.request.user)

@@ -13,6 +13,7 @@ register_converter(converters.Week, 'week')
 
 machine_urlpatterns = [
     path("create/", permission_required('make_queue.add_machine')(machine.CreateMachineView.as_view()), name='create_machine'),
+    path("<int:pk>/", calendar.MachineDetailView.as_view(redirect_to_current_week=True), name='machine_detail'),
     path("<int:pk>/edit/", permission_required('make_queue.change_machine')(machine.EditMachineView.as_view()), name='edit_machine'),
     path("<int:pk>/delete/", permission_required('make_queue.delete_machine')(machine.DeleteMachineView.as_view()),
          name='delete_machine'),
@@ -69,7 +70,7 @@ course_urlpatterns = [
 
 urlpatterns = [
     path("", machine.MachineListView.as_view(), name='machine_list'),
-    path("machine/", include(machine_urlpatterns)),
+    path("machines/", include(machine_urlpatterns)),
     path("<year:year>/<week:week>/<int:pk>/", calendar.MachineDetailView.as_view(), name='machine_detail'),
     path("calendar/", include(calendar_urlpatterns)),
     path("json/", include(json_urlpatterns)),
