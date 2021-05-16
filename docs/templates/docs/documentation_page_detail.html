@@ -50,24 +50,26 @@
                 {% endif %}
             {% endif %}
         </h3>
-        <h1>{{ page.title }}</h1>
+        <h1 class="word-breaking hyphenated">{{ page.title }}</h1>
 
-        {% if content %}
-            {{ content.content|safe }}
-        {% elif page.current_content %}
-            {{ page.current_content.content|safe }}
-        {% else %}
-            <i>
-                {% if perms.docs.change_page %}
-                    {% url 'edit_page' page.pk as edit_page_url %}
-                    {% blocktrans trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
-                        No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
-                    {% endblocktrans %}
-                {% else %}
-                    {% trans "No content exists for this page" %}!
-                {% endif %}
-            </i>
-        {% endif %}
+        <div class="word-breaking hyphenated">
+            {% if content %}
+                {{ content.content|safe }}
+            {% elif page.current_content %}
+                {{ page.current_content.content|safe }}
+            {% else %}
+                <i>
+                    {% if perms.docs.change_page %}
+                        {% url 'edit_page' page.pk as edit_page_url %}
+                        {% blocktrans trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
+                            No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
+                        {% endblocktrans %}
+                    {% else %}
+                        {% trans "No content exists for this page" %}!
+                    {% endif %}
+                </i>
+            {% endif %}
+        </div>
     </div>
 
     {% if form and old and perms.docs.change_page %}

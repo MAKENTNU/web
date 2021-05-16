@@ -14,7 +14,7 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>
+        <h1 class="word-breaking hyphenated">
             {{ title }}
             {% if perms.make_queue.add_reservationrule %}
                 <a href="{% url 'create_reservation_rule' machine_type.pk %}">

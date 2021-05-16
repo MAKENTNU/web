@@ -73,12 +73,12 @@
                 <tr class="reservation-list-desktop reservation-pk-{{ reservation.pk }}
                            {% if not future_reservation %}past-reservation display-none{% endif %}">
 
-                    <td>
+                    <td class="word-breaking hyphenated">
                         <div class="ui small header">{{ reservation.machine.name }}</div>
                         <div>{{ reservation.machine.machine_model }}</div>
                         <div>
                             <a href="{{ reservation.machine.location_url }}" target="_blank">
-                                <i class="location arrow icon"></i>{{ reservation.machine.location }}
+                                <i class="location arrow icon"></i> {{ reservation.machine.location }}
                             </a>
                         </div>
                     </td>
@@ -95,7 +95,7 @@
                         <td>
                             {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
                             {% if reservation_text %}
-                                <div class="ui small header">
+                                <div class="word-breaking hyphenated ui small header">
                                     {% if reservation.event %}
                                         <a href="{% url 'admin_event_detail' reservation.event.event.pk %}" target="_blank">
                                             {{ reservation_text }}
@@ -156,11 +156,11 @@
                             {% if not future_reservation %}past-reservation display-none{% endif %}">
 
                     <div class="content">
-                        <div class="header">{{ reservation.machine.name }}</div>
-                        <div class="meta">
+                        <div class="word-breaking hyphenated header">{{ reservation.machine.name }}</div>
+                        <div class="word-breaking hyphenated meta">
                             {{ reservation.machine.machine_model }}<br/>
                             <a class="ui" href="{{ reservation.machine.location_url }}" target="_blank">
-                                <i class="location arrow icon"></i>{{ reservation.machine.location }}
+                                <i class="location arrow icon"></i> {{ reservation.machine.location }}
                             </a>
                         </div>
                         {% if reservation.start_time.date == reservation.end_time.date %}
@@ -175,7 +175,7 @@
                             {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
                             {% if reservation_text %}
                                 <div class="ui vertical segment"></div>
-                                <div class="ui small header">
+                                <div class="word-breaking hyphenated ui small header">
                                     {% if reservation.event %}
                                         <a href="{% url 'admin_event_detail' reservation.event.event.pk %}" target="_blank">
                                             {{ reservation_text }}

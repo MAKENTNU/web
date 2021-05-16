@@ -15,7 +15,7 @@
         <a href="{% url 'admin_event_detail' event.pk %}">
             <i class="angle double left icon"></i>{% trans "Event admin page" %}
         </a>
-        <h1>{{ event.title }}</h1>
+        <h1 class="word-breaking hyphenated">{{ event.title }}</h1>
 
         <h3>{% trans "Email Addresses of Ticket Holders" %}</h3>
         <div class="emails-container">
@@ -46,11 +46,12 @@
                     </span>
                     <i class="very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
                     <div class="ui content">
-                        <div class="header">
-                            {{ ticket.name }} - {{ ticket.email|urlize_target_blank }}
+                        <div class="word-breaking hyphenated header">
+                            {{ ticket.name }}
+                            &ndash; {{ ticket.email|urlize_target_blank }}
                         </div>
                         <div class="description">
-                            <div>
+                            <div class="word-breaking">
                                 <b>{% trans "Ref #" %}:</b>
                                 <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.uuid }}</a>
                             </div>
@@ -58,7 +59,7 @@
                                 <b>{% trans "language"|capfirst %}</b> {{ ticket.get_language_display }}
                             </div>
                             {% if ticket.comment %}
-                                <div>
+                                <div class="word-breaking hyphenated">
                                     <b>{% trans "comment"|capfirst %}:</b> {{ ticket.comment }}
                                 </div>
                             {% endif %}

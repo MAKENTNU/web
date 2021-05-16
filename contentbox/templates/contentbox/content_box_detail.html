@@ -30,7 +30,9 @@
     <div class="contentbox ui container">
         {% block extra_pre_content %}{% endblock %}
 
-        {{ contentbox.content|safe }}
+        <div class="word-breaking hyphenated">
+            {{ contentbox.content|safe }}
+        </div>
 
         {% block extra_post_content %}{% endblock %}
     </div>

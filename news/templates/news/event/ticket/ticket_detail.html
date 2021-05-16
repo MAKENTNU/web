@@ -11,8 +11,10 @@
 {% block body %}
     <div class="ui container">
         {% if ticket.user == request.user or perms.news.view_eventticket %}
-            <h1>{% blocktrans with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktrans %}</h1>
-            <div>
+            <h1 class="word-breaking hyphenated">
+                {% blocktrans with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktrans %}
+            </h1>
+            <div class="word-breaking hyphenated">
                 <b>{% trans "Registered to" %}:</b> {{ ticket.name }},
                 {{ ticket.email|urlize_target_blank }}
             </div>

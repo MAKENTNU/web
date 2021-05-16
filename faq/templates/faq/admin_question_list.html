@@ -28,7 +28,7 @@
             {% for question in questions %}
                 <div class="item">
                     <div class="content">
-                        <div class="ui header">
+                        <div class="word-breaking hyphenated ui header">
                             {{ question.title }}
                             {% if perms.faq.change_question %}
                                 <a href="{% url 'question_update' question.pk %}">

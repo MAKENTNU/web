@@ -6,7 +6,7 @@
 
 {% block body %}
     <div class="ui container">
-        <h2>{{ title }}</h2>
+        <h2 class="word-breaking hyphenated">{{ title }}</h2>
 
         {% for error in form.non_field_errors %}
             <div class="ui error message">

@@ -8,7 +8,7 @@
 
 {% block body %}
     <div class="ui center aligned text container">
-        <h2>{{ heading|safe }}</h2>
+        <h2 class="word-breaking hyphenated">{{ heading|safe }}</h2>
 
         <form class="ui form" method="POST">
             {% csrf_token %}

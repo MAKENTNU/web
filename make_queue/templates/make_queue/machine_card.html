@@ -13,7 +13,7 @@
              alt="{% blocktrans with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
         />
     {% endif %}
-    <div class="content">
+    <div class="word-breaking hyphenated content">
         <div class="header">
             {{ machine.name }}
             {% if perms.make_queue.change_machine %}
@@ -44,7 +44,7 @@
         </div>
         {{ machine.machine_model }}<br/>
         <a href="{{ machine.location_url }}" target="_blank">
-            <i class="icon location arrow"></i>{{ machine.location }}
+            <i class="icon location arrow"></i> {{ machine.location }}
         </a>
     </div>
     <div>
