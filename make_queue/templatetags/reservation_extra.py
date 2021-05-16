@@ -8,7 +8,7 @@ from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from util.locale_utils import TIME_STRINGS
+from util.locale_utils import TIME_STRINGS, get_current_year_and_week, get_year_and_week
 from ..models.machine import Machine
 from ..models.reservation import Quota, Reservation
 
@@ -17,21 +17,26 @@ register = template.Library()
 
 @register.simple_tag
 def calendar_url_reservation(reservation: Reservation):
-    return reverse('machine_detail',
-                   kwargs={'year': reservation.start_time.year, 'week': reservation.start_time.isocalendar()[1], 'pk': reservation.machine.pk})
+    year, week = get_year_and_week(reservation.start_time)
+    return reverse('machine_detail', kwargs={
+        'year': year, 'week': week, 'pk': reservation.machine.pk,
+    })
 
 
 @register.simple_tag
 def current_calendar_url(machine: Machine):
-    current_time = timezone.localtime()
-    return reverse('machine_detail',
-                   kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'pk': machine.pk})
+    current_year, current_week = get_current_year_and_week()
+    return reverse('machine_detail', kwargs={
+        'year': current_year, 'week': current_week, 'pk': machine.pk,
+    })
 
 
 @register.simple_tag
 def calendar_url_timestamp(machine: Machine, time: datetime):
-    return reverse('machine_detail',
-                   kwargs={'year': time.year, 'week': time.isocalendar()[1], 'pk': machine.pk})
+    year, week = get_year_and_week(time)
+    return reverse('machine_detail', kwargs={
+        'year': year, 'week': week, 'pk': machine.pk,
+    })
 
 
 @register.simple_tag

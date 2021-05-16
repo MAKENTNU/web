@@ -48,6 +48,13 @@ class TestReservationExtra(TestCase):
             reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'pk': printer.pk}),
         )
 
+        # Check the edge case of January 1st 2010 being week 53 of 2009
+        now_mock.return_value = parse_datetime_localized("2010-01-01 12:34")
+        self.assertEqual(
+            reverse('machine_detail', kwargs={'year': 2009, 'week': 53, 'pk': printer.pk}),
+            current_calendar_url(printer)
+        )
+
     def test_get_stream_image_path_returns_correct_image_path(self):
         no_stream_image_path = static('make_queue/img/no_stream.svg')
         path_status_tuple_list = [
