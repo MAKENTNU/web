@@ -40,7 +40,8 @@ class TestEventTicketViews(TestCase):
         assert_response_status_code(reverse('register_event', args=[self.repeating_event.pk]), HTTPStatus.FORBIDDEN)
         assert_response_status_code(reverse('register_timeplace', args=[self.repeating_event.pk, self.repeating_time_place.pk]), HTTPStatus.OK)
         assert_response_status_code(reverse('register_event', args=[self.standalone_event.pk]), HTTPStatus.OK)
-        assert_response_status_code(reverse('register_timeplace', args=[self.standalone_event.pk, self.standalone_time_place.pk]), HTTPStatus.FORBIDDEN)
+        assert_response_status_code(reverse('register_timeplace', args=[self.standalone_event.pk, self.standalone_time_place.pk]),
+                                    HTTPStatus.FORBIDDEN)
 
     def test__event_registration_view__can_only_be_viewed_with_correct_combination_of_event_and_time_place(self):
         repeating_event1 = self.repeating_event

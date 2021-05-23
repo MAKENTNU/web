@@ -74,7 +74,7 @@ class UrlTests(NewsTestBase, TestCase):
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
-    def test_set_language(self):
+    def test_setting_language_does_not_require_any_permissions(self):
         response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
         self.assertRedirects(response, '/en/')
         response = self.anon_client.post(reverse('set_language'), {'language': 'nb'})

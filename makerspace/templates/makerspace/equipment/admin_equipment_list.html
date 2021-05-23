@@ -22,7 +22,7 @@
 
                         <a class="image" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
                             <img src="{{ equipment.image.url }}"
-                                 alt="{% blocktranslate trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
+                                 alt="{% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
                             />
                         </a>
                         <h3 class="equipment-title">

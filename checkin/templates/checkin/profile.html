@@ -96,7 +96,7 @@
                     }
                     $(".message.negative").fadeOut();
                 },
-                error: function (jqXHR, error, errorthrown) {
+                error: function (jqXHR, textStatus, errorthrown) {
                     if (jqXHR.status === 409) {
                         $("#duplicate-error").fadeIn();
                     }

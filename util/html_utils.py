@@ -1,5 +1,7 @@
 from html.entities import html5
+from typing import Sequence, Union
 
+from django.db.models import QuerySet
 from django.utils.html import escape, format_html, format_html_join
 from django.utils.safestring import mark_safe
 from django_hosts import reverse_host
@@ -13,7 +15,7 @@ def _should_include_escape_entry(unicode_character: str, named_character: str):
 
     if len(unicode_character) != 1:
         return False
-    # The character should be escaped (and therefore included in the dict) if it's is not ASCII.
+    # The character should be escaped (and therefore included in the dict) if it's not ASCII.
     # Might have to tweak the condition below, e.g. by checking if the character is part of `string.printable` instead.
     should_escape = ord(unicode_character) >= 128
     return should_escape
@@ -30,7 +32,7 @@ def escape_to_named_characters(string: str):
     return "".join(ESCAPE_UNICODE_TO_HTML5.get(c, c) for c in string)
 
 
-def block_join(object_collection, sep="<b>&bull;</b>", multiline=True):
+def block_join(object_collection: Union[Sequence, QuerySet], sep="<b>&bull;</b>", multiline=True):
     if len(object_collection) == 0:
         return ""
 

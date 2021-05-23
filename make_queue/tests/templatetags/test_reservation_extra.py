@@ -8,10 +8,11 @@ from django.utils import timezone
 
 from users.models import User
 from util.locale_utils import parse_datetime_localized
+from util.templatetags.string_tags import invert
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
-from ...templatetags.reservation_extra import calendar_url_reservation, current_calendar_url, get_stream_image_path, invert
+from ...templatetags.reservation_extra import calendar_url_reservation, current_calendar_url, get_stream_image_path
 
 
 class TestReservationExtra(TestCase):

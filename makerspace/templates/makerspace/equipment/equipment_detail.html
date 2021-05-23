@@ -10,7 +10,7 @@
 {% block og_title %}{{ equipment.title }}{% endblock og_title %}
 {% block og_image_absolute_uri %}{% get_absolute_uri_for_path request equipment.image.url %}{% endblock og_image_absolute_uri %}
 {% block og_image_alt %}
-    {% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}
+    {% blocktrans with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}
 {% endblock og_image_alt %}
 
 {% block extra_head %}

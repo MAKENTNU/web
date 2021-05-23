@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load datetime_tags %}
+{% load string_tags %}
 {% load reservation_extra %}
 
 
@@ -43,7 +44,7 @@
                         <div class="menu">
                             {% for machine_type in machine_types %}
                                 {% if machine_type.instances %}
-                                    <div class="item {% if selected_machine.machine_type == machine_type %}selected_machine_type{% endif %}"
+                                    <div class="item {% if selected_machine.machine_type == machine_type %}selected-machine-type{% endif %}"
                                          data-value="{{ machine_type.pk }}">{{ machine_type.name }}</div>
                                 {% endif %}
                             {% endfor %}

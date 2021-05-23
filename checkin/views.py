@@ -202,14 +202,13 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
             if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
                 Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
-                messages.info(request, _("Skill added!"))
+                messages.success(request, _("Skill added!"))
 
         return HttpResponseRedirect(reverse('suggest_skill'))
 
 
-class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
+class VoteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
-    template_name = 'checkin/suggest_skill.html'
 
     def post(self, request):
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
@@ -253,7 +252,7 @@ class RegisterCardView(RFIDView):
             return HttpResponse("Card scanned", status=HTTPStatus.OK)
 
 
-class RegisterProfileView(TemplateView):
+class RegisterProfileView(PreventGetRequestsMixin, TemplateView):
 
     def post(self, request):
         scan_exists = RegisterProfile.objects.exists()
@@ -275,7 +274,7 @@ class RegisterProfileView(TemplateView):
         return JsonResponse(response_dict)
 
 
-class EditProfilePictureView(View):
+class EditProfilePictureView(PreventGetRequestsMixin, View):
 
     def post(self, request, *args, **kwargs):
         image = request.FILES.get('image')

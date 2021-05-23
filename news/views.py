@@ -34,7 +34,7 @@ class EventListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        queryset: EventQuerySet = self.get_queryset()
+        queryset: EventQuerySet[Event] = self.get_queryset()
 
         future = queryset.future().prefetch_related(
             'timeplaces',
@@ -661,7 +661,7 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
 
     def get_context_data(self, **kwargs):
         if self.ticket.timeplace:
-            at_time_string = _(" at {time}").format(time=short_datetime_format(self.ticket.timeplace.start_time))
+            at_time_string = " " + _("at {time}").format(time=short_datetime_format(self.ticket.timeplace.start_time))
         else:
             at_time_string = ""
         heading = _("Are you sure you want to cancel your ticket for<br/>“{event}”{at_time_string}?").format(

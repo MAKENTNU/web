@@ -16,7 +16,7 @@ class CardNumberField(models.CharField):
             'verbose_name': _("card number"),
             'max_length': 10,  # No card numbers are more than ten digits long
             'error_messages': {
-                "unique": _("Card number already in use"),
+                'unique': _("Card number already in use"),
             },
             **kwargs,
         })

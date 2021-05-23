@@ -26,11 +26,12 @@
 {% comment "Code for card registration and skills - commented out because it's currently not in use" %}
 <br/>
 
-    <div class="ui container">
-        <h4>
-            {% trans "My skills" %}
-        </h4>
-        {% for skill, level in skill_dict.items %}
+<div class="ui container">
+    <h4>
+        {% trans "My skills" %}
+    </h4>
+    {% for skill, level in skill_dict.items %}
+        {% with skill_name=skill|locale_title:CURRENT_LANGUAGE_CODE %}
             <div class="ui basic image label">
                 {% if skill.image %}
                     <img {% thumbnail skill.image "64x64" crop="center" as image_thumb %}
@@ -39,48 +40,48 @@
                         src="{{ skill.image.url }}"
                     {% endthumbnail %}
                         class="skill-image"
-                        alt="{% blocktrans trimmed with skill=skill|locale_title:CURRENT_LANGUAGE_CODE %}Illustration image of {{ skill }}{% endblocktrans %}"
+                        alt="{% blocktrans with skill=skill_name %}Illustration image of {{ skill }}{% endblocktrans %}"
                     />
                 {% else %}
                     <img class="skill-image" src="{% static 'checkin/img/placeholder_skill.svg' %}"
                          alt="{% trans "Placeholder image" %}"
                     />
                 {% endif %}
-                <span>{{ skill|locale_title:CURRENT_LANGUAGE_CODE }}</span>
+                <span>{{ skill_name }}</span>
                 <div class="detail make-bg-blue">
                     <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
                 </div>
             </div>
-        {% endfor %}
-    </div>
+        {% endwith %}
+    {% endfor %}
+</div>
 
-    <br/>
+<br/>
 
-    <div class="container">
-        <form class="ui form" method="POST">
-            {% csrf_token %}
-            <input id="rating-input" type="number" name="rating" value="1" hidden/>
-            <div class="inline fields">
-                <div class="ten wide field">
-                    <label>{% trans "Add skills" %}</label>
-                    <select class="ui fluid dropdown search" name="skill" required>
-                        <option value="">{% trans "Select/search" %}</option>
-                        {% for skill in all_skills %}
-                            <option value="{{ skill.pk }}">{{ skill|locale_title:CURRENT_LANGUAGE_CODE }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="two wide field">
-                    <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
-                </div>
-                <div class="three wide field">
-                    <button class="ui button" type="submit">{% trans "Add" %}</button>
-                </div>
+<div class="container">
+    <form class="ui form" method="POST">
+        {% csrf_token %}
+        <input id="rating-input" type="number" name="rating" value="1" hidden/>
+        <div class="inline fields">
+            <div class="ten wide field">
+                <label>{% trans "Add skills" %}</label>
+                <select class="ui fluid dropdown search" name="skill" required>
+                    <option value="">{% trans "Select/search" %}</option>
+                    {% for skill in all_skills %}
+                        <option value="{{ skill.pk }}">{{ skill|locale_title:CURRENT_LANGUAGE_CODE }}</option>
+                    {% endfor %}
+                </select>
             </div>
-        </form>
-        <a href="{% url 'suggest_skill' %}">{% trans "Suggest new skills" %}</a>
-    </div>
-
+            <div class="two wide field">
+                <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
+            </div>
+            <div class="three wide field">
+                <button class="ui button" type="submit">{% trans "Add" %}</button>
+            </div>
+        </div>
+    </form>
+    <a href="{% url 'suggest_skill' %}">{% trans "Suggest new skills" %}</a>
+</div>
 
 <br/>
 
@@ -101,7 +102,6 @@
             </p>
         </div>
     </div>
-
 {% endif %}
 
 {% endcomment %}

@@ -24,20 +24,13 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
             image=MOCK_JPG_FILE, image_description="Mock image",
             number_of_tickets=40,
         )
+        self.event_url = reverse('event_detail', args=[self.event.pk])
         self.timeplace = TimePlace.objects.create(
             event=self.event,
             start_time=timezone.localtime() + timedelta(minutes=5),
             end_time=timezone.localtime() + timedelta(minutes=10),
             number_of_tickets=29,
         )
-
-    def test_events(self):
-        response = self.client.get(reverse('event_list'))
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-
-    def test_event(self):
-        response = self.client.get(reverse('event_detail', args=[self.event.pk]))
-        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_create(self):
         response = self.client.get(reverse('event_create'))
@@ -93,24 +86,24 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.event.hidden = True
         self.event.save()
 
-        response = self.client.get(reverse('event_detail', args=[self.event.pk]))
+        response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_event')
-        response = self.client.get(reverse('event_detail', args=[self.event.pk]))
+        response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_private_event(self):
-        response = self.client.get(reverse('event_detail', args=[self.event.pk]))
+        response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self.event.private = True
         self.event.save()
-        response = self.client.get(reverse('event_detail', args=[self.event.pk]))
+        response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.can_view_private')
-        response = self.client.get(reverse('event_detail', args=[self.event.pk]))
+        response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):

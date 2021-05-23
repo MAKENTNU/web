@@ -220,7 +220,7 @@ class SystemAccess(models.Model):
         if not self.should_be_changed():
             return ""
 
-        # In the future it would be beneficial to create automated processes for adding, removing and revoking
+        # TODO: In the future it would be beneficial to create automated processes for adding, removing and revoking
         # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
         # channels, or using GSuite APIs to add and remove people from mailing lists.
         return reverse('edit_system_access', args=(self.member.pk, self.pk))
@@ -231,7 +231,7 @@ class SystemAccess(models.Model):
 
 class SecretQuerySet(models.QuerySet):
 
-    def default_order_by(self):
+    def default_order_by(self) -> 'SecretQuerySet[Secret]':
         return self.order_by(
             F('priority').asc(nulls_last=True),
             Lower('title'),

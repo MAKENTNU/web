@@ -15,7 +15,7 @@ class UserModelTests(TestCase):
         self.user1.save()
         self.user1.refresh_from_db()
 
-        self.assertIsInstance(self.user1.card_number, CardNumber)
+        self.assertIs(type(self.user1.card_number), CardNumber)
         self.assertEqual(self.user1.card_number.number, card_number)
         self.assertEqual(str(self.user1.card_number), f"EM {card_number}")
 

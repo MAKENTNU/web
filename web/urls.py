@@ -2,14 +2,14 @@ from ckeditor_uploader import views as ckeditor_views
 from decorator_include import decorator_include
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required, permission_required
-from django.urls import include, path, re_path, reverse_lazy
+from django.urls import include, path, re_path
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
-from django.views.static import serve
 from social_core.utils import setting_name
 
 from contentbox.views import DisplayContentBoxView, EditContentBoxView
@@ -27,6 +27,12 @@ urlpatterns = [
 
     *debug_toolbar_urls(),
     path("i18n/", include('django.conf.urls.i18n')),
+
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
+
+    # Based on the URLs in https://github.com/django-ckeditor/django-ckeditor/blob/9866ebe098794eca7a5132d6f2a4b1d1d837e735/ckeditor_uploader/urls.py
+    path("ckeditor/upload/", permission_required('contentbox.can_upload_image')(ckeditor_views.upload), name='ckeditor_upload'),
+    path("ckeditor/browse/", never_cache(permission_required('contentbox.can_browse_image')(ckeditor_views.browse)), name='ckeditor_browse'),
 ]
 
 admin_urlpatterns = [
@@ -46,20 +52,25 @@ about_urlpatterns = [
 urlpatterns += i18n_patterns(
     path("", views.IndexView.as_view(), name='front_page'),
     path("admin/", decorator_include(login_required, admin_urlpatterns)),
-    path("reservation/", include('make_queue.urls')),
-    path("news/", include('news.urls')),
-    path("contentbox/", include(contentbox_urlpatterns)),
-    path("media/<path:path>", serve, {'document_root': settings.MEDIA_ROOT}),  # for development only; Nginx is used in production
+
+    # App paths:
+    path("announcements/", include('announcements.urls')),
     path("checkin/", include('checkin.urls')),
     path("committees/", include('groups.urls')),
-    path("announcements/", include('announcements.urls')),
-    path("about/", include(about_urlpatterns)),
-    path("makerspace/", include('makerspace.urls')),
     path("faq/", include('faq.urls')),
+    path("makerspace/", include('makerspace.urls')),
+    path("news/", include('news.urls')),
+    path("reservation/", include('make_queue.urls')),
+
+    # ContentBox paths:
+    path("contentbox/", include(contentbox_urlpatterns)),
+    path("about/", include(about_urlpatterns)),
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),
     DisplayContentBoxView.get_path('privacypolicy'),
 
+    # This path must be wrapped by `i18n_patterns()`
+    # (see https://docs.djangoproject.com/en/stable/topics/i18n/translation/#django.views.i18n.JavaScriptCatalog)
     path("jsi18n/", JavaScriptCatalog.as_view(), name='javascript_catalog'),
 
     prefix_default_language=False,
@@ -71,7 +82,7 @@ if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
         path("login/", RedirectView.as_view(url="/login/dataporten/", query_string=True), name='login'),
         path("logout/", Logout.as_view(), name='logout'),
 
-        # Should come before `social_django.urls` below, to override social_django's `complete` view
+        # This line must come before including `social_django.urls` below, to override social_django's `complete` view
         re_path(rf"^complete/(?P<backend>[^/]+){extra}$", login_wrapper),
         path("", include('social_django.urls', namespace='social')),
 
@@ -87,17 +98,11 @@ else:
         prefix_default_language=False,
     )
 
-# CKEditor URLs
-urlpatterns += [
-    # Based on the URLs in https://github.com/django-ckeditor/django-ckeditor/blob/9866ebe098794eca7a5132d6f2a4b1d1d837e735/ckeditor_uploader/urls.py
-    path("ckeditor/upload/", permission_required('contentbox.can_upload_image')(ckeditor_views.upload), name='ckeditor_upload'),
-    path("ckeditor/browse/", never_cache(permission_required('contentbox.can_browse_image')(ckeditor_views.browse)), name='ckeditor_browse'),
-]
-
 # --- Old URLs ---
-# URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs
+# URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs.
+# These need only be URLs for pages that are likely to be linked to.
 urlpatterns += i18n_patterns(
-    path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
+    path("rules/", RedirectView.as_view(pattern_name='rules', permanent=True)),
     path("reservation/rules/<int:pk>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
     path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
 

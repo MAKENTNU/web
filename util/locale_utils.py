@@ -71,14 +71,14 @@ def iso_datetime_format(value):
     return value.isoformat()
 
 
-def exact_weekday_to_day_name(exact_weekday: float):
+def exact_weekday_to_day_name(exact_weekday: float) -> str:
     from make_queue.models.reservation import ReservationRule  # avoids circular imports
 
     truncated_and_wrapped_weekday = int(exact_weekday - 1) % 7 + 1
     return ReservationRule.DAY_INDEX_TO_NAME[truncated_and_wrapped_weekday]
 
 
-def year_and_week_to_monday(year, week):
+def year_and_week_to_monday(year: int, week: int) -> datetime:
     """
     Returns the a datetime object for the monday in the given week and year.
 
@@ -89,7 +89,7 @@ def year_and_week_to_monday(year, week):
     return datetime.strptime(f"{year:04d} {week:02d} 1", "%G %V %w")
 
 
-def timedelta_to_hours(timedelta_obj: timedelta):
+def timedelta_to_hours(timedelta_obj: timedelta) -> float:
     """
     Converts a timedelta object into a float indicating the number of hours the timedelta covers.
 

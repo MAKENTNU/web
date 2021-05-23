@@ -14,6 +14,7 @@ from ...models.course import Printer3DCourse
 
 
 class Printer3DCourseListView(ListView):
+    permission_required = ('make_queue.view_printer3dcourse',)
     model = Printer3DCourse
     queryset = Printer3DCourse.objects.select_related('user').order_by('name')
     template_name = 'make_queue/course/course_registration_list.html'
@@ -93,7 +94,7 @@ class CourseXLSXView(View):
             "font_size": 10,
             "font_name": "Arial",
             "font_color": "#000000",
-            "bg_color": "#f8c700",
+            "bg_color": "#F8C811",
             "border": 1,
             "border_color": "#000000",
         })
@@ -102,7 +103,7 @@ class CourseXLSXView(View):
             "font_size": 10,
             "font_name": "Arial",
             "font_color": "#000000",
-            "bg_color": "#fff2cc",
+            "bg_color": "#FFF2CC",
             "border": 1,
             "border_color": "#000000",
         })

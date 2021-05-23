@@ -38,8 +38,8 @@ function hoursInsideRule(rule, startTime, endTime) {
 
 function getPeriodIn(rules, date, direction) {
     date = (date.getDay() + 6) % 7 + date.getHours() / 24 + date.getMinutes() / (24 * 60);
-    for (let rule of rules) {
-        for (let period of rule.periods) {
+    for (const rule of rules) {
+        for (const period of rule.periods) {
             if (direction === 1 && period[0] === date) {
                 continue;
             } else if (direction === 0 && period[1] === date) {
@@ -82,7 +82,7 @@ function isValidForRules(rules, startTime, endTime) {
     // If the reservation is shorter than the maximum inside for any of the rules, it should also be valid for
     // the whole duration, even though it breaks with one or more of the max_crossed rules.
     let minTime = 7 * 24;
-    for (let coveredRule of coveredRules) {
+    for (const coveredRule of coveredRules) {
         minTime = Math.min(minTime, coveredRule.max_inside);
     }
 
@@ -91,7 +91,7 @@ function isValidForRules(rules, startTime, endTime) {
     }
 
     let maxTime = 0;
-    for (let coveredRule of coveredRules) {
+    for (const coveredRule of coveredRules) {
         maxTime = Math.max(maxTime, coveredRule.max_inside);
         const hoursInside = hoursInsideRule(coveredRule, startTime, endTime);
         if (coveredRule.max_crossed < Number(hoursInside.toFixed(2))) {
@@ -114,7 +114,7 @@ function modifyToFirstValid(rules, startTime, endTime, modificationDirection) {
         // Check if the total time of the reservation is greater than what is allowed by the covered rules
         let maxTime = 0;
         let minTime = 7 * 24;
-        for (let coveredRule of coveredRules) {
+        for (const coveredRule of coveredRules) {
             maxTime = Math.max(maxTime, coveredRule.max_inside);
             minTime = Math.min(minTime, coveredRule.max_inside);
         }

@@ -59,7 +59,7 @@ msgstr "innhold"
 
 #: announcements/models.py:55
 msgid "An optional link to an information page."
-msgstr "En valgfri lenke til en informasjonside."
+msgstr "En valgfri lenke til en informasjonsside."
 
 #: announcements/models.py:56
 msgid "display from"
@@ -2249,8 +2249,8 @@ msgid "timeplace"
 msgstr "tidspunkt"
 
 #: news/forms.py:31
-msgid "The event cannot end before it starts"
-msgstr "Arrangementet kan ikke slutte før det starter"
+msgid "The event cannot end before it starts."
+msgstr "Arrangementet kan ikke slutte før det starter."
 
 #: news/forms.py:49
 msgid "the article"
@@ -2766,8 +2766,8 @@ msgstr "Meld deg på arrangementet «{title}»"
 
 #: news/views.py:664
 #, python-brace-format
-msgid " at {time}"
-msgstr " den {time}"
+msgid "at {time}"
+msgstr "den {time}"
 
 #: news/views.py:667
 #, python-brace-format
@@ -3036,11 +3036,11 @@ msgstr "Last opp bilde"
 
 #: web/templates/web/forms/widgets/semantic_file.html:12
 msgid "View old image"
-msgstr "Se gammelt bilde"
+msgstr "Vis gammelt bilde"
 
 #: web/templates/web/forms/widgets/semantic_file.html:15
 msgid "An image is required"
-msgstr "Et bilde er krevd"
+msgstr "Et bilde er påkrevd"
 
 #: web/templates/web/forms/widgets/semantic_file.html:18
 msgid "The image is too big"

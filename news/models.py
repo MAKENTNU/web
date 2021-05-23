@@ -17,7 +17,7 @@ from web.multilingual.widgets import MultiLingualTextarea
 
 class NewsBaseQuerySet(models.QuerySet):
 
-    def visible_to(self, user: User):
+    def visible_to(self, user: User) -> 'NewsBaseQuerySet[NewsBase]':
         hidden_news_query = Q(hidden=False)
         if not user.has_perm('news.can_view_private'):
             hidden_news_query &= Q(private=False)
@@ -62,7 +62,7 @@ class NewsBase(models.Model):
 
 class ArticleQuerySet(NewsBaseQuerySet):
 
-    def published(self):
+    def published(self) -> 'ArticleQuerySet[Article]':
         return self.filter(hidden=False, publication_time__lte=timezone.localtime())
 
 
@@ -83,12 +83,12 @@ class Article(NewsBase):
 
 class EventQuerySet(NewsBaseQuerySet):
 
-    def future(self):
+    def future(self) -> 'EventQuerySet[Event]':
         return self.filter(
             timeplaces__end_time__gt=timezone.localtime()
         ).distinct()  # remove duplicates that can appear when filtering on values across tables
 
-    def past(self):
+    def past(self) -> 'EventQuerySet[Event]':
         now = timezone.localtime()
         return self.filter(
             # Any repeating event with at least one timeplace that's already ended...
@@ -165,16 +165,16 @@ class Event(NewsBase):
 
 class TimePlaceQuerySet(models.QuerySet):
 
-    def published(self):
+    def published(self) -> 'TimePlaceQuerySet[TimePlace]':
         return self.filter(hidden=False, event__hidden=False, publication_time__lte=timezone.now())
 
-    def unpublished(self):
+    def unpublished(self) -> 'TimePlaceQuerySet[TimePlace]':
         return self.filter(Q(hidden=True) | Q(event__hidden=True) | Q(publication_time__gt=timezone.now()))
 
-    def future(self):
+    def future(self) -> 'TimePlaceQuerySet[TimePlace]':
         return self.filter(end_time__gt=timezone.now())
 
-    def past(self):
+    def past(self) -> 'TimePlaceQuerySet[TimePlace]':
         return self.filter(end_time__lte=timezone.now())
 
 
@@ -257,9 +257,9 @@ class EventTicket(models.Model):
         verbose_name=_("event"),
     )
     active = models.BooleanField(default=True, verbose_name=_("active"))
-    comment = models.TextField(blank=True, verbose_name=_("comment"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
                                 verbose_name=_("preferred language"))
+    comment = models.TextField(blank=True, verbose_name=_("comment"))
 
     class Meta:
         constraints = (

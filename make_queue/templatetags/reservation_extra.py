@@ -88,11 +88,6 @@ def reservation_denied_message(user: User, machine: Machine):
 
 
 @register.simple_tag
-def invert(expression):
-    return "true" if not expression else "false"
-
-
-@register.simple_tag
 def can_change_reservation(reservation: Reservation, user: User):
     return reservation.can_change(user) or reservation.can_change_end_time(user)
 

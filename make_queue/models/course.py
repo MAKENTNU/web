@@ -23,10 +23,11 @@ class Printer3DCourse(models.Model):
         verbose_name=_("user"),
     )
     username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("username"))
-    date = models.DateField(verbose_name=_("course date"))
+    name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
     # Set `null=True` even when it's a string-based field, as `null` is the only value not checked by the unique constraint
     _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
-    name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
+
+    date = models.DateField(verbose_name=_("course date"))
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
     raise3d_course = models.BooleanField(default=False, verbose_name=_("Raise3D course"))
     sla_course = models.BooleanField(default=False, verbose_name=_("SLA course"))
@@ -38,25 +39,6 @@ class Printer3DCourse(models.Model):
         )
         verbose_name = _("3D printer course")
         verbose_name_plural = _("3D printer courses")
-
-    @property
-    def card_number(self):
-        if self.user:
-            return self.user.card_number
-        return self._card_number
-
-    @card_number.setter
-    def card_number(self, card_number):
-        if self.user:
-            self.user.card_number = card_number
-            self.user.save()
-            self._card_number = None
-        else:
-            self._card_number = card_number
-
-    def get_user_display_name(self):
-        full_name = self.user.get_full_name() if self.user else self.name
-        return str(full_name or self.user or self.username)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.pk is None:  # Creation of new object
@@ -86,3 +68,22 @@ class Printer3DCourse(models.Model):
             self.user = User.objects.get(username=self.username)
         except User.DoesNotExist:
             pass
+
+    @property
+    def card_number(self):
+        if self.user:
+            return self.user.card_number
+        return self._card_number
+
+    @card_number.setter
+    def card_number(self, card_number):
+        if self.user:
+            self.user.card_number = card_number
+            self.user.save()
+            self._card_number = None
+        else:
+            self._card_number = card_number
+
+    def get_user_display_name(self):
+        full_name = self.user.get_full_name() if self.user else self.name
+        return str(full_name or self.user or self.username)

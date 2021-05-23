@@ -63,7 +63,7 @@ class InternalContentBoxTests(TestCase):
 
     def test_home_content_box_allows_editing_source(self):
         response = self.internal_admin_client.get(self.home_edit_url)
-        self.assertIsInstance(response.context['form'], EditSourceContentBoxForm)
+        self.assertIs(type(response.context['form']), EditSourceContentBoxForm)
         self.assertInHTML(
             f"""<script src="{static('ckeditor/ckeditor/config_from_django.js')}"
                         data-should-allow-all-tags="true"

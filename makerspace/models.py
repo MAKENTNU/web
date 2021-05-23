@@ -11,7 +11,7 @@ from web.multilingual.modelfields import MultiLingualRichTextUploadingField, Mul
 
 class EquipmentQuerySet(models.QuerySet):
 
-    def default_order_by(self):
+    def default_order_by(self) -> 'EquipmentQuerySet[Equipment]':
         return self.order_by(
             F('priority').asc(nulls_last=True),
             Lower('title'),

@@ -62,6 +62,7 @@
     <script defer src="{% static 'web/js/common_deferred_code.js' %}"></script>
     <script defer src="{% static 'web/js/delete_modal.js' %}"></script>
 
+    {# Should be kept at the bottom of `<head>`, so that deferred form media scripts are loaded after the scripts linked above #}
     {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>

@@ -5,11 +5,12 @@ from abc import ABC
 from datetime import datetime
 from http import HTTPStatus
 from pathlib import Path
-from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar
+from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar, Union
 from urllib.parse import urlparse
 
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
+from django.db.models import QuerySet
 from django.test import Client, SimpleTestCase, override_settings
 from django.utils import translation
 from django.utils.dateparse import parse_time
@@ -220,7 +221,7 @@ def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: 
     ]
 
 
-def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
+def set_without_duplicates(self: SimpleTestCase, collection: Union[Collection[T], QuerySet[T]]) -> Set[T]:
     collection_list = list(collection)
     collection_set = set(collection_list)
     self.assertEqual(len(collection_set), len(collection_list))

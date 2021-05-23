@@ -97,11 +97,9 @@ class SemanticFileInput(forms.ClearableFileInput):
             'all': ('web/css/forms/widgets/semantic_file.css',),
         }
 
-    def get_context(self, name, value, attrs):
-        context = super().get_context(name, value, attrs)
-        context.update({
-            "FILE_MAX_SIZE": settings.FILE_MAX_SIZE,
-        })
+    def get_context(self, *args, **kwargs):
+        context = super().get_context(*args, **kwargs)
+        context['widget']['FILE_MAX_SIZE'] = settings.FILE_MAX_SIZE
         return context
 
 

@@ -10,6 +10,7 @@
     {% endfor %}
 </select>
 
+{# Move this code to its own .js file if it gets more complex #}
 <script>
-    $("#id_{{ widget.name }}").dropdown();
+    $("#{{ widget.attrs.id }}").dropdown();
 </script>

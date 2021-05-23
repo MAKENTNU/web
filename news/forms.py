@@ -28,7 +28,12 @@ class TimePlaceForm(forms.ModelForm):
 
         if start_time and end_time:
             if start_time > end_time:
-                raise forms.ValidationError(_("The event cannot end before it starts"))
+                error_message = _("The event cannot end before it starts.")
+                code = 'invalid_relative_to_other_field'
+                raise forms.ValidationError({
+                    'start_time': forms.ValidationError(error_message, code=code),
+                    'end_time': forms.ValidationError(error_message, code=code),
+                })
 
         return cleaned_data
 
@@ -87,7 +92,7 @@ class EventParticipantsSearchForm(forms.Form):
 class EventRegistrationForm(forms.ModelForm):
     class Meta:
         model = EventTicket
-        fields = ('user', 'timeplace', 'event', 'comment', 'language')
+        fields = ('user', 'timeplace', 'event', 'language', 'comment')
         widgets = {
             'language': SemanticSearchableChoiceInput(),
             'comment': forms.Textarea(attrs={

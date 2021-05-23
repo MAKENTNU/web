@@ -311,7 +311,7 @@ STATICFILES_STORAGE = 'web.static.ManifestStaticFilesStorage'
 MANIFEST_STATICFILES_IGNORE_PATTERNS = [  # (custom setting)
     'ckeditor/mathjax/*',
 ]
-# Monkey patch view used for serving static and media files (for development only; Nginx is used in production)
+# Monkey patch view used for serving static files (for development only; Nginx is used in production)
 django.views.static.serve = serve_interpolated
 
 

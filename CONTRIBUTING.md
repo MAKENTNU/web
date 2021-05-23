@@ -1266,7 +1266,7 @@ All statements should end with a `;`.
 
 #### Comparing values loosely (with `==`)
 The `===` operator should always be favored over `==`. [See some of the reasons in the answers to
-this question](https://stackoverflow.com/questions/359494/which-equals-operator-vs-should-be-used-in-javascript-comparisons).
+this question](https://stackoverflow.com/q/359494).
 
 Of course, this also applies to `!==` vs. `!=`.
 

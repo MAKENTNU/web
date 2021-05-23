@@ -63,7 +63,7 @@
                                     {% endthumbnail %}
                                         class="ui mini rounded image"
                                             {% with skill=suggestion.title|add:" / "|add:suggestion.title_en %}
-                                        alt="{% blocktrans trimmed with skill=skill %}Illustration image of {{ skill }}{% endblocktrans %}"
+                                        alt="{% blocktrans with skill=skill %}Illustration image of {{ skill }}{% endblocktrans %}"
                                             {% endwith %}
                                     />
                                 {% else %}

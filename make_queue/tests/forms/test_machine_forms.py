@@ -102,7 +102,7 @@ class TestCreateMachineForm(TestCase):
         error_data = form.errors.as_data()
         error_list = error_data.get(field_name)
         self.assertIsNotNone(error_list)
-        error_code_list = [err.code for err in error_list]
+        error_code_list = {err.code for err in error_list}
         self.assertIn(error_code, error_code_list)
 
 

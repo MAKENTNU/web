@@ -16,7 +16,7 @@
                 <a class="image" href="{% url 'committee_detail' committee.pk %}">
                     {% if committee.image %}
                         <img src="{{ committee.image.url }}"
-                             alt="{% blocktrans trimmed with name=committee.name %}{{ name }} committee image{% endblocktrans %}"
+                             alt="{% blocktrans with name=committee.name %}{{ name }} committee image{% endblocktrans %}"
                         />
                     {% endif %}
                 </a>
@@ -30,11 +30,7 @@
                         {{ committee.email|urlize_target_blank }}
                     </div>
                     <div class="description">
-                        {% if committee.clickbait %}
-                            {{ committee.clickbait }}
-                        {% else %}
-                            {{ committee.description|safe }}
-                        {% endif %}
+                        {{ committee.clickbait }}
                     </div>
                 </div>
             </div>

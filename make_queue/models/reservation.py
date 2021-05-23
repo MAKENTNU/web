@@ -1,6 +1,6 @@
 import itertools
 from datetime import datetime, time, timedelta
-from typing import Collection, List, Tuple
+from typing import Collection, List, Optional, Tuple
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -42,7 +42,6 @@ class Quota(models.Model):
     class Meta:
         permissions = (
             ('can_create_event_reservation', "Can create event reservation"),
-            ('can_edit_quota', "Can edit quotas"),
         )
 
     def __str__(self):
@@ -77,7 +76,7 @@ class Quota(models.Model):
         return machine_type.quotas.filter(Q(user=user) | Q(all=True))
 
     @classmethod
-    def get_best_quota(cls, reservation: 'Reservation'):
+    def get_best_quota(cls, reservation: 'Reservation') -> Optional['Quota']:
         """
         Selects the best quota for the given reservation,
         by preferring non-diminishing quotas that do not ignore the rules.
@@ -108,6 +107,8 @@ class Quota(models.Model):
 
 class Reservation(models.Model):
     RESERVATION_FUTURE_LIMIT_DAYS = 28
+    # It's allowed to set start/end times up to this amount of time in the past
+    GRACE_PERIOD_FOR_SETTING_TIMES = timedelta(minutes=5)
 
     user = models.ForeignKey(
         to=User,
@@ -199,17 +200,18 @@ class Reservation(models.Model):
         if self.check_machine_out_of_order() or self.check_machine_maintenance():
             return False
 
+        earliest_allowed_time_to_set = self.get_earliest_allowed_time_to_set()
         # Check if the user can change the reservation
         if self.pk:
             old_reservation = Reservation.objects.get(pk=self.pk)
             can_change = self.can_change(self.user)
             can_change_end_time = old_reservation.can_change_end_time(self.user)
             valid_end_time_change = (old_reservation.start_time == self.start_time
-                                     and self.end_time >= timezone.now() - timedelta(minutes=5))
+                                     and self.end_time >= earliest_allowed_time_to_set)
             if not can_change and not (can_change_end_time and valid_end_time_change):
                 return False
 
-        if not self.pk and self.start_time < timezone.now() - timedelta(minutes=5):
+        if not self.pk and self.start_time < earliest_allowed_time_to_set:
             return False
 
         # Check if the user can make the given reservation/edit
@@ -239,12 +241,16 @@ class Reservation(models.Model):
         """Check if the machine is listed as maintenance."""
         return self.machine.get_status() == Machine.Status.MAINTENANCE
 
-    def can_delete(self, user):
+    @classmethod
+    def get_earliest_allowed_time_to_set(cls) -> datetime:
+        return timezone.now() - cls.GRACE_PERIOD_FOR_SETTING_TIMES
+
+    def can_delete(self, user: User):
         if user.has_perm('make_queue.delete_reservation'):
             return True
         return self.user == user and self.start_time > timezone.now()
 
-    def can_change(self, user):
+    def can_change(self, user: User):
         if (user.has_perm('make_queue.can_create_event_reservation')
                 and (self.special or (self.event is not None))):
             return True
@@ -252,7 +258,7 @@ class Reservation(models.Model):
             return False
         return self.user == user or user.is_superuser
 
-    def can_change_end_time(self, user):
+    def can_change_end_time(self, user: User):
         return self.end_time > timezone.now() and (self.user == user or user.is_superuser)
 
 

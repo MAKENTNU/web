@@ -20,7 +20,7 @@
                         <a class="image" href="{% url 'committee_detail' committee.pk %}">
                             <img {% if committee.image %}
                                 src="{{ committee.image.url }}"
-                                alt="{% blocktranslate trimmed with name=committee.name %}{{ name }} committee image{% endblocktranslate %}"
+                                alt="{% blocktranslate with name=committee.name %}{{ name }} committee image{% endblocktranslate %}"
                             {% else %}
                                 {# Use a transparent Base64-encoded image #}
                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="

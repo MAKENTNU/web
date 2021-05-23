@@ -3,6 +3,7 @@
     <div class="results"></div>
 </div>
 
+{# Move this code to its own .js file if it gets more complex #}
 <script>
-    $("input[name={{ widget.name }}]").mazeMapSearch();
+    $("#{{ widget.attrs.id }}").mazeMapSearch();
 </script>

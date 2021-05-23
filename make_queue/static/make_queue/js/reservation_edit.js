@@ -75,7 +75,7 @@ function isNonReservedDate(date) {
     /**
      * Checks if the given date is inside any reservation
      */
-    for (let reservation of reservations) {
+    for (const reservation of reservations) {
         if (date >= reservation.startTime && date < reservation.endTime)
             return false;
     }
@@ -92,7 +92,7 @@ function isCompletelyReserved(start, end) {
         return false;
     reservationsInPeriod.sort((a, b) => a.startTime - b.startTime);
     let currentTime = start;
-    for (let reservation of reservationsInPeriod) {
+    for (const reservation of reservationsInPeriod) {
         if (reservation.startTime > new Date(currentTime.valueOf() + maxDifference))
             return false;
         currentTime = reservation.endTime;
@@ -105,7 +105,7 @@ function getReservationsInPeriod(start, end) {
      * Returns all reservations that are at least partially within the given time period.
      */
     let reservationsInPeriod = [];
-    for (let reservation of reservations) {
+    for (const reservation of reservations) {
         if ((reservation.startTime <= start && reservation.endTime > start) ||
             (reservation.startTime > start && reservation.endTime < end) ||
             (reservation.startTime < end && reservation.endTime > end)) {
@@ -128,7 +128,7 @@ function getMaxDateReservation(date) {
         // Normal reservations should never be more than 1 week
         maxDate = new Date(maxDate.valueOf() + 7 * 24 * 60 * 60 * 1000 - 1000);
     }
-    for (let reservation of reservations) {
+    for (const reservation of reservations) {
         if (date <= reservation.startTime && reservation.startTime < maxDate)
             maxDate = new Date(reservation.startTime.valueOf());
     }
@@ -234,23 +234,31 @@ $("#special-checkbox").checkbox({
     },
 });
 
-$("#machine-type-dropdown").dropdown('setting', 'onChange', function (selectedMachineType) {
-    if (!$("#machine-type-dropdown").is(".disabled")) {
-        $machineNameDropdown.toggleClass("disabled", false).dropdown("restore defaults");
+$("#machine-type-dropdown").dropdown({
+    onChange: function (selectedMachineType, text, $choice) {
+        if (!$("#machine-type-dropdown").is(".disabled")) {
+            $machineNameDropdown.toggleClass("disabled", false).dropdown("restore defaults");
 
-        // Replace the shown machine items from the last selected machine type with the ones from the currently selected machine type
-        $("#machine-name-dropdown .menu .item").toggleClass("display-none", true);
-        $(`#machine-name-dropdown .menu .item.machine-type-${selectedMachineType}`).toggleClass("display-none", false);
-    }
-}).dropdown("set selected", $(".selected_machine_type").data("value"));
+            // Replace the shown machine items from the last selected machine type with the ones from the currently selected machine type
+            $("#machine-name-dropdown .menu .item").toggleClass("display-none", true);
+            $(`#machine-name-dropdown .menu .item.machine-type-${selectedMachineType}`).toggleClass("display-none", false);
+        }
+    },
+}).dropdown(
+    "set selected", $(".selected-machine-type").data("value"),
+);
 
-$machineNameDropdown.dropdown("set selected", $(".selected-machine-name").data("value")).dropdown('setting', "onChange", function (value) {
-    if (value !== "default" && value !== "") {
-        getFutureReservations(value, true);
-        calendar.changeMachine(value);
-    }
-    $("#start-time > div, #end-time > div").toggleClass('disabled', value === "default");
-    $("#start-time, #end-time").calendar('clear');
+$machineNameDropdown.dropdown(
+    "set selected", $(".selected-machine-name").data("value"),
+).dropdown({
+    onChange: function (value, text, $choice) {
+        if (value !== "default" && value !== "") {
+            getFutureReservations(value, true);
+            calendar.changeMachine(value);
+        }
+        $("#start-time > div, #end-time > div").toggleClass("disabled", value === "default");
+        $("#start-time, #end-time").calendar("clear");
+    },
 });
 
 zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
