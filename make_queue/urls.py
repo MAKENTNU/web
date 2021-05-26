@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import include, path, register_converter
 
+from users import converters as user_converters
 from . import converters
 from .views import admin, api, quota, reservation
 
@@ -8,7 +9,7 @@ from .views import admin, api, quota, reservation
 register_converter(converters.SpecificMachineType, 'MachineType')
 register_converter(converters.SpecificMachine, 'Machine')
 register_converter(converters.MachineReservation, 'Reservation')
-register_converter(converters.UserByUsername, 'username')
+register_converter(user_converters.SpecificUser, 'User')
 register_converter(converters.Year, 'year')
 register_converter(converters.Week, 'week')
 
@@ -48,9 +49,9 @@ quota_urlpatterns = [
     path("create/", permission_required('make_queue.add_quota')(admin.quota.CreateQuotaView.as_view()), name='create_quota'),
     path("<int:pk>/update/", permission_required('make_queue.change_quota')(admin.quota.EditQuotaView.as_view()), name='edit_quota'),
     path("<int:pk>/delete/", permission_required('make_queue.delete_quota')(admin.quota.DeleteQuotaView.as_view()), name='delete_quota'),
-    path("user/<username:user>/", permission_required('make_queue.change_quota', raise_exception=True)(quota.user.UserQuotaListView.as_view()),
+    path("user/<User:user>/", permission_required('make_queue.change_quota', raise_exception=True)(quota.user.UserQuotaListView.as_view()),
          name='user_quota_list'),
-    path("<username:user>/", permission_required('make_queue.change_quota', raise_exception=True)(admin.quota.QuotaPanelView.as_view()),
+    path("<User:user>/", permission_required('make_queue.change_quota', raise_exception=True)(admin.quota.QuotaPanelView.as_view()),
          name='quota_panel'),
 ]
 

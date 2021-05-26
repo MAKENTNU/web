@@ -1,4 +1,3 @@
-from users.models import User
 from .models.machine import Machine, MachineType
 from .models.reservation import Reservation
 
@@ -60,16 +59,3 @@ class MachineReservation:
 
     def to_url(self, reservation: Reservation):
         return str(reservation.pk)
-
-
-class UserByUsername:
-    regex = "([-0-9A-Za-z.]*)"
-
-    def to_python(self, value):
-        try:
-            return User.objects.get(username=value)
-        except User.DoesNotExist:
-            raise ValueError("No user with that username")
-
-    def to_url(self, user: User):
-        return user.username
