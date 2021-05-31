@@ -1,6 +1,6 @@
 Django==3.2.*
 django-hosts==4.0
-django-ckeditor==6.0.*
+django-ckeditor==6.1.*
 django-decorator-include>=3.0
 django_ical>=1.7.0
 django-phonenumber-field>=5.0.0
