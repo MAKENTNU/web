@@ -2,14 +2,15 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from util.modelfields import CompressedImageField
 from util.storage import OverwriteStorage, UploadToUtils
 
 
 class Skill(models.Model):
     title = models.CharField(max_length=100, unique=True, verbose_name=_("Title (Norwegian)"))
     title_en = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name=_("Title (English)"))
-    image = models.ImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('skills'),
-                              blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("Illustration image"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('skills'),
+                                 blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("Illustration image"))
 
     def __str__(self):
         return self.title
@@ -76,8 +77,8 @@ class SuggestSkill(models.Model):
         to=Profile,
         related_name='skill_suggestions_voted_for',
     )
-    image = models.ImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('skills/suggestions'),
-                              blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("Illustration image"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('skills/suggestions'),
+                                 blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("Illustration image"))
 
     class Meta:
         ordering = ('title',)

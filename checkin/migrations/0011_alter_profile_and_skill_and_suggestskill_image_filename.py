@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import migrations, models
 import functools
 from pathlib import Path
+import util.modelfields
 import util.storage
 
 
@@ -68,12 +69,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='skill',
             name='image',
-            field=models.ImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills'}), verbose_name='Illustration image'),
+            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills'}), verbose_name='Illustration image'),
         ),
         migrations.AlterField(
             model_name='suggestskill',
             name='image',
-            field=models.ImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills/suggestions'}), verbose_name='Illustration image'),
+            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills/suggestions'}), verbose_name='Illustration image'),
         ),
         migrations.RunPython(move_profile_and_skill_and_suggestskill_images, migrations.RunPython.noop),
     ]

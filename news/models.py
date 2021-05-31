@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from util.locale_utils import short_date_format
+from util.modelfields import CompressedImageField
 from util.storage import OverwriteStorage, UploadToUtils
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
@@ -36,8 +37,8 @@ class NewsBase(models.Model):
     title = MultiLingualTextField(verbose_name=_("Title"))
     content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
     clickbait = MultiLingualTextField(verbose_name=_("Clickbait"), widget=MultiLingualTextarea)
-    image = models.ImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func(news_subclass_directory_path),
-                              max_length=200, storage=OverwriteStorage(), verbose_name=_("Image"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func(news_subclass_directory_path),
+                                 max_length=200, storage=OverwriteStorage(), verbose_name=_("Image"))
     image_description = MultiLingualTextField(verbose_name=_("image description"),
                                               help_text=_("This should be a concise visual description of the image,"
                                                           " which is mainly useful for people using a screen reader."))
