@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from django.views.generic import RedirectView, TemplateView
@@ -11,6 +12,8 @@ admin.site.site_url = f"//{settings.PARENT_HOST}/"
 urlpatterns = [
     # Custom paths must come before including `admin.site.urls` to avoid being "hidden" behind Django admin's catch-all path
     path("robots.txt", TemplateView.as_view(template_name='admin/robots.txt', content_type='text/plain')),
+
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
 
     path("", admin.site.urls),
 ]
