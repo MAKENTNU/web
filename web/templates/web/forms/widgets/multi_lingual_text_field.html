@@ -20,11 +20,13 @@
     {% endfor %}
 
     <script>
+        $(document).ready(() => {
         $('.menu .item').tab();
         {# If there was a CSS predecessor element selector (there will be one in CSS4), this could have been solved in pure CSS #}
         $("#{{ widget.attrs.id }}").prev("label").toggleClass("multilingual-label", true);
 
 
+        {# TODO: move to own js file #}
         {% if widget.attrs.required %}
             {
                 let isFilled = function (element, value) {
@@ -104,6 +106,7 @@
                     }.bind(this));
                 });
             }
+            });
         {% endif %}
     </script>
 </div>

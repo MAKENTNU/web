@@ -1,0 +1,34 @@
+{% load staticfiles %}
+{% load thumbnail %}
+{% load i18n %}
+
+<div class="ui container">
+    {% for message in messages %}
+        <div class="ui red message">
+            <i class="close icon"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
+        {% if image %}
+            <img {% thumbnail image "150x150" crop="center" as image_thumb %}
+                src="{{ image_thumb.url }}"
+            {% empty %}
+                src="{{ image.url }}"
+            {% endthumbnail %}
+                id="profile-pic"
+            />
+        {% else %}
+            <img id="profile-pic" src="{% static "checkin/img/placeholder_profile.png" %}"/>
+        {% endif %}
+    </div>
+    <div class="ui container">
+        <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="POST"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            {# TODO: replace image/* with acual allowed file types #}
+            <input id="input-image" type="file" name="image" accept="image/*" hidden>
+        </form>
+    </div>
+</div>

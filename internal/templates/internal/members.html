@@ -8,7 +8,11 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static "internal/css/members.css" %}">
-{% endblock %}
+    <script>
+        let selectedMemberPk{% if selected_member %} = {{ selected_member.pk }}{% endif %};
+    </script>
+    <script defer src="{% static "internal/js/members.js" %}"></script>
+{% endblock head %}
 
 {% block body %}
 
@@ -236,15 +240,10 @@
 {% endblock %}
 
 {% block scripts %}
-    {{ super.block }}
     <script>
-        $("div.ui.dropdown").dropdown();
-        $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
+        $(document).ready(() => {
+            $("div.ui.dropdown").dropdown();
+            $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
+        });
     </script>
-    <script src="{% static "internal/js/members.js" %}"></script>
-    {% if selected_member %}
-        <script>
-            showDetailedMemberInformation(state.members.find((member) => member.data.pk === {{ selected_member.pk }}));
-        </script>
-    {% endif %}
 {% endblock %}

@@ -1,3 +1,4 @@
+# TODO: use custom user model
 import os
 
 from django.conf import settings
@@ -7,6 +8,7 @@ from django.http import SimpleCookie
 from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 
+from ..forms import ProfileImageForm
 from ..models import Profile
 from ..views import EditProfilePictureView
 
@@ -51,57 +53,41 @@ class UploadProfileImageTests(TestCase):
         self.client1.post(reverse("profile_picture"), {"image": image})
         self.assertFalse(self.profile1.image)
 
-    def test_allowed_file_extensions(self):
-        unknown_file_type = "application/octet-stream"
-        some_allowed_file_extensions = {
-            "bmp": "image/bmp",
-            "gif": "image/gif",
-            "ico": "image/vnd.microsoft.icon",
-            "jpeg": "image/jpeg",
-            "jpg": "image/jpeg",
-            "pdf": "application/pdf",  # Pillow supports PDFs
-            "png": "image/png",
-            "tif": "image/tiff",
-            "tiff": "image/tiff",
-            "webp": "image/webp",
-            "tga": unknown_file_type,
-        }
-        some_disallowed_file_extensions = {
-            "0123456789ABCDEF": unknown_file_type,
-            "bin": unknown_file_type,
-            "css": "text/css",
-            "gz": "application/gzip",
-            "htm": "text/html",
-            "html": "text/html",
-            "js": "application/javascript",
-            "json": "application/json",
-            "exe": unknown_file_type,
-            "mp3": "audio/mpeg",
-            "rar": "application/x-rar-compressed",
-            "svg": "image/svg+xml",  # Pillow does not support SVGs
-            "tar": "application/x-tar",
-            "txt": "text/plain",
-            "weba": "audio/webm",
-            "webm": "video/webm",
-            "xml": "application/xml",
-            "zip": "application/zip",
-            "7z": "application/x-7z-compressed",
-        }
+    def test_too_long_image_name(self):
+        # TODO: use MOCK_JPG_FILE instead
+        image = SimpleUploadedFile(f"{'a' * 100}.jpg", content=bytearray(1), content_type="image/jpeg")
+        self.client1.post(reverse("profile_picture"), {"image": image})
+        self.assertFalse(self.profile1.image)
 
-        for extension, content_type in some_allowed_file_extensions.items():
+        image = SimpleUploadedFile(f"{'a' * 99}.jpg", content=bytearray(1), content_type="image/jpeg")
+        self.client1.post(reverse("profile_picture"), {"image": image})
+        self.assertTrue(self.profile1.image)
+
+    def test_empty_image_file(self):
+        image = SimpleUploadedFile("image.jpg", content=bytearray(0), content_type="image/jpeg")
+        self.client1.post(reverse("profile_picture"), {"image": image})
+        self.assertFalse(self.profile1.image)
+
+    def test_allowed_file_extensions(self):
+        for extension in ProfileImageForm.allowed_extensions:
             file_name = f"image.{extension}"
-            image = SimpleUploadedFile(file_name, content=bytearray(1), content_type=content_type)
+            image = SimpleUploadedFile(file_name, content=bytearray(1), content_type="application/octet-stream")
             self.client1.post(reverse("profile_picture"), {"image": image})
             self.assertTrue(self.profile1.image.name.endswith(file_name), f"{self.profile1.image.name} does not end with {file_name}")
 
-        self.profile1.image.delete()
-
-        for extension, content_type in some_disallowed_file_extensions.items():
-            file = SimpleUploadedFile(f"file.{extension}", content=bytearray(1), content_type=content_type)
+    def test_disallowed_file_extensions(self):
+        some_disallowed_file_extensions = {
+            "", ".", ".0123456789ABCDEF", ".bin", ".css", ".gz",
+            ".htm", ".html", ".js", ".json", ".exe", ".mp3", ".pdf", ".rar", ".svg",  # SVG is unsafe due to XSS
+            ".tar", ".txt", ".weba", ".webm", ".xml", ".zip", ".7z",
+        }
+        for extension in some_disallowed_file_extensions:
+            file = SimpleUploadedFile(f"file{extension}", content=bytearray(1), content_type="application/octet-stream")
             self.client1.post(reverse("profile_picture"), {"image": file})
             self.assertFalse(self.profile1.image, f"Profile has file {self.profile1.image.name} as image")
 
     def test_old_profile_image_deletion(self):
+        # TODO: switch to `simple_jpg` (from #282) if warnings on CI server
         image1 = SimpleUploadedFile("image1.jpg", content=bytearray(1), content_type="image/jpeg")
         self.client1.post(reverse("profile_picture"), {"image": image1})
         image1_path = self.profile1.image.path
@@ -141,7 +127,7 @@ class UploadProfileImageTests(TestCase):
 
         request = generate_request({"csrfmiddlewaretoken": csrf_token})
         response = EditProfilePictureView.as_view()(request)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 302)  # TODO: change to 200 once forms + class-based views are implemented?
         self.assertTrue(self.profile1.image)
 
     def tearDown(self):

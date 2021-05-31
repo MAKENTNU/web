@@ -18,16 +18,18 @@ class Skill(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
     card_id = models.CharField(max_length=100, null=True, blank=True, verbose_name="Kortnummer")
     image = models.ImageField(upload_to='profile', blank=True, verbose_name="Profilbilde")
     on_make = models.BooleanField(default=False, verbose_name="Innsjekkingsstatus")
     last_checkin = models.DateTimeField(auto_now=True, verbose_name="Sist sjekket inn")
 
     def __str__(self):
-        if self.user:
-            return self.user.username
-        return "None"
+        return str(self.user)
 
 
 class UserSkill(models.Model):

@@ -220,3 +220,6 @@ function setup() {
 }
 
 setup();
+
+if (selectedMemberPk !== undefined)
+    showDetailedMemberInformation(state.members.find((member) => member.data.pk === selectedMemberPk));
