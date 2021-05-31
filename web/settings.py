@@ -94,6 +94,10 @@ INSTALLED_APPS = [
     'users',
 
     'util',  # not a "real" app, just a collection of utilities
+
+    # Should be placed last,
+    # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
