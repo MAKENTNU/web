@@ -2,12 +2,11 @@ from django.contrib import admin
 from django.template.defaultfilters import urlize
 from django.utils.translation import gettext_lazy as _
 
-from util.admin_utils import list_filter_factory
-from web.multilingual.admin import MultiLingualFieldAdmin
+from util.admin_utils import DefaultAdminWidgetsMixin, list_filter_factory
 from .models import Announcement
 
 
-class AnnouncementAdmin(MultiLingualFieldAdmin):
+class AnnouncementAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('content', 'classification', 'site_wide', 'get_is_shown', 'get_link', 'display_from', 'display_to')
     list_filter = (
         'classification', 'site_wide',

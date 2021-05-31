@@ -1,5 +1,6 @@
 from django.contrib import admin
 
+from util.admin_utils import DefaultAdminWidgetsMixin
 from .models import Committee, InheritanceGroup
 
 
@@ -35,7 +36,7 @@ class InheritanceGroupAdmin(admin.ModelAdmin):
         return form
 
 
-class CommitteeAdmin(admin.ModelAdmin):
+class CommitteeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('name', 'last_modified')
     list_select_related = ('group',)
     readonly_fields = ('last_modified',)

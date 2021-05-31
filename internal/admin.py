@@ -2,12 +2,11 @@ from django.contrib import admin
 from django.db.models.functions import Concat
 from django.utils.translation import gettext_lazy as _
 
-from util.admin_utils import TextFieldOverrideMixin
-from web.multilingual.admin import MultiLingualFieldAdmin
+from util.admin_utils import DefaultAdminWidgetsMixin
 from .models import Member, Secret, SystemAccess
 
 
-class MemberAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
+class MemberAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('get_name', 'last_modified')
     list_select_related = ('user',)
     readonly_fields = ('last_modified',)
@@ -26,7 +25,7 @@ class SystemAccessAdmin(admin.ModelAdmin):
     readonly_fields = ('last_modified',)
 
 
-class SecretAdmin(MultiLingualFieldAdmin):
+class SecretAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('title', 'priority', 'last_modified')
     search_fields = ('title', 'content')
     list_editable = ('priority',)

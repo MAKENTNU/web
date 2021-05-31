@@ -3,14 +3,13 @@ from django.db.models import Count
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from util.admin_utils import TextFieldOverrideMixin
-from web.multilingual.admin import MultiLingualFieldAdmin
+from util.admin_utils import DefaultAdminWidgetsMixin
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
 from .models.reservation import Quota, Reservation, ReservationRule
 
 
-class MachineTypeAdmin(MultiLingualFieldAdmin):
+class MachineTypeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('name', 'usage_requirement', 'has_stream', 'get_num_machines', 'priority')
     list_filter = ('usage_requirement', 'has_stream')
     search_fields = ('name', 'cannot_use_text')
@@ -29,7 +28,7 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
         return qs.annotate(Count('machines'))  # facilitates querying `machines__count`
 
 
-class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
+class MachineAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'status', 'priority', 'get_stream_name', 'last_modified')
     list_filter = ('machine_type', 'machine_model', 'location', 'status')
     search_fields = ('name', 'stream_name', 'machine_model', 'machine_type__name', 'location', 'location_url')
@@ -55,13 +54,13 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
         return super().get_queryset(request).default_order_by()
 
 
-class MachineUsageRuleAdmin(MultiLingualFieldAdmin):
+class MachineUsageRuleAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('machine_type', 'last_modified')
     list_select_related = ('machine_type',)
     readonly_fields = ('last_modified',)
 
 
-class ReservationAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
+class ReservationAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     pass
 
 
@@ -77,7 +76,7 @@ class ReservationRuleAdmin(admin.ModelAdmin):
     readonly_fields = ('last_modified',)
 
 
-class Printer3DCourseAdmin(admin.ModelAdmin):
+class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('username', 'user', 'name', 'date', 'status', 'advanced_course', 'last_modified')
     list_filter = ('status', 'advanced_course')
     search_fields = (

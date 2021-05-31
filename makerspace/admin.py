@@ -2,11 +2,11 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
 from util import html_utils
-from web.multilingual.admin import MultiLingualFieldAdmin
+from util.admin_utils import DefaultAdminWidgetsMixin
 from .models import Equipment
 
 
-class EquipmentAdmin(MultiLingualFieldAdmin):
+class EquipmentAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('title', 'get_image', 'priority', 'last_modified')
     search_fields = ('title', 'description')
     list_editable = ('priority',)
