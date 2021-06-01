@@ -8,6 +8,7 @@ class CardNumberField(models.CharField):
     """
     Custom field for card numbers, doing some extra validation.
     """
+    empty_strings_allowed = False  # empty values should be stored as None
     default_validators = [card_number_validator]
 
     def __init__(self, **kwargs):
@@ -30,13 +31,14 @@ class CardNumberField(models.CharField):
 
     def get_prep_value(self, value):
         if isinstance(value, CardNumber):
-            return value.number
+            return str(value.number)
         elif isinstance(value, str):
-            # Only try to remove the any EM prefix if the string is just whitespace
-            if value.strip():
+            value = value.strip()
+            # Only try to remove an EM prefix if the string is not just whitespace
+            if value:
                 return value.split()[-1]  # Remove possible EM prefix
-            return ""  # No need to include the whitespace
-        return value
+        # `value` is either None or not an acceptable value
+        return None
 
     def from_db_value(self, value, expression, connection):
         if value:
@@ -50,7 +52,7 @@ class CardNumber:
     """
 
     def __init__(self, number):
-        self.number = number
+        self.number = str(number)
 
     def __str__(self):
         return f"EM {self.number}"

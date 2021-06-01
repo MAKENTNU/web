@@ -7,11 +7,11 @@ class CardNumberModelFieldTest(TestCase):
 
     def test_get_prep_value(self):
         field = CardNumberField()
-        self.assertEqual("", field.get_prep_value(""), "The prep value of an empty string should be an empty string")
-        self.assertEqual("", field.get_prep_value("       "),
-                         "The prep value of a string of space should be an empty string")
-        self.assertEqual("", field.get_prep_value("\t\n \t\n   "),
-                         "The prep value of a string of whitespace should be an empty string")
+        self.assertEqual(None, field.get_prep_value(""), "The prep value of an empty string should be None")
+        self.assertEqual(None, field.get_prep_value("       "),
+                         "The prep value of a string of space should be None")
+        self.assertEqual(None, field.get_prep_value("\t\n \t\n   "),
+                         "The prep value of a string of whitespace should be None")
         self.assertEqual("1234567890", field.get_prep_value("1234567890"),
                          "The prep value of a string of digits should be the same string")
         self.assertEqual("1234567890", field.get_prep_value("EM 1234567890"),

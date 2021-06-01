@@ -24,6 +24,7 @@ class Printer3DCourse(models.Model):
     )
     username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("username"))
     date = models.DateField(verbose_name=_("course date"))
+    # Set `null=True` even when it's a string-based field, as `null` is the only value not checked by the unique constraint
     _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
     name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
