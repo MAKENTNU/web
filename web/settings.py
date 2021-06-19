@@ -14,6 +14,13 @@ if 'test' in sys.argv:
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether the request is actually over HTTPS,
+# as the connection between Nginx (the proxy we're using) and Django (run by Channel's Daphne server) is currently always over HTTP
+# (due to Daphne - seemingly - not supporting HTTPS)
+# !!! WARNING: when deploying, make sure that Nginx always either overwrites or removes the `X-Forwarded-Proto` header !!!
+# (see https://docs.djangoproject.com/en/stable/ref/settings/#secure-proxy-ssl-header)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Default values
 DATABASE = 'sqlite'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
