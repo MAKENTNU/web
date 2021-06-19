@@ -19,10 +19,11 @@
         <meta property="og:site_name" content="MAKE NTNU"/>
         <meta property="og:image"
               content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static 'web/img/make_thumb.png' %}{% endblock og_image %}"/>
+        <meta property="og:image:alt" content="{% block og_image_alt %}{% trans "MAKE NTNU's logo" %}{% endblock og_image_alt %}"/>
         {% trans "MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU." as site_description %}
         <meta property="og:description" content="{% block og_description %}{{ site_description }}{% endblock og_description %}"/>
         <meta property="description" content="{% block description %}{{ site_description }}{% endblock description %}"/>
-        <meta property="og:type" content="website"/>
+        <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}"/>
         <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
     {% endblock open_graph_meta %}
 

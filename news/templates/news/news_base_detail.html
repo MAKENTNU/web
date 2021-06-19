@@ -6,6 +6,7 @@
 
 {% block og_title %}{{ news_obj.title }}{% endblock og_title %}
 {% block og_image %}{{ news_obj.image.url }}{% endblock og_image %}
+{% block og_image_alt %}{{ news_obj.image_description }}{% endblock og_image_alt %}
 {% block og_description %}{{ news_obj.clickbait }}{% endblock og_description %}
 {% block description %}{{ news_obj.clickbait }}{% endblock description %}
 

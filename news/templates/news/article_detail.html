@@ -4,6 +4,12 @@
 {% load datetime_tags %}
 
 
+{% block og_type %}article{% endblock og_type %}
+{% block open_graph_meta %}
+    {{ block.super }}
+    <meta property="article:published_time" content="{{ news_obj.publication_time|iso_datetime }}"/>
+{% endblock open_graph_meta %}
+
 {% block extra_head %}
     {{ block.super }}
     <link rel="stylesheet" href="{% static 'news/css/article_detail.css' %}"/>
