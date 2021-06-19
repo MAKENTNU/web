@@ -4,11 +4,19 @@ register = template.Library()
 
 
 @register.simple_tag
+def get_absolute_uri_for_path(request, path: str):
+    """
+    :param request: the request object
+    :param path: the path to append to the request's scheme and host
+    :return: The absolute URI of the provided path.
+    """
+    return request.build_absolute_uri(path)
+
+
+@register.simple_tag
 def get_absolute_uri_no_query(request):
     """
-    Returns the absolute URI of the request with no query parameters.
-
-    :param request: The request
-    :return: The URI of the request page
+    :param request: the request object
+    :return: The absolute URI of the requested page, without any query parameters.
     """
-    return request.build_absolute_uri(request.path)
+    return get_absolute_uri_for_path(request, request.path)
