@@ -2549,6 +2549,10 @@ msgstr "Profil"
 msgid "Internal pages"
 msgstr "Internsider"
 
+#: web/templates/web/header.html:109
+msgid "Django admin"
+msgstr "Django-admin"
+
 #: web/templates/web/header.html:116 web/templates/web/login.html:30
 msgid "Log in"
 msgstr "Logg inn"
