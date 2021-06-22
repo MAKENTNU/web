@@ -1,9 +1,10 @@
 import copy
+import re
 from abc import ABC
-from typing import Any, Iterable, Tuple
+from typing import Any, Iterable, Optional, Tuple
 
 from django.forms import BoundField, FileInput, Form
-from django.http import Http404
+from django.http import Http404, QueryDict
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.edit import FormMixin
@@ -108,3 +109,28 @@ class PreventGetRequestsMixin:
 
     def get(self, *args, **kwargs):
         raise Http404()
+
+
+# noinspection PyUnresolvedReferences
+class CleanNextParamMixin:
+    # It should either be just a `/` (meaning the front page),
+    # or a `/` followed by one or more word characters and the rest of the string (due to no `$` anchor).
+    # A whitelist was chosen here, but it should be mentioned that the main strings we want to blacklist, are strings starting with:
+    # * word characters (i.e. not symbols), as this allows for arbitrary absolute URLs (e.g. `google.com` or `http://google.com`);
+    # * `//`, as this allows for protocol-relative URLs (e.g. `//google.com`).
+    SAFE_NEXT_REGEX = re.compile(r"^(/$|/\w+)")
+
+    cleaned_next_param: Optional[str]
+
+    def dispatch(self, request, *args, **kwargs):
+        next_param = request.GET.get('next')
+        if next_param and not self.SAFE_NEXT_REGEX.match(next_param):
+            # Remove the `next` param from the query dict
+            get_dict: QueryDict = request.GET.copy()
+            get_dict['next'] = None
+            get_dict._mutable = False
+            request.GET = get_dict
+
+            next_param = None
+        self.cleaned_next_param = next_param
+        return super().dispatch(request, *args, **kwargs)

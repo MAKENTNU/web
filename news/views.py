@@ -21,7 +21,7 @@ from django.views.generic.edit import ModelFormMixin
 from mail import email
 from util.locale_utils import short_datetime_format
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
-from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
+from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
 from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm, ToggleForm
 from .models import Article, Event, EventQuerySet, EventTicket, TimePlace
 
@@ -523,7 +523,7 @@ class AdminTimeplaceTicketListView(AdminEventTicketListView):
         return self.time_place
 
 
-class CancelTicketView(PermissionRequiredMixin, UpdateView):
+class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView):
     model = EventTicket
     fields = ()
     template_name = 'news/ticket_cancel.html'
@@ -534,7 +534,7 @@ class CancelTicketView(PermissionRequiredMixin, UpdateView):
     def has_permission(self):
         return (
                 self.request.user.has_perm('news.cancel_ticket')
-                or self.request.user == self.object.user
+                or self.request.user == self.get_object().user
         )
 
     def get_queryset(self):
@@ -576,7 +576,6 @@ class CancelTicketView(PermissionRequiredMixin, UpdateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        next_page = self.request.GET.get('next')
-        if next_page is not None:
-            return next_page
+        if self.cleaned_next_param:
+            return self.cleaned_next_param
         return reverse('ticket_detail', args=[self.object.pk])
