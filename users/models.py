@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, Type
 
 from django.contrib.auth.models import AbstractUser, Permission
 from django.db import models
@@ -30,7 +30,7 @@ class User(AbstractUser):
             return full_name
         return f"{names[0]} {names[-1]}"
 
-    def has_any_permissions_for(self, model: models.Model):
+    def has_any_permissions_for(self, model: Type[models.Model]):
         app_label = model._meta.app_label
         model_name = model._meta.model_name
         return any(self.has_perm(f'{app_label}.{action}_{model_name}') for action in ('add', 'change', 'delete'))

@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
+from users.models import User
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import CategoryForm, QuestionForm
 from .models import Category, Question
@@ -24,7 +25,7 @@ class FAQAdminPanelView(PermissionRequiredMixin, TemplateView):
     template_name = 'faq/faq_admin_panel.html'
 
     def has_permission(self):
-        user = self.request.user
+        user: User = self.request.user
         return user.has_any_permissions_for(Category) or user.has_any_permissions_for(Question)
 
 

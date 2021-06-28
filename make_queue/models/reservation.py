@@ -1,3 +1,4 @@
+import itertools
 from datetime import datetime, time, timedelta
 from typing import Collection, List, Tuple
 
@@ -364,6 +365,19 @@ class ReservationRule(models.Model):
 
         return [rule for rule in machine_type.reservation_rules.all()
                 if rule.hours_inside(start_time, end_time)]
+
+    @staticmethod
+    def rule_set_has_gaps(machine_type: MachineType):
+        rules = machine_type.reservation_rules.all()
+        if not rules:
+            return True
+        time_periods = itertools.chain(*(rule.time_periods for rule in rules))
+        time_periods = sorted(time_periods, key=lambda p: p.exact_start_weekday)
+        for i, period in enumerate(time_periods):
+            next_period = time_periods[(i + 1) % len(time_periods)]
+            if next_period - period > 0:
+                return True
+        return False
 
     class Period:
 

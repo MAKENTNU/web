@@ -18,6 +18,7 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import ModelFormMixin
 
 from mail import email
+from users.models import User
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
 from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
@@ -142,7 +143,7 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
     context_object_name = 'events'
 
     def has_permission(self):
-        user = self.request.user
+        user: User = self.request.user
         return user.has_any_permissions_for(Event) or user.has_any_permissions_for(TimePlace)
 
     def get_queryset(self):

@@ -1771,6 +1771,13 @@ msgstr "For hver tidsperiode"
 msgid "Card's “multi-period” value"
 msgstr "Kortets «fler-periode»-verdi"
 
+#: make_queue/templates/make_queue/rule_list.html:54
+msgid ""
+"There exists one or more gaps between the rules' periods, that are not "
+"covered"
+msgstr ""
+"Det finnes ett eller flere hull mellom reglenes perioder, som ikke er dekket"
+
 #: make_queue/templates/make_queue/rule_list.html:69
 msgid "Single period"
 msgstr "Enkeltperiode"
