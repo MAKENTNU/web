@@ -1,6 +1,5 @@
 {% extends 'docs/base.html' %}
 {% load i18n %}
-{% load search_tags %}
 
 
 {% block body %}
@@ -26,9 +25,7 @@
                             </div>
                             <div class="description">
                                 {% if page.current_content %}
-                                    {% autoescape off %}
-                                        {% search_content_display page.current_content %}
-                                    {% endautoescape %}
+                                    {{ page.current_content.content|striptags|truncatechars:300 }}
                                 {% else %}
                                     {% trans "No content" %}
                                 {% endif %}
