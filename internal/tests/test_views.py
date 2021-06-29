@@ -10,8 +10,9 @@ from contentbox.forms import EditSourceContentBoxForm
 from contentbox.models import ContentBox
 from users.models import User
 from util.auth_utils import get_perms
+from util.url_utils import reverse_internal
 from web.multilingual.data_structures import MultiLingualTextStructure
-from .test_urls import INTERNAL_CLIENT_DEFAULTS, reverse_internal
+from .test_urls import INTERNAL_CLIENT_DEFAULTS
 
 
 class InternalContentBoxTests(TestCase):

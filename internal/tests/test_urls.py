@@ -5,11 +5,11 @@ from urllib.parse import urlparse
 
 from django.test import Client, TestCase
 from django.utils.dateparse import parse_date
-from django_hosts import reverse
 
 from contentbox.models import ContentBox
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
+from util.url_utils import reverse_internal
 from ..forms import MemberStatusForm
 from ..models import Member, Quote, Secret, SystemAccess
 from ..util import date_to_semester, semester_to_year, year_to_semester
@@ -17,10 +17,6 @@ from ..util import date_to_semester, semester_to_year, year_to_semester
 
 # Makes sure that the subdomain of all requests is `internal`
 INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': 'internal.testserver'}
-
-
-def reverse_internal(viewname: str, *args):
-    return reverse(viewname, args=args, host='internal', host_args=['internal'])
 
 
 class UrlTests(TestCase):

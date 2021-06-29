@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
@@ -15,6 +14,7 @@ from simple_history.models import HistoricalRecords
 
 from groups.models import Committee
 from users.models import User
+from util.url_utils import reverse_internal
 from web.modelfields import UnlimitedCharField
 from .modelfields import SemesterField
 from .util import date_to_semester, year_to_semester
@@ -223,7 +223,7 @@ class SystemAccess(models.Model):
         # TODO: In the future it would be beneficial to create automated processes for adding, removing and revoking
         # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
         # channels, or using GSuite APIs to add and remove people from mailing lists.
-        return reverse('edit_system_access', args=(self.member.pk, self.pk))
+        return reverse_internal('edit_system_access', self.member.pk, self.pk)
 
     def should_be_changed(self):
         return self.name != self.WEBSITE
