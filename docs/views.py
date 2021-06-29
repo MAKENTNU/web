@@ -41,12 +41,12 @@ class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
         return super().get_object(*args, **kwargs)
 
 
-class HistoryDocumentationPageView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageHistoryDetailView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_history.html'
     context_object_name = 'page'
 
 
-class OldDocumentationPageContentView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageContentDetailView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
@@ -75,7 +75,7 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, SpecificPageBa
     form_class = ChangePageVersionForm
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('page_history', args=[self.get_object().pk]))
+        return HttpResponseRedirect(reverse('page_history_detail', args=[self.get_object().pk]))
 
     def get_success_url(self):
         return reverse('page_detail', args=[self.get_object().pk])
