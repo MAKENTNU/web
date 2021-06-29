@@ -22,7 +22,7 @@
                     on {{ date }} at {{ time }}.
                 {% endblocktrans %}
                 {% trans "To view the current version, click" %}
-                <a href="{% url 'page_detail' page.pk %}">{% trans "here" %}</a>.
+                <a href="{{ page.get_absolute_url }}">{% trans "here" %}</a>.
                 {% if perms.docs.change_page %}
                     {% trans "To change the current version to this one, click" %}
                     <a id="change-current-version" href="">{% trans "here" %}</a>.

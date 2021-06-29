@@ -22,7 +22,7 @@
                     {% endif %}
                     <div class="content">
                         <div class="word-breaking hyphenated header">
-                            <a href="{% url 'page_content_detail' page.pk content.pk %}">
+                            <a href="{{ content.get_absolute_url }}">
                                 {% if forloop.last %}
                                     {% trans "Created by" %}
                                 {% else %}

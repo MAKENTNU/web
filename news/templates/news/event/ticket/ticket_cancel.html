@@ -13,7 +13,7 @@
         <form class="ui form" method="POST">
             {% csrf_token %}
             <a class="ui red button" href="{% if request.GET.next %}{{ request.GET.next }}
-                                           {% else %}{% url 'ticket_detail' ticket.pk %}{% endif %}">
+                                           {% else %}{{ ticket.get_absolute_url }}{% endif %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
             <button class="ui primary button" type="submit">{% trans "Yes, I'm sure" %}</button>

@@ -53,7 +53,7 @@
                         <div class="description">
                             <div class="word-breaking">
                                 <b>{% trans "Ref #" %}:</b>
-                                <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.uuid }}</a>
+                                <a href="{{ ticket.get_absolute_url }}">{{ ticket.uuid }}</a>
                             </div>
                             <div>
                                 <b>{% trans "language"|capfirst %}</b> {{ ticket.get_language_display }}

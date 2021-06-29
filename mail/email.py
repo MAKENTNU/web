@@ -3,7 +3,6 @@ import os
 import smtplib
 
 from channels.consumer import SyncConsumer
-from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 
@@ -86,7 +85,6 @@ def render_html(context, html_template_name):
     :param html_template_name: The name of the template file
     :return: A string representing the HTML content
     """
-    context.update({"site": settings.EMAIL_SITE_URL})
     return get_template(html_template_name).render(context)
 
 
@@ -100,9 +98,7 @@ def render_text(context, text="", text_template_name=None):
     :param text_template_name: The name of the template file
     :return: A string representing the text content
     """
-    if text_template_name is not None:
-        context.update({"site": settings.EMAIL_SITE_URL})
-
+    if text_template_name:
         return get_template(text_template_name).render(context)
 
     # Default to text attribute

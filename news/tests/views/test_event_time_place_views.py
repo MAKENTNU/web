@@ -24,7 +24,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
             image=MOCK_JPG_FILE, image_description="Mock image",
             number_of_tickets=40,
         )
-        self.event_url = reverse('event_detail', args=[self.event.pk])
+        self.event_url = self.event.get_absolute_url()
         self.timeplace = TimePlace.objects.create(
             event=self.event,
             start_time=timezone.localtime() + timedelta(minutes=5),

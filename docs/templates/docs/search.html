@@ -21,7 +21,7 @@
                     <div class="ui item">
                         <div class="content">
                             <div class="header">
-                                <a href="{% url 'page_detail' page.pk %}">{{ page.title }}</a>
+                                <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
                             </div>
                             <div class="description">
                                 {% if page.current_content %}

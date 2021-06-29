@@ -16,7 +16,7 @@
     <div class="ui items events">
         {% for event_dict in event_dicts %}
             <div class="event item">
-                <a class="ui small image" href="{% url 'event_detail' event_dict.event.pk %}">
+                <a class="ui small image" href="{{ event_dict.event.get_absolute_url }}">
                     <p class="ui {{ ribbon_extra_classes }} ribbon label">
                         {% block ribbon_label %}
                             {{ event_dict.shown_occurrence.start_time|year_wise_short_date }}
@@ -41,7 +41,7 @@
 
                 <div class="word-breaking hyphenated content">
                     <h1 class="event-title">
-                        <a class="make-col-yellow" href="{% url 'event_detail' event_dict.event.pk %}">{{ event_dict.event.title }}</a>
+                        <a class="make-col-yellow" href="{{ event_dict.event.get_absolute_url }}">{{ event_dict.event.title }}</a>
                     </h1>
                     <div class="meta">
                         {% if event_dict.shown_occurrence.place %}

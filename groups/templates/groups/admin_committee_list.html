@@ -17,7 +17,7 @@
                 {% for committee in committees %}
                     <div class="item">
 
-                        <a class="image" href="{% url 'committee_detail' committee.pk %}">
+                        <a class="image" href="{{ committee.get_absolute_url }}">
                             <img {% if committee.image %}
                                 src="{{ committee.image.url }}"
                                 alt="{% blocktranslate with name=committee.name %}{{ name }} committee image{% endblocktranslate %}"
@@ -30,7 +30,7 @@
                         </a>
                         <div class="word-breaking hyphenated content">
                             <h3 class="committee-name">
-                                <a class="make-col-blue" href="{% url 'committee_detail' committee.pk %}">
+                                <a class="make-col-blue" href="{{ committee.get_absolute_url }}">
                                     {{ committee.name }}
                                 </a>
                             </h3>

@@ -39,7 +39,7 @@
                     </a>
                 {% endif %}
 
-                <a class="ui make-bg-yellow button" href="{% url 'event_detail' event.pk %}">
+                <a class="ui make-bg-yellow button" href="{{ event.get_absolute_url }}">
                     <i class="sticky note icon"></i>{% trans "Go to the event page" %}
                 </a>
             </div>

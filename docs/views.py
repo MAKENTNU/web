@@ -78,7 +78,7 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, SpecificPageBa
         return HttpResponseRedirect(reverse('page_history_detail', args=[self.get_object().pk]))
 
     def get_success_url(self):
-        return reverse('page_detail', args=[self.get_object().pk])
+        return self.get_object().get_absolute_url()
 
     def form_invalid(self, form):
         return HttpResponseForbidden()
@@ -107,7 +107,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
         except Page.DoesNotExist:
             existing_page = None
         if existing_page:
-            return HttpResponseRedirect(reverse('page_detail', args=[existing_page.pk]))
+            return HttpResponseRedirect(existing_page.get_absolute_url())
         return super().form_invalid(form)
 
     def get_success_url(self):
@@ -154,7 +154,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin
         return super(ModelFormMixin, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('page_detail', args=[self.object.pk])
+        return self.object.get_absolute_url()
 
 
 class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificPageBasedViewMixin, DeleteView):

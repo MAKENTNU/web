@@ -49,7 +49,7 @@
     </div>
     <div>
         <a class="ui {% card_color_from_machine_status machine %} bottom attached button"
-           href="{% url 'machine_detail' machine.pk %}">
+           href="{{ machine.get_absolute_url }}">
             {% trans "View in calendar" %}
         </a>
     </div>

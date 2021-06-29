@@ -153,4 +153,4 @@ class EditUsageRulesView(PermissionRequiredMixin, CustomFieldsetFormMixin, Machi
         return _("View usage rules for {machine_type}").format(machine_type=self.machine_type)
 
     def get_success_url(self):
-        return reverse('machine_usage_rules_detail', args=[self.machine_type.pk])
+        return self.get_object().get_absolute_url()

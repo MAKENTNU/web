@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
 from users.models import User
@@ -80,6 +81,9 @@ class Article(NewsBase):
         )
         ordering = ('-publication_time',)
 
+    def get_absolute_url(self):
+        return reverse('article_detail', args=[self.pk])
+
 
 class EventQuerySet(NewsBaseQuerySet):
 
@@ -122,6 +126,9 @@ class Event(NewsBase):
         permissions = (
             ('can_view_private', "Can view private events"),
         )
+
+    def get_absolute_url(self):
+        return reverse('event_detail', args=[self.pk])
 
     def get_future_occurrences(self) -> 'TimePlaceQuerySet':
         return self.timeplaces.published().future().order_by('start_time')
@@ -276,6 +283,9 @@ class EventTicket(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.event if self.event else self.timeplace}"
+
+    def get_absolute_url(self):
+        return reverse('ticket_detail', args=[self.pk])
 
     @property
     def registered_event(self) -> Event:

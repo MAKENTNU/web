@@ -17,6 +17,7 @@ from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import ModelFormMixin
+from django_hosts import reverse as django_hosts_reverse
 
 from mail import email
 from util.locale_utils import short_datetime_format
@@ -529,7 +530,7 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Crea
         except EventTicket.DoesNotExist:
             pass
         else:
-            return HttpResponseRedirect(reverse('ticket_detail', args=[ticket.pk]))
+            return HttpResponseRedirect(ticket.get_absolute_url())
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -580,7 +581,7 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Crea
         })
 
     def get_success_url(self):
-        return reverse('ticket_detail', args=[self.object.pk])
+        return self.object.get_absolute_url()
 
 
 class TicketDetailView(DetailView):
@@ -651,11 +652,14 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         )
 
     def get_allowed_next_params(self) -> Set[str]:
-        return {
-            reverse('ticket_detail', args=[self.ticket.pk]),
-            reverse('my_tickets_list'),
-            reverse('event_detail', args=[self.ticket.registered_event.pk]),
-        }
+        urls = set()
+        for reverse_func in (reverse, django_hosts_reverse):
+            urls |= {
+                reverse_func('ticket_detail', args=[self.ticket.pk]),
+                reverse_func('my_tickets_list'),
+                reverse_func('event_detail', args=[self.ticket.registered_event.pk]),
+            }
+        return urls
 
     def get_queryset(self):
         return self.request.user.event_tickets.all()
@@ -698,4 +702,4 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
     def get_success_url(self):
         if self.cleaned_next_param:
             return self.cleaned_next_param
-        return reverse('ticket_detail', args=[self.ticket.pk])
+        return self.ticket.get_absolute_url()

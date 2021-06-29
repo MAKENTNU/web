@@ -62,7 +62,6 @@ PARENT_HOST = "makentnu.localhost:8000"
 USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
-EMAIL_SITE_URL = "https://makentnu.no"  # (custom setting)
 
 # Set local settings
 try:

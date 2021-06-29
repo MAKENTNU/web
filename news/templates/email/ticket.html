@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load uri_tags %}
 
 {# CSS styles should be inline, as most email clients don't support external stylesheets, and many don't support <style> tags. #}
 {# See https://css-tricks.com/using-css-in-html-emails-the-real-story/ for more details on what is and isn't supported. #}
@@ -14,7 +15,7 @@
     <tr style="padding: 0; margin: 0; width: 100%;">
         <th style="padding: 20px;">
             <img src="{{ site }}{% static 'web/img/logo_white.svg' %}"
-                 style="width: 500px; max-width: 100%;" alt="{% trans "MAKE NTNU's logo" %}"
+                 style="width: 500px; max-width: 100%;" alt="{% translate "MAKE NTNU's logo" %}"
             />
         </th>
     </tr>
@@ -29,21 +30,22 @@
     </tr>
     <tr style="width: 100%">
         <td style="padding: 30px 30px 0 30px; font-size: 30px; font-weight: bold;">
-            {% blocktrans with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktrans %}
+            {% blocktranslate with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktranslate %}
         </td>
     </tr>
     <tr style="width: 100%">
         <td style="padding: 15px 30px 0 30px;">
-            {% trans "Thank you for registering for this event. You can view your ticket on" %}
-            <a href="{{ site }}{% url 'ticket_detail' ticket.pk %}">{% trans "this page" %}</a>.
+            {% translate "Thank you for registering for this event. You can view your ticket on" %}
+            <a href="{% get_absolute_uri_for_path request ticket.get_absolute_url %}">{% translate "this page" %}</a>.
 
-            {% trans "If you want to cancel your registration, you can do so by going to" %}
-            <a href="{{ site }}{% url 'cancel_ticket' ticket.pk %}">{% trans "this page" %}</a>.
+            {% url 'cancel_ticket' ticket.pk as cancel_url %}
+            {% translate "If you want to cancel your registration, you can do so by going to" %}
+            <a href="{% get_absolute_uri_for_path request cancel_url %}">{% translate "this page" %}</a>.
         </td>
     </tr>
     <tr style="width: 100%">
         <td style="padding: 30px;">
-            {% trans "The reference number for your ticket is" %}: <b>"{{ ticket.uuid }}"</b>
+            {% translate "The reference number for your ticket is" %}: <b>"{{ ticket.uuid }}"</b>
         </td>
     </tr>
     </tbody>

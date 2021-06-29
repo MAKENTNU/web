@@ -24,7 +24,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
             image=MOCK_JPG_FILE, image_description="Mock image",
             publication_time=timezone.localtime() - timedelta(days=1),
         )
-        self.article_url = reverse('article_detail', args=[self.article.pk])
+        self.article_url = self.article.get_absolute_url()
 
     def test_admin(self):
         response = self.client.get(reverse('admin_article_list'))

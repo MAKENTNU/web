@@ -86,6 +86,9 @@ class Member(models.Model):
             # Add user to the MAKE group
             self.set_membership(True)
 
+    def get_absolute_url(self):
+        return reverse_internal('member_list', self.pk)
+
     @property
     def phone_number_display(self):
         if not isinstance(self.phone_number, PhoneNumber):

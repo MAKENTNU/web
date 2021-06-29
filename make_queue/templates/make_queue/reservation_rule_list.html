@@ -23,7 +23,7 @@
             {% endif %}
         </h1>
         <div>
-            <a class="ui blue button" href="{% url 'machine_usage_rules_detail' machine_type.pk %}">
+            <a class="ui blue button" href="{{ machine_type.usage_rule.get_absolute_url }}">
                 {% trans "Usage rules" %}
             </a>
         </div>

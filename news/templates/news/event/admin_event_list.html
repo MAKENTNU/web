@@ -16,7 +16,7 @@
         <div class="ui four doubling stackable cards">
             {% for event in events %}
                 <div class="ui card">
-                    <a class="image" href="{% url 'event_detail' event.pk %}">
+                    <a class="image" href="{{ event.get_absolute_url }}">
                         <img src="{{ event.image.url }}"
                              alt="{% blocktrans trimmed with title=event.title description=event.image_description %}
                                  View the event “{{ title }}”; image description: {{ description }}
@@ -24,7 +24,7 @@
                         />
                     </a>
                     <div class="content">
-                        <a class="word-breaking hyphenated header" href="{% url 'event_detail' event.pk %}">
+                        <a class="word-breaking hyphenated header" href="{{ event.get_absolute_url }}">
                             {{ event.title }}
                         </a>
                         <div class="meta">

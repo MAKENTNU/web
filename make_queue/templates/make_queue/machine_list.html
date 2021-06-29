@@ -38,7 +38,7 @@
                         {{ machine_type.name }}
                     </div>
                     <div class="ui content">
-                        <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine_type.pk %}">
+                        <a class="ui primary button" href="{{ machine_type.usage_rule.get_absolute_url }}">
                             {% trans "Show rules" %}
                         </a>
                     </div>

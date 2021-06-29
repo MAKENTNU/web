@@ -13,7 +13,7 @@
     <div class="committees ui divided items text container basic segment">
         {% for committee in committees %}
             <div class="item">
-                <a class="image" href="{% url 'committee_detail' committee.pk %}">
+                <a class="image" href="{{ committee.get_absolute_url }}">
                     {% if committee.image %}
                         <img src="{{ committee.image.url }}"
                              alt="{% blocktrans with name=committee.name %}{{ name }} committee image{% endblocktrans %}"
@@ -22,7 +22,7 @@
                 </a>
                 <div class="word-breaking hyphenated content">
                     <div class="header">
-                        <a class="make-col-blue" href="{% url 'committee_detail' committee.pk %}">
+                        <a class="make-col-blue" href="{{ committee.get_absolute_url }}">
                             {{ committee.name|capfirst }}
                         </a>
                     </div>

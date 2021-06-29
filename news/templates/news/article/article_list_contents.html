@@ -7,7 +7,7 @@
 
 <div class="articles">
     {% for article in articles %}
-        <a class="article-img-container {% cycle "float-right" "float-left" %}" href="{% url 'article_detail' article.pk %}">
+        <a class="article-img-container {% cycle "float-right" "float-left" %}" href="{{ article.get_absolute_url }}">
             <img {% thumbnail article.image "600" crop="center" as image_thumb %}
                 src="{{ image_thumb.url }}"
             {% empty %}
@@ -30,7 +30,7 @@
             {% endif %}
             <div>
                 <h1 class="article-title">
-                    <a class="make-col-yellow" href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
+                    <a class="make-col-yellow" href="{{ article.get_absolute_url }}">{{ article.title }}</a>
                 </h1>
                 <p>{{ article.clickbait }}</p>
             </div>
