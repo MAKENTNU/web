@@ -62,7 +62,7 @@ class OldDocumentationPageContentView(SpecificPageBasedViewMixin, DetailView):
         context_data = super().get_context_data(**kwargs)
 
         context_data.update({
-            'old': True,
+            'old': not hasattr(self.content, 'page_currently_on'),
             'content': self.content,
             'last_edit_name': self.content.made_by.get_full_name() if self.content.made_by else _("Anonymous"),
             'form': ChangePageVersionForm(initial={'current_content': self.content}),

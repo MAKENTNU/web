@@ -24,8 +24,7 @@ class Page(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        # Can be used as a boolean field by `Content`
-        related_name='is_currently_on_page',
+        related_name='page_currently_on',
     )
 
     def __str__(self):
