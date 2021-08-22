@@ -41,6 +41,18 @@ msgstr "Tidspunkt"
 msgid "Comment"
 msgstr "Kommentar"
 
+#: make_queue/static/make_queue/js/course_registration_list.js:18
+msgid "%(num)s user selected"
+msgid_plural "%(num)s users selected"
+msgstr[0] "%(num)s bruker valgt"
+msgstr[1] "%(num)s brukere valgt"
+
+#: make_queue/static/make_queue/js/course_registration_list.js:223
+msgid "Displaying %(num)s registration"
+msgid_plural "Displaying %(num)s registrations"
+msgstr[0] "Viser %(num)s registrering"
+msgstr[1] "Viser %(num)s registreringer"
+
 #: make_queue/static/make_queue/js/reservation_edit.js:292
 msgid "Choose time"
 msgstr "Velg tid"

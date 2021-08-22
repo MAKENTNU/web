@@ -54,7 +54,7 @@
         {# Prepopulated area to be shown when one or more rows are selected #}
         <div id="selected-actions" class="display-none ui secondary segment">
             <h4>
-                <span id="num-selected"></span> {% trans "user(s) selected" %}
+                <span id="num-users-selected"></span>
             </h4>
             <div class="ui form">
                 <div class="ui fields">
@@ -176,13 +176,7 @@
             {% trans "registrations" %}
         </span>
         <br/>
-        <span>
-            {% trans "Displaying" %}
-            <b>
-                <span id="displayed-registrations-count">{{ registrations|length }}</span>/{{ registrations|length }}
-            </b>
-            {% trans "registrations" %}
-        </span>
+        <span id="num-registrations-displayed"></span>
     </div>
 
     {# Modal for confirmation of bulk status update on selected users #}

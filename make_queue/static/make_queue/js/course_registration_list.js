@@ -17,6 +17,14 @@ const state = {
     onlyShowSelectedUsers: false,
 };
 
+function updateSelectedCountText() {
+    const usersSelectedText = interpolate(
+        ngettext("%(num)s user selected", "%(num)s users selected", state.selectedCount),
+        {num: state.selectedCount}, true,
+    );
+    $("#num-users-selected").text(usersSelectedText);
+}
+
 // Make each row selectable
 $("tbody tr").click(function () {
     const hasClass = $(this).hasClass(SELECTED_ROW_CLASS);
@@ -24,7 +32,7 @@ $("tbody tr").click(function () {
     state.selectedCount += hasClass ? -1 : 1;
     $(this).toggleClass(SELECTED_ROW_CLASS, !hasClass);
 
-    $("#num-selected").text(state.selectedCount);
+    updateSelectedCountText();
     $("#selected-actions").toggleClass(DISPLAY_NONE_CLASS, state.selectedCount === 0);
     if (state.onlyShowSelectedUsers || state.selectedCount === 0) {
         state.onlyShowSelectedUsers = state.onlyShowSelectedUsers && state.selectedCount;
@@ -208,7 +216,11 @@ function updateDisplay() {
 
         numRegistrationsFiltered++;
     }
-    $("#displayed-registrations-count").text(displayedRegistrationsCount);
+    const registrationsDisplayedHTML = interpolate(
+        ngettext("Displaying %(num)s registration", "Displaying %(num)s registrations", displayedRegistrationsCount),
+        {num: `<b>${displayedRegistrationsCount}</b>`}, true,
+    );
+    $("#num-registrations-displayed").html(registrationsDisplayedHTML);
 
     // Removes old numbers in pagination bar and adds new ones
     $("#pagination-bar").children().slice(2, -2).remove();

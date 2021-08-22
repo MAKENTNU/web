@@ -1489,10 +1489,6 @@ msgstr "Alle"
 msgid "Download filtered users"
 msgstr "Last ned filtrerte brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:57
-msgid "user(s) selected"
-msgstr "bruker(e) valgt"
-
 #: make_queue/templates/make_queue/course/course_registration_list.html:62
 msgid "Set status for all selected users"
 msgstr "Sett status for alle valgte brukere"
