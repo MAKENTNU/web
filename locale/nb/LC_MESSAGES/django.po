@@ -1505,6 +1505,10 @@ msgstr "Nullstill valg av brukere"
 msgid "Toggle non-selected users"
 msgstr "Veksle visning av ikke-valgte brukere"
 
+#: make_queue/templates/make_queue/course/course_registration_list.html:88
+msgid "Select all shown users"
+msgstr "Velg alle viste brukere"
+
 #: make_queue/templates/make_queue/course/course_registration_list.html:94
 #: news/templates/news/event_list_contents.html:26
 #: web/templates/web/forms/widgets/semantic_date.html:9

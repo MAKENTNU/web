@@ -99,6 +99,25 @@ $("#clear-selected-users").click(function () {
     filter();
 });
 
+// TODO: reformat to reduce code duplication with other parts of the file
+// Button to select all shown users
+$("#select-shown-users").click(function () {
+    const shownUnselectedUserRows = state.elements.filter((e) =>
+        !e.$element.hasClass(DISPLAY_NONE_CLASS)
+        && !e.$element.hasClass(SELECTED_ROW_CLASS),
+    );
+    if (shownUnselectedUserRows.length === 0)
+        return;
+
+    shownUnselectedUserRows.forEach(function (e) {
+        e.$element.toggleClass(SELECTED_ROW_CLASS, true);
+    });
+    state.selectedCount += shownUnselectedUserRows.length;
+    updateSelectedCountText();
+    // Ensure that it's visible, even if it's already visible
+    $("#selected-actions").toggleClass(DISPLAY_NONE_CLASS, false);
+});
+
 // The bulk status change dropdown
 $("#status-set").parent().dropdown({
     onChange: function (value, statusText, $choice) {
