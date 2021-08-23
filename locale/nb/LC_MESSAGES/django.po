@@ -2006,6 +2006,11 @@ msgstr "Maskinen har status «{status}»."
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall framtidige reservasjoner."
 
+#: make_queue/views/admin/course.py:90
+#: make_queue/views/admin/course.py:138
+msgid "Course participants"
+msgstr "Kursdeltakere"
+
 #: make_queue/views/admin/quota.py:61 make_queue/views/admin/quota.py:87
 msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"
