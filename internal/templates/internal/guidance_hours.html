@@ -41,7 +41,7 @@
                 <tbody>
                     <tr>         
                         <td>{{ hour.start_time }}-{{ hour.end_time }}<a href="{% url 'edit-guidance-hours' hour.pk  %}"> </a> </td>
-                        {% for slot in hour.get_slots %}
+                        {% for slot in hour.slots %}
 
                             <td class="member-info"
                                 data-variation="medium"          

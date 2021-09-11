@@ -145,7 +145,7 @@ class GuidanceHours(models.Model):
    
    
     @property
-    def get_slots(self):
+    def slots(self):
         return [self.slot_one, self.slot_two, self.slot_three, self.slot_four]
     
     def clean(self):
