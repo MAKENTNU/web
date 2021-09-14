@@ -1,0 +1,22 @@
+.definition.table td {
+    padding: 1em !important; /* Overrides Fomantic-UI */
+}
+
+.definition.table td div {
+    padding: 0.5em 0;
+}
+
+
+@media only screen and (max-width: 767.98px) {
+    .definition.table td:first-child {
+        padding: 0 1em !important; /* Overrides Fomantic-UI */
+    }
+
+    .definition.table td:not(:first-child) {
+        padding: 1em 1em 0 2.5em !important; /* Overrides Fomantic-UI */
+    }
+
+    .definition.table td div:first-child {
+        padding-top: 0;
+    }
+}

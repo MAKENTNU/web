@@ -1,0 +1,21 @@
+{% extends 'contentbox/display.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'web/css/about.css' %}"/>
+{% endblock head %}
+
+{% block extra_post_content %}
+    <br/>
+
+    <div class="about">
+        <p>
+            <span class="title">
+                <a href="{% url 'contact' %}">{% trans "Contact info" %}</a>
+            </span> &nbsp;&ndash;&nbsp; {% trans "click here to show various contact info, like email addresses" %}.
+        </p>
+    </div>
+{% endblock extra_post_content %}

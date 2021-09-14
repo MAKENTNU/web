@@ -1,0 +1,18 @@
+.copy-button-container {
+    font-size: large;
+    margin-bottom: 0.5em;
+}
+
+.copy-button-container .copy-token.button {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+}
+
+.copy-button-container i.icon {
+    font-size: large;
+}
+
+.input-monospace {
+    font-family: "Courier New", Courier, monospace !important;
+    width: 100%;
+}

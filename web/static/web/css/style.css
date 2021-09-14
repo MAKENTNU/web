@@ -1,10 +1,44 @@
 html, body {
+    --make-yellow: rgb(248, 200, 17);
+    --make-blue: rgb(12, 66, 106);
+    --make-turquoise: rgb(0, 235, 179);
+    --make-dark-grey: rgb(74, 75, 76);
+    --make-light-grey: rgb(220, 221, 222);
+
+    --make-yellow-darker: rgb(239, 184, 14);
+
     height: 100%;
+    min-width: 320px;
+    font-size: 14px; /* Same as Fomantic-UI */
+    font-family: "Ubuntu", sans-serif !important;
 }
 
 body {
     display: block;
     flex-direction: column;
+}
+
+p, h1, h2, h3, h4, h5, li, td, th, div, a, input, textarea, button {
+    font-family: "Ubuntu", sans-serif !important;
+}
+
+p, li {
+    font-size: 1.15rem;
+}
+
+p {
+    line-height: 1.85rem;
+}
+
+li {
+    line-height: 1.65rem;
+}
+
+.word-breaking {
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 
 .wrapper {
@@ -18,17 +52,12 @@ body {
     height: 100%;
 }
 
-.removebottommargin {
-    margin-bottom: 0 !important;
+.display-none {
+    display: none !important;
 }
 
 .text-centered {
     text-align: center !important;
-}
-
-.square_20 {
-    width: 20px;
-    height: 20px;
 }
 
 .square_36 {
@@ -36,84 +65,86 @@ body {
     height: 36px;
 }
 
-.make_yellow.button {
-    background-color: rgb(248, 200, 17) !important;
-    color: black !important;
-    font-weight: normal;
-}
-
-.make_yellow.button:hover {
-    background-color: rgb(228, 188, 15) !important;;
-}
-
-.make_yellow.button.bordered {
-    border-left: 1px solid rgb(162, 130, 12);
-    border-right: 1px solid rgb(162, 130, 12);
-}
-
-.noshadow {
-    text-shadow: 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF !important;
-}
-
-.inline-block {
-    display: inline-block !important;
-}
-
-p, a, h1, h2, h3, h4, h5 {
-    font-family: 'Ubuntu', sans-serif !important;
-}
-
 .cke,
 .django-ckeditor-widget {
     width: 100% !important;
 }
 
-.make_bg_yellow {
-    background-color: rgb(248, 200, 17) !important;
+.make-bg-yellow {
+    background-color: var(--make-yellow) !important;
 }
 
-.make_bg_blue {
-    background-color: rgb(12, 66, 106) !important;
+.make-bg-yellow.ui.button,
+.make-bg-yellow.ui.label {
+    color: white;
 }
 
-.make_bg_turquoise {
-    background-color: rgb(0, 235, 179) !important;
+.make-bg-yellow.ui.button {
+    box-shadow: 0 0 0 0 rgba(34, 36, 38, 0.15) inset; /* Same as Fomantic-UI's style for colored buttons */
 }
 
-.make_bg_dkgray,
-.ui.black.label.make_bg_dkgray,
-.ui.black.labels .label.make_bg_dkgray {
-    background-color: rgb(74, 75, 76) !important;
+.make-bg-yellow.button:hover,
+.make-bg-yellow.button:focus {
+    background-color: var(--make-yellow-darker) !important;
 }
 
-.make_bg_ligray {
-    background-color: rgb(220, 221, 222) !important;
+.make-bg-blue {
+    background-color: var(--make-blue) !important;
 }
 
-.make_col_yellow {
-    color: rgb(248, 200, 17) !important;
+.make-bg-turquoise {
+    background-color: var(--make-turquoise) !important;
 }
 
-.make_col_blue,
-.ui.list .list > .item a.header.make_col_blue,
-.ui.list > .item a.header.make_col_blue {
-    color: rgb(12, 66, 106) !important;
+.make-bg-dkgrey {
+    background-color: var(--make-dark-grey) !important;
 }
 
-.make_col_turquoise {
-    color: rgb(0, 235, 179) !important;
+.make-bg-ligrey {
+    background-color: var(--make-light-grey) !important;
 }
 
-.make_col_dkgray {
-    color: rgb(74, 75, 76) !important;
+.make-col-yellow {
+    color: var(--make-yellow) !important;
 }
 
-.make_col_ligray {
-    color: rgb(220, 221, 222) !important;
+.make-col-blue {
+    color: var(--make-blue) !important;
 }
 
-.make_content_padding {
+.make-col-turquoise {
+    color: var(--make-turquoise) !important;
+}
+
+.make-col-dkgrey {
+    color: var(--make-dark-grey) !important;
+}
+
+.make-col-ligrey {
+    color: var(--make-light-grey) !important;
+}
+
+.make-content-padding {
     height: 3em;
+}
+
+.title-with-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.title-with-buttons:not(:first-child) {
+    margin-top: 0.5em;
+}
+
+.title-with-buttons .button {
+    margin-top: 0.5em;
+}
+
+.delete-modal-button {
+    cursor: pointer;
 }
 
 /*
@@ -136,12 +167,14 @@ p, a, h1, h2, h3, h4, h5 {
     vertical-align: sub;
 }
 
+
 /*
- * Extension of Fomantic UI mobile only, table only, etc. classes
+ * Extension of Fomantic-UI mobile only, table only, etc. classes.
+ * The `max-width` and `min-width` values are copied from Fomantic-UI.
  */
 
 /* Mobile */
-@media only screen and (max-width: 767px) {
+@media only screen and (max-width: 767.98px) {
     [class*="mobile hidden"],
     [class*="tablet only"]:not(.mobile),
     [class*="computer only"]:not(.mobile) {
@@ -151,11 +184,19 @@ p, a, h1, h2, h3, h4, h5 {
 
 
 /* Tablet / iPad Portrait */
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media only screen and (min-width: 768px) and (max-width: 991.98px) {
     [class*="mobile only"]:not(.tablet),
     [class*="tablet hidden"],
     [class*="computer only"]:not(.tablet) {
         display: none !important;
+    }
+}
+
+
+/* Mobile / Tablet / iPad Portrait */
+@media only screen and (max-width: 991.98px) {
+    html, body {
+        font-size: 12px;
     }
 }
 

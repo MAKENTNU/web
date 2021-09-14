@@ -13,7 +13,7 @@ def request_with_user(user):
     return request
 
 
-def post_request_with_user(user, data={}):
-    request = RequestFactory().post("/ignored_path", data)
+def post_request_with_user(user, data=None):
+    request = RequestFactory().post("/ignored_path", data or {})
     request.user = user
     return request

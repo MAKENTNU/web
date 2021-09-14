@@ -4,7 +4,7 @@ import ckeditor_uploader.fields
 from django.conf import settings
 from django.db import migrations, models
 import django.db.models.deletion
-import make_queue.models.course
+import make_queue.models.fields
 
 
 class Migration(migrations.Migration):
@@ -28,11 +28,11 @@ class Migration(migrations.Migration):
             name='Printer3DCourse',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('username', make_queue.models.course.UsernameField(max_length=32, verbose_name='Username')),
+                ('username', make_queue.models.fields.UsernameField(max_length=32, verbose_name='Username')),
                 ('date', models.DateField(verbose_name='Course date')),
                 ('card_number', models.IntegerField(null=True, verbose_name='Card number (EM)')),
                 ('name', models.CharField(max_length=256, verbose_name='Full name')),
-                ('status', models.CharField(choices=[('registered', 'Registered'), ('sent', 'Sent to Byggsikring'), ('access', 'Access granted')], default='registered', max_length=20, verbose_name='Status')),
+                ('status', models.CharField(choices=[('registered', 'Registered'), ('sent', 'Sent to Building security'), ('access', 'Access granted')], default='registered', max_length=20, verbose_name='Status')),
                 ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
             ],
         ),

@@ -1,9 +1,13 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
+
 
 {% block body %}
     <div class="ui container">
-        <h2>{% trans "Register for the event" %} "{{ event.title }}{{ timeplace.event.title }}"</h2>
+        <h2>
+            {% firstof timeplace.event.title event.title as event_title %}
+            {% blocktrans with title=event_title %}Register for the event “{{ title }}”{% endblocktrans %}
+        </h2>
 
         {% for error in form.non_field_errors %}
             <div class="ui error message">
@@ -24,4 +28,4 @@
             <button class="ui right floated blue button">{% trans "Register" %}</button>
         </form>
     </div>
-{% endblock %}
+{% endblock body %}

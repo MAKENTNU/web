@@ -1,8 +1,8 @@
-from users.models import User
 from django.test import TestCase
 
+from users.models import User
+from ..utility import template_view_get_context_data
 from ...models.models import MachineType, Quota
-from ...tests.utility import template_view_get_context_data
 from ...views.admin.quota import QuotaView
 from ...views.quota.user import GetUserQuotaView
 
@@ -20,12 +20,13 @@ class TestGetQuotaView(TestCase):
         context_data = template_view_get_context_data(GetUserQuotaView, request_user=user, user=user)
         context_data["user_quotas"] = list(context_data["user_quotas"])
 
-        self.assertEqual(context_data, {"user_quotas": [quota2]})
+        self.assertDictEqual(context_data, {"user_quotas": [quota2]})
 
 
 class TestQuotaPanelView(TestCase):
 
     def setUp(self):
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.printer_machine_type = MachineType.objects.get(pk=1)
         self.sewing_machine_type = MachineType.objects.get(pk=2)
         self.user = User.objects.create_user("test")
@@ -39,12 +40,12 @@ class TestQuotaPanelView(TestCase):
 
     def test_without_user(self):
         context_data = template_view_get_context_data(QuotaView, request_user=self.user)
-        self.assertEqual(list(context_data["users"]), [self.user, self.user2])
-        self.assertEqual(list(context_data["global_quotas"]), [self.quota1, self.quota2])
+        self.assertListEqual(list(context_data["users"]), [self.user, self.user2])
+        self.assertListEqual(list(context_data["global_quotas"]), [self.quota1, self.quota2])
         self.assertEqual(context_data["requested_user"], None)
 
     def test_with_user(self):
         context_data = template_view_get_context_data(QuotaView, request_user=self.user, user=self.user)
-        self.assertEqual(list(context_data["users"]), [self.user, self.user2])
-        self.assertEqual(list(context_data["global_quotas"]), [self.quota1, self.quota2])
+        self.assertListEqual(list(context_data["users"]), [self.user, self.user2])
+        self.assertListEqual(list(context_data["global_quotas"]), [self.quota1, self.quota2])
         self.assertEqual(context_data["requested_user"], self.user)

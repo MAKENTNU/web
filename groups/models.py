@@ -8,43 +8,42 @@ class InheritanceGroup(Group):
     A group that allow inheritance of permissions.
 
     The groups that a group will inherit from, are given
-    by the `parents` field.
+    by the ``parents`` field.
 
     The permissions that this group has independently
-    from its parents, are given by the `own_permissions` field.
+    from its parents, are given by the ``own_permissions`` field.
 
-    The standard `permissions` field will contain the group's own
+    The standard ``permissions`` field will contain the group's own
     permissions, and those it has inherited. This field should not
     be altered, as any change will get overwritten.
     """
 
     parents = models.ManyToManyField(
-        'self',
-        related_name='sub_groups',
+        to='self',
         symmetrical=False,
         blank=True,
+        related_name='sub_groups',
     )
-
     own_permissions = models.ManyToManyField(
-        Permission,
+        to=Permission,
         blank=True,
     )
-
-    def update_permissions(self):
-        """Update the permissions of this and all sub-groups."""
-        permissions = list(self.own_permissions.all())
-
-        for parent in self.parents.all():
-            permissions += list(parent.permissions.all())
-
-        self.permissions.set(permissions)
-
-        for sub in self.sub_groups.all():
-            sub.update_permissions()
 
     @property
     def inherited_permissions(self):
         return set(self.permissions.all()) - set(self.own_permissions.all())
+
+    def update_permissions(self):
+        """Update the permissions of this and all sub-groups."""
+        own_permissions = list(self.own_permissions.all())
+
+        for parent in self.parents.all():
+            own_permissions.extend(parent.permissions.all())
+
+        self.permissions.set(own_permissions)
+
+        for sub in self.sub_groups.all():
+            sub.update_permissions()
 
     def get_sub_groups(self):
         """Return a queryset of all groups that inherit from this group."""
@@ -82,27 +81,23 @@ class Committee(models.Model):
     """
     A committee in the organization.
 
-    A committee gets its name and members through the:model:`groups.InheritanceGroup`
-    given in the `group` field.
+    A committee gets its name and members through the :model:`groups.InheritanceGroup`
+    given in the ``group`` field.
     """
 
     group = models.OneToOneField(
-        InheritanceGroup,
+        to=InheritanceGroup,
         on_delete=models.CASCADE,
-        verbose_name=_('group'),
+        verbose_name=_("group"),
     )
-    description = models.TextField(_('Description'))
-    email = models.EmailField(_('Email'))
-    image = models.ImageField(_('Image'), blank=True)
-    clickbait = models.TextField(
-        max_length=300,
-        verbose_name=_('Clickbait'),
-        blank=True,
-    )
+    clickbait = models.TextField(blank=True, verbose_name=_("Clickbait"))
+    description = models.TextField(verbose_name=_("Description"))
+    email = models.EmailField(verbose_name=_("Email"))
+    image = models.ImageField(blank=True, verbose_name=_("Image"))
+
+    def __str__(self):
+        return self.name
 
     @property
     def name(self):
         return self.group.name
-
-    def __str__(self):
-        return self.name

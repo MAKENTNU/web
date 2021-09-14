@@ -3,12 +3,13 @@
 }
 
 #footer {
+    --footer-icon-bubble-diameter: 3.5rem;
+
     display: grid;
     width: 100%;
     grid-template-columns: 1fr 1fr 1fr;
-    padding: 65px 40px 40px;
+    padding: 4rem 2rem;
     min-height: 200px;
-    background-color: rgb(12, 66, 106);
 }
 
 #footer > div {
@@ -25,12 +26,13 @@
 }
 
 #footer .social.list .item {
-    display: inline-block;
-    padding: 17px 0 0 4px;
-    background-color: rgb(248, 200, 17);
-    border-radius: 100px;
-    width: 50px;
-    height: 50px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border-radius: calc(2 * var(--footer-icon-bubble-diameter));
+    width: var(--footer-icon-bubble-diameter);
+    height: var(--footer-icon-bubble-diameter);
     margin: 4px;
 }
 
@@ -39,8 +41,9 @@
 }
 
 #footer .social.list i {
-    font-size: 28px;
-    color: rgb(12, 66, 106) !important;
+    margin: 0;
+    font-size: 2rem;
+    line-height: 2rem;
 }
 
 #footer .content {
@@ -48,9 +51,8 @@
 }
 
 #footer p,
-#footer a,
-#footer i {
-    color: #FFFFFF !important;
+#footer a {
+    color: #FFF !important;
 }
 
 #footer .logo {
@@ -65,7 +67,7 @@
 
 .copyright {
     grid-column-start: 2;
-    color: #FFFFFF;
+    color: #FFF;
 }
 
 .two-cols {
@@ -80,7 +82,8 @@
     width: 100px;
 }
 
-@media screen and (max-width: 992px) {
+
+@media screen and (max-width: 991.98px) {
     #footer {
         grid-template-columns: 1fr;
         grid-gap: 30px;
@@ -91,7 +94,7 @@
         margin-left: 0;
     }
 
-    #footer .content{
+    #footer .content {
         text-align: center;
     }
 

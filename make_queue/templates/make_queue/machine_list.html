@@ -1,0 +1,49 @@
+{% extends 'web/base.html' %}
+{% load reservation_extra %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Machines" %}{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/machine_list.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <div class="ui huge header">
+            {% trans "Machines" %}
+            {% if perms.make_queue.add_machine %}
+                <a href="{% url "create_machine" %}" data-tooltip="{% trans "Add" %}">
+                    <i class="ui green plus icon"></i>
+                </a>
+            {% endif %}
+        </div>
+        {% if request.user.is_authenticated %}
+            <div class="reservation-management-buttons">
+                <a class="ui primary button" href="{% url 'my_reservations' %}">
+                    {% trans "My reservations" %}
+                </a>
+                <a class="ui primary button" href="{% url "find_free_slot" %}">
+                    {% trans "Find free reservation slots" %}
+                </a>
+            </div>
+        {% endif %}
+
+        {% for machine_type in machine_types %}
+            <div class="ui machine-title-field">
+                <div class="ui large header machine-title">
+                    {{ machine_type.name }}
+                </div>
+                <a href="{% url "machine_usage_rules" machine_type %}">({% trans "Rules" %})</a>
+            </div>
+            <div class="ui cards">
+                {% for machine in machine_type.existing_machines %}
+                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock body %}

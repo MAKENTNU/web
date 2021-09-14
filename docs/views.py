@@ -2,31 +2,35 @@ from math import ceil
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponseRedirect, HttpResponseForbidden
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.datetime_safe import datetime
-from django.views.generic import DetailView, FormView, DeleteView, TemplateView, UpdateView
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import DeleteView, DetailView, FormView, TemplateView, UpdateView
 
-from docs.forms import PageContentForm, CreatePageForm, ChangePageVersionForm
-from docs.models import Page, Content
+from util.view_utils import PreventGetRequestsMixin
+from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
+from .models import Content, MAIN_PAGE_TITLE, Page
 
 
 class DocumentationPageView(DetailView):
-    template_name = "docs/documentation_page.html"
     model = Page
+    template_name = 'docs/documentation_page_detail.html'
     context_object_name = "page"
+    extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
 
 
 class HistoryDocumentationPageView(DetailView):
-    template_name = "docs/documentation_page_history.html"
     model = Page
+    template_name = 'docs/documentation_page_history.html'
     context_object_name = "page"
 
 
 class OldDocumentationPageContentView(DetailView):
-    template_name = "docs/documentation_page.html"
     model = Page
+    template_name = 'docs/documentation_page_detail.html'
     context_object_name = "page"
+    extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
 
     def dispatch(self, request, *args, **kwargs):
         # A check to make sure that the given content is related to the given page. As to make sure that the database
@@ -46,15 +50,16 @@ class OldDocumentationPageContentView(DetailView):
         context_data.update({
             "old": True,
             "content": content,
-            "form": ChangePageVersionForm(initial={"current_content": content})
+            "last_edit_name": content.made_by.get_full_name() if content.made_by else _("Anonymous"),
+            "form": ChangePageVersionForm(initial={"current_content": content}),
         })
         return context_data
 
 
 class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
+    permission_required = ("docs.change_page",)
     model = Page
     form_class = ChangePageVersionForm
-    permission_required = ("docs.change_page",)
 
     def get(self, request, *args, **kwargs):
         return HttpResponseRedirect(reverse("page-history", kwargs={"pk": self.get_object()}))
@@ -67,10 +72,10 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
 
 
 class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
-    template_name = "docs/create_documentation_page.html"
+    permission_required = ("docs.add_page",)
     model = Page
     form_class = CreatePageForm
-    permission_required = ("docs.add_page",)
+    template_name = 'docs/documentation_page_create.html'
 
     def form_invalid(self, form):
         try:
@@ -88,10 +93,10 @@ class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
 
 
 class EditDocumentationPageView(PermissionRequiredMixin, FormView):
-    template_name = "docs/edit_documentation_page.html"
+    permission_required = ("docs.change_page",)
     model = Content
     form_class = PageContentForm
-    permission_required = ("docs.change_page",)
+    template_name = 'docs/documentation_page_edit.html'
 
     def get_page(self):
         return Page.objects.get(pk=self.kwargs.get("pk"))
@@ -99,7 +104,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
     def get_initial(self):
         page = self.get_page()
         return {
-            "content": page.current_content.content if page.current_content else ""
+            "content": page.current_content.content if page.current_content else "",
         }
 
     def get_context_data(self, **kwargs):
@@ -127,17 +132,15 @@ class EditDocumentationPageView(PermissionRequiredMixin, FormView):
         return redirect
 
 
-class DeleteDocumentationPageView(PermissionRequiredMixin, DeleteView):
-    model = Page
-    success_url = reverse_lazy("home")
+class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ("docs.delete_page",)
-
-    def get_queryset(self):
-        return Page.objects.exclude(title="Documentation")
+    model = Page
+    queryset = Page.objects.exclude(title=MAIN_PAGE_TITLE)
+    success_url = reverse_lazy("home")
 
 
 class SearchPagesView(TemplateView):
-    template_name = "docs/search.html"
+    template_name = 'docs/search.html'
     page_size = 10
 
     def pages_to_show(self, current_page, n_pages):

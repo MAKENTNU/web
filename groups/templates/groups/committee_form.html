@@ -2,11 +2,12 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block title %}{% trans "Edit committee" %}{% endblock title %}
 
 {% block head %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -14,7 +15,7 @@
         {% block form_header %}{% trans "Edit" %}{% endblock form_header %}
         {{ form.instance.name|capfirst }}
     </h1>
-    <form class="ui form text container" method="post" enctype="multipart/form-data">
+    <form class="ui form text container" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
 
         {{ form.non_field_errors }}
@@ -27,9 +28,8 @@
             </div>
         {% endfor %}
 
-        <input class="ui right floated yellow submit button" type="submit" value="{% trans "Save" %}">
-
-        <a href="{% url "committee_admin" %}" class="ui right floated red button">
+        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
+        <a class="ui right floated red button" href="{% url "committee_admin" %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>

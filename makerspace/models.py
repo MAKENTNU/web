@@ -3,7 +3,7 @@ from django.db.models import F
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
 class EquipmentQuerySet(models.QuerySet):
@@ -16,13 +16,9 @@ class EquipmentQuerySet(models.QuerySet):
 
 
 class Equipment(models.Model):
-    title = MultiLingualTextField(
-        max_length=100,
-        unique=True,
-        verbose_name=_('Title'),
-    )
-    description = MultiLingualRichTextUploadingField(verbose_name=_('Description'))
-    image = models.ImageField(upload_to='equipment', verbose_name=_('Image'))
+    title = MultiLingualTextField(unique=True, verbose_name=_("Title"))
+    description = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
+    image = models.ImageField(upload_to='equipment', verbose_name=_("Image"))
     priority = models.IntegerField(
         null=True,
         blank=True,

@@ -1,0 +1,56 @@
+{% extends 'docs/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}
+    {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
+{% endblock title %}
+
+{% block head %}
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <div id="empty-content-error" class="ui transition hidden error message">
+            <i class="close icon"></i>
+            <div class="header">{% trans "No content" %}</div>
+            {% trans "The page is currently empty. Please add some content" %}.
+        </div>
+        <h1>
+            {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
+        </h1>
+        <form id="edit-form" class="ui form" method="POST" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="ui field">
+                {{ form.content }}
+            </div>
+
+            <button class="ui right floated make-bg-yellow button">
+                {% trans "Submit" context "edit" %}
+            </button>
+            <a class="ui right floated red button" href="{% url "page" pk=page %}">
+                {% trans "Cancel" context "abort action" %}
+            </a>
+        </form>
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script>
+        $("#edit-form").submit(() => {
+            const filled = CKEDITOR.instances["id_content"].getData() !== "";
+            const $errorMessage = $("#empty-content-error");
+            if (!filled && $errorMessage.hasClass("hidden")) {
+                $errorMessage.transition("fade");
+            }
+            return filled;
+        });
+
+        $(".message .close").on('click', function () {
+            $(this).closest('.message').transition("fade");
+        });
+    </script>
+{% endblock scripts %}

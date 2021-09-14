@@ -1,0 +1,163 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load news_tags %}
+{% load static %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'news/css/admin_event_detail.css' %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+
+        <a href="{% url "admin-events" %}">
+            <i class="ui angle double left icon"></i>{% trans "Admin page for events" %}
+        </a>
+
+        <h1 class="title-with-buttons">
+            {{ event.title }}
+
+            <div class="admin-actions ui secondary menu">
+                {% if perms.news.delete_event %}
+                    <a class="delete-modal-button ui red button"
+                       data-url="{% url 'event-delete' event.pk %}"
+                       data-obj-name="{{ event }}">
+                        <i class="ui trash icon"></i>{% trans "Delete" %}
+                    </a>
+                {% endif %}
+
+                {% if perms.news.change_event %}
+                    <a class="ui blue button" href="{% url 'event-edit' event.pk %}">
+                        <i class="ui edit icon"></i>{% trans "Edit" %}
+                    </a>
+                {% endif %}
+
+                <a class="ui make-bg-yellow button" href="{% url 'event' event.pk %}">
+                    <i class="ui sticky note icon"></i>{% trans "Go to the event page" %}
+                </a>
+            </div>
+        </h1>
+
+        <div id="message-hidden" class="ui info {% if not event.hidden %}hidden{% endif %} message">
+            <div class="header">
+                {% trans "Hidden event" %}
+            </div>
+            {% trans "This event is hidden! Non-admin users will not be able to see the event or its occurrences." %}
+        </div>
+        <div id="message-featured" class="ui info {% if not event.featured %}hidden{% endif %} message">
+            <div class="header">
+                {% trans "Featured event" %}
+            </div>
+            {% trans "This event is featured! Any future occurrences may be shown on the front page." %}
+        </div>
+        <div id="message-private" class="ui info {% if not event.private %}hidden{% endif %} message">
+            <div class="header">
+                {% trans "Private event" %}
+            </div>
+            {% trans "This event is private! It is only visible to members of MAKE NTNU." %}
+        </div>
+
+        {% if event.standalone %}
+            <h3 class="ui horizontal divider header">
+                <i class="ui ticket icon"></i> {% trans "Tickets" %}
+            </h3>
+            {% if event.number_of_tickets %}
+                <b>
+                    <a href="{% url "event-tickets" pk=event.pk %}">
+                        {% blocktrans trimmed with num_registered_tickets=event.number_of_registered_tickets num_tickets=event.number_of_tickets %}
+                            {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
+                        {% endblocktrans %}
+                    </a>
+                </b>
+            {% else %}
+                <b>{% trans "No registration required" %}</b>
+            {% endif %}
+        {% endif %}
+
+        <h3 class="ui horizontal divider header">
+            <i class="ui time icon"></i>{% trans "Occurrences" %}
+        </h3>
+        <div class="create-new-occurrence">
+            {% if perms.news.add_timeplace %}
+                <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace-new' event.pk %}">
+                    <i class="time icon"></i>
+                    {% trans "New occurrence" %}
+                </a>
+            {% endif %}
+        </div>
+        <div class="ui tabular pointing secondary menu">
+            <a class="active item" data-tab="future">{% trans "Future" %}
+                <div class="ui blue label">{{ event.timeplaces|future|length }}</div>
+            </a>
+            <a class="item" data-tab="past">{% trans "Past" %}
+                <div class="ui red label">{{ event.timeplaces|past|length }}</div>
+            </a>
+        </div>
+
+        <div class="ui active tab segment" data-tab="future">
+            <div class="ui relaxed divided list">
+                {% for timeplace in event.timeplaces|future %}
+                    {% include 'news/admin_timeplace_listing.html' %}
+                {% empty %}
+                    {% trans "No future occurrences exist for this event" %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="past">
+            <div class="ui relaxed divided list">
+                {% for timeplace in event.timeplaces|past %}
+                    {% include 'news/admin_timeplace_listing.html' %}
+                {% empty %}
+                    {% trans "No past occurrences exist for this event" %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+{% endblock body %}
+
+{% block scripts %}
+    <script>
+        $(".tabular.menu .item").tab();
+        $(".explanation-popup").popup();
+
+        $(".toggle").click(function () {
+            toggle_post($(this), $(this).data('pk'), $(this).data('model'), $(this).data('toggle'));
+        });
+
+        function toggle_post(element, pk, model, toggle) {
+            $.ajaxSetup({
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                },
+            });
+            $.ajax({
+                type: "POST",
+                url: `/news/admin/toggle/${model}/`,
+                data: {
+                    'pk': pk,
+                    'toggle': toggle,
+                },
+                success: function (data) {
+                    if (!data['color']) {
+                        return;
+                    }
+                    if (toggle === 'private') {
+                        if (data['color'] === 'yellow') {
+                            element.attr('src', "{% static 'web/img/m_yellow.svg' %}");
+                        } else {
+                            element.attr('src', "{% static 'web/img/m_grey.svg' %}");
+                        }
+                    } else {
+                        element.removeClass('yellow grey').addClass(data['color']);
+                    }
+
+                    if (model === "event") {
+                        $(`#message-${toggle}`).toggleClass("hidden", data["color"] === "grey");
+                    }
+                },
+            });
+        }
+    </script>
+{% endblock scripts %}

@@ -1,0 +1,213 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load reservation_extra %}
+{% load static %}
+
+
+{% block title %}
+    {% if is_MAKE %}
+        {% trans "MAKE NTNU reservations" %}
+    {% else %}
+        {% trans "My reservations" %}
+    {% endif %}
+{% endblock title %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_list.css' %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <div class="ui huge header">
+            {% if is_MAKE %}
+                {% trans "MAKE NTNU reservations" %}
+            {% else %}
+                {% trans "My reservations" %}
+            {% endif %}
+        </div>
+
+        <div class="ui vertical segment">
+            <a class="ui button primary" href="{% url 'reservation_machines_overview' %}">
+                {% trans "Machines" %}
+            </a>
+            <div class="make-right-floated make-row-fill">
+                <div class="field">
+                    <div id="hide-old-reservations" class="ui checkbox">
+                        <input class="hidden" type="checkbox" checked/>
+                        <label>{% trans "Hide previous reservations" %}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Desktop table #}
+        <table class="ui table make-my-reservation-desktop">
+            <thead>
+            <tr>
+                <th>{% trans "Reservation" %}</th>
+                <th>{% trans "Time" %}</th>
+                {% if is_MAKE %}
+                    <th>{% trans "Information" %}</th>
+                {% endif %}
+                <th>{% trans "View in calendar" %}</th>
+                <th>{% trans "Change" %}</th>
+                <th>{% trans "Cancel" context "cancel reservation" %}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for reservation in reservations %}
+                {% is_future_reservation reservation as future_reservation %}
+                <tr class="make-my-reservation-desktop {% if not future_reservation %}display-none{% endif %}"
+                    data-is-future-reservation="{{ future_reservation }}">
+
+                    <td>
+                        <div class="ui small header make-collapsed-header">{{ reservation.machine.name }}</div>
+                        <div>{{ reservation.machine.model }}</div>
+                        <div>
+                            <a href="{{ reservation.machine.location_url }}" target="_blank">
+                                <i class="location arrow icon"></i>{{ reservation.machine.location }}
+                            </a>
+                        </div>
+                    </td>
+                    <td>
+                        {% if reservation.start_time.date == reservation.end_time.date %}
+                            <div>{{ reservation.start_time|date:"d/m/y" }}</div>
+                            <div>{{ reservation.start_time|date:"H:i" }} - {{ reservation.end_time|date:"H:i" }}</div>
+                        {% else %}
+                            <div>{{ reservation.start_time|date:"d/m/Y - H:i" }}</div>
+                            <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
+                        {% endif %}
+                    </td>
+                    {% if reservation.event %}
+                        <td>
+                            <b class="large-text">{{ reservation.event.event.title }}</b><br/>
+                            {{ reservation.event.start_time|date:"d/m/Y" }}
+                        </td>
+                    {% elif reservation.special %}
+                        <td>
+                            <b class="large-text">{{ reservation.special_text }}</b>
+                        </td>
+                    {% endif %}
+                    <td>
+                        <a href="{% calendar_url_reservation reservation %}">
+                            <div class="ui button primary">
+                                {% trans "Calendar" %}
+                            </div>
+                        </a>
+                    </td>
+                    <td>
+                        {% can_change_reservation reservation user as can_change %}
+                        {% if can_change %}
+                            <a href="{% url 'change_reservation' reservation=reservation %}">
+                                <div class="ui button primary">
+                                    {% trans "Change" %}
+                                </div>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% can_delete_reservation reservation user as can_delete %}
+                        {% can_mark_reservation_as_finished reservation as can_mark_finished %}
+                        {% if can_mark_finished %}
+                            <form method="POST" action="{% url 'mark_reservation_done' %}">
+                                {% csrf_token %}
+                                <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                <input class="ui button green" type="submit" value="{% trans "Finish now" %}"/>
+                                {% if is_MAKE %}
+                                    <input class="display-none" type="text" name="next"
+                                           value="{% url 'admin_reservation' %}"/>
+                                {% endif %}
+                            </form>
+                        {% elif can_delete %}
+                            <form method="POST" action="{% url 'delete_reservation' %}">
+                                {% csrf_token %}
+                                <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                <input class="ui button red" type="submit"
+                                       value="{% trans "Cancel" context "cancel reservation" %}"/>
+                                {% if is_MAKE %}
+                                    <input class="display-none" type="text" name="next"
+                                           value="{% url 'admin_reservation' %}"/>
+                                {% endif %}
+                            </form>
+                        {% endif %}
+                    </td>
+
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="ui cards make-my-reservation-tablet">
+            {% for reservation in reservations %}
+                {% is_future_reservation reservation as future_reservation %}
+                <div class="card {% if not future_reservation %}display-none{% endif %}"
+                     data-is-future-reservation="{{ future_reservation }}">
+
+                    <div class="content">
+                        <div class="header">{{ reservation.machine.name }}</div>
+                        <div class="meta">
+                            {{ reservation.machine.model }}<br/>
+                            <a class="ui" href="{{ reservation.machine.location_url }}"
+                               target="_blank">
+                                <i class="location arrow icon"></i>{{ reservation.machine.location }}
+                            </a>
+                        </div>
+                        {% if reservation.start_time.date == reservation.end_time.date %}
+                            <div>{{ reservation.start_time|date:"d/m/y" }}</div>
+                            <div>{{ reservation.start_time|date:"H:i" }}
+                                - {{ reservation.end_time|date:"H:i" }}</div>
+                        {% else %}
+                            <div>{{ reservation.start_time|date:"d/m/Y - H:i" }}</div>
+                            <div>{{ reservation.end_time|date:"d/m/Y - H:i" }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="ui bottom attached buttons">
+                        <a class="ui primary button make-my-reservation-button-pad"
+                           href="{% calendar_url_reservation reservation %}">
+                            {% trans "Calendar" %}
+                        </a>
+                        {% can_change_reservation reservation user as can_change %}
+                        {% if can_change %}
+                            <a class="ui make-bg-yellow button make-my-reservation-button-pad"
+                               href="{% url 'change_reservation' reservation=reservation %}">
+                                {% trans "Change" %}
+                            </a>
+                        {% endif %}
+                        {% can_mark_reservation_as_finished reservation as can_mark_finished %}
+                        {% can_delete_reservation reservation user as can_delete %}
+                        {% if can_mark_finished %}
+                            <div class="ui green button reservation-mark-done">
+                                {% trans "Finish now" %}
+                                <form method="POST" action="{% url 'mark_reservation_done' %}">
+                                    {% csrf_token %}
+                                    <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                    {% if is_MAKE %}
+                                        <input class="display-none" type="text" name="next"
+                                               value="{% url 'admin_reservation' %}"/>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        {% elif can_delete %}
+                            <div class="ui button red reservation-calendar-delete">
+                                {% trans "Cancel" context "cancel reservation" %}
+                                <form method="POST" action="{% url 'delete_reservation' %}">
+                                    {% csrf_token %}
+                                    <input class="display-none" type="number" name="pk" value="{{ reservation.pk }}"/>
+                                    {% if is_MAKE %}
+                                        <input class="display-none" type="text" name="next"
+                                               value="{% url 'admin_reservation' %}"/>
+                                    {% endif %}
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="{% static 'make_queue/js/reservation_list.js' %}"></script>
+{% endblock body %}

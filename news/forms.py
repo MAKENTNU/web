@@ -1,14 +1,12 @@
+from django import forms
 from django.core.exceptions import ValidationError
-from django.forms import ModelForm, Textarea
 from django.utils.translation import gettext_lazy as _
 
-from web.widgets import MazemapSearchInput, SemanticSearchableChoiceInput, SemanticDateTimeInput
-from web.widgets import SemanticFileInput
-from .models import Event
-from .models import TimePlace, EventTicket, Article
+from web.widgets import MazemapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
+from .models import Article, Event, EventTicket, TimePlace
 
 
-class TimePlaceForm(ModelForm):
+class TimePlaceForm(forms.ModelForm):
     class Meta:
         model = TimePlace
         fields = '__all__'
@@ -22,46 +20,45 @@ class TimePlaceForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-
         start_time = cleaned_data.get("start_time")
         end_time = cleaned_data.get("end_time")
 
-        if start_time > end_time:
-            raise ValidationError(_("The event cannot end before it starts"))
+        if start_time and end_time:
+            if start_time > end_time:
+                raise ValidationError(_("The event cannot end before it starts"))
 
         return cleaned_data
 
 
-class ArticleForm(ModelForm):
+class ArticleForm(forms.ModelForm):
     class Meta:
         model = Article
         fields = "__all__"
-        exclude = []
         widgets = {
             "publication_time": SemanticDateTimeInput(),
             "image": SemanticFileInput(),
         }
 
 
-class EventRegistrationForm(ModelForm):
-    class Meta:
-        model = EventTicket
-        fields = ("comment", "language")
-        widgets = {
-            "language": SemanticSearchableChoiceInput(),
-            "comment": Textarea(attrs={
-                "cols": "40",
-                "rows": "3",
-                "placeholder": _(
-                    "Here you can enter any requests or information you want to provide to the organizers"),
-            }),
-        }
-
-
-class EventForm(ModelForm):
+class EventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = "__all__"
         widgets = {
             "image": SemanticFileInput(),
+        }
+
+
+class EventRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = EventTicket
+        fields = ("comment", "language")
+        widgets = {
+            "language": SemanticSearchableChoiceInput(),
+            "comment": forms.Textarea(attrs={
+                "cols": "40",
+                "rows": "3",
+                "placeholder": _(
+                    "Here you can enter any requests or information you want to provide to the organizers"),
+            }),
         }

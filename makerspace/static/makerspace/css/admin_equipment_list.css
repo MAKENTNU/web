@@ -1,0 +1,12 @@
+.equipment-list .item {
+    display: flex !important; /* Overrides Fomantic-UI */
+    align-items: center;
+}
+
+.equipment-list .item h3 {
+    margin: 0;
+}
+
+.equipment-list .item .delete-modal-button {
+    margin-left: auto;
+}

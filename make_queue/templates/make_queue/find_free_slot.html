@@ -1,15 +1,15 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 {% load reservation_extra %}
 
+
 {% block head %}
-    {{ block.super }}
     <style>
         .list {
             max-width: 60em;
         }
     </style>
-{% endblock %}
+{% endblock head %}
 
 {% block body %}
 
@@ -22,7 +22,7 @@
                     <label>{{ form.machine_type.label }}</label>
                     {{ form.machine_type }}
                 </div>
-                <div class="ui three wide field" id="hour-field">
+                <div id="hour-field" class="ui three wide field">
                     <label>{{ form.hours.label }}</label>
                     {{ form.hours }}
                 </div>
@@ -59,4 +59,4 @@
             </div>
         {% endif %}
     </div>
-{% endblock %}
+{% endblock body %}

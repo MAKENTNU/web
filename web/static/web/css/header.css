@@ -21,7 +21,7 @@
 }
 
 #header .item > .text {
-    color: #DCDDDE;
+    color: var(--make-light-grey);
 }
 
 #header .item:hover > .text {
@@ -68,7 +68,7 @@
 #side-nav > .item:hover,
 #nav-user-dropdown.active,
 #makerspace-dropdown.active {
-    /* Disables property from Fomantic UI */
+    /* Disables property from Fomantic-UI */
     background-color: transparent;
 }
 
@@ -102,16 +102,16 @@
     transition: color var(--dur) ease;
 }
 
-#nav > .item .make_bg_yellow.bubble-background {
+#nav > .item .make-bg-yellow.bubble-background {
     filter: brightness(90%);
 }
 
-#nav > .item .make_bg_turquoise.bubble-background {
+#nav > .item .make-bg-turquoise.bubble-background {
     filter: brightness(90%);
 }
 
-#nav > .item .make_bg_blue.bubble-background,
-#side-nav > .item .make_bg_blue.bubble-background {
+#nav > .item .make-bg-blue.bubble-background,
+#side-nav > .item .make-bg-blue.bubble-background {
     filter: brightness(130%);
 }
 
@@ -133,18 +133,20 @@
 #makerspace-dropdown .menu {
     background-color: rgb(34, 43, 52);
     border-radius: 7px;
-    border: 2px solid rgb(220, 221, 222);
+    border: 2px solid var(--make-light-grey);
 }
 
+#makerspace-dropdown .menu > .item,
 #nav-user-dropdown .menu > .item {
-    /* Fixes weird centering of dropdown items, caused by Fomantic UI setting dropdown menu to `display: flex !important`
-       when it's too close to the right window edge */
+    /* For user dropdown: Fixes weird centering of dropdown items, caused by Fomantic-UI setting dropdown menu to `display: flex !important`
+                          when it's too close to the right window edge.
+       For makerspace dropdown: Fixes dropdown items not covering the entire width of the dropdown. */
     align-self: auto;
 }
 
 #nav-user-dropdown .menu > .item:hover,
 #makerspace-dropdown .menu > .item:hover {
-    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic UI */
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic-UI */
 }
 
 #side-nav .lang-link {
@@ -168,14 +170,14 @@
 }
 
 /* Narrower space between elements in navbar */
-@media screen and (max-width: 1200px) {
+@media screen and (max-width: 1199.98px) {
     #header {
         --nav-space-between: 1em;
     }
 }
 
 /* Switch to mobile layout with burger */
-@media screen and (max-width: 992px) {
+@media screen and (max-width: 991.98px) {
     #header {
         --burger-space: minmax(calc(4em + var(--burger-margin)), 1fr);
 
@@ -233,7 +235,7 @@
     }
 
     #header.active #nav-user-dropdown .menu {
-        /* Fixes Fomantic UI de-centering the dropdown menu */
+        /* Fixes Fomantic-UI de-centering the dropdown menu */
         left: initial;
     }
 
@@ -244,20 +246,20 @@
 
 /*** Logo size changes ***/
 
-@media screen and (min-width: 1201px) {
+@media screen and (min-width: 1200px) {
     #header .logo img.large {
         display: block;
     }
 }
 
-@media screen and (max-width: 1200px) and (min-width: 993px) {
+@media screen and (max-width: 1199.98px) and (min-width: 992px) {
     #header .logo img.medium {
         display: block;
     }
 }
 
 /* Switch to mobile layout */
-@media screen and (max-width: 992px) and (min-width: 601px) {
+@media screen and (max-width: 991.98px) and (min-width: 601px) {
     #header .logo img.large {
         display: block;
     }

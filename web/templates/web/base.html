@@ -2,76 +2,79 @@
 {% load i18n %}
 {% load uri_tags %}
 
+
 <!DOCTYPE html>
 {% get_current_language as LANGUAGE_CODE %}
 <html lang="{{ LANGUAGE_CODE }}">
 <head>
     <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=0.8"/>
+    <meta name="viewport" content="width=device-width"/>
     <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
     <meta property="og:site_name" content="MAKE NTNU"/>
     <meta property="og:image"
-          content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static "web/img/make_thumb.png" %}{% endblock og_image %}"/>
+          content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static 'web/img/make_thumb.png' %}{% endblock og_image %}"/>
     <meta property="og:description"
           content="{% block og_description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock og_description %}"/>
     <meta property="description"
           content="{% block description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock description %}"/>
     <meta property="og:type" content="website"/>
     <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
-    <link rel="shortcut icon" type="image/png" href="{% static "web/img/favicon.png" %}"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'web/img/favicon.png' %}"/>
     <meta name="theme-color" content="rgb(248, 200, 17)"/>
 
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700" rel="stylesheet"/>
-    <script type="text/javascript" src="{% url 'javascript-catalog' %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static "lib/fomantic-ui/semantic.min.css" %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/style.css" %}"/>
-    <script src="{% static "lib/jquery/jquery-3.1.1.min.js" %}"></script>
-    <script src="{% static "lib/fomantic-ui/semantic.min.js" %}"></script>
-    <script>const langPrefix = {% if LANGUAGE_CODE == "nb" %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700"/>
+    <script src="{% url 'javascript-catalog' %}"></script>
+    <link rel="stylesheet" href="{% static 'lib/fomantic-ui/semantic.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
+    <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
+    <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
     {% block head %}{% endblock head %}
 </head>
 <body>
-    <div class="wrapper">
-        <div class="content">
-            {% block header %}
-                {% include "web/header.html" %}
-            {% endblock header %}
 
-            {% block padding-top %}
-                <div class="make_content_padding"></div>
-            {% endblock %}
+<div class="wrapper">
+    <div class="content">
+        {% block header %}
+            {% include 'web/header.html' %}
+        {% endblock header %}
 
-            <main id="main">
-                {% block body %}
-                {% endblock body %}
-            </main>
+        {% block padding_top %}
+            <div class="make-content-padding"></div>
+        {% endblock padding_top %}
 
-            {% block padding-bottom %}
-                <div class="make_content_padding"></div>
-            {% endblock padding-bottom %}
-        </div>
+        <main id="main">
+            {% block body %}
+            {% endblock body %}
+        </main>
 
-        {% include "web/delete_modal.html" %}
-        {% block footer %}
-            {% include "web/footer.html" %}
-        {% endblock %}
+        {% block padding_bottom %}
+            <div class="make-content-padding"></div>
+        {% endblock padding_bottom %}
     </div>
 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
+    {% include 'web/delete_modal.html' %}
+    {% block footer %}
+        {% include 'web/footer.html' %}
+    {% endblock footer %}
+</div>
 
-        function gtag() {
-            dataLayer.push(arguments);
-        }
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
 
-        gtag('js', new Date());
-        gtag('config', 'UA-113882146-1');
-    </script>
-    {% block scripts %}
-    {% endblock scripts %}
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'UA-113882146-1');
+</script>
+{% block scripts %}
+{% endblock scripts %}
+
 </body>
 </html>

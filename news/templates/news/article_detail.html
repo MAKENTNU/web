@@ -1,0 +1,66 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load thumbnail %}
+{% load i18n %}
+
+{% block title %}{{ article.title }}{% endblock title %}
+
+{% block og_title %}{{ article.title }}{% endblock og_title %}
+{% block og_image %}{{ article.image.url }}{% endblock og_image %}
+{% block og_description %}{{ article.clickbait }}{% endblock og_description %}
+{% block description %}{{ article.clickbait }}{% endblock description %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'news/css/article_detail.css' %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="article {% block extra_classes %}{% endblock extra_classes %}">
+        <div id="sticky" class="ui text container basic segment">
+            <img {% thumbnail article.image "800" crop="center" as image_thumb %}
+                src="{{ image_thumb.url }}"
+            {% empty %}
+                src="{{ article.image.url }}"
+            {% endthumbnail %}
+                {% if article.contain %}style="object-fit: contain; height: auto;"{% endif %}
+            />
+
+            {% block rail %}
+            {% endblock rail %}
+
+
+            {% block admin_page %}
+                {% if perms.news.change_article %}
+                    <div>
+                        <a class="ui make-bg-yellow button" href="{% url "admin-articles" %}">
+                            <i class="ui sticky note icon"></i>{% trans "Admin page" %}
+                        </a>
+                    </div>
+                {% endif %}
+            {% endblock admin_page %}
+            <h1>
+                {{ article.title }}
+                {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
+                <span class="publication-time">{{ article.publication_time|date:"d.m.Y" }}</span>
+
+            </h1>
+            <div>
+                {% if article.content == "<p>x</p>" %}
+                    <p>{{ article.clickbait }}</p>
+                {% else %}
+                    {% autoescape off %}
+                        {{ article.content }}
+                    {% endautoescape %}
+                {% endif %}
+            </div>
+            <br><br>
+            {% block event_accordion %}
+            {% endblock event_accordion %}
+        </div>
+    </div>
+    <script>
+        $(".ui.sticky").sticky({
+            context: '#sticky',
+        });
+    </script>
+{% endblock body %}

@@ -1,0 +1,143 @@
+{% extends 'web/base.html' %}
+{% load reservation_extra %}
+{% load quota %}
+{% load static %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/rule_list.css' %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>
+            {% blocktrans with machine_type=machine_type %}Reservation rules for {{ machine_type }}{% endblocktrans %}
+            {% if perms.make_queue.add_reservation_rule %}
+                <a href="{% url "create_machine_rule" machine_type %}">
+                    <i class="ui green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+        <div>
+            <a class="ui blue button" href="{% url "machine_usage_rules" machine_type %}">
+                {% trans "Usage rules" %}
+            </a>
+        </div>
+        <table class="ui definition table">
+            <tbody>
+            <tr>
+                <td>{% trans "Reservation duration within a single period" %}</td>
+                <td>
+                    {% trans "Card's “single period” value; see cards below" %}
+                </td>
+            </tr>
+            <tr>
+                <td>{% trans "Reservation duration spanning multiple periods" %}</td>
+                <td>
+                    <div>
+                        <b>{% trans "Total time" %}:</b> {% trans "Largest “single period” value" %}
+                    </div>
+                    <div>
+                        <b>{% trans "For each time period" %}:</b> {% trans "Card's “multi-period” value" %}
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="ui cards">
+            {% for rule in rules %}
+                <div class="ui card">
+                    <div class="content">
+                        <div class="meta">
+                            {% if perms.change_reservation_rule %}
+                                <a href="{% url "edit_machine_rule" machine_type rule.pk %}">
+                                    <i class="ui make-col-yellow icon pencil"></i>
+                                </a>
+                            {% endif %}
+                            {% if perms.delete_reservation_rule %}
+                                <a class="delete-modal-button"
+                                   data-url="{% url "delete_machine_rule" machine_type rule.pk %}">
+                                    <i class="ui red icon trash"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="description">
+                            {% trans "Single period" %}:
+                            <b>{{ rule.max_hours|floatformat:0 }} {% trans "hours" %}</b>
+                            <br/>
+                            {% trans "Multi-period" %}:
+                            <b>{{ rule.max_inside_border_crossed|floatformat:0 }} {% trans "hours" %}</b>
+                        </div>
+                        <h4 class="subheader">
+                            {% trans "Periods" %}
+                        </h4>
+                        {% for period in rule.time_periods %}
+                            <div>
+                                {% rule_period_start_text period LANGUAGE_CODE as start %}
+                                {% rule_period_end_text period LANGUAGE_CODE as end %}
+                                {{ start|capfirst }} - {{ end|capfirst }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if quotas %}
+            <h3>{% trans "My quotas" %}</h3>
+            <div class="ui cards">
+                {% for quota in quotas %}
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">
+                                {% if quota.dimishing %}
+                                    {% trans "One-time quota" %}
+                                {% else %}
+                                    {% trans "Replenishing quota" %}
+                                {% endif %}
+                            </div>
+                            <div class="meta">
+                                {% if quota.all %}
+                                    {% trans "Global" %}
+                                {% else %}
+                                    {% trans "Personal" %}
+                                {% endif %}
+                            </div>
+                            <div class="description">
+                                <span>
+                                    {% trans "Maximum number of reservations" %}: <b>{{ quota.number_of_reservations }}</b>
+                                </span>
+                                <br/>
+                                {% if quota.ignore_rules %}
+                                    <b>{% trans "Ignores rules" %}</b>
+                                {% endif %}
+                            </div>
+                            <div class="ui small feed">
+                                {% get_active_reservations quota user as active_reservations %}
+                                {% if active_reservations %}
+                                    <h5 class="ui header">{% trans "Reservations connected to quota" %}:</h5>
+                                    {% for reservation in active_reservations %}
+                                        <div class="event">
+                                            <div class="content">
+                                                <div class="summary">
+                                                    {% with start_time=reservation.start_time|date:"d/m/y H:i" %}
+                                                        {% blocktrans trimmed with machine_name=reservation.machine.name time=start_time %}
+                                                            {{ machine_name }} at {{ time }}
+                                                        {% endblocktrans %}
+                                                    {% endwith %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <i>{% trans "No reservations connected to quota" %}</i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock body %}

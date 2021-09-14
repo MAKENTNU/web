@@ -1,0 +1,42 @@
+.machine-title {
+    vertical-align: sub;
+    display: inline;
+}
+
+.machine-title-field {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+a.wrapped.button {
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.ui.grid > .column.no.padding {
+    padding: 0;
+}
+
+.ui.grid.vpad > .column,
+.ui.grid.vpad > .column.no.padding {
+    padding-bottom: 1em;
+}
+
+/* Dropdown should not be overlapped by reservations, which have a maximum z-index of 200 (300 for current_time_indicator) */
+.ui.action.list .menu {
+    z-index: 301;
+    width: 100%;
+}
+
+
+/* Mobile layout */
+@media screen and (max-width: 426px) {
+    .machine-info-and-actions .ui {
+        flex: 1 1 100%;
+    }
+
+    .machine-info-and-actions .stream.image {
+        margin: 2em auto !important; /* Overrides Fomantic-UI */
+        float: initial !important; /* Overrides Fomantic-UI */
+    }
+}

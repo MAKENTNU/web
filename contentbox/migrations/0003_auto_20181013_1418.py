@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='contentbox',
-            options={'permissions': (('can_upload_image', 'Can upload image for CKEditor'), ('can_browse_image', 'Can brows image in CKEditor'))},
+            options={'permissions': (('can_upload_image', 'Can upload images in CKEditor'), ('can_browse_image', 'Can browse images in CKEditor'))},
         ),
         migrations.AlterField(
             model_name='contentbox',

@@ -4,8 +4,9 @@
 {% load checkin_tags %}
 {% load i18n %}
 
+
 {% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "checkin/css/profile.css" %}"/>
+    <link rel="stylesheet" href="{% static 'checkin/css/profile.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -18,24 +19,29 @@
         <div class="ui container">
             <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
                 {% if image %}
-                    {% thumbnail image "150x150" crop="center" as im %}
-                        <img id="profile-pic" src="{{ im.url }}">
+                    <img {% thumbnail image "150x150" crop="center" as image_thumb %}
+                        src="{{ image_thumb.url }}"
+                    {% empty %}
+                        src="{{ image.url }}"
                     {% endthumbnail %}
+                        id="profile-pic" alt="{% trans "Profile picture" %}"
+                    />
                 {% else %}
-                    <img id="profile-pic" src="{% static "checkin/img/placeholder_profile.png" %}"/>
+                    <img id="profile-pic" src="{% static 'checkin/img/placeholder_profile.png' %}"
+                         alt="{% trans "Placeholder image" %}"
+                    />
                 {% endif %}
             </div>
-            <br>
             <div class="ui container">
-                <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="post"
+                <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="POST"
                       enctype="multipart/form-data">
                     {% csrf_token %}
-                    <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden>
+                    <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden/>
                 </form>
             </div>
         </div>
 
-        <br>
+        <br/>
 
         {% if make_member %}
 
@@ -46,33 +52,40 @@
                 {% for skill, level in skill_dict.items %}
                     <div class="ui basic image label">
                         {% if skill.image %}
-                            {% thumbnail skill.image "64x64" crop="center" as im %}
-                                <img class="skill-image" src="{{ im.url }}">
+                            <img {% thumbnail skill.image "64x64" crop="center" as image_thumb %}
+                                src="{{ image_thumb.url }}"
+                            {% empty %}
+                                src="{{ skill.image.url }}"
                             {% endthumbnail %}
+                                class="skill-image"
+                                alt="{% blocktrans trimmed with skill=skill|locale_title:request.LANGUAGE_CODE %}Illustration image of {{ skill }}{% endblocktrans %}"
+                            />
                         {% else %}
-                            <img class="skill-image" src="{% static "checkin/img/placeholder_skill.svg" %}"/>
+                            <img class="skill-image" src="{% static 'checkin/img/placeholder_skill.svg' %}"
+                                 alt="{% trans "Placeholder image" %}"
+                            />
                         {% endif %}
                         <span>{{ skill|locale_title:request.LANGUAGE_CODE }}</span>
-                        <div class="detail make_bg_blue">
+                        <div class="detail make-bg-blue">
                             <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
 
-            <br>
+            <br/>
 
             <div class="container">
-                <form class="ui form" action="" method="post">
+                <form class="ui form" action="" method="POST">
                     {% csrf_token %}
-                    <input name="rating" type="number" id="rating-input" value="1" hidden>
+                    <input id="rating-input" type="number" name="rating" value="1" hidden/>
                     <div class="inline fields">
                         <div class="ten wide field">
                             <label>{% trans "Add skills" %}</label>
                             <select class="ui fluid dropdown search" name="skill" required>
                                 <option value="">{% trans "Select/search" %}</option>
                                 {% for skill in all_skills %}
-                                    <option value="{{ skill.id }}">{{ skill|locale_title:request.LANGUAGE_CODE }}</option>
+                                    <option value="{{ skill.pk }}">{{ skill|locale_title:request.LANGUAGE_CODE }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -89,7 +102,7 @@
 
         {% endif %}
 
-        <br>
+        <br/>
 
         {% if not profile.user.card_number %}
             <div class="card-register">
@@ -98,7 +111,7 @@
                     {% trans "Place the card on the card reader and press the button below to register the card" %}
                 </p>
                 <button class="ui button register-profile">{% trans "Register" %}</button>
-                <div id="duplicate_error" class="ui negative small message" style="display: none;">
+                <div id="duplicate-error" class="ui negative small message" style="display: none;">
                     <i class="close icon"></i>
                     <div class="header">{% trans "Card number is already in use" %}</div>
                     <p>{% trans "Contact" %} <a href="mailto:dev@makentnu.no">styret@makentnu.no</a> {% trans "to fix the problem." %}</p>
@@ -111,25 +124,26 @@
 
 {% block scripts %}
     <script>
-        $('.ui.rating').rating();
-        $('.ui.dropdown').dropdown();
-        $('.rating.skill-lvl').rating('disable');
+        $(".ui.rating").rating();
+        $(".ui.dropdown").dropdown();
+        $(".rating.skill-lvl").rating('disable');
 
-        $('#star-rating').click(function () {
-            let rating = $(this).rating('get rating');
-            if (rating === $('#rating-input').val()) {
-                $('#rating-input').val(0);
+        $("#star-rating").click(function () {
+            const rating = $(this).rating('get rating');
+            const $ratingInput = $("#rating-input");
+            if (rating === $ratingInput.val()) {
+                $ratingInput.val(0);
                 $(this).rating('set rating', 0);
             } else {
-                $('#rating-input').val(rating);
+                $ratingInput.val(rating);
             }
         });
 
-        $('.register-profile').click(function () {
-            register_profile_post($(this));
+        $(".register-profile").click(function () {
+            registerProfilePost($(this));
         });
 
-        function register_profile_post(element) {
+        function registerProfilePost(element) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
@@ -162,18 +176,18 @@
                 },
                 error: function (jqXHR, error, errorthrown) {
                     if (jqXHR.status === 409) {
-                        $("#duplicate_error").fadeIn();
+                        $("#duplicate-error").fadeIn();
                     }
-                }
+                },
             });
         }
 
-        $('#profile-pic').click(function () {
-            $('#input-image').click();
+        $("#profile-pic").click(function () {
+            $("#input-image").click();
         });
 
-        $('#input-image').change(function () {
-            $('#image-form').submit();
+        $("#input-image").change(function () {
+            $("#image-form").submit();
         });
 
         $(".message .close").click(function () {

@@ -4,6 +4,7 @@ from django.urls import path
 from contentbox.views import DisplayContentBoxView
 from . import views
 
+
 urlpatterns = [
     path('', views.MakerspaceView.as_view(), name='makerspace'),
     path('equipment/', views.EquipmentListView.as_view(), name='makerspace-equipment-list'),

@@ -1,19 +1,40 @@
-from datetime import timedelta, datetime, time
+from abc import ABC
+from datetime import datetime, time, timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
-from users.models import User
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
 
 from news.models import Event, TimePlace
-from ...util.time import local_to_date
+from users.models import User
+from util.locale_utils import local_to_date
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 
 
-class GeneralReservationTestCase(TestCase):
+class GeneralReservationTestCase(TestCase, ABC):
+
+    def init_objs(self, machine_type: MachineType):
+        self.machine_type = machine_type
+        self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.Status.AVAILABLE,
+                                              machine_type=self.machine_type)
+        self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
+        self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
+                                               machine_type=self.machine_type)
+        self.course_registration = Printer3DCourse.objects.create(user=self.user, username=self.user.username,
+                                                                  date=datetime.now().date(),
+                                                                  name=self.user.get_full_name())
+        self.max_time_reservation = 5
+        ReservationRule.objects.create(machine_type=self.machine_type, start_time=time(0, 0), end_time=time(23, 59),
+                                       days_changed=6, start_days=1, max_hours=self.max_time_reservation,
+                                       max_inside_border_crossed=self.max_time_reservation)
+        self.event = Event.objects.create(title="TEST EVENT")
+        self.timeplace = TimePlace.objects.create(publication_time=timezone.now(),
+                                                  start_time=timezone.now() + timedelta(seconds=1),
+                                                  end_time=timezone.now() + timedelta(minutes=1),
+                                                  event=self.event)
 
     def check_reservation_invalid(self, reservation, error_message):
         self.assertFalse(reservation.validate(), error_message)
@@ -30,28 +51,19 @@ class GeneralReservationTestCase(TestCase):
         except ValidationError:
             self.fail(error_message)
 
+    def create_reservation(self, relative_start_time: timedelta, relative_end_time: timedelta, event: Event = None,
+                           user: User = None, machine: Machine = None, special=False, special_text=""):
+        machine = machine or self.machine
+        user = user or self.user
+        return Reservation(user=user, machine=machine, event=event, start_time=timezone.now() + relative_start_time,
+                           end_time=timezone.now() + relative_end_time, special=special, special_text=special_text)
+
 
 class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def setUp(self):
-        event = Event.objects.create(title="TEST EVENT")
-        self.timeplace = TimePlace.objects.create(publication_time=timezone.now(),
-                                                  start_time=timezone.now() + timedelta(seconds=1),
-                                                  end_time=timezone.now() + timedelta(minutes=1),
-                                                  event=event)
-        self.printer_machine_type = MachineType.objects.get(pk=1)
-        self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.AVAILABLE,
-                                              machine_type=self.printer_machine_type)
-        self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
-        self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
-                                               machine_type=self.printer_machine_type)
-        self.course_registration = Printer3DCourse.objects.create(user=self.user, username=self.user.username,
-                                                                  date=datetime.now().date(),
-                                                                  name=self.user.get_full_name())
-        self.max_time_reservation = 5
-        ReservationRule.objects.create(machine_type=self.printer_machine_type, start_time=time(0, 0), end_time=time(23, 59),
-                                       days_changed=6, start_days=1, max_hours=self.max_time_reservation,
-                                       max_inside_border_crossed=self.max_time_reservation)
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        super().init_objs(MachineType.objects.get(pk=1))
 
     def save_past_reservation(self, reservation):
         validate_function = reservation.validate
@@ -59,19 +71,12 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         reservation.save()
         reservation.validate = validate_function
 
-    def create_reservation(self, timedelta_start, timedelta_end, event=None, user=None, machine=None, special=False,
-                           special_text=""):
-        machine = self.machine if machine is None else machine
-        user = self.user if user is None else user
-        return Reservation(user=user, machine=machine, event=event, start_time=timezone.now() + timedelta_start,
-                           end_time=timezone.now() + timedelta_end, special=special, special_text=special_text)
-
     def set_reservation_future_limit_days(self, days):
-        self.reservation_future_limit_days = Reservation.reservation_future_limit_days
-        Reservation.reservation_future_limit_days = days
+        self.reservation_future_limit_days = Reservation.RESERVATION_FUTURE_LIMIT_DAYS
+        Reservation.RESERVATION_FUTURE_LIMIT_DAYS = days
 
     def reset_reservation_future_limit_days(self):
-        Reservation.reservation_future_limit_days = self.reservation_future_limit_days
+        Reservation.RESERVATION_FUTURE_LIMIT_DAYS = self.reservation_future_limit_days
 
     def give_user_event_permission(self):
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
@@ -82,7 +87,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_not_allowed_user_cannot_create_reservation(self):
         self.course_registration.delete()
-        self.assertFalse(self.printer_machine_type.can_user_use(self.user))
+        self.assertFalse(self.machine_type.can_user_use(self.user))
         self.check_reservation_invalid(
             self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
             "Uses that cannot use a machine, should not be able to reserve it"
@@ -112,14 +117,14 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.user_quota.number_of_reservations = 5
         self.user_quota.save()
 
-        self.assertTrue(Quota.can_make_new_reservation(self.user, self.printer_machine_type))
+        self.assertTrue(Quota.can_create_new_reservation(self.user, self.machine_type))
 
         for reservation_number in range(5):
             self.check_reservation_valid(self.create_reservation(timedelta(days=reservation_number, hours=1),
                                                                  timedelta(days=reservation_number, hours=2)),
                                          "User should be able to make as many reservations as allowed")
 
-        self.assertFalse(Quota.can_make_new_reservation(self.user, self.printer_machine_type))
+        self.assertFalse(Quota.can_create_new_reservation(self.user, self.machine_type))
 
     def test_make_more_than_allowed_number_of_reservations(self):
         self.user_quota.number_of_reservations = 5
@@ -136,6 +141,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     @patch("django.utils.timezone.now")
     def test_disallow_overlapping_reservations(self, now_mock):
         now_mock.return_value = local_to_date(datetime(2018, 3, 12, 12, 0, 0))
+
         self.user_quota.number_of_reservations = 3
         self.user_quota.save()
 
@@ -208,10 +214,10 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
                                      "Changing a reservation with the maximum number of reservations should be valid")
 
     def test_same_time_separate_machines(self):
-        additional_printer = Machine.objects.create(name="C2", location="Printer room Mackerspace U1", status=Machine.AVAILABLE,
-                                                    machine_type=self.printer_machine_type)
-        Machine.objects.create(name="C3", location="Printer room Mackerspace U1", status=Machine.AVAILABLE,
-                               machine_type=self.printer_machine_type)
+        additional_printer = Machine.objects.create(name="C2", location="Printer room Mackerspace U1", status=Machine.Status.AVAILABLE,
+                                                    machine_type=self.machine_type)
+        Machine.objects.create(name="C3", location="Printer room Mackerspace U1", status=Machine.Status.AVAILABLE,
+                               machine_type=self.machine_type)
 
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
                                      "Saving a single reservation should be valid")
@@ -321,7 +327,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.assertFalse(reservation.is_within_allowed_period())
         self.reset_reservation_future_limit_days()
 
-    def test_make_reservation_too_far_in_the_future(self):
+    def test_create_reservation_too_far_in_the_future(self):
         self.set_reservation_future_limit_days(7)
         self.check_reservation_invalid(self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1)),
                                        "Reservation is too far in the future and should not be valid")
@@ -334,3 +340,25 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
             self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1), event=self.timeplace),
             "Event reservations are always valid no matter how far in the future they are")
         self.reset_reservation_future_limit_days()
+
+
+class AdvancedMachineReservationTestCases(GeneralReservationTestCase):
+
+    def setUp(self):
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        super().init_objs(MachineType.objects.get(pk=5))
+
+    def test_booking_advanced_printer_without_any_course(self):
+        user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
+        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2), user=user2),
+                                       "Uses that cannot use a machine, should not be able to reserve it")
+
+    def test_booking_advanced_printer_with_normal_course(self):
+        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                       "Uses that cannot use a machine, should not be able to reserve it")
+
+    def test_booking_advanced_printer_with_advanced_course(self):
+        self.course_registration.advanced_course = True
+        self.course_registration.save()
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
+                                     "Uses that cannot use a machine, should not be able to reserve it")

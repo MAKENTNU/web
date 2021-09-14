@@ -9,10 +9,11 @@ class DataportenOAuth2(BaseOAuth2):
     ID_KEY = 'userid'
     REQUIRES_EMAIL_VALIDATION = False
     EXTRA_DATA = [
+        # (<name from Dataporten's API>, <alias for storage in the database and usage in e.g. views>)
         ('userid', 'userid'),
         ('scope', 'scope'),
-        ('fullname', 'fullname'),
-        ('profilephoto_url', 'profilephoto_url'),
+        ('name', 'fullname'),
+        ('email', 'email'),
     ]
     BASE_URL = 'https://auth.dataporten.no'
     API_URL = 'https://api.dataporten.no'
@@ -28,33 +29,19 @@ class DataportenOAuth2(BaseOAuth2):
     def get_user_details(self, response):
         """
         Return user details from Dataporten.
-
-        Set full name and fetch profile photo URL.
         """
         user = response
-
-        # Rename to what social expects
-        fullname = user.get('name', None)
-        if fullname:
-            user['fullname'] = fullname
-            user.pop('name')
-
-        # Get profile photo URL, if any
-        profilephoto_id = user.get('profilephoto', None)
-        if profilephoto_id:
-            profilephoto_url = f'{self.API_URL}/userinfo/v1/user/media/{profilephoto_id}'
-            user['profilephoto_url'] = profilephoto_url
-
+        # <Convert response data from Dataporten's format to a format fit for usage in e.g. views, here>
         return user
 
     def check_correct_audience(self, audience):
-        """Assert that Dataporten sends back our own client ID as audience"""
+        """Assert that Dataporten sends back our own client ID as audience."""
         client_id, _ = self.get_key_and_secret()
         if audience != client_id:
             raise AuthException('Wrong audience')
 
     def user_data(self, access_token, *args, **kwargs):
-        """Loads user data from service"""
+        """Loads user data from service."""
         url = f'{self.BASE_URL}/userinfo'
         response = self.get_json(
             url,

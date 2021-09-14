@@ -1,0 +1,49 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
+    <script src="{% static 'web/js/image_link.js' %}"></script>
+{% endblock head %}
+
+{% block body %}
+    <h1 class="ui text-centered make-col-blue header">
+        {% trans "Articles" %}
+    </h1>
+    <div class="ui container">
+        <div class="articles">
+            {% for article in articles %}
+                <img {% thumbnail article.image "600" crop="center" as image_thumb %}
+                    src="{{ image_thumb.url }}"
+                {% empty %}
+                    src="{{ article.image.url }}"
+                {% endthumbnail %}
+                    class="article-img clickable {% cycle "float-right" "float-left" %}
+			    {% if forloop.first %}article-first{% endif %}
+			    {% if forloop.last %}article-last{% endif %}"
+                    {% if article.contain %}style="object-fit: contain;"{% endif %}
+                    href="{% url 'article' article.pk %}"
+                />
+                <div class="article-text {% cycle 'float-left' 'float-right' %}
+			    {% if forloop.first %}article-first{% endif %}
+			    {% if forloop.last %}article-last{% endif %}">
+                    {% if forloop.first or forloop.last %}
+                        <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}" alt=""/>
+                        <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}" alt=""/>
+                        <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
+                        <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
+                    {% endif %}
+                    <div>
+                        <h2 class="word-breaking">
+                            <a href="{% url 'article' article.pk %}">{{ article.title }}</a>
+                        </h2>
+                        <p>{{ article.clickbait }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

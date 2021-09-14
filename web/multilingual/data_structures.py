@@ -1,15 +1,15 @@
 import json
-import logging
 from json import JSONDecodeError
 
+from django.conf import settings
 from django.utils.translation import get_language
 
-from web import settings
+from util.logging_utils import get_request_logger
 
 
 class MultiLingualTextStructure:
     """
-    Data structure to keep track of multilingual string data
+    Data structure to keep track of multilingual string data.
     """
     supported_languages = list(map(lambda language: language[0], settings.LANGUAGES))
 
@@ -20,8 +20,9 @@ class MultiLingualTextStructure:
 
     def set_content_for_languages(self, linear_content):
         if not isinstance(linear_content, str):
-            logging.getLogger('django.request').exception(
-                f"Cannot set content to '{linear_content}'; {type(str)} expected, but received {type(linear_content)}"
+            get_request_logger().exception(
+                f"Cannot set content to:\n{linear_content}"
+                f"\n{type(str)} expected, but received {type(linear_content)}"
             )
             return
         if not linear_content:
@@ -32,7 +33,7 @@ class MultiLingualTextStructure:
             # If for some reason (i.e. old or corrupt data) the content given is not JSON,
             # use it as content for the default language.
             self.languages[settings.LANGUAGE_CODE] = linear_content
-            logging.getLogger('django.request').exception(e)
+            get_request_logger().exception(f"Unable to decode as JSON:\n{linear_content}", exc_info=e)
             return
 
         for language, value in json_dict.items():
@@ -50,7 +51,7 @@ class MultiLingualTextStructure:
 
     def __getitem__(self, key):
         """
-        Returns the string for the given language
+        Returns the string for the given language.
         """
         value = self.languages[key]
         if value or not self.use_default_for_empty:
@@ -61,7 +62,7 @@ class MultiLingualTextStructure:
 
     def __setitem__(self, key, item: str):
         """
-        Sets the content of the given language to the given string
+        Sets the content of the given language to the given string.
         """
         self.languages[key] = item
 

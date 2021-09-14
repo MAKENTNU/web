@@ -1,8 +1,9 @@
-from docs.models import Page, Content
+from .models import Content, Page
+from .validators import page_title_regex
 
 
 class PageByTitle:
-    regex = Page.title_regex[1:-1]
+    regex = page_title_regex.strip(r"^$")
 
     def to_python(self, value):
         try:
@@ -10,7 +11,7 @@ class PageByTitle:
         except Page.DoesNotExist:
             raise ValueError("No page exists with that title")
 
-    def to_url(self, page):
+    def to_url(self, page: Page):
         return page.title
 
 
@@ -23,5 +24,5 @@ class ContentByPk(object):
         except Content.DoesNotExist:
             raise ValueError("No content exists with that PK")
 
-    def to_url(self, content):
+    def to_url(self, content: Content):
         return content.pk

@@ -1,0 +1,19 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'news/css/ticket_card.css' %}"/>
+{% endblock head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>{% trans "My tickets" %}</h1>
+        <div class="ui cards">
+            {% for ticket in tickets %}
+                {% include 'news/ticket_card.html' %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

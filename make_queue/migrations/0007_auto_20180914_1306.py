@@ -111,6 +111,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='reservationrule',
             name='max_inside_border_crossed',
-            field=models.FloatField(verbose_name='Hours multiperiod'),
+            field=models.FloatField(verbose_name='Hours multi-period'),
         ),
     ]

@@ -12,6 +12,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='contentbox',
-            options={'permissions': (('can_upload_image', 'Can upload images in CKEditor'), ('can_browse_image', 'Can browse images in CKEditor'))},
+            options={'permissions': (('can_upload_image', 'Can upload images in CKEditor'), ('can_browse_image', 'Can browse images in CKEditor')), 'verbose_name': 'content box', 'verbose_name_plural': 'content boxes'},
         ),
     ]
