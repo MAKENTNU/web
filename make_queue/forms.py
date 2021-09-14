@@ -241,8 +241,7 @@ class BaseMachineForm(forms.ModelForm):
         machine_type = cleaned_data.get("machine_type")
 
         if machine_type is not None and machine_type.has_stream and cleaned_data["stream_name"] is None:
-            self._errors['stream_name'] = [_("Stream Name cannot be empty")]
-            raise ValidationError(_("stream_name cannot be None"), code="stream_name_is_none")
+            self.add_error('stream_name', ValidationError(_("Stream Name cannot be empty"), code="stream_name_is_none"))
 
         return cleaned_data
 
