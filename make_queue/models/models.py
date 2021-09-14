@@ -116,7 +116,7 @@ class Machine(models.Model):
 
     STATUS_CHOICES_DICT = dict(Status.choices)
 
-    status = models.CharField(max_length=2, choices=STATUS_CHOICES, verbose_name=_("Status"), default=AVAILABLE)
+    status = models.CharField(max_length=2, choices=Status.choices, verbose_name=_("Status"), default=Status.AVAILABLE)
     stream_name = models.CharField(
         max_length=30,
         verbose_name=_("Stream Name"),

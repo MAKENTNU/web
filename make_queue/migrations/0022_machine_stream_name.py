@@ -14,7 +14,7 @@ def set_stream_name(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('make_queue', '0016_auto_20201107_1152'),
+        ('make_queue', '0021_alter_id_fields_to_use_bigautofield'),
     ]
 
     operations = [

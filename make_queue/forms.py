@@ -1,5 +1,6 @@
 from django import forms
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
