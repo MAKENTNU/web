@@ -1,5 +1,3 @@
-# Pull request
-
 ## Proposed changes
 _Describe your changes_
 
