@@ -1163,6 +1163,7 @@ Furthermore, it's good practice to add a comment in the original template, sayin
 
 #### Links missing `target="_blank"`
 `<a>` tags leading the user away from the "flow" of the current page, should always have its `target` attribute set to `"_blank"`.
+This will make the link open in a new tab when clicked.
 
 
 ### For each HTML attribute
