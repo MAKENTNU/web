@@ -42,7 +42,9 @@ class EditMachineView(PermissionRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        context_data["has_stream_dict"] = {machine_type.pk: machine_type.has_stream for machine_type in MachineType.objects.all() }
+        context_data['has_stream_dict'] = {
+            machine_type.pk: machine_type.has_stream for machine_type in MachineType.objects.all()
+        }
         return context_data
 
 

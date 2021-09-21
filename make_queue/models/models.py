@@ -116,7 +116,12 @@ class Machine(models.Model):
 
     STATUS_CHOICES_DICT = dict(Status.choices)
 
-    status = models.CharField(max_length=2, choices=Status.choices, verbose_name=_("Status"), default=Status.AVAILABLE)
+    status = models.CharField(
+        max_length=2,
+        choices=Status.choices,
+        verbose_name=_("Status"),
+        default=Status.AVAILABLE,
+    )
     stream_name = models.CharField(
         max_length=30,
         verbose_name=_("Stream Name"),
@@ -125,7 +130,7 @@ class Machine(models.Model):
             RegexValidator(
                 regex="^[a-zA-Z0-9_-]+$",
                 message=_("Stream name can only consist of english letters, numbers, hyphens or underscores."),
-                code="NOT_URL_SAFE"
+                code='not_url_safe',
             )
         ]
     )

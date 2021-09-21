@@ -85,8 +85,8 @@ class CreateAndEditMachineViewTest(TestCase):
         username = 'TEST_USER'
         password = 'TEST_PASS'
         self.user = User.objects.create_user(username=username, password=password)
-        change_permission = Permission.objects.get(codename="change_machine")
-        create_permission = Permission.objects.get(codename="add_machine")
+        change_permission = Permission.objects.get(codename='change_machine')
+        create_permission = Permission.objects.get(codename='add_machine')
         self.user.user_permissions.add(create_permission, change_permission)
         self.client.login(username=username, password=password)
 
@@ -100,10 +100,10 @@ class CreateAndEditMachineViewTest(TestCase):
         self.response = self.client.get(reverse("edit_machine", args=[machine.pk]))
         
         self.assertEqual(self.response.status_code, 200)
-        self.assertTrue(isinstance(self.response.context_data["form"], EditMachineForm))
+        self.assertTrue(isinstance(self.response.context_data['form'], EditMachineForm))
 
     def test_createMachine_context_data_has_baseMachineForm(self):
-        self.response = self.client.get(reverse("create_machine"))
+        self.response = self.client.get(reverse('create_machine'))
         
         self.assertEqual(self.response.status_code, 200)
-        self.assertTrue(isinstance(self.response.context_data["form"], BaseMachineForm))
+        self.assertTrue(isinstance(self.response.context_data['form'], BaseMachineForm))

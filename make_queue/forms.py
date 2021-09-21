@@ -238,10 +238,19 @@ class BaseMachineForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
 
-        machine_type = cleaned_data.get("machine_type")
+        machine_type = cleaned_data.get('machine_type')
+        stream_name = cleaned_data.get('stream_name')
 
-        if machine_type is not None and machine_type.has_stream and cleaned_data["stream_name"] is None:
-            self.add_error('stream_name', ValidationError(_("Stream Name cannot be empty"), code="stream_name_is_none"))
+        if (machine_type is not None
+            and machine_type.has_stream
+            and stream_name is None
+        ):
+            self.add_error(
+                'stream_name', ValidationError(
+                    _("Stream Name cannot be empty"),
+                    code='stream_name_is_none'
+                )
+            )
 
         return cleaned_data
 
@@ -249,4 +258,4 @@ class BaseMachineForm(forms.ModelForm):
 class EditMachineForm(BaseMachineForm):
 
     class Meta(BaseMachineForm.Meta):
-        exclude = ["machine_model"]
+        exclude = ['machine_model']
