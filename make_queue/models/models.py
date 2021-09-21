@@ -4,7 +4,7 @@ from typing import List, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, slug_re
 from django.db import models
 from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Lower
@@ -128,7 +128,7 @@ class Machine(models.Model):
         default=None, blank=True, null=True,
         validators=[
             RegexValidator(
-                regex="^[a-zA-Z0-9_-]+$",
+                regex=slug_re,
                 message=_("Stream name can only consist of english letters, numbers, hyphens or underscores."),
                 code='not_url_safe',
             )
