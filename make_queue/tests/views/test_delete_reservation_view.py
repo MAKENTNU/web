@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
@@ -40,13 +42,13 @@ class DeleteReservationViewTestCase(TestCase):
     def test_delete_single_reservation(self):
         response = self.client1.post(reverse('delete_reservation'),
                                      {'pk': self.reservation.pk})
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
     def test_delete_other_users_reservation(self):
         response = self.client2.post(reverse('delete_reservation'),
                                      {'pk': self.reservation.pk})
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
     def test_delete_one_of_users_reservations(self):
@@ -58,6 +60,6 @@ class DeleteReservationViewTestCase(TestCase):
 
         response = self.client1.post(reverse('delete_reservation'),
                                      {'pk': self.reservation.pk})
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
         self.assertTrue(Reservation.objects.filter(pk=reservation2.pk).exists())
