@@ -26,32 +26,44 @@ class MachineFormTest(TestCase):
 
         self.assertTrue(form.is_valid())
 
-    def test_stream_name_with_space_returns_false(self):
+    def test_stream_name_with_space_returns_error_must_be_slug(self):
         form_data = self.valid_form_data
         form_data["stream_name"] = "invalid form"
 
         form = BaseMachineForm(data=form_data)
 
-        self.assertFalse(form.is_valid())
+        self.assertErrorCodeInForm(
+            field_name='stream_name',
+            error_code='not_url_safe',
+            form=form
+        )
 
-    def test_stream_name_with_special_character_returns_false(self):
+    def test_stream_name_with_special_character_returns_error_must_be_slug(self):
         form_data = self.valid_form_data
         form_data["stream_name"] = "schrödinger"
 
         form = BaseMachineForm(data=form_data)
 
-        self.assertFalse(form.is_valid())
+        self.assertErrorCodeInForm(
+            field_name='stream_name',
+            error_code='not_url_safe',
+            form=form
+        )
 
-    def test_empty_stream_name_when_3dprinter_returns_false(self):
+    def test_empty_stream_name_when_3dprinter_returns_error_cannot_be_empty(self):
         form_data = self.valid_form_data
         form_data["machine_type"] = self.printer_machine_type
         form_data["stream_name"] = ""
 
         form = BaseMachineForm(data=form_data)
 
-        self.assertFalse(form.is_valid())
-    
-    def test_empty_stream_name_when_not_3dprinter_returns_true(self):
+        self.assertErrorCodeInForm(
+            field_name='stream_name',
+            error_code='stream_name_is_none',
+            form=form
+        )
+
+    def test_empty_stream_name_when_not_3dprinter_returns_true_with_no_form_errors(self):
         form_data = self.valid_form_data
         form_data["machine_type"] = MachineType.objects.get(pk=2)
         form_data["stream_name"] = ""
@@ -59,6 +71,16 @@ class MachineFormTest(TestCase):
         form = BaseMachineForm(data=form_data)
 
         self.assertTrue(form.is_valid())
+        self.assertDictEqual({}, form.errors)
+
+    def assertErrorCodeInForm(self, field_name, error_code, form):
+        """Asserts ``error_code`` appears among the errors for ``field_name`` in ``form``"""
+        error_data = form.errors.as_data()
+        error_list = error_data.get(field_name)
+        self.assertIsNotNone(error_list)
+        error_code_list = [err.code for err in error_list]
+        self.assertIn(error_code, error_code_list)
+
 
 class EditMachineFormTest(TestCase):
 
