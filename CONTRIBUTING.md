@@ -652,6 +652,8 @@ there do exist scenarios where *not* getting rid of a code smell would be the mo
     - [Using a model object's `id` instead of `pk`](#using-a-model-objects-id-instead-of-pk)
     - [Missing prefetch of related objects](#missing-prefetch-of-related-objects)
     - [Unnecessary database queries](#unnecessary-database-queries)
+  + [For each migration](#for-each-migration)
+    - [`RunPython` operations missing the `reverse_code` argument](#runpython-operations-missing-the-reverse_code-argument)
   + [For each class](#for-each-class-1)
     - [Fields declared outside of the standard places](#fields-declared-outside-of-the-standard-places)
   + [For each model](#for-each-model)
@@ -864,6 +866,14 @@ LOGGING['loggers']['django.db.backends'] = {
 }
 """
 ```
+
+
+### For each migration
+
+#### `RunPython` operations missing the `reverse_code` argument
+Custom-written migrations with [`RunPython` operations](https://docs.djangoproject.com/en/3.2/ref/migration-operations/#runpython)
+should always provide the `reverse_code` argument,
+so that it's possible to [unapply a migration](https://docs.djangoproject.com/en/3.2/topics/migrations/#reversing-migrations).
 
 
 ### For each class
