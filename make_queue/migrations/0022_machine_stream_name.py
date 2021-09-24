@@ -3,6 +3,7 @@
 from django.db import migrations, models
 from django.core.validators import RegexValidator
 
+
 def set_stream_name(apps, schema_editor):
     Machine = apps.get_model('make_queue', 'Machine')
     db_alias = schema_editor.connection.alias
@@ -10,6 +11,13 @@ def set_stream_name(apps, schema_editor):
     for machine in Machine.objects.using(db_alias).filter(machine_type__has_stream=True):
         machine.stream_name = machine.name.replace("ö", "o").replace(" ", "-")
         machine.save()
+
+
+def revert_stream_name(apps, schema_editor):
+    Machine = apps.get_model('make_queue', 'Machine')
+    db_alias = schema_editor.connection.alias
+    Machine.objects.using(db_alias).filter(machine_type__has_stream=True).update(stream_name=None)
+
 
 class Migration(migrations.Migration):
 
@@ -23,5 +31,5 @@ class Migration(migrations.Migration):
             name='stream_name',
             field=models.CharField(blank=True, default=None, max_length=30, null=True, validators=[RegexValidator(code='NOT_URL_SAFE', message='Stream name can only consist of english letters, numbers, hyphens or underscores.', regex='^[a-zA-Z0-9_-]+$')], verbose_name='Stream Name'),
         ),
-        migrations.RunPython(set_stream_name, migrations.RunPython.noop),
+        migrations.RunPython(set_stream_name, reverse_code=revert_stream_name),
     ]
