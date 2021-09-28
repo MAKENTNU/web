@@ -15,9 +15,18 @@
         <a href="{% url "admin-event" event.pk %}">
             <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
         </a>
-
         <h3>{% trans "Emails" %}</h3>
+
         <div class="emails-container">
+            <div class="send-email-container">
+                <a class="ui blue floated button explanation-popup" href="{{ send_email_url }}">
+                    <i class="icons">
+                        <i class="ui envelope open text icon"></i>
+                        <i class="noshadow bottom right corner add icon"></i>
+                    </i>
+                    {% trans "Send email" %}
+                </a>
+            </div>
             <div class="copy-button-container">
                 <button class="copy-token ui make-bg-yellow icon button"><i class="clipboard icon"></i></button>
                 <span data-content="{% trans "Click to copy the emails of the active tickets to the clipboard" %}.">
