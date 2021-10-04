@@ -84,6 +84,23 @@
                     <label>{{ form.github_username.label }}</label>
                     {{ form.github_username }}
                 </div>
+                <div class="ui field">
+                    {# TODO: reduce code duplication for the error messages #}
+                    <label>{{ form.discord_username.label }}</label>
+                    {{ form.discord_username }}
+                    {% for error in form.discord_username.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.minecraft_username.label }}</label>
+                    {{ form.minecraft_username }}
+                </div>
             </div>
 
             {% if perms.internal.can_edit_group_membership %}

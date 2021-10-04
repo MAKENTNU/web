@@ -16,7 +16,7 @@ from web.modelfields import UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .modelfields import SemesterField
 from .util import date_to_semester, year_to_semester
-from .validators import WhitelistedEmailValidator
+from .validators import WhitelistedEmailValidator, discord_username_validator
 
 
 class Member(models.Model):
@@ -51,8 +51,10 @@ class Member(models.Model):
     quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
     retired = models.BooleanField(default=False, verbose_name=_("Retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
-    # Our code shouldn't have to keep track of GitHub's username length constraints, so we should not limit the length
+    # Our code shouldn't have to keep track of these services' username length constraints, so we should not limit the length
     github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
+    discord_username = UnlimitedCharField(blank=True, validators=[discord_username_validator], verbose_name=_("Discord username"))
+    minecraft_username = UnlimitedCharField(blank=True, verbose_name=_("Minecraft username"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:

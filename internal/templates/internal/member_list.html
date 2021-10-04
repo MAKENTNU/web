@@ -125,6 +125,8 @@
                     data-study-program="{{ member.study_program }}"
                     data-ntnu-starting-semester="{{ member.ntnu_starting_semester_display }}"
                     data-github-username="{{ member.github_username }}"
+                    data-discord-username="{{ member.discord_username }}"
+                    data-minecraft-username="{{ member.minecraft_username }}"
 
                     data-semester-joined="{{ member.semester_joined }}"
                     data-date-joined="{{ member.date_joined|short_date }}"
@@ -346,6 +348,18 @@
                     <td>
                         <b><a id="member-githubUsername"></a></b>
                     </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "Discord username" %}</b>
+                    </td>
+                    <td id="member-discordUsername"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "Minecraft username" %}</b>
+                    </td>
+                    <td id="member-minecraftUsername"></td>
                 </tr>
                 </tbody>
             </table>

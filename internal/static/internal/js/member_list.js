@@ -51,6 +51,8 @@ function showDetailedMemberInformation(member) {
         studyProgram: member.data.studyProgram,
         ntnuStartingSemester: member.data.ntnuStartingSemester,
         githubUsername: member.data.githubUsername,
+        discordUsername: member.data.discordUsername,
+        minecraftUsername: member.data.minecraftUsername,
 
         dateJoined: `${member.data.semesterJoined} (${member.data.dateJoined})`,
         dateQuitOrRetired: `${member.data.semesterQuitOrRetired} (${member.data.dateQuitOrRetired})`,
@@ -275,6 +277,8 @@ function setup() {
                 studyProgram: $row.data("study-program"),
                 ntnuStartingSemester: $row.data("ntnu-starting-semester"),
                 githubUsername: $row.data("github-username"),
+                discordUsername: $row.data("discord-username"),
+                minecraftUsername: $row.data("minecraft-username"),
 
                 dateJoined: $row.data("date-joined"),
                 dateJoinedSortable: $row.data("date-joined-sortable"),
