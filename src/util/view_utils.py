@@ -1,10 +1,11 @@
 import copy
 from abc import ABC
 from collections.abc import Iterable
+from http import HTTPStatus
 from typing import Any
 
 from django.forms import BoundField, FileInput, Form
-from django.http import Http404, QueryDict
+from django.http import Http404, JsonResponse, QueryDict
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.edit import FormMixin
@@ -19,6 +20,77 @@ def insert_form_field_values(form_kwargs: dict, field_name_to_value: dict[str, A
         data._mutable = False
         form_kwargs['data'] = data
     return form_kwargs
+
+
+# noinspection PyUnresolvedReferences
+class QueryParameterFormMixin(FormMixin, ABC):
+    query_params: dict = None
+    """
+    This will be a ``dict`` in inheriting views' ``get()`` as long as ``get_form()`` returns a form.
+    (If the form contains errors, ``get()`` won't be called.)
+    """
+
+    ignore_params_not_on_form = False
+    """If ``False``, responds with an error code if any of the request's query parameter fields is not defined on the form class."""
+
+    _query_param_errors: dict = None
+
+    def get(self, request, *args, **kwargs):
+        # This check allows inheriting views to potentially call `validate_query_params()` before this method is called,
+        # without having to repeat the same validation
+        if self._query_param_errors is None:
+            self.validate_query_params()
+
+        if self._query_param_errors is None:
+            # The form validation logic was skipped, so have to return the default implementation
+            return super().get(request, *args, **kwargs)
+
+        if self._query_param_errors:
+            return self.form_invalid(form=None)
+        else:
+            return self.form_valid(form=None, *args, **kwargs)
+
+    def validate_query_params(self):
+        form: Form = self.get_form()
+        if not form:
+            return
+
+        errors = {}
+        if not form.is_valid():
+            errors['field_errors'] = form.errors
+
+        self.update_errors_with_params_not_on_form(errors, form)
+
+        self._query_param_errors = errors
+        if not errors:
+            self.query_params = form.cleaned_data
+
+    def update_errors_with_params_not_on_form(self, errors: dict, form: Form):
+        if not self.ignore_params_not_on_form:
+            fields_not_on_form = self.request.GET.keys() - form.base_fields.keys()
+            if fields_not_on_form:
+                errors['undefined_fields'] = {
+                    'message': "These provided fields are not defined in the API.",
+                    'fields': list(fields_not_on_form),
+                }
+
+    def get_form(self, form_class=None):
+        # This makes the form validation logic optional, by skipping it in the methods above
+        if not form_class and not self.get_form_class():
+            return None
+        return super().get_form(form_class=form_class)
+
+    def get_form_kwargs(self):
+        return {
+            **super().get_form_kwargs(),
+            'data': self.request.GET,
+        }
+
+    def form_valid(self, form=None, *get_args, **get_kwargs):
+        return super().get(self.request, *get_args, **get_kwargs)
+
+    def form_invalid(self, form=None, *, errors: dict = None, status=HTTPStatus.BAD_REQUEST):
+        return UTF8JsonResponse(errors or self._query_param_errors, status=status)
 
 
 class CustomFieldsetFormMixin(TemplateResponseMixin, FormMixin, ABC):
@@ -143,3 +215,12 @@ class CleanNextParamMixin:
 
     def get_allowed_next_params(self) -> set[str]:
         return self.allowed_next_params
+
+
+class UTF8JsonResponse(JsonResponse):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **{
+            'json_dumps_params': {'ensure_ascii': False},  # Prevents replacing unicode characters with \u encoding
+            **kwargs,
+        })
