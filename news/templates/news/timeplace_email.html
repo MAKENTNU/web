@@ -1,0 +1,39 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% trans "Edit email" %}{% endblock title %}
+
+{% block head %}
+    {{ form.media }}
+{% endblock head %}
+
+{% block body %}
+    <h1 class="ui centered header">{% block form_header %}{% trans "Edit email" %}{% endblock %}</h1>
+    <form class="ui form text container" action="" method="POST" enctype="multipart/form-data">
+        {% for error in form.non_field_errors %}
+            <div class="ui negative message">
+                {{ error }}
+            </div>
+        {% endfor %}
+        {% csrf_token %}
+
+        <div class="field">
+            <label>{{ "Subject" }}</label>
+            {{ form.subject }}
+        </div>
+        <div class="field">
+            <label>{% trans "Body" %}</label>
+            {{ form.body }}
+        </div>
+
+        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Send" %}"/>
+        <a class="ui right floated red button" href="{% url "admin-event" event.pk %}">
+            {% trans "Cancel" context "abort action" %}
+        </a>
+    </form>
+    <script>
+        $("span[data-content]").popup();
+    </script>
+{% endblock body %}

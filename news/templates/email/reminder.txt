@@ -1,0 +1,6 @@
+{% load i18n %}
+
+
+{% trans "You've received an update for the event" %} ""{{ event_or_time_place.event.title }}"":
+
+"{{ body }} "
