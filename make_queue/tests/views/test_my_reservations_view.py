@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.test import TestCase
 from django.utils import timezone
 
@@ -24,7 +26,7 @@ class MyReservationsViewTestCase(TestCase):
                                        date=timezone.now().date())
 
         Reservation.objects.create(user=self.user, machine=printer, event=None,
-                                   start_time=timezone.now(), end_time=timezone.now() + timezone.timedelta(hours=2))
+                                   start_time=timezone.now(), end_time=timezone.now() + timedelta(hours=2))
 
     def test_get_user_reservations_single_reservation(self):
         self.assertListEqual(
@@ -35,8 +37,8 @@ class MyReservationsViewTestCase(TestCase):
     def test_get_user_reservations_multiple_reservations(self):
         Reservation.objects.create(user=self.user,
                                    machine=Machine.objects.get(name="U1"),
-                                   start_time=timezone.now() + timezone.timedelta(hours=2),
-                                   end_time=timezone.now() + timezone.timedelta(hours=4), event=None)
+                                   start_time=timezone.now() + timedelta(hours=2),
+                                   end_time=timezone.now() + timedelta(hours=4), event=None)
 
         self.assertListEqual(
             list(self.user.reservations.order_by("-start_time")),
@@ -53,7 +55,7 @@ class MyReservationsViewTestCase(TestCase):
 
         Reservation.objects.create(user=self.user, machine=sewing_machine,
                                    start_time=timezone.now(),
-                                   end_time=timezone.now() + timezone.timedelta(hours=2), event=None)
+                                   end_time=timezone.now() + timedelta(hours=2), event=None)
 
         self.assertListEqual(
             [

@@ -4,19 +4,19 @@
 
 <div id="{{ widget.attrs.id }}" class="multilingual-input">
     <div class="ui right floated pointing secondary menu inline">
-        {% for widget in widget.subwidgets %}
+        {% for subwidget in widget.subwidgets %}
             <a class="{% if forloop.first %}active{% endif %} item"
-               data-tab="{{ widget.name }}{{ widget.attrs.language }}">
-                <i class="{% get_semantic_flag_code_from_language_code widget.attrs.language %} flag"></i>
-                {% get_local_name_from_language_code widget.attrs.language %}
+               data-tab="{{ subwidget.name }}{{ subwidget.attrs.language }}">
+                <i class="{% get_semantic_flag_code_from_language_code subwidget.attrs.language %} flag"></i>
+                {% get_local_name_from_language_code subwidget.attrs.language %}
             </a>
         {% endfor %}
     </div>
 
-    {% for widget in widget.subwidgets %}
+    {% for subwidget in widget.subwidgets %}
         <div class="ui tab {% if forloop.first %}active{% endif %}"
-             data-tab="{{ widget.name }}{{ widget.attrs.language }}">
-            {% render widget %}
+             data-tab="{{ subwidget.name }}{{ subwidget.attrs.language }}">
+            {% render subwidget %}
         </div>
     {% endfor %}
 

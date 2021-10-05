@@ -157,7 +157,7 @@ class Printer3DCourseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
         self.fields['user'] = forms.ModelChoiceField(
-            queryset=User.objects.filter(Q(printer3dcourse=None) | Q(printer3dcourse=self.instance)),
+            queryset=User.objects.filter(Q(printer_3d_course=None) | Q(printer_3d_course=self.instance)),
             required=False,
             widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name,
@@ -258,4 +258,4 @@ class BaseMachineForm(forms.ModelForm):
 class EditMachineForm(BaseMachineForm):
 
     class Meta(BaseMachineForm.Meta):
-        exclude = ['machine_model']
+        exclude = []

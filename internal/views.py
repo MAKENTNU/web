@@ -1,14 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.exceptions import PermissionDenied
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import PreventGetRequestsMixin
-from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, ToggleSystemAccessForm
+from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, SystemAccessValueForm
 from .models import Member, Secret, SystemAccess
 
 
@@ -135,18 +134,20 @@ class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
         return reverse('members', args=(self.object.pk,))
 
 
-class ToggleSystemAccessView(UpdateView):
+class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
     model = SystemAccess
-    form_class = ToggleSystemAccessForm
-    template_name = 'internal/system_access_edit.html'
+    form_class = SystemAccessValueForm
 
-    def get_context_data(self, **kwargs):
-        if (self.object.member.user != self.request.user
-                and not self.request.user.has_perm('internal.change_systemaccess')):
-            raise PermissionDenied("The requesting user does not have permission to change others' system accesses")
-        if not self.object.should_be_changed():
-            raise Http404("System access should not be changed")
-        return super().get_context_data(**kwargs)
+    def get_queryset(self):
+        return get_object_or_404(Member, pk=self.kwargs['member_pk']).system_accesses
+
+    def has_permission(self):
+        system_access: SystemAccess = self.get_object()
+        return (
+                system_access.should_be_changed()
+                and (self.request.user == system_access.member.user
+                     or self.request.user.has_perm('internal.change_systemaccess'))
+        )
 
     def get_success_url(self):
         return reverse('members', args=(self.object.member.pk,))

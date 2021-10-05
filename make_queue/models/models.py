@@ -72,7 +72,7 @@ class MachineType(models.Model):
     def can_use_3d_printer(user: Union[User, AnonymousUser]):
         if not user.is_authenticated:
             return False
-        if Printer3DCourse.objects.filter(user=user).exists():
+        if hasattr(user, 'printer_3d_course'):
             return True
         if Printer3DCourse.objects.filter(username=user.username).exists():
             course_registration = Printer3DCourse.objects.get(username=user.username)
@@ -422,10 +422,10 @@ class Reservation(models.Model):
             return True
         if self.start_time < timezone.now():
             return False
-        return self.user == user
+        return self.user == user or user.is_superuser
 
     def can_change_end_time(self, user):
-        return self.end_time > timezone.now() and self.user == user
+        return self.end_time > timezone.now() and (self.user == user or user.is_superuser)
 
 
 class ReservationRule(models.Model):

@@ -42,7 +42,7 @@ def get_system_accesses(member, user):
         access.value,
         [_("No"), _("Yes")][access.value],
         access.change_url if member.user == user or user.has_perm("internal.change_systemaccess") else "",
-    ) for access in member.systemaccess_set.all()]
+    ) for access in member.system_accesses.all()]
 
 
 @register.simple_tag

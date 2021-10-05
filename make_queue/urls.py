@@ -26,7 +26,7 @@ calendar_urlpatterns = [
 
 json_urlpatterns = [
     path('<Machine:machine>/', login_required(api.reservation.get_machine_data), name="reservation_json"),
-    path('<Machine:machine>/<Reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
+    path('<Machine:machine>/<Reservation:reservation>/', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<str:username>/', permission_required("make_queue.add_printer3dcourse")(api.user_info.get_user_info_from_username), name="user_json"),
 ]
 

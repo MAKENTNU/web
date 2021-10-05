@@ -32,18 +32,14 @@
                     <label>{{ form.name.label }}</label>
                     {{ form.name }}
                 </div>
-                <div class="ui field">
-                    <label>{{ form.status.label }}</label>
-                    {{ form.status }}
-                </div>
-            </div>
-            <div class="ui two fields">
                 {% if form.machine_type %}
                     <div class="ui field">
                         <label>{{ form.machine_type.label }}</label>
                         {{ form.machine_type }}
                     </div>
                 {% endif %}
+            </div>
+            <div class="ui two fields">
                 {% if form.machine_model %}
                     <div class="ui field">
                         <label>{{ form.machine_model.label }}</label>
@@ -70,6 +66,10 @@
                         </span>
                     </label>
                     {{ form.priority }}
+                </div>
+                <div class="ui field">
+                    <label>{{ form.status.label }}</label>
+                    {{ form.status }}
                 </div>
             </div>
 

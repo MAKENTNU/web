@@ -63,7 +63,7 @@ default_machine_types = (
         priority=5,
     ),
     MachineTypeStruct(
-        pk=5,
+        pk=6,
         name={"en": "Special 3D printers", "nb": "Spesial-3D-printere"},
         cannot_use_text={
             "en": "You must have completed an advanced 3D printer course to reserve the printers."
@@ -81,13 +81,15 @@ default_machine_types = (
 def create_default_machine_types(apps, schema_editor):
     MachineType = apps.get_model('make_queue', 'MachineType')
     for machine_type in default_machine_types:
-        MachineType.objects.create(
-            pk=machine_type.pk,
+        MachineType.objects.get_or_create(
             name=MultiLingualTextStructure(machine_type.name, True),
-            cannot_use_text=MultiLingualTextStructure(machine_type.cannot_use_text, True),
-            usage_requirement=machine_type.usage_requirement,
-            has_stream=machine_type.has_stream,
-            priority=machine_type.priority,
+            defaults={
+                'pk': machine_type.pk,
+                'cannot_use_text': MultiLingualTextStructure(machine_type.cannot_use_text, True),
+                'usage_requirement': machine_type.usage_requirement,
+                'has_stream': machine_type.has_stream,
+                'priority': machine_type.priority,
+            }
         )
 
 

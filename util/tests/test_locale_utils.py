@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.datetime_safe import datetime
@@ -41,10 +43,10 @@ class WeekUtilTest(TestCase):
 class TimedeltaTest(TestCase):
 
     def test_hour_conversion(self):
-        self.assertEqual(1, timedelta_to_hours(timezone.timedelta(hours=1)))
-        self.assertEqual(1.25, timedelta_to_hours(timezone.timedelta(minutes=75)))
-        self.assertEqual(0.05, timedelta_to_hours(timezone.timedelta(seconds=180)))
-        self.assertEqual(28.25, timedelta_to_hours(timezone.timedelta(days=1, hours=3, minutes=60, seconds=900)))
+        self.assertEqual(1, timedelta_to_hours(timedelta(hours=1)))
+        self.assertEqual(1.25, timedelta_to_hours(timedelta(minutes=75)))
+        self.assertEqual(0.05, timedelta_to_hours(timedelta(seconds=180)))
+        self.assertEqual(28.25, timedelta_to_hours(timedelta(days=1, hours=3, minutes=60, seconds=900)))
 
 
 class LocalizationTest(TestCase):
