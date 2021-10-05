@@ -65,7 +65,8 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         super().init_objs(MachineType.objects.get(pk=1))
 
-    def save_past_reservation(self, reservation):
+    @staticmethod
+    def save_past_reservation(reservation):
         validate_function = reservation.validate
         reservation.validate = lambda: True
         reservation.save()
@@ -87,6 +88,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_not_allowed_user_cannot_create_reservation(self):
         self.course_registration.delete()
+        self.user.refresh_from_db()
         self.assertFalse(self.machine_type.can_user_use(self.user))
         self.check_reservation_invalid(
             self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
@@ -346,7 +348,7 @@ class AdvancedMachineReservationTestCases(GeneralReservationTestCase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
-        super().init_objs(MachineType.objects.get(pk=5))
+        super().init_objs(MachineType.objects.get(pk=6))
 
     def test_booking_advanced_printer_without_any_course(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")

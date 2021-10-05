@@ -18,6 +18,10 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='Category')),
             ],
+            options={
+                'verbose_name': 'Category',
+                'verbose_name_plural': 'Categories',
+            },
         ),
         migrations.CreateModel(
             name='Question',
@@ -25,7 +29,11 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='Question')),
                 ('answer', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='Answer')),
-                ('categories', models.ManyToManyField(related_name='questions', to='faq.Category')),
+                ('categories', models.ManyToManyField(related_name='questions', to='faq.Category', verbose_name='Categories')),
             ],
+            options={
+                'verbose_name': 'Question',
+                'verbose_name_plural': 'Questions',
+            },
         ),
     ]

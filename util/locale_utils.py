@@ -84,7 +84,7 @@ def local_to_date(date):
     return timezone.make_aware(date, DEFAULT_TIMEZONE)
 
 
-def timedelta_to_hours(timedelta_obj):
+def timedelta_to_hours(timedelta_obj: timedelta):
     """
     Converts a timedelta object into a float indicating the number of hours the timedelta covers.
 

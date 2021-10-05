@@ -37,10 +37,10 @@
     <tr style="width: 100%">
         <td style="padding: 15px 30px 0 30px;">
             {% trans "Thank you for registering for this event. You can view your ticket" %}
-            <a href="{{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>.
+            <a href="{{ site }}{% url "ticket" ticket.pk %}">{% trans "here" %}</a>.
 
             {% trans "If you want to cancel your registration, you can do so by clicking" %}
-            <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+            <a href="{{ site }}{% url "cancel-ticket" ticket.pk %}">{% trans "here" %}</a>.
         </td>
     </tr>
     <tr style="width: 100%">

@@ -12,7 +12,7 @@
 {% block body %}
 
     <div class="ui container">
-        <form class="ui form" action="" method="POST">
+        <form class="ui form" method="POST">
             {% csrf_token %}
             {{ form.non_field_errors }}
             <div class="ui two fields">
