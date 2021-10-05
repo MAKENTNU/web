@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-05-12 13:40+0200\n"
+"POT-Creation-Date: 2021-10-05 17:56+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -955,13 +955,16 @@ msgstr "Klikk for å vise - bare hvis du er alene!"
 msgid "Last edited:"
 msgstr "Sist redigert:"
 
+#: internal/templates/internal/secret_list.html:44
+msgid "Close - someone's behind me!"
+msgstr "Skjul - noen er bak meg!"
+
 #: make_queue/admin.py:21
 #: make_queue/templates/make_queue/machine_list.html:7
 #: make_queue/templates/make_queue/machine_list.html:17
 #: make_queue/templates/make_queue/reservation_list.html:31
 msgid "Machines"
 msgstr "Maskiner"
-
 #: make_queue/admin.py:40 make_queue/models/models.py:126
 #: make_queue/templates/make_queue/machine_detail.html:35
 #: news/models.py:149
