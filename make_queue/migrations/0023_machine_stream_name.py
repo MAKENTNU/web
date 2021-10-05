@@ -22,7 +22,7 @@ def revert_stream_name(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('make_queue', '0021_alter_id_fields_to_use_bigautofield'),
+        ('make_queue', '0022_printer3dcourse_user_onetoone_and_related_name'),
     ]
 
     operations = [
