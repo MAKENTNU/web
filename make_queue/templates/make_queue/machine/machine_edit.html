@@ -5,7 +5,6 @@
 
 {% block head %}
     {{ form.media }}
-    <script defer src="{% static 'make_queue/js/machine_edit.js' %}"></script>
 {% endblock head %}
 
 {% block body %}
@@ -79,7 +78,7 @@
                     {{ form.stream_name }}
                 </div>
             </div>
-            
+
             <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
             <a class="ui right floated red button" href="{% url 'reservation_machines_overview' %}">
                 {% trans "Cancel" context "abort action" %}
@@ -96,5 +95,4 @@
 
         $("span[data-content]").popup();
     </script>
-    {{ has_stream_dict |json_script:"has-stream-dict" }}
 {% endblock body %}

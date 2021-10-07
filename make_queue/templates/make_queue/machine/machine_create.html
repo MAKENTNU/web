@@ -1,7 +1,17 @@
 {% extends 'make_queue/machine/machine_edit.html' %}
+{% load static %}
 {% load i18n %}
 
+
+{% block head %}
+    {{ block.super }}
+    <script defer src="{% static 'make_queue/js/machine_create.js' %}"></script>
+{% endblock head %}
 
 {% block form_title %}
     {% trans "Create machine" %}
 {% endblock form_title %}
+
+{% block scripts %}
+    {{ has_stream_dict|json_script:"has-stream-dict" }}
+{% endblock scripts %}
