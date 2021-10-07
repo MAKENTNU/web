@@ -40,13 +40,6 @@ class EditMachineView(PermissionRequiredMixin, UpdateView):
     template_name = 'make_queue/machine/machine_edit.html'
     success_url = reverse_lazy("reservation_machines_overview")
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['has_stream_dict'] = {
-            machine_type.pk: machine_type.has_stream for machine_type in MachineType.objects.all()
-        }
-        return context_data
-
 
 class DeleteMachineView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_machine',)

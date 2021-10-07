@@ -259,3 +259,9 @@ class EditMachineForm(BaseMachineForm):
 
     class Meta(BaseMachineForm.Meta):
         exclude = []
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not self.instance.machine_type.has_stream:
+            self.fields['stream_name'].disabled = True
