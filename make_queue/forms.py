@@ -210,7 +210,9 @@ class BaseMachineForm(forms.ModelForm):
         queryset=MachineType.objects.order_by('priority'),
         label=_("Machine type"),
         empty_label=_("Select machine type"),
-        widget=SemanticChoiceInput,
+        widget=SemanticChoiceInput(attr_name_to_attr_value_getter={
+            'has-stream': lambda iterator_value: iterator_value.instance.has_stream if iterator_value else None,
+        }),
     )
 
     class Meta:
@@ -256,12 +258,17 @@ class BaseMachineForm(forms.ModelForm):
 
 
 class EditMachineForm(BaseMachineForm):
+    machine_type = None
 
     class Meta(BaseMachineForm.Meta):
-        exclude = []
+        exclude = ['machine_type']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         if not self.instance.machine_type.has_stream:
             self.fields['stream_name'].disabled = True
+
+    def clean(self):
+        self.cleaned_data['machine_type'] = self.instance.machine_type
+        return super().clean()

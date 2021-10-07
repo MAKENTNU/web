@@ -94,27 +94,27 @@ class EditMachineFormTest(TestCase):
             "location": "Here",
             "location_url": "https://makentnu.no/",
             "machine_model": "multimaker",
-            "machine_type": self.printer_machine_type
         }
 
     def test_valid_machine_form(self):
-        form = EditMachineForm(data=self.valid_form_data)
-        
+        form = EditMachineForm(instance=self.machine, data=self.valid_form_data)
+
         self.assertTrue(form.is_valid())
 
     def test_empty_stream_name_when_3dprinter_returns_false(self):
         form_data = self.valid_form_data
         form_data["stream_name"] = ""
 
-        form = EditMachineForm(data=form_data)
+        form = EditMachineForm(instance=self.machine, data=form_data)
 
         self.assertFalse(form.is_valid())
 
     def test_empty_stream_name_when_not_3dprinter_returns_true(self):
+        self.machine.machine_type = MachineType.objects.get(pk=2)
+        self.machine.save()
         form_data = self.valid_form_data
-        form_data["machine_type"] = MachineType.objects.get(pk=2)
         form_data["stream_name"] = ""
-    
-        form = EditMachineForm(data=form_data)
-    
+
+        form = EditMachineForm(instance=self.machine, data=form_data)
+
         self.assertTrue(form.is_valid())

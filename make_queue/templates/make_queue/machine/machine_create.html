@@ -11,7 +11,3 @@
 {% block form_title %}
     {% trans "Create machine" %}
 {% endblock form_title %}
-
-{% block scripts %}
-    {{ has_stream_dict|json_script:"has-stream-dict" }}
-{% endblock scripts %}
