@@ -74,6 +74,9 @@ class EventForm(NewsBaseForm):
         model = Event
         help_texts = NewsBaseForm.Meta.get_help_texts(model)
 
+class EventsSearchForm(forms.Form):
+    # navn = forms.CharField()
+    pass
 
 class EventRegistrationForm(forms.ModelForm):
     class Meta:

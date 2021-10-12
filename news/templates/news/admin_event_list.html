@@ -9,6 +9,9 @@
             <a class="explanation-popup" href="{% url 'event_create' %}">
                 <i class="ui green add icon"></i>
             </a>
+            <a href="{% url 'admin_events_search' %}">
+                <i class="make-col-yellow search icon"></i> 
+            </a>
         </h1>
         <div class="ui four doubling stackable cards">
             {% for event in events %}

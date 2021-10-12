@@ -8,6 +8,7 @@ from .ical import SingleTimePlaceFeed
 urlpatterns = [
     path("admin/articles/", login_required(views.AdminArticleListView.as_view()), name='admin_article_list'),
     path("admin/events/", login_required(views.AdminEventListView.as_view()), name='admin_event_list'),
+    path('admin/events/search/', login_required(views.AdminEventsSearchView.as_view()), name='admin_events_search'),
     path("admin/toggle/article/", login_required(views.AdminArticleToggleView.as_view()), name='article_toggle'),
     path("admin/toggle/event/", login_required(views.AdminEventToggleView.as_view()), name='event_toggle'),
     path("admin/toggle/timeplace/", login_required(views.AdminTimeplaceToggleView.as_view()), name='timeplace_toggle'),

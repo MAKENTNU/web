@@ -13,12 +13,13 @@ from django.utils import timezone
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView
+from django.views.generic.edit import FormView
 
 from mail import email
 from util.logging_utils import log_request_exception
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
 from util.view_utils import PreventGetRequestsMixin
-from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
+from .forms import ArticleForm, EventForm, EventRegistrationForm, EventsSearchForm, TimePlaceForm
 from .models import Article, Event, EventTicket, TimePlace
 
 
@@ -137,6 +138,17 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
             num_future_occurrences=Count('timeplaces', filter=Q(timeplaces__end_time__gt=timezone.localtime())),
         ).order_by('-latest_occurrence').prefetch_related('timeplaces')
 
+class AdminEventsSearchView(PermissionRequiredMixin, FormView):
+    form_class = EventsSearchForm
+    template_name = 'news/admin_events_search.html'
+    
+    #queryset = Article.objects.all()
+    #context_object_name = 'articles'
+    
+    def has_permission(self):
+        return has_any_event_permissions(self.request.user)
+
+    
 
 class AdminEventDetailView(DetailView):
     model = Event
