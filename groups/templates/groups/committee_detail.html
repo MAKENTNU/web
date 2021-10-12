@@ -6,7 +6,9 @@
 {% block body %}
     <div class="ui text container">
         {% if committee.image %}
-            <img class="ui centered aligned image" src="{{ committee.image.url }}"/>
+            <img class="ui centered aligned image" src="{{ committee.image.url }}"
+                 alt="{% blocktrans trimmed with name=committee.name %}{{ name }} committee image{% endblocktrans %}"
+            />
         {% endif %}
 
         <h1>

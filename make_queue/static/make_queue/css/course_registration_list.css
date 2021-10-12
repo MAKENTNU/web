@@ -1,0 +1,6 @@
+/* Tables on mobile have very specific rules that use !important */
+@media only screen and (max-width: 767.98px) {
+    .display-none.o.v.e.r.r.i.d.e {
+        display: none !important;
+    }
+}

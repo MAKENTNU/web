@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "daily"
     commit-message:
-      prefix: ":arrow_up:"
+      prefix: "⬆"
       include: "scope"
 
   - package-ecosystem: "github-actions"
@@ -15,5 +15,5 @@ updates:
     schedule:
       interval: "weekly"
     commit-message:
-      prefix: ":construction_worker:"
+      prefix: "👷"
       include: "scope"

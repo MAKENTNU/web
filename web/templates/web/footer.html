@@ -8,7 +8,7 @@
     <footer id="footer" class="make-bg-blue">
         <div>
             <div class="logo">
-                <img src="{% static 'web/img/logo_allwhite.svg' %}">
+                <img src="{% static 'web/img/logo_allwhite.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
             </div>
             {% with mazemap_link="https://use.mazemap.com/?v=1&campusid=1&sharepoitype=identifier&sharepoi=360-BU1-124" %}
                 <a href="{{ mazemap_link }}" title="{% trans "You can find us here!" %}" target="_blank">
@@ -21,22 +21,22 @@
         </div>
         <div class="ui social list">
             <div class="make-bg-yellow item">
-                <a href="http://www.facebook.com/MAKENTNU/" title="{% trans "Like us on Facebook!" %}" target="_blank">
+                <a href="https://www.facebook.com/MAKENTNU/" title="{% trans "Like us on Facebook!" %}" target="_blank">
                     <i class="make-col-blue facebook f icon"></i>
                 </a>
             </div>
             <div class="make-bg-yellow item">
-                <a href="http://makentnu.slack.com/" title="{% trans "Chat with us on Slack!" %}" target="_blank">
+                <a href="https://makentnu.slack.com/signup#/" title="{% trans "Chat with us on Slack!" %}" target="_blank">
                     <i class="make-col-blue slack icon"></i>
                 </a>
             </div>
             <div class="make-bg-yellow item">
-                <a href="http://github.com/MAKENTNU" title="{% trans "Open a pull request on GitHub!" %}" target="_blank">
+                <a href="https://github.com/MAKENTNU/web" title="{% trans "Report an issue or suggest an improvement on GitHub!" %}" target="_blank">
                     <i class="make-col-blue github alternate icon"></i>
                 </a>
             </div>
             <div class="make-bg-yellow item">
-                <a href="{% url 'email' %}" title="{% trans "Contact us by mail!" %}">
+                <a href="{% url 'contact' %}" title="{% trans "Contact us by email!" %}">
                     <i class="make-col-blue mail icon"></i>
                 </a>
             </div>

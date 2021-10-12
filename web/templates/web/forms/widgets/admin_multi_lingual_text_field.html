@@ -2,10 +2,10 @@
 
 
 <div style="display: inline-block">
-    {% for widget in widget.subwidgets %}
+    {% for subwidget in widget.subwidgets %}
         <div style="width: 100%">
-            <label for="{{ widget.name }}">{% get_local_name_from_language_code widget.attrs.language %}</label>
-            {% render widget %}
+            <label for="{{ subwidget.name }}">{% get_local_name_from_language_code subwidget.attrs.language %}</label>
+            {% render subwidget %}
         </div>
     {% endfor %}
 </div>

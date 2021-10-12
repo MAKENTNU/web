@@ -5,7 +5,7 @@
 {% load hosts %}
 
 
-{% block title %}{% trans "Members list" %}{% endblock title %}
+{% block title %}{% trans "Member list" %}{% endblock title %}
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'internal/css/member_list.css' %}"/>
@@ -15,7 +15,7 @@
 
     <div class="ui container">
         <h1 class="title-with-buttons">
-            {% trans "Members list" %}
+            {% trans "Member list" %}
             {% if perms.internal.can_register_new_member %}
                 <a class="ui right floated make-bg-yellow button" href="{% url "add-member" %}">
                     <i class="ui plus icon"></i>{% trans "Add member" %}
@@ -102,7 +102,7 @@
                     {% trans "Joined" %}<i id="member-sort-dateJoined" class="ui sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Email" %}<i id="member-sort-email" class="ui sort icon"></i>
+                    {% trans "Contact email" %}<i id="member-sort-email" class="ui sort icon"></i>
                 </th>
                 <th class="computer only">
                     {% trans "Phone number" %}<i id="member-sort-phone" class="ui sort icon"></i>
@@ -123,7 +123,7 @@
                     data-date-joined="{{ member.date_joined|date:"d.m.y" }}"
                     data-date-quit="{{ member.date_quit|date:"d.m.y" }}"
                     data-term-quit="{{ member.term_quit|default:"" }}"
-                    data-reason-quit="{% if member.quit %}{{ member.reason_quit }}{% endif %}"
+                    data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
                     data-status="{{ membership_status }}"
                     data-committees="{{ committees }}"
                     data-role="{{ member.role }}"
@@ -139,22 +139,14 @@
                             {% if member.user == request.user or perms.internal.change_member %}
                                 {% url "edit-member" member.pk %}
                             {% endif %}"
-                    data-quit-url="
+                    data-set-quit-url="
                             {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
                                 {% url "member-quit" member.pk %}
                             {% endif %}"
-                    data-undo-quit-url="
-                            {% if member.quit and perms.internal.can_edit_group_membership %}
-                                {% url "member-undo-quit" member.pk %}
-                            {% endif %}"
-                    data-retire-url="
-                            {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
-                                {% url "member-retire" member.pk %}
-                            {% endif %}"
-                    data-undo-retire-url="
-                            {% if member.retired and perms.internal.can_edit_group_membership %}
-                                {% url "member-undo-retire" member.pk %}
-                            {% endif %}"
+                    data-can-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-can-set-retired="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-can-undo-retired="{% if member.retired and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-edit-status-url="{% url "edit-member-status" member.pk %}"
                 >
                     <td>{{ member.user.get_short_full_name }}</td>
                     <td class="label-cell">
@@ -175,19 +167,29 @@
                         {% endif %}
                     </td>
                     <td class="computer only">
-                        <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
+                        {% if member.phone_number %}
+                            <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+
+        <span>
+            {% trans "Displaying" %}
+            <b>
+                <span id="displayed-members-count">{{ members|length }}</span>/{{ members|length }}
+            </b>
+            {% trans "registered members" %}
+        </span>
     </div>
 
     {# Modal for showing detailed information about the user #}
     <div id="detailed-member-info" class="ui longer modal">
         <div class="header">
             <span id="member-name-header"></span>
-            <a id="member-editUrl">
+            <a id="member-editUrl-button">
                 <i class="ui make-col-yellow pencil icon"></i>
             </a>
             <span id="member-status-header"></span>
@@ -214,7 +216,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Email" %}</b>
+                        <b>{% trans "Contact email" %}</b>
                     </td>
                     <td>
                         <b><a id="member-email"></a></b>
@@ -294,22 +296,38 @@
             <h4 class="ui horizontal divider header">
                 <i class="ui make-col-yellow key icon"></i>{% trans "System accesses" %}
             </h4>
-            <table class="ui very basic unstackable celled table">
-                <tbody id="member-system-accesses">
+            <form id="edit-system-access-form" method="POST">
+                {% csrf_token %}
+                <table class="ui very basic unstackable celled table">
+                    <tbody id="member-system-accesses">
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </form>
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
                     <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
                 </h4>
-                <div class="member-action-buttons">
-                    <a id="member-quitUrl" class="ui red button">{% trans "Set member as quit" %}</a>
-                    <a id="member-undoQuitUrl" class="ui green button">{% trans "Set member as not quit" %}</a>
-                    <a id="member-retireUrl" class="ui make-bg-yellow button">{% trans "Set member as retired" %}</a>
-                    <a id="member-undoRetireUrl" class="ui make-bg-yellow button">{% trans "Set member as not retired" %}</a>
-                </div>
+                <form id="edit-member-status-form" class="member-action-buttons" method="POST">
+                    {% csrf_token %}
+                    <a id="member-setQuitUrl-button" class="ui red button">
+                        {% trans "Set member as quit" %}
+                    </a>
+                    <button id="member-canUndoQuit-button" class="ui green button" type="submit"
+                            data-status-action="{{ StatusAction.UNDO_QUIT }}">
+                        {% trans "Set member as not quit" %}
+                    </button>
+                    <button id="member-canSetRetired-button" class="ui make-bg-yellow button" type="submit"
+                            data-status-action="{{ StatusAction.RETIRE }}">
+                        {% trans "Set member as retired" %}
+                    </button>
+                    <button id="member-canUndoRetired-button" class="ui make-bg-yellow button" type="submit"
+                            data-status-action="{{ StatusAction.UNDO_RETIRE }}">
+                        {% trans "Set member as not retired" %}
+                    </button>
+                    <input id="member-status-action" class="ui green button" type="hidden" name="status_action"/>
+                </form>
             {% endif %}
         </div>
     </div>
@@ -324,7 +342,7 @@
     <script src="{% static 'internal/js/member_list.js' %}"></script>
     {% if selected_member %}
         <script>
-            showDetailedMemberInformation(state.members.find(
+            showDetailedMemberInformation(state.allMembers.find(
                 (member) => member.data.pk === {{ selected_member.pk }}
             ));
         </script>

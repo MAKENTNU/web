@@ -2,7 +2,8 @@ const $memberInfoModal = $("#detailed-member-info");
 
 // Global state to reduce number of jQuery calls
 const state = {
-    members: [],
+    allMembers: [],
+    displayedMembers: [],
     statusFilter: [],
     committeeFilter: [],
     searchValue: "",
@@ -58,11 +59,22 @@ function showDetailedMemberInformation(member) {
             .text(textAttributeNamesToValues[textAttribute]);
     }
 
-    for (let urlAttribute of ["editUrl", "quitUrl", "undoQuitUrl", "retireUrl", "undoRetireUrl"]) {
-        $memberInfoModal.find(`#member-${urlAttribute}`)
-            .attr("href", member.data[urlAttribute])
-            .toggleClass("display-none", member.data[urlAttribute].isEmpty());
+    for (let editAttribute of ["editUrl", "setQuitUrl", "canUndoQuit", "canSetRetired", "canUndoRetired"]) {
+        $memberInfoModal.find(`#member-${editAttribute}-button`)
+            .toggleClass("display-none", member.data[editAttribute].isEmpty());
     }
+    $memberInfoModal.find("#member-editUrl-button").attr("href", member.data["editUrl"]);
+    $memberInfoModal.find("#member-setQuitUrl-button").attr("href", member.data["setQuitUrl"]);
+    $memberInfoModal.find("#edit-member-status-form")
+        .attr("action", member.data.editStatusUrl)
+        .find(".button[type=submit]")
+        .click(function (event) {
+            event.preventDefault(); // cancel form submission
+            const $clickedButton = $(event.target);
+            $memberInfoModal.find("#member-status-action").val($clickedButton.data("status-action"));
+            $memberInfoModal.find("#edit-member-status-form").submit();
+        });
+
     $memberInfoModal.find("#member-phone").attr("href", `tel:${member.data.phone}`);
     $memberInfoModal.find("#member-email").attr("href", `mailto:${member.data.email}`);
 
@@ -81,17 +93,29 @@ function showDetailedMemberInformation(member) {
 
     const $memberSystemAccessesElement = $memberInfoModal.find("#member-system-accesses");
     $memberSystemAccessesElement.empty();
-    $memberSystemAccessesElement.append(member.data.systemAccesses.map(access => $(`
-        <tr>
-            <td class="six wide column"><b>${access.name}</b></td>
-            <td>
-                <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
-                <a class="right floated orange link" href="${access.changeUrl}">
-                    ${access.changeUrl.isEmpty() ? "" : gettext("Change")}
-                </a>
-            </td>
-        </tr>
-    `)));
+    $memberSystemAccessesElement.append(member.data.systemAccesses.map(access => {
+        const toggleForm = access.changeUrl.isEmpty() ? "" : `
+            <div class="ui right floated toggle checkbox">
+                <input type="checkbox" value="${!access.value}" ${access.value ? "checked" : ""}
+                       data-change-url="${access.changeUrl}"/>
+                <label></label>
+            </div>
+        `;
+        return $(`
+            <tr>
+                <td class="six wide column"><b>${access.name}</b></td>
+                <td>
+                    <div class="ui ${access.value ? "green" : "red"} label">${access.displayText}</div>
+                    ${toggleForm}
+                </td>
+            </tr>
+        `);
+    }));
+    $memberSystemAccessesElement.find(".toggle.checkbox input").click(function () {
+        const $toggle = $(this);
+        $toggle.attr("name", "value");
+        $("#edit-system-access-form").attr("action", $toggle.data("change-url")).submit();
+    });
 
     const $memberCommitteesElement = $memberInfoModal.find("#member-committee");
     $memberCommitteesElement.empty();
@@ -136,15 +160,13 @@ function filter() {
         (member) => searchAllows(state.searchValue, member.data.name.toLowerCase()),
     ];
 
-    const $table = $("#member-table-content");
-
-    $.each(state.members, (index, member) => {
-        member.$element.remove();
-        if (filters.every(el => el(member))) {
-            $table.append(member.$element);
-            member.$element.click(() => showDetailedMemberInformation(member));
-        }
+    state.displayedMembers = [];
+    $.each(state.allMembers, (index, member) => {
+        if (filters.every(filter => filter(member)))
+            state.displayedMembers.push(member);
     });
+    updateDisplayedTableRows();
+    $("#displayed-members-count").text(state.displayedMembers.length);
 }
 
 function setSort(attributeName, $element) {
@@ -167,15 +189,33 @@ function sort() {
     /**
      * Sorts the table based on the current state
      */
-    state.members.sort(function (a, b) {
+    state.displayedMembers.sort(function (a, b) {
         return compareElements(a.data[state.sortBy], b.data[state.sortBy]);
     });
 
-    if (state.sortDirection === -1) {
-        state.members.reverse();
+    if (state.sortDirection === -1)
+        state.displayedMembers.reverse();
+
+    updateDisplayedTableRows(true);
+}
+
+function updateDisplayedTableRows(onlyOrderChange = false) {
+    const $table = $("#member-table-content");
+
+    function appendDisplayedMembers() {
+        $table.append(state.displayedMembers.map((member) => member.$element));
     }
 
-    $("#member-table tbody").append(state.members.map((member) => member.$element));
+    if (onlyOrderChange) {
+        // `append()` moves elements (instead of cloning) if they're already present in the DOM
+        appendDisplayedMembers();
+    } else {
+        $table.empty();
+        appendDisplayedMembers();
+        $.each(state.displayedMembers, (index, member) => {
+            member.$element.click(() => showDetailedMemberInformation(member));
+        });
+    }
 }
 
 function setup() {
@@ -224,10 +264,11 @@ function setup() {
                 comment: $.trim($row.data("comment")),
                 guidanceExemption: $.trim($row.data("guidance-exemption")),
                 editUrl: $.trim($row.data("edit-url")),
-                quitUrl: $.trim($row.data("quit-url")),
-                undoQuitUrl: $.trim($row.data("undo-quit-url")),
-                retireUrl: $.trim($row.data("retire-url")),
-                undoRetireUrl: $.trim($row.data("undo-retire-url")),
+                setQuitUrl: $.trim($row.data("set-quit-url")),
+                canUndoQuit: $.trim($row.data("can-undo-quit")),
+                canSetRetired: $.trim($row.data("can-set-retired")),
+                canUndoRetired: $.trim($row.data("can-undo-retired")),
+                editStatusUrl: $.trim($row.data("edit-status-url")),
                 // Membership status is a list of pairs of status name and color: [('Active', 'green')]. Need to parse this list.
                 status: $row.data("status").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
                     .filter(status => status !== ", ")
@@ -259,7 +300,7 @@ function setup() {
         };
 
         member.$element = $row;
-        state.members.push(member);
+        state.allMembers.push(member);
     });
 
     for (let sortAttribute of ["name", "committees", "status", "dateJoined", "email", "role", "phone"]) {

@@ -38,7 +38,9 @@
                             </a>
                         </h3>
                         {% if perms.makerspace.delete_equipment %}
-                            <a class="delete confirm" href="{% url 'makerspace-equipment-delete' equipment.pk %}">
+                            <a class="delete-modal-button"
+                               data-url="{% url 'makerspace-equipment-delete' equipment.pk %}"
+                               data-obj-name="{{ equipment }}">
                                 <i class="large red delete icon"></i>
                             </a>
                         {% endif %}

@@ -4,7 +4,7 @@
 
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_list.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -92,21 +92,31 @@
                 <th data-column-name="cardNumber">{% trans "Card number" %}</th>
                 <th data-column-name="date">{% trans "Date" %}</th>
                 <th data-column-name="status">{% trans "Status" %}</th>
+                <th data-column-name="advancedCourse">{% trans "Advanced" %}</th>
             </tr>
             </thead>
             <tbody>
             {% for registration in registrations %}
-                <tr data-name="{{ registration.name }}" data-username="{{ registration.username }}"
+                <tr class="display-none o v e r r i d e"
+                    data-pk="{{ registration.pk }}"
+                    data-name="{{ registration.name }}"
+                    data-username="{{ registration.username }}"
                     data-card-number="{{ registration.card_number|default:"" }}"
-                    data-date="{{ registration.date|date:"Y-m-d" }}" data-pk="{{ registration.pk }}"
-                    data-status="{{ registration.status }}" class="display-none">
+                    data-date="{{ registration.date|date:"Y-m-d" }}"
+                    data-status="{{ registration.status }}"
+                    data-advanced-course="{{ registration.advanced_course }}"
+                >
                     <td>
                         {{ registration.name }}
                         <a href="{% url "edit_course_registration" registration.pk %}">
                             <i class="ui make-col-yellow pencil icon"></i>
                         </a>
                         {% if perms.make_queue.delete_printer3dcourse %}
-                            <a class="delete confirm" href="{% url "delete_course_registration" registration.pk %}">
+                            <a class="delete-modal-button"
+                               data-url="{% url "delete_course_registration" registration.pk %}"
+                               data-prompt="{% blocktrans trimmed with user=registration.get_user_display_name %}
+                                                Are you sure you want to delete the course registration of {{ user }}?
+                                            {% endblocktrans %}">
                                 <i class="ui red trash icon"></i>
                             </a>
                         {% endif %}
@@ -130,6 +140,13 @@
                     <td class="{% if registration.status != "access" %}warning{% endif %}">
                         {{ registration.get_status_display }}
                     </td>
+                    <td>
+                        {% if registration.advanced_course %}
+                            {% trans "Yes" %}
+                        {% else %}
+                            {% trans "No" %}
+                        {% endif %}
+                    </td>
                 </tr>
 
             {% endfor %}
@@ -151,9 +168,17 @@
             </a>
         </div>
         <span>
-            {% trans "Displaying" %}
+            {% trans "Filter matches" %}
             <b>
                 <span id="num-registrations-filtered">{{ registrations|length }}</span>/{{ registrations|length }}
+            </b>
+            {% trans "registrations" %}
+        </span>
+        <br/>
+        <span>
+            {% trans "Displaying" %}
+            <b>
+                <span id="displayed-registrations-count">{{ registrations|length }}</span>/{{ registrations|length }}
             </b>
             {% trans "registrations" %}
         </span>

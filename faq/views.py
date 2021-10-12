@@ -3,6 +3,7 @@ from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.templatetags.permission_tags import has_any_faq_permissions
+from util.view_utils import PreventGetRequestsMixin
 from .forms import QuestionForm
 from .models import Category, Question
 
@@ -40,7 +41,7 @@ class EditQuestionView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy("faq-admin")
 
 
-class DeleteQuestionView(PermissionRequiredMixin, DeleteView):
+class DeleteQuestionView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('faq.delete_question',)
     model = Question
     success_url = reverse_lazy('faq-admin')

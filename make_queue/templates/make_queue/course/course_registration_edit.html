@@ -5,6 +5,7 @@
 
 
 {% block head %}
+    {{ form.media }}
     <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_edit.css' %}"/>
 {% endblock head %}
 
@@ -23,7 +24,7 @@
                 <div class="header">
                     {% trans "Could not find the user in the NTNU database" %}
                 </div>
-                <p> {% trans "Are you sure you entered the correct username?" %} </p>
+                <p>{% trans "Are you sure you entered the correct username?" %}</p>
             </div>
             {% form_has_error form field="username" error_code="unique" as unique_error %}
             {% if unique_error %}
@@ -32,7 +33,7 @@
                     <div class="header">
                         {% trans "A user with this username is already registered" %}
                     </div>
-                    <p>{% trans "Either the user has already taken the course, or the username of another user has been entered." %}</p>
+                    <p>{% trans "Either the user has already taken the course, or the username of another user has been entered" %}.</p>
                 </div>
             {% endif %}
         {% endblock messages %}
@@ -46,7 +47,7 @@
         {% endfor %}
 
 
-        <form class="ui form" action="{% block form_action %}{% endblock %}" method="POST">
+        <form class="ui form" method="POST" action="{% block form_action %}{% endblock %}">
             {% csrf_token %}
 
             <div class="ui horizontal divider">
@@ -93,6 +94,16 @@
                 </div>
             </div>
 
+            <div class="ui one field">
+                <div class="ui field">
+                    <label>{{ form.advanced_course.label }}</label>
+                    <div class="ui checkbox">
+                        {{ form.advanced_course }}
+                        <label>{% trans "Yes" %}</label>
+                    </div>
+                </div>
+            </div>
+
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
@@ -120,7 +131,9 @@
         $("input[name='username']").focusout((event) => {
             $.ajax(`${LANG_PREFIX}/reservation/json/${$(event.target).val()}/`, {
                 success: function (data) {
-                    $("input[name='name']").val(data["full_name"]);
+                    const fullName = data["full_name"];
+                    if (fullName)
+                        $("input[name='name']").val(fullName);
                     $("#username-not-found-warning").fadeOut();
                 },
                 error: function () {

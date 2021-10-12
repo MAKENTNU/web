@@ -8,16 +8,18 @@ from users.models import User
 from .fields import UsernameField
 
 
+# `3DPrinterCourse` would be a syntactically invalid name :(
 class Printer3DCourse(models.Model):
     class Status(models.TextChoices):
         REGISTERED = 'registered', _("Registered")
-        SENT = 'sent', _("Sent to Byggsikring")
+        SENT = 'sent', _("Sent to Building security")
         ACCESS = 'access', _("Access granted")
 
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         to=User,
         on_delete=models.CASCADE,
         null=True,
+        related_name='printer_3d_course',
         verbose_name=_("User"),
     )
     username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("Username"))
@@ -25,6 +27,7 @@ class Printer3DCourse(models.Model):
     _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
     name = models.CharField(max_length=256, blank=True, verbose_name=_("Full name"))
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("Status"))
+    advanced_course = models.BooleanField(default=False, verbose_name=_("advanced course"))
 
     class Meta:
         constraints = (
@@ -47,6 +50,10 @@ class Printer3DCourse(models.Model):
             self._card_number = None
         else:
             self._card_number = card_number
+
+    def get_user_display_name(self):
+        full_name = self.user.get_full_name() if self.user else self.name
+        return str(full_name or self.user or self.username)
 
     def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
         if self.pk is None:  # Creation of new object

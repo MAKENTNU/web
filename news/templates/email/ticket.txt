@@ -1,6 +1,8 @@
 {% load i18n %}
 
 
-Your ticket for "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"
+{% firstof ticket.timeplace.event.title ticket.event.title as event_title %}
+{% blocktrans with title=event_title %}Your ticket for “{{ title }}”{% endblocktrans %}
 
-{% trans "Thank you for registering for this event. You can view your ticket at the following URL" %}: "{{ site }}{% url "ticket" ticket.uuid %}". {% trans "If you want to cancel your registration, you can do so by visiting the following URL" %}: "{{ site }}{% url "cancel-ticket" ticket.uuid %}".
+{% trans "Thank you for registering for this event. You can view your ticket at the following URL" %}: {{ site }}{% url "ticket" ticket.pk %}
+{% trans "If you want to cancel your registration, you can do so by visiting the following URL" %}: {{ site }}{% url "cancel-ticket" ticket.pk %}

@@ -11,12 +11,18 @@
 {% block body %}
     <div class="ui container">
 
+        <a href="{% url "admin-events" %}">
+            <i class="ui angle double left icon"></i>{% trans "Admin page for events" %}
+        </a>
+
         <h1 class="title-with-buttons">
             {{ event.title }}
 
             <div class="admin-actions ui secondary menu">
                 {% if perms.news.delete_event %}
-                    <a class="ui red delete confirm button" href="{% url 'event-delete' event.pk %}">
+                    <a class="delete-modal-button ui red button"
+                       data-url="{% url 'event-delete' event.pk %}"
+                       data-obj-name="{{ event }}">
                         <i class="ui trash icon"></i>{% trans "Delete" %}
                     </a>
                 {% endif %}
@@ -32,10 +38,6 @@
                 </a>
             </div>
         </h1>
-
-        <a href="{% url "admin-events" %}">
-            <i class="ui angle double left icon"></i>{% trans "Admin page for events" %}
-        </a>
 
         <div id="message-hidden" class="ui info {% if not event.hidden %}hidden{% endif %} message">
             <div class="header">
@@ -63,7 +65,9 @@
             {% if event.number_of_tickets %}
                 <b>
                     <a href="{% url "event-tickets" pk=event.pk %}">
-                        {{ event.number_of_registered_tickets }}/{{ event.number_of_tickets }} {% trans "tickets reserved" %}
+                        {% blocktrans trimmed with num_registered_tickets=event.number_of_registered_tickets num_tickets=event.number_of_tickets %}
+                            {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
+                        {% endblocktrans %}
                     </a>
                 </b>
             {% else %}
@@ -74,13 +78,10 @@
         <h3 class="ui horizontal divider header">
             <i class="ui time icon"></i>{% trans "Occurrences" %}
         </h3>
-        <div style="clear: both; overflow: auto">
+        <div class="create-new-occurrence">
             {% if perms.news.add_timeplace %}
                 <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace-new' event.pk %}">
-                    <i class="icons">
-                        <i class="time icon"></i>
-                        <i class="noshadow bottom right corner add icon"></i>
-                    </i>
+                    <i class="time icon"></i>
                     {% trans "New occurrence" %}
                 </a>
             {% endif %}

@@ -17,6 +17,8 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, R
 
 from mail import email
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
+from util.view_utils import PreventGetRequestsMixin
+from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
 from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm, EmailForm
 from .models import Article, Event, EventTicket, TimePlace
 
@@ -260,19 +262,19 @@ class AdminTimeplaceToggleView(AdminArticleToggleView):
     model = TimePlace
 
 
-class DeleteArticleView(PermissionRequiredMixin, DeleteView):
+class DeleteArticleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_article',)
     model = Article
     success_url = reverse_lazy('admin-articles')
 
 
-class DeleteEventView(PermissionRequiredMixin, DeleteView):
+class DeleteEventView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_event',)
     model = Event
     success_url = reverse_lazy('admin-events')
 
 
-class DeleteTimePlaceView(PermissionRequiredMixin, DeleteView):
+class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_timeplace',)
     model = TimePlace
 
@@ -287,14 +289,14 @@ class EventRegistrationView(CreateView):
 
     @property
     def timeplace(self):
-        if "timeplace_pk" in self.kwargs:
-            return get_object_or_404(TimePlace, pk=self.kwargs["timeplace_pk"])
+        if 'timeplace_pk' in self.kwargs:
+            return get_object_or_404(TimePlace, pk=self.kwargs['timeplace_pk'])
         return None
 
     @property
     def event(self):
-        if "event_pk" in self.kwargs:
-            return get_object_or_404(Event, pk=self.kwargs["event_pk"])
+        if 'event_pk' in self.kwargs:
+            return get_object_or_404(Event, pk=self.kwargs['event_pk'])
         return None
 
     def is_registration_allowed(self):
@@ -304,12 +306,12 @@ class EventRegistrationView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         if not self.is_registration_allowed():
             event = self.event or self.timeplace.event
-            return HttpResponseRedirect(reverse("event", kwargs={"pk": event.pk}))
+            return HttpResponseRedirect(reverse('event', kwargs={'pk': event.pk}))
 
         ticket = self.request.user.event_tickets.filter(active=True, timeplace=self.timeplace, event=self.event)
         if ticket.exists():
-            return HttpResponseRedirect(reverse_lazy("ticket", kwargs={"pk": ticket.first().pk}))
-        return super().dispatch(request, args, kwargs)
+            return HttpResponseRedirect(reverse_lazy('ticket', kwargs={'pk': ticket.first().pk}))
+        return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
         if not self.is_registration_allowed():
@@ -335,18 +337,18 @@ class EventRegistrationView(CreateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
         context_data.update({
-            "timeplace": self.timeplace,
-            "event": self.event,
+            'timeplace': self.timeplace,
+            'event': self.event,
         })
         return context_data
 
     def get_success_url(self):
-        return reverse("ticket", args=(self.object.uuid,))
+        return reverse('ticket', args=[self.object.pk])
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs["initial"].update({
-            "language": get_language(),
+        kwargs['initial'].update({
+            'language': get_language(),
         })
         return kwargs
 
@@ -370,7 +372,7 @@ class AdminEventTicketView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
-        event = get_object_or_404(Event, pk=kwargs.pop("pk", 0))
+        event = get_object_or_404(Event, pk=kwargs.pop('pk', 0))
         if not event.number_of_tickets:
             raise Http404()
         context_data.update({
@@ -388,7 +390,7 @@ class AdminTimeplaceTicketView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data()
-        timeplace = get_object_or_404(TimePlace, pk=kwargs.pop("pk", 0))
+        timeplace = get_object_or_404(TimePlace, pk=kwargs.pop('pk', 0))
         if not timeplace.number_of_tickets:
             raise Http404()
         context_data.update({
@@ -404,19 +406,19 @@ class AdminTimeplaceTicketView(TemplateView):
 class CancelTicketView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
-    pattern_name = "ticket"
+    pattern_name = 'ticket'
 
     def get_redirect_url(self, *args, **kwargs):
-        ticket = get_object_or_404(EventTicket, pk=kwargs.get("pk", 0))
+        ticket = get_object_or_404(EventTicket, pk=kwargs.get('pk', 0))
 
         # Allow for toggling if a ticket is canceled or not
-        if self.request.user.has_perm("news.cancel_ticket"):
+        if self.request.user.has_perm('news.cancel_ticket'):
             ticket.active = not ticket.active
         elif self.request.user == ticket.user:
             ticket.active = False
         ticket.save()
 
-        next_page = self.request.GET.get("next")
+        next_page = self.request.GET.get('next')
         if next_page is None:
             return super().get_redirect_url(*args, **kwargs)
         return next_page

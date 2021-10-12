@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='article',
             name='publication_time',
-            field=models.DateTimeField(default=django.utils.timezone.localtime, verbose_name='Publishing time'),
+            field=models.DateTimeField(default=django.utils.timezone.localtime, verbose_name='Publication time'),
         ),
         migrations.RunPython(merge_article_date_and_time, reverse_merge_article_date_and_time),
         migrations.RemoveField(
@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='timeplace',
             name='publication_time',
-            field=models.DateTimeField(default=django.utils.timezone.localtime, verbose_name='Publishing time'),
+            field=models.DateTimeField(default=django.utils.timezone.localtime, verbose_name='Publication time'),
         ),
         migrations.AddField(
             model_name='timeplace',

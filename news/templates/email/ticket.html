@@ -15,7 +15,7 @@
     <tr style="padding: 0; margin: 0; width: 100%;">
         <th style="padding: 20px;">
             <img src="{{ site }}{% static 'web/img/logo_white.svg' %}"
-                 style="width: 500px; max-width: 100%;" alt="MAKE NTNU logo"
+                 style="width: 500px; max-width: 100%;" alt="{% trans "MAKE NTNU's logo" %}"
             />
         </th>
     </tr>
@@ -23,23 +23,24 @@
     <tbody style="width: 100%;">
     <tr style="width: 100%">
         <td style="align-items: center; padding: 0; margin: 0;">
-            <img src="{{ site }}{{ ticket.event.image.url }}{{ ticket.timeplace.event.image.url }}"
-                 style="width: 100%;" alt="Event image"
+            <img src="{{ site }}{% firstof ticket.timeplace.event.image.url ticket.event.image.url %}"
+                 style="width: 100%;" alt="{% trans "Event image" %}"
             />
         </td>
     </tr>
     <tr style="width: 100%">
         <td style="padding: 30px 30px 0 30px; font-size: 30px; font-weight: bold;">
-            {% trans "Your ticket for" %} "{{ ticket.event.title }}{{ ticket.timeplace.event.title }}"
+            {% firstof ticket.timeplace.event.title ticket.event.title as event_title %}
+            {% blocktrans with title=event_title %}Your ticket for “{{ title }}”{% endblocktrans %}
         </td>
     </tr>
     <tr style="width: 100%">
         <td style="padding: 15px 30px 0 30px;">
             {% trans "Thank you for registering for this event. You can view your ticket" %}
-            <a href="{{ site }}{% url "ticket" ticket.uuid %}">{% trans "here" %}</a>.
+            <a href="{{ site }}{% url "ticket" ticket.pk %}">{% trans "here" %}</a>.
 
             {% trans "If you want to cancel your registration, you can do so by clicking" %}
-            <a href="{{ site }}{% url "cancel-ticket" ticket.uuid %}">{% trans "here" %}</a>.
+            <a href="{{ site }}{% url "cancel-ticket" ticket.pk %}">{% trans "here" %}</a>.
         </td>
     </tr>
     <tr style="width: 100%">

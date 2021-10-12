@@ -10,7 +10,7 @@
                 {% if widget.value %}
                value="{{ widget.value }}"
                 {% elif not widget.attrs.default_blank %}
-               value="{% set_current_date_only %}"
+               value="{% set_current_date %}"
                 {% endif %} name="{{ widget.name }}"
         />
     </div>
@@ -33,6 +33,11 @@
                 {% if widget.attrs.end_calendar %}
                     endCalendar: $("#{{ widget.attrs.end_calendar }}"),
                 {% endif %}
+                text: {
+                    {# The referenced constants are defined in `date_utils.js`, which is linked through the Django widget's media #}
+                    months: MONTH_TRANSLATIONS,
+                    monthsShort: SHORT_MONTH_TRANSLATIONS,
+                },
             });
         });
 

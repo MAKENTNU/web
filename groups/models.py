@@ -22,11 +22,14 @@ class InheritanceGroup(Group):
         to='self',
         symmetrical=False,
         blank=True,
-        related_name='sub_groups',
+        related_name='children',
+        verbose_name=_("parents"),
     )
     own_permissions = models.ManyToManyField(
         to=Permission,
         blank=True,
+        related_name='inheritance_groups',
+        verbose_name=_("own permissions"),
     )
 
     @property
@@ -34,7 +37,7 @@ class InheritanceGroup(Group):
         return set(self.permissions.all()) - set(self.own_permissions.all())
 
     def update_permissions(self):
-        """Update the permissions of this and all sub-groups."""
+        """Update the permissions of this group and all its children."""
         own_permissions = list(self.own_permissions.all())
 
         for parent in self.parents.all():
@@ -42,17 +45,17 @@ class InheritanceGroup(Group):
 
         self.permissions.set(own_permissions)
 
-        for sub in self.sub_groups.all():
-            sub.update_permissions()
+        for child in self.children.all():
+            child.update_permissions()
 
-    def get_sub_groups(self):
+    def get_all_children(self):
         """Return a queryset of all groups that inherit from this group."""
-        subs = self.sub_groups.all()
+        children = self.children.all()
 
-        for sub in self.sub_groups.all():
-            subs = subs.union(sub.get_sub_groups())
+        for child in self.children.all():
+            children = children.union(child.get_all_children())
 
-        return subs
+        return children
 
     def get_all_parents(self):
         """Return a queryset of all groups that this group inherits from."""
@@ -71,8 +74,8 @@ class InheritanceGroup(Group):
         cause a circular dependency.
         """
         parents = InheritanceGroup.objects.exclude(pk=self.pk)
-        for sub in self.get_sub_groups():
-            parents = parents.exclude(pk=sub.pk)
+        for child in self.get_all_children():
+            parents = parents.exclude(pk=child.pk)
 
         return parents
 
@@ -88,6 +91,7 @@ class Committee(models.Model):
     group = models.OneToOneField(
         to=InheritanceGroup,
         on_delete=models.CASCADE,
+        related_name='committee',
         verbose_name=_("group"),
     )
     clickbait = models.TextField(blank=True, verbose_name=_("Clickbait"))

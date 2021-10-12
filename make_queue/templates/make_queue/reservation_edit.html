@@ -6,7 +6,7 @@
 
 
 {% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_edit.css' %}"/>
 {% endblock head %}
 
 {% block body %}
@@ -97,7 +97,7 @@
             <div class="field">
                 <label for="comment">{% trans "Comment" %}</label>
                 <textarea rows="2" maxlength="2000" id="comment" name="comment"
-                          placeholder="Eventuell kommentar">{{ comment }}</textarea>
+                          placeholder="{% trans "Comment" %}">{{ comment }}</textarea>
             </div>
 
             {% if perms.make_queue.can_create_event_reservation %}
@@ -145,7 +145,7 @@
                     <div id="special-input" class="ui field {% if not special %}display-none{% endif %}">
                         <label>{% trans "Reservation text" %}</label>
                         <div id="special-text" class="ui input">
-                            <input type="text" placeholder="Reservasjons tekst" maxlength=20 name="special_text"
+                            <input type="text" placeholder="{% trans "Reservation text" %}" maxlength=20 name="special_text"
                                    value="{% if special %}{{ special_text }}{% endif %}"/>
                         </div>
                     </div>

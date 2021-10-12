@@ -15,7 +15,7 @@
                     {% else %}
                         {% url "event" ticket.timeplace.event.pk %}
                     {% endif %}">
-                {{ ticket.event.title }}{{ ticket.timeplace.event.title }}
+                {% firstof ticket.timeplace.event.title ticket.event.title %}
             </a>
         </div>
         <div class="description">
@@ -54,7 +54,7 @@
     <div class="extra content">
         <div class="right floated">
             <b>{% trans "Ref #" %}:</b>
-            <a href="{% url "ticket" pk=ticket.uuid %}">
+            <a href="{% url "ticket" pk=ticket.pk %}">
                 {{ ticket.uuid }}
             </a>
         </div>
@@ -62,12 +62,12 @@
     {% if ticket.active %}
         {% if ticket.user == request.user or perms.news.cancel_ticket %}
             <a class="ui red bottom attached button"
-               href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
+               href="{% url "cancel-ticket" ticket.pk %}?next={{ request.path }}">
                 {% trans "Cancel ticket" %}
             </a>
         {% endif %}
     {% elif perms.news.cancel_ticket %}
-        <a class="ui green bottom attached button" href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
+        <a class="ui green bottom attached button" href="{% url "cancel-ticket" ticket.pk %}?next={{ request.path }}">
             {% trans "Reactivate ticket" %}
         </a>
     {% endif %}

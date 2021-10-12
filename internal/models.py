@@ -19,15 +19,17 @@ class Member(models.Model):
         to=User,
         on_delete=models.DO_NOTHING,
         null=True,
+        related_name='member',
         verbose_name=_("User"),
     )
     committees = models.ManyToManyField(
         to=Committee,
         blank=True,
+        related_name='members',
         verbose_name=_("Committees"),
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
-    email = models.EmailField(blank=True, verbose_name=_("Email"))
+    email = models.EmailField(blank=True, verbose_name=_("Contact email"))
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
     study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
@@ -60,7 +62,7 @@ class Member(models.Model):
 
             # Setup all properties for new members
             for property_name, value in SystemAccess.NAME_CHOICES:
-                # All members will be registered on the website when added to the members list
+                # All members will be registered on the website when added to the member list
                 SystemAccess.objects.create(name=property_name, member=self,
                                             value=property_name == SystemAccess.WEBSITE)
 
@@ -166,10 +168,19 @@ class SystemAccess(models.Model):
     member = models.ForeignKey(
         to=Member,
         on_delete=models.CASCADE,
+        related_name='system_accesses',
         verbose_name=_("Member"),
     )
     name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
+
+    class Meta:
+        constraints = (
+            models.UniqueConstraint(fields=('name', 'member'), name="%(class)s_unique_name_per_member"),
+        )
+
+    def __str__(self):
+        return _("Access for {member} to {name}: {has_access}").format(member=self.member, name=self.name, has_access=self.value)
 
     @property
     def change_url(self):
@@ -184,7 +195,7 @@ class SystemAccess(models.Model):
         # In the future it would be beneficial to create automated processes for adding, removing and revoking
         # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
         # channels, or using GSuite APIs to add and remove people from mailing lists.
-        return reverse("toggle-system-access", args=(self.pk,))
+        return reverse("edit-system-access", args=(self.member.pk, self.pk))
 
     def should_be_changed(self):
         return self.name != self.WEBSITE
