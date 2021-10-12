@@ -116,12 +116,6 @@ class Machine(models.Model):
 
     STATUS_CHOICES_DICT = dict(Status.choices)
 
-    status = models.CharField(
-        max_length=2,
-        choices=Status.choices,
-        verbose_name=_("Status"),
-        default=Status.AVAILABLE,
-    )
     stream_name = models.CharField(
         max_length=30,
         verbose_name=_("Stream Name"),
@@ -134,8 +128,6 @@ class Machine(models.Model):
             )
         ]
     )
-    location = models.CharField(max_length=40, verbose_name=_("Location"))
-    location_url = models.URLField(verbose_name=_("Location URL"))
     name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
     machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
     machine_type = models.ForeignKey(
