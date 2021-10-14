@@ -33,31 +33,31 @@
     <div style="height: 50px;"></div>
     <div class="ui container">
         <div class="ui items events">
-            {% for event in events %}
+            {% for event_dict in event_dicts %}
                 <div class="item">
-                    <div class="ui small clickable image" href="{% url 'event' event.event.pk %}">
+                    <div class="ui small clickable image" href="{% url 'event' event_dict.event.pk %}">
                         <p class="ui yellow make-bg-yellow ribbon label">
-                            {{ event.start_time|date:"d" }}<br>
-                            {{ event.start_time|date:"M" }}
+                            {{ event_dict.start_time|date:"d" }}<br>
+                            {{ event_dict.start_time|date:"M" }}
                         </p>
-                        <img {% thumbnail event.event.image "300" crop="center" as image_thumb %}
+                        <img {% thumbnail event_dict.event.image "300" crop="center" as image_thumb %}
                             src="{{ image_thumb.url }}"
                         {% empty %}
-                            src="{{ event.event.image.url }}"
+                            src="{{ event_dict.event.image.url }}"
                         {% endthumbnail %}
-                            {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            {% if event_dict.event.contain %}style="object-fit: contain !important;"{% endif %}
                         />
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="{% url 'event' event.event.pk %}">{{ event.event.title }}</a>
+                            <a href="{% url 'event' event_dict.event.pk %}">{{ event_dict.event.title }}</a>
                         </div>
                         <div class="meta">
-                            <span>{{ event.place }}</span>
+                            <span>{{ event_dict.first_occurrence.place }}</span>
                         </div>
                         <div class="description">
-                            <p>{{ event.event.clickbait }}</p>
+                            <p>{{ event_dict.event.clickbait }}</p>
                         </div>
                     </div>
                 </div>
