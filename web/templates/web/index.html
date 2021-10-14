@@ -37,8 +37,10 @@
                 <div class="item">
                     <div class="ui small clickable image" href="{% url 'event' event_dict.event.pk %}">
                         <p class="ui yellow make-bg-yellow ribbon label">
-                            {{ event_dict.start_time|date:"d" }}<br>
-                            {{ event_dict.start_time|date:"M" }}
+                            {{ event_dict.first_occurrence.start_time|date:"d M" }}
+                            {% if event_dict.number_of_occurrences > 1 %}
+                                <br><span>+{{ event_dict.number_of_occurrences|add:-1 }} {% if event_dict.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
+                            {% endif %}
                         </p>
                         <img {% thumbnail event_dict.event.image "300" crop="center" as image_thumb %}
                             src="{{ image_thumb.url }}"

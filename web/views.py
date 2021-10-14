@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from contentbox.views import DisplayContentBoxView
-from news.models import Article, TimePlace
+from news.models import Article, TimePlace, Event
 
 
 class IndexView(TemplateView):
@@ -12,13 +12,31 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        event_dicts = TimePlace.objects.future().filter(event__featured=True)
-        if not self.request.user.has_perm('news.can_view_private'):
-            event_dicts = event_dicts.filter(event__private=False)
+        event_dicts = []
+        for event in Event.objects.filter(hidden=False):
+            if event.private and not self.request.user.has_perm('news.can_view_private'):
+                continue
+            if not event.get_future_occurrences().exists():
+                continue
+            if event.standalone:
+                if event.get_future_occurrences().exists():
+                    event_dicts.append({
+                        'first_occurrence': event.get_future_occurrences().first(),
+                        'event': event,
+                        'number_of_occurrences': event.timeplaces.count(),
+                    })
+            else:
+                if event.get_future_occurrences().exists():
+                    event_dicts.append({
+                        'first_occurrence': event.get_future_occurrences().first(),
+                        'event': event,
+                        'number_of_occurrences': event.get_future_occurrences().count(),
+                    })
 
+        sorted_event_dicts = sorted(event_dicts, key=lambda event: event['first_occurrence'].start_time)
         context.update({
             'articles': Article.objects.published().filter(featured=True)[:4],
-            'event_dicts': event_dicts[:4],
+            'event_dicts': sorted_event_dicts[:4],
         })
         return context
 
