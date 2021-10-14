@@ -37,6 +37,7 @@ class IndexView(TemplateView):
         context.update({
             'articles': Article.objects.published().filter(featured=True)[:4],
             'event_dicts': sorted_event_dicts[:4],
+            'more_events_exist': len(sorted_event_dicts) > 4,
         })
         return context
 

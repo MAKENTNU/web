@@ -105,6 +105,14 @@
     grid-column: 2/3;
 }
 
+.events .item.more-events-link {
+    grid-column: 2/3 !important;
+}
+
+.events .item.more-events-link a {
+    text-transform: initial !important;
+}
+
 .articles {
     display: grid;
     grid-template-columns: 1fr 10fr 10fr 1fr;
