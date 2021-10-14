@@ -34,7 +34,7 @@ class MachineFormTest(TestCase):
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
-            error_code='not_url_safe',
+            error_code='invalid_stream_name',
             form=form
         )
 
@@ -46,7 +46,7 @@ class MachineFormTest(TestCase):
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
-            error_code='not_url_safe',
+            error_code='invalid_stream_name',
             form=form
         )
 

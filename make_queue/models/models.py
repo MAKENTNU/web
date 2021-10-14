@@ -4,7 +4,6 @@ from typing import List, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator, slug_re
 from django.db import models
 from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Lower
@@ -17,6 +16,7 @@ from util.locale_utils import short_datetime_format, timedelta_to_hours
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
+from ..validators import machine_stream_name_validator
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -117,16 +117,12 @@ class Machine(models.Model):
     STATUS_CHOICES_DICT = dict(Status.choices)
 
     stream_name = models.CharField(
-        max_length=30,
-        verbose_name=_("Stream Name"),
-        default=None, blank=True, null=True,
-        validators=[
-            RegexValidator(
-                regex=slug_re,
-                message=_("Stream name can only consist of english letters, numbers, hyphens or underscores."),
-                code='not_url_safe',
-            )
-        ]
+        blank=True,
+        max_length=50,
+        default="",
+        validators=[machine_stream_name_validator],
+        verbose_name=_("stream name"),
+        help_text=_("Used for connecting to the machine's stream."),
     )
     name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
     machine_model = UnlimitedCharField(verbose_name=_("Machine model"))

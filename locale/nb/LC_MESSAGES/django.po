@@ -1085,14 +1085,12 @@ msgid "Maintenance"
 msgstr "Vedlikehold"
 
 #: make_queue/models/models.py:127
-msgid "Stream Name"
+msgid "stream name"
 msgstr ""
 
-#: make_queue/models/models.py:132
-msgid ""
-"Stream name can only consist of english letters, numbers, hyphens or "
-"underscores."
-msgstr ""
+#: make_queue/models/models.py:126
+msgid "Used for connecting to the machine's stream."
+msgstr "Brukes til å koble til maskinens videostrøm."
 
 #: make_queue/models/models.py:138 make_queue/models/models.py:148
 #: news/models.py:150
@@ -1706,6 +1704,12 @@ msgstr "Søn"
 #, python-brace-format
 msgid "{machine_status} for {duration}"
 msgstr "{machine_status} i {duration}"
+
+#: make_queue/validators.py:10
+msgid ""
+"This can only consist of lowercase English letters, numbers, hyphens or "
+"underscores."
+msgstr ""
 
 #: make_queue/views/reservation/reservation.py:35
 #, python-brace-format
