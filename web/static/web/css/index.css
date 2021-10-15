@@ -106,11 +106,11 @@
 }
 
 .events .item.more-events-link {
-    grid-column: 2/3 !important;
+    grid-column: 2/3 !important; /* Overrides Fomantic-UI */
 }
 
 .events .item.more-events-link a {
-    text-transform: initial !important;
+    text-transform: initial !important; /* Overrides Fomantic-UI */
 }
 
 .articles {

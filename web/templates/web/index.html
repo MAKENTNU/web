@@ -39,7 +39,11 @@
                         <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event_dict.first_occurrence.start_time|date:"d M" }}
                             {% if event_dict.number_of_occurrences > 1 %}
-                                <br><span>+{{ event_dict.number_of_occurrences|add:-1 }} {% if event_dict.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
+                                <br/>
+                                <span>
+                                    +{{ event_dict.number_of_occurrences|add:-1 }}
+                                    {% if event_dict.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}
+                                </span>
                             {% endif %}
                         </p>
                         <img {% thumbnail event_dict.event.image "300" crop="center" as image_thumb %}
