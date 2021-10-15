@@ -107,6 +107,7 @@
 
 .events .item.more-events-link {
     grid-column: 2/3 !important; /* Overrides Fomantic-UI */
+    margin-top: 0;
 }
 
 .events .item.more-events-link a {
