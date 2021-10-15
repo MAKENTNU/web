@@ -1,6 +1,6 @@
 from django import forms
-from django.db.models import Q
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
@@ -243,16 +243,14 @@ class BaseMachineForm(forms.ModelForm):
         machine_type = cleaned_data.get('machine_type')
         stream_name = cleaned_data.get('stream_name')
 
-        if (machine_type is not None
-            and machine_type.has_stream
-            and stream_name is None
-        ):
-            self.add_error(
-                'stream_name', ValidationError(
-                    _("Stream Name cannot be empty"),
-                    code='stream_name_is_none'
+        if machine_type:
+            if machine_type.has_stream and not stream_name:
+                self.add_error(
+                    'stream_name', ValidationError(
+                        _("Stream name cannot be empty when the machine type supports streaming."),
+                        code='invalid_empty_stream_name',
+                    )
                 )
-            )
 
         return cleaned_data
 

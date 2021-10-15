@@ -116,6 +116,7 @@ class Machine(models.Model):
 
     STATUS_CHOICES_DICT = dict(Status.choices)
 
+    name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
     stream_name = models.CharField(
         blank=True,
         max_length=50,
@@ -124,7 +125,6 @@ class Machine(models.Model):
         verbose_name=_("stream name"),
         help_text=_("Used for connecting to the machine's stream."),
     )
-    name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
     machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,
