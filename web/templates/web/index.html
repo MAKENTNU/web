@@ -68,14 +68,14 @@
                     </div>
                 </div>
             {% endfor %}
-            {% if more_events_exist %}
-                <h2 class="more-events-link">
-                    <a href="{% url 'events' %}">
-                        {% trans "More events" %} <i class="angle double right icon"></i>
-                    </a>
-                </h2>
-            {% endif %}
         </div>
+        {% if more_events_exist %}
+            <h2 class="more-events-link">
+                <a href="{% url 'events' %}">
+                    {% trans "More events" %} <i class="angle double right icon"></i>
+                </a>
+            </h2>
+        {% endif %}
         <hr class="make-bg-yellow event-article-border"/>
     </div>
 

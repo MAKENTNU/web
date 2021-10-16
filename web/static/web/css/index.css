@@ -105,12 +105,12 @@
     grid-column: 2/3;
 }
 
-.events .item.more-events-link {
-    grid-column: 2/3 !important; /* Overrides Fomantic-UI */
+.more-events-link{
     margin-top: 0;
+    text-align: center;
 }
 
-.events .item.more-events-link a {
+.more-events-link a {
     text-transform: initial !important; /* Overrides Fomantic-UI */
 }
 
