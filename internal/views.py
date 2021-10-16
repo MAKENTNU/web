@@ -8,11 +8,17 @@ from django.views.generic import CreateView, DeleteView, ListView, TemplateView,
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import PreventGetRequestsMixin
 from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, SystemAccessValueForm
-from .models import Member, Secret, SystemAccess
+from .models import Member, Secret, SystemAccess, Quote
 
 
 class HomeView(TemplateView):
     template_name = 'internal/home.html'
+
+
+class QuoteView(ListView):
+    model = Quote
+    template_name = 'internal/quotes_list.html'
+    context_object_name = 'quotes'
 
 
 class SecretsView(ListView):

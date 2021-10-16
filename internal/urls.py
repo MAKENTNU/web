@@ -20,7 +20,8 @@ unsafe_urlpatterns = [
     path("secrets/", views.SecretsView.as_view(), name="secrets"),
     path("secrets/<int:pk>/edit/", views.EditSecretView.as_view(), name="edit-secret"),
     path("secrets/create/", views.CreateSecretView.as_view(), name="create-secret"),
-    path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name="delete-secret")
+    path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name="delete-secret"),
+    path("quotes", views.QuoteView.as_view(), name="quotes")
 ]
 
 LOGIN_URL = reverse('login', host='main')

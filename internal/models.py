@@ -212,3 +212,13 @@ class Secret(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+
+class Quote(models.Model):
+    quote = models.TextField(verbose_name=_("Quote"))
+    quoted = models.CharField(max_length=100, verbose_name=_("Quoted"))
+    context = models.TextField(blank=True, max_length=500, verbose_name=_("Context"))
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.quote + " - " + self.quoted)

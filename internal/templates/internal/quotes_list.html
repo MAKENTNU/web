@@ -1,0 +1,19 @@
+{% extends "internal/base.html" %}
+{% load i18n %}
+{% load static %}
+
+{% block body %}
+    <div class="ui cards">
+    {% for quote in quotes %}
+        <div class="card">
+            <div class="content">
+                <div class="header">{{ quote.quoted }}:</div>
+                <div class="meta">{{ quote.context }}</div>
+                <div class="description">
+                    {{ quote.quote}}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock body %}
