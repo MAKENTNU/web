@@ -22,19 +22,17 @@ class IndexView(TemplateView):
             if not event.get_future_occurrences().exists():
                 continue
             if event.standalone:
-                if event.get_future_occurrences().exists():
-                    event_dicts.append({
-                        'first_occurrence': event.get_future_occurrences().first(),
-                        'event': event,
-                        'number_of_occurrences': event.timeplaces.count(),
-                    })
+                event_dicts.append({
+                    'first_occurrence': event.get_future_occurrences().first(),
+                    'event': event,
+                    'number_of_occurrences': event.timeplaces.count(),
+                })
             else:
-                if event.get_future_occurrences().exists():
-                    event_dicts.append({
-                        'first_occurrence': event.get_future_occurrences().first(),
-                        'event': event,
-                        'number_of_occurrences': event.get_future_occurrences().count(),
-                    })
+                event_dicts.append({
+                    'first_occurrence': event.get_future_occurrences().first(),
+                    'event': event,
+                    'number_of_occurrences': event.get_future_occurrences().count(),
+                })
 
         sorted_event_dicts = sorted(event_dicts, key=lambda event: event['first_occurrence'].start_time)
         articles = Article.objects.published().filter(featured=True)
