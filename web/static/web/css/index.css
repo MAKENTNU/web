@@ -37,7 +37,7 @@
 }
 
 .article-text h2 a,
-.events .header a {
+.event .header a {
     color: rgb(248, 200, 17);
     text-transform: uppercase;
 }
@@ -105,13 +105,9 @@
     grid-column: 2/3;
 }
 
-.more-events-link{
-    margin-top: 0;
-    text-align: center;
-}
-
-.more-events-link a {
-    text-transform: initial !important; /* Overrides Fomantic-UI */
+.events .more-events-link .header {
+    display: flex !important; /* Overrides Fomantic-UI */
+    justify-content: center;
 }
 
 .event-article-border {
@@ -164,6 +160,14 @@
     text-align: center;
     font-style: italic;
 }
+
+
+@media screen and (min-width: 1200px) {
+    .events .more-events-link {
+        grid-column: 2/4;
+    }
+}
+
 
 @media screen and (max-width: 1199.98px) {
     .events {

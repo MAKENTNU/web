@@ -34,7 +34,7 @@
     <div class="ui container">
         <div class="ui items events">
             {% for event_dict in event_dicts %}
-                <div class="item">
+                <div class="event item">
                     <div class="ui small clickable image" href="{% url 'event' event_dict.event.pk %}">
                         <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event_dict.first_occurrence.start_time|date:"d M" }}
@@ -68,14 +68,20 @@
                     </div>
                 </div>
             {% endfor %}
+            {% if more_events_exist %}
+                <div class="more-events-link item">
+                    <div class="content">
+                        <div class="header">
+                            <h2>
+                                <a href="{% url 'events' %}">
+                                    {% trans "More events" %} <i class="angle double right icon"></i>
+                                </a>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-        {% if more_events_exist %}
-            <h2 class="more-events-link">
-                <a href="{% url 'events' %}">
-                    {% trans "More events" %} <i class="angle double right icon"></i>
-                </a>
-            </h2>
-        {% endif %}
         <hr class="make-bg-yellow event-article-border"/>
     </div>
 
