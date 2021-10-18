@@ -63,5 +63,3 @@ class UrlTests(TestCase):
         # Should not redirect to login (caused by the above line)
         response = self.anon_client.post(reverse("set_language"), {"language": "en"})
         self.assertRedirects(response, "/en/")
-
-# TODO: test views' logic
