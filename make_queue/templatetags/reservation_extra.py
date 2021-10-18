@@ -143,15 +143,3 @@ def can_mark_reservation_finished(reservation: Reservation):
 @register.simple_tag
 def is_future_reservation(reservation: Reservation):
     return reservation.end_time >= timezone.now()
-
-
-@register.simple_tag
-def sanitize_stream_name(machine: Machine):
-    values = (
-        (" ", "-"),
-        ("ö", "o"),
-    )
-    name = machine.name
-    for original, new in values:
-        name = name.replace(original, new)
-    return name

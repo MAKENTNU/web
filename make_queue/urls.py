@@ -55,7 +55,7 @@ quota_urlpatterns = [
 ]
 
 course_urlpatterns = [
-    path('', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseView.as_view()), name="course_panel"),
+    path('', permission_required("make_queue.change_printer3dcourse")(admin.course.Printer3DCourseListView.as_view()), name="course_panel"),
     path('status/', permission_required("make_queue.change_printer3dcourse")(admin.course.BulkStatusUpdate.as_view()), name="bulk_status_update"),
     path('download/', permission_required("make_queue.change_printer3dcourse")(admin.course.CourseXLSXView.as_view()),
          name="download_course_registrations"),

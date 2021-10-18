@@ -1,4 +1,5 @@
 from datetime import timedelta
+from http import HTTPStatus
 
 from django.urls import reverse
 from django.utils import timezone
@@ -30,33 +31,33 @@ class ViewTestCase(PermissionsTestCase):
 
     def test_events(self):
         response = self.client.get(reverse('events'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event(self):
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_create(self):
         response = self.client.get(reverse('event-create'))
-        self.assertNotEqual(response.status_code, 200)
+        self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
         self.add_permissions(self.user, 'add_event')
         response = self.client.get(reverse('event-create'))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_edit(self):
         response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
-        self.assertNotEqual(response.status_code, 200)
+        self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
         self.add_permissions(self.user, 'change_event')
         response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_timeplace_duplicate(self):
         tp = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
                                       end_time=timezone.localtime() + timedelta(minutes=10))
         response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
-        self.assertNotEqual(response.status_code, 200)
+        self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
         self.add_permissions(self.user, 'add_timeplace')
         self.add_permissions(self.user, 'change_timeplace')
@@ -88,7 +89,7 @@ class ViewTestCase(PermissionsTestCase):
         )
 
         response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
-        self.assertNotEqual(response.status_code, 200)
+        self.assertNotEqual(response.status_code, HTTPStatus.OK)
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
 
         self.assertEqual(new.start_time, new_start_time)
@@ -99,24 +100,24 @@ class ViewTestCase(PermissionsTestCase):
         self.event.save()
 
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
         self.add_permissions(self.user, 'change_event')
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_private_event(self):
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self.event.private = True
         self.event.save()
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
         self.add_permissions(self.user, 'can_view_private')
         response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
         url_name = "event-tickets"
@@ -176,7 +177,7 @@ class ViewTestCase(PermissionsTestCase):
         self.add_permissions(self.user, "change_event")
 
         response = self.client.get(reverse(url_name, args=[event.pk]))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
 
     @staticmethod

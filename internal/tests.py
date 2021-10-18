@@ -1,3 +1,4 @@
+from http import HTTPStatus
 from typing import Set
 from urllib.parse import urlparse
 
@@ -58,7 +59,7 @@ class UrlTests(PermissionsTestCase):
             response = self.generic_request(client, method, path)
             # Non-member users should be redirected to login:
             if client in {self.anon_client, self.non_member_client}:
-                self.assertEqual(response.status_code, 302)
+                self.assertEqual(response.status_code, HTTPStatus.FOUND)
                 self.assertTrue(urlparse(response.url).path.startswith("/login/"))
             # Disallowed members should be rejected:
             else:
@@ -68,7 +69,7 @@ class UrlTests(PermissionsTestCase):
             if expected_redirect_url:
                 self.assertRedirects(response, expected_redirect_url)
             else:
-                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def _test_internal_url(self, method: str, path: str, data: dict = None, *, expected_redirect_url: str = None):
         self._test_url_permissions(method, path, data, allowed_clients={self.member_client, self.member_editor_client},

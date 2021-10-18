@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('docs', '0004_page_current_content'),
+        ('docs', '0005_alter_id_fields_to_use_bigautofield'),
     ]
 
     operations = [
