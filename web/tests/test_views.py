@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from http import HTTPStatus
 from typing import List
 
 from django.contrib.auth.models import Permission
@@ -147,3 +148,25 @@ class IndexViewTests(TestCase):
         self.assertEqual(len(response_event_dicts), 2)
         self.assertEqual(response_event_dicts[0]['event'], public_event)
         self.assertEqual(response_event_dicts[1]['event'], private_event)
+
+
+class AdminPanelViewTests(TestCase):
+    def setUp(self):
+        self.path = reverse('adminpanel')
+
+    def test_only_users_with_required_permissions_can_view_page(self):
+        def assert_can_view_page(can_view: bool):
+            status_code = self.client.get(self.path).status_code
+            if can_view:
+                self.assertEqual(status_code, HTTPStatus.OK)
+            else:
+                self.assertGreaterEqual(status_code, 300)
+
+        assert_can_view_page(False)
+
+        user = User.objects.create_user(username="user")
+        self.client.force_login(user)
+        assert_can_view_page(False)
+
+        user.user_permissions.add(Permission.objects.get(codename='add_article'))
+        assert_can_view_page(True)
