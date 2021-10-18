@@ -16,6 +16,7 @@ from util.locale_utils import short_datetime_format, timedelta_to_hours
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
+from ..validators import machine_stream_name_validator
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -116,6 +117,14 @@ class Machine(models.Model):
     STATUS_CHOICES_DICT = dict(Status.choices)
 
     name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
+    stream_name = models.CharField(
+        blank=True,
+        max_length=50,
+        default="",
+        validators=[machine_stream_name_validator],
+        verbose_name=_("stream name"),
+        help_text=_("Used for connecting to the machine's stream."),
+    )
     machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,
