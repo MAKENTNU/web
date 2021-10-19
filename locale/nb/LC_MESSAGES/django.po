@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-19 01:02+0200\n"
+"POT-Creation-Date: 2021-10-05 17:56+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -519,7 +519,7 @@ msgstr "Ny side"
 #: internal/templates/internal/header.html:19
 #: news/templates/email/ticket.html:18 web/templates/web/footer.html:11
 #: web/templates/web/header.html:19 web/templates/web/header.html:20
-#: web/templates/web/header.html:21 web/templates/web/index.html:30
+#: web/templates/web/header.html:21 web/templates/web/index.html:31
 msgid "MAKE NTNU's logo"
 msgstr "MAKE NTNUs logo"
 
@@ -953,8 +953,17 @@ msgid "Last modified"
 msgstr "Sist endret"
 
 #: internal/templates/internal/secret_list.html:47
+#: internal/templates/internal/secret_list.html:61
 msgid "Click to show - only if you're alone!"
 msgstr "Klikk for å vise - bare hvis du er alene!"
+
+#: internal/templates/internal/secret_list.html:66
+msgid "Last edited:"
+msgstr "Sist redigert:"
+
+#: internal/templates/internal/secret_list.html:68
+msgid "Close - someone's behind me!"
+msgstr "Skjul - noen er bak meg!"
 
 #: make_queue/admin.py:21
 #: make_queue/templates/make_queue/machine_list.html:7
@@ -2261,12 +2270,12 @@ msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
 #: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77 web/templates/web/index.html:45
+#: news/templates/news/event_list.html:77 web/templates/web/index.html:46
 msgid "dates"
 msgstr "datoer"
 
 #: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77 web/templates/web/index.html:45
+#: news/templates/news/event_list.html:77 web/templates/web/index.html:46
 msgid "date"
 msgstr "dato"
 
@@ -2549,7 +2558,7 @@ msgstr "Internsider"
 msgid "Log in"
 msgstr "Logg inn"
 
-#: web/templates/web/index.html:77
+#: web/templates/web/index.html:78
 msgid "More events"
 msgstr "Flere arrangementer"
 
