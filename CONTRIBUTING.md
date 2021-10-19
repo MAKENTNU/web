@@ -660,7 +660,7 @@ Use:
 
 # Code review guideline: Code smells
 These code smells are meant as guidelines,
-and only provide hints that enhance developers' ability to notice whether some code should be changed or not;
+and only provide hints that might enhance developers' ability to notice whether some code should be changed or not;
 there do exist scenarios where *not* getting rid of a code smell would be the most appropriate.
 
 ## Table of contents
@@ -899,9 +899,12 @@ LOGGING['loggers']['django.db.backends'] = {
 ### For each migration
 
 #### `RunPython` operations missing the `reverse_code` argument
-Custom-written migrations with [`RunPython` operations](https://docs.djangoproject.com/en/3.2/ref/migration-operations/#runpython)
+Custom-written migrations with [`RunPython` operations](https://docs.djangoproject.com/en/stable/ref/migration-operations/#runpython)
 should always provide the `reverse_code` argument,
-so that it's possible to [unapply a migration](https://docs.djangoproject.com/en/3.2/topics/migrations/#reversing-migrations).
+so that it's possible to [unapply a migration](https://docs.djangoproject.com/en/stable/topics/migrations/#reversing-migrations).
+
+If the `RunPython` operation doesn't need to be unapplied, or if it doesn't make sense to unapply it, one can pass
+[`migrations.RunPython.noop`](https://docs.djangoproject.com/en/stable/ref/migration-operations/#django.db.migrations.operations.RunPython.noop).
 
 
 ### For each class
