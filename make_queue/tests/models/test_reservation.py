@@ -1,15 +1,16 @@
 from abc import ABC
-from datetime import datetime, time, timedelta
+from datetime import datetime, timedelta
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.dateparse import parse_time
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.locale_utils import local_to_date
+from util.locale_utils import parse_datetime_localized
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
 
@@ -27,7 +28,7 @@ class GeneralReservationTestCase(TestCase, ABC):
                                                                   date=datetime.now().date(),
                                                                   name=self.user.get_full_name())
         self.max_time_reservation = 5
-        ReservationRule.objects.create(machine_type=self.machine_type, start_time=time(0, 0), end_time=time(23, 59),
+        ReservationRule.objects.create(machine_type=self.machine_type, start_time=parse_time("00:00"), end_time=parse_time("23:59"),
                                        days_changed=6, start_days=1, max_hours=self.max_time_reservation,
                                        max_inside_border_crossed=self.max_time_reservation)
         self.event = Event.objects.create(title="TEST EVENT")
@@ -142,7 +143,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     @patch("django.utils.timezone.now")
     def test_disallow_overlapping_reservations(self, now_mock):
-        now_mock.return_value = local_to_date(datetime(2018, 3, 12, 12, 0, 0))
+        now_mock.return_value = parse_datetime_localized("2018-03-12 12:00")
 
         self.user_quota.number_of_reservations = 3
         self.user_quota.save()

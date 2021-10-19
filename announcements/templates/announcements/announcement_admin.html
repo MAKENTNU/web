@@ -1,5 +1,6 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
+{% load datetime_tags %}
 
 
 {% block body %}
@@ -42,10 +43,9 @@
                         <div class="extra">
                             <span class="ui {% if announcement.is_valid %}green{% else %}red{% endif %} text">
                             {% if announcement.display_to %}
-                                {{ announcement.display_from|date:"d.m.Y H:i" }} -
-                                {{ announcement.display_to|date:"d.m.Y H:i" }}
+                                {{ announcement.display_from|short_datetime }} &ndash; {{ announcement.display_to|short_datetime }}
                             {% else %}
-                                {% trans "From" %} {{ announcement.display_from|date:"d.m.Y H:i" }}
+                                {% trans "From" %} {{ announcement.display_from|short_datetime }}
                             {% endif %}
                             </span>
                         </div>

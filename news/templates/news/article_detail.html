@@ -2,6 +2,8 @@
 {% load static %}
 {% load thumbnail %}
 {% load i18n %}
+{% load datetime_tags %}
+
 
 {% block title %}{{ article.title }}{% endblock title %}
 
@@ -41,7 +43,7 @@
             <h1>
                 {{ article.title }}
                 {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
-                <span class="publication-time">{{ article.publication_time|date:"d.m.Y" }}</span>
+                <span class="publication-time">{{ article.publication_time|short_date }}</span>
 
             </h1>
             <div>

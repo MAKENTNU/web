@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from util.locale_utils import date_to_local, get_day_name
-from ..models.models import Machine, Reservation, ReservationRule
+from ..models.models import Machine, Quota, Reservation, ReservationRule
 
 register = template.Library()
 
@@ -89,13 +89,18 @@ def date_to_percentage(date_: datetime):
 
 
 @register.simple_tag
-def can_use_machine(machine: Machine, user: User):
-    return machine.can_user_use(user)
-
-
-@register.simple_tag
-def get_machine_cannot_use_text(machine: Machine):
-    return machine.machine_type.cannot_use_text
+def reservation_denied_message(user: User, machine: Machine):
+    if not user.is_authenticated:
+        return _("You must be logged in to create reservations.")
+    elif not machine.can_user_use(user):
+        return machine.machine_type.cannot_use_text
+    reservable, status_display = machine.reservable_status_display_tuple()
+    if not reservable:
+        return _("The machine has status “{status}”.").format(status=status_display)
+    elif not Quota.can_create_new_reservation(user, machine.machine_type):
+        return _("You have reached the maximum number of future reservations.")
+    else:
+        return ""
 
 
 @register.simple_tag
@@ -131,22 +136,10 @@ def can_delete_reservation(reservation: Reservation, user: User):
 
 
 @register.simple_tag
-def can_mark_reservation_as_finished(reservation: Reservation):
+def can_mark_reservation_finished(reservation: Reservation):
     return reservation.start_time < timezone.now() < reservation.end_time
 
 
 @register.simple_tag
 def is_future_reservation(reservation: Reservation):
     return reservation.end_time >= timezone.now()
-
-
-@register.simple_tag
-def sanitize_stream_name(machine: Machine):
-    values = (
-        (" ", "-"),
-        ("ö", "o"),
-    )
-    name = machine.name
-    for original, new in values:
-        name = name.replace(original, new)
-    return name

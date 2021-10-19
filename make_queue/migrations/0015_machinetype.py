@@ -63,6 +63,14 @@ default_machine_types = (
         priority=5,
     ),
     MachineTypeStruct(
+        pk=5,
+        name={"en": "Dress form", "nb": "Sømbyste"},
+        cannot_use_text="",
+        usage_requirement="AUTH",
+        has_stream=False,
+        priority=40,
+    ),
+    MachineTypeStruct(
         pk=6,
         name={"en": "Special 3D printers", "nb": "Spesial-3D-printere"},
         cannot_use_text={
