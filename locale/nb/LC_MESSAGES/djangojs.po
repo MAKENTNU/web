@@ -45,6 +45,24 @@ msgstr "Kommentar"
 msgid "Choose time"
 msgstr "Velg tid"
 
+#: make_queue/static/make_queue/js/reservation_list.js:19
+msgid ""
+"Marking reservation as finished failed with the following error message: "
+"%(error)s."
+msgstr ""
+"Markering av reservasjonen som ferdig mislyktes med følgende feilmelding: "
+"%(error)s."
+
+#: make_queue/static/make_queue/js/reservation_list.js:30
+msgid ""
+"Deleting reservation failed with the following error message: %(error)s."
+msgstr ""
+"Sletting av reservasjonen mislyktes med følgende feilmelding: %(error)s."
+
+#: make_queue/static/make_queue/js/reservation_list.js:48
+msgid "Please refresh the page or contact the developers."
+msgstr "Last inn siden på nytt eller kontakt utviklerne."
+
 #: news/static/news/js/email_copy.js:22
 msgid "Successfully copied to clipboard!"
 msgstr "Kopiert til utklippstavlen!"

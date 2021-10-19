@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
+{% load datetime_tags %}
 {% load announcement_tags %}
 
 
@@ -37,7 +38,7 @@
                 <div class="event item">
                     <div class="ui small clickable image" href="{% url 'event' event_dict.event.pk %}">
                         <p class="ui yellow make-bg-yellow ribbon label">
-                            {{ event_dict.first_occurrence.start_time|date:"d M" }}
+                            {{ event_dict.first_occurrence.start_time|year_wise_short_date }}
                             {% if event_dict.number_of_occurrences > 1 %}
                                 <br/>
                                 <span>
