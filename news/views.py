@@ -1,23 +1,25 @@
 import math
 from datetime import timedelta
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.core.mail import send_mail
 from django.db.models import Max
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views import View
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView, \
+    FormView
 
 from mail import email
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
 from util.view_utils import PreventGetRequestsMixin
 from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
+from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm, EmailForm
 from .models import Article, Event, EventTicket, TimePlace
 
 
@@ -321,15 +323,12 @@ class EventRegistrationView(CreateView):
         form.instance.timeplace = self.timeplace
         ticket = form.save()
 
-        async_to_sync(get_channel_layer().send)(
-            'email', {
-                'type': 'send_html',
-                'html_render': email.render_html({'ticket': ticket}, 'email/ticket.html'),
-                'text': email.render_text({'ticket': ticket}, text_template_name='email/ticket.txt'),
-                'subject': _("Your ticket!"),
-                'from': settings.EVENT_TICKET_EMAIL,
-                'to': ticket.email,
-            }
+        send_mail(
+            "Reminder",
+            email.render_text({"ticket": ticket}, text_template_name='email/ticket.txt'),
+            settings.EMAIL_HOST_USER,
+            [ticket.email],
+            html_message=render_to_string('email/ticket.html', {"ticket": ticket})
         )
 
         self.object = ticket
@@ -377,10 +376,11 @@ class AdminEventTicketView(TemplateView):
         if not event.number_of_tickets:
             raise Http404()
         context_data.update({
-            'tickets': event.tickets.order_by('-active'),
-            'event': event,
-            'object': event,
-            'ticket_emails': ",".join(ticket.email for ticket in event.tickets.filter(active=True)),
+            "tickets": event.tickets.order_by("-active"),
+            "event": event,
+            "object": event,
+            "ticket_emails": ",".join(ticket.email for ticket in event.tickets.filter(active=True)),
+            "send_email_url": reverse("event-email", args=[event.pk])
         })
         return context_data
 
@@ -394,10 +394,11 @@ class AdminTimeplaceTicketView(TemplateView):
         if not timeplace.number_of_tickets:
             raise Http404()
         context_data.update({
-            'tickets': timeplace.tickets.order_by('-active'),
-            'event': timeplace.event,
-            'object': timeplace,
-            'ticket_emails': ",".join(ticket.email for ticket in timeplace.tickets.filter(active=True)),
+            "tickets": timeplace.tickets.order_by("-active"),
+            "event": timeplace.event,
+            "object": timeplace,
+            "ticket_emails": ",".join(ticket.email for ticket in timeplace.tickets.filter(active=True)),
+            "send_email_url": reverse("timeplace-email", args=[timeplace.pk]),
         })
         return context_data
 
@@ -421,3 +422,44 @@ class CancelTicketView(LoginRequiredMixin, RedirectView):
         if next_page is None:
             return super().get_redirect_url(*args, **kwargs)
         return next_page
+
+
+class EmailEventView(PermissionRequiredMixin, FormView):
+    permission_required = ('news.change_timeplace',)
+    form_class = EmailForm
+    template_name = 'news/timeplace_email.html'
+
+    event = None
+    time_place = None
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        event_pk = kwargs.get('event_pk')
+        time_place_pk = kwargs.get('time_place_pk')
+        if event_pk:
+            self.event = get_object_or_404(Event, pk=kwargs['event_pk'])
+        if time_place_pk:
+            self.time_place = get_object_or_404(TimePlace, pk=kwargs['time_place_pk'])
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**{
+            'event': self.event or self.time_place.event,
+            **kwargs,
+        })
+
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        if 'data' in form_kwargs:
+            data = form_kwargs['data'].copy()
+            data['event'] = self.event
+            data['time_place'] = self.time_place
+            form_kwargs['data'] = data
+        return form_kwargs
+
+    def form_valid(self, form):
+        form.send_email()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        event = self.event or self.time_place.event
+        return reverse("admin-event", args=(event.pk,))

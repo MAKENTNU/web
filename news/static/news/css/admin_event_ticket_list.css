@@ -1,6 +1,6 @@
 .copy-button-container {
     font-size: large;
-    margin-bottom: 0.5em;
+    display: inline;
 }
 
 .copy-button-container .copy-token.button {
@@ -15,4 +15,8 @@
 .input-monospace {
     font-family: "Courier New", Courier, monospace !important;
     width: 100%;
+    margin-top: 0.5em;
+}
+.send-email-container {
+    display: inline;
 }
