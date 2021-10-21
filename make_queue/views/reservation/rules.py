@@ -20,11 +20,10 @@ class MachineTypeBasedView(ContextMixin, View, ABC):
         self.machine_type = kwargs['machine_type']
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data.update({
+        return super().get_context_data(**{
             'machine_type': self.machine_type,
+            **kwargs,
         })
-        return context_data
 
 
 class RulesOverviewView(MachineTypeBasedView, ListView):

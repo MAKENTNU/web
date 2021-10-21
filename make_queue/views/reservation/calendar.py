@@ -2,6 +2,7 @@ from django.views.generic import TemplateView
 
 from util.locale_utils import year_and_week_to_monday
 from ...models.models import Machine, Quota
+from ...templatetags.reservation_extra import reservation_denied_message
 
 
 class ReservationCalendarView(TemplateView):
@@ -19,8 +20,7 @@ class ReservationCalendarView(TemplateView):
         """
         context = super().get_context_data()
         context.update({
-            'can_create_reservations': False,
-            'can_create_more_reservations': False,
+            'reservation_denied_message': reservation_denied_message(self.request.user, machine),
             'can_ignore_rules': False,
             'other_machines': Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type).default_order_by(),
             'machine': machine,
@@ -31,8 +31,6 @@ class ReservationCalendarView(TemplateView):
 
         if self.request.user.is_authenticated:
             context.update({
-                'can_create_reservations': machine.machine_type.can_user_use(self.request.user),
-                'can_create_more_reservations': Quota.can_create_new_reservation(self.request.user, machine.machine_type),
                 'can_ignore_rules': any(
                     quota.can_create_more_reservations(self.request.user)
                     for quota in Quota.get_user_quotas(self.request.user, machine.machine_type).filter(ignore_rules=True)

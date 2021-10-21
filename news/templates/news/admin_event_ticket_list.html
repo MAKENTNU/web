@@ -51,7 +51,7 @@
                         <div class="description">
                             <div>
                                 <b>{% trans "Ref #" %}:</b>
-                                <a href="{% url "ticket" ticket.uuid %}">{{ ticket.uuid }}</a>
+                                <a href="{% url "ticket" ticket.pk %}">{{ ticket.uuid }}</a>
                             </div>
                             <div>
                                 <b>{% trans "Language" %}</b> {{ ticket.get_language_display }}

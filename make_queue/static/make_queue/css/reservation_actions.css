@@ -29,6 +29,10 @@
     cursor: default;
 }
 
+.negative-message {
+    color: #DB2828; /* Same as Fomantic-UI's `color` for `.basic.negative.button` */
+}
+
 .large.middle.aligned.list.icon {
     padding: 0;
 }
