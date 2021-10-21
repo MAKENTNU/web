@@ -8,7 +8,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('auth', '0012_alter_user_first_name_max_length'),
-        ('groups', '0005_remove_committee_clickbait_max_length'),
+        ('groups', '0006_alter_id_fields_to_use_bigautofield'),
     ]
 
     operations = [

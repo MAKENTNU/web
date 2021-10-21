@@ -3,22 +3,43 @@ from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from contentbox.views import DisplayContentBoxView
-from news.models import Article, TimePlace
+from news.models import Article, Event
 
 
 class IndexView(TemplateView):
+    MAX_EVENTS_SHOWN = 4
+    MAX_ARTICLES_SHOWN = 4
+
     template_name = 'web/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        events = TimePlace.objects.future().filter(event__featured=True)
-        if not self.request.user.has_perm('news.can_view_private'):
-            events = events.filter(event__private=False)
+        event_dicts = []
+        for event in Event.objects.filter(hidden=False):
+            if event.private and not self.request.user.has_perm('news.can_view_private'):
+                continue
+            if not event.get_future_occurrences().exists():
+                continue
+            if event.standalone:
+                event_dicts.append({
+                    'first_occurrence': event.get_future_occurrences().first(),
+                    'event': event,
+                    'number_of_occurrences': event.timeplaces.count(),
+                })
+            else:
+                event_dicts.append({
+                    'first_occurrence': event.get_future_occurrences().first(),
+                    'event': event,
+                    'number_of_occurrences': event.get_future_occurrences().count(),
+                })
 
+        sorted_event_dicts = sorted(event_dicts, key=lambda event: event['first_occurrence'].start_time)
+        articles = Article.objects.published().filter(featured=True)
         context.update({
-            'articles': Article.objects.published().filter(featured=True)[:4],
-            'events': events[:4],
+            'event_dicts': sorted_event_dicts[:self.MAX_EVENTS_SHOWN],
+            'more_events_exist': len(sorted_event_dicts) > self.MAX_EVENTS_SHOWN,
+            'articles': articles[:self.MAX_ARTICLES_SHOWN],
         })
         return context
 

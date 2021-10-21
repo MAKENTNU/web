@@ -1,4 +1,5 @@
 from datetime import timedelta
+from http import HTTPStatus
 from unittest.mock import patch
 
 from django.contrib.auth.models import Permission
@@ -117,8 +118,8 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
             end_time=form.cleaned_data["end_time"],
         )
         response = view.validate_and_save(reservation, form)
-        self.assertEqual(1, Reservation.objects.count())
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(Reservation.objects.count(), 1)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_validate_and_save_non_valid_reservation(self):
         view = self.get_view()
@@ -140,9 +141,9 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         )
         response = view.validate_and_save(reservation, form)
         # Second reservation should not be saved
-        self.assertEqual(1, Reservation.objects.count())
+        self.assertEqual(Reservation.objects.count(), 1)
         # 200 to re render the form
-        self.assertEqual(200, response.status_code)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_get_context_data_reservation(self):
         view = self.get_view()
@@ -202,8 +203,8 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
 
         self.assertTrue(ReservationForm(view.request.POST).is_valid())
         response = view.handle_post(view.request)
-        self.assertEqual(200, response.status_code)
-        self.assertEqual(1, valid_form_calls["calls"])
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(valid_form_calls["calls"], 1)
 
 
 class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
@@ -218,7 +219,7 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         form = self.create_form(start_time_diff=1, end_time_diff=2)
         self.assertTrue(form.is_valid())
         view.form_valid(form)
-        self.assertTrue(Machine.objects.count(), 1)
+        self.assertEqual(Machine.objects.count(), 1)
 
     def test_form_valid_event_reservation(self):
         view = self.get_view()
@@ -226,7 +227,7 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         view.form_valid(form)
-        self.assertTrue(Machine.objects.count(), 1)
+        self.assertEqual(Machine.objects.count(), 1)
 
     def test_form_valid_special_reservation(self):
         view = self.get_view()
@@ -234,7 +235,7 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
         view.form_valid(form)
-        self.assertTrue(Machine.objects.count(), 1)
+        self.assertEqual(Machine.objects.count(), 1)
 
     def test_form_valid_invalid_reservation(self):
         view = self.get_view()
@@ -247,9 +248,9 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         )
         response = view.form_valid(form)
         # Second reservation should not have been saved
-        self.assertTrue(Machine.objects.count(), 1)
+        self.assertEqual(Machine.objects.count(), 1)
         # Re-rendering of form
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
 class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
@@ -273,8 +274,8 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         reservation = self.create_reservation(self.create_form(start_time_diff=1, end_time_diff=2))
         response = view.dispatch(view.request, reservation=reservation)
         # Response should be the edit page for the reservation, as no form is posted with the data
-        self.assertEqual(200, response.status_code)
-        self.assertListEqual(['make_queue/reservation_edit.html'], response.template_name)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertListEqual(response.template_name, ['make_queue/reservation_edit.html'])
 
     @patch("django.utils.timezone.now")
     def test_post_unchangeable_reservation(self, now_mock):
@@ -287,7 +288,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         now_mock.return_value = timezone.localtime() + timedelta(hours=2, minutes=1)
         response = view.dispatch(view.request, reservation=reservation)
         # An unchangeable reservation should have redirect
-        self.assertEqual(302, response.status_code)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     @patch("django.utils.timezone.now")
     def test_form_valid_normal_reservation(self, now_mock):
@@ -299,7 +300,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         response = view.form_valid(form, reservation=reservation)
         self.assertEqual(Reservation.objects.count(), 1)
-        self.assertTrue(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.first().end_time, timezone.localtime() + timedelta(hours=3))
 
     @patch("django.utils.timezone.now")
@@ -313,7 +314,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         form = self.create_form(start_time_diff=1, end_time_diff=3)
         self.assertTrue(form.is_valid())
         response = view.form_valid(form, reservation=reservation)
-        self.assertTrue(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.count(), 1)
         self.assertEqual(Reservation.objects.first().end_time, timezone.localtime() + timedelta(hours=2))
         self.assertEqual(Reservation.objects.first().machine, old_machine)
@@ -338,7 +339,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         response = view.form_valid(form, reservation=reservation)
         self.assertEqual(Reservation.objects.count(), 1)
-        self.assertTrue(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.first().event, self.timeplace)
 
     @patch("django.utils.timezone.now")
@@ -358,7 +359,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertTrue(form.is_valid())
         response = view.form_valid(form, reservation=reservation)
         self.assertEqual(Reservation.objects.count(), 1)
-        self.assertTrue(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.first().special_text, "Test2")
 
 
@@ -432,7 +433,7 @@ class MarkReservationFinishedTest(TestCase):
         self.assertTrue(self.reservation1.can_change_end_time(self.user))
 
         response = self.post_to(self.reservation1)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.reservation1.refresh_from_db()
         self.assertEqual(self.reservation1.end_time, timezone.now())
 
@@ -476,6 +477,6 @@ class MarkReservationFinishedTest(TestCase):
         # Set "now" to 3 minutes before `reservation2` ends and `reservation3` starts
         now_mock.return_value = self.now + timedelta(hours=5, minutes=57)
         response = self.post_to(reservation2)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         reservation2.refresh_from_db()
         self.assertEqual(reservation2.end_time, timezone.now())

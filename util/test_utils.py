@@ -1,5 +1,6 @@
 import functools
 from abc import ABC
+from http import HTTPStatus
 from typing import Any, Dict, List, Tuple
 from urllib.parse import urlparse
 
@@ -91,7 +92,7 @@ class Get(PathPredicate):
             status_code = client.get(path, follow=True).status_code
 
         if self.public or is_superuser:
-            test_case.assertEqual(status_code, 200)
+            test_case.assertEqual(status_code, HTTPStatus.OK)
         else:
             test_case.assertGreaterEqual(status_code, 300)
 

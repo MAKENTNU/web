@@ -1,4 +1,3 @@
-import logging
 import mimetypes
 import os
 import smtplib
@@ -7,6 +6,8 @@ from channels.consumer import SyncConsumer
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
+
+from util.logging_utils import get_request_logger
 
 
 class EmailConsumer(SyncConsumer):
@@ -42,9 +43,7 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            logging.getLogger('django.request').exception(
-                f"Failed sending plain text email from {message['from']} to {message['to']}.", exc_info=e,
-            )
+            get_request_logger().exception(f"Failed sending plain text email:\n{message}", exc_info=e)
 
     def send_html(self, message):
         """
@@ -57,9 +56,7 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            logging.getLogger('django.request').exception(
-                f"Failed sending HTML email from {message['from']} to {message['to']}.", exc_info=e,
-            )
+            get_request_logger().exception(f"Failed sending HTML email:\n{message}", exc_info=e)
 
     def create_message(self, message):
         """

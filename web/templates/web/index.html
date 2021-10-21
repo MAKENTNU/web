@@ -2,6 +2,7 @@
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
+{% load datetime_tags %}
 {% load announcement_tags %}
 
 
@@ -33,36 +34,56 @@
     <div style="height: 50px;"></div>
     <div class="ui container">
         <div class="ui items events">
-            {% for event in events %}
-                <div class="item">
-                    <div class="ui small clickable image" href="{% url 'event_detail' event.event.pk %}">
+            {% for event_dict in event_dicts %}
+                <div class="event item">
+                    <div class="ui small clickable image" href="{% url 'event_detail' event_dict.event.pk %}">
                         <p class="ui yellow make-bg-yellow ribbon label">
-                            {{ event.start_time|date:"d" }}<br>
-                            {{ event.start_time|date:"M" }}
+                            {{ event_dict.first_occurrence.start_time|year_wise_short_date }}
+                            {% if event_dict.number_of_occurrences > 1 %}
+                                <br/>
+                                <span>
+                                    +{{ event_dict.number_of_occurrences|add:-1 }}
+                                    {% if event_dict.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}
+                                </span>
+                            {% endif %}
                         </p>
-                        <img {% thumbnail event.event.image "300" crop="center" as image_thumb %}
+                        <img {% thumbnail event_dict.event.image "300" crop="center" as image_thumb %}
                             src="{{ image_thumb.url }}"
                         {% empty %}
-                            src="{{ event.event.image.url }}"
+                            src="{{ event_dict.event.image.url }}"
                         {% endthumbnail %}
-                            {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            {% if event_dict.event.contain %}style="object-fit: contain !important;"{% endif %}
                         />
                     </div>
 
                     <div class="content">
                         <div class="header">
-                            <a href="{% url 'event_detail' event.event.pk %}">{{ event.event.title }}</a>
+                            <a href="{% url 'event_detail' event_dict.event.pk %}">{{ event_dict.event.title }}</a>
                         </div>
                         <div class="meta">
-                            <span>{{ event.place }}</span>
+                            <span>{{ event_dict.first_occurrence.place }}</span>
                         </div>
                         <div class="description">
-                            <p>{{ event.event.clickbait }}</p>
+                            <p>{{ event_dict.event.clickbait }}</p>
                         </div>
                     </div>
                 </div>
             {% endfor %}
+            {% if more_events_exist %}
+                <div class="more-events-link item">
+                    <div class="content">
+                        <div class="header">
+                            <h2>
+                                <a href="{% url 'event_list' %}">
+                                    {% trans "More events" %} <i class="angle double right icon"></i>
+                                </a>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
+        <hr class="make-bg-yellow event-article-border"/>
     </div>
 
     <div class="ui container">

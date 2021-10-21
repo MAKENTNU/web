@@ -13,6 +13,7 @@ from users.models import User
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
+from ..validators import machine_stream_name_validator
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -31,6 +32,7 @@ class MachineType(models.Model):
     class UsageRequirement(models.TextChoices):
         IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
         TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
+        TAKEN_ADVANCED_3D_PRINTER_COURSE = "A3DP", _("Taken the advanced 3D printer course")
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
@@ -59,6 +61,8 @@ class MachineType(models.Model):
             return user.is_authenticated
         elif self.usage_requirement == self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
             return self.can_use_3d_printer(user)
+        elif self.usage_requirement == self.UsageRequirement.TAKEN_ADVANCED_3D_PRINTER_COURSE:
+            return self.can_use_advanced_3d_printer(user)
         return False
 
     @staticmethod
@@ -73,6 +77,20 @@ class MachineType(models.Model):
             course_registration.save()
             return True
         return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
+
+    @staticmethod
+    def can_use_advanced_3d_printer(user: Union[User, AnonymousUser]):
+        if not user.is_authenticated:
+            return False
+        if Printer3DCourse.objects.filter(user=user).exists():
+            course_registration = Printer3DCourse.objects.get(user=user)
+            return course_registration.advanced_course
+        if Printer3DCourse.objects.filter(username=user.username).exists():
+            course_registration = Printer3DCourse.objects.get(username=user.username)
+            course_registration.user = user
+            course_registration.save()
+            return course_registration.advanced_course
+        return False
 
 
 class MachineQuerySet(models.QuerySet):
@@ -96,6 +114,14 @@ class Machine(models.Model):
     STATUS_CHOICES_DICT = dict(Status.choices)
 
     name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
+    stream_name = models.CharField(
+        blank=True,
+        max_length=50,
+        default="",
+        validators=[machine_stream_name_validator],
+        verbose_name=_("stream name"),
+        help_text=_("Used for connecting to the machine's stream."),
+    )
     machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,

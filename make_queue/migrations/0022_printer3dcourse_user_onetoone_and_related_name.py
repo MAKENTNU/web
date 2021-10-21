@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('make_queue', '0019_add_related_names'),
+        ('make_queue', '0021_alter_id_fields_to_use_bigautofield'),
     ]
 
     operations = [

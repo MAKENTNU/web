@@ -1,4 +1,3 @@
-import logging
 from abc import ABC
 from datetime import timedelta
 from math import ceil
@@ -13,6 +12,7 @@ from django.views.generic import DeleteView, FormView, ListView, TemplateView, U
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
+from util.logging_utils import log_request_exception
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import FreeSlotForm, ReservationForm
 from ...models.machine import Machine, MachineType
@@ -142,7 +142,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
             if form.is_valid():
                 return self.form_valid(form, **kwargs)
         except Exception as e:
-            logging.getLogger('django.request').exception(e)
+            log_request_exception("Validating reservation failed.", e, request)
         return self.get(request, **kwargs)
 
 

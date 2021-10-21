@@ -16,6 +16,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Default values
 DATABASE = 'sqlite'
+# TODO: change to `BigAutoField` when `social-auth-app-django` fixes its own `DEFAULT_AUTO_FIELD`
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -54,6 +56,9 @@ except ImportError:
 
 
 INSTALLED_APPS = [
+    # The main entrypoint app; should be listed first, to be able to override things like management commands
+    'web',
+
     # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,9 +70,6 @@ INSTALLED_APPS = [
     # Third-party packages with significant effect on Django's functionality
     'django_hosts',
     'channels',
-
-    # The main entrypoint app
-    'web',
 
     # Other third-party packages
     'social_django',

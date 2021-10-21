@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-04-23 02:34+0200\n"
+"POT-Creation-Date: 2021-10-21 14:34+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -100,7 +100,7 @@ msgstr "Ny kunngjøring"
 #: groups/templates/groups/committee_form.html:31
 #: internal/templates/internal/member_edit.html:84
 #: internal/templates/internal/secret_edit.html:38
-#: make_queue/templates/make_queue/machine/machine_edit.html:74
+#: make_queue/templates/make_queue/machine/machine_edit.html:82
 #: make_queue/templates/make_queue/usage_rules_edit.html:39
 #: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:48
 #: news/templates/news/article_edit.html:90
@@ -119,9 +119,9 @@ msgstr "Lagre"
 #: internal/templates/internal/member_edit.html:87
 #: internal/templates/internal/member_quit.html:26
 #: internal/templates/internal/secret_edit.html:40
-#: make_queue/templates/make_queue/course/course_registration_edit.html:103
-#: make_queue/templates/make_queue/course/course_registration_list.html:201
-#: make_queue/templates/make_queue/machine/machine_edit.html:76
+#: make_queue/templates/make_queue/course/course_registration_edit.html:113
+#: make_queue/templates/make_queue/course/course_registration_list.html:211
+#: make_queue/templates/make_queue/machine/machine_edit.html:84
 #: make_queue/templates/make_queue/quota/quota_edit.html:67
 #: make_queue/templates/make_queue/reservation_edit.html:158
 #: make_queue/templates/make_queue/rule_edit.html:96
@@ -258,7 +258,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: checkin/templates/checkin/profile.html:116 internal/forms.py:43
-#: make_queue/forms.py:187
+#: make_queue/forms.py:188
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -470,7 +470,7 @@ msgid "The page is currently empty. Please add some content"
 msgstr "Siden er for øyeblikket tom. Vennligst legg til noe innhold"
 
 #: docs/templates/docs/documentation_page_edit.html:32
-#: make_queue/templates/make_queue/course/course_registration_edit.html:99
+#: make_queue/templates/make_queue/course/course_registration_edit.html:109
 #: make_queue/templates/make_queue/quota/quota_edit.html:63
 #: make_queue/templates/make_queue/rule_edit.html:93
 msgctxt "edit"
@@ -513,7 +513,7 @@ msgstr "Ny side"
 #: docs/templates/docs/header.html:26 news/templates/email/ticket.html:18
 #: web/templates/web/footer.html:11 web/templates/web/header.html:18
 #: web/templates/web/header.html:19 web/templates/web/header.html:20
-#: web/templates/web/index.html:30
+#: web/templates/web/index.html:31
 msgid "MAKE NTNU's logo"
 msgstr "MAKE NTNUs logo"
 
@@ -594,7 +594,7 @@ msgstr "Beskrivelse"
 msgid "Email"
 msgstr "E-post"
 
-#: groups/models.py:100 makerspace/admin.py:20 makerspace/models.py:21
+#: groups/models.py:100 makerspace/admin.py:14 makerspace/models.py:21
 #: news/models.py:23
 msgid "Image"
 msgstr "Bilde"
@@ -656,7 +656,7 @@ msgstr ""
 "Medlemmets «pang»-status ble ikke gjort om siden medlemmet ikke hadde status "
 "«pang»."
 
-#: internal/models.py:23 make_queue/forms.py:119
+#: internal/models.py:23 make_queue/forms.py:120
 #: make_queue/models/course.py:23 make_queue/models/reservation.py:25
 #: news/models.py:185
 msgid "User"
@@ -844,7 +844,7 @@ msgstr "Filtrer komiteer"
 
 #: internal/templates/internal/member_list.html:91
 #: internal/templates/internal/member_list.html:207
-#: make_queue/models/machine.py:98
+#: make_queue/models/machine.py:116
 #: make_queue/templates/make_queue/course/course_registration_list.html:91
 #: news/models.py:206
 msgid "Name"
@@ -857,7 +857,7 @@ msgstr "Komité"
 
 #: internal/templates/internal/member_list.html:100
 #: internal/templates/internal/member_list.html:267
-#: make_queue/models/course.py:29 make_queue/models/machine.py:108
+#: make_queue/models/course.py:29 make_queue/models/machine.py:134
 #: make_queue/templates/make_queue/course/course_registration_list.html:95
 #: make_queue/templates/make_queue/machine_detail.html:59
 msgid "Status"
@@ -870,16 +870,19 @@ msgstr "Ble med"
 
 #: internal/templates/internal/member_list.html:134
 #: internal/templatetags/member.py:43
+#: make_queue/templates/make_queue/course/course_registration_edit.html:102
+#: make_queue/templates/make_queue/course/course_registration_list.html:146
 msgid "Yes"
 msgstr "Ja"
 
 #: internal/templates/internal/member_list.html:136
 #: internal/templatetags/member.py:43
+#: make_queue/templates/make_queue/course/course_registration_list.html:148
 msgid "No"
 msgstr "Nei"
 
 #: internal/templates/internal/member_list.html:182
-#: make_queue/templates/make_queue/course/course_registration_list.html:170
+#: make_queue/templates/make_queue/course/course_registration_list.html:180
 msgid "Displaying"
 msgstr "Viser"
 
@@ -943,40 +946,48 @@ msgstr "Internhemmeligheter"
 msgid "Last modified"
 msgstr "Sist endret"
 
-#: internal/templates/internal/secret_list.html:47
+#: internal/templates/internal/secret_list.html:48
 msgid "Click to show - only if you're alone!"
 msgstr "Klikk for å vise - bare hvis du er alene!"
 
-#: make_queue/admin.py:23
+#: internal/templates/internal/secret_list.html:53
+msgid "Close - someone's behind me!"
+msgstr "Skjul - noen er bak meg!"
+
+#: make_queue/admin.py:22
 #: make_queue/templates/make_queue/machine_list.html:7
 #: make_queue/templates/make_queue/machine_list.html:17
 #: make_queue/templates/make_queue/reservation_list.html:43
 msgid "Machines"
 msgstr "Maskiner"
 
-#: make_queue/admin.py:41 make_queue/models/machine.py:106
+#: make_queue/admin.py:41 make_queue/models/machine.py:132
 #: make_queue/templates/make_queue/machine_detail.html:38
 #: news/models.py:149
 msgid "Location"
 msgstr "Sted"
 
-#: make_queue/forms.py:118 make_queue/forms.py:162
+#: make_queue/admin.py:48 make_queue/models/machine.py:122
+msgid "stream name"
+msgstr "videostrømnavn"
+
+#: make_queue/forms.py:119 make_queue/forms.py:163
 #: make_queue/templates/make_queue/quota/quota_panel.html:57
 msgid "Select user"
 msgstr "Velg bruker"
 
-#: make_queue/forms.py:124 make_queue/forms.py:201
-#: make_queue/forms.py:211 make_queue/models/machine.py:104
+#: make_queue/forms.py:125 make_queue/forms.py:202
+#: make_queue/forms.py:212 make_queue/models/machine.py:130
 #: make_queue/models/reservation.py:31 make_queue/models/reservation.py:245
 #: make_queue/templates/make_queue/machine_detail.html:45
 msgid "Machine type"
 msgstr "Maskintype"
 
-#: make_queue/forms.py:125 make_queue/forms.py:212
+#: make_queue/forms.py:126 make_queue/forms.py:213
 msgid "Select machine type"
 msgstr "Velg maskintype"
 
-#: make_queue/forms.py:175
+#: make_queue/forms.py:176
 msgid ""
 "The card number was detected to be the phone number of Building security at "
 "NTNU. Please enter a valid card number."
@@ -984,13 +995,17 @@ msgstr ""
 "Kortnummeret ble oppdaget å være telefonnummeret til Vakt og service på "
 "NTNU. Vennligst fyll inn et gyldig kortnummer."
 
-#: make_queue/forms.py:204
+#: make_queue/forms.py:205
 msgid "Duration in hours"
 msgstr "Varighet i timer"
 
-#: make_queue/forms.py:205
+#: make_queue/forms.py:206
 msgid "Duration in minutes"
 msgstr "Varighet i minutter"
+
+#: make_queue/forms.py:251
+msgid "Stream name cannot be empty when the machine type supports streaming."
+msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
 
 #: make_queue/models/course.py:15
 msgid "Sent to Building security"
@@ -1013,68 +1028,80 @@ msgstr "Kursdato"
 msgid "Full name"
 msgstr "Fullt navn"
 
-#: make_queue/models/course.py:35
+#: make_queue/models/course.py:30
+msgid "advanced course"
+msgstr "avansert kurs"
+
+#: make_queue/models/course.py:36
 msgid "3D printer course"
 msgstr "3D-printerkurs"
 
-#: make_queue/models/course.py:36
+#: make_queue/models/course.py:37
 msgid "3D printer courses"
 msgstr "3D-printerkurs"
 
-#: make_queue/models/machine.py:32
+#: make_queue/models/machine.py:33
 msgid "Only has to be logged in"
 msgstr "Trenger bare å være innlogget"
 
-#: make_queue/models/machine.py:33
+#: make_queue/models/machine.py:34
 msgid "Taken the 3D printer course"
 msgstr "Tatt 3D-printerkurset"
 
-#: make_queue/models/machine.py:41
+#: make_queue/models/machine.py:35
+msgid "Taken the advanced 3D printer course"
+msgstr "Tatt det avanserte 3D-printerkurset"
+
+#: make_queue/models/machine.py:43
 msgid "Usage requirement"
 msgstr "Brukskrav"
 
-#: make_queue/models/machine.py:45 make_queue/models/machine.py:112
+#: make_queue/models/machine.py:47 make_queue/models/machine.py:138
 #: makerspace/models.py:25
 msgid "Priority"
 msgstr "Prioritet"
 
-#: make_queue/models/machine.py:46
+#: make_queue/models/machine.py:48
 msgid "The machine types are sorted ascending by this value."
 msgstr "Maskintypene sorteres stigende på denne verdien."
 
-#: make_queue/models/machine.py:90
+#: make_queue/models/machine.py:108
 msgid "Reserved"
 msgstr "Reservert"
 
-#: make_queue/models/machine.py:91
+#: make_queue/models/machine.py:109
 msgid "Available"
 msgstr "Ledig"
 
-#: make_queue/models/machine.py:92
+#: make_queue/models/machine.py:110
 msgid "In use"
 msgstr "I bruk"
 
-#: make_queue/models/machine.py:93
+#: make_queue/models/machine.py:111
 msgid "Out of order"
 msgstr "I ustand"
 
-#: make_queue/models/machine.py:94
+#: make_queue/models/machine.py:112
 msgid "Maintenance"
 msgstr "Vedlikehold"
 
-#: make_queue/models/machine.py:99
+#: make_queue/models/machine.py:123
+msgid "Used for connecting to the machine's stream."
+msgstr "Brukes til å koble til maskinens videostrøm."
+
+#: make_queue/models/machine.py:125
 msgid "Machine model"
 msgstr "Maskinmodell"
 
-#: make_queue/models/machine.py:107 news/models.py:150
+#: make_queue/models/machine.py:133 news/models.py:150
 msgid "Location URL"
 msgstr "Sted-URL"
 
-#: make_queue/models/machine.py:113
+#: make_queue/models/machine.py:139
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 
-#: make_queue/models/machine.py:166
+#: make_queue/models/machine.py:192
 #, python-brace-format
 msgid "Usage rules for {machine_type}"
 msgstr "Bruksregler for {machine_type}"
@@ -1269,37 +1296,41 @@ msgstr "Veksle visning av ikke-valgte brukere"
 msgid "Date"
 msgstr "Dato"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:115
+#: make_queue/templates/make_queue/course/course_registration_list.html:96
+msgid "Advanced"
+msgstr "Avansert"
+
+#: make_queue/templates/make_queue/course/course_registration_list.html:118
 #, python-format
 msgid "Are you sure you want to delete the course registration of %(user)s?"
 msgstr "Er du sikker på at du vil slette kursregistreringen til %(user)s?"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:122
+#: make_queue/templates/make_queue/course/course_registration_list.html:125
 msgid "Connected to user"
 msgstr "Koblet til bruker"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:162
+#: make_queue/templates/make_queue/course/course_registration_list.html:172
 msgid "Filter matches"
 msgstr "Filter matcher"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:166
-#: make_queue/templates/make_queue/course/course_registration_list.html:174
+#: make_queue/templates/make_queue/course/course_registration_list.html:176
+#: make_queue/templates/make_queue/course/course_registration_list.html:184
 msgid "registrations"
 msgstr "registreringer"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:182
+#: make_queue/templates/make_queue/course/course_registration_list.html:192
 msgid "Set status of users to"
 msgstr "Sett status for brukere til"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:191
+#: make_queue/templates/make_queue/course/course_registration_list.html:201
 msgid "You are changing the status for the following users"
 msgstr "Du vil endre status for følgende brukere"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:193
+#: make_queue/templates/make_queue/course/course_registration_list.html:203
 msgid "Are you sure you want to do this?"
 msgstr "Er du sikker på at du vil gjøre dette?"
 
-#: make_queue/templates/make_queue/course/course_registration_list.html:198
+#: make_queue/templates/make_queue/course/course_registration_list.html:208
 msgid "Set status"
 msgstr "Sett status"
 
@@ -1316,11 +1347,11 @@ msgstr "Ledige reservasjonstidspunkter"
 msgid "h"
 msgstr "t"
 
-#: make_queue/templates/make_queue/machine/machine_create.html:6
+#: make_queue/templates/make_queue/machine/machine_create.html:12
 msgid "Create machine"
 msgstr "Legg til maskin"
 
-#: make_queue/templates/make_queue/machine/machine_edit.html:13
+#: make_queue/templates/make_queue/machine/machine_edit.html:14
 msgid "Edit machine"
 msgstr "Rediger maskin"
 
@@ -1683,6 +1714,14 @@ msgstr "Maskinen har status «{status}»."
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall fremtidige reservasjoner."
 
+#: make_queue/validators.py:10
+msgid ""
+"This can only consist of lowercase English letters, numbers, hyphens or "
+"underscores."
+msgstr ""
+"Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
+"understreker."
+
 #: make_queue/views/reservation/reservation.py:39
 #, python-brace-format
 msgid "Reservations can only be made {num_days} day ahead of time"
@@ -1750,7 +1789,7 @@ msgstr "Kan ikke sette reservasjonen som ferdig når den ikke har startet ennå.
 msgid "Cannot mark reservation as finished when it has already ended."
 msgstr "Kan ikke sette reservasjonen som ferdig når den allerede er over."
 
-#: makerspace/admin.py:17
+#: makerspace/admin.py:18
 #, python-brace-format
 msgid "Image of {equipment}."
 msgstr "Bilde av {equipment}."
@@ -2226,12 +2265,12 @@ msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
 #: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77
+#: news/templates/news/event_list.html:77 web/templates/web/index.html:46
 msgid "dates"
 msgstr "datoer"
 
 #: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77
+#: news/templates/news/event_list.html:77 web/templates/web/index.html:46
 msgid "date"
 msgstr "dato"
 
@@ -2514,10 +2553,14 @@ msgstr "Internsider"
 msgid "Log in"
 msgstr "Logg inn"
 
-#: web/widgets.py:30 web/widgets.py:40
+#: web/templates/web/index.html:78
+msgid "More events"
+msgstr "Flere arrangementer"
+
+#: web/widgets.py:70 web/widgets.py:80
 msgid "Choose value"
 msgstr "Velg verdi"
 
-#: web/widgets.py:64
+#: web/widgets.py:104
 msgid "Search places"
 msgstr "Søk etter steder"
