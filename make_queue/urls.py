@@ -80,7 +80,7 @@ urlpatterns = [
     path("<Reservation:reservation>/edit/", login_required(reservation.reservation.EditReservationView.as_view()), name='edit_reservation'),
     path("<int:pk>/finish/", login_required(reservation.reservation.MarkReservationFinishedView.as_view()), name='mark_reservation_finished'),
     path("<int:pk>/", login_required(reservation.reservation.DeleteReservationView.as_view()), name='delete_reservation'),
-    path("me/", login_required(reservation.reservation.MyReservationsListView.as_view()), name='my_reservations_list'),
+    path("me/", reservation.reservation.MyReservationsListView.as_view(), name='my_reservations_list'),
     path("admin/",
          permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.MAKEReservationsListView.as_view()),
          name='MAKE_reservations_list'),

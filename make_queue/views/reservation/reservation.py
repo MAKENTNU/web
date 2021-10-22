@@ -2,7 +2,7 @@ from abc import ABC
 from datetime import timedelta
 from math import ceil
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
@@ -274,7 +274,7 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
         return HttpResponse(status=200)
 
 
-class MyReservationsListView(ListView):
+class MyReservationsListView(LoginRequiredMixin, ListView):
     """View for seeing the user's reservations."""
     model = Reservation
     template_name = 'make_queue/reservation_list.html'
@@ -287,7 +287,7 @@ class MyReservationsListView(ListView):
         return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
 
 
-class FindFreeSlotView(FormView):
+class FindFreeSlotView(LoginRequiredMixin, FormView):
     """
     View to find free time slots for reservations.
     """

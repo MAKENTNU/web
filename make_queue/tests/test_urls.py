@@ -138,7 +138,7 @@ class UrlTests(MakeQueueTestBase, TestCase):
             ],
             Get(reverse('my_reservations_list'), public=False),
             Get(reverse('MAKE_reservations_list'), public=False),
-            Get(reverse('find_free_slot'), public=True),
+            Get(reverse('find_free_slot'), public=False),
 
             # rules_urlpatterns
             Get(reverse('reservation_rule_list', kwargs={'machine_type': self.printer_machine_type}), public=True),
