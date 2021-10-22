@@ -659,8 +659,8 @@ Use:
 
 
 # Code review guideline: Code smells
-These code smells are meant as guidelines,
-and only provide hints that might enhance developers' ability to notice whether some code should be changed or not;
+This list is meant as a guideline,
+and only provides hints that might enhance developers' ability to notice whether some code should be changed or not;
 there do exist scenarios where *not* getting rid of a code smell would be the most appropriate.
 
 ## Table of contents
