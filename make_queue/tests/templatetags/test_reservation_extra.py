@@ -15,7 +15,7 @@ from ...templatetags.reservation_extra import (
 )
 
 
-class ReservationExtraTestCases(TestCase):
+class TestReservationExtra(TestCase):
 
     @mock.patch('django.utils.timezone.now')
     def test_calendar_reservation_url(self, now_mock):

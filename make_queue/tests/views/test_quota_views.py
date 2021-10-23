@@ -9,7 +9,7 @@ from ...models.reservation import Quota
 from ...views.admin.quota import QuotaPanelView
 
 
-class TestGetQuotaView(TestCase):
+class TestUserQuotaListView(TestCase):
 
     def test_get_user_quota(self):
         user = User.objects.create_user("test")

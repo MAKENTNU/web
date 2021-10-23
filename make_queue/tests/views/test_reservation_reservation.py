@@ -1,3 +1,4 @@
+from abc import ABC
 from datetime import timedelta
 from http import HTTPStatus
 from unittest.mock import patch
@@ -21,7 +22,7 @@ from ...views.admin.reservation import MAKEReservationsListView
 from ...views.reservation.reservation import CreateOrEditReservationView, CreateReservationView, EditReservationView
 
 
-class BaseReservationCreateOrChangeViewTest(TestCase):
+class CreateOrEditReservationViewTestBase(TestCase, ABC):
 
     def setUp(self):
         Reservation.RESERVATION_FUTURE_LIMIT_DAYS = 7
@@ -54,7 +55,7 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
         }
 
 
-class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
+class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
 
     def test_get_error_message_non_event(self):
         view = self.get_view()
@@ -207,7 +208,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(valid_form_calls["calls"], 1)
 
 
-class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
+class TestCreateReservationView(CreateOrEditReservationViewTestBase):
 
     def get_view(self):
         view = CreateReservationView()
@@ -253,7 +254,7 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
-class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
+class TestEditReservationView(CreateOrEditReservationViewTestBase):
 
     def get_view(self):
         view = EditReservationView()
@@ -363,7 +364,7 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(Reservation.objects.first().special_text, "Test2")
 
 
-class ReservationAdminViewTest(TestCase):
+class TestMAKEReservationsListView(TestCase):
 
     def test_get_MAKE_reservations(self):
         user = User.objects.create_user("test")
@@ -400,7 +401,7 @@ class ReservationAdminViewTest(TestCase):
         self.assertSetEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
 
 
-class MarkReservationFinishedTest(TestCase):
+class TestMarkReservationFinishedView(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("test")

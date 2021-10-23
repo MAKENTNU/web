@@ -11,7 +11,7 @@ from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
 
 
-class DeleteReservationViewTestCase(TestCase):
+class TestDeleteReservationView(TestCase):
 
     def setUp(self):
         password = "weak_pass"

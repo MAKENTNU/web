@@ -14,6 +14,7 @@ from web.views import IndexView
 
 
 class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
+
     def setUp(self):
         self.path = reverse('front_page')
 
@@ -151,6 +152,7 @@ class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
 
 
 class AdminPanelViewTests(TestCase):
+
     def setUp(self):
         self.path = reverse('adminpanel')
 

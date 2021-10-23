@@ -16,7 +16,7 @@ from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
 
 
-class GeneralReservationTestCase(TestCase, ABC):
+class ReservationTestBase(TestCase, ABC):
 
     def init_objs(self, machine_type: MachineType):
         self.machine_type = machine_type
@@ -61,7 +61,7 @@ class GeneralReservationTestCase(TestCase, ABC):
                            end_time=timezone.now() + relative_end_time, special=special, special_text=special_text)
 
 
-class GeneralReservationTestCases(GeneralReservationTestCase):
+class TestReservation(ReservationTestBase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
@@ -346,7 +346,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.reset_reservation_future_limit_days()
 
 
-class AdvancedMachineReservationTestCases(GeneralReservationTestCase):
+class TestAdvancedMachineReservation(ReservationTestBase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default

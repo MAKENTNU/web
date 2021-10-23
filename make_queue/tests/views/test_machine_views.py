@@ -12,7 +12,7 @@ from ...models.machine import Machine, MachineType
 from ...views.reservation.machine import MachineListView
 
 
-class MachineListViewTest(TestCase):
+class TestMachineListView(TestCase):
 
     def test_no_machines(self):
         context_data = MachineListView.as_view()(request_with_user(None)).context_data
@@ -81,7 +81,7 @@ class MachineListViewTest(TestCase):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
 
 
-class CreateAndEditMachineViewTest(TestCase):
+class TestCreateAndEditMachineView(TestCase):
 
     def setUp(self):
         username = "TEST_USER"
