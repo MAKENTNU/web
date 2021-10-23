@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 640 480"
+   version="1.1"
+   id="svg4588"
+   sodipodi:docname="no_camera.svg"
+   width="640"
+   height="480"
+   inkscape:version="1.0.2-2 (e86c870879, 2021-01-15)"
+   inkscape:export-filename="C:\Users\Markus\workspace\makentnu\no_stream_grey_cross.png"
+   inkscape:export-xdpi="960"
+   inkscape:export-ydpi="960">
+  <metadata
+     id="metadata4592">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>MAKE NTNU logo</dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1500"
+     inkscape:window-height="938"
+     id="namedview4590"
+     showgrid="false"
+     units="px"
+     width="640px"
+     fit-margin-top="2"
+     fit-margin-left="2"
+     fit-margin-right="2"
+     fit-margin-bottom="2"
+     inkscape:zoom="0.98422685"
+     inkscape:cx="382.62077"
+     inkscape:cy="341.58154"
+     inkscape:window-x="-6"
+     inkscape:window-y="-6"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4588"
+     inkscape:document-rotation="0" />
+  <defs
+     id="defs4558">
+    <style
+       id="style4556">.a{fill:#4a4b4c;}.b{fill:#f8c811;}</style>
+  </defs>
+  <title
+     id="title4560">MAKE NTNU logo</title>
+  <g
+     inkscape:groupmode="layer"
+     id="layer1"
+     inkscape:label="Background"
+     transform="translate(21.266984,154.53796)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Crane"
+     transform="translate(21.266984,154.53796)" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Camera">
+    <g
+       id="g927"
+       transform="translate(3.7775976)">
+      <rect
+         style="fill:#f8c811;fill-opacity:1;stroke:none;stroke-width:4.40315;stroke-opacity:0.153226"
+         id="rect90"
+         width="301.7597"
+         height="285.5033"
+         x="210.31738"
+         y="97.248352"
+         ry="32.477631" />
+      <path
+         sodipodi:type="star"
+         style="fill:#f8c811;fill-opacity:1;stroke:none;stroke-width:4.40315;stroke-opacity:0.153226"
+         id="path921"
+         sodipodi:sides="3"
+         sodipodi:cx="192.02892"
+         sodipodi:cy="238.54092"
+         sodipodi:r1="120.9455"
+         sodipodi:r2="60.472752"
+         sodipodi:arg1="-0.025204745"
+         sodipodi:arg2="1.0219928"
+         inkscape:flatsided="true"
+         inkscape:rounded="0.08"
+         inkscape:randomized="0"
+         d="m 312.936,235.49285 c 0.42236,16.75337 -164.00089,117.29164 -178.72092,109.28072 -14.72002,-8.01092 -19.5771,-200.67476 -5.27942,-209.41722 14.29767,-8.74246 183.57799,83.38312 184.00034,100.1365 z"
+         inkscape:transform-center-x="-24.623351"
+         inkscape:transform-center-y="1.4590652" />
+    </g>
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Cross">
+    <rect
+       style="fill:#4a4b4c;fill-opacity:1;stroke:none;stroke-width:9.22253;stroke-opacity:0.153226"
+       id="rect957"
+       width="39.369774"
+       height="527.76782"
+       x="36.883652"
+       y="132.09589"
+       ry="25.537153"
+       transform="rotate(-45)" />
+    <rect
+       style="fill:#4a4b4c;fill-opacity:1;stroke:none;stroke-width:9.22253;stroke-opacity:0.153226"
+       id="rect957-3"
+       width="39.369774"
+       height="527.76782"
+       x="376.29492"
+       y="-320.45245"
+       ry="25.537153"
+       transform="rotate(45)" />
+  </g>
+</svg>

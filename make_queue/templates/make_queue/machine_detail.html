@@ -71,7 +71,7 @@
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
                     <img id="{% sanitize_stream_name machine %}" class="ui right floated stream medium image" name="{{ machine.name }}"
-                         src="{% static 'make_queue/img/no_stream.jpg' %}"
+                         src="{% static 'make_queue/img/no_stream.svg' %}"
                          alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
                 </div>
