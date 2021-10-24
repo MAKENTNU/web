@@ -144,6 +144,7 @@ def can_mark_reservation_finished(reservation: Reservation):
 def is_future_reservation(reservation: Reservation):
     return reservation.end_time >= timezone.now()
 
+
 @register.simple_tag
 def get_stream_image(status):
     status_image_dict = {
