@@ -146,15 +146,8 @@ def is_future_reservation(reservation: Reservation):
 
 @register.simple_tag
 def get_stream_image(status):
-
     status_image_dict = {
-        Machine.Status.MAINTENANCE: "maintenance.svg",
-        Machine.Status.OUT_OF_ORDER: "out_of_order.svg",
+        Machine.Status.MAINTENANCE: 'maintenance.svg',
+        Machine.Status.OUT_OF_ORDER: 'out_of_order.svg',
     }
-
-    stream_name = status_image_dict.get(status)
-
-    if stream_name is None:
-        return "no_stream.svg"
-
-    return stream_name
+    return status_image_dict.get(status, 'no_stream.svg')
