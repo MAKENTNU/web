@@ -4,6 +4,8 @@ from unittest import mock
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
+from django.template import Context, Template
+from django.templatetags.static import static
 
 from users.models import User
 from util.locale_utils import parse_datetime_localized
@@ -94,3 +96,62 @@ class ReservationExtraTestCases(TestCase):
         self.assertEqual("false", invert("test"))
         self.assertEqual("true", invert(False))
         self.assertEqual("false", invert(True))
+
+
+class RenderTemplateTestCases(TestCase):
+
+    def render_template(self, string, prefix_string='{% load reservation_extra %}', context=None):
+        template_string = prefix_string + string
+        context = context or {}
+        context = Context(context)
+        return Template(template_string).render(context)
+
+    def setUp(self):
+        self.printer_machine_type = MachineType.objects.get(pk=1)
+        self.render_string = (
+            '{% get_stream_image machine.status as stream_image_path %}'
+            '{{ stream_image_path }}'
+        )
+
+    def assert_static_path_with_machine_status(self, static_path, machine_status):
+        machine = Machine.objects.create(
+            name="b",
+            machine_model="Ultimaker 2+",
+            machine_type=self.printer_machine_type,
+            status=machine_status
+        )
+        rendered = self.render_template(
+            self.render_string,
+            context={'machine': machine}
+        )
+        self.assertInHTML(static_path, rendered)
+
+    def test_get_stream_image_maintenance_machine_returns_maintenance_image(self):
+        self.assert_static_path_with_machine_status(
+            static('make_queue/img/maintenance.svg'),
+            Machine.Status.MAINTENANCE
+        )
+
+    def test_get_stream_image_available_machine_returns_no_stream_image(self):
+        self.assert_static_path_with_machine_status(
+            static('make_queue/img/no_stream.svg'),
+            Machine.Status.AVAILABLE
+        )
+
+    def test_get_stream_image_in_use_machine_returns_no_stream_image(self):
+        self.assert_static_path_with_machine_status(
+            static('make_queue/img/no_stream.svg'),
+            Machine.Status.IN_USE
+        )
+
+    def test_get_stream_image_reserved_returns_no_stream_image(self):
+        self.assert_static_path_with_machine_status(
+            static('make_queue/img/no_stream.svg'),
+            Machine.Status.RESERVED
+        )
+
+    def test_get_stream_image_out_of_order_machine_returns_out_of_order_image(self):
+        self.assert_static_path_with_machine_status(
+            static('make_queue/img/out_of_order.svg'),
+            Machine.Status.OUT_OF_ORDER
+        )
