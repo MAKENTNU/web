@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
 {% load static %}
+{% load datetime_tags %}
 
 
 {% block head %}
@@ -102,7 +103,7 @@
                     data-name="{{ registration.name }}"
                     data-username="{{ registration.username }}"
                     data-card-number="{{ registration.card_number|default:"" }}"
-                    data-date="{{ registration.date|date:"Y-m-d" }}"
+                    data-date="{{ registration.date|iso_date }}"
                     data-status="{{ registration.status }}"
                     data-advanced-course="{{ registration.advanced_course }}"
                 >
@@ -136,7 +137,7 @@
                     {% else %}
                         <td class="error"></td>
                     {% endif %}
-                    <td>{{ registration.date|date:"Y-m-d" }}</td>
+                    <td>{{ registration.date|iso_date }}</td>
                     <td class="{% if registration.status != "access" %}warning{% endif %}">
                         {{ registration.get_status_display }}
                     </td>

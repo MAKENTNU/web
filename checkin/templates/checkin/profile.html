@@ -33,7 +33,7 @@
                 {% endif %}
             </div>
             <div class="ui container">
-                <form id="image-form" class="ui form" action="{% url "profile_picture" %}" method="POST"
+                <form id="image-form" class="ui form" method="POST" action="{% url "profile_picture" %}"
                       enctype="multipart/form-data">
                     {% csrf_token %}
                     <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden/>
@@ -76,7 +76,7 @@
             <br/>
 
             <div class="container">
-                <form class="ui form" action="" method="POST">
+                <form class="ui form" method="POST">
                     {% csrf_token %}
                     <input id="rating-input" type="number" name="rating" value="1" hidden/>
                     <div class="inline fields">
@@ -126,14 +126,14 @@
     <script>
         $(".ui.rating").rating();
         $(".ui.dropdown").dropdown();
-        $(".rating.skill-lvl").rating('disable');
+        $(".rating.skill-lvl").rating("disable");
 
         $("#star-rating").click(function () {
-            const rating = $(this).rating('get rating');
+            const rating = $(this).rating("get rating");
             const $ratingInput = $("#rating-input");
             if (rating === $ratingInput.val()) {
                 $ratingInput.val(0);
-                $(this).rating('set rating', 0);
+                $(this).rating("set rating", 0);
             } else {
                 $ratingInput.val(rating);
             }
@@ -143,10 +143,10 @@
             registerProfilePost($(this));
         });
 
-        function registerProfilePost(element) {
+        function registerProfilePost($element) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
                 },
             });
             $.ajax({
@@ -154,23 +154,23 @@
                 url: '/checkin/register/profile/',
                 data: {},
                 success: function (data) {
-                    if (data['scan_exists']) {
-                        if (data['scan_is_recent']) {
-                            element.removeClass('red');
-                            element.removeAttr('data-tooltip');
-                            element.removeAttr('data-position');
-                            element.addClass('green');
-                            element.addClass('disabled');
-                            element.html('{% trans "Registered" %}');
+                    if (data["scan_exists"]) {
+                        if (data["scan_is_recent"]) {
+                            $element.removeClass("red");
+                            $element.removeAttr("data-tooltip");
+                            $element.removeAttr("data-position");
+                            $element.addClass("green");
+                            $element.addClass("disabled");
+                            $element.html('{% trans "Registered" %}');
                         } else {
-                            element.addClass('red');
-                            element.attr('data-tooltip', '{% trans "Scan card again!" %}');
-                            element.attr('data-position', 'right center');
+                            $element.addClass("red");
+                            $element.attr("data-tooltip", '{% trans "Scan card again!" %}');
+                            $element.attr("data-position", "right center");
                         }
                     } else {
-                        element.addClass('red');
-                        element.attr('data-tooltip', '{% trans "Scan card" %}');
-                        element.attr('data-position', 'right center');
+                        $element.addClass("red");
+                        $element.attr("data-tooltip", '{% trans "Scan card" %}');
+                        $element.attr("data-position", "right center");
                     }
                     $(".message.negative").fadeOut();
                 },

@@ -36,7 +36,8 @@ class CreateQuotaView(PermissionRequiredMixin, CreateView):
     def get_success_url(self):
         if self.object.all:
             return reverse("quota_panel")
-        return reverse("quota_panel", kwargs={"user": self.object.user})
+        else:
+            return reverse("quota_panel", kwargs={"user": self.object.user})
 
 
 class EditQuotaView(PermissionRequiredMixin, UpdateView):
@@ -48,7 +49,8 @@ class EditQuotaView(PermissionRequiredMixin, UpdateView):
     def get_success_url(self):
         if self.object.all:
             return reverse("quota_panel")
-        return reverse("quota_panel", kwargs={"user": self.object.user})
+        else:
+            return reverse("quota_panel", kwargs={"user": self.object.user})
 
 
 class DeleteQuotaView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -58,4 +60,5 @@ class DeleteQuotaView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
     def get_success_url(self):
         if self.object.all:
             return reverse("quota_panel")
-        return reverse("quota_panel", kwargs={"user": self.object.user})
+        else:
+            return reverse("quota_panel", kwargs={"user": self.object.user})

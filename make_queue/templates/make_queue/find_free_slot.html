@@ -1,5 +1,6 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
+{% load datetime_tags %}
 {% load reservation_extra %}
 
 
@@ -15,7 +16,7 @@
 
     <div class="ui container">
         <h1>{% trans "Find free reservation slots" %}</h1>
-        <form class="ui form" action="" method="POST">
+        <form class="ui form" method="POST">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
@@ -51,7 +52,7 @@
                                 {{ slot.machine.name }}
                             </div>
                             <div class="description">
-                                {{ slot.start_time|date:"d F H:i" }} - {{ slot.end_time|date:"d F H:i" }}
+                                {{ slot.start_time|long_datetime_no_year }} &ndash; {{ slot.end_time|long_datetime_no_year }}
                             </div>
                         </div>
                     </a>

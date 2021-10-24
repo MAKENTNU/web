@@ -2,9 +2,11 @@ from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
+from django_hosts import reverse
 
 from news.models import Article
 from users.models import User
+from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 from .admin import InheritanceGroupAdmin
 from .models import Committee, InheritanceGroup
 
@@ -155,19 +157,19 @@ class PermGroupTestCase(TestCase):
         self.assertTrue(user2.has_perm(perm1_str))
         self.assertTrue(user2.has_perm(perm2_str))
 
-    def test_get_sub_group(self):
+    def test_get_all_children(self):
         org = InheritanceGroup.objects.get(name='Org')
         arr = InheritanceGroup.objects.get(name='Arrangement')
         dev = InheritanceGroup.objects.get(name='Dev')
         web = InheritanceGroup.objects.create(name='Web')
         web.parents.add(dev)
 
-        self.assertIn(dev, org.get_sub_groups())
-        self.assertIn(arr, org.get_sub_groups())
-        self.assertIn(web, org.get_sub_groups())
-        self.assertIn(web, dev.get_sub_groups())
-        self.assertNotIn(arr, dev.get_sub_groups())
-        self.assertNotIn(dev, arr.get_sub_groups())
+        self.assertIn(dev, org.get_all_children())
+        self.assertIn(arr, org.get_all_children())
+        self.assertIn(web, org.get_all_children())
+        self.assertIn(web, dev.get_all_children())
+        self.assertNotIn(arr, dev.get_all_children())
+        self.assertNotIn(dev, arr.get_all_children())
 
     def test_get_all_parents(self):
         org = InheritanceGroup.objects.get(name='Org')
@@ -270,3 +272,25 @@ class CommitteeTestCase(TestCase):
         )
         self.assertEqual(dev.name, 'Dev')
         self.assertEqual(str(dev), 'Dev')
+
+
+class UrlTests(TestCase):
+
+    def setUp(self):
+        self.group1 = InheritanceGroup.objects.create(name="Group 1")
+        self.committee1 = Committee.objects.create(
+            group=self.group1,
+            description="Lorem ipsum dolor sit amet",
+            email="committee1@makentnu.no",
+            image=MOCK_JPG_FILE,
+            clickbait="Wow!",
+        )
+
+    def test_all_get_request_paths_succeed(self):
+        path_predicates = [
+            Get(reverse('committee_list'), public=True),
+            Get(reverse('committee_detail', kwargs={'pk': self.committee1.pk}), public=True),
+            Get(reverse('committee_edit', kwargs={'pk': self.committee1.pk}), public=False),
+            Get(reverse('committee_admin'), public=False),
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates)

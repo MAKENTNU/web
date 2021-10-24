@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
+{% load datetime_tags %}
 {% load semantic_ui_calendar_extra %}
 {% load reservation_extra %}
 
@@ -76,7 +77,7 @@
                             <i class="calendar icon"></i>
                             <input name="start_time" type="text" placeholder="{% trans "Start time" %}"
                                    {# Do not place the if-else on separate lines, as it introduces whitespace #}
-                                   value="{% if start_time %}{{ start_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date %}{% endif %}"
+                                   value="{% if start_time %}{{ start_time|iso_datetime }}{% else %}{% set_current_date %}{% endif %}"
                             />
                         </div>
                     </div>
@@ -88,7 +89,7 @@
                             <i class="calendar icon"></i>
                             <input name="end_time" type="text" placeholder="{% trans "End time" %}"
                                    {# Do not place the if-else on separate lines, as it introduces whitespace #}
-                                   value="{% if end_time %}{{ end_time|date:"Y-m-d H:i" }}{% else %}{% set_current_date 2 %}{% endif %}"
+                                   value="{% if end_time %}{{ end_time|iso_datetime }}{% else %}{% set_current_date 2 %}{% endif %}"
                             />
                         </div>
                     </div>
@@ -133,9 +134,9 @@
                                     <div class="item" data-value="{{ event_timeplace.pk }}">
                                         <b>{{ event_timeplace.event.title }}</b><br/>
                                         {% if event_timeplace.start_time.date == event_timeplace.end_time.date %}
-                                            {{ event_timeplace.start_time|date:"d/m/Y - H:i" }}
+                                            {{ event_timeplace.start_time|short_datetime }}
                                         {% else %}
-                                            {{ event_timeplace.start_time|date:"d/m/Y" }} - {{ event_timeplace.end_time|date:"d/m/Y" }}
+                                            {{ event_timeplace.start_time|short_date }} &ndash; {{ event_timeplace.end_time|short_date }}
                                         {% endif %}
                                     </div>
                                 {% endfor %}

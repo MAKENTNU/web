@@ -1,8 +1,15 @@
 import functools
-from typing import Any, Dict, Tuple
+from abc import ABC
+from http import HTTPStatus
+from typing import Any, Dict, List, Tuple
+from urllib.parse import urlparse
 
+from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test import Client, SimpleTestCase, TestCase
+from django.utils import translation
 
+from users.models import User
 
 # A very small JPEG image without any content; used for mocking a valid image while testing
 MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
@@ -42,3 +49,80 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
         return wrapper
 
     return decorator
+
+
+class PathPredicate(ABC):
+    LANGUAGE_PREFIXES = ["", "/en"]
+
+    def __init__(self, path: str, *, public: bool, translated=True, success_code=200):
+        """
+        :param path: the path to be tested (e.g. from ``reverse()``)
+        :param public: whether a user does not have to be authenticated or not to successfully request the path
+        :param translated: whether the path has a translated version (typically prefixed with e.g. ``/en``)
+        :param success_code: the HTTP status code of a response that indicates that the request was successful.
+                             If the code provided is a redirect code (3xx), the redirect chain will be followed until a status of 200 is encountered.
+        """
+        if translated:
+            self.paths = []
+            for prefix in self.LANGUAGE_PREFIXES:
+                url_obj = urlparse(path)
+                url_obj = url_obj._replace(path=f"{prefix}{url_obj.path}")
+                self.paths.append(url_obj.geturl())
+        else:
+            self.paths = [path]
+
+        self.public = public
+        self.translated = translated
+        self.success_code = success_code
+
+    def __repr__(self):
+        return "\n".join(self.paths)
+
+    def do_request_assertion(self, path: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+        raise NotImplementedError
+
+
+class Get(PathPredicate):
+
+    def do_request_assertion(self, path: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+        status_code = client.get(path).status_code
+
+        if 300 <= self.success_code < 400:
+            test_case.assertEqual(status_code, self.success_code)
+            status_code = client.get(path, follow=True).status_code
+
+        if self.public or is_superuser:
+            test_case.assertEqual(status_code, HTTPStatus.OK)
+        else:
+            test_case.assertGreaterEqual(status_code, 300)
+
+
+def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List[PathPredicate], subdomain=''):
+    previous_language = translation.get_language()
+
+    password = "1234"
+    superuser = User.objects.create_user("superuser", "admin@makentnu.no", password,
+                                         is_superuser=True, is_staff=True)
+
+    server_name = f'{subdomain}.testserver' if subdomain else 'testserver'  # 'testserver' is Django's default server name
+    superuser_client = Client(SERVER_NAME=server_name)
+    superuser_client.login(username=superuser.username, password=password)
+    anon_client = Client(SERVER_NAME=server_name)
+
+    for predicate in path_predicates:
+        for path in predicate.paths:
+            with self.subTest(path=path):
+                predicate.do_request_assertion(path, anon_client, False, self)
+                predicate.do_request_assertion(path, superuser_client, True, self)
+
+    # Reactivate the previously set language, as requests to translated URLs change the active language
+    translation.activate(previous_language)
+
+
+class PermissionsTestCase(TestCase):
+
+    @staticmethod
+    def add_permissions(user: User, *codenames: str):
+        for codename in codenames:
+            permission = Permission.objects.get(codename=codename)
+            user.user_permissions.add(permission)

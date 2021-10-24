@@ -1,5 +1,8 @@
+from datetime import timedelta
+
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from django.utils.datetime_safe import datetime
 
 from ..locale_utils import (
@@ -10,12 +13,10 @@ from ..locale_utils import (
 class WeekUtilTest(TestCase):
 
     def test_year_and_week_to_monday(self):
-        date = datetime(2017, 12, 18)
-        self.assertEqual(date, year_and_week_to_monday(2017, 51))
+        self.assertEqual(year_and_week_to_monday(2017, 51), parse_datetime("2017-12-18 00:00"))
 
     def test_year_and_week_to_monday_start_of_year(self):
-        date = datetime(2018, 12, 31)
-        self.assertEqual(date, year_and_week_to_monday(2019, 1))
+        self.assertEqual(year_and_week_to_monday(2019, 1), parse_datetime("2018-12-31 00:00"))
 
     def test_is_valid_week_with_zero_week_number(self):
         self.assertFalse(is_valid_week(2017, 0))
@@ -41,10 +42,10 @@ class WeekUtilTest(TestCase):
 class TimedeltaTest(TestCase):
 
     def test_hour_conversion(self):
-        self.assertEqual(1, timedelta_to_hours(timezone.timedelta(hours=1)))
-        self.assertEqual(1.25, timedelta_to_hours(timezone.timedelta(minutes=75)))
-        self.assertEqual(0.05, timedelta_to_hours(timezone.timedelta(seconds=180)))
-        self.assertEqual(28.25, timedelta_to_hours(timezone.timedelta(days=1, hours=3, minutes=60, seconds=900)))
+        self.assertEqual(1, timedelta_to_hours(timedelta(hours=1)))
+        self.assertEqual(1.25, timedelta_to_hours(timedelta(minutes=75)))
+        self.assertEqual(0.05, timedelta_to_hours(timedelta(seconds=180)))
+        self.assertEqual(28.25, timedelta_to_hours(timedelta(days=1, hours=3, minutes=60, seconds=900)))
 
 
 class LocalizationTest(TestCase):

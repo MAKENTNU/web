@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load datetime_tags %}
 
 
 <div class="item">
@@ -17,7 +18,7 @@
     {% endif %}
     <div class="content">
         <div class="header">
-            {{ timeplace.start_time|date:"d. M Y H:i" }}
+            {{ timeplace.start_time|long_datetime }}
             <span>
                 &nbsp;&nbsp;
                     <i class="ui {% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle explanation-popup"

@@ -10,17 +10,21 @@
 {% block body %}
     <div class="ui container">
         {% if ticket.user == request.user or perms.news.view_eventticket %}
-            <h1>{% trans "Ticket for" %} "{% firstof ticket.timeplace.event.title ticket.event.title %}"</h1>
+            {% firstof ticket.timeplace.event.title ticket.event.title as event_title %}
+            <h1>{% blocktrans with title=event_title %}Ticket for “{{ title }}”{% endblocktrans %}</h1>
             <div>
                 <b>{% trans "Registered to" %}:</b> {{ ticket.name }},
                 {{ ticket.email|urlize }}
             </div>
+            <br/>
 
-            {% include 'news/ticket_card.html' with ticket=ticket %}
+            <div class="ui cards">
+                {% include 'news/ticket_card.html' with ticket=ticket %}
+            </div>
         {% else %}
             <div class="ui error message">
                 {% trans "This ticket is registered to another account. Please" %}
-                <a href="{% url "login" %}?next={% url "ticket" pk=ticket.uuid %}">{% trans "log in" %}</a>
+                <a href="{% url "login" %}?next={% url "ticket" pk=ticket.pk %}">{% trans "log in" %}</a>
                 {% trans "to the correct account to see your ticket." %}
             </div>
         {% endif %}

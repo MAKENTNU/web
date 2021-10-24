@@ -6,7 +6,7 @@
 
 <header id="header">
     <div id="page-search">
-        <form id="search-form" action="{% url "search-pages" %}" method="GET">
+        <form id="search-form" method="GET" action="{% url "search-pages" %}">
             <div class="ui icon input">
                 <input id="query" type="text" name="query" placeholder="{% trans "Search" %}"/>
                 <i id="search" class="search link icon"></i>
