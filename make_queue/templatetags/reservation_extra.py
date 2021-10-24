@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.utils.formats import time_format
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
+from django.templatetags.static import static
 
 from users.models import User
 from util.locale_utils import date_to_local, get_day_name
@@ -148,7 +149,7 @@ def is_future_reservation(reservation: Reservation):
 @register.simple_tag
 def get_stream_image(status):
     status_image_dict = {
-        Machine.Status.MAINTENANCE: 'maintenance.svg',
-        Machine.Status.OUT_OF_ORDER: 'out_of_order.svg',
+        Machine.Status.MAINTENANCE: static('make_queue/img/maintenance.svg'),
+        Machine.Status.OUT_OF_ORDER: static('make_queue/img/out_of_order.svg'),
     }
-    return status_image_dict.get(status, 'no_stream.svg')
+    return status_image_dict.get(status, static('make_queue/img/no_stream.svg'))
