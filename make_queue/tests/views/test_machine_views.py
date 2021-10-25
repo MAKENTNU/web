@@ -83,12 +83,14 @@ class MachineViewTest(TestCase):
         self.assertContains(response, static('make_queue/img/no_stream.svg'))
         self.assertContains(response, static('make_queue/img/maintenance.svg'))
 
-    def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs):
+    def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs) -> Machine:
+        """Creates a machine of type ``machine_type_`` with name '``name_prefix`` ``machine_type_``'"""
             return Machine.objects.create(
                 name=f"{name_prefix} {machine_type_.name}",
                 machine_type=machine_type_,
                 **kwargs,
             )
+
 
 class CreateAndEditMachineViewTest(TestCase):
 
