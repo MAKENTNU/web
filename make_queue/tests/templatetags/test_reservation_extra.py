@@ -1,11 +1,11 @@
 from datetime import timedelta
 from unittest import mock
 
+from django.template import Context, Template
+from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
-from django.template import Context, Template
-from django.templatetags.static import static
 
 from users.models import User
 from util.locale_utils import parse_datetime_localized

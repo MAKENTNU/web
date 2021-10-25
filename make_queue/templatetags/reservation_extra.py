@@ -1,12 +1,12 @@
 from datetime import date, datetime
 
 from django import template
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import time_format
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
-from django.templatetags.static import static
 
 from users.models import User
 from util.locale_utils import date_to_local, get_day_name
