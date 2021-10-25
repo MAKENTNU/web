@@ -1,7 +1,7 @@
 from http import HTTPStatus
-from typing import Union
 
 from django.contrib.auth.models import Permission
+from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
 
@@ -80,9 +80,9 @@ class MachineViewTest(TestCase):
 
         response = self.client.get(reverse('reservation_machines_overview'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertContains(response, 'make_queue/img/out_of_order')
-        self.assertContains(response, 'make_queue/img/no_stream')
-        self.assertContains(response, 'make_queue/img/maintenance')
+        self.assertContains(response, static('make_queue/img/out_of_order.svg'))
+        self.assertContains(response, static('make_queue/img/no_stream.svg'))
+        self.assertContains(response, static('make_queue/img/maintenance.svg'))
 
     def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs):
             return Machine.objects.create(
