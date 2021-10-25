@@ -85,11 +85,11 @@ class MachineViewTest(TestCase):
 
     def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs) -> Machine:
         """Creates a machine of type ``machine_type_`` with name '``name_prefix`` ``machine_type_``'"""
-            return Machine.objects.create(
-                name=f"{name_prefix} {machine_type_.name}",
-                machine_type=machine_type_,
-                **kwargs,
-            )
+        return Machine.objects.create(
+            name=f"{name_prefix} {machine_type_.name}",
+            machine_type=machine_type_,
+            **kwargs,
+        )
 
 
 class CreateAndEditMachineViewTest(TestCase):
