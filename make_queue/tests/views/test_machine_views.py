@@ -73,13 +73,16 @@ class MachineViewTest(TestCase):
             with self.subTest(machine_type=machine_type):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
 
-    def test_get_machine_list_view_doesnt_crash_page(self):
+    def test_get_machine_list_view_contains_img_path_in_html(self):
         self.create_machine(name_prefix="available", machine_type_=self.printer_machine_type, status=Machine.Status.AVAILABLE)
         self.create_machine(name_prefix="out of order", machine_type_=self.printer_machine_type, status=Machine.Status.OUT_OF_ORDER)
         self.create_machine(name_prefix="maintenance", machine_type_=self.printer_machine_type, status=Machine.Status.MAINTENANCE)
 
         response = self.client.get(reverse('reservation_machines_overview'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertContains(response, 'make_queue/img/out_of_order')
+        self.assertContains(response, 'make_queue/img/no_stream')
+        self.assertContains(response, 'make_queue/img/maintenance')
 
     def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs):
             return Machine.objects.create(
