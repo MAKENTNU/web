@@ -78,7 +78,7 @@ class MachineViewTest(TestCase):
         self.create_machine(name_prefix="maintenance", machine_type_=self.printer_machine_type, status=Machine.Status.MAINTENANCE)
 
         response = self.client.get(reverse('reservation_machines_overview'))
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+        
         self.assertContains(response, static('make_queue/img/out_of_order.svg'))
         self.assertContains(response, static('make_queue/img/no_stream.svg'))
         self.assertContains(response, static('make_queue/img/maintenance.svg'))
