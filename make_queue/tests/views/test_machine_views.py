@@ -14,10 +14,9 @@ from ...views.reservation.machine import MachineView
 
 class MachineViewTest(TestCase):
 
-    def setUp(self) -> None:
+    def setUp(self):
         self.printer_machine_type = MachineType.objects.get(pk=1)
         self.sewing_machine_type = MachineType.objects.get(pk=2)
-        return super().setUp()
 
     def test_no_machines(self):
         context_data = MachineView.as_view()(request_with_user(None)).context_data
