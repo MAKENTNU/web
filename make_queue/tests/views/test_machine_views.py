@@ -53,14 +53,14 @@ class MachineViewTest(TestCase):
     def test_machines_are_sorted_correctly(self):
         correct_machine_orders = []
         for machine_type in (self.printer_machine_type, self.sewing_machine_type):
-            machine_b = self.create_machine("b", machine_type, None)
-            machine_c = self.create_machine("c", machine_type, None)
-            machine_d = self.create_machine("d", machine_type, None)
-            machine_1_h = self.create_machine("h", machine_type, 1)
-            machine_3_e = self.create_machine("e", machine_type, 3)
-            machine_2_f = self.create_machine("f", machine_type, 2)
-            machine_2_g = self.create_machine("g", machine_type, 2)
-            machine_2_a = self.create_machine("a", machine_type, 2)
+            machine_b = self.create_machine("b", machine_type)
+            machine_c = self.create_machine("c", machine_type)
+            machine_d = self.create_machine("d", machine_type)
+            machine_1_h = self.create_machine("h", machine_type, priority=1)
+            machine_3_e = self.create_machine("e", machine_type, priority=3)
+            machine_2_f = self.create_machine("f", machine_type, priority=2)
+            machine_2_g = self.create_machine("g", machine_type, priority=2)
+            machine_2_a = self.create_machine("a", machine_type, priority=2)
             correct_machine_orders.append([
                 machine_1_h,
                 machine_2_a, machine_2_f, machine_2_g,
@@ -81,11 +81,10 @@ class MachineViewTest(TestCase):
         response = self.client.get(reverse('reservation_machines_overview'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def create_machine(self, name_prefix: str, machine_type_: MachineType, priority: Union[int, None] = None, **kwargs):
+    def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs):
             return Machine.objects.create(
                 name=f"{name_prefix} {machine_type_.name}",
                 machine_type=machine_type_,
-                priority=priority,
                 **kwargs
             )
 
