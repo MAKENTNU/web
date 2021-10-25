@@ -107,7 +107,7 @@ class RenderTemplateTestCases(TestCase):
 
     def assert_static_path_with_machine_status(self,
                                                static_path: str,
-                                               machine_status: Machine.Status
+                                               machine_status: Machine.Status,
                                                ):
         result = get_stream_image_path(machine_status)
         self.assertEqual(static_path, result)

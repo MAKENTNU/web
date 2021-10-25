@@ -87,7 +87,7 @@ class MachineViewTest(TestCase):
             return Machine.objects.create(
                 name=f"{name_prefix} {machine_type_.name}",
                 machine_type=machine_type_,
-                **kwargs
+                **kwargs,
             )
 
 class CreateAndEditMachineViewTest(TestCase):
