@@ -1,7 +1,6 @@
 from datetime import timedelta
 from unittest import mock
 
-from django.template import Context, Template
 from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
@@ -12,7 +11,13 @@ from util.locale_utils import parse_datetime_localized
 from ...models.course import Printer3DCourse
 from ...models.models import Machine, MachineType, Quota, Reservation
 from ...templatetags.reservation_extra import (
-    calendar_url_reservation, current_calendar_url, date_to_percentage, get_current_time_of_day, invert, is_current_date,
+    calendar_url_reservation,
+    current_calendar_url,
+    date_to_percentage,
+    get_current_time_of_day,
+    invert,
+    is_current_date,
+    get_stream_image_path,
 )
 
 
@@ -100,31 +105,12 @@ class ReservationExtraTestCases(TestCase):
 
 class RenderTemplateTestCases(TestCase):
 
-    def render_template(self, string, prefix_string='{% load reservation_extra %}', context=None):
-        template_string = prefix_string + string
-        context = context or {}
-        context = Context(context)
-        return Template(template_string).render(context)
-
-    def setUp(self):
-        self.printer_machine_type = MachineType.objects.get(pk=1)
-        self.render_string = (
-            '{% get_stream_image machine.status as stream_image_path %}'
-            '{{ stream_image_path }}'
-        )
-
-    def assert_static_path_with_machine_status(self, static_path, machine_status):
-        machine = Machine.objects.create(
-            name="b",
-            machine_model="Ultimaker 2+",
-            machine_type=self.printer_machine_type,
-            status=machine_status
-        )
-        rendered = self.render_template(
-            self.render_string,
-            context={'machine': machine}
-        )
-        self.assertInHTML(static_path, rendered)
+    def assert_static_path_with_machine_status(self,
+                                               static_path: str,
+                                               machine_status: Machine.Status
+                                               ):
+        result = get_stream_image_path(machine_status)
+        self.assertEqual(static_path, result)
 
     def test_get_stream_image_maintenance_machine_returns_maintenance_image(self):
         self.assert_static_path_with_machine_status(
@@ -132,26 +118,14 @@ class RenderTemplateTestCases(TestCase):
             Machine.Status.MAINTENANCE
         )
 
-    def test_get_stream_image_available_machine_returns_no_stream_image(self):
-        self.assert_static_path_with_machine_status(
-            static('make_queue/img/no_stream.svg'),
-            Machine.Status.AVAILABLE
-        )
-
-    def test_get_stream_image_in_use_machine_returns_no_stream_image(self):
-        self.assert_static_path_with_machine_status(
-            static('make_queue/img/no_stream.svg'),
-            Machine.Status.IN_USE
-        )
-
-    def test_get_stream_image_reserved_returns_no_stream_image(self):
-        self.assert_static_path_with_machine_status(
-            static('make_queue/img/no_stream.svg'),
-            Machine.Status.RESERVED
-        )
-
     def test_get_stream_image_out_of_order_machine_returns_out_of_order_image(self):
         self.assert_static_path_with_machine_status(
             static('make_queue/img/out_of_order.svg'),
             Machine.Status.OUT_OF_ORDER
         )
+
+    def test_get_stream_image_path_returns_no_stream_image(self):
+        no_stream_image_path = static('make_queue/img/no_stream.svg')
+        self.assert_static_path_with_machine_status(no_stream_image_path, Machine.Status.AVAILABLE)
+        self.assert_static_path_with_machine_status(no_stream_image_path, Machine.Status.IN_USE)
+        self.assert_static_path_with_machine_status(no_stream_image_path, Machine.Status.RESERVED)
