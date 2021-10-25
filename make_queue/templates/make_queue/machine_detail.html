@@ -72,7 +72,7 @@
             </div>
 
             {% if machine.machine_type.has_stream %}
-                {% get_stream_image machine.status as stream_image_static_path %}
+                {% get_stream_image_path machine.status as stream_image_static_path %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
                     <img class="ui right floated stream medium image" data-stream-name="{{ machine.stream_name }}"
                          src="{{ stream_image_static_path }}"

@@ -147,7 +147,7 @@ def is_future_reservation(reservation: Reservation):
 
 
 @register.simple_tag
-def get_stream_image(status):
+def get_stream_image_path(status: Machine.Status) -> str:
     status_image_dict = {
         Machine.Status.MAINTENANCE: static('make_queue/img/maintenance.svg'),
         Machine.Status.OUT_OF_ORDER: static('make_queue/img/out_of_order.svg'),
