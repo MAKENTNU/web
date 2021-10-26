@@ -79,9 +79,9 @@ class MachineViewTest(TestCase):
 
         response = self.client.get(reverse('reservation_machines_overview'))
         
-        self.assertContains(response, static('make_queue/img/out_of_order.svg'))
-        self.assertContains(response, static('make_queue/img/no_stream.svg'))
-        self.assertContains(response, static('make_queue/img/maintenance.svg'))
+        for stream_image_name in ['out_of_order', 'no_stream', 'maintenance']:
+            with self.subTest(stream_image_name=stream_image_name):
+                self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'))
 
     def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs) -> Machine:
         """Creates a machine of type ``machine_type_`` with name '``name_prefix`` ``machine_type_``'"""
