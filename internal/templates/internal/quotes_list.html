@@ -17,7 +17,7 @@
             <div class="card">
                 <div class="content">
                     <div class="header">{{ quote.quoted }}:
-                        {% if perms.internal.delete_quote %}
+                        {% if perms.internal.delete_quote or quote.author == user %}
                             <a class="delete-modal-button"
                                data-url="{% url 'delete-quote' quote.pk %}"
                                data-obj-name="{{ quote }}">
