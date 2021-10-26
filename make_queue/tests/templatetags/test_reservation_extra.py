@@ -102,30 +102,16 @@ class ReservationExtraTestCases(TestCase):
         self.assertEqual("true", invert(False))
         self.assertEqual("false", invert(True))
 
-
-class RenderTemplateTestCases(TestCase):
-
-    def assert_static_path_with_machine_status(self,
-                                               static_path: str,
-                                               machine_status: Machine.Status,
-                                               ):
-        result = get_stream_image_path(machine_status)
-        self.assertEqual(static_path, result)
-
-    def test_get_stream_image_maintenance_machine_returns_maintenance_image(self):
-        self.assert_static_path_with_machine_status(
-            static('make_queue/img/maintenance.svg'),
-            Machine.Status.MAINTENANCE
-        )
-
-    def test_get_stream_image_out_of_order_machine_returns_out_of_order_image(self):
-        self.assert_static_path_with_machine_status(
-            static('make_queue/img/out_of_order.svg'),
-            Machine.Status.OUT_OF_ORDER
-        )
-
-    def test_get_stream_image_path_returns_no_stream_image(self):
+    def test_get_stream_image_path_returns_correct_image_path(self):
         no_stream_image_path = static('make_queue/img/no_stream.svg')
-        self.assert_static_path_with_machine_status(no_stream_image_path, Machine.Status.AVAILABLE)
-        self.assert_static_path_with_machine_status(no_stream_image_path, Machine.Status.IN_USE)
-        self.assert_static_path_with_machine_status(no_stream_image_path, Machine.Status.RESERVED)
+        path_status_tuple_list = [
+            (static('make_queue/img/maintenance.svg'),Machine.Status.MAINTENANCE),
+            (static('make_queue/img/out_of_order.svg'), Machine.Status.OUT_OF_ORDER),
+            (no_stream_image_path, Machine.Status.AVAILABLE),
+            (no_stream_image_path, Machine.Status.IN_USE),
+            (no_stream_image_path, Machine.Status.RESERVED),
+        ]
+        for static_path, machine_status in path_status_tuple_list:
+            with self.subTest(static_path=static_path, machine_status=machine_status):
+                result = get_stream_image_path(machine_status)
+                self.assertEqual(static_path, result)
