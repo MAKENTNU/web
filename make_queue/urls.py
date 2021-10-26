@@ -26,7 +26,7 @@ calendar_urlpatterns = [
 
 json_urlpatterns = [
     path('<Machine:machine>/', login_required(api.reservation.get_machine_data), name="reservation_json"),
-    path('<Machine:machine>/<Reservation:reservation>/', api.reservation.get_machine_data, name="reservation_json"),
+    path('<Machine:machine>/<Reservation:reservation>/', login_required(api.reservation.get_machine_data), name="reservation_json"),
     path('<str:username>/', permission_required("make_queue.add_printer3dcourse")(api.user_info.get_user_info_from_username), name="user_json"),
 ]
 
@@ -76,9 +76,9 @@ urlpatterns = [
     path('calendar/', include(calendar_urlpatterns)),
     path('json/', include(json_urlpatterns)),
     path('create/<Machine:machine>/', login_required(reservation.reservation.CreateReservationView.as_view()), name="create_reservation"),
-    path('change/<Reservation:reservation>/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
-    path('finish/', login_required(reservation.reservation.MarkReservationAsDone.as_view()), name="mark_reservation_done"),
-    path('delete/', login_required(reservation.reservation.DeleteReservationView.as_view()), name="delete_reservation"),
+    path('<Reservation:reservation>/change/', login_required(reservation.reservation.ChangeReservationView.as_view()), name="change_reservation"),
+    path('<int:pk>/finish/', login_required(reservation.reservation.MarkReservationFinishedView.as_view()), name="mark_reservation_finished"),
+    path('<int:pk>/', login_required(reservation.reservation.DeleteReservationView.as_view()), name="delete_reservation"),
     path('me/', login_required(reservation.overview.MyReservationsView.as_view()), name="my_reservations"),
     path('admin/',
          permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.AdminReservationView.as_view()),

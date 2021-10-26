@@ -5,7 +5,7 @@ from . import views
 
 
 urlpatterns = [
-    path('', views.ShowSkillsView.as_view()),
+    path('', views.ShowSkillsView.as_view(), name='skills_present_list'),
     path('profile/', login_required(views.ProfilePageView.as_view()), name="profile"),
     path('profile/edit/image/', login_required(views.EditProfilePictureView.as_view()), name="profile_picture"),
     path('post/', views.CheckInView.as_view()),

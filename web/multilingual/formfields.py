@@ -14,22 +14,6 @@ class MultiLingualFormField(forms.MultiValueField):
     """
     field_class = forms.CharField
 
-    def compress(self, data_list):
-        """
-        Merges the input from the different form fields into a single value.
-
-        :param data_list: A list of the inputs of the different fields
-        :return: A MultiLingualTextStructure element
-        """
-        structure = MultiLingualTextStructure("", True)
-        for index, language in enumerate(structure.supported_languages):
-            # Non required fields may not have enough values
-            try:
-                structure[language] = data_list[index]
-            except IndexError as e:
-                logging.getLogger('django.request').exception(e)
-        return structure
-
     def __init__(self, *args, **kwargs):
         defaults = {
             "max_length": kwargs.pop("max_length", None),
@@ -45,6 +29,22 @@ class MultiLingualFormField(forms.MultiValueField):
             fields.append(field)
 
         super().__init__(fields=fields, *args, **kwargs)
+
+    def compress(self, data_list):
+        """
+        Merges the input from the different form fields into a single value.
+
+        :param data_list: A list of the inputs of the different fields
+        :return: A MultiLingualTextStructure element
+        """
+        structure = MultiLingualTextStructure("", True)
+        for index, language in enumerate(structure.supported_languages):
+            # Non-required fields may not have enough values
+            try:
+                structure[language] = data_list[index]
+            except IndexError as e:
+                logging.getLogger('django.request').exception(e)
+        return structure
 
 
 class MultiLingualRichTextFormField(MultiLingualFormField):

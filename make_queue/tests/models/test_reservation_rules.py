@@ -153,36 +153,36 @@ class ReservationRuleTests(TestCase):
                         "Rules for different machine types should not effect the validity of each other")
 
     def test_is_valid_time_in_rule_no_border_cross(self):
-        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
+        rule = ReservationRule(start_time=parse_time("10:00"), end_time=parse_time("6:00"), days_changed=1,
                                start_days=1, max_inside_border_crossed=5, machine_type=self.machine_type, max_hours=10)
 
-        self.assertTrue(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 10, 12),
-                                                datetime.datetime(2018, 11, 5, 10, 48), False))
-        self.assertTrue(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 10, 0),
-                                                datetime.datetime(2018, 11, 5, 20, 0), False))
-        self.assertTrue(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 20, 0),
-                                                datetime.datetime(2018, 11, 6, 4, 0), False))
+        self.assertTrue(rule.valid_time_in_rule(parse_datetime("2018-11-05 10:12"),
+                                                parse_datetime("2018-11-05 10:48"), False))
+        self.assertTrue(rule.valid_time_in_rule(parse_datetime("2018-11-05 10:00"),
+                                                parse_datetime("2018-11-05 20:00"), False))
+        self.assertTrue(rule.valid_time_in_rule(parse_datetime("2018-11-05 20:00"),
+                                                parse_datetime("2018-11-06 04:00"), False))
 
-        self.assertFalse(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 10, 0),
-                                                 datetime.datetime(2018, 11, 5, 21, 0), False))
-        self.assertFalse(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 18, 0),
-                                                 datetime.datetime(2018, 11, 6, 6, 0), False))
+        self.assertFalse(rule.valid_time_in_rule(parse_datetime("2018-11-05 10:00"),
+                                                 parse_datetime("2018-11-05 21:00"), False))
+        self.assertFalse(rule.valid_time_in_rule(parse_datetime("2018-11-05 18:00"),
+                                                 parse_datetime("2018-11-06 06:00"), False))
 
     def test_is_valid_time_in_rule_border_cross(self):
-        rule = ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
+        rule = ReservationRule(start_time=parse_time("10:00"), end_time=parse_time("6:00"), days_changed=1,
                                start_days=1, max_inside_border_crossed=5, machine_type=self.machine_type, max_hours=10)
 
-        self.assertTrue(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 8, 0),
-                                                datetime.datetime(2018, 11, 5, 12, 0), True))
-        self.assertTrue(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 0, 0),
-                                                datetime.datetime(2018, 11, 5, 15, 0), True))
+        self.assertTrue(rule.valid_time_in_rule(parse_datetime("2018-11-05 08:00"),
+                                                parse_datetime("2018-11-05 12:00"), True))
+        self.assertTrue(rule.valid_time_in_rule(parse_datetime("2018-11-05 00:00"),
+                                                parse_datetime("2018-11-05 15:00"), True))
 
-        self.assertFalse(rule.valid_time_in_rule(datetime.datetime(2018, 11, 5, 9, 0),
-                                                 datetime.datetime(2018, 11, 5, 16, 0), True))
+        self.assertFalse(rule.valid_time_in_rule(parse_datetime("2018-11-05 09:00"),
+                                                 parse_datetime("2018-11-05 16:00"), True))
 
     def test_is_valid_time_max_interval(self):
-        self.assertFalse(ReservationRule.valid_time(datetime.datetime(2018, 11, 5, 0, 0),
-                                                    datetime.datetime(2018, 11, 12, 0, 1),
+        self.assertFalse(ReservationRule.valid_time(parse_datetime("2018-11-05 00:00"),
+                                                    parse_datetime("2018-11-12 00:01"),
                                                     self.machine_type),
                          """
                          Reservations should not be valid if they are longer than 1 week, as the logic won't work 
@@ -191,39 +191,39 @@ class ReservationRuleTests(TestCase):
                          """)
 
     def test_is_valid_time(self):
-        ReservationRule(start_time=datetime.time(10, 0), end_time=datetime.time(6, 0), days_changed=1,
+        ReservationRule(start_time=parse_time("10:00"), end_time=parse_time("6:00"), days_changed=1,
                         start_days=1, max_inside_border_crossed=5, machine_type=self.machine_type, max_hours=10).save()
-        ReservationRule(start_time=datetime.time(6, 0), end_time=datetime.time(12, 0), days_changed=2,
+        ReservationRule(start_time=parse_time("6:00"), end_time=parse_time("12:00"), days_changed=2,
                         start_days=2, max_inside_border_crossed=16, machine_type=self.machine_type, max_hours=16).save()
 
-        self.assertTrue(ReservationRule.valid_time(datetime.datetime(2018, 11, 5, 12, 0),
-                                                   datetime.datetime(2018, 11, 5, 18, 0), self.machine_type),
+        self.assertTrue(ReservationRule.valid_time(parse_datetime("2018-11-05 12:00"),
+                                                   parse_datetime("2018-11-05 18:00"), self.machine_type),
                         "Periods that cover only one rule, should be valid if they are valid in that rule")
-        self.assertFalse(ReservationRule.valid_time(datetime.datetime(2018, 11, 5, 12, 0),
-                                                    datetime.datetime(2018, 11, 5, 23, 0), self.machine_type),
+        self.assertFalse(ReservationRule.valid_time(parse_datetime("2018-11-05 12:00"),
+                                                    parse_datetime("2018-11-05 23:00"), self.machine_type),
                          "Periods that cover only one rule, should be valid if they are valid in that rule")
-        self.assertTrue(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 12, 0),
-                                                   datetime.datetime(2018, 11, 7, 3, 0), self.machine_type),
+        self.assertTrue(ReservationRule.valid_time(parse_datetime("2018-11-06 12:00"),
+                                                   parse_datetime("2018-11-07 03:00"), self.machine_type),
                         "Periods that cover only one rule, should be valid if they are valid in that rule")
-        self.assertFalse(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 12, 0),
-                                                    datetime.datetime(2018, 11, 7, 18, 0), self.machine_type),
+        self.assertFalse(ReservationRule.valid_time(parse_datetime("2018-11-06 12:00"),
+                                                    parse_datetime("2018-11-07 18:00"), self.machine_type),
                          "Periods that cover only one rule, should be valid if they are valid in that rule")
 
-        self.assertTrue(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 3, 0),
-                                                   datetime.datetime(2018, 11, 6, 18, 0), self.machine_type),
+        self.assertTrue(ReservationRule.valid_time(parse_datetime("2018-11-06 03:00"),
+                                                   parse_datetime("2018-11-06 18:00"), self.machine_type),
                         "A period may still be valid, even though its total duration is larger than what is allowed in"
                         "one of the rules it partially covers")
 
-        self.assertFalse(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 1, 0),
-                                                    datetime.datetime(2018, 11, 6, 22, 0), self.machine_type),
+        self.assertFalse(ReservationRule.valid_time(parse_datetime("2018-11-06 01:00"),
+                                                    parse_datetime("2018-11-06 22:00"), self.machine_type),
                          "A period may be valid in each rule, it can still be invalid due to its total duration")
 
-        self.assertFalse(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 0, 0),
-                                                    datetime.datetime(2018, 11, 6, 12, 0), self.machine_type),
+        self.assertFalse(ReservationRule.valid_time(parse_datetime("2018-11-06 00:00"),
+                                                    parse_datetime("2018-11-06 12:00"), self.machine_type),
                          "A period may not be valid in one of the rules is covers")
 
-        self.assertTrue(ReservationRule.valid_time(datetime.datetime(2018, 11, 6, 0, 0),
-                                                   datetime.datetime(2018, 11, 6, 10, 0), self.machine_type),
+        self.assertTrue(ReservationRule.valid_time(parse_datetime("2018-11-06 00:00"),
+                                                   parse_datetime("2018-11-06 10:00"), self.machine_type),
                         "A period may be valid, even though not all of its rules are valid, if it is still less than"
                         "the shortest maximum length of any of its rules.")
 

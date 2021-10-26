@@ -26,22 +26,22 @@ class EventFeed(ICalFeed):
 
         return items
 
-    def item_link(self, item):
+    def item_link(self, item: TimePlace):
         return reverse('event', kwargs={'pk': item.pk})
 
-    def item_title(self, item):
+    def item_title(self, item: TimePlace):
         return item.event.title
 
-    def item_description(self, item):
+    def item_description(self, item: TimePlace):
         return item.event.clickbait
 
-    def item_start_datetime(self, item):
+    def item_start_datetime(self, item: TimePlace):
         return item.start_time
 
-    def item_end_datetime(self, item):
+    def item_end_datetime(self, item: TimePlace):
         return item.end_time
 
-    def item_location(self, item):
+    def item_location(self, item: TimePlace):
         return item.place
 
     def product_id(self):

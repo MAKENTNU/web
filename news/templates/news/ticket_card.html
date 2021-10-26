@@ -1,5 +1,8 @@
 {% load i18n %}
+{% load datetime_tags %}
 
+
+{# Linking `ticket_card.css` is required when including this template #}
 
 <div class="ui ticket card">
     {% if not ticket.active %}
@@ -24,17 +27,17 @@
                     {% for timeplace in ticket.event.timeplaces.all %}
                         {% if not timeplace.hidden %}
                             <div class="ui item">
-                                <div class="content">
+                                <div class="time-place content">
+                                    <a class="calendar-button" href="{% url 'timeplace-ical' timeplace.pk %}" target="_blank">
+                                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                                    </a>
                                     <div class="header">
-                                        {{ timeplace.start_time|date:"d. M H:i" }}
-                                        - {{ timeplace.end_time|date:"d. M H:i" }}
-                                        <a class="left floated" href="{% url 'timeplace-ical' timeplace.pk %}"
-                                           target="_blank">
-                                            <i class="ui make-col-yellow large calendar plus outline icon"></i>
-                                        </a>
+                                        {{ timeplace.start_time|long_datetime_no_year }} &ndash; {{ timeplace.end_time|long_datetime_no_year }}
                                     </div>
-                                    <div class="description">
-                                        <a href="{{ timeplace.place_url }}">{{ timeplace.place }}</a>
+                                    <div class="place description">
+                                        <a href="{{ timeplace.place_url }}" target="_blank">
+                                            {{ timeplace.place }}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -42,19 +45,21 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <a class="left floated" href="{% url 'timeplace-ical' ticket.timeplace.pk %}" target="_blank">
-                    <i class="ui make-col-yellow large calendar plus outline icon"></i>
-                </a>
-                <b>
-                    {{ ticket.timeplace.start_time|date:"d. M H:i" }} - {{ ticket.timeplace.end_time|date:"d. M H:i" }}
-                </b>
+                <div class="time-place content">
+                    <a class="calendar-button" href="{% url 'timeplace-ical' ticket.timeplace.pk %}" target="_blank">
+                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                    </a>
+                    <b>
+                        {{ ticket.timeplace.start_time|long_datetime_no_year }} &ndash; {{ ticket.timeplace.end_time|long_datetime_no_year }}
+                    </b>
+                </div>
             {% endif %}
         </div>
     </div>
     <div class="extra content">
         <div class="right floated">
             <b>{% trans "Ref #" %}:</b>
-            <a href="{% url "ticket" pk=ticket.uuid %}">
+            <a href="{% url "ticket" pk=ticket.pk %}">
                 {{ ticket.uuid }}
             </a>
         </div>
@@ -62,12 +67,12 @@
     {% if ticket.active %}
         {% if ticket.user == request.user or perms.news.cancel_ticket %}
             <a class="ui red bottom attached button"
-               href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
+               href="{% url "cancel-ticket" ticket.pk %}?next={{ request.path }}">
                 {% trans "Cancel ticket" %}
             </a>
         {% endif %}
     {% elif perms.news.cancel_ticket %}
-        <a class="ui green bottom attached button" href="{% url "cancel-ticket" ticket.uuid %}?next={{ request.path }}">
+        <a class="ui green bottom attached button" href="{% url "cancel-ticket" ticket.pk %}?next={{ request.path }}">
             {% trans "Reactivate ticket" %}
         </a>
     {% endif %}

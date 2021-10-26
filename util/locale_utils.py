@@ -2,29 +2,58 @@ from calendar import day_name
 from datetime import datetime, timedelta
 
 from django.utils import timezone, translation
+from django.utils.dateparse import parse_datetime
 from django.utils.formats import date_format
+from django.utils.timezone import make_aware
 from django.utils.translation import gettext
 
 
 DEFAULT_TIMEZONE = timezone.get_default_timezone()
 
 
-def as_local(value: datetime):
-    return value.astimezone(DEFAULT_TIMEZONE)
+def parse_datetime_localized(value):
+    return make_aware(parse_datetime(value))
+
+
+def attempt_as_local(value):
+    if (isinstance(value, datetime)
+            # Each timezone has its own `tzinfo` subclass
+            and type(value.tzinfo) is not type(DEFAULT_TIMEZONE)):
+        value = value.astimezone(DEFAULT_TIMEZONE)
+    return value
 
 
 def _date_format(value, format_):
-    if isinstance(value, datetime) and value.tzinfo != DEFAULT_TIMEZONE:
-        value = as_local(value)
+    value = attempt_as_local(value)
     return date_format(value, format_)
 
 
 def short_date_format(value):
-    return _date_format(value, "SHORT_DATE_FORMAT")
+    return _date_format(value, 'SHORT_DATE_FORMAT')
 
 
 def short_datetime_format(value):
-    return _date_format(value, "SHORT_DATETIME_FORMAT")
+    return _date_format(value, 'SHORT_DATETIME_FORMAT')
+
+
+def long_date_format(value):
+    return _date_format(value, 'DATE_FORMAT')
+
+
+def long_datetime_format(value):
+    return _date_format(value, 'DATETIME_FORMAT')
+
+
+def time_format(value):
+    return _date_format(value, 'TIME_FORMAT')
+
+
+def iso_date_format(value):
+    return _date_format(value, "Y-m-d")
+
+
+def iso_datetime_format(value):
+    return _date_format(value, "Y-m-d H:i")
 
 
 def is_valid_week(year, week):
@@ -84,7 +113,7 @@ def local_to_date(date):
     return timezone.make_aware(date, DEFAULT_TIMEZONE)
 
 
-def timedelta_to_hours(timedelta_obj):
+def timedelta_to_hours(timedelta_obj: timedelta):
     """
     Converts a timedelta object into a float indicating the number of hours the timedelta covers.
 
