@@ -7,7 +7,8 @@ from django.views.generic import CreateView, DeleteView, ListView, TemplateView,
 
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import PreventGetRequestsMixin
-from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, SystemAccessValueForm
+from .forms import AddMemberForm, EditMemberForm, MemberQuitForm, MemberStatusForm, RestrictedEditMemberForm, \
+    SecretsForm, SystemAccessValueForm, QuoteForm
 from .models import Member, Secret, SystemAccess, Quote
 
 
@@ -19,6 +20,34 @@ class QuoteView(ListView):
     model = Quote
     template_name = 'internal/quotes_list.html'
     context_object_name = 'quotes'
+
+
+class CreateQuoteView(PermissionRequiredMixin, CreateView):
+    permission_required = ('internal.add_quote',)
+    model = Quote
+    form_class = QuoteForm
+    template_name = 'internal/quote_create.html'
+    context_object_name = 'quote'
+    success_url = reverse_lazy('quotes')
+
+    def form_valid(self, form, **kwargs):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class EditQuoteView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('internal.change_quote',)
+    model = Quote
+    form_class = QuoteForm
+    template_name = 'internal/quote_edit.html'
+    context_object_name = 'quote'
+    success_url = reverse_lazy('quotes')
+
+
+class DeleteQuoteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    permission_required = ('internal.delete_quote',)
+    model = Quote
+    success_url = reverse_lazy('quotes')
 
 
 class SecretsView(ListView):

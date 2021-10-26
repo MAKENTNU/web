@@ -6,7 +6,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import SemanticDateInput, SemanticMultipleSelectInput, SemanticSearchableChoiceInput
-from .models import Member, Secret, SystemAccess
+from .models import Member, Secret, SystemAccess, Quote
 
 
 class AddMemberForm(forms.ModelForm):
@@ -145,3 +145,9 @@ class SecretsForm(forms.ModelForm):
     class Meta:
         model = Secret
         fields = '__all__'
+
+
+class QuoteForm(forms.ModelForm):
+    class Meta:
+        model = Quote
+        fields = ('quote', 'quoted', 'context')
