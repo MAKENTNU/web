@@ -14,14 +14,17 @@
 {% endblock head %}
 
 {% block body %}
-    {% can_use_machine machine user as can_use %}
     <div class="ui container">
         {% csrf_token %}
         <div class="ui machine-title-field">
             <div class="ui huge header machine-title">
                 {{ machine.name }}
             </div>
-            <a href="{% url "machine_usage_rules" machine.machine_type %}">({% trans "Rules" %})</a>
+            <div class="ui content">
+                <a class="ui primary button" href="{% url 'machine_usage_rules' machine.machine_type %}">
+                    {% trans "Show rules" %}
+                </a>
+            </div>
         </div>
 
         <div class="machine-info-and-actions ui three column padded grid vpad">
@@ -70,7 +73,7 @@
 
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
-                    <img id="{% sanitize_stream_name machine %}" class="ui right floated stream medium image" name="{{ machine.name }}"
+                    <img class="ui right floated stream medium image" data-stream-name="{{ machine.stream_name }}"
                          src="{% static 'make_queue/img/no_stream.jpg' %}"
                          alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
@@ -78,7 +81,6 @@
                 <div id="fader"></div>
                 <i id="closefullscreen" class="ui times icon"></i>
                 <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
-                <script>var streamID = "{% sanitize_stream_name machine %}";</script>
                 <script src="{% static 'make_queue/js/stream.js' %}"></script>
             {% endif %}
 
@@ -92,7 +94,7 @@
         <script>
             new ReservationCalendar($(".reservation-calendar"), {
                 machine: {{ machine.pk }},
-                selection: {% if can_create_reservations and can_create_more_reservations %}true{% else %}false{% endif %},
+                selection: {% if reservation_denied_message %}false{% else %}true{% endif %},
                 canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
                 date: new Date(Date.parse("{{ date|date:"c" }}")),
             });

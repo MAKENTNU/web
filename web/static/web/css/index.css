@@ -37,7 +37,7 @@
 }
 
 .article-text h2 a,
-.events .header a {
+.event .header a {
     color: rgb(248, 200, 17);
     text-transform: uppercase;
 }
@@ -47,10 +47,10 @@
 }
 
 .txtborder {
-    position: absolute;
     display: none;
-    width: 50px !important;
-    height: 50px !important;
+    position: absolute;
+    width: 50px;
+    height: 50px;
 }
 
 .txtborder.tl {
@@ -73,43 +73,40 @@
     right: 0;
 }
 
-.article-text.article-first .txtborder.tr,
-.article-text.article-last.float-right .txtborder.bl,
-.article-text.article-last.float-left .txtborder.br {
-    display: inline;
-}
-
 .events {
     display: grid;
     grid-template-columns: 1fr 10fr 10fr 1fr;
     grid-auto-flow: dense;
-    grid-gap: 30px;
-    margin: 80px 0;
+    grid-gap: 2em;
 }
 
-.events img {
-    object-fit: cover !important;
-    width: 100% !important;
-    height: 100% !important;
+.events .event.item img {
+    object-fit: cover;
+    width: 100% !important; /* Overrides Fomantic-UI */
+    height: 100% !important; /* Overrides Fomantic-UI */
 }
 
 .events .item {
-    margin: 0 !important;
+    margin: 0 !important; /* Overrides Fomantic-UI */
 }
 
-.events .item:nth-of-type(2n) {
-    grid-column: 3/4;
+.events .more-events-link .header {
+    display: flex !important; /* Overrides Fomantic-UI */
+    justify-content: center;
 }
 
-.events .item:nth-of-type(2n+1) {
-    grid-column: 2/3;
+.event-article-border {
+    display: none;
+    border-style: solid;
+    border-color: var(--make-yellow);
 }
 
 .articles {
     display: grid;
     grid-template-columns: 1fr 10fr 10fr 1fr;
     grid-auto-flow: dense;
-    margin: 50px 0;
+    margin-top: 6em;
+    margin-bottom: 3em;
 }
 
 .articles .article-img {
@@ -124,19 +121,11 @@
 }
 
 .articles .article-text p {
-    padding: 0 50px 50px;
+    padding: 0 3em 3em;
 }
 
 .articles h2 {
-    margin-bottom: 5px;
-}
-
-.articles .float-left {
-    grid-column: 3/4;
-}
-
-.articles .float-right {
-    grid-column: 2/3;
+    margin-bottom: 0.25em;
 }
 
 .articles .article-img {
@@ -150,36 +139,69 @@
     font-style: italic;
 }
 
-@media screen and (max-width: 1199.98px) {
-    .events {
-        grid-template-columns: 1fr 20fr 1fr;
-        grid-gap: 0;
+
+/* Events are listed alternatingly left and right */
+@media screen and (min-width: 1200px) {
+    .events .event:nth-of-type(2n+1) {
+        grid-column: 2/3;
     }
 
-    .events .item {
-        grid-column: 2/3 !important;
-        padding-bottom: 40px !important;
+    .events .event:nth-of-type(2n) {
+        grid-column: 3/4;
+    }
+
+    .events .more-events-link {
+        grid-column: 2/4;
     }
 }
 
-/* Switch to mobile layout */
+
+/* Events are listed in one column */
+@media screen and (max-width: 1199.98px) {
+    .events {
+        grid-template-columns: 1fr 20fr 1fr;
+        grid-gap: 3em 0;
+    }
+
+    .events .item {
+        grid-column: 2/3;
+    }
+
+    .events .event.item:last-child {
+        margin-bottom: 3em !important; /* Overrides Fomantic-UI */
+    }
+}
+
+
+/* Articles are listed alternatingly left and right */
+@media screen and (min-width: 992px) {
+    .articles .float-left {
+        grid-column: 3/4;
+    }
+
+    .articles .float-right {
+        grid-column: 2/3;
+    }
+
+    .article-text.article-first .txtborder.tr,
+    .article-text.article-last.float-right .txtborder.bl,
+    .article-text.article-last.float-left .txtborder.br {
+        display: inline;
+    }
+}
+
+
+/* Switch to mobile layout; articles are listed in one column */
 @media screen and (max-width: 991.98px) {
     .articles {
+        grid-template-rows: auto;
         grid-template-columns: 1fr 20fr 1fr;
-        margin-top: 20px;
         margin-bottom: 0;
     }
 
     .articles .article-text,
     .articles .article-img {
-        grid-column: 2/3 !important;
-    }
-
-    .txtborder.tl,
-    .txtborder.tr,
-    .txtborder.bl,
-    .txtborder.br {
-        display: none !important;
+        grid-column: 2/3;
     }
 
     .top-img.large {
@@ -190,32 +212,32 @@
         display: inline;
     }
 
-    .articles {
-        grid-template-rows: auto;
-    }
-
     .articles .article-text {
+        height: auto;
+        max-height: 300px;
         align-items: flex-start;
     }
 
     .article-text h2 {
         text-align: left;
-        margin-top: 20px !important;
+        margin-top: 1em;
     }
 
     .article-text p,
     .article-text a,
     .article-text h2 {
-        margin-left: 0 !important;
-        padding: 0 !important;
+        margin-left: 0;
+        padding: 0 !important; /* Overrides Fomantic-UI */
     }
 
-    .article-text p {
-        padding-bottom: 80px !important;
+    .articles .article-text p {
+        padding-bottom: 5em !important;
     }
+}
 
-    .articles .article-text {
-        height: auto;
-        max-height: 300px;
+
+@media only screen and (max-width: 767.98px) {
+    .event-article-border {
+        display: block;
     }
 }

@@ -1,8 +1,9 @@
-from datetime import time, timedelta
+from datetime import timedelta
 
 from django.contrib.auth.models import Permission
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.dateparse import parse_time
 from django_hosts import reverse
 
 from news.models import Event, TimePlace
@@ -25,15 +26,15 @@ class UrlTests(TestCase):
         self.machines = (self.printer1, self.printer2, self.sewing1, self.sewing2)
 
         self.rule1 = ReservationRule.objects.create(
-            machine_type=self.printer_machine_type, start_time=time(0), days_changed=0, end_time=time(18),
+            machine_type=self.printer_machine_type, start_time=parse_time("00:00"), days_changed=0, end_time=parse_time("18:00"),
             start_days=127, max_hours=6, max_inside_border_crossed=6,
         )
         self.rule2 = ReservationRule.objects.create(
-            machine_type=self.printer_machine_type, start_time=time(18), days_changed=1, end_time=time(0),
+            machine_type=self.printer_machine_type, start_time=parse_time("18:00"), days_changed=1, end_time=parse_time("00:00"),
             start_days=127, max_hours=10, max_inside_border_crossed=6,
         )
         self.rule3 = ReservationRule.objects.create(
-            machine_type=self.sewing_machine_type, start_time=time(0), days_changed=1, end_time=time(0),
+            machine_type=self.sewing_machine_type, start_time=parse_time("00:00"), days_changed=1, end_time=parse_time("00:00"),
             start_days=127, max_hours=4, max_inside_border_crossed=4,
         )
         self.rules = (self.rule1, self.rule2, self.rule3)

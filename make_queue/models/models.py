@@ -1,6 +1,6 @@
 from abc import abstractmethod
 from datetime import datetime, timedelta
-from typing import List, Union
+from typing import List, Tuple, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
@@ -16,6 +16,7 @@ from util.locale_utils import short_datetime_format, timedelta_to_hours
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
+from ..validators import machine_stream_name_validator
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -78,7 +79,7 @@ class MachineType(models.Model):
             course_registration.user = user
             course_registration.save()
             return True
-        return False
+        return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
 
     @staticmethod
     def can_use_advanced_3d_printer(user: Union[User, AnonymousUser]):
@@ -116,6 +117,14 @@ class Machine(models.Model):
     STATUS_CHOICES_DICT = dict(Status.choices)
 
     name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
+    stream_name = models.CharField(
+        blank=True,
+        max_length=50,
+        default="",
+        validators=[machine_stream_name_validator],
+        verbose_name=_("stream name"),
+        help_text=_("Used for connecting to the machine's stream."),
+    )
     machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,
@@ -164,9 +173,11 @@ class Machine(models.Model):
             return self.STATUS_CHOICES_DICT[self.get_status()]
         return super()._get_FIELD_display(field)
 
-    @property
-    def is_reservable(self):
-        return self.get_status() in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE}
+    def reservable_status_display_tuple(self) -> Tuple[bool, str]:
+        return (
+            self.get_status() in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE},
+            self.get_status_display(),
+        )
 
 
 class MachineUsageRule(models.Model):

@@ -29,9 +29,9 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
 
 
 class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
-    list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'status', 'priority')
+    list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'status', 'priority', 'get_stream_name')
     list_filter = ('machine_type', 'machine_model', 'location', 'status')
-    search_fields = ('name', 'machine_model', 'machine_type__name', 'location', 'location_url')
+    search_fields = ('name', 'stream_name', 'machine_model', 'machine_type__name', 'location', 'location_url')
     list_editable = ('status', 'priority')
     list_select_related = ('machine_type',)
 
@@ -41,6 +41,13 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     )
     def get_location(self, machine: Machine):
         return format_html('<a href="{}" target="_blank">{}</a>', machine.location_url, machine.location)
+
+    @admin.display(
+        ordering='stream_name',
+        description=_("stream name"),
+    )
+    def get_stream_name(self, machine: Machine):
+        return machine.stream_name or None
 
     def get_queryset(self, request):
         return super().get_queryset(request).default_order_by()

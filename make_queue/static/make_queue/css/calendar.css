@@ -103,7 +103,7 @@ tr.wrapping {
     display: inline-block;
 }
 
-.make-right-floated {
+.right-floated {
     float: right;
     display: inline-block;
 }

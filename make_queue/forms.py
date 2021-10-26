@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
@@ -209,7 +210,9 @@ class BaseMachineForm(forms.ModelForm):
         queryset=MachineType.objects.order_by('priority'),
         label=_("Machine type"),
         empty_label=_("Select machine type"),
-        widget=SemanticChoiceInput,
+        widget=SemanticChoiceInput(attr_name_to_attr_value_getter={
+            'has-stream': lambda iterator_value: iterator_value.instance.has_stream if iterator_value else None,
+        }),
     )
 
     class Meta:
@@ -234,9 +237,36 @@ class BaseMachineForm(forms.ModelForm):
             widget=SemanticChoiceInput(attrs={'required': True}),
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        machine_type = cleaned_data.get('machine_type')
+        stream_name = cleaned_data.get('stream_name')
+
+        if machine_type:
+            if machine_type.has_stream and not stream_name:
+                self.add_error(
+                    'stream_name', ValidationError(
+                        _("Stream name cannot be empty when the machine type supports streaming."),
+                        code='invalid_empty_stream_name',
+                    )
+                )
+
+        return cleaned_data
+
 
 class EditMachineForm(BaseMachineForm):
     machine_type = None
 
     class Meta(BaseMachineForm.Meta):
         exclude = ['machine_type']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not self.instance.machine_type.has_stream:
+            self.fields['stream_name'].disabled = True
+
+    def clean(self):
+        self.cleaned_data['machine_type'] = self.instance.machine_type
+        return super().clean()

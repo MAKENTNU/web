@@ -1,6 +1,7 @@
 {% extends 'news/article_detail.html' %}
 {% load static %}
 {% load i18n %}
+{% load datetime_tags %}
 {% load event_tags %}
 
 
@@ -29,7 +30,7 @@
             <div class="ui info message">
                 {% trans "You are viewing an old event" %}.
                 {% if last_occurrence %}
-                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_time|date:"d.m.Y" }}
+                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_time|short_date }}
                 {% endif %}
             </div>
         {% endif %}
@@ -39,11 +40,19 @@
                     <div class="content">
                         <p>
                             <i class="ui make-col-yellow wait icon"></i>
-                            {{ occurrence.start_time|date:"d. M, H:i" }} -
                             {% if occurrence.start_time.date == occurrence.end_time.date %}
-                                {{ occurrence.end_time|date:"H:i" }}
+                                {{ occurrence.start_time|year_wise_long_date }}
                             {% else %}
-                                {{ occurrence.end_time|date:"d. M, H:i" }}
+                                {{ occurrence.start_time|year_wise_long_date }} {{ occurrence.start_time|only_time }}
+                            {% endif %}
+                            <br/>
+                            {# Hidden icon only for indenting to the same level as the icon above #}
+                            <i class="ui hidden wait icon"></i>
+                            {% if occurrence.start_time.date == occurrence.end_time.date %}
+                                {{ occurrence.start_time|only_time }}
+                                &ndash; {{ occurrence.end_time|only_time }}
+                            {% else %}
+                                &ndash;&nbsp; {{ occurrence.end_time|year_wise_long_date }} {{ occurrence.end_time|only_time }}
                             {% endif %}
                         </p>
                         {% if occurrence.place %}
@@ -137,7 +146,7 @@
             <div class="ui info message">
                 {% trans "You are viewing an old event" %}.
                 {% if last_occurrence %}
-                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_time|date:"d.m.Y" }}
+                    {% trans "The last occurrence of this event was" %} {{ last_occurrence.start_time|short_date }}
                 {% endif %}
             </div>
         {% endif %}
@@ -169,7 +178,7 @@
         {% for occurrence in timeplaces %}
             <div class="title">
                 <i class="dropdown icon"></i>
-                {{ occurrence.start_time|date:"d. M" }}
+                {{ occurrence.start_time|year_wise_long_date }}
             </div>
             <div class="content">
                 <div class="transition hidden">
@@ -178,9 +187,13 @@
                             <p>
                                 <i class="ui make-col-yellow wait icon"></i>
                                 {% if occurrence.start_time.date == occurrence.end_time.date %}
-                                    {{ occurrence.start_time|time:"H:i" }} - {{ occurrence.end_time|time:"H:i" }}
+                                    {{ occurrence.start_time|only_time }} &ndash; {{ occurrence.end_time|only_time }}
                                 {% else %}
-                                    {{ occurrence.start_time|date:"d. M, H:i" }} - {{ occurrence.end_time|date:"d. M, H:i" }}
+                                    {{ occurrence.start_time|year_wise_long_date }} {{ occurrence.start_time|only_time }}
+                                    <br/>
+                                    {# Hidden icon only for indenting to the same level as the icon above #}
+                                    <i class="ui hidden wait icon"></i>
+                                    &ndash;&nbsp; {{ occurrence.end_time|year_wise_long_date }} {{ occurrence.end_time|only_time }}
                                 {% endif %}
                             </p>
                             {% if occurrence.place %}
