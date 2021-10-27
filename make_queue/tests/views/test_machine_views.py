@@ -92,7 +92,7 @@ class TestMachineListView(TestCase):
 
     @staticmethod
     def create_machine(name_prefix: str, machine_type: MachineType, **kwargs) -> Machine:
-        """Creates a machine of type ``machine_type`` with name '``name_prefix`` ``machine_type``.'"""
+        """Creates a machine of type ``machine_type`` with name '``name_prefix`` ``machine_type``'."""
         return Machine.objects.create(
             name=f"{name_prefix} {machine_type.name}",
             machine_type=machine_type,
