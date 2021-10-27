@@ -38,6 +38,7 @@ class Question(models.Model):
         related_name='questions',
         verbose_name=_("Categories"),
     )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         verbose_name = _("Question")

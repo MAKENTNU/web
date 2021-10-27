@@ -43,6 +43,7 @@ class Member(models.Model):
     quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
     retired = models.BooleanField(default=False, verbose_name=_("Retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         permissions = (
@@ -175,6 +176,7 @@ class SystemAccess(models.Model):
     )
     name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         constraints = (
@@ -225,7 +227,7 @@ class Secret(models.Model):
         verbose_name=_("Priority"),
         help_text=_("If specified, the secrets are sorted ascending by this value."),
     )
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = SecretQuerySet.as_manager()
 

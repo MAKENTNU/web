@@ -35,6 +35,7 @@ class NewsBase(models.Model):
     featured = models.BooleanField(default=True, verbose_name=_("Featured"))
     hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))
     private = models.BooleanField(default=False, verbose_name=_("Internal"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = NewsBaseQuerySet.as_manager()
 
@@ -190,6 +191,7 @@ class TimePlace(models.Model):
     place_url = URLTextField(blank=True, verbose_name=_("Location URL"))
     hidden = models.BooleanField(default=True, verbose_name=_("Hidden"))
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = TimePlaceQuerySet.as_manager()
 
