@@ -12,13 +12,7 @@ from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
 from ...templatetags.reservation_extra import (
-    calendar_url_reservation,
-    current_calendar_url,
-    date_to_percentage,
-    get_current_time_of_day,
-    invert,
-    is_current_date,
-    get_stream_image_path,
+    calendar_url_reservation, current_calendar_url, date_to_percentage, get_current_time_of_day, get_stream_image_path, invert, is_current_date,
 )
 
 
@@ -106,7 +100,7 @@ class TestReservationExtra(TestCase):
     def test_get_stream_image_path_returns_correct_image_path(self):
         no_stream_image_path = static('make_queue/img/no_stream.svg')
         path_status_tuple_list = [
-            (static('make_queue/img/maintenance.svg'),Machine.Status.MAINTENANCE),
+            (static('make_queue/img/maintenance.svg'), Machine.Status.MAINTENANCE),
             (static('make_queue/img/out_of_order.svg'), Machine.Status.OUT_OF_ORDER),
             (no_stream_image_path, Machine.Status.AVAILABLE),
             (no_stream_image_path, Machine.Status.IN_USE),

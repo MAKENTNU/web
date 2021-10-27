@@ -73,9 +73,9 @@ class TestMachineListView(TestCase):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
 
     def test_get_machine_list_view_contains_img_path_in_html(self):
-        self.create_machine(name_prefix="available", machine_type_=self.printer_machine_type, status=Machine.Status.AVAILABLE)
-        self.create_machine(name_prefix="out of order", machine_type_=self.printer_machine_type, status=Machine.Status.OUT_OF_ORDER)
-        self.create_machine(name_prefix="maintenance", machine_type_=self.printer_machine_type, status=Machine.Status.MAINTENANCE)
+        self.create_machine(name_prefix="available", machine_type=self.printer_machine_type, status=Machine.Status.AVAILABLE)
+        self.create_machine(name_prefix="out of order", machine_type=self.printer_machine_type, status=Machine.Status.OUT_OF_ORDER)
+        self.create_machine(name_prefix="maintenance", machine_type=self.printer_machine_type, status=Machine.Status.MAINTENANCE)
 
         response = self.client.get(reverse('machine_list'))
 
@@ -83,11 +83,12 @@ class TestMachineListView(TestCase):
             with self.subTest(stream_image_name=stream_image_name):
                 self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'))
 
-    def create_machine(self, name_prefix: str, machine_type_: MachineType, **kwargs) -> Machine:
-        """Creates a machine of type ``machine_type_`` with name '``name_prefix`` ``machine_type_``'"""
+    @staticmethod
+    def create_machine(name_prefix: str, machine_type: MachineType, **kwargs) -> Machine:
+        """Creates a machine of type ``machine_type`` with name '``name_prefix`` ``machine_type``.'"""
         return Machine.objects.create(
-            name=f"{name_prefix} {machine_type_.name}",
-            machine_type=machine_type_,
+            name=f"{name_prefix} {machine_type.name}",
+            machine_type=machine_type,
             **kwargs,
         )
 
