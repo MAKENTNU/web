@@ -1,3 +1,4 @@
+from abc import ABC
 from datetime import timedelta
 from http import HTTPStatus
 from unittest.mock import patch
@@ -15,12 +16,13 @@ from util.locale_utils import iso_datetime_format, parse_datetime_localized
 from ..utility import post_request_with_user, request_with_user
 from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
-from ...views.admin.reservation import AdminReservationView
-from ...views.reservation.reservation import ChangeReservationView, CreateReservationView, ReservationCreateOrChangeView
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation, ReservationRule
+from ...views.admin.reservation import MAKEReservationsListView
+from ...views.reservation.reservation import CreateOrEditReservationView, CreateReservationView, EditReservationView
 
 
-class BaseReservationCreateOrChangeViewTest(TestCase):
+class CreateOrEditReservationViewTestBase(TestCase, ABC):
 
     def setUp(self):
         Reservation.RESERVATION_FUTURE_LIMIT_DAYS = 7
@@ -36,7 +38,7 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
                                                   end_time=timezone.localtime() + timedelta(hours=2))
 
     def get_view(self):
-        view = ReservationCreateOrChangeView()
+        view = CreateOrEditReservationView()
         view.request = request_with_user(self.user)
         return view
 
@@ -53,7 +55,7 @@ class BaseReservationCreateOrChangeViewTest(TestCase):
         }
 
 
-class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
+class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
 
     def test_get_error_message_non_event(self):
         view = self.get_view()
@@ -206,7 +208,7 @@ class ReservationCreateOrChangeViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(valid_form_calls["calls"], 1)
 
 
-class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
+class TestCreateReservationView(CreateOrEditReservationViewTestBase):
 
     def get_view(self):
         view = CreateReservationView()
@@ -252,10 +254,10 @@ class CreateReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
-class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
+class TestEditReservationView(CreateOrEditReservationViewTestBase):
 
     def get_view(self):
-        view = ChangeReservationView()
+        view = EditReservationView()
         view.request = request_with_user(self.user)
         return view
 
@@ -362,9 +364,9 @@ class ChangeReservationViewTest(BaseReservationCreateOrChangeViewTest):
         self.assertEqual(Reservation.objects.first().special_text, "Test2")
 
 
-class ReservationAdminViewTest(TestCase):
+class TestMAKEReservationsListView(TestCase):
 
-    def test_get_admin_reservation(self):
+    def test_get_MAKE_reservations(self):
         user = User.objects.create_user("test")
         printer_machine_type = MachineType.objects.get(pk=1)
         Quota.objects.create(machine_type=printer_machine_type, number_of_reservations=10, ignore_rules=True, user=user)
@@ -394,12 +396,12 @@ class ReservationAdminViewTest(TestCase):
             event=timeplace,
         )
 
-        context_data = AdminReservationView.as_view()(request_with_user(user)).context_data
+        context_data = MAKEReservationsListView.as_view()(request_with_user(user)).context_data
         self.assertEqual(context_data["is_MAKE"], True)
         self.assertSetEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
 
 
-class MarkReservationFinishedTest(TestCase):
+class TestMarkReservationFinishedView(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("test")

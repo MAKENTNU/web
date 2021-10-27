@@ -7,10 +7,10 @@
     {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
 {% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -31,14 +31,14 @@
             <button class="ui right floated make-bg-yellow button">
                 {% trans "Submit" context "edit" %}
             </button>
-            <a class="ui right floated red button" href="{% url "page" pk=page %}">
+            <a class="ui right floated red button" href="{% url 'page_detail' pk=page %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $("#edit-form").submit(() => {
             const filled = CKEDITOR.instances["id_content"].getData() !== "";
@@ -48,9 +48,5 @@
             }
             return filled;
         });
-
-        $(".message .close").on('click', function () {
-            $(this).closest('.message').transition("fade");
-        });
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

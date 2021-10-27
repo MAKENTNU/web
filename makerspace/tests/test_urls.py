@@ -1,11 +1,11 @@
 from django.test import TestCase
 from django_hosts import reverse
 
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 from ..models import Equipment
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         self.equipment1 = Equipment.objects.create(
@@ -17,11 +17,11 @@ class UrlTests(TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             Get(reverse('makerspace'), public=True),
-            Get(reverse('makerspace-equipment-list'), public=True),
-            Get(reverse('makerspace-equipment-admin'), public=False),
-            Get(reverse('makerspace-equipment-create'), public=False),
-            Get(reverse('makerspace-equipment-edit', kwargs={'pk': self.equipment1.pk}), public=False),
-            Get(reverse('makerspace-equipment', kwargs={'pk': self.equipment1.pk}), public=True),
+            Get(reverse('makerspace_equipment_list'), public=True),
+            Get(reverse('makerspace_admin_equipment_list'), public=False),
+            Get(reverse('makerspace_equipment_create'), public=False),
+            Get(reverse('makerspace_equipment_edit', kwargs={'pk': self.equipment1.pk}), public=False),
+            Get(reverse('makerspace_equipment_detail', kwargs={'pk': self.equipment1.pk}), public=True),
             Get(reverse('rules'), public=True),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)

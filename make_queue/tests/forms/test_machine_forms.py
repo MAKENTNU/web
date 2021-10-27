@@ -1,10 +1,10 @@
 from django.test import TestCase
 
 from ...forms import BaseMachineForm, EditMachineForm
-from ...models.models import Machine, MachineType
+from ...models.machine import Machine, MachineType
 
 
-class MachineFormTest(TestCase):
+class TestBaseMachineForm(TestCase):
 
     def setUp(self):
         self.printer_machine_type = MachineType.objects.get(pk=1)
@@ -79,7 +79,7 @@ class MachineFormTest(TestCase):
         self.assertIn(error_code, error_code_list)
 
 
-class EditMachineFormTest(TestCase):
+class TestEditMachineForm(TestCase):
 
     def setUp(self):
         self.printer_machine_type = MachineType.objects.get(pk=1)

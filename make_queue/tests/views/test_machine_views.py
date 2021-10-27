@@ -8,18 +8,18 @@ from django.urls import reverse
 from users.models import User
 from ..utility import request_with_user
 from ...forms import BaseMachineForm, EditMachineForm
-from ...models.models import Machine, MachineType
-from ...views.reservation.machine import MachineView
+from ...models.machine import Machine, MachineType
+from ...views.reservation.machine import MachineListView
 
 
-class MachineViewTest(TestCase):
+class TestMachineListView(TestCase):
 
     def setUp(self):
         self.printer_machine_type = MachineType.objects.get(pk=1)
         self.sewing_machine_type = MachineType.objects.get(pk=2)
 
     def test_no_machines(self):
-        context_data = MachineView.as_view()(request_with_user(None)).context_data
+        context_data = MachineListView.as_view()(request_with_user(None)).context_data
         self.assertIn('machine_types', context_data)
         self.assertFalse(context_data['machine_types'].exists())
 
@@ -27,7 +27,7 @@ class MachineViewTest(TestCase):
         printer1 = Machine.objects.create(name="test1", machine_type=self.printer_machine_type)
         printer2 = Machine.objects.create(name="test2", machine_type=self.printer_machine_type)
 
-        machine_types = list(MachineView.as_view()(request_with_user(None)).context_data['machine_types'])
+        machine_types = list(MachineListView.as_view()(request_with_user(None)).context_data['machine_types'])
         self.assertEqual(len(machine_types), 1)
         machine_type_0 = machine_types[0]
         self.assertEqual(machine_type_0.pk, self.printer_machine_type.pk)
@@ -39,7 +39,7 @@ class MachineViewTest(TestCase):
         printer2 = Machine.objects.create(name="test2", machine_type=self.printer_machine_type)
         sewing = Machine.objects.create(name="test", machine_type=self.sewing_machine_type)
 
-        machine_types = list(MachineView.as_view()(request_with_user(None)).context_data['machine_types'])
+        machine_types = list(MachineListView.as_view()(request_with_user(None)).context_data['machine_types'])
         self.assertEqual(len(machine_types), 2)
         machine_type_0, machine_type_1 = machine_types
         self.assertEqual(machine_type_0.pk, self.printer_machine_type.pk)
@@ -67,7 +67,7 @@ class MachineViewTest(TestCase):
                 machine_b, machine_c, machine_d,
             ])
 
-        machine_types = list(MachineView.as_view()(request_with_user(None)).context_data['machine_types'])
+        machine_types = list(MachineListView.as_view()(request_with_user(None)).context_data['machine_types'])
         for machine_type, correct_machine_order in zip(machine_types, correct_machine_orders):
             with self.subTest(machine_type=machine_type):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
@@ -77,8 +77,8 @@ class MachineViewTest(TestCase):
         self.create_machine(name_prefix="out of order", machine_type_=self.printer_machine_type, status=Machine.Status.OUT_OF_ORDER)
         self.create_machine(name_prefix="maintenance", machine_type_=self.printer_machine_type, status=Machine.Status.MAINTENANCE)
 
-        response = self.client.get(reverse('reservation_machines_overview'))
-        
+        response = self.client.get(reverse('machine_list'))
+
         for stream_image_name in ['out_of_order', 'no_stream', 'maintenance']:
             with self.subTest(stream_image_name=stream_image_name):
                 self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'))
@@ -92,7 +92,7 @@ class MachineViewTest(TestCase):
         )
 
 
-class CreateAndEditMachineViewTest(TestCase):
+class TestCreateAndEditMachineView(TestCase):
 
     def setUp(self):
         username = "TEST_USER"

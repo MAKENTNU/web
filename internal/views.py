@@ -15,7 +15,7 @@ class HomeView(TemplateView):
     template_name = 'internal/home.html'
 
 
-class SecretsView(ListView):
+class SecretListView(ListView):
     model = Secret
     template_name = 'internal/secret_list.html'
     context_object_name = 'secrets'
@@ -27,7 +27,7 @@ class CreateSecretView(PermissionRequiredMixin, CreateView):
     form_class = SecretsForm
     template_name = 'internal/secret_create.html'
     context_object_name = 'secrets'
-    success_url = reverse_lazy('secrets')
+    success_url = reverse_lazy('secret_list')
 
 
 class EditSecretView(PermissionRequiredMixin, UpdateView):
@@ -36,16 +36,16 @@ class EditSecretView(PermissionRequiredMixin, UpdateView):
     form_class = SecretsForm
     template_name = 'internal/secret_edit.html'
     context_object_name = 'secrets'
-    success_url = reverse_lazy('secrets')
+    success_url = reverse_lazy('secret_list')
 
 
 class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('internal.delete_secret',)
     model = Secret
-    success_url = reverse_lazy('secrets')
+    success_url = reverse_lazy('secret_list')
 
 
-class MembersListView(ListView):
+class MemberListView(ListView):
     model = Member
     template_name = 'internal/member_list.html'
     context_object_name = 'members'
@@ -62,14 +62,14 @@ class MembersListView(ListView):
         return context_data
 
 
-class AddMemberView(PermissionRequiredMixin, CreateView):
+class CreateMemberView(PermissionRequiredMixin, CreateView):
     permission_required = ('internal.can_register_new_member',)
     model = Member
     form_class = AddMemberForm
     template_name = 'internal/member_create.html'
 
     def get_success_url(self):
-        return reverse('edit-member', args=(self.object.pk,))
+        return reverse('edit_member', args=(self.object.pk,))
 
     def form_valid(self, form):
         user = form.cleaned_data['user']
@@ -105,7 +105,7 @@ class EditMemberView(PermissionRequiredMixin, UpdateView):
         return kwargs
 
     def get_success_url(self):
-        return reverse('members', args=(self.object.pk,))
+        return reverse('member_list', args=(self.object.pk,))
 
 
 class MemberQuitView(PermissionRequiredMixin, UpdateView):
@@ -115,7 +115,7 @@ class MemberQuitView(PermissionRequiredMixin, UpdateView):
     template_name = 'internal/member_quit.html'
 
     def get_success_url(self):
-        return reverse('members', args=(self.object.pk,))
+        return reverse('member_list', args=(self.object.pk,))
 
 
 class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
@@ -131,7 +131,7 @@ class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('members', args=(self.object.pk,))
+        return reverse('member_list', args=(self.object.pk,))
 
 
 class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
@@ -150,4 +150,4 @@ class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
         )
 
     def get_success_url(self):
-        return reverse('members', args=(self.object.member.pk,))
+        return reverse('member_list', args=(self.object.member.pk,))

@@ -26,6 +26,12 @@ p, li {
     font-size: 1.15rem;
 }
 
+.ui.message p,
+.ui.message li {
+    /* Unsets the font size set above, so that Fomantic-UI is able to use its own font size */
+    font-size: unset;
+}
+
 p {
     line-height: 1.85rem;
 }
@@ -165,6 +171,11 @@ li {
 .ui.form .field > label.multilingual-label {
     display: inline;
     vertical-align: sub;
+}
+
+/* Fix for https://github.com/MAKENTNU/web/issues/386; this should be removed once fixed in Fomantic-UI */
+.ui.ribbon.label:after {
+    z-index: -1;
 }
 
 

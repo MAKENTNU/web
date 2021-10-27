@@ -9,10 +9,10 @@ from django_hosts import host
 ckeditor_uploader_widgets.reverse = django_hosts.reverse
 
 host_patterns = [
-    host(r"(i|internal|internt)", "internal.urls", name="internal"),
-    host(r"admin", "web.admin_urls", name="admin"),
-    host(r"docs", "docs.urls", name="docs"),
-    host(r"", settings.ROOT_URLCONF, name="main"),
+    host(r"(i|internal|internt)", 'internal.urls', name='internal'),
+    host(r"admin", 'web.admin_urls', name='admin'),
+    host(r"docs", 'docs.urls', name='docs'),
+    host(r"", settings.ROOT_URLCONF, name='main'),
 ]
 
 # This allows the next parameter in login to redirect to pages on all the subdomains

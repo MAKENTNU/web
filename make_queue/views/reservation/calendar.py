@@ -1,11 +1,12 @@
 from django.views.generic import TemplateView
 
 from util.locale_utils import year_and_week_to_monday
-from ...models.models import Machine, Quota
+from ...models.machine import Machine
+from ...models.reservation import Quota
 from ...templatetags.reservation_extra import reservation_denied_message
 
 
-class ReservationCalendarView(TemplateView):
+class MachineDetailView(TemplateView):
     """Main view for showing the reservation calendar for a machine."""
     template_name = 'make_queue/machine_detail.html'
 

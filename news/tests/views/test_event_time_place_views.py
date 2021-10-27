@@ -5,11 +5,11 @@ from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from util.test_utils import MOCK_JPG_FILE, PermissionsTestCase
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE, PermissionsTestCase
 from ...models import Event, EventTicket, TimePlace
 
 
-class ViewTestCase(PermissionsTestCase):
+class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
 
     def setUp(self):
         username = 'TEST_USER'
@@ -30,41 +30,41 @@ class ViewTestCase(PermissionsTestCase):
         )
 
     def test_events(self):
-        response = self.client.get(reverse('events'))
+        response = self.client.get(reverse('event_list'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event(self):
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_create(self):
-        response = self.client.get(reverse('event-create'))
+        response = self.client.get(reverse('event_create'))
         self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
         self.add_permissions(self.user, 'add_event')
-        response = self.client.get(reverse('event-create'))
+        response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_edit(self):
-        response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
         self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
         self.add_permissions(self.user, 'change_event')
-        response = self.client.get(reverse('event-edit', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_timeplace_duplicate(self):
         tp = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
                                       end_time=timezone.localtime() + timedelta(minutes=10))
-        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
         self.add_permissions(self.user, 'add_timeplace')
         self.add_permissions(self.user, 'change_timeplace')
-        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
 
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
-        self.assertRedirects(response, reverse('timeplace-edit', args=[new.pk]))
+        self.assertRedirects(response, reverse('timeplace_edit', args=[new.pk]))
 
         new_start_time = tp.start_time + timedelta(weeks=1)
         new_end_time = tp.end_time + timedelta(weeks=1)
@@ -88,7 +88,7 @@ class ViewTestCase(PermissionsTestCase):
             hidden=False,
         )
 
-        response = self.client.get(reverse('timeplace-duplicate', args=[tp.pk]))
+        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, HTTPStatus.OK)
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
 
@@ -99,28 +99,28 @@ class ViewTestCase(PermissionsTestCase):
         self.event.hidden = True
         self.event.save()
 
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
         self.add_permissions(self.user, 'change_event')
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_private_event(self):
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self.event.private = True
         self.event.save()
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
         self.add_permissions(self.user, 'can_view_private')
-        response = self.client.get(reverse('event', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = "event-tickets"
+        url_name = 'event_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -131,7 +131,7 @@ class ViewTestCase(PermissionsTestCase):
         self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_timeplace_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = "timeplace-tickets"
+        url_name = 'timeplace_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -142,7 +142,7 @@ class ViewTestCase(PermissionsTestCase):
         self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = "event-tickets"
+        url_name = 'event_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),
@@ -152,7 +152,7 @@ class ViewTestCase(PermissionsTestCase):
         self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = "timeplace-tickets"
+        url_name = 'timeplace_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user2", False),

@@ -256,6 +256,7 @@ function setup() {
                 cardNumber: $row.data("card-number"),
                 studyProgram: $row.data("study-program"),
                 dateJoined: $row.data("date-joined"),
+                dateJoinedSortable: $row.data("date-joined-sortable"),
                 termJoined: $row.data("term-joined"),
                 dateQuit: $row.data("date-quit"),
                 termQuit: $.trim($row.data("term-quit")),
@@ -303,7 +304,7 @@ function setup() {
         state.allMembers.push(member);
     });
 
-    for (let sortAttribute of ["name", "committees", "status", "dateJoined", "email", "role", "phone"]) {
+    for (let sortAttribute of ["name", "committees", "status", "dateJoinedSortable", "email", "role", "phone"]) {
         $(`#member-sort-${sortAttribute}`).closest("th").click((e) => setSort(
             sortAttribute, $(e.target).find(".icon"),
         ));

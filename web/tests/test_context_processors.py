@@ -9,7 +9,7 @@ class TestLoginRedirect(TestCase):
         self.assertEqual(response.context['login_next_param'], "")
 
     def test_login_page_keeps_redirect_target(self):
-        login_path = reverse('login', host="main")
+        login_path = reverse('login', host='main')
         response = self.client.get(f"{login_path}?next=/asdf/")
         login_redirect_path = self.get_login_redirect_path(response)
         self.assertEqual(login_redirect_path, "/asdf/")

@@ -6,11 +6,11 @@
 {% load announcement_tags %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
     <script src="{% static 'web/js/image_link.js' %}"></script>
     <script src="{% static 'lib/parallax/parallax.min.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block padding_top %}{% endblock %}
 
@@ -36,7 +36,7 @@
         <div class="ui items events">
             {% for event_dict in event_dicts %}
                 <div class="event item">
-                    <div class="ui small clickable image" href="{% url 'event' event_dict.event.pk %}">
+                    <div class="ui small clickable image" href="{% url 'event_detail' event_dict.event.pk %}">
                         <p class="ui yellow make-bg-yellow ribbon label">
                             {{ event_dict.first_occurrence.start_time|year_wise_short_date }}
                             {% if event_dict.number_of_occurrences > 1 %}
@@ -58,7 +58,7 @@
 
                     <div class="content">
                         <div class="header">
-                            <a href="{% url 'event' event_dict.event.pk %}">{{ event_dict.event.title }}</a>
+                            <a href="{% url 'event_detail' event_dict.event.pk %}">{{ event_dict.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event_dict.first_occurrence.place }}</span>
@@ -74,7 +74,7 @@
                     <div class="content">
                         <div class="header">
                             <h2>
-                                <a href="{% url 'events' %}">
+                                <a href="{% url 'event_list' %}">
                                     {% trans "More events" %} <i class="angle double right icon"></i>
                                 </a>
                             </h2>
@@ -98,7 +98,7 @@
  			    {% if forloop.first %}article-first{% endif %}
  			    {% if forloop.last %}article-last{% endif %}"
                     {% if article.contain %}style="object-fit: contain;"{% endif %}
-                    href="{% url 'article' article.pk %}"
+                    href="{% url 'article_detail' article.pk %}"
                 />
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
@@ -108,7 +108,7 @@
                     <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
                     <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
                     <div>
-                        <h2><a href="{% url 'article' article.pk %}">{{ article.title }}</a></h2>
+                        <h2><a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a></h2>
                         <p>{{ article.clickbait }}</p>
                     </div>
                 </div>
@@ -117,11 +117,11 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".clickable").click(function () {
             window.location.href = $(this).attr('href');
         });
         $(".parallax-window").parallax({'speed': 0.5});
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

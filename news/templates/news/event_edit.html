@@ -5,11 +5,11 @@
 
 {% block title %}{% trans "Edit event" %}{% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
     <script src="{% static 'news/js/event_type.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui centered header">
@@ -123,13 +123,9 @@
 
         <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
         <a class="ui right floated red button"
-           href="{% block cancel_url %}{% url "admin-event" form.instance.pk %}{% endblock cancel_url %}"
+           href="{% block cancel_url %}{% url 'admin_event_detail' form.instance.pk %}{% endblock cancel_url %}"
         >
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
-
-    <script>
-        $("span[data-content]").popup();
-    </script>
 {% endblock body %}
