@@ -83,6 +83,13 @@ class TestMachineListView(TestCase):
             with self.subTest(stream_image_name=stream_image_name):
                 self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'))
 
+    def test_get_empty_machine_list_doesnt_contain_stream_img_path_in_html(self):
+        no_machine_list_response = self.client.get(reverse('machine_list'))
+
+        for stream_image_name in ['out_of_order', 'no_stream', 'maintenance']:
+            with self.subTest(stream_image_name=stream_image_name):
+                self.assertNotContains(no_machine_list_response, static(f'make_queue/img/{stream_image_name}.svg'))
+
     @staticmethod
     def create_machine(name_prefix: str, machine_type: MachineType, **kwargs) -> Machine:
         """Creates a machine of type ``machine_type`` with name '``name_prefix`` ``machine_type``.'"""
