@@ -21,65 +21,65 @@ class FAQAdminPanelView(PermissionRequiredMixin, TemplateView):
         return has_any_faq_permissions(self.request.user)
 
 
-class QuestionAdminView(PermissionRequiredMixin, ListView):
+class AdminQuestionListView(PermissionRequiredMixin, ListView):
     permission_required = ('faq.change_question',)
     model = Question
+    queryset = Question.objects.order_by('title')
     template_name = 'faq/admin_question_list.html'
     context_object_name = 'questions'
-    queryset = Question.objects.order_by('title')
 
 
-class CategoryAdminView(PermissionRequiredMixin, ListView):
+class AdminCategoryListView(PermissionRequiredMixin, ListView):
     permission_required = ('faq.change_category',)
     model = Category
+    queryset = Category.objects.order_by('name')
     template_name = 'faq/admin_category_list.html'
     context_object_name = 'categories'
-    queryset = Category.objects.order_by('name')
 
 
-class FAQCreateView(PermissionRequiredMixin, CreateView):
+class QuestionCreateView(PermissionRequiredMixin, CreateView):
     permission_required = ('faq.add_question',)
     model = Question
     form_class = QuestionForm
     template_name = 'faq/admin_question_create.html'
     context_object_name = 'question'
-    success_url = reverse_lazy('faq-question-list')
+    success_url = reverse_lazy('admin_question_list')
 
 
-class FAQEditView(PermissionRequiredMixin, UpdateView):
+class QuestionUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = ('faq.change_question',)
     model = Question
     form_class = QuestionForm
     template_name = 'faq/admin_question_edit.html'
     context_object_name = 'question'
-    success_url = reverse_lazy('faq-question-list')
+    success_url = reverse_lazy('admin_question_list')
 
 
-class FAQDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class QuestionDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('faq.delete_question',)
     model = Question
-    success_url = reverse_lazy('faq-question-list')
+    success_url = reverse_lazy('admin_question_list')
 
 
-class CreateCategoryView(PermissionRequiredMixin, CreateView):
+class CategoryCreateView(PermissionRequiredMixin, CreateView):
     permission_required = ('faq.add_category',)
     model = Category
     form_class = CategoryForm
     template_name = 'faq/admin_category_create.html'
     context_object_name = 'category'
-    success_url = reverse_lazy('faq-category-list')
+    success_url = reverse_lazy('admin_category_list')
 
 
-class EditCategoryView(PermissionRequiredMixin, UpdateView):
+class CategoryUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = ('faq.change_category',)
     model = Category
     form_class = CategoryForm
     template_name = 'faq/admin_category_edit.html'
     context_object_name = 'category'
-    success_url = reverse_lazy('faq-category-list')
+    success_url = reverse_lazy('admin_category_list')
 
 
-class DeleteCategoryView(PermissionRequiredMixin, DeleteView):
+class CategoryDeleteView(PermissionRequiredMixin, DeleteView):
     permission_required = ('faq.delete_category',)
     model = Category
-    success_url = reverse_lazy('faq-category-list')
+    success_url = reverse_lazy('admin_category_list')

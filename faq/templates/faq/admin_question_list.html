@@ -5,12 +5,12 @@
 {% block body %}
     <div class="ui container">
         <h1>
-            <a href="{% url "faq-admin" %}">
+            <a href="{% url 'faq_admin_panel' %}">
                 <i class="blue chevron circle left icon"></i>
             </a>
             {% trans "Questions" %}
             {% if perms.faq.add_question %}
-                <a href="{% url 'faq-question-create' %}">
+                <a href="{% url 'question_create' %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -22,14 +22,14 @@
                         <div class="ui header">
                             {{ question.title }}
                             {% if perms.faq.change_question %}
-                                <a href="{% url 'faq-question-edit' pk=question.pk %}">
+                                <a href="{% url 'question_update' pk=question.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
 
                             {% if perms.faq.delete_question %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url 'faq-question-delete' question.pk %}"
+                                   data-url="{% url 'question_delete' question.pk %}"
                                    data-obj-name="{{ question }}">
                                     <i class="large red delete icon"></i>
                                 </a>

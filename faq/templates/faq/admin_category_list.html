@@ -9,12 +9,12 @@
 {% block body %}
     <div class="ui container">
         <h1 class="faq-title">
-            <a href="{% url "faq-admin" %}">
+            <a href="{% url 'faq_admin_panel' %}">
                 <i class="blue chevron circle left icon"></i>
             </a>
             {% trans "Categories" %}
             {% if perms.faq.add_category %}
-                <a href="{% url "faq-category-create" %}">
+                <a href="{% url 'category_create' %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -26,7 +26,7 @@
                         <div class="ui header">
                             {{ category.name }}
                             {% if perms.faq.change_category %}
-                                <a href="{% url "faq-category-edit" pk=category.pk %}">
+                                <a href="{% url 'category_update' category.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
@@ -35,7 +35,7 @@
                                 <a class="delete confirm"
                                    data-title="{% trans "Delete" %}"
                                    data-content="{% trans "Click to delete" %}."
-                                   href="{% url "faq-category-delete" category.pk %}">
+                                   href="{% url "category_delete" category.pk %}">
                                     <i class="ui delete icon red"></i>
                                 </a>
                             {% endif %}
