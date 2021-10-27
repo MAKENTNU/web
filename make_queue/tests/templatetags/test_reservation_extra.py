@@ -109,4 +109,4 @@ class TestReservationExtra(TestCase):
         for static_path, machine_status in path_status_tuple_list:
             with self.subTest(static_path=static_path, machine_status=machine_status):
                 result = get_stream_image_path(machine_status)
-                self.assertEqual(static_path, result)
+                self.assertEqual(result, static_path)
