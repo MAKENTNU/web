@@ -81,7 +81,7 @@ class TestMachineListView(TestCase):
 
         for stream_image_name in ['out_of_order', 'no_stream', 'maintenance']:
             with self.subTest(stream_image_name=stream_image_name):
-                self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'))
+                self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'), count=1)
 
     def test_get_empty_machine_list_doesnt_contain_stream_img_path_in_html(self):
         no_machine_list_response = self.client.get(reverse('machine_list'))
