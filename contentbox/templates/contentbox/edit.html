@@ -5,10 +5,10 @@
 
 {% block title %}{% trans "Edit" %} {{ contentbox.title }}{% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
     <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -24,11 +24,6 @@
                 <div class="header">{% trans "Missing language" %}</div>
                 <div class="content">{% trans "One or more languages has no content" %}</div>
             </div>
-            <script>
-                $(".message .close").click(function () {
-                    $(this).closest(".message").fadeOut();
-                });
-            </script>
         {% endif %}
 
         <form class="ui form text" method="POST" enctype="multipart/form-data">

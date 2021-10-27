@@ -5,9 +5,9 @@
 {% load thumbnail %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'checkin/css/checkin.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui text container">
@@ -44,9 +44,9 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".ui.rating").rating();
         $(".rating.skill-lvl").rating('disable');
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

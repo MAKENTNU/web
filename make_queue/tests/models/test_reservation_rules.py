@@ -5,13 +5,14 @@ from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils.dateparse import parse_datetime, parse_time
 
-from ...models.models import MachineType, ReservationRule
+from ...models.machine import MachineType
+from ...models.reservation import ReservationRule
 
 
 Period = ReservationRule.Period
 
 
-class PeriodTests(TestCase):
+class TestPeriod(TestCase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
@@ -64,7 +65,7 @@ class PeriodTests(TestCase):
         self.assertFalse(period4.overlap(period1), "Periods on distinct days should not overlap")
 
 
-class ReservationRuleTests(TestCase):
+class TestReservationRule(TestCase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default

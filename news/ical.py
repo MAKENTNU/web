@@ -27,7 +27,7 @@ class EventFeed(ICalFeed):
         return items
 
     def item_link(self, item: TimePlace):
-        return reverse('event', kwargs={'pk': item.pk})
+        return reverse('event_detail', kwargs={'pk': item.pk})
 
     def item_title(self, item: TimePlace):
         return item.event.title

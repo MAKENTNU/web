@@ -7,22 +7,22 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/rule_list.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
         <h1>
             {% blocktrans with machine_type=machine_type %}Reservation rules for {{ machine_type }}{% endblocktrans %}
             {% if perms.make_queue.add_reservation_rule %}
-                <a href="{% url "create_machine_rule" machine_type %}">
+                <a href="{% url 'create_reservation_rule' machine_type %}">
                     <i class="ui green plus icon"></i>
                 </a>
             {% endif %}
         </h1>
         <div>
-            <a class="ui blue button" href="{% url "machine_usage_rules" machine_type %}">
+            <a class="ui blue button" href="{% url 'machine_usage_rules_detail' machine_type %}">
                 {% trans "Usage rules" %}
             </a>
         </div>
@@ -53,13 +53,13 @@
                     <div class="content">
                         <div class="meta">
                             {% if perms.change_reservation_rule %}
-                                <a href="{% url "edit_machine_rule" machine_type rule.pk %}">
+                                <a href="{% url 'edit_reservation_rule' machine_type rule.pk %}">
                                     <i class="ui make-col-yellow icon pencil"></i>
                                 </a>
                             {% endif %}
                             {% if perms.delete_reservation_rule %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url "delete_machine_rule" machine_type rule.pk %}">
+                                   data-url="{% url 'delete_reservation_rule' machine_type rule.pk %}">
                                     <i class="ui red icon trash"></i>
                                 </a>
                             {% endif %}

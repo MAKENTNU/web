@@ -2,9 +2,9 @@
 {% load i18n %}
 
 
-{% block head %}
+{% block extra_head %}
     {{ form.media }}
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -58,13 +58,9 @@
             <button class="ui right floated make-bg-yellow button">
                 {% trans "Save" %}
             </button>
-            <a class="ui right floated red button" href="{% url "announcement_admin" %}">
+            <a class="ui right floated red button" href="{% url 'announcement_admin' %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
-
-    <script>
-        $("span[data-content]").popup();
-    </script>
 {% endblock body %}

@@ -4,10 +4,10 @@ from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import BaseMachineForm, EditMachineForm
-from ...models.models import Machine, MachineType
+from ...models.machine import Machine, MachineType
 
 
-class MachineView(ListView):
+class MachineListView(ListView):
     """View that shows all the machines - listed per machine type."""
     model = MachineType
     queryset = (
@@ -25,7 +25,7 @@ class CreateMachineView(PermissionRequiredMixin, CreateView):
     model = Machine
     form_class = BaseMachineForm
     template_name = 'make_queue/machine/machine_create.html'
-    success_url = reverse_lazy("reservation_machines_overview")
+    success_url = reverse_lazy('machine_list')
 
 
 class EditMachineView(PermissionRequiredMixin, UpdateView):
@@ -33,10 +33,10 @@ class EditMachineView(PermissionRequiredMixin, UpdateView):
     model = Machine
     form_class = EditMachineForm
     template_name = 'make_queue/machine/machine_edit.html'
-    success_url = reverse_lazy("reservation_machines_overview")
+    success_url = reverse_lazy('machine_list')
 
 
 class DeleteMachineView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_machine',)
     model = Machine
-    success_url = reverse_lazy("reservation_machines_overview")
+    success_url = reverse_lazy('machine_list')

@@ -16,8 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Default values
 DATABASE = 'sqlite'
-# TODO: change to `BigAutoField` when `social-auth-app-django` fixes its own `DEFAULT_AUTO_FIELD`
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -94,6 +93,10 @@ INSTALLED_APPS = [
     'users',
 
     'util',  # not a "real" app, just a collection of utilities
+
+    # Should be placed last,
+    # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

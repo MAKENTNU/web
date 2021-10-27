@@ -4,10 +4,10 @@
 {% load thumbnail %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
     <script src="{% static 'web/js/image_link.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui text-centered make-col-blue header">
@@ -25,7 +25,7 @@
 			    {% if forloop.first %}article-first{% endif %}
 			    {% if forloop.last %}article-last{% endif %}"
                     {% if article.contain %}style="object-fit: contain;"{% endif %}
-                    href="{% url 'article' article.pk %}"
+                    href="{% url 'article_detail' article.pk %}"
                 />
                 <div class="article-text {% cycle 'float-left' 'float-right' %}
 			    {% if forloop.first %}article-first{% endif %}
@@ -38,7 +38,7 @@
                     {% endif %}
                     <div>
                         <h2 class="word-breaking">
-                            <a href="{% url 'article' article.pk %}">{{ article.title }}</a>
+                            <a href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
                         </h2>
                         <p>{{ article.clickbait }}</p>
                     </div>

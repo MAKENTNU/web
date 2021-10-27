@@ -9,7 +9,8 @@ from django.views.generic.edit import ModelFormMixin
 
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import RuleForm
-from ...models.models import MachineType, MachineUsageRule, Quota, ReservationRule
+from ...models.machine import MachineType, MachineUsageRule
+from ...models.reservation import Quota, ReservationRule
 
 
 class MachineTypeBasedView(ContextMixin, View, ABC):
@@ -26,7 +27,7 @@ class MachineTypeBasedView(ContextMixin, View, ABC):
         })
 
 
-class RulesOverviewView(MachineTypeBasedView, ListView):
+class ReservationRuleListView(MachineTypeBasedView, ListView):
     model = ReservationRule
     template_name = 'make_queue/rule_list.html'
     context_object_name = 'rules'
@@ -62,7 +63,7 @@ class BaseReservationRulePostView(MachineTypeBasedView, ModelFormMixin, ABC):
         return kwargs
 
     def get_success_url(self):
-        return reverse('machine_rules', args=[self.object.machine_type])
+        return reverse('reservation_rule_list', args=[self.object.machine_type])
 
 
 class CreateReservationRuleView(PermissionRequiredMixin, BaseReservationRulePostView, CreateView):
@@ -75,15 +76,15 @@ class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRulePostVi
     template_name = 'make_queue/rule_edit.html'
 
 
-class DeleteReservationRules(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class DeleteReservationRuleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_reservation_rule',)
     model = ReservationRule
 
     def get_success_url(self):
-        return reverse('machine_rules', args=[self.object.machine_type])
+        return reverse('reservation_rule_list', args=[self.object.machine_type])
 
 
-class MachineUsageRulesView(MachineTypeBasedView, DetailView):
+class MachineUsageRulesDetailView(MachineTypeBasedView, DetailView):
     model = MachineUsageRule
     template_name = 'make_queue/usage_rules_detail.html'
     context_object_name = 'usage_rules'
@@ -104,4 +105,4 @@ class EditUsageRulesView(PermissionRequiredMixin, MachineTypeBasedView, UpdateVi
         return self.machine_type.usage_rule
 
     def get_success_url(self):
-        return reverse('machine_usage_rules', args=[self.object.machine_type])
+        return reverse('machine_usage_rules_detail', args=[self.object.machine_type])

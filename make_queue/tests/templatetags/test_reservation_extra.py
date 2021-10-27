@@ -8,13 +8,14 @@ from django.utils import timezone
 from users.models import User
 from util.locale_utils import parse_datetime_localized
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation
 from ...templatetags.reservation_extra import (
     calendar_url_reservation, current_calendar_url, date_to_percentage, get_current_time_of_day, invert, is_current_date,
 )
 
 
-class ReservationExtraTestCases(TestCase):
+class TestReservationExtra(TestCase):
 
     @mock.patch('django.utils.timezone.now')
     def test_calendar_reservation_url(self, now_mock):
@@ -44,7 +45,7 @@ class ReservationExtraTestCases(TestCase):
         )
 
         self.assertEqual(
-            reverse('reservation_calendar', kwargs={'year': 2017, 'week': 52, 'machine': printer}),
+            reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'machine': printer}),
             current_calendar_url(printer)
         )
 

@@ -8,7 +8,7 @@
         <h1>
             {% trans "Questions" %}
             {% if perms.faq.add_question %}
-                <a href="{% url "faq-create" %}">
+                <a href="{% url 'faq_create' %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -20,14 +20,14 @@
                         <div class="ui header">
                             {{ question.title }}
                             {% if perms.faq.change_question %}
-                                <a href="{% url "faq-edit" pk=question.pk %}">
+                                <a href="{% url 'faq_edit' pk=question.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
 
                             {% if perms.faq.delete_question %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url 'faq-question-delete' question.pk %}"
+                                   data-url="{% url 'faq_delete' question.pk %}"
                                    data-obj-name="{{ question }}">
                                     <i class="large red delete icon"></i>
                                 </a>

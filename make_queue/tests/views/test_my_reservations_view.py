@@ -6,11 +6,12 @@ from django.utils import timezone
 from users.models import User
 from ..utility import request_with_user
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation
-from ...views.reservation.overview import MyReservationsView
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation
+from ...views.reservation.reservation import MyReservationsListView
 
 
-class MyReservationsViewTestCase(TestCase):
+class TestMyReservationsListView(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("user", "user@makentnu.no")
@@ -31,7 +32,7 @@ class MyReservationsViewTestCase(TestCase):
     def test_get_user_reservations_single_reservation(self):
         self.assertListEqual(
             [Reservation.objects.get(user=self.user)],
-            list(MyReservationsView.as_view()(request_with_user(self.user)).context_data['reservations'])
+            list(MyReservationsListView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )
 
     def test_get_user_reservations_multiple_reservations(self):
@@ -42,7 +43,7 @@ class MyReservationsViewTestCase(TestCase):
 
         self.assertListEqual(
             list(self.user.reservations.order_by("-start_time")),
-            list(MyReservationsView.as_view()(request_with_user(self.user)).context_data['reservations'])
+            list(MyReservationsListView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )
 
     def test_get_user_reservations_different_types(self):
@@ -62,5 +63,5 @@ class MyReservationsViewTestCase(TestCase):
                 Reservation.objects.get(user=self.user, machine__machine_type=sewing_machine_type),
                 Reservation.objects.get(user=self.user, machine__machine_type=self.printer_machine_type),
             ],
-            list(MyReservationsView.as_view()(request_with_user(self.user)).context_data['reservations'])
+            list(MyReservationsListView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )

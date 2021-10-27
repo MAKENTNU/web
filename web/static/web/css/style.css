@@ -26,6 +26,12 @@ p, li {
     font-size: 1.15rem;
 }
 
+.ui.message p,
+.ui.message li {
+    /* Unsets the font size set above, so that Fomantic-UI is able to use its own font size */
+    font-size: unset;
+}
+
 p {
     line-height: 1.85rem;
 }
