@@ -1,10 +1,11 @@
-{% extends "web/base.html" %}
-{%  load static %}
+{% extends 'web/base.html' %}
+{% load static %}
 {% load i18n %}
 
-{% block head %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static "faq/css/faq_admin_list.css" %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -32,11 +33,10 @@
                             {% endif %}
 
                             {% if perms.faq.delete_category %}
-                                <a class="delete confirm"
-                                   data-title="{% trans "Delete" %}"
-                                   data-content="{% trans "Click to delete" %}."
-                                   href="{% url "category_delete" category.pk %}">
-                                    <i class="ui delete icon red"></i>
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'category_delete' category.pk %}"
+                                   data-obj-name="{{ category }}">
+                                    <i class="large red delete icon"></i>
                                 </a>
                             {% endif %}
                         </div>
@@ -45,4 +45,4 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock body %}

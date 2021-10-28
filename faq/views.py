@@ -79,7 +79,7 @@ class CategoryUpdateView(PermissionRequiredMixin, UpdateView):
     success_url = reverse_lazy('admin_category_list')
 
 
-class CategoryDeleteView(PermissionRequiredMixin, DeleteView):
+class CategoryDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('faq.delete_category',)
     model = Category
     success_url = reverse_lazy('admin_category_list')
