@@ -14,7 +14,7 @@
         </h1>
         <div class="ui styled fluid accordion">
             {% for category in categories %}
-                <div class="active title">
+                <div class="title">
                     <div class="ui header">
                         <i class="dropdown icon"></i>
                         {{ category.name }}
@@ -24,7 +24,7 @@
                     {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
                     <div class="styled fluid accordion">
                         {% for question in category.questions.all %}
-                            <div class="active title">
+                            <div class="title">
                                 <div class="ui make-col-blue header">
                                     <i class="dropdown icon"></i>
                                     {{ question.title }}
