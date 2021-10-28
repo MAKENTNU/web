@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 from django import template
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import time_format
@@ -144,3 +145,12 @@ def can_mark_reservation_finished(reservation: Reservation):
 @register.simple_tag
 def is_future_reservation(reservation: Reservation):
     return reservation.end_time >= timezone.now()
+
+
+@register.simple_tag
+def get_stream_image_path(status: Machine.Status) -> str:
+    status_image_dict = {
+        Machine.Status.MAINTENANCE: static('make_queue/img/maintenance.svg'),
+        Machine.Status.OUT_OF_ORDER: static('make_queue/img/out_of_order.svg'),
+    }
+    return status_image_dict.get(status, static('make_queue/img/no_stream.svg'))
