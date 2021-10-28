@@ -20,7 +20,7 @@ class MachineTypeQuerySet(models.QuerySet):
 
     def prefetch_machines_and_default_order_by(self, *, machines_attr_name: str):
         """
-        Returns a ``QuerySet`` where all the ``MachineType``'s machines have been prefetched
+        Returns a ``QuerySet`` where all the machine types' machines have been prefetched
         and can be accessed through the attribute with the same name as ``machines_attr_name``.
         """
         return self.order_by('priority').prefetch_related(

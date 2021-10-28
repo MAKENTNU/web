@@ -23,7 +23,7 @@
                 <div class="content">
                     {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
                     <div class="styled fluid accordion">
-                        {% for question in category.questions.all %}
+                        {% for question in category.existing_questions %}
                             <div class="title">
                                 <div class="ui make-col-blue header">
                                     <i class="dropdown icon"></i>
