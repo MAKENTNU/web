@@ -1,5 +1,6 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
+
 
 {% block body %}
     <div class="ui container">
@@ -9,7 +10,7 @@
             </a>
             {% trans "Questions" %}
             {% if perms.faq.add_question %}
-                <a href="{% url "faq-question-create" %}">
+                <a href="{% url 'faq-question-create' %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -21,17 +22,16 @@
                         <div class="ui header">
                             {{ question.title }}
                             {% if perms.faq.change_question %}
-                                <a href="{% url "faq-question-edit" pk=question.pk %}">
-                                    <i class="yellow pencil icon"></i>
+                                <a href="{% url 'faq-question-edit' pk=question.pk %}">
+                                    <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
 
                             {% if perms.faq.delete_question %}
-                                <a class="delete confirm"
-                                   data-title="{% trans "Delete" %}"
-                                   data-content="{% trans "Click to delete" %}."
-                                   href="{% url "faq-question-delete" question.pk %}">
-                                    <i class="ui delete icon red"></i>
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'faq-question-delete' question.pk %}"
+                                   data-obj-name="{{ question }}">
+                                    <i class="large red delete icon"></i>
                                 </a>
                             {% endif %}
                         </div>
@@ -40,4 +40,4 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock body %}

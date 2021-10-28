@@ -1,11 +1,15 @@
-{% extends "internal/base.html" %}
+{% extends 'internal/base.html' %}
 {% load i18n %}
 
+
+{% block extra_head %}
+    {{ form.media }}
+{% endblock extra_head %}
 
 {% block body %}
 
     <div class="ui container">
-        <h1>{% trans "Set member" %} "{{ form.instance.user.get_full_name }}" {% trans "as quit" %}</h1>
+        <h1>{% blocktrans with name=form.instance.user.get_full_name %}Set member {{ name }} as quit{% endblocktrans %}</h1>
         <form class="ui form" method="POST" action="">
             {% csrf_token %}
             <div class="ui two fields">
@@ -19,8 +23,8 @@
                 </div>
             </div>
             <button class="ui right floated make-bg-yellow button">{% trans "Set quit" %}</button>
-            <a class="ui right floated red button" href="{% url "members" %}">{% trans "Cancel" context "abort action" %}</a>
+            <a class="ui right floated red button" href="{% url 'member_list' %}">{% trans "Cancel" context "abort action" %}</a>
         </form>
     </div>
 
-{% endblock %}
+{% endblock body %}

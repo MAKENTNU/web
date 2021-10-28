@@ -3,23 +3,26 @@
 {% load i18n %}
 
 
-<div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %} {% endif %}card">
-    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}">
+<div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
+    <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
     {% if machine.machine_type.has_stream %}
-        <img id="stream-{% sanitize_stream_name machine %}" class="stream image" name="{% sanitize_stream_name machine %}"
-             src="{% static "make_queue/img/no_stream.jpg" %}"
+        <img class="stream image" data-stream-name="{{ machine.stream_name }}"
+             src="{% static 'make_queue/img/no_stream.jpg' %}"
+             alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
         />
     {% endif %}
     <div class="content">
         <div class="header">
             {{ machine.name }}
             {% if perms.make_queue.change_machine %}
-                <a href="{% url "edit_machine" machine.pk %}">
+                <a href="{% url 'edit_machine' machine.pk %}">
                     <i class="ui make-col-yellow pencil icon"></i>
                 </a>
             {% endif %}
             {% if perms.make_queue.delete_machine %}
-                <a class="delete confirm" href="{% url "delete_machine" machine.pk %}">
+                <a class="delete-modal-button"
+                   data-url="{% url 'delete_machine' machine.pk %}"
+                   data-obj-name="{{ machine.name }}">
                     <i class="ui red trash icon"></i>
                 </a>
             {% endif %}
@@ -29,7 +32,7 @@
                 {% card_text_from_machine_status machine %}
             </div>
         </div>
-        {{ machine.machine_model }}<br>
+        {{ machine.machine_model }}<br/>
         <a href="{{ machine.location_url }}" target="_blank">
             <i class="icon location arrow"></i>{{ machine.location }}
         </a>
@@ -45,7 +48,6 @@
     {% if machine.machine_type.has_stream %}
         <div id="fader"></div>
         <i id="closefullscreen" class="ui times icon"></i>
-        <script>var streamID = "stream-{% sanitize_stream_name machine %}";</script>
-        <script src="{% static "make_queue/js/stream.js" %}"></script>
+        <script src="{% static 'make_queue/js/stream.js' %}"></script>
     {% endif %}
 </div>

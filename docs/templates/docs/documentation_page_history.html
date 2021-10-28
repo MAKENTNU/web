@@ -1,18 +1,23 @@
-{% extends "docs/base.html" %}
+{% extends 'docs/base.html' %}
 {% load i18n %}
+{% load datetime_tags %}
 
 
-{% block title %}{% trans "History of" %} "{{ page.title }}"{% endblock %}
+{% block title %}
+    {% blocktrans with title=page.title %}History of “{{ title }}”{% endblocktrans %}
+{% endblock title %}
 
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "History of" %} "{{ page.title }}"</h1>
+        <h1>
+            {% blocktrans with title=page.title %}History of “{{ title }}”{% endblocktrans %}
+        </h1>
         <div class="ui relaxed divided list">
             {% for content in page.content_history.all reversed %}
                 {% if content == page.current_content %}
-                    {% url "page" pk=page as content_url %}
+                    {% url 'page_detail' pk=page as content_url %}
                 {% else %}
-                    {% url "old-page-content" pk=page content=content as content_url %}
+                    {% url 'old_page_content' pk=page content=content as content_url %}
                 {% endif %}
                 <div class="item">
                     {% if forloop.last %}
@@ -41,11 +46,11 @@
                             </i>
                         </div>
                         <div class="description">
-                            {{ content.changed|date:"d N Y H:i" }}
+                            {{ content.changed|long_datetime }}
                         </div>
                     </div>
                 </div>
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock body %}

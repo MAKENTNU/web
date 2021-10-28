@@ -5,17 +5,17 @@
 
 {% block title %}{% trans "Edit event" %}{% endblock title %}
 
-{% block head %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-    <script type="text/javascript" src="{% static "news/js/event_type.js" %}"></script>
-{% endblock head %}
+{% block extra_head %}
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+    <script src="{% static 'news/js/event_type.js' %}"></script>
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui centered header">
         {% block form_header %}{% trans "Edit event" %}{% endblock form_header %}
     </h1>
-    <form class="ui form text container" method="post" enctype="multipart/form-data">
+    <form class="ui form text container" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="field">
             <label>{{ form.title.label }}</label>
@@ -43,8 +43,8 @@
                     <label>{{ form.event_type.label }}</label>
                     <div class="field">
                         <div class="ui radio checkbox">
-                            <input type="radio" id="repeating" name="{{ form.event_type.name }}" value="{{ Event.REPEATING }}"
-                                   {% if form.event_type.value == Event.REPEATING %}checked{% endif %}>
+                            <input type="radio" id="repeating" name="{{ form.event_type.name }}" value="{{ Event.Type.REPEATING }}"
+                                   {% if form.event_type.value == Event.Type.REPEATING %}checked{% endif %}>
                             <label for="repeating">{% trans "Repeating" %}
                                 <span data-content="{% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}">
                                     <i class="ui make-col-yellow question circle icon"></i>
@@ -55,8 +55,8 @@
 
                     <div class="field">
                         <div class="ui radio checkbox">
-                            <input type="radio" id="standalone" name="{{ form.event_type.name }}" value="{{ Event.STANDALONE }}"
-                                   {% if form.event_type.value == Event.STANDALONE %}checked{% endif %}>
+                            <input type="radio" id="standalone" name="{{ form.event_type.name }}" value="{{ Event.Type.STANDALONE }}"
+                                   {% if form.event_type.value == Event.Type.STANDALONE %}checked{% endif %}>
                             <label for="standalone">{% trans "Standalone" %}
                                 <span data-content="{% trans "Used for events that happen once, e.g. a weekend-long happening. All occurrences of the event will have a common registration." %}">
                                     <i class="ui make-col-yellow question circle icon"></i>
@@ -123,13 +123,9 @@
 
         <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
         <a class="ui right floated red button"
-           href="{% block cancel-url %}{% url "admin-event" form.instance.id %}{% endblock %}"
+           href="{% block cancel_url %}{% url 'admin_event_detail' form.instance.pk %}{% endblock cancel_url %}"
         >
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
-
-    <script>
-        $("span[data-content]").popup();
-    </script>
 {% endblock body %}

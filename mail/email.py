@@ -1,41 +1,41 @@
-import logging
 import mimetypes
 import os
 import smtplib
 
 from channels.consumer import SyncConsumer
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import get_template
 
-from web import settings
+from util.logging_utils import get_request_logger
 
 
 class EmailConsumer(SyncConsumer):
     """
-    A consumer for sending async email messages. Contains two entry points `send_text` and `send_html`, which creates
-    and sends email messages given by the `message` dictionary given through Django Channels. The message object has
+    A consumer for sending async email messages. Contains two entry points ``send_text`` and ``send_html``, which creates
+    and sends email messages given by the ``message`` dictionary given through Django Channels. The message object has
     several properties which are needed and some that are optional.
 
-    "type"        [required]: The type of message to send, either "send_text" or "send_html"
+    "type"        [required]: The type of message to send, either ``send_text`` or ``send_html``
     "to"          [required]: The email address to send to
     "from"        [required]: The email address to send from
     "text"        [required]: The text content of the email, required no matter if HTML or plaintext is used
     "subject"     [required]: The subject of the email message
-    "html_render" [required]: The content for the html render, only used in `send_html`
+    "html_render" [required]: The content for the html render, only used in ``send_html``
     "reply_to"    [optional]: The content of the reply-to field, needs to be a list or a tuple
     "attachments" [optional]: A list of files to attach to the email. Each file is a tuple of the filename, content
-                              and content type. `serialize_file` can be used to create this tuple from a file.
+                              and content type. ``serialize_file`` can be used to create this tuple from a file.
 
-    To send an asynchronous email use `async_to_sync(get_channel_layer().send)("email", message)`, where `message` is a
-    message dictionary as described above. `async_to_sync` can be imported from `asgiref.sync` and `get_channel_layer`
-    can be imported from `channels.layers`. The email consumer requires a worker to be ran which can be started by the
-    command `python manage.py runworker -v 2 email`. To run the worker, redis must be installed and running. Requires a
+    To send an asynchronous email use ``async_to_sync(get_channel_layer().send)("email", message)``, where ``message`` is a
+    message dictionary as described above. ``async_to_sync`` can be imported from ``asgiref.sync`` and ``get_channel_layer``
+    can be imported from ``channels.layers``. The email consumer requires a worker to be ran which can be started by the
+    command ``python manage.py runworker -v 2 email``. To run the worker, redis must be installed and running. Requires a
     normal Django setup of email credentials to send emails.
     """
 
     def send_text(self, message):
         """
-        For sending a plaintext message
+        For sending a plaintext message.
 
         :param message: The message dictionary
         """
@@ -43,13 +43,11 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            logging.getLogger('django.request').exception(
-                f"Failed sending plain text email from {message['from']} to {message['to']}.", exc_info=e,
-            )
+            get_request_logger().exception(f"Failed sending plain text email:\n{message}", exc_info=e)
 
     def send_html(self, message):
         """
-        For sending a HTML rendered message
+        For sending a HTML rendered message.
 
         :param message: The message dictionary
         """
@@ -58,13 +56,11 @@ class EmailConsumer(SyncConsumer):
         try:
             msg.send(fail_silently=False)
         except smtplib.SMTPException as e:
-            logging.getLogger('django.request').exception(
-                f"Failed sending HTML email from {message['from']} to {message['to']}.", exc_info=e,
-            )
+            get_request_logger().exception(f"Failed sending HTML email:\n{message}", exc_info=e)
 
     def create_message(self, message):
         """
-        Creates email message from a message dictionary
+        Creates email message from a message dictionary.
 
         :param message: The message dictionary
         :return: A email message object
@@ -115,7 +111,7 @@ def render_text(context, text="", text_template_name=None):
 
 def serialize_file(file):
     """
-    Serializes the content of the file so that it can be sent to the email consumer
+    Serializes the content of the file so that it can be sent to the email consumer.
 
     :param file: The file to serialize
     :return: A tuple of the filename, content and content type

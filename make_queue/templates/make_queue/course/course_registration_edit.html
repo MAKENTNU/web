@@ -1,13 +1,13 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 {% load static %}
 {% load form_utility %}
 
 
-{% block head %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static "make_queue/css/course_registration_edit.css" %}">
-{% endblock %}
+{% block extra_head %}
+    {{ form.media }}
+    <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_edit.css' %}"/>
+{% endblock extra_head %}
 
 {% block body %}
 
@@ -15,16 +15,16 @@
         <h1>
             {% block form_title %}
                 {% trans "Edit course registration" %}
-            {% endblock %}
+            {% endblock form_title %}
         </h1>
 
         {% block messages %}
-            <div id="username_not_found_warning" class="ui warning message hidden">
+            <div id="username-not-found-warning" class="ui warning message hidden">
                 <i class="close icon"></i>
                 <div class="header">
                     {% trans "Could not find the user in the NTNU database" %}
                 </div>
-                <p> {% trans "Are you sure you entered the correct username?" %} </p>
+                <p>{% trans "Are you sure you entered the correct username?" %}</p>
             </div>
             {% form_has_error form field="username" error_code="unique" as unique_error %}
             {% if unique_error %}
@@ -33,10 +33,10 @@
                     <div class="header">
                         {% trans "A user with this username is already registered" %}
                     </div>
-                    <p>{% trans "Either the user has already taken the course, or the username of another user has been entered." %}</p>
+                    <p>{% trans "Either the user has already taken the course, or the username of another user has been entered" %}.</p>
                 </div>
             {% endif %}
-        {% endblock %}
+        {% endblock messages %}
         {% for error in form.card_number.errors %}
             <div class="ui error message">
                 <i class="close icon"></i>
@@ -47,7 +47,7 @@
         {% endfor %}
 
 
-        <form class="ui form" action="{% block form_action %}{% endblock %}" method="post">
+        <form class="ui form" method="POST" action="{% block form_action %}{% endblock %}">
             {% csrf_token %}
 
             <div class="ui horizontal divider">
@@ -94,24 +94,28 @@
                 </div>
             </div>
 
+            <div class="ui one field">
+                <div class="ui field">
+                    <label>{{ form.advanced_course.label }}</label>
+                    <div class="ui checkbox">
+                        {{ form.advanced_course }}
+                        <label>{% trans "Yes" %}</label>
+                    </div>
+                </div>
+            </div>
+
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
-                {% endblock %}
+                {% endblock submit_button %}
             </button>
-            <a class="ui right floated red button" href="{% url "course_panel" %}">
+            <a class="ui right floated red button" href="{% url 'course_registration_list' %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
 
     <script>
-        $(".message .close").click(function () {
-            $(this)
-                .closest(".message")
-                .fadeOut();
-        });
-
         $(".clear-dropdown").click(function () {
             $(this).closest("div.ui.field").find("div.dropdown")
                 .dropdown("clear")
@@ -119,16 +123,18 @@
         });
 
         $("input[name='username']").focusout((event) => {
-            $.ajax(`${langPrefix}/reservation/json/${$(event.target).val()}/`, {
+            $.ajax(`${LANG_PREFIX}/reservation/json/${$(event.target).val()}/`, {
                 success: function (data) {
-                    $("input[name='name']").val(data["full_name"]);
-                    $('#username_not_found_warning').fadeOut();
+                    const fullName = data["full_name"];
+                    if (fullName)
+                        $("input[name='name']").val(fullName);
+                    $("#username-not-found-warning").fadeOut();
                 },
                 error: function () {
-                    $('#username_not_found_warning').fadeIn();
+                    $("#username-not-found-warning").fadeIn();
                 },
             });
             $("#user").closest(".dropdown").dropdown("set selected", $(event.target).val());
         });
     </script>
-{% endblock %}
+{% endblock body %}

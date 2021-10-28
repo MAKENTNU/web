@@ -1,23 +1,27 @@
-{% extends "docs/base.html" %}
+{% extends 'docs/base.html' %}
 {% load i18n %}
 {% load static %}
 
 
-{% block title %}{% trans "Edit" %} "{{ page.title }}"{% endblock %}
+{% block title %}
+    {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
+{% endblock title %}
 
-{% block head %}
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-{% endblock head %}
+{% block extra_head %}
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
         <div id="empty-content-error" class="ui transition hidden error message">
             <i class="close icon"></i>
             <div class="header">{% trans "No content" %}</div>
-            {% trans "The page is currently empty, please add some content" %}.
+            {% trans "The page is currently empty. Please add some content" %}.
         </div>
-        <h1>{% trans "Edit" %} "{{ page.title }}"</h1>
+        <h1>
+            {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
+        </h1>
         <form id="edit-form" class="ui form" method="POST" action="" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="ui field">
@@ -27,26 +31,22 @@
             <button class="ui right floated make-bg-yellow button">
                 {% trans "Submit" context "edit" %}
             </button>
-            <a class="ui right floated red button" href="{% url "page" pk=page %}">
+            <a class="ui right floated red button" href="{% url 'page_detail' pk=page %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
-{% endblock %}
+{% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $("#edit-form").submit(() => {
-            let filled = CKEDITOR.instances["id_content"].getData() !== "";
-            let error_message = $("#empty-content-error")
-            if (!filled && error_message.hasClass("hidden")) {
-                error_message.transition("fade");
+            const filled = CKEDITOR.instances["id_content"].getData() !== "";
+            const $errorMessage = $("#empty-content-error");
+            if (!filled && $errorMessage.hasClass("hidden")) {
+                $errorMessage.transition("fade");
             }
             return filled;
         });
-
-        $('.message .close').on('click', function () {
-            $(this).closest('.message').transition("fade");
-        });
     </script>
-{% endblock %}
+{% endblock extra_scripts %}

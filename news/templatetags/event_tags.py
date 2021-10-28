@@ -1,16 +1,17 @@
 from django import template
 
-from ..models import Event, EventTicket
+from users.models import User
+from ..models import Event
 
 register = template.Library()
 
 
 @register.simple_tag
-def get_ticket(event, user):
+def get_ticket(event_or_timeplace, user: User):
     if not user.is_authenticated:
         return None
-    tickets = EventTicket.objects.filter(user=user, active=True)
-    if isinstance(event, Event):
-        return tickets.filter(event=event).first()
+    tickets = user.event_tickets.filter(active=True)
+    if isinstance(event_or_timeplace, Event):
+        return tickets.filter(event=event_or_timeplace).first()
     else:
-        return tickets.filter(timeplace=event).first()
+        return tickets.filter(timeplace=event_or_timeplace).first()

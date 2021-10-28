@@ -4,14 +4,14 @@ from ckeditor.widgets import CKEditorWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
 
-from web.multilingual.data_structures import MultiLingualTextStructure
+from .data_structures import MultiLingualTextStructure
 
 
 class MultiLingualTextEdit(forms.MultiWidget):
     """
     A multi-widget for multilingual fields.
     """
-    template_name = "web/forms/widgets/multi_lingual_text_field.html"
+    template_name = 'web/forms/widgets/multi_lingual_text_field.html'
     widget = forms.TextInput
 
     def __init__(self, attrs=None):
@@ -26,7 +26,7 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
     def decompress(self, value):
         """
-        Turns the value for the multi-widget into a list of values, one for each sub-widget
+        Turns the value for the multi-widget into a list of values, one for each sub-widget.
 
         :param value: The value for the whole multi-widget, either of type None or MultiLingualTextStructure
         :return: A list of values for the individual sub-widgets

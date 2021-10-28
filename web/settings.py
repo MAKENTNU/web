@@ -2,6 +2,10 @@ import logging
 import sys
 from pathlib import Path
 
+from django.conf.locale.en import formats as en_formats
+from django.conf.locale.nb import formats as nb_formats
+
+
 # Disable logging when testing
 if 'test' in sys.argv:
     # Disable calls with severity level equal to or less than `CRITICAL` (i.e. everything)
@@ -12,6 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Default values
 DATABASE = 'sqlite'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -26,7 +31,7 @@ CHECKIN_KEY = ''  # (custom setting)
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
 STREAM_KEY = ''  # (custom setting)
-FILE_MAX_SIZE = 26214400  # 25 MiB (custom setting, the max on the server is 50 MiB)
+FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is 50 MiB)
 
 # When using more than one subdomain, the session cookie domain has to be set so
 # that the subdomains can use the same session. Currently points to "makentnu.localhost"
@@ -50,6 +55,9 @@ except ImportError:
 
 
 INSTALLED_APPS = [
+    # The main entrypoint app; should be listed first, to be able to override things like management commands
+    'web',
+
     # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -61,9 +69,6 @@ INSTALLED_APPS = [
     # Third-party packages with significant effect on Django's functionality
     'django_hosts',
     'channels',
-
-    # The main entrypoint app
-    'web',
 
     # Other third-party packages
     'social_django',
@@ -88,6 +93,10 @@ INSTALLED_APPS = [
     'users',
 
     'util',  # not a "real" app, just a collection of utilities
+
+    # Should be placed last,
+    # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
@@ -239,6 +248,14 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+# Set time format for English to match the Norwegian format
+for format_name in ('TIME_FORMAT', 'DATETIME_FORMAT', 'SHORT_DATETIME_FORMAT'):
+    format_str: str = getattr(en_formats, format_name)
+    setattr(en_formats, format_name, format_str.replace('P', 'H:i'))
+
+nb_formats.DECIMAL_SEPARATOR = '.'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/stable/howto/static-files/

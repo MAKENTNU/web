@@ -26,12 +26,25 @@ p, li {
     font-size: 1.15rem;
 }
 
+.ui.message p,
+.ui.message li {
+    /* Unsets the font size set above, so that Fomantic-UI is able to use its own font size */
+    font-size: unset;
+}
+
 p {
     line-height: 1.85rem;
 }
 
 li {
     line-height: 1.65rem;
+}
+
+.word-breaking {
+    word-break: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
 }
 
 .wrapper {
@@ -45,26 +58,17 @@ li {
     height: 100%;
 }
 
-.removebottommargin {
-    margin-bottom: 0 !important;
+.display-none {
+    display: none !important;
 }
 
 .text-centered {
     text-align: center !important;
 }
 
-.square_20 {
-    width: 20px;
-    height: 20px;
-}
-
 .square_36 {
     width: 36px;
     height: 36px;
-}
-
-.noshadow {
-    text-shadow: 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF, 0 0 0 #FFF !important;
 }
 
 .cke,
@@ -98,9 +102,7 @@ li {
     background-color: var(--make-turquoise) !important;
 }
 
-.make-bg-dkgrey,
-.ui.black.label.make-bg-dkgrey,
-.ui.black.labels .label.make-bg-dkgrey {
+.make-bg-dkgrey {
     background-color: var(--make-dark-grey) !important;
 }
 
@@ -128,7 +130,7 @@ li {
     color: var(--make-light-grey) !important;
 }
 
-.make_content_padding {
+.make-content-padding {
     height: 3em;
 }
 
@@ -145,6 +147,10 @@ li {
 
 .title-with-buttons .button {
     margin-top: 0.5em;
+}
+
+.delete-modal-button {
+    cursor: pointer;
 }
 
 /*
@@ -167,9 +173,14 @@ li {
     vertical-align: sub;
 }
 
+/* Fix for https://github.com/MAKENTNU/web/issues/386; this should be removed once fixed in Fomantic-UI */
+.ui.ribbon.label:after {
+    z-index: -1;
+}
+
 
 /*
- * Extension of Fomantic UI mobile only, table only, etc. classes
+ * Extension of Fomantic-UI mobile only, table only, etc. classes.
  * The `max-width` and `min-width` values are copied from Fomantic-UI.
  */
 

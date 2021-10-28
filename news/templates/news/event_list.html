@@ -1,12 +1,13 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
+{% load datetime_tags %}
 
 
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "web/css/index.css" %}">
-{% endblock head %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui text-centered make-col-blue header">
@@ -15,25 +16,29 @@
     {% if future %}
         <div class="ui items events" style="margin: 80px 0;">
             {% for event in future %}
-                <div class="item">
+                <div class="event item">
                     <div class="ui small image">
                         <p class="ui yellow make-bg-yellow ribbon label">
-                            {{ event.first_occurrence.start_time|date:"d M" }}
+                            {{ event.first_occurrence.start_time|year_wise_short_date }}
                             {% if event.number_of_occurrences > 1 %}
                                 <br><span>+{{ event.number_of_occurrences|add:-1 }} {% if event.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
                             {% endif %}
                         </p>
 
-                        {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
-                                 {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
-                            />
+                        <img {% thumbnail event.event.image "300" crop="center" as image_thumb %}
+                            src="{{ image_thumb.url }}"
+                        {% empty %}
+                            src="{{ event.event.image.url }}"
                         {% endthumbnail %}
+                            class="clickable"
+                            {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
+                            href="{% url 'event_detail' event.event.pk %}"
+                        />
                     </div>
 
                     <div class="content">
-                        <div class="header">
-                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
+                        <div class="word-breaking header">
+                            <a href="{% url 'event_detail' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             {% if event.first_occurrence.place_url %}
@@ -64,24 +69,24 @@
     {% if past %}
         <div class="ui items events" style="margin: 80px 0;">
             {% for event in past %}
-                <div class="item">
+                <div class="event item">
                     <div class="ui small image">
                         <p class="ui yellow make-bg-yellow ribbon label">
-                            {{ event.last_occurrence.start_time|date:"d M Y" }}
+                            {{ event.last_occurrence.start_time|year_wise_short_date }}
                             {% if event.number_of_occurrences > 1 %}
                                 <br><span>+{{ event.number_of_occurrences|add:-1 }} {% if event.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}</span>
                             {% endif %}
                         </p>
                         {% thumbnail event.event.image "300" crop="center" as im %}
-                            <img src="{{ im.url }}" class="clickable" href="{% url 'event' event.event.id %}"
+                            <img src="{{ im.url }}" class="clickable" href="{% url 'event_detail' event.event.pk %}"
                                  {% if event.event.contain %}style="object-fit: contain !important;"{% endif %}
                             />
                         {% endthumbnail %}
                     </div>
 
                     <div class="content">
-                        <div class="header">
-                            <a href="{% url 'event' event.event.id %}">{{ event.event.title }}</a>
+                        <div class="word-breaking header">
+                            <a href="{% url 'event_detail' event.event.pk %}">{{ event.event.title }}</a>
                         </div>
                         <div class="meta">
                             <span>{{ event.place }}</span>

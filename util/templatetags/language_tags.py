@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 register = template.Library()
 
 
-@register.simple_tag()
+@register.simple_tag
 def get_semantic_flag_code_from_language_code(language_code):
     return {
         "nb": "no",
@@ -12,7 +12,7 @@ def get_semantic_flag_code_from_language_code(language_code):
     }[language_code]
 
 
-@register.simple_tag()
+@register.simple_tag
 def get_local_name_from_language_code(language_code):
     return {
         "nb": _("Norwegian"),
@@ -20,6 +20,6 @@ def get_local_name_from_language_code(language_code):
     }[language_code]
 
 
-@register.simple_tag()
+@register.simple_tag
 def render(widget):
     return widget["render"](widget["name"], widget["value"], widget["attrs"])

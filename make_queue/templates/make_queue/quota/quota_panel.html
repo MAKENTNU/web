@@ -3,15 +3,15 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Access" %}{% endblock %}
+{% block title %}{% trans "Access" %}{% endblock title %}
 
-{% block head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/general.css' %}">
-{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/quota_panel.css' %}"/>
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
-        <a class="ui make-bg-yellow button" href="{% url "create_quota" %}">
+        <a class="ui make-bg-yellow button" href="{% url 'create_quota' %}">
             <i class="ui icon plus"></i>{% trans "New quota" %}
         </a>
         <div class="ui tabular pointing secondary menu">
@@ -28,11 +28,13 @@
                             {% else %}
                                 {% trans "Replenishing quota" %}
                             {% endif %}
-                            <a href="{% url "edit_quota" quota.pk %}">
+                            <a href="{% url 'edit_quota' quota.pk %}">
                                 <i class="ui make-col-yellow icon pencil"></i>
                             </a>
                             {% if perms.make_queue.delete_quota %}
-                                <a class="delete confirm" href="{% url "delete_quota" quota.pk %}">
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'delete_quota' quota.pk %}"
+                                   data-obj-name="{{ quota }}">
                                     <i class="ui red icon trash"></i>
                                 </a>
                             {% endif %}
@@ -50,16 +52,16 @@
         </div>
         <div class="ui {% if requested_user %}active{% endif %} tab" data-tab="users">
             <div class="ui fluid search selection dropdown">
-                <input id="user" type="hidden" name="user">
+                <input id="user" type="hidden" name="user"/>
                 <i class="ui dropdown icon"></i>
                 <div class="default text">{% trans "Select user" %}</div>
                 <div class="menu">
                     {% for user in users %}
-                        <div class="item" data-value="{{ user.username }}">{{ user.get_full_name }}</div>
+                        <div class="item" data-value="{{ user.pk }}">{{ user.get_full_name }}</div>
                     {% endfor %}
                 </div>
             </div>
-            <div class="make_content_padding"></div>
+            <div class="make-content-padding"></div>
             <div id="user-quotas">
 
             </div>
@@ -67,9 +69,9 @@
     </div>
     <script src="{% static 'make_queue/js/quota_panel.js' %}"></script>
     <script>
-        $('.tabular.menu .item').tab();
+        $(".tabular.menu .item").tab();
         {% if requested_user %}
-            $("#user").parent().dropdown("set selected", "{{ requested_user.username }}");
+            $("#user").parent().dropdown("set selected", "{{ requested_user.pk }}");
         {% endif %}
     </script>
-{% endblock %}
+{% endblock body %}

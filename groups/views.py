@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
-from django.views.generic import ListView, UpdateView, DetailView
+from django.views.generic import DetailView, ListView, UpdateView
 
 from .models import Committee
 
@@ -13,10 +13,12 @@ class CommitteeList(ListView):
 
 class CommitteeDetailView(DetailView):
     model = Committee
+    template_name = 'groups/committee_detail.html'
     context_object_name = 'committee'
 
 
-class EditCommitteeView(UpdateView):
+class EditCommitteeView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('groups.change_committee',)
     model = Committee
     fields = ('clickbait', 'description', 'email', 'image')
     success_url = reverse_lazy('committee_list')

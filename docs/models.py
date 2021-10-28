@@ -6,8 +6,11 @@ from users.models import User
 from .validators import page_title_validator
 
 
+MAIN_PAGE_TITLE = "Documentation"
+
+
 class Page(models.Model):
-    """Model for each individual documentation page"""
+    """Model for each individual documentation page."""
 
     title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[page_title_validator])
     created_by = models.ForeignKey(
@@ -15,13 +18,15 @@ class Page(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name='doc_pages_created',
     )
-    current_content = models.ForeignKey(
+    current_content = models.OneToOneField(
         to="Content",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="in_use",
+        # Can be used as a boolean field by `Content`
+        related_name='is_currently_on_page',
     )
 
     def __str__(self):
@@ -34,7 +39,7 @@ class Content(models.Model):
     page = models.ForeignKey(
         to=Page,
         on_delete=models.CASCADE,
-        related_name="content_history",
+        related_name='content_history',
         verbose_name=_("Page"),
     )
     changed = models.DateTimeField(verbose_name=_("Time changed"))
@@ -44,5 +49,6 @@ class Content(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name='doc_page_contents_created',
         verbose_name=_("Made by"),
     )

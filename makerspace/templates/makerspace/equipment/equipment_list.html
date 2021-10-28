@@ -1,14 +1,13 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
 {% load thumbnail %}
 {% load css_tags %}
 
 
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "makerspace/css/equipment_list.css" %}"/>
-    <script src="{% static "web/js/image_link.js" %}"></script>
-{% endblock head %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'makerspace/css/equipment_list.css' %}"/>
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui text-centered make-col-blue header">
@@ -19,7 +18,7 @@
             {% for equipment in equipment_list %}
 
                 {# For the images #}
-                <a class="equipment-img" href="{% url 'makerspace-equipment' equipment.id %}">
+                <a class="equipment-img" href="{% url 'makerspace_equipment_detail' equipment.pk %}">
                     <img {% thumbnail equipment.image "250x250" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
                     {% empty %}
@@ -34,12 +33,14 @@
                 <div class="equipment-text
                             {% if forloop.first %}equipment-first{% endif %}
                             {% if forloop.last %}equipment-last{% endif %}">
-                    <img class="txtborder tl" src="{% static "web/img/top_left.svg" %}" alt=""/>
-                    <img class="txtborder tr" src="{% static "web/img/top_right.svg" %}" alt=""/>
-                    <img class="txtborder bl" src="{% static "web/img/bottom_left.svg" %}" alt=""/>
-                    <img class="txtborder br" src="{% static "web/img/bottom_right.svg" %}" alt=""/>
-                    <h2 class="equipment-title">
-                        <a class="make-col-yellow" href="{% url 'makerspace-equipment' equipment.id %}">{{ equipment.title }}</a>
+                    {% if forloop.first or forloop.last %}
+                        <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}" alt=""/>
+                        <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}" alt=""/>
+                        <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
+                        <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
+                    {% endif %}
+                    <h2 class="word-breaking equipment-title">
+                        <a class="make-col-yellow" href="{% url 'makerspace_equipment_detail' equipment.pk %}">{{ equipment.title }}</a>
                     </h2>
                 </div>
 

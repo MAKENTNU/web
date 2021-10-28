@@ -5,16 +5,16 @@
 
 {% block title %}{% trans "Edit Question" %}{% endblock title %}
 
-{% block head %}
-    <script src="{% static "ckeditor/ckeditor-init.js" %}"></script>
-    <script src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
-{% endblock head %}
+{% block extra_head %}
+    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui centered header">
         {% block form_header %}{% trans "Edit Question" %}{% endblock form_header %}
     </h1>
-    <form class="ui form text container" method="post" enctype="multipart/form-data">
+    <form class="ui form text container" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.non_field_errors }}
 
@@ -28,7 +28,7 @@
         </div>
         <div class="field">
             <label>{{ form.categories.label }}
-                <span data-content="{% trans "Choose one or multiple categories for the question" %}">
+                <span data-content="{% trans "Choose one or more categories" %}.">
                     <i class="ui make-col-yellow question circle icon"></i>
                 </span>
             </label>
@@ -36,17 +36,8 @@
         </div>
 
         <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
-        <a class="ui right floated red button" href="{% url "faq-admin" %}">
+        <a class="ui right floated red button" href="{% url 'faq_admin_list' %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
-
-    <script>
-        $(".message .close").click(function () {
-            $(this)
-                .closest(".message")
-                .transition("fade");
-        });
-        $("span[data-content]").popup();
-    </script>
 {% endblock body %}

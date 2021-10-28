@@ -1,12 +1,11 @@
 from django.test import TestCase
 from django.utils import timezone
 
-# Create your tests here.
 from users.models import User
-from make_queue.models.course import Printer3DCourse
+from ...models.course import Printer3DCourse
 
 
-class CardAndCourseSaveTest(TestCase):
+class TestCardAndCourseSave(TestCase):
 
     def setUp(self):
         self.user1 = User.objects.create_user("user1")

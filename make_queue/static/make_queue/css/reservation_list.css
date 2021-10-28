@@ -1,0 +1,34 @@
+.right-floated {
+    float: right;
+    display: inline-block;
+}
+
+
+/* Desktop layout */
+@media screen and (min-width: 800px) {
+    .reservation-list-tablet {
+        display: none !important;
+    }
+
+    .reservation-list-desktop .header {
+        margin-bottom: 0 !important; /* Overrides Fomantic-UI */
+    }
+}
+
+
+/* Tablet and mobile layout */
+@media screen and (max-width: 800px) {
+    .reservation-list-desktop {
+        display: none !important;
+    }
+
+    .reservation-list-tablet {
+        padding: 2em 0;
+        align-items: flex-start;
+    }
+
+    .reservation-list-tablet .card .bottom.buttons .button {
+        padding-top: 1em !important; /* Overrides Fomantic-UI */
+        padding-bottom: 1em !important; /* Overrides Fomantic-UI */
+    }
+}

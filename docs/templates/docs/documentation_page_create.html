@@ -1,8 +1,8 @@
-{% extends "docs/base.html" %}
+{% extends 'docs/base.html' %}
 {% load i18n %}
 
 
-{% block title %}{% trans "Create a New Page" %}{% endblock %}
+{% block title %}{% trans "Create a New Page" %}{% endblock title %}
 
 {% block body %}
     <div class="ui container">
@@ -24,9 +24,9 @@
             <button class="ui right floated make-bg-yellow button">
                 {% trans "Submit" %}
             </button>
-            <a class="ui right floated red button" href="{% url "home" %}">
+            <a class="ui right floated red button" href="{% url 'home' %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
-{% endblock %}
+{% endblock body %}

@@ -3,16 +3,16 @@
 {% load static %}
 
 
-{% block head %}
-    <link rel="stylesheet" href="{% static "contentbox/css/display.css" %}">
-{% endblock %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'contentbox/css/display.css' %}"/>
+{% endblock extra_head %}
 
 {% block body %}
     <div class="contentbox ui container">
         {% block extra_pre_content %}{% endblock %}
 
         {% if perms.contentbox.change_contentbox %}
-            <a class="edit ui make-bg-yellow button" href="{% url 'contentbox_edit' contentbox.id %}">
+            <a class="edit ui make-bg-yellow button" href="{% url 'contentbox_edit' contentbox.pk %}">
                 <i class="ui edit icon"></i>{% trans "Edit" %}
             </a>
         {% endif %}

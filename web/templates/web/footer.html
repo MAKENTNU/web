@@ -2,17 +2,17 @@
 {% load i18n %}
 
 
-<link rel="stylesheet" type="text/css" href="{% static "web/css/footer.css" %}">
+<link rel="stylesheet" href="{% static 'web/css/footer.css' %}"/>
 
 <div class="footer-wrapper">
     <footer id="footer" class="make-bg-blue">
         <div>
             <div class="logo">
-                <img src="{% static "web/img/logo_allwhite.svg" %}">
+                <img src="{% static 'web/img/logo_allwhite.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
             </div>
-            {% with mazemap_link="https://use.mazemap.com/#config=default&v=1&zlevel=-1&center=10.406219,63.415816&zoom=19.3&campusid=1&sharepoitype=poi&sharepoi=1000098577&utm_medium=longurl" %}
+            {% with mazemap_link="https://use.mazemap.com/?v=1&campusid=1&sharepoitype=identifier&sharepoi=360-BU1-124" %}
                 <a href="{{ mazemap_link }}" title="{% trans "You can find us here!" %}" target="_blank">
-                    {% trans "Makerverkstedet<br>Realfagbygget U1<br>7034 Trondheim" %}
+                    {% trans "Makerverkstedet<br/>Realfagbygget U1<br/>7034 Trondheim" %}
                 </a>
                 <a href="{{ mazemap_link }}" target="_blank">
                     <i class="map marker alternate icon"></i>
@@ -21,22 +21,22 @@
         </div>
         <div class="ui social list">
             <div class="make-bg-yellow item">
-                <a href="http://www.facebook.com/MAKENTNU/" title="{% trans "Like us on Facebook!" %}" target="_blank">
+                <a href="https://www.facebook.com/MAKENTNU/" title="{% trans "Like us on Facebook!" %}" target="_blank">
                     <i class="make-col-blue facebook f icon"></i>
                 </a>
             </div>
             <div class="make-bg-yellow item">
-                <a href="http://makentnu.slack.com/" title="{% trans "Chat with us on Slack!" %}" target="_blank">
+                <a href="https://makentnu.slack.com/signup#/" title="{% trans "Chat with us on Slack!" %}" target="_blank">
                     <i class="make-col-blue slack icon"></i>
                 </a>
             </div>
             <div class="make-bg-yellow item">
-                <a href="http://github.com/MAKENTNU" title="{% trans "Open a pull request on GitHub!" %}" target="_blank">
-                    <i class="make-col-blue github alternate icon"></i>
+                <a href="https://github.com/MAKENTNU/web" title="{% trans "Report an issue or suggest an improvement on GitHub!" %}" target="_blank">
+                    <i class="make-col-blue github icon"></i>
                 </a>
             </div>
             <div class="make-bg-yellow item">
-                <a href="{% url 'email' %}" title="{% trans "Contact us by mail!" %}">
+                <a href="{% url 'contact' %}" title="{% trans "Contact us by email!" %}">
                     <i class="make-col-blue mail icon"></i>
                 </a>
             </div>
@@ -50,7 +50,7 @@
             <div class="ui list">
                 <div class="item">
                     <div class="content">
-                        <a href="{% url 'cookies' %}">{% trans "Cookies" %}</a><br>
+                        <a href="{% url 'cookies' %}">{% trans "Cookies" %}</a><br/>
                         <a href="{% url 'privacypolicy' %}">{% trans "Privacy Policy" %}</a>
                     </div>
                 </div>

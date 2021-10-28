@@ -1,12 +1,11 @@
-{% extends "web/base.html" %}
+{% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
-{% load news_tags %}
 
 
-{% block head %}
-    <link rel="stylesheet" type="text/css" href="{% static "groups/css/committee_admin.css" %}"/>
-{% endblock head %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'groups/css/committee_admin.css' %}"/>
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui text-centered make-col-yellow header">
@@ -20,11 +19,14 @@
 
                         <a class="image" href="{% url 'committee_detail' committee.pk %}">
                             {% if committee.image %}
-                                <img class="square_36" src="{{ committee.image.url }}">
+                                <img class="square_36" src="{{ committee.image.url }}"
+                                     alt="{% blocktrans trimmed with name=committee.name %}{{ name }} committee image{% endblocktrans %}"
+                                />
                             {% else %}
                                 {# Use a transparent base64 encoded image #}
                                 <img class="square_36"
                                      src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNgYAAAAAMAASsJTYQAAAAASUVORK5CYII="
+                                     alt="{% trans "Placeholder image" %}"
                                 />
                             {% endif %}
                         </a>
@@ -35,11 +37,7 @@
                                 </a>
                             </h3>
                             <div class="description">
-                                {% if committee.clickbait %}
-                                    {{ committee.clickbait }}
-                                {% else %}
-                                    {{ committee.description }}
-                                {% endif %}
+                                {% firstof committee.clickbait committee.description %}
                             </div>
                         </div>
                         <a class="make-col-blue edit-button" href="{% url 'committee_edit' committee.pk %}">
@@ -51,42 +49,4 @@
             </div>
         {% endif %}
     </div>
-
-    <script>
-        $('.ui.accordion').accordion();
-
-        $('.toggle').click(function () {
-            toggle_post($(this), $(this).attr('pk'), $(this).attr('model'), $(this).attr('toggle'));
-        });
-
-        function toggle_post(element, pk, model, toggle) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
-                },
-            });
-            $.ajax({
-                type: "POST",
-                url: `/news/admin/toggle/${model}/`,
-                data: {
-                    'pk': pk,
-                    'toggle': toggle,
-                },
-                success: function (data) {
-                    if (!data['color']) {
-                        return;
-                    }
-                    if (toggle === 'private') {
-                        if (data['color'] === 'yellow') {
-                            element.attr('src', '{% static "web/img/m_yellow.svg" %}');
-                        } else {
-                            element.attr('src', '{% static "web/img/m_grey.svg" %}');
-                        }
-                    } else {
-                        element.removeClass('yellow grey').addClass(data['color']);
-                    }
-                },
-            });
-        }
-    </script>
 {% endblock body %}

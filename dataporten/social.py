@@ -1,18 +1,19 @@
-from __future__ import unicode_literals
-
 from social_core.backends.oauth import BaseOAuth2
 from social_core.exceptions import AuthException
 
 
+# Code based on https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/dataporten/social.py
 class DataportenOAuth2(BaseOAuth2):
     name = 'dataporten'
     ID_KEY = 'userid'
     REQUIRES_EMAIL_VALIDATION = False
     EXTRA_DATA = [
-        ('userid', 'userid'),
+        # (<name returned by `get_user_details()`>, <alias for storage in the database - through `UserSocialAuth.extra_data`>)
         ('scope', 'scope'),
-        ('fullname', 'fullname'),
-        ('profilephoto_url', 'profilephoto_url'),
+        ('userid', 'userid'),
+        ('username', 'username'),  # used as the base username for new users; it's set in `get_user_details()` below
+        ('email', 'email'),
+        ('name', 'fullname'),
     ]
     BASE_URL = 'https://auth.dataporten.no'
     API_URL = 'https://api.dataporten.no'
@@ -27,34 +28,31 @@ class DataportenOAuth2(BaseOAuth2):
 
     def get_user_details(self, response):
         """
-        Return user details from Dataporten.
+        Converts response data from the format of Dataporten's API, to the format expected by the ``social`` libraries -
+        which is stored in ``UserSocialAuth.extra_data`` (through ``EXTRA_DATA`` above).
 
-        Set full name and fetch profile photo URL.
+        :return: user details from Dataporten.
         """
         user = response
 
-        # Rename to what social expects
-        fullname = user.get('name', None)
-        if fullname:
-            user['fullname'] = fullname
-            user.pop('name')
-
-        # Get profile photo URL, if any
-        profilephoto_id = user.get('profilephoto', None)
-        if profilephoto_id:
-            profilephoto_url = f'{self.API_URL}/userinfo/v1/user/media/{profilephoto_id}'
-            user['profilephoto_url'] = profilephoto_url
+        # Based on https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/dataporten/social.py#L102-L107
+        for userid in user['userid_sec']:
+            usertype, complete_username = userid.split(':')
+            if usertype == 'feide':
+                username, _domain = complete_username.split('@')
+                user['username'] = username
+                break
 
         return user
 
     def check_correct_audience(self, audience):
-        """Assert that Dataporten sends back our own client ID as audience"""
+        """Assert that Dataporten sends back our own client ID as audience."""
         client_id, _ = self.get_key_and_secret()
         if audience != client_id:
             raise AuthException('Wrong audience')
 
     def user_data(self, access_token, *args, **kwargs):
-        """Loads user data from service"""
+        """Loads user data from service."""
         url = f'{self.BASE_URL}/userinfo'
         response = self.get_json(
             url,

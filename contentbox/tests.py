@@ -1,6 +1,8 @@
+from http import HTTPStatus
+
 from django.contrib.auth.models import Permission
-from django.test import TestCase
-from django.urls import reverse
+from django.test import Client, TestCase
+from django_hosts import reverse
 
 from users.models import User
 from web.urls import urlpatterns as base_urlpatterns
@@ -20,45 +22,41 @@ base_urlpatterns += [
 class ModelAndViewTests(TestCase):
 
     def setUp(self):
-        self.contentbox1 = ContentBox.objects.create(title=TEST_TITLE)
+        self.content_box1 = ContentBox.objects.create(title=TEST_TITLE)
 
     def test_str(self):
-        self.assertEqual(self.contentbox1.title, TEST_TITLE)
-        self.assertEqual(str(self.contentbox1), self.contentbox1.title)
+        self.assertEqual(self.content_box1.title, TEST_TITLE)
+        self.assertEqual(str(self.content_box1), self.content_box1.title)
 
-    def test_get_contentbox_retrieves_correctly(self):
+    def test_get_content_box_retrieves_correctly(self):
         paths_to_test = (reverse(TEST_TITLE), f'/{TEST_TITLE}/')
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
-                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
                 self.assertEqual(response.context['contentbox'].title, TEST_TITLE)
 
-    def test_all_paths_of_multi_path_contentbox_retrieve_correctly(self):
-        multi_path_contentbox_title = TEST_MULTI_TITLES[0]
+    def test_all_paths_of_multi_path_content_box_retrieve_correctly(self):
+        multi_path_content_box_title = TEST_MULTI_TITLES[0]
         paths_to_test = (
-            reverse(multi_path_contentbox_title),
+            reverse(multi_path_content_box_title),
             *(f'/{url}/' for url in TEST_MULTI_TITLES),
         )
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
-                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
-                self.assertEqual(response.context['contentbox'].title, multi_path_contentbox_title)
+                self.assertEqual(response.context['contentbox'].title, multi_path_content_box_title)
 
-    def test_edit_without_permission_is_rejected(self):
-        response = self.client.get(f'/contentbox/{self.contentbox1.pk}/edit/')
-        self.assertNotEqual(response.status_code, 200)
+    def test_visiting_edit_page_is_only_allowed_for_users_with_permission(self):
+        user = User.objects.create_user(username="user1")
+        user.user_permissions.add(Permission.objects.get(codename='change_contentbox'))
+        user_client = Client()
+        user_client.force_login(user)
+        anon_client = Client()
 
-    def test_edit_with_permission_succeeds(self):
-        username = "TEST_USER"
-        password = "TEST_PASS"
-        user = User.objects.create_user(username=username, password=password)
-        permission = Permission.objects.get(codename='change_contentbox')
-        user.user_permissions.add(permission)
-        self.client.login(username=username, password=password)
-
-        response = self.client.get(f'/contentbox/{self.contentbox1.pk}/edit/')
-        self.assertEqual(response.status_code, 200)
+        edit_url = reverse('contentbox_edit', kwargs={'pk': self.content_box1.pk})
+        self.assertGreaterEqual(anon_client.get(edit_url).status_code, 300)
+        self.assertEqual(user_client.get(edit_url).status_code, HTTPStatus.OK)

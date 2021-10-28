@@ -1,11 +1,11 @@
-{% extends "internal/base.html" %}
+{% extends 'internal/base.html' %}
 {% load i18n %}
 
 
 {% block body %}
     <style>
         .ui.checkbox.field input[type=checkbox] {
-            /* Fixes offset too far to the left set by Fomantic UI */
+            /* Fixes offset too far to the left set by Fomantic-UI */
             left: auto !important;
         }
     </style>
@@ -83,17 +83,9 @@
             <button class="ui right floated make-bg-yellow button">
                 {% trans "Save" %}
             </button>
-            <a class="ui right floated red button" href="{% url "members" %}">
+            <a class="ui right floated red button" href="{% url 'member_list' %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
     </div>
-
-    <script>
-        $(".message .close").click(function () {
-            $(this)
-                .closest(".message")
-                .transition("fade");
-        });
-    </script>
-{% endblock %}
+{% endblock body %}

@@ -1,4 +1,4 @@
-{% extends "docs/base.html" %}
+{% extends 'docs/base.html' %}
 {% load i18n %}
 {% load search_tags %}
 
@@ -7,10 +7,10 @@
     <div class="ui container">
         <h1>{% trans "Search" %}</h1>
 
-        <form class="ui form" action="" method="GET">
+        <form class="ui form" method="GET">
             <div class="ui field">
                 <div class="ui icon input">
-                    <input type="text" name="query" placeholder="{% trans "Search" %}" value="{{ query }}">
+                    <input type="text" name="query" placeholder="{% trans "Search" %}" value="{{ query }}"/>
                     <i class="ui link search icon"></i>
                 </div>
             </div>
@@ -22,7 +22,7 @@
                     <div class="ui item">
                         <div class="content">
                             <div class="header">
-                                <a href="{% url "page" pk=page %}">{{ page.title }}</a>
+                                <a href="{% url 'page_detail' pk=page %}">{{ page.title }}</a>
                             </div>
                             <div class="description">
                                 {% if page.current_content %}
@@ -41,9 +41,9 @@
             {% trans "There are no documents for that search. Try searching for something else." %}
         {% endif %}
 
-        <form id="page-form" action="" method="GET">
-            <input type="hidden" name="query" value="{{ query }}">
-            <input id="page-form-page-input" type="hidden" name="page" value="{{ page }}">
+        <form id="page-form" method="GET">
+            <input type="hidden" name="query" value="{{ query }}"/>
+            <input id="page-form-page-input" type="hidden" name="page" value="{{ page }}"/>
         </form>
 
         {# Create buttons to allow changing page to one that is close to the current selected page #}
@@ -56,13 +56,13 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+{% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".page-selector").click((event) => {
             $("#page-form-page-input").val($(event.target).data("page"));
             $("#page-form").submit();
         });
     </script>
-{% endblock %}
+{% endblock extra_scripts %}

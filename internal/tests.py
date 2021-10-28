@@ -1,15 +1,25 @@
+from http import HTTPStatus
 from typing import Set
 from urllib.parse import urlparse
 
-from django.contrib.auth.models import Permission
-from django.test import Client, TestCase, override_settings
+from django.test import Client
 from django_hosts import reverse
 
 from users.models import User
-from .models import Member, SystemAccess
+from util.test_utils import Get, PermissionsTestCase, assert_requesting_paths_succeeds
+from .forms import MemberStatusForm
+from .models import Member, Secret, SystemAccess
 
 
-class UrlTests(TestCase):
+# Makes sure that the subdomain of all requests is `internal`
+INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': 'internal.testserver'}
+
+
+def reverse_internal(viewname: str, **kwargs):
+    return reverse(viewname, kwargs=kwargs, host='internal', host_args=['internal'])
+
+
+class UrlTests(PermissionsTestCase):
 
     def setUp(self):
         password = "TEST_PASS"
@@ -17,16 +27,16 @@ class UrlTests(TestCase):
         member_user = User.objects.create_user(username="MEMBER", password=password)
         member_editor_user = User.objects.create_user(username="MEMBER_EDITOR", password=password)
 
-        self.add_permissions(member_user, "is_internal")
-        self.add_permissions(member_editor_user, "is_internal",
-                             "can_register_new_member", "can_edit_group_membership", "change_systemaccess")
+        self.add_permissions(member_user, 'is_internal')
+        self.add_permissions(member_editor_user, 'is_internal',
+                             'can_register_new_member', 'can_edit_group_membership', 'change_systemaccess')
         self.member = Member.objects.create(user=member_user)
         self.member_editor = Member.objects.create(user=member_editor_user)
 
-        self.anon_client = Client()
-        self.non_member_client = Client()
-        self.member_client = Client()
-        self.member_editor_client = Client()
+        self.anon_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.non_member_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.member_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.member_editor_client = Client(**INTERNAL_CLIENT_DEFAULTS)
 
         self.all_clients = {self.anon_client, self.non_member_client, self.member_client, self.member_editor_client}
 
@@ -35,69 +45,96 @@ class UrlTests(TestCase):
         self.member_editor_client.login(username=member_editor_user, password=password)
 
     @staticmethod
-    def add_permissions(user: User, *codenames: str):
-        for codename in codenames:
-            permission = Permission.objects.get(codename=codename)
-            user.user_permissions.add(permission)
+    def generic_request(client: Client, method: str, path: str, data: dict = None):
+        if method == 'GET':
+            return client.get(path)
+        elif method == 'POST':
+            return client.post(path, data)
+        else:
+            raise ValueError(f'Method "{method}" not supported')
 
-    @staticmethod
-    def get_url(name: str, args=None):
-        return reverse(name, args, host="internal", host_args=["internal"])
-
-    def _test_url_permissions(self, url: str, allowed_clients: Set[Client]):
+    def _test_url_permissions(self, method: str, path: str, data: dict = None, *, allowed_clients: Set[Client], expected_redirect_url: str = None):
         disallowed_clients = self.all_clients - allowed_clients
         for client in disallowed_clients:
-            self.assertNotEqual(client.get(url, follow=True).status_code, 200)
+            response = self.generic_request(client, method, path)
+            # Non-member users should be redirected to login:
+            if client in {self.anon_client, self.non_member_client}:
+                self.assertEqual(response.status_code, HTTPStatus.FOUND)
+                self.assertTrue(urlparse(response.url).path.startswith("/login/"))
+            # Disallowed members should be rejected:
+            else:
+                self.assertGreaterEqual(response.status_code, 400)
         for client in allowed_clients:
-            self.assertEqual(client.get(url, follow=True).status_code, 200)
+            response = self.generic_request(client, method, path, data)
+            if expected_redirect_url:
+                self.assertRedirects(response, expected_redirect_url)
+            else:
+                self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def _test_internal_url(self, url: str):
-        self._test_url_permissions(url, {self.member_client, self.member_editor_client})
+    def _test_internal_url(self, method: str, path: str, data: dict = None, *, expected_redirect_url: str = None):
+        self._test_url_permissions(method, path, data, allowed_clients={self.member_client, self.member_editor_client},
+                                   expected_redirect_url=expected_redirect_url)
 
-    def _test_editor_url(self, url: str):
-        self._test_url_permissions(url, {self.member_editor_client})
+    def _test_editor_url(self, method: str, path: str, data: dict = None, *, expected_redirect_url: str = None):
+        self._test_url_permissions(method, path, data, allowed_clients={self.member_editor_client},
+                                   expected_redirect_url=expected_redirect_url)
 
-    def _test_internal_post_url(self, url: str, data: dict, *, expected_redirect_url: str):
-        # Unauthorized users should be redirected to login
-        response = self.anon_client.post(url, data)
-        self.assertTrue(urlparse(response.url).path.startswith("/login"))
-        response = self.non_member_client.post(url, data)
-        self.assertTrue(urlparse(response.url).path.startswith("/login"))
-
-        self.assertRedirects(self.member_client.post(url, data), expected_redirect_url)
-        self.assertRedirects(self.member_editor_client.post(url, data), expected_redirect_url)
-
-    @override_settings(DEFAULT_HOST="internal")
     def test_permissions(self):
-        self._test_internal_url(self.get_url("members"))
-        self._test_internal_url(self.get_url("members", [self.member.pk]))
-        self._test_editor_url(self.get_url("add-member"))
+        self._test_internal_url('GET', reverse_internal('member_list'))
+        self._test_internal_url('GET', reverse_internal('member_list', pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal('create_member'))
 
         # All members can edit themselves, but only editors can edit other members
-        self._test_url_permissions(self.get_url("edit-member", [self.member.pk]),
-                                   allowed_clients={self.member_client, self.member_editor_client})
-        self._test_url_permissions(self.get_url("edit-member", [self.member_editor.pk]),
-                                   allowed_clients={self.member_editor_client})
+        self._test_internal_url('GET', reverse_internal('edit_member', pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal('edit_member', pk=self.member_editor.pk))
 
-        self._test_editor_url(self.get_url("member-quit", [self.member.pk]))
-        self._test_editor_url(self.get_url("member-undo-quit", [self.member.pk]))
-        self._test_editor_url(self.get_url("member-retire", [self.member.pk]))
-        self._test_editor_url(self.get_url("member-undo-retire", [self.member.pk]))
+        self._test_editor_url('GET', reverse_internal('member_quit', pk=self.member.pk))
 
-        for system_access in self.member.systemaccess_set.all():
-            # No one is allowed to change their "website" access. Other than that,
-            # all members can edit their own accesses, but only editors can edit other members'.
-            allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions(self.get_url("toggle-system-access", [system_access.pk]),
-                                       allowed_clients=allowed_clients)
+        path_data_assertion_tuples = (
+            ('member_quit', {'date_quit': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
+            ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.UNDO_QUIT}, lambda member: not member.quit),
+            ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.RETIRE}, lambda member: member.retired),
+            ('edit_member_status', {'status_action': MemberStatusForm.StatusAction.UNDO_RETIRE}, lambda member: not member.retired),
+        )
+        for path, data, assertion in path_data_assertion_tuples:
+            with self.subTest(path=path, data=data):
+                self._test_editor_url('POST', reverse_internal(path, pk=self.member.pk), data,
+                                      expected_redirect_url=f"/members/{self.member.pk}/")
+                self.member.refresh_from_db()
+                self.assertTrue(assertion(self.member))
 
-        for system_access in self.member_editor.systemaccess_set.all():
-            # No one is allowed to change their "website" access
-            allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-            self._test_url_permissions(self.get_url("toggle-system-access", [system_access.pk]),
-                                       allowed_clients=allowed_clients)
+        for system_access in self.member.system_accesses.all():
+            with self.subTest(system_access=system_access):
+                # No one is allowed to change their `WEBSITE` access. Other than that,
+                # all members can edit their own accesses, but only editors can edit other members'.
+                allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
+                self._test_url_permissions('POST', reverse_internal('edit_system_access', member_pk=self.member.pk, pk=system_access.pk),
+                                           {'value': True}, allowed_clients=allowed_clients,
+                                           expected_redirect_url=f"/members/{self.member.pk}/")
 
-        self._test_internal_url(self.get_url("home"))
+        for system_access in self.member_editor.system_accesses.all():
+            with self.subTest(system_access=system_access):
+                # No one is allowed to change their `WEBSITE` access
+                allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
+                self._test_url_permissions('POST', reverse_internal('edit_system_access', member_pk=self.member_editor.pk, pk=system_access.pk),
+                                           {'value': True}, allowed_clients=allowed_clients,
+                                           expected_redirect_url=f"/members/{self.member_editor.pk}/")
 
-        self._test_internal_post_url(self.get_url("set_language"), {"language": "en"}, expected_redirect_url="/en/")
-        self._test_internal_post_url(self.get_url("set_language"), {"language": "nb"}, expected_redirect_url="/")
+        self._test_internal_url('GET', reverse_internal('home'))
+
+        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'en'}, expected_redirect_url="/en/")
+        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'nb'}, expected_redirect_url="/")
+
+    def test_all_non_member_get_request_paths_succeed(self):
+        secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
+        secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
+
+        path_predicates = [
+            Get(reverse_internal('home'), public=False),
+            Get(reverse_internal('secret_list'), public=False),
+            Get(reverse_internal('create_secret'), public=False),
+            Get(reverse_internal('edit_secret', pk=secret1.pk), public=False),
+            Get(reverse_internal('edit_secret', pk=secret2.pk), public=False),
+            Get('/robots.txt', public=True, translated=False),
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'internal')
