@@ -4,9 +4,16 @@
 {% load permission_tags %}
 
 
+{% block title %}{% trans "FAQ Admin Panel" %}{% endblock title %}
+
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "FAQ Admin Panel" %}</h1>
+        <h1 class="ui header">
+            <a href="{% url 'adminpanel' %}">
+                <i class="blue chevron circle left icon"></i>
+            </a>
+            {% trans "FAQ Admin Panel" %}
+        </h1>
         <div class="ui four doubling stackable cards">
             <div class="ui yellow card">
                 <a class="content" href="{% url 'admin_question_list' %}">
