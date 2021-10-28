@@ -73,22 +73,19 @@ class TestMachineListView(TestCase):
                 self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
 
     def test_get_machine_list_view_contains_img_path_in_html(self):
+        def assert_response_contains_num_of_each_img_path(num_of_each: int):
+            response = self.client.get(reverse('machine_list'))
+            for stream_image_name in ['out_of_order', 'no_stream', 'maintenance']:
+                with self.subTest(stream_image_name=stream_image_name):
+                    self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'), count=num_of_each)
+
+        assert_response_contains_num_of_each_img_path(0)
+
         self.create_machine(name_prefix="available", machine_type=self.printer_machine_type, status=Machine.Status.AVAILABLE)
         self.create_machine(name_prefix="out of order", machine_type=self.printer_machine_type, status=Machine.Status.OUT_OF_ORDER)
         self.create_machine(name_prefix="maintenance", machine_type=self.printer_machine_type, status=Machine.Status.MAINTENANCE)
 
-        response = self.client.get(reverse('machine_list'))
-
-        for stream_image_name in ['out_of_order', 'no_stream', 'maintenance']:
-            with self.subTest(stream_image_name=stream_image_name):
-                self.assertContains(response, static(f'make_queue/img/{stream_image_name}.svg'), count=1)
-
-    def test_get_empty_machine_list_doesnt_contain_stream_img_path_in_html(self):
-        no_machine_list_response = self.client.get(reverse('machine_list'))
-
-        for stream_image_name in ['out_of_order', 'no_stream', 'maintenance']:
-            with self.subTest(stream_image_name=stream_image_name):
-                self.assertNotContains(no_machine_list_response, static(f'make_queue/img/{stream_image_name}.svg'))
+        assert_response_contains_num_of_each_img_path(1)
 
     @staticmethod
     def create_machine(name_prefix: str, machine_type: MachineType, **kwargs) -> Machine:
