@@ -4,6 +4,7 @@
 
 {% block body %}
     <div class="ui container">
+
         <h1>
             <a href="{% url 'faq_admin_panel' %}">
                 <i class="blue chevron circle left icon"></i>
@@ -15,6 +16,7 @@
                 </a>
             {% endif %}
         </h1>
+
         <div class="ui relaxed divided list">
             {% for category in categories %}
                 <div class="item">
@@ -39,5 +41,6 @@
                 </div>
             {% endfor %}
         </div>
+
     </div>
 {% endblock body %}

@@ -587,8 +587,8 @@ msgid "Choose one or more categories"
 msgstr "Velg én eller flere kategorier"
 
 #: faq/templates/faq/faq_admin_panel.html:9
-msgid "FAQ panel"
-msgstr "FAQ panel"
+msgid "FAQ Admin Panel"
+msgstr "FAQ-administrasjonspanel"
 
 #: faq/templates/faq/faq_admin_panel.html:17
 msgid "Here you can create, edit and delete questions"
