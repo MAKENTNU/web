@@ -21,16 +21,14 @@
                 </a>
             {% endif %}
         </div>
-        {% if request.user.is_authenticated %}
-            <div class="reservation-management-buttons">
-                <a class="ui primary button" href="{% url 'my_reservations_list' %}">
-                    {% trans "My reservations" %}
-                </a>
-                <a class="ui primary button" href="{% url 'find_free_slot' %}">
-                    {% trans "Find free reservation slots" %}
-                </a>
-            </div>
-        {% endif %}
+        <div class="reservation-management-buttons">
+            <a class="ui primary button" href="{% url 'my_reservations_list' %}">
+                {% trans "My reservations" %}
+            </a>
+            <a class="ui primary button" href="{% url 'find_free_slot' %}">
+                {% trans "Find free reservation slots" %}
+            </a>
+        </div>
 
         {% for machine_type in machine_types %}
             <div class="ui machine-title-field">

@@ -18,13 +18,12 @@ class QuotaPanelView(TemplateView):
 
         :return: A list of all users
         """
-        context_data = super().get_context_data(**kwargs)
-        context_data.update({
-            "users": User.objects.all(),
-            "global_quotas": Quota.objects.filter(all=True),
-            "requested_user": user,
+        return super().get_context_data(**{
+            'users': User.objects.all(),
+            'global_quotas': Quota.objects.filter(all=True),
+            'requested_user': user,
+            **kwargs,
         })
-        return context_data
 
 
 class CreateQuotaView(PermissionRequiredMixin, CreateView):

@@ -11,7 +11,7 @@ from ...models.reservation import Quota, Reservation
 from ...views.reservation.reservation import MyReservationsListView
 
 
-class MyReservationsViewTestCase(TestCase):
+class TestMyReservationsListView(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("user", "user@makentnu.no")

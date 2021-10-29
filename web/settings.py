@@ -16,6 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Default values
 DATABASE = 'sqlite'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -54,6 +55,9 @@ except ImportError:
 
 
 INSTALLED_APPS = [
+    # The main entrypoint app; should be listed first, to be able to override things like management commands
+    'web',
+
     # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,9 +69,6 @@ INSTALLED_APPS = [
     # Third-party packages with significant effect on Django's functionality
     'django_hosts',
     'channels',
-
-    # The main entrypoint app
-    'web',
 
     # Other third-party packages
     'social_django',
@@ -92,6 +93,10 @@ INSTALLED_APPS = [
     'users',
 
     'util',  # not a "real" app, just a collection of utilities
+
+    # Should be placed last,
+    # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

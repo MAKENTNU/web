@@ -49,11 +49,14 @@ def time_format(value):
 
 
 def iso_date_format(value):
-    return _date_format(value, "Y-m-d")
+    if isinstance(value, datetime):
+        value = attempt_as_local(value).date()
+    return value.isoformat()
 
 
 def iso_datetime_format(value):
-    return _date_format(value, "Y-m-d H:i")
+    value = attempt_as_local(value)
+    return value.isoformat()
 
 
 def is_valid_week(year, week):

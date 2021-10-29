@@ -1,7 +1,6 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
-{% load thumbnail %}
 {% load announcement_tags %}
 
 
@@ -36,6 +35,7 @@
 
     <div class="ui container">
         {% include 'news/index_event_list_contents.html' with event_dicts=featured_event_dicts ribbon_extra_classes="yellow make-bg-yellow" %}
+        <hr class="make-bg-yellow event-article-border"/>
     </div>
 
     <div class="ui container">

@@ -1,4 +1,3 @@
-import logging
 import sys
 import uuid
 from io import BytesIO
@@ -12,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from util.locale_utils import short_date_format
+from util.logging_utils import get_request_logger
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
@@ -67,7 +67,7 @@ class NewsBase(models.Model):
                                                       sys.getsizeof(output), None)
                 # Should not close image, as Django uses the image and closes it by default
             except IOError as e:
-                logging.getLogger('django.request').exception(e)
+                get_request_logger().exception(e)
 
         super().save(**kwargs)
 

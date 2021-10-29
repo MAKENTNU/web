@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('groups', '0004_auto_20181009_1356'),
-        ('internal', '0008_systemaccess_unique_name_per_member'),
+        ('internal', '0009_alter_id_fields_to_use_bigautofield'),
     ]
 
     operations = [

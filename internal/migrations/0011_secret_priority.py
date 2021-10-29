@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internal', '0009_add_related_names'),
+        ('internal', '0010_add_related_names'),
     ]
 
     operations = [
