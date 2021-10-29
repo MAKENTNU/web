@@ -96,7 +96,7 @@ msgstr "Ny kunngjøring"
 
 #: announcements/templates/announcements/announcement_create.html:59
 #: contentbox/templates/contentbox/edit.html:35
-#: faq/templates/faq/admin_category_edit.html:25
+#: faq/templates/faq/admin_category_edit.html:26
 #: faq/templates/faq/admin_question_edit.html:38
 #: groups/templates/groups/committee_form.html:31
 #: internal/templates/internal/member_edit.html:84
@@ -114,7 +114,7 @@ msgstr "Lagre"
 #: contentbox/templates/contentbox/edit.html:37
 #: docs/templates/docs/documentation_page_create.html:28
 #: docs/templates/docs/documentation_page_edit.html:35
-#: faq/templates/faq/admin_category_edit.html:27
+#: faq/templates/faq/admin_category_edit.html:28
 #: faq/templates/faq/admin_question_edit.html:40
 #: groups/templates/groups/committee_form.html:33
 #: internal/templates/internal/member_create.html:33
@@ -328,7 +328,6 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:100
 #: docs/templates/docs/documentation_page_detail.html:46
-#: faq/templates/faq/admin_category_list.html:36
 #: news/templates/news/admin_article_list.html:56
 #: news/templates/news/admin_event_detail.html:26
 #: news/templates/news/admin_timeplace_listing.html:39
@@ -357,6 +356,7 @@ msgstr "Tittel"
 #: contentbox/templates/contentbox/edit.html:6
 #: contentbox/templates/contentbox/edit.html:17
 #: docs/templates/docs/documentation_page_detail.html:39
+#: faq/templates/faq/faq_list.html:38
 #: groups/templates/groups/committee_form.html:15
 #: make_queue/templates/make_queue/usage_rules_detail.html:19
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:29
@@ -535,42 +535,40 @@ msgstr "Kun tall, bokstaver, mellomrom, parenteser og kolon er tillatt."
 msgid "Choose categories"
 msgstr "Velg kategorier"
 
-#: faq/models.py:8 faq/models.py:11
+#: faq/models.py:21 faq/models.py:26
 msgid "Category"
 msgstr "Kategori"
 
-#: faq/models.py:12 faq/models.py:24
-#: faq/templates/faq/admin_category_list.html:15
-#: faq/templates/faq/faq_admin_panel.html:24
+#: faq/models.py:27 faq/models.py:39
+#: faq/templates/faq/admin_category_list.html:6
+#: faq/templates/faq/admin_category_list.html:19
+#: faq/templates/faq/faq_admin_panel.html:33
 msgid "Categories"
 msgstr "Kategorier"
 
-#: faq/models.py:19 faq/models.py:28
+#: faq/models.py:34 faq/models.py:43
 msgid "Question"
 msgstr "Spørsmål"
 
-#: faq/models.py:20
+#: faq/models.py:35
 msgid "Answer"
 msgstr "Svar"
 
-#: faq/models.py:29 faq/templates/faq/admin_question_list.html:11
-#: faq/templates/faq/faq_admin_panel.html:14
+#: faq/models.py:44 faq/templates/faq/admin_question_list.html:6
+#: faq/templates/faq/admin_question_list.html:19
+#: faq/templates/faq/faq_admin_panel.html:22
 msgid "Questions"
 msgstr "Spørsmål"
 
-#: faq/templates/faq/admin_category_create.html:4
 #: faq/templates/faq/admin_category_create.html:5
+#: faq/templates/faq/admin_category_create.html:6
 msgid "New Category"
 msgstr "Ny kategori"
 
-#: faq/templates/faq/admin_category_edit.html:5
-#: faq/templates/faq/admin_category_edit.html:14
+#: faq/templates/faq/admin_category_edit.html:6
+#: faq/templates/faq/admin_category_edit.html:15
 msgid "Edit Category"
 msgstr "Endre kategori"
-
-#: faq/templates/faq/admin_category_list.html:37
-msgid "Click to delete"
-msgstr "Klikk for å slette"
 
 #: faq/templates/faq/admin_question_create.html:5
 #: faq/templates/faq/admin_question_create.html:6
@@ -586,19 +584,20 @@ msgstr "Endre spørsmål"
 msgid "Choose one or more categories"
 msgstr "Velg én eller flere kategorier"
 
-#: faq/templates/faq/faq_admin_panel.html:9
+#: faq/templates/faq/faq_admin_panel.html:7
+#: faq/templates/faq/faq_admin_panel.html:15
 msgid "FAQ Admin Panel"
 msgstr "FAQ-administrasjonspanel"
 
-#: faq/templates/faq/faq_admin_panel.html:17
+#: faq/templates/faq/faq_admin_panel.html:25
 msgid "Here you can create, edit and delete questions"
 msgstr "Her kan du lage, endre og slette spørsmål"
 
-#: faq/templates/faq/faq_admin_panel.html:27
+#: faq/templates/faq/faq_admin_panel.html:36
 msgid "Here you can create, edit and delete categories"
 msgstr "Her kan du lage, endre og slette kategorier"
 
-#: faq/templates/faq/faq_list.html:13
+#: faq/templates/faq/faq_list.html:6 faq/templates/faq/faq_list.html:15
 msgid "Frequently Asked Questions"
 msgstr "Ofte stilte spørsmål"
 
