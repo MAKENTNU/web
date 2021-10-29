@@ -305,17 +305,21 @@ CKEDITOR_CONFIGS = {
             {'name': 'paragraph',
              'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter',
                        'JustifyRight', 'JustifyBlock']},
-            {'name': 'links', 'items': ['Link', 'Unlink']},
             {'name': 'format', 'items': ['Format', 'RemoveFormat']},
-            {'name': 'insert', 'items': ['Image', 'CodeSnippet']},
+            '/',
+            {'name': 'links', 'items': ['Link', 'Unlink']},
+            {'name': 'insert', 'items': ['Mathjax', 'CodeSnippet', '-', 'Image']},
         ],
         'toolbar': 'main',
+        # All MathJax files downloaded from https://github.com/mathjax/MathJax/tree/2.7.9
+        'mathJaxLib': static_lazy('ckeditor/mathjax/MathJax.js?config=TeX-AMS_HTML'),
         'tabSpaces': 4,
         'contentsCss': [
             static_lazy('ckeditor/ckeditor/customstyles.css'),
             static_lazy('ckeditor/ckeditor/contents.css'),  # CKEditor's default styles
         ],
         'extraPlugins': ','.join([
+            'mathjax',
             'codesnippet',
             'uploadimage',
             'image2',
