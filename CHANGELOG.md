@@ -7,7 +7,28 @@ Description of the changes through deployments.
 - Changelog, issue template and pull request template.
 
 
-## 2021-10-21
+## 2021-10-29 ([#389](https://github.com/MAKENTNU/web/pull/389))
+### New features
+- Added admin page for FAQ categories
+- For machines with streams: Added a new "no stream" image, in addition to images that are shown when the stream is down *and* the machine has either status "Maintenance" or "Out of order"
+
+### Improvements
+- Improved layout of the FAQ page and the FAQ question admin page
+- Made "My reservations" and "Find free reservation slots" buttons visible when not logged in
+- Added Django admin button to user dropdown (visible to users with the "Is staff" status)
+
+### Fixes
+- Fixed wrong sorting of members' date joined
+- Images for articles, events, etc. are now actually removed on the server when uploading a new image
+- Fixed occasionally disappearing course registration rows, which happened when clicking rows after the page had initially loaded
+- Fixed a bug that caused the `start_time` field on the "New reservation" form to not be parsed correctly on some iPhones
+- Fixed ribbon label on events being displaced by a few pixels
+
+### Other changes
+- A respectable quantity of code cleanup
+
+
+## 2021-10-21 ([#383](https://github.com/MAKENTNU/web/pull/383))
 ### New features
 - Machines now have a separate `stream_name` field, for specifying the name that's used to connect to their stream
 - Added button for manually hiding shown secrets
