@@ -1,6 +1,7 @@
 from datetime import date, datetime
 
 from django import template
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.formats import time_format
@@ -9,14 +10,15 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from util.locale_utils import date_to_local, get_day_name
-from ..models.models import Machine, Quota, Reservation, ReservationRule
+from ..models.machine import Machine
+from ..models.reservation import Quota, Reservation, ReservationRule
 
 register = template.Library()
 
 
 @register.simple_tag
 def calendar_url_reservation(reservation: Reservation):
-    return reverse('reservation_calendar',
+    return reverse('machine_detail',
                    kwargs={'year': reservation.start_time.year, 'week': reservation.start_time.isocalendar()[1],
                            'machine': reservation.machine})
 
@@ -24,14 +26,14 @@ def calendar_url_reservation(reservation: Reservation):
 @register.simple_tag
 def current_calendar_url(machine: Machine):
     current_time = timezone.localtime()
-    return reverse('reservation_calendar',
+    return reverse('machine_detail',
                    kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'machine': machine})
 
 
 @register.simple_tag
 def calendar_url_timestamp(machine: Machine, time: datetime):
-    return reverse("reservation_calendar",
-                   kwargs={"year": time.year, "week": time.isocalendar()[1], "machine": machine})
+    return reverse('machine_detail',
+                   kwargs={'year': time.year, 'week': time.isocalendar()[1], 'machine': machine})
 
 
 @register.simple_tag
@@ -143,3 +145,12 @@ def can_mark_reservation_finished(reservation: Reservation):
 @register.simple_tag
 def is_future_reservation(reservation: Reservation):
     return reservation.end_time >= timezone.now()
+
+
+@register.simple_tag
+def get_stream_image_path(status: Machine.Status) -> str:
+    status_image_dict = {
+        Machine.Status.MAINTENANCE: static('make_queue/img/maintenance.svg'),
+        Machine.Status.OUT_OF_ORDER: static('make_queue/img/out_of_order.svg'),
+    }
+    return status_image_dict.get(status, static('make_queue/img/no_stream.svg'))

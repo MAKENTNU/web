@@ -5,9 +5,9 @@
 
 {% block title %}{% trans "Edit time" %}{% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     {{ form.media }}
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui centered header">{% block form_header %}{% trans "Edit time" %}{% endblock %}</h1>
@@ -67,11 +67,8 @@
         </div>
 
         <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
-        <a class="ui right floated red button" href="{% url "admin-event" form.event.initial %}">
+        <a class="ui right floated red button" href="{% url 'admin_event_detail' form.event.initial %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>
-    <script>
-        $("span[data-content]").popup();
-    </script>
 {% endblock body %}

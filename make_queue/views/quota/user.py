@@ -1,19 +1,15 @@
-from django.views.generic import TemplateView
+from django.views.generic import ListView
 
 from users.models import User
+from ...models.reservation import Quota
 
 
-class GetUserQuotaView(TemplateView):
+class UserQuotaListView(ListView):
     """View for getting a rendered version of the quota of a specific user."""
+    model = Quota
     template_name = 'make_queue/quota/quota_user.html'
+    context_object_name = 'user_quotas'
 
-    def get_context_data(self, user: User, **kwargs):
-        """
-        Creates the context required for the template.
-
-        :param user: The user for which to get the quota
-        :return: The context
-        """
-        return {
-            "user_quotas": user.quotas.filter(all=False),
-        }
+    def get_queryset(self):
+        user: User = self.kwargs['user']
+        return user.quotas.filter(all=False)

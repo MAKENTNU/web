@@ -4,14 +4,14 @@
 {% load static %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/admin_event_detail.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
 
-        <a href="{% url "admin-events" %}">
+        <a href="{% url 'admin_event_list' %}">
             <i class="ui angle double left icon"></i>{% trans "Admin page for events" %}
         </a>
 
@@ -21,19 +21,19 @@
             <div class="admin-actions ui secondary menu">
                 {% if perms.news.delete_event %}
                     <a class="delete-modal-button ui red button"
-                       data-url="{% url 'event-delete' event.pk %}"
+                       data-url="{% url 'event_delete' event.pk %}"
                        data-obj-name="{{ event }}">
                         <i class="ui trash icon"></i>{% trans "Delete" %}
                     </a>
                 {% endif %}
 
                 {% if perms.news.change_event %}
-                    <a class="ui blue button" href="{% url 'event-edit' event.pk %}">
+                    <a class="ui blue button" href="{% url 'event_edit' event.pk %}">
                         <i class="ui edit icon"></i>{% trans "Edit" %}
                     </a>
                 {% endif %}
 
-                <a class="ui make-bg-yellow button" href="{% url 'event' event.pk %}">
+                <a class="ui make-bg-yellow button" href="{% url 'event_detail' event.pk %}">
                     <i class="ui sticky note icon"></i>{% trans "Go to the event page" %}
                 </a>
             </div>
@@ -64,7 +64,7 @@
             </h3>
             {% if event.number_of_tickets %}
                 <b>
-                    <a href="{% url "event-tickets" pk=event.pk %}">
+                    <a href="{% url 'event_ticket_list' pk=event.pk %}">
                         {% blocktrans trimmed with num_registered_tickets=event.number_of_registered_tickets num_tickets=event.number_of_tickets %}
                             {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
                         {% endblocktrans %}
@@ -80,7 +80,7 @@
         </h3>
         <div class="create-new-occurrence">
             {% if perms.news.add_timeplace %}
-                <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace-new' event.pk %}">
+                <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace_create' event.pk %}">
                     <i class="time icon"></i>
                     {% trans "New occurrence" %}
                 </a>
@@ -117,10 +117,9 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".tabular.menu .item").tab();
-        $(".explanation-popup").popup();
 
         $(".toggle").click(function () {
             toggle_post($(this), $(this).data('pk'), $(this).data('model'), $(this).data('toggle'));
@@ -160,4 +159,4 @@
             });
         }
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

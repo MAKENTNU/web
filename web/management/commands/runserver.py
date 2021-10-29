@@ -19,7 +19,7 @@ class Command(runserver.Command):
 
         addr_regex = r"(?:127\.0\.0\.1|localhost)"
         dev_server_addr_regex = re.compile(
-            rf"(Starting .*development server at https?://)({addr_regex}:\d+)",
+            rf"(Starting .*development server at https?://)({addr_regex}):(\d+)",
             re.IGNORECASE
         )
         original_write_func = self.stdout.write
@@ -29,8 +29,9 @@ class Command(runserver.Command):
             if regex_match:
                 # noinspection PyBroadException
                 try:
-                    prefix, dev_server_prefix_str, _addr_and_port, suffix = dev_server_addr_regex.split(msg)
-                    msg = f"{prefix}{dev_server_prefix_str}{settings.PARENT_HOST}{suffix}"
+                    prefix, dev_server_prefix_str, _addr, port, suffix = dev_server_addr_regex.split(msg)
+                    dev_host_addr = settings.PARENT_HOST[:settings.PARENT_HOST.rindex(':')]
+                    msg = f"{prefix}{dev_server_prefix_str}{dev_host_addr}:{port}{suffix}"
                 except Exception:
                     self.stderr.write(f"Error while parsing development server address string:")
                     self.stderr.write(traceback.format_exc())

@@ -63,7 +63,7 @@
                     {% trans "Submit" context "edit" %}
                 {% endblock submit_button %}
             </button>
-            <a class="ui right floated red button" href="{% url "quota_panel" %}">
+            <a class="ui right floated red button" href="{% url 'quota_panel' %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
@@ -102,13 +102,6 @@
 
             return !(userEmpty || machineTypeEmpty || numberOfReservationsEmpty);
         });
-
-        $(".message .close")
-            .on('click', function () {
-                $(this)
-                    .closest('.message')
-                    .transition('fade');
-            });
     </script>
 
 {% endblock body %}

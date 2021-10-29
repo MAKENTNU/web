@@ -21,7 +21,7 @@ $(".secret-close-button").click(function () {
     const secretButton = $(`#button-${secretId}`);
     const secret = $(`#${secretId}`);
     hideButtons(secret, secretButton);
-    clearTimeout(secretTimers[secretId])
+    clearTimeout(secretTimers[secretId]);
 });
 
 function hideButtons(secret, secretButton) {

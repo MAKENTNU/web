@@ -6,7 +6,7 @@ from django_hosts import reverse
 
 from news.models import Article
 from users.models import User
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 from .admin import InheritanceGroupAdmin
 from .models import Committee, InheritanceGroup
 
@@ -274,7 +274,7 @@ class CommitteeTestCase(TestCase):
         self.assertEqual(str(dev), 'Dev')
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         self.group1 = InheritanceGroup.objects.create(name="Group 1")

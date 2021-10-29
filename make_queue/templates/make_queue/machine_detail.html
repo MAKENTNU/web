@@ -8,10 +8,10 @@
     {{ machine.name }} - {{ machine.machine_model }}
 {% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_actions.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -21,7 +21,7 @@
                 {{ machine.name }}
             </div>
             <div class="ui content">
-                <a class="ui primary button" href="{% url 'machine_usage_rules' machine.machine_type %}">
+                <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine.machine_type %}">
                     {% trans "Show rules" %}
                 </a>
             </div>
@@ -74,7 +74,7 @@
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
                     <img class="ui right floated stream medium image" data-stream-name="{{ machine.stream_name }}"
-                         src="{% static 'make_queue/img/no_stream.jpg' %}"
+                         src="{% get_stream_image_path machine.status %}"
                          alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
                 </div>

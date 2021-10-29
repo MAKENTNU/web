@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load hosts %}
 {% load uri_tags %}
 
 
@@ -10,29 +11,47 @@
     <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width"/>
-    <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
-    <meta property="og:site_name" content="MAKE NTNU"/>
-    <meta property="og:image"
-          content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static 'web/img/make_thumb.png' %}{% endblock og_image %}"/>
-    <meta property="og:description"
-          content="{% block og_description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock og_description %}"/>
-    <meta property="description"
-          content="{% block description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock description %}"/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
-    <link rel="shortcut icon" type="image/png" href="{% static 'web/img/favicon.png' %}"/>
     <meta name="theme-color" content="rgb(248, 200, 17)"/>
+    <link rel="shortcut icon" type="image/png" href="{% static 'web/img/favicon.png' %}"/>
+
+    {% block open_graph_meta %}
+        <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
+        <meta property="og:site_name" content="MAKE NTNU"/>
+        <meta property="og:image"
+              content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static 'web/img/make_thumb.png' %}{% endblock og_image %}"/>
+        <meta property="og:description"
+              content="{% block og_description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock og_description %}"/>
+        <meta property="description"
+              content="{% block description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock description %}"/>
+        <meta property="og:type" content="website"/>
+        <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
+    {% endblock open_graph_meta %}
 
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700"/>
-    <script src="{% url 'javascript-catalog' %}"></script>
     <link rel="stylesheet" href="{% static 'lib/fomantic-ui/semantic.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
+    <script src="{% host_url 'javascript_catalog' host 'main' %}"></script>
     <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
     <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
     <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
-    {% block head %}{% endblock head %}
+
+    {% block analytics %}
+        <script defer src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+        <script defer src="{% static 'web/js/gtag_init.js' %}"></script>
+    {% endblock analytics %}
+
+    {% block header_links %}
+        <link rel="stylesheet" href="{% static 'web/css/header.css' %}"/>
+        <link rel="stylesheet" href="{% static 'announcements/css/announcement.css' %}"/>
+        <script defer src="{% static 'web/js/header.js' %}"></script>
+    {% endblock header_links %}
+
+    <script defer src="{% static 'web/js/common_utils.js' %}"></script>
+    <script defer src="{% static 'web/js/delete_modal.js' %}"></script>
+
+    {% block extra_head %}{% endblock extra_head %}
 </head>
 <body>
 
@@ -62,19 +81,8 @@
     {% endblock footer %}
 </div>
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
-<script>
-    window.dataLayer = window.dataLayer || [];
-
-    function gtag() {
-        dataLayer.push(arguments);
-    }
-
-    gtag('js', new Date());
-    gtag('config', 'UA-113882146-1');
-</script>
-{% block scripts %}
-{% endblock scripts %}
+{% block extra_scripts %}
+{% endblock extra_scripts %}
 
 </body>
 </html>

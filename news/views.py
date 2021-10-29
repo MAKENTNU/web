@@ -21,7 +21,7 @@ from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
 from .models import Article, Event, EventTicket, TimePlace
 
 
-class ViewEventsView(TemplateView):
+class EventListView(TemplateView):
     template_name = 'news/event_list.html'
 
     def get_context_data(self, **kwargs):
@@ -66,7 +66,7 @@ class ViewEventsView(TemplateView):
         return context
 
 
-class ViewArticlesView(ListView):
+class ArticleListView(ListView):
     template_name = 'news/article_list.html'
     context_object_name = "articles"
 
@@ -74,7 +74,7 @@ class ViewArticlesView(ListView):
         return Article.objects.published()
 
 
-class ViewEventView(TemplateView):
+class EventDetailView(TemplateView):
     template_name = 'news/event_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -92,7 +92,7 @@ class ViewEventView(TemplateView):
         return context
 
 
-class ViewArticleView(TemplateView):
+class ArticleDetailView(TemplateView):
     template_name = 'news/article_detail.html'
 
     def get_context_data(self, **kwargs):
@@ -107,7 +107,7 @@ class ViewArticleView(TemplateView):
         return context
 
 
-class AdminArticleView(PermissionRequiredMixin, ListView):
+class AdminArticleListView(PermissionRequiredMixin, ListView):
     model = Article
     template_name = 'news/admin_article_list.html'
     context_object_name = 'articles'
@@ -116,7 +116,7 @@ class AdminArticleView(PermissionRequiredMixin, ListView):
         return has_any_article_permissions(self.request.user)
 
 
-class AdminEventsView(PermissionRequiredMixin, ListView):
+class AdminEventListView(PermissionRequiredMixin, ListView):
     model = Event
     template_name = 'news/admin_event_list.html'
     context_object_name = 'events'
@@ -130,7 +130,7 @@ class AdminEventsView(PermissionRequiredMixin, ListView):
         ).order_by('-latest_occurrence')
 
 
-class AdminEventView(DetailView):
+class AdminEventDetailView(DetailView):
     model = Event
     template_name = 'news/admin_event_detail.html'
     context_object_name = 'event'
@@ -141,7 +141,7 @@ class EditArticleView(PermissionRequiredMixin, UpdateView):
     model = Article
     form_class = ArticleForm
     template_name = 'news/article_edit.html'
-    success_url = reverse_lazy("admin-articles")
+    success_url = reverse_lazy('admin_article_list')
 
 
 class CreateArticleView(PermissionRequiredMixin, CreateView):
@@ -149,7 +149,7 @@ class CreateArticleView(PermissionRequiredMixin, CreateView):
     model = Article
     form_class = ArticleForm
     template_name = 'news/article_create.html'
-    success_url = reverse_lazy("admin-articles")
+    success_url = reverse_lazy('admin_article_list')
 
 
 class EditEventView(PermissionRequiredMixin, UpdateView):
@@ -162,7 +162,7 @@ class EditEventView(PermissionRequiredMixin, UpdateView):
     }
 
     def get_success_url(self):
-        return reverse("admin-event", args=(self.object.pk,))
+        return reverse('admin_event_detail', args=(self.object.pk,))
 
 
 class CreateEventView(PermissionRequiredMixin, CreateView):
@@ -175,7 +175,7 @@ class CreateEventView(PermissionRequiredMixin, CreateView):
     }
 
     def get_success_url(self):
-        return reverse("admin-event", args=(self.object.pk,))
+        return reverse('admin_event_detail', args=(self.object.pk,))
 
 
 class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
@@ -191,7 +191,7 @@ class EditTimePlaceView(PermissionRequiredMixin, UpdateView):
         return form
 
     def get_success_url(self):
-        return reverse("admin-event", args=(self.object.event.pk,))
+        return reverse('admin_event_detail', args=(self.object.event.pk,))
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, View):
@@ -209,7 +209,7 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, View):
         timeplace.hidden = True
         timeplace.pk = None
         timeplace.save()
-        return HttpResponseRedirect(reverse('timeplace-edit', args=(timeplace.pk,)))
+        return HttpResponseRedirect(reverse('timeplace_edit', args=(timeplace.pk,)))
 
 
 class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
@@ -220,14 +220,14 @@ class CreateTimePlaceView(PermissionRequiredMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
-        event = get_object_or_404(Event, pk=self.kwargs["event_pk"])
+        event = get_object_or_404(Event, pk=self.kwargs['event_pk'])
         form.fields["event"].initial = event.pk
         if event.standalone:
             del form.fields["number_of_tickets"]
         return form
 
     def get_success_url(self):
-        return reverse("admin-event", args=(self.object.event.pk,))
+        return reverse('admin_event_detail', args=(self.object.event.pk,))
 
 
 class AdminArticleToggleView(PermissionRequiredMixin, View):
@@ -263,13 +263,13 @@ class AdminTimeplaceToggleView(AdminArticleToggleView):
 class DeleteArticleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_article',)
     model = Article
-    success_url = reverse_lazy('admin-articles')
+    success_url = reverse_lazy('admin_article_list')
 
 
 class DeleteEventView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_event',)
     model = Event
-    success_url = reverse_lazy('admin-events')
+    success_url = reverse_lazy('admin_event_list')
 
 
 class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -277,7 +277,7 @@ class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, Dele
     model = TimePlace
 
     def get_success_url(self):
-        return reverse("admin-event", args=(self.object.event.pk,))
+        return reverse('admin_event_detail', args=(self.object.event.pk,))
 
 
 class EventRegistrationView(CreateView):
@@ -304,11 +304,11 @@ class EventRegistrationView(CreateView):
     def dispatch(self, request, *args, **kwargs):
         if not self.is_registration_allowed():
             event = self.event or self.timeplace.event
-            return HttpResponseRedirect(reverse('event', kwargs={'pk': event.pk}))
+            return HttpResponseRedirect(reverse('event_detail', kwargs={'pk': event.pk}))
 
         ticket = self.request.user.event_tickets.filter(active=True, timeplace=self.timeplace, event=self.event)
         if ticket.exists():
-            return HttpResponseRedirect(reverse_lazy('ticket', kwargs={'pk': ticket.first().pk}))
+            return HttpResponseRedirect(reverse_lazy('ticket_detail', kwargs={'pk': ticket.first().pk}))
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
@@ -344,7 +344,7 @@ class EventRegistrationView(CreateView):
         return context_data
 
     def get_success_url(self):
-        return reverse('ticket', args=[self.object.pk])
+        return reverse('ticket_detail', args=[self.object.pk])
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -354,13 +354,13 @@ class EventRegistrationView(CreateView):
         return kwargs
 
 
-class TicketView(LoginRequiredMixin, DetailView):
+class TicketDetailView(LoginRequiredMixin, DetailView):
     model = EventTicket
     template_name = 'news/ticket_detail.html'
     context_object_name = 'ticket'
 
 
-class MyTicketsView(ListView):
+class MyTicketsListView(ListView):
     template_name = 'news/my_tickets_list.html'
     context_object_name = 'tickets'
 
@@ -368,7 +368,7 @@ class MyTicketsView(ListView):
         return self.request.user.event_tickets.all()
 
 
-class AdminEventTicketView(TemplateView):
+class AdminEventTicketListView(TemplateView):
     template_name = 'news/admin_event_ticket_list.html'
 
     def get_context_data(self, **kwargs):
@@ -385,7 +385,7 @@ class AdminEventTicketView(TemplateView):
         return context_data
 
 
-class AdminTimeplaceTicketView(TemplateView):
+class AdminTimeplaceTicketListView(TemplateView):
     template_name = 'news/admin_event_ticket_list.html'
 
     def get_context_data(self, **kwargs):
@@ -405,7 +405,7 @@ class AdminTimeplaceTicketView(TemplateView):
 class CancelTicketView(LoginRequiredMixin, RedirectView):
     permanent = False
     query_string = True
-    pattern_name = 'ticket'
+    pattern_name = 'ticket_detail'
 
     def get_redirect_url(self, *args, **kwargs):
         ticket = get_object_or_404(EventTicket, pk=kwargs.get('pk', 0))
