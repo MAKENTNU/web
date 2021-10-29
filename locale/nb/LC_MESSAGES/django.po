@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-21 14:34+0200\n"
+"POT-Creation-Date: 2021-10-27 20:59+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -96,7 +96,8 @@ msgstr "Ny kunngjøring"
 
 #: announcements/templates/announcements/announcement_create.html:59
 #: contentbox/templates/contentbox/edit.html:35
-#: faq/templates/faq/question_edit.html:38
+#: faq/templates/faq/admin_category_edit.html:26
+#: faq/templates/faq/admin_question_edit.html:38
 #: groups/templates/groups/committee_form.html:31
 #: internal/templates/internal/member_edit.html:84
 #: internal/templates/internal/secret_edit.html:38
@@ -113,7 +114,8 @@ msgstr "Lagre"
 #: contentbox/templates/contentbox/edit.html:37
 #: docs/templates/docs/documentation_page_create.html:28
 #: docs/templates/docs/documentation_page_edit.html:35
-#: faq/templates/faq/question_edit.html:40
+#: faq/templates/faq/admin_category_edit.html:28
+#: faq/templates/faq/admin_question_edit.html:40
 #: groups/templates/groups/committee_form.html:33
 #: internal/templates/internal/member_create.html:33
 #: internal/templates/internal/member_edit.html:87
@@ -333,15 +335,15 @@ msgstr "Stem"
 msgid "Delete"
 msgstr "Slett"
 
-#: checkin/views.py:139 checkin/views.py:142
+#: checkin/views.py:140 checkin/views.py:143
 msgid "Enter both norwegian and english skill name"
 msgstr "Skriv inn tittel på både norsk og engelsk"
 
-#: checkin/views.py:149
+#: checkin/views.py:150
 msgid "Skill already exists!"
 msgstr "Ferdigheten finnes allerede!"
 
-#: checkin/views.py:167
+#: checkin/views.py:168
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
@@ -354,6 +356,7 @@ msgstr "Tittel"
 #: contentbox/templates/contentbox/edit.html:6
 #: contentbox/templates/contentbox/edit.html:17
 #: docs/templates/docs/documentation_page_detail.html:39
+#: faq/templates/faq/faq_list.html:38
 #: groups/templates/groups/committee_form.html:15
 #: make_queue/templates/make_queue/usage_rules_detail.html:19
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:29
@@ -532,43 +535,71 @@ msgstr "Kun tall, bokstaver, mellomrom, parenteser og kolon er tillatt."
 msgid "Choose categories"
 msgstr "Velg kategorier"
 
-#: faq/models.py:8 faq/models.py:11
+#: faq/models.py:21 faq/models.py:26
 msgid "Category"
 msgstr "Kategori"
 
-#: faq/models.py:12 faq/models.py:24
+#: faq/models.py:27 faq/models.py:39
+#: faq/templates/faq/admin_category_list.html:6
+#: faq/templates/faq/admin_category_list.html:19
+#: faq/templates/faq/faq_admin_panel.html:33
 msgid "Categories"
 msgstr "Kategorier"
 
-#: faq/models.py:19 faq/models.py:28
+#: faq/models.py:34 faq/models.py:43
 msgid "Question"
 msgstr "Spørsmål"
 
-#: faq/models.py:20
+#: faq/models.py:35
 msgid "Answer"
 msgstr "Svar"
 
-#: faq/models.py:29 faq/templates/faq/faq_admin.html:9
+#: faq/models.py:44 faq/templates/faq/admin_question_list.html:6
+#: faq/templates/faq/admin_question_list.html:19
+#: faq/templates/faq/faq_admin_panel.html:22
 msgid "Questions"
 msgstr "Spørsmål"
 
-#: faq/templates/faq/faq_list.html:13
-msgid "Frequently Asked Questions"
-msgstr "Ofte stilte spørsmål"
+#: faq/templates/faq/admin_category_create.html:5
+#: faq/templates/faq/admin_category_create.html:6
+msgid "New Category"
+msgstr "Ny kategori"
 
-#: faq/templates/faq/question_create.html:5
-#: faq/templates/faq/question_create.html:6
+#: faq/templates/faq/admin_category_edit.html:6
+#: faq/templates/faq/admin_category_edit.html:15
+msgid "Edit Category"
+msgstr "Endre kategori"
+
+#: faq/templates/faq/admin_question_create.html:5
+#: faq/templates/faq/admin_question_create.html:6
 msgid "New Question"
 msgstr "Nytt spørsmål"
 
-#: faq/templates/faq/question_edit.html:6
-#: faq/templates/faq/question_edit.html:15
+#: faq/templates/faq/admin_question_edit.html:6
+#: faq/templates/faq/admin_question_edit.html:15
 msgid "Edit Question"
 msgstr "Endre spørsmål"
 
-#: faq/templates/faq/question_edit.html:31
+#: faq/templates/faq/admin_question_edit.html:31
 msgid "Choose one or more categories"
 msgstr "Velg én eller flere kategorier"
+
+#: faq/templates/faq/faq_admin_panel.html:7
+#: faq/templates/faq/faq_admin_panel.html:15
+msgid "FAQ Admin Panel"
+msgstr "FAQ-administrasjonspanel"
+
+#: faq/templates/faq/faq_admin_panel.html:25
+msgid "Here you can create, edit and delete questions"
+msgstr "Her kan du lage, endre og slette spørsmål"
+
+#: faq/templates/faq/faq_admin_panel.html:36
+msgid "Here you can create, edit and delete categories"
+msgstr "Her kan du lage, endre og slette kategorier"
+
+#: faq/templates/faq/faq_list.html:6 faq/templates/faq/faq_list.html:15
+msgid "Frequently Asked Questions"
+msgstr "Ofte stilte spørsmål"
 
 #: groups/models.py:26
 msgid "parents"
@@ -782,7 +813,7 @@ msgid "Public pages"
 msgstr "Offentlige sider"
 
 #: internal/templates/internal/header.html:26
-#: web/templates/web/header.html:108
+#: web/templates/web/header.html:113
 msgid "Log out"
 msgstr "Logg ut"
 
@@ -1198,7 +1229,7 @@ msgid "Events"
 msgstr "Arrangementer"
 
 #: make_queue/templates/make_queue/calendar.html:99
-#: make_queue/templates/make_queue/machine_list.html:27
+#: make_queue/templates/make_queue/machine_list.html:26
 #: make_queue/templates/make_queue/reservation_actions.html:32
 #: make_queue/templates/make_queue/reservation_list.html:12
 #: make_queue/templates/make_queue/reservation_list.html:32
@@ -1335,7 +1366,7 @@ msgid "Set status"
 msgstr "Sett status"
 
 #: make_queue/templates/make_queue/find_free_slot.html:18
-#: make_queue/templates/make_queue/machine_list.html:30
+#: make_queue/templates/make_queue/machine_list.html:29
 msgid "Find free reservation slots"
 msgstr "Finn ledige reservasjonstidspunkter"
 
@@ -1367,7 +1398,7 @@ msgid "View in calendar"
 msgstr "Se i kalender"
 
 #: make_queue/templates/make_queue/machine_detail.html:25
-#: make_queue/templates/make_queue/machine_list.html:42
+#: make_queue/templates/make_queue/machine_list.html:40
 msgid "Show rules"
 msgstr "Vis regler"
 
@@ -2553,7 +2584,7 @@ msgstr "Internsider"
 msgid "Django admin"
 msgstr "Django-admin"
 
-#: web/templates/web/header.html:116 web/templates/web/login.html:30
+#: web/templates/web/header.html:121 web/templates/web/login.html:30
 msgid "Log in"
 msgstr "Logg inn"
 
