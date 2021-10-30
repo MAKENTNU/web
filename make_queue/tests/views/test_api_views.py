@@ -15,8 +15,8 @@ class CalendarApiTestCase(TestCase):
         self.printer_machine_type = MachineType.objects.get(pk=1)
         self.machine1 = self.create_machine("1", machine_type=self.printer_machine_type)
         self.valid_data_dates = {
-            'startDate': '2021-01-01 10:20',
-            'endDate': '2021-01-01 12:20',
+            'startDate': '2021-01-01 10:20Z',
+            'endDate': '2021-01-01 12:20Z',
         }
         
 
