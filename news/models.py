@@ -40,9 +40,6 @@ class NewsBase(models.Model):
 
     class Meta:
         abstract = True
-        permissions = (
-            ('can_view_private', "Can view private news"),
-        )
 
     def __str__(self):
         return str(self.title)
@@ -84,6 +81,9 @@ class Article(NewsBase):
     objects = ArticleQuerySet.as_manager()
 
     class Meta(NewsBase.Meta):
+        permissions = (
+            ('can_view_private', "Can view private articles"),
+        )
         ordering = ('-publication_time',)
 
 
@@ -121,6 +121,11 @@ class Event(NewsBase):
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("Number of available tickets"))
 
     objects = EventQuerySet.as_manager()
+
+    class Meta(NewsBase.Meta):
+        permissions = (
+            ('can_view_private', "Can view private events"),
+        )
 
     def get_future_occurrences(self):
         return self.timeplaces.published().future().order_by('start_time')

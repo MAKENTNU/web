@@ -58,7 +58,7 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ('-publication_time',),
-                'permissions': (('can_view_private', 'Can view private news'),),
+                'permissions': (('can_view_private', 'Can view private articles'),),
                 'abstract': False,
             },
         ),
@@ -78,7 +78,7 @@ class Migration(migrations.Migration):
                 ('number_of_tickets', models.IntegerField(default=0, verbose_name='Number of available tickets')),
             ],
             options={
-                'permissions': (('can_view_private', 'Can view private news'),),
+                'permissions': (('can_view_private', 'Can view private events'),),
                 'abstract': False,
             },
         ),
