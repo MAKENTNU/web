@@ -27,6 +27,30 @@
     transform: translate(-50%, -50%);
 }
 
+.container .events {
+    margin: unset !important; /* Overrides the styling in `event_list_contents.css` */
+}
+
+.events .more-events-link .header {
+    display: flex !important; /* Overrides Fomantic-UI */
+    justify-content: center;
+}
+
+.event-article-border {
+    display: none;
+    margin-top: 2em;
+    border-style: solid;
+    border-color: var(--make-yellow);
+}
+
+
+/* Events are listed alternatingly left and right */
+@media screen and (min-width: 1200px) {
+    .events .more-events-link {
+        grid-column: 2/4;
+    }
+}
+
 
 /* Switch to mobile layout; articles are listed in one column */
 @media screen and (max-width: 991.98px) {

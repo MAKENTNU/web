@@ -37,7 +37,7 @@ class EventListView(TemplateView):
         for event in future:
             if not event.future_timeplaces:
                 continue
-            if event.event_type == Event.Type.STANDALONE:
+            if event.standalone:
                 future_event_dicts.append({
                     'event': event,
                     'shown_occurrence': event.future_timeplaces[0],
@@ -76,7 +76,7 @@ class ArticleListView(ListView):
     context_object_name = 'articles'
 
     def get_queryset(self):
-        return Article.objects.published().visible_to(self.request.user)
+        return Article.objects.published().visible_to(self.request.user).order_by('-publication_time')
 
 
 class EventDetailView(TemplateView):

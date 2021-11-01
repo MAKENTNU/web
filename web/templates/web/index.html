@@ -39,7 +39,7 @@
     </div>
 
     <div class="ui container">
-        {% include 'news/article_list_contents.html' %}
+        {% include 'news/article_list_contents.html' with articles=featured_articles %}
     </div>
 {% endblock body %}
 

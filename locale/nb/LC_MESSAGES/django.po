@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-27 20:59+0200\n"
+"POT-Creation-Date: 2021-11-01 11:46+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -794,8 +794,8 @@ msgstr "Tilgang"
 msgid "Access for {member} to {name}: {has_access}"
 msgstr "Tilgang for {member} til {name}: {has_access}"
 
-#: internal/models.py:225 make_queue/models/machine.py:45
-#: make_queue/models/machine.py:112 makerspace/models.py:25
+#: internal/models.py:225 make_queue/models/machine.py:47
+#: make_queue/models/machine.py:138 makerspace/models.py:25
 msgid "Priority"
 msgstr "Prioritet"
 
@@ -821,7 +821,7 @@ msgid "Public pages"
 msgstr "Offentlige sider"
 
 #: internal/templates/internal/header.html:26
-#: web/templates/web/header.html:113
+#: web/templates/web/header.html:115
 msgid "Log out"
 msgstr "Logg ut"
 
@@ -1094,11 +1094,6 @@ msgstr "Tatt det avanserte 3D-printerkurset"
 #: make_queue/models/machine.py:43
 msgid "Usage requirement"
 msgstr "Brukskrav"
-
-#: make_queue/models/machine.py:47 make_queue/models/machine.py:138
-#: makerspace/models.py:25
-msgid "Priority"
-msgstr "Prioritet"
 
 #: make_queue/models/machine.py:48
 msgid "The machine types are sorted ascending by this value."
@@ -1707,49 +1702,49 @@ msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 msgid "Edit usage rules for %(machine_type)s"
 msgstr "Rediger bruksregler for %(machine_type)s"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:63
 msgid "Mon"
 msgstr "Man"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:63
 msgid "Tue"
 msgstr "Tir"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:63
 msgid "Wed"
 msgstr "Ons"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:63
 msgid "Thu"
 msgstr "Tor"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:63
 msgid "Fri"
 msgstr "Fre"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:63
 msgid "Sat"
 msgstr "Lør"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:63
 msgid "Sun"
 msgstr "Søn"
 
-#: make_queue/templatetags/reservation_extra.py:74
+#: make_queue/templatetags/reservation_extra.py:75
 #, python-brace-format
 msgid "{machine_status} for {duration}"
 msgstr "{machine_status} i {duration}"
 
-#: make_queue/templatetags/reservation_extra.py:95
+#: make_queue/templatetags/reservation_extra.py:96
 msgid "You must be logged in to create reservations."
 msgstr "Du må være logget inn for å kunne lage reservasjoner."
 
-#: make_queue/templatetags/reservation_extra.py:100
+#: make_queue/templatetags/reservation_extra.py:101
 #, python-brace-format
 msgid "The machine has status “{status}”."
 msgstr "Maskinen har status «{status}»."
 
-#: make_queue/templatetags/reservation_extra.py:102
+#: make_queue/templatetags/reservation_extra.py:103
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall fremtidige reservasjoner."
 
@@ -2291,17 +2286,7 @@ msgstr ""
 msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
-#: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77 web/templates/web/index.html:46
-msgid "dates"
-msgstr "datoer"
-
-#: news/templates/news/event_list.html:24
-#: news/templates/news/event_list.html:77 web/templates/web/index.html:46
-msgid "date"
-msgstr "dato"
-
-#: news/templates/news/event_list.html:61
+#: news/templates/news/event_list.html:12
 msgid "No upcoming events"
 msgstr "Ingen kommende arrangementer"
 
@@ -2330,6 +2315,10 @@ msgstr "Illustrasjonsbilde for %(event)s"
 #, python-format
 msgid "Register for the event “%(title)s”"
 msgstr "Meld deg på arrangementet «%(title)s»"
+
+#: news/templates/news/index_event_list_contents.html:14
+msgid "More events"
+msgstr "Flere arrangementer"
 
 #: news/templates/news/my_tickets_list.html:12
 #: web/templates/web/header.html:107
@@ -2602,17 +2591,13 @@ msgstr "Profil"
 msgid "Internal pages"
 msgstr "Internsider"
 
-#: web/templates/web/header.html:109
+#: web/templates/web/header.html:111
 msgid "Django admin"
 msgstr "Django-admin"
 
-#: web/templates/web/header.html:121 web/templates/web/login.html:30
+#: web/templates/web/header.html:123 web/templates/web/login.html:30
 msgid "Log in"
 msgstr "Logg inn"
-
-#: web/templates/web/index.html:78
-msgid "More events"
-msgstr "Flere arrangementer"
 
 #: web/widgets.py:70 web/widgets.py:80
 msgid "Choose value"
