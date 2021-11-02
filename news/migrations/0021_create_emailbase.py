@@ -7,7 +7,7 @@ import web.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('news', '0020_empty.py'),
+        ('news', '0020_added_hyphen_to_fieldname_multiperiod'),
     ]
 
     operations = [
