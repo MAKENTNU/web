@@ -169,13 +169,16 @@ class Event(NewsBase):
 class TimePlaceQuerySet(models.QuerySet):
 
     def published(self):
-        return self.filter(hidden=False, event__hidden=False).filter(publication_time__lte=timezone.localtime())
+        return self.filter(hidden=False, event__hidden=False, publication_time__lte=timezone.now())
+
+    def unpublished(self):
+        return self.filter(Q(hidden=True) | Q(event__hidden=True) | Q(publication_time__gt=timezone.now()))
 
     def future(self):
-        return self.filter(end_time__gt=timezone.localtime())
+        return self.filter(end_time__gt=timezone.now())
 
     def past(self):
-        return self.filter(end_time__lte=timezone.localtime())
+        return self.filter(end_time__lte=timezone.now())
 
 
 class TimePlace(models.Model):

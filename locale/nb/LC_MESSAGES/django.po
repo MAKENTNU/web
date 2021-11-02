@@ -1883,6 +1883,46 @@ msgstr "Regler"
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
+#: news/admin.py:87 news/admin.py:139
+msgid "number of reserved tickets"
+msgstr "antall reserverte billetter"
+
+#: news/admin.py:117
+msgid "number of occurrences"
+msgstr "antall forekomster"
+
+#: news/admin.py:122
+msgid "future occurrences"
+msgstr "framtidige forekomster"
+
+#: news/admin.py:130
+msgid "previous occurrence"
+msgstr "forrige forekomst"
+
+#: news/admin.py:154
+#, python-brace-format
+msgid "{count} more..."
+msgstr "{count} fler..."
+
+#: news/admin.py:198 news/admin.py:237
+msgid "is published"
+msgstr "er publisert"
+
+#: news/admin.py:240
+msgid "event hidden"
+msgstr "arrangement skjult"
+
+#: news/admin.py:242 news/models.py:36 news/models.py:196
+#: news/templates/news/admin_article_list.html:31
+#: news/templates/news/admin_event_list.html:39
+#: news/templates/news/admin_timeplace_listing.html:27
+msgid "Hidden"
+msgstr "Skjult"
+
+#: news/admin.py:244
+msgid "future publication time"
+msgstr "framtidig publiseringstid"
+
 #: news/forms.py:31
 msgid "The event cannot end before it starts"
 msgstr "Arrangementet kan ikke slutte før det starter"
@@ -1939,13 +1979,6 @@ msgstr "Ikke crop bildet"
 #: news/templates/news/admin_event_list.html:33
 msgid "Featured"
 msgstr "Fremhevet"
-
-#: news/models.py:36 news/models.py:194
-#: news/templates/news/admin_article_list.html:31
-#: news/templates/news/admin_event_list.html:39
-#: news/templates/news/admin_timeplace_listing.html:27
-msgid "Hidden"
-msgstr "Skjult"
 
 #: news/models.py:37 news/templates/news/admin_article_list.html:37
 #: news/templates/news/admin_event_list.html:45
