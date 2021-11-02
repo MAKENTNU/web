@@ -7,7 +7,7 @@ import web.modelfields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('news', '0020_merge_20210419_1301'),
+        ('news', '0020_empty.py'),
     ]
 
     operations = [
