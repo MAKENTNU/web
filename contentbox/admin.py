@@ -4,4 +4,9 @@ from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import ContentBox
 
 
-admin.site.register(ContentBox, MultiLingualFieldAdmin)
+class ContentBoxAdmin(MultiLingualFieldAdmin):
+    list_display = ('title', 'last_modified')
+    readonly_fields = ('last_modified',)
+
+
+admin.site.register(ContentBox, ContentBoxAdmin)
