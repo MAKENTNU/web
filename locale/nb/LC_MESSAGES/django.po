@@ -1887,6 +1887,12 @@ msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 msgid "number of reserved tickets"
 msgstr "antall reserverte billetter"
 
+#: news/admin.py:108 news/admin.py:215
+#: news/templates/news/admin_event_detail.html:69
+#: news/templates/news/admin_event_ticket_list.html:30
+msgid "Tickets"
+msgstr "Billetter"
+
 #: news/admin.py:117
 msgid "number of occurrences"
 msgstr "antall forekomster"
@@ -1903,6 +1909,14 @@ msgstr "forrige forekomst"
 #, python-brace-format
 msgid "{count} more..."
 msgstr "{count} fler..."
+
+#: news/admin.py:158 news/admin.py:251
+msgid "active tickets"
+msgstr "aktive billetter"
+
+#: news/admin.py:162 news/admin.py:255
+msgid "inactive tickets"
+msgstr "inaktive billetter"
 
 #: news/admin.py:198 news/admin.py:237
 msgid "is published"
@@ -2021,6 +2035,16 @@ msgstr "Tidspunkt"
 msgid "Preferred language"
 msgstr "Foretrukket språk"
 
+#: news/templates/admin/news/event/change_form_ticket_table.html:5
+msgid "Number of tickets"
+msgstr "Antall billetter"
+
+#: news/templates/admin/news/event/change_form_ticket_table.html:13
+#: news/templates/news/admin_event_ticket_list.html:53
+#: news/templates/news/ticket_card.html:61
+msgid "Ref #"
+msgstr "Ref #"
+
 #: news/templates/email/ticket.html:27
 msgid "Event image"
 msgstr "Arrangementsbilde"
@@ -2111,11 +2135,6 @@ msgid "This event is private! It is only visible to members of MAKE NTNU."
 msgstr ""
 "Dette arrangementet er privat! Det vil bare vises for medlemmer av MAKE NTNU."
 
-#: news/templates/news/admin_event_detail.html:69
-#: news/templates/news/admin_event_ticket_list.html:30
-msgid "Tickets"
-msgstr "Billetter"
-
 #: news/templates/news/admin_event_detail.html:74
 #: news/templates/news/admin_event_ticket_list.html:32
 #: news/templates/news/admin_timeplace_listing.html:12
@@ -2183,11 +2202,6 @@ msgstr ""
 #: news/templates/news/ticket_card.html:10
 msgid "Canceled"
 msgstr "Kansellert"
-
-#: news/templates/news/admin_event_ticket_list.html:53
-#: news/templates/news/ticket_card.html:61
-msgid "Ref #"
-msgstr "Ref #"
 
 #: news/templates/news/admin_event_ticket_list.html:57
 msgid "Language"

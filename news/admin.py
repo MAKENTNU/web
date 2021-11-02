@@ -1,15 +1,14 @@
 from django import forms
 from django.contrib import admin
-from django.db.models import Count, Max, Prefetch, Q
+from django.db.models import Count, Max, Prefetch, Q, QuerySet
+from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from util import html_utils
-from util.admin_utils import (
-    LabelFreeRawIdWidgetAdminMixin, TextFieldOverrideMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped,
-)
+from util.admin_utils import TextFieldOverrideMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
 from util.locale_utils import short_datetime_format
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .forms import ArticleForm, EventForm
@@ -54,15 +53,20 @@ class ArticleAdmin(NewsBaseAdmin):
     ordering = ('-publication_time',)
 
 
-class EventTicketInline(LabelFreeRawIdWidgetAdminMixin, admin.TabularInline):
-    model = EventTicket
-    readonly_fields = ('event', 'timeplace')
-    raw_id_fields = ('user',)
-
-    extra = 0
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('user', 'event').prefetch_related('timeplace__event')
+def get_ticket_table(tickets: QuerySet[EventTicket]):
+    ticket_dicts = [
+        {
+            'ref_link': link_to_admin_change_form(ticket, text=ticket.pk),
+            'user_name_link': link_to_admin_change_form(ticket.user, text=ticket.name),
+            'user_email': ticket.email,
+            'comment': ticket.comment,
+            'language': ticket.get_language_display(),
+        }
+        for ticket in tickets.select_related('user')
+    ]
+    return get_template('admin/news/event/change_form_ticket_table.html').render({
+        'ticket_dicts': ticket_dicts,
+    })
 
 
 class EventAdmin(NewsBaseAdmin):
@@ -85,10 +89,24 @@ class EventAdmin(NewsBaseAdmin):
             qs = qs.select_related('event')
             return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
 
-    inlines = [TimePlaceInline, EventTicketInline]
+    inlines = [TimePlaceInline]
     form_base = EventForm
     list_display_extra = ('event_type', 'get_num_occurrences', 'get_future_occurrences', 'get_last_occurrence', 'get_number_of_tickets')
     list_filter = ('event_type', *NewsBaseAdmin.list_filter)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'title', 'content', 'clickbait', 'image', 'contain', 'featured', 'hidden', 'private',
+                'event_type', 'number_of_tickets', 'last_modified',
+            ),
+        }),
+        (_("Tickets"), {
+            'fields': ('get_active_tickets', 'get_inactive_tickets'),
+            'classes': ('collapse',),
+        }),
+    )
+    readonly_fields = (*NewsBaseAdmin.readonly_fields, 'get_active_tickets', 'get_inactive_tickets')
 
     @admin.display(
         ordering='num_time_places',
@@ -133,6 +151,14 @@ class EventAdmin(NewsBaseAdmin):
 
             return html_utils.block_join(time_place_ticket_strings, sep="<b>&bull;</b>") or None
 
+    @admin.display(description=_("active tickets"))
+    def get_active_tickets(self, event: Event):
+        return get_ticket_table(event.tickets.filter(active=True))
+
+    @admin.display(description=_("inactive tickets"))
+    def get_inactive_tickets(self, event: Event):
+        return get_ticket_table(event.tickets.filter(active=False))
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         # Passing `distinct=True` to make multiple aggregations work
@@ -158,8 +184,6 @@ class EventAdmin(NewsBaseAdmin):
 
 
 class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
-    inlines = [EventTicketInline]
-
     list_display = (
         'publication_time', 'get_event', 'start_time', 'end_time', 'get_place', 'number_of_tickets',
         'hidden', 'is_published', 'last_modified',
@@ -177,7 +201,19 @@ class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     list_editable = ('number_of_tickets', 'hidden')
     ordering = ('-start_time',)
     list_select_related = ('event',)
-    readonly_fields = ('last_modified',)
+
+    fieldsets = (
+        (None, {
+            'fields': (
+                'event', 'publication_time', 'start_time', 'end_time', 'place', 'place_url', 'hidden', 'number_of_tickets', 'last_modified',
+            ),
+        }),
+        (_("Tickets"), {
+            'fields': ('get_active_tickets', 'get_inactive_tickets'),
+            'classes': ('collapse',),
+        }),
+    )
+    readonly_fields = ('last_modified', 'get_active_tickets', 'get_inactive_tickets')
     raw_id_fields = ('event',)
 
     @admin.display(
@@ -207,6 +243,14 @@ class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
 
         no_translation = _("No")
         return f"{no_translation} ({unpublished_message})"
+
+    @admin.display(description=_("active tickets"))
+    def get_active_tickets(self, time_place: TimePlace):
+        return get_ticket_table(time_place.tickets.filter(active=True))
+
+    @admin.display(description=_("inactive tickets"))
+    def get_inactive_tickets(self, time_place: TimePlace):
+        return get_ticket_table(time_place.tickets.filter(active=False))
 
     def get_search_results(self, request, queryset, search_term):
         return search_escaped_and_unescaped(super(), request, queryset, search_term)
