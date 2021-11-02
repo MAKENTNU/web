@@ -2139,8 +2139,8 @@ msgstr ""
 #: news/templates/news/admin_event_ticket_list.html:32
 #: news/templates/news/admin_timeplace_listing.html:12
 #, python-format
-msgid "%(num_registered_tickets)s/%(num_tickets)s tickets reserved"
-msgstr "%(num_registered_tickets)s/%(num_tickets)s billetter reservert"
+msgid "%(num_active_tickets)s/%(num_tickets)s tickets reserved"
+msgstr "%(num_active_tickets)s/%(num_tickets)s billetter reservert"
 
 #: news/templates/news/admin_event_detail.html:80
 #: news/templates/news/admin_timeplace_listing.html:17

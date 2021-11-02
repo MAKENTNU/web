@@ -134,7 +134,8 @@ class Event(NewsBase):
     def get_past_occurrences(self):
         return self.timeplaces.published().past().order_by('-start_time')
 
-    def number_of_registered_tickets(self):
+    @property
+    def number_of_active_tickets(self):
         return self.tickets.filter(active=True).count()
 
     @property
@@ -160,7 +161,7 @@ class Event(NewsBase):
 
         # If the event is standalone, the ability to register is dependent on if there are any more available tickets
         if self.standalone:
-            return self.number_of_tickets > self.number_of_registered_tickets()
+            return self.number_of_active_tickets < self.number_of_tickets
 
         # Registration to a repeating event with future occurrences is handled by the time place objects
         return True
@@ -204,7 +205,8 @@ class TimePlace(models.Model):
     def __str__(self):
         return f"{self.event.title} - {short_date_format(self.start_time)}"
 
-    def number_of_registered_tickets(self):
+    @property
+    def number_of_active_tickets(self):
         return self.tickets.filter(active=True).count()
 
     def is_in_the_past(self):
@@ -213,7 +215,7 @@ class TimePlace(models.Model):
     def can_register(self, user):
         if not self.event.can_register(user) or self.is_in_the_past():
             return False
-        return not self.hidden and self.number_of_registered_tickets() < self.number_of_tickets
+        return not self.hidden and self.number_of_active_tickets < self.number_of_tickets
 
 
 class EventTicket(models.Model):
