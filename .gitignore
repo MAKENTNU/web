@@ -247,7 +247,7 @@ modules.xml
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 [Bb]in
 [Ii]nclude
-[Ll]ib
+# Can't ignore [Ll]ib, as that would ignore `web/static/lib`
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
