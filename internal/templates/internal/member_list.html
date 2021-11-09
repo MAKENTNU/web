@@ -24,7 +24,7 @@
             {% endif %}
         </h1>
 
-        <form class="ui form">
+        <form class="dont-prevent-leaving ui form">
             <div id="filter-fields" class="ui fields">
                 <div class="ui six wide field">
                     <input id="search" type="text" name="search-text" placeholder="{% trans "Search name and username" %}"/>
@@ -298,7 +298,7 @@
             <h4 class="ui horizontal divider header">
                 <i class="ui make-col-yellow key icon"></i>{% trans "System accesses" %}
             </h4>
-            <form id="edit-system-access-form" method="POST">
+            <form id="edit-system-access-form" class="dont-prevent-leaving" method="POST">
                 {% csrf_token %}
                 <table class="ui very basic unstackable celled table">
                     <tbody id="member-system-accesses">
@@ -311,7 +311,7 @@
                 <h4 class="ui horizontal divider header">
                     <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
                 </h4>
-                <form id="edit-member-status-form" class="member-action-buttons" method="POST">
+                <form id="edit-member-status-form" class="dont-prevent-leaving member-action-buttons" method="POST">
                     {% csrf_token %}
                     <a id="member-setQuitUrl-button" class="ui red button">
                         {% trans "Set member as quit" %}
