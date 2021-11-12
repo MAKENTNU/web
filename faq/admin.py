@@ -15,7 +15,7 @@ class QuestionAdmin(MultiLingualFieldAdmin):
     readonly_fields = ('last_modified',)
 
     @admin.display(description=_("Categories"))
-    def get_categries(self, question: Question):
+    def get_categories(self, question: Question):
         category_strings = [
             link_to_admin_change_form(category)
             for category in question.categories.all()
