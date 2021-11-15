@@ -64,7 +64,7 @@ default_machine_types = (
     ),
     MachineTypeStruct(
         pk=5,
-        name={"en": "Dress form", "nb": "Sømbyste"},
+        name={"en": "Dress forms", "nb": "Sømbyster"},
         cannot_use_text="",
         usage_requirement="AUTH",
         has_stream=False,

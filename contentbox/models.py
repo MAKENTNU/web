@@ -11,6 +11,7 @@ class ContentBox(models.Model):
         verbose_name=_("Title"),
     )
     content = MultiLingualRichTextUploadingField()
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         permissions = (

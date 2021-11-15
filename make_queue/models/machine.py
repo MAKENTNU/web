@@ -138,6 +138,7 @@ class Machine(models.Model):
         verbose_name=_("Priority"),
         help_text=_("If specified, the machines are sorted ascending by this value."),
     )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = MachineQuerySet.as_manager()
 
@@ -187,6 +188,7 @@ class MachineUsageRule(models.Model):
         related_name='usage_rule',
     )
     content = MultiLingualRichTextUploadingField()
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def __str__(self):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)
