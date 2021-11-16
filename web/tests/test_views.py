@@ -3,19 +3,21 @@ from http import HTTPStatus
 from typing import List
 
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.test import Client, TestCase
 from django.utils import timezone
 from django_hosts import reverse
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.test_utils import MOCK_JPG_FILE
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
 from web.views import IndexView
 
 
-class IndexViewTests(TestCase):
+class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
+
     def setUp(self):
-        self.path = reverse('front-page')
+        self.path = reverse('front_page')
 
     @staticmethod
     def create_time_place(*, start_time: datetime, event: Event) -> TimePlace:
@@ -45,7 +47,7 @@ class IndexViewTests(TestCase):
     def test_context_data_contains_expected_event_dict_values(self):
         def assert_context_event_dicts_equal(expected_event_dicts: List[dict]):
             response_context = self.get_response_context()
-            self.assertListEqual(response_context['event_dicts'], expected_event_dicts)
+            self.assertListEqual(response_context['featured_event_dicts'], expected_event_dicts)
 
         now = timezone.now()
 
@@ -69,13 +71,13 @@ class IndexViewTests(TestCase):
         future_repeating__past = self.create_time_place(start_time=now + timedelta(days=-3), event=future_repeating)
         future_repeating__3_days = self.create_time_place(start_time=now + timedelta(days=3), event=future_repeating)
         future_standalone_dict = {
-            'first_occurrence': future_standalone__2_days,
             'event': future_standalone,
+            'shown_occurrence': future_standalone__2_days,
             'number_of_occurrences': 2,
         }
         future_repeating_dict = {
-            'first_occurrence': future_repeating__3_days,
             'event': future_repeating,
+            'shown_occurrence': future_repeating__3_days,
             'number_of_occurrences': 1,
         }
         assert_context_event_dicts_equal([future_standalone_dict, future_repeating_dict])
@@ -83,7 +85,7 @@ class IndexViewTests(TestCase):
         # Adding a time place that occurs before the existing future ones,
         # should change the first occurrence, and make the associated event be listed first
         future_repeating__1_day = self.create_time_place(start_time=now + timedelta(days=1), event=future_repeating)
-        future_repeating_dict['first_occurrence'] = future_repeating__1_day
+        future_repeating_dict['shown_occurrence'] = future_repeating__1_day
         future_repeating_dict['number_of_occurrences'] = 2
         assert_context_event_dicts_equal([future_repeating_dict, future_standalone_dict])
 
@@ -98,7 +100,7 @@ class IndexViewTests(TestCase):
         # No events to begin with
         response_context = self.get_response_context()
         self.assertEqual(Event.objects.count(), 0)
-        self.assertEqual(len(response_context['event_dicts']), 0)
+        self.assertEqual(len(response_context['featured_event_dicts']), 0)
         self.assertFalse(response_context['more_events_exist'])
 
         # Create events in chronological order, up until the max shown events limit
@@ -110,7 +112,7 @@ class IndexViewTests(TestCase):
                 ordered_events.append(event)
 
                 response_context = self.get_response_context()
-                response_event_dicts = response_context['event_dicts']
+                response_event_dicts = response_context['featured_event_dicts']
                 self.assertEqual(len(response_event_dicts), event_num)
                 self.assertListEqual(
                     [event_dict['event'] for event_dict in response_event_dicts],
@@ -122,7 +124,7 @@ class IndexViewTests(TestCase):
         # and should make the "More events" button visible
         event = self.create_event_with_one_time_place(event_type=Event.Type.STANDALONE, start_time=now + timedelta(days=0.5))
         response_context = self.get_response_context()
-        response_event_dicts = response_context['event_dicts']
+        response_event_dicts = response_context['featured_event_dicts']
         self.assertEqual(Event.objects.count(), IndexView.MAX_EVENTS_SHOWN + 1)
         self.assertEqual(len(response_event_dicts), IndexView.MAX_EVENTS_SHOWN)
         self.assertEqual(response_event_dicts[0]['event'], event)
@@ -131,7 +133,7 @@ class IndexViewTests(TestCase):
     def test_context_data_contains_expected_private_events(self):
         now = timezone.now()
         internal_user = User.objects.create_user(username="internal_user")
-        internal_user.user_permissions.add(Permission.objects.get(codename='can_view_private'))
+        internal_user.user_permissions.add(Permission.objects.get(codename='can_view_private', content_type=ContentType.objects.get_for_model(Event)))
         internal_client = Client()
         internal_client.force_login(internal_user)
 
@@ -151,6 +153,7 @@ class IndexViewTests(TestCase):
 
 
 class AdminPanelViewTests(TestCase):
+
     def setUp(self):
         self.path = reverse('adminpanel')
 

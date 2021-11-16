@@ -291,7 +291,8 @@ function setupState() {
         $downloadUsersForm.find("#selected").val(selected);
     });
 
-    updateDisplay();
+    // Initial display refresh (`sort()` also calls `updateDisplay()`)
+    sort();
 }
 
 setupState();

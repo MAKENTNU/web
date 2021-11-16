@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='machine',
             name='stream_name',
-            field=models.CharField(blank=True, default='', max_length=50, validators=[django.core.validators.RegexValidator(code='invalid_stream_name', message='This can only consist of lowercase English letters, numbers, hyphens or underscores.', regex=re.compile('^[a-z0-9_-]+$'))], verbose_name='stream name'),
+            field=models.CharField(blank=True, default='', help_text="Used for connecting to the machine's stream.", max_length=50, validators=[django.core.validators.RegexValidator(code='invalid_stream_name', message='This can only consist of lowercase English letters, numbers, hyphens or underscores.', regex=re.compile('^[a-z0-9_-]+$'))], verbose_name='stream name'),
         ),
         migrations.RunPython(set_stream_name, migrations.RunPython.noop),
     ]

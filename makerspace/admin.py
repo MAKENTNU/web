@@ -7,9 +7,10 @@ from .models import Equipment
 
 
 class EquipmentAdmin(MultiLingualFieldAdmin):
-    list_display = ('title', 'get_image', 'priority')
+    list_display = ('title', 'get_image', 'priority', 'last_modified')
     search_fields = ('title', 'description')
     list_editable = ('priority',)
+    readonly_fields = ('last_modified',)
 
     @admin.display(description=_("Image"))
     def get_image(self, equipment: Equipment):

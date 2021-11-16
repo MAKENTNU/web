@@ -2,23 +2,25 @@ from abc import ABC
 from datetime import timedelta
 from math import ceil
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
-from django.views.generic import DeleteView, FormView, TemplateView, UpdateView
+from django.views.generic import DeleteView, FormView, ListView, TemplateView, UpdateView
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import FreeSlotForm, ReservationForm
-from ...models.models import Machine, MachineType, Reservation, ReservationRule
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation, can_delete_reservation, can_mark_reservation_finished
 
 
-class ReservationCreateOrChangeView(TemplateView, ABC):
+class CreateOrEditReservationView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
 
     template_name = 'make_queue/reservation_edit.html'
@@ -38,7 +40,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
                 'Reservations can only be made {num_days} days ahead of time',
                 num_days
             ).format(num_days=num_days)
-        if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
+        if self.request.user.has_perm('make_queue.can_create_event_reservation') and form.cleaned_data["event"]:
             return _("The time slot or event is no longer available")
         if reservation.check_machine_out_of_order():
             return _("The machine is out of order")
@@ -144,7 +146,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
         return self.get(request, **kwargs)
 
 
-class CreateReservationView(PermissionRequiredMixin, ReservationCreateOrChangeView):
+class CreateReservationView(PermissionRequiredMixin, CreateOrEditReservationView):
     """View for creating a new reservation."""
     new_reservation = True
 
@@ -201,7 +203,7 @@ class DeleteReservationView(PermissionRequiredMixin, PreventGetRequestsMixin, De
         return HttpResponse(status=200)
 
 
-class ChangeReservationView(ReservationCreateOrChangeView):
+class EditReservationView(CreateOrEditReservationView):
     """View for changing a reservation (Cannot be UpdateView due to the abstract inheritance of reservations)."""
     new_reservation = False
 
@@ -216,7 +218,7 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         if reservation.can_change(request.user) or reservation.can_change_end_time(request.user):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
     def form_valid(self, form, **kwargs):
         """
@@ -228,11 +230,11 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         reservation = kwargs["reservation"]
         # The user is not allowed to change the machine for a reservation
         if reservation.machine != form.cleaned_data["machine"]:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
         # If the reservation has begun, the user is not allowed to change the start time
         if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
         reservation.comment = form.cleaned_data["comment"]
 
@@ -272,7 +274,20 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
         return HttpResponse(status=200)
 
 
-class FindFreeSlot(FormView):
+class MyReservationsListView(LoginRequiredMixin, ListView):
+    """View for seeing the user's reservations."""
+    model = Reservation
+    template_name = 'make_queue/reservation_list.html'
+    context_object_name = 'reservations'
+
+    def get_queryset(self):
+        filter_query = Q(user=self.request.user)
+        if not self.request.user.has_perm('make_queue.can_create_event_reservation'):
+            filter_query &= Q(event=None, special=False)
+        return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
+
+
+class FindFreeSlotView(LoginRequiredMixin, FormView):
     """
     View to find free time slots for reservations.
     """

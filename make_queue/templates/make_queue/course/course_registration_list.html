@@ -4,21 +4,21 @@
 {% load datetime_tags %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_list.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
 
     <div class="ui container">
         <h1>
             {% trans "Course registrations" %}
-            <a href="{% url "create_course_registration" %}" data-tooltip="{% trans "Add" %}">
+            <a href="{% url 'create_course_registration' %}" data-tooltip="{% trans "Add" %}">
                 <i class="ui green plus icon"></i>
             </a>
         </h1>
 
-        <form id="download-users" class="ui form" method="POST" action="{% url "download_course_registrations" %}">
+        <form id="download-users" class="ui form" method="POST" action="{% url 'download_course_registrations' %}">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
@@ -109,12 +109,12 @@
                 >
                     <td>
                         {{ registration.name }}
-                        <a href="{% url "edit_course_registration" registration.pk %}">
+                        <a href="{% url 'edit_course_registration' registration.pk %}">
                             <i class="ui make-col-yellow pencil icon"></i>
                         </a>
                         {% if perms.make_queue.delete_printer3dcourse %}
                             <a class="delete-modal-button"
-                               data-url="{% url "delete_course_registration" registration.pk %}"
+                               data-url="{% url 'delete_course_registration' registration.pk %}"
                                data-prompt="{% blocktrans trimmed with user=registration.get_user_display_name %}
                                                 Are you sure you want to delete the course registration of {{ user }}?
                                             {% endblocktrans %}">
@@ -192,7 +192,7 @@
             {% trans "Set status of users to" %} &quot;<i><span id="set-status-text"></span></i>&quot;
         </div>
 
-        <form method="POST" action="{% url "bulk_status_update" %}">
+        <form method="POST" action="{% url 'bulk_status_update' %}">
             {% csrf_token %}
             <input id="status" type="hidden" value="" name="status"/>
         </form>

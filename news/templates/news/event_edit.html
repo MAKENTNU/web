@@ -1,135 +1,63 @@
-{% extends 'web/base.html' %}
+{% extends 'news/news_base_edit.html' %}
 {% load static %}
 {% load i18n %}
 
 
 {% block title %}{% trans "Edit event" %}{% endblock title %}
+{% block form_header %}{% trans "Edit event" %}{% endblock form_header %}
 
-{% block head %}
-    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
-    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+{% block extra_head %}
+    {{ block.super }}
     <script src="{% static 'news/js/event_type.js' %}"></script>
-{% endblock head %}
+{% endblock extra_head %}
 
-{% block body %}
-    <h1 class="ui centered header">
-        {% block form_header %}{% trans "Edit event" %}{% endblock form_header %}
-    </h1>
-    <form class="ui form text container" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="field">
-            <label>{{ form.title.label }}</label>
-            {{ form.title }}
-        </div>
-        <div class="field">
-            <label>{{ form.content.label }}
-                <span data-content="{% trans "The main description of the event" %}">
-                    <i class="ui make-col-yellow question circle icon"></i>
-                </span>
-            </label>
-            {{ form.content }}
-        </div>
-        <div class="field">
-            <label>{{ form.clickbait.label }}
-                <span data-content="{% trans "A short text designed to bait users into clicking the event" %}">
-                    <i class="ui make-col-yellow question circle icon"></i>
-                </span>
-            </label>
-            {{ form.clickbait }}
-        </div>
-        <div class="two fields">
-            <div class="ui field">
-                <div class="grouped fields">
-                    <label>{{ form.event_type.label }}</label>
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" id="repeating" name="{{ form.event_type.name }}" value="{{ Event.Type.REPEATING }}"
-                                   {% if form.event_type.value == Event.Type.REPEATING %}checked{% endif %}>
-                            <label for="repeating">{% trans "Repeating" %}
-                                <span data-content="{% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}">
-                                    <i class="ui make-col-yellow question circle icon"></i>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <div class="ui radio checkbox">
-                            <input type="radio" id="standalone" name="{{ form.event_type.name }}" value="{{ Event.Type.STANDALONE }}"
-                                   {% if form.event_type.value == Event.Type.STANDALONE %}checked{% endif %}>
-                            <label for="standalone">{% trans "Standalone" %}
-                                <span data-content="{% trans "Used for events that happen once, e.g. a weekend-long happening. All occurrences of the event will have a common registration." %}">
-                                    <i class="ui make-col-yellow question circle icon"></i>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="field">
+{% block custom_fields %}
+    <div class="two fields">
+        <div class="ui field">
+            <div class="grouped fields">
+                <label>{{ form.event_type.label }}</label>
                 <div class="field">
-                    <label>{{ form.number_of_tickets.label }}</label>
-                    {{ form.number_of_tickets }}
-                    <div id="info-message-tickets" class="ui blue pointing basic label">
-                        {% trans "A value of zero indicates that no registration is required" %}
+                    <div class="ui radio checkbox">
+                        <input id="repeating" type="radio" name="{{ form.event_type.name }}" value="{{ Event.Type.REPEATING }}"
+                               {% if form.event_type.value == Event.Type.REPEATING %}checked{% endif %}/>
+                        <label for="repeating">{% trans "Repeating" %}
+                            <span data-content="
+                                {% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}
+                            ">
+                                <i class="make-col-yellow question circle icon"></i>
+                            </span>
+                        </label>
                     </div>
                 </div>
-                <div id="info-message-tickets-repeating" class="ui red pointing basic label">
-                    {% trans "Only used for standalone events. For repeating events, tickets are administered per occurrence." %}
+
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input id="standalone" type="radio" name="{{ form.event_type.name }}" value="{{ Event.Type.STANDALONE }}"
+                               {% if form.event_type.value == Event.Type.STANDALONE %}checked{% endif %}/>
+                        <label for="standalone">{% trans "Standalone" %}
+                            <span data-content="
+                                {% trans "Used for events that happen once, e.g. a weekend-long happening. All occurrences of the event will have a common registration." %}
+                            ">
+                                <i class="make-col-yellow question circle icon"></i>
+                            </span>
+                        </label>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="field">
-            <label>{{ form.image.label }} <i style="font-weight: normal">({% trans "Preferred format is" %} 16:10)</i></label>
-            {{ form.image }}
-            <div class="ui checkbox" style="float: right; margin-top: 1em">
-                {{ form.contain }}
-                <label for="id_contain"><b>{{ form.contain.label }}</b></label>
+            <div class="field">
+                <label>{{ form.number_of_tickets.label }}</label>
+                {{ form.number_of_tickets }}
+                <div id="info-message-tickets" class="ui blue pointing basic label">
+                    {% trans "A value of zero indicates that no registration is required" %}
+                </div>
+            </div>
+            <div id="info-message-tickets-repeating" class="ui red pointing basic label">
+                {% trans "Only used for standalone events. For repeating events, tickets are administered per occurrence." %}
             </div>
         </div>
-        <h4>{% trans "Attributes" %}</h4>
-        <div class="ui three inline fields">
-            <div class="field">
-                <div class="ui checkbox">
-                    {{ form.featured }}
-                    <label>{{ form.featured.label }}
-                        <span data-content="{% trans "If selected, the event may be shown on the front page." %}">
-                            <i class="ui make-col-yellow question circle icon"></i>
-                        </span>
-                    </label>
-                </div>
-            </div>
-            <div class="field">
-                <div class="ui checkbox">
-                    {{ form.hidden }}
-                    <label>{{ form.hidden.label }}
-                        <span data-content="{% trans "If selected, the event will only be visible to admin users." %}">
-                            <i class="ui make-col-yellow question circle icon"></i>
-                        </span>
-                    </label>
-                </div>
-            </div>
-            <div class="field">
-                <div class="ui checkbox">
-                    {{ form.private }}
-                    <label>{{ form.private.label }}
-                        <span data-content="{% trans "If selected, the event will only be visible to members of MAKE NTNU" %}">
-                            <i class="ui make-col-yellow question circle icon"></i>
-                        </span>
-                    </label>
-                </div>
-            </div>
-        </div>
+    </div>
+{% endblock custom_fields %}
 
-        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}">
-        <a class="ui right floated red button"
-           href="{% block cancel_url %}{% url "admin-event" form.instance.pk %}{% endblock cancel_url %}"
-        >
-            {% trans "Cancel" context "abort action" %}
-        </a>
-    </form>
-
-    <script>
-        $("span[data-content]").popup();
-    </script>
-{% endblock body %}
+{% block cancel_url %}{% url 'admin_event_detail' form.instance.pk %}{% endblock cancel_url %}

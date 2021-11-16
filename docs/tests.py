@@ -33,13 +33,13 @@ class UrlTests(TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             Get(self.reverse('home'), public=False),
-            Get(self.reverse('page', pk=self.page1), public=False),
-            Get(self.reverse('page-history', pk=self.page1), public=False),
-            Get(self.reverse('old-page-content', pk=self.page1, content=self.content1), public=False),
-            Get(self.reverse('old-page-content', pk=self.page1, content=self.content2), public=False),
-            Get(self.reverse('create-page'), public=False),
-            Get(self.reverse('edit-page', pk=self.page1), public=False),
-            Get(self.reverse('search-pages'), public=False),
+            Get(self.reverse('page_detail', pk=self.page1), public=False),
+            Get(self.reverse('page_history', pk=self.page1), public=False),
+            Get(self.reverse('old_page_content', pk=self.page1, content=self.content1), public=False),
+            Get(self.reverse('old_page_content', pk=self.page1, content=self.content2), public=False),
+            Get(self.reverse('create_page'), public=False),
+            Get(self.reverse('edit_page', pk=self.page1), public=False),
+            Get(self.reverse('search_pages'), public=False),
             Get('/robots.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'docs')

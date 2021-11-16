@@ -7,10 +7,11 @@ from django.utils import timezone
 
 from users.models import User
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation
 
 
-class DeleteReservationViewTestCase(TestCase):
+class TestDeleteReservationView(TestCase):
 
     def setUp(self):
         password = "weak_pass"

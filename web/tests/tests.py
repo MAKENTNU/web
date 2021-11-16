@@ -4,10 +4,10 @@ from django_hosts import reverse
 
 from news.tests.test_urls import UrlTests as NewsUrlTests
 from users.models import User
-from util.test_utils import Get, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, assert_requesting_paths_succeeds
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         username = "TEST_USER"
@@ -24,7 +24,7 @@ class UrlTests(TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
-            Get(reverse('front-page'), public=True),
+            Get(reverse('front_page'), public=True),
             Get(reverse('adminpanel'), public=False),
             Get(reverse('about'), public=True),
             Get(reverse('contact'), public=True),
@@ -46,20 +46,20 @@ class UrlTests(TestCase):
         assert_requesting_paths_succeeds(self, path_predicates)
 
     def test_set_language(self):
-        response = self.anon_client.post(reverse("set_language"), {"language": "en"})
-        self.assertRedirects(response, "/en/")
-        response = self.anon_client.post(reverse("set_language"), {"language": "nb"})
-        self.assertRedirects(response, "/")
+        response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
+        self.assertRedirects(response, '/en/')
+        response = self.anon_client.post(reverse('set_language'), {'language': 'nb'})
+        self.assertRedirects(response, '/')
 
-        response = self.user_client.post(reverse("set_language"), {"language": "en"})
-        self.assertRedirects(response, "/en/")
-        response = self.user_client.post(reverse("set_language"), {"language": "nb"})
-        self.assertRedirects(response, "/")
+        response = self.user_client.post(reverse('set_language'), {'language': 'en'})
+        self.assertRedirects(response, '/en/')
+        response = self.user_client.post(reverse('set_language'), {'language': 'nb'})
+        self.assertRedirects(response, '/')
 
         # Previously indirectly caused decorating "set_language" with "permission_required" (see https://github.com/MAKENTNU/web/pull/297).
         # [This test can potentially be removed]
-        self.user_client.get(reverse("home", host="internal", host_args=["internal"]),
-                             HTTP_HOST=f"internal.{settings.PARENT_HOST}")
+        self.user_client.get(reverse('home', host='internal', host_args=['internal']),
+                             HTTP_HOST=f'internal.{settings.PARENT_HOST}')
         # Should not redirect to login (caused by the above line)
-        response = self.anon_client.post(reverse("set_language"), {"language": "en"})
-        self.assertRedirects(response, "/en/")
+        response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
+        self.assertRedirects(response, '/en/')

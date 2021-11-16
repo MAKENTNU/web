@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Prefetch
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from contentbox.views import DisplayContentBoxView
-from news.models import Article, Event
+from news.models import Article, Event, TimePlace
 
 
 class IndexView(TemplateView):
@@ -15,31 +16,24 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        event_dicts = []
-        for event in Event.objects.filter(hidden=False):
-            if event.private and not self.request.user.has_perm('news.can_view_private'):
-                continue
-            if not event.get_future_occurrences().exists():
-                continue
-            if event.standalone:
-                event_dicts.append({
-                    'first_occurrence': event.get_future_occurrences().first(),
-                    'event': event,
-                    'number_of_occurrences': event.timeplaces.count(),
-                })
-            else:
-                event_dicts.append({
-                    'first_occurrence': event.get_future_occurrences().first(),
-                    'event': event,
-                    'number_of_occurrences': event.get_future_occurrences().count(),
-                })
+        future_events = Event.objects.future().visible_to(self.request.user).prefetch_related(
+            'timeplaces',
+            Prefetch('timeplaces',
+                     queryset=TimePlace.objects.published().future().order_by('start_time'),
+                     to_attr='future_timeplaces')
+        )
+        future_event_dicts = [{
+            'event': event,
+            'shown_occurrence': event.future_timeplaces[0],
+            'number_of_occurrences': event.timeplaces.count() if event.standalone else len(event.future_timeplaces),
+        } for event in future_events if event.future_timeplaces]
 
-        sorted_event_dicts = sorted(event_dicts, key=lambda event: event['first_occurrence'].start_time)
-        articles = Article.objects.published().filter(featured=True)
+        sorted_future_event_dicts = sorted(future_event_dicts, key=lambda event: event['shown_occurrence'].start_time)
+        articles = Article.objects.published().visible_to(self.request.user).filter(featured=True).order_by('-publication_time')
         context.update({
-            'event_dicts': sorted_event_dicts[:self.MAX_EVENTS_SHOWN],
-            'more_events_exist': len(sorted_event_dicts) > self.MAX_EVENTS_SHOWN,
-            'articles': articles[:self.MAX_ARTICLES_SHOWN],
+            'featured_event_dicts': sorted_future_event_dicts[:self.MAX_EVENTS_SHOWN],
+            'more_events_exist': len(sorted_future_event_dicts) > self.MAX_EVENTS_SHOWN,
+            'featured_articles': articles[:self.MAX_ARTICLES_SHOWN],
         })
         return context
 

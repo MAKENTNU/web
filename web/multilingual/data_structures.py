@@ -49,6 +49,9 @@ class MultiLingualTextStructure:
     def __repr__(self):
         return repr(self.languages)
 
+    def __len__(self):
+        return len(self.languages)
+
     def __getitem__(self, key):
         """
         Returns the string for the given language.

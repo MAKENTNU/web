@@ -1,5 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db import models
+from django.db.models import F
+from django.db.models.functions import Lower
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.urls import reverse
@@ -41,6 +43,7 @@ class Member(models.Model):
     quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
     retired = models.BooleanField(default=False, verbose_name=_("Retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         permissions = (
@@ -173,6 +176,7 @@ class SystemAccess(models.Model):
     )
     name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         constraints = (
@@ -195,10 +199,19 @@ class SystemAccess(models.Model):
         # In the future it would be beneficial to create automated processes for adding, removing and revoking
         # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
         # channels, or using GSuite APIs to add and remove people from mailing lists.
-        return reverse("edit-system-access", args=(self.member.pk, self.pk))
+        return reverse('edit_system_access', args=(self.member.pk, self.pk))
 
     def should_be_changed(self):
         return self.name != self.WEBSITE
+
+
+class SecretQuerySet(models.QuerySet):
+
+    def default_order_by(self):
+        return self.order_by(
+            F('priority').asc(nulls_last=True),
+            Lower('title'),
+        )
 
 
 class Secret(models.Model):
@@ -208,7 +221,15 @@ class Secret(models.Model):
         verbose_name=_("Title"),
     )
     content = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
-    last_modified = models.DateTimeField(auto_now=True)
+    priority = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_("Priority"),
+        help_text=_("If specified, the secrets are sorted ascending by this value."),
+    )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    objects = SecretQuerySet.as_manager()
 
     def __str__(self):
         return str(self.title)

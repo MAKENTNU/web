@@ -3,32 +3,41 @@
 {% load static %}
 
 
-{% block head %}
+{% block title %}{% trans "Frequently Asked Questions" %}{% endblock title %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'faq/css/faq_list.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
         <h1 id="page-title" class="ui text-centered make-col-blue header">
             {% trans "Frequently Asked Questions" %}
         </h1>
-        <div id="outer-accordion" class="ui styled accordion">
+        <div class="categories ui styled fluid accordion">
             {% for category in categories %}
-                <div class="active title">
-                    <i class="dropdown icon"></i>
-                    <p>
+                <div class="title">
+                    <div class="ui header">
+                        <i class="dropdown icon"></i>
                         {{ category.name }}
-                    </p>
+                    </div>
                 </div>
                 <div class="content">
                     {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
-                    <div class="styled accordion">
-                        {% for question in category.questions.all %}
-                            <div class="active title">
-                                <i class="dropdown icon"></i>
-                                <div class="make-col-blue">{{ question.title }}</div>
+                    <div class="questions styled fluid accordion">
+                        {% for question in category.existing_questions %}
+                            <div class="title">
+                                <div class="ui make-col-blue header">
+                                    <i class="dropdown icon"></i>
+                                    {{ question.title }}
+                                </div>
                             </div>
                             <div class="content">
+                                {% if perms.faq.change_question %}
+                                    <a class="ui make-bg-yellow button" href="{% url 'question_update' question.pk %}">
+                                        <i class="edit icon"></i>{% trans "Edit" %}
+                                    </a>
+                                {% endif %}
                                 {{ question.answer|safe }}
                             </div>
                         {% endfor %}
@@ -40,8 +49,8 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
-        $('.ui.accordion').accordion();
+        $(".ui.accordion").accordion();
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}
