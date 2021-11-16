@@ -17,14 +17,14 @@
             <div class="card">
                 <div class="content">
                     <div class="header">{{ quote.quoted }}:
-                        {% if perms.internal.delete_quote or quote.author == user %}
+                        {% if perms.internal.delete_quote and quote.author == request.user or request.user.is_superuser %}
                             <a class="delete-modal-button"
                                data-url="{% url 'delete-quote' quote.pk %}"
                                data-obj-name="{{ quote }}">
                                 <i class="red right floated trash icon"></i>
                             </a>
                         {% endif %}
-                        {% if perms.internal.change_quote or quote.author == user %}
+                        {% if perms.internal.change_quote and quote.author == request.user or request.user.is_superuser  %}
                             <a href="{% url 'edit-quote' quote.pk %}">
                                 <i class="ui right floated make-col-yellow pencil icon"></i>
                             </a>

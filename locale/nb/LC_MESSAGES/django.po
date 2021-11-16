@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-05 17:56+0200\n"
+"POT-Creation-Date: 2021-11-09 17:41+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -99,6 +99,7 @@ msgstr "Ny kunngjøring"
 #: faq/templates/faq/question_edit.html:38
 #: groups/templates/groups/committee_form.html:31
 #: internal/templates/internal/member_edit.html:84
+#: internal/templates/internal/quote_edit.html:38
 #: internal/templates/internal/secret_edit.html:38
 #: make_queue/templates/make_queue/machine/machine_edit.html:82
 #: make_queue/templates/make_queue/usage_rules_edit.html:44
@@ -118,6 +119,7 @@ msgstr "Lagre"
 #: internal/templates/internal/member_create.html:33
 #: internal/templates/internal/member_edit.html:87
 #: internal/templates/internal/member_quit.html:26
+#: internal/templates/internal/quote_edit.html:40
 #: internal/templates/internal/secret_edit.html:40
 #: make_queue/templates/make_queue/course/course_registration_edit.html:113
 #: make_queue/templates/make_queue/course/course_registration_list.html:211
@@ -770,6 +772,18 @@ msgstr "Tilgang"
 msgid "Access for {member} to {name}: {has_access}"
 msgstr "Tilgang for {member} til {name}: {has_access}"
 
+#: internal/models.py:218
+msgid "Quote"
+msgstr "Sitat"
+
+#: internal/models.py:219
+msgid "Quoted"
+msgstr "Person som sa noe"
+
+#: internal/models.py:220
+msgid "Context"
+msgstr "Kontekst"
+
 #: internal/templates/internal/base.html:10
 #: internal/templates/internal/home.html:13
 msgid "MAKE NTNU Internal"
@@ -783,11 +797,16 @@ msgstr "Medlemmer"
 msgid "Secrets"
 msgstr "Hemmeligheter"
 
-#: internal/templates/internal/header.html:44
+#: internal/templates/internal/header.html:35
+#: internal/templates/internal/quotes_list.html:8
+msgid "Quotes"
+msgstr "Sitater"
+
+#: internal/templates/internal/header.html:48
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:47
+#: internal/templates/internal/header.html:51
 #: web/templates/web/header.html:106
 msgid "Log out"
 msgstr "Logg ut"
@@ -934,6 +953,16 @@ msgstr "Sett medlem %(name)s som sluttet"
 msgid "Set quit"
 msgstr "Sett sluttet"
 
+#: internal/templates/internal/quote_create.html:5
+#: internal/templates/internal/quote_create.html:6
+msgid "New quote"
+msgstr "Nytt sitat"
+
+#: internal/templates/internal/quote_edit.html:6
+#: internal/templates/internal/quote_edit.html:16
+msgid "Edit quote"
+msgstr "Rediger sitat"
+
 #: internal/templates/internal/secret_create.html:5
 #: internal/templates/internal/secret_create.html:6
 msgid "New secret"
@@ -952,16 +981,11 @@ msgstr "Internhemmeligheter"
 msgid "Last modified"
 msgstr "Sist endret"
 
-#: internal/templates/internal/secret_list.html:47
-#: internal/templates/internal/secret_list.html:61
+#: internal/templates/internal/secret_list.html:48
 msgid "Click to show - only if you're alone!"
 msgstr "Klikk for å vise - bare hvis du er alene!"
 
-#: internal/templates/internal/secret_list.html:66
-msgid "Last edited:"
-msgstr "Sist redigert:"
-
-#: internal/templates/internal/secret_list.html:68
+#: internal/templates/internal/secret_list.html:53
 msgid "Close - someone's behind me!"
 msgstr "Skjul - noen er bak meg!"
 
@@ -2569,3 +2593,6 @@ msgstr "Velg verdi"
 #: web/widgets.py:104
 msgid "Search places"
 msgstr "Søk etter steder"
+
+#~ msgid "Last edited:"
+#~ msgstr "Sist redigert:"

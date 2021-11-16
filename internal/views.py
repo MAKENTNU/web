@@ -20,6 +20,7 @@ class QuoteView(ListView):
     model = Quote
     template_name = 'internal/quotes_list.html'
     context_object_name = 'quotes'
+    queryset = Quote.objects.order_by('-pk')
 
 
 class CreateQuoteView(PermissionRequiredMixin, CreateView):
