@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('internal', '0010_add_related_names'),
+        ('internal', '0012_member_and_systemaccess_last_modified'),
     ]
 
     operations = [
