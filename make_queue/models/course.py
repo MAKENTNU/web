@@ -27,6 +27,8 @@ class Printer3DCourse(models.Model):
     _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
     name = models.CharField(max_length=256, blank=True, verbose_name=_("Full name"))
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("Status"))
+    advanced_course = models.BooleanField(default=False, verbose_name=_("advanced course"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         constraints = (

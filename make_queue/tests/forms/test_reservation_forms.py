@@ -8,7 +8,7 @@ from ...forms import ReservationForm
 from ...models.machine import Machine, MachineType
 
 
-class ReservationFormTest(TestCase):
+class TestReservationForm(TestCase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default

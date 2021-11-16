@@ -253,6 +253,7 @@ function setupState() {
                 cardNumber: ("0000000000" + $(this).data("card-number").toString()).slice(-10),
                 date: $(this).data("date"),
                 status: $(this).data("status"),
+                advancedCourse: $(this).data("advanced-course"),
                 display: true,
                 $element: $(this),
             });
@@ -290,7 +291,8 @@ function setupState() {
         $downloadUsersForm.find("#selected").val(selected);
     });
 
-    updateDisplay();
+    // Initial display refresh (`sort()` also calls `updateDisplay()`)
+    sort();
 }
 
 setupState();

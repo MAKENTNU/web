@@ -38,14 +38,14 @@ def copy_objects_from_article_tmp_and_event_tmp_to_article_and_event(apps, schem
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('news', '0019_add_related_names'),
+        ('news', '0021_alter_id_fields_to_use_bigautofield'),
     ]
 
     operations = [
         migrations.CreateModel(
             name='Article_Tmp',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', web.multilingual.modelfields.MultiLingualTextField(verbose_name='Title')),
                 ('content', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='Content')),
                 ('clickbait', web.multilingual.modelfields.MultiLingualTextField(verbose_name='Clickbait')),
@@ -58,14 +58,14 @@ class Migration(migrations.Migration):
             ],
             options={
                 'ordering': ('-publication_time',),
-                'permissions': (('can_view_private', 'Can view private news'),),
+                'permissions': (('can_view_private', 'Can view private articles'),),
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
             name='Event_Tmp',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', web.multilingual.modelfields.MultiLingualTextField(verbose_name='Title')),
                 ('content', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='Content')),
                 ('clickbait', web.multilingual.modelfields.MultiLingualTextField(verbose_name='Clickbait')),
@@ -78,7 +78,7 @@ class Migration(migrations.Migration):
                 ('number_of_tickets', models.IntegerField(default=0, verbose_name='Number of available tickets')),
             ],
             options={
-                'permissions': (('can_view_private', 'Can view private news'),),
+                'permissions': (('can_view_private', 'Can view private events'),),
                 'abstract': False,
             },
         ),

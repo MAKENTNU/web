@@ -17,6 +17,7 @@ from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
 class CheckInView(RFIDView):
+
     def card_number_valid(self, card_number):
         profiles = Profile.objects.filter(user__card_number=card_number)
         if not profiles.exists():
@@ -209,6 +210,7 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 
 class RegisterCardView(RFIDView):
+
     def card_number_valid(self, card_number):
         if Profile.objects.filter(user__card__number=card_number).exists():
             return HttpResponse(f"{card_number} is already registered", status=409)

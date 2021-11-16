@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from util.admin_utils import TextFieldOverrideMixin
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .models.course import Printer3DCourse
-from .models.machine import Machine, MachineType
+from .models.machine import Machine, MachineType, MachineUsageRule
 from .models.reservation import Quota, Reservation, ReservationRule
 
 
@@ -17,11 +17,12 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
     list_editable = ('priority',)
     ordering = ('priority',)
 
+    @admin.display(
+        ordering='machines__count',
+        description=_("Machines"),
+    )
     def get_num_machines(self, machine_type: MachineType):
         return machine_type.machines__count
-
-    get_num_machines.short_description = _("Machines")
-    get_num_machines.admin_order_field = 'machines__count'
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
@@ -29,30 +30,68 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
 
 
 class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
-    list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'status', 'priority')
+    list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'status', 'priority', 'get_stream_name', 'last_modified')
     list_filter = ('machine_type', 'machine_model', 'location', 'status')
-    search_fields = ('name', 'machine_model', 'machine_type__name', 'location', 'location_url')
+    search_fields = ('name', 'stream_name', 'machine_model', 'machine_type__name', 'location', 'location_url')
     list_editable = ('status', 'priority')
     list_select_related = ('machine_type',)
+    readonly_fields = ('last_modified',)
 
+    @admin.display(
+        ordering='location',
+        description=_("Location"),
+    )
     def get_location(self, machine: Machine):
         return format_html('<a href="{}" target="_blank">{}</a>', machine.location_url, machine.location)
 
-    get_location.short_description = _("Location")
-    get_location.admin_order_field = 'location'
+    @admin.display(
+        ordering='stream_name',
+        description=_("stream name"),
+    )
+    def get_stream_name(self, machine: Machine):
+        return machine.stream_name or None
 
     def get_queryset(self, request):
         return super().get_queryset(request).default_order_by()
+
+
+class MachineUsageRuleAdmin(MultiLingualFieldAdmin):
+    list_display = ('machine_type', 'last_modified')
+    list_select_related = ('machine_type',)
+    readonly_fields = ('last_modified',)
 
 
 class ReservationAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     pass
 
 
+class ReservationRuleAdmin(admin.ModelAdmin):
+    list_display = (
+        'machine_type',
+        'start_time', 'end_time',
+        'days_changed', 'start_days',
+        'max_hours', 'max_inside_border_crossed',
+        'last_modified',
+    )
+    list_select_related = ('machine_type',)
+    readonly_fields = ('last_modified',)
+
+
+class Printer3DCourseAdmin(admin.ModelAdmin):
+    list_display = ('username', 'user', 'name', 'date', 'status', 'advanced_course', 'last_modified')
+    list_filter = ('status', 'advanced_course')
+    search_fields = ('username', 'user', 'name')
+    list_editable = ('status', 'advanced_course')
+    ordering = ('date', 'username')
+    list_select_related = ('user',)
+    readonly_fields = ('last_modified',)
+
+
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
+admin.site.register(MachineUsageRule, MachineUsageRuleAdmin)
 admin.site.register(Quota)
 admin.site.register(Reservation, ReservationAdmin)
-admin.site.register(ReservationRule)
+admin.site.register(ReservationRule, ReservationRuleAdmin)
 
-admin.site.register(Printer3DCourse)
+admin.site.register(Printer3DCourse, Printer3DCourseAdmin)

@@ -6,10 +6,10 @@ from django_hosts import reverse
 
 from news.models import Article, Event, EventTicket, TimePlace
 from users.models import User
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     @staticmethod
     def init_objs(self: TestCase):
@@ -43,8 +43,8 @@ class UrlTests(TestCase):
         )
         self.timeplaces = (self.timeplace1, self.timeplace2, self.timeplace3)
 
-        self.user1 = User.objects.create(username="user1")
-        self.user2 = User.objects.create(username="user2")
+        self.user1 = User.objects.create_user(username="user1")
+        self.user2 = User.objects.create_user(username="user2")
 
         self.ticket1 = EventTicket.objects.create(
             user=self.user1, timeplace=self.timeplace1, comment="Looking forward to this!!", language=EventTicket.Language.ENGLISH,

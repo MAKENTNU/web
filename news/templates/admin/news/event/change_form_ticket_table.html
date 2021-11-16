@@ -1,0 +1,35 @@
+{% load i18n %}
+
+
+<h3>
+    {% trans "Number of tickets" %}: {{ ticket_dicts|length }}
+</h3>
+<br/>
+
+{% if ticket_dicts %}
+    <table>
+        <thead>
+        <tr>
+            <th>{% trans "Ref #" %}</th>
+            <th>{% trans "User" %}</th>
+            <th>{% trans "Email" %}</th>
+            <th>{% trans "Comment" %}</th>
+            <th>{% trans "Preferred language" %}</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for ticket_dict in ticket_dicts %}
+            <tr>
+                <td>
+                    <b>{{ ticket_dict.ref_link }}</b>
+                </td>
+                <td>{{ ticket_dict.user_name_link }}</td>
+                <td>{{ ticket_dict.user_email|urlize }}</td>
+                <td>{{ ticket_dict.comment }}</td>
+                <td>{{ ticket_dict.language }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endif %}

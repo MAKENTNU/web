@@ -4,10 +4,10 @@ from django_hosts import reverse
 
 from news.tests.test_urls import UrlTests as NewsUrlTests
 from users.models import User
-from util.test_utils import Get, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, assert_requesting_paths_succeeds
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         username = "TEST_USER"
@@ -63,5 +63,3 @@ class UrlTests(TestCase):
         # Should not redirect to login (caused by the above line)
         response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
         self.assertRedirects(response, '/en/')
-
-# TODO: test views' logic
