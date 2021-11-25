@@ -77,13 +77,13 @@ class Member(models.Model):
 
     @property
     def phone_number_display(self):
-        if (
-                self.phone_number
-                and isinstance(self.phone_number, PhoneNumber)
-                and region_code_for_number(self.phone_number) != settings.PHONENUMBER_DEFAULT_REGION
-        ):
+        if not isinstance(self.phone_number, PhoneNumber):
+            return self.phone_number
+
+        if region_code_for_number(self.phone_number) == settings.PHONENUMBER_DEFAULT_REGION:
+            return self.phone_number.as_national
+        else:
             return self.phone_number.as_international
-        return self.phone_number
 
 
     @property

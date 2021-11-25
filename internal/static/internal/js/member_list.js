@@ -43,7 +43,7 @@ function showDetailedMemberInformation(member) {
     const textAttributeNamesToValues = {
         "name-header": member.data.name,
         name: member.data.name,
-        phone: member.data.phone,
+        phone: member.data.phoneDisplay,
         email: member.data.email,
         cardNumber: member.data.cardNumber,
         studyProgram: member.data.studyProgram,
@@ -252,6 +252,7 @@ function setup() {
                 pk: $row.data("pk"),
                 name: $row.data("name"),
                 phone: $row.data("phone"),
+                phoneDisplay: $row.data("phone-display"),
                 email: $row.data("email"),
                 cardNumber: $row.data("card-number"),
                 studyProgram: $row.data("study-program"),

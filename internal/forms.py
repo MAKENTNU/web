@@ -6,7 +6,6 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import SemanticDateInput, SemanticMultipleSelectInput, SemanticSearchableChoiceInput
-from .formfields import PhoneNumberRegionFallbackField
 from .models import Member, Secret, SystemAccess
 
 
@@ -28,22 +27,14 @@ class AddMemberForm(forms.ModelForm):
 
 class EditMemberForm(forms.ModelForm):
     card_number = CardNumberField(required=False)
-    phone_number = PhoneNumberRegionFallbackField(required=False, label=_("Phone number"))
 
     class Meta:
         model = Member
-        exclude = ['user', 'date_joined', 'date_quit', 'reason_quit', 'quit', 'retired', 'phone_number']
+        exclude = ['user', 'date_joined', 'date_quit', 'reason_quit', 'quit', 'retired']
         widgets = {
             'comment': forms.TextInput(),
             'committees': SemanticMultipleSelectInput(prompt_text=_("Choose committees")),
         }
-
-    def get_initial_for_field(self, field, field_name):
-        if field_name == 'phone_number':
-            # The instance should never be `None`
-            return self.instance.phone_number
-
-        return super().get_initial_for_field(field, field_name)
 
     def clean_card_number(self):
         card_number = self.cleaned_data['card_number']
@@ -53,15 +44,10 @@ class EditMemberForm(forms.ModelForm):
         return card_number
 
     def save(self, commit=True):
-        member = super().save(commit=False)
-        member.phone_number = self.cleaned_data['phone_number']
-        if commit:
-            member.save()
-
+        member = super().save(commit=commit)
         user = member.user
         user.card_number = self.cleaned_data['card_number']
         user.save()
-
         return member
 
 
