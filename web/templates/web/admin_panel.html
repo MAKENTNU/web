@@ -68,7 +68,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if perms.groups.can_edit_group %}
+            {% if perms.groups.change_committee %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'committee_admin' %}">
                         <div class="center aligned header">

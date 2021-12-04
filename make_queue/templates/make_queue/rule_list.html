@@ -15,7 +15,7 @@
     <div class="ui container">
         <h1>
             {% blocktrans with machine_type=machine_type %}Reservation rules for {{ machine_type }}{% endblocktrans %}
-            {% if perms.make_queue.add_reservation_rule %}
+            {% if perms.make_queue.add_reservationrule %}
                 <a href="{% url 'create_reservation_rule' machine_type %}">
                     <i class="ui green plus icon"></i>
                 </a>
@@ -52,12 +52,12 @@
                 <div class="ui card">
                     <div class="content">
                         <div class="meta">
-                            {% if perms.change_reservation_rule %}
+                            {% if perms.make_queue.change_reservationrule %}
                                 <a href="{% url 'edit_reservation_rule' machine_type rule.pk %}">
                                     <i class="ui make-col-yellow icon pencil"></i>
                                 </a>
                             {% endif %}
-                            {% if perms.delete_reservation_rule %}
+                            {% if perms.make_queue.delete_reservationrule %}
                                 <a class="delete-modal-button"
                                    data-url="{% url 'delete_reservation_rule' machine_type rule.pk %}">
                                     <i class="ui red icon trash"></i>
