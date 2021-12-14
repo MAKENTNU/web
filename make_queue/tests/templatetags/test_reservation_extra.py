@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from util.locale_utils import parse_datetime_localized
+from util.locale_utils import attempt_as_local, parse_datetime_localized
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
@@ -53,7 +53,7 @@ class TestReservationExtra(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_is_current_data(self, now_mock):
         date = timezone.datetime(2017, 3, 5, 11, 18, 0)
-        now_mock.return_value = timezone.get_default_timezone().localize(date)
+        now_mock.return_value = attempt_as_local(date)
 
         self.assertTrue(is_current_date(timezone.now().date()))
         self.assertTrue(is_current_date((timezone.now() + timedelta(hours=1)).date()))
@@ -64,7 +64,7 @@ class TestReservationExtra(TestCase):
     def test_get_current_time_of_day(self, now_mock):
         def set_mock_value(hours, minutes):
             date = timezone.datetime(2017, 3, 5, hours, minutes, 0)
-            now_mock.return_value = timezone.get_default_timezone().localize(date)
+            now_mock.return_value = attempt_as_local(date)
 
         set_mock_value(12, 0)
         self.assertEqual(50, get_current_time_of_day())

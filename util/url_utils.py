@@ -10,6 +10,7 @@ class SpecificObjectConverter(ABC):
 
     def to_python(self, value):
         try:
+            # TODO: remove in favor of a solution that gets these objects in the view, as this crashes with a SynchronousOnlyOperation error
             return self.model.objects.get(pk=int(value))
         except self.model.DoesNotExist:
             raise ValueError(f"Unable to find any {self.model._meta.object_name} for the PK '{value}'")

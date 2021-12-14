@@ -13,8 +13,8 @@ from django.views.static import serve
 INTERPOLATION_PATTERNS = (
     ('*.interpolated.*', (
         (
-            r"""(\{% get_relative_static ["'](.*?)["'] %\})""",
-            "%s",
+            r"""(?P<matched>\{% get_relative_static ["'](?P<url>.*?)["'] %\})""",
+            "%(url)s",
         ),
     )),
 )
@@ -67,7 +67,7 @@ def serve_interpolated(request, path, document_root=None, show_indexes=False):
                     registered_relative_static_path = replace_filename(
                         relative_static_path, PurePosixPath(registered_static_path).name
                     )
-                    return template % registered_relative_static_path
+                    return template % {'url': registered_relative_static_path}
 
                 content = pattern.sub(replace, content)
 
