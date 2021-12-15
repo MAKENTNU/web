@@ -91,6 +91,8 @@
 
 
 ## Global
+*Tip: [The project's `.editorconfig` file](.editorconfig) may be used to configure a text editor to format code to (roughly) fit this style guide -
+especially when using an IntelliJ-based IDE, like PyCharm.*
 
 #### Max line length
 150 (can be surpassed if it's impossible to wrap).
