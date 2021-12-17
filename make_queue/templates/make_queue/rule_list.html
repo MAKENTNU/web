@@ -67,10 +67,10 @@
                         </div>
                         <div class="description">
                             {% trans "Single period" %}:
-                            <b>{{ rule.max_hours|floatformat:0 }} {% trans "hours" %}</b>
+                            <b>{{ rule.max_hours|floatformat }} {% trans "hours" %}</b>
                             <br/>
                             {% trans "Multi-period" %}:
-                            <b>{{ rule.max_inside_border_crossed|floatformat:0 }} {% trans "hours" %}</b>
+                            <b>{{ rule.max_inside_border_crossed|floatformat }} {% trans "hours" %}</b>
                         </div>
                         <h4 class="subheader">
                             {% trans "Periods" %}
