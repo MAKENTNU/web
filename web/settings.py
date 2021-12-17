@@ -172,7 +172,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'web.routing.application'
+ASGI_APPLICATION = 'web.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
