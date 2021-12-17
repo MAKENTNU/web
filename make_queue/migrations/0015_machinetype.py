@@ -32,7 +32,7 @@ default_machine_types = (
             "en": "You must have completed a 3D printer course to reserve the printers."
                   " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
             "nb": "Reservasjon av 3D-printere krever fullført 3D-printerkurs."
-                  " Hvis du har hatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+                  " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="3DPR",
         has_stream=True,
@@ -77,7 +77,7 @@ default_machine_types = (
             "en": "You must have completed an advanced 3D printer course to reserve the printers."
                   " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
             "nb": "Reservasjon av 3D-printere krever fullført avansert 3D-printerkurs."
-                  " Hvis du har hatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+                  " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="A3DP",
         has_stream=True,

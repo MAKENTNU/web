@@ -100,7 +100,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsRequestMiddleware',
+
+    # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -109,6 +112,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
