@@ -31,6 +31,9 @@ class NewsBase(models.Model):
     content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
     clickbait = MultiLingualTextField(verbose_name=_("Clickbait"), widget=MultiLingualTextarea)
     image = models.ImageField(verbose_name=_("Image"))
+    image_description = MultiLingualTextField(verbose_name=_("image description"),
+                                              help_text=_("This should be a concise visual description of the image,"
+                                                          " which is mainly useful for people using a screen reader."))
     contain = models.BooleanField(default=False, verbose_name=_("Don't crop the image"))
     featured = models.BooleanField(default=True, verbose_name=_("Featured"))
     hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))

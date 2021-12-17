@@ -17,7 +17,7 @@
     <div class="news-obj {% block extra_classes %}{% endblock extra_classes %}">
         <div id="sticky" class="ui text container basic segment">
             <img class="news-obj-image {% if news_obj.contain %}contain{% endif %}"
-                 src="{{ news_obj.image.url }}"/>
+                 src="{{ news_obj.image.url }}" alt="{{ news_obj.image_description }}"/>
 
             {% block rail %}
             {% endblock rail %}
