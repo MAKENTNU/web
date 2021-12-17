@@ -267,6 +267,10 @@ class EventTicket(models.Model):
         return f"{self.name} - {self.event if self.event is not None else self.timeplace}"
 
     @property
+    def registered_event(self) -> Event:
+        return self.event or self.timeplace.event
+
+    @property
     def name(self):
         """
         Gets the name of the user whom the ticket is registered to.

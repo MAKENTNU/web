@@ -23,15 +23,14 @@
     <tbody style="width: 100%;">
     <tr style="width: 100%">
         <td style="align-items: center; padding: 0; margin: 0;">
-            <img src="{{ site }}{% firstof ticket.timeplace.event.image.url ticket.event.image.url %}"
+            <img src="{{ site }}{{ ticket.registered_event.image.url }}"
                  style="width: 100%;" alt="{% trans "Event image" %}"
             />
         </td>
     </tr>
     <tr style="width: 100%">
         <td style="padding: 30px 30px 0 30px; font-size: 30px; font-weight: bold;">
-            {% firstof ticket.timeplace.event.title ticket.event.title as event_title %}
-            {% blocktrans with title=event_title %}Your ticket for “{{ title }}”{% endblocktrans %}
+            {% blocktrans with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktrans %}
         </td>
     </tr>
     <tr style="width: 100%">
