@@ -318,7 +318,7 @@ CKEDITOR_CONFIGS = {
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
-PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for

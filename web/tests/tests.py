@@ -37,6 +37,12 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
+    def test_all_admin_get_request_paths_succeed(self):
+        path_predicates = [
+            Get('/robots.txt', public=True, translated=False),
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')
+
     def test_all_old_urls_succeed(self):
         path_predicates = [
             Get('/rules/', public=True, success_code=301),
