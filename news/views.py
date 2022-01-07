@@ -15,6 +15,7 @@ from django.views import View
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView
 
 from mail import email
+from util.logging_utils import log_request_exception
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
 from util.view_utils import PreventGetRequestsMixin
 from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
@@ -336,16 +337,19 @@ class EventRegistrationView(CreateView):
         form.instance.timeplace = self.timeplace
         ticket = form.save()
 
-        async_to_sync(get_channel_layer().send)(
-            'email', {
-                'type': 'send_html',
-                'html_render': email.render_html({'ticket': ticket}, 'email/ticket.html'),
-                'text': email.render_text({'ticket': ticket}, text_template_name='email/ticket.txt'),
-                'subject': str(_("Your ticket!")),  # pass the pure string object, instead of the proxy object from `gettext_lazy`
-                'from': settings.EVENT_TICKET_EMAIL,
-                'to': ticket.email,
-            }
-        )
+        try:
+            async_to_sync(get_channel_layer().send)(
+                'email', {
+                    'type': 'send_html',
+                    'html_render': email.render_html({'ticket': ticket}, 'email/ticket.html'),
+                    'text': email.render_text({'ticket': ticket}, text_template_name='email/ticket.txt'),
+                    'subject': str(_("Your ticket!")),  # pass the pure string object, instead of the proxy object from `gettext_lazy`
+                    'from': settings.EVENT_TICKET_EMAIL,
+                    'to': ticket.email,
+                }
+            )
+        except Exception as e:
+            log_request_exception("Sending event ticket email failed.", e, self.request)
 
         self.object = ticket
         return HttpResponseRedirect(self.get_success_url())
