@@ -116,6 +116,7 @@
                 {% get_membership_statuses member as membership_status %}
                 <tr data-pk="{{ member.pk }}"
                     data-phone="{{ member.phone_number }}"
+                    data-phone-display="{{ member.phone_number_display }}"
                     data-name="{{ member.user.get_full_name }}"
                     data-email="{{ member.email }}"
                     data-card-number="{{ member.user.card_number }}"
@@ -169,9 +170,11 @@
                         {% endif %}
                     </td>
                     <td class="computer only">
-                        {% if member.phone_number %}
-                            <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
-                        {% endif %}
+                        {% with phone_number=member.phone_number_display %}
+                            {% if phone_number %}
+                                <a href="tel:{{ member.phone_number }}">{{ phone_number }}</a>
+                            {% endif %}
+                        {% endwith %}
                     </td>
                 </tr>
             {% endfor %}
