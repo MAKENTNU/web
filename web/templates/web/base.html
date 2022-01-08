@@ -11,15 +11,16 @@
     <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width"/>
-    <meta name="theme-color" content="rgb(248, 200, 17)"/>
-    <link rel="shortcut icon" type="image/png" href="{% static 'web/img/favicon.png' %}"/>
+    {% block favicon_template %}
+        {% include 'web/favicon.html' with favicons_folder='web/img/favicons' %}
+    {% endblock favicon_template %}
 
     {% block open_graph_meta %}
         <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
         <meta property="og:site_name" content="MAKE NTNU"/>
         <meta property="og:image" content="{% spaceless %}
             {% block og_image_absolute_uri %}
-                {% static 'web/img/make_thumb.png' as og_image_url %}
+                {% static 'web/img/logo_og_thumbnail.png' as og_image_url %}
                 {% get_absolute_uri_for_path request og_image_url %}
             {% endblock og_image_absolute_uri %}
         {% endspaceless %}"/>

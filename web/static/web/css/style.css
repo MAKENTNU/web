@@ -1,9 +1,9 @@
 html, body {
-    --make-yellow: rgb(248, 200, 17);
-    --make-blue: rgb(12, 66, 106);
-    --make-turquoise: rgb(0, 235, 179);
-    --make-dark-grey: rgb(74, 75, 76);
-    --make-light-grey: rgb(220, 221, 222);
+    --make-yellow: rgb(248, 200, 17); /* #F8C811 */
+    --make-blue: rgb(12, 66, 106); /* #0C426A */
+    --make-turquoise: rgb(0, 235, 179); /* #00EBB3 */
+    --make-dark-grey: rgb(74, 75, 76); /* #4A4B4C */
+    --make-light-grey: rgb(220, 221, 222); /* #DCDDDE */
 
     --make-yellow-darker: rgb(239, 184, 14);
 

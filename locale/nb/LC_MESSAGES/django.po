@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-01 11:46+0100\n"
+"POT-Creation-Date: 2021-11-16 14:33+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -100,7 +100,7 @@ msgstr "Ny kunngjøring"
 #: faq/templates/faq/admin_question_edit.html:38
 #: groups/templates/groups/committee_form.html:31
 #: internal/templates/internal/member_edit.html:84
-#: internal/templates/internal/secret_edit.html:38
+#: internal/templates/internal/secret_edit.html:45
 #: make_queue/templates/make_queue/machine/machine_edit.html:82
 #: make_queue/templates/make_queue/usage_rules_edit.html:39
 #: makerspace/templates/makerspace/equipment/admin_equipment_edit.html:48
@@ -119,7 +119,7 @@ msgstr "Lagre"
 #: internal/templates/internal/member_create.html:33
 #: internal/templates/internal/member_edit.html:87
 #: internal/templates/internal/member_quit.html:26
-#: internal/templates/internal/secret_edit.html:40
+#: internal/templates/internal/secret_edit.html:47
 #: make_queue/templates/make_queue/course/course_registration_edit.html:113
 #: make_queue/templates/make_queue/course/course_registration_list.html:211
 #: make_queue/templates/make_queue/machine/machine_edit.html:84
@@ -635,7 +635,7 @@ msgid "Email"
 msgstr "E-post"
 
 #: groups/models.py:101 makerspace/admin.py:15 makerspace/models.py:21
-#: news/admin.py:36 news/models.py:33
+#: news/admin.py:35 news/models.py:33
 msgid "Image"
 msgstr "Bilde"
 
@@ -825,6 +825,11 @@ msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
 msgid "MAKE NTNU Internal"
 msgstr "MAKE NTNU internsider"
 
+#: internal/templates/internal/favicon.html:7
+#: internal/templates/internal/favicon.html:9
+msgid "MAKE Internal"
+msgstr "MAKE internsider"
+
 #: internal/templates/internal/header.html:12
 msgid "Members"
 msgstr "Medlemmer"
@@ -928,14 +933,14 @@ msgstr "Ble med"
 #: internal/templatetags/member.py:43
 #: make_queue/templates/make_queue/course/course_registration_edit.html:102
 #: make_queue/templates/make_queue/course/course_registration_list.html:146
-#: news/admin.py:244 util/admin_utils.py:69
+#: news/admin.py:242 util/admin_utils.py:69
 msgid "Yes"
 msgstr "Ja"
 
 #: internal/templates/internal/member_list.html:136
 #: internal/templatetags/member.py:43
 #: make_queue/templates/make_queue/course/course_registration_list.html:148
-#: news/admin.py:246 util/admin_utils.py:70
+#: news/admin.py:244 util/admin_utils.py:70
 msgid "No"
 msgstr "Nei"
 
@@ -1016,7 +1021,7 @@ msgid "Machines"
 msgstr "Maskiner"
 
 #: make_queue/admin.py:42 make_queue/models/machine.py:132
-#: make_queue/templates/make_queue/machine_detail.html:38 news/admin.py:230
+#: make_queue/templates/make_queue/machine_detail.html:38 news/admin.py:228
 #: news/models.py:194
 msgid "Location"
 msgstr "Sted"
@@ -1228,7 +1233,8 @@ msgstr "Neste"
 
 #: make_queue/templates/make_queue/calendar.html:87
 #: make_queue/templates/make_queue/reservation_edit.html:118
-#: web/templates/web/base.html:11
+#: web/templates/web/base.html:11 web/templates/web/favicon.html:16
+#: web/templates/web/favicon.html:18
 msgid "MAKE NTNU"
 msgstr "MAKE NTNU"
 
@@ -1528,7 +1534,7 @@ msgstr "Velg maskin"
 
 #: make_queue/templates/make_queue/reservation_edit.html:111
 #: make_queue/templates/make_queue/reservation_edit.html:124
-#: news/admin.py:223 news/models.py:250
+#: news/admin.py:221 news/models.py:250
 msgid "Event"
 msgstr "Arrangement"
 
@@ -1889,57 +1895,57 @@ msgstr "Regler"
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
-#: news/admin.py:85 news/admin.py:137
+#: news/admin.py:83 news/admin.py:135
 msgid "number of reserved tickets"
 msgstr "antall reserverte billetter"
 
-#: news/admin.py:106 news/admin.py:213
+#: news/admin.py:104 news/admin.py:211
 #: news/templates/news/admin_event_detail.html:69
 #: news/templates/news/admin_event_ticket_list.html:30
 msgid "Tickets"
 msgstr "Billetter"
 
-#: news/admin.py:115
+#: news/admin.py:113
 msgid "number of occurrences"
 msgstr "antall forekomster"
 
-#: news/admin.py:120
+#: news/admin.py:118
 msgid "future occurrences"
 msgstr "framtidige forekomster"
 
-#: news/admin.py:128
+#: news/admin.py:126
 msgid "previous occurrence"
 msgstr "forrige forekomst"
 
-#: news/admin.py:152
+#: news/admin.py:150
 #, python-brace-format
 msgid "{count} more..."
 msgstr "{count} fler..."
 
-#: news/admin.py:156 news/admin.py:249
+#: news/admin.py:154 news/admin.py:247
 msgid "active tickets"
 msgstr "aktive billetter"
 
-#: news/admin.py:160 news/admin.py:253
+#: news/admin.py:158 news/admin.py:251
 msgid "inactive tickets"
 msgstr "inaktive billetter"
 
-#: news/admin.py:196 news/admin.py:235
+#: news/admin.py:194 news/admin.py:233
 msgid "is published"
 msgstr "er publisert"
 
-#: news/admin.py:238
+#: news/admin.py:236
 msgid "event hidden"
 msgstr "arrangement skjult"
 
-#: news/admin.py:240 news/models.py:36 news/models.py:196
+#: news/admin.py:238 news/models.py:36 news/models.py:196
 #: news/templates/news/admin_article_list.html:31
 #: news/templates/news/admin_event_list.html:39
 #: news/templates/news/admin_timeplace_listing.html:27
 msgid "Hidden"
 msgstr "Skjult"
 
-#: news/admin.py:242
+#: news/admin.py:240
 msgid "future publication time"
 msgstr "framtidig publiseringstid"
 
@@ -2454,6 +2460,18 @@ msgstr "Din billett!"
 msgid "Full name from LDAP"
 msgstr "Fullt navn fra LDAP"
 
+#: web/templates/admin/base_site.html:12
+msgid "Django site admin"
+msgstr "Django administrasjonsside"
+
+#: web/templates/admin/base_site.html:16
+msgid "Django administration"
+msgstr "Django-administrasjon"
+
+#: web/templates/admin/favicon.html:7 web/templates/admin/favicon.html:9
+msgid "MAKE Admin"
+msgstr "MAKE admin"
+
 #: web/templates/web/404.html:6
 msgid "The page doesn't exist"
 msgstr "Siden finnes ikke"
@@ -2554,7 +2572,7 @@ msgstr ""
 msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
 
-#: web/templates/web/base.html:62
+#: web/templates/web/base.html:63
 msgid "Skip to main content"
 msgstr "Hopp til hovedinnhold"
 
