@@ -20,7 +20,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, PermissionsTestCase):
 
         self.article = Article.objects.create(
             title='PUBLISHED',
-            image=MOCK_JPG_FILE,
+            image=MOCK_JPG_FILE, image_description="Mock image",
             publication_time=timezone.localtime() - timedelta(days=1),
         )
 

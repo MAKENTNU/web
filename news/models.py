@@ -27,10 +27,18 @@ class NewsBaseQuerySet(models.QuerySet):
 
 
 class NewsBase(models.Model):
+    """
+    The abstract class that contains the common fields and methods of ``Article`` and ``Event``.
+
+    (Several of the fields' ``help_text`` arguments are defined in ``NewsBaseForm``, to facilitate customizing them to fit the two subclasses.)
+    """
     title = MultiLingualTextField(verbose_name=_("Title"))
     content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
     clickbait = MultiLingualTextField(verbose_name=_("Clickbait"), widget=MultiLingualTextarea)
     image = models.ImageField(verbose_name=_("Image"))
+    image_description = MultiLingualTextField(verbose_name=_("image description"),
+                                              help_text=_("This should be a concise visual description of the image,"
+                                                          " which is mainly useful for people using a screen reader."))
     contain = models.BooleanField(default=False, verbose_name=_("Don't crop the image"))
     featured = models.BooleanField(default=True, verbose_name=_("Featured"))
     hidden = models.BooleanField(default=False, verbose_name=_("Hidden"))
@@ -264,7 +272,11 @@ class EventTicket(models.Model):
         )
 
     def __str__(self):
-        return f"{self.name} - {self.event if self.event is not None else self.timeplace}"
+        return f"{self.name} - {self.event if self.event else self.timeplace}"
+
+    @property
+    def registered_event(self) -> Event:
+        return self.event or self.timeplace.event
 
     @property
     def name(self):

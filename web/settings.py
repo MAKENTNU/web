@@ -17,6 +17,13 @@ if 'test' in sys.argv:
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether the request is actually over HTTPS,
+# as the connection between Nginx (the proxy we're using) and Django (run by Channel's Daphne server) is currently always over HTTP
+# (due to Daphne - seemingly - not supporting HTTPS)
+# !!! WARNING: when deploying, make sure that Nginx always either overwrites or removes the `X-Forwarded-Proto` header !!!
+# (see https://docs.djangoproject.com/en/stable/ref/settings/#secure-proxy-ssl-header)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Default values
 DATABASE = 'sqlite'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -103,7 +110,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsRequestMiddleware',
+
+    # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -112,6 +122,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
@@ -313,7 +325,7 @@ CKEDITOR_CONFIGS = {
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
-PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for

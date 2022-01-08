@@ -74,10 +74,13 @@
                     <div id="start-time" class="ui calendar">
                         <div class="ui input {% if not can_change_start_time %}disabled{% endif %} left icon">
                             <i class="calendar icon"></i>
-                            <input name="start_time" type="text" placeholder="{% trans "Start time" %}"
-                                   {# Do not place the if-else on separate lines, as it introduces whitespace #}
-                                   value="{% if start_time %}{{ start_time|iso_datetime }}{% else %}{% formatted_localtime %}{% endif %}"
-                            />
+                            <input name="start_time" type="text" placeholder="{% trans "Start time" %}" value="{% spaceless %}
+                                {% if start_time %}
+                                    {{ start_time|iso_datetime }}
+                                {% else %}
+                                    {% formatted_localtime %}
+                                {% endif %}
+                            {% endspaceless %}"/>
                         </div>
                     </div>
                 </div>
@@ -86,10 +89,13 @@
                     <div id="end-time" class="ui calendar">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="end_time" type="text" placeholder="{% trans "End time" %}"
-                                   {# Do not place the if-else on separate lines, as it introduces whitespace #}
-                                   value="{% if end_time %}{{ end_time|iso_datetime }}{% else %}{% formatted_localtime shift_hours=2 %}{% endif %}"
-                            />
+                            <input name="end_time" type="text" placeholder="{% trans "End time" %}" value="{% spaceless %}
+                                {% if end_time %}
+                                    {{ end_time|iso_datetime }}
+                                {% else %}
+                                    {% formatted_localtime shift_hours=2 %}
+                                {% endif %}
+                            {% endspaceless %}"/>
                         </div>
                     </div>
                 </div>

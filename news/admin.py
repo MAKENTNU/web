@@ -34,7 +34,7 @@ class NewsBaseAdmin(MultiLingualFieldAdmin):
 
     @admin.display(description=_("Image"))
     def get_image(self, news_obj: NewsBase):
-        return html_utils.tag_media_img(news_obj.image.url, url_host_name='main', alt_text="")
+        return html_utils.tag_media_img(news_obj.image.url, url_host_name='main', alt_text=news_obj.image_description)
 
     def get_form(self, request, obj: NewsBase = None, **kwargs):
         return super().get_form(request, **{
@@ -97,7 +97,7 @@ class EventAdmin(NewsBaseAdmin):
     fieldsets = (
         (None, {
             'fields': (
-                'title', 'content', 'clickbait', 'image', 'contain', 'featured', 'hidden', 'private',
+                'title', 'content', 'clickbait', 'image', 'image_description', 'contain', 'featured', 'hidden', 'private',
                 'event_type', 'number_of_tickets', 'last_modified',
             ),
         }),

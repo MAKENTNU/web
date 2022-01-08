@@ -14,22 +14,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2.4.0
 
-      - uses: actions/cache@v2.1.6
-        id: cache
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2.2.2
+        uses: actions/setup-python@v2.3.1
         with:
           python-version: ${{ matrix.python-version }}
+          cache: "pip"
+          cache-dependency-path: "requirements*.txt"
 
       - name: Install System Dependencies
         run: |
-          sudo apt update && sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
+          sudo apt update
+          sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
 
       - name: Install Python Dependencies
         run: |
