@@ -8,13 +8,13 @@
     <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
 {% endblock extrahead %}
 
-{# Based on https://github.com/django/django/blob/5ea34f3f86af307e1a1c02b49136f51a4f63da88/django/contrib/admin/templates/admin/base_site.html#L3 #}
-{% block title %}{{ title }} | {{ site_title|default:_("Django site admin") }}{% endblock %}
+{# Based on https://github.com/django/django/blob/84609b3205905097d7d3038d32e6101f012c0619/django/contrib/admin/templates/admin/base_site.html#L3 #}
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | {{ site_title|default:_("Django site admin") }}{% endblock %}
 
-{# Based on https://github.com/django/django/blob/5ea34f3f86af307e1a1c02b49136f51a4f63da88/django/contrib/admin/templates/admin/base_site.html#L5-L7 #}
+{# Based on https://github.com/django/django/blob/84609b3205905097d7d3038d32e6101f012c0619/django/contrib/admin/templates/admin/base_site.html#L5-L7 #}
 {% block branding %}
     <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_("Django administration") }}</a></h1>
 {% endblock branding %}
 
-{# Based on https://github.com/django/django/blob/5ea34f3f86af307e1a1c02b49136f51a4f63da88/django/contrib/admin/templates/admin/base_site.html#L9 #}
+{# Based on https://github.com/django/django/blob/84609b3205905097d7d3038d32e6101f012c0619/django/contrib/admin/templates/admin/base_site.html#L9 #}
 {% block nav-global %}{% endblock %}

@@ -1,4 +1,3 @@
-from django import forms
 from django.contrib import admin
 from django.db.models import Count, Max, Prefetch, Q, QuerySet
 from django.template.loader import get_template
@@ -11,12 +10,12 @@ from util import html_utils
 from util.admin_utils import TextFieldOverrideMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
 from util.locale_utils import short_datetime_format
 from web.multilingual.admin import MultiLingualFieldAdmin
-from .forms import ArticleForm, EventForm
+from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
 class NewsBaseAdmin(MultiLingualFieldAdmin):
-    form_base: forms.ModelForm
+    form_base: NewsBaseForm
     list_display_extra: tuple
 
     list_filter = ('featured', 'hidden', 'private')
@@ -57,7 +56,7 @@ def get_ticket_table(tickets: QuerySet[EventTicket]):
     ticket_dicts = [
         {
             'ref_link': link_to_admin_change_form(ticket, text=ticket.pk),
-            'user_name_link': link_to_admin_change_form(ticket.user, text=ticket.name),
+            'user_name_link': link_to_admin_change_form(ticket.user, text=ticket.name) if ticket.user else "-",
             'user_email': ticket.email,
             'comment': ticket.comment,
             'language': ticket.get_language_display(),
@@ -75,13 +74,13 @@ class EventAdmin(NewsBaseAdmin):
     class TimePlaceInline(TextFieldOverrideMixin, admin.TabularInline):
         model = TimePlace
         ordering = ('-start_time',)
-        readonly_fields = ('get_number_of_reserved_tickets', 'last_modified')
+        readonly_fields = ('get_num_reserved_tickets', 'last_modified')
         show_change_link = True
 
         extra = 0
 
         @admin.display(description=_("number of reserved tickets"))
-        def get_number_of_reserved_tickets(self, time_place: TimePlace):
+        def get_num_reserved_tickets(self, time_place: TimePlace):
             return time_place.ticket_count
 
         def get_queryset(self, request):
@@ -185,7 +184,7 @@ class EventAdmin(NewsBaseAdmin):
 
 class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     list_display = (
-        'publication_time', 'get_event', 'start_time', 'end_time', 'get_place', 'number_of_tickets',
+        'publication_time', 'get_event', 'start_time', 'end_time', 'get_place', 'number_of_tickets', 'get_num_reserved_tickets',
         'hidden', 'is_published', 'last_modified',
     )
     list_filter = (
@@ -230,6 +229,17 @@ class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     def get_place(self, time_place: TimePlace):
         return format_html('<a href="{}" target="_blank">{}</a>', time_place.place_url, time_place.place)
 
+    @admin.display(
+        ordering='ticket_count',
+        description=_("number of reserved tickets"),
+    )
+    def get_num_reserved_tickets(self, time_place: TimePlace):
+        if time_place.event.standalone:
+            standalone_notice = _("event is standalone")
+            return mark_safe(f"- <i>({standalone_notice})</i>")
+        else:
+            return time_place.ticket_count
+
     @admin.display(description=_("is published"))
     def is_published(self, time_place: TimePlace):
         if time_place.event.hidden:
@@ -254,6 +264,10 @@ class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
 
     def get_search_results(self, request, queryset, search_term):
         return search_escaped_and_unescaped(super(), request, queryset, search_term)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
 
 
 admin.site.register(Article, ArticleAdmin)
