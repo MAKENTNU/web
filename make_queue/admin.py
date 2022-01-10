@@ -80,7 +80,11 @@ class ReservationRuleAdmin(admin.ModelAdmin):
 class Printer3DCourseAdmin(admin.ModelAdmin):
     list_display = ('username', 'user', 'name', 'date', 'status', 'advanced_course', 'last_modified')
     list_filter = ('status', 'advanced_course')
-    search_fields = ('username', 'user', 'name')
+    search_fields = (
+        'user__username', 'user__first_name', 'user__last_name',
+        'username', 'name',
+        'user__card_number', '_card_number',
+    )
     list_editable = ('status', 'advanced_course')
     ordering = ('date', 'username')
     list_select_related = ('user',)
