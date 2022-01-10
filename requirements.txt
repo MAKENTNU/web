@@ -3,7 +3,7 @@ django-hosts==4.0
 django-ckeditor==6.2.0
 django-cleanup==5.2.0
 django-decorator-include==3.0
-django_ical==1.8.0
+django_ical==1.8.1
 django-phonenumber-field==6.0.0
 sorl-thumbnail==12.7.0
 
