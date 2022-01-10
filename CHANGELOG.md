@@ -7,6 +7,28 @@ Description of the changes through deployments.
 - Changelog, issue template and pull request template.
 
 
+## 2022-01-10 ([#402](https://github.com/MAKENTNU/web/pull/402))
+### New features
+- Added new favicon with better color contrast, and different favicons for the `i`/`internal`/`internt` and `admin` subdomains
+- Made "dirtied" (modified) forms prevent the user from leaving
+- Added an image description field to articles and events, which is useful for people using screen readers
+- Added priority field to secrets
+- Added an automatically updated "last modified" field to various models
+- Added "Skip to main content" button for navigation using <kbd>Tab</kbd>
+
+### Improvements
+- Articles and events are now stored fully in their own separate tables, instead of storing the common fields in a third table
+- Small improvements to the design of the event and article pages
+- Improved using <kbd>Tab</kbd> for navigating the buttons in the header
+- SEO improvements (see [#401](https://github.com/MAKENTNU/web/pull/401))
+
+### Fixes
+- Fixed members being unable to have international phone number
+
+### Other changes
+- A barely impressive volume of code cleanup
+
+
 ## 2021-10-29 ([#389](https://github.com/MAKENTNU/web/pull/389))
 ### New features
 - Added admin page for FAQ categories
