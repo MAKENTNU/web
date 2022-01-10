@@ -1934,6 +1934,10 @@ msgstr "inaktive billetter"
 msgid "is published"
 msgstr "er publisert"
 
+#: news/admin.py:238
+msgid "event is standalone"
+msgstr "arrangementet er frittstående"
+
 #: news/admin.py:236
 msgid "event hidden"
 msgstr "arrangement skjult"
