@@ -2116,6 +2116,12 @@ msgstr ""
 msgid "Articles"
 msgstr "Artikler"
 
+#: news/templates/news/admin_article_list.html:19
+#: news/templates/news/article_list_contents.html:17
+#, python-format
+msgid "View the article “%(title)s”; image description: %(description)s"
+msgstr "Vis artikkelen «%(title)s»; bildebeskrivelse: %(description)s"
+
 #: news/templates/news/admin_event_detail.html:21
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
@@ -2193,6 +2199,12 @@ msgstr "Ingen fremtidige forekomster finnes for dette arrangementet"
 #: news/templates/news/admin_event_detail.html:118
 msgid "No past occurrences exist for this event"
 msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
+
+#: news/templates/news/admin_event_list.html:18
+#: news/templates/news/event_list_contents.html:36
+#, python-format
+msgid "View the event “%(title)s”; image description: %(description)s"
+msgstr "Vis arrangementet «%(title)s»; bildebeskrivelse: %(description)s"
 
 #: news/templates/news/admin_event_list.html:24
 #, python-format

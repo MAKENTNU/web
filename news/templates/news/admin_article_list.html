@@ -15,7 +15,11 @@
             {% for article in articles %}
                 <div class="ui card">
                     <a class="image" href="{% url 'article_detail' article.pk %}">
-                        <img src="{{ article.image.url }}" alt="{{ article.image_description }}"/>
+                        <img src="{{ article.image.url }}"
+                             alt="{% blocktrans trimmed with title=article.title description=article.image_description %}
+                                 View the article “{{ title }}”; image description: {{ description }}
+                             {% endblocktrans %}"
+                        />
                     </a>
                     <div class="content">
                         <a class="header" href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
