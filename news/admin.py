@@ -57,7 +57,7 @@ def get_ticket_table(tickets: QuerySet[EventTicket]):
     ticket_dicts = [
         {
             'ref_link': link_to_admin_change_form(ticket, text=ticket.pk),
-            'user_name_link': link_to_admin_change_form(ticket.user, text=ticket.name),
+            'user_name_link': link_to_admin_change_form(ticket.user, text=ticket.name) if ticket.user else "-",
             'user_email': ticket.email,
             'comment': ticket.comment,
             'language': ticket.get_language_display(),
