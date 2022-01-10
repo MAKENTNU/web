@@ -9,8 +9,10 @@ from django_hosts import reverse
 admin.site.site_url = f"//{settings.PARENT_HOST}/"
 
 urlpatterns = [
+    # Custom paths must come before including `admin.site.urls` to avoid being "hidden" behind Django admin's catch-all path
+    path("robots.txt", TemplateView.as_view(template_name='admin/robots.txt', content_type='text/plain')),
+
     path("", admin.site.urls),
-    path("robots.txt", TemplateView.as_view(template_name='web/admin_robots.txt', content_type='text/plain')),
 ]
 
 # Disable admin page login if Dataporten is configured,

@@ -5,6 +5,10 @@
 
 {% block title %}{% trans "MAKE NTNU Internal" %}{% endblock title %}
 
+{% block favicon_template %}
+    {% include 'internal/favicon.html' with favicons_folder='internal/img/favicons' %}
+{% endblock favicon_template %}
+
 {% block open_graph_meta %}{% endblock open_graph_meta %}
 
 {% block analytics %}{% endblock analytics %}

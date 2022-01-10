@@ -4,9 +4,7 @@
     --logo-min-width: 120px;
     --logo-space: minmax(var(--logo-min-width), var(--logo-width));
 
-    --burger-margin: 1em;
-
-    --header-height: 100px;
+    --burger-margin: 2em;
 
     /* nav */
     --nav-space-between: 2em;
@@ -24,7 +22,8 @@
     color: var(--make-light-grey);
 }
 
-#header .item:hover > .text {
+#header .item:hover > .text,
+#header .item:focus > .text {
     color: #EEE;
 }
 
@@ -52,8 +51,8 @@
     margin-right: var(--burger-margin);
 }
 
-#burger:hover {
-    cursor: pointer;
+#burger .icon {
+    margin: 0;
 }
 
 #nav > .item,
@@ -72,6 +71,12 @@
     background-color: transparent;
 }
 
+#nav > .item:focus,
+#side-nav > .item:focus {
+    /* Disable native outline when focusing, as we provide our own with the `.bubble-background` elements */
+    outline: none;
+}
+
 #nav > .item .bubble-background,
 #side-nav > .item .bubble-background {
     position: absolute;
@@ -83,7 +88,9 @@
 }
 
 #nav > .item:hover .bubble-background,
-#side-nav > .item:hover .bubble-background {
+#nav > .item:focus-within .bubble-background,
+#side-nav > .item:hover .bubble-background,
+#side-nav > .item:focus-within .bubble-background {
     width: calc(100% + var(--bubble-background-extra-width));
     height: 3em;
     opacity: 1;
@@ -144,8 +151,17 @@
     align-self: auto;
 }
 
+#makerspace-dropdown .menu > .active.item,
+#nav-user-dropdown .menu > .active.item {
+    /* Prevents changing the font-weight to bold when focusing on a dropdown element,
+       which happens due to the workaround code in `header.js` */
+    font-weight: normal !important;
+}
+
 #nav-user-dropdown .menu > .item:hover,
-#makerspace-dropdown .menu > .item:hover {
+#nav-user-dropdown .menu > .item:focus,
+#makerspace-dropdown .menu > .item:hover,
+#makerspace-dropdown .menu > .item:focus {
     background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic-UI */
 }
 
@@ -179,7 +195,7 @@
 /* Switch to mobile layout with burger */
 @media screen and (max-width: 991.98px) {
     #header {
-        --burger-space: minmax(calc(4em + var(--burger-margin)), 1fr);
+        --burger-space: minmax(calc(3em + var(--burger-margin)), 1fr);
 
         grid-template-columns: var(--burger-space) auto var(--burger-space);
         grid-template-rows: var(--header-height);

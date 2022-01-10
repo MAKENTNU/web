@@ -16,12 +16,14 @@
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% block logo_link_url %}{% host_url 'front_page' host 'main' %}{% endblock logo_link_url %}">
             <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="medium" src="{% static 'web/img/logo_narrow.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="small" src="{% static 'web/img/logo_icon.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
         </a>
     </div>
 
-    <i id="burger" class="big inverted sidebar icon"></i>
+    <a id="burger" href="">
+        <i class="big inverted sidebar icon"></i>
+    </a>
 
     {# `aria-label` should be used in conjunction with `role="navigation"`, which the `nav` tag specifies implicitly #}
     {# See https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/Navigation_Role #}
@@ -148,7 +150,7 @@
 {% endblock announcements %}
 
 {# This form is hidden, but is submitted through jQuery #}
-<form id="lang-form" action="{% url 'set_language' %}" method="POST">
+<form id="lang-form" class="dont-prevent-leaving" action="{% url 'set_language' %}" method="POST">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>

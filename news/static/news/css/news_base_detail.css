@@ -1,0 +1,20 @@
+.news-obj {
+    margin-top: 20px;
+}
+
+.news-obj-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+}
+
+.news-obj-image.contain {
+    object-fit: contain;
+}
+
+.news-obj-content img {
+    max-width: 100%;
+    /* Overrides images' `height` attribute (which is set by CKEditor by default),
+       to prevent them from getting skewed when `max-width` takes effect */
+    height: auto !important;
+}

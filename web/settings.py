@@ -2,8 +2,11 @@ import logging
 import sys
 from pathlib import Path
 
+import django.views.static
 from django.conf.locale.en import formats as en_formats
 from django.conf.locale.nb import formats as nb_formats
+
+from .static import serve_interpolated
 
 
 # Disable logging when testing
@@ -13,6 +16,13 @@ if 'test' in sys.argv:
 
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether the request is actually over HTTPS,
+# as the connection between Nginx (the proxy we're using) and Django (run by Channel's Daphne server) is currently always over HTTP
+# (due to Daphne - seemingly - not supporting HTTPS)
+# !!! WARNING: when deploying, make sure that Nginx always either overwrites or removes the `X-Forwarded-Proto` header !!!
+# (see https://docs.djangoproject.com/en/stable/ref/settings/#secure-proxy-ssl-header)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Default values
 DATABASE = 'sqlite'
@@ -100,7 +110,10 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsRequestMiddleware',
+
+    # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -109,6 +122,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
@@ -134,7 +149,9 @@ ALLOWED_REDIRECT_HOSTS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'web/templates',  # for overriding Django admin templates
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -263,9 +280,11 @@ nb_formats.DECIMAL_SEPARATOR = '.'
 STATIC_ROOT = BASE_DIR.parent / 'static'
 STATIC_URL = '/static/'
 
-# ManifestStaticFilesStorage appends every static file's MD5 hash to its filename,
+# This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
 # which avoids waiting for browsers' cache to update if a file's contents change
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'web.static.InterpolatingManifestStaticFilesStorage'
+# Monkey patch view used for serving static and media files (for development only; Nginx is used in production)
+django.views.static.serve = serve_interpolated
 
 
 # Code taken from https://github.com/django-ckeditor/django-ckeditor/issues/404#issuecomment-687778492
@@ -306,7 +325,7 @@ CKEDITOR_CONFIGS = {
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
-PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for

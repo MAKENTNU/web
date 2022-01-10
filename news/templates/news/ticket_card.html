@@ -13,12 +13,8 @@
 
     <div class="content">
         <div class="header">
-            <a href="{% if ticket.event %}
-                        {% url 'event_detail' ticket.event.pk %}
-                    {% else %}
-                        {% url 'event_detail' ticket.timeplace.event.pk %}
-                    {% endif %}">
-                {% firstof ticket.timeplace.event.title ticket.event.title %}
+            <a href="{% url 'event_detail' ticket.registered_event.pk %}">
+                {{ ticket.registered_event.title }}
             </a>
         </div>
         <div class="description">

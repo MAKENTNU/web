@@ -1,12 +1,6 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% load i18n %}
-{% load news_tags %}
 
-
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static 'news/css/admin_list.css' %}"/>
-{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -20,22 +14,20 @@
             {% for event in events %}
                 <div class="ui card">
                     <a class="image" href="{% url 'event_detail' event.pk %}">
-                        <img src="{{ event.image.url }}"/>
+                        <img src="{{ event.image.url }}" alt="{{ event.image_description }}"/>
                     </a>
                     <div class="content">
                         <a class="header" href="{% url 'event_detail' event.pk %}">{{ event.title }}</a>
                         <div class="meta">
-                            {% with event.timeplaces|future|length as num_future_occurrences %}
-                                {% if num_future_occurrences %}
-                                    <div>
-                                        {% blocktrans trimmed count counter=num_future_occurrences %}
-                                            1 future occurrence
-                                        {% plural %}
-                                            {{ counter }} future occurrences
-                                        {% endblocktrans %}
-                                    </div>
-                                {% endif %}
-                            {% endwith %}
+                            {% if event.num_future_occurrences %}
+                                <div>
+                                    {% blocktrans trimmed count counter=event.num_future_occurrences %}
+                                        1 future occurrence
+                                    {% plural %}
+                                        {{ counter }} future occurrences
+                                    {% endblocktrans %}
+                                </div>
+                            {% endif %}
                             {% if event.featured %}
                                 <span class="ui green mini label">
                                     {% trans "Featured" %}

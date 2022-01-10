@@ -1,11 +1,6 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% load i18n %}
 
-
-{% block extra_head %}
-    <link rel="stylesheet" href="{% static 'news/css/admin_list.css' %}"/>
-{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -20,7 +15,7 @@
             {% for article in articles %}
                 <div class="ui card">
                     <a class="image" href="{% url 'article_detail' article.pk %}">
-                        <img src="{{ article.image.url }}" alt="{% trans "Article image" %}"/>
+                        <img src="{{ article.image.url }}" alt="{{ article.image_description }}"/>
                     </a>
                     <div class="content">
                         <a class="header" href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>

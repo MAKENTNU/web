@@ -1,11 +1,16 @@
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
+from django.db.models import F
+from django.db.models.functions import Lower
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.phonenumber import PhoneNumber
+from phonenumbers.phonenumberutil import region_code_for_number
 
 from groups.models import Committee
 from users.models import User
@@ -41,6 +46,7 @@ class Member(models.Model):
     quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
     retired = models.BooleanField(default=False, verbose_name=_("Retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         permissions = (
@@ -68,6 +74,17 @@ class Member(models.Model):
 
             # Add user to the MAKE group
             self.set_membership(True)
+
+    @property
+    def phone_number_display(self):
+        if not isinstance(self.phone_number, PhoneNumber):
+            return self.phone_number
+
+        if region_code_for_number(self.phone_number) == settings.PHONENUMBER_DEFAULT_REGION:
+            return self.phone_number.as_national
+        else:
+            return self.phone_number.as_international
+
 
     @property
     def term_joined(self):
@@ -173,6 +190,7 @@ class SystemAccess(models.Model):
     )
     name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         constraints = (
@@ -201,6 +219,15 @@ class SystemAccess(models.Model):
         return self.name != self.WEBSITE
 
 
+class SecretQuerySet(models.QuerySet):
+
+    def default_order_by(self):
+        return self.order_by(
+            F('priority').asc(nulls_last=True),
+            Lower('title'),
+        )
+
+
 class Secret(models.Model):
     title = MultiLingualTextField(
         max_length=100,
@@ -208,7 +235,15 @@ class Secret(models.Model):
         verbose_name=_("Title"),
     )
     content = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
-    last_modified = models.DateTimeField(auto_now=True)
+    priority = models.IntegerField(
+        null=True,
+        blank=True,
+        verbose_name=_("Priority"),
+        help_text=_("If specified, the secrets are sorted ascending by this value."),
+    )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    objects = SecretQuerySet.as_manager()
 
     def __str__(self):
         return str(self.title)

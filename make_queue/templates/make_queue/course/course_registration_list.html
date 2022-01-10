@@ -18,7 +18,7 @@
             </a>
         </h1>
 
-        <form id="download-users" class="ui form" method="POST" action="{% url 'download_course_registrations' %}">
+        <form id="download-users" class="dont-prevent-leaving ui form" method="POST" action="{% url 'download_course_registrations' %}">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
@@ -192,7 +192,7 @@
             {% trans "Set status of users to" %} &quot;<i><span id="set-status-text"></span></i>&quot;
         </div>
 
-        <form method="POST" action="{% url 'bulk_status_update' %}">
+        <form class="dont-prevent-leaving" method="POST" action="{% url 'bulk_status_update' %}">
             {% csrf_token %}
             <input id="status" type="hidden" value="" name="status"/>
         </form>

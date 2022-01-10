@@ -47,14 +47,14 @@ class Quota(models.Model):
             user_str = self.user.get_full_name() if self.user else _("<nobody>")
         return _("Quota for {user} on {machine_type}").format(user=user_str, machine_type=self.machine_type)
 
-    def get_active_reservations(self, user):
+    def get_unfinished_reservations(self, user: User):
         if self.diminishing:
             return self.reservations.all()
         reservations = self.reservations.filter(user=user) if self.all else self.reservations
         return reservations.filter(end_time__gte=timezone.now())
 
-    def can_create_more_reservations(self, user):
-        return self.number_of_reservations != self.get_active_reservations(user).count()
+    def can_create_more_reservations(self, user: User):
+        return self.number_of_reservations != self.get_unfinished_reservations(user).count()
 
     def is_valid_in(self, reservation: 'Reservation'):
         reservation_exists_or_can_make_more = (self.reservations.filter(pk=reservation.pk).exists()
@@ -251,6 +251,7 @@ class ReservationRule(models.Model):
     start_days = models.IntegerField(default=0, verbose_name=_("Start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("Hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multi-period"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def save(self, **kwargs):
         if not self.is_valid_rule():

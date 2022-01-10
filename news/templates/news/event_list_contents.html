@@ -1,0 +1,68 @@
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% load datetime_tags %}
+
+
+{# Linking `event_list_contents.css` is required when including this template #}
+
+{% block title %}
+    <h1 class="ui text-centered make-col-blue header">
+        {{ title }}
+    </h1>
+{% endblock title %}
+
+{% if event_dicts %}
+    <div class="ui items events">
+        {% for event_dict in event_dicts %}
+            <div class="event item">
+                <a class="ui small image" href="{% url 'event_detail' event_dict.event.pk %}">
+                    <p class="ui {{ ribbon_extra_classes }} ribbon label">
+                        {% block ribbon_label %}
+                            {{ event_dict.shown_occurrence.start_time|year_wise_short_date }}
+                            {% if event_dict.number_of_occurrences > 1 %}
+                                <br/>
+                                +{{ event_dict.number_of_occurrences|add:-1 }}
+                                {% if event_dict.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}
+                            {% endif %}
+                        {% endblock ribbon_label %}
+                    </p>
+                    <img {% thumbnail event_dict.event.image "300" crop="center" as image_thumb %}
+                        src="{{ image_thumb.url }}"
+                    {% empty %}
+                        src="{{ event_dict.event.image.url }}"
+                    {% endthumbnail %}
+                        class="event-img o v e r r i d e {% if event_dict.event.contain %}contain{% endif %}"
+                        alt="{{ event_dict.event.image_description }}"
+                    />
+                </a>
+
+                <div class="content">
+                    <h1 class="word-breaking event-title">
+                        <a class="make-col-yellow" href="{% url 'event_detail' event_dict.event.pk %}">{{ event_dict.event.title }}</a>
+                    </h1>
+                    <div class="meta">
+                        {% if event_dict.shown_occurrence.place_url %}
+                            <a class="make-col-blue" href="{{ event_dict.shown_occurrence.place_url }}" target="_blank">
+                                {{ event_dict.shown_occurrence.place }}
+                            </a>
+                        {% else %}
+                            {{ event_dict.shown_occurrence.place }}
+                        {% endif %}
+                    </div>
+                    <div class="description">
+                        <p>{{ event_dict.event.clickbait }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+        {% block extra_post_events %}{% endblock %}
+    </div>
+{% else %}
+    {% block no_events %}
+        <div class="no-events">
+            {{ no_events_message }}
+        </div>
+        <br/>
+    {% endblock no_events %}
+{% endif %}

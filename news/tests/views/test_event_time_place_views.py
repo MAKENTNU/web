@@ -19,7 +19,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
 
         self.event = Event.objects.create(
             title='FUTURE',
-            image=MOCK_JPG_FILE,
+            image=MOCK_JPG_FILE, image_description="Mock image",
             number_of_tickets=40,
         )
         self.timeplace = TimePlace.objects.create(
