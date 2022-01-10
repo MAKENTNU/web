@@ -2001,6 +2001,18 @@ msgstr ""
 "Her kan du fylle inn eventuelle forespørsler eller opplysninger du ønsker å "
 "gi til arrangørene"
 
+#: news/models.py:39
+msgid "image description"
+msgstr "bildebeskrivelse"
+
+#: news/models.py:40
+msgid ""
+"This should be a concise visual description of the image, which is mainly "
+"useful for people using a screen reader."
+msgstr ""
+"Dette burde være en konsis visuell beskrivelse av bildet, som er "
+"hovedsakelig nyttig for folk som bruker en skjermleser."
+
 #: news/models.py:34
 msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
@@ -2575,6 +2587,16 @@ msgstr ""
 #: web/templates/web/admin_panel.html:114
 msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
+
+#: web/templates/web/base.html:28
+msgid ""
+"MAKE NTNU is a voluntary student organization that works for a better "
+"environment for project development, both in private and educational "
+"contexts, for all students at NTNU."
+msgstr ""
+"MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø "
+"for prosjektutvikling, både i privat og undervisningssammenheng, for alle "
+"studenter på NTNU."
 
 #: web/templates/web/base.html:63
 msgid "Skip to main content"
