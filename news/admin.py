@@ -1,4 +1,3 @@
-from django import forms
 from django.contrib import admin
 from django.db.models import Count, Max, Prefetch, Q, QuerySet
 from django.template.loader import get_template
@@ -11,12 +10,12 @@ from util import html_utils
 from util.admin_utils import TextFieldOverrideMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
 from util.locale_utils import short_datetime_format
 from web.multilingual.admin import MultiLingualFieldAdmin
-from .forms import ArticleForm, EventForm
+from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
 class NewsBaseAdmin(MultiLingualFieldAdmin):
-    form_base: forms.ModelForm
+    form_base: NewsBaseForm
     list_display_extra: tuple
 
     list_filter = ('featured', 'hidden', 'private')
@@ -75,13 +74,13 @@ class EventAdmin(NewsBaseAdmin):
     class TimePlaceInline(TextFieldOverrideMixin, admin.TabularInline):
         model = TimePlace
         ordering = ('-start_time',)
-        readonly_fields = ('get_number_of_reserved_tickets', 'last_modified')
+        readonly_fields = ('get_num_reserved_tickets', 'last_modified')
         show_change_link = True
 
         extra = 0
 
         @admin.display(description=_("number of reserved tickets"))
-        def get_number_of_reserved_tickets(self, time_place: TimePlace):
+        def get_num_reserved_tickets(self, time_place: TimePlace):
             return time_place.ticket_count
 
         def get_queryset(self, request):

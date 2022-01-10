@@ -2074,10 +2074,6 @@ msgstr "Antall billetter"
 msgid "Ref #"
 msgstr "Ref #"
 
-#: news/templates/email/ticket.html:27
-msgid "Event image"
-msgstr "Arrangementsbilde"
-
 #: news/templates/email/ticket.html:34 news/templates/email/ticket.txt:5
 #, python-format
 msgid "Your ticket for “%(title)s”"
@@ -2118,10 +2114,6 @@ msgstr ""
 #: web/templates/web/admin_panel.html:15 web/templates/web/header.html:37
 msgid "Articles"
 msgstr "Artikler"
-
-#: news/templates/news/admin_article_list.html:18
-msgid "Article image"
-msgstr "Artikkelbilde"
 
 #: news/templates/news/admin_event_detail.html:21
 msgid "Admin page for events"
@@ -2386,11 +2378,6 @@ msgstr "datoer"
 #: news/templates/news/event_list_contents.html:26
 msgid "date"
 msgstr "dato"
-
-#: news/templates/news/event_list_contents.html:36
-#, python-format
-msgid "Illustration image for %(event)s"
-msgstr "Illustrasjonsbilde for %(event)s"
 
 #: news/templates/news/event_registration.html:9
 #, python-format

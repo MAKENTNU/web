@@ -2,7 +2,6 @@ from abc import ABCMeta
 from typing import Type
 
 from django import forms
-from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
 from web.widgets import MazemapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
@@ -35,11 +34,12 @@ class TimePlaceForm(forms.ModelForm):
 
 class NewsBaseForm(forms.ModelForm):
     class Meta(ABCMeta):
-        model: Model
+        model: Type[NewsBase]
         fields = '__all__'
         widgets = {
             'image': SemanticFileInput(),
         }
+        help_texts: dict
 
         @staticmethod
         def get_help_texts(news_class: Type[NewsBase]):
@@ -69,7 +69,7 @@ class ArticleForm(NewsBaseForm):
         help_texts = NewsBaseForm.Meta.get_help_texts(model)
 
 
-class EventForm(forms.ModelForm):
+class EventForm(NewsBaseForm):
     class Meta(NewsBaseForm.Meta):
         model = Event
         help_texts = NewsBaseForm.Meta.get_help_texts(model)
