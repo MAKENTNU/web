@@ -53,7 +53,11 @@
                 </div>
                 <div class="ui field">
                     {# TODO: reduce code duplication for the error messages #}
-                    <label>{{ form.ntnu_starting_semester.label }}</label>
+                    <label>{{ form.ntnu_starting_semester.label }}
+                        <span data-content="{{ form.ntnu_starting_semester.help_text }}">
+                            <i class="ui make-col-yellow question circle icon"></i>
+                        </span>
+                    </label>
                     {{ form.ntnu_starting_semester }}
                     {% for error in form.ntnu_starting_semester.errors %}
                         <div class="ui negative small message">
