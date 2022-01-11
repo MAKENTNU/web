@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models import F
@@ -6,6 +7,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
+from phonenumber_field.phonenumber import PhoneNumber
+from phonenumbers.phonenumberutil import region_code_for_number
 
 from groups.models import Committee
 from users.models import User
@@ -50,6 +53,7 @@ class Member(models.Model):
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
     # Our code shouldn't have to keep track of GitHub's username length constraints, so we should not limit the length
     github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         permissions = (
@@ -75,6 +79,17 @@ class Member(models.Model):
 
             # Add user to the MAKE group
             self.set_membership(True)
+
+    @property
+    def phone_number_display(self):
+        if not isinstance(self.phone_number, PhoneNumber):
+            return self.phone_number
+
+        if region_code_for_number(self.phone_number) == settings.PHONENUMBER_DEFAULT_REGION:
+            return self.phone_number.as_national
+        else:
+            return self.phone_number.as_international
+
 
     @property
     def ntnu_starting_semester_display(self):
@@ -177,6 +192,7 @@ class SystemAccess(models.Model):
     )
     name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
     value = models.fields.BooleanField(verbose_name=_("Access"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         constraints = (
@@ -227,7 +243,7 @@ class Secret(models.Model):
         verbose_name=_("Priority"),
         help_text=_("If specified, the secrets are sorted ascending by this value."),
     )
-    last_modified = models.DateTimeField(auto_now=True)
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = SecretQuerySet.as_manager()
 

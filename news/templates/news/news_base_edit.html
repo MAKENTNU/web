@@ -54,6 +54,15 @@
                     <label for="id_contain"><b>{{ form.contain.label }}</b></label>
                 </div>
             </div>
+            <div class="field">
+                <label>
+                    {{ form.image_description.label }}
+                    <span data-content="{{ form.image_description.help_text }}">
+                        <i class="make-col-yellow question circle icon"></i>
+                    </span>
+                </label>
+                {{ form.image_description }}
+            </div>
             <h4>{% trans "Attributes" %}</h4>
             <div class="ui three inline fields">
                 <div class="field">

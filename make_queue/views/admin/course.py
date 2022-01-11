@@ -6,17 +6,19 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView, View
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import Printer3DCourseForm
 from ...models.course import Printer3DCourse
 
 
-class CourseRegistrationListView(TemplateView):
+class Printer3DCourseListView(ListView):
+    model = Printer3DCourse
+    queryset = Printer3DCourse.objects.order_by('name')
     template_name = 'make_queue/course/course_registration_list.html'
+    context_object_name = 'registrations'
     extra_context = {
-        'registrations': Printer3DCourse.objects.order_by('name'),
         'possible_statuses': Printer3DCourse.Status.choices,
     }
 

@@ -1,6 +1,48 @@
-from django.contrib.admin.widgets import AdminTextInputWidget, AdminURLFieldWidget
+from typing import Callable
 
+from django.contrib import admin
+from django.contrib.admin.widgets import AdminTextInputWidget, AdminURLFieldWidget, ForeignKeyRawIdWidget
+from django.db.models import Model, QuerySet
+from django.urls import reverse
+from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
+
+from util.html_utils import escape_to_named_characters
 from web.modelfields import URLTextField, UnlimitedCharField
+
+
+def link_to_admin_change_form(obj: Model, *, text=None, should_open_new_tab=True):
+    """
+    Constructs a string consisting of an ``<a>`` tag which links to the Django admin change form of ``obj``.
+    The tag's text is set to ``text``, or ``obj`` if not given.
+    If ``should_open_new_tab`` is ``True``, the link is opened in a new tab or window when clicked.
+    """
+    target_attr = 'target="_blank"' if should_open_new_tab else ""
+    url = reverse(
+        f'admin:{obj._meta.app_label}_{obj._meta.model_name}_change', args=[obj.pk]
+    )
+    return format_html(
+        '<a href="{}" {}>{}</a>',
+        url, mark_safe(target_attr), text or obj,
+    )
+
+
+def search_escaped_and_unescaped(super_obj: admin.ModelAdmin, request, input_queryset: QuerySet, search_term: str):
+    """
+    Can be called from the ``get_search_results()`` method of ``ModelAdmin`` classes, to search using both escaped and unescaped characters.
+    For example, passing in "grøt" as ``search_term``, will search for both "grøt" and "gr&oslash;t".
+    """
+    # `use_distinct` starts as `False` in Django's `get_search_results()`
+    combined_searched_querysets, use_distinct_result = input_queryset.none(), False
+    # Try both with and without escaping:
+    for search_term_repr in (search_term, escape_to_named_characters(search_term)):
+        searched_queryset, use_distinct = super_obj.get_search_results(request, input_queryset, search_term_repr)
+        combined_searched_querysets = combined_searched_querysets.union(searched_queryset.order_by())  # clear ordering
+        use_distinct_result |= use_distinct
+
+    result_queryset = input_queryset.filter(pk__in={cb.pk for cb in combined_searched_querysets})
+    return result_queryset, use_distinct_result
 
 
 class TextFieldOverrideMixin:
@@ -9,3 +51,66 @@ class TextFieldOverrideMixin:
         UnlimitedCharField: {'widget': AdminTextInputWidget},
         URLTextField: {'widget': AdminURLFieldWidget},
     }
+
+
+# Code based on https://github.com/Uninett/Argus/commit/bc6031e2f9de3e14a942f3f20bfa1e6c7d37d637
+class YesNoListFilter(admin.SimpleListFilter):
+    YES = 1
+    NO = 0
+
+    title: str
+    # Parameter for the filter that will be used in the URL query
+    parameter_name: str
+
+    get_filter_func: Callable[[], Callable[[QuerySet, bool], QuerySet]]
+
+    def lookups(self, request, model_admin):
+        return (
+            (self.YES, _("Yes")),
+            (self.NO, _("No")),
+        )
+
+    def queryset(self, request, queryset):
+        try:
+            value = int(self.value())
+        except (TypeError, ValueError):
+            return None
+
+        if value not in {self.YES, self.NO}:
+            return None
+
+        return self.get_filter_func()(queryset, bool(value))
+
+
+# Code based on https://github.com/Uninett/Argus/commit/bc6031e2f9de3e14a942f3f20bfa1e6c7d37d637
+def list_filter_factory(title: str, parameter_name: str, filter_func: Callable[[QuerySet, bool], QuerySet]):
+    new_class_name = f"{parameter_name.title().replace('_', '')}ListFilter"
+    new_class_members = {
+        "title": title,
+        "parameter_name": parameter_name,
+        # Can't pass `filter_func` directly, as calling it from the new class (`self.filter_func()`)
+        # will pass an extra `self` argument
+        "get_filter_func": lambda _self: filter_func,
+    }
+    new_class = type(new_class_name, (YesNoListFilter,), new_class_members)
+    return new_class
+
+
+# noinspection PyUnresolvedReferences
+class LabelFreeRawIdWidgetAdminMixin:
+    """
+    Extending this class can help reducing the number of database queriees done by Django's ``ForeignKeyRawIdWidget``,
+    if the ``__str__()`` method of the admin class' model uses values from related fields.
+    """
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name not in self.raw_id_fields:
+            return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+        class LabelFreeRawIdWidget(ForeignKeyRawIdWidget):
+
+            def label_and_url_for_value(self, value):
+                return "", ""
+
+        kwargs['widget'] = LabelFreeRawIdWidget(db_field.remote_field, self.admin_site, using=kwargs.get('using'))
+        return db_field.formfield(**kwargs)

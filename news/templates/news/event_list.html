@@ -14,5 +14,5 @@
 
     {% trans "Previous events" as previous_title %}
     {% trans "No previous events" as no_previous_events %}
-    {% include 'news/event_list_contents.html' with event_dicts=past_event_dicts title=previous_title no_events_message=no_previous_events ribbon_extra_classes="make-bg-ligrey make-col-dkgrey" %}
+    {% include 'news/event_list_contents.html' with event_dicts=past_event_dicts title=previous_title no_events_message=no_previous_events ribbon_extra_classes="grey make-bg-ligrey make-col-dkgrey" %}
 {% endblock body %}
