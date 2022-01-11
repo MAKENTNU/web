@@ -38,6 +38,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='contentbox',
             name='content',
-            field=web.multilingual.modelfields.MultiLingualRichTextUploadingField(),
+            field=web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='Content'),
         ),
     ]

@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from web.multilingual.modelfields import MultiLingualRichTextUploadingField
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
 class ContentBox(models.Model):
@@ -10,7 +10,8 @@ class ContentBox(models.Model):
         unique=True,
         verbose_name=_("URL name"),
     )
-    content = MultiLingualRichTextUploadingField()
+    title = MultiLingualTextField(verbose_name=_("Title"))
+    content = MultiLingualRichTextUploadingField(verbose_name=_("Content"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
@@ -22,4 +23,4 @@ class ContentBox(models.Model):
         verbose_name_plural = "content boxes"
 
     def __str__(self):
-        return self.url_name
+        return str(self.title)

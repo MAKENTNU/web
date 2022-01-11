@@ -33,7 +33,7 @@ class DisplayContentBoxView(DetailView):
 class EditContentBoxView(PermissionRequiredMixin, UpdateView):
     permission_required = ('contentbox.change_contentbox',)
     model = ContentBox
-    fields = ('content',)
+    fields = ('title', 'content',)
     template_name = 'contentbox/edit.html'
 
     def get_success_url(self):

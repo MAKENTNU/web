@@ -24,10 +24,6 @@ class ModelAndViewTests(TestCase):
     def setUp(self):
         self.content_box1 = ContentBox.objects.create(url_name=TEST_URL_NAME)
 
-    def test_str(self):
-        self.assertEqual(self.content_box1.url_name, TEST_URL_NAME)
-        self.assertEqual(str(self.content_box1), self.content_box1.url_name)
-
     def test_get_content_box_retrieves_correctly(self):
         paths_to_test = (reverse(TEST_URL_NAME), f'/{TEST_URL_NAME}/')
         for path in paths_to_test:
