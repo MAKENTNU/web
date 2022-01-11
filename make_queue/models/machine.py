@@ -10,10 +10,10 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from util.validators import lowercase_slug_validator
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
-from ..validators import machine_stream_name_validator
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -118,7 +118,7 @@ class Machine(models.Model):
         blank=True,
         max_length=50,
         default="",
-        validators=[machine_stream_name_validator],
+        validators=[lowercase_slug_validator],
         verbose_name=_("stream name"),
         help_text=_("Used for connecting to the machine's stream."),
     )

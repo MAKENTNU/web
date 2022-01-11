@@ -31,7 +31,7 @@ class TestBaseMachineForm(TestCase):
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
-            error_code='invalid_stream_name',
+            error_code='invalid_lowercase_slug',
             form=form,
         )
 
@@ -43,7 +43,7 @@ class TestBaseMachineForm(TestCase):
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
-            error_code='invalid_stream_name',
+            error_code='invalid_lowercase_slug',
             form=form,
         )
 
