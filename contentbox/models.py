@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from util.validators import lowercase_slug_validator
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
@@ -8,6 +9,7 @@ class ContentBox(models.Model):
     url_name = models.CharField(
         max_length=100,
         unique=True,
+        validators=[lowercase_slug_validator],
         verbose_name=_("URL name"),
     )
     title = MultiLingualTextField(verbose_name=_("Title"))
