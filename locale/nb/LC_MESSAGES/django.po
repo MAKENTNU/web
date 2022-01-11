@@ -345,6 +345,10 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
+#: contentbox/models.py:11
+msgid "URL name"
+msgstr "URL-navn"
+
 #: contentbox/models.py:11 docs/models.py:15 internal/models.py:235
 #: makerspace/models.py:19 news/models.py:35
 msgid "Title"

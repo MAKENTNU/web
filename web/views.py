@@ -68,4 +68,4 @@ def view_500(request):
 
 class AboutUsView(DisplayContentBoxView):
     template_name = 'web/about.html'
-    title = 'about'
+    url_name = 'about'

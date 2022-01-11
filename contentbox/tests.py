@@ -10,45 +10,45 @@ from .models import ContentBox
 from .views import DisplayContentBoxView
 
 
-TEST_TITLE = 'test_title'
-TEST_MULTI_TITLES = ('test_main', 'test_alt1', 'test_alt2')
+TEST_URL_NAME = 'test_url_name'
+TEST_MULTI_URL_NAMES = ('test_main', 'test_alt1', 'test_alt2')
 
 base_urlpatterns += [
-    DisplayContentBoxView.get_path(TEST_TITLE),
-    *DisplayContentBoxView.get_multi_path(*TEST_MULTI_TITLES),
+    DisplayContentBoxView.get_path(TEST_URL_NAME),
+    *DisplayContentBoxView.get_multi_path(*TEST_MULTI_URL_NAMES),
 ]
 
 
 class ModelAndViewTests(TestCase):
 
     def setUp(self):
-        self.content_box1 = ContentBox.objects.create(title=TEST_TITLE)
+        self.content_box1 = ContentBox.objects.create(url_name=TEST_URL_NAME)
 
     def test_str(self):
-        self.assertEqual(self.content_box1.title, TEST_TITLE)
-        self.assertEqual(str(self.content_box1), self.content_box1.title)
+        self.assertEqual(self.content_box1.url_name, TEST_URL_NAME)
+        self.assertEqual(str(self.content_box1), self.content_box1.url_name)
 
     def test_get_content_box_retrieves_correctly(self):
-        paths_to_test = (reverse(TEST_TITLE), f'/{TEST_TITLE}/')
+        paths_to_test = (reverse(TEST_URL_NAME), f'/{TEST_URL_NAME}/')
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
-                self.assertEqual(response.context['contentbox'].title, TEST_TITLE)
+                self.assertEqual(response.context['contentbox'].url_name, TEST_URL_NAME)
 
     def test_all_paths_of_multi_path_content_box_retrieve_correctly(self):
-        multi_path_content_box_title = TEST_MULTI_TITLES[0]
+        multi_path_content_box_url_name = TEST_MULTI_URL_NAMES[0]
         paths_to_test = (
-            reverse(multi_path_content_box_title),
-            *(f'/{url}/' for url in TEST_MULTI_TITLES),
+            reverse(multi_path_content_box_url_name),
+            *(f'/{url}/' for url in TEST_MULTI_URL_NAMES),
         )
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
-                self.assertEqual(response.context['contentbox'].title, multi_path_content_box_title)
+                self.assertEqual(response.context['contentbox'].url_name, multi_path_content_box_url_name)
 
     def test_visiting_edit_page_is_only_allowed_for_users_with_permission(self):
         user = User.objects.create_user(username="user1")

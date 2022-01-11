@@ -5,7 +5,7 @@ from .models import ContentBox
 
 
 class ContentBoxAdmin(MultiLingualFieldAdmin):
-    list_display = ('title', 'last_modified')
+    list_display = ('url_name', 'last_modified')
     readonly_fields = ('last_modified',)
 
 

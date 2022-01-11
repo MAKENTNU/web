@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Edit" %} {{ contentbox.title }}{% endblock title %}
+{% block title %}{% trans "Edit" %} {{ contentbox.url_name }}{% endblock title %}
 
 {% block extra_head %}
     <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
@@ -14,7 +14,7 @@
     <div class="ui container">
         <h1 class="ui centered header">
             {% block form_header %}
-                {% trans "Edit" %} {{ contentbox.title }}
+                {% trans "Edit" %} {{ contentbox.url_name }}
             {% endblock form_header %}
         </h1>
 
@@ -33,7 +33,7 @@
             </div>
 
             <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
-            <a class="ui right floated red button" href="{% url contentbox.title %}">
+            <a class="ui right floated red button" href="{% url contentbox.url_name %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>
