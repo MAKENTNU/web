@@ -19,7 +19,7 @@ class NewsBaseAdmin(MultiLingualFieldAdmin):
     list_display_extra: tuple
 
     list_filter = ('featured', 'hidden', 'private')
-    search_fields = ('title', 'content', 'clickbait')
+    search_fields = ('title', 'content', 'clickbait', 'image_description')
     list_editable = ('contain', 'featured', 'hidden', 'private')
     list_display = ('__str__', *list_editable)  # prevents Django system check errors; the field is actually set in `get_list_display()` below
     readonly_fields = ('last_modified',)
