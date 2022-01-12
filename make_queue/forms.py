@@ -7,7 +7,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
-from web.widgets import MazemapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticTimeInput
+from web.widgets import MazeMapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticTimeInput
 from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType
@@ -220,7 +220,7 @@ class BaseMachineForm(forms.ModelForm):
         model = Machine
         fields = '__all__'
         widgets = {
-            'location': MazemapSearchInput(url_field='location_url'),
+            'location': MazeMapSearchInput(url_field='location_url'),
         }
 
     def __init__(self, *args, **kwargs):
