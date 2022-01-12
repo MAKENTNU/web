@@ -32,7 +32,7 @@
         <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
     {% endblock open_graph_meta %}
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,400i,700"/>
+    <link rel="stylesheet" href="{% static 'web/css/font_faces.css' %}"/>
     <link rel="stylesheet" href="{% static 'lib/fomantic-ui/semantic.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
     <script src="{% host_url 'javascript_catalog' host 'main' %}"></script>

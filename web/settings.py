@@ -315,6 +315,7 @@ CKEDITOR_CONFIGS = {
         'mathJaxLib': static_lazy('ckeditor/mathjax/MathJax.js?config=TeX-AMS_HTML'),
         'tabSpaces': 4,
         'contentsCss': [
+            static_lazy('web/css/font_faces.css'),
             static_lazy('ckeditor/ckeditor/customstyles.css'),
             static_lazy('ckeditor/ckeditor/contents.css'),  # CKEditor's default styles
         ],
