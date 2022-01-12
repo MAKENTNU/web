@@ -1,3 +1,8 @@
+function removeTagsAndSanitize(str) {
+    return str.replaceAll(/<[^>]*>/g, "")
+        .replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+}
+
 jQuery.fn.extend({
     mazeMapSearch: function () {
         // Data attributes set by the widget
@@ -21,10 +26,10 @@ jQuery.fn.extend({
                         const roomName = item.dispPoiNames[0];
                         const roomID = item.dispPoiNames[1];
                         return {
-                            title: (
-                                roomName + (buildingName ? `, ${buildingName}` : "")
-                            ).replace(/<[^>]*>/g, ""),
-                            description: roomID ? roomID.replace(/<[^>]*>/g, "") : "",
+                            title: removeTagsAndSanitize(
+                                roomName + (buildingName ? `, ${buildingName}` : ""),
+                            ),
+                            description: roomID ? removeTagsAndSanitize(roomID) : "",
                             id: item.poiId,
                         };
                     }),
