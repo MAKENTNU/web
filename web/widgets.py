@@ -95,7 +95,7 @@ class SemanticFileInput(forms.ClearableFileInput):
         return context
 
 
-class MazemapSearchInput(forms.TextInput):
+class MazeMapSearchInput(forms.TextInput):
     """
     Widget that enables MazeMap search functionality, including autofill of URL to MazeMap.
     """
@@ -116,9 +116,9 @@ class MazemapSearchInput(forms.TextInput):
 
         default_attrs = {
             'placeholder': self.placeholder,
-            'data-campusId': campus_id,
-            'data-maxResults': max_results,
-            'data-urlField': url_field,
+            'data-campus-id': campus_id,
+            'data-max-results': max_results,
+            'data-url-field': url_field,
         }
         if attrs:
             default_attrs.update(attrs)
