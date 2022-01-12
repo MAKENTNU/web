@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-10 18:05+0100\n"
+"POT-Creation-Date: 2022-01-12 16:11+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -44,7 +44,8 @@ msgstr ""
 "Hvis valgt vil kunngjøringen vises på hele nettsiden, ellers vil den kun "
 "vises på forsiden."
 
-#: announcements/models.py:42 docs/models.py:46 news/models.py:36
+#: announcements/models.py:42 contentbox/models.py:16 docs/models.py:46
+#: news/models.py:36
 msgid "Content"
 msgstr "Innhold"
 
@@ -95,7 +96,7 @@ msgid "New Announcement"
 msgstr "Ny kunngjøring"
 
 #: announcements/templates/announcements/announcement_create.html:59
-#: contentbox/templates/contentbox/edit.html:35
+#: contentbox/templates/contentbox/edit.html:41
 #: faq/templates/faq/admin_category_edit.html:26
 #: faq/templates/faq/admin_question_edit.html:38
 #: groups/templates/groups/committee_form.html:31
@@ -110,7 +111,7 @@ msgid "Save"
 msgstr "Lagre"
 
 #: announcements/templates/announcements/announcement_create.html:62
-#: contentbox/templates/contentbox/edit.html:37
+#: contentbox/templates/contentbox/edit.html:43
 #: docs/templates/docs/documentation_page_create.html:28
 #: docs/templates/docs/documentation_page_edit.html:35
 #: faq/templates/faq/admin_category_edit.html:28
@@ -326,7 +327,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:100
 #: docs/templates/docs/documentation_page_detail.html:46
-#: news/templates/news/admin_article_list.html:51
+#: news/templates/news/admin_article_list.html:55
 #: news/templates/news/admin_event_detail.html:32
 #: news/templates/news/admin_timeplace_listing.html:41
 #: web/templates/web/delete_modal.html:16
@@ -345,16 +346,16 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/models.py:11
+#: contentbox/models.py:13
 msgid "URL name"
 msgstr "URL-navn"
 
-#: contentbox/models.py:11 docs/models.py:15 internal/models.py:235
+#: contentbox/models.py:15 docs/models.py:15 internal/models.py:235
 #: makerspace/models.py:19 news/models.py:35
 msgid "Title"
 msgstr "Tittel"
 
-#: contentbox/models.py:14 faq/models.py:41 groups/models.py:34
+#: contentbox/models.py:17 faq/models.py:41 groups/models.py:34
 #: groups/models.py:102 internal/models.py:49 internal/models.py:193
 #: internal/models.py:244 internal/templates/internal/secret_list.html:43
 #: make_queue/models/course.py:31 make_queue/models/machine.py:141
@@ -365,25 +366,25 @@ msgstr "sist endret"
 
 #: contentbox/templates/contentbox/display.html:16
 #: contentbox/templates/contentbox/edit.html:6
-#: contentbox/templates/contentbox/edit.html:17
+#: contentbox/templates/contentbox/edit.html:18
 #: docs/templates/docs/documentation_page_detail.html:39
 #: faq/templates/faq/faq_list.html:38
 #: groups/templates/groups/committee_form.html:15
 #: make_queue/templates/make_queue/usage_rules_detail.html:19
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:33
-#: news/templates/news/admin_article_list.html:45
+#: news/templates/news/admin_article_list.html:49
 #: news/templates/news/admin_event_detail.html:38
 #: news/templates/news/admin_timeplace_listing.html:33
 #: news/templates/news/article_detail.html:37
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:24
+#: contentbox/templates/contentbox/edit.html:25
 #: make_queue/templates/make_queue/usage_rules_edit.html:28
 msgid "Missing language"
 msgstr "Manglende språk"
 
-#: contentbox/templates/contentbox/edit.html:25
+#: contentbox/templates/contentbox/edit.html:26
 #: make_queue/templates/make_queue/usage_rules_edit.html:29
 msgid "One or more languages has no content"
 msgstr "Et eller flere språk mangler innhold"
@@ -1769,14 +1770,6 @@ msgstr "Maskinen har status «{status}»."
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall fremtidige reservasjoner."
 
-#: make_queue/validators.py:10
-msgid ""
-"This can only consist of lowercase English letters, numbers, hyphens or "
-"underscores."
-msgstr ""
-"Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
-"understreker."
-
 #: make_queue/views/reservation/reservation.py:39
 #, python-brace-format
 msgid "Reservations can only be made {num_days} day ahead of time"
@@ -1948,8 +1941,8 @@ msgid "event hidden"
 msgstr "arrangement skjult"
 
 #: news/admin.py:248 news/models.py:44 news/models.py:204
-#: news/templates/news/admin_article_list.html:31
-#: news/templates/news/admin_event_list.html:39
+#: news/templates/news/admin_article_list.html:35
+#: news/templates/news/admin_event_list.html:43
 #: news/templates/news/admin_timeplace_listing.html:27
 msgid "Hidden"
 msgstr "Skjult"
@@ -2022,13 +2015,13 @@ msgstr ""
 msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
 
-#: news/models.py:43 news/templates/news/admin_article_list.html:25
-#: news/templates/news/admin_event_list.html:33
+#: news/models.py:43 news/templates/news/admin_article_list.html:29
+#: news/templates/news/admin_event_list.html:37
 msgid "Featured"
 msgstr "Fremhevet"
 
-#: news/models.py:45 news/templates/news/admin_article_list.html:37
-#: news/templates/news/admin_event_list.html:45
+#: news/models.py:45 news/templates/news/admin_article_list.html:41
+#: news/templates/news/admin_event_list.html:49
 msgid "Internal"
 msgstr "Internt"
 
@@ -2210,14 +2203,14 @@ msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 msgid "View the event “%(title)s”; image description: %(description)s"
 msgstr "Vis arrangementet «%(title)s»; bildebeskrivelse: %(description)s"
 
-#: news/templates/news/admin_event_list.html:24
+#: news/templates/news/admin_event_list.html:28
 #, python-format
 msgid "1 future occurrence"
 msgid_plural "%(counter)s future occurrences"
 msgstr[0] "1 fremtidig forekomst"
 msgstr[1] "%(counter)s fremtidige forekomster"
 
-#: news/templates/news/admin_event_list.html:52
+#: news/templates/news/admin_event_list.html:56
 msgid "Admin"
 msgstr "Admin"
 
@@ -2479,6 +2472,14 @@ msgstr "Din billett!"
 #: users/models.py:9
 msgid "Full name from LDAP"
 msgstr "Fullt navn fra LDAP"
+
+#: util/validators.py:10
+msgid ""
+"This can only consist of lowercase English letters, numbers, hyphens or "
+"underscores."
+msgstr ""
+"Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
+"understreker."
 
 #: web/templates/admin/base_site.html:12
 msgid "Django site admin"
