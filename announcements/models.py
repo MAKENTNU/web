@@ -11,8 +11,19 @@ class AnnouncementQuerySet(models.QuerySet):
 
     def valid(self):
         """Finds all announcements that are currently valid."""
-        return self.filter(display_from__lte=timezone.localtime()).filter(
-            Q(display_to__isnull=True) | Q(display_to__gt=timezone.localtime()))
+        now = timezone.localtime()
+        return self.filter(
+            Q(display_from__lte=now)
+            & (Q(display_to__isnull=True) | Q(display_to__gt=now))
+        )
+
+    def invalid(self):
+        """Finds all announcements that are currently invalid."""
+        now = timezone.localtime()
+        return self.filter(
+            Q(display_from__lte=now) & Q(display_to__lte=now)
+            | Q(display_from__gt=now)
+        )
 
     def valid_site_wide(self):
         """Finds all currently valid announcements that should be displayed site-wide."""
