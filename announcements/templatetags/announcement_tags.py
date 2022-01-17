@@ -16,9 +16,9 @@ def announcement_css_class(announcement):
 
 @register.simple_tag
 def site_wide_announcements():
-    return Announcement.objects.valid_site_wide()
+    return Announcement.objects.shown().site_wide()
 
 
 @register.simple_tag
 def non_site_wide_announcements():
-    return Announcement.objects.valid_non_site_wide()
+    return Announcement.objects.shown().non_site_wide()

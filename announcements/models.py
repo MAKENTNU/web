@@ -9,29 +9,29 @@ from web.multilingual.modelfields import MultiLingualTextField
 
 class AnnouncementQuerySet(models.QuerySet):
 
-    def valid(self):
-        """Finds all announcements that are currently valid."""
+    def shown(self):
+        """Returns a ``QuerySet`` with only the announcements that are currently shown."""
         now = timezone.localtime()
         return self.filter(
             Q(display_from__lte=now)
             & (Q(display_to__isnull=True) | Q(display_to__gt=now))
         )
 
-    def invalid(self):
-        """Finds all announcements that are currently invalid."""
+    def not_shown(self):
+        """Returns a ``QuerySet`` with only the announcements that are currently not shown."""
         now = timezone.localtime()
         return self.filter(
             Q(display_from__lte=now) & Q(display_to__lte=now)
             | Q(display_from__gt=now)
         )
 
-    def valid_site_wide(self):
-        """Finds all currently valid announcements that should be displayed site-wide."""
-        return self.valid().filter(site_wide=True)
+    def site_wide(self):
+        """Returns a ``QuerySet`` with only the announcements that should be displayed site-wide."""
+        return self.filter(site_wide=True)
 
-    def valid_non_site_wide(self):
-        """Finds all currently valid announcements that should not be displayed site-wide."""
-        return self.valid().filter(site_wide=False)
+    def non_site_wide(self):
+        """Returns a ``QuerySet`` with only the announcements that should not be displayed site-wide."""
+        return self.filter(site_wide=False)
 
 
 class Announcement(models.Model):
@@ -64,7 +64,7 @@ class Announcement(models.Model):
     def __str__(self):
         return f"{self.get_classification_display()}: {self.content}"
 
-    def is_valid(self):
-        """Checks if the given reservation is currently valid."""
+    def is_shown(self):
+        """Checks if the given reservation is currently shown."""
         return self.display_from <= timezone.localtime() and (
                 self.display_to is None or self.display_to > timezone.localtime())

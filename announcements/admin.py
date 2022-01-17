@@ -12,7 +12,7 @@ class AnnouncementAdmin(MultiLingualFieldAdmin):
     list_filter = (
         'classification', 'site_wide',
         list_filter_factory(
-            _("shown"), 'shown', lambda qs, yes_filter: qs.valid() if yes_filter else qs.invalid(),
+            _("shown"), 'shown', lambda qs, yes_filter: qs.shown() if yes_filter else qs.not_shown(),
         ),
     )
     search_fields = ('content', 'link')
@@ -24,7 +24,7 @@ class AnnouncementAdmin(MultiLingualFieldAdmin):
         description=_("shown"),
     )
     def get_is_shown(self, announcement: Announcement):
-        return announcement.is_valid()
+        return announcement.is_shown()
 
     @admin.display(
         ordering='link',

@@ -41,7 +41,7 @@
                         </div>
                         <div class="description">{{ announcement.content }}</div>
                         <div class="extra">
-                            <span class="ui {% if announcement.is_valid %}green{% else %}red{% endif %} text">
+                            <span class="ui {% if announcement.is_shown %}green{% else %}red{% endif %} text">
                             {% if announcement.display_to %}
                                 {{ announcement.display_from|short_datetime }} &ndash; {{ announcement.display_to|short_datetime }}
                             {% else %}
