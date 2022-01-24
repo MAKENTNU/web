@@ -8,6 +8,8 @@ from django.core.files.storage import FileSystemStorage
 from django.core.management.base import SystemCheckError
 from django.db import models
 from django.db.models.fields.files import FieldFile
+from sorl.thumbnail import delete as delete_sorl_thumbnail
+from sorl.thumbnail.images import ImageFile
 
 
 # Code based on https://stackoverflow.com/a/4905384
@@ -29,6 +31,11 @@ class OverwriteStorage(FileSystemStorage):
     def save(self, name, *args, **kwargs):
         if self.exists(name):
             self.delete(name)
+            delete_sorl_thumbnail(
+                ImageFile(Path(name).as_posix(), storage=self),
+                # Should not delete the source file, as this has already been done by `self.delete()` above
+                delete_file=False,
+            )
         return super().save(name, *args, **kwargs)
 
 
