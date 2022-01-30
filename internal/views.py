@@ -21,8 +21,10 @@ class HomeView(DisplayContentBoxView):
     template_name = 'internal/home.html'
     extra_context = {
         'base_template': 'internal/base.html',
-        'change_perm': 'contentbox.change_internal_contentbox',
     }
+
+    change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)
+    title = 'home'
 
 
 class SecretListView(ListView):

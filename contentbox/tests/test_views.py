@@ -97,8 +97,9 @@ internal_change_perm = 'contentbox.perm1'
 class InternalDisplayContentBoxView(DisplayContentBoxView):
     extra_context = {
         'base_template': 'internal/base.html',
-        'change_perm': 'contentbox.change_internal_contentbox',
     }
+
+    change_perms = (internal_change_perm,)
 
 
 # Insert this path at the beginning of the internal urlpatterns (overridden in `hosts_and_internal_urls_override.py`),

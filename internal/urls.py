@@ -16,7 +16,7 @@ internal_contentbox_urlpatterns = [
 ]
 
 internal_urlpatterns = [
-    path("", views.HomeView.as_view(title='home'), name='home'),
+    path("", views.HomeView.as_view(), name='home'),
     path("contentbox/", include(internal_contentbox_urlpatterns)),
 ]
 

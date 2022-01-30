@@ -13,8 +13,9 @@ class DisplayContentBoxView(DetailView):
     context_object_name = 'contentbox'
     extra_context = {
         'base_template': 'web/base.html',
-        'change_perm': 'contentbox.change_contentbox',
     }
+
+    change_perms = ('contentbox.change_contentbox',)
 
     # The value of this field is set when calling the view's `as_view()` method
     title = ""
@@ -22,6 +23,12 @@ class DisplayContentBoxView(DetailView):
     def get_object(self, queryset=None):
         contentbox, _created = ContentBox.objects.get_or_create(title=self.title)
         return contentbox
+
+    def get_context_data(self, **kwargs):
+        return {
+            'user_can_change': self.request.user.has_perms(self.change_perms),
+            **super().get_context_data(**kwargs),
+        }
 
     @classmethod
     def get_path(cls, title: str):
