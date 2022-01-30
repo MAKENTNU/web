@@ -14,8 +14,7 @@ from web.urls import urlpatterns as base_urlpatterns
 from . import hosts_and_internal_urls_override
 from .hosts_and_internal_urls_override import urlpatterns as internal_urlpatterns_override
 from ..models import ContentBox
-from ..urls import get_content_box_urlpatterns
-from ..views import DisplayContentBoxView
+from ..views import DisplayContentBoxView, EditContentBoxView
 
 
 TEST_TITLE = 'test_title'
@@ -94,15 +93,6 @@ class SimpleModelAndViewTests(TestCase):
 INTERNAL_TEST_TITLE = 'internal_test_title'
 internal_change_perm = 'contentbox.perm1'
 
-# Insert this path at the beginning of the internal urlpatterns (overridden in `hosts_and_internal_urls_override.py`),
-# to make it effectively override the already defined content box paths
-internal_urlpatterns_override.insert(0, path(
-    "contentbox/", decorator_include(
-        permission_required(internal_change_perm, raise_exception=True),
-        get_content_box_urlpatterns(base_template='internal/base.html')
-    )
-))
-
 
 class InternalDisplayContentBoxView(DisplayContentBoxView):
     extra_context = {
@@ -111,9 +101,16 @@ class InternalDisplayContentBoxView(DisplayContentBoxView):
     }
 
 
-internal_urlpatterns_override += [
-    InternalDisplayContentBoxView.get_path(INTERNAL_TEST_TITLE),
-]
+# Insert this path at the beginning of the internal urlpatterns (overridden in `hosts_and_internal_urls_override.py`),
+# to make it override the already defined ContentBox change path
+internal_urlpatterns_override.insert(0, path(
+    "contentbox/<int:pk>/edit/",
+    permission_required(internal_change_perm, raise_exception=True)(EditContentBoxView.as_view(base_template='internal/base.html')),
+    name='contentbox_edit',
+))
+internal_urlpatterns_override.append(
+    InternalDisplayContentBoxView.get_path(INTERNAL_TEST_TITLE)
+)
 
 
 # Uses the imported (and modified) `urlpatterns` as the base urlpatterns

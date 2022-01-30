@@ -1,20 +1,23 @@
 from decorator_include import decorator_include
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.decorators import permission_required
-from django.urls import path
+from django.urls import include, path
 from django.views.generic import TemplateView
 from django_hosts import reverse
 
-from contentbox.urls import get_content_box_urlpatterns
+from contentbox.views import EditContentBoxView
 from . import views
 
 
+internal_contentbox_urlpatterns = [
+    path("<int:pk>/edit/",
+         permission_required('contentbox.change_internal_contentbox', raise_exception=True)(EditContentBoxView.as_view(base_template='internal/base.html')),
+         name='contentbox_edit'),
+]
+
 internal_urlpatterns = [
     path("", views.HomeView.as_view(title='home'), name='home'),
-    path("contentbox/", decorator_include(
-        permission_required('contentbox.change_internal_contentbox', raise_exception=True),
-        get_content_box_urlpatterns(base_template='internal/base.html')
-    )),
+    path("contentbox/", include(internal_contentbox_urlpatterns)),
 ]
 
 member_urlpatterns = [
