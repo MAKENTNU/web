@@ -62,6 +62,9 @@ class Member(models.Model):
         permissions = (
             ('is_internal', "Is a member of MAKE NTNU"),
             ('can_edit_group_membership', "Can edit the groups a member is part of, including (de)activation"),
+            # WARNING: granting a user this permission enables them to carry out a stored XSS attack;
+            #          only give trusted users/groups this permission
+            ('can_change_rich_text_source', "Can change rich text fields' HTML source code directly (including adding <script> tags)"),
         )
 
     def __str__(self):

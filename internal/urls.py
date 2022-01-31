@@ -5,14 +5,11 @@ from django.urls import include, path
 from django.views.generic import TemplateView
 from django_hosts import reverse
 
-from contentbox.views import EditContentBoxView
 from . import views
 
 
 internal_contentbox_urlpatterns = [
-    path("<int:pk>/edit/",
-         permission_required('contentbox.change_internal_contentbox', raise_exception=True)(EditContentBoxView.as_view(base_template='internal/base.html')),
-         name='contentbox_edit'),
+    path("<int:pk>/edit/", views.EditInternalContentBoxView.as_view(), name='contentbox_edit'),
 ]
 
 internal_urlpatterns = [

@@ -8,6 +8,7 @@ class ContentBoxAdmin(MultiLingualFieldAdmin):
     list_display = ('title', 'last_modified')
 
     readonly_fields = ('last_modified',)
+    enable_changing_rich_text_source = True
 
 
 admin.site.register(ContentBox, ContentBoxAdmin)

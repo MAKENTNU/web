@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin
+from .forms import ContentBoxForm
 from .models import ContentBox
 
 
@@ -46,7 +47,7 @@ class DisplayContentBoxView(DetailView):
 class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
     permission_required = ('contentbox.change_contentbox',)
     model = ContentBox
-    fields = ('content',)
+    form_class = ContentBoxForm
     template_name = 'contentbox/edit.html'
 
     narrow = False

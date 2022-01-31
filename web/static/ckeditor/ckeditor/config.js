@@ -6,6 +6,22 @@ CKEDITOR.editorConfig = function (config) {
     // Define changes to default configuration here. For example:
     // config.language = 'fr';
     // config.uiColor = '#AADC6E';
+
+    if (CKEDITOR_CONFIG_FROM_DJANGO.shouldAllowAllTags) {
+        // Code based on https://stackoverflow.com/a/24575744
+        // (This doesn't strictly speaking allow *all* tags, but the ones deemed necessary for most cases)
+        config.allowedContent = {
+            script: true,
+            div: true,
+            $1: {
+                // This will set the default set of elements
+                elements: CKEDITOR.dtd,
+                attributes: true,
+                styles: true,
+                classes: true,
+            },
+        };
+    }
 };
 
 // Set the default link target to "_blank"

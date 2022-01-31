@@ -1,9 +1,12 @@
 from http import HTTPStatus
 
+from django.templatetags.static import static
 from django.test import Client, TestCase
 
+from contentbox.forms import EditSourceContentBoxForm
 from contentbox.models import ContentBox
 from users.models import User
+from web.multilingual.data_structures import MultiLingualTextStructure
 from .test_urls import INTERNAL_CLIENT_DEFAULTS, reverse_internal
 
 
@@ -13,7 +16,8 @@ class InternalContentBoxTests(TestCase):
         internal_user = User.objects.create_user("internal_user")
         internal_admin = User.objects.create_user("internal_admin")
         internal_user.add_perms('internal.is_internal', 'contentbox.change_contentbox')
-        internal_admin.add_perms('internal.is_internal', 'contentbox.change_contentbox', 'contentbox.change_internal_contentbox')
+        internal_admin.add_perms('internal.is_internal', 'contentbox.change_contentbox',
+                                 'contentbox.change_internal_contentbox', 'internal.can_change_rich_text_source')
 
         self.internal_user_client = Client(**INTERNAL_CLIENT_DEFAULTS)
         self.internal_admin_client = Client(**INTERNAL_CLIENT_DEFAULTS)
@@ -40,3 +44,14 @@ class InternalContentBoxTests(TestCase):
 
         assert_edit_button_in_response(False, self.internal_user_client)
         assert_edit_button_in_response(True, self.internal_admin_client)
+
+    def test_home_content_box_allows_editing_source(self):
+        response = self.internal_admin_client.get(self.home_edit_url)
+        self.assertIsInstance(response.context['form'], EditSourceContentBoxForm)
+        self.assertInHTML(
+            f"""<script src="{static('ckeditor/ckeditor/config_from_django.js')}"
+                        data-should-allow-all-tags="true"
+                        id="config-from-django">
+            </script>""", response.content.decode(), count=1)
+        # `editsource` is the name of the toolbar section containing the edit source button (see `CKEDITOR_CONFIGS` in the settings)
+        self.assertContains(response, "&quot;editsource&quot;", count=len(MultiLingualTextStructure.SUPPORTED_LANGUAGES))

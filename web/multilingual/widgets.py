@@ -1,8 +1,9 @@
-from ckeditor.widgets import CKEditorWidget
-from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from typing import Any, Dict
+
 from django import forms
 
 from .data_structures import MultiLingualTextStructure
+from ..widgets import CKEditorUploadingWidget, CKEditorWidget
 
 
 class MultiLingualTextEdit(forms.MultiWidget):
@@ -13,7 +14,7 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
     subwidget_class = forms.TextInput
 
-    def __init__(self, attrs=None):
+    def __init__(self, attrs=None, *, subwidget_kwargs: Dict[str, Any] = None):
         widgets = []
         for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
             # Create widgets from the subwidget class, so we can reuse logic
@@ -23,6 +24,8 @@ class MultiLingualTextEdit(forms.MultiWidget):
                     # Makes each subwidget distinguishable in the template
                     'language': language,
                 },
+                # Pass the kwargs to each subwidget (only used by the CKEditor-based widgets)
+                **(subwidget_kwargs or {}),
             })
             widgets.append(subwidget)
         super().__init__(widgets, attrs)

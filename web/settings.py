@@ -1,3 +1,4 @@
+import copy
 import logging
 import sys
 from pathlib import Path
@@ -322,6 +323,12 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+# This config should only be used for a rich text widget if the user has the `internal.can_change_rich_text_source` permission
+CKEDITOR_EDIT_SOURCE_CONFIG_NAME = 'edit_source'  # (custom setting)
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME] = copy.deepcopy(CKEDITOR_CONFIGS['default'])
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME]['toolbar_main'].append(
+    {'name': 'editsource', 'items': ['Source']}
+)
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
