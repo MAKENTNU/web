@@ -14,6 +14,9 @@ from ..models.machine import Machine, MachineType, MachineUsageRule
 from ..models.reservation import Quota, Reservation, ReservationRule
 
 
+Day = ReservationRule.Day
+
+
 class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
 
     # noinspection PyAttributeOutsideInit
@@ -27,17 +30,18 @@ class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
         self.sewing2 = Machine.objects.create(name="Sewing 2", machine_type=self.sewing_machine_type)
         self.machines = (self.printer1, self.printer2, self.sewing1, self.sewing2)
 
+        # `Day.values` is a list of all the weekdays
         self.rule1 = ReservationRule.objects.create(
             machine_type=self.printer_machine_type, start_time=parse_time("00:00"), days_changed=0, end_time=parse_time("18:00"),
-            start_days=[1, 2, 3, 4, 5, 6, 7], max_hours=6, max_inside_border_crossed=6,
+            start_days=Day.values, max_hours=6, max_inside_border_crossed=6,
         )
         self.rule2 = ReservationRule.objects.create(
             machine_type=self.printer_machine_type, start_time=parse_time("18:00"), days_changed=1, end_time=parse_time("00:00"),
-            start_days=[1, 2, 3, 4, 5, 6, 7], max_hours=10, max_inside_border_crossed=6,
+            start_days=Day.values, max_hours=10, max_inside_border_crossed=6,
         )
         self.rule3 = ReservationRule.objects.create(
             machine_type=self.sewing_machine_type, start_time=parse_time("00:00"), days_changed=1, end_time=parse_time("00:00"),
-            start_days=[1, 2, 3, 4, 5, 6, 7], max_hours=4, max_inside_border_crossed=4,
+            start_days=Day.values, max_hours=4, max_inside_border_crossed=4,
         )
         self.rules = (self.rule1, self.rule2, self.rule3)
 

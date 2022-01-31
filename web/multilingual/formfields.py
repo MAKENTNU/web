@@ -1,5 +1,3 @@
-import copy
-
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingFormField
 from django import forms
@@ -13,26 +11,25 @@ class MultiLingualFormField(forms.MultiValueField):
     """
     A multi-value field for a multilingual database field.
     """
-    field_class = forms.CharField
     default_error_messages = {
         'required': _("One or more languages have no content."),
     }
 
+    subfield_class = forms.CharField
+
     def __init__(self, *args, **kwargs):
-        defaults = {
-            "max_length": kwargs.pop("max_length", None),
+        subfield_attrs = {
+            'max_length': kwargs.pop('max_length', None),
+            **kwargs,
+            'label': None,  # the `label` attribute is not used by the subfields, so override the one in `kwargs`
         }
-        defaults.update(**kwargs)
+        subfields = []
+        for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
+            subfield = self.subfield_class(**subfield_attrs)
+            subfield.locale = language
+            subfields.append(subfield)
 
-        fields = []
-        for language in MultiLingualTextStructure.supported_languages:
-            field_attrs = copy.copy(defaults)
-            field_attrs["label"] = f"{field_attrs.get('label')}-{language}"
-            field = self.field_class(**field_attrs)
-            field.locale = language
-            fields.append(field)
-
-        super().__init__(fields=fields, *args, **kwargs)
+        super().__init__(fields=subfields, *args, **kwargs)
 
     def compress(self, data_list):
         """
@@ -51,16 +48,15 @@ class MultiLingualFormField(forms.MultiValueField):
             )
             return structure
 
-        for index, language in enumerate(structure.supported_languages):
-            structure[language] = data_list[index]
+        for i, language in enumerate(structure.SUPPORTED_LANGUAGES):
+            structure[language] = data_list[i]
         return structure
 
 
 class MultiLingualRichTextFormField(MultiLingualFormField):
     # Unless we want to emulate the CKEditor code, it requires a different field class for its subfields
-    field_class = RichTextFormField
+    subfield_class = RichTextFormField
 
 
 class MultiLingualRichTextUploadingFormField(MultiLingualFormField):
-    # Unless we want to emulate the CKEditor code, it requires a different field class for its subfields
-    field_class = RichTextUploadingFormField
+    subfield_class = RichTextUploadingFormField

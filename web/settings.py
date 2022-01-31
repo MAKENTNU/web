@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Default values
-DATABASE = 'sqlite'
+DATABASE = 'sqlite'  # (custom setting; used below for selecting database configuration)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True

@@ -1,20 +1,21 @@
 import copy
 from abc import ABC
-from typing import Any, Iterable, Tuple
+from typing import Any, Dict, Iterable
 
 from django.forms import BoundField, FileInput, Form
-from django.http import Http404
+from django.http import Http404, QueryDict
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.edit import FormMixin
 
 
-def insert_form_field_values(form_kwargs: dict, *field_names_to_values: Tuple[str, Any]):
+def insert_form_field_values(form_kwargs: dict, field_name_to_value: Dict[str, Any]):
     # If the request contains posted data:
     if 'data' in form_kwargs:
-        data = form_kwargs['data'].copy()
-        for field_name, value in field_names_to_values:
+        data: QueryDict = form_kwargs['data'].copy()
+        for field_name, value in field_name_to_value.items():
             data[field_name] = value
+        data._mutable = False
         form_kwargs['data'] = data
     return form_kwargs
 

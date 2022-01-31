@@ -34,6 +34,7 @@ class SimpleModelAndViewTests(TestCase):
 
     def setUp(self):
         self.content_box1 = ContentBox.objects.create(title=TEST_TITLE)
+        self.edit_url1 = reverse('contentbox_edit', args=[self.content_box1.pk])
 
     def test_str(self):
         self.assertEqual(self.content_box1.title, TEST_TITLE)
@@ -68,24 +69,22 @@ class SimpleModelAndViewTests(TestCase):
         user_client.force_login(user)
         anon_client = Client()
 
-        edit_url = reverse('contentbox_edit', kwargs={'pk': self.content_box1.pk})
-        self.assertGreaterEqual(anon_client.get(edit_url).status_code, 300)
-        self.assertEqual(user_client.get(edit_url).status_code, HTTPStatus.OK)
+        self.assertGreaterEqual(anon_client.get(self.edit_url1).status_code, 300)
+        self.assertEqual(user_client.get(self.edit_url1).status_code, HTTPStatus.OK)
 
     def test_edit_page_contains_correct_error_messages(self):
         user = User.objects.create_user(username="user1")
         user.add_perms('contentbox.change_contentbox')
         self.client.force_login(user)
-        edit_url = reverse('contentbox_edit', args=[self.content_box1.pk])
 
         def assert_response_contains_error_message(posted_content: str, error: bool):
             data = {
                 'content_0': posted_content,
                 'content_1': posted_content,
             }
-            response = self.client.post(edit_url, data=data)
+            response = self.client.post(self.edit_url1, data=data)
             # The form will redirect if valid, and stay on the same page if not
-            self.assertEqual(response.status_code, 200 if error else 302)
+            self.assertEqual(response.status_code, HTTPStatus.OK if error else HTTPStatus.FOUND)
             self.assertInHTML("Manglende språk", response.content.decode(), count=1 if error else 0)
 
         assert_response_contains_error_message("", True)
@@ -126,7 +125,7 @@ class MultiSubdomainTests(TestCase):
     def setUp(self):
         Permission.objects.create(
             codename=internal_change_perm.split('.')[1],
-            name="Change internal contentbox",
+            name="Change internal content box",
             content_type=ContentType.objects.get_for_model(ContentBox),
         )
 
@@ -156,9 +155,9 @@ class MultiSubdomainTests(TestCase):
 
     def test_content_box_edit_urls_are_only_accessible_with_required_permissions(self):
         # Users with the `'change_contentbox'` permission can edit public content boxes
-        self.assertEqual(self.internal_user_public_client.get(self.public_edit_url).status_code, 200)
-        self.assertEqual(self.internal_admin_public_client.get(self.public_edit_url).status_code, 200)
+        self.assertEqual(self.internal_user_public_client.get(self.public_edit_url).status_code, HTTPStatus.OK)
+        self.assertEqual(self.internal_admin_public_client.get(self.public_edit_url).status_code, HTTPStatus.OK)
 
         # Only users with the `internal_change_perm` permission can edit internal content boxes
         self.assertGreaterEqual(self.internal_user_internal_client.get(self.internal_edit_url).status_code, 300)
-        self.assertEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, 200)
+        self.assertEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, HTTPStatus.OK)

@@ -8,10 +8,12 @@ CKEDITOR.editorConfig = function (config) {
     // config.uiColor = '#AADC6E';
 };
 
-CKEDITOR.on("dialogDefinition", function (ev) {
-    // Set the default link target to "_blank"
-    if (ev.data.name === "link") {
-        const targetTab = ev.data.definition.getContents("target");
+// Set the default link target to "_blank"
+CKEDITOR.on("dialogDefinition", function (evt) {
+    const dialogName = evt.data.name;
+    if (dialogName === "link") {
+        const dialogDefinition = evt.data.definition;
+        const targetTab = dialogDefinition.getContents("target");
         const targetField = targetTab.get("linkTargetType");
         targetField["default"] = "_blank";
     }

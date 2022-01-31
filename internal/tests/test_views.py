@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.test import Client, TestCase
 
 from contentbox.models import ContentBox
@@ -26,7 +28,7 @@ class InternalContentBoxTests(TestCase):
 
     def test_internal_content_boxes_can_only_be_edited_with_required_permission(self):
         self.assertGreaterEqual(self.internal_user_client.get(self.home_edit_url).status_code, 400)
-        self.assertEqual(self.internal_admin_client.get(self.home_edit_url).status_code, 200)
+        self.assertEqual(self.internal_admin_client.get(self.home_edit_url).status_code, HTTPStatus.OK)
 
     def test_internal_content_boxes_only_contain_edit_buttons_when_user_has_required_permission(self):
         home_content_box_edit_path = f"/contentbox/{self.home_content_box.pk}/edit/"

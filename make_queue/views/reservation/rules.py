@@ -66,7 +66,7 @@ class BaseReservationRuleEditView(MachineTypeBasedView, CustomFieldsetFormMixin,
 
     def get_form_kwargs(self):
         # Forcefully pass the machine type from the URL to the form
-        return insert_form_field_values(super().get_form_kwargs(), ('machine_type', self.machine_type.pk))
+        return insert_form_field_values(super().get_form_kwargs(), {'machine_type': self.machine_type.pk})
 
     def get_back_button_link(self):
         return self.get_success_url()

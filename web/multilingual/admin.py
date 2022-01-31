@@ -23,9 +23,9 @@ class MultiLingualFieldAdmin(admin.ModelAdmin):
                     # Some class properties are not possible to copy. These will not be mutable anyways
                     properties[key] = value
 
-            # Want to copy widget, as to not override the template for the normal forms
-            widget = type("AdminMultiLingualTextField", (db_field.widget,), properties)
             # Different template for admin page, without Fomantic-UI
-            widget.template_name = 'web/forms/widgets/admin_multi_lingual_text_field.html'
-            return db_field.formfield(widget=widget, **kwargs)
+            properties['template_name'] = 'web/forms/widgets/admin_multi_lingual_text_field.html'
+            # Want to copy widget, as to not override the template for the normal forms
+            new_widget_type = type("AdminMultiLingualTextField", (db_field.widget,), properties)
+            return db_field.formfield(widget=new_widget_type, **kwargs)
         return super().formfield_for_dbfield(db_field, request, **kwargs)

@@ -1,7 +1,7 @@
 import json
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import translation
 
 from ..multilingual.data_structures import MultiLingualTextStructure
@@ -9,23 +9,17 @@ from ..multilingual.formfields import MultiLingualFormField
 from ..multilingual.modelfields import MultiLingualTextField
 
 
+# Ensure the settings are as expected by the tests below
+@override_settings(
+    LANGUAGES=(
+            ('nb', "Norsk"),
+            ('en', "English"),
+    ),
+    LANGUAGE_CODE='nb')
 class TestMultiLingualTextStructure(TestCase):
     """
     Tests for the MultiLingualTextStructure class.
     """
-
-    def setUp(self):
-        self.original_languages = settings.LANGUAGES
-        self.original_language_code = settings.LANGUAGE_CODE
-        settings.LANGUAGES = (
-            ("nb", "Norsk"),
-            ("en", "English"),
-        )
-        settings.LANGUAGE_CODE = "nb"
-
-    def tearDown(self):
-        settings.LANGUAGES = self.original_languages
-        settings.LANGUAGE_CODE = self.original_language_code
 
     def test_constructor_serialized_json(self):
         """

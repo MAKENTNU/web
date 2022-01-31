@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.test import Client, TestCase
+from django.utils import translation
 from django_hosts import reverse
 
 from news.tests.test_urls import UrlTests as NewsUrlTests
@@ -41,6 +42,7 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
     def test_all_admin_get_request_paths_succeed(self):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
+            Get('/.well-known/security.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')
 
@@ -70,3 +72,6 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
         # Should not redirect to login (caused by the above line)
         response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
         self.assertRedirects(response, '/en/')
+
+        # Reset current language back to the default
+        translation.activate(settings.LANGUAGE_CODE)

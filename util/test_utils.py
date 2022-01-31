@@ -13,6 +13,8 @@ from django.utils import translation
 from users.models import User
 
 
+T = TypeVar('T')
+
 # A very small JPEG image without any content; used for mocking a valid image while testing
 MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
                b'\x04\x04\x08\x06\x06\x05\x06\t\x08\n\n\t\x08\t\t\n\x0c\x0f\x0c\n\x0b\x0e\x0b\t\t\r\x11\r\x0e\x0f\x10' \
@@ -72,9 +74,6 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
         return wrapper
 
     return decorator
-
-
-T = TypeVar('T')
 
 
 def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:

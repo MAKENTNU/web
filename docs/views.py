@@ -86,7 +86,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
 
     def get_form_kwargs(self):
         # Forcefully insert the user into the form
-        return insert_form_field_values(super().get_form_kwargs(), ('created_by', self.request.user))
+        return insert_form_field_values(super().get_form_kwargs(), {'created_by': self.request.user})
 
     def form_invalid(self, form):
         try:
@@ -121,8 +121,10 @@ class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin
         # UpdateView inserts the Page instance into the Content form, so remove it, as a new Content instance will be created
         form_kwargs.pop('instance')
         # Forcefully insert the page and user into the form
-        return insert_form_field_values(form_kwargs,
-                                        ('page', self.object), ('made_by', self.request.user))
+        return insert_form_field_values(form_kwargs, {
+            'page': self.object,
+            'made_by': self.request.user,
+        })
 
     def get_form_title(self):
         return _("Edit “{title}”").format(title=self.object)

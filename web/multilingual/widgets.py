@@ -1,5 +1,3 @@
-import copy
-
 from ckeditor.widgets import CKEditorWidget
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from django import forms
@@ -12,16 +10,21 @@ class MultiLingualTextEdit(forms.MultiWidget):
     A multi-widget for multilingual fields.
     """
     template_name = 'web/forms/widgets/multi_lingual_text_field.html'
-    widget = forms.TextInput
+
+    subwidget_class = forms.TextInput
 
     def __init__(self, attrs=None):
         widgets = []
-        for language in MultiLingualTextStructure.supported_languages:
-            attributes = copy.copy(attrs) or {}
-            # Set language in attributes, so each subwidget is distinguishable in the template
-            attributes["language"] = language
-            # Create widgets from the current set widget class, so we can reuse logic
-            widgets.append(self.widget(attrs=attributes))
+        for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
+            # Create widgets from the subwidget class, so we can reuse logic
+            subwidget = self.subwidget_class(**{
+                'attrs': {
+                    **(attrs or {}),
+                    # Makes each subwidget distinguishable in the template
+                    'language': language,
+                },
+            })
+            widgets.append(subwidget)
         super().__init__(widgets, attrs)
 
     def decompress(self, value):
@@ -32,8 +35,8 @@ class MultiLingualTextEdit(forms.MultiWidget):
         :return: A list of values for the individual sub-widgets
         """
         if value is None:
-            return [""] * len(MultiLingualTextStructure.supported_languages)
-        return [value[language] for language in MultiLingualTextStructure.supported_languages]
+            return [""] * len(MultiLingualTextStructure.SUPPORTED_LANGUAGES)
+        return [value[language] for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES]
 
     def get_context(self, name, value, attrs):
         """
@@ -50,22 +53,22 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
         for index, widget in enumerate(self.widgets):
             # Include the render function of the subwidget, as CKEditor does not use templates
-            context["widget"]["subwidgets"][index]["render"] = widget.render
+            context['widget']['subwidgets'][index]['render'] = widget.render
 
         return context
 
 
 class MultiLingualTextInput(MultiLingualTextEdit):
-    widget = forms.TextInput
+    subwidget_class = forms.TextInput
 
 
 class MultiLingualTextarea(MultiLingualTextEdit):
-    widget = forms.Textarea
+    subwidget_class = forms.Textarea
 
 
 class MultiLingualRichText(MultiLingualTextEdit):
-    widget = CKEditorWidget
+    subwidget_class = CKEditorWidget
 
 
 class MultiLingualRichTextUploading(MultiLingualTextEdit):
-    widget = CKEditorUploadingWidget
+    subwidget_class = CKEditorUploadingWidget
