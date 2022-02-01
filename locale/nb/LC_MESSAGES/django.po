@@ -333,15 +333,15 @@ msgstr "Stem"
 msgid "Delete"
 msgstr "Slett"
 
-#: checkin/views.py:140 checkin/views.py:143
+#: checkin/views.py:141 checkin/views.py:144
 msgid "Enter both norwegian and english skill name"
 msgstr "Skriv inn tittel på både norsk og engelsk"
 
-#: checkin/views.py:150
+#: checkin/views.py:151
 msgid "Skill already exists!"
 msgstr "Ferdigheten finnes allerede!"
 
-#: checkin/views.py:168
+#: checkin/views.py:169
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
@@ -513,6 +513,7 @@ msgstr "Nåværende versjon"
 #: docs/templates/docs/header.html:11 docs/templates/docs/search.html:8
 #: docs/templates/docs/search.html:13
 #: make_queue/templates/make_queue/find_free_slot.html:36
+#: news/templates/news/admin_events_search.html:23
 msgid "Search"
 msgstr "Søk"
 
@@ -1945,7 +1946,7 @@ msgstr "arrangement skjult"
 
 #: news/admin.py:248 news/models.py:44 news/models.py:204
 #: news/templates/news/admin_article_list.html:31
-#: news/templates/news/admin_event_list.html:39
+#: news/templates/news/admin_event_list.html:42
 #: news/templates/news/admin_timeplace_listing.html:27
 msgid "Hidden"
 msgstr "Skjult"
@@ -1994,7 +1995,11 @@ msgstr "Hvis valgt vil {the_type} bare være synlig for administratorer."
 msgid "If selected, {the_type} will only be visible to members of MAKE NTNU."
 msgstr "Hvis valgt vil {the_type} bare vises for medlemmer av MAKE NTNU."
 
-#: news/forms.py:88
+#: news/forms.py:78
+msgid "Search for user"
+msgstr "Søk etter en person"
+
+#: news/forms.py:90
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
 "organizers"
@@ -2019,12 +2024,12 @@ msgid "Don't crop the image"
 msgstr "Ikke crop bildet"
 
 #: news/models.py:43 news/templates/news/admin_article_list.html:25
-#: news/templates/news/admin_event_list.html:33
+#: news/templates/news/admin_event_list.html:36
 msgid "Featured"
 msgstr "Fremhevet"
 
 #: news/models.py:45 news/templates/news/admin_article_list.html:37
-#: news/templates/news/admin_event_list.html:45
+#: news/templates/news/admin_event_list.html:48
 msgid "Internal"
 msgstr "Internt"
 
@@ -2194,14 +2199,14 @@ msgstr "Ingen fremtidige forekomster finnes for dette arrangementet"
 msgid "No past occurrences exist for this event"
 msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
-#: news/templates/news/admin_event_list.html:24
+#: news/templates/news/admin_event_list.html:27
 #, python-format
 msgid "1 future occurrence"
 msgid_plural "%(counter)s future occurrences"
 msgstr[0] "1 fremtidig forekomst"
 msgstr[1] "%(counter)s fremtidige forekomster"
 
-#: news/templates/news/admin_event_list.html:52
+#: news/templates/news/admin_event_list.html:55
 msgid "Admin"
 msgstr "Admin"
 
@@ -2232,6 +2237,14 @@ msgstr "Språk"
 #: news/templates/news/admin_event_ticket_list.html:68
 msgid "No tickets have been registered for this event"
 msgstr "Ingen billetter har blitt registrert for dette arrangement"
+
+#: news/templates/news/admin_events_search.html:10
+msgid "Check if a user has attended or is registered for an event"
+msgstr "Sjekk om en bruker har deltatt eller skal delta på et arrangement"
+
+#: news/templates/news/admin_events_search.html:16
+msgid "Valid arguments are username, firstname or lastname"
+msgstr "Gyldige argumenter er brukernavn, fornavn og etternavn"
 
 #: news/templates/news/admin_timeplace_listing.html:29
 msgid "If selected, the occurrence is hidden for non-admin users."
@@ -2450,13 +2463,13 @@ msgid ""
 "If selected, the occurrence will be hidden, even after the publication date"
 msgstr "Hvis valgt vil forekomsten være skjult, selv etter publikasjonsdatoen"
 
-#: news/views.py:332
+#: news/views.py:383
 msgid "Could not register you for the event, please try again later."
 msgstr ""
 "Det var ikke mulig å melde deg på arrangementet på dette tidspunktet. "
 "Vennligst prøv igjen ved en senere anledning."
 
-#: news/views.py:346
+#: news/views.py:397
 msgid "Your ticket!"
 msgstr "Din billett!"
 

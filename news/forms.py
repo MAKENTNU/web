@@ -75,8 +75,7 @@ class EventForm(NewsBaseForm):
         help_texts = NewsBaseForm.Meta.get_help_texts(model)
 
 class EventsSearchForm(forms.Form):
-    # navn = forms.CharField()
-    pass
+    name = forms.CharField(label=_("Search for user"), max_length=500)
 
 class EventRegistrationForm(forms.ModelForm):
     class Meta:

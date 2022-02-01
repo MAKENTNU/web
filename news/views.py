@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
-from django.db.models import Count, Max, Prefetch, Q
+from django.db.models import Count, Max, Min, Prefetch, Q
 from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -16,6 +16,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, R
 from django.views.generic.edit import FormView
 
 from mail import email
+from users.models import User
 from util.logging_utils import log_request_exception
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
 from util.view_utils import PreventGetRequestsMixin
@@ -138,17 +139,55 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
             num_future_occurrences=Count('timeplaces', filter=Q(timeplaces__end_time__gt=timezone.localtime())),
         ).order_by('-latest_occurrence').prefetch_related('timeplaces')
 
+
 class AdminEventsSearchView(PermissionRequiredMixin, FormView):
     form_class = EventsSearchForm
     template_name = 'news/admin_events_search.html'
     
-    #queryset = Article.objects.all()
-    #context_object_name = 'articles'
-    
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        form = context_data['form']
+        if form.is_bound:
+            searched_name = form.cleaned_data['name']
+            searched_name_split = searched_name.split()
+            
+            q=Q()
+            for i in searched_name_split:
+                q &= Q(first_name__icontains = i) | Q(last_name__icontains = i) | Q(username__icontains = i)
+
+            users = User.objects.filter(q).prefetch_related(
+                Prefetch('event_tickets',
+                        queryset=EventTicket.objects.annotate(
+                            first_standalone_event_occurrence=Min('event__timeplaces__start_time'),
+                            last_standalone_event_occurrence=Max('event__timeplaces__start_time'),
+                        ).select_related(
+                            'timeplace',
+                        ), to_attr='tickets'),
+            )
+
+            def sorting_key(tickets):
+                if tickets.timeplace:
+                    return tickets.timeplace.start_time
+                else:
+                    return tickets.first_standalone_event_occurrence
+
+            for user in users:
+                user.tickets = sorted(
+                list(user.tickets),
+                    key=sorting_key,
+                )
+            context_data.update({
+                'users': users,
+            })          
+
+        return context_data
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
     def has_permission(self):
         return has_any_event_permissions(self.request.user)
 
-    
 
 class AdminEventDetailView(DetailView):
     model = Event
