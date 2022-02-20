@@ -15,7 +15,7 @@ class MultiLingualTextEdit(forms.MultiWidget):
     subwidget_class = forms.TextInput
 
     def __init__(self, attrs=None, *, subwidget_kwargs: Dict[str, Any] = None):
-        widgets = []
+        widgets = {}
         for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
             # Create widgets from the subwidget class, so we can reuse logic
             subwidget = self.subwidget_class(**{
@@ -27,7 +27,7 @@ class MultiLingualTextEdit(forms.MultiWidget):
                 # Pass the kwargs to each subwidget (only used by the CKEditor-based widgets)
                 **(subwidget_kwargs or {}),
             })
-            widgets.append(subwidget)
+            widgets[language] = subwidget
         super().__init__(widgets, attrs)
 
     def decompress(self, value):

@@ -11,6 +11,7 @@ from users.models import User
 from util.auth_utils import get_perm
 from web.hosts import host_patterns
 from web.multilingual.data_structures import MultiLingualTextStructure
+from ..forms import ContentBoxForm
 from ..models import ContentBox
 from ..views import DisplayContentBoxView
 
@@ -188,8 +189,7 @@ class UrlTests(TestCase):
         change_url = reverse('contentbox_edit', args=[content_box.pk])
         for original_content, bleached_content in original_content__bleached_content__tuples:
             response = client.post(change_url, {
-                # `content_0` etc. are the expected names of the subfields (one for each language) of `MultiLingualFormField`
-                f'content_{i}': original_content for i in range(len(MultiLingualTextStructure.SUPPORTED_LANGUAGES))
+                subwidget_name: original_content for subwidget_name in ContentBoxForm.CONTENT_SUBWIDGET_NAMES
             })
             # `url` contains a relative scheme and a host, so only compare the paths
             self.assertRedirects(response, urlparse(url).path)

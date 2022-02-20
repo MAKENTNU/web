@@ -83,8 +83,7 @@ class SimpleModelAndViewTests(TestCase):
 
         def assert_response_contains_error_message(posted_content: str, error: bool):
             data = {
-                'content_0': posted_content,
-                'content_1': posted_content,
+                subwidget_name: posted_content for subwidget_name in ContentBoxForm.CONTENT_SUBWIDGET_NAMES
             }
             response = self.client.post(self.edit_url1, data=data)
             # The form will redirect if valid, and stay on the same page if not

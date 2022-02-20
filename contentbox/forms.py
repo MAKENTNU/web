@@ -1,11 +1,15 @@
 from django import forms
 from django.conf import settings
 
+from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualRichTextUploading
 from .models import ContentBox
 
 
 class ContentBoxForm(forms.ModelForm):
+    # The expected names of the subwidgets (one for each language) of `MultiLingualFormField`
+    CONTENT_SUBWIDGET_NAMES = [f'content_{language}' for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES]
+
     class Meta:
         model = ContentBox
         fields = ('content',)
