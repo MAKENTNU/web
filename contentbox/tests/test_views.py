@@ -2,38 +2,25 @@ from http import HTTPStatus
 from typing import Optional, Type
 from urllib.parse import urlparse
 
-from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.forms import BaseForm
 from django.test import Client, TestCase, override_settings
-from django.urls import path
 from django_hosts import reverse
 
-from internal.tests.test_urls import INTERNAL_CLIENT_DEFAULTS, reverse_internal
 from users.models import User
 from util.auth_utils import get_perm
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
-from web.urls import urlpatterns as base_urlpatterns
-from . import hosts_and_internal_urls_override
-from .hosts_and_internal_urls_override import urlpatterns as internal_urlpatterns_override
+from .urls import hosts, urls_main
+from .urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
+from .urls.urls_internal import INTERNAL_TEST_TITLE, internal_change_perm
+from .urls.urls_main import TEST_MULTI_TITLES, TEST_TITLE
 from ..forms import ContentBoxForm, EditSourceContentBoxForm
 from ..models import ContentBox
-from ..views import DisplayContentBoxView, EditContentBoxView
 
 
-TEST_TITLE = 'test_title'
-TEST_MULTI_TITLES = ('test_main', 'test_alt1', 'test_alt2')
-
-urlpatterns = base_urlpatterns
-urlpatterns += [
-    DisplayContentBoxView.get_path(TEST_TITLE),
-    *DisplayContentBoxView.get_multi_path(*TEST_MULTI_TITLES),
-]
-
-
-# Uses the imported (and modified) `urlpatterns` as the base urlpatterns
-@override_settings(ROOT_URLCONF=__name__)
+@override_settings(ROOT_HOSTCONF=hosts.__name__, DEFAULT_HOST='test_main',
+                   ROOT_URLCONF=urls_main.__name__)
 class SimpleModelAndViewTests(TestCase):
 
     def setUp(self):
@@ -119,34 +106,8 @@ class SimpleModelAndViewTests(TestCase):
         assert_edit_page_response_with(status_code=HTTPStatus.OK, form=EditSourceContentBoxForm)
 
 
-INTERNAL_TEST_TITLE = 'internal_test_title'
-internal_change_perm = 'contentbox.perm1'
-
-
-class InternalDisplayContentBoxView(DisplayContentBoxView):
-    extra_context = {
-        'base_template': 'internal/base.html',
-    }
-
-    change_perms = (internal_change_perm,)
-
-
-# Insert this path at the beginning of the internal urlpatterns (overridden in `hosts_and_internal_urls_override.py`),
-# to make it override the already defined ContentBox change path
-internal_urlpatterns_override.insert(0, path(
-    "contentbox/<int:pk>/edit/",
-    permission_required(internal_change_perm, raise_exception=True)(EditContentBoxView.as_view(base_template='internal/base.html')),
-    name='contentbox_edit',
-))
-internal_urlpatterns_override.append(
-    InternalDisplayContentBoxView.get_path(INTERNAL_TEST_TITLE)
-)
-
-
-# Uses the imported (and modified) `urlpatterns` as the base urlpatterns
-@override_settings(ROOT_URLCONF=__name__)
-# Uses the `host_patterns` of this file as the base host_patterns
-@override_settings(ROOT_HOSTCONF=hosts_and_internal_urls_override.__name__)
+@override_settings(ROOT_HOSTCONF=hosts.__name__, DEFAULT_HOST='test_main',
+                   ROOT_URLCONF=urls_main.__name__)
 class MultiSubdomainTests(TestCase):
 
     def setUp(self):
@@ -162,10 +123,10 @@ class MultiSubdomainTests(TestCase):
         self.internal_admin.add_perms('internal.is_internal', 'contentbox.change_contentbox', internal_change_perm)
 
         self.internal_user_public_client = Client()
-        self.internal_user_internal_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.internal_user_internal_client = Client(**TEST_INTERNAL_CLIENT_DEFAULTS)
         self.internal_user_admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
         self.internal_admin_public_client = Client()
-        self.internal_admin_internal_client = Client(**INTERNAL_CLIENT_DEFAULTS)
+        self.internal_admin_internal_client = Client(**TEST_INTERNAL_CLIENT_DEFAULTS)
         self.internal_admin_admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
 
         self.internal_user_public_client.force_login(self.internal_user)
@@ -177,13 +138,13 @@ class MultiSubdomainTests(TestCase):
 
         # Creates the content boxes by requesting them
         self.internal_user_public_client.get(reverse(TEST_TITLE))
-        self.internal_user_internal_client.get(reverse_internal(INTERNAL_TEST_TITLE))
+        self.internal_user_internal_client.get(reverse(INTERNAL_TEST_TITLE, host='test_internal'))
         self.public_content_box = ContentBox.objects.get(title=TEST_TITLE)
         self.internal_content_box = ContentBox.objects.get(title=INTERNAL_TEST_TITLE)
 
         self.public_edit_url = reverse('contentbox_edit', kwargs={'pk': self.public_content_box.pk})
         self.public_admin_edit_url = reverse('admin:contentbox_contentbox_change', args=[self.public_content_box.pk], host='admin')
-        self.internal_edit_url = reverse_internal('contentbox_edit', pk=self.internal_content_box.pk)
+        self.internal_edit_url = reverse('contentbox_edit', kwargs={'pk': self.internal_content_box.pk}, host='test_internal')
         self.internal_admin_edit_url = reverse('admin:contentbox_contentbox_change', args=[self.internal_content_box.pk], host='admin')
 
     def test_content_box_edit_urls_are_only_accessible_with_required_permissions(self):
