@@ -5,8 +5,7 @@
 
 
 <!DOCTYPE html>
-{% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}">
+<html lang="{{ CURRENT_LANGUAGE_CODE }}">
 <head>
     <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
     <meta charset="UTF-8"/>
@@ -39,7 +38,9 @@
     <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'lib/jquery/jquery.dirty.js' %}"></script>
     <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
-    <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
+    <script>
+        const LANG_PREFIX = {% if CURRENT_LANGUAGE_CODE == DEFAULT_LANGUAGE_CODE %} "" {% else %} "/{{ CURRENT_LANGUAGE_CODE }}" {% endif %};
+    </script>
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
     <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
 

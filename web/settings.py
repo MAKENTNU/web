@@ -161,6 +161,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'web.context_processors.common_context_variables',
                 'web.context_processors.login',
             ],
         },
