@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from django import forms
 
@@ -14,9 +14,11 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
     subwidget_class = forms.TextInput
 
-    def __init__(self, attrs=None, *, subwidget_kwargs: Dict[str, Any] = None):
+    def __init__(self, attrs=None, *, languages: List[str] = MultiLingualTextStructure.SUPPORTED_LANGUAGES, subwidget_kwargs: Dict[str, Any] = None):
+        self.languages = languages
+
         widgets = {}
-        for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
+        for language in self.languages:
             # Create widgets from the subwidget class, so we can reuse logic
             subwidget = self.subwidget_class(**{
                 'attrs': {
@@ -38,8 +40,8 @@ class MultiLingualTextEdit(forms.MultiWidget):
         :return: A list of values for the individual sub-widgets
         """
         if value is None:
-            return [""] * len(MultiLingualTextStructure.SUPPORTED_LANGUAGES)
-        return [value[language] for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES]
+            return [""] * len(self.languages)
+        return [value[language] for language in self.languages]
 
     def get_context(self, name, value, attrs):
         """

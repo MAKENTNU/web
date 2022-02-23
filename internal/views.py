@@ -1,5 +1,6 @@
 from abc import ABC
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
@@ -32,6 +33,12 @@ class EditInternalContentBoxView(EditContentBoxView):
     raise_exception = True
 
     base_template = 'internal/base.html'
+
+    def get_form_kwargs(self):
+        return {
+            **super().get_form_kwargs(),
+            'single_language': settings.LANGUAGE_CODE,
+        }
 
 
 class SecretListView(ListView):

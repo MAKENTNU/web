@@ -1,3 +1,5 @@
+from typing import List
+
 import bleach
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingFormField
@@ -20,14 +22,16 @@ class MultiLingualFormField(forms.MultiValueField):
 
     subfield_class = forms.CharField
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, languages: List[str] = MultiLingualTextStructure.SUPPORTED_LANGUAGES, **kwargs):
+        self.languages = languages
+
         subfield_attrs = {
             'max_length': kwargs.pop('max_length', None),
             **kwargs,
             'label': None,  # the `label` attribute is not used by the subfields, so override the one in `kwargs`
         }
         subfields = []
-        for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
+        for language in self.languages:
             subfield = self.subfield_class(**subfield_attrs)
             subfield.locale = language
             subfields.append(subfield)
@@ -44,14 +48,14 @@ class MultiLingualFormField(forms.MultiValueField):
         structure = MultiLingualTextStructure("", True)
         if not data_list:
             return structure
-        if len(data_list) != len(structure):
+        if len(data_list) != len(self.languages):
             get_request_logger().exception(
                 f"Unexpected number of elements:\n\t{data_list}"
-                f"\n\t(Should have matched the number of elements in {repr(structure)})"
+                f"\n\t(Should have matched the number of elements in {self.languages})"
             )
             return structure
 
-        for i, language in enumerate(structure.SUPPORTED_LANGUAGES):
+        for i, language in enumerate(self.languages):
             structure[language] = data_list[i]
         return structure
 

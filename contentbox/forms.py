@@ -10,9 +10,41 @@ class ContentBoxForm(forms.ModelForm):
     # The expected names of the subwidgets (one for each language) of `MultiLingualFormField`
     CONTENT_SUBWIDGET_NAMES = [f'content_{language}' for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES]
 
+    content_extra_widget_kwargs = {}
+
     class Meta:
         model = ContentBox
         fields = ('content',)
+
+    def __init__(self, *args, single_language: str = False, **kwargs):
+        """
+        :param single_language: A language code;
+                                if set, the form widget of ``content`` will display only this language, and the submitted value for this language
+                                will be copied to the other languages used by the website.
+        """
+        self.single_language = single_language
+        if self.single_language:
+            self.content_extra_widget_kwargs['languages'] = [self.single_language]
+
+        super().__init__(*args, **kwargs)
+
+        # Overwrite the form field of `content`
+        form_field_kwargs = {
+            'widget': MultiLingualRichTextUploading(**self.content_extra_widget_kwargs),
+        }
+        if self.single_language:
+            form_field_kwargs['languages'] = [self.single_language]
+        self.fields['content'] = ContentBox._meta.get_field('content').formfield(**form_field_kwargs)
+
+    def clean_content(self):
+        content: MultiLingualTextStructure = self.cleaned_data['content']
+        if content:
+            if self.single_language:
+                single_language_content = content[self.single_language]
+                # Set the same content for all languages
+                for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
+                    content[language] = single_language_content
+        return content
 
 
 class EditSourceContentBoxForm(ContentBoxForm):
@@ -21,10 +53,8 @@ class EditSourceContentBoxForm(ContentBoxForm):
 
     NOTE: Make sure that the user has the ``internal.can_change_rich_text_source`` permission before using this form.
     """
-
-    class Meta(ContentBoxForm.Meta):
-        widgets = {
-            'content': MultiLingualRichTextUploading(subwidget_kwargs={
-                'config_name': settings.CKEDITOR_EDIT_SOURCE_CONFIG_NAME,
-            }),
-        }
+    content_extra_widget_kwargs = {
+        'subwidget_kwargs': {
+            'config_name': settings.CKEDITOR_EDIT_SOURCE_CONFIG_NAME,
+        },
+    }

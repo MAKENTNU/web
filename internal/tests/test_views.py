@@ -1,7 +1,10 @@
 from http import HTTPStatus
+from urllib.parse import urlparse
 
+from django.conf import settings
 from django.templatetags.static import static
-from django.test import Client, TestCase
+from django.test import Client, TestCase, override_settings
+from django.urls import clear_url_caches
 
 from contentbox.forms import EditSourceContentBoxForm
 from contentbox.models import ContentBox
@@ -35,6 +38,14 @@ class InternalContentBoxTests(TestCase):
         self.home_content_box.extra_change_permissions.add(*get_perms(*internal_admin_perms))
         self.home_edit_url = reverse_internal('contentbox_edit', pk=self.home_content_box.pk)
 
+        self.internal_content_boxes = (self.home_content_box,)
+
+    @classmethod
+    def tearDownClass(cls):
+        # Clear the cache again, after filling it with URLs prefixed with `/en`
+        # when testing with the `LANGUAGE_CODE` setting set to `en` below
+        clear_url_caches()
+
     def test_internal_content_boxes_can_only_be_edited_with_required_permission(self):
         self.assertGreaterEqual(self.internal_user_client.get(self.home_edit_url).status_code, 400)
         self.assertEqual(self.internal_admin_client.get(self.home_edit_url).status_code, HTTPStatus.OK)
@@ -59,4 +70,37 @@ class InternalContentBoxTests(TestCase):
                         id="config-from-django">
             </script>""", response.content.decode(), count=1)
         # `editsource` is the name of the toolbar section containing the edit source button (see `CKEDITOR_CONFIGS` in the settings)
-        self.assertContains(response, "&quot;editsource&quot;", count=len(MultiLingualTextStructure.SUPPORTED_LANGUAGES))
+        self.assertContains(response, "&quot;editsource&quot;",
+                            # This view only uses one language, and so there should only be one occurrence of this string
+                            count=1)
+
+    @override_settings(LANGUAGE_CODE='nb')
+    def test_internal_content_boxes_accept_posting_just_norwegian(self):
+        self._test_internal_content_boxes_accept_posting_just_one_language()
+
+    @override_settings(LANGUAGE_CODE='en')
+    def test_internal_content_boxes_accept_posting_just_english(self):
+        # Have to clear the cached URLs, to make calls to `reverse()` return paths that are not prefixed with `/en`
+        # (after having overridden the `LANGUAGE_CODE` setting so that it's set to `en`)
+        clear_url_caches()
+        self._test_internal_content_boxes_accept_posting_just_one_language()
+
+    def _test_internal_content_boxes_accept_posting_just_one_language(self):
+        mock_content = "asdf"
+        expected_content_languages = {
+            language: mock_content for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES
+        }
+
+        for content_box in self.internal_content_boxes:
+            with self.subTest(content_box=content_box):
+                edit_url = reverse_internal('contentbox_edit', pk=content_box.pk)
+                response = self.internal_admin_client.post(edit_url, {
+                    f'content_{settings.LANGUAGE_CODE}': mock_content,
+                })
+                display_url = reverse_internal(content_box.title)
+                # `display_url` contains a relative scheme and a host, so only compare the paths
+                self.assertRedirects(response, urlparse(display_url).path)
+                content_box.refresh_from_db()
+                content_text_structure: MultiLingualTextStructure = content_box.content
+                # The content box should contain the same content for all languages
+                self.assertDictEqual(content_text_structure.languages, expected_content_languages)
