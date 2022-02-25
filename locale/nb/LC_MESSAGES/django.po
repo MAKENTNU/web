@@ -671,18 +671,18 @@ msgstr "Velg komiteer"
 
 #: internal/forms.py:67
 msgid ""
-"Member was not set as quit, as the member already has the status “quit” or "
-"“retired”."
-msgstr ""
-"Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
-"«sluttet» eller «pang»."
-
-#: internal/forms.py:98
-msgid ""
 "Member was not set as retired, as the member already has the status “quit” "
 "or “retired”."
 msgstr ""
 "Medlemmet ble ikke markert som pang siden medlemmet allerede har status "
+"«sluttet» eller «pang»."
+
+#: internal/forms.py:98
+msgid ""
+"Member was not set as quit, as the member already has the status “quit” or "
+"“retired”."
+msgstr ""
+"Medlemmet ble ikke markert som sluttet siden medlemmet allerede har status "
 "«sluttet» eller «pang»."
 
 #: internal/forms.py:136

@@ -64,7 +64,7 @@ class RestrictedEditMemberForm(EditMemberForm):
 
 class MemberRetireForm(forms.ModelForm):
     already_quit_or_retired_error_message = _(
-        "Member was not set as quit, as the member already has the status “quit” or “retired”."
+        "Member was not set as retired, as the member already has the status “quit” or “retired”."
     )
 
     class Meta:
@@ -95,7 +95,7 @@ class MemberRetireForm(forms.ModelForm):
 
 class MemberQuitForm(MemberRetireForm):
     already_quit_or_retired_error_message = _(
-        "Member was not set as retired, as the member already has the status “quit” or “retired”."
+        "Member was not set as quit, as the member already has the status “quit” or “retired”."
     )
 
     class Meta(MemberRetireForm.Meta):
