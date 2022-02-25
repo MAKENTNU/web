@@ -14,16 +14,16 @@ class TemplateTagTestCases(TestCase):
     @mock.patch('django.utils.timezone.now')
     def test_formatted_localtime_without_shift(self, now_mock):
         now_mock.return_value = self.base_date
-        self.assertEqual("2017-12-23 12:34", formatted_localtime())
+        self.assertEqual(formatted_localtime(), "2017-12-23T12:34:00+01:00")
 
     @mock.patch('django.utils.timezone.now')
     def test_formatted_localtime_with_positive_shift(self, now_mock):
         now_mock.return_value = self.base_date
-        self.assertEqual("2017-12-23 17:34", formatted_localtime(shift_hours=5))
-        self.assertEqual("2017-12-24 12:34", formatted_localtime(shift_hours=24))
+        self.assertEqual(formatted_localtime(shift_hours=5), "2017-12-23T17:34:00+01:00")
+        self.assertEqual(formatted_localtime(shift_hours=24), "2017-12-24T12:34:00+01:00")
 
     @mock.patch('django.utils.timezone.now')
     def test_formatted_localtime_with_negative_shift(self, now_mock):
         now_mock.return_value = self.base_date
-        self.assertEqual("2017-12-23 08:34", formatted_localtime(shift_hours=-4))
-        self.assertEqual("2017-12-22 12:34", formatted_localtime(shift_hours=-24))
+        self.assertEqual(formatted_localtime(shift_hours=-4), "2017-12-23T08:34:00+01:00")
+        self.assertEqual(formatted_localtime(shift_hours=-24), "2017-12-22T12:34:00+01:00")

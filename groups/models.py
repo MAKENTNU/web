@@ -31,6 +31,7 @@ class InheritanceGroup(Group):
         related_name='inheritance_groups',
         verbose_name=_("own permissions"),
     )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     @property
     def inherited_permissions(self):
@@ -98,6 +99,7 @@ class Committee(models.Model):
     description = models.TextField(verbose_name=_("Description"))
     email = models.EmailField(verbose_name=_("Email"))
     image = models.ImageField(blank=True, verbose_name=_("Image"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def __str__(self):
         return self.name

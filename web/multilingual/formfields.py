@@ -1,10 +1,10 @@
 import copy
-import logging
 
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingFormField
 from django import forms
 
+from util.logging_utils import get_request_logger
 from .data_structures import MultiLingualTextStructure
 
 
@@ -38,12 +38,17 @@ class MultiLingualFormField(forms.MultiValueField):
         :return: A MultiLingualTextStructure element
         """
         structure = MultiLingualTextStructure("", True)
+        if not data_list:
+            return structure
+        if len(data_list) != len(structure):
+            get_request_logger().exception(
+                f"Unexpected number of elements:\n\t{data_list}"
+                f"\n\t(Should have matched the number of elements in {repr(structure)})"
+            )
+            return structure
+
         for index, language in enumerate(structure.supported_languages):
-            # Non-required fields may not have enough values
-            try:
-                structure[language] = data_list[index]
-            except IndexError as e:
-                logging.getLogger('django.request').exception(e)
+            structure[language] = data_list[index]
         return structure
 
 

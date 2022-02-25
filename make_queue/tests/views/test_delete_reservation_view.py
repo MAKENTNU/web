@@ -1,4 +1,5 @@
 from datetime import timedelta
+from http import HTTPStatus
 
 from django.test import Client, TestCase
 from django.urls import reverse
@@ -10,7 +11,7 @@ from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
 
 
-class DeleteReservationViewTestCase(TestCase):
+class TestDeleteReservationView(TestCase):
 
     def setUp(self):
         password = "weak_pass"
@@ -44,7 +45,7 @@ class DeleteReservationViewTestCase(TestCase):
 
     def test_delete_own_reservation_succeeds(self):
         response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
     def test_delete_other_users_reservation_fails(self):
@@ -62,7 +63,7 @@ class DeleteReservationViewTestCase(TestCase):
         )
 
         response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
         self.assertTrue(Reservation.objects.filter(pk=reservation2.pk).exists())
 
@@ -76,5 +77,5 @@ class DeleteReservationViewTestCase(TestCase):
         # Setting the start time to the future should allow deletion
         Reservation.objects.filter(pk=self.reservation.pk).update(start_time=now + timedelta(hours=1))
         response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())

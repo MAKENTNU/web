@@ -3,7 +3,7 @@
     <msapplication>
         <tile>
             <square150x150logo src="{% get_relative_static './mstile-150x150.png' %}"/>
-            <TileColor>#4A4B4C</TileColor>
+            <TileColor>#F8C811</TileColor>
         </tile>
     </msapplication>
 </browserconfig>

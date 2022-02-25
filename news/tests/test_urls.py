@@ -6,27 +6,29 @@ from django_hosts import reverse
 
 from news.models import Article, Event, EventTicket, TimePlace
 from users.models import User
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     @staticmethod
     def init_objs(self: TestCase):
         self.article1 = Article.objects.create(
-            title="Article 1", content="Lorem ipsum dolor sit amet", clickbait="Pleeasee!", image=MOCK_JPG_FILE,
+            title="Article 1", content="Lorem ipsum dolor sit amet", clickbait="Pleeasee!", image=MOCK_JPG_FILE, image_description="Mock image",
             featured=True, hidden=False, private=False,
         )
         self.article2 = Article.objects.create(
-            title="Article 2", content="You will not believe...", clickbait="Or..?!", image=MOCK_JPG_FILE, private=True,
+            title="Article 2", content="You will not believe...", clickbait="Or..?!", image=MOCK_JPG_FILE, image_description="Mock image",
+            private=True,
         )
 
         self.event1 = Event.objects.create(
-            title="Event 1", content="Lorem ipsum dolor sit amet", clickbait="Join us!", image=MOCK_JPG_FILE, featured=True,
+            title="Event 1", content="Lorem ipsum dolor sit amet", clickbait="Join us!", image=MOCK_JPG_FILE, image_description="Mock image",
+            featured=True,
         )
         self.event2 = Event.objects.create(
-            title="Event 2", content="Lorem ipsum electric boogaloo", clickbait="Do it!", image=MOCK_JPG_FILE, private=True,
-            event_type=Event.Type.STANDALONE, number_of_tickets=3,
+            title="Event 2", content="Lorem ipsum electric boogaloo", clickbait="Do it!", image=MOCK_JPG_FILE, image_description="Mock image",
+            private=True, event_type=Event.Type.STANDALONE, number_of_tickets=3,
         )
         now = timezone.localtime()
         self.timeplace1 = TimePlace.objects.create(
@@ -43,8 +45,8 @@ class UrlTests(TestCase):
         )
         self.timeplaces = (self.timeplace1, self.timeplace2, self.timeplace3)
 
-        self.user1 = User.objects.create(username="user1")
-        self.user2 = User.objects.create(username="user2")
+        self.user1 = User.objects.create_user(username="user1")
+        self.user2 = User.objects.create_user(username="user2")
 
         self.ticket1 = EventTicket.objects.create(
             user=self.user1, timeplace=self.timeplace1, comment="Looking forward to this!!", language=EventTicket.Language.ENGLISH,

@@ -54,21 +54,8 @@ class EditEquipmentView(PermissionRequiredMixin, UpdateView):
     context_object_name = 'equipment'
     success_url = reverse_lazy('makerspace_admin_equipment_list')
 
-    # Delete the old image file if a new image is being uploaded:
-    def form_valid(self, form):
-        if form.files.get('image'):
-            equipment = self.get_object()
-            equipment.image.delete()
-        return super().form_valid(form)
-
 
 class DeleteEquipmentView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
     success_url = reverse_lazy('makerspace_admin_equipment_list')
-
-    # Delete the image file before deleting the object:
-    def delete(self, request, *args, **kwargs):
-        equipment = self.get_object()
-        equipment.image.delete()
-        return super().delete(request, *args, **kwargs)
