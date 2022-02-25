@@ -90,27 +90,29 @@
 
                 <nav class="menu transition" aria-label="User">
                     {% block user_dropdown_buttons %}
+                        {% if perms.internal.is_internal %}
+                            <a class="item" href="{% host_url 'home' host 'internal' 'i' %}">
+                                <div class="text">{% trans "Internal pages" %}</div>
+                            </a>
+                        {% endif %}
                         {% if user|has_any_permissions %}
                             <a class="item" href="{% host_url 'adminpanel' host 'main' %}">
                                 <div class="text">{% trans "Administration" %}</div>
+                            </a>
+                        {% endif %}
+                        {% if user.is_staff %}
+                            <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
+                                <div class="text">{% trans "Django admin" %}</div>
                             </a>
                         {% endif %}
                         {% if perms.internal.is_internal %}
                             <a class="item" href="{% host_url 'profile' host 'main' %}">
                                 <div class="text">{% trans "Profile" %}</div>
                             </a>
-                            <a class="item" href="{% host_url 'home' host 'internal' 'internt' %}">
-                                <div class="text">{% trans "Internal pages" %}</div>
-                            </a>
                         {% endif %}
                         <a class="item" href="{% host_url 'my_tickets_list' host 'main' %}">
                             <div class="text">{% trans "My tickets" %}</div>
                         </a>
-                        {% if user.is_staff %}
-                            <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
-                                <div class="text">{% trans "Django admin" %}</div>
-                            </a>
-                        {% endif %}
                         <a class="item" href="{% host_url 'logout' host 'main' %}?next={{ request.path }}">
                             <div class="text">{% trans "Log out" %}</div>
                         </a>
