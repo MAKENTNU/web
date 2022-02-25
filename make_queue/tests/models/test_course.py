@@ -5,7 +5,7 @@ from users.models import User
 from ...models.course import Printer3DCourse
 
 
-class CardAndCourseSaveTest(TestCase):
+class TestCardAndCourseSave(TestCase):
 
     def setUp(self):
         self.user1 = User.objects.create_user("user1")

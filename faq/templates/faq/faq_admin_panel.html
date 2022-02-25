@@ -1,0 +1,42 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load permission_tags %}
+
+
+{% block title %}{% trans "FAQ Admin Panel" %}{% endblock title %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="ui header">
+            <a href="{% url 'adminpanel' %}">
+                <i class="blue chevron circle left icon"></i>
+            </a>
+            {% trans "FAQ Admin Panel" %}
+        </h1>
+        <div class="ui four doubling stackable cards">
+            <div class="ui yellow card">
+                <a class="content" href="{% url 'admin_question_list' %}">
+                    <div class="center aligned header">
+                        <i class="grey question circle outline icon"></i>
+                        {% trans "questions"|capfirst %}
+                    </div>
+                    <div class="description">
+                        {% trans "Here you can create, edit and delete questions" %}.
+                    </div>
+                </a>
+            </div>
+            <div class="ui yellow card">
+                <a class="content" href="{% url 'admin_category_list' %}">
+                    <div class="center aligned header">
+                        <i class="grey newspaper outline icon"></i>
+                        {% trans "categories"|capfirst %}
+                    </div>
+                    <div class="description">
+                        {% trans "Here you can create, edit and delete categories" %}.
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock body %}

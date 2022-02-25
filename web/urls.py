@@ -56,8 +56,9 @@ if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
         path("login/", RedirectView.as_view(url="/login/dataporten/", query_string=True), name='login'),
         path("logout/", Logout.as_view(), name='logout'),
 
-        path("", include('social_django.urls', namespace='social')),
+        # Should come before `social_django.urls` to override social_django's `complete` view
         re_path(rf"^complete/(?P<backend>[^/]+){extra}$", login_wrapper),
+        path("", include('social_django.urls', namespace='social')),
         prefix_default_language=False,
     )
 else:

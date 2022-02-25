@@ -7,7 +7,7 @@
     <div class="ui container">
         <h1>{% trans "Search" %}</h1>
 
-        <form class="ui form" method="GET">
+        <form class="dont-prevent-leaving ui form" method="GET">
             <div class="ui field">
                 <div class="ui icon input">
                     <input type="text" name="query" placeholder="{% trans "Search" %}" value="{{ query }}"/>
@@ -41,7 +41,7 @@
             {% trans "There are no documents for that search. Try searching for something else." %}
         {% endif %}
 
-        <form id="page-form" method="GET">
+        <form id="page-form" class="dont-prevent-leaving" method="GET">
             <input type="hidden" name="query" value="{{ query }}"/>
             <input id="page-form-page-input" type="hidden" name="page" value="{{ page }}"/>
         </form>

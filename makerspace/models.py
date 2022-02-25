@@ -25,6 +25,7 @@ class Equipment(models.Model):
         verbose_name=_("priority"),
         help_text=_("If specified, the equipment is sorted ascending by this value."),
     )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = EquipmentQuerySet.as_manager()
 

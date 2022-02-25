@@ -14,7 +14,7 @@
             {% for event in events %}
                 <div class="ui card">
                     <a class="image" href="{% url 'event_detail' event.pk %}">
-                        <img src="{{ event.image.url }}"/>
+                        <img src="{{ event.image.url }}" alt="{{ event.image_description }}"/>
                     </a>
                     <div class="content">
                         <a class="header" href="{% url 'event_detail' event.pk %}">{{ event.title }}</a>

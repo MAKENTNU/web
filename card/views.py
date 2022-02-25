@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponse
 from django.utils.decorators import method_decorator
+from django.utils.html import escape
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
@@ -41,7 +42,7 @@ class RFIDView(View):
         :param card_number: The card id from the request
         :return: An HttpResponse
         """
-        return HttpResponse(f"Valid card number {card_number}", status=200)
+        return HttpResponse(f"Valid card number {escape(card_number)}", status=200)
 
     def card_number_invalid(self, card_number):
         """
@@ -51,4 +52,4 @@ class RFIDView(View):
         :param card_number: The card id from the request
         :return: An HttpResponse
         """
-        return HttpResponse(f"Invalid card number {card_number}", status=401)
+        return HttpResponse(f"Invalid card number {escape(card_number)}", status=401)

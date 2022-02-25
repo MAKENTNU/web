@@ -57,7 +57,7 @@
                 <div class="default text">{% trans "Select user" %}</div>
                 <div class="menu">
                     {% for user in users %}
-                        <div class="item" data-value="{{ user.username }}">{{ user.get_full_name }}</div>
+                        <div class="item" data-value="{{ user.pk }}">{{ user.get_full_name }}</div>
                     {% endfor %}
                 </div>
             </div>
@@ -71,7 +71,7 @@
     <script>
         $(".tabular.menu .item").tab();
         {% if requested_user %}
-            $("#user").parent().dropdown("set selected", "{{ requested_user.username }}");
+            $("#user").parent().dropdown("set selected", "{{ requested_user.pk }}");
         {% endif %}
     </script>
 {% endblock body %}

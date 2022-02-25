@@ -1,4 +1,5 @@
-from django.contrib.auth.models import Permission
+from http import HTTPStatus
+
 from django.test import Client, TestCase
 from django_hosts import reverse
 
@@ -31,7 +32,7 @@ class ModelAndViewTests(TestCase):
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
-                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
                 self.assertEqual(response.context['contentbox'].title, TEST_TITLE)
 
@@ -44,7 +45,7 @@ class ModelAndViewTests(TestCase):
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
-                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
                 self.assertEqual(response.context['contentbox'].title, multi_path_content_box_title)
 
@@ -57,4 +58,4 @@ class ModelAndViewTests(TestCase):
 
         edit_url = reverse('contentbox_edit', kwargs={'pk': self.content_box1.pk})
         self.assertGreaterEqual(anon_client.get(edit_url).status_code, 300)
-        self.assertEqual(user_client.get(edit_url).status_code, 200)
+        self.assertEqual(user_client.get(edit_url).status_code, HTTPStatus.OK)

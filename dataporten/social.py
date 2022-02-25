@@ -2,16 +2,18 @@ from social_core.backends.oauth import BaseOAuth2
 from social_core.exceptions import AuthException
 
 
+# Code based on https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/dataporten/social.py
 class DataportenOAuth2(BaseOAuth2):
     name = 'dataporten'
     ID_KEY = 'userid'
     REQUIRES_EMAIL_VALIDATION = False
     EXTRA_DATA = [
-        # (<name from Dataporten's API>, <alias for storage in the database and usage in e.g. views>)
-        ('userid', 'userid'),
+        # (<name returned by `get_user_details()`>, <alias for storage in the database - through `UserSocialAuth.extra_data`>)
         ('scope', 'scope'),
-        ('name', 'fullname'),
+        ('userid', 'userid'),
+        ('username', 'username'),  # used as the base username for new users; it's set in `get_user_details()` below
         ('email', 'email'),
+        ('name', 'fullname'),
     ]
     BASE_URL = 'https://auth.dataporten.no'
     API_URL = 'https://api.dataporten.no'
@@ -26,10 +28,21 @@ class DataportenOAuth2(BaseOAuth2):
 
     def get_user_details(self, response):
         """
-        Return user details from Dataporten.
+        Converts response data from the format of Dataporten's API, to the format expected by the ``social`` libraries -
+        which is stored in ``UserSocialAuth.extra_data`` (through ``EXTRA_DATA`` above).
+
+        :return: user details from Dataporten.
         """
         user = response
-        # <Convert response data from Dataporten's format to a format fit for usage in e.g. views, here>
+
+        # Based on https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/dataporten/social.py#L102-L107
+        for userid in user['userid_sec']:
+            usertype, complete_username = userid.split(':')
+            if usertype == 'feide':
+                username, _domain = complete_username.split('@')
+                user['username'] = username
+                break
+
         return user
 
     def check_correct_audience(self, audience):

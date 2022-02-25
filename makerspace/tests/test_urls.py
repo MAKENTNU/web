@@ -1,11 +1,11 @@
 from django.test import TestCase
 from django_hosts import reverse
 
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 from ..models import Equipment
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         self.equipment1 = Equipment.objects.create(

@@ -251,6 +251,7 @@ class ReservationRule(models.Model):
     start_days = models.IntegerField(default=0, verbose_name=_("start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("hours multi-period"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def save(self, **kwargs):
         if not self.is_valid_rule():

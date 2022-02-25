@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import include, path, register_converter
 
+from users import converters as user_converters
 from . import converters
 from .views import admin, api, quota, reservation
 
@@ -8,7 +9,7 @@ from .views import admin, api, quota, reservation
 register_converter(converters.SpecificMachineType, 'MachineType')
 register_converter(converters.SpecificMachine, 'Machine')
 register_converter(converters.MachineReservation, 'Reservation')
-register_converter(converters.UserByUsername, 'username')
+register_converter(user_converters.SpecificUser, 'User')
 register_converter(converters.Year, 'year')
 register_converter(converters.Week, 'week')
 
@@ -48,14 +49,14 @@ quota_urlpatterns = [
     path("create/", permission_required('make_queue.add_quota')(admin.quota.CreateQuotaView.as_view()), name='create_quota'),
     path("<int:pk>/update/", permission_required('make_queue.change_quota')(admin.quota.EditQuotaView.as_view()), name='edit_quota'),
     path("<int:pk>/delete/", permission_required('make_queue.delete_quota')(admin.quota.DeleteQuotaView.as_view()), name='delete_quota'),
-    path("user/<username:user>/", permission_required('make_queue.change_quota', raise_exception=True)(quota.user.UserQuotaListView.as_view()),
+    path("user/<User:user>/", permission_required('make_queue.change_quota', raise_exception=True)(quota.user.UserQuotaListView.as_view()),
          name='user_quota_list'),
-    path("<username:user>/", permission_required('make_queue.change_quota', raise_exception=True)(admin.quota.QuotaPanelView.as_view()),
+    path("<User:user>/", permission_required('make_queue.change_quota', raise_exception=True)(admin.quota.QuotaPanelView.as_view()),
          name='quota_panel'),
 ]
 
 course_urlpatterns = [
-    path("", permission_required('make_queue.change_printer3dcourse')(admin.course.CourseRegistrationListView.as_view()),
+    path("", permission_required('make_queue.change_printer3dcourse')(admin.course.Printer3DCourseListView.as_view()),
          name='course_registration_list'),
     path("status/", permission_required('make_queue.change_printer3dcourse')(admin.course.BulkStatusUpdate.as_view()), name='bulk_status_update'),
     path("download/", permission_required('make_queue.change_printer3dcourse')(admin.course.CourseXLSXView.as_view()),
@@ -80,7 +81,7 @@ urlpatterns = [
     path("<Reservation:reservation>/edit/", login_required(reservation.reservation.EditReservationView.as_view()), name='edit_reservation'),
     path("<int:pk>/finish/", login_required(reservation.reservation.MarkReservationFinishedView.as_view()), name='mark_reservation_finished'),
     path("<int:pk>/", login_required(reservation.reservation.DeleteReservationView.as_view()), name='delete_reservation'),
-    path("me/", login_required(reservation.reservation.MyReservationsListView.as_view()), name='my_reservations_list'),
+    path("me/", reservation.reservation.MyReservationsListView.as_view(), name='my_reservations_list'),
     path("admin/",
          permission_required('make_queue.can_create_event_reservation', raise_exception=True)(admin.reservation.MAKEReservationsListView.as_view()),
          name='MAKE_reservations_list'),

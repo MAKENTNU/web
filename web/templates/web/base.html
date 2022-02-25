@@ -18,13 +18,17 @@
     {% block open_graph_meta %}
         <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
         <meta property="og:site_name" content="MAKE NTNU"/>
-        <meta property="og:image"
-              content="{{ request.scheme }}://{{ request.get_host }}{% block og_image %}{% static 'web/img/make_thumb.png' %}{% endblock og_image %}"/>
-        <meta property="og:description"
-              content="{% block og_description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock og_description %}"/>
-        <meta property="description"
-              content="{% block description %}MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø for prosjektutvikling, både i privat og undervisningssammenheng, for alle studenter på NTNU.{% endblock description %}"/>
-        <meta property="og:type" content="website"/>
+        <meta property="og:image" content="{% spaceless %}
+            {% block og_image_absolute_uri %}
+                {% static 'web/img/logo_og_thumbnail.png' as og_image_url %}
+                {% get_absolute_uri_for_path request og_image_url %}
+            {% endblock og_image_absolute_uri %}
+        {% endspaceless %}"/>
+        <meta property="og:image:alt" content="{% block og_image_alt %}{% trans "MAKE NTNU's logo" %}{% endblock og_image_alt %}"/>
+        {% trans "MAKE NTNU is a voluntary student organization that works for a better environment for project development, both in private and educational contexts, for all students at NTNU." as site_description %}
+        <meta property="og:description" content="{% block og_description %}{{ site_description }}{% endblock og_description %}"/>
+        <meta property="description" content="{% block description %}{{ site_description }}{% endblock description %}"/>
+        <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}"/>
         <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
     {% endblock open_graph_meta %}
 
@@ -32,7 +36,8 @@
     <link rel="stylesheet" href="{% static 'lib/fomantic-ui/semantic.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
     <script src="{% host_url 'javascript_catalog' host 'main' %}"></script>
-    <script src="{% static 'lib/jquery/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery.dirty.js' %}"></script>
     <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
     <script>const LANG_PREFIX = {% if LANGUAGE_CODE == 'nb' %} "" {% else %} "/{{ LANGUAGE_CODE }}" {% endif %};</script>
     {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}

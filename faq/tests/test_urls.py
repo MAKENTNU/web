@@ -10,6 +10,7 @@ class UrlTests(TestCase):
     def setUp(self):
         self.category1 = Category.objects.create(name="Category 1")
         self.category2 = Category.objects.create(name="Category 2")
+        self.categories = (self.category1, self.category2)
 
         self.question1 = Question.objects.create(title="Question 1", answer="Answer to question 1!")
         self.question1.categories.add(self.category1)
@@ -21,11 +22,18 @@ class UrlTests(TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             Get(reverse('faq_list'), public=True),
-            Get(reverse('faq_admin_list'), public=False),
-            Get(reverse('faq_create'), public=False),
+            Get(reverse('faq_admin_panel'), public=False),
+            Get(reverse('admin_question_list'), public=False),
+            Get(reverse('question_create'), public=False),
             *[
-                Get(reverse('faq_edit', kwargs={'pk': question.pk}), public=False)
+                Get(reverse('question_update', kwargs={'pk': question.pk}), public=False)
                 for question in self.questions
+            ],
+            Get(reverse('admin_category_list'), public=False),
+            Get(reverse('category_create'), public=False),
+            *[
+                Get(reverse('category_update', kwargs={'pk': category.pk}), public=False)
+                for category in self.categories
             ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates)

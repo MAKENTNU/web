@@ -4,10 +4,10 @@ from django_hosts import reverse
 
 from news.tests.test_urls import UrlTests as NewsUrlTests
 from users.models import User
-from util.test_utils import Get, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, assert_requesting_paths_succeeds
 
 
-class UrlTests(TestCase):
+class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         username = "TEST_USER"
@@ -38,6 +38,12 @@ class UrlTests(TestCase):
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
+    def test_all_admin_get_request_paths_succeed(self):
+        path_predicates = [
+            Get('/robots.txt', public=True, translated=False),
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')
+
     def test_all_old_urls_succeed(self):
         path_predicates = [
             Get('/rules/', public=True, success_code=301),
@@ -64,5 +70,3 @@ class UrlTests(TestCase):
         # Should not redirect to login (caused by the above line)
         response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
         self.assertRedirects(response, '/en/')
-
-# TODO: test views' logic

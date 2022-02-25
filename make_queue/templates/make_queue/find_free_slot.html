@@ -16,7 +16,7 @@
 
     <div class="ui container">
         <h1>{% trans "Find free reservation slots" %}</h1>
-        <form class="ui form" method="POST">
+        <form class="dont-prevent-leaving ui form" method="POST">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">

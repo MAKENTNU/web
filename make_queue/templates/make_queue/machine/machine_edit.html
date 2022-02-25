@@ -1,4 +1,5 @@
 {% extends 'web/base.html' %}
+{% load static %}
 {% load i18n %}
 
 
@@ -68,6 +69,13 @@
                 <div class="ui field">
                     <label>{{ form.status.label }}</label>
                     {{ form.status }}
+                </div>
+            </div>
+
+            <div class="ui two fields">
+                <div class="ui text field">
+                    <label>{{ form.stream_name.label }}</label>
+                    {{ form.stream_name }}
                 </div>
             </div>
 

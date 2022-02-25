@@ -5,7 +5,7 @@ from ...forms import Printer3DCourseForm
 from ...models.course import Printer3DCourse
 
 
-class Printer3DCourseFormTests(TestCase):
+class TestPrinter3DCourseForm(TestCase):
 
     def setUp(self):
         self.superuser = User.objects.create_user("superuser", is_superuser=True)
