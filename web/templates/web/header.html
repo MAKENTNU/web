@@ -125,19 +125,7 @@
             </a>
         {% endif %}
 
-        <div class="lang-link ui inverted secondary menu">
-            <div class="ui language link item">
-                <div class="text">
-                    {% if LANGUAGE_CODE == "en" %}
-                        Norsk
-                    {% else %}
-                        English
-                    {% endif %}
-                </div>
-                <i class="globe icon text"></i>
-            </div>
-        </div>
-
+        {% include 'web/forms/language_form.html' %}
     </div>
 </header>
 
@@ -148,15 +136,3 @@
         {% include 'announcements/announcement.html' with announcement=announcement %}
     {% endfor %}
 {% endblock announcements %}
-
-{# This form is hidden, but is submitted through jQuery #}
-<form id="lang-form" class="dont-prevent-leaving" action="{% url 'set_language' %}" method="POST">
-    {% csrf_token %}
-    {% if LANGUAGE_CODE == "en" %}
-        <input name="language" type="hidden" value="nb"/>
-        <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/> {# removes "/en" #}
-    {% else %}
-        <input name="language" type="hidden" value="en"/>
-        <input name="next" type="hidden" value="/en{{ request.get_full_path }}"/>
-    {% endif %}
-</form>
