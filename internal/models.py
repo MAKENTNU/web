@@ -200,6 +200,8 @@ class SystemAccess(models.Model):
         constraints = (
             models.UniqueConstraint(fields=('name', 'member'), name="%(class)s_unique_name_per_member"),
         )
+        verbose_name = "system access"
+        verbose_name_plural = "system accesses"
 
     def __str__(self):
         return _("Access for {member} to {name}: {has_access}").format(member=self.member, name=self.name, has_access=self.value)
