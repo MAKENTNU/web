@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Access" %}{% endblock title %}
+{% block title %}{% trans "access"|capfirst %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/quota_panel.css' %}"/>
@@ -44,7 +44,7 @@
                             <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
                         </span>
                         {% if quota.ignore_rules %}
-                            <b>{% trans "Ignores rules" %}</b>
+                            <b>{% trans "ignores rules"|capfirst %}</b>
                         {% endif %}
                     </div>
                 </div>

@@ -39,7 +39,10 @@ class MultiLingualTextField(models.TextField):
             return value
         if isinstance(value, MultiLingualTextStructure):
             # Save the content as a JSON object with languages as keys
-            return json.dumps({language: value[language] for language in value.supported_languages})
+            return json.dumps(
+                {language: value[language] for language in value.supported_languages},
+                ensure_ascii=False,  # prevents replacing unicode characters with \u encoding, which would have messed with searching
+            )
         return value
 
     def from_db_value(self, value, expression, connection):

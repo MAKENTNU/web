@@ -13,6 +13,7 @@ admin.site.site_url = f"//{settings.PARENT_HOST}/"
 
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='admin/robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
     path("i18n/", decorator_include(
         staff_member_required,
         'django.conf.urls.i18n'
@@ -22,6 +23,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     # Including `admin.site.urls` must be done last, to prevent other paths being "hidden" behind Django admin's catch-all path
     path("", admin.site.urls),
+
     prefix_default_language=False,
 )
 

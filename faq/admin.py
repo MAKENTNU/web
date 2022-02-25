@@ -11,10 +11,11 @@ class QuestionAdmin(MultiLingualFieldAdmin):
     list_display = ('title', 'get_categories', 'last_modified')
     list_filter = ('categories',)
     search_fields = ('title', 'answer', 'categories__name')
+
     filter_horizontal = ('categories',)
     readonly_fields = ('last_modified',)
 
-    @admin.display(description=_("Categories"))
+    @admin.display(description=_("categories"))
     def get_categories(self, question: Question):
         category_strings = [
             link_to_admin_change_form(category)

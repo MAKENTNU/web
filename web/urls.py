@@ -21,6 +21,7 @@ extra = "/" if getattr(settings, setting_name('TRAILING_SLASH'), True) else ""
 urlpatterns = [
     path("i18n/", include('django.conf.urls.i18n')),
     path("robots.txt", TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
 ]
 
 about_urlpatterns = [
@@ -46,6 +47,7 @@ urlpatterns += i18n_patterns(
     DisplayContentBoxView.get_path('privacypolicy'),
 
     path("jsi18n/", JavaScriptCatalog.as_view(), name='javascript_catalog'),
+
     prefix_default_language=False,
 )
 
@@ -55,9 +57,10 @@ if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
         path("login/", RedirectView.as_view(url="/login/dataporten/", query_string=True), name='login'),
         path("logout/", Logout.as_view(), name='logout'),
 
-        # Should come before `social_django.urls` to override social_django's `complete` view
+        # Should come before `social_django.urls` below, to override social_django's `complete` view
         re_path(rf"^complete/(?P<backend>[^/]+){extra}$", login_wrapper),
         path("", include('social_django.urls', namespace='social')),
+
         prefix_default_language=False,
     )
 else:
@@ -66,11 +69,13 @@ else:
     urlpatterns += i18n_patterns(
         path("login/", auth_views.LoginView.as_view(template_name='web/login.html', redirect_authenticated_user=True), name='login'),
         path("logout/", auth_views.LogoutView.as_view(next_page="/"), name='logout'),
+
         prefix_default_language=False,
     )
 
 # CKEditor URLs
 urlpatterns += [
+    # Based on the URLs in https://github.com/django-ckeditor/django-ckeditor/blob/9866ebe098794eca7a5132d6f2a4b1d1d837e735/ckeditor_uploader/urls.py
     path("ckeditor/upload/", permission_required('contentbox.can_upload_image')(ckeditor_views.upload), name='ckeditor_upload'),
     path("ckeditor/browse/", never_cache(permission_required('contentbox.can_browse_image')(ckeditor_views.browse)), name='ckeditor_browse'),
 ]
@@ -81,6 +86,7 @@ urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
     path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
     path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+
     prefix_default_language=False,
 )
 

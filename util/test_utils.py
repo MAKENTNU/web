@@ -6,12 +6,12 @@ from http import HTTPStatus
 from typing import Any, Collection, Dict, List, Set, Tuple, TypeVar
 from urllib.parse import urlparse
 
-from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, SimpleTestCase, TestCase, override_settings
+from django.test import Client, SimpleTestCase, override_settings
 from django.utils import translation
 
 from users.models import User
+
 
 # A very small JPEG image without any content; used for mocking a valid image while testing
 MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
@@ -150,10 +150,3 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
 
     # Reactivate the previously set language, as requests to translated URLs change the active language
     translation.activate(previous_language)
-
-
-class PermissionsTestCase(TestCase):
-
-    @staticmethod
-    def add_permissions(user: User, *codenames: str):
-        user.user_permissions.add(*Permission.objects.filter(codename__in=codenames))

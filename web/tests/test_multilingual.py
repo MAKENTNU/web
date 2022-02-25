@@ -143,6 +143,22 @@ class TestMultiLingualTextField(TestCase):
         self.assertEqual("test", field.get_prep_value("test"),
                          "get_prep_value should not do anything with other object types.")
 
+    def test_get_prep_value_does_not_escape_non_ascii_characters(self):
+        # Demonstration of the earlier bug:
+        failure_demo_value = json.dumps({"nb": "Abc å"})
+        success_demo_value = json.dumps({"nb": "Abc å"}, ensure_ascii=False)
+        self.assertNotIn("å", failure_demo_value)
+        self.assertIn("å", success_demo_value)
+        self.assertEqual(failure_demo_value, r'{"nb": "Abc \u00e5"}')
+
+        field = MultiLingualTextField()
+        content = {
+            "nb": "Test æøå",
+            "en": "Test ???",
+        }
+        structure = MultiLingualTextStructure(json.dumps(content), False)
+        self.assertIn('"nb": "Test æøå"', field.get_prep_value(structure))
+
     def test_from_db_value(self):
         """
         Tests the ``from_db_value()`` method. Which should always return a ``MultiLingualTextStructure``.

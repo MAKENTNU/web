@@ -18,6 +18,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='member',
             name='date_quit_or_retired',
-            field=models.DateField(blank=True, null=True, verbose_name='Date quit or retired'),
+            field=models.DateField(blank=True, null=True, verbose_name='date quit or retired'),
         ),
     ]

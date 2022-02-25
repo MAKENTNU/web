@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newsbase',
             name='featured',
-            field=models.BooleanField(default=True, verbose_name='Fremhevet'),
+            field=models.BooleanField(default=True, verbose_name='fremhevet'),
         ),
     ]

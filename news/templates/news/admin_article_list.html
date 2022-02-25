@@ -22,19 +22,19 @@
                         <div class="meta">
                             {% if article.featured %}
                                 <div class="ui green mini label">
-                                    {% trans "Featured" %}
+                                    {% trans "featured"|capfirst %}
                                 </div>
                             {% endif %}
 
                             {% if article.hidden %}
                                 <div class="ui red mini label">
-                                    {% trans "Hidden" %}
+                                    {% trans "hidden"|capfirst %}
                                 </div>
                             {% endif %}
 
                             {% if article.private %}
                                 <div class="ui make-bg-yellow mini label">
-                                    {% trans "Internal" %}
+                                    {% trans "internal"|capfirst %}
                                 </div>
                             {% endif %}
                         </div>

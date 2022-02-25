@@ -1,15 +1,16 @@
 from datetime import timedelta
 from http import HTTPStatus
 
+from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE, PermissionsTestCase
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
 from ...models import Event, EventTicket, TimePlace
 
 
-class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
+class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         username = 'TEST_USER'
@@ -41,7 +42,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         response = self.client.get(reverse('event_create'))
         self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
-        self.add_permissions(self.user, 'add_event')
+        self.user.add_perms('news.add_event')
         response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -49,7 +50,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
         self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
-        self.add_permissions(self.user, 'change_event')
+        self.user.add_perms('news.change_event')
         response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -59,8 +60,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
         self.assertNotEqual(response.status_code, HTTPStatus.OK)
 
-        self.add_permissions(self.user, 'add_timeplace')
-        self.add_permissions(self.user, 'change_timeplace')
+        self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
         response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
 
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
@@ -73,8 +73,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         self.assertEqual(new.end_time, new_end_time)
 
     def test_timplace_duplicate_old(self):
-        self.add_permissions(self.user, 'add_timeplace')
-        self.add_permissions(self.user, 'change_timeplace')
+        self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
 
         start_time = timezone.localtime() - timedelta(weeks=2, days=3)
         end_time = start_time + timedelta(days=1)
@@ -102,7 +101,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
-        self.add_permissions(self.user, 'change_event')
+        self.user.add_perms('news.change_event')
         response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -115,7 +114,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
-        self.add_permissions(self.user, 'can_view_private')
+        self.user.add_perms('news.can_view_private')
         response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -174,7 +173,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         """
 
         self.create_tickets_for(event, username_and_ticket_state_tuples)
-        self.add_permissions(self.user, "change_event")
+        self.user.add_perms('news.change_event')
 
         response = self.client.get(reverse(url_name, args=[event.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)

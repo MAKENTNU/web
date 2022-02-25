@@ -15,24 +15,24 @@ from .machine import Machine, MachineType
 
 
 class Quota(models.Model):
-    all = models.BooleanField(default=False, verbose_name=_("All users"))
+    all = models.BooleanField(default=False, verbose_name=_("all users"))
     user = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name='quotas',
-        verbose_name=_("User"),
+        verbose_name=_("user"),
     )
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.CASCADE,
         related_name='quotas',
-        verbose_name=_("Machine type"),
+        verbose_name=_("machine type"),
     )
-    number_of_reservations = models.IntegerField(default=1, verbose_name=_("Number of reservations"))
-    diminishing = models.BooleanField(default=False, verbose_name=_("Diminishing"))
-    ignore_rules = models.BooleanField(default=False, verbose_name=_("Ignores rules"))
+    number_of_reservations = models.IntegerField(default=1, verbose_name=_("number of reservations"))
+    diminishing = models.BooleanField(default=False, verbose_name=_("diminishing"))
+    ignore_rules = models.BooleanField(default=False, verbose_name=_("ignores rules"))
 
     class Meta:
         permissions = (
@@ -242,15 +242,15 @@ class ReservationRule(models.Model):
         to=MachineType,
         on_delete=models.CASCADE,
         related_name='reservation_rules',
-        verbose_name=_("Machine type"),
+        verbose_name=_("machine type"),
     )
-    start_time = models.TimeField(verbose_name=_("Start time"))
-    end_time = models.TimeField(verbose_name=_("End time"))
+    start_time = models.TimeField(verbose_name=_("start time"))
+    end_time = models.TimeField(verbose_name=_("end time"))
     # Number of times passed by midnight between start and end time
-    days_changed = models.IntegerField(verbose_name=_("Days"))
-    start_days = models.IntegerField(default=0, verbose_name=_("Start days for rule periods"))
-    max_hours = models.FloatField(verbose_name=_("Hours single period"))
-    max_inside_border_crossed = models.FloatField(verbose_name=_("Hours multi-period"))
+    days_changed = models.IntegerField(verbose_name=_("days"))
+    start_days = models.IntegerField(default=0, verbose_name=_("start days for rule periods"))
+    max_hours = models.FloatField(verbose_name=_("hours single period"))
+    max_inside_border_crossed = models.FloatField(verbose_name=_("hours multi-period"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def save(self, **kwargs):

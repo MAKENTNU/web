@@ -10,9 +10,10 @@ class EquipmentAdmin(MultiLingualFieldAdmin):
     list_display = ('title', 'get_image', 'priority', 'last_modified')
     search_fields = ('title', 'description')
     list_editable = ('priority',)
+
     readonly_fields = ('last_modified',)
 
-    @admin.display(description=_("Image"))
+    @admin.display(description=_("image"))
     def get_image(self, equipment: Equipment):
         return html_utils.tag_media_img(
             equipment.image.url, url_host_name='main',

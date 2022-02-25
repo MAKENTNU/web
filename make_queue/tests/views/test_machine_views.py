@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from django.contrib.auth.models import Permission
 from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
@@ -103,9 +102,7 @@ class TestCreateAndEditMachineView(TestCase):
         username = "TEST_USER"
         password = "TEST_PASS"
         self.user = User.objects.create_user(username=username, password=password)
-        change_permission = Permission.objects.get(codename='change_machine')
-        create_permission = Permission.objects.get(codename='add_machine')
-        self.user.user_permissions.add(create_permission, change_permission)
+        self.user.add_perms('make_queue.add_machine', 'make_queue.change_machine')
         self.client.login(username=username, password=password)
 
     def test_edit_machine_context_data_has_correct_form(self):

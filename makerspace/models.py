@@ -16,13 +16,13 @@ class EquipmentQuerySet(models.QuerySet):
 
 
 class Equipment(models.Model):
-    title = MultiLingualTextField(unique=True, verbose_name=_("Title"))
-    description = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
-    image = models.ImageField(upload_to='equipment', verbose_name=_("Image"))
+    title = MultiLingualTextField(unique=True, verbose_name=_("title"))
+    description = MultiLingualRichTextUploadingField(verbose_name=_("description"))
+    image = models.ImageField(upload_to='equipment', verbose_name=_("image"))
     priority = models.IntegerField(
         null=True,
         blank=True,
-        verbose_name=_("Priority"),
+        verbose_name=_("priority"),
         help_text=_("If specified, the equipment is sorted ascending by this value."),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))

@@ -10,11 +10,12 @@ from .models import Member, Secret, SystemAccess
 class MemberAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     list_display = ('get_name', 'last_modified')
     list_select_related = ('user',)
+
     readonly_fields = ('last_modified',)
 
     @admin.display(
         ordering=Concat('user__first_name', 'user__last_name'),
-        description=_("Full name"),
+        description=_("full name"),
     )
     def get_name(self, member: Member):
         return str(member)
@@ -23,6 +24,7 @@ class MemberAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
 class SystemAccessAdmin(admin.ModelAdmin):
     list_display = ('member', 'name', 'value', 'last_modified')
     list_select_related = ('member__user',)
+
     readonly_fields = ('last_modified',)
 
 
@@ -30,6 +32,7 @@ class SecretAdmin(MultiLingualFieldAdmin):
     list_display = ('title', 'priority', 'last_modified')
     search_fields = ('title', 'content')
     list_editable = ('priority',)
+
     readonly_fields = ('last_modified',)
 
     def get_queryset(self, request):

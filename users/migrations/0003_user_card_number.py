@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='card_number',
-            field=card.modelfields.CardNumberField(blank=True, error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, verbose_name='Card number'),
+            field=card.modelfields.CardNumberField(blank=True, error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, verbose_name='card number'),
         ),
     ]

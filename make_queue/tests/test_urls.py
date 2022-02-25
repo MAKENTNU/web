@@ -1,7 +1,6 @@
 from abc import ABC
 from datetime import timedelta
 
-from django.contrib.auth.models import Permission
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_time
@@ -54,7 +53,7 @@ class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
             user=self.user2, username=self.user2.username, date=timezone.localdate(), status=Printer3DCourse.Status.REGISTERED,
         )
 
-        self.user1.user_permissions.add(Permission.objects.get(codename='can_create_event_reservation'))
+        self.user1.add_perms('make_queue.can_create_event_reservation')
 
         self.quota1 = Quota.objects.create(all=True, machine_type=self.printer_machine_type, number_of_reservations=3)
         self.quota2 = Quota.objects.create(all=True, machine_type=self.sewing_machine_type)

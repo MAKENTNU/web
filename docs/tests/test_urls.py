@@ -6,7 +6,7 @@ from django_hosts import reverse
 
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds
-from .models import Content, Page
+from ..models import Content, Page
 
 
 class UrlTests(TestCase):
@@ -41,6 +41,7 @@ class UrlTests(TestCase):
             Get(self.reverse('edit_page', pk=self.page1), public=False),
             Get(self.reverse('search_pages'), public=False),
             Get('/robots.txt', public=True, translated=False),
+            Get('/.well-known/security.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'docs')
 

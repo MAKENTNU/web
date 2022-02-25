@@ -372,7 +372,7 @@ useful for checking e.g. that a request doesn't query the database more times th
 # }
 
 
-# [SHOULD ALWAYS COME LAST] Override the settings above
+# [SHOULD BE KEPT LAST IN THIS FILE] Override the settings above
 try:
     from .local_settings_post import *
 except ImportError:

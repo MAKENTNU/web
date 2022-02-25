@@ -3,7 +3,7 @@ from django.utils import timezone
 from django_hosts import reverse
 
 from util.test_utils import Get, assert_requesting_paths_succeeds
-from .models import Announcement
+from ..models import Announcement
 
 
 class UrlTests(TestCase):

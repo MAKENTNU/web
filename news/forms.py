@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from typing import Type
+from typing import Dict, Type
 
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -39,10 +39,10 @@ class NewsBaseForm(forms.ModelForm):
         widgets = {
             'image': SemanticFileInput(),
         }
-        help_texts: dict
+        help_texts: Dict[str, str]
 
         @staticmethod
-        def get_help_texts(news_class: Type[NewsBase]):
+        def get_help_texts(news_class: Type[NewsBase]) -> Dict[str, str]:
             the_type, content_help_text = None, None
             if news_class is Article:
                 the_type = _("the article")

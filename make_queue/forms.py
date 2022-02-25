@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
@@ -117,12 +118,13 @@ class QuotaForm(forms.ModelForm):
     user = UserModelChoiceField(
         queryset=User.objects.all(),
         widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
-        label=_("User"),
+        # `capfirst()` to avoid duplicate translation differing only in case
+        label=capfirst(_("user")),
         required=False,
     )
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by('priority'),
-        label=_("Machine type"),
+        label=capfirst(_("machine type")),
         empty_label=_("Select machine type"),
         widget=SemanticChoiceInput,
     )
@@ -199,7 +201,8 @@ class Printer3DCourseForm(forms.ModelForm):
 class FreeSlotForm(forms.Form):
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by('priority'),
-        label=_("Machine type"),
+        # `capfirst()` to avoid duplicate translation differing only in case
+        label=capfirst(_("machine type")),
         widget=SemanticChoiceInput,
     )
     hours = forms.IntegerField(min_value=0, initial=1, label=_("Duration in hours"))
@@ -209,7 +212,8 @@ class FreeSlotForm(forms.Form):
 class BaseMachineForm(forms.ModelForm):
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by('priority'),
-        label=_("Machine type"),
+        # `capfirst()` to avoid duplicate translation differing only in case
+        label=capfirst(_("machine type")),
         empty_label=_("Select machine type"),
         widget=SemanticChoiceInput(attr_name_to_attr_value_getter={
             'has-stream': lambda iterator_value: iterator_value.instance.has_stream if iterator_value else None,

@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event',
             name='event_type',
-            field=models.CharField(choices=[('R', 'Repeating'), ('S', 'Standalone')], default='R', max_length=1, verbose_name='Type of event'),
+            field=models.CharField(choices=[('R', 'Repeating'), ('S', 'Standalone')], default='R', max_length=1, verbose_name='type of event'),
         ),
         migrations.RunPython(event_type_from_multiday, reverse_event_type_from_multiday),
         migrations.RemoveField(

@@ -1,13 +1,12 @@
 from http import HTTPStatus
 
-from django.contrib.auth.models import Permission
 from django.test import Client, TestCase
 from django_hosts import reverse
 
 from users.models import User
 from web.urls import urlpatterns as base_urlpatterns
-from .models import ContentBox
-from .views import DisplayContentBoxView
+from ..models import ContentBox
+from ..views import DisplayContentBoxView
 
 
 TEST_TITLE = 'test_title'
@@ -52,7 +51,7 @@ class ModelAndViewTests(TestCase):
 
     def test_visiting_edit_page_is_only_allowed_for_users_with_permission(self):
         user = User.objects.create_user(username="user1")
-        user.user_permissions.add(Permission.objects.get(codename='change_contentbox'))
+        user.add_perms('contentbox.change_contentbox')
         user_client = Client()
         user_client.force_login(user)
         anon_client = Client()

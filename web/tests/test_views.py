@@ -2,8 +2,6 @@ from datetime import datetime, timedelta
 from http import HTTPStatus
 from typing import List
 
-from django.contrib.auth.models import Permission
-from django.contrib.contenttypes.models import ContentType
 from django.test import Client, TestCase
 from django.utils import timezone
 from django_hosts import reverse
@@ -133,7 +131,7 @@ class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
     def test_context_data_contains_expected_private_events(self):
         now = timezone.now()
         internal_user = User.objects.create_user(username="internal_user")
-        internal_user.user_permissions.add(Permission.objects.get(codename='can_view_private', content_type=ContentType.objects.get_for_model(Event)))
+        internal_user.add_perms('news.can_view_private')
         internal_client = Client()
         internal_client.force_login(internal_user)
 
@@ -171,5 +169,5 @@ class AdminPanelViewTests(TestCase):
         self.client.force_login(user)
         assert_can_view_page(False)
 
-        user.user_permissions.add(Permission.objects.get(codename='add_article'))
+        user.add_perms('news.add_article')
         assert_can_view_page(True)

@@ -85,9 +85,9 @@
         grid-column: 2/3;
     }
 
-    .article-text.article-first .txtborder.tr,
-    .article-text.article-last.float-right .txtborder.bl,
-    .article-text.article-last.float-left .txtborder.br {
+    .article-text.first .txtborder.tr,
+    .article-text.last.float-right .txtborder.bl,
+    .article-text.last.float-left .txtborder.br {
         display: inline;
     }
 }
