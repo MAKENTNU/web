@@ -43,3 +43,17 @@ CKEDITOR.on("dialogDefinition", function (evt) {
         targetField["default"] = "_blank";
     }
 });
+
+// Set the link target based on whether the link type is `anchor` or not
+for (const [_name, instance] of Object.entries(CKEDITOR.instances)) {
+    instance.on("dialogShow", function (evt) {
+        const dialog = evt.data;
+        // Code based on https://stackoverflow.com/a/7040445
+        dialog._.contents.info.linkType.on("change", function (evt) {
+            // `anchor` links (<a> tags with an `href` that starts with `#` followed by the ID of an HTML element)
+            // should not have `target="_blank"`
+            const linkTarget = (this.getValue() === "anchor") ? "notSet" : "_blank";
+            dialog.setValueOf("target", "linkTargetType", linkTarget);
+        });
+    });
+}
