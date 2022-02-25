@@ -8,4 +8,5 @@ class UtilConfig(AppConfig):
     name = 'util'
 
     def ready(self):
+        # Register / connect to the signals here when the app starts
         signals.connect()
