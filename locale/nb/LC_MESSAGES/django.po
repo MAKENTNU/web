@@ -305,10 +305,18 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
+#: contentbox/admin.py:15 contentbox/models.py:20
+msgid "extra change permissions"
+msgstr "ekstra endringsrettigheter"
+
 #: contentbox/models.py:11 docs/models.py:15 internal/models.py:241
 #: makerspace/models.py:19 news/models.py:35
 msgid "title"
 msgstr "tittel"
+
+#: contentbox/models.py:21
+msgid "Extra permissions that are required for editing the content box."
+msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 
 #: contentbox/models.py:14 docs/models.py:54 faq/models.py:41
 #: groups/models.py:34 groups/models.py:102 internal/models.py:59

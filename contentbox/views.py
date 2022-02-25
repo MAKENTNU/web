@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin
-from .forms import ContentBoxForm
+from .forms import ContentBoxForm, EditSourceContentBoxForm
 from .models import ContentBox
 
 
@@ -27,9 +27,12 @@ class DisplayContentBoxView(DetailView):
 
     def get_context_data(self, **kwargs):
         return {
-            'user_can_change': self.request.user.has_perms(self.change_perms),
+            'user_can_change': self.request.user.has_perms(self.get_change_perms()),
             **super().get_context_data(**kwargs),
         }
+
+    def get_change_perms(self):
+        return self.change_perms + self.get_object().extra_change_perms_str_tuple
 
     @classmethod
     def get_path(cls, title: str):
@@ -51,6 +54,16 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
     template_name = 'contentbox/edit.html'
 
     narrow = False
+
+    def get_permission_required(self):
+        return self.permission_required + self.get_object().extra_change_perms_str_tuple
+
+    def get_form_class(self):
+        # Allow editing HTML source code if this permission is required by the view
+        # (not if the user has the permission or not, as that is handled by `PermissionRequiredMixin`):
+        if 'internal.can_change_rich_text_source' in self.get_permission_required():
+            return EditSourceContentBoxForm
+        return super().get_form_class()
 
     def get_form_title(self):
         return _("Edit “{title}”").format(title=self.object.title)

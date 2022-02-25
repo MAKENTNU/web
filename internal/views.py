@@ -8,8 +8,6 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from contentbox.forms import EditSourceContentBoxForm
-from contentbox.models import ContentBox
 from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
@@ -25,7 +23,7 @@ class HomeView(DisplayContentBoxView):
         'base_template': 'internal/base.html',
     }
 
-    change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox', 'internal.can_change_rich_text_source')
+    change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)
     title = 'home'
 
 
@@ -34,25 +32,6 @@ class EditInternalContentBoxView(EditContentBoxView):
     raise_exception = True
 
     base_template = 'internal/base.html'
-
-    is_home: bool
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        content_box: ContentBox = self.get_object()
-        self.is_home = content_box.title == HomeView.title
-
-    def has_permission(self):
-        extra_permissions = []
-        if self.is_home:
-            extra_permissions.append(self.request.user.has_perm('internal.can_change_rich_text_source'))
-
-        return super().has_permission() and all(extra_permissions)
-
-    def get_form_class(self):
-        if self.is_home:
-            return EditSourceContentBoxForm
-        return super().get_form_class()
 
 
 class SecretListView(ListView):
