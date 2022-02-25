@@ -11,23 +11,22 @@ class CardNumberField(models.CharField):
     default_validators = [card_number_validator]
 
     def __init__(self, **kwargs):
-        kwargs = {
-            "verbose_name": _("Card number"),
-            "validators": self.default_validators,
-            "max_length": 10,
-            "error_messages": {
+        super().__init__(**{
+            'verbose_name': _("Card number"),
+            'max_length': 10,  # No card numbers are more than ten digits long
+            'error_messages': {
                 "unique": _("Card number already in use"),
             },
             **kwargs,
-        }
-        super().__init__(**kwargs)  # No card numbers are more than ten digits long
+        })
 
     def formfield(self, **kwargs):
         from . import formfields  # avoids circular imports
 
-        if "form_class" not in kwargs:
-            kwargs["form_class"] = formfields.CardNumberField
-        return super().formfield(**kwargs)
+        return super().formfield(**{
+            'form_class': formfields.CardNumberField,
+            **kwargs,
+        })
 
     def get_prep_value(self, value):
         if isinstance(value, CardNumber):

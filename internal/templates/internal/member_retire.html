@@ -2,6 +2,8 @@
 {% load i18n %}
 
 
+{# TODO: refactor this template and the `member_quit` template, to reduce code duplication #}
+
 {% block extra_head %}
     {{ form.media }}
 {% endblock extra_head %}
@@ -9,7 +11,7 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{% blocktrans with name=form.instance.user.get_full_name %}Set member {{ name }} as quit{% endblocktrans %}</h1>
+        <h1>{% blocktrans with name=form.instance.user.get_full_name %}Set member {{ name }} as retired{% endblocktrans %}</h1>
         <form class="ui form" method="POST" action="">
             {% csrf_token %}
             <div class="ui two fields">
@@ -17,12 +19,8 @@
                     <label>{{ form.date_quit_or_retired.label }}</label>
                     {{ form.date_quit_or_retired }}
                 </div>
-                <div class="ui field">
-                    <label>{{ form.reason_quit.label }}</label>
-                    {{ form.reason_quit }}
-                </div>
             </div>
-            <button class="ui right floated make-bg-yellow button">{% trans "Set quit" %}</button>
+            <button class="ui right floated make-bg-yellow button">{% trans "Set retired" %}</button>
             <a class="ui right floated red button" href="{% url 'member_list' %}">{% trans "Cancel" context "abort action" %}</a>
         </form>
     </div>

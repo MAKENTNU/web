@@ -15,8 +15,8 @@
             {% csrf_token %}
             <div class="ui two fields">
                 <div class="ui field">
-                    <label>{{ form.email.label }}</label>
-                    {{ form.email }}
+                    <label>{{ form.contact_email.label }}</label>
+                    {{ form.contact_email }}
                 </div>
                 <div class="ui field">
                     <label>{{ form.phone_number.label }}</label>
@@ -31,9 +31,43 @@
             </div>
             <div class="ui two fields">
                 <div class="ui field">
+                    <label>{{ form.gmail.label }}</label>
+                    {{ form.gmail }}
+                </div>
+                <div class="ui field">
+                    {# TODO: reduce code duplication for the error messages #}
+                    <label>{{ form.MAKE_email.label }}</label>
+                    {{ form.MAKE_email }}
+                    {% for error in form.MAKE_email.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui two fields">
+                <div class="ui field">
                     <label>{{ form.study_program.label }}</label>
                     {{ form.study_program }}
                 </div>
+                <div class="ui field">
+                    {# TODO: reduce code duplication for the error messages #}
+                    <label>{{ form.ntnu_starting_semester.label }}
+                        <span data-content="{{ form.ntnu_starting_semester.help_text }}">
+                            <i class="ui make-col-yellow question circle icon"></i>
+                        </span>
+                    </label>
+                    {{ form.ntnu_starting_semester }}
+                    {% for error in form.ntnu_starting_semester.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui two fields">
                 <div class="ui field">
                     <label>{{ form.card_number.label }}</label>
                     {{ form.card_number }}
@@ -43,6 +77,33 @@
                             <b>{{ error|escape }}</b>
                         </div>
                     {% endfor %}
+                </div>
+            </div>
+
+            <h4 class="ui horizontal divider header">
+                <i class="info circle icon"></i>{% trans "Extra information" %}
+            </h4>
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.github_username.label }}</label>
+                    {{ form.github_username }}
+                </div>
+                <div class="ui field">
+                    {# TODO: reduce code duplication for the error messages #}
+                    <label>{{ form.discord_username.label }}</label>
+                    {{ form.discord_username }}
+                    {% for error in form.discord_username.errors %}
+                        <div class="ui negative small message">
+                            <i class="close icon"></i>
+                            <b>{{ error }}</b>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label>{{ form.minecraft_username.label }}</label>
+                    {{ form.minecraft_username }}
                 </div>
             </div>
 

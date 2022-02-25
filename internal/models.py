@@ -3,8 +3,6 @@ from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
-from django.db.models.signals import m2m_changed
-from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -16,7 +14,9 @@ from groups.models import Committee
 from users.models import User
 from web.modelfields import UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
-from .util import date_to_term
+from .modelfields import SemesterField
+from .util import date_to_semester, year_to_semester
+from .validators import WhitelistedEmailValidator, discord_username_validator
 
 
 class Member(models.Model):
@@ -34,11 +34,16 @@ class Member(models.Model):
         verbose_name=_("Committees"),
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
-    email = models.EmailField(blank=True, verbose_name=_("Contact email"))
+    contact_email = models.EmailField(blank=True, verbose_name=_("Contact email"))
+    gmail = models.EmailField(blank=True, verbose_name=_("Gmail"))
+    MAKE_email = models.EmailField(blank=True, validators=[WhitelistedEmailValidator(valid_domains=["makentnu.no"])],
+                                   verbose_name=_("MAKE email"))
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
     study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
+    ntnu_starting_semester = SemesterField(null=True, blank=True, verbose_name=_("starting semester at NTNU"),
+                                           help_text=_('Must be in the format [V/H][year], e.g. “V17” or “H2017”.'))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
-    date_quit = models.DateField(null=True, blank=True, verbose_name=_("Date quit"))
+    date_quit_or_retired = models.DateField(null=True, blank=True, verbose_name=_("Date quit or retired"))
     reason_quit = models.TextField(blank=True, verbose_name=_("Reason quit"))
     comment = models.TextField(blank=True, verbose_name=_("Comment"))
     active = models.BooleanField(default=True, verbose_name=_("Is active"))
@@ -46,6 +51,10 @@ class Member(models.Model):
     quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
     retired = models.BooleanField(default=False, verbose_name=_("Retired"))
     honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
+    # Our code shouldn't have to keep track of these services' username length constraints, so we should not limit the length
+    github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
+    discord_username = UnlimitedCharField(blank=True, validators=[discord_username_validator], verbose_name=_("Discord username"))
+    minecraft_username = UnlimitedCharField(blank=True, verbose_name=_("Minecraft username"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
@@ -64,8 +73,6 @@ class Member(models.Model):
         super().save(force_insert, force_update, using, update_fields)
 
         if is_creation:
-            self.email = self.user.email
-
             # Setup all properties for new members
             for property_name, value in SystemAccess.NAME_CHOICES:
                 # All members will be registered on the website when added to the member list
@@ -87,40 +94,52 @@ class Member(models.Model):
 
 
     @property
-    def term_joined(self):
-        return date_to_term(self.date_joined)
+    def ntnu_starting_semester_display(self):
+        if not self.ntnu_starting_semester:
+            return ""
+        return year_to_semester(self.ntnu_starting_semester)
 
     @property
-    def term_quit(self):
-        if self.date_quit is None:
-            return None
-        return date_to_term(self.date_quit)
+    def semester_joined(self):
+        return date_to_semester(self.date_joined)
 
-    def set_quit(self, quit_status: bool, reason="", date_quit=timezone.now()):
+    @property
+    def semester_quit_or_retired(self):
+        if self.date_quit_or_retired is None:
+            return None
+        return date_to_semester(self.date_quit_or_retired)
+
+    def set_quit(self, quit_status: bool, reason="", date_quit_or_retired=timezone.now()):
         """
         Perform all the actions to set a member as quit or undo this action.
 
         :param quit_status: Indicates if the member has quit
         :param reason: The reason why the member has quit
-        :param date_quit: The date the member quit
+        :param date_quit_or_retired: The date the member quit
         """
         self.quit = quit_status
         if self.quit:
-            self.date_quit = date_quit
+            self.date_quit_or_retired = date_quit_or_retired
         else:
-            self.date_quit = None
+            self.date_quit_or_retired = None
 
         self.reason_quit = reason
         self.set_committee_membership(not quit_status)
         self.set_membership(not quit_status)
 
-    def set_retirement(self, retirement_status: bool):
+    def set_retirement(self, retirement_status: bool, date_quit_or_retired=timezone.now()):
         """
         Perform all the actions to set a member as retired or to undo this action.
 
         :param retirement_status: Indicates if the member has retired
+        :param date_quit_or_retired: The date the member retired
         """
         self.retired = retirement_status
+        if self.retired:
+            self.date_quit_or_retired = date_quit_or_retired
+        else:
+            self.date_quit_or_retired = None
+
         self.set_committee_membership(not retirement_status)
         self.set_membership(True)
 
@@ -148,21 +167,6 @@ class Member(models.Model):
                 make.first().user_set.add(self.user)
             else:
                 make.first().user_set.remove(self.user)
-
-
-@receiver(m2m_changed, sender=Member.committees.through)
-def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs):
-    """
-    Makes sure that the member is added/removed from the correct groups as their committee membership changes.
-    """
-    if action == 'pre_add':
-        committees = Committee.objects.filter(pk__in=pk_set)
-        for committee in committees:
-            committee.group.user_set.add(instance.user)
-    elif action == 'pre_remove':
-        committees = Committee.objects.filter(pk__in=pk_set)
-        for committee in committees:
-            committee.group.user_set.remove(instance.user)
 
 
 class SystemAccess(models.Model):

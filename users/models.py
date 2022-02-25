@@ -8,6 +8,7 @@ from card.modelfields import CardNumberField
 class User(AbstractUser):
     ldap_full_name = models.CharField(max_length=150, blank=True, verbose_name=_('Full name from LDAP'))
 
+    # Should allow `null` values even when it's a string-based field, as empty strings are checked by the unique constraint
     card_number = CardNumberField(null=True, blank=True, unique=True)
 
     def get_short_full_name(self):

@@ -16,6 +16,7 @@ unsafe_urlpatterns = [
     path("members/<int:pk>/edit/", views.EditMemberView.as_view(), name='edit_member'),
     path("members/<int:pk>/edit/status/", views.EditMemberStatusView.as_view(), name='edit_member_status'),
     path("members/<int:pk>/edit/status/quit/", views.MemberQuitView.as_view(), name='member_quit'),
+    path("members/<int:pk>/edit/status/retire/", views.MemberRetireView.as_view(), name='member_retire'),
     path("members/<int:member_pk>/access/<int:pk>/edit/", views.EditSystemAccessView.as_view(), name='edit_system_access'),
     path("secrets/", views.SecretListView.as_view(), name='secret_list'),
     path("secrets/create/", views.CreateSecretView.as_view(), name='create_secret'),
