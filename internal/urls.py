@@ -45,6 +45,7 @@ urlpatterns = i18n_patterns(
         permission_required('internal.view_secret', login_url=LOGIN_URL),
         secret_urlpatterns
     )),
+
     prefix_default_language=False,
 )
 

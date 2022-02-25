@@ -92,7 +92,6 @@ class Member(models.Model):
         else:
             return self.phone_number.as_international
 
-
     @property
     def ntnu_starting_semester_display(self):
         if not self.ntnu_starting_semester:

@@ -40,5 +40,6 @@ urlpatterns += i18n_patterns(
         permission_required('docs.view_page', login_url=LOGIN_URL),
         unsafe_urlpatterns
     )),
+
     prefix_default_language=False,
 )

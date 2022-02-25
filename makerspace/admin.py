@@ -10,6 +10,7 @@ class EquipmentAdmin(MultiLingualFieldAdmin):
     list_display = ('title', 'get_image', 'priority', 'last_modified')
     search_fields = ('title', 'description')
     list_editable = ('priority',)
+
     readonly_fields = ('last_modified',)
 
     @admin.display(description=_("image"))

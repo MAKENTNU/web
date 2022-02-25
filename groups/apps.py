@@ -1,5 +1,7 @@
 from django.apps import AppConfig
 
+from . import signals
+
 
 class GroupsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -7,5 +9,5 @@ class GroupsConfig(AppConfig):
 
     # noinspection PyUnresolvedReferences
     def ready(self):
-        # Import the signals here, so that they're registered/connected when the app starts
-        from . import signals
+        # Register / connect to the signals here when the app starts
+        signals.connect()

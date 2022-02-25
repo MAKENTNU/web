@@ -23,6 +23,7 @@ class NewsBaseAdmin(MultiLingualFieldAdmin):
     search_fields = ('title', 'content', 'clickbait')
     list_editable = ('contain', 'featured', 'hidden', 'private')
     list_display = ('__str__', *list_editable)  # prevents Django system check errors; the field is actually set in `get_list_display()` below
+
     readonly_fields = ('last_modified',)
 
     def get_list_display(self, request):
@@ -69,31 +70,33 @@ def get_ticket_table(tickets: QuerySet[EventTicket]):
     })
 
 
+class TimePlaceInline(TextFieldOverrideMixin, admin.TabularInline):
+    model = TimePlace
+    ordering = ('-start_time',)
+
+    readonly_fields = ('get_num_reserved_tickets', 'last_modified')
+    show_change_link = True
+
+    extra = 0
+
+    @admin.display(description=_("number of reserved tickets"))
+    def get_num_reserved_tickets(self, time_place: TimePlace):
+        return time_place.ticket_count
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.select_related('event')
+        return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
+
+
 class EventAdmin(NewsBaseAdmin):
     MAX_TICKET_OCCURRENCES_LISTED = 20
-
-    class TimePlaceInline(TextFieldOverrideMixin, admin.TabularInline):
-        model = TimePlace
-        ordering = ('-start_time',)
-        readonly_fields = ('get_num_reserved_tickets', 'last_modified')
-        show_change_link = True
-
-        extra = 0
-
-        @admin.display(description=_("number of reserved tickets"))
-        def get_num_reserved_tickets(self, time_place: TimePlace):
-            return time_place.ticket_count
-
-        def get_queryset(self, request):
-            qs = super().get_queryset(request)
-            qs = qs.select_related('event')
-            return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
-
-    inlines = [TimePlaceInline]
     form_base = EventForm
     list_display_extra = ('event_type', 'get_num_occurrences', 'get_future_occurrences', 'get_last_occurrence', 'get_number_of_tickets')
+
     list_filter = ('event_type', *NewsBaseAdmin.list_filter)
 
+    inlines = [TimePlaceInline]
     fieldsets = (
         (None, {
             'fields': (

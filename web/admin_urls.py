@@ -23,6 +23,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     # Including `admin.site.urls` must be done last, to prevent other paths being "hidden" behind Django admin's catch-all path
     path("", admin.site.urls),
+
     prefix_default_language=False,
 )
 

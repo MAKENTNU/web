@@ -11,6 +11,7 @@ class QuestionAdmin(MultiLingualFieldAdmin):
     list_display = ('title', 'get_categories', 'last_modified')
     list_filter = ('categories',)
     search_fields = ('title', 'answer', 'categories__name')
+
     filter_horizontal = ('categories',)
     readonly_fields = ('last_modified',)
 
