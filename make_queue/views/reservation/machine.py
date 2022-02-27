@@ -35,11 +35,15 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
 
     def get_custom_fieldsets(self):
         return [
-            {'fields': ('name', 'machine_type' if self.should_include_machine_type else None), 'layout_class': "two"},
-            {'fields': ('machine_model',), 'layout_class': "two"},
+            {'fields': ('machine_type' if self.should_include_machine_type else None, 'machine_model'), 'layout_class': "two"},
+            {'fields': ('name',), 'layout_class': "two"},
+            {'fields': ('stream_name',), 'layout_class': "two"} if self.should_include_stream_name() else None,
             {'fields': ('location', 'location_url'), 'layout_class': "two"},
             {'fields': ('priority', 'status'), 'layout_class': "two"},
         ]
+
+    def should_include_stream_name(self):
+        return True
 
 
 class CreateMachineView(PermissionRequiredMixin, MachineFormMixin, CreateView):
@@ -59,6 +63,9 @@ class EditMachineView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
     form_title = _("Edit Machine")
 
     should_include_machine_type = False
+
+    def should_include_stream_name(self):
+        return self.object.machine_type.has_stream
 
 
 class DeleteMachineView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

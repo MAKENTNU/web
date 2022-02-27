@@ -73,6 +73,9 @@ class CustomFieldsetFormMixin(TemplateResponseMixin, FormMixin, ABC):
     def compile_fieldsets(self, custom_fieldsets: Iterable[dict], form: Form):
         fieldsets = []
         for fieldset in copy.deepcopy(custom_fieldsets):
+            if not fieldset:
+                continue
+
             if 'heading' in fieldset:
                 fieldset['type'] = 'heading'
             else:
