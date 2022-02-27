@@ -25,7 +25,7 @@
             {% endif %}
         </h1>
 
-        <form class="ui form">
+        <form class="dont-prevent-leaving ui form">
             <div id="filter-fields" class="ui fields">
                 <div class="ui six wide field">
                     <input id="search" type="text" name="search-text" placeholder="{% trans "Search name and username" %}"/>
@@ -117,6 +117,7 @@
                 {% get_membership_statuses member as membership_status %}
                 <tr data-pk="{{ member.pk }}"
                     data-phone="{{ member.phone_number }}"
+                    data-phone-display="{{ member.phone_number_display }}"
                     data-name="{{ member.user.get_full_name }}"
                     data-contact-email="{{ member.contact_email }}"
                     data-gmail="{{ member.gmail }}"
@@ -125,6 +126,8 @@
                     data-study-program="{{ member.study_program }}"
                     data-ntnu-starting-semester="{{ member.ntnu_starting_semester_display }}"
                     data-github-username="{{ member.github_username }}"
+                    data-discord-username="{{ member.discord_username }}"
+                    data-minecraft-username="{{ member.minecraft_username }}"
 
                     data-semester-joined="{{ member.semester_joined }}"
                     data-date-joined="{{ member.date_joined|short_date }}"
@@ -184,9 +187,11 @@
                         {% endif %}
                     </td>
                     <td class="computer only">
-                        {% if member.phone_number %}
-                            <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
-                        {% endif %}
+                        {% with phone_number=member.phone_number_display %}
+                            {% if phone_number %}
+                                <a href="tel:{{ member.phone_number }}">{{ phone_number }}</a>
+                            {% endif %}
+                        {% endwith %}
                     </td>
                 </tr>
             {% endfor %}
@@ -345,13 +350,25 @@
                         <b><a id="member-githubUsername"></a></b>
                     </td>
                 </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "Discord username" %}</b>
+                    </td>
+                    <td id="member-discordUsername"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "Minecraft username" %}</b>
+                    </td>
+                    <td id="member-minecraftUsername"></td>
+                </tr>
                 </tbody>
             </table>
 
             <h4 class="ui horizontal divider header">
                 <i class="ui make-col-yellow key icon"></i>{% trans "system accesses"|capfirst %}
             </h4>
-            <form id="edit-system-access-form" method="POST">
+            <form id="edit-system-access-form" class="dont-prevent-leaving" method="POST">
                 {% csrf_token %}
                 <table class="ui very basic unstackable celled table">
                     <tbody id="member-system-accesses">
@@ -364,7 +381,7 @@
                 <h4 class="ui horizontal divider header">
                     <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
                 </h4>
-                <form id="edit-member-status-form" class="member-action-buttons" method="POST">
+                <form id="edit-member-status-form" class="dont-prevent-leaving member-action-buttons" method="POST">
                     {% csrf_token %}
                     <a id="member-setQuitUrl-button" class="ui red button">
                         {% trans "Set member as quit" %}

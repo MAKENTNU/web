@@ -54,12 +54,17 @@ class EditMemberForm(forms.ModelForm):
 class RestrictedEditMemberForm(EditMemberForm):
     class Meta:
         model = Member
-        fields = ['contact_email', 'gmail', 'phone_number', 'study_program', 'ntnu_starting_semester', 'card_number', 'github_username']
+        fields = [
+            'contact_email', 'gmail',
+            'phone_number',
+            'study_program', 'ntnu_starting_semester', 'card_number',
+            'github_username', 'discord_username', 'minecraft_username',
+        ]
 
 
 class MemberRetireForm(forms.ModelForm):
     already_quit_or_retired_error_message = _(
-        "Member was not set as quit, as the member already has the status “quit” or “retired”."
+        "Member was not set as retired, as the member already has the status “quit” or “retired”."
     )
 
     class Meta:
@@ -90,7 +95,7 @@ class MemberRetireForm(forms.ModelForm):
 
 class MemberQuitForm(MemberRetireForm):
     already_quit_or_retired_error_message = _(
-        "Member was not set as retired, as the member already has the status “quit” or “retired”."
+        "Member was not set as quit, as the member already has the status “quit” or “retired”."
     )
 
     class Meta(MemberRetireForm.Meta):

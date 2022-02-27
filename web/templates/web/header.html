@@ -16,8 +16,8 @@
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% block logo_link_url %}{% host_url 'front_page' host 'main' %}{% endblock logo_link_url %}">
             <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="medium" src="{% static 'web/img/logo_narrow.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="small" src="{% static 'web/img/logo_icon.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
         </a>
     </div>
 
@@ -90,17 +90,24 @@
 
                 <nav class="menu transition" aria-label="User">
                     {% block user_dropdown_buttons %}
+                        {% if perms.internal.is_internal %}
+                            <a class="item" href="{% host_url 'home' host 'internal' 'i' %}">
+                                <div class="text">{% trans "Internal pages" %}</div>
+                            </a>
+                        {% endif %}
                         {% if user|has_any_permissions %}
                             <a class="item" href="{% host_url 'adminpanel' host 'main' %}">
                                 <div class="text">{% trans "Administration" %}</div>
                             </a>
                         {% endif %}
+                        {% if user.is_staff %}
+                            <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
+                                <div class="text">{% trans "Django admin" %}</div>
+                            </a>
+                        {% endif %}
                         {% if perms.internal.is_internal %}
                             <a class="item" href="{% host_url 'profile' host 'main' %}">
                                 <div class="text">{% trans "Profile" %}</div>
-                            </a>
-                            <a class="item" href="{% host_url 'home' host 'internal' 'internt' %}">
-                                <div class="text">{% trans "Internal pages" %}</div>
                             </a>
                         {% endif %}
                         <a class="item" href="{% host_url 'my_tickets_list' host 'main' %}">
@@ -115,7 +122,7 @@
             </div>
         {% else %}
             <a class="item" href="{% url 'login' %}{{ login_next_param }}">
-                <div class="text">{% trans "Log in" %}</div>
+                <div class="text">{% trans "log in"|capfirst %}</div>
                 <div class="make-bg-blue bubble-background"></div>
             </a>
         {% endif %}

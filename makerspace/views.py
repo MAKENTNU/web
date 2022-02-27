@@ -40,7 +40,7 @@ class AdminEquipmentListView(PermissionRequiredMixin, ListView):
         return has_any_equipment_permissions(self.request.user)
 
 
-class EquipmentEditMixin(CustomFieldsetFormMixin, ABC):
+class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):
     model = Equipment
     form_class = EquipmentForm
     success_url = reverse_lazy('makerspace_admin_equipment_list')
@@ -49,32 +49,19 @@ class EquipmentEditMixin(CustomFieldsetFormMixin, ABC):
     back_button_text = _("Admin page for equipment")
 
 
-class CreateEquipmentView(PermissionRequiredMixin, EquipmentEditMixin, CreateView):
+class CreateEquipmentView(PermissionRequiredMixin, EquipmentFormMixin, CreateView):
     permission_required = ('makerspace.add_equipment',)
 
     form_title = _("New Equipment")
 
 
-class EditEquipmentView(PermissionRequiredMixin, EquipmentEditMixin, UpdateView):
+class EditEquipmentView(PermissionRequiredMixin, EquipmentFormMixin, UpdateView):
     permission_required = ('makerspace.change_equipment',)
 
     form_title = _("Edit Equipment")
-
-    # Delete the old image file if a new image is being uploaded:
-    def form_valid(self, form):
-        if form.files.get('image'):
-            equipment = self.get_object()
-            equipment.image.delete()
-        return super().form_valid(form)
 
 
 class DeleteEquipmentView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
     success_url = reverse_lazy('makerspace_admin_equipment_list')
-
-    # Delete the image file before deleting the object:
-    def delete(self, request, *args, **kwargs):
-        equipment = self.get_object()
-        equipment.image.delete()
-        return super().delete(request, *args, **kwargs)

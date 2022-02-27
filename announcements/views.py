@@ -17,7 +17,7 @@ class AnnouncementAdminView(PermissionRequiredMixin, ListView):
     context_object_name = "announcements"
 
 
-class AnnouncementEditMixin(CustomFieldsetFormMixin, ABC):
+class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
     model = Announcement
     form_class = AnnouncementForm
     success_url = reverse_lazy('announcement_admin')
@@ -33,13 +33,13 @@ class AnnouncementEditMixin(CustomFieldsetFormMixin, ABC):
     ]
 
 
-class CreateAnnouncementView(PermissionRequiredMixin, AnnouncementEditMixin, CreateView):
+class CreateAnnouncementView(PermissionRequiredMixin, AnnouncementFormMixin, CreateView):
     permission_required = ('announcements.add_announcement',)
 
     form_title = _("New Announcement")
 
 
-class EditAnnouncementView(PermissionRequiredMixin, AnnouncementEditMixin, UpdateView):
+class EditAnnouncementView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):
     permission_required = ('announcements.change_announcement',)
 
     form_title = _("Edit Announcement")

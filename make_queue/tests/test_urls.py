@@ -1,3 +1,4 @@
+from abc import ABC
 from datetime import timedelta
 
 from django.test import TestCase
@@ -7,15 +8,16 @@ from django_hosts import reverse
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.test_utils import Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
 from ..models.course import Printer3DCourse
 from ..models.machine import Machine, MachineType, MachineUsageRule
 from ..models.reservation import Quota, Reservation, ReservationRule
 
 
-class UrlTests(TestCase):
+class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
 
-    def setUp(self):
+    # noinspection PyAttributeOutsideInit
+    def init_objs(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.printer_machine_type = MachineType.objects.get(pk=1)
         self.sewing_machine_type = MachineType.objects.get(pk=2)
@@ -84,6 +86,12 @@ class UrlTests(TestCase):
         )
         self.reservations = (self.reservation1, self.reservation2, self.reservation3, self.reservation4, self.reservation5)
 
+
+class UrlTests(MakeQueueTestBase, TestCase):
+
+    def setUp(self):
+        self.init_objs()
+
     def test_all_get_request_paths_succeed(self):
         year, week_number, _weekday = timezone.localtime().isocalendar()
         path_predicates = [
@@ -129,7 +137,7 @@ class UrlTests(TestCase):
             ],
             Get(reverse('my_reservations_list'), public=False),
             Get(reverse('MAKE_reservations_list'), public=False),
-            Get(reverse('find_free_slot'), public=True),
+            Get(reverse('find_free_slot'), public=False),
 
             # rules_urlpatterns
             Get(reverse('reservation_rule_list', kwargs={'machine_type': self.printer_machine_type}), public=True),

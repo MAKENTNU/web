@@ -17,8 +17,16 @@ if 'test' in sys.argv:
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether the request is actually over HTTPS,
+# as the connection between Nginx (the proxy we're using) and Django (run by Channel's Daphne server) is currently always over HTTP
+# (due to Daphne - seemingly - not supporting HTTPS)
+# !!! WARNING: when deploying, make sure that Nginx always either overwrites or removes the `X-Forwarded-Proto` header !!!
+# (see https://docs.djangoproject.com/en/stable/ref/settings/#secure-proxy-ssl-header)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Default values
 DATABASE = 'sqlite'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
@@ -57,6 +65,9 @@ except ImportError:
 
 
 INSTALLED_APPS = [
+    # The main entrypoint app; should be listed first, to be able to override things like management commands
+    'web',
+
     # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -68,9 +79,6 @@ INSTALLED_APPS = [
     # Third-party packages with significant effect on Django's functionality
     'django_hosts',
     'channels',
-
-    # The main entrypoint app
-    'web',
 
     # Other third-party packages
     'social_django',
@@ -95,10 +103,17 @@ INSTALLED_APPS = [
     'users',
 
     'util',  # not a "real" app, just a collection of utilities
+
+    # Should be placed last,
+    # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
+    # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsRequestMiddleware',
+
+    # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -107,6 +122,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
@@ -308,7 +325,7 @@ CKEDITOR_CONFIGS = {
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
-PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for
@@ -355,7 +372,7 @@ useful for checking e.g. that a request doesn't query the database more times th
 # }
 
 
-# [SHOULD ALWAYS COME LAST] Override the settings above
+# [SHOULD BE KEPT LAST IN THIS FILE] Override the settings above
 try:
     from .local_settings_post import *
 except ImportError:

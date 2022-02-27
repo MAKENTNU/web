@@ -1,4 +1,3 @@
-import logging
 import sys
 import uuid
 from io import BytesIO
@@ -12,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from users.models import User
 from util.locale_utils import short_date_format
+from util.logging_utils import get_request_logger
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
@@ -27,22 +27,28 @@ class NewsBaseQuerySet(models.QuerySet):
 
 
 class NewsBase(models.Model):
+    """
+    The abstract class that contains the common fields and methods of ``Article`` and ``Event``.
+
+    (Several of the fields' ``help_text`` arguments are defined in ``NewsBaseForm``, to facilitate customizing them to fit the two subclasses.)
+    """
     title = MultiLingualTextField(verbose_name=_("title"))
     content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
     clickbait = MultiLingualTextField(verbose_name=_("clickbait"), widget=MultiLingualTextarea)
     image = models.ImageField(verbose_name=_("image"))
+    image_description = MultiLingualTextField(verbose_name=_("image description"),
+                                              help_text=_("This should be a concise visual description of the image,"
+                                                          " which is mainly useful for people using a screen reader."))
     contain = models.BooleanField(default=False, verbose_name=_("don't crop the image"))
     featured = models.BooleanField(default=True, verbose_name=_("featured"))
     hidden = models.BooleanField(default=False, verbose_name=_("hidden"))
     private = models.BooleanField(default=False, verbose_name=_("internal"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = NewsBaseQuerySet.as_manager()
 
     class Meta:
         abstract = True
-        permissions = (
-            ('can_view_private', "Can view private news"),
-        )
 
     def __str__(self):
         return str(self.title)
@@ -67,7 +73,7 @@ class NewsBase(models.Model):
                                                       sys.getsizeof(output), None)
                 # Should not close image, as Django uses the image and closes it by default
             except IOError as e:
-                logging.getLogger('django.request').exception(e)
+                get_request_logger().exception(e)
 
         super().save(**kwargs)
 
@@ -85,6 +91,9 @@ class Article(NewsBase):
     objects = ArticleQuerySet.as_manager()
 
     class Meta(NewsBase.Meta):
+        permissions = (
+            ('can_view_private', "Can view private articles"),
+        )
         ordering = ('-publication_time',)
 
 
@@ -123,13 +132,19 @@ class Event(NewsBase):
 
     objects = EventQuerySet.as_manager()
 
+    class Meta(NewsBase.Meta):
+        permissions = (
+            ('can_view_private', "Can view private events"),
+        )
+
     def get_future_occurrences(self):
         return self.timeplaces.published().future().order_by('start_time')
 
     def get_past_occurrences(self):
         return self.timeplaces.published().past().order_by('-start_time')
 
-    def number_of_registered_tickets(self):
+    @property
+    def number_of_active_tickets(self):
         return self.tickets.filter(active=True).count()
 
     @property
@@ -155,7 +170,7 @@ class Event(NewsBase):
 
         # If the event is standalone, the ability to register is dependent on if there are any more available tickets
         if self.standalone:
-            return self.number_of_tickets > self.number_of_registered_tickets()
+            return self.number_of_active_tickets < self.number_of_tickets
 
         # Registration to a repeating event with future occurrences is handled by the time place objects
         return True
@@ -164,13 +179,16 @@ class Event(NewsBase):
 class TimePlaceQuerySet(models.QuerySet):
 
     def published(self):
-        return self.filter(hidden=False, event__hidden=False).filter(publication_time__lte=timezone.localtime())
+        return self.filter(hidden=False, event__hidden=False, publication_time__lte=timezone.now())
+
+    def unpublished(self):
+        return self.filter(Q(hidden=True) | Q(event__hidden=True) | Q(publication_time__gt=timezone.now()))
 
     def future(self):
-        return self.filter(end_time__gt=timezone.localtime())
+        return self.filter(end_time__gt=timezone.now())
 
     def past(self):
-        return self.filter(end_time__lte=timezone.localtime())
+        return self.filter(end_time__lte=timezone.now())
 
 
 class TimePlace(models.Model):
@@ -188,6 +206,7 @@ class TimePlace(models.Model):
     hidden = models.BooleanField(default=True, verbose_name=_("hidden"),
                                  help_text=_("If selected, the occurrence will be hidden, even after the publication date."))
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = TimePlaceQuerySet.as_manager()
 
@@ -197,7 +216,8 @@ class TimePlace(models.Model):
     def __str__(self):
         return f"{self.event.title} - {short_date_format(self.start_time)}"
 
-    def number_of_registered_tickets(self):
+    @property
+    def number_of_active_tickets(self):
         return self.tickets.filter(active=True).count()
 
     def is_in_the_past(self):
@@ -206,7 +226,7 @@ class TimePlace(models.Model):
     def can_register(self, user):
         if not self.event.can_register(user) or self.is_in_the_past():
             return False
-        return not self.hidden and self.number_of_registered_tickets() < self.number_of_tickets
+        return not self.hidden and self.number_of_active_tickets < self.number_of_tickets
 
 
 class EventTicket(models.Model):
@@ -255,7 +275,11 @@ class EventTicket(models.Model):
         )
 
     def __str__(self):
-        return f"{self.name} - {self.event if self.event is not None else self.timeplace}"
+        return f"{self.name} - {self.event if self.event else self.timeplace}"
+
+    @property
+    def registered_event(self) -> Event:
+        return self.event or self.timeplace.event
 
     @property
     def name(self):

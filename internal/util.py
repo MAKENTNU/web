@@ -55,6 +55,10 @@ def year_to_semester(year: float) -> str:
 
     current_year = timezone.now().year
     same_century = year // 100 == current_year // 100
-    year_str = int(year % 100) if same_century else int(year)
+    if same_century:
+        year_str = int(year % 100)
+        year_str = str(year_str).rjust(2, "0")
+    else:
+        year_str = str(int(year))
     year_half = "V" if year % 1 < 0.5 else "H"
     return f"{year_half}{year_str}"

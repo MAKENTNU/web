@@ -28,10 +28,10 @@
             <input readonly class="copy-input input-monospace" value="{{ ticket_emails }}"/>
         </div>
 
-        <h3>{% trans "Tickets" %}</h3>
+        <h3>{% trans "tickets"|capfirst %}</h3>
         <b>
-            {% blocktrans trimmed with num_registered_tickets=object.number_of_registered_tickets num_tickets=object.number_of_tickets %}
-                {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
+            {% blocktrans trimmed with num_active_tickets=object.number_of_active_tickets num_tickets=object.number_of_tickets %}
+                {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
             {% endblocktrans %}
         </b>
         <div class="ui relaxed divided list">

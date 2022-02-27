@@ -6,6 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
@@ -17,10 +18,11 @@ from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
 class CheckInView(RFIDView):
+
     def card_number_valid(self, card_number):
         profiles = Profile.objects.filter(user__card_number=card_number)
         if not profiles.exists():
-            return HttpResponse(f"{card_number} is not registered", status=401)
+            return HttpResponse(f"{escape(card_number)} is not registered", status=401)
 
         if profiles.first().on_make:
             profiles.update(on_make=False)
@@ -209,9 +211,10 @@ class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
 
 
 class RegisterCardView(RFIDView):
+
     def card_number_valid(self, card_number):
         if Profile.objects.filter(user__card__number=card_number).exists():
-            return HttpResponse(f"{card_number} is already registered", status=409)
+            return HttpResponse(f"{escape(card_number)} is already registered", status=409)
         else:
             RegisterProfile.objects.all().delete()
             RegisterProfile.objects.create(card_id=card_number, last_scan=timezone.now())

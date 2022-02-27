@@ -1,30 +1,39 @@
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.db.models import Prefetch
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from contentbox.views import DisplayContentBoxView
-from news.models import Article, TimePlace
+from news.models import Article, Event, TimePlace
 
 
 class IndexView(TemplateView):
+    MAX_EVENTS_SHOWN = 4
+    MAX_ARTICLES_SHOWN = 4
+
     template_name = 'web/index.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        event_timeplaces = TimePlace.objects.published().future().filter(event__featured=True)
-        if not self.request.user.has_perm('news.can_view_private'):
-            event_timeplaces = event_timeplaces.filter(event__private=False)
+        future_events = Event.objects.future().visible_to(self.request.user).prefetch_related(
+            'timeplaces',
+            Prefetch('timeplaces',
+                     queryset=TimePlace.objects.published().future().order_by('start_time'),
+                     to_attr='future_timeplaces')
+        )
+        future_event_dicts = [{
+            'event': event,
+            'shown_occurrence': event.future_timeplaces[0],
+            'number_of_occurrences': event.timeplaces.count() if event.standalone else len(event.future_timeplaces),
+        } for event in future_events if event.future_timeplaces]
 
-        event_dicts = [{
-            'event': event_timeplace.event,
-            'shown_occurrence': event_timeplace,
-            'number_of_occurrences': 1,
-        } for event_timeplace in event_timeplaces[:4]]
-
+        sorted_future_event_dicts = sorted(future_event_dicts, key=lambda event: event['shown_occurrence'].start_time)
+        articles = Article.objects.published().visible_to(self.request.user).filter(featured=True).order_by('-publication_time')
         context.update({
-            'articles': Article.objects.published().visible_to(self.request.user).filter(featured=True)[:4],
-            'featured_event_dicts': event_dicts,
+            'featured_event_dicts': sorted_future_event_dicts[:self.MAX_EVENTS_SHOWN],
+            'more_events_exist': len(sorted_future_event_dicts) > self.MAX_EVENTS_SHOWN,
+            'featured_articles': articles[:self.MAX_ARTICLES_SHOWN],
         })
         return context
 

@@ -4,6 +4,8 @@ from .models import Committee, InheritanceGroup
 
 
 class InheritanceGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'last_modified')
+
     fieldsets = (
         (None, {
             'fields': ('name', 'parents', 'own_permissions'),
@@ -16,14 +18,16 @@ class InheritanceGroupAdmin(admin.ModelAdmin):
             'classes': ('collapse',),
             'fields': ('get_inherited_permissions',),
         }),
+        (None, {
+            'fields': ('last_modified',),
+        }),
     )
     filter_horizontal = ('parents', 'own_permissions')
-    readonly_fields = ('get_inherited_permissions',)
+    readonly_fields = ('last_modified', 'get_inherited_permissions',)
 
+    @admin.display(description="Inherited permissions")
     def get_inherited_permissions(self, inheritance_group: InheritanceGroup):
         return "\n".join(map(str, inheritance_group.inherited_permissions))
-
-    get_inherited_permissions.short_description = "Inherited permissions"
 
     def get_form(self, request, obj: InheritanceGroup = None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -32,5 +36,12 @@ class InheritanceGroupAdmin(admin.ModelAdmin):
         return form
 
 
+class CommitteeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'last_modified')
+    list_select_related = ('group',)
+
+    readonly_fields = ('last_modified',)
+
+
 admin.site.register(InheritanceGroup, InheritanceGroupAdmin)
-admin.site.register(Committee)
+admin.site.register(Committee, CommitteeAdmin)

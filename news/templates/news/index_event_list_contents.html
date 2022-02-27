@@ -1,11 +1,23 @@
 {% extends 'news/event_list_contents.html' %}
+{% load i18n %}
 
 
 {% block title %}{% endblock %}
 
-{% block ribbon_label %}
-    {{ event_dict.shown_occurrence.start_time|date:"d" }}<br/>
-    {{ event_dict.shown_occurrence.start_time|date:"M" }}
-{% endblock ribbon_label %}
+{% block extra_post_events %}
+    {% if more_events_exist %}
+        <div class="more-events-link item">
+            <div class="content">
+                <div class="header">
+                    <h2>
+                        <a href="{% url 'event_list' %}">
+                            {% trans "More events" %} <i class="angle double right icon"></i>
+                        </a>
+                    </h2>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock extra_post_events %}
 
 {% block no_events %}{% endblock %}

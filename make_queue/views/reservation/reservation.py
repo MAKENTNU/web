@@ -1,9 +1,8 @@
-import logging
 from abc import ABC
 from datetime import timedelta
 from math import ceil
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
@@ -13,6 +12,7 @@ from django.views.generic import DeleteView, FormView, ListView, TemplateView, U
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
+from util.logging_utils import log_request_exception
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import FreeSlotForm, ReservationForm
 from ...models.machine import Machine, MachineType
@@ -142,7 +142,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
             if form.is_valid():
                 return self.form_valid(form, **kwargs)
         except Exception as e:
-            logging.getLogger('django.request').exception(e)
+            log_request_exception("Validating reservation failed.", e, request)
         return self.get(request, **kwargs)
 
 
@@ -274,7 +274,7 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
         return HttpResponse(status=200)
 
 
-class MyReservationsListView(ListView):
+class MyReservationsListView(LoginRequiredMixin, ListView):
     """View for seeing the user's reservations."""
     model = Reservation
     template_name = 'make_queue/reservation_list.html'
@@ -287,7 +287,7 @@ class MyReservationsListView(ListView):
         return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
 
 
-class FindFreeSlotView(FormView):
+class FindFreeSlotView(LoginRequiredMixin, FormView):
     """
     View to find free time slots for reservations.
     """

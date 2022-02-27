@@ -8,8 +8,8 @@
     <script>
         {# `csrfToken`, `privateEventIcon` and `publicEventIcon` are used in `admin_event_detail.js` #}
         var csrfToken = "{{ csrf_token }}";
-        var privateEventIcon = "{% static 'web/img/m_yellow.svg' %}";
-        var publicEventIcon = "{% static 'web/img/m_grey.svg' %}";
+        var privateEventIcon = "{% static 'web/img/logo_icon_allyellow.svg' %}";
+        var publicEventIcon = "{% static 'web/img/logo_icon_allgrey.svg' %}";
     </script>
     <script defer src="{% static 'news/js/admin_event_detail.js' %}"></script>
 {% endblock extra_head %}
@@ -66,13 +66,13 @@
 
         {% if event.standalone %}
             <h3 class="ui horizontal divider header">
-                <i class="ui ticket icon"></i> {% trans "Tickets" %}
+                <i class="ui ticket icon"></i> {% trans "tickets"|capfirst %}
             </h3>
             {% if event.number_of_tickets %}
                 <b>
                     <a href="{% url 'event_ticket_list' pk=event.pk %}">
-                        {% blocktrans trimmed with num_registered_tickets=event.number_of_registered_tickets num_tickets=event.number_of_tickets %}
-                            {{ num_registered_tickets }}/{{ num_tickets }} tickets reserved
+                        {% blocktrans trimmed with num_active_tickets=event.number_of_active_tickets num_tickets=event.number_of_tickets %}
+                            {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
                         {% endblocktrans %}
                     </a>
                 </b>

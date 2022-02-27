@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from decorator_include import decorator_include
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.models import Permission
@@ -42,7 +44,7 @@ class SimpleModelAndViewTests(TestCase):
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
-                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
                 self.assertEqual(response.context['contentbox'].title, TEST_TITLE)
 
@@ -55,7 +57,7 @@ class SimpleModelAndViewTests(TestCase):
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
-                self.assertEqual(response.status_code, 200)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
                 self.assertEqual(response.context['contentbox'].title, multi_path_content_box_title)
 
@@ -68,7 +70,7 @@ class SimpleModelAndViewTests(TestCase):
 
         edit_url = reverse('contentbox_edit', kwargs={'pk': self.content_box1.pk})
         self.assertGreaterEqual(anon_client.get(edit_url).status_code, 300)
-        self.assertEqual(user_client.get(edit_url).status_code, 200)
+        self.assertEqual(user_client.get(edit_url).status_code, HTTPStatus.OK)
 
     def test_edit_page_contains_correct_error_messages(self):
         user = User.objects.create_user(username="user1")

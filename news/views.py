@@ -17,10 +17,11 @@ from django.views.generic import CreateView, DeleteView, DetailView, ListView, R
 from django.views.generic.edit import ModelFormMixin
 
 from mail import email
+from util.logging_utils import log_request_exception
 from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-from .forms import ArticleForm, EventForm, EventRegistrationForm, TimePlaceForm
-from .models import Article, Event, EventTicket, TimePlace
+from .forms import ArticleForm, EventForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm
+from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
 class EventListView(TemplateView):
@@ -39,7 +40,7 @@ class EventListView(TemplateView):
         for event in future:
             if not event.future_timeplaces:
                 continue
-            if event.event_type == Event.Type.STANDALONE:
+            if event.standalone:
                 future_event_dicts.append({
                     'event': event,
                     'shown_occurrence': event.future_timeplaces[0],
@@ -78,7 +79,7 @@ class ArticleListView(ListView):
     context_object_name = 'articles'
 
     def get_queryset(self):
-        return Article.objects.published().visible_to(self.request.user)
+        return Article.objects.published().visible_to(self.request.user).order_by('-publication_time')
 
 
 class EventDetailView(TemplateView):
@@ -153,7 +154,9 @@ class AdminEventDetailView(DetailView):
         })
 
 
-class NewsBaseEditMixin(CustomFieldsetFormMixin, ABC):
+class NewsBaseFormMixin(CustomFieldsetFormMixin, ABC):
+    model: NewsBase
+    form_class: NewsBaseForm
     template_name = 'news/news_base_edit.html'
 
     def get_custom_fieldsets(self):
@@ -161,6 +164,7 @@ class NewsBaseEditMixin(CustomFieldsetFormMixin, ABC):
             {'fields': ('title', 'content', 'clickbait')},
             self.get_custom_news_fieldset(),
             {'fields': ('image', 'contain')},
+            {'fields': ('image_description',)},
 
             {'heading': _("Attributes")},
             {'fields': ('featured', 'hidden', 'private'), 'layout_class': "three inline"},
@@ -171,7 +175,7 @@ class NewsBaseEditMixin(CustomFieldsetFormMixin, ABC):
         raise NotImplementedError
 
 
-class ArticleEditMixin(NewsBaseEditMixin, ABC):
+class ArticleFormMixin(NewsBaseFormMixin, ABC):
     model = Article
     form_class = ArticleForm
     success_url = reverse_lazy('admin_article_list')
@@ -183,19 +187,19 @@ class ArticleEditMixin(NewsBaseEditMixin, ABC):
         return {'fields': ('publication_time',)}
 
 
-class EditArticleView(PermissionRequiredMixin, ArticleEditMixin, UpdateView):
+class EditArticleView(PermissionRequiredMixin, ArticleFormMixin, UpdateView):
     permission_required = ('news.change_article',)
 
     form_title = _("Edit Article")
 
 
-class CreateArticleView(PermissionRequiredMixin, ArticleEditMixin, CreateView):
+class CreateArticleView(PermissionRequiredMixin, ArticleFormMixin, CreateView):
     permission_required = ('news.add_article',)
 
     form_title = _("New Article")
 
 
-class EventEditMixin(NewsBaseEditMixin, ModelFormMixin, ABC):
+class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
     model = Event
     form_class = EventForm
     template_name = 'news/event_edit.html'
@@ -213,7 +217,7 @@ class EventEditMixin(NewsBaseEditMixin, ModelFormMixin, ABC):
         return reverse('admin_event_detail', args=(self.object.pk,))
 
 
-class EditEventView(PermissionRequiredMixin, EventEditMixin, UpdateView):
+class EditEventView(PermissionRequiredMixin, EventFormMixin, UpdateView):
     permission_required = ('news.change_event',)
 
     form_title = _("Edit Event")
@@ -222,7 +226,7 @@ class EditEventView(PermissionRequiredMixin, EventEditMixin, UpdateView):
         return _("Admin page for “{event_title}”").format(event_title=self.object.title)
 
 
-class CreateEventView(PermissionRequiredMixin, EventEditMixin, CreateView):
+class CreateEventView(PermissionRequiredMixin, EventFormMixin, CreateView):
     permission_required = ('news.add_event',)
 
     form_title = _("New Event")
@@ -232,7 +236,7 @@ class CreateEventView(PermissionRequiredMixin, EventEditMixin, CreateView):
         return reverse('admin_event_list')
 
 
-class TimePlaceEditMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
+class TimePlaceFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
     model = TimePlace
     form_class = TimePlaceForm
     template_name = 'news/timeplace_edit.html'
@@ -258,7 +262,7 @@ class TimePlaceEditMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
         return reverse('admin_event_detail', args=(self.object.event.pk,))
 
 
-class EditTimePlaceView(PermissionRequiredMixin, TimePlaceEditMixin, UpdateView):
+class EditTimePlaceView(PermissionRequiredMixin, TimePlaceFormMixin, UpdateView):
     permission_required = ('news.change_timeplace',)
 
     form_title = _("Edit Occurrence")
@@ -276,7 +280,7 @@ class EditTimePlaceView(PermissionRequiredMixin, TimePlaceEditMixin, UpdateView)
         return self.get_success_url()
 
 
-class CreateTimePlaceView(PermissionRequiredMixin, TimePlaceEditMixin, CreateView):
+class CreateTimePlaceView(PermissionRequiredMixin, TimePlaceFormMixin, CreateView):
     permission_required = ('news.add_timeplace',)
 
     form_title = _("New Occurrence")
@@ -405,16 +409,19 @@ class EventRegistrationView(CreateView):
         form.instance.timeplace = self.timeplace
         ticket = form.save()
 
-        async_to_sync(get_channel_layer().send)(
-            'email', {
-                'type': 'send_html',
-                'html_render': email.render_html({'ticket': ticket}, 'email/ticket.html'),
-                'text': email.render_text({'ticket': ticket}, text_template_name='email/ticket.txt'),
-                'subject': _("Your ticket!"),
-                'from': settings.EVENT_TICKET_EMAIL,
-                'to': ticket.email,
-            }
-        )
+        try:
+            async_to_sync(get_channel_layer().send)(
+                'email', {
+                    'type': 'send_html',
+                    'html_render': email.render_html({'ticket': ticket}, 'email/ticket.html'),
+                    'text': email.render_text({'ticket': ticket}, text_template_name='email/ticket.txt'),
+                    'subject': str(_("Your ticket!")),  # pass the pure string object, instead of the proxy object from `gettext_lazy`
+                    'from': settings.EVENT_TICKET_EMAIL,
+                    'to': ticket.email,
+                }
+            )
+        except Exception as e:
+            log_request_exception("Sending event ticket email failed.", e, self.request)
 
         self.object = ticket
         return HttpResponseRedirect(self.get_success_url())

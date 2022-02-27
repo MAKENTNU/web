@@ -96,6 +96,16 @@
                 </div>
             </div>
 
+            <div class="ui one field">
+                <div class="ui field">
+                    <label>{{ form.advanced_course.label }}</label>
+                    <div class="ui checkbox">
+                        {{ form.advanced_course }}
+                        <label>{% trans "Yes" %}</label>
+                    </div>
+                </div>
+            </div>
+
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}
                     {% trans "Submit" context "edit" %}
@@ -117,7 +127,9 @@
         $("input[name='username']").focusout((event) => {
             $.ajax(`${LANG_PREFIX}/reservation/json/${$(event.target).val()}/`, {
                 success: function (data) {
-                    $("input[name='name']").val(data["full_name"]);
+                    const fullName = data["full_name"];
+                    if (fullName)
+                        $("input[name='name']").val(fullName);
                     $("#username-not-found-warning").fadeOut();
                 },
                 error: function () {

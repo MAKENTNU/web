@@ -13,6 +13,7 @@
                 src="{{ article.image.url }}"
             {% endthumbnail %}
                 {% if article.contain %}class="contain"{% endif %}
+                alt="{{ article.image_description }}"
             />
         </a>
         <div class="article-text {% cycle "float-left" "float-right" %}

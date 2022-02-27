@@ -265,6 +265,7 @@ class ReservationRule(models.Model):
     start_days = MultiSelectField(choices=Day.choices, min_choices=1, verbose_name=_("start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("hours multi-period"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def __str__(self):
         start_time = time_format(self.start_time)

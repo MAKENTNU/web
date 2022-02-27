@@ -32,7 +32,7 @@ class SecretListView(ListView):
     context_object_name = 'secrets'
 
 
-class SecretEditMixin(CustomFieldsetFormMixin, ABC):
+class SecretFormMixin(CustomFieldsetFormMixin, ABC):
     model = Secret
     form_class = SecretsForm
     success_url = reverse_lazy('secret_list')
@@ -42,13 +42,13 @@ class SecretEditMixin(CustomFieldsetFormMixin, ABC):
     back_button_text = _("Secrets list")
 
 
-class CreateSecretView(PermissionRequiredMixin, SecretEditMixin, CreateView):
+class CreateSecretView(PermissionRequiredMixin, SecretFormMixin, CreateView):
     permission_required = ('internal.add_secret',)
 
     form_title = _("New Secret")
 
 
-class EditSecretView(PermissionRequiredMixin, SecretEditMixin, UpdateView):
+class EditSecretView(PermissionRequiredMixin, SecretFormMixin, UpdateView):
     permission_required = ('internal.change_secret',)
 
     form_title = _("Edit Secret")
@@ -77,16 +77,17 @@ class MemberListView(ListView):
         return context_data
 
 
-class MemberEditMixin(CustomFieldsetFormMixin, ABC):
+class MemberFormMixin(CustomFieldsetFormMixin, ABC):
+    model = Member
+
     base_template = 'internal/base.html'
     narrow = False
     centered_title = False
     back_button_text = _("Member list")
 
 
-class CreateMemberView(PermissionRequiredMixin, MemberEditMixin, CreateView):
+class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     permission_required = ('internal.add_member',)
-    model = Member
     form_class = AddMemberForm
 
     form_title = _("Add New Member")
@@ -112,8 +113,7 @@ class CreateMemberView(PermissionRequiredMixin, MemberEditMixin, CreateView):
         return super().form_valid(form)
 
 
-class EditMemberView(PermissionRequiredMixin, MemberEditMixin, UpdateView):
-    model = Member
+class EditMemberView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
 
     def has_permission(self):
         return (self.request.user == self.get_object().user
@@ -143,7 +143,8 @@ class EditMemberView(PermissionRequiredMixin, MemberEditMixin, UpdateView):
             {'fields': ('card_number',), 'layout_class': "two"},
 
             {'heading': _("Extra information"), 'icon_class': "info circle"},
-            {'fields': ('github_username',), 'layout_class': "two"},
+            {'fields': ('github_username', 'discord_username'), 'layout_class': "two"},
+            {'fields': ('minecraft_username',), 'layout_class': "two"},
         ]
         if full_form:
             custom_fieldsets.extend([

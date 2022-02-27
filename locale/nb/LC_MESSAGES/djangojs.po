@@ -147,10 +147,10 @@ msgstr "Lørdag"
 msgid "Are you sure you want to delete “%(objName)s”?"
 msgstr "Er du sikker på at du vil slette «%(objName)s»?"
 
-#: web/static/web/js/forms/widgets/mazemap_search.js:31
+#: web/static/web/js/forms/widgets/mazemap_search.js:44
 msgid "No Results"
 msgstr "Ingen resultater"
 
-#: web/static/web/js/forms/widgets/mazemap_search.js:34
+#: web/static/web/js/forms/widgets/mazemap_search.js:47
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"

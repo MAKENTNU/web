@@ -1,4 +1,4 @@
-<form class="set-language-form ui form" method="POST" action="{% url 'set_language' %}">
+<form class="set-language-form dont-prevent-leaving ui form" method="POST" action="{% url 'set_language' %}">
     {% csrf_token %}
     {% if LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>

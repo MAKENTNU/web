@@ -23,7 +23,7 @@ class MachineListView(ListView):
     context_object_name = 'machine_types'
 
 
-class MachineEditMixin(CustomFieldsetFormMixin, ABC):
+class MachineFormMixin(CustomFieldsetFormMixin, ABC):
     model = Machine
     success_url = reverse_lazy('machine_list')
 
@@ -42,7 +42,7 @@ class MachineEditMixin(CustomFieldsetFormMixin, ABC):
         ]
 
 
-class CreateMachineView(PermissionRequiredMixin, MachineEditMixin, CreateView):
+class CreateMachineView(PermissionRequiredMixin, MachineFormMixin, CreateView):
     permission_required = ('make_queue.add_machine',)
     form_class = BaseMachineForm
 
@@ -52,7 +52,7 @@ class CreateMachineView(PermissionRequiredMixin, MachineEditMixin, CreateView):
     should_include_machine_type = True
 
 
-class EditMachineView(PermissionRequiredMixin, MachineEditMixin, UpdateView):
+class EditMachineView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
     permission_required = ('make_queue.change_machine',)
     form_class = EditMachineForm
 

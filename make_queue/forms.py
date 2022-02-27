@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
@@ -8,7 +9,7 @@ from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
 from web.widgets import (
-    Direction, DirectionalCheckboxSelectMultiple, MazemapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput,
+    Direction, DirectionalCheckboxSelectMultiple, MazeMapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput,
     SemanticTimeInput,
 )
 from .formfields import UserModelChoiceField
@@ -224,14 +225,16 @@ class BaseMachineForm(forms.ModelForm):
         # `capfirst()` to avoid duplicate translation differing only in case
         label=capfirst(_("machine type")),
         empty_label=_("Select machine type"),
-        widget=SemanticChoiceInput,
+        widget=SemanticChoiceInput(attr_name_to_attr_value_getter={
+            'has-stream': lambda iterator_value: iterator_value.instance.has_stream if iterator_value else None,
+        }),
     )
 
     class Meta:
         model = Machine
         fields = '__all__'
         widgets = {
-            'location': MazemapSearchInput(url_field='location_url'),
+            'location': MazeMapSearchInput(url_field='location_url'),
         }
 
     def __init__(self, *args, **kwargs):
@@ -249,9 +252,36 @@ class BaseMachineForm(forms.ModelForm):
             widget=SemanticChoiceInput(attrs={'required': True}),
         )
 
+    def clean(self):
+        cleaned_data = super().clean()
+
+        machine_type = cleaned_data.get('machine_type')
+        stream_name = cleaned_data.get('stream_name')
+
+        if machine_type:
+            if machine_type.has_stream and not stream_name:
+                self.add_error(
+                    'stream_name', ValidationError(
+                        _("Stream name cannot be empty when the machine type supports streaming."),
+                        code='invalid_empty_stream_name',
+                    )
+                )
+
+        return cleaned_data
+
 
 class EditMachineForm(BaseMachineForm):
     machine_type = None
 
     class Meta(BaseMachineForm.Meta):
         exclude = ['machine_type']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if not self.instance.machine_type.has_stream:
+            self.fields['stream_name'].disabled = True
+
+    def clean(self):
+        self.cleaned_data['machine_type'] = self.instance.machine_type
+        return super().clean()

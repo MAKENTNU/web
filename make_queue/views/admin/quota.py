@@ -22,19 +22,17 @@ class QuotaPanelView(TemplateView):
 
         :return: A list of all users
         """
-        context_data = super().get_context_data(**kwargs)
-        context_data.update({
-            "users": User.objects.all(),
-            "global_quotas": Quota.objects.filter(all=True),
-            "requested_user": user,
+        return super().get_context_data(**{
+            'users': User.objects.all(),
+            'global_quotas': Quota.objects.filter(all=True),
+            'requested_user': user,
+            **kwargs,
         })
-        return context_data
 
 
-class QuotaEditMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
+class QuotaFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
     model = Quota
     form_class = QuotaForm
-    template_name = 'make_queue/quota/quota_edit.html'
 
     narrow = False
     centered_title = False
@@ -57,14 +55,14 @@ class QuotaEditMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
             return reverse('quota_panel', kwargs={'user': self.object.user})
 
 
-class CreateQuotaView(PermissionRequiredMixin, QuotaEditMixin, CreateView):
+class CreateQuotaView(PermissionRequiredMixin, QuotaFormMixin, CreateView):
     permission_required = ('make_queue.add_quota',)
 
     form_title = _("New Quota")
     save_button_text = _("Add")
 
 
-class EditQuotaView(PermissionRequiredMixin, QuotaEditMixin, UpdateView):
+class EditQuotaView(PermissionRequiredMixin, QuotaFormMixin, UpdateView):
     permission_required = ('make_queue.change_quota',)
 
     form_title = _("Edit Quota")

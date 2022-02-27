@@ -1,12 +1,11 @@
-import logging
-
 from django.conf import settings
 from django.contrib.auth import logout
-from django.http import HttpResponseForbidden, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.views import View
 from social_django import views as social_views
 
 from users.models import User
+from util.logging_utils import log_request_exception
 from . import ldap_utils
 
 # Assign these functions to module-level variables, to facilitate testing (through monkey patching)
@@ -33,8 +32,7 @@ def login_wrapper(request, backend, *args, **kwargs):
     try:
         response = complete(request, backend, *args, **kwargs)
     except Exception as e:
-        logging.getLogger('django.request').exception("Authentication through Dataporten failed.", exc_info=e)
-        return HttpResponseForbidden()
+        raise RuntimeError("Authentication through Dataporten failed.") from e
 
     user: User = request.user
     social_data = user.social_auth.first().extra_data
@@ -52,15 +50,17 @@ def login_wrapper(request, backend, *args, **kwargs):
         # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
         ldap_data = get_user_details_from_email(user.email, use_cached=False)
     except Exception as e:
-        logging.getLogger('django.request').exception("Looking up user details through LDAP failed.", exc_info=e)
+        log_request_exception("Looking up user details through LDAP failed.", e, request)
         ldap_data = {}
-    _update_username_if_different(user, ldap_data)
+    _update_username_if_different(user, social_data, ldap_data)
 
     return response
 
 
 def _update_full_name_if_different(user: User, social_data: dict):
     split_ldap_name = social_data['fullname'].split()
+    if not split_ldap_name:
+        return
     old_full_name = user.get_full_name()
     user.first_name = " ".join(split_ldap_name[:-1])
     user.last_name = split_ldap_name[-1]
@@ -69,13 +69,22 @@ def _update_full_name_if_different(user: User, social_data: dict):
 
 
 def _update_ldap_full_name_if_different(user: User, social_data: dict):
-    if user.ldap_full_name != social_data['fullname']:
-        user.ldap_full_name = social_data['fullname']
+    potentially_new_ldap_full_name = social_data['fullname']
+    if not potentially_new_ldap_full_name:
+        return
+    if user.ldap_full_name != potentially_new_ldap_full_name:
+        user.ldap_full_name = potentially_new_ldap_full_name
         user.save()
 
 
-def _update_username_if_different(user: User, ldap_data: dict):
-    potentially_new_username = ldap_data.get('username') or user.email.split("@")[0]
+def _update_username_if_different(user: User, social_data: dict, ldap_data: dict):
+    potentially_new_username = (
+            social_data.get('username')
+            or ldap_data.get('username')
+            or user.email.split("@")[0]
+    )
+    if not potentially_new_username:
+        return
     if user.username != potentially_new_username:
         user.username = potentially_new_username
         user.save()

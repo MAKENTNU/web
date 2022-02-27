@@ -1,9 +1,13 @@
 from django.apps import AppConfig
 
+from . import signals
+
 
 class GroupsConfig(AppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
     name = 'groups'
 
+    # noinspection PyUnresolvedReferences
     def ready(self):
-        # noinspection PyUnresolvedReferences
-        from . import signals
+        # Register / connect to the signals here when the app starts
+        signals.connect()

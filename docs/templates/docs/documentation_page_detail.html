@@ -71,7 +71,7 @@
     </div>
 
     {% if form and old and perms.docs.change_page %}
-        <form id="change-version-form" class="hidden form" method="POST"
+        <form id="change-version-form" class="dont-prevent-leaving hidden form" method="POST"
               action="{% url 'change_page_version' pk=page %}">
             {% csrf_token %}
             {{ form }}

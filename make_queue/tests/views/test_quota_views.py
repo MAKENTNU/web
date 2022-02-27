@@ -1,27 +1,27 @@
 from django.test import TestCase
+from django_hosts import reverse
 
 from users.models import User
 from ..utility import template_view_get_context_data
 from ...models.machine import MachineType
 from ...models.reservation import Quota
 from ...views.admin.quota import QuotaPanelView
-from ...views.quota.user import UserQuotaListView
 
 
-class TestGetQuotaView(TestCase):
+class TestUserQuotaListView(TestCase):
 
     def test_get_user_quota(self):
         user = User.objects.create_user("test")
+        user.add_perms('make_queue.change_quota')
         user2 = User.objects.create_user("test2")
         machine_type = MachineType.objects.first()
         Quota.objects.create(all=True, user=user, machine_type=machine_type, number_of_reservations=2)
         quota2 = Quota.objects.create(user=user, machine_type=machine_type, number_of_reservations=2)
         Quota.objects.create(user=user2, machine_type=machine_type, number_of_reservations=2)
 
-        context_data = template_view_get_context_data(UserQuotaListView, request_user=user, user=user)
-        context_data["user_quotas"] = list(context_data["user_quotas"])
-
-        self.assertDictEqual(context_data, {"user_quotas": [quota2]})
+        self.client.force_login(user)
+        context_data = self.client.get(reverse('user_quota_list', args=[user])).context
+        self.assertListEqual(list(context_data['user_quotas']), [quota2])
 
 
 class TestQuotaPanelView(TestCase):

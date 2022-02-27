@@ -1,13 +1,17 @@
 import functools
+import shutil
+import tempfile
 from abc import ABC
+from http import HTTPStatus
 from typing import Any, Collection, Dict, List, Set, Tuple, TypeVar
 from urllib.parse import urlparse
 
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test import Client, SimpleTestCase
+from django.test import Client, SimpleTestCase, override_settings
 from django.utils import translation
 
 from users.models import User
+
 
 # A very small JPEG image without any content; used for mocking a valid image while testing
 MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
@@ -16,6 +20,27 @@ MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x
                b'\x00\xff\xcc\x00\x06\x00\x10\x10\x05\xff\xda\x00\x08\x01\x01\x00\x00?\x00\xd2\xcf \xff\xd9'
 
 MOCK_JPG_FILE = SimpleUploadedFile(name="img.jpg", content=MOCK_JPG_RAW, content_type='image/jpeg')
+
+
+# noinspection PyPep8Naming
+class CleanUpTempFilesTestMixin(ABC):
+    _temp_media_root: str
+    _override_settings_obj: override_settings
+
+    @classmethod
+    def setUpClass(cls):
+        # noinspection PyUnresolvedReferences
+        super().setUpClass()
+        cls._temp_media_root = tempfile.mkdtemp()
+        cls._override_settings_obj = override_settings(MEDIA_ROOT=cls._temp_media_root)
+        cls._override_settings_obj.enable()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls._override_settings_obj.disable()
+        shutil.rmtree(cls._temp_media_root)
+        # noinspection PyUnresolvedReferences
+        super().tearDownClass()
 
 
 def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]):
@@ -100,7 +125,7 @@ class Get(PathPredicate):
             status_code = client.get(path, follow=True).status_code
 
         if self.public or is_superuser:
-            test_case.assertEqual(status_code, 200)
+            test_case.assertEqual(status_code, HTTPStatus.OK)
         else:
             test_case.assertGreaterEqual(status_code, 300)
 
