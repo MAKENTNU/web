@@ -23,6 +23,8 @@ class MemberAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
 
 class SystemAccessAdmin(admin.ModelAdmin):
     list_display = ('member', 'name', 'value', 'last_modified')
+    list_filter = ('name', 'value')
+    search_fields = ('member__user__username', 'member__user__first_name', 'member__user__last_name')
     list_select_related = ('member__user',)
 
     readonly_fields = ('last_modified',)
