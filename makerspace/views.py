@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from contentbox.views import DisplayContentBoxView
-from util.templatetags.permission_tags import has_any_equipment_permissions
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import EquipmentForm
 from .models import Equipment
@@ -37,7 +36,7 @@ class AdminEquipmentListView(PermissionRequiredMixin, ListView):
     context_object_name = 'equipment_list'
 
     def has_permission(self):
-        return has_any_equipment_permissions(self.request.user)
+        return self.request.user.has_any_permissions_for(Equipment)
 
 
 class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):

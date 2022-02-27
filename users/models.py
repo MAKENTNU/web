@@ -27,6 +27,11 @@ class User(AbstractUser):
             return full_name
         return f"{names[0]} {names[-1]}"
 
+    def has_any_permissions_for(self, model: models.Model):
+        app_label = model._meta.app_label
+        model_name = model._meta.model_name
+        return any(self.has_perm(f'{app_label}.{action}_{model_name}') for action in ('add', 'change', 'delete'))
+
     def add_perms(self, *app_labels_and_codenames: str):
         query = Q()
         for app_label_and_codename in app_labels_and_codenames:

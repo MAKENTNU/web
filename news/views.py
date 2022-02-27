@@ -18,7 +18,6 @@ from django.views.generic.edit import ModelFormMixin
 
 from mail import email
 from util.logging_utils import log_request_exception
-from util.templatetags.permission_tags import has_any_article_permissions, has_any_event_permissions
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import ArticleForm, EventForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
@@ -122,7 +121,7 @@ class AdminArticleListView(PermissionRequiredMixin, ListView):
     context_object_name = 'articles'
 
     def has_permission(self):
-        return has_any_article_permissions(self.request.user)
+        return self.request.user.has_any_permissions_for(Article)
 
 
 class AdminEventListView(PermissionRequiredMixin, ListView):
@@ -131,7 +130,8 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
     context_object_name = 'events'
 
     def has_permission(self):
-        return has_any_event_permissions(self.request.user)
+        user = self.request.user
+        return user.has_any_permissions_for(Event) or user.has_any_permissions_for(TimePlace)
 
     def get_queryset(self):
         return Event.objects.annotate(
