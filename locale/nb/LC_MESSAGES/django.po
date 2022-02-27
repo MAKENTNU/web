@@ -199,8 +199,8 @@ msgstr "Velg/søk"
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:19
-#: make_queue/views/admin/quota.py:63
-#: make_queue/views/reservation/machine.py:50
+#: make_queue/views/admin/quota.py:62
+#: make_queue/views/reservation/machine.py:54
 msgid "Add"
 msgstr "Legg til"
 
@@ -225,7 +225,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: checkin/templates/checkin/profile.html:117 internal/forms.py:43
-#: make_queue/forms.py:200
+#: make_queue/forms.py:206
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -518,30 +518,6 @@ msgstr "svar"
 msgid "questions"
 msgstr "spørsmål"
 
-#: faq/templates/faq/admin_category_create.html:5
-#: faq/templates/faq/admin_category_create.html:6
-msgid "New Category"
-msgstr "Ny kategori"
-
-#: faq/templates/faq/admin_category_edit.html:6
-#: faq/templates/faq/admin_category_edit.html:15
-msgid "Edit Category"
-msgstr "Endre kategori"
-
-#: faq/templates/faq/admin_category_edit.html:26 util/view_utils.py:31
-msgid "Save"
-msgstr "Lagre"
-
-#: faq/templates/faq/admin_category_edit.html:28
-#: make_queue/templates/make_queue/course/course_registration_edit.html:115
-#: make_queue/templates/make_queue/course/course_registration_list.html:211
-#: make_queue/templates/make_queue/reservation_edit.html:166
-#: web/templates/web/delete_modal.html:20
-#: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
-msgctxt "abort action"
-msgid "Cancel"
-msgstr "Avbryt"
-
 #: faq/templates/faq/faq_admin_panel.html:7
 #: faq/templates/faq/faq_admin_panel.html:15
 msgid "FAQ Admin Panel"
@@ -570,6 +546,18 @@ msgstr "Nytt spørsmål"
 #: faq/views.py:65
 msgid "Edit Question"
 msgstr "Endre spørsmål"
+
+#: faq/views.py:80
+msgid "Admin page for categories"
+msgstr "Administrasjonsside for kategorier"
+
+#: faq/views.py:86
+msgid "New Category"
+msgstr "Ny kategori"
+
+#: faq/views.py:92
+msgid "Edit Category"
+msgstr "Endre kategori"
 
 #: groups/models.py:26
 msgid "parents"
@@ -667,7 +655,7 @@ msgstr ""
 "Medlemmets «pang»-status ble ikke gjort om siden medlemmet ikke hadde status "
 "«pang»."
 
-#: internal/models.py:29 make_queue/forms.py:125
+#: internal/models.py:29 make_queue/forms.py:126
 #: make_queue/models/course.py:23 make_queue/models/reservation.py:28
 #: news/models.py:243
 #: news/templates/admin/news/event/change_form_ticket_table.html:14
@@ -1068,50 +1056,50 @@ msgstr "sted"
 msgid "stream name"
 msgstr "videostrømnavn"
 
-#: make_queue/forms.py:96
+#: make_queue/forms.py:97
 msgid ""
 "Period is either too long (7+ days) or start time is earlier than end time."
 msgstr ""
 "Perioden er enten for lang (7+ dager) eller starttiden er før sluttiden."
 
-#: make_queue/forms.py:105
+#: make_queue/forms.py:106
 msgid "Rule has internal overlap of time periods."
 msgstr "Tidsperiodene innad i regelen overlapper hverandre."
 
-#: make_queue/forms.py:115
+#: make_queue/forms.py:116
 msgid "Rule time periods overlap with time periods of other rules."
 msgstr ""
 "Tidsperiodene til regelen overlapper med tidsperiodene til andre regler."
 
-#: make_queue/forms.py:123 make_queue/forms.py:175
+#: make_queue/forms.py:124 make_queue/forms.py:181
 #: make_queue/templates/make_queue/quota/quota_panel.html:57
 msgid "Select user"
 msgstr "Velg bruker"
 
-#: make_queue/forms.py:130 make_queue/forms.py:215
-#: make_queue/forms.py:226 make_queue/models/machine.py:130
+#: make_queue/forms.py:131 make_queue/forms.py:221
+#: make_queue/forms.py:232 make_queue/models/machine.py:130
 #: make_queue/models/reservation.py:34 make_queue/models/reservation.py:260
 #: make_queue/templates/make_queue/machine_detail.html:45
 msgid "machine type"
 msgstr "maskintype"
 
-#: make_queue/forms.py:131 make_queue/forms.py:227
+#: make_queue/forms.py:132 make_queue/forms.py:233
 msgid "Select machine type"
 msgstr "Velg maskintype"
 
-#: make_queue/forms.py:146
+#: make_queue/forms.py:152
 msgid "User must be set when “All users” is not set."
 msgstr "Bruker må oppgis når «Alle brukere» ikke er satt."
 
-#: make_queue/forms.py:148
+#: make_queue/forms.py:154
 msgid "User cannot be set when “All users” is set."
 msgstr "Bruker kan ikke være satt når «Alle brukere» er satt."
 
-#: make_queue/forms.py:152
+#: make_queue/forms.py:158
 msgid "Must select either specific user or all users."
 msgstr "Må velge enten én spesifikk bruker eller alle brukere."
 
-#: make_queue/forms.py:188
+#: make_queue/forms.py:194
 msgid ""
 "The card number was detected to be the phone number of Building security at "
 "NTNU. Please enter a valid card number."
@@ -1119,15 +1107,15 @@ msgstr ""
 "Kortnummeret ble oppdaget å være telefonnummeret til Vakt og service på "
 "NTNU. Vennligst fyll inn et gyldig kortnummer."
 
-#: make_queue/forms.py:218
+#: make_queue/forms.py:224
 msgid "Duration in hours"
 msgstr "Varighet i timer"
 
-#: make_queue/forms.py:219
+#: make_queue/forms.py:225
 msgid "Duration in minutes"
 msgstr "Varighet i minutter"
 
-#: make_queue/forms.py:266
+#: make_queue/forms.py:272
 msgid "Stream name cannot be empty when the machine type supports streaming."
 msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
 
@@ -1401,6 +1389,15 @@ msgstr "Registreringsstatus"
 msgctxt "edit"
 msgid "Submit"
 msgstr "Lagre"
+
+#: make_queue/templates/make_queue/course/course_registration_edit.html:115
+#: make_queue/templates/make_queue/course/course_registration_list.html:211
+#: make_queue/templates/make_queue/reservation_edit.html:166
+#: web/templates/web/delete_modal.html:20
+#: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
+msgctxt "abort action"
+msgid "Cancel"
+msgstr "Avbryt"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:15
 #: web/templates/web/admin_panel.html:87
@@ -1801,19 +1798,19 @@ msgstr ""
 "Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
 "understreker."
 
-#: make_queue/views/admin/quota.py:50 make_queue/views/admin/quota.py:76
+#: make_queue/views/admin/quota.py:49 make_queue/views/admin/quota.py:75
 msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"
 
-#: make_queue/views/admin/quota.py:62
+#: make_queue/views/admin/quota.py:61
 msgid "New Quota"
 msgstr "Ny kvote"
 
-#: make_queue/views/admin/quota.py:69
+#: make_queue/views/admin/quota.py:68
 msgid "Edit Quota"
 msgstr "Endre kvote"
 
-#: make_queue/views/admin/quota.py:78
+#: make_queue/views/admin/quota.py:77
 #, python-brace-format
 msgid "Admin page for the quotas of {user_full_name}"
 msgstr "Administrasjonsside for kvotene til {user_full_name}"
@@ -1822,11 +1819,11 @@ msgstr "Administrasjonsside for kvotene til {user_full_name}"
 msgid "Machine list"
 msgstr "Maskinliste"
 
-#: make_queue/views/reservation/machine.py:49
+#: make_queue/views/reservation/machine.py:53
 msgid "Create Machine"
 msgstr "Legg til maskin"
 
-#: make_queue/views/reservation/machine.py:59
+#: make_queue/views/reservation/machine.py:63
 msgid "Edit Machine"
 msgstr "Rediger maskin"
 
@@ -2535,6 +2532,10 @@ msgstr "Meld deg på arrangementet «{title}»"
 #: users/models.py:11
 msgid "full name from LDAP"
 msgstr "fullt navn fra LDAP"
+
+#: util/view_utils.py:31
+msgid "Save"
+msgstr "Lagre"
 
 #: web/multilingual/formfields.py:18
 msgid "One or more languages have no content."
