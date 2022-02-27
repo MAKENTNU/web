@@ -6,7 +6,7 @@ from django.urls import reverse
 
 from users.models import User
 from ..utility import request_with_user
-from ...forms import BaseMachineForm, EditMachineForm
+from ...forms import CreateMachineForm, EditMachineForm
 from ...models.machine import Machine, MachineType
 from ...views.reservation.machine import MachineListView
 
@@ -121,4 +121,4 @@ class TestCreateAndEditMachineView(TestCase):
         self.response = self.client.get(reverse('create_machine'))
 
         self.assertEqual(self.response.status_code, HTTPStatus.OK)
-        self.assertTrue(isinstance(self.response.context_data['form'], BaseMachineForm))
+        self.assertTrue(isinstance(self.response.context_data['form'], CreateMachineForm))

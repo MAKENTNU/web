@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
+from js_asset import JS
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
@@ -136,6 +137,11 @@ class QuotaForm(forms.ModelForm):
         model = Quota
         fields = '__all__'
 
+    class Media:
+        js = (
+            JS('make_queue/js/quota_edit.js', attrs={'defer': 'defer'}),
+        )
+
     def clean(self):
         cleaned_data = super().clean()
         user = cleaned_data.get('user')
@@ -219,7 +225,7 @@ class FreeSlotForm(forms.Form):
     minutes = forms.IntegerField(min_value=0, max_value=59, initial=0, label=_("Duration in minutes"))
 
 
-class BaseMachineForm(forms.ModelForm):
+class MachineFormBase(forms.ModelForm):
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by('priority'),
         # `capfirst()` to avoid duplicate translation differing only in case
@@ -270,10 +276,17 @@ class BaseMachineForm(forms.ModelForm):
         return cleaned_data
 
 
-class EditMachineForm(BaseMachineForm):
+class CreateMachineForm(MachineFormBase):
+    class Media:
+        js = (
+            JS('make_queue/js/machine_create.js', attrs={'defer': 'defer'}),
+        )
+
+
+class EditMachineForm(MachineFormBase):
     machine_type = None
 
-    class Meta(BaseMachineForm.Meta):
+    class Meta(MachineFormBase.Meta):
         exclude = ['machine_type']
 
     def __init__(self, *args, **kwargs):
