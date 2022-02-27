@@ -265,13 +265,17 @@ class MachineFormBase(forms.ModelForm):
         stream_name = cleaned_data.get('stream_name')
 
         if machine_type:
-            if machine_type.has_stream and not stream_name:
-                self.add_error(
-                    'stream_name', ValidationError(
-                        _("Stream name cannot be empty when the machine type supports streaming."),
-                        code='invalid_empty_stream_name',
+            if machine_type.has_stream:
+                if not stream_name:
+                    self.add_error(
+                        'stream_name', ValidationError(
+                            _("Stream name cannot be empty when the machine type supports streaming."),
+                            code='invalid_empty_stream_name',
+                        )
                     )
-                )
+            else:
+                # Remove the stream name if the machine type does not support streams
+                cleaned_data['stream_name'] = ""
 
         return cleaned_data
 
