@@ -72,6 +72,9 @@ class UrlTests(TestCase):
         return patterns
 
     def test_form_input_is_properly_bleached(self):
+        # Facilitates printing the whole diff if the tests fail, which is useful due to the long strings in this test case
+        self.maxDiff = None
+
         def unchanged(s: str):
             return s
 
@@ -87,8 +90,9 @@ class UrlTests(TestCase):
                 unchanged,
             ),
             (
+                # Attributes with optional values (like `download`) should be assigned to an empty value (like `""`), or the tests might fail
                 """
-                    <a href="https://makentnu.dev" target="_blank" name="link" download>LINK</a>
+                    <a href="https://makentnu.dev" target="_blank" name="link" download="">LINK</a>
                     <a id="anchor" href="#anchor" name="anchor">Scroll to anchor</a>
                     <a href="mailto:styret@makentnu.no" style="text-decoration: none;"></a>
                     <a href="tel:+47 123 45 678"></a>
