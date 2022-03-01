@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from util.auth_utils import perm_to_str
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField
@@ -21,6 +22,8 @@ class ContentBox(models.Model):
         help_text=_("Extra permissions that are required for editing the content box."),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(excluded_fields=['last_modified'])
 
     class Meta:
         permissions = (

@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from users.models import User
 from util.locale_utils import short_date_format
@@ -46,6 +47,8 @@ class NewsBase(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = NewsBaseQuerySet.as_manager()
+
+    BASE_FIELDS_EXCLUDED_FROM_HISTORY = ['contain', 'featured', 'hidden', 'private', 'last_modified']
 
     class Meta:
         abstract = True
@@ -90,6 +93,8 @@ class Article(NewsBase):
 
     objects = ArticleQuerySet.as_manager()
 
+    history = HistoricalRecords(excluded_fields=NewsBase.BASE_FIELDS_EXCLUDED_FROM_HISTORY)
+
     class Meta(NewsBase.Meta):
         permissions = (
             ('can_view_private', "Can view private articles"),
@@ -131,6 +136,8 @@ class Event(NewsBase):
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
 
     objects = EventQuerySet.as_manager()
+
+    history = HistoricalRecords(excluded_fields=['number_of_tickets', *NewsBase.BASE_FIELDS_EXCLUDED_FROM_HISTORY])
 
     class Meta(NewsBase.Meta):
         permissions = (

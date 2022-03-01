@@ -6,6 +6,7 @@ from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from util.admin_utils import TextFieldOverrideMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
@@ -15,7 +16,7 @@ from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
-class NewsBaseAdmin(MultiLingualFieldAdmin):
+class NewsBaseAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     form_base: NewsBaseForm
     list_display_extra: tuple
 

@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumber_field.phonenumber import PhoneNumber
 from phonenumbers.phonenumberutil import region_code_for_number
+from simple_history.models import HistoricalRecords
 
 from groups.models import Committee
 from users.models import User
@@ -253,6 +254,8 @@ class Secret(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = SecretQuerySet.as_manager()
+
+    history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
 
     def __str__(self):
         return str(self.title)

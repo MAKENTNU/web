@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import Equipment
 
 
-class EquipmentAdmin(MultiLingualFieldAdmin):
+class EquipmentAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     list_display = ('title', 'get_image', 'priority', 'last_modified')
     search_fields = ('title', 'description')
     list_editable = ('priority',)

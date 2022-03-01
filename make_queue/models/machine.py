@@ -8,6 +8,7 @@ from django.db.models import F, Prefetch
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from users.models import User
 from web.modelfields import URLTextField, UnlimitedCharField
@@ -189,6 +190,8 @@ class MachineUsageRule(models.Model):
     )
     content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(excluded_fields=['last_modified'])
 
     def __str__(self):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)

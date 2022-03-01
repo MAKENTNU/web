@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 
 class InheritanceGroup(Group):
@@ -100,6 +101,8 @@ class Committee(models.Model):
     email = models.EmailField(verbose_name=_("email"))
     image = models.ImageField(blank=True, verbose_name=_("image"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(excluded_fields=['last_modified'])
 
     def __str__(self):
         return self.name

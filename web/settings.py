@@ -86,6 +86,7 @@ INSTALLED_APPS = [
     'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
+    'simple_history',
     'sorl.thumbnail',
 
     # Project apps, listed alphabetically
@@ -123,6 +124,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'simple_history.middleware.HistoryRequestMiddleware',
 
     # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
@@ -337,6 +340,9 @@ CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME]['toolbar_main'].append(
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
 PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
+
+# See https://django-simple-history.readthedocs.io/en/stable/historical_model.html#filefield-as-a-charfield
+SIMPLE_HISTORY_FILEFIELD_TO_CHARFIELD = True
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for

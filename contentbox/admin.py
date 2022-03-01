@@ -1,12 +1,13 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import ContentBox
 
 
-class ContentBoxAdmin(MultiLingualFieldAdmin):
+class ContentBoxAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     list_display = ('title', 'get_extra_change_permissions', 'last_modified')
 
     filter_horizontal = ('extra_change_permissions',)

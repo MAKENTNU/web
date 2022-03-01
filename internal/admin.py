@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.db.models.functions import Concat
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util.admin_utils import TextFieldOverrideMixin
 from web.multilingual.admin import MultiLingualFieldAdmin
@@ -30,7 +31,7 @@ class SystemAccessAdmin(admin.ModelAdmin):
     readonly_fields = ('last_modified',)
 
 
-class SecretAdmin(MultiLingualFieldAdmin):
+class SecretAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     list_display = ('title', 'priority', 'last_modified')
     search_fields = ('title', 'content')
     list_editable = ('priority',)

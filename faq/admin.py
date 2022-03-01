@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from util.admin_utils import link_to_admin_change_form, search_escaped_and_unescaped
@@ -7,7 +8,7 @@ from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import Category, Question
 
 
-class QuestionAdmin(MultiLingualFieldAdmin):
+class QuestionAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     list_display = ('title', 'get_categories', 'last_modified')
     list_filter = ('categories',)
     search_fields = ('title', 'answer', 'categories__name')
