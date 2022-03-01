@@ -1,4 +1,5 @@
 import importlib
+from http import HTTPStatus
 from typing import Callable, List, Tuple
 from urllib.parse import urlparse
 
@@ -9,6 +10,7 @@ from django_hosts import reverse
 from internal.tests.test_urls import INTERNAL_CLIENT_DEFAULTS, reverse_internal
 from users.models import User
 from util.auth_utils import get_perm
+from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
 from web.hosts import host_patterns
 from web.multilingual.data_structures import MultiLingualTextStructure
 from ..forms import ContentBoxForm
@@ -35,6 +37,12 @@ class UrlTests(TestCase):
 
             (reverse_internal('home'), self.internal_client, False),
         )
+
+    def get_content_box_from_url(self, url: str, client: Client) -> ContentBox:
+        client.force_login(self.superuser)
+        response = client.get(url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        return response.context['object']
 
     def test_content_box_url_count_is_as_expected(self):
         all_content_box_url_patterns = self.get_all_content_box_url_patterns()
@@ -70,6 +78,17 @@ class UrlTests(TestCase):
             check_urls(module.urlpatterns)
 
         return patterns
+
+    def test_all_admin_get_request_paths_succeed(self):
+        content_boxes = [
+            self.get_content_box_from_url(url, client)
+            for url, client, _ in self.url__client__should_be_bleached__tuples
+        ]
+        path_predicates = [
+            Get(admin_url, public=False)
+            for admin_url in generate_all_admin_urls_for_model_and_objs(ContentBox, content_boxes)
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')
 
     def test_form_input_is_properly_bleached(self):
         # Facilitates printing the whole diff if the tests fail, which is useful due to the long strings in this test case
@@ -178,9 +197,7 @@ class UrlTests(TestCase):
 
         for url, client, should_be_bleached in self.url__client__should_be_bleached__tuples:
             with self.subTest(url=url):
-                client.force_login(self.superuser)
-                response = client.get(url)
-                content_box: ContentBox = response.context['object']
+                content_box = self.get_content_box_from_url(url, client)
                 if not should_be_bleached:
                     # Add the permission that is expected for non-bleached content boxes to have
                     content_box.extra_change_permissions.add(get_perm('internal.can_change_rich_text_source'))

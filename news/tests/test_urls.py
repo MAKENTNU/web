@@ -6,7 +6,9 @@ from django_hosts import reverse
 
 from news.models import Article, Event, EventTicket, TimePlace
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import (
+    CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
+)
 
 
 class UrlTests(CleanUpTempFilesTestMixin, TestCase):
@@ -114,3 +116,24 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
             Get(reverse('my_tickets_list'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
+
+    def test_all_admin_get_request_paths_succeed(self):
+        path_predicates = [
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Article, [self.article1, self.article2])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(EventTicket, self.tickets)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Event, [self.event1, self.event2])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(TimePlace, self.time_places)
+            ],
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')

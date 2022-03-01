@@ -3,10 +3,11 @@ import shutil
 import tempfile
 from abc import ABC
 from http import HTTPStatus
-from typing import Any, Collection, Dict, List, Set, Tuple, TypeVar
+from typing import Any, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar
 from urllib.parse import urlparse
 
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.db import models
 from django.test import Client, SimpleTestCase, override_settings
 from django.utils import translation
 
@@ -14,6 +15,7 @@ from users.models import User
 
 
 T = TypeVar('T')
+ModelT = TypeVar('ModelT', bound=models.Model)
 
 # A very small JPEG image without any content; used for mocking a valid image while testing
 MOCK_JPG_RAW = b'\xff\xd8\xff\xdb\x00C\x00\x03\x02\x02\x02\x02\x02\x03\x02\x02\x02\x03\x03\x03\x03\x04\x06\x04\x04\x04' \
@@ -129,11 +131,26 @@ class Get(PathPredicate):
             test_case.assertGreaterEqual(status_code, 300)
 
 
+def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> List[str]:
+    from web.tests.test_urls import reverse_admin  # avoids circular imports
+
+    url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
+    return [
+        reverse_admin(f'{url_name_prefix}_changelist'),
+        reverse_admin(f'{url_name_prefix}_add'),
+        *[
+            reverse_admin(f'{url_name_prefix}_{url_name_suffix}', args=[obj.pk])
+            for obj in model_objs
+            for url_name_suffix in ['change', 'delete', 'history']
+        ],
+    ]
+
+
 def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List[PathPredicate], subdomain=''):
     previous_language = translation.get_language()
 
     password = "1234"
-    superuser = User.objects.create_user("superuser", "admin@makentnu.no", password,
+    superuser = User.objects.create_user("unique_superuser_username", "admin@makentnu.no", password,
                                          is_superuser=True, is_staff=True)
 
     server_name = f'{subdomain}.testserver' if subdomain else 'testserver'  # 'testserver' is Django's default server name

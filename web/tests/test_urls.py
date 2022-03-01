@@ -12,6 +12,10 @@ from util.test_utils import CleanUpTempFilesTestMixin, Get, assert_requesting_pa
 ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': 'admin.testserver'}
 
 
+def reverse_admin(viewname: str, args=None, **kwargs):
+    return reverse(f'admin:{viewname}', args=args, kwargs=kwargs, host='admin')
+
+
 class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
@@ -47,6 +51,13 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
+            Get(reverse_admin('index'), public=False),
+            Get(reverse_admin('password_change'), public=False),
+            *[
+                Get(reverse_admin('app_list', args=[app_label]), public=False)
+                for app_label in ['announcements', 'auth', 'checkin', 'contentbox', 'docs', 'faq', 'groups', 'internal', 'make_queue', 'makerspace',
+                                  'news', 'social_django', 'users']
+            ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')
 
