@@ -27,7 +27,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
 
     def test_admin(self):
         response = self.client.get(reverse('admin_article_list'))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
         response = self.client.get(reverse('admin_article_list'))
@@ -43,7 +43,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
 
     def test_article_create(self):
         response = self.client.get(reverse('article_create'))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.add_article')
         response = self.client.get(reverse('article_create'))
@@ -51,7 +51,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
 
     def test_article_edit(self):
         response = self.client.get(reverse('article_edit', kwargs={'article': self.article}))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
         response = self.client.get(reverse('article_edit', kwargs={'article': self.article}))
@@ -77,7 +77,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         self.article.private = True
         self.article.save()
         response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.can_view_private')
         response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
@@ -92,7 +92,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         self.article.publication_time = timezone.now() + timedelta(days=1)
         self.article.save()
         response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
         response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
@@ -102,7 +102,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         self.article.hidden = True
         self.article.save()
         response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
         response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))

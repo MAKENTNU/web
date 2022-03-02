@@ -47,7 +47,7 @@ class InternalContentBoxTests(TestCase):
         clear_url_caches()
 
     def test_internal_content_boxes_can_only_be_edited_with_required_permission(self):
-        self.assertGreaterEqual(self.internal_user_client.get(self.home_edit_url).status_code, 400)
+        self.assertEqual(self.internal_user_client.get(self.home_edit_url).status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(self.internal_admin_client.get(self.home_edit_url).status_code, HTTPStatus.OK)
 
     def test_internal_content_boxes_only_contain_edit_buttons_when_user_has_required_permission(self):

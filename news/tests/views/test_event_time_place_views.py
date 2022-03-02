@@ -41,7 +41,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
 
     def test_event_create(self):
         response = self.client.get(reverse('event_create'))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.add_event')
         response = self.client.get(reverse('event_create'))
@@ -49,7 +49,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
 
     def test_event_edit(self):
         response = self.client.get(reverse('event_edit', kwargs={'event': self.event}))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_event')
         response = self.client.get(reverse('event_edit', kwargs={'event': self.event}))
@@ -59,7 +59,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         tp = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
                                       end_time=timezone.localtime() + timedelta(minutes=10))
         response = self.client.post(reverse('timeplace_duplicate', args=[self.event, tp.pk]))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
         response = self.client.post(reverse('timeplace_duplicate', args=[self.event, tp.pk]))
@@ -81,26 +81,20 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         new_start_time = start_time + timedelta(weeks=3)
         new_end_time = end_time + timedelta(weeks=3)
 
-        tp = TimePlace.objects.create(
-            event=self.event,
-            start_time=start_time,
-            end_time=end_time,
-            hidden=False,
-        )
+        time_place = TimePlace.objects.create(event=self.event, start_time=start_time, end_time=end_time, hidden=False)
+        response = self.client.post(reverse('timeplace_duplicate', args=[self.event, time_place.pk]))
+        duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
 
-        response = self.client.post(reverse('timeplace_duplicate', args=[self.event, tp.pk]))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
-        new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
-
-        self.assertEqual(new.start_time, new_start_time)
-        self.assertEqual(new.end_time, new_end_time)
+        self.assertRedirects(response, reverse('timeplace_edit', args=[self.event, duplicated_time_place.pk]))
+        self.assertEqual(duplicated_time_place.start_time, new_start_time)
+        self.assertEqual(duplicated_time_place.end_time, new_end_time)
 
     def test_hidden_event(self):
         self.event.hidden = True
         self.event.save()
 
         response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_event')
         response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
@@ -113,7 +107,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.event.private = True
         self.event.save()
         response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.can_view_private')
         response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))

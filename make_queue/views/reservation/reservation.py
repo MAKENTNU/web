@@ -1,5 +1,6 @@
 from abc import ABC
 from datetime import timedelta
+from http import HTTPStatus
 from math import ceil
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -197,10 +198,10 @@ class DeleteReservationView(PermissionRequiredMixin, PreventGetRequestsMixin, De
                     message = _("Cannot delete reservation when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=400)
+            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.delete()
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
 class EditReservationView(CreateOrEditReservationView):
@@ -267,11 +268,11 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
                 message = _("Cannot mark reservation as finished when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=400)
+            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.end_time = timezone.localtime()
         reservation.save()
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
 class MyReservationsListView(LoginRequiredMixin, ListView):

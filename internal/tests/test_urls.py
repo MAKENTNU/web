@@ -74,7 +74,7 @@ class UrlTests(TestCase):
                 self.assertTrue(urlparse(response.url).path.startswith("/login/"))
             # Disallowed members should be rejected:
             else:
-                self.assertGreaterEqual(response.status_code, 400)
+                self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         for client in allowed_clients:
             response = self.generic_request(client, method, path, data)
             if expected_redirect_url:

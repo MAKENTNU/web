@@ -161,7 +161,7 @@ class MultiSubdomainTests(TestCase):
             self.assertEqual(bool(form_fields), can_change)
 
         # Only users with the `internal_change_perm` permission can edit internal content boxes
-        self.assertGreaterEqual(self.internal_user_internal_client.get(self.internal_edit_url).status_code, 400)
+        self.assertEqual(self.internal_user_internal_client.get(self.internal_edit_url).status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, HTTPStatus.OK)
         # Only staff can change content boxes through Django admin
         self.assertRedirects(self.internal_user_admin_client.get(self.public_admin_edit_url),
@@ -178,7 +178,7 @@ class MultiSubdomainTests(TestCase):
         )
         self.internal_content_box.extra_change_permissions.add(extra_perm)
         # Users without the extra change permission for the content box, are not allowed to edit it
-        self.assertGreaterEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, 400)
+        self.assertEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, HTTPStatus.FORBIDDEN)
         assert_staff_can_change_through_django_admin(False, self.internal_admin_admin_client, self.internal_admin_edit_url)
         # Now `internal_admin` can edit it again:
         self.internal_admin.user_permissions.add(extra_perm)

@@ -427,7 +427,7 @@ class TestMarkReservationFinishedView(TestCase):
 
     def test_get_request_fails(self):
         response = self.client.get(reverse('mark_reservation_finished', args=[self.reservation1.pk]))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     @patch('django.utils.timezone.now')
     def test_valid_post_request_succeeds(self, now_mock):
@@ -443,7 +443,7 @@ class TestMarkReservationFinishedView(TestCase):
     def test_finishing_before_start_fails(self):
         original_end_time = self.reservation1.end_time
         response = self.post_to(self.reservation1)
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
         self.reservation1.refresh_from_db()
         self.assertEqual(self.reservation1.end_time, original_end_time,
                          "Marking a reservation in the future as finished should not be possible")
@@ -455,7 +455,7 @@ class TestMarkReservationFinishedView(TestCase):
 
         original_end_time = self.reservation1.end_time
         response = self.post_to(self.reservation1)
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
         self.reservation1.refresh_from_db()
         self.assertEqual(self.reservation1.end_time, original_end_time,
                          "Marking a reservation in the past as finished should not do anything")
