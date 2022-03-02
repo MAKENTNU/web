@@ -6,6 +6,7 @@ from pathlib import Path
 import django.views.static
 from django.conf.locale.en import formats as en_formats
 from django.conf.locale.nb import formats as nb_formats
+from django_hosts import reverse_lazy
 
 from .static import serve_interpolated
 
@@ -35,9 +36,9 @@ MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
-LOGOUT_URL = '/'
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('front_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
 CHECKIN_KEY = ''  # (custom setting)
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
@@ -230,8 +231,8 @@ AUTH_USER_MODEL = 'users.User'
 # Dataporten
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('front_page')
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = (

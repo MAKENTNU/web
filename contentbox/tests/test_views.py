@@ -10,6 +10,7 @@ from django_hosts import reverse
 
 from users.models import User
 from util.auth_utils import get_perm
+from util.test_utils import assertRedirectsWithPathPrefix
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from .urls import hosts, urls_main
 from .urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
@@ -60,7 +61,7 @@ class SimpleModelAndViewTests(TestCase):
         user_client.force_login(user)
         anon_client = Client()
 
-        self.assertGreaterEqual(anon_client.get(self.edit_url1).status_code, 300)
+        assertRedirectsWithPathPrefix(self, anon_client.get(self.edit_url1), "/login/")
         self.assertEqual(user_client.get(self.edit_url1).status_code, HTTPStatus.OK)
 
     def test_edit_page_contains_correct_error_messages(self):
