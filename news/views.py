@@ -1,6 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import timedelta
+from typing import Set
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -543,6 +544,13 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
                 self.request.user.has_perm('news.cancel_ticket')
                 or self.request.user == self.ticket.user
         )
+
+    def get_allowed_next_params(self) -> Set[str]:
+        return {
+            reverse('ticket_detail', args=[self.ticket.pk]),
+            reverse('my_tickets_list'),
+            reverse('event_detail', args=[self.ticket.event or self.ticket.timeplace.event]),
+        }
 
     def get_queryset(self):
         return self.request.user.event_tickets.all()

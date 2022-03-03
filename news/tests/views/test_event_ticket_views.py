@@ -53,7 +53,7 @@ class TestEventTicketViews(TestCase):
 
                 # Only `next` parameters that redirect the client to a URL on our website, are allowed
                 assert_next_param_is_valid("google.com", False)
-                assert_next_param_is_valid("/google.com", True)
+                assert_next_param_is_valid("/google.com", False)
                 assert_next_param_is_valid("//google.com", False)
                 assert_next_param_is_valid("http://google.com", False)
                 assert_next_param_is_valid("https://google.com", False)
@@ -61,5 +61,5 @@ class TestEventTicketViews(TestCase):
                 assert_next_param_is_valid(ticket_detail_url, True)
                 assert_next_param_is_valid(urlparse(reverse('my_tickets_list')).path, True)
                 assert_next_param_is_valid(urlparse(reverse('event_detail', args=[ticket.event or ticket.timeplace.event])).path, True)
-                assert_next_param_is_valid("/", True)
-                assert_next_param_is_valid(urlparse(reverse('front_page')).path, True)
+                assert_next_param_is_valid("/", False)
+                assert_next_param_is_valid(urlparse(reverse('front_page')).path, False)
