@@ -532,22 +532,25 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
     template_name = 'news/ticket_cancel.html'
     context_object_name = 'ticket'
 
-    object: EventTicket
+    ticket: EventTicket
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.ticket = self.get_object()
 
     def has_permission(self):
         return (
                 self.request.user.has_perm('news.cancel_ticket')
-                or self.request.user == self.get_object().user
+                or self.request.user == self.ticket.user
         )
 
     def get_queryset(self):
         return self.request.user.event_tickets.all()
 
     def get_context_data(self, **kwargs):
-        ticket = self.object
-        event = ticket.event or ticket.timeplace.event
-        if ticket.timeplace:
-            at_time_string = _(" at {time}").format(time=short_datetime_format(ticket.timeplace.start_time))
+        event = self.ticket.event or self.ticket.timeplace.event
+        if self.ticket.timeplace:
+            at_time_string = _(" at {time}").format(time=short_datetime_format(self.ticket.timeplace.start_time))
         else:
             at_time_string = ""
         heading = _("Are you sure you want to cancel your ticket for<br/>“{event}”{at_time_string}?").format(
@@ -560,25 +563,23 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         })
 
     def get(self, request, *args, **kwargs):
-        ticket = self.get_object()
-        if not ticket.active:
+        if not self.ticket.active:
             # Redirect back to the ticket, as it would be confusing to show a page
             # asking if you want to cancel the ticket if it's already canceled
             return HttpResponseRedirect(self.get_success_url())
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
-        ticket = self.object
         # Allow for toggling if a ticket is canceled or not
         if self.request.user.has_perm('news.cancel_ticket'):
-            ticket.active = not ticket.active
-            ticket.save()
-        elif self.request.user == ticket.user and ticket.active:
-            ticket.active = False
-            ticket.save()
+            self.ticket.active = not self.ticket.active
+            self.ticket.save()
+        elif self.request.user == self.ticket.user and self.ticket.active:
+            self.ticket.active = False
+            self.ticket.save()
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
         if self.cleaned_next_param:
             return self.cleaned_next_param
-        return reverse('ticket_detail', args=[self.object.pk])
+        return reverse('ticket_detail', args=[self.ticket.pk])
