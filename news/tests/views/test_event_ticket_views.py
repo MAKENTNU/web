@@ -60,6 +60,6 @@ class TestEventTicketViews(TestCase):
                 assert_next_param_is_valid(f"google.com{ticket_detail_url}", False)
                 assert_next_param_is_valid(ticket_detail_url, True)
                 assert_next_param_is_valid(urlparse(reverse('my_tickets_list')).path, True)
-                assert_next_param_is_valid(urlparse(reverse('event_detail', args=[ticket.event or ticket.timeplace.event])).path, True)
+                assert_next_param_is_valid(urlparse(reverse('event_detail', args=[ticket.registered_event])).path, True)
                 assert_next_param_is_valid("/", False)
                 assert_next_param_is_valid(urlparse(reverse('front_page')).path, False)

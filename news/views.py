@@ -549,23 +549,22 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         return {
             reverse('ticket_detail', args=[self.ticket.pk]),
             reverse('my_tickets_list'),
-            reverse('event_detail', args=[self.ticket.event or self.ticket.timeplace.event]),
+            reverse('event_detail', args=[self.ticket.registered_event]),
         }
 
     def get_queryset(self):
         return self.request.user.event_tickets.all()
 
     def get_context_data(self, **kwargs):
-        event = self.ticket.event or self.ticket.timeplace.event
         if self.ticket.timeplace:
             at_time_string = _(" at {time}").format(time=short_datetime_format(self.ticket.timeplace.start_time))
         else:
             at_time_string = ""
         heading = _("Are you sure you want to cancel your ticket for<br/>“{event}”{at_time_string}?").format(
-            event=event, at_time_string=at_time_string,
+            event=self.ticket.registered_event, at_time_string=at_time_string,
         )
         return super().get_context_data(**{
-            'event': event,
+            'event': self.ticket.registered_event,
             'heading': heading,
             **kwargs,
         })
