@@ -22,9 +22,10 @@ jobs:
           cache-dependency-path: "requirements*.txt"
 
       - name: Install System Dependencies
+        # Retries installing files 3 times, as the GitHub Actions CI is occasionally unreliable
         run: |
           sudo apt update
-          sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev
+          sudo apt install python-dev libldap2-dev libsasl2-dev libssl-dev -o Acquire::Retries=3
 
       - name: Install Python Dependencies
         run: |
