@@ -1,74 +1,19 @@
-{% extends 'web/base.html' %}
-{% load static %}
+{% extends 'web/edit_form.html' %}
 {% load i18n %}
 
 
-{% block title %}{% trans "Edit time" %}{% endblock title %}
+{% block field_classes %}
+    {% if field.name == 'event' %}
+        ui disabled field
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_classes %}
 
-{% block extra_head %}
-    {{ form.media }}
-{% endblock extra_head %}
-
-{% block body %}
-    <h1 class="ui centered header">{% block form_header %}{% trans "Edit time" %}{% endblock %}</h1>
-    <form class="ui form text container" method="POST" enctype="multipart/form-data">
-        {% for error in form.non_field_errors %}
-            <div class="ui negative message">
-                {{ error }}
-            </div>
-        {% endfor %}
-
-        {% csrf_token %}
-        <div class="field disabled">
-            <label>{{ form.event.label }}</label>
-            {{ form.event }}
-        </div>
-        <div class="field">
-            <label>{{ form.place.label }}</label>
-            {{ form.place }}
-        </div>
-        <div class="field">
-            <label>{{ form.place_url.label }}</label>
-            {{ form.place_url }}
-        </div>
-        {% if form.number_of_tickets %}
-            <div class="field">
-                <label>{{ form.number_of_tickets.label }}</label>
-                {{ form.number_of_tickets }}
-                <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}</div>
-            </div>
-        {% endif %}
-        <div class="field">
-            <label>{% trans "From" %}</label>
-            {{ form.start_time }}
-        </div>
-        <div class="field">
-            <label>{% trans "To" %}</label>
-            {{ form.end_time }}
-        </div>
-        <div class="field">
-            <label>{% trans "Publication" %}
-                <span data-content="{% trans "The occurrence will not be shown before this date" %}.">
-                    <i class="ui make-col-yellow question circle icon"></i>
-                </span>
-            </label>
-            {{ form.publication_time }}
-        </div>
-        <h4>{% trans "Attributes" %}</h4>
-        <div class="field">
-            <div class="ui checkbox">
-                {{ form.hidden }}
-                <label>{{ form.hidden.label }}
-                    <span data-content="{% trans "If selected, the occurrence will be hidden, even after the publication date" %}.">
-                        <i class="ui make-col-yellow question circle icon"></i>
-                    </span>
-                </label>
-            </div>
-        </div>
-
-        <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
-        <a class="ui right floated red button" href="{% url 'admin_event_detail' form.event.initial %}">
-            {% trans "Cancel" context "abort action" %}
-        </a>
-    </form>
-{% endblock body %}
+{% block field_post_content %}
+    {% if field.name == 'number_of_tickets' %}
+        <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}.</div>
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_post_content %}

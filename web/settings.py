@@ -1,3 +1,4 @@
+import copy
 import logging
 import sys
 from pathlib import Path
@@ -25,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Default values
-DATABASE = 'sqlite'
+DATABASE = 'sqlite'  # (custom setting; used below for selecting database configuration)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
@@ -85,6 +86,7 @@ INSTALLED_APPS = [
     'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
+    'simple_history',
     'sorl.thumbnail',
 
     # Project apps, listed alphabetically
@@ -123,6 +125,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'simple_history.middleware.HistoryRequestMiddleware',
+
     # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
@@ -160,6 +164,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'web.context_processors.common_context_variables',
                 'web.context_processors.login',
             ],
         },
@@ -301,13 +306,16 @@ CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
         'toolbar_main': [
+            {'name': 'editing', 'items': ['Find']},
             {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'format', 'items': ['Format', 'Styles', 'RemoveFormat']},
+            '/',
             {'name': 'paragraph',
-             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter',
-                       'JustifyRight', 'JustifyBlock']},
-            {'name': 'links', 'items': ['Link', 'Unlink']},
-            {'name': 'format', 'items': ['Format', 'RemoveFormat']},
-            {'name': 'insert', 'items': ['Image', 'CodeSnippet']},
+             'items': ['NumberedList', 'BulletedList', 'Blockquote', '-', 'Outdent', 'Indent',
+                       '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert', 'items': ['Image', 'HorizontalRule', 'CodeSnippet']},
         ],
         'toolbar': 'main',
         'tabSpaces': 4,
@@ -322,10 +330,19 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+# This config should only be used for a rich text widget if the user has the `internal.can_change_rich_text_source` permission
+CKEDITOR_EDIT_SOURCE_CONFIG_NAME = 'edit_source'  # (custom setting)
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME] = copy.deepcopy(CKEDITOR_CONFIGS['default'])
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME]['toolbar_main'].append(
+    {'name': 'editsource', 'items': ['Source']}
+)
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
 PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
+
+# See https://django-simple-history.readthedocs.io/en/stable/historical_model.html#filefield-as-a-charfield
+SIMPLE_HISTORY_FILEFIELD_TO_CHARFIELD = True
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for

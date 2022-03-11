@@ -12,7 +12,7 @@
 {% block body %}
     <div class="ui container">
         <a class="ui make-bg-yellow button" href="{% url 'create_quota' %}">
-            <i class="ui icon plus"></i>{% trans "New quota" %}
+            <i class="ui icon plus"></i>{% trans "Add new quota" %}
         </a>
         <div class="ui tabular pointing secondary menu">
             <a class="{% if not requested_user %}active{% endif %} item" data-tab="global">{% trans "Global" %}</a>

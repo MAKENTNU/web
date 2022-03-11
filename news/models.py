@@ -8,6 +8,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from users.models import User
 from util.locale_utils import short_date_format
@@ -47,6 +48,8 @@ class NewsBase(models.Model):
 
     objects = NewsBaseQuerySet.as_manager()
 
+    BASE_FIELDS_EXCLUDED_FROM_HISTORY = ['contain', 'featured', 'hidden', 'private', 'last_modified']
+
     class Meta:
         abstract = True
 
@@ -85,9 +88,12 @@ class ArticleQuerySet(NewsBaseQuerySet):
 
 
 class Article(NewsBase):
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"),
+                                            help_text=_("The article will be hidden until this date."))
 
     objects = ArticleQuerySet.as_manager()
+
+    history = HistoricalRecords(excluded_fields=NewsBase.BASE_FIELDS_EXCLUDED_FROM_HISTORY)
 
     class Meta(NewsBase.Meta):
         permissions = (
@@ -130,6 +136,8 @@ class Event(NewsBase):
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
 
     objects = EventQuerySet.as_manager()
+
+    history = HistoricalRecords(excluded_fields=['number_of_tickets', *NewsBase.BASE_FIELDS_EXCLUDED_FROM_HISTORY])
 
     class Meta(NewsBase.Meta):
         permissions = (
@@ -196,12 +204,14 @@ class TimePlace(models.Model):
         on_delete=models.CASCADE,
         related_name='timeplaces',
     )
-    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"))
+    publication_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("publication time"),
+                                            help_text=_("The occurrence will not be shown before this date."))
     start_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("start time"))
     end_time = models.DateTimeField(default=timezone.localtime, verbose_name=_("end time"))
     place = UnlimitedCharField(blank=True, verbose_name=_("location"))
     place_url = URLTextField(blank=True, verbose_name=_("location URL"))
-    hidden = models.BooleanField(default=True, verbose_name=_("hidden"))
+    hidden = models.BooleanField(default=True, verbose_name=_("hidden"),
+                                 help_text=_("If selected, the occurrence will be hidden, even after the publication date."))
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 

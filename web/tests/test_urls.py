@@ -1,10 +1,19 @@
 from django.conf import settings
 from django.test import Client, TestCase
+from django.utils import translation
 from django_hosts import reverse
 
 from news.tests.test_urls import UrlTests as NewsUrlTests
 from users.models import User
 from util.test_utils import CleanUpTempFilesTestMixin, Get, assert_requesting_paths_succeeds
+
+
+# Makes sure that the subdomain of all requests is `admin`
+ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': 'admin.testserver'}
+
+
+def reverse_admin(viewname: str, args=None, **kwargs):
+    return reverse(f'admin:{viewname}', args=args, kwargs=kwargs, host='admin')
 
 
 class UrlTests(CleanUpTempFilesTestMixin, TestCase):
@@ -41,6 +50,14 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
     def test_all_admin_get_request_paths_succeed(self):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
+            Get('/.well-known/security.txt', public=True, translated=False),
+            Get(reverse_admin('index'), public=False),
+            Get(reverse_admin('password_change'), public=False),
+            *[
+                Get(reverse_admin('app_list', args=[app_label]), public=False)
+                for app_label in ['announcements', 'auth', 'checkin', 'contentbox', 'docs', 'faq', 'groups', 'internal', 'make_queue', 'makerspace',
+                                  'news', 'social_django', 'users']
+            ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')
 
@@ -70,3 +87,6 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
         # Should not redirect to login (caused by the above line)
         response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
         self.assertRedirects(response, '/en/')
+
+        # Reset current language back to the default
+        translation.activate(settings.LANGUAGE_CODE)

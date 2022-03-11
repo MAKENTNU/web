@@ -20,7 +20,7 @@ body {
     flex-direction: column;
 }
 
-p, h1, h2, h3, h4, h5, li, td, th, div, a, input, textarea, button {
+p, h1, h2, h3, h4, h5, h6, li, td, th, div, a, input, textarea, button {
     font-family: "Ubuntu", sans-serif !important;
 }
 

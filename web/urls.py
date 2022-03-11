@@ -11,7 +11,7 @@ from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 from social_core.utils import setting_name
 
-from contentbox.views import DisplayContentBoxView
+from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from dataporten.views import Logout, login_wrapper
 from . import views
 
@@ -24,8 +24,12 @@ urlpatterns = [
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
 ]
 
+contentbox_urlpatterns = [
+    path("<int:pk>/edit/", EditContentBoxView.as_view(base_template='web/base.html'), name='contentbox_edit'),
+]
+
 about_urlpatterns = [
-    path("", views.AboutUsView.as_view(), name='about'),
+    path("", views.AboutUsView.as_view(title='about'), name='about'),
     DisplayContentBoxView.get_path('contact'),
 ]
 
@@ -34,7 +38,7 @@ urlpatterns += i18n_patterns(
     path("admin/", views.AdminPanelView.as_view(), name='adminpanel'),
     path("reservation/", include('make_queue.urls')),
     path("news/", include('news.urls')),
-    path("contentbox/", include('contentbox.urls')),
+    path("contentbox/", include(contentbox_urlpatterns)),
     path("media/<path:path>", serve, {'document_root': settings.MEDIA_ROOT}),  # for development only; Nginx is used in production
     path("checkin/", include('checkin.urls')),
     path("committees/", include('groups.urls')),

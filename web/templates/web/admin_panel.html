@@ -8,7 +8,7 @@
     <div class="ui container">
         <h1>{% trans "Admin panel" %}</h1>
         <div class="ui four doubling stackable cards">
-            {% if user|has_any_article_permissions %}
+            {% if user|has_any_permissions_for:'Article' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'admin_article_list' %}">
                         <div class="center aligned header">
@@ -20,7 +20,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_event_permissions %}
+            {% if user|has_any_permissions_for:'Event' or user|has_any_permissions_for:'TimePlace' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'admin_event_list' %}">
                         <div class="center aligned header">
@@ -44,7 +44,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_faq_permissions %}
+            {% if user|has_any_permissions_for:'Category' or user|has_any_permissions_for:'Question' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'faq_admin_panel' %}">
                         <div class="center aligned header">
@@ -104,7 +104,7 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_equipment_permissions %}
+            {% if user|has_any_permissions_for:'Equipment' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'makerspace_admin_equipment_list' %}">
                         <div class="center aligned header">

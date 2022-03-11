@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
@@ -28,6 +29,8 @@ class Equipment(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = EquipmentQuerySet.as_manager()
+
+    history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
 
     def __str__(self):
         return str(self.title)

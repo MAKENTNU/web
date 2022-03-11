@@ -7,8 +7,9 @@ from django.test import Client, TestCase
 from django.utils.dateparse import parse_date
 from django_hosts import reverse
 
+from contentbox.models import ContentBox
 from users.models import User
-from util.test_utils import Get, assert_requesting_paths_succeeds
+from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
 from ..forms import MemberStatusForm
 from ..models import Member, Secret, SystemAccess
 from ..util import date_to_semester, semester_to_year, year_to_semester
@@ -36,6 +37,7 @@ class UrlTests(TestCase):
                                      'internal.add_member', 'internal.can_edit_group_membership', 'internal.change_systemaccess')
         self.member = Member.objects.create(user=member_user)
         self.member_editor = Member.objects.create(user=member_editor_user)
+        self.members = (self.member, self.member_editor)
 
         self.anon_client = Client(**INTERNAL_CLIENT_DEFAULTS)
         self.non_member_client = Client(**INTERNAL_CLIENT_DEFAULTS)
@@ -47,6 +49,11 @@ class UrlTests(TestCase):
         self.non_member_client.login(username=non_member_user, password=password)
         self.member_client.login(username=member_user, password=password)
         self.member_editor_client.login(username=member_editor_user, password=password)
+
+        self.home_content_box = ContentBox.objects.create(title='home')
+        self.secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
+        self.secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
+        self.secrets = (self.secret1, self.secret2)
 
     @staticmethod
     def generic_request(client: Client, method: str, path: str, data: dict = None):
@@ -130,19 +137,36 @@ class UrlTests(TestCase):
         self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'nb'}, expected_redirect_url="/")
 
     def test_all_non_member_get_request_paths_succeed(self):
-        secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
-        secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
-
         path_predicates = [
-            Get(reverse_internal('home'), public=False),
+            Get(reverse_internal(self.home_content_box.title), public=False),
+            Get(reverse_internal('contentbox_edit', pk=self.home_content_box.pk), public=False),
             Get(reverse_internal('secret_list'), public=False),
             Get(reverse_internal('create_secret'), public=False),
-            Get(reverse_internal('edit_secret', pk=secret1.pk), public=False),
-            Get(reverse_internal('edit_secret', pk=secret2.pk), public=False),
+            Get(reverse_internal('edit_secret', pk=self.secret1.pk), public=False),
+            Get(reverse_internal('edit_secret', pk=self.secret2.pk), public=False),
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'internal')
+
+    def test_all_admin_get_request_paths_succeed(self):
+        path_predicates = [
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Member, self.members)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Secret, self.secrets)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(SystemAccess, [access
+                                                                                           for member in self.members
+                                                                                           for access in member.system_accesses.all()])
+            ],
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')
 
 
 class UtilTests(StandardTestCase):

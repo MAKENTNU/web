@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util.admin_utils import TextFieldOverrideMixin
 from web.multilingual.admin import MultiLingualFieldAdmin
@@ -56,7 +57,7 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
         return super().get_queryset(request).default_order_by()
 
 
-class MachineUsageRuleAdmin(MultiLingualFieldAdmin):
+class MachineUsageRuleAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     list_display = ('machine_type', 'last_modified')
     list_select_related = ('machine_type',)
 

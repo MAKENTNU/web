@@ -1,10 +1,12 @@
+from abc import ABC
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from contentbox.views import DisplayContentBoxView
-from util.templatetags.permission_tags import has_any_equipment_permissions
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import EquipmentForm
 from .models import Equipment
 
@@ -34,25 +36,28 @@ class AdminEquipmentListView(PermissionRequiredMixin, ListView):
     context_object_name = 'equipment_list'
 
     def has_permission(self):
-        return has_any_equipment_permissions(self.request.user)
+        return self.request.user.has_any_permissions_for(Equipment)
 
 
-class CreateEquipmentView(PermissionRequiredMixin, CreateView):
+class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):
+    model = Equipment
+    form_class = EquipmentForm
+    success_url = reverse_lazy('makerspace_admin_equipment_list')
+
+    back_button_link = success_url
+    back_button_text = _("Admin page for equipment")
+
+
+class CreateEquipmentView(PermissionRequiredMixin, EquipmentFormMixin, CreateView):
     permission_required = ('makerspace.add_equipment',)
-    model = Equipment
-    form_class = EquipmentForm
-    template_name = 'makerspace/equipment/admin_equipment_create.html'
-    context_object_name = 'equipment'
-    success_url = reverse_lazy('makerspace_admin_equipment_list')
+
+    form_title = _("New Equipment")
 
 
-class EditEquipmentView(PermissionRequiredMixin, UpdateView):
+class EditEquipmentView(PermissionRequiredMixin, EquipmentFormMixin, UpdateView):
     permission_required = ('makerspace.change_equipment',)
-    model = Equipment
-    form_class = EquipmentForm
-    template_name = 'makerspace/equipment/admin_equipment_edit.html'
-    context_object_name = 'equipment'
-    success_url = reverse_lazy('makerspace_admin_equipment_list')
+
+    form_title = _("Edit Equipment")
 
 
 class DeleteEquipmentView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

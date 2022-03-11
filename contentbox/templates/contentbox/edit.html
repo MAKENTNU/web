@@ -1,41 +1,29 @@
-{% extends 'web/base.html' %}
-{% load static %}
+{% extends 'web/edit_form.html' %}
 {% load i18n %}
 
 
-{% block title %}{% trans "Edit" %} {{ contentbox.title }}{% endblock title %}
-
-{% block extra_head %}
-    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
-    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-{% endblock extra_head %}
-
-{% block body %}
-    <div class="ui container">
-        <h1 class="ui centered header">
-            {% block form_header %}
-                {% trans "Edit" %} {{ contentbox.title }}
-            {% endblock form_header %}
-        </h1>
-
-        {% if form.content.errors %}
-            <div class="ui error message">
+{% block field_pre_content %}
+    {% if field.name == 'content' %}
+        {% for error in field.errors.as_data %}
+            <div class="ui negative message">
                 <i class="close icon"></i>
-                <div class="header">{% trans "Missing language" %}</div>
-                <div class="content">{% trans "One or more languages has no content" %}</div>
+                {% if error.code == 'required' %}
+                    <div class="header">{% trans "Missing language" %}</div>
+                    <p>{{ error.message }}</p>
+                {% else %}
+                    <b>{{ error.message }}</b>
+                {% endif %}
             </div>
-        {% endif %}
+        {% endfor %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_pre_content %}
 
-        <form class="ui form text" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="field">
-                {{ form.content }}
-            </div>
-
-            <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
-            <a class="ui right floated red button" href="{% url contentbox.title %}">
-                {% trans "Cancel" context "abort action" %}
-            </a>
-        </form>
-    </div>
-{% endblock body %}
+{% block field_errors %}
+    {% if field.name == 'content' %}
+        {# Remove the block's content and add it in the `field_pre_content` block above instead #}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_errors %}

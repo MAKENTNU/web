@@ -4,8 +4,9 @@
 {% load datetime_tags %}
 {% load reservation_extra %}
 {% load quota %}
-{% get_current_language as LANGUAGE_CODE %}
 
+
+{% block title %}{{ title }}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/rule_list.css' %}"/>
@@ -14,7 +15,7 @@
 {% block body %}
     <div class="ui container">
         <h1>
-            {% blocktrans with machine_type=machine_type %}Reservation rules for {{ machine_type }}{% endblocktrans %}
+            {{ title }}
             {% if perms.make_queue.add_reservationrule %}
                 <a href="{% url 'create_reservation_rule' machine_type %}">
                     <i class="ui green plus icon"></i>
@@ -76,9 +77,7 @@
                         </h4>
                         {% for period in rule.time_periods %}
                             <div>
-                                {% rule_period_start_text period LANGUAGE_CODE as start %}
-                                {% rule_period_end_text period LANGUAGE_CODE as end %}
-                                {{ start|capfirst }} &ndash; {{ end|capfirst }}
+                                {{ period|safe }}
                             </div>
                         {% endfor %}
                     </div>

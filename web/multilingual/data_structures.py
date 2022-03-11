@@ -11,29 +11,29 @@ class MultiLingualTextStructure:
     """
     Data structure to keep track of multilingual string data.
     """
-    supported_languages = list(map(lambda language: language[0], settings.LANGUAGES))
+    SUPPORTED_LANGUAGES = [lang_code for lang_code, _lang_name in settings.LANGUAGES]
 
-    def __init__(self, linear_content, use_default_for_empty):
+    def __init__(self, json_content: str, use_default_for_empty: bool):
         self.use_default_for_empty = use_default_for_empty
-        self.languages = {language: "" for language in self.supported_languages}
-        self.set_content_for_languages(linear_content)
+        self.languages = {language: "" for language in self.SUPPORTED_LANGUAGES}
+        self.set_content_for_languages(json_content)
 
-    def set_content_for_languages(self, linear_content):
-        if not isinstance(linear_content, str):
+    def set_content_for_languages(self, json_content):
+        if not isinstance(json_content, str):
             get_request_logger().exception(
-                f"Cannot set content to:\n{linear_content}"
-                f"\n{type(str)} expected, but received {type(linear_content)}"
+                f"Cannot set content to:\n{json_content}"
+                f"\n{type(str)} expected, but received {type(json_content)}"
             )
             return
-        if not linear_content:
+        if not json_content:
             return
         try:
-            json_dict = json.loads(linear_content)
+            json_dict = json.loads(json_content)
         except JSONDecodeError as e:
             # If for some reason (i.e. old or corrupt data) the content given is not JSON,
             # use it as content for the default language.
-            self.languages[settings.LANGUAGE_CODE] = linear_content
-            get_request_logger().exception(f"Unable to decode as JSON:\n{linear_content}", exc_info=e)
+            self.languages[settings.LANGUAGE_CODE] = json_content
+            get_request_logger().exception(f"Unable to decode as JSON:\n{json_content}", exc_info=e)
             return
 
         for language, value in json_dict.items():
@@ -56,7 +56,7 @@ class MultiLingualTextStructure:
         """
         Returns the string for the given language.
         """
-        value = self.languages[key]
+        value = self.languages.get(key, "")
         if value or not self.use_default_for_empty:
             return value
         # If the value for the given language is empty and use_default_for_empty is set to True, provide the value of

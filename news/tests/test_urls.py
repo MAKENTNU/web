@@ -6,7 +6,9 @@ from django_hosts import reverse
 
 from news.models import Article, Event, EventTicket, TimePlace
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import (
+    CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
+)
 
 
 class UrlTests(CleanUpTempFilesTestMixin, TestCase):
@@ -31,37 +33,37 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
             private=True, event_type=Event.Type.STANDALONE, number_of_tickets=3,
         )
         now = timezone.localtime()
-        self.timeplace1 = TimePlace.objects.create(
+        self.time_place1 = TimePlace.objects.create(
             event=self.event1, start_time=now, end_time=now + timedelta(hours=3),
             place="Makerverkstedet", place_url="https://makentnu.no/", hidden=False, number_of_tickets=5,
         )
-        self.timeplace2 = TimePlace.objects.create(
+        self.time_place2 = TimePlace.objects.create(
             event=self.event1, start_time=now + timedelta(days=1), end_time=now + timedelta(days=1, hours=3),
             place="U1", place_url="https://www.ntnu.no/ub/bibliotek/real", hidden=False, number_of_tickets=5,
         )
-        self.timeplace3 = TimePlace.objects.create(
+        self.time_place3 = TimePlace.objects.create(
             event=self.event2, start_time=now, end_time=now + timedelta(hours=12),
             place="Home", place_url="http://makentnu.localhost:8000/", hidden=False,
         )
-        self.timeplaces = (self.timeplace1, self.timeplace2, self.timeplace3)
+        self.time_places = (self.time_place1, self.time_place2, self.time_place3)
 
         self.user1 = User.objects.create_user(username="user1")
         self.user2 = User.objects.create_user(username="user2")
 
         self.ticket1 = EventTicket.objects.create(
-            user=self.user1, timeplace=self.timeplace1, comment="Looking forward to this!!", language=EventTicket.Language.ENGLISH,
+            user=self.user1, timeplace=self.time_place1, comment="Looking forward to this!!", language=EventTicket.Language.ENGLISH,
         )
         self.ticket2 = EventTicket.objects.create(
-            user=self.user2, timeplace=self.timeplace1, comment="~Woop~", language=EventTicket.Language.NORWEGIAN,
+            user=self.user2, timeplace=self.time_place1, comment="~Woop~", language=EventTicket.Language.NORWEGIAN,
         )
         self.ticket3 = EventTicket.objects.create(
-            user=self.user1, timeplace=self.timeplace2, active=False, language=EventTicket.Language.ENGLISH,
+            user=self.user1, timeplace=self.time_place2, active=False, language=EventTicket.Language.ENGLISH,
         )
         self.ticket4 = EventTicket.objects.create(
-            user=self.user2, timeplace=self.timeplace2, active=True, language=EventTicket.Language.ENGLISH,
+            user=self.user2, timeplace=self.time_place2, active=True, language=EventTicket.Language.ENGLISH,
         )
         self.ticket5 = EventTicket.objects.create(
-            user=self.user1, timeplace=self.timeplace3, language=EventTicket.Language.NORWEGIAN,
+            user=self.user1, timeplace=self.time_place3, language=EventTicket.Language.NORWEGIAN,
         )
         self.tickets = (self.ticket1, self.ticket2, self.ticket3, self.ticket4, self.ticket5)
 
@@ -90,22 +92,22 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
             Get(reverse('register_event', kwargs={'event_pk': self.event1.pk}), public=False),
             Get(reverse('register_event', kwargs={'event_pk': self.event2.pk}), public=False),
             *[
-                Get(reverse('timeplace_edit', kwargs={'pk': timeplace.pk}), public=False)
-                for timeplace in self.timeplaces
+                Get(reverse('timeplace_edit', kwargs={'pk': time_place.pk}), public=False)
+                for time_place in self.time_places
             ],
             Get(reverse('timeplace_create', kwargs={'event_pk': self.event1.pk}), public=False),
             Get(reverse('timeplace_create', kwargs={'event_pk': self.event2.pk}), public=False),
             *[
-                Get(reverse('timeplace_ticket_list', kwargs={'pk': timeplace.pk}), public=False)
-                for timeplace in self.timeplaces if timeplace != self.timeplace3  # can't test `timeplace3`, as it has no tickets
+                Get(reverse('timeplace_ticket_list', kwargs={'pk': time_place.pk}), public=False)
+                for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
             ],
             *[
-                Get(reverse('timeplace_ical', kwargs={'pk': timeplace.pk}), public=True)
-                for timeplace in self.timeplaces
+                Get(reverse('timeplace_ical', kwargs={'pk': time_place.pk}), public=True)
+                for time_place in self.time_places
             ],
             *[
-                Get(reverse('register_timeplace', kwargs={'timeplace_pk': timeplace.pk}), public=False)
-                for timeplace in self.timeplaces if timeplace != self.timeplace3  # can't test `timeplace3`, as it has no tickets
+                Get(reverse('register_timeplace', kwargs={'timeplace_pk': time_place.pk}), public=False)
+                for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
             ],
             *[
                 Get(reverse('ticket_detail', kwargs={'pk': ticket.pk}), public=False)
@@ -114,3 +116,24 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
             Get(reverse('my_tickets_list'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
+
+    def test_all_admin_get_request_paths_succeed(self):
+        path_predicates = [
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Article, [self.article1, self.article2])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(EventTicket, self.tickets)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Event, [self.event1, self.event2])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(TimePlace, self.time_places)
+            ],
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')

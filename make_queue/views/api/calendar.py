@@ -48,7 +48,7 @@ def get_reservations(request, machine: Machine):
     return JsonResponse({"reservations": reservations})
 
 
-def get_reservation_rules(request, machine):
+def get_reservation_rules(request, machine: Machine):
     return JsonResponse({
         "rules": [
             {
@@ -57,7 +57,7 @@ def get_reservation_rules(request, machine):
                         day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
                         (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
                     ]
-                    for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
+                    for day in rule.get_start_day_indices(iso=False)
                 ],
                 "max_inside": rule.max_hours,
                 "max_crossed": rule.max_inside_border_crossed,

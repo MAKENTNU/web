@@ -21,6 +21,9 @@ from ...views.admin.reservation import MAKEReservationsListView
 from ...views.reservation.reservation import CreateOrEditReservationView, CreateReservationView, EditReservationView
 
 
+Day = ReservationRule.Day
+
+
 class CreateOrEditReservationViewTestBase(TestCase, ABC):
 
     def setUp(self):
@@ -92,7 +95,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             end_time=form.cleaned_data["end_time"],
         )
         self.assertEqual(view.get_error_message(form, reservation),
-                         "Reservasjoner kan bare lages 7 dager frem i tid")
+                         "Reservasjoner kan bare lages 7 dager fram i tid")
 
     def test_get_error_message_machine_out_of_order(self):
         view = self.get_view()
@@ -407,10 +410,11 @@ class TestMarkReservationFinishedView(TestCase):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         self.machine_type = MachineType.objects.get(pk=2)
         self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.Status.AVAILABLE, name="Test")
-        Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False,
-                             all=True)
-        ReservationRule.objects.create(start_time=parse_time("00:00"), end_time=parse_time("23:59"), start_days=1, days_changed=6,
-                                       max_inside_border_crossed=6, max_hours=6, machine_type=self.machine_type)
+        Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False, all=True)
+        ReservationRule.objects.create(
+            machine_type=self.machine_type, start_time=parse_time("00:00"), days_changed=6, end_time=parse_time("23:59"),
+            start_days=[Day.MONDAY], max_hours=6, max_inside_border_crossed=6,
+        )
         self.now = timezone.localtime()
         self.reservation1 = Reservation.objects.create(
             machine=self.machine, user=self.user,

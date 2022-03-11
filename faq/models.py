@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import Prefetch
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
@@ -39,6 +40,8 @@ class Question(models.Model):
         verbose_name=_("categories"),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(excluded_fields=['last_modified'])
 
     class Meta:
         verbose_name = _("question")

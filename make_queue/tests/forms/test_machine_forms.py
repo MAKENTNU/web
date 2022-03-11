@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ...forms import BaseMachineForm, EditMachineForm
+from ...forms import CreateMachineForm, EditMachineForm
 from ...models.machine import Machine, MachineType
 
 
@@ -19,7 +19,7 @@ class TestBaseMachineForm(TestCase):
         }
 
     def test_valid_machine_form(self):
-        form = BaseMachineForm(data=self.valid_form_data)
+        form = CreateMachineForm(data=self.valid_form_data)
 
         self.assertTrue(form.is_valid())
 
@@ -27,7 +27,7 @@ class TestBaseMachineForm(TestCase):
         form_data = self.valid_form_data
         form_data['stream_name'] = "invalid form"
 
-        form = BaseMachineForm(data=form_data)
+        form = CreateMachineForm(data=form_data)
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
@@ -39,7 +39,7 @@ class TestBaseMachineForm(TestCase):
         form_data = self.valid_form_data
         form_data['stream_name'] = "schrödinger"
 
-        form = BaseMachineForm(data=form_data)
+        form = CreateMachineForm(data=form_data)
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
@@ -52,7 +52,7 @@ class TestBaseMachineForm(TestCase):
         form_data['machine_type'] = self.printer_machine_type
         form_data['stream_name'] = ""
 
-        form = BaseMachineForm(data=form_data)
+        form = CreateMachineForm(data=form_data)
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
@@ -65,7 +65,7 @@ class TestBaseMachineForm(TestCase):
         form_data['machine_type'] = MachineType.objects.get(pk=2)
         form_data['stream_name'] = ""
 
-        form = BaseMachineForm(data=form_data)
+        form = CreateMachineForm(data=form_data)
 
         self.assertTrue(form.is_valid())
         self.assertDictEqual({}, form.errors)

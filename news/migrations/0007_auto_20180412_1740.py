@@ -70,7 +70,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='timeplace',
             name='hidden',
-            field=models.BooleanField(default=True, verbose_name='hidden'),
+            field=models.BooleanField(default=True, help_text='If selected, the occurrence will be hidden, even after the publication date.', verbose_name='hidden'),
         ),
         migrations.AlterField(
             model_name='timeplace',
