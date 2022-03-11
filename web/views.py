@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.db.models import Prefetch
 from django.shortcuts import render
@@ -59,11 +61,11 @@ class View404(TemplateView):
     template_name = 'web/404.html'
 
     def get(self, request, *args, **kwargs):
-        return self.render_to_response({}, status=404)
+        return self.render_to_response({}, status=HTTPStatus.NOT_FOUND)
 
 
 def view_500(request):
-    return render(request, template_name='web/500.html', status=500)
+    return render(request, template_name='web/500.html', status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
 class AboutUsView(DisplayContentBoxView):

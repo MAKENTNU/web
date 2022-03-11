@@ -33,28 +33,28 @@
                 <h3>{% trans "About the machine" %}</h3>
                 <div class="ui relaxed list">
                     <div class="item">
-                        <i class="ui large middle aligned make-col-yellow location arrow icon"></i>
+                        <i class="large middle aligned make-col-yellow location arrow icon"></i>
                         <div class="content">
                             <div class="header">{% trans "location"|capfirst %}</div>
                             <a href="{{ machine.location_url }}" target="_blank">{{ machine.location }}</a>
                         </div>
                     </div>
                     <div class="item">
-                        <i class="ui large middle aligned make-col-yellow cog icon"></i>
+                        <i class="large middle aligned make-col-yellow cog icon"></i>
                         <div class="content">
                             <div class="header">{% trans "machine type"|capfirst %}</div>
                             {{ machine.machine_type.name }}
                         </div>
                     </div>
                     <div class="item">
-                        <i class="ui large middle aligned make-col-yellow wrench icon"></i>
+                        <i class="large middle aligned make-col-yellow wrench icon"></i>
                         <div class="content">
                             <div class="header">{% trans "model"|capfirst %}</div>
                             {{ machine.machine_model }}
                         </div>
                     </div>
                     <div class="item">
-                        <i class="ui large middle make-col-yellow aligned info circle icon"></i>
+                        <i class="large middle aligned make-col-yellow info circle icon"></i>
                         <div class="content">
                             <div class="header">{% trans "status"|capfirst %}</div>
                             <b>
@@ -79,7 +79,7 @@
                     />
                 </div>
                 <div id="fader"></div>
-                <i id="closefullscreen" class="ui times icon"></i>
+                <i id="closefullscreen" class="times icon"></i>
                 <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
                 <script src="{% static 'make_queue/js/stream.js' %}"></script>
             {% endif %}

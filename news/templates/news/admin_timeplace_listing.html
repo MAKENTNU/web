@@ -8,7 +8,7 @@
     {% if timeplace.event.repeating %}
         <span class="ui right floated">
             {% if timeplace.number_of_tickets %}
-                <a href="{% url 'timeplace_ticket_list' pk=timeplace.pk %}">
+                <a href="{% url 'timeplace_ticket_list' timeplace.event timeplace.pk %}">
                     {% blocktrans trimmed with num_active_tickets=timeplace.number_of_active_tickets num_tickets=timeplace.number_of_tickets %}
                         {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
                     {% endblocktrans %}
@@ -23,33 +23,37 @@
             {{ timeplace.start_time|long_datetime }}
             <span>
                 &nbsp;&nbsp;
-                    <i class="ui {% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle explanation-popup"
-                       data-title="{% trans "hidden"|capfirst %}" data-pk="{{ timeplace.pk }}"
-                       data-toggle="hidden" data-model="timeplace"
+                    <i class="{% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle explanation-popup"
+                       data-title="{% trans "hidden"|capfirst %}"
+                       data-post-url="{% url 'timeplace_toggle' timeplace.event timeplace.pk %}" data-toggle="hidden" data-model="timeplace"
                        data-content="{% trans "If selected, the occurrence is hidden for non-admin users." %}">
                     </i>
                 &nbsp;&nbsp;
                 {% if perms.news.change_timeplace %}
                     <a class="make-col-blue explanation-popup" data-title="{% trans "Edit" %}"
                        data-content="{% trans "If clicked, a form for editing the occurrence is shown." %}"
-                       href="{% url 'timeplace_edit' timeplace.pk %}">
-                        <i class="ui edit icon"></i>
+                       href="{% url 'timeplace_edit' timeplace.event timeplace.pk %}">
+                        <i class="edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
                     <a class="delete-modal-button make-col-blue explanation-popup"
                        data-title="{% trans "Delete" %}" data-content="{% trans "If clicked, the occurrence will be deleted." %}"
-                       data-url="{% url 'timeplace_delete' timeplace.pk %}" data-obj-name="{{ timeplace }}">
-                        <i class="ui delete icon"></i>
+                       data-url="{% url 'timeplace_delete' timeplace.event timeplace.pk %}" data-obj-name="{{ timeplace }}">
+                        <i class="delete icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.add_timeplace %}
                     <a class="make-col-blue explanation-popup"
                        data-title="{% trans "Duplicate" %}"
                        data-content="{% trans "If clicked, the occurrence is duplicated." %}"
-                       href="{% url 'timeplace_duplicate' timeplace.pk %}">
-                        <i class="ui copy icon"></i>
+                       onclick="$('#duplication-form-{{ timeplace.pk }}').submit();">
+                        <i class="copy icon"></i>
                     </a>
+                    <form id="duplication-form-{{ timeplace.pk }}"
+                          method="POST" action="{% url 'timeplace_duplicate' timeplace.event timeplace.pk %}">
+                        {% csrf_token %}
+                    </form>
                 {% endif %}
             </span>
         </div>

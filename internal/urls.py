@@ -3,7 +3,6 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.decorators import permission_required
 from django.urls import include, path
 from django.views.generic import TemplateView
-from django_hosts import reverse
 
 from . import views
 
@@ -35,19 +34,17 @@ secret_urlpatterns = [
     path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name='delete_secret'),
 ]
 
-LOGIN_URL = reverse('login', host='main')
-
 urlpatterns = i18n_patterns(
     path("", decorator_include(
-        permission_required('internal.is_internal', login_url=LOGIN_URL),
+        permission_required('internal.is_internal'),
         internal_urlpatterns
     )),
     path("", decorator_include(
-        permission_required('internal.view_member', login_url=LOGIN_URL),
+        permission_required('internal.view_member'),
         member_urlpatterns
     )),
     path("", decorator_include(
-        permission_required('internal.view_secret', login_url=LOGIN_URL),
+        permission_required('internal.view_secret'),
         secret_urlpatterns
     )),
 
@@ -58,7 +55,7 @@ urlpatterns += [
     path("robots.txt", TemplateView.as_view(template_name='internal/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
     path("i18n/", decorator_include(
-        permission_required('internal.is_internal', login_url=LOGIN_URL),
+        permission_required('internal.is_internal'),
         'django.conf.urls.i18n'
     )),
 ]

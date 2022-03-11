@@ -13,7 +13,7 @@
 
         {% if user_can_change %}
             <a class="edit ui make-bg-yellow button" href="{% url 'contentbox_edit' contentbox.pk %}">
-                <i class="ui edit icon"></i>{% trans "Edit" %}
+                <i class="edit icon"></i>{% trans "Edit" %}
             </a>
         {% endif %}
         {{ contentbox.content|safe }}

@@ -3,7 +3,7 @@ import shutil
 import tempfile
 from abc import ABC
 from http import HTTPStatus
-from typing import Any, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar
+from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar
 from urllib.parse import urlparse
 
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -78,6 +78,39 @@ def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]
     return decorator
 
 
+# noinspection PyPep8Naming
+def assertRedirectsWithPathPrefix(self: SimpleTestCase, response, expected_path_prefix: str):
+    """
+    Tests whether the provided ``response`` redirects, and whether the path of the redirect URL starts with the provided ``expected_path_prefix``.
+    Also tests whether the redirect URL can be loaded by the same client that produced the provided ``response``.
+    """
+    self.assertEqual(response.status_code, HTTPStatus.FOUND)
+    redirect_path = urlparse(response.url).path
+    self.assertTrue(redirect_path.startswith(expected_path_prefix),
+                    f"The redirected path {redirect_path} did not start with the expected prefix {expected_path_prefix}")
+
+    def get_redirected_response(response_func: Callable):
+        redirect_netloc = urlparse(response.url).netloc
+        # If the redirect URL is on the same domain as the request that produced the response:
+        if not redirect_netloc:
+            return response_func()
+
+        original_client_defaults: dict = response.client.defaults
+        # Ensure that the client makes requests to the same netloc (domain) as the redirect URL
+        response.client.defaults = {
+            **original_client_defaults,
+            'SERVER_NAME': redirect_netloc,
+        }
+        try:
+            return response_func()
+        finally:
+            # Ensure that the `SERVER_NAME` we set earlier is reset
+            response.client.defaults = original_client_defaults
+
+    redirected_response = get_redirected_response(lambda: response.client.get(response.url))
+    self.assertEqual(redirected_response.status_code, HTTPStatus.OK)
+
+
 def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
     collection_list = list(collection)
     collection_set = set(collection_list)
@@ -88,47 +121,58 @@ def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> S
 class PathPredicate(ABC):
     LANGUAGE_PREFIXES = ["", "/en"]
 
-    def __init__(self, path: str, *, public: bool, translated=True, success_code=200):
+    def __init__(self, path: str, *, public: bool, translated=True):
         """
         :param path: the path to be tested (e.g. from ``reverse()``)
         :param public: whether a user does not have to be authenticated or not to successfully request the path
         :param translated: whether the path has a translated version (typically prefixed with e.g. ``/en``)
-        :param success_code: the HTTP status code of a response that indicates that the request was successful.
-                             If the code provided is a redirect code (3xx), the redirect chain will be followed until a status of 200 is encountered.
         """
-        if translated:
-            self.paths = []
-            for prefix in self.LANGUAGE_PREFIXES:
-                url_obj = urlparse(path)
-                url_obj = url_obj._replace(path=f"{prefix}{url_obj.path}")
-                self.paths.append(url_obj.geturl())
-        else:
-            self.paths = [path]
-
+        self.path = path
         self.public = public
         self.translated = translated
-        self.success_code = success_code
 
     def __repr__(self):
-        return "\n".join(self.paths)
+        return f"<{self.path} public={self.public} translated={self.translated}>"
 
-    def do_request_assertion(self, path: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+    def do_request_assertion(self, client: Client, is_superuser: bool, test_case: SimpleTestCase):
         raise NotImplementedError
+
+    @staticmethod
+    def _prepend_url_path(prefix: str, url: str) -> str:
+        url_obj = urlparse(url)
+        if prefix:
+            url_obj = url_obj._replace(path=f"{prefix}{url_obj.path}")
+        return url_obj.geturl()
 
 
 class Get(PathPredicate):
 
-    def do_request_assertion(self, path: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
-        status_code = client.get(path).status_code
+    def __init__(self, *args, permanent_redirect=False, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.permanent_redirect = permanent_redirect
 
-        if 300 <= self.success_code < 400:
-            test_case.assertEqual(status_code, self.success_code)
-            status_code = client.get(path, follow=True).status_code
+    def do_request_assertion(self, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+        language_prefixes = self.LANGUAGE_PREFIXES if self.translated else [""]
+        for prefix in language_prefixes:
+            path = self._prepend_url_path(prefix, self.path)
+            with test_case.subTest(path=path):
+                self._do_request_assertion_for_path(path, prefix, client, is_superuser, test_case)
+
+    def _do_request_assertion_for_path(self, path: str, language_prefix: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
+        response = client.get(path)
+
+        if self.permanent_redirect:
+            test_case.assertEqual(response.status_code, HTTPStatus.MOVED_PERMANENTLY)
+            # Follow the redirect URL from the response, and do the rest of the assertions from the perspective of this URL
+            response = client.get(response.url)
 
         if self.public or is_superuser:
-            test_case.assertEqual(status_code, HTTPStatus.OK)
+            test_case.assertEqual(response.status_code, HTTPStatus.OK)
         else:
-            test_case.assertGreaterEqual(status_code, 300)
+            if response.status_code == HTTPStatus.FOUND:
+                assertRedirectsWithPathPrefix(test_case, response, f"{language_prefix}/login/")
+            else:
+                test_case.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
 def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> List[str]:
@@ -159,10 +203,8 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
     anon_client = Client(SERVER_NAME=server_name)
 
     for predicate in path_predicates:
-        for path in predicate.paths:
-            with self.subTest(path=path):
-                predicate.do_request_assertion(path, anon_client, False, self)
-                predicate.do_request_assertion(path, superuser_client, True, self)
+        predicate.do_request_assertion(anon_client, False, self)
+        predicate.do_request_assertion(superuser_client, True, self)
 
     # Reactivate the previously set language, as requests to translated URLs change the active language
     translation.activate(previous_language)

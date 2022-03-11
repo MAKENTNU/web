@@ -10,6 +10,7 @@ from django_hosts import reverse
 
 from users.models import User
 from util.auth_utils import get_perm
+from util.test_utils import assertRedirectsWithPathPrefix
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from .urls import hosts, urls_main
 from .urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
@@ -60,7 +61,7 @@ class SimpleModelAndViewTests(TestCase):
         user_client.force_login(user)
         anon_client = Client()
 
-        self.assertGreaterEqual(anon_client.get(self.edit_url1).status_code, 300)
+        assertRedirectsWithPathPrefix(self, anon_client.get(self.edit_url1), "/login/")
         self.assertEqual(user_client.get(self.edit_url1).status_code, HTTPStatus.OK)
 
     def test_edit_page_contains_correct_error_messages(self):
@@ -161,7 +162,7 @@ class MultiSubdomainTests(TestCase):
             self.assertEqual(bool(form_fields), can_change)
 
         # Only users with the `internal_change_perm` permission can edit internal content boxes
-        self.assertGreaterEqual(self.internal_user_internal_client.get(self.internal_edit_url).status_code, 400)
+        self.assertEqual(self.internal_user_internal_client.get(self.internal_edit_url).status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, HTTPStatus.OK)
         # Only staff can change content boxes through Django admin
         self.assertRedirects(self.internal_user_admin_client.get(self.public_admin_edit_url),
@@ -178,7 +179,7 @@ class MultiSubdomainTests(TestCase):
         )
         self.internal_content_box.extra_change_permissions.add(extra_perm)
         # Users without the extra change permission for the content box, are not allowed to edit it
-        self.assertGreaterEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, 400)
+        self.assertEqual(self.internal_admin_internal_client.get(self.internal_edit_url).status_code, HTTPStatus.FORBIDDEN)
         assert_staff_can_change_through_django_admin(False, self.internal_admin_admin_client, self.internal_admin_edit_url)
         # Now `internal_admin` can edit it again:
         self.internal_admin.user_permissions.add(extra_perm)
