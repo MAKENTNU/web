@@ -1,6 +1,6 @@
 # Django-related packages
 Django==3.2.11
-django-hosts==4.0
+django-hosts==5.1
 django-ckeditor==6.2.0
 django-cleanup==5.2.0
 django-decorator-include==3.0
