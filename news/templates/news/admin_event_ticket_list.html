@@ -12,17 +12,17 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{{ event.title }}</h1>
         <a href="{% url 'admin_event_detail' event.pk %}">
-            <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
+            <i class="angle double left icon"></i>{% trans "Event admin page" %}
         </a>
+        <h1>{{ event.title }}</h1>
 
         <h3>{% trans "Email Addresses of Ticket Holders" %}</h3>
         <div class="emails-container">
             <div class="copy-button-container">
                 <button class="copy-token ui make-bg-yellow icon button"><i class="clipboard icon"></i></button>
                 <span data-content="{% trans "Click to copy the email addresses of the active tickets to the clipboard" %}.">
-                    <i class="ui make-col-yellow question circle icon"></i>
+                    <i class="make-col-yellow question circle icon"></i>
                 </span>
             </div>
             <input readonly class="copy-input input-monospace" value="{{ ticket_emails }}"/>
@@ -30,7 +30,7 @@
 
         <h3>{% trans "tickets"|capfirst %}</h3>
         <b>
-            {% blocktrans trimmed with num_active_tickets=object.number_of_active_tickets num_tickets=object.number_of_tickets %}
+            {% blocktrans trimmed with num_active_tickets=focused_object.number_of_active_tickets num_tickets=focused_object.number_of_tickets %}
                 {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
             {% endblocktrans %}
         </b>
@@ -44,7 +44,7 @@
                             <span class="ui red label">{% trans "canceled"|capfirst %}</span>
                         {% endif %}
                     </span>
-                    <i class="ui very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
+                    <i class="very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
                     <div class="ui content">
                         <div class="header">
                             {{ ticket.name }} - {{ ticket.email|urlize_target_blank }}

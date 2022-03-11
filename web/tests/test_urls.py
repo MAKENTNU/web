@@ -3,9 +3,9 @@ from django.test import Client, TestCase
 from django.utils import translation
 from django_hosts import reverse
 
-from news.tests.test_urls import UrlTests as NewsUrlTests
+from news.tests.test_urls import NewsTestBase
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, Get, assert_requesting_paths_succeeds
+from util.test_utils import Get, assert_requesting_paths_succeeds
 
 
 # Makes sure that the subdomain of all requests is `admin`
@@ -16,7 +16,7 @@ def reverse_admin(viewname: str, args=None, **kwargs):
     return reverse(f'admin:{viewname}', args=args, kwargs=kwargs, host='admin')
 
 
-class UrlTests(CleanUpTempFilesTestMixin, TestCase):
+class UrlTests(NewsTestBase, TestCase):
 
     def setUp(self):
         username = "TEST_USER"
@@ -28,7 +28,7 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
         self.user_client.login(username=username, password=password)
 
         # Populate the front page
-        NewsUrlTests.init_objs(self)
+        self.init_objs()
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
@@ -66,6 +66,11 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
             Get('/rules/', public=True, success_code=301),
             Get('/reservation/rules/1/', public=True, success_code=301),
             Get('/reservation/rules/usage/1/', public=True, success_code=301),
+
+            Get(f'/news/article/{self.article1.pk}/', public=True, success_code=301),
+            Get(f'/news/event/{self.event1.pk}/', public=True, success_code=301),
+            Get(f'/news/ticket/{self.ticket1.pk}/', public=True, success_code=301),
+            Get(f'/news/ticket/me/', public=True, success_code=301),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

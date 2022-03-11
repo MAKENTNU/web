@@ -5,31 +5,73 @@ from datetime import timedelta
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count, Max, Prefetch, Q
-from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import get_language, gettext_lazy as _
 from django.views import View
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, RedirectView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import ModelFormMixin
 
 from mail import email
+from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
-from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-from .forms import ArticleForm, EventForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm
-from .models import Article, Event, EventTicket, NewsBase, TimePlace
+from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
+from .forms import ArticleForm, EventForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm, ToggleForm
+from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace
 
 
-class EventListView(TemplateView):
+class SpecificArticleView(SingleObjectMixin, View, ABC):
+    article: Article
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.article = kwargs['article']
+
+    def get_object(self, queryset=None):
+        return self.article
+
+
+class EventBasedView(View, ABC):
+    event: Event
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.event = kwargs['event']
+
+
+class SpecificEventView(SingleObjectMixin, EventBasedView, ABC):
+
+    def get_object(self, queryset=None):
+        return self.event
+
+
+class SpecificTimePlaceView(SingleObjectMixin, EventBasedView, ABC):
+    time_place: TimePlace
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.time_place = self.get_object()
+
+    def get_queryset(self):
+        return self.event.timeplaces.all()
+
+
+class EventListView(ListView):
     template_name = 'news/event_list.html'
+
+    def get_queryset(self):
+        return Event.objects.visible_to(self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        queryset: EventQuerySet = self.get_queryset()
 
-        future = Event.objects.future().visible_to(self.request.user).prefetch_related(
+        future = queryset.future().prefetch_related(
             'timeplaces',
             Prefetch('timeplaces',
                      queryset=TimePlace.objects.published().future().order_by('start_time'),
@@ -53,7 +95,7 @@ class EventListView(TemplateView):
                         'number_of_occurrences': 1,
                     })
 
-        past = Event.objects.past().visible_to(self.request.user).annotate(
+        past = queryset.past().annotate(
             latest_occurrence=Max('timeplaces__start_time'),
         ).order_by('-latest_occurrence').prefetch_related(
             Prefetch('timeplaces',
@@ -81,38 +123,41 @@ class ArticleListView(ListView):
         return Article.objects.published().visible_to(self.request.user).order_by('-publication_time')
 
 
-class EventDetailView(TemplateView):
+class EventDetailView(PermissionRequiredMixin, SpecificEventView, DetailView):
+    model = Event
     template_name = 'news/event_detail.html'
+    context_object_name = 'news_obj'
+
+    def has_permission(self):
+        if self.event.hidden and not self.request.user.has_perm('news.change_event'):
+            return False
+        elif self.event.private and not self.request.user.has_perm('news.can_view_private'):
+            return False
+        else:
+            return True
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        event = get_object_or_404(Event, pk=kwargs['pk'])
-        future_timeplaces = event.timeplaces.published().future()
-        context.update({
-            'news_obj': event,
-            'timeplaces': event.timeplaces.all() if event.standalone else future_timeplaces,
+        future_timeplaces = self.event.timeplaces.published().future()
+        return super().get_context_data(**{
+            'timeplaces': self.event.timeplaces.all() if self.event.standalone else future_timeplaces,
             'is_old': not future_timeplaces.exists(),
-            'last_occurrence': event.get_past_occurrences().first(),
+            'last_occurrence': self.event.get_past_occurrences().first(),
+            **kwargs,
         })
-        if (event.hidden and not self.request.user.has_perm('news.change_event')
-                or event.private and not self.request.user.has_perm('news.can_view_private')):
-            raise Http404()
-        return context
 
 
-class ArticleDetailView(TemplateView):
+class ArticleDetailView(PermissionRequiredMixin, SpecificArticleView, DetailView):
+    model = Article
     template_name = 'news/article_detail.html'
+    context_object_name = 'news_obj'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        article = get_object_or_404(Article, pk=kwargs['pk'])
-        context.update({
-            'news_obj': article,
-        })
-        if (article not in Article.objects.published() and not self.request.user.has_perm('news.change_article')
-                or article.private and not self.request.user.has_perm('news.can_view_private')):
-            raise Http404()
-        return context
+    def has_permission(self):
+        if self.article not in Article.objects.published() and not self.request.user.has_perm('news.change_article'):
+            return False
+        elif self.article.private and not self.request.user.has_perm('news.can_view_private'):
+            return False
+        else:
+            return True
 
 
 class AdminArticleListView(PermissionRequiredMixin, ListView):
@@ -140,16 +185,16 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
         ).order_by('-latest_occurrence').prefetch_related('timeplaces')
 
 
-class AdminEventDetailView(DetailView):
+class AdminEventDetailView(PermissionRequiredMixin, SpecificEventView, DetailView):
+    permission_required = ('news.change_event',)
     model = Event
     template_name = 'news/admin_event_detail.html'
     context_object_name = 'event'
 
     def get_context_data(self, **kwargs):
-        event: Event = self.object
         return super().get_context_data(**{
-            'future_timeplaces': event.timeplaces.future().order_by('start_time'),
-            'past_timeplaces': event.timeplaces.past().order_by('-start_time'),
+            'future_timeplaces': self.event.timeplaces.future().order_by('start_time'),
+            'past_timeplaces': self.event.timeplaces.past().order_by('-start_time'),
             **kwargs,
         })
 
@@ -187,7 +232,7 @@ class ArticleFormMixin(NewsBaseFormMixin, ABC):
         return {'fields': ('publication_time',)}
 
 
-class EditArticleView(PermissionRequiredMixin, ArticleFormMixin, UpdateView):
+class EditArticleView(PermissionRequiredMixin, ArticleFormMixin, SpecificArticleView, UpdateView):
     permission_required = ('news.change_article',)
 
     form_title = _("Edit Article")
@@ -214,16 +259,16 @@ class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
         return self.get_success_url()
 
     def get_success_url(self):
-        return reverse('admin_event_detail', args=(self.object.pk,))
+        return reverse('admin_event_detail', args=[self.object])
 
 
-class EditEventView(PermissionRequiredMixin, EventFormMixin, UpdateView):
+class EditEventView(PermissionRequiredMixin, EventFormMixin, SpecificEventView, UpdateView):
     permission_required = ('news.change_event',)
 
     form_title = _("Edit Event")
 
     def get_back_button_text(self):
-        return _("Admin page for “{event_title}”").format(event_title=self.object.title)
+        return _("Admin page for “{event_title}”").format(event_title=self.event.title)
 
 
 class CreateEventView(PermissionRequiredMixin, EventFormMixin, CreateView):
@@ -236,22 +281,31 @@ class CreateEventView(PermissionRequiredMixin, EventFormMixin, CreateView):
         return reverse('admin_event_list')
 
 
-class TimePlaceFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
+class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventBasedView, ABC):
     model = TimePlace
     form_class = TimePlaceForm
     template_name = 'news/timeplace_edit.html'
 
-    @abstractmethod
-    def get_event(self) -> Event:
-        raise NotImplementedError
+    def get_form_kwargs(self):
+        # Forcefully pass the event from the URL to the form
+        return insert_form_field_values(super().get_form_kwargs(), ('event', self.event))
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        if self.event.standalone:
+            del form.fields['number_of_tickets']
+        return form
+
+    def get_back_button_link(self):
+        return self.get_success_url()
 
     def get_back_button_text(self):
-        return _("Admin page for “{event_title}”").format(event_title=self.get_event().title)
+        return _("Admin page for “{event_title}”").format(event_title=self.event.title)
 
     def get_custom_fieldsets(self):
         return [
             {'fields': ('event', 'place', 'place_url',
-                        None if self.get_event().standalone else 'number_of_tickets',
+                        None if self.event.standalone else 'number_of_tickets',
                         'start_time', 'end_time', 'publication_time')},
 
             {'heading': _("Attributes")},
@@ -259,154 +313,131 @@ class TimePlaceFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
         ]
 
     def get_success_url(self):
-        return reverse('admin_event_detail', args=(self.object.event.pk,))
+        return reverse('admin_event_detail', args=[self.event])
 
 
-class EditTimePlaceView(PermissionRequiredMixin, TimePlaceFormMixin, UpdateView):
+class EditTimePlaceView(PermissionRequiredMixin, SpecificTimePlaceView, BaseTimePlaceEditView, UpdateView):
     permission_required = ('news.change_timeplace',)
 
     form_title = _("Edit Occurrence")
 
-    def get_event(self) -> Event:
-        return self.object.event
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        if self.get_event().standalone:
-            del form.fields["number_of_tickets"]
-        return form
-
-    def get_back_button_link(self):
-        return self.get_success_url()
-
-
-class CreateTimePlaceView(PermissionRequiredMixin, TimePlaceFormMixin, CreateView):
+class CreateTimePlaceView(PermissionRequiredMixin, BaseTimePlaceEditView, CreateView):
     permission_required = ('news.add_timeplace',)
 
     form_title = _("New Occurrence")
 
-    def get_event(self) -> Event:
-        return get_object_or_404(Event, pk=self.kwargs['event_pk'])
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        event = self.get_event()
-        form.fields['event'].initial = event.pk
-        if event.standalone:
-            del form.fields['number_of_tickets']
-        return form
-
-    def get_back_button_link(self):
-        return reverse('admin_event_detail', args=[self.get_event().pk])
-
-
-class DuplicateTimePlaceView(PermissionRequiredMixin, View):
+class DuplicateTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificTimePlaceView, CreateView):
     permission_required = ('news.add_timeplace',)
+    fields = ()
 
-    def get(self, request, pk):
-        timeplace = get_object_or_404(TimePlace, pk=pk)
-        if timezone.localtime() > timeplace.start_time:
-            delta_days = (timezone.localtime() - timeplace.start_time).days
+    def form_valid(self, form):
+        if timezone.localtime() > self.time_place.start_time:
+            delta_days = (timezone.localtime() - self.time_place.start_time).days
             weeks = math.ceil(delta_days / 7)
         else:
             weeks = 1
-        timeplace.start_time += timedelta(weeks=weeks)
-        timeplace.end_time += timedelta(weeks=weeks)
-        timeplace.hidden = True
-        timeplace.pk = None
-        timeplace.save()
-        return HttpResponseRedirect(reverse('timeplace_edit', args=(timeplace.pk,)))
+        self.time_place.pk = None  # duplicates the object when saving
+        self.time_place.start_time += timedelta(weeks=weeks)
+        self.time_place.end_time += timedelta(weeks=weeks)
+        self.time_place.hidden = True
+        self.time_place.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_success_url(self):
+        return reverse('timeplace_edit', args=[self.event, self.time_place.pk])
 
 
-class AdminArticleToggleView(PermissionRequiredMixin, View):
-    permission_required = ('news.change_article',)
-    model = Article
+class AdminNewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, FormView, ABC):
+    form_class = ToggleForm
 
-    def post(self, request):
-        pk, toggle = request.POST.get('pk'), request.POST.get('toggle')
-        try:
-            obj = self.model.objects.get(pk=pk)
-            val = not getattr(obj, toggle)
-            setattr(obj, toggle, val)
-            obj.save()
-            color = 'yellow' if val else 'grey'
-        except (self.model.DoesNotExist, AttributeError):
-            return JsonResponse({})
+    def get_form_kwargs(self):
+        return {
+            **super().get_form_kwargs(),
+            'instance': self.get_object(),
+        }
 
+    def form_valid(self, form):
+        obj = self.get_object()
+        toggle_attr = form.cleaned_data['toggle_attr']
+        attr_value = getattr(obj, toggle_attr)
+
+        toggled_attr_value = not attr_value
+        setattr(obj, toggle_attr, toggled_attr_value)
+        obj.save()
         return JsonResponse({
-            'color': color,
+            'color': 'yellow' if toggled_attr_value else 'grey',
         })
 
+    def form_invalid(self, form):
+        return JsonResponse({})
 
-class AdminEventToggleView(AdminArticleToggleView):
+
+class AdminArticleToggleView(PermissionRequiredMixin, SpecificArticleView, AdminNewsBaseToggleView):
+    permission_required = ('news.change_article',)
+
+
+class AdminEventToggleView(PermissionRequiredMixin, SpecificEventView, AdminNewsBaseToggleView):
     permission_required = ('news.change_event',)
-    model = Event
 
 
-class AdminTimeplaceToggleView(AdminArticleToggleView):
+class AdminTimeplaceToggleView(PermissionRequiredMixin, SpecificTimePlaceView, AdminNewsBaseToggleView):
     permission_required = ('news.change_timeplace',)
-    model = TimePlace
 
 
-class DeleteArticleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class DeleteArticleView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificArticleView, DeleteView):
     permission_required = ('news.delete_article',)
     model = Article
     success_url = reverse_lazy('admin_article_list')
 
 
-class DeleteEventView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class DeleteEventView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificEventView, DeleteView):
     permission_required = ('news.delete_event',)
     model = Event
     success_url = reverse_lazy('admin_event_list')
 
 
-class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificTimePlaceView, DeleteView):
     permission_required = ('news.delete_timeplace',)
     model = TimePlace
 
     def get_success_url(self):
-        return reverse('admin_event_detail', args=(self.object.event.pk,))
+        return reverse('admin_event_detail', args=[self.object.event])
 
 
-class EventRegistrationView(CreateView):
+class EventRegistrationView(PermissionRequiredMixin, CreateView):
     model = EventTicket
     form_class = EventRegistrationForm
     template_name = 'news/event_registration.html'
 
-    @property
-    def timeplace(self):
-        if 'timeplace_pk' in self.kwargs:
-            return get_object_or_404(TimePlace, pk=self.kwargs['timeplace_pk'])
-        return None
+    event: Event = None
+    time_place: TimePlace = None
 
-    @property
-    def event(self):
-        if 'event_pk' in self.kwargs:
-            return get_object_or_404(Event, pk=self.kwargs['event_pk'])
-        return None
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.event = self.kwargs.get('event')
+        time_place_pk = self.kwargs.get('time_place_pk')
+        if time_place_pk is not None:
+            self.time_place = get_object_or_404(TimePlace, pk=time_place_pk)
 
-    def is_registration_allowed(self):
-        return (self.timeplace and self.timeplace.can_register(self.request.user)
-                or self.event and self.event.can_register(self.request.user))
+    def has_permission(self):
+        return (
+                self.time_place and self.time_place.can_register(self.request.user)
+                or self.event and self.event.can_register(self.request.user)
+        )
 
     def dispatch(self, request, *args, **kwargs):
-        if not self.is_registration_allowed():
-            event = self.event or self.timeplace.event
-            return HttpResponseRedirect(reverse('event_detail', kwargs={'pk': event.pk}))
-
-        ticket = self.request.user.event_tickets.filter(active=True, timeplace=self.timeplace, event=self.event)
+        # If the user already has an active ticket for the event/timeplace, redirect to that ticket
+        ticket = self.request.user.event_tickets.filter(active=True, timeplace=self.time_place, event=self.event)
         if ticket.exists():
-            return HttpResponseRedirect(reverse_lazy('ticket_detail', kwargs={'pk': ticket.first().pk}))
+            return HttpResponseRedirect(reverse('ticket_detail', args=[ticket.first().pk]))
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        if not self.is_registration_allowed():
-            form.add_error(None, _("Could not register you for the event, please try again later."))
-            return self.form_invalid(form)
-
         form.instance.user = self.request.user
         form.instance.event = self.event
-        form.instance.timeplace = self.timeplace
+        form.instance.timeplace = self.time_place
         ticket = form.save()
 
         try:
@@ -427,10 +458,8 @@ class EventRegistrationView(CreateView):
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
-        event_title = (self.event or self.timeplace.event).title
+        event_title = (self.event or self.time_place.event).title
         return super().get_context_data(**{
-            'timeplace': self.timeplace,
-            'event': self.event,
             'title': _("Register for the event “{title}”").format(title=event_title),
             **kwargs,
         })
@@ -446,7 +475,7 @@ class EventRegistrationView(CreateView):
         return kwargs
 
 
-class TicketDetailView(LoginRequiredMixin, DetailView):
+class TicketDetailView(DetailView):
     model = EventTicket
     template_name = 'news/ticket_detail.html'
     context_object_name = 'ticket'
@@ -460,56 +489,96 @@ class MyTicketsListView(ListView):
         return self.request.user.event_tickets.all()
 
 
-class AdminEventTicketListView(TemplateView):
+class AdminEventTicketListView(PermissionRequiredMixin, EventBasedView, ListView):
+    model = EventTicket
     template_name = 'news/admin_event_ticket_list.html'
+    context_object_name = 'tickets'
+
+    @property
+    def focused_object(self):
+        return self.event
+
+    def has_permission(self):
+        return self.request.user.has_perm('news.change_event') and self.focused_object.number_of_tickets
+
+    def get_queryset(self):
+        return self.focused_object.tickets.order_by('-active')
 
     def get_context_data(self, **kwargs):
-        context_data = super().get_context_data()
-        event = get_object_or_404(Event, pk=kwargs.pop('pk', 0))
-        if not event.number_of_tickets:
-            raise Http404()
-        context_data.update({
-            'tickets': event.tickets.order_by('-active'),
+        return super().get_context_data(**{
+            'event': self.event,
+            'focused_object': self.focused_object,
+            'ticket_emails': ",".join(ticket.email for ticket in self.focused_object.tickets.filter(active=True)),
+            **kwargs,
+        })
+
+
+class AdminTimeplaceTicketListView(AdminEventTicketListView):
+    time_place_pk_url_kwarg = 'pk'
+    time_place: TimePlace
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        self.time_place = get_object_or_404(self.event.timeplaces, pk=self.kwargs[self.time_place_pk_url_kwarg])
+
+    @property
+    def focused_object(self):
+        return self.time_place
+
+
+class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView):
+    model = EventTicket
+    fields = ()
+    template_name = 'news/ticket_cancel.html'
+    context_object_name = 'ticket'
+
+    object: EventTicket
+
+    def has_permission(self):
+        return (
+                self.request.user.has_perm('news.cancel_ticket')
+                or self.request.user == self.get_object().user
+        )
+
+    def get_queryset(self):
+        return self.request.user.event_tickets.all()
+
+    def get_context_data(self, **kwargs):
+        ticket = self.object
+        event = ticket.event or ticket.timeplace.event
+        if ticket.timeplace:
+            at_time_string = _(" at {time}").format(time=short_datetime_format(ticket.timeplace.start_time))
+        else:
+            at_time_string = ""
+        heading = _("Are you sure you want to cancel your ticket for<br/>“{event}”{at_time_string}?").format(
+            event=event, at_time_string=at_time_string,
+        )
+        return super().get_context_data(**{
             'event': event,
-            'object': event,
-            'ticket_emails': ",".join(ticket.email for ticket in event.tickets.filter(active=True)),
+            'heading': heading,
+            **kwargs,
         })
-        return context_data
 
+    def get(self, request, *args, **kwargs):
+        ticket = self.get_object()
+        if not ticket.active:
+            # Redirect back to the ticket, as it would be confusing to show a page
+            # asking if you want to cancel the ticket if it's already canceled
+            return HttpResponseRedirect(self.get_success_url())
+        return super().get(request, *args, **kwargs)
 
-class AdminTimeplaceTicketListView(TemplateView):
-    template_name = 'news/admin_event_ticket_list.html'
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data()
-        timeplace = get_object_or_404(TimePlace, pk=kwargs.pop('pk', 0))
-        if not timeplace.number_of_tickets:
-            raise Http404()
-        context_data.update({
-            'tickets': timeplace.tickets.order_by('-active'),
-            'event': timeplace.event,
-            'object': timeplace,
-            'ticket_emails': ",".join(ticket.email for ticket in timeplace.tickets.filter(active=True)),
-        })
-        return context_data
-
-
-class CancelTicketView(LoginRequiredMixin, RedirectView):
-    permanent = False
-    query_string = True
-    pattern_name = 'ticket_detail'
-
-    def get_redirect_url(self, *args, **kwargs):
-        ticket = get_object_or_404(EventTicket, pk=kwargs.get('pk', 0))
-
+    def form_valid(self, form):
+        ticket = self.object
         # Allow for toggling if a ticket is canceled or not
         if self.request.user.has_perm('news.cancel_ticket'):
             ticket.active = not ticket.active
-        elif self.request.user == ticket.user:
+            ticket.save()
+        elif self.request.user == ticket.user and ticket.active:
             ticket.active = False
-        ticket.save()
+            ticket.save()
+        return HttpResponseRedirect(self.get_success_url())
 
-        next_page = self.request.GET.get('next')
-        if next_page is None:
-            return super().get_redirect_url(*args, **kwargs)
-        return next_page
+    def get_success_url(self):
+        if self.cleaned_next_param:
+            return self.cleaned_next_param
+        return reverse('ticket_detail', args=[self.object.pk])

@@ -20,7 +20,7 @@
             {% trans "Member list" %}
             {% if perms.internal.add_member %}
                 <a class="ui right floated make-bg-yellow button" href="{% url 'create_member' %}">
-                    <i class="ui plus icon"></i>{% trans "Add member" %}
+                    <i class="plus icon"></i>{% trans "Add member" %}
                 </a>
             {% endif %}
         </h1>
@@ -34,48 +34,48 @@
 
                     <div class="ui multiple blue labeled compact button icon dropdown">
                         <input type="hidden" name="filter-status"/>
-                        <i class="ui filter icon"></i>
+                        <i class="filter icon"></i>
                         <span class="ui text">{% trans "Filter membership status" %}</span>
                         <div class="menu">
                             <div class="scrolling menu">
                                 <div class="item" data-value="{% trans "active"|capfirst %}">
-                                    <i class="ui green circle icon"></i>{% trans "active"|capfirst %}
+                                    <i class="green circle icon"></i>{% trans "active"|capfirst %}
                                 </div>
                                 <div class="item" data-value="{% trans "inactive"|capfirst %}">
-                                    <i class="ui grey circle icon"></i>{% trans "inactive"|capfirst %}
+                                    <i class="grey circle icon"></i>{% trans "inactive"|capfirst %}
                                 </div>
                                 <div class="item" data-value="{% trans "retired"|capfirst %}">
-                                    <i class="ui blue circle icon"></i>{% trans "retired"|capfirst %}
+                                    <i class="blue circle icon"></i>{% trans "retired"|capfirst %}
                                 </div>
                                 <div class="item" data-value="{% trans "honorary"|capfirst %}">
-                                    <i class="ui make-col-yellow circle icon"></i>{% trans "honorary"|capfirst %}
+                                    <i class="make-col-yellow circle icon"></i>{% trans "honorary"|capfirst %}
                                 </div>
                                 <div class="item" data-value="{% trans "quit"|capfirst %}">
-                                    <i class="ui red circle icon"></i>{% trans "quit"|capfirst %}
+                                    <i class="red circle icon"></i>{% trans "quit"|capfirst %}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="ui multiple blue labeled compact button icon dropdown">
                         <input type="hidden" name="filter-committee"/>
-                        <i class="ui filter icon"></i>
+                        <i class="filter icon"></i>
                         <span class="ui text">{% trans "Filter committees" %}</span>
                         <div class="menu">
                             <div class="scrolling menu">
                                 <div class="item" data-value="Dev">
-                                    <i class="ui green circle icon"></i>Dev
+                                    <i class="green circle icon"></i>Dev
                                 </div>
                                 <div class="item" data-value="Mentor">
-                                    <i class="ui red circle icon"></i>Mentor
+                                    <i class="red circle icon"></i>Mentor
                                 </div>
                                 <div class="item" data-value="Event">
-                                    <i class="ui blue circle icon"></i>Event
+                                    <i class="blue circle icon"></i>Event
                                 </div>
                                 <div class="item" data-value="PR">
-                                    <i class="ui make-col-yellow circle icon"></i>PR
+                                    <i class="make-col-yellow circle icon"></i>PR
                                 </div>
                                 <div class="item" data-value="Styret">
-                                    <i class="ui purple circle icon"></i>Styret
+                                    <i class="purple circle icon"></i>Styret
                                 </div>
                             </div>
                         </div>
@@ -89,25 +89,25 @@
             <thead>
             <tr>
                 <th>
-                    {% trans "name"|capfirst %}<i id="member-sort-name" class="ui sort icon"></i>
+                    {% trans "name"|capfirst %}<i id="member-sort-name" class="sort icon"></i>
                 </th>
                 <th>
-                    {% trans "committee"|capfirst %}<i id="member-sort-committees" class="ui up sort icon"></i>
+                    {% trans "committee"|capfirst %}<i id="member-sort-committees" class="sort up icon"></i>
                 </th>
                 <th>
-                    {% trans "role"|capfirst %}<i id="member-sort-role" class="ui sort icon"></i>
+                    {% trans "role"|capfirst %}<i id="member-sort-role" class="sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "status"|capfirst %}<i id="member-sort-status" class="ui sort icon"></i>
+                    {% trans "status"|capfirst %}<i id="member-sort-status" class="sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "joined"|capfirst %}<i id="member-sort-dateJoinedSortable" class="ui sort icon"></i>
+                    {% trans "joined"|capfirst %}<i id="member-sort-dateJoinedSortable" class="sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "contact email"|capfirst %}<i id="member-sort-contactEmail" class="ui sort icon"></i>
+                    {% trans "contact email"|capfirst %}<i id="member-sort-contactEmail" class="sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "phone number"|capfirst %}<i id="member-sort-phone" class="ui sort icon"></i>
+                    {% trans "phone number"|capfirst %}<i id="member-sort-phone" class="sort icon"></i>
                 </th>
             </tr>
             </thead>
@@ -212,13 +212,13 @@
         <div class="header">
             <span id="member-name-header"></span>
             <a id="member-editUrl-button">
-                <i class="ui make-col-yellow pencil icon"></i>
+                <i class="make-col-yellow pencil icon"></i>
             </a>
             <span id="member-status-header"></span>
         </div>
         <div class="scrolling content">
             <h4 class="ui horizontal divider header">
-                <i class="ui make-col-yellow user icon"></i>{% trans "Basic information" %}
+                <i class="make-col-yellow user icon"></i>{% trans "Basic information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
@@ -282,7 +282,7 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="ui make-col-yellow users icon"></i>{% trans "Membership information" %}
+                <i class="make-col-yellow users icon"></i>{% trans "Membership information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
@@ -366,7 +366,7 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="ui make-col-yellow key icon"></i>{% trans "system accesses"|capfirst %}
+                <i class="make-col-yellow key icon"></i>{% trans "system accesses"|capfirst %}
             </h4>
             <form id="edit-system-access-form" class="dont-prevent-leaving" method="POST">
                 {% csrf_token %}
@@ -379,7 +379,7 @@
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
-                    <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
+                    <i class="make-col-yellow wrench icon"></i>{% trans "Actions" %}
                 </h4>
                 <form id="edit-member-status-form" class="dont-prevent-leaving member-action-buttons" method="POST">
                     {% csrf_token %}

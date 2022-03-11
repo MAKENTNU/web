@@ -17,7 +17,7 @@
             {% trans "machines"|capfirst %}
             {% if perms.make_queue.add_machine %}
                 <a href="{% url 'create_machine' %}" data-tooltip="{% trans "Add" %}">
-                    <i class="ui green plus icon"></i>
+                    <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </div>

@@ -2,14 +2,6 @@
 {% load i18n %}
 
 
-{% block field_classes %}
-    {% if field.name == 'event' %}
-        ui disabled field
-    {% else %}
-        {{ block.super }}
-    {% endif %}
-{% endblock field_classes %}
-
 {% block field_post_content %}
     {% if field.name == 'number_of_tickets' %}
         <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}.</div>

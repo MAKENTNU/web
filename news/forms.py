@@ -2,6 +2,7 @@ from abc import ABCMeta
 from typing import Dict, Type
 
 from django import forms
+from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
 from web.widgets import MazeMapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
@@ -13,8 +14,8 @@ class TimePlaceForm(forms.ModelForm):
         model = TimePlace
         fields = '__all__'
         widgets = {
+            'event': forms.HiddenInput(),
             'place': MazeMapSearchInput(url_field='place_url'),
-            'event': SemanticSearchableChoiceInput(),
             'start_time': SemanticDateTimeInput(attrs={'end_calendar': 'end_time'}),
             'end_time': SemanticDateTimeInput(attrs={'start_calendar': 'start_time'}),
             'publication_time': SemanticDateTimeInput(),
@@ -88,3 +89,24 @@ class EventRegistrationForm(forms.ModelForm):
                     "Here you can enter any requests or information you want to provide to the organizers"),
             }),
         }
+
+
+class ToggleForm(forms.Form):
+    instance: Model
+    toggle_attr = forms.CharField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.pop('instance')
+        self.instance = instance
+        super().__init__(*args, **kwargs)
+
+    def clean_toggle_attr(self):
+        toggle_attr = self.cleaned_data['toggle_attr']
+        try:
+            attr_value = getattr(self.instance, toggle_attr)
+        except AttributeError:
+            raise forms.ValidationError("No attribute found with this name")
+        if type(attr_value) is not bool:
+            raise forms.ValidationError("The attribute is not a boolean field, and is therefore not toggleable")
+
+        return toggle_attr
