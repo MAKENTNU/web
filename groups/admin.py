@@ -1,10 +1,12 @@
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from .models import Committee, InheritanceGroup
 
 
 class InheritanceGroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'last_modified')
+
     fieldsets = (
         (None, {
             'fields': ('name', 'parents', 'own_permissions'),
@@ -35,9 +37,10 @@ class InheritanceGroupAdmin(admin.ModelAdmin):
         return form
 
 
-class CommitteeAdmin(admin.ModelAdmin):
+class CommitteeAdmin(SimpleHistoryAdmin):
     list_display = ('name', 'last_modified')
     list_select_related = ('group',)
+
     readonly_fields = ('last_modified',)
 
 

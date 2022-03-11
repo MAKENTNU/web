@@ -16,5 +16,13 @@
     <h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_("Django administration") }}</a></h1>
 {% endblock branding %}
 
+{% block userlinks %}
+    {{ block.super }}
+    &ensp;|&ensp;
+    <div style="display: inline-block;">
+        {% include 'web/forms/language_form.html' %}
+    </div>
+{% endblock userlinks %}
+
 {# Based on https://github.com/django/django/blob/84609b3205905097d7d3038d32e6101f012c0619/django/contrib/admin/templates/admin/base_site.html#L9 #}
 {% block nav-global %}{% endblock %}

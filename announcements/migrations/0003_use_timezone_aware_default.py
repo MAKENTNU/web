@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='announcement',
             name='display_from',
-            field=models.DateTimeField(default=django.utils.timezone.localtime, help_text='The date from which the announcement will be shown.', verbose_name='Display from'),
+            field=models.DateTimeField(default=django.utils.timezone.localtime, help_text='The date from which the announcement will be shown.', verbose_name='display from'),
         ),
     ]

@@ -1,12 +1,13 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% load i18n %}
+{% load static %}
+{% load html_tags %}
 
 
 {% block body %}
     <div class="ui text container">
         <h1>
-            <strong>{% trans "Committees" %}</strong>
+            <strong>{% trans "committees"|capfirst %}</strong>
         </h1>
     </div>
     <div class="committees ui divided items text container basic segment">
@@ -26,7 +27,7 @@
                         </a>
                     </div>
                     <div class="meta">
-                        {{ committee.email|urlize }}
+                        {{ committee.email|urlize_target_blank }}
                     </div>
                     <div class="description">
                         {% if committee.clickbait %}

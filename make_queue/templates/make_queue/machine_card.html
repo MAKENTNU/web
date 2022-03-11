@@ -16,14 +16,14 @@
             {{ machine.name }}
             {% if perms.make_queue.change_machine %}
                 <a href="{% url 'edit_machine' machine.pk %}">
-                    <i class="ui make-col-yellow pencil icon"></i>
+                    <i class="make-col-yellow pencil icon"></i>
                 </a>
             {% endif %}
             {% if perms.make_queue.delete_machine %}
                 <a class="delete-modal-button"
                    data-url="{% url 'delete_machine' machine.pk %}"
                    data-obj-name="{{ machine.name }}">
-                    <i class="ui red trash icon"></i>
+                    <i class="red trash icon"></i>
                 </a>
             {% endif %}
         </div>
@@ -47,7 +47,7 @@
     {% endif %}
     {% if machine.machine_type.has_stream %}
         <div id="fader"></div>
-        <i id="closefullscreen" class="ui times icon"></i>
+        <i id="closefullscreen" class="times icon"></i>
         <script src="{% static 'make_queue/js/stream.js' %}"></script>
     {% endif %}
 </div>

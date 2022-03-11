@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% load i18n %}
+{% load static %}
+{% load html_tags %}
 
 
 {% block extra_head %}
@@ -11,25 +12,25 @@
 {% block body %}
 
     <div class="ui container">
-        <h1>{{ event.title }}</h1>
         <a href="{% url 'admin_event_detail' event.pk %}">
-            <i class="ui angle double left icon"></i>{% trans "Event admin page" %}
+            <i class="angle double left icon"></i>{% trans "Event admin page" %}
         </a>
+        <h1>{{ event.title }}</h1>
 
         <h3>{% trans "Email Addresses of Ticket Holders" %}</h3>
         <div class="emails-container">
             <div class="copy-button-container">
                 <button class="copy-token ui make-bg-yellow icon button"><i class="clipboard icon"></i></button>
                 <span data-content="{% trans "Click to copy the email addresses of the active tickets to the clipboard" %}.">
-                    <i class="ui make-col-yellow question circle icon"></i>
+                    <i class="make-col-yellow question circle icon"></i>
                 </span>
             </div>
             <input readonly class="copy-input input-monospace" value="{{ ticket_emails }}"/>
         </div>
 
-        <h3>{% trans "Tickets" %}</h3>
+        <h3>{% trans "tickets"|capfirst %}</h3>
         <b>
-            {% blocktrans trimmed with num_active_tickets=object.number_of_active_tickets num_tickets=object.number_of_tickets %}
+            {% blocktrans trimmed with num_active_tickets=focused_object.number_of_active_tickets num_tickets=focused_object.number_of_tickets %}
                 {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
             {% endblocktrans %}
         </b>
@@ -38,15 +39,15 @@
                 <div class="item">
                     <span class="right floated ">
                         {% if ticket.active %}
-                            <span class="ui green label">{% trans "Active" %}</span>
+                            <span class="ui green label">{% trans "active"|capfirst %}</span>
                         {% else %}
-                            <span class="ui red label">{% trans "Canceled" %}</span>
+                            <span class="ui red label">{% trans "canceled"|capfirst %}</span>
                         {% endif %}
                     </span>
-                    <i class="ui very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
+                    <i class="very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
                     <div class="ui content">
                         <div class="header">
-                            {{ ticket.name }} - {{ ticket.email|urlize }}
+                            {{ ticket.name }} - {{ ticket.email|urlize_target_blank }}
                         </div>
                         <div class="description">
                             <div>
@@ -54,11 +55,11 @@
                                 <a href="{% url 'ticket_detail' ticket.pk %}">{{ ticket.uuid }}</a>
                             </div>
                             <div>
-                                <b>{% trans "Language" %}</b> {{ ticket.get_language_display }}
+                                <b>{% trans "language"|capfirst %}</b> {{ ticket.get_language_display }}
                             </div>
                             {% if ticket.comment %}
                                 <div>
-                                    <b>{% trans "Comment" %}:</b> {{ ticket.comment }}
+                                    <b>{% trans "comment"|capfirst %}:</b> {{ ticket.comment }}
                                 </div>
                             {% endif %}
                         </div>

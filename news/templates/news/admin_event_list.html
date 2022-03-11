@@ -7,7 +7,7 @@
         <h1 class="ui text-centered header">
             {% trans "Events" %}
             <a class="explanation-popup" href="{% url 'event_create' %}">
-                <i class="ui green add icon"></i>
+                <i class="green add icon"></i>
             </a>
         </h1>
         <div class="ui four doubling stackable cards">
@@ -34,19 +34,19 @@
                             {% endif %}
                             {% if event.featured %}
                                 <span class="ui green mini label">
-                                    {% trans "Featured" %}
+                                    {% trans "featured"|capfirst %}
                                 </span>
                             {% endif %}
 
                             {% if event.hidden %}
                                 <span class="ui red mini label">
-                                    {% trans "Hidden" %}
+                                    {% trans "hidden"|capfirst %}
                                 </span>
                             {% endif %}
 
                             {% if event.private %}
                                 <span class="ui make-bg-yellow mini label">
-                                    {% trans "Internal" %}
+                                    {% trans "internal"|capfirst %}
                                 </span>
                             {% endif %}
                         </div>

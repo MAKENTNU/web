@@ -101,16 +101,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='reservationrule',
             name='machine_type',
-            field=models.CharField(max_length=30, verbose_name='Machine type'),
+            field=models.CharField(max_length=30, verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='reservationrule',
             name='max_hours',
-            field=models.FloatField(verbose_name='Hours single period'),
+            field=models.FloatField(verbose_name='hours single period'),
         ),
         migrations.AlterField(
             model_name='reservationrule',
             name='max_inside_border_crossed',
-            field=models.FloatField(verbose_name='Hours multi-period'),
+            field=models.FloatField(verbose_name='hours multi-period'),
         ),
     ]

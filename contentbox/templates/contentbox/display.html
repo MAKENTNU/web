@@ -1,4 +1,4 @@
-{% extends 'web/base.html' %}
+{% extends base_template %}
 {% load i18n %}
 {% load static %}
 
@@ -11,9 +11,9 @@
 
 {% block padding_top %}
     <div class="ui container">
-        <a class="{% if not perms.contentbox.change_contentbox %}hidden{% endif %} edit-button ui make-bg-yellow button"
+        <a class="{% if not user_can_change %}hidden{% endif %} edit-button ui make-bg-yellow button"
            href="{% url 'contentbox_edit' contentbox.pk %}">
-            <i class="ui edit icon"></i>{% trans "Edit" %}
+            <i class="edit icon"></i>{% trans "Edit" %}
         </a>
     </div>
 {% endblock padding_top %}

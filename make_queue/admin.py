@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.db.models import Count
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util.admin_utils import TextFieldOverrideMixin
 from web.multilingual.admin import MultiLingualFieldAdmin
@@ -19,7 +20,7 @@ class MachineTypeAdmin(MultiLingualFieldAdmin):
 
     @admin.display(
         ordering='machines__count',
-        description=_("Machines"),
+        description=_("machines"),
     )
     def get_num_machines(self, machine_type: MachineType):
         return machine_type.machines__count
@@ -35,11 +36,12 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
     search_fields = ('name', 'stream_name', 'machine_model', 'machine_type__name', 'location', 'location_url')
     list_editable = ('status', 'priority')
     list_select_related = ('machine_type',)
+
     readonly_fields = ('last_modified',)
 
     @admin.display(
         ordering='location',
-        description=_("Location"),
+        description=_("location"),
     )
     def get_location(self, machine: Machine):
         return format_html('<a href="{}" target="_blank">{}</a>', machine.location_url, machine.location)
@@ -55,9 +57,10 @@ class MachineAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
         return super().get_queryset(request).default_order_by()
 
 
-class MachineUsageRuleAdmin(MultiLingualFieldAdmin):
+class MachineUsageRuleAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     list_display = ('machine_type', 'last_modified')
     list_select_related = ('machine_type',)
+
     readonly_fields = ('last_modified',)
 
 
@@ -74,6 +77,7 @@ class ReservationRuleAdmin(admin.ModelAdmin):
         'last_modified',
     )
     list_select_related = ('machine_type',)
+
     readonly_fields = ('last_modified',)
 
 
@@ -88,6 +92,7 @@ class Printer3DCourseAdmin(admin.ModelAdmin):
     list_editable = ('status', 'advanced_course')
     ordering = ('date', 'username')
     list_select_related = ('user',)
+
     readonly_fields = ('last_modified',)
 
 

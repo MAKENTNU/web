@@ -8,11 +8,11 @@
     <div class="ui container">
         <h1>{% trans "Admin panel" %}</h1>
         <div class="ui four doubling stackable cards">
-            {% if user|has_any_article_permissions %}
+            {% if user|has_any_permissions_for:'Article' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'admin_article_list' %}">
                         <div class="center aligned header">
-                            <i class="ui grey newspaper outline icon"></i>{% trans "Articles" %}
+                            <i class="grey newspaper outline icon"></i>{% trans "Articles" %}
                         </div>
                         <div class="description">
                             {% trans "Here you can create, edit and delete articles" %}.
@@ -20,11 +20,11 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_event_permissions %}
+            {% if user|has_any_permissions_for:'Event' or user|has_any_permissions_for:'TimePlace' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'admin_event_list' %}">
                         <div class="center aligned header">
-                            <i class="ui grey calendar outline icon"></i>{% trans "Events" %}
+                            <i class="grey calendar outline icon"></i>{% trans "Events" %}
                         </div>
                         <div class="description">
                             {% trans "Here you can create, edit and delete events and their occurrences" %}.
@@ -36,7 +36,7 @@
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'MAKE_reservations_list' %}">
                         <div class="center aligned header">
-                            <i class="ui grey cogs icon"></i>{% trans "Reservations" %}
+                            <i class="grey cogs icon"></i>{% trans "Reservations" %}
                         </div>
                         <div class="description">
                             {% trans "Here you can view machine reservations for events and other MAKE NTNU causes" %}.
@@ -44,11 +44,11 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_faq_permissions %}
+            {% if user|has_any_permissions_for:'Category' or user|has_any_permissions_for:'Question' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'faq_admin_panel' %}">
                         <div class="center aligned header">
-                            <i class="ui grey question circle outline icon"></i>{% trans "FAQ" %}
+                            <i class="grey question circle outline icon"></i>{% trans "FAQ" %}
                         </div>
                         <div class="description">
                             {% trans "Here you can add or edit frequently asked questions" %}.
@@ -60,7 +60,7 @@
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'quota_panel' %}">
                         <div class="center aligned header">
-                            <i class="ui grey clock outline icon"></i>{% trans "Quota" %}
+                            <i class="grey clock outline icon"></i>{% trans "quota"|capfirst %}
                         </div>
                         <div class="description">
                             {% trans "Here you can create and edit both global and personal quotas for reservations of machines" %}.
@@ -68,11 +68,11 @@
                     </a>
                 </div>
             {% endif %}
-            {% if perms.groups.can_edit_group %}
+            {% if perms.groups.change_committee %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'committee_admin' %}">
                         <div class="center aligned header">
-                            <i class="ui grey users icon"></i>{% trans "Committees" %}
+                            <i class="grey users icon"></i>{% trans "committees"|capfirst %}
                         </div>
                         <div class="description">
                             {% trans "Here you can edit the committees' description, image and email" %}.
@@ -84,7 +84,7 @@
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'course_registration_list' %}">
                         <div class="center aligned header">
-                            <i class="ui grey user plus icon"></i>{% trans "Course registrations" %}
+                            <i class="grey user plus icon"></i>{% trans "Course registrations" %}
                         </div>
                         <div class="description">
                             {% trans "Here you can add and edit information about persons who have taken the 3D printer course" %}.
@@ -96,7 +96,7 @@
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'announcement_admin' %}">
                         <div class="center aligned header">
-                            <i class="ui grey bullhorn icon"></i>{% trans "Announcements" %}
+                            <i class="grey bullhorn icon"></i>{% trans "Announcements" %}
                         </div>
                         <div class="description">
                             {% trans "Here you can create and modify announcements to be shown on either the front page or the entire website" %}.
@@ -104,11 +104,11 @@
                     </a>
                 </div>
             {% endif %}
-            {% if user|has_any_equipment_permissions %}
+            {% if user|has_any_permissions_for:'Equipment' %}
                 <div class="ui yellow card">
                     <a class="content" href="{% url 'makerspace_admin_equipment_list' %}">
                         <div class="center aligned header">
-                            <i class="ui grey tools icon"></i>{% trans "Equipment" %}
+                            <i class="grey tools icon"></i>{% trans "Equipment" %}
                         </div>
                         <div class="description">
                             {% trans "Here you can add or edit equipment at Makerverkstedet" %}.

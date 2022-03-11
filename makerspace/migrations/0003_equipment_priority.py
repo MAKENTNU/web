@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='equipment',
             name='priority',
-            field=models.IntegerField(blank=True, help_text='If specified, the equipment is sorted ascending by this value.', null=True, verbose_name='Priority'),
+            field=models.IntegerField(blank=True, help_text='If specified, the equipment is sorted ascending by this value.', null=True, verbose_name='priority'),
         ),
     ]

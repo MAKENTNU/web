@@ -4,7 +4,9 @@ from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
+from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from util.admin_utils import TextFieldOverrideMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
@@ -14,7 +16,7 @@ from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
-class NewsBaseAdmin(MultiLingualFieldAdmin):
+class NewsBaseAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
     form_base: NewsBaseForm
     list_display_extra: tuple
 
@@ -22,6 +24,7 @@ class NewsBaseAdmin(MultiLingualFieldAdmin):
     search_fields = ('title', 'content', 'clickbait', 'image_description')
     list_editable = ('contain', 'featured', 'hidden', 'private')
     list_display = ('__str__', *list_editable)  # prevents Django system check errors; the field is actually set in `get_list_display()` below
+
     readonly_fields = ('last_modified',)
 
     def get_list_display(self, request):
@@ -31,7 +34,7 @@ class NewsBaseAdmin(MultiLingualFieldAdmin):
             'get_image', 'contain', 'featured', 'hidden', 'private', 'last_modified',
         )
 
-    @admin.display(description=_("Image"))
+    @admin.display(description=_("image"))
     def get_image(self, news_obj: NewsBase):
         return html_utils.tag_media_img(news_obj.image.url, url_host_name='main', alt_text=news_obj.image_description)
 
@@ -68,31 +71,33 @@ def get_ticket_table(tickets: QuerySet[EventTicket]):
     })
 
 
+class TimePlaceInline(TextFieldOverrideMixin, admin.TabularInline):
+    model = TimePlace
+    ordering = ('-start_time',)
+
+    readonly_fields = ('get_num_reserved_tickets', 'last_modified')
+    show_change_link = True
+
+    extra = 0
+
+    @admin.display(description=_("number of reserved tickets"))
+    def get_num_reserved_tickets(self, time_place: TimePlace):
+        return time_place.ticket_count
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        qs = qs.select_related('event')
+        return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
+
+
 class EventAdmin(NewsBaseAdmin):
     MAX_TICKET_OCCURRENCES_LISTED = 20
-
-    class TimePlaceInline(TextFieldOverrideMixin, admin.TabularInline):
-        model = TimePlace
-        ordering = ('-start_time',)
-        readonly_fields = ('get_num_reserved_tickets', 'last_modified')
-        show_change_link = True
-
-        extra = 0
-
-        @admin.display(description=_("number of reserved tickets"))
-        def get_num_reserved_tickets(self, time_place: TimePlace):
-            return time_place.ticket_count
-
-        def get_queryset(self, request):
-            qs = super().get_queryset(request)
-            qs = qs.select_related('event')
-            return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
-
-    inlines = [TimePlaceInline]
     form_base = EventForm
     list_display_extra = ('event_type', 'get_num_occurrences', 'get_future_occurrences', 'get_last_occurrence', 'get_number_of_tickets')
+
     list_filter = ('event_type', *NewsBaseAdmin.list_filter)
 
+    inlines = [TimePlaceInline]
     fieldsets = (
         (None, {
             'fields': (
@@ -100,7 +105,8 @@ class EventAdmin(NewsBaseAdmin):
                 'event_type', 'number_of_tickets', 'last_modified',
             ),
         }),
-        (_("Tickets"), {
+        # `capfirst()` to avoid duplicate translation differing only in case
+        (capfirst(_("tickets")), {
             'fields': ('get_active_tickets', 'get_inactive_tickets'),
             'classes': ('collapse',),
         }),
@@ -207,7 +213,8 @@ class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
                 'event', 'publication_time', 'start_time', 'end_time', 'place', 'place_url', 'hidden', 'number_of_tickets', 'last_modified',
             ),
         }),
-        (_("Tickets"), {
+        # `capfirst()` to avoid duplicate translation differing only in case
+        (capfirst(_("tickets")), {
             'fields': ('get_active_tickets', 'get_inactive_tickets'),
             'classes': ('collapse',),
         }),
@@ -217,14 +224,14 @@ class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
 
     @admin.display(
         ordering='event__title',
-        description=_("Event"),
+        description=_("event"),
     )
     def get_event(self, time_place: TimePlace):
         return link_to_admin_change_form(time_place.event)
 
     @admin.display(
         ordering='place',
-        description=_("Location"),
+        description=_("location"),
     )
     def get_place(self, time_place: TimePlace):
         return format_html('<a href="{}" target="_blank">{}</a>', time_place.place_url, time_place.place)
@@ -245,7 +252,7 @@ class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
         if time_place.event.hidden:
             unpublished_message = _("event hidden")
         elif time_place.hidden:
-            unpublished_message = _("Hidden")
+            unpublished_message = _("hidden")
         elif time_place.publication_time > timezone.now():
             unpublished_message = _("future publication time")
         else:

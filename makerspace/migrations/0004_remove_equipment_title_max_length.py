@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='equipment',
             name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='Title'),
+            field=web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='title'),
         ),
     ]

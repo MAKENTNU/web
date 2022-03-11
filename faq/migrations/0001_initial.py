@@ -16,24 +16,24 @@ class Migration(migrations.Migration):
             name='Category',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='Category')),
+                ('name', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='category')),
             ],
             options={
-                'verbose_name': 'Category',
-                'verbose_name_plural': 'Categories',
+                'verbose_name': 'category',
+                'verbose_name_plural': 'categories',
             },
         ),
         migrations.CreateModel(
             name='Question',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='Question')),
-                ('answer', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='Answer')),
-                ('categories', models.ManyToManyField(related_name='questions', to='faq.Category', verbose_name='Categories')),
+                ('title', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='question')),
+                ('answer', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='answer')),
+                ('categories', models.ManyToManyField(related_name='questions', to='faq.Category', verbose_name='categories')),
             ],
             options={
-                'verbose_name': 'Question',
-                'verbose_name_plural': 'Questions',
+                'verbose_name': 'question',
+                'verbose_name_plural': 'questions',
             },
         ),
     ]

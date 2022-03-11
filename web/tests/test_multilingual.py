@@ -1,7 +1,7 @@
 import json
 
 from django.conf import settings
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.utils import translation
 
 from ..multilingual.data_structures import MultiLingualTextStructure
@@ -9,23 +9,17 @@ from ..multilingual.formfields import MultiLingualFormField
 from ..multilingual.modelfields import MultiLingualTextField
 
 
+# Ensure the settings are as expected by the tests below
+@override_settings(
+    LANGUAGES=(
+            ('nb', "Norsk"),
+            ('en', "English"),
+    ),
+    LANGUAGE_CODE='nb')
 class TestMultiLingualTextStructure(TestCase):
     """
     Tests for the MultiLingualTextStructure class.
     """
-
-    def setUp(self):
-        self.original_languages = settings.LANGUAGES
-        self.original_language_code = settings.LANGUAGE_CODE
-        settings.LANGUAGES = (
-            ("nb", "Norsk"),
-            ("en", "English"),
-        )
-        settings.LANGUAGE_CODE = "nb"
-
-    def tearDown(self):
-        settings.LANGUAGES = self.original_languages
-        settings.LANGUAGE_CODE = self.original_language_code
 
     def test_constructor_serialized_json(self):
         """
@@ -142,6 +136,22 @@ class TestMultiLingualTextField(TestCase):
 
         self.assertEqual("test", field.get_prep_value("test"),
                          "get_prep_value should not do anything with other object types.")
+
+    def test_get_prep_value_does_not_escape_non_ascii_characters(self):
+        # Demonstration of the earlier bug:
+        failure_demo_value = json.dumps({"nb": "Abc å"})
+        success_demo_value = json.dumps({"nb": "Abc å"}, ensure_ascii=False)
+        self.assertNotIn("å", failure_demo_value)
+        self.assertIn("å", success_demo_value)
+        self.assertEqual(failure_demo_value, r'{"nb": "Abc \u00e5"}')
+
+        field = MultiLingualTextField()
+        content = {
+            "nb": "Test æøå",
+            "en": "Test ???",
+        }
+        structure = MultiLingualTextStructure(json.dumps(content), False)
+        self.assertIn('"nb": "Test æøå"', field.get_prep_value(structure))
 
     def test_from_db_value(self):
         """

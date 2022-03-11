@@ -8,6 +8,7 @@ from django.db.models import F, Prefetch
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from users.models import User
 from util.validators import lowercase_slug_validator
@@ -40,11 +41,11 @@ class MachineType(models.Model):
         choices=UsageRequirement.choices,
         max_length=4,
         default=UsageRequirement.IS_AUTHENTICATED,
-        verbose_name=_("Usage requirement"),
+        verbose_name=_("usage requirement"),
     )
     has_stream = models.BooleanField(default=False)
     priority = models.IntegerField(
-        verbose_name=_("Priority"),
+        verbose_name=_("priority"),
         help_text=_("The machine types are sorted ascending by this value."),
     )
 
@@ -113,7 +114,7 @@ class Machine(models.Model):
 
     STATUS_CHOICES_DICT = dict(Status.choices)
 
-    name = UnlimitedCharField(unique=True, verbose_name=_("Name"))
+    name = UnlimitedCharField(unique=True, verbose_name=_("name"))
     stream_name = models.CharField(
         blank=True,
         max_length=50,
@@ -122,20 +123,20 @@ class Machine(models.Model):
         verbose_name=_("stream name"),
         help_text=_("Used for connecting to the machine's stream."),
     )
-    machine_model = UnlimitedCharField(verbose_name=_("Machine model"))
+    machine_model = UnlimitedCharField(verbose_name=_("machine model"))
     machine_type = models.ForeignKey(
         to=MachineType,
         on_delete=models.PROTECT,
         related_name='machines',
-        verbose_name=_("Machine type"),
+        verbose_name=_("machine type"),
     )
-    location = UnlimitedCharField(verbose_name=_("Location"))
-    location_url = URLTextField(verbose_name=_("Location URL"))
-    status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("Status"))
+    location = UnlimitedCharField(verbose_name=_("location"))
+    location_url = URLTextField(verbose_name=_("location URL"))
+    status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("status"))
     priority = models.IntegerField(
         null=True,
         blank=True,
-        verbose_name=_("Priority"),
+        verbose_name=_("priority"),
         help_text=_("If specified, the machines are sorted ascending by this value."),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
@@ -187,8 +188,10 @@ class MachineUsageRule(models.Model):
         on_delete=models.CASCADE,
         related_name='usage_rule',
     )
-    content = MultiLingualRichTextUploadingField()
+    content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(excluded_fields=['last_modified'])
 
     def __str__(self):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)

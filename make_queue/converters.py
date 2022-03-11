@@ -1,31 +1,32 @@
+from users.models import User
+from util.url_utils import SpecificObjectConverter
 from .models.machine import Machine, MachineType
 from .models.reservation import Reservation
 
 
-class SpecificMachineType:
-    regex = "([0-9]+)"
+class SpecificMachineType(SpecificObjectConverter):
+    model = MachineType
+
+
+class SpecificMachine(SpecificObjectConverter):
+    model = Machine
+
+
+class SpecificReservation(SpecificObjectConverter):
+    model = Reservation
+
+
+class UserByUsername:
+    regex = r"([-0-9A-Za-z.]*)"
 
     def to_python(self, value):
         try:
-            return MachineType.objects.get(pk=int(value))
-        except MachineType.DoesNotExist:
-            raise ValueError("No machine type for that key")
+            return User.objects.get(username=value)
+        except User.DoesNotExist:
+            raise ValueError("No user with that username")
 
-    def to_url(self, machine_type: MachineType):
-        return str(machine_type.pk)
-
-
-class SpecificMachine:
-    regex = "([0-9]+)"
-
-    def to_python(self, value):
-        try:
-            return Machine.objects.get(pk=int(value))
-        except Machine.DoesNotExist:
-            raise ValueError("No machine for that key")
-
-    def to_url(self, machine: Machine):
-        return str(machine.pk)
+    def to_url(self, user: User):
+        return user.username
 
 
 class Year:

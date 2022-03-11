@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newsbase',
             name='clickbait',
-            field=web.multilingual.modelfields.MultiLingualTextField(max_length=300, verbose_name='Clickbait'),
+            field=web.multilingual.modelfields.MultiLingualTextField(max_length=300, verbose_name='clickbait'),
         ),
     ]
