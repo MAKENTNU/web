@@ -2,6 +2,8 @@
 {% load i18n %}
 
 
+{% block title %}{{ form_title|striptags }}{% endblock title %}
+
 {% block field_pre_content %}
     {% if field.name == 'content' %}
         {% for error in field.errors.as_data %}

@@ -2,17 +2,14 @@ from django import forms
 from django.conf import settings
 
 from web.multilingual.data_structures import MultiLingualTextStructure
-from web.multilingual.widgets import MultiLingualRichTextUploading
+from web.multilingual.widgets import MultiLingualRichTextUploading, MultiLingualTextInput
 from .models import ContentBox
 
 
 class ContentBoxForm(forms.ModelForm):
-    # The expected names of the subwidgets (one for each language) of `MultiLingualFormField`
-    CONTENT_SUBWIDGET_NAMES = [f'content_{language}' for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES]
-
     class Meta:
         model = ContentBox
-        fields = ('content',)
+        fields = ('title', 'content',)
 
     def __init__(self, *args, single_language: str = False, content_extra_widget_kwargs: dict = None, **kwargs):
         """
@@ -28,23 +25,39 @@ class ContentBoxForm(forms.ModelForm):
 
         super().__init__(*args, **kwargs)
 
+        # Overwrite the form field of `title`
+        if self.single_language:
+            self.fields['title'] = ContentBox._meta.get_field('title').formfield(
+                languages=[self.single_language],
+                widget=MultiLingualTextInput(languages=[self.single_language]),
+            )
+
         # Overwrite the form field of `content`
-        form_field_kwargs = {
+        content_form_field_kwargs = {
             'widget': MultiLingualRichTextUploading(**self.content_extra_widget_kwargs),
         }
         if self.single_language:
-            form_field_kwargs['languages'] = [self.single_language]
-        self.fields['content'] = ContentBox._meta.get_field('content').formfield(**form_field_kwargs)
+            content_form_field_kwargs['languages'] = [self.single_language]
+        self.fields['content'] = ContentBox._meta.get_field('content').formfield(**content_form_field_kwargs)
+
+    def clean_title(self):
+        title: MultiLingualTextStructure = self.cleaned_data['title']
+        if title:
+            self._set_same_content_for_languages_if_single_language(title)
+        return title
 
     def clean_content(self):
         content: MultiLingualTextStructure = self.cleaned_data['content']
         if content:
-            if self.single_language:
-                single_language_content = content[self.single_language]
-                # Set the same content for all languages
-                for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
-                    content[language] = single_language_content
+            self._set_same_content_for_languages_if_single_language(content)
         return content
+
+    def _set_same_content_for_languages_if_single_language(self, text_structure: MultiLingualTextStructure):
+        if self.single_language:
+            single_language_content = text_structure[self.single_language]
+            # Set the same JSON content for all languages
+            for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
+                text_structure[language] = single_language_content
 
 
 class EditSourceContentBoxForm(ContentBoxForm):

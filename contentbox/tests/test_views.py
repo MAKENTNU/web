@@ -11,11 +11,12 @@ from django_hosts import reverse
 from users.models import User
 from util.auth_utils import get_perm
 from util.test_utils import assertRedirectsWithPathPrefix
+from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from .urls import hosts, urls_main
 from .urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
-from .urls.urls_internal import INTERNAL_TEST_TITLE, internal_change_perm
-from .urls.urls_main import TEST_MULTI_TITLES, TEST_TITLE
+from .urls.urls_internal import INTERNAL_TEST_URL_NAME, internal_change_perm
+from .urls.urls_main import TEST_MULTI_URL_NAMES, TEST_URL_NAME
 from ..forms import ContentBoxForm, EditSourceContentBoxForm
 from ..models import ContentBox
 
@@ -25,34 +26,30 @@ from ..models import ContentBox
 class SimpleModelAndViewTests(TestCase):
 
     def setUp(self):
-        self.content_box1 = ContentBox.objects.create(title=TEST_TITLE)
+        self.content_box1 = ContentBox.objects.create(url_name=TEST_URL_NAME)
         self.edit_url1 = reverse('contentbox_edit', args=[self.content_box1.pk])
 
-    def test_str(self):
-        self.assertEqual(self.content_box1.title, TEST_TITLE)
-        self.assertEqual(str(self.content_box1), self.content_box1.title)
-
     def test_get_content_box_retrieves_correctly(self):
-        paths_to_test = (reverse(TEST_TITLE), f'/{TEST_TITLE}/')
+        paths_to_test = (reverse(TEST_URL_NAME), f'/{TEST_URL_NAME}/')
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
-                self.assertEqual(response.context['contentbox'].title, TEST_TITLE)
+                self.assertEqual(response.context['contentbox'].url_name, TEST_URL_NAME)
 
     def test_all_paths_of_multi_path_content_box_retrieve_correctly(self):
-        multi_path_content_box_title = TEST_MULTI_TITLES[0]
+        multi_path_content_box_url_name = TEST_MULTI_URL_NAMES[0]
         paths_to_test = (
-            reverse(multi_path_content_box_title),
-            *(f'/{url}/' for url in TEST_MULTI_TITLES),
+            reverse(multi_path_content_box_url_name),
+            *(f'/{url}/' for url in TEST_MULTI_URL_NAMES),
         )
         for path in paths_to_test:
             with self.subTest(path=path):
                 response = self.client.get(path)
                 self.assertEqual(response.status_code, HTTPStatus.OK)
                 self.assertIn('contentbox', response.context)
-                self.assertEqual(response.context['contentbox'].title, multi_path_content_box_title)
+                self.assertEqual(response.context['contentbox'].url_name, multi_path_content_box_url_name)
 
     def test_visiting_edit_page_is_only_allowed_for_users_with_permission(self):
         user = User.objects.create_user(username="user1")
@@ -71,7 +68,8 @@ class SimpleModelAndViewTests(TestCase):
 
         def assert_response_contains_error_message(posted_content: str, error: bool):
             data = {
-                subwidget_name: posted_content for subwidget_name in ContentBoxForm.CONTENT_SUBWIDGET_NAMES
+                **{subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')},
+                **{subwidget_name: posted_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')},
             }
             response = self.client.post(self.edit_url1, data=data)
             # The form will redirect if valid, and stay on the same page if not
@@ -138,10 +136,10 @@ class MultiSubdomainTests(TestCase):
         self.internal_admin_admin_client.force_login(self.internal_admin)
 
         # Creates the content boxes by requesting them
-        self.internal_user_public_client.get(reverse(TEST_TITLE))
-        self.internal_user_internal_client.get(reverse(INTERNAL_TEST_TITLE, host='test_internal'))
-        self.public_content_box = ContentBox.objects.get(title=TEST_TITLE)
-        self.internal_content_box = ContentBox.objects.get(title=INTERNAL_TEST_TITLE)
+        self.internal_user_public_client.get(reverse(TEST_URL_NAME))
+        self.internal_user_internal_client.get(reverse(INTERNAL_TEST_URL_NAME, host='test_internal'))
+        self.public_content_box = ContentBox.objects.get(url_name=TEST_URL_NAME)
+        self.internal_content_box = ContentBox.objects.get(url_name=INTERNAL_TEST_URL_NAME)
 
         self.public_edit_url = reverse('contentbox_edit', kwargs={'pk': self.public_content_box.pk})
         self.public_admin_edit_url = reverse('admin:contentbox_contentbox_change', args=[self.public_content_box.pk], host='admin')

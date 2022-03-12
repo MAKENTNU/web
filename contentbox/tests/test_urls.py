@@ -13,7 +13,7 @@ from util.auth_utils import get_perm
 from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
 from web.hosts import host_patterns
 from web.multilingual.data_structures import MultiLingualTextStructure
-from ..forms import ContentBoxForm
+from web.multilingual.widgets import MultiLingualTextEdit
 from ..models import ContentBox
 from ..views import DisplayContentBoxView
 
@@ -210,7 +210,8 @@ class UrlTests(TestCase):
         change_url = reverse('contentbox_edit', args=[content_box.pk])
         for original_content, bleached_content in original_content__bleached_content__tuples:
             response = client.post(change_url, {
-                subwidget_name: original_content for subwidget_name in ContentBoxForm.CONTENT_SUBWIDGET_NAMES
+                **{subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')},
+                **{subwidget_name: original_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')},
             })
             # `url` contains a relative scheme and a host, so only compare the paths
             self.assertRedirects(response, urlparse(url).path)

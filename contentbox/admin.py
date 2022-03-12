@@ -3,12 +3,15 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
+from util.admin_utils import search_escaped_and_unescaped
 from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import ContentBox
 
 
 class ContentBoxAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
-    list_display = ('title', 'get_extra_change_permissions', 'last_modified')
+    list_display = ('url_name', 'title', 'get_extra_change_permissions', 'last_modified')
+    search_fields = ('url_name', 'title', 'content')
+    ordering = ('title',)
 
     filter_horizontal = ('extra_change_permissions',)
     readonly_fields = ('last_modified',)
@@ -24,6 +27,9 @@ class ContentBoxAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
             return has_base_change_perm
 
         return has_base_change_perm and request.user.has_perms(obj.extra_change_perms_str_tuple)
+
+    def get_search_results(self, request, queryset, search_term):
+        return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
 admin.site.register(ContentBox, ContentBoxAdmin)

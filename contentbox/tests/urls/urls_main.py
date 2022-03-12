@@ -4,12 +4,12 @@ from web.urls import urlpatterns as base_urlpatterns
 from ...views import DisplayContentBoxView
 
 
-TEST_TITLE = 'test_title'
-TEST_MULTI_TITLES = ('test_main', 'test_alt1', 'test_alt2')
+TEST_URL_NAME = 'test_url_name'
+TEST_MULTI_URL_NAMES = ('test_main', 'test_alt1', 'test_alt2')
 
 urlpatterns = i18n_patterns(
-    DisplayContentBoxView.get_path(TEST_TITLE),
-    *DisplayContentBoxView.get_multi_path(*TEST_MULTI_TITLES),
+    DisplayContentBoxView.get_path(TEST_URL_NAME),
+    *DisplayContentBoxView.get_multi_path(*TEST_MULTI_URL_NAMES),
 
     prefix_default_language=False,
 ) + base_urlpatterns

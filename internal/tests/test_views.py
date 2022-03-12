@@ -32,7 +32,7 @@ class InternalContentBoxTests(TestCase):
         self.home_url = reverse_internal('home')
         # Creates the content box by requesting it
         self.internal_user_client.get(self.home_url)
-        self.home_content_box = ContentBox.objects.get(title='home')
+        self.home_content_box = ContentBox.objects.get(url_name='home')
         # Add these extra change perms (mainly `internal.can_change_rich_text_source`),
         # so that the content box uses the form that allows editing the HTML source code
         self.home_content_box.extra_change_permissions.add(*get_perms(*internal_admin_perms))
@@ -50,16 +50,16 @@ class InternalContentBoxTests(TestCase):
         self.assertEqual(self.internal_user_client.get(self.home_edit_url).status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(self.internal_admin_client.get(self.home_edit_url).status_code, HTTPStatus.OK)
 
-    def test_internal_content_boxes_only_contain_edit_buttons_when_user_has_required_permission(self):
+    def test_internal_content_boxes_only_contain_visible_edit_buttons_when_user_has_required_permission(self):
         home_content_box_edit_path = f"/contentbox/{self.home_content_box.pk}/edit/"
 
-        def assert_edit_button_in_response(should_button_be_present: bool, client: Client):
+        def assert_visible_edit_button_in_response(should_button_be_present: bool, client: Client):
             response_html = client.get(self.home_url).content.decode()
-            self.assertInHTML('<i class="edit icon">', response_html, count=1 if should_button_be_present else 0)
+            self.assertEqual("hidden edit-button" in response_html, not should_button_be_present)
             self.assertEqual(home_content_box_edit_path in response_html, should_button_be_present)
 
-        assert_edit_button_in_response(False, self.internal_user_client)
-        assert_edit_button_in_response(True, self.internal_admin_client)
+        assert_visible_edit_button_in_response(False, self.internal_user_client)
+        assert_visible_edit_button_in_response(True, self.internal_admin_client)
 
     def test_home_content_box_allows_editing_source(self):
         response = self.internal_admin_client.get(self.home_edit_url)
@@ -95,9 +95,10 @@ class InternalContentBoxTests(TestCase):
             with self.subTest(content_box=content_box):
                 edit_url = reverse_internal('contentbox_edit', pk=content_box.pk)
                 response = self.internal_admin_client.post(edit_url, {
+                    f'title_{settings.LANGUAGE_CODE}': "Mock Title",
                     f'content_{settings.LANGUAGE_CODE}': mock_content,
                 })
-                display_url = reverse_internal(content_box.title)
+                display_url = reverse_internal(content_box.url_name)
                 # `display_url` contains a relative scheme and a host, so only compare the paths
                 self.assertRedirects(response, urlparse(display_url).path)
                 content_box.refresh_from_db()

@@ -13,7 +13,6 @@ from .models import Equipment
 
 class MakerspaceView(DisplayContentBoxView):
     template_name = 'makerspace/makerspace.html'
-    title = 'makerspace'
 
 
 class EquipmentDetailView(DetailView):

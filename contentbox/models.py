@@ -4,15 +4,18 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
 from util.auth_utils import perm_to_str
-from web.multilingual.modelfields import MultiLingualRichTextUploadingField
+from util.validators import lowercase_slug_validator
+from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
 class ContentBox(models.Model):
-    title = models.CharField(
+    url_name = models.CharField(
         max_length=100,
         unique=True,
-        verbose_name=_("title"),
+        validators=[lowercase_slug_validator],
+        verbose_name=_("URL name"),
     )
+    title = MultiLingualTextField(verbose_name=_("title"))
     content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
     extra_change_permissions = models.ManyToManyField(
         to=Permission,
@@ -36,7 +39,7 @@ class ContentBox(models.Model):
         verbose_name_plural = "content boxes"
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
     @property
     def extra_change_perms_str_tuple(self):

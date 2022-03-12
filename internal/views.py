@@ -25,7 +25,6 @@ class HomeView(DisplayContentBoxView):
     }
 
     change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)
-    title = 'home'
 
 
 class EditInternalContentBoxView(EditContentBoxView):

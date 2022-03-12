@@ -50,7 +50,7 @@ class UrlTests(TestCase):
         self.member_client.login(username=member_user, password=password)
         self.member_editor_client.login(username=member_editor_user, password=password)
 
-        self.home_content_box = ContentBox.objects.create(title='home')
+        self.home_content_box = ContentBox.objects.create(url_name='home')
         self.secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
         self.secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
         self.secrets = (self.secret1, self.secret2)
@@ -138,7 +138,7 @@ class UrlTests(TestCase):
 
     def test_all_non_member_get_request_paths_succeed(self):
         path_predicates = [
-            Get(reverse_internal(self.home_content_box.title), public=False),
+            Get(reverse_internal(self.home_content_box.url_name), public=False),
             Get(reverse_internal('contentbox_edit', pk=self.home_content_box.pk), public=False),
             Get(reverse_internal('secret_list'), public=False),
             Get(reverse_internal('create_secret'), public=False),

@@ -36,7 +36,7 @@ contentbox_urlpatterns = [
 ]
 
 about_urlpatterns = [
-    path("", views.AboutUsView.as_view(title='about'), name='about'),
+    path("", views.AboutUsView.as_view(url_name='about'), name='about'),
     DisplayContentBoxView.get_path('contact'),
 ]
 

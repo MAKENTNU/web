@@ -44,7 +44,7 @@ msgstr ""
 "Hvis valgt vil kunngjøringen vises på hele nettsiden, ellers vil den kun "
 "vises på forsiden."
 
-#: announcements/models.py:42 contentbox/models.py:16 docs/models.py:45
+#: announcements/models.py:42 contentbox/models.py:19 docs/models.py:45
 #: make_queue/models/machine.py:191 news/models.py:37
 msgid "content"
 msgstr "innhold"
@@ -195,7 +195,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile.html:97 docs/views.py:85
-#: internal/views.py:111
+#: internal/views.py:110
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:19
@@ -286,7 +286,7 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:100
 #: docs/templates/docs/documentation_page_detail.html:46
-#: news/templates/news/admin_article_list.html:51
+#: news/templates/news/admin_article_list.html:55
 #: news/templates/news/admin_event_detail.html:32
 #: news/templates/news/admin_timeplace_listing.html:41
 #: web/templates/web/delete_modal.html:16
@@ -305,20 +305,24 @@ msgstr "Ferdigheten finnes allerede!"
 msgid "Skill added!"
 msgstr "Ferdighet lagt til!"
 
-#: contentbox/admin.py:17 contentbox/models.py:21
+#: contentbox/admin.py:20 contentbox/models.py:24
 msgid "extra change permissions"
 msgstr "ekstra endringsrettigheter"
 
-#: contentbox/models.py:14 docs/models.py:15 internal/models.py:245
+#: contentbox/models.py:16
+msgid "URL name"
+msgstr "URL-navn"
+
+#: contentbox/models.py:18 docs/models.py:15 internal/models.py:245
 #: makerspace/models.py:20 news/models.py:36
 msgid "title"
 msgstr "tittel"
 
-#: contentbox/models.py:22
+#: contentbox/models.py:25
 msgid "Extra permissions that are required for editing the content box."
 msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 
-#: contentbox/models.py:24 docs/models.py:54 faq/models.py:42
+#: contentbox/models.py:27 docs/models.py:54 faq/models.py:42
 #: groups/models.py:35 groups/models.py:103 internal/models.py:60
 #: internal/models.py:201 internal/models.py:254
 #: internal/templates/internal/secret_list.html:43
@@ -328,31 +332,26 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 msgid "last modified"
 msgstr "sist endret"
 
-#: contentbox/templates/contentbox/display.html:16
+#: contentbox/templates/contentbox/display.html:17 contentbox/views.py:70
 #: docs/templates/docs/documentation_page_detail.html:39
 #: faq/templates/faq/faq_list.html:38
 #: make_queue/templates/make_queue/usage_rules_detail.html:20
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:33
-#: news/templates/news/admin_article_list.html:45
+#: news/templates/news/admin_article_list.html:49
 #: news/templates/news/admin_event_detail.html:38
 #: news/templates/news/admin_timeplace_listing.html:33
 #: news/templates/news/article_detail.html:37
 msgid "Edit"
 msgstr "Rediger"
 
-#: contentbox/templates/contentbox/edit.html:11
+#: contentbox/templates/contentbox/edit.html:13
 msgid "Missing language"
 msgstr "Manglende språk"
 
-#: contentbox/views.py:69 docs/views.py:130
-#, python-brace-format
-msgid "Edit “{title}”"
-msgstr "Rediger «{title}»"
-
-#: contentbox/views.py:75 docs/views.py:136
-#, python-brace-format
-msgid "View “{title}”"
-msgstr "Se «{title}»"
+#: contentbox/views.py:81
+msgctxt "view page"
+msgid "View"
+msgstr "Se"
 
 #: docs/forms.py:25
 msgid "The page is currently empty; please add some content."
@@ -495,6 +494,16 @@ msgstr "Lag en ny side"
 #: docs/views.py:84
 msgid "Documentation home page"
 msgstr "Hjemmeside for dokumentasjon"
+
+#: docs/views.py:130
+#, python-brace-format
+msgid "Edit “{title}”"
+msgstr "Rediger «{title}»"
+
+#: docs/views.py:136
+#, python-brace-format
+msgid "View “{title}”"
+msgstr "Se «{title}»"
 
 #: faq/admin.py:19 faq/models.py:28 faq/models.py:40
 #: faq/templates/faq/admin_category_list.html:6
@@ -842,8 +851,8 @@ msgid "Log out"
 msgstr "Logg ut"
 
 #: internal/templates/internal/member_list.html:10
-#: internal/templates/internal/member_list.html:20 internal/views.py:102
-#: internal/views.py:194
+#: internal/templates/internal/member_list.html:20 internal/views.py:101
+#: internal/views.py:193
 msgid "Member list"
 msgstr "Medlemsliste"
 
@@ -946,11 +955,11 @@ msgstr "registrerte medlemmer"
 msgid "Basic information"
 msgstr "Grunnleggende informasjon"
 
-#: internal/templates/internal/member_list.html:285 internal/views.py:167
+#: internal/templates/internal/member_list.html:285 internal/views.py:166
 msgid "Membership information"
 msgstr "Medlemskapsinformasjon"
 
-#: internal/templates/internal/member_list.html:341 internal/views.py:161
+#: internal/templates/internal/member_list.html:341 internal/views.py:160
 msgid "Extra information"
 msgstr "Ekstrainformasjon"
 
@@ -1007,41 +1016,41 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: internal/views.py:58
+#: internal/views.py:57
 msgid "Secrets list"
 msgstr "Liste med hemmeligheter"
 
-#: internal/views.py:64
+#: internal/views.py:63
 msgid "New Secret"
 msgstr "Ny hemmelighet"
 
-#: internal/views.py:70
+#: internal/views.py:69
 msgid "Edit Secret"
 msgstr "Rediger hemmelighet"
 
-#: internal/views.py:109
+#: internal/views.py:108
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
 
-#: internal/views.py:148
+#: internal/views.py:147
 #, python-brace-format
 msgid "Change Information for {full_name}"
 msgstr "Endre informasjonen til {full_name}"
 
-#: internal/views.py:195
+#: internal/views.py:194
 msgid "Set retired"
 msgstr "Sett panget"
 
-#: internal/views.py:201
+#: internal/views.py:200
 #, python-brace-format
 msgid "Set member {name} as retired"
 msgstr "Sett medlem {name} som pang"
 
-#: internal/views.py:213
+#: internal/views.py:212
 msgid "Set quit"
 msgstr "Sett sluttet"
 
-#: internal/views.py:219
+#: internal/views.py:218
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
@@ -1798,14 +1807,6 @@ msgstr "Maskinen har status «{status}»."
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall framtidige reservasjoner."
 
-#: make_queue/validators.py:10
-msgid ""
-"This can only consist of lowercase English letters, numbers, hyphens or "
-"underscores."
-msgstr ""
-"Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
-"understreker."
-
 #: make_queue/views/admin/quota.py:49 make_queue/views/admin/quota.py:75
 msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"
@@ -1970,15 +1971,15 @@ msgstr "Regler"
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
-#: makerspace/views.py:48
+#: makerspace/views.py:47
 msgid "Admin page for equipment"
 msgstr "Administrasjonsside for utstyr"
 
-#: makerspace/views.py:54
+#: makerspace/views.py:53
 msgid "New Equipment"
 msgstr "Nytt utstyr"
 
-#: makerspace/views.py:60
+#: makerspace/views.py:59
 msgid "Edit Equipment"
 msgstr "Rediger utstyr"
 
@@ -2030,8 +2031,8 @@ msgid "event hidden"
 msgstr "arrangement skjult"
 
 #: news/admin.py:255 news/models.py:45 news/models.py:213
-#: news/templates/news/admin_article_list.html:31
-#: news/templates/news/admin_event_list.html:39
+#: news/templates/news/admin_article_list.html:35
+#: news/templates/news/admin_event_list.html:43
 #: news/templates/news/admin_timeplace_listing.html:27
 msgid "hidden"
 msgstr "skjult"
@@ -2104,13 +2105,13 @@ msgstr ""
 msgid "don't crop the image"
 msgstr "ikke crop bildet"
 
-#: news/models.py:44 news/templates/news/admin_article_list.html:25
-#: news/templates/news/admin_event_list.html:33
+#: news/models.py:44 news/templates/news/admin_article_list.html:29
+#: news/templates/news/admin_event_list.html:37
 msgid "featured"
 msgstr "fremhevet"
 
-#: news/models.py:46 news/templates/news/admin_article_list.html:37
-#: news/templates/news/admin_event_list.html:45
+#: news/models.py:46 news/templates/news/admin_article_list.html:41
+#: news/templates/news/admin_event_list.html:49
 msgid "internal"
 msgstr "internt"
 
@@ -2219,6 +2220,12 @@ msgstr ""
 msgid "Articles"
 msgstr "Artikler"
 
+#: news/templates/news/admin_article_list.html:19
+#: news/templates/news/article_list_contents.html:17
+#, python-format
+msgid "View the article “%(title)s”; image description: %(description)s"
+msgstr "Vis artikkelen «%(title)s»; bildebeskrivelse: %(description)s"
+
 #: news/templates/news/admin_event_detail.html:21 news/views.py:279
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
@@ -2296,14 +2303,20 @@ msgstr "Ingen framtidige forekomster finnes for dette arrangementet"
 msgid "No past occurrences exist for this event"
 msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
-#: news/templates/news/admin_event_list.html:24
+#: news/templates/news/admin_event_list.html:18
+#: news/templates/news/event_list_contents.html:36
+#, python-format
+msgid "View the event “%(title)s”; image description: %(description)s"
+msgstr "Vis arrangementet «%(title)s»; bildebeskrivelse: %(description)s"
+
+#: news/templates/news/admin_event_list.html:28
 #, python-format
 msgid "1 future occurrence"
 msgid_plural "%(counter)s future occurrences"
 msgstr[0] "1 framtidig forekomst"
 msgstr[1] "%(counter)s framtidige forekomster"
 
-#: news/templates/news/admin_event_list.html:52
+#: news/templates/news/admin_event_list.html:56
 msgid "Admin"
 msgstr "Admin"
 
@@ -2561,6 +2574,14 @@ msgstr ""
 #: users/models.py:10
 msgid "full name from LDAP"
 msgstr "fullt navn fra LDAP"
+
+#: util/validators.py:10
+msgid ""
+"This can only consist of lowercase English letters, numbers, hyphens or "
+"underscores."
+msgstr ""
+"Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
+"understreker."
 
 #: util/view_utils.py:31
 msgid "Save"

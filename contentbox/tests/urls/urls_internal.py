@@ -5,7 +5,7 @@ from internal.urls import urlpatterns as internal_urlpatterns
 from ...views import DisplayContentBoxView, EditContentBoxView
 
 
-INTERNAL_TEST_TITLE = 'internal_test_title'
+INTERNAL_TEST_URL_NAME = 'internal_test_url_name'
 internal_change_perm = 'contentbox.perm1'
 
 
@@ -18,7 +18,7 @@ class InternalDisplayContentBoxView(DisplayContentBoxView):
 
 
 urlpatterns = i18n_patterns(
-    InternalDisplayContentBoxView.get_path(INTERNAL_TEST_TITLE),
+    InternalDisplayContentBoxView.get_path(INTERNAL_TEST_URL_NAME),
     path("contentbox/<int:pk>/edit/",
          EditContentBoxView.as_view(
              permission_required=EditContentBoxView.permission_required + (internal_change_perm,),

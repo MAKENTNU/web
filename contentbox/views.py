@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import path, reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _, pgettext
 from django.views.generic import DetailView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin
@@ -19,10 +20,10 @@ class DisplayContentBoxView(DetailView):
     change_perms = ('contentbox.change_contentbox',)
 
     # The value of this field is set when calling the view's `as_view()` method
-    title = ""
+    url_name = None
 
     def get_object(self, queryset=None):
-        contentbox, _created = ContentBox.objects.get_or_create(title=self.title)
+        contentbox, _created = ContentBox.objects.get_or_create(url_name=self.url_name)
         return contentbox
 
     def get_context_data(self, **kwargs):
@@ -35,15 +36,15 @@ class DisplayContentBoxView(DetailView):
         return self.change_perms + self.get_object().extra_change_perms_str_tuple
 
     @classmethod
-    def get_path(cls, title: str):
-        return path(f'{title}/', cls.as_view(title=title), name=title)
+    def get_path(cls, url_name: str):
+        return path(f'{url_name}/', cls.as_view(url_name=url_name), name=url_name)
 
     @classmethod
-    def get_multi_path(cls, title: str, alt_url1: str, *other_alt_urls: str) -> tuple:
+    def get_multi_path(cls, url_name: str, alt_url1: str, *other_alt_urls: str) -> tuple:
         alt_urls = (alt_url1, *other_alt_urls)
         return (
-            path(f'{title}/', cls.as_view(title=title), name=title),
-            *(path(f'{url}/', cls.as_view(title=title)) for url in alt_urls),
+            path(f'{url_name}/', cls.as_view(url_name=url_name), name=url_name),
+            *(path(f'{url}/', cls.as_view(url_name=url_name)) for url in alt_urls),
         )
 
 
@@ -66,13 +67,18 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
         return super().get_form_class()
 
     def get_form_title(self):
-        return _("Edit “{title}”").format(title=self.object.title)
+        return self._get_page_title(_("Edit"))
+
+    def _get_page_title(self, prefixed_verb: str = None):
+        prefix = f"{prefixed_verb} " if prefixed_verb else ""
+        html_text = f"{prefix}<code>{self.object.url_name}</code> (<code>{self.get_success_url()}</code>)"
+        return mark_safe(html_text)
 
     def get_back_button_link(self):
         return self.get_success_url()
 
     def get_back_button_text(self):
-        return _("View “{title}”").format(title=self.object.title)
+        return self._get_page_title(pgettext("view page", "View"))
 
     def get_success_url(self):
-        return reverse(self.object.title)
+        return reverse(self.object.url_name)
