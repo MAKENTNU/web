@@ -11,6 +11,7 @@ from django_hosts import reverse
 from users.models import User
 from util.auth_utils import get_perm
 from util.test_utils import assertRedirectsWithPathPrefix
+from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from .urls import hosts, urls_main
 from .urls.hosts import TEST_INTERNAL_CLIENT_DEFAULTS
@@ -67,7 +68,8 @@ class SimpleModelAndViewTests(TestCase):
 
         def assert_response_contains_error_message(posted_content: str, error: bool):
             data = {
-                subwidget_name: posted_content for subwidget_name in ContentBoxForm.CONTENT_SUBWIDGET_NAMES
+                **{subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')},
+                **{subwidget_name: posted_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')},
             }
             response = self.client.post(self.edit_url1, data=data)
             # The form will redirect if valid, and stay on the same page if not

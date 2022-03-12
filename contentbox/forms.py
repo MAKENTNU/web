@@ -7,9 +7,6 @@ from .models import ContentBox
 
 
 class ContentBoxForm(forms.ModelForm):
-    # The expected names of the subwidgets (one for each language) of `MultiLingualFormField`
-    CONTENT_SUBWIDGET_NAMES = [f'content_{language}' for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES]
-
     class Meta:
         model = ContentBox
         fields = ('title', 'content',)

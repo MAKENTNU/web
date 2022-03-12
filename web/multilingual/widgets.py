@@ -62,6 +62,14 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
         return context
 
+    @staticmethod
+    def get_subwidget_names(field_name: str, languages=MultiLingualTextStructure.SUPPORTED_LANGUAGES):
+        """
+        :return: The expected names of the subwidgets (one for each language) of the provided ``field_name``
+                 (which should be a ``MultiLingualFormField``).
+        """
+        return [f'{field_name}_{language}' for language in languages]
+
 
 class MultiLingualTextInput(MultiLingualTextEdit):
     subwidget_class = forms.TextInput

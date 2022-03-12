@@ -95,6 +95,7 @@ class InternalContentBoxTests(TestCase):
             with self.subTest(content_box=content_box):
                 edit_url = reverse_internal('contentbox_edit', pk=content_box.pk)
                 response = self.internal_admin_client.post(edit_url, {
+                    f'title_{settings.LANGUAGE_CODE}': "Mock Title",
                     f'content_{settings.LANGUAGE_CODE}': mock_content,
                 })
                 display_url = reverse_internal(content_box.url_name)
