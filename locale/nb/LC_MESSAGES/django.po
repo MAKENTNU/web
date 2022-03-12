@@ -348,15 +348,10 @@ msgstr "Rediger"
 msgid "Missing language"
 msgstr "Manglende språk"
 
-#: contentbox/views.py:69 docs/views.py:130
-#, python-brace-format
-msgid "Edit “{title}”"
-msgstr "Rediger «{title}»"
-
-#: contentbox/views.py:75 docs/views.py:136
-#, python-brace-format
-msgid "View “{title}”"
-msgstr "Se «{title}»"
+#: contentbox/views.py:81
+msgctxt "view page"
+msgid "View"
+msgstr "Se"
 
 #: docs/forms.py:25
 msgid "The page is currently empty; please add some content."
@@ -499,6 +494,16 @@ msgstr "Lag en ny side"
 #: docs/views.py:84
 msgid "Documentation home page"
 msgstr "Hjemmeside for dokumentasjon"
+
+#: docs/views.py:130
+#, python-brace-format
+msgid "Edit “{title}”"
+msgstr "Rediger «{title}»"
+
+#: docs/views.py:136
+#, python-brace-format
+msgid "View “{title}”"
+msgstr "Se «{title}»"
 
 #: faq/admin.py:19 faq/models.py:28 faq/models.py:40
 #: faq/templates/faq/admin_category_list.html:6

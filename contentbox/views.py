@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import path, reverse
-from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext as _, pgettext
 from django.views.generic import DetailView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin
@@ -66,13 +67,18 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
         return super().get_form_class()
 
     def get_form_title(self):
-        return _("Edit “{title}”").format(title=self.get_success_url())
+        return self._get_page_title(_("Edit"))
+
+    def _get_page_title(self, prefixed_verb: str = None):
+        prefix = f"{prefixed_verb} " if prefixed_verb else ""
+        html_text = f"{prefix}<code>{self.object.url_name}</code> (<code>{self.get_success_url()}</code>)"
+        return mark_safe(html_text)
 
     def get_back_button_link(self):
         return self.get_success_url()
 
     def get_back_button_text(self):
-        return _("View “{title}”").format(title=self.get_success_url())
+        return self._get_page_title(pgettext("view page", "View"))
 
     def get_success_url(self):
         return reverse(self.object.url_name)
