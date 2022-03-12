@@ -75,9 +75,13 @@ class DefaultAdminWidgetsMixin:
         UnlimitedCharField: {'widget': AdminTextInputWidget},
         URLTextField: {'widget': AdminURLFieldWidget},
     }
+    enable_changing_rich_text_source = False
 
     def formfield_for_dbfield(self, db_field, request, **kwargs):
-        multi_lingual_admin_formfield = create_multi_lingual_admin_formfield(db_field, **kwargs)
+        multi_lingual_admin_formfield = create_multi_lingual_admin_formfield(
+            db_field, request, **kwargs,
+            enable_changing_rich_text_source=self.enable_changing_rich_text_source,
+        )
         if multi_lingual_admin_formfield:
             return multi_lingual_admin_formfield
 

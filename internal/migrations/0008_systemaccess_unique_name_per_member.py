@@ -14,4 +14,8 @@ class Migration(migrations.Migration):
             model_name='systemaccess',
             constraint=models.UniqueConstraint(fields=('name', 'member'), name='systemaccess_unique_name_per_member'),
         ),
+        migrations.AlterModelOptions(
+            name='systemaccess',
+            options={'verbose_name': 'system access', 'verbose_name_plural': 'system accesses'},
+        ),
     ]

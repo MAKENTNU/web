@@ -27,7 +27,7 @@ class AnnouncementAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 
     @admin.display(
         ordering='link',
-        description=_("Link"),
+        description=_("link"),
     )
     def get_link(self, announcement: Announcement):
         return urlize(announcement.link) or None

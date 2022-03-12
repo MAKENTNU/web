@@ -33,7 +33,7 @@ class UserAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, DjangoUserAdmin
 
     @admin.display(
         ordering='email',
-        description=_("Email"),
+        description=_("email"),
     )
     def get_email(self, user: User):
         return urlize(user.email) or None

@@ -44,16 +44,16 @@ class UploadToUtils:
     A collection of utility methods relating to the ``upload_to`` argument of ``FileField`` and subclasses.
     ``get_pk_prefixed_filename_func()`` is the main method intended for use by other apps.
     """
-    REPLACABLE_TOKEN_START = "--replacedByPK"
-    REPLACABLE_TOKEN_MIDDLE_NUM_BYTES = 4
-    REPLACABLE_TOKEN_END = REPLACABLE_TOKEN_START[::-1]  # reverse the start part of the token
-    REPLACABLE_TOKEN_REGEX = re.compile(rf"({REPLACABLE_TOKEN_START}-[0-9a-f]+-{REPLACABLE_TOKEN_END})")
+    REPLACEABLE_TOKEN_START = "--replacedByPK"
+    REPLACEABLE_TOKEN_MIDDLE_NUM_BYTES = 4
+    REPLACEABLE_TOKEN_END = REPLACEABLE_TOKEN_START[::-1]  # reverse the start part of the token
+    REPLACEABLE_TOKEN_REGEX = re.compile(rf"({REPLACEABLE_TOKEN_START}-[0-9a-f]+-{REPLACEABLE_TOKEN_END})")
 
     @classmethod
-    def generate_replacable_token(cls):
+    def generate_replaceable_token(cls):
         # Produces the same characters as matched by the middle part of the token regex
-        token_middle = secrets.token_hex(cls.REPLACABLE_TOKEN_MIDDLE_NUM_BYTES)
-        return f"{cls.REPLACABLE_TOKEN_START}-{token_middle}-{cls.REPLACABLE_TOKEN_END}"
+        token_middle = secrets.token_hex(cls.REPLACEABLE_TOKEN_MIDDLE_NUM_BYTES)
+        return f"{cls.REPLACEABLE_TOKEN_START}-{token_middle}-{cls.REPLACEABLE_TOKEN_END}"
 
     @classmethod
     def get_pk_prefixed_filename_func(cls, upload_to: Union[str, Callable[[models.Model, str], str]]):
@@ -82,14 +82,14 @@ class UploadToUtils:
             base_path = PurePosixPath(upload_to(instance, filename))
         base_filename = base_path.name
         # Remove token if the filename already contains it (for whatever reason)
-        if cls.REPLACABLE_TOKEN_REGEX.search(base_filename):
-            first_part, _token, last_part = cls.REPLACABLE_TOKEN_REGEX.split(base_filename)
+        if cls.REPLACEABLE_TOKEN_REGEX.search(base_filename):
+            first_part, _token, last_part = cls.REPLACEABLE_TOKEN_REGEX.split(base_filename)
             base_filename = f"{first_part}{last_part}"
         # Remove the PK prefix if the filename already has it
         if instance.pk:
             base_filename = base_filename.removeprefix(f"{instance.pk}_")
 
-        prefix = instance.pk or cls.generate_replacable_token()
+        prefix = instance.pk or cls.generate_replaceable_token()
         prefixed_filename_path = base_path.with_name(f"{prefix}_{base_filename}")
         return str(prefixed_filename_path)
 
@@ -110,10 +110,10 @@ class UploadToUtils:
 
             field_value: FieldFile = getattr(instance, field.name)
             old_name = field_value.name
-            if not cls.REPLACABLE_TOKEN_REGEX.search(old_name):
+            if not cls.REPLACEABLE_TOKEN_REGEX.search(old_name):
                 continue
 
-            first_part, _token, last_part = cls.REPLACABLE_TOKEN_REGEX.split(old_name)
+            first_part, _token, last_part = cls.REPLACEABLE_TOKEN_REGEX.split(old_name)
             new_name = f"{first_part}{instance.pk}{last_part}"
 
             # Rename the actual file

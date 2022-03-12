@@ -34,9 +34,9 @@
                         </div>
                         <div class="meta">
                             {% if announcement.site_wide %}
-                                <i class="ui make-col-yellow globe icon"></i>{% trans "Site-wide" %}
+                                <i class="make-col-yellow globe icon"></i>{% trans "site-wide"|capfirst %}
                             {% else %}
-                                <i class="ui make-col-yellow home icon"></i>{% trans "Front page" %}
+                                <i class="make-col-yellow home icon"></i>{% trans "Front page" %}
                             {% endif %}
                         </div>
                         <div class="description">{{ announcement.content }}</div>

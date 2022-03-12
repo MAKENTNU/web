@@ -1,19 +1,21 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
+from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from util.admin_utils import DefaultAdminWidgetsMixin, link_to_admin_change_form, search_escaped_and_unescaped
 from .models import Category, Question
 
 
-class QuestionAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
+class QuestionAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
     list_display = ('title', 'get_categories', 'last_modified')
     list_filter = ('categories',)
     search_fields = ('title', 'answer', 'categories__name')
+
     filter_horizontal = ('categories',)
     readonly_fields = ('last_modified',)
 
-    @admin.display(description=_("Categories"))
+    @admin.display(description=_("categories"))
     def get_categories(self, question: Question):
         category_strings = [
             link_to_admin_change_form(category)

@@ -20,13 +20,13 @@ class Printer3DCourse(models.Model):
         on_delete=models.CASCADE,
         null=True,
         related_name='printer_3d_course',
-        verbose_name=_("User"),
+        verbose_name=_("user"),
     )
-    username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("Username"))
-    date = models.DateField(verbose_name=_("Course date"))
+    username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("username"))
+    date = models.DateField(verbose_name=_("course date"))
     _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
-    name = models.CharField(max_length=256, blank=True, verbose_name=_("Full name"))
-    status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("Status"))
+    name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
+    status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
     advanced_course = models.BooleanField(default=False, verbose_name=_("advanced course"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 

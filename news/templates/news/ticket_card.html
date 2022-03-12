@@ -7,7 +7,7 @@
 <div class="ui ticket card">
     {% if not ticket.active %}
         <div class="ui red cancel label">
-            {% trans "Canceled" %}
+            {% trans "canceled"|capfirst %}
         </div>
     {% endif %}
 
@@ -24,8 +24,8 @@
                         {% if not timeplace.hidden %}
                             <div class="ui item">
                                 <div class="time-place content">
-                                    <a class="calendar-button" href="{% url 'timeplace_ical' timeplace.pk %}" target="_blank">
-                                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.event timeplace.pk %}" target="_blank">
+                                        <i class="large make-col-yellow calendar plus outline icon"></i>
                                     </a>
                                     <div class="header">
                                         {{ timeplace.start_time|long_datetime_no_year }} &ndash; {{ timeplace.end_time|long_datetime_no_year }}
@@ -42,8 +42,8 @@
                 </div>
             {% else %}
                 <div class="time-place content">
-                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.timeplace.pk %}" target="_blank">
-                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
+                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.timeplace.event ticket.timeplace.pk %}" target="_blank">
+                        <i class="large make-col-yellow calendar plus outline icon"></i>
                     </a>
                     <b>
                         {{ ticket.timeplace.start_time|long_datetime_no_year }} &ndash; {{ ticket.timeplace.end_time|long_datetime_no_year }}
@@ -68,8 +68,13 @@
             </a>
         {% endif %}
     {% elif perms.news.cancel_ticket %}
-        <a class="ui green bottom attached button" href="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
+        <button class="ui green bottom attached button" type="submit"
+                onclick="$('#reactivate-form-{{ ticket.pk }}').submit();">
             {% trans "Reactivate ticket" %}
-        </a>
+        </button>
+        <form id="reactivate-form-{{ ticket.pk }}"
+              method="POST" action="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
+            {% csrf_token %}
+        </form>
     {% endif %}
 </div>

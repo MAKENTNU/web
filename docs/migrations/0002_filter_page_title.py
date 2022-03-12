@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='page',
             name='title',
-            field=models.CharField(max_length=64, unique=True, validators=[django.core.validators.RegexValidator(regex='^[0-9A-Za-z ():]+$', message='Only numbers, letters, spaces, parentheses and colons are allowed.')], verbose_name='Title'),
+            field=models.CharField(max_length=64, unique=True, validators=[django.core.validators.RegexValidator(regex='^[0-9A-Za-z ():]+$', message='Only numbers, letters, spaces, parentheses and colons are allowed.')], verbose_name='title'),
         ),
     ]

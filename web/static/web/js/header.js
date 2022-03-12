@@ -42,11 +42,6 @@ $headerDropdowns.find("a.item")
         $(this).removeClass("active selected");
     });
 
-$(".lang-link").click(function (event) {
-    event.preventDefault();
-    $("#lang-form").submit();
-});
-
 $("#burger").click(function (e) {
     e.preventDefault();
     $("#header").toggleClass("active");

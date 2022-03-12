@@ -7,13 +7,43 @@ from .models import Content, Page
 class CreatePageForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = ('title',)
+        fields = ('title', 'created_by')
+        widgets = {
+            'created_by': forms.HiddenInput(),
+        }
 
 
 class PageContentForm(forms.ModelForm):
     class Meta:
         model = Content
-        fields = ('content',)
+        fields = ('page', 'content', 'made_by')
+        widgets = {
+            'page': forms.HiddenInput(),
+            'made_by': forms.HiddenInput(),
+        }
+        error_messages = {
+            'content': {'required': _("The page is currently empty; please add some content.")},
+        }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        page: Page = cleaned_data.get('page')
+        content = cleaned_data.get('content')
+
+        if page and content:
+            if page.current_content and content == page.current_content.content:
+                raise forms.ValidationError({
+                    'content': _("The content must be changed in order to create a new version."),
+                })
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        instance: Content = super().save(commit=commit)
+        page = instance.page
+        page.current_content = instance
+        page.save()
+        return instance
 
 
 class ChangePageVersionForm(forms.ModelForm):
@@ -26,7 +56,8 @@ class ChangePageVersionForm(forms.ModelForm):
 
         # Limit the choices to the initial ones, to reduce the size of the HTML generated for a non-changing hidden form
         choice = kwargs.get('initial').get('current_content')
-        self.fields['current_content'].choices = [(choice.pk, choice)]
+        if choice:
+            self.fields['current_content'].choices = [(choice.pk, choice)]
 
     def clean(self):
         cleaned_data = super().clean()

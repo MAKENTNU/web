@@ -64,17 +64,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='profile',
             name='image',
-            field=models.ImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'profiles'}), verbose_name='Profile picture'),
+            field=models.ImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'profiles'}), verbose_name='profile picture'),
         ),
         migrations.AlterField(
             model_name='skill',
             name='image',
-            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills'}), verbose_name='Illustration image'),
+            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills'}), verbose_name='illustration image'),
         ),
         migrations.AlterField(
             model_name='suggestskill',
             name='image',
-            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills/suggestions'}), verbose_name='Illustration image'),
+            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills/suggestions'}), verbose_name='illustration image'),
         ),
         migrations.RunPython(move_profile_and_skill_and_suggestskill_images, migrations.RunPython.noop),
     ]

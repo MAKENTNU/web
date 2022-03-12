@@ -4,14 +4,13 @@ from django import template
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.formats import time_format
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from util.locale_utils import date_to_local, get_day_name
+from util.locale_utils import date_to_local
 from ..models.machine import Machine
-from ..models.reservation import Quota, Reservation, ReservationRule
+from ..models.reservation import Quota, Reservation
 
 register = template.Library()
 
@@ -108,18 +107,6 @@ def reservation_denied_message(user: User, machine: Machine):
 @register.simple_tag
 def invert(expression):
     return "true" if not expression else "false"
-
-
-@register.simple_tag
-def rule_period_start_text(period: ReservationRule.Period, locale):
-    start_day_name = get_day_name(int(period.start_time // 1), locale)
-    return f"{start_day_name} {time_format(period.rule.start_time)}"
-
-
-@register.simple_tag
-def rule_period_end_text(period: ReservationRule.Period, locale):
-    end_day_name = get_day_name(int(period.end_time // 1) % 7, locale)
-    return f"{end_day_name} {time_format(period.rule.end_time)}"
 
 
 @register.simple_tag

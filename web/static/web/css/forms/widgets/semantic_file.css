@@ -1,0 +1,6 @@
+/* Ensures that this input field does not push the upload button
+   farther to the right than the edge of the content */
+.file-upload.ui.input input[type=text] {
+    width: 100% !important; /* Overrides Fomantic-UI */
+    flex: auto;
+}

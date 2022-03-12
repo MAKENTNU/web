@@ -4,7 +4,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "Machines" %}{% endblock title %}
+{% block title %}{% trans "machines"|capfirst %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_list.css' %}"/>
@@ -14,10 +14,10 @@
 {% block body %}
     <div class="ui container">
         <div class="ui huge header">
-            {% trans "Machines" %}
+            {% trans "machines"|capfirst %}
             {% if perms.make_queue.add_machine %}
                 <a href="{% url 'create_machine' %}" data-tooltip="{% trans "Add" %}">
-                    <i class="ui green plus icon"></i>
+                    <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </div>

@@ -1,7 +1,6 @@
 from abc import ABC
 from datetime import timedelta
 
-from django.contrib.auth.models import Permission
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_time
@@ -9,10 +8,15 @@ from django_hosts import reverse
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds
+from util.test_utils import (
+    CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
+)
 from ..models.course import Printer3DCourse
 from ..models.machine import Machine, MachineType, MachineUsageRule
 from ..models.reservation import Quota, Reservation, ReservationRule
+
+
+Day = ReservationRule.Day
 
 
 class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
@@ -28,17 +32,18 @@ class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
         self.sewing2 = Machine.objects.create(name="Sewing 2", machine_type=self.sewing_machine_type)
         self.machines = (self.printer1, self.printer2, self.sewing1, self.sewing2)
 
+        # `Day.values` is a list of all the weekdays
         self.rule1 = ReservationRule.objects.create(
             machine_type=self.printer_machine_type, start_time=parse_time("00:00"), days_changed=0, end_time=parse_time("18:00"),
-            start_days=127, max_hours=6, max_inside_border_crossed=6,
+            start_days=Day.values, max_hours=6, max_inside_border_crossed=6,
         )
         self.rule2 = ReservationRule.objects.create(
             machine_type=self.printer_machine_type, start_time=parse_time("18:00"), days_changed=1, end_time=parse_time("00:00"),
-            start_days=127, max_hours=10, max_inside_border_crossed=6,
+            start_days=Day.values, max_hours=10, max_inside_border_crossed=6,
         )
         self.rule3 = ReservationRule.objects.create(
             machine_type=self.sewing_machine_type, start_time=parse_time("00:00"), days_changed=1, end_time=parse_time("00:00"),
-            start_days=127, max_hours=4, max_inside_border_crossed=4,
+            start_days=Day.values, max_hours=4, max_inside_border_crossed=4,
         )
         self.rules = (self.rule1, self.rule2, self.rule3)
 
@@ -54,7 +59,7 @@ class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
             user=self.user2, username=self.user2.username, date=timezone.localdate(), status=Printer3DCourse.Status.REGISTERED,
         )
 
-        self.user1.user_permissions.add(Permission.objects.get(codename='can_create_event_reservation'))
+        self.user1.add_perms('make_queue.can_create_event_reservation')
 
         self.quota1 = Quota.objects.create(all=True, machine_type=self.printer_machine_type, number_of_reservations=3)
         self.quota2 = Quota.objects.create(all=True, machine_type=self.sewing_machine_type)
@@ -174,3 +179,36 @@ class UrlTests(MakeQueueTestBase, TestCase):
             Get(reverse('edit_course_registration', kwargs={'pk': self.course2.pk}), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
+
+    def test_all_admin_get_request_paths_succeed(self):
+        path_predicates = [
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Printer3DCourse, [self.course1, self.course2])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(MachineType, [self.printer_machine_type, self.sewing_machine_type])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(MachineUsageRule, [self.usage_rule1, self.usage_rule2])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Machine, self.machines)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Quota, self.quotas)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(ReservationRule, self.rules)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Reservation, self.reservations)
+            ],
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')
