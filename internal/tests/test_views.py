@@ -50,16 +50,16 @@ class InternalContentBoxTests(TestCase):
         self.assertEqual(self.internal_user_client.get(self.home_edit_url).status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(self.internal_admin_client.get(self.home_edit_url).status_code, HTTPStatus.OK)
 
-    def test_internal_content_boxes_only_contain_edit_buttons_when_user_has_required_permission(self):
+    def test_internal_content_boxes_only_contain_visible_edit_buttons_when_user_has_required_permission(self):
         home_content_box_edit_path = f"/contentbox/{self.home_content_box.pk}/edit/"
 
-        def assert_edit_button_in_response(should_button_be_present: bool, client: Client):
+        def assert_visible_edit_button_in_response(should_button_be_present: bool, client: Client):
             response_html = client.get(self.home_url).content.decode()
-            self.assertInHTML('<i class="edit icon">', response_html, count=1 if should_button_be_present else 0)
+            self.assertEqual("hidden edit-button" in response_html, not should_button_be_present)
             self.assertEqual(home_content_box_edit_path in response_html, should_button_be_present)
 
-        assert_edit_button_in_response(False, self.internal_user_client)
-        assert_edit_button_in_response(True, self.internal_admin_client)
+        assert_visible_edit_button_in_response(False, self.internal_user_client)
+        assert_visible_edit_button_in_response(True, self.internal_admin_client)
 
     def test_home_content_box_allows_editing_source(self):
         response = self.internal_admin_client.get(self.home_edit_url)
