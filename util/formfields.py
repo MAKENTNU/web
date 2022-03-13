@@ -7,7 +7,7 @@ from django import forms
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db.models.fields.files import ImageFieldFile
 
-from util.file_utils import files_equal
+from util.file_utils import file_contents_equal, filenames_equal
 from util.logging_utils import get_request_logger
 
 
@@ -20,7 +20,11 @@ class CompressedImageField(forms.ImageField):
     def clean(self, data: Union[InMemoryUploadedFile, bool, None], initial: ImageFieldFile = None):
         cleaned_data: Union[ImageFieldFile, InMemoryUploadedFile, bool, None] = super().clean(data, initial=initial)
         if data and cleaned_data:
-            if initial and files_equal(cleaned_data, initial):
+            if initial and file_contents_equal(cleaned_data, initial):
+                if not filenames_equal(cleaned_data, initial):
+                    # Return the cleaned data, so that the image will get the name of the uploaded file
+                    return cleaned_data
+                # Don't change the field at all (unlike returning `False`, which would clear the image field and delete the existing file)
                 return None
 
             try:

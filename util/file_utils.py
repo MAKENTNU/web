@@ -1,4 +1,5 @@
 import hashlib
+from pathlib import PurePosixPath
 
 from django.core.files import File
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -18,5 +19,9 @@ def calculate_file_hash(file: File) -> bytes:
     return file_hash.digest()
 
 
-def files_equal(file1: File, file2: File) -> bool:
+def file_contents_equal(file1: File, file2: File) -> bool:
     return calculate_file_hash(file1) == calculate_file_hash(file2)
+
+
+def filenames_equal(file1: File, file2: File) -> bool:
+    return PurePosixPath(file1.name).name == PurePosixPath(file2.name).name
