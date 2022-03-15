@@ -85,8 +85,7 @@ class EventRegistrationForm(forms.ModelForm):
             'comment': forms.Textarea(attrs={
                 'cols': "40",
                 'rows': "3",
-                'placeholder': _(
-                    "Here you can enter any requests or information you want to provide to the organizers"),
+                'placeholder': _("Here you can enter any requests or information you want to provide to the organizers."),
             }),
         }
 

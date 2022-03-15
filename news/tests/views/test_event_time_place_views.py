@@ -177,7 +177,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
 
     @staticmethod
-    def create_tickets_for(event, username_and_ticket_state_tuples):
+    def create_tickets_for(event: Union[Event, TimePlace], username_and_ticket_state_tuples: List[Tuple[str, bool]]):
         """
         Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
 

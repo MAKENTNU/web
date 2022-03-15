@@ -2085,10 +2085,10 @@ msgstr "Hvis valgt vil {the_type} bare vises for medlemmer av MAKE NTNU."
 #: news/forms.py:89
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
-"organizers"
+"organizers."
 msgstr ""
 "Her kan du fylle inn eventuelle forespørsler eller opplysninger du ønsker å "
-"gi til arrangørene"
+"gi til arrangørene."
 
 #: news/models.py:43
 msgid "image description"

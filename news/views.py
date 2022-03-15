@@ -289,7 +289,7 @@ class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventBasedView, ABC):
 
     def get_form_kwargs(self):
         # Forcefully pass the event from the URL to the form
-        return insert_form_field_values(super().get_form_kwargs(), ('event', self.event))
+        return insert_form_field_values(super().get_form_kwargs(), {'event': self.event})
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class)

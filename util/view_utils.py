@@ -12,9 +12,10 @@ from django.views.generic.edit import FormMixin
 def insert_form_field_values(form_kwargs: dict, field_name_to_value: Dict[str, Any]):
     # If the request contains posted data:
     if 'data' in form_kwargs:
-        data = form_kwargs['data'].copy()
+        data: QueryDict = form_kwargs['data'].copy()
         for field_name, value in field_name_to_value.items():
             data[field_name] = value
+        data._mutable = False
         form_kwargs['data'] = data
     return form_kwargs
 

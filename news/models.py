@@ -123,10 +123,10 @@ class Event(NewsBase):
             ('can_view_private', "Can view private events"),
         )
 
-    def get_future_occurrences(self):
+    def get_future_occurrences(self) -> 'TimePlaceQuerySet':
         return self.timeplaces.published().future().order_by('start_time')
 
-    def get_past_occurrences(self):
+    def get_past_occurrences(self) -> 'TimePlaceQuerySet':
         return self.timeplaces.published().past().order_by('-start_time')
 
     @property
@@ -141,7 +141,7 @@ class Event(NewsBase):
     def standalone(self):
         return self.event_type == self.Type.STANDALONE
 
-    def can_register(self, user):
+    def can_register(self, user: User):
         # When hidden, registration is always disabled
         if self.hidden:
             return False
@@ -151,7 +151,7 @@ class Event(NewsBase):
             return False
 
         # If there are no future occurrences, there is never anything to register for
-        if not self.get_future_occurrences():
+        if not self.get_future_occurrences().exists():
             return False
 
         # If the event is standalone, the ability to register is dependent on if there are any more available tickets
@@ -209,7 +209,7 @@ class TimePlace(models.Model):
     def is_in_the_past(self):
         return self.end_time < timezone.localtime()
 
-    def can_register(self, user):
+    def can_register(self, user: User):
         if not self.event.can_register(user) or self.is_in_the_past():
             return False
         return not self.hidden and self.number_of_active_tickets < self.number_of_tickets
@@ -220,6 +220,7 @@ class EventTicket(models.Model):
         ENGLISH = 'en', _("English")
         NORWEGIAN = 'nb', _("Norwegian")
 
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,
@@ -253,7 +254,6 @@ class EventTicket(models.Model):
     comment = models.TextField(blank=True, verbose_name=_("comment"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
                                 verbose_name=_("preferred language"))
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     class Meta:
         permissions = (
