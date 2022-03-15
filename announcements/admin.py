@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.template.defaultfilters import urlize
 from django.utils.translation import gettext_lazy as _
 
-from util.admin_utils import DefaultAdminWidgetsMixin, list_filter_factory
+from util.admin_utils import DefaultAdminWidgetsMixin, list_filter_factory, search_escaped_and_unescaped
 from .models import Announcement
 
 
@@ -31,6 +31,9 @@ class AnnouncementAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     )
     def get_link(self, announcement: Announcement):
         return urlize(announcement.link) or None
+
+    def get_search_results(self, request, queryset, search_term):
+        return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
 admin.site.register(Announcement, AnnouncementAdmin)

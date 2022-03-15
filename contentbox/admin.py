@@ -9,6 +9,9 @@ from .models import ContentBox
 
 class ContentBoxAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
     list_display = ('url_name', 'title', 'get_extra_change_permissions', 'last_modified')
+    list_filter = (
+        ('extra_change_permissions', admin.RelatedOnlyFieldListFilter),
+    )
     search_fields = ('url_name', 'title', 'content')
     ordering = ('title',)
 

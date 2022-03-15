@@ -3,7 +3,7 @@ from django.db.models.functions import Concat
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
-from util.admin_utils import DefaultAdminWidgetsMixin
+from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped
 from .models import Member, Secret, SystemAccess
 
 
@@ -11,6 +11,8 @@ class MemberAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('get_name', 'last_modified')
     list_select_related = ('user',)
 
+    autocomplete_fields = ('user',)
+    filter_horizontal = ('committees',)
     readonly_fields = ('last_modified',)
 
     @admin.display(
@@ -21,10 +23,13 @@ class MemberAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
         return str(member)
 
 
-class SystemAccessAdmin(admin.ModelAdmin):
+class SystemAccessAdmin(UserSearchFieldsMixin, admin.ModelAdmin):
     list_display = ('member', 'name', 'value', 'last_modified')
     list_filter = ('name', 'value')
-    search_fields = ('member__user__username', 'member__user__first_name', 'member__user__last_name')
+    search_fields = (
+        # The user search fields are appended in `UserSearchFieldsMixin`
+    )
+    user_lookup, name_for_full_name_lookup = 'member__user__', 'member_full_name'
     list_select_related = ('member__user',)
 
     readonly_fields = ('last_modified',)
@@ -39,6 +44,9 @@ class SecretAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).default_order_by()
+
+    def get_search_results(self, request, queryset, search_term):
+        return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
 admin.site.register(Member, MemberAdmin)

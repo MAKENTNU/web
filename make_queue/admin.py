@@ -4,7 +4,7 @@ from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
-from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin
+from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
 from .models.reservation import Quota, Reservation, ReservationRule
@@ -27,6 +27,9 @@ class MachineTypeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         return qs.annotate(Count('machines'))  # facilitates querying `machines__count`
+
+    def get_search_results(self, request, queryset, search_term):
+        return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
 class MachineAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
@@ -70,11 +73,11 @@ class ReservationAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 class ReservationRuleAdmin(admin.ModelAdmin):
     list_display = (
         'machine_type',
-        'start_time', 'end_time',
-        'days_changed', 'start_days',
-        'max_hours', 'max_inside_border_crossed',
+        'start_time', 'days_changed', 'end_time',
+        'start_days', 'max_hours', 'max_inside_border_crossed',
         'last_modified',
     )
+    ordering = ('machine_type',)
     list_select_related = ('machine_type',)
 
     readonly_fields = ('last_modified',)
