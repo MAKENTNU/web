@@ -3,6 +3,7 @@ import shutil
 import tempfile
 from abc import ABC
 from http import HTTPStatus
+from pathlib import Path
 from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar
 from urllib.parse import urlparse
 
@@ -28,16 +29,30 @@ MOCK_JPG_FILE = SimpleUploadedFile(name="img.jpg", content=MOCK_JPG_RAW, content
 
 # noinspection PyPep8Naming
 class CleanUpTempFilesTestMixin(ABC):
-    _temp_media_root: str
+    _temp_media_root: Path
     _override_settings_obj: override_settings
 
     @classmethod
     def setUpClass(cls):
         # noinspection PyUnresolvedReferences
         super().setUpClass()
-        cls._temp_media_root = tempfile.mkdtemp()
+        cls._temp_media_root = Path(tempfile.mkdtemp())
         cls._override_settings_obj = override_settings(MEDIA_ROOT=cls._temp_media_root)
         cls._override_settings_obj.enable()
+
+    def tearDown(self):
+        """
+        Deletes all files and folders in the temp media root folder after each test case,
+        as on some systems, they're not deleted before the next test case is run, which can cause filename collisions.
+
+        It might be easier to just create the temp media root folder in ``setUp()`` (instead of ``setUpClass()``) and delete the whole folder
+        in this method, but that would be slightly riskier, as it's not common to remember calling the super class' ``setUp()`` in a test case.
+        """
+        for child in self._temp_media_root.iterdir():
+            if child.is_file() or child.is_symlink():
+                child.unlink()  # deletes the file/symlink
+            elif child.is_dir():
+                shutil.rmtree(child)
 
     @classmethod
     def tearDownClass(cls):

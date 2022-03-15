@@ -34,9 +34,9 @@ class TestEventTicketViews(TestCase):
         ticket_standalone = EventTicket.objects.create(user=self.user1, event=self.standalone_event)
 
         for ticket in [ticket_repeating, ticket_standalone]:
-            ticket_detail_url = urlparse(reverse('ticket_detail', args=[ticket.pk])).path
-            ticket_cancel_url = reverse('cancel_ticket', args=[ticket.pk])
-            with self.subTest(ticket_cancel_url=ticket_cancel_url):
+            with self.subTest(ticket=ticket):
+                ticket_detail_url = urlparse(reverse('ticket_detail', args=[ticket.pk])).path
+                ticket_cancel_url = reverse('cancel_ticket', args=[ticket.pk])
 
                 def assert_next_param_is_valid(next_param: str, valid: bool):
                     response = self.client1.post(f"{ticket_cancel_url}?next={next_param}")

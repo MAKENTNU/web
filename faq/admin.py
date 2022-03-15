@@ -3,12 +3,11 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
-from util.admin_utils import link_to_admin_change_form, search_escaped_and_unescaped
-from web.multilingual.admin import MultiLingualFieldAdmin
+from util.admin_utils import DefaultAdminWidgetsMixin, link_to_admin_change_form, search_escaped_and_unescaped
 from .models import Category, Question
 
 
-class QuestionAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
+class QuestionAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
     list_display = ('title', 'get_categories', 'last_modified')
     list_filter = ('categories',)
     search_fields = ('title', 'answer', 'categories__name')
@@ -31,7 +30,7 @@ class QuestionAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
         return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
-class CategoryAdmin(MultiLingualFieldAdmin):
+class CategoryAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('name',)
     search_fields = ('name',)
 

@@ -1,15 +1,22 @@
+import copy
 from typing import Callable
 
 from django.contrib import admin
 from django.contrib.admin.widgets import AdminTextInputWidget, AdminURLFieldWidget, ForeignKeyRawIdWidget
+from django.db import models
 from django.db.models import Model, QuerySet
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
+from sorl.thumbnail.admin.current import AdminImageWidget
 
+from card.modelfields import CardNumberField
+from card.widgets import CardNumberInput
+from users.models import User
 from util.html_utils import escape_to_named_characters
 from web.modelfields import URLTextField, UnlimitedCharField
+from web.multilingual.admin import create_multi_lingual_admin_formfield
 
 
 def link_to_admin_change_form(obj: Model, *, text=None, should_open_new_tab=True):
@@ -45,12 +52,54 @@ def search_escaped_and_unescaped(super_obj: admin.ModelAdmin, request, input_que
     return result_queryset, use_distinct_result
 
 
-class TextFieldOverrideMixin:
-    """Provides the proper widgets for the custom text fields in the Django admin change forms."""
+# noinspection PyUnresolvedReferences
+class UserSearchFieldsMixin:
+    user_lookup: str  # e.g. 'user__'
+    name_for_full_name_lookup: str  # e.g. 'full_name'; used in `User.get_user_search_fields()` and `User.annotate_full_name()`
+
+    def get_search_fields(self, request):
+        search_fields = super().get_search_fields(request)
+        return search_fields + User.get_user_search_fields(self.user_lookup, annotated_full_name_lookup=self.name_for_full_name_lookup)
+
+    def get_search_results(self, request, queryset, search_term):
+        queryset = User.annotate_full_name(queryset, self.user_lookup, lookup_name=self.name_for_full_name_lookup)
+        return super().get_search_results(request, queryset, search_term)
+
+
+# noinspection PyUnresolvedReferences
+class DefaultAdminWidgetsMixin:
+    """Overrides the Django admin change forms' widgets with the default ones used in this project."""
     formfield_overrides = {
+        models.ImageField: {'widget': AdminImageWidget},
+        CardNumberField: {'widget': CardNumberInput},
         UnlimitedCharField: {'widget': AdminTextInputWidget},
         URLTextField: {'widget': AdminURLFieldWidget},
     }
+    enable_changing_rich_text_source = False
+
+    def formfield_for_dbfield(self, db_field, request, **kwargs):
+        multi_lingual_admin_formfield = create_multi_lingual_admin_formfield(
+            db_field, request, **kwargs,
+            enable_changing_rich_text_source=self.enable_changing_rich_text_source,
+        )
+        if multi_lingual_admin_formfield:
+            return multi_lingual_admin_formfield
+
+        if db_field.choices:
+            return self.formfield_for_choice_field(db_field, request, **kwargs)
+
+        # Code based on https://github.com/django/django/blob/fbea64b8ce6a82dd34b1f78cb884306455106185/django/contrib/admin/options.py#L181-L184
+        for klass in db_field.__class__.mro():
+            if klass in self.formfield_overrides:
+                formfield_overrides_kwargs = copy.deepcopy(self.formfield_overrides[klass])
+                new_kwargs = {**formfield_overrides_kwargs, **kwargs}
+                # Always override the widget:
+                widget = formfield_overrides_kwargs.get('widget')
+                if widget:
+                    new_kwargs['widget'] = widget
+                return db_field.formfield(**new_kwargs)
+
+        return super().formfield_for_dbfield(db_field, request, **kwargs)
 
 
 # Code based on https://github.com/Uninett/Argus/commit/bc6031e2f9de3e14a942f3f20bfa1e6c7d37d637

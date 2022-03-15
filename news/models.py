@@ -1,9 +1,5 @@
-import sys
 import uuid
-from io import BytesIO
 
-from PIL import Image
-from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.db import models
 from django.db.models import Q
 from django.utils import timezone
@@ -12,7 +8,8 @@ from simple_history.models import HistoricalRecords
 
 from users.models import User
 from util.locale_utils import short_date_format
-from util.logging_utils import get_request_logger
+from util.modelfields import CompressedImageField
+from util.storage import OverwriteStorage, UploadToUtils
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from web.multilingual.widgets import MultiLingualTextarea
@@ -27,6 +24,11 @@ class NewsBaseQuerySet(models.QuerySet):
         return self.filter(hidden_news_query)
 
 
+def news_subclass_directory_path(instance: 'NewsBase', filename: str):
+    model_name = instance._meta.model_name
+    return f"news/{model_name}s/{filename}"
+
+
 class NewsBase(models.Model):
     """
     The abstract class that contains the common fields and methods of ``Article`` and ``Event``.
@@ -36,7 +38,8 @@ class NewsBase(models.Model):
     title = MultiLingualTextField(verbose_name=_("title"))
     content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
     clickbait = MultiLingualTextField(verbose_name=_("clickbait"), widget=MultiLingualTextarea)
-    image = models.ImageField(verbose_name=_("image"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func(news_subclass_directory_path),
+                                 max_length=200, storage=OverwriteStorage(), verbose_name=_("image"))
     image_description = MultiLingualTextField(verbose_name=_("image description"),
                                               help_text=_("This should be a concise visual description of the image,"
                                                           " which is mainly useful for people using a screen reader."))
@@ -55,30 +58,6 @@ class NewsBase(models.Model):
 
     def __str__(self):
         return str(self.title)
-
-    def save(self, **kwargs):
-        """
-        Override of save, to change all JPEG images to have quality 90. This greatly reduces the size of JPEG images,
-        while resulting in non to very minuscule reduction in quality. In almost all cases, the possible reduction in
-        quality will not be visible to the naked eye.
-        """
-        # Only check the image if there is actually an image
-        if self.image:
-            # PIL will throw an IO error if it cannot open the image, or does not support the given format
-            try:
-                image = Image.open(self.image)
-                if image.format == "JPEG":
-                    output = BytesIO()
-                    image.save(output, format="JPEG", quality=90)
-                    output.seek(0)
-
-                    self.image = InMemoryUploadedFile(output, "ImageField", self.image.name, "image/jpeg",
-                                                      sys.getsizeof(output), None)
-                # Should not close image, as Django uses the image and closes it by default
-            except IOError as e:
-                get_request_logger().exception(e)
-
-        super().save(**kwargs)
 
 
 class ArticleQuerySet(NewsBaseQuerySet):
@@ -144,10 +123,10 @@ class Event(NewsBase):
             ('can_view_private', "Can view private events"),
         )
 
-    def get_future_occurrences(self):
+    def get_future_occurrences(self) -> 'TimePlaceQuerySet':
         return self.timeplaces.published().future().order_by('start_time')
 
-    def get_past_occurrences(self):
+    def get_past_occurrences(self) -> 'TimePlaceQuerySet':
         return self.timeplaces.published().past().order_by('-start_time')
 
     @property
@@ -162,7 +141,7 @@ class Event(NewsBase):
     def standalone(self):
         return self.event_type == self.Type.STANDALONE
 
-    def can_register(self, user):
+    def can_register(self, user: User):
         # When hidden, registration is always disabled
         if self.hidden:
             return False
@@ -172,7 +151,7 @@ class Event(NewsBase):
             return False
 
         # If there are no future occurrences, there is never anything to register for
-        if not self.get_future_occurrences():
+        if not self.get_future_occurrences().exists():
             return False
 
         # If the event is standalone, the ability to register is dependent on if there are any more available tickets
@@ -230,7 +209,7 @@ class TimePlace(models.Model):
     def is_in_the_past(self):
         return self.end_time < timezone.localtime()
 
-    def can_register(self, user):
+    def can_register(self, user: User):
         if not self.event.can_register(user) or self.is_in_the_past():
             return False
         return not self.hidden and self.number_of_active_tickets < self.number_of_tickets
@@ -241,6 +220,7 @@ class EventTicket(models.Model):
         ENGLISH = 'en', _("English")
         NORWEGIAN = 'nb', _("Norwegian")
 
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,
@@ -274,7 +254,6 @@ class EventTicket(models.Model):
     comment = models.TextField(blank=True, verbose_name=_("comment"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
                                 verbose_name=_("preferred language"))
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 
     class Meta:
         permissions = (

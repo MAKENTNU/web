@@ -9,14 +9,13 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
-from util.admin_utils import TextFieldOverrideMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
+from util.admin_utils import DefaultAdminWidgetsMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
 from util.locale_utils import short_datetime_format
-from web.multilingual.admin import MultiLingualFieldAdmin
 from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
-class NewsBaseAdmin(MultiLingualFieldAdmin, SimpleHistoryAdmin):
+class NewsBaseAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
     form_base: NewsBaseForm
     list_display_extra: tuple
 
@@ -71,7 +70,7 @@ def get_ticket_table(tickets: QuerySet[EventTicket]):
     })
 
 
-class TimePlaceInline(TextFieldOverrideMixin, admin.TabularInline):
+class TimePlaceInline(DefaultAdminWidgetsMixin, admin.TabularInline):
     model = TimePlace
     ordering = ('-start_time',)
 
@@ -188,7 +187,7 @@ class EventAdmin(NewsBaseAdmin):
         return qs.annotate(latest_occurrence=Max('timeplaces__start_time')).order_by('-latest_occurrence')
 
 
-class TimePlaceAdmin(TextFieldOverrideMixin, admin.ModelAdmin):
+class TimePlaceAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = (
         'publication_time', 'get_event', 'start_time', 'end_time', 'get_place', 'number_of_tickets', 'get_num_reserved_tickets',
         'hidden', 'is_published', 'last_modified',

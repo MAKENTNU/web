@@ -13,6 +13,7 @@ from .models import Announcement
 class AnnouncementAdminView(PermissionRequiredMixin, ListView):
     permission_required = ('announcements.change_announcement',)
     model = Announcement
+    queryset = Announcement.objects.order_by('-display_from')
     template_name = 'announcements/announcement_admin.html'
     context_object_name = "announcements"
 

@@ -4,6 +4,8 @@ from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
 from simple_history.models import HistoricalRecords
 
+from util.modelfields import CompressedImageField
+from util.storage import OverwriteStorage, UploadToUtils
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
 
@@ -19,7 +21,8 @@ class EquipmentQuerySet(models.QuerySet):
 class Equipment(models.Model):
     title = MultiLingualTextField(unique=True, verbose_name=_("title"))
     description = MultiLingualRichTextUploadingField(verbose_name=_("description"))
-    image = models.ImageField(upload_to='equipment', verbose_name=_("image"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('equipment'),
+                                 max_length=200, storage=OverwriteStorage(), verbose_name=_("image"))
     priority = models.IntegerField(
         null=True,
         blank=True,

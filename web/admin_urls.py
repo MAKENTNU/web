@@ -1,6 +1,7 @@
 from decorator_include import decorator_include
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import path
@@ -18,6 +19,7 @@ urlpatterns = [
         staff_member_required,
         'django.conf.urls.i18n'
     )),
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
 ]
 
 urlpatterns += i18n_patterns(

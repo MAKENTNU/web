@@ -1,0 +1,14 @@
+/*** Django admin styles ***/
+
+body.change-form .card-number-field {
+    display: inline-flex;
+    align-items: center;
+}
+
+body.change-form .card-number-field :not(:first-child) {
+    margin-left: 0.5em;
+}
+
+body.change-form .card-number-field + .red.label {
+    color: red;
+}
