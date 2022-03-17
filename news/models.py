@@ -141,7 +141,7 @@ class Event(NewsBase):
     def standalone(self):
         return self.event_type == self.Type.STANDALONE
 
-    def can_register(self, user: User):
+    def can_register(self, user: User, *, fail_if_not_standalone):
         # When hidden, registration is always disabled
         if self.hidden:
             return False
@@ -157,9 +157,8 @@ class Event(NewsBase):
         # If the event is standalone, the ability to register is dependent on if there are any more available tickets
         if self.standalone:
             return self.number_of_active_tickets < self.number_of_tickets
-
-        # Registration to a repeating event with future occurrences is handled by the time place objects
-        return True
+        else:
+            return not fail_if_not_standalone
 
 
 class TimePlaceQuerySet(models.QuerySet):
@@ -210,7 +209,7 @@ class TimePlace(models.Model):
         return self.end_time < timezone.localtime()
 
     def can_register(self, user: User):
-        if not self.event.can_register(user) or self.is_in_the_past():
+        if not self.event.can_register(user, fail_if_not_standalone=False) or self.is_in_the_past():
             return False
         return not self.hidden and self.number_of_active_tickets < self.number_of_tickets
 
@@ -251,6 +250,14 @@ class EventTicket(models.Model):
                                 verbose_name=_("preferred language"))
 
     class Meta:
+        constraints = (
+            models.CheckConstraint(
+                check=Q(timeplace__isnull=False, event__isnull=True) | Q(timeplace__isnull=True, event__isnull=False),
+                name="%(class)s_either_timeplace_or_event_is_set",
+            ),
+            models.UniqueConstraint(fields=('user', 'timeplace'), name="%(class)s_unique_user_per_timeplace"),
+            models.UniqueConstraint(fields=('user', 'event'), name="%(class)s_unique_user_per_event"),
+        )
         permissions = (
             ('cancel_ticket', "Can cancel and reactivate all event tickets"),
         )

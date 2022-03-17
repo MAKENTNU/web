@@ -1,7 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import Set
+from typing import Optional, Set
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -412,34 +412,59 @@ class EventRegistrationView(PermissionRequiredMixin, CreateView):
     form_class = EventRegistrationForm
     template_name = 'news/event_registration.html'
 
-    event: Event = None
-    time_place: TimePlace = None
+    event: Event
+    ticket_event: Optional[Event]
+    ticket_time_place: Optional[TimePlace]
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
         self.event = self.kwargs.get('event')
         time_place_pk = self.kwargs.get('time_place_pk')
-        if time_place_pk is not None:
-            self.time_place = get_object_or_404(TimePlace, pk=time_place_pk)
+        if time_place_pk is None:
+            self.ticket_time_place = None
+            self.ticket_event = self.event
+        else:
+            self.ticket_time_place = get_object_or_404(TimePlace, pk=time_place_pk, event=self.event)
+            self.ticket_event = None
 
     def has_permission(self):
         return (
-                self.time_place and self.time_place.can_register(self.request.user)
-                or self.event and self.event.can_register(self.request.user)
+                self.ticket_time_place and self.ticket_time_place.can_register(self.request.user)
+                or self.ticket_event and self.ticket_event.can_register(self.request.user, fail_if_not_standalone=True)
         )
 
     def dispatch(self, request, *args, **kwargs):
         # If the user already has an active ticket for the event/timeplace, redirect to that ticket
-        ticket = self.request.user.event_tickets.filter(active=True, timeplace=self.time_place, event=self.event)
-        if ticket.exists():
-            return HttpResponseRedirect(reverse('ticket_detail', args=[ticket.first().pk]))
+        try:
+            ticket = self.request.user.event_tickets.get(active=True, timeplace=self.ticket_time_place, event=self.ticket_event)
+        except EventTicket.DoesNotExist:
+            pass
+        else:
+            return HttpResponseRedirect(reverse('ticket_detail', args=[ticket.pk]))
         return super().dispatch(request, *args, **kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        try:
+            existing_ticket_for_user = EventTicket.objects.get(user=self.request.user, timeplace=self.ticket_time_place, event=self.ticket_event)
+        except EventTicket.DoesNotExist:
+            # If this is a completely new ticket, set the initial language to the user-set site language
+            kwargs['initial']['language'] = get_language()
+        else:
+            # If a user already has an existing ticket for the timeplace/event, use this as the instance
+            kwargs['instance'] = existing_ticket_for_user
+
+        # Forcefully insert the user, time place and event into the form
+        return insert_form_field_values(kwargs, {
+            'user': self.request.user,
+            'timeplace': self.ticket_time_place,
+            'event': self.ticket_event,
+        })
+
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        form.instance.event = self.event
-        form.instance.timeplace = self.time_place
+        form.instance.active = True  # this is done mainly for reactivating an existing ticket
         ticket = form.save()
+        self.object = ticket
 
         try:
             async_to_sync(get_channel_layer().send)(
@@ -455,25 +480,16 @@ class EventRegistrationView(PermissionRequiredMixin, CreateView):
         except Exception as e:
             log_request_exception("Sending event ticket email failed.", e, self.request)
 
-        self.object = ticket
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
-        event_title = (self.event or self.time_place.event).title
         return super().get_context_data(**{
-            'title': _("Register for the event “{title}”").format(title=event_title),
+            'title': _("Register for the event “{title}”").format(title=self.event.title),
             **kwargs,
         })
 
     def get_success_url(self):
         return reverse('ticket_detail', args=[self.object.pk])
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['initial'].update({
-            'language': get_language(),
-        })
-        return kwargs
 
 
 class TicketDetailView(DetailView):

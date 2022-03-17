@@ -138,8 +138,8 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
     def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
         url_name = 'event_ticket_list'
         username_and_ticket_state_tuples = [
-            ("user2", True),
             ("user2", False),
+            ("user2", True),
         ]
         expected_context_ticket_emails = "user2@example.com"
 
@@ -148,8 +148,8 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
     def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(self):
         url_name = 'timeplace_ticket_list'
         username_and_ticket_state_tuples = [
-            ("user2", True),
             ("user2", False),
+            ("user2", True),
         ]
         expected_context_ticket_emails = "user2@example.com"
 
@@ -191,11 +191,11 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         tickets = []
         for username, ticket_state in username_and_ticket_state_tuples:
             user = User.objects.get_or_create(username=username, email=f"{username}@example.com")[0]
-            tickets.append(
-                EventTicket.objects.create(
-                    user=user,
-                    active=ticket_state,
-                    **{event_arg_name: event},
-                )
+            ticket, _created = EventTicket.objects.get_or_create(
+                user=user,
+                **{event_arg_name: event},
             )
+            ticket.active = ticket_state
+            ticket.save()
+            tickets.append(ticket)
         return tickets
