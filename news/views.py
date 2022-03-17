@@ -503,7 +503,9 @@ class MyTicketsListView(ListView):
     context_object_name = 'tickets'
 
     def get_queryset(self):
-        return self.request.user.event_tickets.all()
+        return self.request.user.event_tickets.prefetch_related(
+            'event__timeplaces__event', 'timeplace__event',
+        )
 
 
 class AdminEventTicketListView(PermissionRequiredMixin, EventBasedView, ListView):

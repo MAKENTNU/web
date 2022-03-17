@@ -12,7 +12,7 @@
     {% endif %}
 
     <div class="content">
-        <div class="header">
+        <div class="word-breaking header">
             <a href="{% url 'event_detail' ticket.registered_event.pk %}">
                 {{ ticket.registered_event.title }}
             </a>
@@ -20,45 +20,34 @@
         <div class="description">
             {% if ticket.event %}
                 <div class="ui relaxed list">
-                    {% for timeplace in ticket.event.timeplaces.all %}
-                        {% if not timeplace.hidden %}
+                    {% for time_place in ticket.event.timeplaces.all %}
+                        {% if not time_place.hidden %}
                             <div class="ui item">
-                                <div class="time-place content">
-                                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.event timeplace.pk %}" target="_blank">
-                                        <i class="large make-col-yellow calendar plus outline icon"></i>
-                                    </a>
-                                    <div class="header">
-                                        {{ timeplace.start_time|long_datetime_no_year }} &ndash; {{ timeplace.end_time|long_datetime_no_year }}
-                                    </div>
-                                    <div class="place description">
-                                        <a href="{{ timeplace.place_url }}" target="_blank">
-                                            {{ timeplace.place }}
-                                        </a>
-                                    </div>
-                                </div>
+                                {% include 'news/ticket_card_time_place.html' %}
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="time-place content">
-                    <a class="calendar-button" href="{% url 'timeplace_ical' ticket.timeplace.event ticket.timeplace.pk %}" target="_blank">
-                        <i class="large make-col-yellow calendar plus outline icon"></i>
-                    </a>
-                    <b>
-                        {{ ticket.timeplace.start_time|long_datetime_no_year }} &ndash; {{ ticket.timeplace.end_time|long_datetime_no_year }}
-                    </b>
-                </div>
+                {% include 'news/ticket_card_time_place.html' with time_place=ticket.timeplace %}
             {% endif %}
         </div>
     </div>
     <div class="extra content">
-        <div class="right floated">
-            <b>{% trans "Ref #" %}:</b>
-            <a href="{% url 'ticket_detail' pk=ticket.pk %}">
-                {{ ticket.uuid }}
-            </a>
-        </div>
+        <p>
+            <b>{% trans "language"|capfirst %}:</b> {{ ticket.get_language_display }}
+        </p>
+        {% if ticket.comment %}
+            <p>
+                <b>{% trans "comment"|capfirst %}:</b> {{ ticket.comment }}
+            </p>
+        {% endif %}
+    </div>
+    <div class="extra content">
+        <b>{% trans "Ref #" %}:</b>
+        <a href="{% url 'ticket_detail' pk=ticket.pk %}">
+            {{ ticket.uuid }}
+        </a>
     </div>
     {% if ticket.active %}
         {% if ticket.user == request.user or perms.news.cancel_ticket %}
