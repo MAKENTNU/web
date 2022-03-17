@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.db.models import Count, Max, Prefetch, Q, QuerySet
+from django.db.models.functions import Concat
 from django.template.loader import get_template
 from django.utils import timezone
 from django.utils.html import format_html
@@ -9,8 +10,11 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
-from util.admin_utils import DefaultAdminWidgetsMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped
+from util.admin_utils import (
+    DefaultAdminWidgetsMixin, UserSearchFieldsMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped,
+)
 from util.locale_utils import short_datetime_format
+from util.templatetags.html_tags import urlize_target_blank
 from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
@@ -276,7 +280,61 @@ class TimePlaceAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
         return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
 
 
+class EventTicketAdmin(UserSearchFieldsMixin, admin.ModelAdmin):
+    list_display = ('uuid', 'get_user', 'get_email', 'get_timeplace', 'get_event', 'active', 'language')
+    list_filter = (
+        'active', 'language',
+        ('timeplace', admin.EmptyFieldListFilter),
+        ('event', admin.EmptyFieldListFilter),
+    )
+    search_fields = (
+        'uuid', 'comment',
+        'timeplace__event__title', 'event__title',
+        # The user search fields are appended in `UserSearchFieldsMixin`
+    )
+    user_lookup, name_for_full_name_lookup = 'user__', 'user_full_name'
+    list_editable = ('active',)
+
+    autocomplete_fields = ('user',)
+    raw_id_fields = ('timeplace', 'event')
+
+    @admin.display(
+        ordering=Concat('user__first_name', 'user__last_name'),
+        description=_("user"),
+    )
+    def get_user(self, ticket: EventTicket):
+        return link_to_admin_change_form(ticket.user, text=ticket.name or ticket.user)
+
+    @admin.display(
+        ordering='user__email',
+        description=_("email"),
+    )
+    def get_email(self, ticket: EventTicket):
+        return urlize_target_blank(ticket.email)
+
+    @admin.display(
+        ordering='timeplace__event__title',
+        description=_("timeplace"),
+    )
+    def get_timeplace(self, ticket: EventTicket):
+        return link_to_admin_change_form(ticket.timeplace) if ticket.timeplace else None
+
+    @admin.display(
+        ordering='event__title',
+        description=_("event"),
+    )
+    def get_event(self, ticket: EventTicket):
+        return link_to_admin_change_form(ticket.event) if ticket.event else None
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('user').prefetch_related('timeplace__event', 'event')
+
+    def get_search_results(self, request, queryset, search_term):
+        return search_escaped_and_unescaped(super(), request, queryset, search_term)
+
+
 admin.site.register(Article, ArticleAdmin)
 admin.site.register(Event, EventAdmin)
 admin.site.register(TimePlace, TimePlaceAdmin)
-admin.site.register(EventTicket)
+admin.site.register(EventTicket, EventTicketAdmin)
