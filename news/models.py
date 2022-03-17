@@ -223,9 +223,7 @@ class EventTicket(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         to=User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         related_name='event_tickets',
         verbose_name=_("user"),
     )
@@ -247,9 +245,6 @@ class EventTicket(models.Model):
         related_name='tickets',
         verbose_name=_("event"),
     )
-    # For backwards compatibility, name and email are no longer set. Getting name and email from user.
-    _name = models.CharField(max_length=128, db_column='name', verbose_name=_("name"))
-    _email = models.EmailField(db_column='email', verbose_name=_("email"))
     active = models.BooleanField(default=True, verbose_name=_("active"))
     comment = models.TextField(blank=True, verbose_name=_("comment"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
@@ -270,15 +265,13 @@ class EventTicket(models.Model):
     @property
     def name(self):
         """
-        Gets the name of the user whom the ticket is registered to.
-        For backwards compatibility it returns the ``_name`` field if the user is not set.
+        :return: The name of the user whom the ticket is registered to.
         """
-        return self.user.get_full_name() if self.user else self._name
+        return self.user.get_full_name()
 
     @property
     def email(self):
         """
-        Gets the email of the user whom the ticket is registered to.
-        For backwards compatibility it returns the ``_email`` field if the user is not set.
+        :return: The email of the user whom the ticket is registered to.
         """
-        return self.user.email if self.user else self._email
+        return self.user.email
