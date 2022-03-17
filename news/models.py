@@ -142,16 +142,18 @@ class Event(NewsBase):
         return self.event_type == self.Type.STANDALONE
 
     def can_register(self, user: User, *, fail_if_not_standalone):
-        # When hidden, registration is always disabled
-        if self.hidden:
-            return False
+        # Admins should always be allowed
+        if user.has_perm('news.cancel_ticket'):
+            return True
 
-        # Registration for private events is never allowed for non members
-        if self.private and not user.has_perm('news.can_view_private'):
-            return False
-
-        # If there are no future occurrences, there is never anything to register for
-        if not self.get_future_occurrences().exists():
+        if (
+                # When hidden, registration is always disabled
+                self.hidden
+                # Registration for private events is never allowed for non members
+                or self.private and not user.has_perm('news.can_view_private')
+                # If there are no future occurrences, there is never anything to register for
+                or not self.get_future_occurrences().exists()
+        ):
             return False
 
         # If the event is standalone, the ability to register is dependent on if there are any more available tickets
@@ -209,9 +211,19 @@ class TimePlace(models.Model):
         return self.end_time < timezone.localtime()
 
     def can_register(self, user: User):
-        if not self.event.can_register(user, fail_if_not_standalone=False) or self.is_in_the_past():
+        # Admins should always be allowed
+        if user.has_perm('news.cancel_ticket'):
+            return True
+
+        if (
+                self.hidden
+                or self.event.standalone
+                or not self.event.can_register(user, fail_if_not_standalone=False)
+                or self.is_in_the_past()
+        ):
             return False
-        return not self.hidden and self.number_of_active_tickets < self.number_of_tickets
+
+        return self.number_of_active_tickets < self.number_of_tickets
 
 
 class EventTicket(models.Model):
