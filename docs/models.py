@@ -12,7 +12,7 @@ MAIN_PAGE_TITLE = "Documentation"
 class Page(models.Model):
     """Model for each individual documentation page."""
 
-    title = models.CharField(max_length=64, unique=True, verbose_name=_("Title"), validators=[page_title_validator])
+    title = models.CharField(max_length=64, unique=True, verbose_name=_("title"), validators=[page_title_validator])
     created_by = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,
@@ -40,15 +40,15 @@ class Content(models.Model):
         to=Page,
         on_delete=models.CASCADE,
         related_name='content_history',
-        verbose_name=_("Page"),
+        verbose_name=_("page"),
     )
-    changed = models.DateTimeField(verbose_name=_("Time changed"))
-    content = RichTextUploadingField(verbose_name=_("Content"))
+    content = RichTextUploadingField(verbose_name=_("content"))
     made_by = models.ForeignKey(
         to=User,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name='doc_page_contents_created',
-        verbose_name=_("Made by"),
+        verbose_name=_("made by"),
     )
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))

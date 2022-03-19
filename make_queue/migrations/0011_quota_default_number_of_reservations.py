@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quota',
             name='number_of_reservations',
-            field=models.IntegerField(default=1, verbose_name='Number of reservations'),
+            field=models.IntegerField(default=1, verbose_name='number of reservations'),
         ),
     ]

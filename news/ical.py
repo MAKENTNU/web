@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.urls import reverse
 from django_ical.views import ICalFeed
 
@@ -7,7 +8,7 @@ from .models import TimePlace
 class EventFeed(ICalFeed):
     """An iCal feed of all the events available to the user."""
     file_name = 'events.ics'
-    timezone = "CET"
+    timezone = settings.TIME_ZONE
 
     def get_object(self, request, *args, **kwargs):
         return {
@@ -27,7 +28,7 @@ class EventFeed(ICalFeed):
         return items
 
     def item_link(self, item: TimePlace):
-        return reverse('event_detail', kwargs={'pk': item.pk})
+        return reverse('event_detail', kwargs={'event': item.event})
 
     def item_title(self, item: TimePlace):
         return item.event.title

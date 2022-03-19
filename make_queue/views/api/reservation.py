@@ -21,7 +21,7 @@ def get_machine_data(request, machine: Machine, reservation=None):
                         day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
                         (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
                     ]
-                    for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
+                    for day in rule.get_start_day_indices(iso=False)
                 ],
                 "max_hours": rule.max_hours,
                 "max_hours_crossed": rule.max_inside_border_crossed,

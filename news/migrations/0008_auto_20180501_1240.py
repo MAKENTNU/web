@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='event',
             name='multiday',
-            field=models.BooleanField(default=False, verbose_name='Single registration'),
+            field=models.BooleanField(default=False, verbose_name='single registration'),
         ),
     ]

@@ -15,21 +15,21 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='newsbase',
             name='clickbait',
-            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='Clickbait'),
+            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='clickbait'),
         ),
         migrations.AlterField(
             model_name='newsbase',
             name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='Title'),
+            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='title'),
         ),
         migrations.AlterField(
             model_name='timeplace',
             name='place',
-            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='Location'),
+            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='location'),
         ),
         migrations.AlterField(
             model_name='timeplace',
             name='place_url',
-            field=web.modelfields.URLTextField(blank=True, verbose_name='Location URL'),
+            field=web.modelfields.URLTextField(blank=True, verbose_name='location URL'),
         ),
     ]

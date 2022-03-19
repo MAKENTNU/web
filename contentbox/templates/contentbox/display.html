@@ -1,21 +1,31 @@
-{% extends 'web/base.html' %}
+{% extends base_template %}
 {% load i18n %}
 {% load static %}
 
+
+{% block title %}{{ contentbox.title }}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'contentbox/css/display.css' %}"/>
 {% endblock extra_head %}
 
+{% block padding_top %}
+    <div class="ui container">
+        <a class="{% if not user_can_change %}hidden{% endif %} edit-button ui make-bg-yellow button"
+           {% if user_can_change %}href="{% url 'contentbox_edit' contentbox.pk %}"{% endif %}
+        >
+            <i class="edit icon"></i>{% trans "Edit" %}
+        </a>
+    </div>
+{% endblock padding_top %}
+
 {% block body %}
+    <h1 class="ui text-centered make-col-blue header">
+        {{ contentbox.title }}
+    </h1>
     <div class="contentbox ui container">
         {% block extra_pre_content %}{% endblock %}
 
-        {% if perms.contentbox.change_contentbox %}
-            <a class="edit ui make-bg-yellow button" href="{% url 'contentbox_edit' contentbox.pk %}">
-                <i class="ui edit icon"></i>{% trans "Edit" %}
-            </a>
-        {% endif %}
         {{ contentbox.content|safe }}
 
         {% block extra_post_content %}{% endblock %}

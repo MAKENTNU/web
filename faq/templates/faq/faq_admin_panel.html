@@ -19,7 +19,7 @@
                 <a class="content" href="{% url 'admin_question_list' %}">
                     <div class="center aligned header">
                         <i class="grey question circle outline icon"></i>
-                        {% trans "Questions" %}
+                        {% trans "questions"|capfirst %}
                     </div>
                     <div class="description">
                         {% trans "Here you can create, edit and delete questions" %}.
@@ -30,7 +30,7 @@
                 <a class="content" href="{% url 'admin_category_list' %}">
                     <div class="center aligned header">
                         <i class="grey newspaper outline icon"></i>
-                        {% trans "Categories" %}
+                        {% trans "categories"|capfirst %}
                     </div>
                     <div class="description">
                         {% trans "Here you can create, edit and delete categories" %}.

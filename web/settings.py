@@ -1,3 +1,4 @@
+import copy
 import logging
 import sys
 from pathlib import Path
@@ -5,6 +6,7 @@ from pathlib import Path
 import django.views.static
 from django.conf.locale.en import formats as en_formats
 from django.conf.locale.nb import formats as nb_formats
+from django_hosts import reverse_lazy
 
 from .static import serve_interpolated
 
@@ -25,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Default values
-DATABASE = 'sqlite'
+DATABASE = 'sqlite'  # (custom setting; used below for selecting database configuration)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
@@ -34,9 +36,9 @@ MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
-LOGOUT_URL = '/'
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('front_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
 CHECKIN_KEY = ''  # (custom setting)
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
@@ -85,6 +87,7 @@ INSTALLED_APPS = [
     'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
+    'simple_history',
     'sorl.thumbnail',
 
     # Project apps, listed alphabetically
@@ -102,7 +105,7 @@ INSTALLED_APPS = [
     'news',
     'users',
 
-    'util',  # not a "real" app, just a collection of utilities
+    'util',
 
     # Should be placed last,
     # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
@@ -122,6 +125,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'simple_history.middleware.HistoryRequestMiddleware',
 
     # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
@@ -160,6 +165,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'web.context_processors.common_context_variables',
                 'web.context_processors.login',
             ],
         },
@@ -225,8 +231,8 @@ AUTH_USER_MODEL = 'users.User'
 # Dataporten
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('front_page')
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = (
@@ -301,14 +307,16 @@ CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
         'toolbar_main': [
+            {'name': 'editing', 'items': ['Find']},
             {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']},
-            {'name': 'paragraph',
-             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter',
-                       'JustifyRight', 'JustifyBlock']},
-            {'name': 'format', 'items': ['Format', 'RemoveFormat']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'format', 'items': ['Format', 'Styles', 'RemoveFormat']},
             '/',
-            {'name': 'links', 'items': ['Link', 'Unlink']},
-            {'name': 'insert', 'items': ['Mathjax', 'CodeSnippet', '-', 'Image']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', 'Blockquote', '-', 'Outdent', 'Indent',
+                       '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert', 'items': ['Mathjax', 'CodeSnippet', 'HorizontalRule', '-', 'Image']},
         ],
         'toolbar': 'main',
         # All MathJax files downloaded from https://github.com/mathjax/MathJax/tree/2.7.9
@@ -327,10 +335,19 @@ CKEDITOR_CONFIGS = {
         ]),
     }
 }
+# This config should only be used for a rich text widget if the user has the `internal.can_change_rich_text_source` permission
+CKEDITOR_EDIT_SOURCE_CONFIG_NAME = 'edit_source'  # (custom setting)
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME] = copy.deepcopy(CKEDITOR_CONFIGS['default'])
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME]['toolbar_main'].append(
+    {'name': 'editsource', 'items': ['Source']}
+)
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
 PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
+
+# See https://django-simple-history.readthedocs.io/en/stable/historical_model.html#filefield-as-a-charfield
+SIMPLE_HISTORY_FILEFIELD_TO_CHARFIELD = True
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for
@@ -377,7 +394,7 @@ useful for checking e.g. that a request doesn't query the database more times th
 # }
 
 
-# [SHOULD ALWAYS COME LAST] Override the settings above
+# [SHOULD BE KEPT LAST IN THIS FILE] Override the settings above
 try:
     from .local_settings_post import *
 except ImportError:

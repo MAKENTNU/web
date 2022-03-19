@@ -28,43 +28,43 @@ class Migration(migrations.Migration):
             name='Printer3DCourse',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('username', make_queue.models.fields.UsernameField(max_length=32, verbose_name='Username')),
-                ('date', models.DateField(verbose_name='Course date')),
-                ('card_number', models.IntegerField(null=True, verbose_name='Card number (EM)')),
-                ('name', models.CharField(max_length=256, verbose_name='Full name')),
-                ('status', models.CharField(choices=[('registered', 'Registered'), ('sent', 'Sent to Building security'), ('access', 'Access granted')], default='registered', max_length=20, verbose_name='Status')),
-                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User')),
+                ('username', make_queue.models.fields.UsernameField(max_length=32, verbose_name='username')),
+                ('date', models.DateField(verbose_name='course date')),
+                ('card_number', models.IntegerField(null=True, verbose_name='card number (EM)')),
+                ('name', models.CharField(max_length=256, verbose_name='full name')),
+                ('status', models.CharField(choices=[('registered', 'Registered'), ('sent', 'Sent to Building security'), ('access', 'Access granted')], default='registered', max_length=20, verbose_name='status')),
+                ('user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='user')),
             ],
         ),
         migrations.AlterField(
             model_name='quota',
             name='all',
-            field=models.BooleanField(default=False, verbose_name='All users'),
+            field=models.BooleanField(default=False, verbose_name='all users'),
         ),
         migrations.AlterField(
             model_name='quota',
             name='diminishing',
-            field=models.BooleanField(default=False, verbose_name='Diminishing'),
+            field=models.BooleanField(default=False, verbose_name='diminishing'),
         ),
         migrations.AlterField(
             model_name='quota',
             name='ignore_rules',
-            field=models.BooleanField(default=False, verbose_name='Ignores rules'),
+            field=models.BooleanField(default=False, verbose_name='ignores rules'),
         ),
         migrations.AlterField(
             model_name='quota',
             name='machine_type',
-            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], null=True, verbose_name='Machine type'),
+            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], null=True, verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='quota',
             name='number_of_reservations',
-            field=models.IntegerField(default=3, verbose_name='Number of reservations'),
+            field=models.IntegerField(default=3, verbose_name='number of reservations'),
         ),
         migrations.AlterField(
             model_name='quota',
             name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='User'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='user'),
         ),
         migrations.AlterField(
             model_name='reservation',
@@ -74,6 +74,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='reservationrule',
             name='machine_type',
-            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], verbose_name='Machine type'),
+            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], verbose_name='machine type'),
         ),
     ]

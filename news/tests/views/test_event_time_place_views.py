@@ -1,15 +1,17 @@
 from datetime import timedelta
 from http import HTTPStatus
+from typing import List, Tuple, Union
 
+from django.test import TestCase
 from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE, PermissionsTestCase
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
 from ...models import Event, EventTicket, TimePlace
 
 
-class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
+class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         username = 'TEST_USER'
@@ -34,37 +36,36 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event(self):
-        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_create(self):
         response = self.client.get(reverse('event_create'))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.add_permissions(self.user, 'add_event')
+        self.user.add_perms('news.add_event')
         response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_edit(self):
-        response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        response = self.client.get(reverse('event_edit', kwargs={'event': self.event}))
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.add_permissions(self.user, 'change_event')
-        response = self.client.get(reverse('event_edit', kwargs={'pk': self.event.pk}))
+        self.user.add_perms('news.change_event')
+        response = self.client.get(reverse('event_edit', kwargs={'event': self.event}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_timeplace_duplicate(self):
         tp = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
                                       end_time=timezone.localtime() + timedelta(minutes=10))
-        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
+        response = self.client.post(reverse('timeplace_duplicate', args=[self.event, tp.pk]))
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.add_permissions(self.user, 'add_timeplace')
-        self.add_permissions(self.user, 'change_timeplace')
-        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
+        self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
+        response = self.client.post(reverse('timeplace_duplicate', args=[self.event, tp.pk]))
 
         new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
-        self.assertRedirects(response, reverse('timeplace_edit', args=[new.pk]))
+        self.assertRedirects(response, reverse('timeplace_edit', args=[self.event, new.pk]))
 
         new_start_time = tp.start_time + timedelta(weeks=1)
         new_end_time = tp.end_time + timedelta(weeks=1)
@@ -73,50 +74,43 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         self.assertEqual(new.end_time, new_end_time)
 
     def test_timplace_duplicate_old(self):
-        self.add_permissions(self.user, 'add_timeplace')
-        self.add_permissions(self.user, 'change_timeplace')
+        self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
 
         start_time = timezone.localtime() - timedelta(weeks=2, days=3)
         end_time = start_time + timedelta(days=1)
         new_start_time = start_time + timedelta(weeks=3)
         new_end_time = end_time + timedelta(weeks=3)
 
-        tp = TimePlace.objects.create(
-            event=self.event,
-            start_time=start_time,
-            end_time=end_time,
-            hidden=False,
-        )
+        time_place = TimePlace.objects.create(event=self.event, start_time=start_time, end_time=end_time, hidden=False)
+        response = self.client.post(reverse('timeplace_duplicate', args=[self.event, time_place.pk]))
+        duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
 
-        response = self.client.get(reverse('timeplace_duplicate', args=[tp.pk]))
-        self.assertNotEqual(response.status_code, HTTPStatus.OK)
-        new = TimePlace.objects.exclude(pk=tp.pk).latest('pk')
-
-        self.assertEqual(new.start_time, new_start_time)
-        self.assertEqual(new.end_time, new_end_time)
+        self.assertRedirects(response, reverse('timeplace_edit', args=[self.event, duplicated_time_place.pk]))
+        self.assertEqual(duplicated_time_place.start_time, new_start_time)
+        self.assertEqual(duplicated_time_place.end_time, new_end_time)
 
     def test_hidden_event(self):
         self.event.hidden = True
         self.event.save()
 
-        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+        response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.add_permissions(self.user, 'change_event')
-        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
+        self.user.add_perms('news.change_event')
+        response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_private_event(self):
-        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
+        response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self.event.private = True
         self.event.save()
-        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
-        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+        response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.add_permissions(self.user, 'can_view_private')
-        response = self.client.get(reverse('event_detail', kwargs={'pk': self.event.pk}))
+        self.user.add_perms('news.can_view_private')
+        response = self.client.get(reverse('event_detail', kwargs={'event': self.event}))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
@@ -161,7 +155,8 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
 
         self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
-    def assert_context_ticket_emails(self, url_name, event, username_and_ticket_state_tuples, expected_context_ticket_emails):
+    def assert_context_ticket_emails(self, url_name: str, event: Union[Event, TimePlace],
+                                     username_and_ticket_state_tuples: List[Tuple[str, bool]], expected_context_ticket_emails: str):
         """
         Asserts that the ``ticket_emails`` in context at ``url_name`` equals ``expected_context_ticket_emails``.
 
@@ -174,14 +169,15 @@ class ViewTestCase(CleanUpTempFilesTestMixin, PermissionsTestCase):
         """
 
         self.create_tickets_for(event, username_and_ticket_state_tuples)
-        self.add_permissions(self.user, "change_event")
+        self.user.add_perms('news.change_event')
 
-        response = self.client.get(reverse(url_name, args=[event.pk]))
+        url_args = [event.event, event.pk] if isinstance(event, TimePlace) else [event]
+        response = self.client.get(reverse(url_name, args=url_args))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
 
     @staticmethod
-    def create_tickets_for(event, username_and_ticket_state_tuples):
+    def create_tickets_for(event: Union[Event, TimePlace], username_and_ticket_state_tuples: List[Tuple[str, bool]]):
         """
         Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
 
