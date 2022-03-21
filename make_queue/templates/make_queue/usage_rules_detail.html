@@ -4,6 +4,10 @@
 
 {% block title %}{{ title }}{% endblock title %}
 
+{% block extra_head %}
+    {% include 'ckeditor/mathjax_render.html' %}
+{% endblock extra_head %}
+
 {% block body %}
     <div class="ui container">
         <h1>

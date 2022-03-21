@@ -13,6 +13,7 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/news_base_detail.css' %}"/>
+    {% include 'ckeditor/mathjax_render.html' %}
 {% endblock extra_head %}
 
 {% block body %}
