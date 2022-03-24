@@ -56,8 +56,8 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_timeplace_duplicate(self):
-        time_place = TimePlace.objects.create(event=self.event, start_time=timezone.localtime() + timedelta(minutes=5),
-                                              end_time=timezone.localtime() + timedelta(minutes=10))
+        time_place = TimePlace.objects.create(event=self.event, start_time=timezone.now() + timedelta(minutes=5),
+                                              end_time=timezone.now() + timedelta(minutes=10))
         response = self.client.post(reverse('timeplace_duplicate', args=[self.event.pk, time_place.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
@@ -76,7 +76,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
     def test_timplace_duplicate_old(self):
         self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
 
-        start_time = timezone.localtime() - timedelta(weeks=2, days=3)
+        start_time = timezone.now() - timedelta(weeks=2, days=3)
         end_time = start_time + timedelta(days=1)
         new_start_time = start_time + timedelta(weeks=3)
         new_end_time = end_time + timedelta(weeks=3)
