@@ -22,7 +22,7 @@ class UrlTests(TestCase):
         path_predicates = [
             Get(reverse('announcement_admin'), public=False),
             Get(reverse('create_announcement'), public=False),
-            Get(reverse('edit_announcement', kwargs={'pk': self.announcement1.pk}), public=False),
+            Get(reverse('edit_announcement', args=[self.announcement1.pk]), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

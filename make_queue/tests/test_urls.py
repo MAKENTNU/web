@@ -107,7 +107,7 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # machine_urlpatterns
             Get(reverse('create_machine'), public=False),
             *[
-                Get(reverse('edit_machine', kwargs={'pk': machine.pk}), public=False)
+                Get(reverse('edit_machine', args=[machine.pk]), public=False)
                 for machine in self.machines
             ],
 
@@ -129,8 +129,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 Get(reverse('reservation_json', args=[reservation.machine.pk, reservation.pk]), public=False)
                 for reservation in self.reservations
             ],
-            Get(reverse('user_json', kwargs={'username': self.user1.username}), public=False),
-            Get(reverse('user_json', kwargs={'username': self.user2.username}), public=False),
+            Get(reverse('user_json', args=[self.user1.username]), public=False),
+            Get(reverse('user_json', args=[self.user2.username]), public=False),
 
             # Back to urlpatterns
             *[
@@ -163,7 +163,7 @@ class UrlTests(MakeQueueTestBase, TestCase):
             Get(reverse('quota_panel'), public=False),
             Get(reverse('create_quota'), public=False),
             *[
-                Get(reverse('edit_quota', kwargs={'pk': quota.pk}), public=False)
+                Get(reverse('edit_quota', args=[quota.pk]), public=False)
                 for quota in self.quotas
             ],
             Get(reverse('user_quota_list', args=[self.user1.pk]), public=False),
@@ -175,8 +175,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
             Get(reverse('course_registration_list'), public=False),
             Get(reverse('create_course_registration'), public=False),
             Get(reverse('create_course_registration_success'), public=False),
-            Get(reverse('edit_course_registration', kwargs={'pk': self.course1.pk}), public=False),
-            Get(reverse('edit_course_registration', kwargs={'pk': self.course2.pk}), public=False),
+            Get(reverse('edit_course_registration', args=[self.course1.pk]), public=False),
+            Get(reverse('edit_course_registration', args=[self.course2.pk]), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

@@ -93,7 +93,7 @@
                         {% if occurrence.number_of_tickets %}
                             {% get_ticket occurrence user as ticket %}
                             {% if ticket %}
-                                <a class="ui green fluid button" href="{% url 'ticket_detail' pk=ticket.pk %}">
+                                <a class="ui green fluid button" href="{% url 'ticket_detail' ticket.pk %}">
                                     {% trans "You are registered for this event" %}
                                 </a>
                             {% elif occurrence.number_of_active_tickets < occurrence.number_of_tickets %}
@@ -121,7 +121,7 @@
                     {% if news_obj.number_of_tickets %}
                         {% get_ticket news_obj user as ticket %}
                         {% if ticket %}
-                            <a class="ui green fluid button" href="{% url 'ticket_detail' pk=ticket.pk %}">
+                            <a class="ui green fluid button" href="{% url 'ticket_detail' ticket.pk %}">
                                 {% trans "You are registered for this event" %}
                             </a>
                         {% elif news_obj.number_of_active_tickets < news_obj.number_of_tickets %}
@@ -161,7 +161,7 @@
             {% if news_obj.number_of_tickets %}
                 {% get_ticket news_obj user as ticket %}
                 {% if ticket %}
-                    <a class="ui green fluid button" href="{% url 'ticket_detail' pk=ticket.pk %}">
+                    <a class="ui green fluid button" href="{% url 'ticket_detail' ticket.pk %}">
                         {% trans "You are registered for this event" %}
                     </a>
                 {% elif news_obj.number_of_active_tickets < news_obj.number_of_tickets %}
@@ -237,7 +237,7 @@
                             {% if occurrence.number_of_tickets %}
                                 {% get_ticket occurrence user as ticket %}
                                 {% if ticket %}
-                                    <a class="ui bottom attached green button" href="{% url 'ticket_detail' pk=ticket.pk %}">
+                                    <a class="ui bottom attached green button" href="{% url 'ticket_detail' ticket.pk %}">
                                         {% trans "You are registered for this event" %}
                                     </a>
                                 {% elif occurrence.number_of_active_tickets < occurrence.number_of_tickets %}

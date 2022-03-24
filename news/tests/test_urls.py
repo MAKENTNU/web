@@ -114,7 +114,7 @@ class UrlTests(NewsTestBase, TestCase):
                 for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
             ],
             *[
-                Get(reverse('ticket_detail', kwargs={'pk': ticket.pk}), public=False)
+                Get(reverse('ticket_detail', args=[ticket.pk]), public=False)
                 for ticket in self.tickets
             ],
             Get(reverse('my_tickets_list'), public=False),
