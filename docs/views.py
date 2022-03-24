@@ -33,6 +33,13 @@ class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
     context_object_name = "page"
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
 
+    is_main_page = False
+
+    def get_object(self, *args, **kwargs):
+        if self.is_main_page:
+            return Page.get_main_page()
+        return super().get_object(*args, **kwargs)
+
 
 class HistoryDocumentationPageView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_history.html'

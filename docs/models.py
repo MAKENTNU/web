@@ -32,6 +32,11 @@ class Page(models.Model):
     def __str__(self):
         return self.title
 
+    @classmethod
+    def get_main_page(cls) -> 'Page':
+        main_page, _created = Page.objects.get_or_create(title=MAIN_PAGE_TITLE)
+        return main_page
+
 
 class Content(models.Model):
     """The content of a documentation page. All versions are kept for editing history."""

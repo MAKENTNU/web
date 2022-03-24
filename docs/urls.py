@@ -5,13 +5,12 @@ from django.urls import path, register_converter
 from django.views.generic import TemplateView
 
 from . import converters, views
-from .models import MAIN_PAGE_TITLE, Page
 
 
 register_converter(converters.SpecificPageByTitle, 'PageTitle')
 
 unsafe_urlpatterns = [
-    path("", views.DocumentationPageDetailView.as_view(), {'title': Page.objects.get_or_create(title=MAIN_PAGE_TITLE)[0].title}, name='home'),
+    path("", views.DocumentationPageDetailView.as_view(is_main_page=True), name='home'),
     path("page/create/", views.CreateDocumentationPageView.as_view(), name='create_page'),
     path("page/<PageTitle:title>/", views.DocumentationPageDetailView.as_view(), name='page_detail'),
     path("page/<PageTitle:title>/history/", views.HistoryDocumentationPageView.as_view(), name='page_history'),
