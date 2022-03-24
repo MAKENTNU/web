@@ -4,6 +4,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_time
+from django.utils.http import urlencode
 from django_hosts import reverse
 
 from news.models import Event, TimePlace
@@ -100,6 +101,12 @@ class UrlTests(MakeQueueTestBase, TestCase):
 
     def test_all_get_request_paths_succeed(self):
         year, week_number, _weekday = timezone.localtime().isocalendar()
+        # Create URL params to query all reservations
+        api_reservation_list_url_params = urlencode({
+            'startDate': Reservation.objects.earliest('start_time').start_time.isoformat(),
+            'endDate': Reservation.objects.latest('end_time').end_time.isoformat(),
+        })
+
         path_predicates = [
             # urlpatterns
             Get(reverse('machine_list'), public=True),
@@ -112,9 +119,19 @@ class UrlTests(MakeQueueTestBase, TestCase):
             ],
 
             # Back to urlpatterns
-            Get(reverse('machine_detail', kwargs={'year': year, 'week': week_number, 'pk': self.printer1.pk}), public=True),
+            *[
+                Get(reverse('machine_detail', kwargs={'year': year, 'week': week_number, 'pk': machine.pk}), public=True)
+                for machine in self.machines
+            ],
 
             # calendar_urlpatterns
+            *[
+                Get(
+                    f"{reverse('api_reservations', args=[machine.pk])}?{api_reservation_list_url_params}",
+                    public=True,
+                )
+                for machine in self.machines
+            ],
             *[
                 Get(reverse('api_reservation_rules', args=[machine.pk]), public=True)
                 for machine in self.machines
