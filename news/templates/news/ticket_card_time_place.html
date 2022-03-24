@@ -4,7 +4,7 @@
 {# Linking `ticket_card.css` is required when including this template #}
 
 <div class="time-place content">
-    <a class="calendar-button" href="{% url 'timeplace_ical' time_place.event time_place.pk %}" target="_blank">
+    <a class="calendar-button" href="{% url 'timeplace_ical' time_place.event.pk time_place.pk %}" target="_blank">
         <i class="large make-col-yellow calendar plus outline icon"></i>
     </a>
     <b class="time description">

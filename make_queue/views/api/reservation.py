@@ -1,11 +1,14 @@
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from ...models.machine import Machine
 from ...models.reservation import Quota
 
 
-def get_machine_data(request, machine: Machine, reservation=None):
+def get_machine_data(request, pk: int, reservation_pk: int = None):
+    machine = get_object_or_404(Machine, pk=pk)
+    reservation = get_object_or_404(machine.reservations, pk=reservation_pk) if reservation_pk is not None else None
     return JsonResponse({
         "reservations": [
             {"start_time": c_reservation.start_time, "end_time": c_reservation.end_time}

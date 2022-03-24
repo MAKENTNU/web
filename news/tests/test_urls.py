@@ -78,39 +78,39 @@ class UrlTests(NewsTestBase, TestCase):
         path_predicates = [
             Get(reverse('admin_article_list'), public=False),
             Get(reverse('admin_event_list'), public=False),
-            Get(reverse('admin_event_detail', kwargs={'event': self.event1}), public=False),
-            Get(reverse('admin_event_detail', kwargs={'event': self.event2}), public=False),
+            Get(reverse('admin_event_detail', args=[self.event1.pk]), public=False),
+            Get(reverse('admin_event_detail', args=[self.event2.pk]), public=False),
             Get(reverse('article_list'), public=True),
             Get(reverse('article_create'), public=False),
-            Get(reverse('article_edit', kwargs={'article': self.article1}), public=False),
-            Get(reverse('article_edit', kwargs={'article': self.article2}), public=False),
-            Get(reverse('article_detail', kwargs={'article': self.article1}), public=True),
-            Get(reverse('article_detail', kwargs={'article': self.article2}), public=False),  # this article is private
+            Get(reverse('article_edit', args=[self.article1.pk]), public=False),
+            Get(reverse('article_edit', args=[self.article2.pk]), public=False),
+            Get(reverse('article_detail', args=[self.article1.pk]), public=True),
+            Get(reverse('article_detail', args=[self.article2.pk]), public=False),  # this article is private
             Get(reverse('event_list'), public=True),
             Get(reverse('event_create'), public=False),
-            Get(reverse('event_edit', kwargs={'event': self.event1}), public=False),
-            Get(reverse('event_edit', kwargs={'event': self.event2}), public=False),
-            Get(reverse('event_ticket_list', kwargs={'event': self.event2}), public=False),  # can't test `event1`, as it has no tickets
-            Get(reverse('event_detail', kwargs={'event': self.event1}), public=True),
-            Get(reverse('event_detail', kwargs={'event': self.event2}), public=False),  # this event is private
-            Get(reverse('register_event', kwargs={'event': self.event1}), public=False),
-            Get(reverse('register_event', kwargs={'event': self.event2}), public=False),
+            Get(reverse('event_edit', args=[self.event1.pk]), public=False),
+            Get(reverse('event_edit', args=[self.event2.pk]), public=False),
+            Get(reverse('event_ticket_list', args=[self.event2.pk]), public=False),  # can't test `event1`, as it has no tickets
+            Get(reverse('event_detail', args=[self.event1.pk]), public=True),
+            Get(reverse('event_detail', args=[self.event2.pk]), public=False),  # this event is private
+            Get(reverse('register_event', args=[self.event1.pk]), public=False),
+            Get(reverse('register_event', args=[self.event2.pk]), public=False),
             *[
-                Get(reverse('timeplace_edit', kwargs={'event': time_place.event, 'pk': time_place.pk}), public=False)
+                Get(reverse('timeplace_edit', args=[time_place.event.pk, time_place.pk]), public=False)
                 for time_place in self.time_places
             ],
-            Get(reverse('timeplace_create', kwargs={'event': self.event1}), public=False),
-            Get(reverse('timeplace_create', kwargs={'event': self.event2}), public=False),
+            Get(reverse('timeplace_create', args=[self.event1.pk]), public=False),
+            Get(reverse('timeplace_create', args=[self.event2.pk]), public=False),
             *[
-                Get(reverse('timeplace_ticket_list', kwargs={'event': time_place.event, 'pk': time_place.pk}), public=False)
+                Get(reverse('timeplace_ticket_list', args=[time_place.event.pk, time_place.pk]), public=False)
                 for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
             ],
             *[
-                Get(reverse('timeplace_ical', kwargs={'event': time_place.event, 'pk': time_place.pk}), public=True)
+                Get(reverse('timeplace_ical', args=[time_place.event.pk, time_place.pk]), public=True)
                 for time_place in self.time_places
             ],
             *[
-                Get(reverse('register_timeplace', kwargs={'event': time_place.event, 'time_place_pk': time_place.pk}), public=False)
+                Get(reverse('register_timeplace', args=[time_place.event.pk, time_place.pk]), public=False)
                 for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
             ],
             *[

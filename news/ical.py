@@ -28,7 +28,7 @@ class EventFeed(ICalFeed):
         return items
 
     def item_link(self, item: TimePlace):
-        return reverse('event_detail', kwargs={'event': item.event})
+        return reverse('event_detail', args=[item.event.pk])
 
     def item_title(self, item: TimePlace):
         return item.event.title
@@ -72,6 +72,6 @@ class SingleTimePlaceFeed(EventFeed):
 
     def get_object(self, request, *args, **kwargs):
         attrs = super().get_object(request, *args, **kwargs)
-        attrs['query_kwargs']['id'] = int(kwargs['pk'])
+        attrs['query_kwargs']['id'] = int(kwargs['time_place_pk'])
 
         return attrs

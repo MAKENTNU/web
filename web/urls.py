@@ -95,11 +95,11 @@ urlpatterns += [
 # URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
-    path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
-    path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+    path("reservation/rules/<int:pk>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
+    path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
 
-    path("news/article/<Article:article>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
-    path("news/event/<Event:event>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
+    path("news/article/<int:pk>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
+    path("news/event/<int:pk>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
     path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='ticket_detail', permanent=True)),
     path("news/ticket/me/", RedirectView.as_view(pattern_name='my_tickets_list', permanent=True)),
 

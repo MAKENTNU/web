@@ -1,4 +1,5 @@
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.dateparse import parse_datetime
 
@@ -15,7 +16,8 @@ def reservation_type(reservation, user):
     return "normal"
 
 
-def get_reservations(request, machine: Machine):
+def get_reservations(request, pk: int):
+    machine = get_object_or_404(Machine, pk=pk)
     start_date = parse_datetime(request.GET.get("startDate"))
     end_date = parse_datetime(request.GET.get("endDate"))
 
@@ -48,7 +50,8 @@ def get_reservations(request, machine: Machine):
     return JsonResponse({"reservations": reservations})
 
 
-def get_reservation_rules(request, machine: Machine):
+def get_reservation_rules(request, pk: int):
+    machine = get_object_or_404(Machine, pk=pk)
     return JsonResponse({
         "rules": [
             {

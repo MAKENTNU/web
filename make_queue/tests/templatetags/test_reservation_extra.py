@@ -46,8 +46,8 @@ class TestReservationExtra(TestCase):
         )
 
         self.assertEqual(
-            reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'machine': printer}),
-            current_calendar_url(printer)
+            current_calendar_url(printer),
+            reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'pk': printer.pk}),
         )
 
     @mock.patch('django.utils.timezone.now')
