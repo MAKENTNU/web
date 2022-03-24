@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
+from web.widgets import CKEditorUploadingWidget
 from .models import Content, Page
 
 
@@ -24,6 +25,12 @@ class PageContentForm(forms.ModelForm):
         error_messages = {
             'content': {'required': _("The page is currently empty; please add some content.")},
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Have to set the widget here instead of in `Meta.widgets` above,
+        # as the `widget` kwarg is always overwritten in `RichTextUploadingFormField`
+        self.fields['content'].widget = CKEditorUploadingWidget()
 
     def clean(self):
         cleaned_data = super().clean()
