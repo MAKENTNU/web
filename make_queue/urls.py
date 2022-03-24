@@ -16,13 +16,13 @@ machine_urlpatterns = [
 ]
 
 calendar_urlpatterns = [
-    path("<int:pk>/reservations/", api.calendar.get_reservations, name='api_reservations'),
-    path("<int:pk>/rules/", api.calendar.get_reservation_rules, name='api_reservation_rules'),
+    path("<int:pk>/reservations/", api.calendar.APIReservationListView.as_view(), name='api_reservations'),
+    path("<int:pk>/rules/", api.calendar.APIReservationRuleListView.as_view(), name='api_reservation_rules'),
 ]
 
 json_urlpatterns = [
-    path("<int:pk>/", login_required(api.reservation.get_machine_data), name='reservation_json'),
-    path("<int:pk>/<int:reservation_pk>/", login_required(api.reservation.get_machine_data), name='reservation_json'),
+    path("<int:pk>/", login_required(api.reservation.APIMachineDataView.as_view()), name='reservation_json'),
+    path("<int:pk>/<int:reservation_pk>/", login_required(api.reservation.APIMachineDataView.as_view()), name='reservation_json'),
     path("<str:username>/", permission_required('make_queue.add_printer3dcourse')(api.user_info.get_user_info_from_username), name='user_json'),
 ]
 
