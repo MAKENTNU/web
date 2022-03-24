@@ -79,7 +79,7 @@ class EventForm(NewsBaseForm):
 class EventRegistrationForm(forms.ModelForm):
     class Meta:
         model = EventTicket
-        fields = ('comment', 'language')
+        fields = ('user', 'timeplace', 'event', 'comment', 'language')
         widgets = {
             'language': SemanticSearchableChoiceInput(),
             'comment': forms.Textarea(attrs={

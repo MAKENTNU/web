@@ -141,25 +141,26 @@ class Event(NewsBase):
     def standalone(self):
         return self.event_type == self.Type.STANDALONE
 
-    def can_register(self, user: User):
-        # When hidden, registration is always disabled
-        if self.hidden:
-            return False
+    def can_register(self, user: User, *, fail_if_not_standalone):
+        # Admins should always be allowed
+        if user.has_perm('news.cancel_ticket'):
+            return True
 
-        # Registration for private events is never allowed for non members
-        if self.private and not user.has_perm('news.can_view_private'):
-            return False
-
-        # If there are no future occurrences, there is never anything to register for
-        if not self.get_future_occurrences().exists():
+        if (
+                # When hidden, registration is always disabled
+                self.hidden
+                # Registration for private events is never allowed for non members
+                or self.private and not user.has_perm('news.can_view_private')
+                # If there are no future occurrences, there is never anything to register for
+                or not self.get_future_occurrences().exists()
+        ):
             return False
 
         # If the event is standalone, the ability to register is dependent on if there are any more available tickets
         if self.standalone:
             return self.number_of_active_tickets < self.number_of_tickets
-
-        # Registration to a repeating event with future occurrences is handled by the time place objects
-        return True
+        else:
+            return not fail_if_not_standalone
 
 
 class TimePlaceQuerySet(models.QuerySet):
@@ -210,9 +211,19 @@ class TimePlace(models.Model):
         return self.end_time < timezone.localtime()
 
     def can_register(self, user: User):
-        if not self.event.can_register(user) or self.is_in_the_past():
+        # Admins should always be allowed
+        if user.has_perm('news.cancel_ticket'):
+            return True
+
+        if (
+                self.hidden
+                or self.event.standalone
+                or not self.event.can_register(user, fail_if_not_standalone=False)
+                or self.is_in_the_past()
+        ):
             return False
-        return not self.hidden and self.number_of_active_tickets < self.number_of_tickets
+
+        return self.number_of_active_tickets < self.number_of_tickets
 
 
 class EventTicket(models.Model):
@@ -223,9 +234,7 @@ class EventTicket(models.Model):
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
         to=User,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         related_name='event_tickets',
         verbose_name=_("user"),
     )
@@ -247,15 +256,20 @@ class EventTicket(models.Model):
         related_name='tickets',
         verbose_name=_("event"),
     )
-    # For backwards compatibility, name and email are no longer set. Getting name and email from user.
-    _name = models.CharField(max_length=128, db_column='name', verbose_name=_("name"))
-    _email = models.EmailField(db_column='email', verbose_name=_("email"))
     active = models.BooleanField(default=True, verbose_name=_("active"))
     comment = models.TextField(blank=True, verbose_name=_("comment"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
                                 verbose_name=_("preferred language"))
 
     class Meta:
+        constraints = (
+            models.CheckConstraint(
+                check=Q(timeplace__isnull=False, event__isnull=True) | Q(timeplace__isnull=True, event__isnull=False),
+                name="%(class)s_either_timeplace_or_event_is_set",
+            ),
+            models.UniqueConstraint(fields=('user', 'timeplace'), name="%(class)s_unique_user_per_timeplace"),
+            models.UniqueConstraint(fields=('user', 'event'), name="%(class)s_unique_user_per_event"),
+        )
         permissions = (
             ('cancel_ticket', "Can cancel and reactivate all event tickets"),
         )
@@ -270,15 +284,13 @@ class EventTicket(models.Model):
     @property
     def name(self):
         """
-        Gets the name of the user whom the ticket is registered to.
-        For backwards compatibility it returns the ``_name`` field if the user is not set.
+        :return: The name of the user whom the ticket is registered to.
         """
-        return self.user.get_full_name() if self.user else self._name
+        return self.user.get_full_name()
 
     @property
     def email(self):
         """
-        Gets the email of the user whom the ticket is registered to.
-        For backwards compatibility it returns the ``_email`` field if the user is not set.
+        :return: The email of the user whom the ticket is registered to.
         """
-        return self.user.email if self.user else self._email
+        return self.user.email
