@@ -50,7 +50,7 @@ class EventFeed(ICalFeed):
 
 
 class SingleEventFeed(EventFeed):
-    """An iCal feed of all occurences of a single event."""
+    """An iCal feed of all occurrences of a single event."""
 
     def file_name(self, attrs):
         title = self.items(attrs).values_list('event__title', flat=True).first()
@@ -64,7 +64,7 @@ class SingleEventFeed(EventFeed):
 
 
 class SingleTimePlaceFeed(EventFeed):
-    """An iCal feed of a single occurences of an event."""
+    """An iCal feed of a single occurrences of an event."""
 
     def file_name(self, attrs):
         title = self.items(attrs).values_list('event__title', flat=True).first()

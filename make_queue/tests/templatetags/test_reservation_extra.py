@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from users.models import User
-from util.locale_utils import attempt_as_local, parse_datetime_localized
+from util.locale_utils import parse_datetime_localized
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
@@ -35,7 +35,7 @@ class TestReservationExtra(TestCase):
                                                  start_time=timezone.now(),
                                                  end_time=timezone.now() + timedelta(hours=2))
 
-        self.assertEqual(current_calendar_url(printer), calendar_url_reservation(reservation))
+        self.assertEqual(calendar_url_reservation(reservation), current_calendar_url(printer))
 
     @mock.patch('django.utils.timezone.now')
     def test_current_calendar_url(self, now_mock):
@@ -52,8 +52,7 @@ class TestReservationExtra(TestCase):
 
     @mock.patch('django.utils.timezone.now')
     def test_is_current_data(self, now_mock):
-        date = timezone.datetime(2017, 3, 5, 11, 18, 0)
-        now_mock.return_value = attempt_as_local(date)
+        now_mock.return_value = parse_datetime_localized("2017-03-05 11:18")
 
         self.assertTrue(is_current_date(timezone.now().date()))
         self.assertTrue(is_current_date((timezone.now() + timedelta(hours=1)).date()))
@@ -62,40 +61,32 @@ class TestReservationExtra(TestCase):
 
     @mock.patch('django.utils.timezone.now')
     def test_get_current_time_of_day(self, now_mock):
-        def set_mock_value(hours, minutes):
-            date = timezone.datetime(2017, 3, 5, hours, minutes, 0)
-            now_mock.return_value = attempt_as_local(date)
+        def set_mock_value(time: str):
+            now_mock.return_value = parse_datetime_localized(f"2017-03-05 {time}")
 
-        set_mock_value(12, 0)
-        self.assertEqual(50, get_current_time_of_day())
+        set_mock_value("12:00")
+        self.assertEqual(get_current_time_of_day(), 50)
 
-        set_mock_value(0, 0)
-        self.assertEqual(0, get_current_time_of_day())
+        set_mock_value("00:00")
+        self.assertEqual(get_current_time_of_day(), 0)
 
-        set_mock_value(13, 0)
-        self.assertEqual((13 / 24) * 100, get_current_time_of_day())
+        set_mock_value("13:00")
+        self.assertEqual(get_current_time_of_day(), (13 / 24) * 100)
 
     def test_date_to_percentage(self):
-        date = timezone.datetime(2017, 3, 5, 12, 0, 0)
-        self.assertEqual(50, date_to_percentage(date))
-
-        date = timezone.datetime(2017, 3, 5, 0, 0, 0)
-        self.assertEqual(0, date_to_percentage(date))
-
-        date = timezone.datetime(2017, 3, 5, 17, 0, 0)
-        self.assertEqual((17 / 24) * 100, date_to_percentage(date))
-
-        date = timezone.datetime(2017, 3, 5, 17, 25, 0)
-        self.assertEqual((17 / 24 + 25 / (24 * 60)) * 100, date_to_percentage(date))
+        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 12:00")), 50)
+        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 00:00")), 0)
+        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 17:00")), (17 / 24) * 100)
+        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 17:25")), (17 / 24 + 25 / (24 * 60)) * 100)
 
     def test_invert(self):
-        self.assertEqual("true", invert(0))
-        self.assertEqual("false", invert(1))
-        self.assertEqual("true", invert(""))
-        self.assertEqual("false", invert("true"))
-        self.assertEqual("false", invert("test"))
-        self.assertEqual("true", invert(False))
-        self.assertEqual("false", invert(True))
+        self.assertEqual(invert(0), "true")
+        self.assertEqual(invert(1), "false")
+        self.assertEqual(invert(""), "true")
+        self.assertEqual(invert("true"), "false")
+        self.assertEqual(invert("test"), "false")
+        self.assertEqual(invert(False), "true")
+        self.assertEqual(invert(True), "false")
 
     def test_get_stream_image_path_returns_correct_image_path(self):
         no_stream_image_path = static('make_queue/img/no_stream.svg')

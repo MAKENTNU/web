@@ -30,7 +30,7 @@ class SpecificPageBasedViewMixin:
 
 class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
-    context_object_name = "page"
+    context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
 
     is_main_page = False
@@ -43,12 +43,12 @@ class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
 
 class HistoryDocumentationPageView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_history.html'
-    context_object_name = "page"
+    context_object_name = 'page'
 
 
 class OldDocumentationPageContentView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
-    context_object_name = "page"
+    context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
 
     content: Content
@@ -103,7 +103,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
 
     def form_invalid(self, form):
         try:
-            existing_page = Page.objects.get(title=form.data["title"])
+            existing_page = Page.objects.get(title=form.data['title'])
         except Page.DoesNotExist:
             existing_page = None
         if existing_page:
@@ -125,7 +125,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin
 
     def get_initial(self):
         return {
-            "content": self.object.current_content.content if self.object.current_content else "",
+            'content': self.object.current_content.content if self.object.current_content else "",
         }
 
     def get_form_kwargs(self):
@@ -167,7 +167,8 @@ class SearchPagesView(TemplateView):
     template_name = 'docs/search.html'
     page_size = 10
 
-    def pages_to_show(self, current_page, n_pages):
+    @staticmethod
+    def pages_to_show(current_page, n_pages):
         if current_page <= 3:
             return range(1, min(n_pages + 1, 8))
         if current_page >= n_pages - 3:
@@ -177,15 +178,15 @@ class SearchPagesView(TemplateView):
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        query = self.request.GET.get("query", "")
-        page = int(self.request.GET.get("page", 1))
+        query = self.request.GET.get('query', "")
+        page = int(self.request.GET.get('page', 1))
         pages = Page.objects.filter(Q(title__icontains=query) | Q(current_content__content__icontains=query))
         n_pages = ceil(pages.count() / self.page_size)
         context_data.update({
-            "pages": pages[(page - 1) * self.page_size:page * self.page_size],
-            "page": page,
-            "pages_to_show": self.pages_to_show(page, n_pages),
-            "query": query,
+            'pages': pages[(page - 1) * self.page_size:page * self.page_size],
+            'page': page,
+            'pages_to_show': self.pages_to_show(page, n_pages),
+            'query': query,
         })
 
         return context_data

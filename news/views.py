@@ -338,8 +338,9 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, T
     fields = ()
 
     def form_valid(self, form):
-        if timezone.localtime() > self.time_place.start_time:
-            delta_days = (timezone.localtime() - self.time_place.start_time).days
+        now = timezone.now()
+        if now > self.time_place.start_time:
+            delta_days = (now - self.time_place.start_time).days
             weeks = math.ceil(delta_days / 7)
         else:
             weeks = 1

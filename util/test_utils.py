@@ -170,7 +170,7 @@ class Get(PathPredicate):
         language_prefixes = self.LANGUAGE_PREFIXES if self.translated else [""]
         for prefix in language_prefixes:
             path = self._prepend_url_path(prefix, self.path)
-            with test_case.subTest(path=path):
+            with test_case.subTest(path=path, is_superuser=is_superuser):
                 self._do_request_assertion_for_path(path, prefix, client, is_superuser, test_case)
 
     def _do_request_assertion_for_path(self, path: str, language_prefix: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):

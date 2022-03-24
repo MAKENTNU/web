@@ -11,7 +11,6 @@ MAIN_PAGE_TITLE = "Documentation"
 
 class Page(models.Model):
     """Model for each individual documentation page."""
-
     title = models.CharField(max_length=64, unique=True, verbose_name=_("title"), validators=[page_title_validator])
     created_by = models.ForeignKey(
         to=User,
@@ -21,7 +20,7 @@ class Page(models.Model):
         related_name='doc_pages_created',
     )
     current_content = models.OneToOneField(
-        to="Content",
+        to='Content',
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -40,7 +39,6 @@ class Page(models.Model):
 
 class Content(models.Model):
     """The content of a documentation page. All versions are kept for editing history."""
-
     page = models.ForeignKey(
         to=Page,
         on_delete=models.CASCADE,

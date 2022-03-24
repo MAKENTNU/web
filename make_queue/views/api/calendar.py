@@ -3,18 +3,19 @@ from django.urls import reverse
 from django.utils.dateparse import parse_datetime
 from django.views.generic import ListView
 
+from users.models import User
 from ..reservation.reservation import MachineRelatedViewMixin
 from ...models.reservation import Reservation, ReservationRule
 
 
-def reservation_type(reservation, user):
+def reservation_type(reservation: Reservation, user: User):
     if reservation.special:
-        return "make"
+        return 'make'
     if reservation.event:
-        return "event"
-    if user is not None and reservation.user == user:
-        return "own"
-    return "normal"
+        return 'event'
+    if user == reservation.user:
+        return 'own'
+    return 'normal'
 
 
 class APIReservationListView(MachineRelatedViewMixin, ListView):
