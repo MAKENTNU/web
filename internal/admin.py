@@ -4,7 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped
-from web.multilingual.admin import MultiLingualFieldAdmin
 from .models import Member, Secret, SystemAccess, Quote
 
 
@@ -50,7 +49,7 @@ class SecretAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
         return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
-class QuoteAdmin(MultiLingualFieldAdmin):
+class QuoteAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
     list_display = ('quote', 'quoted', 'author')
     search_fields = ('quote', 'quoted', 'author')
 
