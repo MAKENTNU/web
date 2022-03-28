@@ -36,7 +36,7 @@
         {% endfor %}
 
         <input class="ui right floated make-bg-yellow submit button" type="submit" value="{% trans "Save" %}"/>
-        <a class="ui right floated red button" href="{% url "quotes_list" %}">
+        <a class="ui right floated red button" href="{% url 'quotes_list' %}">
             {% trans "Cancel" context "abort action" %}
         </a>
     </form>

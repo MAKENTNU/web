@@ -29,7 +29,7 @@ class CreateQuoteView(PermissionRequiredMixin, CreateView):
     form_class = QuoteForm
     template_name = 'internal/quote_create.html'
     context_object_name = 'quote'
-    success_url = reverse_lazy('quotes')
+    success_url = reverse_lazy('quotes_list')
 
     def form_valid(self, form, **kwargs):
         form.instance.author = self.request.user
@@ -42,13 +42,13 @@ class EditQuoteView(PermissionRequiredMixin, UpdateView):
     form_class = QuoteForm
     template_name = 'internal/quote_edit.html'
     context_object_name = 'quote'
-    success_url = reverse_lazy('quotes')
+    success_url = reverse_lazy('quotes_list')
 
 
 class DeleteQuoteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('internal.delete_quote',)
     model = Quote
-    success_url = reverse_lazy('quotes')
+    success_url = reverse_lazy('quotes_list')
 
 
 class SecretListView(ListView):
