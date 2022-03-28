@@ -2,12 +2,15 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
+from util.modelfields import CompressedImageField
+from util.storage import OverwriteStorage, UploadToUtils
 
 
 class Skill(models.Model):
-    title = models.CharField(max_length=100, unique=True, verbose_name=_("Title (Norwegian)"))
-    title_en = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name=_("Title (English)"))
-    image = models.ImageField(upload_to='skills', blank=True, verbose_name=_("Illustration image"))
+    title = models.CharField(max_length=100, unique=True, verbose_name=_("title (Norwegian)"))
+    title_en = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name=_("title (English)"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('skills'),
+                                 blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("illustration image"))
 
     def __str__(self):
         return self.title
@@ -25,9 +28,10 @@ class Profile(models.Model):
         null=True,
         related_name='profile',
     )
-    image = models.ImageField(upload_to='profile', blank=True, verbose_name=_("Profile picture"))
-    on_make = models.BooleanField(default=False, verbose_name=_("Checked in"))
-    last_checkin = models.DateTimeField(auto_now=True, verbose_name=_("Last checked in"))
+    image = models.ImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('profiles'),
+                              blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("profile picture"))
+    on_make = models.BooleanField(default=False, verbose_name=_("checked in"))
+    last_checkin = models.DateTimeField(auto_now=True, verbose_name=_("last checked in"))
 
     def __str__(self):
         if self.user:
@@ -67,13 +71,14 @@ class SuggestSkill(models.Model):
         null=True,
         related_name='skill_suggestions',
     )
-    title = models.CharField(max_length=100, unique=True, verbose_name=_("Title (Norwegian)"))
-    title_en = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name=_("Title (English)"))
+    title = models.CharField(max_length=100, unique=True, verbose_name=_("title (Norwegian)"))
+    title_en = models.CharField(max_length=100, null=True, blank=True, unique=True, verbose_name=_("title (English)"))
     voters = models.ManyToManyField(
         to=Profile,
         related_name='skill_suggestions_voted_for',
     )
-    image = models.ImageField(upload_to="skills", blank=True, verbose_name=_("Illustration image"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('skills/suggestions'),
+                                 blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("illustration image"))
 
     class Meta:
         ordering = ('title',)
@@ -91,7 +96,7 @@ class SuggestSkill(models.Model):
 
 
 class RegisterProfile(models.Model):
-    card_id = models.CharField(max_length=100, verbose_name=_("Card number"))
+    card_id = models.CharField(max_length=100, verbose_name=_("card number"))
     last_scan = models.DateTimeField()
 
     def __str__(self):

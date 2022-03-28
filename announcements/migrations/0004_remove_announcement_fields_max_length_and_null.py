@@ -15,11 +15,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='announcement',
             name='content',
-            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='Content'),
+            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='content'),
         ),
         migrations.AlterField(
             model_name='announcement',
             name='link',
-            field=web.modelfields.URLTextField(blank=True, help_text='An optional link to an information page.', verbose_name='Link'),
+            field=web.modelfields.URLTextField(blank=True, help_text='An optional link to an information page.', verbose_name='link'),
         ),
     ]

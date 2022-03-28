@@ -15,9 +15,9 @@ class Migration(migrations.Migration):
             name='SystemAccess',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(choices=[('drive', 'Drive'), ('slack', 'Slack'), ('calendar', 'Calendar'), ('trello', 'Trello'), ('email', 'Email'), ('website', 'Website')], max_length=32, verbose_name='System')),
-                ('value', models.BooleanField(verbose_name='Access')),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.Member', verbose_name='Member')),
+                ('name', models.CharField(choices=[('drive', 'Drive'), ('slack', 'Slack'), ('calendar', 'Calendar'), ('trello', 'Trello'), ('email', 'Email'), ('website', 'Website')], max_length=32, verbose_name='system')),
+                ('value', models.BooleanField(verbose_name='access')),
+                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internal.Member', verbose_name='member')),
             ],
         ),
         migrations.RemoveField(

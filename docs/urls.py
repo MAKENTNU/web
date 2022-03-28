@@ -3,14 +3,13 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.decorators import permission_required
 from django.urls import path, register_converter
 from django.views.generic import TemplateView
-from django_hosts import reverse
 
 from . import converters, views
 from .models import MAIN_PAGE_TITLE, Page
 
 
-register_converter(converters.PageByTitle, 'Page')
-register_converter(converters.ContentByPk, 'Content')
+register_converter(converters.SpecificPageByTitle, 'Page')
+register_converter(converters.SpecificContent, 'Content')
 
 unsafe_urlpatterns = [
     path("", views.DocumentationPageDetailView.as_view(), {'pk': Page.objects.get_or_create(title=MAIN_PAGE_TITLE)[0].pk}, name='home'),
@@ -24,20 +23,20 @@ unsafe_urlpatterns = [
     path("search/", views.SearchPagesView.as_view(), name='search_pages'),
 ]
 
-LOGIN_URL = reverse('login', host='main')
-
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='docs/robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
     path("i18n/", decorator_include(
-        permission_required('docs.view_page', login_url=LOGIN_URL),
+        permission_required('docs.view_page'),
         'django.conf.urls.i18n'
     )),
 ]
 
 urlpatterns += i18n_patterns(
     path("", decorator_include(
-        permission_required('docs.view_page', login_url=LOGIN_URL),
+        permission_required('docs.view_page'),
         unsafe_urlpatterns
     )),
+
     prefix_default_language=False,
 )

@@ -1,52 +1,23 @@
-{% extends 'docs/base.html' %}
-{% load i18n %}
-{% load static %}
+{% extends 'web/edit_form.html' %}
 
 
-{% block title %}
-    {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
-{% endblock title %}
-
-{% block extra_head %}
-    <script src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
-    <script src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
-{% endblock extra_head %}
-
-{% block body %}
-    <div class="ui container">
-        <div id="empty-content-error" class="ui transition hidden error message">
-            <i class="close icon"></i>
-            <div class="header">{% trans "No content" %}</div>
-            {% trans "The page is currently empty. Please add some content" %}.
-        </div>
-        <h1>
-            {% blocktrans with title=page.title %}Edit “{{ title }}”{% endblocktrans %}
-        </h1>
-        <form id="edit-form" class="ui form" method="POST" action="" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="ui field">
-                {{ form.content }}
+{% block field_pre_content %}
+    {% if field.name == 'content' %}
+        {% for error in field.errors %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                <b>{{ error }}</b>
             </div>
+        {% endfor %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_pre_content %}
 
-            <button class="ui right floated make-bg-yellow button">
-                {% trans "Submit" context "edit" %}
-            </button>
-            <a class="ui right floated red button" href="{% url 'page_detail' pk=page %}">
-                {% trans "Cancel" context "abort action" %}
-            </a>
-        </form>
-    </div>
-{% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $("#edit-form").submit(() => {
-            const filled = CKEDITOR.instances["id_content"].getData() !== "";
-            const $errorMessage = $("#empty-content-error");
-            if (!filled && $errorMessage.hasClass("hidden")) {
-                $errorMessage.transition("fade");
-            }
-            return filled;
-        });
-    </script>
-{% endblock extra_scripts %}
+{% block field_errors %}
+    {% if field.name == 'content' %}
+        {# Remove the block's content and add it in the `field_pre_content` block above instead #}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_errors %}

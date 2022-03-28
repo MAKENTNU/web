@@ -3,12 +3,20 @@
 {% load i18n %}
 {% load thumbnail %}
 {% load permission_tags %}
+{% load uri_tags %}
 
 
 {% block title %}{{ equipment.title }}{% endblock title %}
 
 {% block og_title %}{{ equipment.title }}{% endblock og_title %}
-{% block og_image %}{{ equipment.image.url }}{% endblock og_image %}
+{% block og_image_absolute_uri %}{% get_absolute_uri_for_path request equipment.image.url %}{% endblock og_image_absolute_uri %}
+{% block og_image_alt %}
+    {% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}
+{% endblock og_image_alt %}
+
+{% block extra_head %}
+    {% include 'ckeditor/mathjax_render.html' %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="equipment">
@@ -23,10 +31,10 @@
                     alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
                 />
 
-                {% if user|has_any_equipment_permissions %}
+                {% if user|has_any_permissions_for:'Equipment' %}
                     <br/>
                     <a class="ui make-bg-yellow button" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
-                        <i class="ui edit icon"></i>{% trans "Edit" %}
+                        <i class="edit icon"></i>{% trans "Edit" %}
                     </a>
                 {% endif %}
 

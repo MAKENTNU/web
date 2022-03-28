@@ -15,17 +15,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='profile',
             name='image',
-            field=models.ImageField(blank=True, upload_to='profile', verbose_name='Profile picture'),
+            field=models.ImageField(blank=True, upload_to='profile', verbose_name='profile picture'),
         ),
         migrations.AlterField(
             model_name='profile',
             name='last_checkin',
-            field=models.DateTimeField(auto_now=True, verbose_name='Last checked in'),
+            field=models.DateTimeField(auto_now=True, verbose_name='last checked in'),
         ),
         migrations.AlterField(
             model_name='profile',
             name='on_make',
-            field=models.BooleanField(default=False, verbose_name='Checked in'),
+            field=models.BooleanField(default=False, verbose_name='checked in'),
         ),
         migrations.AlterField(
             model_name='profile',
@@ -35,22 +35,22 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='registerprofile',
             name='card_id',
-            field=models.CharField(max_length=100, verbose_name='Card number'),
+            field=models.CharField(max_length=100, verbose_name='card number'),
         ),
         migrations.AlterField(
             model_name='skill',
             name='image',
-            field=models.ImageField(blank=True, upload_to='skills', verbose_name='Illustration image'),
+            field=models.ImageField(blank=True, upload_to='skills', verbose_name='illustration image'),
         ),
         migrations.AlterField(
             model_name='skill',
             name='title',
-            field=models.CharField(max_length=100, unique=True, verbose_name='Title (Norwegian)'),
+            field=models.CharField(max_length=100, unique=True, verbose_name='title (Norwegian)'),
         ),
         migrations.AlterField(
             model_name='skill',
             name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='Title (English)'),
+            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='title (English)'),
         ),
         migrations.AlterField(
             model_name='suggestskill',
@@ -60,17 +60,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='suggestskill',
             name='image',
-            field=models.ImageField(blank=True, upload_to='skills', verbose_name='Illustration image'),
+            field=models.ImageField(blank=True, upload_to='skills', verbose_name='illustration image'),
         ),
         migrations.AlterField(
             model_name='suggestskill',
             name='title',
-            field=models.CharField(max_length=100, unique=True, verbose_name='Title (Norwegian)'),
+            field=models.CharField(max_length=100, unique=True, verbose_name='title (Norwegian)'),
         ),
         migrations.AlterField(
             model_name='suggestskill',
             name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='Title (English)'),
+            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='title (English)'),
         ),
         migrations.AlterField(
             model_name='suggestskill',

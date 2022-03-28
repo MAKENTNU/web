@@ -165,24 +165,27 @@
     background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic-UI */
 }
 
-#side-nav .lang-link {
+#side-nav .set-language-form {
     position: absolute;
     margin: 0;
     top: 0;
     right: 0;
 }
 
-#side-nav .lang-link .link {
+#side-nav .set-language-form .button {
     margin: 0;
-    align-self: start;
+    padding: 0.75em;
+    box-shadow: none;
 }
 
-#side-nav .lang-link .link .text {
-    margin-right: 0.5em;
+#side-nav .set-language-form .inverted.make-col-ligrey.button:hover,
+#side-nav .set-language-form .inverted.make-col-ligrey.button:focus {
+    box-shadow: 0 0 0 2px var(--make-light-grey) inset; /* Same as Fomantic-UI's style for inverted buttons, except the color */
+    background-color: transparent;
 }
 
-#side-nav .lang-link .link .globe.icon {
-    margin: 0;
+#side-nav .set-language-form .button .globe.icon {
+    margin: 0 -5px 0 3px;
 }
 
 /* Narrower space between elements in navbar */
@@ -255,7 +258,7 @@
         left: initial;
     }
 
-    #side-nav .lang-link {
+    #side-nav .set-language-form {
         position: static;
     }
 }

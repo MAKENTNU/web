@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='committee',
             name='clickbait',
-            field=models.TextField(blank=True, verbose_name='Clickbait'),
+            field=models.TextField(blank=True, verbose_name='clickbait'),
         ),
     ]

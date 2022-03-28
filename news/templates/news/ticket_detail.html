@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
 {% load static %}
+{% load html_tags %}
 
 
 {% block extra_head %}
@@ -10,11 +11,10 @@
 {% block body %}
     <div class="ui container">
         {% if ticket.user == request.user or perms.news.view_eventticket %}
-            {% firstof ticket.timeplace.event.title ticket.event.title as event_title %}
-            <h1>{% blocktrans with title=event_title %}Ticket for “{{ title }}”{% endblocktrans %}</h1>
+            <h1>{% blocktrans with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktrans %}</h1>
             <div>
                 <b>{% trans "Registered to" %}:</b> {{ ticket.name }},
-                {{ ticket.email|urlize }}
+                {{ ticket.email|urlize_target_blank }}
             </div>
             <br/>
 

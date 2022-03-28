@@ -13,31 +13,31 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='machine',
             name='location',
-            field=models.CharField(max_length=40, verbose_name='Location'),
+            field=models.CharField(max_length=40, verbose_name='location'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='location_url',
-            field=models.URLField(verbose_name='Location URL'),
+            field=models.URLField(verbose_name='location URL'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='machine_model',
-            field=models.CharField(max_length=40, verbose_name='Machine model'),
+            field=models.CharField(max_length=40, verbose_name='machine model'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='machine_type',
-            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], null=True, verbose_name='Machine type'),
+            field=models.IntegerField(choices=[(1, '3D-printers'), (2, 'Sewing machines')], null=True, verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='name',
-            field=models.CharField(max_length=30, unique=True, verbose_name='Name'),
+            field=models.CharField(max_length=30, unique=True, verbose_name='name'),
         ),
         migrations.AlterField(
             model_name='machine',
             name='status',
-            field=models.CharField(choices=[('R', 'Reserved'), ('F', 'Available'), ('I', 'In use'), ('O', 'Out of order'), ('M', 'Maintenance')], default="F", max_length=2, verbose_name='Status'),
+            field=models.CharField(choices=[('R', 'Reserved'), ('F', 'Available'), ('I', 'In use'), ('O', 'Out of order'), ('M', 'Maintenance')], default="F", max_length=2, verbose_name='status'),
         ),
     ]

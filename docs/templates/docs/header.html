@@ -6,7 +6,7 @@
 
 <header id="header">
     <div id="page-search">
-        <form id="search-form" method="GET" action="{% url 'search_pages' %}">
+        <form id="search-form" class="dont-prevent-leaving" method="GET" action="{% url 'search_pages' %}">
             <div class="ui icon input">
                 <input id="query" type="text" name="query" placeholder="{% trans "Search" %}"/>
                 <i id="search" class="search link icon"></i>
@@ -15,15 +15,15 @@
     </div>
     {% if perms.docs.add_page %}
         <a id="new-page" class="ui right floated make-bg-yellow button" href="{% url 'create_page' %}">
-            <i class="ui plus icon"></i>
+            <i class="plus icon"></i>
             {% trans "New page" %}
         </a>
     {% endif %}
     <div id="home-button">
         <a href="{% url 'home' %}">
             <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="medium" src="{% static 'web/img/logo_make.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="small" src="{% static 'web/img/logo_m.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="medium" src="{% static 'web/img/logo_narrow.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <img class="small" src="{% static 'web/img/logo_icon.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
         </a>
     </div>
 </header>

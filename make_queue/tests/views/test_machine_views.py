@@ -1,13 +1,12 @@
 from http import HTTPStatus
 
-from django.contrib.auth.models import Permission
 from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
 
 from users.models import User
 from ..utility import request_with_user
-from ...forms import BaseMachineForm, EditMachineForm
+from ...forms import CreateMachineForm, EditMachineForm
 from ...models.machine import Machine, MachineType
 from ...views.reservation.machine import MachineListView
 
@@ -103,9 +102,7 @@ class TestCreateAndEditMachineView(TestCase):
         username = "TEST_USER"
         password = "TEST_PASS"
         self.user = User.objects.create_user(username=username, password=password)
-        change_permission = Permission.objects.get(codename='change_machine')
-        create_permission = Permission.objects.get(codename='add_machine')
-        self.user.user_permissions.add(create_permission, change_permission)
+        self.user.add_perms('make_queue.add_machine', 'make_queue.change_machine')
         self.client.login(username=username, password=password)
 
     def test_edit_machine_context_data_has_correct_form(self):
@@ -115,13 +112,13 @@ class TestCreateAndEditMachineView(TestCase):
             machine_model="Ultimaker 2+",
             machine_type=printer_machine_type,
         )
-        self.response = self.client.get(reverse('edit_machine', args=[machine.pk]))
+        response = self.client.get(reverse('edit_machine', args=[machine.pk]))
 
-        self.assertEqual(self.response.status_code, HTTPStatus.OK)
-        self.assertTrue(isinstance(self.response.context_data['form'], EditMachineForm))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertTrue(isinstance(response.context_data['form'], EditMachineForm))
 
     def test_create_machine_context_data_has_correct_form(self):
-        self.response = self.client.get(reverse('create_machine'))
+        response = self.client.get(reverse('create_machine'))
 
-        self.assertEqual(self.response.status_code, HTTPStatus.OK)
-        self.assertTrue(isinstance(self.response.context_data['form'], BaseMachineForm))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertTrue(isinstance(response.context_data['form'], CreateMachineForm))

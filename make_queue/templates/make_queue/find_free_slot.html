@@ -16,7 +16,7 @@
 
     <div class="ui container">
         <h1>{% trans "Find free reservation slots" %}</h1>
-        <form class="ui form" method="POST">
+        <form class="dont-prevent-leaving ui form" method="POST">
             {% csrf_token %}
             <div class="ui fields">
                 <div class="ui six wide field">
@@ -46,7 +46,7 @@
                         <div class="right floated content">
                             {{ slot.duration }}{% trans "h" %}
                         </div>
-                        <i class="ui middle aligned clock icon"></i>
+                        <i class="middle aligned clock icon"></i>
                         <div class="content">
                             <div class="header">
                                 {{ slot.machine.name }}

@@ -1,7 +1,15 @@
+.edit-button {
+    margin-top: 1em !important; /* Overrides Fomantic-UI */
+    margin-bottom: 1em !important; /* Overrides Fomantic-UI */
+}
+
+.edit-button.hidden {
+    visibility: hidden;
+}
+
 .contentbox {
-    position: relative;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin-top: 2em;
+    margin-bottom: 1.5em;
 }
 
 .contentbox .edit.button {
