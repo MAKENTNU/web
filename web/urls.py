@@ -15,6 +15,7 @@ from social_core.utils import setting_name
 from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from dataporten.views import Logout, login_wrapper
 from news import urls as news_urls
+from util.url_utils import debug_toolbar_urls
 from . import views
 
 
@@ -24,6 +25,7 @@ urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
 
+    *debug_toolbar_urls(),
     path("i18n/", include('django.conf.urls.i18n')),
 ]
 

@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import permission_required
 from django.urls import path, register_converter
 from django.views.generic import TemplateView
 
+from util.url_utils import debug_toolbar_urls
 from . import converters, views
 
 
@@ -13,6 +14,7 @@ urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='docs/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
 
+    *debug_toolbar_urls(),
     path("i18n/", decorator_include(
         permission_required('docs.view_page'),
         'django.conf.urls.i18n'
