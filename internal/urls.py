@@ -7,6 +7,16 @@ from django.views.generic import TemplateView
 from . import views
 
 
+urlpatterns = [
+    path("robots.txt", TemplateView.as_view(template_name='internal/robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
+
+    path("i18n/", decorator_include(
+        permission_required('internal.is_internal'),
+        'django.conf.urls.i18n'
+    )),
+]
+
 internal_contentbox_urlpatterns = [
     path("<int:pk>/edit/", views.EditInternalContentBoxView.as_view(), name='contentbox_edit'),
 ]
@@ -34,7 +44,7 @@ secret_urlpatterns = [
     path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name='delete_secret'),
 ]
 
-urlpatterns = i18n_patterns(
+urlpatterns += i18n_patterns(
     path("", decorator_include(
         permission_required('internal.is_internal'),
         internal_urlpatterns
@@ -50,12 +60,3 @@ urlpatterns = i18n_patterns(
 
     prefix_default_language=False,
 )
-
-urlpatterns += [
-    path("robots.txt", TemplateView.as_view(template_name='internal/robots.txt', content_type='text/plain')),
-    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
-    path("i18n/", decorator_include(
-        permission_required('internal.is_internal'),
-        'django.conf.urls.i18n'
-    )),
-]

@@ -21,9 +21,10 @@ from . import views
 extra = "/" if getattr(settings, setting_name('TRAILING_SLASH'), True) else ""
 
 urlpatterns = [
-    path("i18n/", include('django.conf.urls.i18n')),
     path("robots.txt", TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
+
+    path("i18n/", include('django.conf.urls.i18n')),
 ]
 
 admin_urlpatterns = [

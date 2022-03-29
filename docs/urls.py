@@ -9,6 +9,16 @@ from . import converters, views
 
 register_converter(converters.SpecificPageByTitle, 'PageTitle')
 
+urlpatterns = [
+    path("robots.txt", TemplateView.as_view(template_name='docs/robots.txt', content_type='text/plain')),
+    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
+
+    path("i18n/", decorator_include(
+        permission_required('docs.view_page'),
+        'django.conf.urls.i18n'
+    )),
+]
+
 unsafe_urlpatterns = [
     path("", views.DocumentationPageDetailView.as_view(is_main_page=True), name='home'),
     path("page/create/", views.CreateDocumentationPageView.as_view(), name='create_page'),
@@ -19,15 +29,6 @@ unsafe_urlpatterns = [
     path("page/<PageTitle:title>/edit/", views.EditDocumentationPageView.as_view(), name='edit_page'),
     path("page/<PageTitle:title>/delete/", views.DeleteDocumentationPageView.as_view(), name='delete_page'),
     path("search/", views.SearchPagesView.as_view(), name='search_pages'),
-]
-
-urlpatterns = [
-    path("robots.txt", TemplateView.as_view(template_name='docs/robots.txt', content_type='text/plain')),
-    path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
-    path("i18n/", decorator_include(
-        permission_required('docs.view_page'),
-        'django.conf.urls.i18n'
-    )),
 ]
 
 urlpatterns += i18n_patterns(
