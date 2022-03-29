@@ -107,10 +107,15 @@ INSTALLED_APPS = [
 
     'util',
 
+    # Contains a lot of useful management commands, but is not strictly necessary for the project.
+    # See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html
+    'django_extensions',
+
     # Should be placed last,
     # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
     'django_cleanup.apps.CleanupConfig',
 ]
+
 
 MIDDLEWARE = [
     # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
