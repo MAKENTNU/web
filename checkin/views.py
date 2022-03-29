@@ -119,7 +119,6 @@ class ProfilePageView(TemplateView):
             'userskill': user_skills,
             'skill_dict': skill_dict,
             'all_skills': Skill.objects.all(),
-            'make_member': self.request.user.groups.filter(name="make").exists(),
         })
         return context
 
