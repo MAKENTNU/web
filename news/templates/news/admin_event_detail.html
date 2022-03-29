@@ -18,7 +18,7 @@
     <div class="ui container">
 
         <a href="{% url 'admin_event_list' %}">
-            <i class="ui angle double left icon"></i>{% trans "Admin page for events" %}
+            <i class="angle double left icon"></i>{% trans "Admin page for events" %}
         </a>
 
         <h1 class="title-with-buttons">
@@ -29,18 +29,18 @@
                     <a class="delete-modal-button ui red button"
                        data-url="{% url 'event_delete' event.pk %}"
                        data-obj-name="{{ event }}">
-                        <i class="ui trash icon"></i>{% trans "Delete" %}
+                        <i class="trash icon"></i>{% trans "Delete" %}
                     </a>
                 {% endif %}
 
                 {% if perms.news.change_event %}
                     <a class="ui blue button" href="{% url 'event_edit' event.pk %}">
-                        <i class="ui edit icon"></i>{% trans "Edit" %}
+                        <i class="edit icon"></i>{% trans "Edit" %}
                     </a>
                 {% endif %}
 
                 <a class="ui make-bg-yellow button" href="{% url 'event_detail' event.pk %}">
-                    <i class="ui sticky note icon"></i>{% trans "Go to the event page" %}
+                    <i class="sticky note icon"></i>{% trans "Go to the event page" %}
                 </a>
             </div>
         </h1>
@@ -66,11 +66,11 @@
 
         {% if event.standalone %}
             <h3 class="ui horizontal divider header">
-                <i class="ui ticket icon"></i> {% trans "Tickets" %}
+                <i class="ticket icon"></i> {% trans "tickets"|capfirst %}
             </h3>
             {% if event.number_of_tickets %}
                 <b>
-                    <a href="{% url 'event_ticket_list' pk=event.pk %}">
+                    <a href="{% url 'event_ticket_list' event.pk %}">
                         {% blocktrans trimmed with num_active_tickets=event.number_of_active_tickets num_tickets=event.number_of_tickets %}
                             {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
                         {% endblocktrans %}
@@ -82,13 +82,13 @@
         {% endif %}
 
         <h3 class="ui horizontal divider header">
-            <i class="ui time icon"></i>{% trans "Occurrences" %}
+            <i class="time icon"></i>{% trans "Occurrences" %}
         </h3>
         <div class="create-new-occurrence">
             {% if perms.news.add_timeplace %}
                 <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace_create' event.pk %}">
                     <i class="time icon"></i>
-                    {% trans "New occurrence" %}
+                    {% trans "Add new occurrence" %}
                 </a>
             {% endif %}
         </div>

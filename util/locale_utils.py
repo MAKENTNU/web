@@ -1,11 +1,9 @@
-from calendar import day_name
 from datetime import datetime, timedelta
 
-from django.utils import timezone, translation
+from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 from django.utils.formats import date_format
 from django.utils.timezone import make_aware
-from django.utils.translation import gettext
 
 
 DEFAULT_TIMEZONE = timezone.get_default_timezone()
@@ -57,6 +55,13 @@ def iso_date_format(value):
 def iso_datetime_format(value):
     value = attempt_as_local(value)
     return value.isoformat()
+
+
+def exact_weekday_to_day_name(exact_weekday: float):
+    from make_queue.models.reservation import ReservationRule  # avoids circular imports
+
+    truncated_and_wrapped_weekday = int(exact_weekday - 1) % 7 + 1
+    return ReservationRule.DAY_INDEX_TO_NAME[truncated_and_wrapped_weekday]
 
 
 def is_valid_week(year, week):
@@ -124,18 +129,3 @@ def timedelta_to_hours(timedelta_obj: timedelta):
     :return: The number of hours it covers
     """
     return timedelta_obj.days * 24 + timedelta_obj.seconds / (60 * 60)
-
-
-def get_day_name(day_no, locale):
-    """
-    Gets the name of the given day [0, 6] in the given locale.
-    
-    :param day_no: The day in the week in the range [0, 6], with Monday being 0
-    :param locale: The language code
-    :return: The name of the given day in the given locale
-    """
-    previous_lang = translation.get_language()
-    translation.activate(locale)
-    locale_day_name = gettext(day_name[day_no])
-    translation.activate(previous_lang)
-    return locale_day_name

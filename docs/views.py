@@ -4,13 +4,13 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
-from django.utils.datetime_safe import datetime
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, DetailView, FormView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView
+from django.views.generic.edit import ModelFormMixin
 
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
 from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
-from .models import Content, MAIN_PAGE_TITLE, Page
+from .models import MAIN_PAGE_TITLE, Page
 
 
 class DocumentationPageDetailView(DetailView):
@@ -71,65 +71,78 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, UpdateView):
         return HttpResponseForbidden()
 
 
-class CreateDocumentationPageView(PermissionRequiredMixin, FormView):
+class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView):
     permission_required = ('docs.add_page',)
     model = Page
     form_class = CreatePageForm
-    template_name = 'docs/documentation_page_create.html'
+
+    base_template = 'docs/base.html'
+    form_title = _("Create a New Page")
+    narrow = False
+    centered_title = False
+    back_button_link = reverse_lazy('home')
+    back_button_text = _("Documentation home page")
+    save_button_text = _("Add")
+
+    def get_form_kwargs(self):
+        # Forcefully insert the user into the form
+        return insert_form_field_values(super().get_form_kwargs(), {'created_by': self.request.user})
 
     def form_invalid(self, form):
         try:
-            page = Page.objects.get(title=form.data["title"])
-            return HttpResponseRedirect(reverse('page_detail', kwargs={'pk': page}))
+            existing_page = Page.objects.get(title=form.data["title"])
         except Page.DoesNotExist:
-            return super().form_invalid(form)
+            existing_page = None
+        if existing_page:
+            return HttpResponseRedirect(reverse('page_detail', kwargs={'pk': existing_page}))
+        return super().form_invalid(form)
 
-    def form_valid(self, form):
-        page = Page.objects.create(
-            title=form.cleaned_data["title"],
-            created_by=self.request.user,
-        )
-        return HttpResponseRedirect(reverse('edit_page', kwargs={'pk': page}))
+    def get_success_url(self):
+        return reverse('edit_page', kwargs={'pk': self.object})
 
 
-class EditDocumentationPageView(PermissionRequiredMixin, FormView):
+class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
     permission_required = ('docs.change_page',)
-    model = Content
+    model = Page
     form_class = PageContentForm
     template_name = 'docs/documentation_page_edit.html'
 
-    def get_page(self):
-        return Page.objects.get(pk=self.kwargs.get('pk'))
+    base_template = 'docs/base.html'
+    narrow = False
+    centered_title = False
 
     def get_initial(self):
-        page = self.get_page()
         return {
-            "content": page.current_content.content if page.current_content else "",
+            "content": self.object.current_content.content if self.object.current_content else "",
         }
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data.update({
-            "page": self.get_page(),
+    def get_form_kwargs(self):
+        form_kwargs = super().get_form_kwargs()
+        # UpdateView inserts the Page instance into the Content form, so remove it, as a new Content instance will be created
+        form_kwargs.pop('instance')
+        # Forcefully insert the page and user into the form
+        return insert_form_field_values(form_kwargs, {
+            'page': self.object,
+            'made_by': self.request.user,
         })
-        return context_data
 
-    def get_success_url(self):
-        return reverse('page_detail', kwargs={'pk': self.get_page()})
+    def get_form_title(self):
+        return _("Edit “{title}”").format(title=self.object)
+
+    def get_back_button_link(self):
+        return self.get_success_url()
+
+    def get_back_button_text(self):
+        return _("View “{title}”").format(title=self.object)
 
     def form_valid(self, form):
-        redirect = super().form_valid(form)
-        page = self.get_page()
-        if not page.current_content or form.cleaned_data["content"] != page.current_content.content:
-            content = Content.objects.create(
-                content=form.cleaned_data["content"],
-                page=self.get_page(),
-                changed=datetime.now(),
-                made_by=self.request.user,
-            )
-            page.current_content = content
-            page.save()
-        return redirect
+        form.save()
+        # ModelFormMixin sets `self.object = form.save()`, which we don't want,
+        # as `get_success_url()` should still be able to refer to the Page object
+        return super(ModelFormMixin, self).form_valid(form)
+
+    def get_success_url(self):
+        return reverse('page_detail', kwargs={'pk': self.object})
 
 
 class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

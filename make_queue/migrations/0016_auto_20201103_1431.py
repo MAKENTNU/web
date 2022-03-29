@@ -24,6 +24,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quota',
             name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='Machine type'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='machine type'),
         ),
     ]

@@ -4,6 +4,8 @@
 {% load form_utility %}
 
 
+{# TODO: make this template extend web/edit_form.html #}
+
 {% block extra_head %}
     {{ form.media }}
     <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_edit.css' %}"/>
@@ -68,7 +70,7 @@
             <div class="ui two fields">
                 <div class="ui field">
                     <label>
-                        {{ form.user.label }}
+                        {{ form.user.label|capfirst }}
                         <span class="clear-dropdown">{% trans "Clear selection" %}</span>
                     </label>
                     {{ form.user }}

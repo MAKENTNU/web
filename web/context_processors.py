@@ -1,5 +1,14 @@
+from django.conf import settings
 from django.contrib.auth.views import LoginView
+from django.utils.translation import get_language
 from django_hosts import reverse, reverse_host
+
+
+def common_context_variables(request):
+    return {
+        'DEFAULT_LANGUAGE_CODE': settings.LANGUAGE_CODE,
+        'CURRENT_LANGUAGE_CODE': get_language(),
+    }
 
 
 def login(request):

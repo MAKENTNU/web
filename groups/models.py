@@ -1,6 +1,10 @@
 from django.contrib.auth.models import Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
+
+from util.modelfields import CompressedImageField
+from util.storage import OverwriteStorage, UploadToUtils
 
 
 class InheritanceGroup(Group):
@@ -95,11 +99,14 @@ class Committee(models.Model):
         related_name='committee',
         verbose_name=_("group"),
     )
-    clickbait = models.TextField(blank=True, verbose_name=_("Clickbait"))
-    description = models.TextField(verbose_name=_("Description"))
-    email = models.EmailField(verbose_name=_("Email"))
-    image = models.ImageField(blank=True, verbose_name=_("Image"))
+    clickbait = models.TextField(blank=True, verbose_name=_("clickbait"))
+    description = models.TextField(verbose_name=_("description"))
+    email = models.EmailField(verbose_name=_("email"))
+    image = CompressedImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('committees'),
+                                 blank=True, max_length=200, storage=OverwriteStorage(), verbose_name=_("image"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(excluded_fields=['last_modified'])
 
     def __str__(self):
         return self.name

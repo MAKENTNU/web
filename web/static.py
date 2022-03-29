@@ -11,11 +11,12 @@ from django.views.static import serve
 # In the files matching the glob patterns, the strings matching the regexes are replaced by the inner capturing group,
 # which is first looked up in the static file manifest
 INTERPOLATION_PATTERNS = (
-    (
-        '*.interpolated.*', (
-            (r"""(\{% get_relative_static ["'](.*?)["'] %\})""", "%s"),
-        )
-    ),
+    ('*.interpolated.*', (
+        (
+            r"""(\{% get_relative_static ["'](.*?)["'] %\})""",
+            "%s",
+        ),
+    )),
 )
 
 
