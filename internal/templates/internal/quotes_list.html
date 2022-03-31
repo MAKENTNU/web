@@ -1,14 +1,15 @@
-{% extends "internal/base.html" %}
+{% extends 'internal/base.html' %}
 {% load i18n %}
 {% load static %}
+
 
 {% block body %}
     <div class="ui container">
         <h1 class="ui header">
             {% trans "Quotes" %}
             {% if perms.internal.add_quote %}
-                <a href="{% url 'create_quote' %}">
-                    <i class="ui green plus icon"></i>
+                <a href="{% url 'quote_create' %}">
+                    <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </h1>
@@ -16,22 +17,23 @@
         {% for quote in quotes %}
             <div class="card">
                 <div class="content">
-                    <div class="header">{{ quote.quoted }}:
+                    <div class="header">
+                        {{ quote.quoted }}:
                         {% if perms.internal.delete_quote and quote.author == request.user or request.user.is_superuser %}
                             <a class="delete-modal-button"
-                               data-url="{% url 'delete_quote' quote.pk %}"
+                               data-url="{% url 'quote_delete' quote.pk %}"
                                data-obj-name="{{ quote }}">
-                                <i class="red right floated trash icon"></i>
+                                <i class="right floated red trash icon"></i>
                             </a>
                         {% endif %}
-                        {% if perms.internal.change_quote and quote.author == request.user or request.user.is_superuser  %}
-                            <a href="{% url 'edit_quote' quote.pk %}">
-                                <i class="ui right floated make-col-yellow pencil icon"></i>
+                        {% if perms.internal.change_quote and quote.author == request.user or request.user.is_superuser %}
+                            <a href="{% url 'quote_update' quote.pk %}">
+                                <i class="right floated make-col-yellow pencil icon"></i>
                             </a>
                         {% endif %}
                     </div>
                     <div class="description">
-                        "{{ quote.quote }}"
+                        {% blocktrans with quote=quote.quote %}“{{ quote }}”{% endblocktrans %}
                     </div>
                     <div class="meta">{{ quote.context }}</div>
                 </div>

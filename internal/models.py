@@ -262,10 +262,13 @@ class Secret(models.Model):
 
 
 class Quote(models.Model):
-    quote = models.TextField(verbose_name=_("Quote"))
-    quoted = models.CharField(max_length=100, verbose_name=_("Quoted"))
-    context = models.TextField(blank=True, max_length=500, verbose_name=_("Context"))
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    quote = models.TextField(verbose_name=_("quote"))
+    quoted = models.CharField(max_length=100, verbose_name=_("quoted"))
+    context = models.TextField(blank=True, max_length=500, verbose_name=_("context"))
+    author = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+    )
 
     def __str__(self):
-        return str(self.quote + " - " + self.quoted)
+        return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)

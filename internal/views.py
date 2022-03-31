@@ -13,11 +13,10 @@ from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import (
-    AddMemberForm, EditMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, SystemAccessValueForm, QuoteForm,
+    AddMemberForm, EditMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedEditMemberForm, SecretsForm,
+    SystemAccessValueForm,
 )
-from util.view_utils import PreventGetRequestsMixin
-
-from .models import Member, Secret, SystemAccess, Quote
+from .models import Member, Quote, Secret, SystemAccess
 
 
 class HomeView(DisplayContentBoxView):
@@ -46,35 +45,35 @@ class QuoteListView(ListView):
     model = Quote
     template_name = 'internal/quotes_list.html'
     context_object_name = 'quotes'
-    queryset = Quote.objects.order_by('-pk')
+    queryset = Quote.objects.order_by('-pk').select_related('author')
 
 
-class CreateQuoteView(PermissionRequiredMixin, CreateView):
+class QuoteCreateView(PermissionRequiredMixin, CreateView):
     permission_required = ('internal.add_quote',)
     model = Quote
     form_class = QuoteForm
     template_name = 'internal/quote_create.html'
     context_object_name = 'quote'
-    success_url = reverse_lazy('quotes_list')
+    success_url = reverse_lazy('quote_list')
 
-    def form_valid(self, form, **kwargs):
+    def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class EditQuoteView(PermissionRequiredMixin, UpdateView):
+class QuoteUpdateView(PermissionRequiredMixin, UpdateView):
     permission_required = ('internal.change_quote',)
     model = Quote
     form_class = QuoteForm
     template_name = 'internal/quote_edit.html'
     context_object_name = 'quote'
-    success_url = reverse_lazy('quotes_list')
+    success_url = reverse_lazy('quote_list')
 
 
-class DeleteQuoteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('internal.delete_quote',)
     model = Quote
-    success_url = reverse_lazy('quotes_list')
+    success_url = reverse_lazy('quote_list')
 
 
 class SecretListView(ListView):

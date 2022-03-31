@@ -826,16 +826,21 @@ msgid "If specified, the secrets are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
 
 #: internal/models.py:265
-msgid "Quote"
-msgstr "Sitat"
+msgid "quote"
+msgstr "sitat"
 
 #: internal/models.py:266
-msgid "Quoted"
-msgstr "Person som sa noe"
+msgid "quoted"
+msgstr "person som sa noe"
 
 #: internal/models.py:267
-msgid "Context"
-msgstr "Kontekst"
+msgid "context"
+msgstr "kontekst"
+
+#: internal/models.py:276
+#, python-brace-format
+msgid "“{quote}” —{quoted}"
+msgstr "«{quote}» —{quoted}"
 
 #: internal/templates/internal/base.html:6
 msgid "MAKE NTNU Internal"
@@ -1034,6 +1039,11 @@ msgstr "Lagre"
 msgctxt "abort action"
 msgid "Cancel"
 msgstr "Avbryt"
+
+#: internal/templates/internal/quotes_list.html:36
+#, python-format
+msgid "“%(quote)s”"
+msgstr "«%(quote)s»"
 
 #: internal/templates/internal/secret_list.html:16
 msgid "Internal secrets"
