@@ -18,9 +18,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('quote', models.TextField(verbose_name='quote')),
-                ('quoted', models.CharField(max_length=100, verbose_name='quoted')),
+                ('quoted', models.CharField(help_text='The person who is quoted.', max_length=100, verbose_name='quoted')),
                 ('context', models.TextField(blank=True, max_length=500, verbose_name='context')),
-                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                ('author', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotes', to=settings.AUTH_USER_MODEL, verbose_name='author')),
             ],
         ),
     ]

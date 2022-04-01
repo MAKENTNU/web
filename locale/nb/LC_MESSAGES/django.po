@@ -831,11 +831,19 @@ msgstr "sitat"
 
 #: internal/models.py:266
 msgid "quoted"
-msgstr "person som sa noe"
+msgstr "sitert"
+
+#: internal/models.py:266
+msgid "The person who is quoted."
+msgstr "Personen som blir sitert."
 
 #: internal/models.py:267
 msgid "context"
 msgstr "kontekst"
+
+#: internal/models.py:272
+msgid "author"
+msgstr "forfatter"
 
 #: internal/models.py:276
 #, python-brace-format
