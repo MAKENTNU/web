@@ -38,7 +38,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_article(self):
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_article_create(self):
@@ -50,11 +50,11 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_article_edit(self):
-        response = self.client.get(reverse('article_edit', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_edit', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
-        response = self.client.get(reverse('article_edit', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_edit', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_admin_article_toggle_view(self):
@@ -71,39 +71,39 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
 
     def test_private_article(self):
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self.article.private = True
         self.article.save()
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.can_view_private')
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_not_published_article(self):
         self.article.publication_time = timezone.now() - timedelta(days=1)
         self.article.save()
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self.article.publication_time = timezone.now() + timedelta(days=1)
         self.article.save()
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_hidden_article(self):
         self.article.hidden = True
         self.article.save()
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
-        response = self.client.get(reverse('article_detail', kwargs={'article': self.article}))
+        response = self.client.get(reverse('article_detail', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)

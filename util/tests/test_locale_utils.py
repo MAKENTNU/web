@@ -1,9 +1,8 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.utils.datetime_safe import datetime
 
 from make_queue.models.reservation import ReservationRule
 from ..locale_utils import (

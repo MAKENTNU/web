@@ -21,7 +21,7 @@
                 {{ machine.name }}
             </div>
             <div class="ui content">
-                <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine.machine_type %}">
+                <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine.machine_type.pk %}">
                     {% trans "Show rules" %}
                 </a>
             </div>

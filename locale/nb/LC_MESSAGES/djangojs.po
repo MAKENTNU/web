@@ -67,19 +67,19 @@ msgstr "Last inn siden på nytt eller kontakt utviklerne."
 msgid "Successfully copied to clipboard!"
 msgstr "Kopiert til utklippstavlen!"
 
-#: web/static/ckeditor/ckeditor/config.js:6
+#: web/static/ckeditor/ckeditor/config.js:9
 msgid "Big"
 msgstr "Stor"
 
-#: web/static/ckeditor/ckeditor/config.js:7
+#: web/static/ckeditor/ckeditor/config.js:10
 msgid "Small"
 msgstr "Liten"
 
-#: web/static/ckeditor/ckeditor/config.js:8
+#: web/static/ckeditor/ckeditor/config.js:11
 msgid "Code"
 msgstr "Kode"
 
-#: web/static/ckeditor/ckeditor/config.js:9
+#: web/static/ckeditor/ckeditor/config.js:12
 msgid "Quotation"
 msgstr "Sitat"
 

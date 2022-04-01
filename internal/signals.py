@@ -8,7 +8,7 @@ def connect():
     from .models import Member
 
     @receiver(m2m_changed, sender=Member.committees.through)
-    def member_update_user_groups(sender, instance: Member, action='', pk_set=None, **kwargs):
+    def member_update_user_groups(sender, instance: Member, action, pk_set=None, **kwargs):
         """
         Makes sure that the member is added/removed from the correct groups as their committee membership changes.
         """

@@ -16,7 +16,7 @@ msgstr ""
 
 #: announcements/admin.py:14 announcements/admin.py:23
 msgid "shown"
-msgstr ""
+msgstr "vist"
 
 #: announcements/admin.py:30 announcements/models.py:54
 msgid "link"
@@ -52,7 +52,7 @@ msgstr ""
 "Hvis valgt vil kunngjøringen vises på hele nettsiden, ellers vil den kun "
 "vises på forsiden."
 
-#: announcements/models.py:53 contentbox/models.py:19 docs/models.py:45
+#: announcements/models.py:53 contentbox/models.py:19 docs/models.py:48
 #: make_queue/models/machine.py:191 news/models.py:39
 msgid "content"
 msgstr "innhold"
@@ -198,12 +198,12 @@ msgstr "Legg til ferdigheter"
 msgid "Select/search"
 msgstr "Velg/søk"
 
-#: checkin/templates/checkin/profile.html:97 docs/views.py:85
+#: checkin/templates/checkin/profile.html:97 docs/views.py:98
 #: internal/views.py:147
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:19
-#: make_queue/views/admin/quota.py:62
+#: make_queue/views/admin/quota.py:74
 #: make_queue/views/reservation/machine.py:54
 msgid "Add"
 msgstr "Legg til"
@@ -317,7 +317,7 @@ msgstr "ekstra endringsrettigheter"
 msgid "URL name"
 msgstr "URL-navn"
 
-#: contentbox/models.py:18 docs/models.py:15 internal/models.py:245
+#: contentbox/models.py:18 docs/models.py:14 internal/models.py:245
 #: makerspace/models.py:22 news/models.py:38
 msgid "title"
 msgstr "tittel"
@@ -326,7 +326,7 @@ msgstr "tittel"
 msgid "Extra permissions that are required for editing the content box."
 msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 
-#: contentbox/models.py:27 docs/models.py:54 faq/models.py:42
+#: contentbox/models.py:27 docs/models.py:57 faq/models.py:42
 #: groups/models.py:38 groups/models.py:107 internal/models.py:60
 #: internal/models.py:201 internal/models.py:254
 #: internal/templates/internal/secret_list.html:44
@@ -357,23 +357,23 @@ msgctxt "view page"
 msgid "View"
 msgstr "Se"
 
-#: docs/forms.py:25
+#: docs/forms.py:26
 msgid "The page is currently empty; please add some content."
 msgstr "Siden er for øyeblikket tom; vennligst legg til noe innhold."
 
-#: docs/forms.py:36
+#: docs/forms.py:43
 msgid "The content must be changed in order to create a new version."
 msgstr "Innholdet må endres på for å lage en ny versjon."
 
-#: docs/forms.py:70
+#: docs/forms.py:77
 msgid "The content does not belong to the given page"
 msgstr "Dette innholdet hører ikke til denne siden"
 
-#: docs/models.py:43
+#: docs/models.py:46
 msgid "page"
 msgstr "side"
 
-#: docs/models.py:52
+#: docs/models.py:55
 msgid "made by"
 msgstr "gjort av"
 
@@ -450,7 +450,7 @@ msgstr "Laget av"
 msgid "Edited by"
 msgstr "Redigert av"
 
-#: docs/templates/docs/documentation_page_history.html:39 docs/views.py:53
+#: docs/templates/docs/documentation_page_history.html:39 docs/views.py:67
 msgid "Anonymous"
 msgstr "Anonym"
 
@@ -491,20 +491,20 @@ msgstr ""
 msgid "Only numbers, letters, spaces, parentheses and colons are allowed."
 msgstr "Kun tall, bokstaver, mellomrom, parenteser og kolon er tillatt."
 
-#: docs/views.py:80
+#: docs/views.py:93
 msgid "Create a New Page"
 msgstr "Lag en ny side"
 
-#: docs/views.py:84
+#: docs/views.py:97
 msgid "Documentation home page"
 msgstr "Hjemmeside for dokumentasjon"
 
-#: docs/views.py:130
+#: docs/views.py:142
 #, python-brace-format
 msgid "Edit “{title}”"
 msgstr "Rediger «{title}»"
 
-#: docs/views.py:136
+#: docs/views.py:148
 #, python-brace-format
 msgid "View “{title}”"
 msgstr "Se «{title}»"
@@ -1268,7 +1268,7 @@ msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 
 #: make_queue/models/machine.py:197
-#: make_queue/views/reservation/rules.py:116
+#: make_queue/views/reservation/rules.py:124
 #, python-brace-format
 msgid "Usage rules for {machine_type}"
 msgstr "Bruksregler for {machine_type}"
@@ -1798,65 +1798,65 @@ msgstr "Ingen reservasjoner knyttet til kvoten"
 msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:61
 msgid "Mon"
 msgstr "Man"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:61
 msgid "Tue"
 msgstr "Tir"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:61
 msgid "Wed"
 msgstr "Ons"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:61
 msgid "Thu"
 msgstr "Tor"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:61
 msgid "Fri"
 msgstr "Fre"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:61
 msgid "Sat"
 msgstr "Lør"
 
-#: make_queue/templatetags/reservation_extra.py:62
+#: make_queue/templatetags/reservation_extra.py:61
 msgid "Sun"
 msgstr "Søn"
 
-#: make_queue/templatetags/reservation_extra.py:74
+#: make_queue/templatetags/reservation_extra.py:73
 #, python-brace-format
 msgid "{machine_status} for {duration}"
 msgstr "{machine_status} i {duration}"
 
-#: make_queue/templatetags/reservation_extra.py:95
+#: make_queue/templatetags/reservation_extra.py:94
 msgid "You must be logged in to create reservations."
 msgstr "Du må være logget inn for å kunne lage reservasjoner."
 
-#: make_queue/templatetags/reservation_extra.py:100
+#: make_queue/templatetags/reservation_extra.py:99
 #, python-brace-format
 msgid "The machine has status “{status}”."
 msgstr "Maskinen har status «{status}»."
 
-#: make_queue/templatetags/reservation_extra.py:102
+#: make_queue/templatetags/reservation_extra.py:101
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall framtidige reservasjoner."
 
-#: make_queue/views/admin/quota.py:49 make_queue/views/admin/quota.py:75
+#: make_queue/views/admin/quota.py:61 make_queue/views/admin/quota.py:87
 msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"
 
-#: make_queue/views/admin/quota.py:61
+#: make_queue/views/admin/quota.py:73
 msgid "New Quota"
 msgstr "Ny kvote"
 
-#: make_queue/views/admin/quota.py:68
+#: make_queue/views/admin/quota.py:80
 msgid "Edit Quota"
 msgstr "Endre kvote"
 
-#: make_queue/views/admin/quota.py:77
+#: make_queue/views/admin/quota.py:89
 #, python-brace-format
 msgid "Admin page for the quotas of {user_full_name}"
 msgstr "Administrasjonsside for kvotene til {user_full_name}"
@@ -1873,30 +1873,30 @@ msgstr "Legg til maskin"
 msgid "Edit Machine"
 msgstr "Rediger maskin"
 
-#: make_queue/views/reservation/reservation.py:40
+#: make_queue/views/reservation/reservation.py:41
 #, python-brace-format
 msgid "Reservations can only be made {num_days} day ahead of time"
 msgid_plural "Reservations can only be made {num_days} days ahead of time"
 msgstr[0] "Reservasjoner kan bare lages {num_days} dag fram i tid"
 msgstr[1] "Reservasjoner kan bare lages {num_days} dager fram i tid"
 
-#: make_queue/views/reservation/reservation.py:45
+#: make_queue/views/reservation/reservation.py:46
 msgid "The time slot or event is no longer available"
 msgstr "Tidspunktet eller arrangementet er ikke lenger tilgjengelig"
 
-#: make_queue/views/reservation/reservation.py:47
+#: make_queue/views/reservation/reservation.py:48
 msgid "The machine is out of order"
 msgstr "Maskinen er i ustand"
 
-#: make_queue/views/reservation/reservation.py:49
+#: make_queue/views/reservation/reservation.py:50
 msgid "The machine is under maintenance"
 msgstr "Maskinen er under vedlikehold"
 
-#: make_queue/views/reservation/reservation.py:51
+#: make_queue/views/reservation/reservation.py:52
 msgid "The reservation cannot start and end at the same time"
 msgstr "Reservasjonen kan ikke starte og slutte på samme tidspunkt"
 
-#: make_queue/views/reservation/reservation.py:54
+#: make_queue/views/reservation/reservation.py:55
 msgid ""
 "It is not possible to reserve the machine during these hours. Check the "
 "rules for when the machine is reservable"
@@ -1904,23 +1904,23 @@ msgstr ""
 "Det er ikke mulig å reservere maskinen på dette tidspunktet. Sjekk reglene "
 "for hvilke perioder det er mulig å reservere maskinen i"
 
-#: make_queue/views/reservation/reservation.py:56
+#: make_queue/views/reservation/reservation.py:57
 msgid "The reservation exceeds your quota"
 msgstr "Reservasjonen går over kvoten din"
 
-#: make_queue/views/reservation/reservation.py:58
+#: make_queue/views/reservation/reservation.py:59
 msgid "The start time can't be after the end time"
 msgstr "Starttiden kan ikke være etter sluttiden"
 
-#: make_queue/views/reservation/reservation.py:60
+#: make_queue/views/reservation/reservation.py:61
 msgid "The reservation can't start in the past"
 msgstr "Reservasjonen kan ikke starte i fortiden"
 
-#: make_queue/views/reservation/reservation.py:61
+#: make_queue/views/reservation/reservation.py:62
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
-#: make_queue/views/reservation/reservation.py:196
+#: make_queue/views/reservation/reservation.py:221
 msgid ""
 "Cannot delete reservation when it has already started. Mark it as finished "
 "instead."
@@ -1928,40 +1928,40 @@ msgstr ""
 "Kan ikke slette reservasjonen når den allerede har startet. Sett den som "
 "ferdig istedenfor."
 
-#: make_queue/views/reservation/reservation.py:198
+#: make_queue/views/reservation/reservation.py:223
 msgid "Cannot delete reservation when it has already ended."
 msgstr "Kan ikke slette reservasjonen når den allerede er over."
 
-#: make_queue/views/reservation/reservation.py:266
+#: make_queue/views/reservation/reservation.py:298
 msgid "Cannot mark reservation as finished when it has not started yet."
 msgstr "Kan ikke sette reservasjonen som ferdig når den ikke har startet ennå."
 
-#: make_queue/views/reservation/reservation.py:268
+#: make_queue/views/reservation/reservation.py:300
 msgid "Cannot mark reservation as finished when it has already ended."
 msgstr "Kan ikke sette reservasjonen som ferdig når den allerede er over."
 
-#: make_queue/views/reservation/rules.py:43
-#: make_queue/views/reservation/rules.py:75
+#: make_queue/views/reservation/rules.py:49
+#: make_queue/views/reservation/rules.py:81
 #, python-brace-format
 msgid "Reservation rules for {machine_type}"
 msgstr "Reservasjonsregler for {machine_type}"
 
-#: make_queue/views/reservation/rules.py:85
+#: make_queue/views/reservation/rules.py:91
 #, python-brace-format
 msgid "New Rule for {machine_type}"
 msgstr "Ny regel for {machine_type}"
 
-#: make_queue/views/reservation/rules.py:92
+#: make_queue/views/reservation/rules.py:99
 #, python-brace-format
 msgid "Rule for {machine_type}"
 msgstr "Regel for {machine_type}"
 
-#: make_queue/views/reservation/rules.py:133
+#: make_queue/views/reservation/rules.py:141
 #, python-brace-format
 msgid "Edit usage rules for {machine_type}"
 msgstr "Rediger bruksregler for {machine_type}"
 
-#: make_queue/views/reservation/rules.py:139
+#: make_queue/views/reservation/rules.py:147
 #, python-brace-format
 msgid "View usage rules for {machine_type}"
 msgstr "Se bruksregler for {machine_type}"
@@ -2263,7 +2263,7 @@ msgstr "Artikler"
 msgid "View the article “%(title)s”; image description: %(description)s"
 msgstr "Vis artikkelen «%(title)s»; bildebeskrivelse: %(description)s"
 
-#: news/templates/news/admin_event_detail.html:21 news/views.py:279
+#: news/templates/news/admin_event_detail.html:21 news/views.py:246
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
 
@@ -2549,32 +2549,32 @@ msgstr "logg inn"
 msgid "to the correct account to see your ticket."
 msgstr "til den riktige brukeren for å se billetten din."
 
-#: news/views.py:215 news/views.py:312
+#: news/views.py:182 news/views.py:312
 msgid "Attributes"
 msgstr "Egenskaper"
 
-#: news/views.py:230
+#: news/views.py:197
 msgid "Admin page for articles"
 msgstr "Administrasjonsside for artikler"
 
-#: news/views.py:239
+#: news/views.py:206
 msgid "Edit Article"
 msgstr "Rediger artikkel"
 
-#: news/views.py:245
+#: news/views.py:212
 msgid "New Article"
 msgstr "Ny artikkel"
 
-#: news/views.py:269
+#: news/views.py:236
 msgid "Edit Event"
 msgstr "Rediger arrangement"
 
-#: news/views.py:272 news/views.py:304
+#: news/views.py:239 news/views.py:304
 #, python-brace-format
 msgid "Admin page for “{event_title}”"
 msgstr "Administrasjonsside for «{event_title}»"
 
-#: news/views.py:278
+#: news/views.py:245
 msgid "New Event"
 msgstr "Nytt arrangement"
 
@@ -2582,25 +2582,25 @@ msgstr "Nytt arrangement"
 msgid "Edit Occurrence"
 msgstr "Rediger forekomst"
 
-#: news/views.py:329
+#: news/views.py:332
 msgid "New Occurrence"
 msgstr "Ny forekomst"
 
-#: news/views.py:475
+#: news/views.py:494
 msgid "Your ticket!"
 msgstr "Din billett!"
 
-#: news/views.py:487
+#: news/views.py:506
 #, python-brace-format
 msgid "Register for the event “{title}”"
 msgstr "Meld deg på arrangementet «{title}»"
 
-#: news/views.py:578
+#: news/views.py:592
 #, python-brace-format
 msgid " at {time}"
 msgstr " den {time}"
 
-#: news/views.py:581
+#: news/views.py:595
 #, python-brace-format
 msgid ""
 "Are you sure you want to cancel your ticket for<br/"

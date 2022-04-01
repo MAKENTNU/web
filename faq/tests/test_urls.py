@@ -26,13 +26,13 @@ class UrlTests(TestCase):
             Get(reverse('admin_question_list'), public=False),
             Get(reverse('question_create'), public=False),
             *[
-                Get(reverse('question_update', kwargs={'pk': question.pk}), public=False)
+                Get(reverse('question_update', args=[question.pk]), public=False)
                 for question in self.questions
             ],
             Get(reverse('admin_category_list'), public=False),
             Get(reverse('category_create'), public=False),
             *[
-                Get(reverse('category_update', kwargs={'pk': category.pk}), public=False)
+                Get(reverse('category_update', args=[category.pk]), public=False)
                 for category in self.categories
             ],
         ]
