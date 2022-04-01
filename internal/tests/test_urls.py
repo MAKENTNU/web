@@ -11,7 +11,7 @@ from contentbox.models import ContentBox
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
 from ..forms import MemberStatusForm
-from ..models import Member, Secret, SystemAccess
+from ..models import Member, Quote, Secret, SystemAccess
 from ..util import date_to_semester, semester_to_year, year_to_semester
 
 
@@ -54,6 +54,10 @@ class UrlTests(TestCase):
         self.secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
         self.secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
         self.secrets = (self.secret1, self.secret2)
+
+        self.quote1 = Quote.objects.create(quote="Ha ha.", quoted="Human 1", author=member_user)
+        self.quote2 = Quote.objects.create(quote="I like human humor.", quoted="Human 2", author=member_editor_user)
+        self.quotes = (self.quote1, self.quote2)
 
     @staticmethod
     def generic_request(client: Client, method: str, path: str, data: dict = None):
@@ -146,6 +150,11 @@ class UrlTests(TestCase):
             Get(reverse_internal('edit_secret', self.secret1.pk), public=False),
             Get(reverse_internal('edit_secret', self.secret2.pk), public=False),
 
+            Get(reverse_internal('quote_list'), public=False),
+            Get(reverse_internal('quote_create'), public=False),
+            Get(reverse_internal('quote_update', self.quote1.pk), public=False),
+            Get(reverse_internal('quote_update', self.quote2.pk), public=False),
+
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
         ]
@@ -166,6 +175,10 @@ class UrlTests(TestCase):
             *[
                 Get(admin_url, public=False)
                 for admin_url in generate_all_admin_urls_for_model_and_objs(Secret, self.secrets)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Quote, self.quotes)
             ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')
