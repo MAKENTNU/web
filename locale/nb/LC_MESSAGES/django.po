@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-24 13:44+0100\n"
+"POT-Creation-Date: 2022-04-01 19:35+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -199,7 +199,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile.html:97 docs/views.py:98
-#: internal/views.py:110
+#: internal/views.py:76
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:19
@@ -825,6 +825,31 @@ msgstr "prioritet"
 msgid "If specified, the secrets are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
 
+#: internal/models.py:265
+msgid "quote"
+msgstr "sitat"
+
+#: internal/models.py:266
+msgid "quoted"
+msgstr "sitert"
+
+#: internal/models.py:266
+msgid "The person who is quoted."
+msgstr "Personen som blir sitert."
+
+#: internal/models.py:267
+msgid "context"
+msgstr "kontekst"
+
+#: internal/models.py:272
+msgid "author"
+msgstr "forfatter"
+
+#: internal/models.py:276
+#, python-brace-format
+msgid "“{quote}” —{quoted}"
+msgstr "«{quote}» —{quoted}"
+
 #: internal/templates/internal/base.html:6
 msgid "MAKE NTNU Internal"
 msgstr "MAKE NTNU internsider"
@@ -842,23 +867,28 @@ msgstr "Medlemmer"
 msgid "Secrets"
 msgstr "Hemmeligheter"
 
-#: internal/templates/internal/header.html:23
+#: internal/templates/internal/header.html:20
+#: internal/templates/internal/quotes_list.html:9
+msgid "Quotes"
+msgstr "Sitater"
+
+#: internal/templates/internal/header.html:27
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:27
+#: internal/templates/internal/header.html:31
 #: web/templates/web/header.html:104
 msgid "Django admin"
 msgstr "Django-admin"
 
-#: internal/templates/internal/header.html:31
+#: internal/templates/internal/header.html:35
 #: web/templates/web/header.html:116
 msgid "Log out"
 msgstr "Logg ut"
 
 #: internal/templates/internal/member_list.html:10
-#: internal/templates/internal/member_list.html:20 internal/views.py:101
-#: internal/views.py:193
+#: internal/templates/internal/member_list.html:20 internal/views.py:67
+#: internal/views.py:159
 msgid "Member list"
 msgstr "Medlemsliste"
 
@@ -960,11 +990,11 @@ msgstr "registrerte medlemmer"
 msgid "Basic information"
 msgstr "Grunnleggende informasjon"
 
-#: internal/templates/internal/member_list.html:285 internal/views.py:166
+#: internal/templates/internal/member_list.html:285 internal/views.py:132
 msgid "Membership information"
 msgstr "Medlemskapsinformasjon"
 
-#: internal/templates/internal/member_list.html:341 internal/views.py:160
+#: internal/templates/internal/member_list.html:341 internal/views.py:126
 msgid "Extra information"
 msgstr "Ekstrainformasjon"
 
@@ -992,6 +1022,11 @@ msgstr "Sett medlem som pang"
 #: internal/templates/internal/member_list.html:398
 msgid "Set member as not retired"
 msgstr "Sett medlem som ikke pang"
+
+#: internal/templates/internal/quotes_list.html:36
+#, python-format
+msgid "“%(quote)s”"
+msgstr "«%(quote)s»"
 
 #: internal/templates/internal/secret_list.html:16
 msgid "Internal secrets"
@@ -1021,44 +1056,56 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: internal/views.py:57
-msgid "Secrets list"
-msgstr "Liste med hemmeligheter"
-
-#: internal/views.py:63
-msgid "New Secret"
-msgstr "Ny hemmelighet"
-
-#: internal/views.py:69
-msgid "Edit Secret"
-msgstr "Rediger hemmelighet"
-
-#: internal/views.py:108
+#: internal/views.py:74
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
 
-#: internal/views.py:147
+#: internal/views.py:113
 #, python-brace-format
 msgid "Change Information for {full_name}"
 msgstr "Endre informasjonen til {full_name}"
 
-#: internal/views.py:194
+#: internal/views.py:160
 msgid "Set retired"
 msgstr "Sett panget"
 
-#: internal/views.py:200
+#: internal/views.py:166
 #, python-brace-format
 msgid "Set member {name} as retired"
 msgstr "Sett medlem {name} som pang"
 
-#: internal/views.py:212
+#: internal/views.py:178
 msgid "Set quit"
 msgstr "Sett sluttet"
 
-#: internal/views.py:218
+#: internal/views.py:184
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
+
+#: internal/views.py:236
+msgid "Secrets list"
+msgstr "Liste med hemmeligheter"
+
+#: internal/views.py:242
+msgid "New Secret"
+msgstr "Ny hemmelighet"
+
+#: internal/views.py:248
+msgid "Edit Secret"
+msgstr "Rediger hemmelighet"
+
+#: internal/views.py:271
+msgid "Quotes page"
+msgstr "Sitatside"
+
+#: internal/views.py:277
+msgid "New Quote"
+msgstr "Nytt sitat"
+
+#: internal/views.py:285
+msgid "Edit Quote"
+msgstr "Endre sitat"
 
 #: make_queue/admin.py:22
 #: make_queue/templates/make_queue/machine_list.html:7

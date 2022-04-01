@@ -23,11 +23,6 @@ internal_contentbox_urlpatterns = [
     path("<int:pk>/edit/", views.EditInternalContentBoxView.as_view(), name='contentbox_edit'),
 ]
 
-internal_urlpatterns = [
-    path("", views.HomeView.as_view(url_name='home'), name='home'),
-    path("contentbox/", include(internal_contentbox_urlpatterns)),
-]
-
 member_urlpatterns = [
     path("members/", views.MemberListView.as_view(), name='member_list'),
     path("members/<int:pk>/", views.MemberListView.as_view(), name='member_list'),
@@ -46,11 +41,17 @@ secret_urlpatterns = [
     path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name='delete_secret'),
 ]
 
-urlpatterns += i18n_patterns(
-    path("", decorator_include(
-        permission_required('internal.is_internal'),
-        internal_urlpatterns
-    )),
+quote_urlpatterns = [
+    path("quotes/", views.QuoteListView.as_view(), name='quote_list'),
+    path("quotes/add/", views.QuoteCreateView.as_view(), name='quote_create'),
+    path("quotes/<int:pk>/change/", views.QuoteUpdateView.as_view(), name='quote_update'),
+    path("quotes/<int:pk>/delete/", views.QuoteDeleteView.as_view(), name='quote_delete'),
+]
+
+internal_urlpatterns = [
+    path("", views.HomeView.as_view(url_name='home'), name='home'),
+    path("contentbox/", include(internal_contentbox_urlpatterns)),
+
     path("", decorator_include(
         permission_required('internal.view_member'),
         member_urlpatterns
@@ -58,6 +59,17 @@ urlpatterns += i18n_patterns(
     path("", decorator_include(
         permission_required('internal.view_secret'),
         secret_urlpatterns
+    )),
+    path("", decorator_include(
+        permission_required('internal.view_quote'),
+        quote_urlpatterns
+    )),
+]
+
+urlpatterns += i18n_patterns(
+    path("", decorator_include(
+        permission_required('internal.is_internal'),
+        internal_urlpatterns
     )),
 
     prefix_default_language=False,
