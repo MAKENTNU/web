@@ -282,12 +282,21 @@ class QuoteCreateView(PermissionRequiredMixin, QuoteFormMixin, CreateView):
 
 
 class QuoteUpdateView(PermissionRequiredMixin, QuoteFormMixin, UpdateView):
-    permission_required = ('internal.change_quote',)
-
     form_title = _("Edit Quote")
+
+    def has_permission(self):
+        return (
+                self.request.user.has_perm('internal.change_quote')
+                or self.request.user == self.object.author
+        )
 
 
 class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('internal.delete_quote',)
     model = Quote
     success_url = reverse_lazy('quote_list')
+
+    def has_permission(self):
+        return (
+                self.request.user.has_perm('internal.delete_quote')
+                or self.request.user == self.object.author
+        )
