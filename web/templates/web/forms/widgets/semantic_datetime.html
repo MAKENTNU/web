@@ -32,6 +32,11 @@
                 {% endif %}
                 {% if widget.attrs.end_calendar %}
                     endCalendar: $("#{{ widget.attrs.end_calendar }}"),
+                    onHidden: function () {
+                        {# Fixes a bug in Fomantic-UI that doesn't update the end calendar's focused date #}
+                        {# when changing the date of the start calendar #}
+                        $("#{{ widget.attrs.end_calendar }}").calendar("refresh");
+                    },
                 {% endif %}
                 text: {
                     {# The referenced constants are defined in `date_utils.js`, which is linked through the Django widget's media #}
