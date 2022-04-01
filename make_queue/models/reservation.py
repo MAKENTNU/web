@@ -278,6 +278,19 @@ class ReservationRule(models.Model):
     def time_periods(self) -> List['Period']:
         return self.Period.list_from_start_weekdays(self.get_start_day_indices(), self.start_time, self.end_time, self.days_changed)
 
+    def get_exact_start_and_end_times_list(self, *, iso=True, wrap_using_modulo=False) -> List[Tuple[float, float]]:
+        mod_divisor = 8 if iso else 7
+
+        def mod(exact_weekday: float) -> float:
+            if not wrap_using_modulo:
+                return exact_weekday
+            return exact_weekday % mod_divisor
+
+        return [
+            (mod(p.exact_start_weekday), mod(p.exact_end_weekday))
+            for p in self.Period.list_from_start_weekdays(self.get_start_day_indices(iso=iso), self.start_time, self.end_time, self.days_changed)
+        ]
+
     def get_start_day_indices(self, *, iso=True):
         shift = 0 if iso else -1
         return [int(day_index_str) + shift for day_index_str in self.start_days]

@@ -37,10 +37,10 @@ class TestEventTicketViews(TestCase):
             response = self.client1.get(url)
             self.assertEqual(response.status_code, status_code)
 
-        assert_response_status_code(reverse('register_event', args=[self.repeating_event]), HTTPStatus.FORBIDDEN)
-        assert_response_status_code(reverse('register_timeplace', args=[self.repeating_event, self.repeating_time_place.pk]), HTTPStatus.OK)
-        assert_response_status_code(reverse('register_event', args=[self.standalone_event]), HTTPStatus.OK)
-        assert_response_status_code(reverse('register_timeplace', args=[self.standalone_event, self.standalone_time_place.pk]), HTTPStatus.FORBIDDEN)
+        assert_response_status_code(reverse('register_event', args=[self.repeating_event.pk]), HTTPStatus.FORBIDDEN)
+        assert_response_status_code(reverse('register_timeplace', args=[self.repeating_event.pk, self.repeating_time_place.pk]), HTTPStatus.OK)
+        assert_response_status_code(reverse('register_event', args=[self.standalone_event.pk]), HTTPStatus.OK)
+        assert_response_status_code(reverse('register_timeplace', args=[self.standalone_event.pk, self.standalone_time_place.pk]), HTTPStatus.FORBIDDEN)
 
     def test__event_registration_view__can_only_be_viewed_with_correct_combination_of_event_and_time_place(self):
         repeating_event1 = self.repeating_event
@@ -53,23 +53,23 @@ class TestEventTicketViews(TestCase):
             response = self.client1.get(url)
             self.assertEqual(response.status_code, status_code)
 
-        assert_response_status_code([repeating_event1, repeating_time_place1.pk], HTTPStatus.OK)
-        assert_response_status_code([repeating_event1, repeating_time_place2.pk], HTTPStatus.NOT_FOUND)
-        assert_response_status_code([repeating_event1, self.standalone_time_place.pk], HTTPStatus.NOT_FOUND)
-        assert_response_status_code([repeating_event2, repeating_time_place1.pk], HTTPStatus.NOT_FOUND)
-        assert_response_status_code([repeating_event2, repeating_time_place2.pk], HTTPStatus.OK)
-        assert_response_status_code([repeating_event2, self.standalone_time_place.pk], HTTPStatus.NOT_FOUND)
-        assert_response_status_code([self.standalone_event, repeating_time_place1.pk], HTTPStatus.NOT_FOUND)
-        assert_response_status_code([self.standalone_event, repeating_time_place2.pk], HTTPStatus.NOT_FOUND)
-        assert_response_status_code([self.standalone_event, self.standalone_time_place.pk], HTTPStatus.FORBIDDEN)
+        assert_response_status_code([repeating_event1.pk, repeating_time_place1.pk], HTTPStatus.OK)
+        assert_response_status_code([repeating_event1.pk, repeating_time_place2.pk], HTTPStatus.NOT_FOUND)
+        assert_response_status_code([repeating_event1.pk, self.standalone_time_place.pk], HTTPStatus.NOT_FOUND)
+        assert_response_status_code([repeating_event2.pk, repeating_time_place1.pk], HTTPStatus.NOT_FOUND)
+        assert_response_status_code([repeating_event2.pk, repeating_time_place2.pk], HTTPStatus.OK)
+        assert_response_status_code([repeating_event2.pk, self.standalone_time_place.pk], HTTPStatus.NOT_FOUND)
+        assert_response_status_code([self.standalone_event.pk, repeating_time_place1.pk], HTTPStatus.NOT_FOUND)
+        assert_response_status_code([self.standalone_event.pk, repeating_time_place2.pk], HTTPStatus.NOT_FOUND)
+        assert_response_status_code([self.standalone_event.pk, self.standalone_time_place.pk], HTTPStatus.FORBIDDEN)
 
     def test__event_registration_view__creates_and_reactivates_tickets_as_expected(self):
         for time_place_or_event in [self.repeating_time_place, self.standalone_event]:
             with self.subTest(time_place_or_event=time_place_or_event):
                 if isinstance(time_place_or_event, TimePlace):
-                    registration_url = reverse('register_timeplace', args=[time_place_or_event.event, time_place_or_event.pk])
+                    registration_url = reverse('register_timeplace', args=[time_place_or_event.event.pk, time_place_or_event.pk])
                 else:
-                    registration_url = reverse('register_event', args=[time_place_or_event])
+                    registration_url = reverse('register_event', args=[time_place_or_event.pk])
 
                 self.assertEqual(time_place_or_event.tickets.count(), 0)
 
@@ -164,6 +164,6 @@ class TestEventTicketViews(TestCase):
                 assert_next_param_is_valid(f"google.com{ticket_detail_url}", False)
                 assert_next_param_is_valid(ticket_detail_url, True)
                 assert_next_param_is_valid(urlparse(reverse('my_tickets_list')).path, True)
-                assert_next_param_is_valid(urlparse(reverse('event_detail', args=[ticket.registered_event])).path, True)
+                assert_next_param_is_valid(urlparse(reverse('event_detail', args=[ticket.registered_event.pk])).path, True)
                 assert_next_param_is_valid("/", False)
                 assert_next_param_is_valid(urlparse(reverse('front_page')).path, False)

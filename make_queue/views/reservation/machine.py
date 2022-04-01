@@ -11,7 +11,7 @@ from ...models.machine import Machine, MachineType
 
 
 class MachineListView(ListView):
-    """View that shows all the machines - listed per machine type."""
+    """View that shows all the machines -- listed per machine type."""
     model = MachineType
     queryset = (
         # Retrieves all machine types that have at least one existing machine

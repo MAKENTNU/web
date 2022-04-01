@@ -1,6 +1,8 @@
 from abc import ABC
+from typing import Optional
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
@@ -16,7 +18,17 @@ class QuotaPanelView(TemplateView):
     """View for the quota admin panel that allows users to control the quotas of people."""
     template_name = 'make_queue/quota/quota_panel.html'
 
-    def get_context_data(self, user=None, **kwargs):
+    user: Optional[User]
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        if 'pk' in self.kwargs:
+            user_pk = self.kwargs['pk']
+            self.user = get_object_or_404(User, pk=user_pk)
+        else:
+            self.user = None
+
+    def get_context_data(self, **kwargs):
         """
         Creates the required context for the quota panel.
 
@@ -25,7 +37,7 @@ class QuotaPanelView(TemplateView):
         return super().get_context_data(**{
             'users': User.objects.all(),
             'global_quotas': Quota.objects.filter(all=True),
-            'requested_user': user,
+            'requested_user': self.user,
             **kwargs,
         })
 
@@ -52,7 +64,7 @@ class QuotaFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
         if self.object.all:
             return reverse('quota_panel')
         else:
-            return reverse('quota_panel', kwargs={'user': self.object.user})
+            return reverse('quota_panel', args=[self.object.user.pk])
 
 
 class CreateQuotaView(PermissionRequiredMixin, QuotaFormMixin, CreateView):
@@ -87,4 +99,4 @@ class DeleteQuotaView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
         if self.object.all:
             return reverse('quota_panel')
         else:
-            return reverse('quota_panel', kwargs={'user': self.object.user})
+            return reverse('quota_panel', args=[self.object.user.pk])

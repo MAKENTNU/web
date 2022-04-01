@@ -141,9 +141,9 @@ class MultiSubdomainTests(TestCase):
         self.public_content_box = ContentBox.objects.get(url_name=TEST_URL_NAME)
         self.internal_content_box = ContentBox.objects.get(url_name=INTERNAL_TEST_URL_NAME)
 
-        self.public_edit_url = reverse('contentbox_edit', kwargs={'pk': self.public_content_box.pk})
+        self.public_edit_url = reverse('contentbox_edit', args=[self.public_content_box.pk])
         self.public_admin_edit_url = reverse('admin:contentbox_contentbox_change', args=[self.public_content_box.pk], host='admin')
-        self.internal_edit_url = reverse('contentbox_edit', kwargs={'pk': self.internal_content_box.pk}, host='test_internal')
+        self.internal_edit_url = reverse('contentbox_edit', args=[self.internal_content_box.pk], host='test_internal')
         self.internal_admin_edit_url = reverse('admin:contentbox_contentbox_change', args=[self.internal_content_box.pk], host='admin')
 
     def test_content_box_edit_urls_are_only_accessible_with_required_permissions(self):

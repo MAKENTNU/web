@@ -1,6 +1,7 @@
 import copy
 import logging
 import sys
+from importlib.util import find_spec
 from pathlib import Path
 
 import django.views.static
@@ -32,6 +33,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+INTERNAL_IPS = ['127.0.0.1']
 MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
@@ -55,6 +57,9 @@ SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 # host we are running on. This currently points to "makentnu.localhost:8000", and should
 # be changed in production
 PARENT_HOST = "makentnu.localhost:8000"
+
+# Is `True` if `django-debug-toolbar` is installed
+USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 EMAIL_SITE_URL = "https://makentnu.no"  # (custom setting)
@@ -107,14 +112,23 @@ INSTALLED_APPS = [
 
     'util',
 
+    # Contains a lot of useful management commands, but is not strictly necessary for the project.
+    # See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html
+    'django_extensions',
+
+    *(['debug_toolbar'] if USE_DEBUG_TOOLBAR else []),
+
     # Should be placed last,
     # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
     'django_cleanup.apps.CleanupConfig',
 ]
 
+
 MIDDLEWARE = [
     # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsRequestMiddleware',
+
+    *(['debug_toolbar.middleware.DebugToolbarMiddleware'] if USE_DEBUG_TOOLBAR else []),
 
     # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
     'django.middleware.security.SecurityMiddleware',
@@ -172,7 +186,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'web.routing.application'
+ASGI_APPLICATION = 'web.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -348,6 +362,28 @@ PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 
 # See https://django-simple-history.readthedocs.io/en/stable/historical_model.html#filefield-as-a-charfield
 SIMPLE_HISTORY_FILEFIELD_TO_CHARFIELD = True
+
+
+if USE_DEBUG_TOOLBAR:
+    DEBUG_TOOLBAR_CONFIG = {
+        'RENDER_PANELS': False,
+        'DISABLE_PANELS': {
+            # 'debug_toolbar.panels.history.HistoryPanel',
+            'debug_toolbar.panels.versions.VersionsPanel',
+            # 'debug_toolbar.panels.timer.TimerPanel',
+            # 'debug_toolbar.panels.settings.SettingsPanel',
+            # 'debug_toolbar.panels.headers.HeadersPanel',
+            # 'debug_toolbar.panels.request.RequestPanel',
+            'debug_toolbar.panels.sql.SQLPanel',
+            'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+            'debug_toolbar.panels.templates.TemplatesPanel',
+            'debug_toolbar.panels.cache.CachePanel',
+            'debug_toolbar.panels.signals.SignalsPanel',
+            # 'debug_toolbar.panels.logging.LoggingPanel',
+            'debug_toolbar.panels.redirects.RedirectsPanel',
+            'debug_toolbar.panels.profiling.ProfilingPanel',
+        },
+    }
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for

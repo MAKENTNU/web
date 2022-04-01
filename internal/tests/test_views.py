@@ -36,7 +36,7 @@ class InternalContentBoxTests(TestCase):
         # Add these extra change perms (mainly `internal.can_change_rich_text_source`),
         # so that the content box uses the form that allows editing the HTML source code
         self.home_content_box.extra_change_permissions.add(*get_perms(*internal_admin_perms))
-        self.home_edit_url = reverse_internal('contentbox_edit', pk=self.home_content_box.pk)
+        self.home_edit_url = reverse_internal('contentbox_edit', self.home_content_box.pk)
 
         self.internal_content_boxes = (self.home_content_box,)
 
@@ -93,7 +93,7 @@ class InternalContentBoxTests(TestCase):
 
         for content_box in self.internal_content_boxes:
             with self.subTest(content_box=content_box):
-                edit_url = reverse_internal('contentbox_edit', pk=content_box.pk)
+                edit_url = reverse_internal('contentbox_edit', content_box.pk)
                 response = self.internal_admin_client.post(edit_url, {
                     f'title_{settings.LANGUAGE_CODE}': "Mock Title",
                     f'content_{settings.LANGUAGE_CODE}': mock_content,

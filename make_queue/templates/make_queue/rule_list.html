@@ -17,13 +17,13 @@
         <h1>
             {{ title }}
             {% if perms.make_queue.add_reservationrule %}
-                <a href="{% url 'create_reservation_rule' machine_type %}">
+                <a href="{% url 'create_reservation_rule' machine_type.pk %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </h1>
         <div>
-            <a class="ui blue button" href="{% url 'machine_usage_rules_detail' machine_type %}">
+            <a class="ui blue button" href="{% url 'machine_usage_rules_detail' machine_type.pk %}">
                 {% trans "Usage rules" %}
             </a>
         </div>
@@ -54,23 +54,23 @@
                     <div class="content">
                         <div class="meta">
                             {% if perms.make_queue.change_reservationrule %}
-                                <a href="{% url 'edit_reservation_rule' machine_type rule.pk %}">
+                                <a href="{% url 'edit_reservation_rule' machine_type.pk rule.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
                             {% if perms.make_queue.delete_reservationrule %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url 'delete_reservation_rule' machine_type rule.pk %}">
+                                   data-url="{% url 'delete_reservation_rule' machine_type.pk rule.pk %}">
                                     <i class="red trash icon"></i>
                                 </a>
                             {% endif %}
                         </div>
                         <div class="description">
                             {% trans "Single period" %}:
-                            <b>{{ rule.max_hours|floatformat:0 }} {% trans "hours" %}</b>
+                            <b>{{ rule.max_hours|floatformat }} {% trans "hours" %}</b>
                             <br/>
                             {% trans "Multi-period" %}:
-                            <b>{{ rule.max_inside_border_crossed|floatformat:0 }} {% trans "hours" %}</b>
+                            <b>{{ rule.max_inside_border_crossed|floatformat }} {% trans "hours" %}</b>
                         </div>
                         <h4 class="subheader">
                             {% trans "Periods" %}

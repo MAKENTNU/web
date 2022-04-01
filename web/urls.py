@@ -15,15 +15,18 @@ from social_core.utils import setting_name
 from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from dataporten.views import Logout, login_wrapper
 from news import urls as news_urls
+from util.url_utils import debug_toolbar_urls
 from . import views
 
 
 extra = "/" if getattr(settings, setting_name('TRAILING_SLASH'), True) else ""
 
 urlpatterns = [
-    path("i18n/", include('django.conf.urls.i18n')),
     path("robots.txt", TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
+
+    *debug_toolbar_urls(),
+    path("i18n/", include('django.conf.urls.i18n')),
 ]
 
 admin_urlpatterns = [
@@ -95,11 +98,11 @@ urlpatterns += [
 # URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
-    path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
-    path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+    path("reservation/rules/<int:pk>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
+    path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
 
-    path("news/article/<Article:article>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
-    path("news/event/<Event:event>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
+    path("news/article/<int:pk>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
+    path("news/event/<int:pk>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
     path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='ticket_detail', permanent=True)),
     path("news/ticket/me/", RedirectView.as_view(pattern_name='my_tickets_list', permanent=True)),
 

@@ -1,6 +1,9 @@
 /*
   Note: To make this configuration file apply, the `ckeditor` app must be listed after `web` in `INSTALLED_APPS`.
 */
+// `CKEDITOR_CONFIG_FROM_DJANGO` is defined in `config_from_django.js`
+var CKEDITOR_CONFIG_FROM_DJANGO = (typeof CKEDITOR_CONFIG_FROM_DJANGO !== "undefined") ? CKEDITOR_CONFIG_FROM_DJANGO : {};
+
 const customStylesName = "my_styles";
 CKEDITOR.stylesSet.add(customStylesName, [
     {name: gettext("Big"), element: "big"},

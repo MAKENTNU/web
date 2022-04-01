@@ -45,7 +45,7 @@
     </div>
     <div class="extra content">
         <b>{% trans "Ref #" %}:</b>
-        <a href="{% url 'ticket_detail' pk=ticket.pk %}">
+        <a href="{% url 'ticket_detail' ticket.pk %}">
             {{ ticket.uuid }}
         </a>
     </div>
