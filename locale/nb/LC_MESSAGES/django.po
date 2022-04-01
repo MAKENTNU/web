@@ -1015,31 +1015,6 @@ msgstr "Sett medlem som pang"
 msgid "Set member as not retired"
 msgstr "Sett medlem som ikke pang"
 
-#: internal/templates/internal/quote_create.html:5
-#: internal/templates/internal/quote_create.html:6
-msgid "New quote"
-msgstr "Nytt sitat"
-
-#: internal/templates/internal/quote_edit.html:6
-#: internal/templates/internal/quote_edit.html:16
-msgid "Edit quote"
-msgstr "Endre sitat"
-
-#: internal/templates/internal/quote_edit.html:38 util/view_utils.py:32
-msgid "Save"
-msgstr "Lagre"
-
-#: internal/templates/internal/quote_edit.html:40
-#: make_queue/templates/make_queue/course/course_registration_edit.html:115
-#: make_queue/templates/make_queue/course/course_registration_list.html:211
-#: make_queue/templates/make_queue/reservation_edit.html:166
-#: news/templates/news/ticket_cancel.html:17
-#: web/templates/web/delete_modal.html:20
-#: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
-msgctxt "abort action"
-msgid "Cancel"
-msgstr "Avbryt"
-
 #: internal/templates/internal/quotes_list.html:36
 #, python-format
 msgid "“%(quote)s”"
@@ -1111,6 +1086,18 @@ msgstr "Ny hemmelighet"
 #: internal/views.py:248
 msgid "Edit Secret"
 msgstr "Rediger hemmelighet"
+
+#: internal/views.py:271
+msgid "Quotes page"
+msgstr "Sitatside"
+
+#: internal/views.py:277
+msgid "New Quote"
+msgstr "Nytt sitat"
+
+#: internal/views.py:285
+msgid "Edit Quote"
+msgstr "Endre sitat"
 
 #: make_queue/admin.py:22
 #: make_queue/templates/make_queue/machine_list.html:7
@@ -1462,6 +1449,16 @@ msgstr "Registreringsstatus"
 msgctxt "edit"
 msgid "Submit"
 msgstr "Lagre"
+
+#: make_queue/templates/make_queue/course/course_registration_edit.html:115
+#: make_queue/templates/make_queue/course/course_registration_list.html:211
+#: make_queue/templates/make_queue/reservation_edit.html:166
+#: news/templates/news/ticket_cancel.html:17
+#: web/templates/web/delete_modal.html:20
+#: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
+msgctxt "abort action"
+msgid "Cancel"
+msgstr "Avbryt"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:15
 #: web/templates/web/admin_panel.html:87
@@ -2646,6 +2643,10 @@ msgid ""
 msgstr ""
 "Dette kan bare bestå av små, engelske bokstaver, tall, bindestreker og "
 "understreker."
+
+#: util/view_utils.py:32
+msgid "Save"
+msgstr "Lagre"
 
 #: web/multilingual/formfields.py:20
 msgid "One or more languages have no content."

@@ -261,26 +261,30 @@ class QuoteListView(ListView):
     queryset = Quote.objects.order_by('-pk').select_related('author')
 
 
-class QuoteCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = ('internal.add_quote',)
+class QuoteFormMixin(CustomFieldsetFormMixin, ABC):
     model = Quote
     form_class = QuoteForm
-    template_name = 'internal/quote_create.html'
-    context_object_name = 'quote'
     success_url = reverse_lazy('quote_list')
+
+    base_template = 'internal/base.html'
+    back_button_link = success_url
+    back_button_text = _("Quotes page")
+
+
+class QuoteCreateView(PermissionRequiredMixin, QuoteFormMixin, CreateView):
+    permission_required = ('internal.add_quote',)
+
+    form_title = _("New Quote")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
 
 
-class QuoteUpdateView(PermissionRequiredMixin, UpdateView):
+class QuoteUpdateView(PermissionRequiredMixin, QuoteFormMixin, UpdateView):
     permission_required = ('internal.change_quote',)
-    model = Quote
-    form_class = QuoteForm
-    template_name = 'internal/quote_edit.html'
-    context_object_name = 'quote'
-    success_url = reverse_lazy('quote_list')
+
+    form_title = _("Edit Quote")
 
 
 class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
