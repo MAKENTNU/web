@@ -140,10 +140,12 @@ class UrlTests(TestCase):
         path_predicates = [
             Get(reverse_internal(self.home_content_box.url_name), public=False),
             Get(reverse_internal('contentbox_edit', self.home_content_box.pk), public=False),
+
             Get(reverse_internal('secret_list'), public=False),
             Get(reverse_internal('create_secret'), public=False),
             Get(reverse_internal('edit_secret', self.secret1.pk), public=False),
             Get(reverse_internal('edit_secret', self.secret2.pk), public=False),
+
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
         ]
@@ -157,13 +159,13 @@ class UrlTests(TestCase):
             ],
             *[
                 Get(admin_url, public=False)
-                for admin_url in generate_all_admin_urls_for_model_and_objs(Secret, self.secrets)
-            ],
-            *[
-                Get(admin_url, public=False)
                 for admin_url in generate_all_admin_urls_for_model_and_objs(SystemAccess, [access
                                                                                            for member in self.members
                                                                                            for access in member.system_accesses.all()])
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Secret, self.secrets)
             ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')

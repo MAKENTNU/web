@@ -1073,18 +1073,6 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: internal/views.py:94
-msgid "Secrets list"
-msgstr "Liste med hemmeligheter"
-
-#: internal/views.py:100
-msgid "New Secret"
-msgstr "Ny hemmelighet"
-
-#: internal/views.py:106
-msgid "Edit Secret"
-msgstr "Rediger hemmelighet"
-
 #: internal/views.py:145
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
@@ -1111,6 +1099,18 @@ msgstr "Sett sluttet"
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
+
+#: internal/views.py:236
+msgid "Secrets list"
+msgstr "Liste med hemmeligheter"
+
+#: internal/views.py:242
+msgid "New Secret"
+msgstr "Ny hemmelighet"
+
+#: internal/views.py:248
+msgid "Edit Secret"
+msgstr "Rediger hemmelighet"
 
 #: make_queue/admin.py:22
 #: make_queue/templates/make_queue/machine_list.html:7

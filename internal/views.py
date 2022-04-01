@@ -41,76 +41,6 @@ class EditInternalContentBoxView(EditContentBoxView):
         }
 
 
-class QuoteListView(ListView):
-    model = Quote
-    template_name = 'internal/quotes_list.html'
-    context_object_name = 'quotes'
-    queryset = Quote.objects.order_by('-pk').select_related('author')
-
-
-class QuoteCreateView(PermissionRequiredMixin, CreateView):
-    permission_required = ('internal.add_quote',)
-    model = Quote
-    form_class = QuoteForm
-    template_name = 'internal/quote_create.html'
-    context_object_name = 'quote'
-    success_url = reverse_lazy('quote_list')
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
-
-class QuoteUpdateView(PermissionRequiredMixin, UpdateView):
-    permission_required = ('internal.change_quote',)
-    model = Quote
-    form_class = QuoteForm
-    template_name = 'internal/quote_edit.html'
-    context_object_name = 'quote'
-    success_url = reverse_lazy('quote_list')
-
-
-class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('internal.delete_quote',)
-    model = Quote
-    success_url = reverse_lazy('quote_list')
-
-
-class SecretListView(ListView):
-    model = Secret
-    queryset = Secret.objects.default_order_by()
-    template_name = 'internal/secret_list.html'
-    context_object_name = 'secrets'
-
-
-class SecretFormMixin(CustomFieldsetFormMixin, ABC):
-    model = Secret
-    form_class = SecretsForm
-    success_url = reverse_lazy('secret_list')
-
-    base_template = 'internal/base.html'
-    back_button_link = success_url
-    back_button_text = _("Secrets list")
-
-
-class CreateSecretView(PermissionRequiredMixin, SecretFormMixin, CreateView):
-    permission_required = ('internal.add_secret',)
-
-    form_title = _("New Secret")
-
-
-class EditSecretView(PermissionRequiredMixin, SecretFormMixin, UpdateView):
-    permission_required = ('internal.change_secret',)
-
-    form_title = _("Edit Secret")
-
-
-class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('internal.delete_secret',)
-    model = Secret
-    success_url = reverse_lazy('secret_list')
-
-
 class MemberListView(ListView):
     model = Member
     template_name = 'internal/member_list.html'
@@ -287,3 +217,73 @@ class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
 
     def get_success_url(self):
         return reverse('member_list', args=(self.object.member.pk,))
+
+
+class SecretListView(ListView):
+    model = Secret
+    queryset = Secret.objects.default_order_by()
+    template_name = 'internal/secret_list.html'
+    context_object_name = 'secrets'
+
+
+class SecretFormMixin(CustomFieldsetFormMixin, ABC):
+    model = Secret
+    form_class = SecretsForm
+    success_url = reverse_lazy('secret_list')
+
+    base_template = 'internal/base.html'
+    back_button_link = success_url
+    back_button_text = _("Secrets list")
+
+
+class CreateSecretView(PermissionRequiredMixin, SecretFormMixin, CreateView):
+    permission_required = ('internal.add_secret',)
+
+    form_title = _("New Secret")
+
+
+class EditSecretView(PermissionRequiredMixin, SecretFormMixin, UpdateView):
+    permission_required = ('internal.change_secret',)
+
+    form_title = _("Edit Secret")
+
+
+class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    permission_required = ('internal.delete_secret',)
+    model = Secret
+    success_url = reverse_lazy('secret_list')
+
+
+class QuoteListView(ListView):
+    model = Quote
+    template_name = 'internal/quotes_list.html'
+    context_object_name = 'quotes'
+    queryset = Quote.objects.order_by('-pk').select_related('author')
+
+
+class QuoteCreateView(PermissionRequiredMixin, CreateView):
+    permission_required = ('internal.add_quote',)
+    model = Quote
+    form_class = QuoteForm
+    template_name = 'internal/quote_create.html'
+    context_object_name = 'quote'
+    success_url = reverse_lazy('quote_list')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class QuoteUpdateView(PermissionRequiredMixin, UpdateView):
+    permission_required = ('internal.change_quote',)
+    model = Quote
+    form_class = QuoteForm
+    template_name = 'internal/quote_edit.html'
+    context_object_name = 'quote'
+    success_url = reverse_lazy('quote_list')
+
+
+class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    permission_required = ('internal.delete_quote',)
+    model = Quote
+    success_url = reverse_lazy('quote_list')

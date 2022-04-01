@@ -44,11 +44,11 @@ secret_urlpatterns = [
     path("secrets/create/", views.CreateSecretView.as_view(), name='create_secret'),
     path("secrets/<int:pk>/edit/", views.EditSecretView.as_view(), name='edit_secret'),
     path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name='delete_secret'),
+
     path("quotes/", views.QuoteListView.as_view(), name='quote_list'),
     path("quotes/add/", views.QuoteCreateView.as_view(), name='quote_create'),
     path("quotes/<int:pk>/change/", views.QuoteUpdateView.as_view(), name='quote_update'),
     path("quotes/<int:pk>/delete/", views.QuoteDeleteView.as_view(), name='quote_delete'),
-
 ]
 
 urlpatterns += i18n_patterns(
