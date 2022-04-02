@@ -258,7 +258,7 @@ class QuoteListView(ListView):
     model = Quote
     template_name = 'internal/quotes_list.html'
     context_object_name = 'quotes'
-    queryset = Quote.objects.order_by('-pk').select_related('author')
+    queryset = Quote.objects.order_by('-date').select_related('author')
 
 
 class QuoteFormMixin(CustomFieldsetFormMixin, ABC):

@@ -35,7 +35,12 @@
                         <div class="description">
                             {% blocktrans with quote=quote.quote %}“{{ quote }}”{% endblocktrans %}
                         </div>
-                        <div class="meta">{{ quote.context }}</div>
+                        <div class="meta">
+                            {{ quote.context }}
+                            <span class="right floated">
+                                {{ quote.date }}
+                            </span>
+                        </div>
                     </div>
                 </div>
             {% endfor %}

@@ -170,4 +170,7 @@ class SecretsForm(forms.ModelForm):
 class QuoteForm(forms.ModelForm):
     class Meta:
         model = Quote
-        fields = ('quote', 'quoted', 'context')
+        fields = ('quote', 'quoted', 'context', 'date')
+        widgets = {
+            'date': SemanticDateInput(),
+        }
