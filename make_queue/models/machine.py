@@ -139,6 +139,7 @@ class Machine(models.Model):
         verbose_name=_("priority"),
         help_text=_("If specified, the machines are sorted ascending by this value."),
     )
+    notes = models.TextField(blank=True, verbose_name=_("notes"), help_text=_("This is only for internal use and is not displayed anywhere."))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = MachineQuerySet.as_manager()

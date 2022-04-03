@@ -1334,6 +1334,14 @@ msgstr "sted-URL"
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."
 
+#: make_queue/models/machine.py:142
+msgid "notes"
+msgstr "notater"
+
+#: make_queue/models/machine.py:142
+msgid "This is only for internal use and is not displayed anywhere."
+msgstr "Dette er bare for intern bruk og blir ikke vist fram noe sted."
+
 #: make_queue/models/machine.py:197
 #: make_queue/views/reservation/rules.py:130
 #, python-brace-format

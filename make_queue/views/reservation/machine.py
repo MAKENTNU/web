@@ -40,6 +40,7 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
             {'fields': ('stream_name',), 'layout_class': "two"} if self.should_include_stream_name() else None,
             {'fields': ('location', 'location_url'), 'layout_class': "two"},
             {'fields': ('priority', 'status'), 'layout_class': "two"},
+            {'fields': ('notes',)},
         ]
 
     def should_include_stream_name(self):
