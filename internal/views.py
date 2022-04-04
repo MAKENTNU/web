@@ -76,7 +76,7 @@ class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     back_button_link = reverse_lazy('member_list')
     save_button_text = _("Add")
     custom_fieldsets = [
-        {'fields': ('user', 'date_joined'), 'layout_class': "two"},
+        {'fields': ('user', 'date_joined'), 'layout_class': "ui two fields"},
         {'fields': ('committees',)},
     ]
 
@@ -119,21 +119,21 @@ class EditMemberView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
     def get_custom_fieldsets(self):
         full_form = self.user_has_edit_perm()
         custom_fieldsets = [
-            {'fields': ('contact_email', 'phone_number'), 'layout_class': "two"},
-            {'fields': ('gmail', 'MAKE_email' if full_form else None), 'layout_class': "two"},
-            {'fields': ('study_program', 'ntnu_starting_semester'), 'layout_class': "two"},
-            {'fields': ('card_number',), 'layout_class': "two"},
+            {'fields': ('contact_email', 'phone_number'), 'layout_class': "ui two fields"},
+            {'fields': ('gmail', 'MAKE_email' if full_form else None), 'layout_class': "ui two fields"},
+            {'fields': ('study_program', 'ntnu_starting_semester'), 'layout_class': "ui two fields"},
+            {'fields': ('card_number',), 'layout_class': "ui two fields"},
 
             {'heading': _("Extra information"), 'icon_class': "info circle"},
-            {'fields': ('github_username', 'discord_username'), 'layout_class': "two"},
-            {'fields': ('minecraft_username',), 'layout_class': "two"},
+            {'fields': ('github_username', 'discord_username'), 'layout_class': "ui two fields"},
+            {'fields': ('minecraft_username',), 'layout_class': "ui two fields"},
         ]
         if full_form:
             custom_fieldsets.extend([
                 {'heading': _("Membership information"), 'icon_class': "group"},
-                {'fields': ('committees', 'role'), 'layout_class': "two"},
+                {'fields': ('committees', 'role'), 'layout_class': "ui two fields"},
                 {'fields': ('comment',)},
-                {'fields': ('guidance_exemption', 'active', 'honorary'), 'layout_class': "three"},
+                {'fields': ('guidance_exemption', 'active', 'honorary'), 'layout_class': "ui three fields"},
             ])
         return custom_fieldsets
 
@@ -160,7 +160,7 @@ class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateV
     back_button_text = _("Member list")
     save_button_text = _("Set retired")
     custom_fieldsets = [
-        {'fields': ('date_quit_or_retired',), 'layout_class': "two"},
+        {'fields': ('date_quit_or_retired',), 'layout_class': "ui two fields"},
     ]
 
     def get_form_title(self):
@@ -178,7 +178,7 @@ class MemberQuitView(MemberRetireView):
 
     save_button_text = _("Set quit")
     custom_fieldsets = [
-        {'fields': ('date_quit_or_retired', 'reason_quit'), 'layout_class': "two"},
+        {'fields': ('date_quit_or_retired', 'reason_quit'), 'layout_class': "ui two fields"},
     ]
 
     def get_form_title(self):

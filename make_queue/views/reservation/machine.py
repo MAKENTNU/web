@@ -35,11 +35,11 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
 
     def get_custom_fieldsets(self):
         return [
-            {'fields': ('machine_type' if self.should_include_machine_type else None, 'machine_model'), 'layout_class': "two"},
-            {'fields': ('name',), 'layout_class': "two"},
-            {'fields': ('stream_name',), 'layout_class': "two"} if self.should_include_stream_name() else None,
-            {'fields': ('location', 'location_url'), 'layout_class': "two"},
-            {'fields': ('priority', 'status'), 'layout_class': "two"},
+            {'fields': ('machine_type' if self.should_include_machine_type else None, 'machine_model'), 'layout_class': "ui two fields"},
+            {'fields': ('name',), 'layout_class': "ui two fields"},
+            {'fields': ('stream_name',), 'layout_class': "ui two fields"} if self.should_include_stream_name() else None,
+            {'fields': ('location', 'location_url'), 'layout_class': "ui two fields"},
+            {'fields': ('priority', 'status'), 'layout_class': "ui two fields"},
             {'fields': ('notes',)},
         ]
 
