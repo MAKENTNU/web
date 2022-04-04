@@ -12,6 +12,9 @@ class MachineDetailView(DetailView):
     template_name = 'make_queue/machine_detail.html'
     context_object_name = 'machine'
 
+    def get_queryset(self):
+        return Machine.objects.visible_to(self.request.user)
+
     def get_context_data(self, **kwargs):
         """
         Create the context required for the controls and the information to be displayed.
@@ -26,7 +29,11 @@ class MachineDetailView(DetailView):
         context.update({
             'reservation_denied_message': reservation_denied_message(self.request.user, machine),
             'can_ignore_rules': False,
-            'other_machines': Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type).default_order_by(),
+            'other_machines': (
+                Machine.objects.exclude(pk=machine.pk).filter(
+                    machine_type=machine.machine_type,
+                ).visible_to(self.request.user).default_order_by()
+            ),
             'year': year,
             'week': week,
             'date': year_and_week_to_monday(year, week),

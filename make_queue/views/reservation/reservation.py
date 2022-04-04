@@ -89,6 +89,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
         :return: The context data needed for the template
         """
 
+        machine_queryset = Machine.objects.visible_to(self.request.user).default_order_by()
         # Always include a list of events and machines to populate the dropdown lists
         context_data = {
             "new_reservation": self.new_reservation,
@@ -97,7 +98,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
                 machine_type
                 for machine_type in
                 MachineType.objects.default_order_by().prefetch_machines(
-                    machine_queryset=Machine.objects.default_order_by(), machines_attr_name='instances',
+                    machine_queryset=machine_queryset, machines_attr_name='instances',
                 )
                 if machine_type.can_user_use(self.request.user)
             ],
@@ -171,7 +172,7 @@ class MachineRelatedViewMixin:
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
         machine_pk = self.kwargs['pk']
-        self.machine = get_object_or_404(Machine, pk=machine_pk)
+        self.machine = get_object_or_404(Machine.objects.visible_to(self.request.user), pk=machine_pk)
 
 
 class CreateReservationView(PermissionRequiredMixin, MachineRelatedViewMixin, CreateOrEditReservationView):

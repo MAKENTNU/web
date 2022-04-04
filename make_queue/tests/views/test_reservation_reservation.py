@@ -212,6 +212,65 @@ class TestCreateReservationView(CreateOrEditReservationViewTestBase):
             **kwargs,
         })
 
+    def test_only_users_with_3d_printer_course_can_view_create_reservation_page_for_3d_printers(self):
+        printer_machine_type = MachineType.objects.get(pk=1)
+        machine = Machine.objects.create(name="Lovelace", machine_model="Ultimaker 2+", machine_type=printer_machine_type)
+        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+
+        self.client.force_login(self.user)
+        # Not having taken the course should deny the user
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+
+        Printer3DCourse.objects.create(user=self.user, date=timezone.now())
+        # Having taken the course should allow the user
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+        self._test_only_internal_users_can_view_create_reservation_page_for_machine(self.user, machine)
+
+    def test_only_users_with_raise3d_course_can_view_create_reservation_page_for_raise3d_printers(self):
+        raise3d_machine_type = MachineType.objects.get(pk=6)
+        machine = Machine.objects.create(name="Darwin", machine_model="Raise3D Pro2 Plus", machine_type=raise3d_machine_type)
+        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+
+        self.client.force_login(self.user)
+        # Not having taken the course at all should deny the user
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+
+        course = Printer3DCourse.objects.create(user=self.user, date=timezone.now())
+        # Not having taken the Raise3D course should deny the user
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+
+        # Having taken the Raise3D course should allow the user
+        course.raise3d_course = True
+        course.save()
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+        self._test_only_internal_users_can_view_create_reservation_page_for_machine(self.user, machine)
+
+    def _test_only_internal_users_can_view_create_reservation_page_for_machine(self, user: User, machine: Machine):
+        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+        self.client.force_login(user)
+
+        # User should be allowed when machine is not internal
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
+        # User should not be able to find the machine when it's internal
+        machine.internal = True
+        machine.save()
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+        # User should be allowed when they're internal
+        user.add_perms('internal.is_internal')
+        response = self.client.get(create_reservation_url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+
     def test_form_valid_normal_reservation(self):
         form = self.create_form(start_time_diff=1, end_time_diff=2)
         self.assertTrue(form.is_valid())

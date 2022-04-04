@@ -101,6 +101,12 @@ class MachineType(models.Model):
 
 class MachineQuerySet(models.QuerySet):
 
+    def visible_to(self, user: User):
+        if user.has_perm('internal.is_internal'):
+            return self.all()
+        else:
+            return self.exclude(internal=True)
+
     def default_order_by(self):
         return self.order_by(
             'machine_type__priority',
@@ -137,6 +143,8 @@ class Machine(models.Model):
     )
     location = UnlimitedCharField(verbose_name=_("location"))
     location_url = URLTextField(verbose_name=_("location URL"))
+    internal = models.BooleanField(default=False, verbose_name=_("internal"),
+                                   help_text=_("If selected, the machine will only be visible to and reservable by MAKE members."))
     status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("status"))
     priority = models.IntegerField(
         null=True,

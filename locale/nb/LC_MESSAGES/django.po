@@ -1330,6 +1330,14 @@ msgstr "maskinmodell"
 msgid "location URL"
 msgstr "sted-URL"
 
+#: make_queue/models/machine.py:147
+msgid ""
+"If selected, the machine will only be visible to and reservable by MAKE "
+"members."
+msgstr ""
+"Hvis valgt vil maskinen bare være synlig og mulig å reservere for MAKE-"
+"medlemmer."
+
 #: make_queue/models/machine.py:140
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."

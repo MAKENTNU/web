@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from typing import List
 
 from django.templatetags.static import static
 from django.test import TestCase
@@ -31,7 +32,7 @@ class TestMachineListView(TestCase):
         machine_type_0 = machine_types[0]
         self.assertEqual(machine_type_0.pk, self.printer_machine_type.pk)
         self.assertEqual(machine_type_0.name, self.printer_machine_type.name)
-        self.assertListEqual(list(machine_type_0.existing_machines), [printer1, printer2])
+        self.assertListEqual(list(machine_type_0.shown_machines), [printer1, printer2])
 
     def test_several_machine_types(self):
         printer1 = Machine.objects.create(name="test1", machine_type=self.printer_machine_type)
@@ -45,8 +46,50 @@ class TestMachineListView(TestCase):
         self.assertEqual(machine_type_1.pk, self.sewing_machine_type.pk)
         self.assertEqual(machine_type_0.name, self.printer_machine_type.name)
         self.assertEqual(machine_type_1.name, self.sewing_machine_type.name)
-        self.assertListEqual(list(machine_type_0.existing_machines), [printer1, printer2])
-        self.assertListEqual(list(machine_type_1.existing_machines), [sewing])
+        self.assertListEqual(list(machine_type_0.shown_machines), [printer1, printer2])
+        self.assertListEqual(list(machine_type_1.shown_machines), [sewing])
+
+    def test_internal_machines_are_only_shown_to_privileged_users(self):
+        printer1 = Machine.objects.create(name="Printer 1", machine_type=self.printer_machine_type)
+        printer2 = Machine.objects.create(name="Printer 2", machine_type=self.printer_machine_type)
+        printer3_internal = Machine.objects.create(name="Printer 3", machine_type=self.printer_machine_type, internal=True)
+        printer4 = Machine.objects.create(name="Printer 4", machine_type=self.printer_machine_type)
+        sewing1_internal = Machine.objects.create(name="Sewing machine 1", machine_type=self.sewing_machine_type, internal=True)
+        sewing2 = Machine.objects.create(name="Sewing machine 2", machine_type=self.sewing_machine_type)
+        scanner1_internal = Machine.objects.create(name="Scanner 1", machine_type=MachineType.objects.get(pk=3), internal=True)
+
+        machine_list_url = reverse('machine_list')
+
+        def assert_machine_list_contains(expected_machines_per_machine_type: List[List[Machine]]):
+            response = self.client.get(machine_list_url)
+            self.assertEqual(response.status_code, HTTPStatus.OK)
+            # Filter the machine types the same way as in the template
+            machine_types = list(machine_type for machine_type in response.context['machine_types'] if machine_type.shown_machines)
+            self.assertEqual(len(machine_types), len(expected_machines_per_machine_type))
+            for machine_type, expected_machines in zip(machine_types, expected_machines_per_machine_type):
+                self.assertListEqual(list(machine_type.shown_machines), expected_machines)
+
+        # The internal machines should not be shown to anonymous users
+        assert_machine_list_contains([
+            [printer1, printer2, printer4],
+            [sewing2],
+        ])
+
+        # The internal machines should not be shown to unprivileged users
+        user = User.objects.create_user("user1")
+        self.client.force_login(user)
+        assert_machine_list_contains([
+            [printer1, printer2, printer4],
+            [sewing2],
+        ])
+
+        # The internal machines should be shown to MAKE members
+        user.add_perms('internal.is_internal')
+        assert_machine_list_contains([
+            [printer1, printer2, printer3_internal, printer4],
+            [sewing1_internal, sewing2],
+            [scanner1_internal],
+        ])
 
     def test_machines_are_sorted_correctly(self):
         correct_machine_orders = []
@@ -69,7 +112,7 @@ class TestMachineListView(TestCase):
         machine_types = list(MachineListView.as_view()(request_with_user(None)).context_data['machine_types'])
         for machine_type, correct_machine_order in zip(machine_types, correct_machine_orders):
             with self.subTest(machine_type=machine_type):
-                self.assertListEqual(list(machine_type.existing_machines), correct_machine_order)
+                self.assertListEqual(list(machine_type.shown_machines), correct_machine_order)
 
     def test_get_machine_list_view_contains_img_path_in_html(self):
         def assert_response_contains_num_of_each_img_path(num_of_each: int):
@@ -94,6 +137,33 @@ class TestMachineListView(TestCase):
             machine_type=machine_type,
             **kwargs,
         )
+
+
+class TestMachineDetailView(TestCase):
+
+    def test_only_internal_users_can_view_internal_machines(self):
+        for machine_type in MachineType.objects.all():
+            with self.subTest(machine_type=machine_type):
+                user = User.objects.create_user(username=f"user{machine_type.pk}")
+                self.client.force_login(user)
+
+                machine = Machine.objects.create(name=f"{machine_type} 1", machine_type=machine_type)
+                machine_detail_url = reverse('machine_detail', args=[2022, 1, machine.pk])
+
+                # User should be allowed when machine is not internal
+                response = self.client.get(machine_detail_url)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
+
+                # User should not be able to find the machine when it's internal
+                machine.internal = True
+                machine.save()
+                response = self.client.get(machine_detail_url)
+                self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+                # User should be allowed when they're internal
+                user.add_perms('internal.is_internal')
+                response = self.client.get(machine_detail_url)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
 class TestCreateAndEditMachineView(TestCase):
