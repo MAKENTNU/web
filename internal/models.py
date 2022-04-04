@@ -273,5 +273,8 @@ class Quote(models.Model):
         verbose_name=_("author"),
     )
 
+    class Meta:
+        ordering = ('-date',)
+
     def __str__(self):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)

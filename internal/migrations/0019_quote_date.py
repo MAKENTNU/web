@@ -17,4 +17,8 @@ class Migration(migrations.Migration):
             field=models.DateField(default=date.fromtimestamp(0), verbose_name='date'),
             preserve_default=False,
         ),
+        migrations.AlterModelOptions(
+            name='quote',
+            options={'ordering': ('-date',)},
+        ),
     ]
