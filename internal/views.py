@@ -256,7 +256,7 @@ class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteV
 
 class QuoteListView(ListView):
     model = Quote
-    template_name = 'internal/quotes_list.html'
+    template_name = 'internal/quote_list.html'
     context_object_name = 'quotes'
     queryset = Quote.objects.order_by('-date').select_related('author')
 
