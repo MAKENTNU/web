@@ -15,8 +15,8 @@ class MachineListView(ListView):
     model = MachineType
     queryset = (
         # Retrieves all machine types that have at least one existing machine
-        MachineType.objects.prefetch_machines_and_default_order_by(
-            machines_attr_name='existing_machines',
+        MachineType.objects.default_order_by().prefetch_machines(
+            machine_queryset=Machine.objects.default_order_by(), machines_attr_name='existing_machines',
         ).filter(machines__isnull=False).distinct()  # remove duplicates that can appear when filtering on values across tables
     )
     template_name = 'make_queue/machine_list.html'

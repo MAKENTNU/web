@@ -96,7 +96,9 @@ class CreateOrEditReservationView(TemplateView, ABC):
             "machine_types": [
                 machine_type
                 for machine_type in
-                MachineType.objects.prefetch_machines_and_default_order_by(machines_attr_name="instances")
+                MachineType.objects.default_order_by().prefetch_machines(
+                    machine_queryset=Machine.objects.default_order_by(), machines_attr_name='instances',
+                )
                 if machine_type.can_user_use(self.request.user)
             ],
             "maximum_days_in_advance": Reservation.RESERVATION_FUTURE_LIMIT_DAYS,

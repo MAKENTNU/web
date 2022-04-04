@@ -19,13 +19,18 @@ from .course import Printer3DCourse
 
 class MachineTypeQuerySet(models.QuerySet):
 
-    def prefetch_machines_and_default_order_by(self, *, machines_attr_name: str):
+    def default_order_by(self):
+        return self.order_by('priority')
+
+    def prefetch_machines(self, *, machine_queryset=None, machines_attr_name: str):
         """
         Returns a ``QuerySet`` where all the machine types' machines have been prefetched
         and can be accessed through the attribute with the same name as ``machines_attr_name``.
         """
-        return self.order_by('priority').prefetch_related(
-            Prefetch('machines', queryset=Machine.objects.default_order_by(), to_attr=machines_attr_name)
+        if machine_queryset is None:
+            machine_queryset = Machine.objects.all()
+        return self.prefetch_related(
+            Prefetch('machines', queryset=machine_queryset, to_attr=machines_attr_name)
         )
 
 
