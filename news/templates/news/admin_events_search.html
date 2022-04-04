@@ -10,7 +10,7 @@
     <h1 class="ui centered header">{% translate "Check if a user has attended or is registered for an event" %}</h1>
     
     <div class="ui text container">
-    <form method="POST" class="ui small form">{% csrf_token %}
+    <form method="POST" class="ui small dont-prevent-leaving form">{% csrf_token %}
         <div class="eight wide field">
              <label>{{ form.name.label }}
                 <span data-content="{% translate "Valid arguments are username, firstname or lastname" %}">
@@ -31,16 +31,16 @@
                     {% for ticket in user.tickets%}
                         {% if ticket.active %}
                             {% if ticket.timeplace %}
-                                <a href="{% url 'timeplace_ticket_list' ticket.timeplace.pk %}" target="_blank">{{ ticket.timeplace.event.title }}:
+                                <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event ticket.timeplace.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.timeplace.event.title }}:
                                     {{ ticket.timeplace.start_time.date }}</a> <br/>
                             {% else %}
                                 {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence%}
-                                    <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank">{{ ticket.event }}:
+                                    <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.event }}:
                                         {{ ticket.first_standalone_event_occurrence.date }}
                                         &ndash; {{ ticket.last_standalone_event_occurrence.date }}
                                         </a> <br/>
                                 {% else %}
-                                    <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank">{{ ticket.event }}:
+                                    <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.event }}:
                                         {{ ticket.first_standalone_event_occurrence.date }}</a> <br/>
                                 {% endif %}
                             {% endif %}

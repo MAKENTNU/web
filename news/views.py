@@ -7,7 +7,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Count, Max, Prefetch, Q
+from django.db.models import Count, Max, Min, Prefetch, Q
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -23,7 +23,7 @@ from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
 from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
 from .forms import ArticleForm, EventForm, EventRegistrationForm, EventsSearchForm, NewsBaseForm, TimePlaceForm, ToggleForm
-from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace
+from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
 
 
 class SpecificArticleView(SingleObjectMixin, View, ABC):
@@ -232,7 +232,7 @@ class AdminEventsSearchView(PermissionRequiredMixin, FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
     def has_permission(self):
-        return has_any_event_permissions(self.request.user)
+        return self.request.user.has_any_permissions_for(Event)
 
 
 class AdminEventDetailView(PermissionRequiredMixin, SpecificEventView, DetailView):

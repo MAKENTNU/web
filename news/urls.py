@@ -81,6 +81,7 @@ event_adminpatterns = [
     path("", views.AdminEventListView.as_view(), name='admin_event_list'),
     path("create/", views.CreateEventView.as_view(), name='event_create'),
     path("<Event:event>/", include(specific_event_adminpatterns)),
+    path('search/', login_required(views.AdminEventsSearchView.as_view()), name='admin_events_search'),
 ]
 
 adminpatterns = [
