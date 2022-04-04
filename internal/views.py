@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -273,6 +274,9 @@ class QuoteFormMixin(CustomFieldsetFormMixin, ABC):
 
 class QuoteCreateView(PermissionRequiredMixin, QuoteFormMixin, CreateView):
     permission_required = ('internal.add_quote',)
+    initial = {
+        'date': timezone.localdate,
+    }
 
     form_title = _("New Quote")
 

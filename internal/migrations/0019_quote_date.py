@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='quote',
             name='date',
-            field=models.DateField(blank=True, default=date.fromtimestamp(0), verbose_name='date'),
+            field=models.DateField(default=date.fromtimestamp(0), verbose_name='date'),
             preserve_default=False,
         ),
     ]
