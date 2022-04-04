@@ -33,7 +33,9 @@
                         src="{{ event_dict.event.image.url }}"
                     {% endthumbnail %}
                         class="event-img o v e r r i d e {% if event_dict.event.contain %}contain{% endif %}"
-                        alt="{{ event_dict.event.image_description }}"
+                        alt="{% blocktrans trimmed with title=event_dict.event.title description=event_dict.event.image_description %}
+                            View the event “{{ title }}”; image description: {{ description }}
+                        {% endblocktrans %}"
                     />
                 </a>
 

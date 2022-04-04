@@ -3,20 +3,22 @@ from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
-from django.db.models.signals import m2m_changed
-from django.dispatch import receiver
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumber_field.phonenumber import PhoneNumber
 from phonenumbers.phonenumberutil import region_code_for_number
+from simple_history.models import HistoricalRecords
 
 from groups.models import Committee
 from users.models import User
 from web.modelfields import UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
-from .util import date_to_term
+from .modelfields import SemesterField
+from .util import date_to_semester, year_to_semester
+from .validators import WhitelistedEmailValidator, discord_username_validator
 
 
 class Member(models.Model):
@@ -25,34 +27,45 @@ class Member(models.Model):
         on_delete=models.DO_NOTHING,
         null=True,
         related_name='member',
-        verbose_name=_("User"),
+        verbose_name=_("user"),
     )
     committees = models.ManyToManyField(
         to=Committee,
         blank=True,
         related_name='members',
-        verbose_name=_("Committees"),
+        verbose_name=_("committees"),
     )
-    role = UnlimitedCharField(blank=True, verbose_name=_("Role"))
-    email = models.EmailField(blank=True, verbose_name=_("Contact email"))
-    phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("Phone number"))
-    study_program = UnlimitedCharField(blank=True, verbose_name=_("Study program"))
-    date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("Date joined"))
-    date_quit = models.DateField(null=True, blank=True, verbose_name=_("Date quit"))
-    reason_quit = models.TextField(blank=True, verbose_name=_("Reason quit"))
-    comment = models.TextField(blank=True, verbose_name=_("Comment"))
-    active = models.BooleanField(default=True, verbose_name=_("Is active"))
-    guidance_exemption = models.BooleanField(default=False, verbose_name=_("Guidance exemption"))
-    quit = models.BooleanField(default=False, verbose_name=_("Has quit"))
-    retired = models.BooleanField(default=False, verbose_name=_("Retired"))
-    honorary = models.BooleanField(default=False, verbose_name=_("Honorary"))
+    role = UnlimitedCharField(blank=True, verbose_name=_("role"))
+    contact_email = models.EmailField(blank=True, verbose_name=_("contact email"))
+    gmail = models.EmailField(blank=True, verbose_name=_("Gmail"))
+    MAKE_email = models.EmailField(blank=True, validators=[WhitelistedEmailValidator(valid_domains=["makentnu.no"])],
+                                   verbose_name=_("MAKE email"))
+    phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("phone number"))
+    study_program = UnlimitedCharField(blank=True, verbose_name=_("study program"))
+    ntnu_starting_semester = SemesterField(null=True, blank=True, verbose_name=_("starting semester at NTNU"),
+                                           help_text=_('Must be in the format [V/H][year], e.g. “V17” or “H2017”.'))
+    date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("date joined"))
+    date_quit_or_retired = models.DateField(null=True, blank=True, verbose_name=_("date quit or retired"))
+    reason_quit = models.TextField(blank=True, verbose_name=_("reason quit"))
+    comment = models.TextField(blank=True, verbose_name=_("comment"))
+    active = models.BooleanField(default=True, verbose_name=_("is active"))
+    guidance_exemption = models.BooleanField(default=False, verbose_name=_("guidance exemption"))
+    quit = models.BooleanField(default=False, verbose_name=_("has quit"))
+    retired = models.BooleanField(default=False, verbose_name=_("retired"))
+    honorary = models.BooleanField(default=False, verbose_name=_("honorary"))
+    # Our code shouldn't have to keep track of these services' username length constraints, so we should not limit the length
+    github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
+    discord_username = UnlimitedCharField(blank=True, validators=[discord_username_validator], verbose_name=_("Discord username"))
+    minecraft_username = UnlimitedCharField(blank=True, verbose_name=_("Minecraft username"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         permissions = (
             ('is_internal', "Is a member of MAKE NTNU"),
-            ('can_register_new_member', "Can register new member"),
             ('can_edit_group_membership', "Can edit the groups a member is part of, including (de)activation"),
+            # WARNING: granting a user this permission enables them to carry out a stored XSS attack;
+            #          only give trusted users/groups this permission
+            ('can_change_rich_text_source', "Can change rich text fields' HTML source code directly (including adding <script> tags)"),
         )
 
     def __str__(self):
@@ -64,8 +77,6 @@ class Member(models.Model):
         super().save(force_insert, force_update, using, update_fields)
 
         if is_creation:
-            self.email = self.user.email
-
             # Setup all properties for new members
             for property_name, value in SystemAccess.NAME_CHOICES:
                 # All members will be registered on the website when added to the member list
@@ -85,42 +96,53 @@ class Member(models.Model):
         else:
             return self.phone_number.as_international
 
+    @property
+    def ntnu_starting_semester_display(self):
+        if not self.ntnu_starting_semester:
+            return ""
+        return year_to_semester(self.ntnu_starting_semester)
 
     @property
-    def term_joined(self):
-        return date_to_term(self.date_joined)
+    def semester_joined(self):
+        return date_to_semester(self.date_joined)
 
     @property
-    def term_quit(self):
-        if self.date_quit is None:
+    def semester_quit_or_retired(self):
+        if self.date_quit_or_retired is None:
             return None
-        return date_to_term(self.date_quit)
+        return date_to_semester(self.date_quit_or_retired)
 
-    def set_quit(self, quit_status: bool, reason="", date_quit=timezone.now()):
+    def set_quit(self, quit_status: bool, reason="", date_quit_or_retired=timezone.now()):
         """
         Perform all the actions to set a member as quit or undo this action.
 
         :param quit_status: Indicates if the member has quit
         :param reason: The reason why the member has quit
-        :param date_quit: The date the member quit
+        :param date_quit_or_retired: The date the member quit
         """
         self.quit = quit_status
         if self.quit:
-            self.date_quit = date_quit
+            self.date_quit_or_retired = date_quit_or_retired
         else:
-            self.date_quit = None
+            self.date_quit_or_retired = None
 
         self.reason_quit = reason
         self.set_committee_membership(not quit_status)
         self.set_membership(not quit_status)
 
-    def set_retirement(self, retirement_status: bool):
+    def set_retirement(self, retirement_status: bool, date_quit_or_retired=timezone.now()):
         """
         Perform all the actions to set a member as retired or to undo this action.
 
         :param retirement_status: Indicates if the member has retired
+        :param date_quit_or_retired: The date the member retired
         """
         self.retired = retirement_status
+        if self.retired:
+            self.date_quit_or_retired = date_quit_or_retired
+        else:
+            self.date_quit_or_retired = None
+
         self.set_committee_membership(not retirement_status)
         self.set_membership(True)
 
@@ -150,21 +172,6 @@ class Member(models.Model):
                 make.first().user_set.remove(self.user)
 
 
-@receiver(m2m_changed, sender=Member.committees.through)
-def member_update_user_groups(sender, instance, action="", pk_set=None, **kwargs):
-    """
-    Makes sure that the member is added/removed from the correct groups as their committee membership changes.
-    """
-    if action == 'pre_add':
-        committees = Committee.objects.filter(pk__in=pk_set)
-        for committee in committees:
-            committee.group.user_set.add(instance.user)
-    elif action == 'pre_remove':
-        committees = Committee.objects.filter(pk__in=pk_set)
-        for committee in committees:
-            committee.group.user_set.remove(instance.user)
-
-
 class SystemAccess(models.Model):
     DRIVE = "drive"
     SLACK = "slack"
@@ -178,7 +185,8 @@ class SystemAccess(models.Model):
         (SLACK, _("Slack")),
         (CALENDAR, _("Calendar")),
         (TRELLO, _("Trello")),
-        (EMAIL, _("Email")),
+        # `capfirst()` to avoid duplicate translation differing only in case
+        (EMAIL, capfirst(_("email"))),
         (WEBSITE, _("Website")),
     )
 
@@ -186,16 +194,18 @@ class SystemAccess(models.Model):
         to=Member,
         on_delete=models.CASCADE,
         related_name='system_accesses',
-        verbose_name=_("Member"),
+        verbose_name=_("member"),
     )
-    name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("System"))
-    value = models.fields.BooleanField(verbose_name=_("Access"))
+    name = models.fields.CharField(choices=NAME_CHOICES, max_length=32, verbose_name=_("system"))
+    value = models.fields.BooleanField(verbose_name=_("access"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         constraints = (
             models.UniqueConstraint(fields=('name', 'member'), name="%(class)s_unique_name_per_member"),
         )
+        verbose_name = "system access"
+        verbose_name_plural = "system accesses"
 
     def __str__(self):
         return _("Access for {member} to {name}: {has_access}").format(member=self.member, name=self.name, has_access=self.value)
@@ -232,18 +242,39 @@ class Secret(models.Model):
     title = MultiLingualTextField(
         max_length=100,
         unique=True,
-        verbose_name=_("Title"),
+        verbose_name=_("title"),
     )
-    content = MultiLingualRichTextUploadingField(verbose_name=_("Description"))
+    content = MultiLingualRichTextUploadingField(verbose_name=_("description"))
     priority = models.IntegerField(
         null=True,
         blank=True,
-        verbose_name=_("Priority"),
+        verbose_name=_("priority"),
         help_text=_("If specified, the secrets are sorted ascending by this value."),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = SecretQuerySet.as_manager()
 
+    history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
+
     def __str__(self):
         return str(self.title)
+
+
+class Quote(models.Model):
+    quote = models.TextField(verbose_name=_("quote"))
+    quoted = models.CharField(max_length=100, verbose_name=_("quoted"), help_text=_("The person who is quoted."))
+    context = models.TextField(blank=True, max_length=500, verbose_name=_("context"))
+    date = models.DateField(verbose_name=_("date"))
+    author = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='quotes',
+        verbose_name=_("author"),
+    )
+
+    class Meta:
+        ordering = ('-date',)
+
+    def __str__(self):
+        return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)

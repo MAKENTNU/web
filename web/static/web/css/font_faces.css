@@ -1,0 +1,26 @@
+/* ubuntu-regular - latin, latin-ext, greek */
+@font-face {
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 400;
+    /* See https://caniuse.com/woff2 for browser coverage */
+    src: url("../fonts/ubuntu-v15-latin-ext_latin_greek-regular.woff2") format("woff2")
+}
+
+/* ubuntu-italic - latin, latin-ext, greek */
+@font-face {
+    font-family: "Ubuntu";
+    font-style: italic;
+    font-weight: 400;
+    /* See https://caniuse.com/woff2 for browser coverage */
+    src: url("../fonts/ubuntu-v15-latin-ext_latin_greek-italic.woff2") format("woff2")
+}
+
+/* ubuntu-700 - latin, latin-ext, greek */
+@font-face {
+    font-family: "Ubuntu";
+    font-style: normal;
+    font-weight: 700;
+    /* See https://caniuse.com/woff2 for browser coverage */
+    src: url("../fonts/ubuntu-v15-latin-ext_latin_greek-700.woff2") format("woff2")
+}

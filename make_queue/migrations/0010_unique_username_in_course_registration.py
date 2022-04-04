@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='printer3dcourse',
             name='username',
-            field=make_queue.models.fields.UsernameField(max_length=32, unique=True, verbose_name='Username'),
+            field=make_queue.models.fields.UsernameField(max_length=32, unique=True, verbose_name='username'),
         ),
     ]

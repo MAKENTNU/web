@@ -20,18 +20,12 @@ body {
     flex-direction: column;
 }
 
-p, h1, h2, h3, h4, h5, li, td, th, div, a, input, textarea, button {
+p, h1, h2, h3, h4, h5, h6, li, td, th, div, a, input, textarea, button {
     font-family: "Ubuntu", sans-serif !important;
 }
 
 p, li {
     font-size: 1.15rem;
-}
-
-.ui.message p,
-.ui.message li {
-    /* Unsets the font size set above, so that Fomantic-UI is able to use its own font size */
-    font-size: unset;
 }
 
 p {
@@ -40,6 +34,15 @@ p {
 
 li {
     line-height: 1.65rem;
+}
+
+.ui.card p,
+.ui.card li,
+.ui.message p,
+.ui.message li {
+    /* Unsets the properties set above, so that Fomantic-UI is able to use its own font size */
+    font-size: unset;
+    line-height: unset;
 }
 
 .word-breaking {

@@ -1,66 +1,81 @@
 from django.http import JsonResponse
 from django.urls import reverse
 from django.utils.dateparse import parse_datetime
+from django.views.generic import ListView
 
-from ...models.machine import Machine
+from users.models import User
+from ..reservation.reservation import MachineRelatedViewMixin
+from ...models.reservation import Reservation, ReservationRule
 
 
-def reservation_type(reservation, user):
+def reservation_type(reservation: Reservation, user: User):
     if reservation.special:
-        return "make"
+        return 'make'
     if reservation.event:
-        return "event"
-    if user is not None and reservation.user == user:
-        return "own"
-    return "normal"
+        return 'event'
+    if user == reservation.user:
+        return 'own'
+    return 'normal'
 
 
-def get_reservations(request, machine: Machine):
-    start_date = parse_datetime(request.GET.get("startDate"))
-    end_date = parse_datetime(request.GET.get("endDate"))
+class APIReservationListView(MachineRelatedViewMixin, ListView):
+    model = Reservation
 
-    reservations = []
-    for reservation in machine.reservations.filter(start_time__lt=end_date, end_time__gt=start_date):
-        reservation_data = {
-            "start": reservation.start_time,
-            "end": reservation.end_time,
-            "type": reservation_type(reservation, request.user),
+    def get_queryset(self):
+        # TODO: use a form instead of manually parsing the URL parameters
+        start_time = parse_datetime(self.request.GET.get('startDate'))
+        end_time = parse_datetime(self.request.GET.get('endDate'))
+        return self.machine.reservations.filter(start_time__lt=end_time, end_time__gt=start_time)
+
+    def get_context_data(self, **kwargs):
+        reservations = []
+        for reservation in self.object_list:
+            reservation_data = {
+                'start': reservation.start_time,
+                'end': reservation.end_time,
+                'type': reservation_type(reservation, self.request.user),
+            }
+
+            if reservation.event:
+                reservation_data.update({
+                    'eventLink': reverse('event_detail', args=[reservation.event.event.pk]),
+                    'displayText': str(reservation.event.event.title),
+                })
+            elif reservation.special:
+                reservation_data.update({
+                    'displayText': reservation.special_text,
+                })
+            elif self.request.user.has_perm('make_queue.can_view_reservation_user'):
+                reservation_data.update({
+                    'user': reservation.user.get_full_name(),
+                    'email': reservation.user.email,
+                    'displayText': reservation.comment,
+                })
+
+            reservations.append(reservation_data)
+
+        return {'reservations': reservations}
+
+    def render_to_response(self, context, **response_kwargs):
+        return JsonResponse(context)
+
+
+class APIReservationRuleListView(MachineRelatedViewMixin, ListView):
+    model = ReservationRule
+
+    def get_queryset(self):
+        return self.machine.machine_type.reservation_rules.all()
+
+    def get_context_data(self, **kwargs):
+        return {
+            'rules': [
+                {
+                    'periods': rule.get_exact_start_and_end_times_list(iso=False, wrap_using_modulo=True),
+                    'max_inside': rule.max_hours,
+                    'max_crossed': rule.max_inside_border_crossed,
+                } for rule in self.object_list
+            ],
         }
 
-        if reservation.event:
-            reservation_data.update({
-                "eventLink": reverse('event_detail', kwargs={'pk': reservation.event.event.pk}),
-                "displayText": str(reservation.event.event.title),
-            })
-        elif reservation.special:
-            reservation_data.update({
-                "displayText": reservation.special_text,
-            })
-        elif request.user.has_perm('make_queue.can_view_reservation_user'):
-            reservation_data.update({
-                "user": reservation.user.get_full_name(),
-                "email": reservation.user.email,
-                "displayText": reservation.comment,
-            })
-
-        reservations.append(reservation_data)
-
-    return JsonResponse({"reservations": reservations})
-
-
-def get_reservation_rules(request, machine):
-    return JsonResponse({
-        "rules": [
-            {
-                "periods": [
-                    [
-                        day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
-                        (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
-                    ]
-                    for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
-                ],
-                "max_inside": rule.max_hours,
-                "max_crossed": rule.max_inside_border_crossed,
-            } for rule in machine.machine_type.reservation_rules.all()
-        ],
-    })
+    def render_to_response(self, context, **response_kwargs):
+        return JsonResponse(context)

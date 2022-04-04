@@ -6,7 +6,7 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.MakerspaceView.as_view(), name='makerspace'),
+    path("", views.MakerspaceView.as_view(url_name='makerspace'), name='makerspace'),
     path("equipment/", views.EquipmentListView.as_view(), name='makerspace_equipment_list'),
     path("equipment/admin/", login_required(views.AdminEquipmentListView.as_view()), name='makerspace_admin_equipment_list'),
     path("equipment/admin/create/", login_required(views.CreateEquipmentView.as_view()), name='makerspace_equipment_create'),

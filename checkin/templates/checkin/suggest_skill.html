@@ -14,7 +14,7 @@
             {% csrf_token %}
             <div class="inline fields">
                 <div class="ten wide field">
-                    <label>{% trans "Title (Norwegian)" %}</label>
+                    <label>{% trans "title (Norwegian)"|capfirst %}</label>
                     <input required type="text" name="suggested-skill" placeholder="Ferdighet"/>
                 </div>
                 <div class="five wide field">
@@ -28,7 +28,7 @@
 
             <div class="inline fields">
                 <div class="nine wide field">
-                    <label>{% trans "Title (English)" %}</label>
+                    <label>{% trans "title (English)"|capfirst %}</label>
                     <input required type="text" name="suggested-skill-english" placeholder="Skill"/>
                 </div>
             </div>

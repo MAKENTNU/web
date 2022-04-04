@@ -16,12 +16,21 @@
         <div class="text">{% trans "Secrets" %}</div>
         <div class="make-bg-turquoise bubble-background"></div>
     </a>
+    <a class="item" href="{% url 'quote_list' %}">
+        <div class="text">{% trans "Quotes" %}</div>
+        <div class="make-bg-blue bubble-background"></div>
+    </a>
 {% endblock nav_buttons %}
 
 {% block user_dropdown_buttons %}
     <a class="item" href="{% host_url 'front_page' host 'main' %}">
         <div class="text">{% trans "Public pages" %}</div>
     </a>
+    {% if user.is_staff %}
+        <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
+            <div class="text">{% trans "Django admin" %}</div>
+        </a>
+    {% endif %}
     <a class="item" href="{% host_url 'logout' host 'main' %}">
         <div class="text">{% trans "Log out" %}</div>
     </a>

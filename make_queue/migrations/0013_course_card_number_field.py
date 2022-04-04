@@ -56,7 +56,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(  # Rename database column for use when converting
             model_name='printer3dcourse',
             name='card_number',
-            field=models.IntegerField(null=True, verbose_name='Card number (EM)', db_column='old_card_number')
+            field=models.IntegerField(null=True, verbose_name='card number (EM)', db_column='old_card_number')
         ),
         migrations.RenameField(  # Rename so card_number is available for replacement
             model_name='printer3dcourse',
@@ -68,7 +68,7 @@ class Migration(migrations.Migration):
             name='_card_number',
             field=card.modelfields.CardNumberField(max_length=10, null=True, unique=True, validators=[
                 django.core.validators.RegexValidator('^\\d{10}$', 'Card number must be ten digits long.')],
-                                              verbose_name='Card number'),
+                                              verbose_name='card number'),
         ),
         migrations.RunPython(to_cardnumberfield, to_integerfield),  # Do conversion
         migrations.RemoveField(  # Remove old field when converting is done

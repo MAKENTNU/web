@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='skill',
             name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='Skill (english)'),
+            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='skill (english)'),
         ),
         migrations.AlterField(
             model_name='suggestskill',
             name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='Suggested skill'),
+            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='suggested skill'),
         ),
     ]

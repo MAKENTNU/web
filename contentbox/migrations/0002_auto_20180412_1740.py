@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='contentbox',
             name='title',
-            field=models.CharField(max_length=100, unique=True, verbose_name='Title'),
+            field=models.CharField(max_length=100, unique=True, verbose_name='title'),
         ),
     ]

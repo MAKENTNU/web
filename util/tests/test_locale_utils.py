@@ -1,16 +1,27 @@
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.test import TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_datetime
-from django.utils.datetime_safe import datetime
 
+from make_queue.models.reservation import ReservationRule
 from ..locale_utils import (
-    date_to_local, get_day_name, get_next_week, is_valid_week, local_to_date, timedelta_to_hours, year_and_week_to_monday,
+    date_to_local, exact_weekday_to_day_name, get_next_week, is_valid_week, local_to_date, timedelta_to_hours, year_and_week_to_monday,
 )
 
 
 class WeekUtilTest(TestCase):
+
+    def test_exact_weekday_to_day_name_returns_expected_values(self):
+        for week_offset in range(3):
+            day_offset = week_offset * 7
+
+            for day_index, day_name in ReservationRule.Day.choices:
+                self.assertEqual(exact_weekday_to_day_name(day_offset + day_index), day_name)
+
+            self.assertEqual(exact_weekday_to_day_name(day_offset + 1.000001), "Mandag")
+            self.assertEqual(exact_weekday_to_day_name(day_offset + 1.999999), "Mandag")
+            self.assertEqual(exact_weekday_to_day_name(day_offset + 7.999999), "Søndag")
 
     def test_year_and_week_to_monday(self):
         self.assertEqual(year_and_week_to_monday(2017, 51), parse_datetime("2017-12-18 00:00"))
@@ -62,11 +73,3 @@ class LocalizationTest(TestCase):
                          date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=timezone.utc)).date())
         self.assertEqual(datetime(2018, 3, 12, 11, 20, 20).time(),
                          date_to_local(timezone.datetime(2018, 3, 12, 10, 20, 20, tzinfo=timezone.utc)).time())
-
-    def test_get_day_name(self):
-        english_day_names = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        norwegian_day_names = ["Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"]
-
-        for day_number in range(7):
-            self.assertEqual(get_day_name(day_number, "no"), norwegian_day_names[day_number])
-            self.assertEqual(get_day_name(day_number, "en"), english_day_names[day_number])

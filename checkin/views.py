@@ -1,4 +1,5 @@
 from datetime import timedelta
+from http import HTTPStatus
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -6,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import TemplateView
@@ -21,14 +23,14 @@ class CheckInView(RFIDView):
     def card_number_valid(self, card_number):
         profiles = Profile.objects.filter(user__card_number=card_number)
         if not profiles.exists():
-            return HttpResponse(f"{card_number} is not registered", status=401)
+            return HttpResponse(f"{escape(card_number)} is not registered", status=HTTPStatus.UNAUTHORIZED)
 
         if profiles.first().on_make:
             profiles.update(on_make=False)
-            return HttpResponse('check out'.encode(), status=200)
+            return HttpResponse('check out'.encode(), status=HTTPStatus.OK)
         else:
             profiles.update(on_make=True, last_checkin=timezone.now())
-            return HttpResponse('check in'.encode(), status=200)
+            return HttpResponse('check in'.encode(), status=HTTPStatus.OK)
 
 
 class ShowSkillsView(TemplateView):
@@ -213,11 +215,11 @@ class RegisterCardView(RFIDView):
 
     def card_number_valid(self, card_number):
         if Profile.objects.filter(user__card__number=card_number).exists():
-            return HttpResponse(f"{card_number} is already registered", status=409)
+            return HttpResponse(f"{escape(card_number)} is already registered", status=HTTPStatus.CONFLICT)
         else:
             RegisterProfile.objects.all().delete()
             RegisterProfile.objects.create(card_id=card_number, last_scan=timezone.now())
-            return HttpResponse("Card scanned", status=200)
+            return HttpResponse("Card scanned", status=HTTPStatus.OK)
 
 
 class RegisterProfileView(TemplateView):
@@ -235,7 +237,7 @@ class RegisterProfileView(TemplateView):
                 card_number = RegisterProfile.objects.first().card_id
                 is_duplicate = card_utils.is_duplicate(card_number, request.user.username)
                 if is_duplicate:
-                    return HttpResponse(status=409)
+                    return HttpResponse(status=HTTPStatus.CONFLICT)
                 request.user.card_number = card_number
                 request.user.save()
         RegisterProfile.objects.all().delete()

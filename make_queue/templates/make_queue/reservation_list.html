@@ -40,7 +40,7 @@
 
         <div class="ui vertical segment">
             <a class="ui primary button" href="{% url 'machine_list' %}">
-                {% trans "Machines" %}
+                {% trans "machines"|capfirst %}
             </a>
             <div class="right-floated">
                 <div class="field">
@@ -120,7 +120,7 @@
                     <td>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a href="{% url 'edit_reservation' reservation %}">
+                            <a href="{% url 'edit_reservation' reservation.pk %}">
                                 <div class="ui make-bg-yellow button">
                                     {% trans "Change" %}
                                 </div>
@@ -198,7 +198,7 @@
                         </a>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a class="ui make-bg-yellow button" href="{% url 'edit_reservation' reservation %}">
+                            <a class="ui make-bg-yellow button" href="{% url 'edit_reservation' reservation.pk %}">
                                 {% trans "Change" %}
                             </a>
                         {% endif %}

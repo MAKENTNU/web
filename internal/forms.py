@@ -6,7 +6,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import SemanticDateInput, SemanticMultipleSelectInput, SemanticSearchableChoiceInput
-from .models import Member, Secret, SystemAccess
+from .models import Member, Quote, Secret, SystemAccess
 
 
 class AddMemberForm(forms.ModelForm):
@@ -30,7 +30,7 @@ class EditMemberForm(forms.ModelForm):
 
     class Meta:
         model = Member
-        exclude = ['user', 'date_joined', 'date_quit', 'reason_quit', 'quit', 'retired']
+        exclude = ['user', 'date_joined', 'date_quit_or_retired', 'reason_quit', 'quit', 'retired']
         widgets = {
             'comment': forms.TextInput(),
             'committees': SemanticMultipleSelectInput(prompt_text=_("Choose committees")),
@@ -54,16 +54,24 @@ class EditMemberForm(forms.ModelForm):
 class RestrictedEditMemberForm(EditMemberForm):
     class Meta:
         model = Member
-        fields = ['email', 'phone_number', 'study_program', 'card_number']
+        fields = [
+            'contact_email', 'gmail',
+            'phone_number',
+            'study_program', 'ntnu_starting_semester', 'card_number',
+            'github_username', 'discord_username', 'minecraft_username',
+        ]
 
 
-class MemberQuitForm(forms.ModelForm):
+class MemberRetireForm(forms.ModelForm):
+    already_quit_or_retired_error_message = _(
+        "Member was not set as retired, as the member already has the status “quit” or “retired”."
+    )
+
     class Meta:
         model = Member
-        fields = ['date_quit', 'reason_quit']
+        fields = ['date_quit_or_retired']
         widgets = {
-            'date_quit': SemanticDateInput(),
-            'reason_quit': forms.TextInput(),
+            'date_quit_or_retired': SemanticDateInput(),
         }
 
     def clean(self):
@@ -72,7 +80,7 @@ class MemberQuitForm(forms.ModelForm):
         member = self.instance
         if member.retired or member.quit:
             raise forms.ValidationError(
-                _("Member was not set as quit, as the member already has the status “quit” or “retired”."),
+                self.already_quit_or_retired_error_message,
                 code='warning_message',
             )
         return cleaned_data
@@ -80,7 +88,27 @@ class MemberQuitForm(forms.ModelForm):
     def save(self, commit=True):
         member = super().save(commit=False)
         # The instance returned by the form's `save()` method contains the cleaned data
-        member.set_quit(True, member.reason_quit, member.date_quit)
+        member.set_retirement(True, member.date_quit_or_retired)
+        member.save()
+        return member
+
+
+class MemberQuitForm(MemberRetireForm):
+    already_quit_or_retired_error_message = _(
+        "Member was not set as quit, as the member already has the status “quit” or “retired”."
+    )
+
+    class Meta(MemberRetireForm.Meta):
+        fields = MemberRetireForm.Meta.fields + ['reason_quit']
+        widgets = {
+            **MemberRetireForm.Meta.widgets,
+            'reason_quit': forms.TextInput(),
+        }
+
+    def save(self, commit=True):
+        member = super(MemberRetireForm, self).save(commit=False)
+        # The instance returned by the form's `save()` method contains the cleaned data
+        member.set_quit(True, member.reason_quit, member.date_quit_or_retired)
         member.save()
         return member
 
@@ -92,7 +120,6 @@ class MemberStatusForm(forms.ModelForm):
 
     class StatusAction(models.TextChoices):
         UNDO_QUIT = 'UQ', "Undo quit"
-        RETIRE = 'R', "Retire"
         UNDO_RETIRE = 'UR', "Undo retire"
 
     status_action = forms.ChoiceField(choices=StatusAction.choices, required=True)
@@ -109,11 +136,6 @@ class MemberStatusForm(forms.ModelForm):
                 _("Member's “quit” status was not undone, as the member did not have the status “quit”."),
                 code='warning_message',
             )
-        elif status_action == self.StatusAction.RETIRE and (member.quit or member.retired):
-            raise forms.ValidationError(
-                _("Member was not set as retired, as the member already has the status “quit” or “retired”."),
-                code='warning_message',
-            )
         elif status_action == self.StatusAction.UNDO_RETIRE and not member.retired:
             raise forms.ValidationError(
                 _("Member's retirement was not undone, as the member did not have the status “retired”."),
@@ -127,8 +149,6 @@ class MemberStatusForm(forms.ModelForm):
 
         if status_action == self.StatusAction.UNDO_QUIT:
             member.set_quit(False)
-        elif status_action == self.StatusAction.RETIRE:
-            member.set_retirement(True)
         elif status_action == self.StatusAction.UNDO_RETIRE:
             member.set_retirement(False)
         member.save()
@@ -145,3 +165,12 @@ class SecretsForm(forms.ModelForm):
     class Meta:
         model = Secret
         fields = '__all__'
+
+
+class QuoteForm(forms.ModelForm):
+    class Meta:
+        model = Quote
+        fields = ('quote', 'quoted', 'context', 'date')
+        widgets = {
+            'date': SemanticDateInput(),
+        }

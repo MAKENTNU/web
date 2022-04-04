@@ -1,10 +1,11 @@
 from abc import ABCMeta
-from typing import Type
+from typing import Dict, Type
 
 from django import forms
+from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
-from web.widgets import MazemapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
+from web.widgets import MazeMapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
@@ -13,8 +14,8 @@ class TimePlaceForm(forms.ModelForm):
         model = TimePlace
         fields = '__all__'
         widgets = {
-            'place': MazemapSearchInput(url_field='place_url'),
-            'event': SemanticSearchableChoiceInput(),
+            'event': forms.HiddenInput(),
+            'place': MazeMapSearchInput(url_field='place_url'),
             'start_time': SemanticDateTimeInput(attrs={'end_calendar': 'end_time'}),
             'end_time': SemanticDateTimeInput(attrs={'start_calendar': 'start_time'}),
             'publication_time': SemanticDateTimeInput(),
@@ -39,10 +40,10 @@ class NewsBaseForm(forms.ModelForm):
         widgets = {
             'image': SemanticFileInput(),
         }
-        help_texts: dict
+        help_texts: Dict[str, str]
 
         @staticmethod
-        def get_help_texts(news_class: Type[NewsBase]):
+        def get_help_texts(news_class: Type[NewsBase]) -> Dict[str, str]:
             the_type, content_help_text = None, None
             if news_class is Article:
                 the_type = _("the article")
@@ -78,13 +79,33 @@ class EventForm(NewsBaseForm):
 class EventRegistrationForm(forms.ModelForm):
     class Meta:
         model = EventTicket
-        fields = ('comment', 'language')
+        fields = ('user', 'timeplace', 'event', 'comment', 'language')
         widgets = {
             'language': SemanticSearchableChoiceInput(),
             'comment': forms.Textarea(attrs={
                 'cols': "40",
                 'rows': "3",
-                'placeholder': _(
-                    "Here you can enter any requests or information you want to provide to the organizers"),
+                'placeholder': _("Here you can enter any requests or information you want to provide to the organizers."),
             }),
         }
+
+
+class ToggleForm(forms.Form):
+    instance: Model
+    toggle_attr = forms.CharField(required=True)
+
+    def __init__(self, *args, **kwargs):
+        instance = kwargs.pop('instance')
+        self.instance = instance
+        super().__init__(*args, **kwargs)
+
+    def clean_toggle_attr(self):
+        toggle_attr = self.cleaned_data['toggle_attr']
+        try:
+            attr_value = getattr(self.instance, toggle_attr)
+        except AttributeError:
+            raise forms.ValidationError("No attribute found with this name")
+        if type(attr_value) is not bool:
+            raise forms.ValidationError("The attribute is not a boolean field, and is therefore not toggleable")
+
+        return toggle_attr

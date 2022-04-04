@@ -15,7 +15,7 @@ from ...models.course import Printer3DCourse
 
 class Printer3DCourseListView(ListView):
     model = Printer3DCourse
-    queryset = Printer3DCourse.objects.order_by('name')
+    queryset = Printer3DCourse.objects.select_related('user').order_by('name')
     template_name = 'make_queue/course/course_registration_list.html'
     context_object_name = 'registrations'
     extra_context = {
@@ -79,6 +79,7 @@ class CourseXLSXView(View):
             course_registrations = Printer3DCourse.objects.filter(
                 Q(username__icontains=search_string) | Q(name__icontains=search_string),
                 status__icontains=status_filter)
+        course_registrations = course_registrations.select_related('user')
 
         # Use an in-memory output file, to avoid having to clean up the disk
         output_file = io.BytesIO()

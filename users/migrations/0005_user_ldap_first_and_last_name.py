@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='user',
             name='ldap_full_name',
-            field=models.CharField(blank=True, max_length=150, verbose_name='Full name from LDAP'),
+            field=models.CharField(blank=True, max_length=150, verbose_name='full name from LDAP'),
         ),
         migrations.RunPython(copy_first_and_last_name_to_ldap_full_name, migrations.RunPython.noop),
     ]
