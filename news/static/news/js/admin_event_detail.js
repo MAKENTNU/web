@@ -6,10 +6,10 @@ var publicEventIcon;
 $(".tabular.menu .item").tab();
 
 $(".toggle").click(function () {
-    toggle_post($(this), $(this).data("pk"), $(this).data("model"), $(this).data("toggle"));
+    toggle_post($(this), $(this).data("post-url"), $(this).data("model"), $(this).data("toggle"));
 });
 
-function toggle_post($element, pk, model, toggle) {
+function toggle_post($element, postURL, model, toggle) {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", csrfToken);
@@ -17,10 +17,9 @@ function toggle_post($element, pk, model, toggle) {
     });
     $.ajax({
         type: "POST",
-        url: `/news/admin/toggle/${model}/`,
+        url: postURL,
         data: {
-            "pk": pk,
-            "toggle": toggle,
+            "toggle_attr": toggle,
         },
         success: function (data) {
             if ($.isEmptyObject(data))

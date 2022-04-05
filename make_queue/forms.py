@@ -3,12 +3,16 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
+from js_asset import JS
 
 from card import utils as card_utils
 from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
-from web.widgets import MazeMapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticTimeInput
+from web.widgets import (
+    Direction, DirectionalCheckboxSelectMultiple, MazeMapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput,
+    SemanticTimeInput,
+)
 from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType
@@ -66,52 +70,52 @@ class ReservationForm(forms.Form):
         return cleaned_data
 
 
-class RuleForm(forms.ModelForm):
-    day_field_names = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
-
-    machine_type = forms.ModelChoiceField(MachineType.objects.all(), widget=forms.HiddenInput())
-
+class ReservationRuleForm(forms.ModelForm):
     class Meta:
         model = ReservationRule
-        fields = ['start_time', 'days_changed', 'end_time', 'max_hours', 'max_inside_border_crossed', 'machine_type']
+        fields = ['start_time', 'days_changed', 'end_time', 'start_days', 'max_hours', 'max_inside_border_crossed', 'machine_type']
         widgets = {
             'start_time': SemanticTimeInput(),
             'end_time': SemanticTimeInput(),
-            'machine_type': SemanticChoiceInput(),
+            'start_days': DirectionalCheckboxSelectMultiple(Direction.VERTICAL),
+            'machine_type': forms.HiddenInput(),
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        rule_obj = kwargs["instance"]
-        for shift, field_name in enumerate(self.day_field_names):
-            self.fields[field_name] = forms.BooleanField(required=False)
-            if rule_obj is not None:
-                self.fields[field_name].initial = rule_obj.start_days & (1 << shift) > 0
 
     def clean(self):
         cleaned_data = super().clean()
-        if self.errors:
-            return cleaned_data
+        start_time = cleaned_data.get('start_time')
+        end_time = cleaned_data.get('end_time')
+        days_changed = cleaned_data.get('days_changed')
+        start_days = cleaned_data.get('start_days')
+        machine_type: MachineType = cleaned_data.get('machine_type')
 
-        rule = ReservationRule(
-            machine_type=cleaned_data["machine_type"], max_hours=0, max_inside_border_crossed=0,
-            start_time=cleaned_data["start_time"], end_time=cleaned_data["end_time"],
-            days_changed=cleaned_data["days_changed"], start_days=self._get_start_days(cleaned_data),
-        )
-        rule.is_valid_rule(raise_error=True)
+        if start_time and end_time and days_changed is not None and start_days and machine_type:
+            # Check if the time period is a valid time period (within a week)
+            if (start_time > end_time and days_changed == 0
+                    or days_changed > 7
+                    or days_changed == 7 and start_time < end_time):
+                raise forms.ValidationError(_("Period is either too long (7+ days) or start time is earlier than end time."))
+
+            start_days = [int(day) for day in start_days]
+            # Check for internal overlap
+            time_periods = ReservationRule.Period.list_from_start_weekdays(start_days, start_time, end_time, days_changed)
+            if any(t1.overlap(t2)
+                   for t1 in time_periods
+                   for t2 in time_periods
+                   if t1.exact_end_weekday != t2.exact_end_weekday and t1.exact_start_weekday != t2.exact_end_weekday):
+                raise forms.ValidationError(_("Rule has internal overlap of time periods."))
+
+            other_reservation_rules = machine_type.reservation_rules.exclude(pk=self.instance.pk)  # pk will be None if creating a new object
+            # Check for overlap with other time periods
+            other_time_periods = [time_period
+                                  for rule in other_reservation_rules
+                                  for time_period in rule.time_periods]
+            if any(t1.overlap(t2)
+                   for t1 in time_periods
+                   for t2 in other_time_periods):
+                raise forms.ValidationError(_("Rule time periods overlap with time periods of other rules."))
 
         return cleaned_data
-
-    def save(self, commit=True):
-        rule = super().save(commit=False)
-        rule.start_days = self._get_start_days(self.cleaned_data)
-        if commit:
-            rule.save()
-        return rule
-
-    @staticmethod
-    def _get_start_days(cleaned_data):
-        return sum(cleaned_data[field_name] << shift for shift, field_name in enumerate(RuleForm.day_field_names))
 
 
 class QuotaForm(forms.ModelForm):
@@ -133,15 +137,27 @@ class QuotaForm(forms.ModelForm):
         model = Quota
         fields = '__all__'
 
+    class Media:
+        js = (
+            JS('make_queue/js/quota_edit.js', attrs={'defer': 'defer'}),
+        )
+
     def clean(self):
         cleaned_data = super().clean()
         user = cleaned_data.get('user')
         all_users = cleaned_data.get('all')
 
-        if user is None and not all_users:
-            raise forms.ValidationError("User cannot be None when the quota is not for all users")
-        if user is not None and all_users:
-            raise forms.ValidationError("User cannot be set when the all users is set")
+        user_error_message = None
+        if not user and not all_users:
+            user_error_message = _("User must be set when “All users” is not set.")
+        if user and all_users:
+            user_error_message = _("User cannot be set when “All users” is set.")
+        if user_error_message:
+            # Can't raise ValidationError when adding errors for both a specific field and the whole form (field=None)
+            self.add_error('user', user_error_message)
+            self.add_error(None, _("Must select either specific user or all users."))
+            return
+
         return cleaned_data
 
 
@@ -209,7 +225,7 @@ class FreeSlotForm(forms.Form):
     minutes = forms.IntegerField(min_value=0, max_value=59, initial=0, label=_("Duration in minutes"))
 
 
-class BaseMachineForm(forms.ModelForm):
+class MachineFormBase(forms.ModelForm):
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by('priority'),
         # `capfirst()` to avoid duplicate translation differing only in case
@@ -249,21 +265,32 @@ class BaseMachineForm(forms.ModelForm):
         stream_name = cleaned_data.get('stream_name')
 
         if machine_type:
-            if machine_type.has_stream and not stream_name:
-                self.add_error(
-                    'stream_name', ValidationError(
-                        _("Stream name cannot be empty when the machine type supports streaming."),
-                        code='invalid_empty_stream_name',
+            if machine_type.has_stream:
+                if not stream_name:
+                    self.add_error(
+                        'stream_name', ValidationError(
+                            _("Stream name cannot be empty when the machine type supports streaming."),
+                            code='invalid_empty_stream_name',
+                        )
                     )
-                )
+            else:
+                # Remove the stream name if the machine type does not support streams
+                cleaned_data['stream_name'] = ""
 
         return cleaned_data
 
 
-class EditMachineForm(BaseMachineForm):
+class CreateMachineForm(MachineFormBase):
+    class Media:
+        js = (
+            JS('make_queue/js/machine_create.js', attrs={'defer': 'defer'}),
+        )
+
+
+class EditMachineForm(MachineFormBase):
     machine_type = None
 
-    class Meta(BaseMachineForm.Meta):
+    class Meta(MachineFormBase.Meta):
         exclude = ['machine_type']
 
     def __init__(self, *args, **kwargs):

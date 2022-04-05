@@ -3,41 +3,39 @@ from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth.decorators import permission_required
 from django.urls import path, register_converter
 from django.views.generic import TemplateView
-from django_hosts import reverse
 
+from util.url_utils import debug_toolbar_urls
 from . import converters, views
-from .models import MAIN_PAGE_TITLE, Page
 
 
-register_converter(converters.PageByTitle, 'Page')
-register_converter(converters.ContentByPk, 'Content')
-
-unsafe_urlpatterns = [
-    path("", views.DocumentationPageDetailView.as_view(), {'pk': Page.objects.get_or_create(title=MAIN_PAGE_TITLE)[0].pk}, name='home'),
-    path("page/<Page:pk>/", views.DocumentationPageDetailView.as_view(), name='page_detail'),
-    path("page/<Page:pk>/history/", views.HistoryDocumentationPageView.as_view(), name='page_history'),
-    path("page/<Page:pk>/history/change/", views.ChangeDocumentationPageVersionView.as_view(), name='change_page_version'),
-    path("page/<Page:pk>/history/<Content:content>/", views.OldDocumentationPageContentView.as_view(), name='old_page_content'),
-    path("page/create/", views.CreateDocumentationPageView.as_view(), name='create_page'),
-    path("page/<Page:pk>/edit/", views.EditDocumentationPageView.as_view(), name='edit_page'),
-    path("page/<Page:pk>/delete/", views.DeleteDocumentationPageView.as_view(), name='delete_page'),
-    path("search/", views.SearchPagesView.as_view(), name='search_pages'),
-]
-
-LOGIN_URL = reverse('login', host='main')
+register_converter(converters.SpecificPageByTitle, 'PageTitle')
 
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='docs/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
+
+    *debug_toolbar_urls(),
     path("i18n/", decorator_include(
-        permission_required('docs.view_page', login_url=LOGIN_URL),
+        permission_required('docs.view_page'),
         'django.conf.urls.i18n'
     )),
 ]
 
+unsafe_urlpatterns = [
+    path("", views.DocumentationPageDetailView.as_view(is_main_page=True), name='home'),
+    path("page/create/", views.CreateDocumentationPageView.as_view(), name='create_page'),
+    path("page/<PageTitle:title>/", views.DocumentationPageDetailView.as_view(), name='page_detail'),
+    path("page/<PageTitle:title>/history/", views.HistoryDocumentationPageView.as_view(), name='page_history'),
+    path("page/<PageTitle:title>/history/change/", views.ChangeDocumentationPageVersionView.as_view(), name='change_page_version'),
+    path("page/<PageTitle:title>/history/<int:content_pk>/", views.OldDocumentationPageContentView.as_view(), name='old_page_content'),
+    path("page/<PageTitle:title>/edit/", views.EditDocumentationPageView.as_view(), name='edit_page'),
+    path("page/<PageTitle:title>/delete/", views.DeleteDocumentationPageView.as_view(), name='delete_page'),
+    path("search/", views.SearchPagesView.as_view(), name='search_pages'),
+]
+
 urlpatterns += i18n_patterns(
     path("", decorator_include(
-        permission_required('docs.view_page', login_url=LOGIN_URL),
+        permission_required('docs.view_page'),
         unsafe_urlpatterns
     )),
 

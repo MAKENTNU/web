@@ -1,11 +1,14 @@
 from decorator_include import decorator_include
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import path
 from django.views.generic import RedirectView, TemplateView
 from django_hosts import reverse
+
+from util.url_utils import debug_toolbar_urls
 
 
 # Updates the "View site" link to this url
@@ -14,10 +17,13 @@ admin.site.site_url = f"//{settings.PARENT_HOST}/"
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='admin/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
+
+    *debug_toolbar_urls(),
     path("i18n/", decorator_include(
         staff_member_required,
         'django.conf.urls.i18n'
     )),
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
 ]
 
 urlpatterns += i18n_patterns(

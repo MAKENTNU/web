@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumber_field.phonenumber import PhoneNumber
 from phonenumbers.phonenumberutil import region_code_for_number
+from simple_history.models import HistoricalRecords
 
 from groups.models import Committee
 from users.models import User
@@ -62,6 +63,9 @@ class Member(models.Model):
         permissions = (
             ('is_internal', "Is a member of MAKE NTNU"),
             ('can_edit_group_membership', "Can edit the groups a member is part of, including (de)activation"),
+            # WARNING: granting a user this permission enables them to carry out a stored XSS attack;
+            #          only give trusted users/groups this permission
+            ('can_change_rich_text_source', "Can change rich text fields' HTML source code directly (including adding <script> tags)"),
         )
 
     def __str__(self):
@@ -251,5 +255,26 @@ class Secret(models.Model):
 
     objects = SecretQuerySet.as_manager()
 
+    history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
+
     def __str__(self):
         return str(self.title)
+
+
+class Quote(models.Model):
+    quote = models.TextField(verbose_name=_("quote"))
+    quoted = models.CharField(max_length=100, verbose_name=_("quoted"), help_text=_("The person who is quoted."))
+    context = models.TextField(blank=True, max_length=500, verbose_name=_("context"))
+    date = models.DateField(verbose_name=_("date"))
+    author = models.ForeignKey(
+        to=User,
+        on_delete=models.CASCADE,
+        related_name='quotes',
+        verbose_name=_("author"),
+    )
+
+    class Meta:
+        ordering = ('-date',)
+
+    def __str__(self):
+        return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)

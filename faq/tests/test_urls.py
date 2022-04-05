@@ -2,7 +2,7 @@ from django.test import TestCase
 from django_hosts import reverse
 
 from faq.models import Category, Question
-from util.test_utils import Get, assert_requesting_paths_succeeds
+from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
 
 
 class UrlTests(TestCase):
@@ -26,14 +26,27 @@ class UrlTests(TestCase):
             Get(reverse('admin_question_list'), public=False),
             Get(reverse('question_create'), public=False),
             *[
-                Get(reverse('question_update', kwargs={'pk': question.pk}), public=False)
+                Get(reverse('question_update', args=[question.pk]), public=False)
                 for question in self.questions
             ],
             Get(reverse('admin_category_list'), public=False),
             Get(reverse('category_create'), public=False),
             *[
-                Get(reverse('category_update', kwargs={'pk': category.pk}), public=False)
+                Get(reverse('category_update', args=[category.pk]), public=False)
                 for category in self.categories
             ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
+
+    def test_all_admin_get_request_paths_succeed(self):
+        path_predicates = [
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Category, self.categories)
+            ],
+            *[
+                Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Question, self.questions)
+            ],
+        ]
+        assert_requesting_paths_succeeds(self, path_predicates, 'admin')

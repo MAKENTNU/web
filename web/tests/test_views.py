@@ -8,7 +8,7 @@ from django_hosts import reverse
 
 from news.models import Event, TimePlace
 from users.models import User
-from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE, assertRedirectsWithPathPrefix
 from web.views import IndexView
 
 
@@ -156,18 +156,18 @@ class AdminPanelViewTests(TestCase):
         self.path = reverse('adminpanel')
 
     def test_only_users_with_required_permissions_can_view_page(self):
-        def assert_can_view_page(can_view: bool):
-            status_code = self.client.get(self.path).status_code
-            if can_view:
-                self.assertEqual(status_code, HTTPStatus.OK)
+        def assert_visiting_page_produces_status_code(expected_status_code: int):
+            response = self.client.get(self.path)
+            if expected_status_code == HTTPStatus.FOUND:
+                assertRedirectsWithPathPrefix(self, response, "/login/")
             else:
-                self.assertGreaterEqual(status_code, 300)
+                self.assertEqual(response.status_code, expected_status_code)
 
-        assert_can_view_page(False)
+        assert_visiting_page_produces_status_code(HTTPStatus.FOUND)
 
         user = User.objects.create_user(username="user")
         self.client.force_login(user)
-        assert_can_view_page(False)
+        assert_visiting_page_produces_status_code(HTTPStatus.FORBIDDEN)
 
         user.add_perms('news.add_article')
-        assert_can_view_page(True)
+        assert_visiting_page_produces_status_code(HTTPStatus.OK)

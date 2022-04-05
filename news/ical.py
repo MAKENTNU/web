@@ -28,7 +28,7 @@ class EventFeed(ICalFeed):
         return items
 
     def item_link(self, item: TimePlace):
-        return reverse('event_detail', kwargs={'pk': item.pk})
+        return reverse('event_detail', args=[item.event.pk])
 
     def item_title(self, item: TimePlace):
         return item.event.title
@@ -50,7 +50,7 @@ class EventFeed(ICalFeed):
 
 
 class SingleEventFeed(EventFeed):
-    """An iCal feed of all occurences of a single event."""
+    """An iCal feed of all occurrences of a single event."""
 
     def file_name(self, attrs):
         title = self.items(attrs).values_list('event__title', flat=True).first()
@@ -64,7 +64,7 @@ class SingleEventFeed(EventFeed):
 
 
 class SingleTimePlaceFeed(EventFeed):
-    """An iCal feed of a single occurences of an event."""
+    """An iCal feed of a single occurrences of an event."""
 
     def file_name(self, attrs):
         title = self.items(attrs).values_list('event__title', flat=True).first()
@@ -72,6 +72,6 @@ class SingleTimePlaceFeed(EventFeed):
 
     def get_object(self, request, *args, **kwargs):
         attrs = super().get_object(request, *args, **kwargs)
-        attrs['query_kwargs']['id'] = int(kwargs['pk'])
+        attrs['query_kwargs']['id'] = int(kwargs['time_place_pk'])
 
         return attrs

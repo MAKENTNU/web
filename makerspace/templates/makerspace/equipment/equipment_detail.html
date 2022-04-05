@@ -14,6 +14,10 @@
     {% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}
 {% endblock og_image_alt %}
 
+{% block extra_head %}
+    {% include 'ckeditor/mathjax_render.html' %}
+{% endblock extra_head %}
+
 {% block body %}
     <div class="equipment">
         <div class="ui container">
@@ -27,10 +31,10 @@
                     alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
                 />
 
-                {% if user|has_any_equipment_permissions %}
+                {% if user|has_any_permissions_for:'Equipment' %}
                     <br/>
                     <a class="ui make-bg-yellow button" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
-                        <i class="ui edit icon"></i>{% trans "Edit" %}
+                        <i class="edit icon"></i>{% trans "Edit" %}
                     </a>
                 {% endif %}
 

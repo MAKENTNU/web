@@ -1,51 +1,45 @@
+from abc import ABC
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from make_queue.models.course import Printer3DCourse
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import (
-    AddMemberForm, EditMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, RestrictedEditMemberForm, SecretsForm, SystemAccessValueForm,
+    AddMemberForm, EditMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedEditMemberForm, SecretsForm,
+    SystemAccessValueForm,
 )
-from .models import Member, Secret, SystemAccess
+from .models import Member, Quote, Secret, SystemAccess
 
 
-class HomeView(TemplateView):
+class HomeView(DisplayContentBoxView):
     template_name = 'internal/home.html'
+    extra_context = {
+        'base_template': 'internal/base.html',
+    }
+
+    change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)
 
 
-class SecretListView(ListView):
-    model = Secret
-    queryset = Secret.objects.default_order_by()
-    template_name = 'internal/secret_list.html'
-    context_object_name = 'secrets'
+class EditInternalContentBoxView(EditContentBoxView):
+    permission_required = ('contentbox.change_internal_contentbox',)
+    raise_exception = True
 
+    base_template = 'internal/base.html'
 
-class CreateSecretView(PermissionRequiredMixin, CreateView):
-    permission_required = ('internal.add_secret',)
-    model = Secret
-    form_class = SecretsForm
-    template_name = 'internal/secret_create.html'
-    context_object_name = 'secrets'
-    success_url = reverse_lazy('secret_list')
-
-
-class EditSecretView(PermissionRequiredMixin, UpdateView):
-    permission_required = ('internal.change_secret',)
-    model = Secret
-    form_class = SecretsForm
-    template_name = 'internal/secret_edit.html'
-    context_object_name = 'secrets'
-    success_url = reverse_lazy('secret_list')
-
-
-class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('internal.delete_secret',)
-    model = Secret
-    success_url = reverse_lazy('secret_list')
+    def get_form_kwargs(self):
+        return {
+            **super().get_form_kwargs(),
+            'single_language': settings.LANGUAGE_CODE,
+        }
 
 
 class MemberListView(ListView):
@@ -65,11 +59,26 @@ class MemberListView(ListView):
         return context_data
 
 
-class CreateMemberView(PermissionRequiredMixin, CreateView):
-    permission_required = ('internal.add_member',)
+class MemberFormMixin(CustomFieldsetFormMixin, ABC):
     model = Member
+
+    base_template = 'internal/base.html'
+    narrow = False
+    centered_title = False
+    back_button_text = _("Member list")
+
+
+class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
+    permission_required = ('internal.add_member',)
     form_class = AddMemberForm
-    template_name = 'internal/member_create.html'
+
+    form_title = _("Add New Member")
+    back_button_link = reverse_lazy('member_list')
+    save_button_text = _("Add")
+    custom_fieldsets = [
+        {'fields': ('user', 'date_joined'), 'layout_class': "two"},
+        {'fields': ('committees',)},
+    ]
 
     def get_success_url(self):
         return reverse('edit_member', args=(self.object.pk,))
@@ -86,18 +95,47 @@ class CreateMemberView(PermissionRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class EditMemberView(PermissionRequiredMixin, UpdateView):
-    model = Member
-    template_name = 'internal/member_edit.html'
+class EditMemberView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
 
     def has_permission(self):
         return (self.request.user == self.get_object().user
-                or self.request.user.has_perm('internal.can_edit_group_membership'))
+                or self.user_has_edit_perm())
+
+    def user_has_edit_perm(self):
+        return self.request.user.has_perm('internal.can_edit_group_membership')
 
     def get_form_class(self):
-        if not self.request.user.has_perm('internal.can_edit_group_membership'):
+        if not self.user_has_edit_perm():
             return RestrictedEditMemberForm
         return EditMemberForm
+
+    def get_form_title(self):
+        full_name = self.get_object().user.get_full_name()
+        return _("Change Information for {full_name}").format(full_name=full_name)
+
+    def get_back_button_link(self):
+        return self.get_success_url()
+
+    def get_custom_fieldsets(self):
+        full_form = self.user_has_edit_perm()
+        custom_fieldsets = [
+            {'fields': ('contact_email', 'phone_number'), 'layout_class': "two"},
+            {'fields': ('gmail', 'MAKE_email' if full_form else None), 'layout_class': "two"},
+            {'fields': ('study_program', 'ntnu_starting_semester'), 'layout_class': "two"},
+            {'fields': ('card_number',), 'layout_class': "two"},
+
+            {'heading': _("Extra information"), 'icon_class': "info circle"},
+            {'fields': ('github_username', 'discord_username'), 'layout_class': "two"},
+            {'fields': ('minecraft_username',), 'layout_class': "two"},
+        ]
+        if full_form:
+            custom_fieldsets.extend([
+                {'heading': _("Membership information"), 'icon_class': "group"},
+                {'fields': ('committees', 'role'), 'layout_class': "two"},
+                {'fields': ('comment',)},
+                {'fields': ('guidance_exemption', 'active', 'honorary'), 'layout_class': "three"},
+            ])
+        return custom_fieldsets
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -111,11 +149,25 @@ class EditMemberView(PermissionRequiredMixin, UpdateView):
         return reverse('member_list', args=(self.object.pk,))
 
 
-class MemberRetireView(PermissionRequiredMixin, UpdateView):
+class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
     permission_required = ('internal.can_edit_group_membership',)
     model = Member
     form_class = MemberRetireForm
-    template_name = 'internal/member_retire.html'
+
+    base_template = 'internal/base.html'
+    narrow = False
+    centered_title = False
+    back_button_text = _("Member list")
+    save_button_text = _("Set retired")
+    custom_fieldsets = [
+        {'fields': ('date_quit_or_retired',), 'layout_class': "two"},
+    ]
+
+    def get_form_title(self):
+        return _("Set member {name} as retired").format(name=self.object.user.get_full_name())
+
+    def get_back_button_link(self):
+        return self.get_success_url()
 
     def get_success_url(self):
         return reverse('member_list', args=(self.object.pk,))
@@ -123,7 +175,14 @@ class MemberRetireView(PermissionRequiredMixin, UpdateView):
 
 class MemberQuitView(MemberRetireView):
     form_class = MemberQuitForm
-    template_name = 'internal/member_quit.html'
+
+    save_button_text = _("Set quit")
+    custom_fieldsets = [
+        {'fields': ('date_quit_or_retired', 'reason_quit'), 'layout_class': "two"},
+    ]
+
+    def get_form_title(self):
+        return _("Set member {name} as quit").format(name=self.object.user.get_full_name())
 
 
 class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
@@ -159,3 +218,89 @@ class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
 
     def get_success_url(self):
         return reverse('member_list', args=(self.object.member.pk,))
+
+
+class SecretListView(ListView):
+    model = Secret
+    queryset = Secret.objects.default_order_by()
+    template_name = 'internal/secret_list.html'
+    context_object_name = 'secrets'
+
+
+class SecretFormMixin(CustomFieldsetFormMixin, ABC):
+    model = Secret
+    form_class = SecretsForm
+    success_url = reverse_lazy('secret_list')
+
+    base_template = 'internal/base.html'
+    back_button_link = success_url
+    back_button_text = _("Secrets list")
+
+
+class CreateSecretView(PermissionRequiredMixin, SecretFormMixin, CreateView):
+    permission_required = ('internal.add_secret',)
+
+    form_title = _("New Secret")
+
+
+class EditSecretView(PermissionRequiredMixin, SecretFormMixin, UpdateView):
+    permission_required = ('internal.change_secret',)
+
+    form_title = _("Edit Secret")
+
+
+class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    permission_required = ('internal.delete_secret',)
+    model = Secret
+    success_url = reverse_lazy('secret_list')
+
+
+class QuoteListView(ListView):
+    model = Quote
+    template_name = 'internal/quote_list.html'
+    context_object_name = 'quotes'
+    queryset = Quote.objects.order_by('-date').select_related('author')
+
+
+class QuoteFormMixin(CustomFieldsetFormMixin, ABC):
+    model = Quote
+    form_class = QuoteForm
+    success_url = reverse_lazy('quote_list')
+
+    base_template = 'internal/base.html'
+    back_button_link = success_url
+    back_button_text = _("Quotes page")
+
+
+class QuoteCreateView(PermissionRequiredMixin, QuoteFormMixin, CreateView):
+    permission_required = ('internal.add_quote',)
+    initial = {
+        'date': timezone.localdate,
+    }
+
+    form_title = _("New Quote")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class QuoteUpdateView(PermissionRequiredMixin, QuoteFormMixin, UpdateView):
+    form_title = _("Edit Quote")
+
+    def has_permission(self):
+        return (
+                self.request.user.has_perm('internal.change_quote')
+                or self.request.user == self.object.author
+        )
+
+
+class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    model = Quote
+    success_url = reverse_lazy('quote_list')
+
+    def has_permission(self):
+        return (
+                self.request.user.has_perm('internal.delete_quote')
+                or self.request.user == self.object.author
+        )

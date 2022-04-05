@@ -8,12 +8,13 @@ from django.db.models import F, Prefetch
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from simple_history.models import HistoricalRecords
 
 from users.models import User
+from util.validators import lowercase_slug_validator
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .course import Printer3DCourse
-from ..validators import machine_stream_name_validator
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -118,7 +119,7 @@ class Machine(models.Model):
         blank=True,
         max_length=50,
         default="",
-        validators=[machine_stream_name_validator],
+        validators=[lowercase_slug_validator],
         verbose_name=_("stream name"),
         help_text=_("Used for connecting to the machine's stream."),
     )
@@ -187,8 +188,10 @@ class MachineUsageRule(models.Model):
         on_delete=models.CASCADE,
         related_name='usage_rule',
     )
-    content = MultiLingualRichTextUploadingField()
+    content = MultiLingualRichTextUploadingField(verbose_name=_("content"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(excluded_fields=['last_modified'])
 
     def __str__(self):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)

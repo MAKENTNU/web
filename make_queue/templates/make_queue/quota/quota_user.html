@@ -11,13 +11,13 @@
                     {% trans "Replenishing quota" %}
                 {% endif %}
                 <a href="{% url 'edit_quota' quota.pk %}">
-                    <i class="ui make-col-yellow icon pencil"></i>
+                    <i class="make-col-yellow pencil icon"></i>
                 </a>
                 {% if perms.make_queue.delete_quota %}
                     <a class="delete-modal-button"
                        data-url="{% url 'delete_quota' quota.pk %}"
                        data-obj-name="{{ quota }}">
-                        <i class="ui red icon trash"></i>
+                        <i class="red trash icon"></i>
                     </a>
                 {% endif %}
             </div>

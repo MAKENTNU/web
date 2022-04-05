@@ -16,7 +16,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('start_time', models.TimeField(verbose_name='start time')),
                 ('end_time', models.TimeField(verbose_name='end time')),
-                ('days_changed', models.IntegerField(verbose_name='days')),
+                ('days_changed', models.IntegerField(help_text='Number of times midnight is passed between start and end time.', verbose_name='days')),
                 ('start_days', models.IntegerField(default=0, verbose_name='start days for rule periods')),
                 ('max_hours', models.FloatField(verbose_name='hours inside')),
                 ('max_inside_border_crossed', models.FloatField(verbose_name='hours across borders')),

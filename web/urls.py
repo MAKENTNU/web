@@ -1,8 +1,9 @@
 from ckeditor_uploader import views as ckeditor_views
+from decorator_include import decorator_include
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.urls import include, path, re_path, reverse_lazy
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
@@ -11,30 +12,43 @@ from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
 from social_core.utils import setting_name
 
-from contentbox.views import DisplayContentBoxView
+from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from dataporten.views import Logout, login_wrapper
+from news import urls as news_urls
+from util.url_utils import debug_toolbar_urls
 from . import views
 
 
 extra = "/" if getattr(settings, setting_name('TRAILING_SLASH'), True) else ""
 
 urlpatterns = [
-    path("i18n/", include('django.conf.urls.i18n')),
     path("robots.txt", TemplateView.as_view(template_name='web/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
+
+    *debug_toolbar_urls(),
+    path("i18n/", include('django.conf.urls.i18n')),
+]
+
+admin_urlpatterns = [
+    path("", views.AdminPanelView.as_view(), name='adminpanel'),
+    path("news/", include(news_urls.adminpatterns)),
+]
+
+contentbox_urlpatterns = [
+    path("<int:pk>/edit/", EditContentBoxView.as_view(base_template='web/base.html'), name='contentbox_edit'),
 ]
 
 about_urlpatterns = [
-    path("", views.AboutUsView.as_view(), name='about'),
+    path("", views.AboutUsView.as_view(url_name='about'), name='about'),
     DisplayContentBoxView.get_path('contact'),
 ]
 
 urlpatterns += i18n_patterns(
     path("", views.IndexView.as_view(), name='front_page'),
-    path("admin/", views.AdminPanelView.as_view(), name='adminpanel'),
+    path("admin/", decorator_include(login_required, admin_urlpatterns)),
     path("reservation/", include('make_queue.urls')),
     path("news/", include('news.urls')),
-    path("contentbox/", include('contentbox.urls')),
+    path("contentbox/", include(contentbox_urlpatterns)),
     path("media/<path:path>", serve, {'document_root': settings.MEDIA_ROOT}),  # for development only; Nginx is used in production
     path("checkin/", include('checkin.urls')),
     path("committees/", include('groups.urls')),
@@ -84,8 +98,13 @@ urlpatterns += [
 # URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(url=reverse_lazy('rules'), permanent=True)),
-    path("reservation/rules/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
-    path("reservation/rules/usage/<MachineType:machine_type>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+    path("reservation/rules/<int:pk>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
+    path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+
+    path("news/article/<int:pk>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
+    path("news/event/<int:pk>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
+    path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='ticket_detail', permanent=True)),
+    path("news/ticket/me/", RedirectView.as_view(pattern_name='my_tickets_list', permanent=True)),
 
     prefix_default_language=False,
 )

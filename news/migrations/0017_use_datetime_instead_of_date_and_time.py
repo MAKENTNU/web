@@ -84,7 +84,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='timeplace',
             name='publication_time',
-            field=models.DateTimeField(default=django.utils.timezone.localtime, verbose_name='publication time'),
+            field=models.DateTimeField(default=django.utils.timezone.localtime, help_text='The occurrence will not be shown before this date.', verbose_name='publication time'),
         ),
         migrations.AddField(
             model_name='timeplace',

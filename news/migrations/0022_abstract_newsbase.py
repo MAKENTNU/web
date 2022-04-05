@@ -54,7 +54,7 @@ class Migration(migrations.Migration):
                 ('featured', models.BooleanField(default=True, verbose_name='featured')),
                 ('hidden', models.BooleanField(default=False, verbose_name='hidden')),
                 ('private', models.BooleanField(default=False, verbose_name='internal')),
-                ('publication_time', models.DateTimeField(default=django.utils.timezone.localtime, verbose_name='publication time')),
+                ('publication_time', models.DateTimeField(default=django.utils.timezone.localtime, help_text='The article will be hidden until this date.', verbose_name='publication time')),
             ],
             options={
                 'ordering': ('-publication_time',),

@@ -1,5 +1,9 @@
+from typing import Type, Union
+
 from django import template
 from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django.db.models import Q
 
 from users.models import User
@@ -16,31 +20,26 @@ def has_any_permissions(user: User):
 
 
 @register.filter
-def has_any_article_permissions(user: User):
-    return any(user.has_perm(f"news.{action}_article") for action in ["add", "change", "delete"])
+def has_any_permissions_for(user: User, model__or__app_and_model: Union[Type[models.Model], str]):
+    """
+    :param user: the user to check permissions for
+    :param model__or__app_and_model: either a model type, a string with the name of a uniquely named model,
+                                     or a string of the format "{app_label}.{model_name}"
+    """
+    if not isinstance(model__or__app_and_model, str) and not isinstance(model__or__app_and_model, type(models.Model)):
+        raise ValueError(f"Expected an instance of {str} or {type(models.Model)}, but got '{model__or__app_and_model}'")
 
+    if user.is_anonymous:
+        return False
 
-@register.filter
-def has_any_event_permissions(user: User):
-    models = "event", "timeplace"
-    actions = "add", "change", "delete"
-    for model in models:
-        for action in actions:
-            if user.has_perm(f"news.{action}_{model}"):
-                return True
-    return False
+    if isinstance(model__or__app_and_model, str):
+        if "." in model__or__app_and_model:
+            app_label, model_name = model__or__app_and_model.split(".", maxsplit=1)
+            model = ContentType.objects.get_by_natural_key(app_label, model_name).model_class()
+        else:
+            model_name = model__or__app_and_model.lower()
+            model = ContentType.objects.get(model=model_name).model_class()
+    else:
+        model = model__or__app_and_model
 
-
-@register.filter
-def has_any_makerspace_permissions(user: User):
-    return any(user.has_perm(f"makerspace.{action}_makerspace") for action in ["add", "change", "delete"])
-
-
-@register.filter
-def has_any_equipment_permissions(user: User):
-    return any(user.has_perm(f"makerspace.{action}_equipment") for action in ["add", "change", "delete"])
-
-
-@register.filter
-def has_any_faq_permissions(user):
-    return any(user.has_perm(f"faq.{action}_question") for action in ["add", "change", "delete"])
+    return user.has_any_permissions_for(model)

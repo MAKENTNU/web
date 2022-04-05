@@ -12,7 +12,7 @@
 {% block body %}
     <div class="ui container">
         <a class="ui make-bg-yellow button" href="{% url 'create_quota' %}">
-            <i class="ui icon plus"></i>{% trans "New quota" %}
+            <i class="plus icon"></i>{% trans "Add new quota" %}
         </a>
         <div class="ui tabular pointing secondary menu">
             <a class="{% if not requested_user %}active{% endif %} item" data-tab="global">{% trans "Global" %}</a>
@@ -29,13 +29,13 @@
                                 {% trans "Replenishing quota" %}
                             {% endif %}
                             <a href="{% url 'edit_quota' quota.pk %}">
-                                <i class="ui make-col-yellow icon pencil"></i>
+                                <i class="make-col-yellow pencil icon"></i>
                             </a>
                             {% if perms.make_queue.delete_quota %}
                                 <a class="delete-modal-button"
                                    data-url="{% url 'delete_quota' quota.pk %}"
                                    data-obj-name="{{ quota }}">
-                                    <i class="ui red icon trash"></i>
+                                    <i class="red trash icon"></i>
                                 </a>
                             {% endif %}
                         </div>
@@ -53,7 +53,7 @@
         <div class="ui {% if requested_user %}active{% endif %} tab" data-tab="users">
             <div class="ui fluid search selection dropdown">
                 <input id="user" type="hidden" name="user"/>
-                <i class="ui dropdown icon"></i>
+                <i class="dropdown icon"></i>
                 <div class="default text">{% trans "Select user" %}</div>
                 <div class="menu">
                     {% for user in users %}

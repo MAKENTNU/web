@@ -1,6 +1,6 @@
 <form class="set-language-form dont-prevent-leaving ui form" method="POST" action="{% url 'set_language' %}">
     {% csrf_token %}
-    {% if LANGUAGE_CODE == "en" %}
+    {% if CURRENT_LANGUAGE_CODE == "en" %}
         <input name="language" type="hidden" value="nb"/>
         <input name="next" type="hidden" value="{{ request.get_full_path|slice:"3:" }}"/> {# removes "/en" #}
     {% else %}
