@@ -302,7 +302,15 @@ STATIC_URL = '/static/'
 
 # This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
 # which avoids waiting for browsers' cache to update if a file's contents change
-STATICFILES_STORAGE = 'web.static.InterpolatingManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'web.static.ManifestStaticFilesStorage'
+# Ignores adding a hash to the files whose paths match these glob patterns:
+# NOTE: Ignored files should be named so that it's obvious that they should be renamed when their contents update,
+#       to avoid being "stuck" in browsers' cache - which is what `ManifestStaticFilesStorage` would have prevented
+#       if the files were not ignored.
+#       For example: placing ignored files inside a folder with a version number as its name.
+MANIFEST_STATICFILES_IGNORE_PATTERNS = [  # (custom setting)
+    'ckeditor/mathjax/*',
+]
 # Monkey patch view used for serving static and media files (for development only; Nginx is used in production)
 django.views.static.serve = serve_interpolated
 
@@ -334,7 +342,7 @@ CKEDITOR_CONFIGS = {
         ],
         'toolbar': 'main',
         # All MathJax files downloaded from https://github.com/mathjax/MathJax/tree/2.7.9
-        'mathJaxLib': static_lazy('ckeditor/mathjax/MathJax.js?config=TeX-AMS_HTML'),
+        'mathJaxLib': static_lazy('ckeditor/mathjax/v2.7.9/MathJax.js?config=TeX-AMS_HTML'),
         'tabSpaces': 4,
         'contentsCss': [
             static_lazy('web/css/font_faces.css'),
