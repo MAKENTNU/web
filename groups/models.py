@@ -37,6 +37,8 @@ class InheritanceGroup(Group):
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
+    history = HistoricalRecords(excluded_fields=['last_modified'])
+
     @property
     def inherited_permissions(self):
         return set(self.permissions.all()) - set(self.own_permissions.all())

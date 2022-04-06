@@ -74,9 +74,9 @@ default_machine_types = (
         pk=6,
         name={"en": "Special 3D printers", "nb": "Spesial-3D-printere"},
         cannot_use_text={
-            "en": "You must have completed an advanced 3D printer course to reserve the printers."
+            "en": "You must have completed an advanced 3D printer course to reserve these."
                   " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
-            "nb": "Reservasjon av 3D-printere krever fullført avansert 3D-printerkurs."
+            "nb": "Reservasjon av disse krever fullført avansert 3D-printerkurs."
                   " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="A3DP",

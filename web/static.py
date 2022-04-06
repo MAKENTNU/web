@@ -1,10 +1,11 @@
 import re
 from fnmatch import fnmatchcase
 from io import BytesIO
+from pathlib import Path
 from typing import Dict, List, Tuple
 
 from django.conf import settings
-from django.contrib.staticfiles.storage import HashedFilesMixin, ManifestStaticFilesStorage
+from django.contrib.staticfiles.storage import HashedFilesMixin, ManifestStaticFilesStorage as DjangoManifestStaticFilesStorage
 from django.http import FileResponse
 from django.views.static import serve
 
@@ -24,9 +25,9 @@ INTERPOLATION_PATTERNS = (
 )
 
 
-class InterpolatingManifestStaticFilesStorage(ManifestStaticFilesStorage):
+class ManifestStaticFilesStorage(DjangoManifestStaticFilesStorage):
     """
-    This class extends the functionality of ``ManifestStaticFilesStorage`` by replacing ``static`` tags
+    This class extends the functionality of Django's ``ManifestStaticFilesStorage`` by replacing ``static`` tags
     in files whose names end with ``.interpolated`` (not including the extension),  with the path of another static file.
 
     For example,
@@ -35,10 +36,13 @@ class InterpolatingManifestStaticFilesStorage(ManifestStaticFilesStorage):
     is replaced by
     ::
         /static/web/img/favicons/android-chrome-192x192.edcbcb619832.png
+
+    This class also implements logic for ignoring adding a hash to the files whose paths match
+    the glob patterns defined in the ``MANIFEST_STATICFILES_IGNORE_PATTERNS`` setting.
     """
     patterns = (
         *INTERPOLATION_PATTERNS,
-        *ManifestStaticFilesStorage.patterns,
+        *DjangoManifestStaticFilesStorage.patterns,
     )
 
     def url_converter(self, name, *args, **kwargs):
@@ -62,7 +66,19 @@ class InterpolatingManifestStaticFilesStorage(ManifestStaticFilesStorage):
     def get_full_static_url(url: str):
         return f"{settings.STATIC_URL}{url}"
 
+    def file_hash(self, name, content=None):
+        normalized_file_path = Path(name).as_posix()
+        # Don't hash the filename if the path matches any of the patterns in the `MANIFEST_STATICFILES_IGNORE_PATTERNS` setting
+        if any(
+                fnmatchcase(normalized_file_path, pattern)
+                for pattern in settings.MANIFEST_STATICFILES_IGNORE_PATTERNS
+        ):
+            return None
 
+        return super().file_hash(name, content)
+
+
+# Only used for generating `_compiled_interpolation_patterns` below
 class _PureInterpolatingFilesMixin(HashedFilesMixin):
     patterns = INTERPOLATION_PATTERNS
 
@@ -72,7 +88,8 @@ _compiled_interpolation_patterns: Dict[str, List[Tuple[re.Pattern, str]]] = _Pur
 
 def serve_interpolated(request, path, *args, **kwargs):
     """
-    This view extends the functionality of Django's ``serve()`` with the same as ``InterpolatingManifestStaticFilesStorage`` does.
+    This view extends the functionality of Django's ``serve()`` method
+    with the same interpolation logic as ``ManifestStaticFilesStorage`` implements.
     """
     response = serve(request, path, *args, **kwargs)
     if (isinstance(response, FileResponse) and request.path.startswith(settings.STATIC_URL)
@@ -85,7 +102,7 @@ def serve_interpolated(request, path, *args, **kwargs):
 
                 def replace(match_obj: re.Match):
                     matches = match_obj.groupdict()
-                    matches['url'] = InterpolatingManifestStaticFilesStorage.get_full_static_url(matches['url'])
+                    matches['url'] = ManifestStaticFilesStorage.get_full_static_url(matches['url'])
                     return template % matches
 
                 content = pattern.sub(replace, content)
