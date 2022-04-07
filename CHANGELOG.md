@@ -7,6 +7,45 @@ Description of the changes through deployments.
 - Changelog, issue template and pull request template.
 
 
+## 2022-04-07 ([#434](https://github.com/MAKENTNU/web/pull/434) and [#437](https://github.com/MAKENTNU/web/pull/437))
+### New features
+- Made the front page of the internal site editable
+  - This only uses Norwegian (not English), and allows editing the HTML source code for extra customization possibilities
+- Added an internal page for quotes
+- Added more info fields to members (Gmail and MAKE email addresses, starting semester at NTNU, and GitHub, Discord and Minecraft usernames)
+- Added history tracking to several models (`ContentBox`, `Question`, `Committee`, `Secret`, `MachineUsageRule`, `Event`, `Article` and `InheritanceGroup`)
+  - Admins can view this through the Django admin site
+- Added translations to the Django admin site
+- Added the [`django-extensions`](https://pypi.org/project/django-extensions/) and [`django-debug-toolbar`](https://pypi.org/project/django-debug-toolbar/) packages
+
+### Improvements
+- Updated Django to version 4.0
+- Reordered the buttons in the user dropdown menu
+- Added some extra buttons to the CKEditor toolbar
+- Most change forms now have a more consistent design, by using the same generic template
+- Changed some of the news URLs
+  - Redirect URLs have been added for the paths that are commonly linked to from elsewhere
+- Redesigned the language button
+- Improved the `alt` text (mainly for screen readers) of image links
+- Added reduction of the quality of uploaded JPEG files to additional models, like `Equipment`
+- Made privileged users always able to register for an event, event if it's sold out
+- Made event tickets also display the provided language and comment
+- Removed `EventTicket`'s legacy `_name` and `_email` fields
+- Event tickets are reactivated instead of recreated
+- Added proper title field to content boxes
+- The ID of the edited object (e.g. article or event) is now prefixed to the filename when uploading an image
+- Added more specific permissions for internal URLs
+- Made fonts self-hosted
+- Improvements to the change lists and forms of some of the Django admin pages
+
+### Fixes
+- Made the course registration list load faster
+- Fixed hidden buttons for adding/changing/deleting reservation rules, and for the committee admin panel
+
+### Other changes
+- Never-before-seen quanta of code cleanup
+
+
 ## 2022-01-10 ([#402](https://github.com/MAKENTNU/web/pull/402))
 ### New features
 - Added new favicon with better color contrast, and different favicons for the `i`/`internal`/`internt` and `admin` subdomains
