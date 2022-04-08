@@ -1,6 +1,7 @@
 from typing import List
 
 import bleach
+from bleach.css_sanitizer import CSSSanitizer
 from ckeditor.fields import RichTextFormField
 from ckeditor_uploader.fields import RichTextUploadingFormField
 from django import forms
@@ -77,15 +78,14 @@ class MultiLingualRichTextFormField(MultiLingualFormField):
         "table": ["align", "border", "cellpadding", "cellspacing", "summary"],
         "th": ["scope"],
     }
-    ALLOWED_STYLES = bleach.sanitizer.ALLOWED_STYLES + [
-        "display", "height", "width",
-        "float", "margin", "margin-left", "padding",
-        "background", "background-color", "border", "color",
-        "text-align", "text-decoration",
-    ]
     ALLOWED_PROTOCOLS = bleach.sanitizer.ALLOWED_PROTOCOLS + [
         "tel",
     ]
+    ALLOWED_CSS_PROPERTIES = {
+        *bleach.css_sanitizer.ALLOWED_CSS_PROPERTIES,
+        "margin", "margin-left", "padding",
+        "background", "border",
+    }
 
     # Unless we want to emulate the CKEditor code, it requires a different field class for its subfields
     subfield_class = RichTextFormField
@@ -98,8 +98,8 @@ class MultiLingualRichTextFormField(MultiLingualFormField):
                     content,
                     tags=self.ALLOWED_TAGS,
                     attributes=self.ALLOWED_ATTRIBUTES,
-                    styles=self.ALLOWED_STYLES,
                     protocols=self.ALLOWED_PROTOCOLS,
+                    css_sanitizer=CSSSanitizer(allowed_css_properties=self.ALLOWED_CSS_PROPERTIES),
                 )
         return value
 
