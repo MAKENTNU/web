@@ -22,7 +22,7 @@ channels==3.0.4
 channels-redis==3.4.0
 
 # Misc. packages
-bleach==4.1.0
+bleach[css]==5.0.0
 phonenumbers==8.12.46
 Pillow==9.1.0
 uuid==1.30
