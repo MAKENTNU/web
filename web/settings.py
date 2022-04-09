@@ -324,7 +324,7 @@ def static_lazy(path):
 
 
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
-CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
