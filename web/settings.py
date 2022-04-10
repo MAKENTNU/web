@@ -399,6 +399,16 @@ if USE_DEBUG_TOOLBAR:
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': "{message}",
+            'style': '{',
+        },
+        'verbose': {
+            'format': "{levelname}\t| {name}\t|\t{message}",
+            'style': '{',
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse',
@@ -415,15 +425,24 @@ LOGGING = {
         },
         'console': {
             'level': 'DEBUG',
-            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
+            'formatter': 'standard',
         },
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        **{
+            f'django.{disabled_logger_name}': {'propagate': False}
+            for disabled_logger_name in ['db', 'template', 'utils']
         },
     },
 }
@@ -432,9 +451,9 @@ LOGGING = {
 Uncomment to print all database queries to the console;
 useful for checking e.g. that a request doesn't query the database more times than necessary.
 """
-# LOGGING['loggers']['django.db.backends'] = {
+# LOGGING['loggers']['django.db'] = {
 #     'level': 'DEBUG',
-#     'handlers': ['console'],
+#     'propagate': True,
 # }
 
 
