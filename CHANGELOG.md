@@ -119,60 +119,66 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## 2021-05-11 ([#361](https://github.com/MAKENTNU/web/pull/361) and [#367](https://github.com/MAKENTNU/web/pull/367))
 ### New features
-- La til en ny maskintype for spesial-3D-printere (som blir lista opp under en egen seksjon på reservasjonssida når noen legger til én eller flere maskiner av den typen)
-- Det er nå en "Avansert kurs"-checkbox for kursregistreringer, som kan krysses av på kursregistreringen til en bruker når den har tatt det avanserte printerkurset. (Når brukere har en kursregistrering med denne checkboxen aktivert, gir det dem tilgang til å reservere spesial-3D-printerne)
-- Kursregistreringssida sjekker nå om kortnummeret som sendes inn (med et uhell) egentlig er telefonnummeret til Vakt og service (tidl. kjent som Byggsikring)
-- Endra URL-en for e-postlistene fra makentnu.no/email til makentnu.no/about/contact
-- La til litt tekst på bånn av sida, som sier antall medlemmer som vises i medlemslista og antall registreringer i kursregistreringslista
-- Artikler, profilbilder og andre ting man kan laste opp bilder til, støtter nå GIFs
+- Added a "Special 3D printers" machine type
+  - This is listed on [the machine list (reservations) page](https://makentnu.no/reservation/) when one or more machines of this type have been added
+- Added an "Advanced course" checkbox to course registrations
+  - Checking this checkbox will grant users permission to create reservations for the special 3D printers
+- The course registration form now checks whether the submitted card number is actually (by accident) the phone number of NTNU's Building security
+- Changed the URL for the email lists from [/email](https://makentnu.no/email/) to [/about/contact](https://makentnu.no/about/contact/)
+- Added a counter at the bottom of [the member list](https://i.makentnu.no/members/)
+  and [course registration list](https://makentnu.no/reservation/course/), that shows how many members and course registrations are displayed,
+  respectively
+- Articles, events, profile pictures and other things you can upload images for, now support GIFs
 
 ### Improvements
-- Django oppdatert til 3.2
-- Hvis man nå går til noen gamle URL-er som i ettertid har blitt endra på, så vil man bli redirected til den nye URL-en (dette gjelder bl.a. makentnu.no/rules - som står i de gamle kurskontraktene; den fullstendige URL-lista kan ses i denne delen av koden)
+- Updated Django to version 3.2
+- Visiting old URLs that have previously been changed, will redirect to the new URL
+  - This applies e.g. to [makentnu.no/rules](https://makentnu.no/rules/), which is written in the old 3D printer course contracts;
+    see [the full URL list in the code](https://github.com/MAKENTNU/web/blob/1631cdedddfa204af5b763201027df50ba89e324/web/urls.py#L81-L83)
 
 ### Fixes
-- Fiksa (endelig) at kursregistreringslista viser oppdatert info når én eller flere registreringer har blitt endra
-- Fiksa noen ablegøyer i medlemslista som gjorde at sortering og filtrering ikke fungerte sammen
-- Fiksa at man kom til 404-sida hvis man besøkte den engelske "Om oss"-sida
+- (Finally) fixed the course registration list not showing updated info when one or more registrations were modified
+- Fixed a bug that prevented sorting and filtering of the member list from both working simultaneously
+- Fixed seeing the 404 page when visiting the English "About us" page
 
 ### Other changes
-- mMMasse kodeopprydding
+- Lots of code cleanup
 
 
 ## 2021-04-13 ([#349](https://github.com/MAKENTNU/web/pull/349))
 ### New features
-- Man kan nå filtrere brukere etter navn i medlemslista
+- It's now possible to search for users by name in [the member list](https://i.makentnu.no/members/)
 
 ### Improvements
-- Når man laster opp bilder vil man få en beskjed om bildet er for stort
+- An error message is now shown when uploading an image that is too large
 
 ### Fixes
-- Fiksa den nylige feilen som gjorde at nye brukere ikke fikk navnet sitt lagra i databasen
+- Fixed the recently discovered issue preventing new users' name from being stored in the database
 
 ### Known issues
-- både filtrering og sortering ikke fungerer samtidig(en fiks har allerede blitt lagd og kommer til å bli gjort live om ikke så lenge)
+- Both filtering and sorting the member list simultaneously does currently not work
 
 
 ## 2021-03-10 ([#343](https://github.com/MAKENTNU/web/pull/343))
 ### New features
-- Intern hjemmeside
-- FAQ-side, og mulighet for å legge til spørsmål via administrasjonssiden
+- Added an [internal home page](https://i.makentnu.no/) (currently blank)
+- Added an [FAQ page](https://makentnu.no/faq/), including the ability to [add questions through the admin page](https://makentnu.no/faq/admin/)
 
 ### Fixes
-- Fikser for reservasjoner
-- Fikser for søkefunksjonaliteten til kursregistrering
-- Fiks av andre deler av koden
+- Fixes for reservations
+- Fixes for searching course registrations
+- Fixes of other parts of the code
 
 ### Other changes
-- Cleanup av kode
+- Code cleanup
 
 
 ## 2020-11-20 ([#334](https://github.com/MAKENTNU/web/pull/334))
 ### New features
-- Secrets kan nå legges ut på internsidene
-- Oppdatert Epostlisteside
-- Man kan kopiere epostene til folk som er registrert til et arrangement
-- Utstyrsprioritert
+- Added an [internal secrets page](https://i.makentnu.no/secrets/)
+- Added [dedicated page for email lists](https://makentnu.no/email/)
+- Added support for copying the email addresses of event ticket holders
+- Added priority field to equipment
 
 ### Other changes
-- En del fixes
+- A lot of fixes
