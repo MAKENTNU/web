@@ -1,10 +1,11 @@
 # Changelog
-Description of the changes through deployments.
+A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
-### Added
-- Changelog, issue template and pull request template.
+### New features
+- Added [changelog](https://github.com/MAKENTNU/web/blob/main/CHANGELOG.md), issue template and pull request template to
+  [our GitHub page](https://github.com/MAKENTNU/web)
 
 
 ## 2022-04-07 ([#434](https://github.com/MAKENTNU/web/pull/434) and [#437](https://github.com/MAKENTNU/web/pull/437))
@@ -89,7 +90,7 @@ Description of the changes through deployments.
 - A respectable quantity of code cleanup
 
 
-## 2021-10-21 ([#383](https://github.com/MAKENTNU/web/pull/383))
+## 2021-10-21 ([#383](https://github.com/MAKENTNU/web/pull/383) and [#385](https://github.com/MAKENTNU/web/pull/385))
 ### New features
 - Machines now have a separate `stream_name` field, for specifying the name that's used to connect to their stream
 - Added button for manually hiding shown secrets
@@ -116,8 +117,8 @@ Description of the changes through deployments.
 - Added code style guide and guideline for code smells
 
 
-## 2021-05-11
-### Added
+## 2021-05-11 ([#361](https://github.com/MAKENTNU/web/pull/361) and [#367](https://github.com/MAKENTNU/web/pull/367))
+### New features
 - La til en ny maskintype for spesial-3D-printere (som blir lista opp under en egen seksjon på reservasjonssida når noen legger til én eller flere maskiner av den typen)
 - Det er nå en "Avansert kurs"-checkbox for kursregistreringer, som kan krysses av på kursregistreringen til en bruker når den har tatt det avanserte printerkurset. (Når brukere har en kursregistrering med denne checkboxen aktivert, gir det dem tilgang til å reservere spesial-3D-printerne)
 - Kursregistreringssida sjekker nå om kortnummeret som sendes inn (med et uhell) egentlig er telefonnummeret til Vakt og service (tidl. kjent som Byggsikring)
@@ -125,55 +126,53 @@ Description of the changes through deployments.
 - La til litt tekst på bånn av sida, som sier antall medlemmer som vises i medlemslista og antall registreringer i kursregistreringslista
 - Artikler, profilbilder og andre ting man kan laste opp bilder til, støtter nå GIFs
 
-### Changed
+### Improvements
 - Django oppdatert til 3.2
+- Hvis man nå går til noen gamle URL-er som i ettertid har blitt endra på, så vil man bli redirected til den nye URL-en (dette gjelder bl.a. makentnu.no/rules - som står i de gamle kurskontraktene; den fullstendige URL-lista kan ses i denne delen av koden)
 
-### Fixed
+### Fixes
 - Fiksa (endelig) at kursregistreringslista viser oppdatert info når én eller flere registreringer har blitt endra
 - Fiksa noen ablegøyer i medlemslista som gjorde at sortering og filtrering ikke fungerte sammen
-- Hvis man nå går til noen gamle URL-er som i ettertid har blitt endra på, så vil man bli redirected til den nye URL-en (dette gjelder bl.a. makentnu.no/rules - som står i de gamle kurskontraktene; den fullstendige URL-lista kan ses i denne delen av koden)
 - Fiksa at man kom til 404-sida hvis man besøkte den engelske "Om oss"-sida
 
-### Other
+### Other changes
 - mMMasse kodeopprydding
 
 
-## 2021-04-13
-### Added
+## 2021-04-13 ([#349](https://github.com/MAKENTNU/web/pull/349))
+### New features
 - Man kan nå filtrere brukere etter navn i medlemslista
 
-### Changed
+### Improvements
 - Når man laster opp bilder vil man få en beskjed om bildet er for stort
 
-### Fixed
+### Fixes
 - Fiksa den nylige feilen som gjorde at nye brukere ikke fikk navnet sitt lagra i databasen
 
-### Known Errors
+### Known issues
 - både filtrering og sortering ikke fungerer samtidig(en fiks har allerede blitt lagd og kommer til å bli gjort live om ikke så lenge)
 
 
-## 2021-03-10
-### Added
+## 2021-03-10 ([#343](https://github.com/MAKENTNU/web/pull/343))
+### New features
 - Intern hjemmeside
 - FAQ-side, og mulighet for å legge til spørsmål via administrasjonssiden
 
-### Fixed
+### Fixes
 - Fikser for reservasjoner
 - Fikser for søkefunksjonaliteten til kursregistrering
 - Fiks av andre deler av koden
 
-### Other
+### Other changes
 - Cleanup av kode
 
 
-## 2020-11-20
-### Added
+## 2020-11-20 ([#334](https://github.com/MAKENTNU/web/pull/334))
+### New features
 - Secrets kan nå legges ut på internsidene
+- Oppdatert Epostlisteside
 - Man kan kopiere epostene til folk som er registrert til et arrangement
 - Utstyrsprioritert
 
-### Changed
-- Oppdatert Epostlisteside
-
-### Other
+### Other changes
 - En del fixes

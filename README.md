@@ -9,4 +9,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the following topics:
 * [Code review guideline: Code smells](CONTRIBUTING.md#code-review-guideline-code-smells)
 
 ## Changelog
-We have a [changelog](./CHANGELOG.md) that should be updated whenever there are changes done to the code base.
+[The changelog](CHANGELOG.md) is updated on [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev) when changes are made to the codebase -
+specifically under [the "Unreleased" section](CHANGELOG.md#unreleased).
+This section is then renamed to the current date whenever a deployment pull request is merged into
+[the `main` branch](https://github.com/MAKENTNU/web/tree/main), and a new, empty "Unreleased" section is added.
