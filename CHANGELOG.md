@@ -10,14 +10,16 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## 2022-04-07 ([#434](https://github.com/MAKENTNU/web/pull/434) and [#437](https://github.com/MAKENTNU/web/pull/437))
 ### New features
-- Made the front page of the internal site editable
+- Made [the front page of the internal site](https://i.makentnu.no/) editable
   - This only uses Norwegian (not English), and allows editing the HTML source code for extra customization possibilities
-- Added an internal page for quotes
+- Added an [internal page for quotes](https://i.makentnu.no/quotes/)
 - Added more info fields to members (Gmail and MAKE email addresses, starting semester at NTNU, and GitHub, Discord and Minecraft usernames)
-- Added history tracking to several models (`ContentBox`, `Question`, `Committee`, `Secret`, `MachineUsageRule`, `Event`, `Article` and `InheritanceGroup`)
+- Added history tracking to several models
+  (`ContentBox`, `Question`, `Committee`, `Secret`, `MachineUsageRule`, `Event`, `Article` and `InheritanceGroup`)
   - Admins can view this through the Django admin site
-- Added translations to the Django admin site
-- Added the [`django-extensions`](https://pypi.org/project/django-extensions/) and [`django-debug-toolbar`](https://pypi.org/project/django-debug-toolbar/) packages
+- Added translations to [the Django admin site](https://admin.makentnu.no/)
+- Added the [`django-extensions`](https://pypi.org/project/django-extensions/)
+  and [`django-debug-toolbar`](https://pypi.org/project/django-debug-toolbar/) packages
 
 ### Improvements
 - Updated Django to version 4.0
@@ -71,8 +73,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## 2021-10-29 ([#389](https://github.com/MAKENTNU/web/pull/389))
 ### New features
-- Added admin page for FAQ categories
-- For machines with streams: Added a new "no stream" image, in addition to images that are shown when the stream is down *and* the machine has either status "Maintenance" or "Out of order"
+- Added an [admin page for FAQ categories](https://makentnu.no/faq/admin/categories/)
+- For machines with streams: Added a new "no stream" image, in addition to images that are shown when the stream is down *and* the machine has either
+  status "Maintenance" or "Out of order"
 
 ### Improvements
 - Improved layout of the FAQ page and the FAQ question admin page
