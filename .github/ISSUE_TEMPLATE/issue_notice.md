@@ -1,10 +1,10 @@
-# Issue Notice
-
-**Please Note**
-
-Issues are not the main way of reporting bugs or feature requests.
-We use the #dev-public channel on [makentnu.slack.com](https://makentnu.slack.com/).
-
-Feel free to still leave an issue, but don't expect a quick response.
+---
+name: Issue notice
+about: Please read this before opening your first issue (you don't have to use this as an actual template).
 
 ---
+
+_**Note:**_
+_We recommend contacting the Dev committee about bug reports or feature requests,
+through the `#dev-public` channel in [our Slack workspace](https://makentnu.slack.com/).
+Feel free to still open an issue here, though!_
