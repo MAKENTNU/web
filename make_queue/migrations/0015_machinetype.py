@@ -32,7 +32,7 @@ default_machine_types = (
             "en": "You must have completed a 3D printer course to reserve the printers."
                   " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
             "nb": "Reservasjon av 3D-printere krever fullført 3D-printerkurs."
-                  " Hvis du har hatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+                  " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="3DPR",
         has_stream=True,
@@ -64,7 +64,7 @@ default_machine_types = (
     ),
     MachineTypeStruct(
         pk=5,
-        name={"en": "Dress form", "nb": "Sømbyste"},
+        name={"en": "Dress forms", "nb": "Sømbyster"},
         cannot_use_text="",
         usage_requirement="AUTH",
         has_stream=False,
@@ -74,10 +74,10 @@ default_machine_types = (
         pk=6,
         name={"en": "Special 3D printers", "nb": "Spesial-3D-printere"},
         cannot_use_text={
-            "en": "You must have completed an advanced 3D printer course to reserve the printers."
+            "en": "You must have completed an advanced 3D printer course to reserve these."
                   " If you have taken the course, but don't have access, contact 3Dprint@makentnu.no",
-            "nb": "Reservasjon av 3D-printere krever fullført avansert 3D-printerkurs."
-                  " Hvis du har hatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
+            "nb": "Reservasjon av disse krever fullført avansert 3D-printerkurs."
+                  " Hvis du har tatt kurset, men ikke har tilgang, ta kontakt med 3Dprint@makentnu.no",
         },
         usage_requirement="A3DP",
         has_stream=True,
@@ -114,9 +114,9 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', web.multilingual.modelfields.MultiLingualTextField(max_length=30, unique=True)),
                 ('cannot_use_text', web.multilingual.modelfields.MultiLingualTextField(blank=True)),
-                ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course'), ('A3DP', 'Taken the advanced 3D printer course')], default='AUTH', max_length=4, verbose_name='Usage requirement')),
+                ('usage_requirement', models.CharField(choices=[('AUTH', 'Only has to be logged in'), ('3DPR', 'Taken the 3D printer course'), ('A3DP', 'Taken the advanced 3D printer course')], default='AUTH', max_length=4, verbose_name='usage requirement')),
                 ('has_stream', models.BooleanField(default=False)),
-                ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='Priority')),
+                ('priority', models.IntegerField(help_text='The machine types are sorted ascending by this value.', verbose_name='priority')),
             ],
             options={
                 'ordering': ('priority',),
@@ -126,7 +126,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='machine',
             name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='machines', to='make_queue.MachineType', verbose_name='Machine type'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='machines', to='make_queue.MachineType', verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='machineusagerule',
@@ -136,11 +136,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quota',
             name='machine_type',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='Machine type'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='machine type'),
         ),
         migrations.AlterField(
             model_name='reservationrule',
             name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservation_rules', to='make_queue.MachineType', verbose_name='Machine type'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='reservation_rules', to='make_queue.MachineType', verbose_name='machine type'),
         ),
     ]

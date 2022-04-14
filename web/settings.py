@@ -1,9 +1,15 @@
+import copy
 import logging
 import sys
+from importlib.util import find_spec
 from pathlib import Path
 
+import django.views.static
 from django.conf.locale.en import formats as en_formats
 from django.conf.locale.nb import formats as nb_formats
+from django_hosts import reverse_lazy
+
+from .static import serve_interpolated
 
 
 # Disable logging when testing
@@ -14,20 +20,27 @@ if 'test' in sys.argv:
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether the request is actually over HTTPS,
+# as the connection between Nginx (the proxy we're using) and Django (run by Channel's Daphne server) is currently always over HTTP
+# (due to Daphne - seemingly - not supporting HTTPS)
+# !!! WARNING: when deploying, make sure that Nginx always either overwrites or removes the `X-Forwarded-Proto` header !!!
+# (see https://docs.djangoproject.com/en/stable/ref/settings/#secure-proxy-ssl-header)
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # Default values
-DATABASE = 'sqlite'
-# TODO: change to `BigAutoField` when `social-auth-app-django` fixes its own `DEFAULT_AUTO_FIELD`
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DATABASE = 'sqlite'  # (custom setting; used below for selecting database configuration)
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+INTERNAL_IPS = ['127.0.0.1']
 MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
-LOGOUT_URL = '/'
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/'
+LOGIN_URL = reverse_lazy('login')
+LOGIN_REDIRECT_URL = reverse_lazy('front_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
 CHECKIN_KEY = ''  # (custom setting)
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
@@ -44,6 +57,9 @@ SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 # host we are running on. This currently points to "makentnu.localhost:8000", and should
 # be changed in production
 PARENT_HOST = "makentnu.localhost:8000"
+
+# Is `True` if `django-debug-toolbar` is installed
+USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 EMAIL_SITE_URL = "https://makentnu.no"  # (custom setting)
@@ -76,6 +92,7 @@ INSTALLED_APPS = [
     'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
+    'simple_history',
     'sorl.thumbnail',
 
     # Project apps, listed alphabetically
@@ -93,11 +110,27 @@ INSTALLED_APPS = [
     'news',
     'users',
 
-    'util',  # not a "real" app, just a collection of utilities
+    'util',
+
+    # Contains a lot of useful management commands, but is not strictly necessary for the project.
+    # See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html
+    'django_extensions',
+
+    *(['debug_toolbar'] if USE_DEBUG_TOOLBAR else []),
+
+    # Should be placed last,
+    # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
+    'django_cleanup.apps.CleanupConfig',
 ]
 
+
 MIDDLEWARE = [
+    # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsRequestMiddleware',
+
+    *(['debug_toolbar.middleware.DebugToolbarMiddleware'] if USE_DEBUG_TOOLBAR else []),
+
+    # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
@@ -106,6 +139,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'simple_history.middleware.HistoryRequestMiddleware',
+
+    # Must be the last entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsResponseMiddleware',
 ]
 
@@ -131,7 +168,9 @@ ALLOWED_REDIRECT_HOSTS = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            BASE_DIR / 'web/templates',  # for overriding Django admin templates
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -140,13 +179,14 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                'web.context_processors.common_context_variables',
                 'web.context_processors.login',
             ],
         },
     },
 ]
 
-ASGI_APPLICATION = 'web.routing.application'
+ASGI_APPLICATION = 'web.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -205,8 +245,8 @@ AUTH_USER_MODEL = 'users.User'
 # Dataporten
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = '/'
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('front_page')
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 AUTHENTICATION_BACKENDS = (
@@ -260,9 +300,19 @@ nb_formats.DECIMAL_SEPARATOR = '.'
 STATIC_ROOT = BASE_DIR.parent / 'static'
 STATIC_URL = '/static/'
 
-# ManifestStaticFilesStorage appends every static file's MD5 hash to its filename,
+# This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
 # which avoids waiting for browsers' cache to update if a file's contents change
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'web.static.ManifestStaticFilesStorage'
+# Ignores adding a hash to the files whose paths match these glob patterns:
+# NOTE: Ignored files should be named so that it's obvious that they should be renamed when their contents update,
+#       to avoid being "stuck" in browsers' cache - which is what `ManifestStaticFilesStorage` would have prevented
+#       if the files were not ignored.
+#       For example: placing ignored files inside a folder with a version number as its name.
+MANIFEST_STATICFILES_IGNORE_PATTERNS = [  # (custom setting)
+    'ckeditor/mathjax/*',
+]
+# Monkey patch view used for serving static and media files (for development only; Nginx is used in production)
+django.views.static.serve = serve_interpolated
 
 
 # Code taken from https://github.com/django-ckeditor/django-ckeditor/issues/404#issuecomment-687778492
@@ -274,36 +324,74 @@ def static_lazy(path):
 
 
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
-CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
         'toolbar_main': [
+            {'name': 'editing', 'items': ['Find']},
             {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'format', 'items': ['Format', 'Styles', 'RemoveFormat']},
+            '/',
             {'name': 'paragraph',
-             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter',
-                       'JustifyRight', 'JustifyBlock']},
-            {'name': 'links', 'items': ['Link', 'Unlink']},
-            {'name': 'format', 'items': ['Format', 'RemoveFormat']},
-            {'name': 'insert', 'items': ['Image', 'CodeSnippet']},
+             'items': ['NumberedList', 'BulletedList', 'Blockquote', '-', 'Outdent', 'Indent',
+                       '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert', 'items': ['Mathjax', 'CodeSnippet', 'HorizontalRule', '-', 'Image']},
         ],
         'toolbar': 'main',
+        # All MathJax files downloaded from https://github.com/mathjax/MathJax/tree/2.7.9
+        'mathJaxLib': static_lazy('ckeditor/mathjax/v2.7.9/MathJax.js?config=TeX-AMS_HTML'),
         'tabSpaces': 4,
         'contentsCss': [
+            static_lazy('web/css/font_faces.css'),
             static_lazy('ckeditor/ckeditor/customstyles.css'),
             static_lazy('ckeditor/ckeditor/contents.css'),  # CKEditor's default styles
         ],
         'extraPlugins': ','.join([
+            'mathjax',
             'codesnippet',
             'uploadimage',
             'image2',
         ]),
     }
 }
+# This config should only be used for a rich text widget if the user has the `internal.can_change_rich_text_source` permission
+CKEDITOR_EDIT_SOURCE_CONFIG_NAME = 'edit_source'  # (custom setting)
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME] = copy.deepcopy(CKEDITOR_CONFIGS['default'])
+CKEDITOR_CONFIGS[CKEDITOR_EDIT_SOURCE_CONFIG_NAME]['toolbar_main'].append(
+    {'name': 'editsource', 'items': ['Source']}
+)
 
 # Phonenumbers
 PHONENUMBER_DEFAULT_REGION = 'NO'
-PHONENUMBER_DEFAULT_FORMAT = 'NATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
+
+# See https://django-simple-history.readthedocs.io/en/stable/historical_model.html#filefield-as-a-charfield
+SIMPLE_HISTORY_FILEFIELD_TO_CHARFIELD = True
+
+
+if USE_DEBUG_TOOLBAR:
+    DEBUG_TOOLBAR_CONFIG = {
+        'RENDER_PANELS': False,
+        'DISABLE_PANELS': {
+            # 'debug_toolbar.panels.history.HistoryPanel',
+            'debug_toolbar.panels.versions.VersionsPanel',
+            # 'debug_toolbar.panels.timer.TimerPanel',
+            # 'debug_toolbar.panels.settings.SettingsPanel',
+            # 'debug_toolbar.panels.headers.HeadersPanel',
+            # 'debug_toolbar.panels.request.RequestPanel',
+            'debug_toolbar.panels.sql.SQLPanel',
+            'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+            'debug_toolbar.panels.templates.TemplatesPanel',
+            'debug_toolbar.panels.cache.CachePanel',
+            'debug_toolbar.panels.signals.SignalsPanel',
+            # 'debug_toolbar.panels.logging.LoggingPanel',
+            'debug_toolbar.panels.redirects.RedirectsPanel',
+            'debug_toolbar.panels.profiling.ProfilingPanel',
+        },
+    }
 
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for
@@ -350,7 +438,7 @@ useful for checking e.g. that a request doesn't query the database more times th
 # }
 
 
-# [SHOULD ALWAYS COME LAST] Override the settings above
+# [SHOULD BE KEPT LAST IN THIS FILE] Override the settings above
 try:
     from .local_settings_post import *
 except ImportError:

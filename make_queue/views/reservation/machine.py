@@ -1,14 +1,17 @@
+from abc import ABC
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-from util.view_utils import PreventGetRequestsMixin
-from ...forms import BaseMachineForm, EditMachineForm
-from ...models.models import Machine, MachineType
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
+from ...forms import CreateMachineForm, EditMachineForm
+from ...models.machine import Machine, MachineType
 
 
-class MachineView(ListView):
-    """View that shows all the machines - listed per machine type."""
+class MachineListView(ListView):
+    """View that shows all the machines -- listed per machine type."""
     model = MachineType
     queryset = (
         # Retrieves all machine types that have at least one existing machine
@@ -20,23 +23,52 @@ class MachineView(ListView):
     context_object_name = 'machine_types'
 
 
-class CreateMachineView(PermissionRequiredMixin, CreateView):
+class MachineFormMixin(CustomFieldsetFormMixin, ABC):
+    model = Machine
+    success_url = reverse_lazy('machine_list')
+
+    narrow = False
+    back_button_link = success_url
+    back_button_text = _("Machine list")
+
+    should_include_machine_type: bool
+
+    def get_custom_fieldsets(self):
+        return [
+            {'fields': ('machine_type' if self.should_include_machine_type else None, 'machine_model'), 'layout_class': "two"},
+            {'fields': ('name',), 'layout_class': "two"},
+            {'fields': ('stream_name',), 'layout_class': "two"} if self.should_include_stream_name() else None,
+            {'fields': ('location', 'location_url'), 'layout_class': "two"},
+            {'fields': ('priority', 'status'), 'layout_class': "two"},
+        ]
+
+    def should_include_stream_name(self):
+        return True
+
+
+class CreateMachineView(PermissionRequiredMixin, MachineFormMixin, CreateView):
     permission_required = ('make_queue.add_machine',)
-    model = Machine
-    form_class = BaseMachineForm
-    template_name = 'make_queue/machine/machine_create.html'
-    success_url = reverse_lazy("reservation_machines_overview")
+    form_class = CreateMachineForm
+
+    form_title = _("Create Machine")
+    save_button_text = _("Add")
+
+    should_include_machine_type = True
 
 
-class EditMachineView(PermissionRequiredMixin, UpdateView):
+class EditMachineView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
     permission_required = ('make_queue.change_machine',)
-    model = Machine
     form_class = EditMachineForm
-    template_name = 'make_queue/machine/machine_edit.html'
-    success_url = reverse_lazy("reservation_machines_overview")
+
+    form_title = _("Edit Machine")
+
+    should_include_machine_type = False
+
+    def should_include_stream_name(self):
+        return self.object.machine_type.has_stream
 
 
 class DeleteMachineView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_machine',)
     model = Machine
-    success_url = reverse_lazy("reservation_machines_overview")
+    success_url = reverse_lazy('machine_list')

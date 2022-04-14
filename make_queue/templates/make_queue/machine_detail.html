@@ -8,10 +8,10 @@
     {{ machine.name }} - {{ machine.machine_model }}
 {% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_actions.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -21,7 +21,7 @@
                 {{ machine.name }}
             </div>
             <div class="ui content">
-                <a class="ui primary button" href="{% url 'machine_usage_rules' machine.machine_type %}">
+                <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine.machine_type.pk %}">
                     {% trans "Show rules" %}
                 </a>
             </div>
@@ -33,30 +33,30 @@
                 <h3>{% trans "About the machine" %}</h3>
                 <div class="ui relaxed list">
                     <div class="item">
-                        <i class="ui large middle aligned make-col-yellow location arrow icon"></i>
+                        <i class="large middle aligned make-col-yellow location arrow icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "Location" %}</div>
+                            <div class="header">{% trans "location"|capfirst %}</div>
                             <a href="{{ machine.location_url }}" target="_blank">{{ machine.location }}</a>
                         </div>
                     </div>
                     <div class="item">
-                        <i class="ui large middle aligned make-col-yellow cog icon"></i>
+                        <i class="large middle aligned make-col-yellow cog icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "Machine type" %}</div>
+                            <div class="header">{% trans "machine type"|capfirst %}</div>
                             {{ machine.machine_type.name }}
                         </div>
                     </div>
                     <div class="item">
-                        <i class="ui large middle aligned make-col-yellow wrench icon"></i>
+                        <i class="large middle aligned make-col-yellow wrench icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "Model" %}</div>
+                            <div class="header">{% trans "model"|capfirst %}</div>
                             {{ machine.machine_model }}
                         </div>
                     </div>
                     <div class="item">
-                        <i class="ui large middle make-col-yellow aligned info circle icon"></i>
+                        <i class="large middle aligned make-col-yellow info circle icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "Status" %}</div>
+                            <div class="header">{% trans "status"|capfirst %}</div>
                             <b>
                                 <span class="ui {% card_color_from_machine_status machine %} text">
                                     {% card_text_from_machine_status machine %}
@@ -74,12 +74,12 @@
             {% if machine.machine_type.has_stream %}
                 <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
                     <img class="ui right floated stream medium image" data-stream-name="{{ machine.stream_name }}"
-                         src="{% static 'make_queue/img/no_stream.jpg' %}"
+                         src="{% get_stream_image_path machine.status %}"
                          alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
                 </div>
                 <div id="fader"></div>
-                <i id="closefullscreen" class="ui times icon"></i>
+                <i id="closefullscreen" class="times icon"></i>
                 <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
                 <script src="{% static 'make_queue/js/stream.js' %}"></script>
             {% endif %}

@@ -16,17 +16,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='eventticket',
             name='event',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='news.event', verbose_name='Event'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='news.event', verbose_name='event'),
         ),
         migrations.AlterField(
             model_name='eventticket',
             name='timeplace',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='news.timeplace', verbose_name='Timeplace'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='tickets', to='news.timeplace', verbose_name='timeplace'),
         ),
         migrations.AlterField(
             model_name='eventticket',
             name='user',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='event_tickets', to=settings.AUTH_USER_MODEL, verbose_name='User'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='event_tickets', to=settings.AUTH_USER_MODEL, verbose_name='user'),
         ),
         migrations.AlterField(
             model_name='timeplace',

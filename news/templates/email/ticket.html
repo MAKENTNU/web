@@ -6,8 +6,7 @@
 
 
 <!DOCTYPE html>
-{% get_current_language as LANGUAGE_CODE %}
-<html lang="{{ LANGUAGE_CODE }}" style="width: 100%; padding: 0; margin: 0;">
+<html lang="{{ CURRENT_LANGUAGE_CODE }}" style="width: 100%; padding: 0; margin: 0;">
 <body style="width: 100%; padding: 0; margin: 0;">
 
 <table style="width: 100%; padding: 0; margin: 0; border-width: 0; border-collapse: collapse;">
@@ -23,24 +22,23 @@
     <tbody style="width: 100%;">
     <tr style="width: 100%">
         <td style="align-items: center; padding: 0; margin: 0;">
-            <img src="{{ site }}{% firstof ticket.timeplace.event.image.url ticket.event.image.url %}"
-                 style="width: 100%;" alt="{% trans "Event image" %}"
+            <img src="{{ site }}{{ ticket.registered_event.image.url }}"
+                 style="width: 100%;" alt="{{ ticket.registered_event.image_description }}"
             />
         </td>
     </tr>
     <tr style="width: 100%">
         <td style="padding: 30px 30px 0 30px; font-size: 30px; font-weight: bold;">
-            {% firstof ticket.timeplace.event.title ticket.event.title as event_title %}
-            {% blocktrans with title=event_title %}Your ticket for “{{ title }}”{% endblocktrans %}
+            {% blocktrans with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktrans %}
         </td>
     </tr>
     <tr style="width: 100%">
         <td style="padding: 15px 30px 0 30px;">
-            {% trans "Thank you for registering for this event. You can view your ticket" %}
-            <a href="{{ site }}{% url "ticket" ticket.pk %}">{% trans "here" %}</a>.
+            {% trans "Thank you for registering for this event. You can view your ticket on" %}
+            <a href="{{ site }}{% url 'ticket_detail' ticket.pk %}">{% trans "this page" %}</a>.
 
-            {% trans "If you want to cancel your registration, you can do so by clicking" %}
-            <a href="{{ site }}{% url "cancel-ticket" ticket.pk %}">{% trans "here" %}</a>.
+            {% trans "If you want to cancel your registration, you can do so by going to" %}
+            <a href="{{ site }}{% url 'cancel_ticket' ticket.pk %}">{% trans "this page" %}</a>.
         </td>
     </tr>
     <tr style="width: 100%">

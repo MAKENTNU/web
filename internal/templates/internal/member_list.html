@@ -2,29 +2,30 @@
 {% load i18n %}
 {% load static %}
 {% load datetime_tags %}
+{% load html_tags %}
 {% load member %}
 {% load hosts %}
 
 
 {% block title %}{% trans "Member list" %}{% endblock title %}
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'internal/css/member_list.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
 
     <div class="ui container">
         <h1 class="title-with-buttons">
             {% trans "Member list" %}
-            {% if perms.internal.can_register_new_member %}
-                <a class="ui right floated make-bg-yellow button" href="{% url "add-member" %}">
-                    <i class="ui plus icon"></i>{% trans "Add member" %}
+            {% if perms.internal.add_member %}
+                <a class="ui right floated make-bg-yellow button" href="{% url 'create_member' %}">
+                    <i class="plus icon"></i>{% trans "Add member" %}
                 </a>
             {% endif %}
         </h1>
 
-        <form class="ui form">
+        <form class="dont-prevent-leaving ui form">
             <div id="filter-fields" class="ui fields">
                 <div class="ui six wide field">
                     <input id="search" type="text" name="search-text" placeholder="{% trans "Search name and username" %}"/>
@@ -33,48 +34,48 @@
 
                     <div class="ui multiple blue labeled compact button icon dropdown">
                         <input type="hidden" name="filter-status"/>
-                        <i class="ui filter icon"></i>
+                        <i class="filter icon"></i>
                         <span class="ui text">{% trans "Filter membership status" %}</span>
                         <div class="menu">
                             <div class="scrolling menu">
-                                <div class="item" data-value="{% trans "Active" %}">
-                                    <i class="ui green circle icon"></i>{% trans "Active" %}
+                                <div class="item" data-value="{% trans "active"|capfirst %}">
+                                    <i class="green circle icon"></i>{% trans "active"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Inactive" %}">
-                                    <i class="ui grey circle icon"></i>{% trans "Inactive" %}
+                                <div class="item" data-value="{% trans "inactive"|capfirst %}">
+                                    <i class="grey circle icon"></i>{% trans "inactive"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Retired" %}">
-                                    <i class="ui blue circle icon"></i>{% trans "Retired" %}
+                                <div class="item" data-value="{% trans "retired"|capfirst %}">
+                                    <i class="blue circle icon"></i>{% trans "retired"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Honorary" %}">
-                                    <i class="ui make-col-yellow circle icon"></i>{% trans "Honorary" %}
+                                <div class="item" data-value="{% trans "honorary"|capfirst %}">
+                                    <i class="make-col-yellow circle icon"></i>{% trans "honorary"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "Quit" %}">
-                                    <i class="ui red circle icon"></i>{% trans "Quit" %}
+                                <div class="item" data-value="{% trans "quit"|capfirst %}">
+                                    <i class="red circle icon"></i>{% trans "quit"|capfirst %}
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="ui multiple blue labeled compact button icon dropdown">
                         <input type="hidden" name="filter-committee"/>
-                        <i class="ui filter icon"></i>
+                        <i class="filter icon"></i>
                         <span class="ui text">{% trans "Filter committees" %}</span>
                         <div class="menu">
                             <div class="scrolling menu">
                                 <div class="item" data-value="Dev">
-                                    <i class="ui green circle icon"></i>Dev
+                                    <i class="green circle icon"></i>Dev
                                 </div>
                                 <div class="item" data-value="Mentor">
-                                    <i class="ui red circle icon"></i>Mentor
+                                    <i class="red circle icon"></i>Mentor
                                 </div>
                                 <div class="item" data-value="Event">
-                                    <i class="ui blue circle icon"></i>Event
+                                    <i class="blue circle icon"></i>Event
                                 </div>
                                 <div class="item" data-value="PR">
-                                    <i class="ui make-col-yellow circle icon"></i>PR
+                                    <i class="make-col-yellow circle icon"></i>PR
                                 </div>
                                 <div class="item" data-value="Styret">
-                                    <i class="ui purple circle icon"></i>Styret
+                                    <i class="purple circle icon"></i>Styret
                                 </div>
                             </div>
                         </div>
@@ -88,25 +89,25 @@
             <thead>
             <tr>
                 <th>
-                    {% trans "Name" %}<i id="member-sort-name" class="ui sort icon"></i>
+                    {% trans "name"|capfirst %}<i id="member-sort-name" class="sort icon"></i>
                 </th>
                 <th>
-                    {% trans "Committee" %}<i id="member-sort-committees" class="ui up sort icon"></i>
+                    {% trans "committee"|capfirst %}<i id="member-sort-committees" class="sort up icon"></i>
                 </th>
                 <th>
-                    {% trans "Role" %}<i id="member-sort-role" class="ui sort icon"></i>
+                    {% trans "role"|capfirst %}<i id="member-sort-role" class="sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Status" %}<i id="member-sort-status" class="ui sort icon"></i>
+                    {% trans "status"|capfirst %}<i id="member-sort-status" class="sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "Joined" %}<i id="member-sort-dateJoined" class="ui sort icon"></i>
+                    {% trans "joined"|capfirst %}<i id="member-sort-dateJoinedSortable" class="sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "Contact email" %}<i id="member-sort-email" class="ui sort icon"></i>
+                    {% trans "contact email"|capfirst %}<i id="member-sort-contactEmail" class="sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "Phone number" %}<i id="member-sort-phone" class="ui sort icon"></i>
+                    {% trans "phone number"|capfirst %}<i id="member-sort-phone" class="sort icon"></i>
                 </th>
             </tr>
             </thead>
@@ -116,14 +117,29 @@
                 {% get_membership_statuses member as membership_status %}
                 <tr data-pk="{{ member.pk }}"
                     data-phone="{{ member.phone_number }}"
+                    data-phone-display="{{ member.phone_number_display }}"
                     data-name="{{ member.user.get_full_name }}"
-                    data-email="{{ member.email }}"
+                    data-contact-email="{{ member.contact_email }}"
+                    data-gmail="{{ member.gmail }}"
+                    data-make-email="{{ member.MAKE_email }}" {# HTML attributes cannot be uppercase #}
                     data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
-                    data-term-joined="{{ member.term_joined }}"
+                    data-ntnu-starting-semester="{{ member.ntnu_starting_semester_display }}"
+                    data-github-username="{{ member.github_username }}"
+                    data-discord-username="{{ member.discord_username }}"
+                    data-minecraft-username="{{ member.minecraft_username }}"
+
+                    data-semester-joined="{{ member.semester_joined }}"
                     data-date-joined="{{ member.date_joined|short_date }}"
-                    data-date-quit="{{ member.date_quit|short_date }}"
-                    data-term-quit="{{ member.term_quit|default:"" }}"
+                    data-date-joined-sortable="{{ member.date_joined|iso_date }}"
+                    data-date-quit-or-retired="{{ member.date_quit_or_retired|short_date }}"
+                    data-date-quit-or-retired-label="
+                            {% if member.retired %}
+                                {% trans "Date retired" %}
+                            {% elif member.quit %}
+                                {% trans "Date quit" %}
+                            {% endif %}"
+                    data-semester-quit-or-retired="{{ member.semester_quit_or_retired|default:"" }}"
                     data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
                     data-status="{{ membership_status }}"
                     data-committees="{{ committees }}"
@@ -138,16 +154,19 @@
                     data-system-accesses="{% get_system_accesses member request.user %}"
                     data-edit-url="
                             {% if member.user == request.user or perms.internal.change_member %}
-                                {% url "edit-member" member.pk %}
+                                {% url 'edit_member' member.pk %}
                             {% endif %}"
                     data-set-quit-url="
                             {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
-                                {% url "member-quit" member.pk %}
+                                {% url 'member_quit' member.pk %}
                             {% endif %}"
                     data-can-undo-quit="{% if member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
-                    data-can-set-retired="{% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}true{% endif %}"
+                    data-set-retired-url="
+                            {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
+                                {% url 'member_retire' member.pk %}
+                            {% endif %}"
                     data-can-undo-retired="{% if member.retired and perms.internal.can_edit_group_membership %}true{% endif %}"
-                    data-edit-status-url="{% url "edit-member-status" member.pk %}"
+                    data-edit-status-url="{% url 'edit_member_status' member.pk %}"
                 >
                     <td>{{ member.user.get_short_full_name }}</td>
                     <td class="label-cell">
@@ -161,16 +180,18 @@
                             <div class="ui {{ color }} label">{{ status_name }}</div>
                         {% endfor %}
                     </td>
-                    <td class="computer only">{{ member.term_joined }}</td>
+                    <td class="computer only">{{ member.semester_joined }}</td>
                     <td class="mobile hidden">
-                        {% if member.email %}
-                            {{ member.email|urlize }}
+                        {% if member.contact_email %}
+                            {{ member.contact_email|urlize_target_blank }}
                         {% endif %}
                     </td>
                     <td class="computer only">
-                        {% if member.phone_number %}
-                            <a href="tel:{{ member.phone_number }}">{{ member.phone_number }}</a>
-                        {% endif %}
+                        {% with phone_number=member.phone_number_display %}
+                            {% if phone_number %}
+                                <a href="tel:{{ member.phone_number }}">{{ phone_number }}</a>
+                            {% endif %}
+                        {% endwith %}
                     </td>
                 </tr>
             {% endfor %}
@@ -191,25 +212,25 @@
         <div class="header">
             <span id="member-name-header"></span>
             <a id="member-editUrl-button">
-                <i class="ui make-col-yellow pencil icon"></i>
+                <i class="make-col-yellow pencil icon"></i>
             </a>
             <span id="member-status-header"></span>
         </div>
         <div class="scrolling content">
             <h4 class="ui horizontal divider header">
-                <i class="ui make-col-yellow user icon"></i>{% trans "Basic information" %}
+                <i class="make-col-yellow user icon"></i>{% trans "Basic information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
                 <tr>
                     <td class="six wide column">
-                        <b>{% trans "Name" %}</b>
+                        <b>{% trans "name"|capfirst %}</b>
                     </td>
                     <td id="member-name"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Phone number" %}</b>
+                        <b>{% trans "phone number"|capfirst %}</b>
                     </td>
                     <td>
                         <b><a id="member-phone"></a></b>
@@ -217,77 +238,99 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Contact email" %}</b>
+                        <b>{% trans "contact email"|capfirst %}</b>
                     </td>
                     <td>
-                        <b><a id="member-email"></a></b>
+                        <b><a id="member-contactEmail"></a></b>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Card number" %}</b>
+                        <b>{% trans "Gmail" %}</b>
+                    </td>
+                    <td>
+                        <b><a id="member-gmail"></a></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "MAKE email" %}</b>
+                    </td>
+                    <td>
+                        <b><a id="member-MAKEEmail"></a></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "card number"|capfirst %}</b>
                     </td>
                     <td id="member-cardNumber"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Study program" %}</b>
+                        <b>{% trans "study program"|capfirst %}</b>
                     </td>
                     <td id="member-studyProgram"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "starting semester at NTNU"|capfirst %}</b>
+                    </td>
+                    <td id="member-ntnuStartingSemester"></td>
                 </tr>
                 </tbody>
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="ui make-col-yellow users icon"></i>{% trans "Membership information" %}
+                <i class="make-col-yellow users icon"></i>{% trans "Membership information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
                 <tr>
                     <td class="six wide column">
-                        <b>{% trans "Joined" %}</b>
+                        <b>{% trans "joined"|capfirst %}</b>
                     </td>
                     <td id="member-dateJoined"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Quit" %}</b>
+                        <b id="member-dateQuitOrRetiredLabel"></b>
                     </td>
-                    <td id="member-dateQuit"></td>
+                    <td id="member-dateQuitOrRetired"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Reason quit" %}</b>
+                        <b>{% trans "reason quit"|capfirst %}</b>
                     </td>
                     <td id="member-reasonQuit"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Status" %}</b>
+                        <b>{% trans "status"|capfirst %}</b>
                     </td>
                     <td id="member-status"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Committee" %}</b>
+                        <b>{% trans "committee"|capfirst %}</b>
                     </td>
                     <td id="member-committee"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Role" %}</b>
+                        <b>{% trans "role"|capfirst %}</b>
                     </td>
                     <td id="member-role"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Guidance exemption" %}</b>
+                        <b>{% trans "guidance exemption"|capfirst %}</b>
                     </td>
                     <td id="member-guidanceExemption"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Comment" %}</b>
+                        <b>{% trans "comment"|capfirst %}</b>
                     </td>
                     <td id="member-comment"></td>
                 </tr>
@@ -295,9 +338,37 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="ui make-col-yellow key icon"></i>{% trans "System accesses" %}
+                <i class="make-col-yellow info circle icon"></i>{% trans "Extra information" %}
             </h4>
-            <form id="edit-system-access-form" method="POST">
+            <table class="ui very basic unstackable celled table">
+                <tbody>
+                <tr>
+                    <td class="six wide column">
+                        <b>{% trans "GitHub username" %}</b>
+                    </td>
+                    <td>
+                        <b><a id="member-githubUsername"></a></b>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "Discord username" %}</b>
+                    </td>
+                    <td id="member-discordUsername"></td>
+                </tr>
+                <tr>
+                    <td>
+                        <b>{% trans "Minecraft username" %}</b>
+                    </td>
+                    <td id="member-minecraftUsername"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h4 class="ui horizontal divider header">
+                <i class="make-col-yellow key icon"></i>{% trans "system accesses"|capfirst %}
+            </h4>
+            <form id="edit-system-access-form" class="dont-prevent-leaving" method="POST">
                 {% csrf_token %}
                 <table class="ui very basic unstackable celled table">
                     <tbody id="member-system-accesses">
@@ -308,9 +379,9 @@
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
-                    <i class="ui wrench make-col-yellow icon"></i>{% trans "Actions" %}
+                    <i class="make-col-yellow wrench icon"></i>{% trans "Actions" %}
                 </h4>
-                <form id="edit-member-status-form" class="member-action-buttons" method="POST">
+                <form id="edit-member-status-form" class="dont-prevent-leaving member-action-buttons" method="POST">
                     {% csrf_token %}
                     <a id="member-setQuitUrl-button" class="ui red button">
                         {% trans "Set member as quit" %}
@@ -319,10 +390,9 @@
                             data-status-action="{{ StatusAction.UNDO_QUIT }}">
                         {% trans "Set member as not quit" %}
                     </button>
-                    <button id="member-canSetRetired-button" class="ui make-bg-yellow button" type="submit"
-                            data-status-action="{{ StatusAction.RETIRE }}">
+                    <a id="member-setRetiredUrl-button" class="ui make-bg-yellow button">
                         {% trans "Set member as retired" %}
-                    </button>
+                    </a>
                     <button id="member-canUndoRetired-button" class="ui make-bg-yellow button" type="submit"
                             data-status-action="{{ StatusAction.UNDO_RETIRE }}">
                         {% trans "Set member as not retired" %}
@@ -335,10 +405,10 @@
 
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $("div.ui.dropdown").dropdown();
-        $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "Active" %}"]);
+        $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "active"|capfirst %}"]);
     </script>
     <script src="{% static 'internal/js/member_list.js' %}"></script>
     {% if selected_member %}
@@ -359,4 +429,4 @@
             });
         {% endfor %}
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

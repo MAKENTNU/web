@@ -15,31 +15,31 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='member',
             name='comment',
-            field=models.TextField(blank=True, verbose_name='Comment'),
+            field=models.TextField(blank=True, verbose_name='comment'),
         ),
         migrations.AlterField(
             model_name='member',
             name='email',
-            field=models.EmailField(blank=True, max_length=254, verbose_name='Contact email'),
+            field=models.EmailField(blank=True, max_length=254, verbose_name='contact email'),
         ),
         migrations.AlterField(
             model_name='member',
             name='phone_number',
-            field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=32, region=None, verbose_name='Phone number'),
+            field=phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=32, region=None, verbose_name='phone number'),
         ),
         migrations.AlterField(
             model_name='member',
             name='reason_quit',
-            field=models.TextField(blank=True, verbose_name='Reason quit'),
+            field=models.TextField(blank=True, verbose_name='reason quit'),
         ),
         migrations.AlterField(
             model_name='member',
             name='role',
-            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='Role'),
+            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='role'),
         ),
         migrations.AlterField(
             model_name='member',
             name='study_program',
-            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='Study program'),
+            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='study program'),
         ),
     ]

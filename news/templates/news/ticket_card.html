@@ -7,73 +7,63 @@
 <div class="ui ticket card">
     {% if not ticket.active %}
         <div class="ui red cancel label">
-            {% trans "Canceled" %}
+            {% trans "canceled"|capfirst %}
         </div>
     {% endif %}
 
     <div class="content">
-        <div class="header">
-            <a href="{% if ticket.event %}
-                        {% url "event" ticket.event.pk %}
-                    {% else %}
-                        {% url "event" ticket.timeplace.event.pk %}
-                    {% endif %}">
-                {% firstof ticket.timeplace.event.title ticket.event.title %}
+        <div class="word-breaking header">
+            <a href="{% url 'event_detail' ticket.registered_event.pk %}">
+                {{ ticket.registered_event.title }}
             </a>
         </div>
         <div class="description">
             {% if ticket.event %}
                 <div class="ui relaxed list">
-                    {% for timeplace in ticket.event.timeplaces.all %}
-                        {% if not timeplace.hidden %}
+                    {% for time_place in ticket.event.timeplaces.all %}
+                        {% if not time_place.hidden %}
                             <div class="ui item">
-                                <div class="time-place content">
-                                    <a class="calendar-button" href="{% url 'timeplace-ical' timeplace.pk %}" target="_blank">
-                                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
-                                    </a>
-                                    <div class="header">
-                                        {{ timeplace.start_time|long_datetime_no_year }} &ndash; {{ timeplace.end_time|long_datetime_no_year }}
-                                    </div>
-                                    <div class="place description">
-                                        <a href="{{ timeplace.place_url }}" target="_blank">
-                                            {{ timeplace.place }}
-                                        </a>
-                                    </div>
-                                </div>
+                                {% include 'news/ticket_card_time_place.html' %}
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="time-place content">
-                    <a class="calendar-button" href="{% url 'timeplace-ical' ticket.timeplace.pk %}" target="_blank">
-                        <i class="ui make-col-yellow large calendar plus outline icon"></i>
-                    </a>
-                    <b>
-                        {{ ticket.timeplace.start_time|long_datetime_no_year }} &ndash; {{ ticket.timeplace.end_time|long_datetime_no_year }}
-                    </b>
-                </div>
+                {% include 'news/ticket_card_time_place.html' with time_place=ticket.timeplace %}
             {% endif %}
         </div>
     </div>
     <div class="extra content">
-        <div class="right floated">
-            <b>{% trans "Ref #" %}:</b>
-            <a href="{% url "ticket" pk=ticket.pk %}">
-                {{ ticket.uuid }}
-            </a>
-        </div>
+        <p>
+            <b>{% trans "language"|capfirst %}:</b> {{ ticket.get_language_display }}
+        </p>
+        {% if ticket.comment %}
+            <p>
+                <b>{% trans "comment"|capfirst %}:</b> {{ ticket.comment }}
+            </p>
+        {% endif %}
+    </div>
+    <div class="extra content">
+        <b>{% trans "Ref #" %}:</b>
+        <a href="{% url 'ticket_detail' ticket.pk %}">
+            {{ ticket.uuid }}
+        </a>
     </div>
     {% if ticket.active %}
         {% if ticket.user == request.user or perms.news.cancel_ticket %}
             <a class="ui red bottom attached button"
-               href="{% url "cancel-ticket" ticket.pk %}?next={{ request.path }}">
+               href="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
                 {% trans "Cancel ticket" %}
             </a>
         {% endif %}
     {% elif perms.news.cancel_ticket %}
-        <a class="ui green bottom attached button" href="{% url "cancel-ticket" ticket.pk %}?next={{ request.path }}">
+        <button class="ui green bottom attached button" type="submit"
+                onclick="$('#reactivate-form-{{ ticket.pk }}').submit();">
             {% trans "Reactivate ticket" %}
-        </a>
+        </button>
+        <form id="reactivate-form-{{ ticket.pk }}"
+              method="POST" action="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
+            {% csrf_token %}
+        </form>
     {% endif %}
 </div>

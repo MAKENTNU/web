@@ -2,13 +2,14 @@
 {% load static %}
 {% load i18n %}
 {% load datetime_tags %}
-{% load semantic_ui_calendar_extra %}
 {% load reservation_extra %}
 
 
-{% block head %}
+{# TODO: make this template extend web/edit_form.html #}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_edit.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
@@ -71,34 +72,40 @@
 
             <div class="two fields">
                 <div class="field">
-                    <label>{% trans "Start time" %}</label>
+                    <label>{% trans "start time"|capfirst %}</label>
                     <div id="start-time" class="ui calendar">
                         <div class="ui input {% if not can_change_start_time %}disabled{% endif %} left icon">
                             <i class="calendar icon"></i>
-                            <input name="start_time" type="text" placeholder="{% trans "Start time" %}"
-                                   {# Do not place the if-else on separate lines, as it introduces whitespace #}
-                                   value="{% if start_time %}{{ start_time|iso_datetime }}{% else %}{% set_current_date %}{% endif %}"
-                            />
+                            <input name="start_time" type="text" placeholder="{% trans "start time"|capfirst %}" value="{% spaceless %}
+                                {% if start_time %}
+                                    {{ start_time|iso_datetime }}
+                                {% else %}
+                                    {% formatted_localtime %}
+                                {% endif %}
+                            {% endspaceless %}"/>
                         </div>
                     </div>
                 </div>
                 <div class="field">
-                    <label>{% trans "End time" %}</label>
+                    <label>{% trans "end time"|capfirst %}</label>
                     <div id="end-time" class="ui calendar">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="end_time" type="text" placeholder="{% trans "End time" %}"
-                                   {# Do not place the if-else on separate lines, as it introduces whitespace #}
-                                   value="{% if end_time %}{{ end_time|iso_datetime }}{% else %}{% set_current_date 2 %}{% endif %}"
-                            />
+                            <input name="end_time" type="text" placeholder="{% trans "end time"|capfirst %}" value="{% spaceless %}
+                                {% if end_time %}
+                                    {{ end_time|iso_datetime }}
+                                {% else %}
+                                    {% formatted_localtime shift_hours=2 %}
+                                {% endif %}
+                            {% endspaceless %}"/>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="field">
-                <label for="comment">{% trans "Comment" %}</label>
+                <label for="comment">{% trans "comment"|capfirst %}</label>
                 <textarea rows="2" maxlength="2000" id="comment" name="comment"
-                          placeholder="{% trans "Comment" %}">{{ comment }}</textarea>
+                          placeholder="{% trans "comment"|capfirst %}">{{ comment }}</textarea>
             </div>
 
             {% if perms.make_queue.can_create_event_reservation %}
@@ -109,7 +116,7 @@
                                 <div id="event-checkbox" class="ui checkbox {% if not new_reservation %}disabled{% endif %}">
                                     <input id="event" type="checkbox" name="event"
                                            {% if not is_new_reservation and event %}checked{% endif %}/>
-                                    <label for="event">{% trans "Event" %}</label>
+                                    <label for="event">{% trans "event"|capfirst %}</label>
                                 </div>
                             </div>
                             <div class="field">
@@ -122,7 +129,7 @@
                         </div>
                     </div>
                     <div id="event-name-input" class="ui field {% if not event %}display-none{% endif %}">
-                        <label>{% trans "Event" %}</label>
+                        <label>{% trans "event"|capfirst %}</label>
                         <div id="event-pk" class="ui field selection dropdown">
                             <input type="hidden" name="event_pk" value="{% if event %}{{ event.pk }}{% endif %}"/>
                             <div class="default text">

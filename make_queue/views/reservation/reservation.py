@@ -1,26 +1,30 @@
 from abc import ABC
 from datetime import timedelta
+from http import HTTPStatus
 from math import ceil
 
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.db.models import Q
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
-from django.views.generic import DeleteView, FormView, TemplateView, UpdateView
+from django.views.generic import DeleteView, FormView, ListView, TemplateView, UpdateView
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
 from util.view_utils import PreventGetRequestsMixin
 from ...forms import FreeSlotForm, ReservationForm
-from ...models.models import Machine, MachineType, Reservation, ReservationRule
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation, can_delete_reservation, can_mark_reservation_finished
 
 
-class ReservationCreateOrChangeView(TemplateView, ABC):
+# TODO: rewrite this whole view (and everything that uses it),
+#  so that it's more extendable, and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
+class CreateOrEditReservationView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
-
     template_name = 'make_queue/reservation_edit.html'
 
     def get_error_message(self, form, reservation):
@@ -38,7 +42,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
                 'Reservations can only be made {num_days} days ahead of time',
                 num_days
             ).format(num_days=num_days)
-        if self.request.user.has_perm("make_queue.can_create_event_reservation") and form.cleaned_data["event"]:
+        if self.request.user.has_perm('make_queue.can_create_event_reservation') and form.cleaned_data["event"]:
             return _("The time slot or event is no longer available")
         if reservation.check_machine_out_of_order():
             return _("The machine is out of order")
@@ -67,7 +71,9 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
                  the reservation cannot be validated
         """
         if not reservation.validate():
-            context_data = self.get_context_data(reservation=reservation)
+            # Hack to "simulate" `EditReservationView`
+            self.reservation = reservation
+            context_data = self.get_context_data(reservation_pk=reservation.pk)
             context_data["error"] = self.get_error_message(form, reservation)
             return render(self.request, self.template_name, context_data)
 
@@ -97,8 +103,9 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
         }
 
         # If we are given a reservation, populate the information relevant to that reservation
-        if "reservation" in kwargs:
-            reservation = kwargs["reservation"]
+        if 'reservation_pk' in kwargs:
+            # noinspection PyUnresolvedReferences
+            reservation = self.reservation  # defined in `EditReservationView`
             context_data["start_time"] = reservation.start_time
             context_data["reservation_pk"] = reservation.pk
             context_data["end_time"] = reservation.end_time
@@ -110,7 +117,13 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
             context_data["can_change_start_time"] = reservation.can_change(self.request.user)
         # Otherwise populate with default information given to the view
         else:
-            context_data["selected_machine"] = kwargs["machine"]
+            if hasattr(self, 'machine'):
+                # Set in `CreateReservationView`
+                selected_machine = self.machine
+            else:
+                # `machine_pk` is only set in `test_get_context_data_non_reservation()` 🙃🔥
+                selected_machine = get_object_or_404(Machine, pk=kwargs['machine_pk'])
+            context_data["selected_machine"] = selected_machine
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
             context_data["can_change_start_time"] = True
@@ -125,7 +138,7 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
         :param request: The HTTP request
         :return: HTTP response
         """
-        if request.method == "POST":
+        if request.method == 'POST':
             return self.handle_post(request, **kwargs)
         return super().dispatch(request, *args, **kwargs)
 
@@ -144,12 +157,27 @@ class ReservationCreateOrChangeView(TemplateView, ABC):
         return self.get(request, **kwargs)
 
 
-class CreateReservationView(PermissionRequiredMixin, ReservationCreateOrChangeView):
+# noinspection PyUnresolvedReferences
+class MachineRelatedViewMixin:
+    """
+    Note: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
+    which will be used to query the database for the machine that the object(s) are related to.
+    If found, the machine will be assigned to a ``machine`` field on the view, otherwise, a 404 error will be raised.
+    """
+    machine: Machine
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        machine_pk = self.kwargs['pk']
+        self.machine = get_object_or_404(Machine, pk=machine_pk)
+
+
+class CreateReservationView(PermissionRequiredMixin, MachineRelatedViewMixin, CreateOrEditReservationView):
     """View for creating a new reservation."""
     new_reservation = True
 
     def has_permission(self):
-        return self.kwargs['machine'].can_user_use(self.request.user)
+        return self.machine.can_user_use(self.request.user)
 
     def form_valid(self, form, **kwargs):
         """
@@ -195,15 +223,22 @@ class DeleteReservationView(PermissionRequiredMixin, PreventGetRequestsMixin, De
                     message = _("Cannot delete reservation when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=400)
+            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.delete()
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
-class ChangeReservationView(ReservationCreateOrChangeView):
+class EditReservationView(CreateOrEditReservationView):
     """View for changing a reservation (Cannot be UpdateView due to the abstract inheritance of reservations)."""
     new_reservation = False
+
+    reservation: Reservation
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        reservation_pk = self.kwargs['reservation_pk']
+        self.reservation = get_object_or_404(Reservation, pk=reservation_pk)
 
     def dispatch(self, request, *args, **kwargs):
         """
@@ -211,12 +246,12 @@ class ChangeReservationView(ReservationCreateOrChangeView):
 
         :param request: The HTTP request
         """
+        reservation = self.reservation
         # User must be able to change the given reservation
-        reservation = kwargs["reservation"]
         if reservation.can_change(request.user) or reservation.can_change_end_time(request.user):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
     def form_valid(self, form, **kwargs):
         """
@@ -225,14 +260,14 @@ class ChangeReservationView(ReservationCreateOrChangeView):
         :param form: The valid form
         :return: HTTP Response
         """
-        reservation = kwargs["reservation"]
+        reservation = self.reservation
         # The user is not allowed to change the machine for a reservation
         if reservation.machine != form.cleaned_data["machine"]:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
         # If the reservation has begun, the user is not allowed to change the start time
         if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
-            return redirect("my_reservations")
+            return redirect('my_reservations_list')
 
         reservation.comment = form.cleaned_data["comment"]
 
@@ -265,14 +300,27 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
                 message = _("Cannot mark reservation as finished when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=400)
+            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.end_time = timezone.localtime()
         reservation.save()
-        return HttpResponse(status=200)
+        return HttpResponse(status=HTTPStatus.OK)
 
 
-class FindFreeSlot(FormView):
+class MyReservationsListView(LoginRequiredMixin, ListView):
+    """View for seeing the user's reservations."""
+    model = Reservation
+    template_name = 'make_queue/reservation_list.html'
+    context_object_name = 'reservations'
+
+    def get_queryset(self):
+        filter_query = Q(user=self.request.user)
+        if not self.request.user.has_perm('make_queue.can_create_event_reservation'):
+            filter_query &= Q(event=None, special=False)
+        return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
+
+
+class FindFreeSlotView(LoginRequiredMixin, FormView):
     """
     View to find free time slots for reservations.
     """

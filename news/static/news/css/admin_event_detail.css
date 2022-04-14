@@ -7,3 +7,7 @@
     clear: both;
     overflow: auto;
 }
+
+.toggle.icon {
+    cursor: pointer;
+}

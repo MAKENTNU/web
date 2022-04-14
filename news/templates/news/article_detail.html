@@ -1,68 +1,45 @@
-{% extends 'web/base.html' %}
+{% extends 'news/news_base_detail.html' %}
 {% load static %}
-{% load thumbnail %}
 {% load i18n %}
 {% load datetime_tags %}
+{% load uri_tags %}
 
 
-{% block title %}{{ article.title }}{% endblock title %}
+{% block og_type %}article{% endblock og_type %}
+{% block open_graph_meta %}
+    {{ block.super }}
+    <meta property="article:published_time" content="{{ news_obj.publication_time|iso_datetime }}"/>
+{% endblock open_graph_meta %}
 
-{% block og_title %}{{ article.title }}{% endblock og_title %}
-{% block og_image %}{{ article.image.url }}{% endblock og_image %}
-{% block og_description %}{{ article.clickbait }}{% endblock og_description %}
-{% block description %}{{ article.clickbait }}{% endblock description %}
-
-{% block head %}
+{% block extra_head %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'news/css/article_detail.css' %}"/>
-{% endblock head %}
 
-{% block body %}
-    <div class="article {% block extra_classes %}{% endblock extra_classes %}">
-        <div id="sticky" class="ui text container basic segment">
-            <img {% thumbnail article.image "800" crop="center" as image_thumb %}
-                src="{{ image_thumb.url }}"
-            {% empty %}
-                src="{{ article.image.url }}"
-            {% endthumbnail %}
-                {% if article.contain %}style="object-fit: contain; height: auto;"{% endif %}
-            />
+    {% block google_seo_json %}
+        <script type="application/ld+json">
+            {
+                "@context": "https://schema.org",
+                "@type": "NewsArticle",
+                "headline": "{{ news_obj.title }}",
+                "image": [
+                    "{% get_absolute_uri_for_path request news_obj.image.url %}"
+                 ],
+                "datePublished": "{{ news_obj.publication_time|iso_datetime }}"
+            }
+        </script>
+    {% endblock google_seo_json %}
+{% endblock extra_head %}
 
-            {% block rail %}
-            {% endblock rail %}
-
-
-            {% block admin_page %}
-                {% if perms.news.change_article %}
-                    <div>
-                        <a class="ui make-bg-yellow button" href="{% url "admin-articles" %}">
-                            <i class="ui sticky note icon"></i>{% trans "Admin page" %}
-                        </a>
-                    </div>
-                {% endif %}
-            {% endblock admin_page %}
-            <h1>
-                {{ article.title }}
-                {% if article.hidden %}<i class="ui eye slash black icon"></i>{% endif %}
-                <span class="publication-time">{{ article.publication_time|short_date }}</span>
-
-            </h1>
-            <div>
-                {% if article.content == "<p>x</p>" %}
-                    <p>{{ article.clickbait }}</p>
-                {% else %}
-                    {% autoescape off %}
-                        {{ article.content }}
-                    {% endautoescape %}
-                {% endif %}
-            </div>
-            <br><br>
-            {% block event_accordion %}
-            {% endblock event_accordion %}
+{% block admin_page %}
+    {% if perms.news.change_article %}
+        <div>
+            <a class="ui make-bg-yellow button" href="{% url 'article_edit' news_obj.pk %}">
+                <i class="edit icon"></i>{% trans "Edit" %}
+            </a>
         </div>
-    </div>
-    <script>
-        $(".ui.sticky").sticky({
-            context: '#sticky',
-        });
-    </script>
-{% endblock body %}
+    {% endif %}
+{% endblock admin_page %}
+
+{% block title_extra %}
+    <span class="publication-time">{{ news_obj.publication_time|short_date }}</span>
+{% endblock title_extra %}

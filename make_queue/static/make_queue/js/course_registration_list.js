@@ -156,7 +156,7 @@ $("th").click(function () {
     sort();
 
     const sortDirection = state.sortOrder ? "down" : "up";
-    $(this).append($(`<i class="ui icon sort ${sortDirection}"></i>`));
+    $(this).append($(`<i class="sort ${sortDirection} icon"></i>`));
 });
 
 
@@ -291,7 +291,8 @@ function setupState() {
         $downloadUsersForm.find("#selected").val(selected);
     });
 
-    updateDisplay();
+    // Initial display refresh (`sort()` also calls `updateDisplay()`)
+    sort();
 }
 
 setupState();

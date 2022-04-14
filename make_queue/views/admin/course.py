@@ -15,7 +15,7 @@ from ...models.course import Printer3DCourse
 
 class Printer3DCourseListView(ListView):
     model = Printer3DCourse
-    queryset = Printer3DCourse.objects.order_by('name')
+    queryset = Printer3DCourse.objects.select_related('user').order_by('name')
     template_name = 'make_queue/course/course_registration_list.html'
     context_object_name = 'registrations'
     extra_context = {
@@ -23,7 +23,7 @@ class Printer3DCourseListView(ListView):
     }
 
 
-class CreateRegistrationView(PermissionRequiredMixin, CreateView):
+class CreateCourseRegistrationView(PermissionRequiredMixin, CreateView):
     is_next = False
     permission_required = ('make_queue.add_printer3dcourse',)
     model = Printer3DCourse
@@ -38,18 +38,18 @@ class CreateRegistrationView(PermissionRequiredMixin, CreateView):
         return context_data
 
 
-class EditRegistrationView(PermissionRequiredMixin, UpdateView):
+class EditCourseRegistrationView(PermissionRequiredMixin, UpdateView):
     permission_required = ('make_queue.change_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = 'make_queue/course/course_registration_edit.html'
-    success_url = reverse_lazy('course_panel')
+    success_url = reverse_lazy('course_registration_list')
 
 
-class DeleteRegistrationView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class DeleteCourseRegistrationView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_printer3dcourse',)
     model = Printer3DCourse
-    success_url = reverse_lazy('course_panel')
+    success_url = reverse_lazy('course_registration_list')
 
 
 class BulkStatusUpdate(View):
@@ -62,7 +62,7 @@ class BulkStatusUpdate(View):
         registrations = list(map(int, request.POST.getlist('users')))
         Printer3DCourse.objects.filter(pk__in=registrations).update(status=status)
 
-        return redirect('course_panel')
+        return redirect('course_registration_list')
 
 
 class CourseXLSXView(View):
@@ -79,6 +79,7 @@ class CourseXLSXView(View):
             course_registrations = Printer3DCourse.objects.filter(
                 Q(username__icontains=search_string) | Q(name__icontains=search_string),
                 status__icontains=status_filter)
+        course_registrations = course_registrations.select_related('user')
 
         # Use an in-memory output file, to avoid having to clean up the disk
         output_file = io.BytesIO()

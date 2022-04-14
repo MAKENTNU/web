@@ -7,10 +7,11 @@ from django.utils import timezone
 
 from users.models import User
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation
 
 
-class DeleteReservationViewTestCase(TestCase):
+class TestDeleteReservationView(TestCase):
 
     def setUp(self):
         password = "weak_pass"
@@ -49,7 +50,7 @@ class DeleteReservationViewTestCase(TestCase):
 
     def test_delete_other_users_reservation_fails(self):
         response = self.client2.delete(reverse('delete_reservation', args=[self.reservation.pk]))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
     def test_delete_only_one_among_multiple_reservations_succeeds(self):
@@ -70,7 +71,7 @@ class DeleteReservationViewTestCase(TestCase):
         now = timezone.localtime()
         Reservation.objects.filter(pk=self.reservation.pk).update(start_time=now)
         response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
-        self.assertGreaterEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
         # Setting the start time to the future should allow deletion

@@ -1,59 +1,58 @@
 {% extends 'web/base.html' %}
-{% load static %}
 {% load i18n %}
 
-
-{% block head %}
-    <link rel="stylesheet" href="{% static 'news/css/admin_list.css' %}"/>
-{% endblock head %}
 
 {% block body %}
     <div class="ui container">
         <h1 class="ui text-centered">
             {% trans "Articles" %}
-            <a href="{% url 'article-create' %}">
-                <i class="ui green add icon"></i>
+            <a href="{% url 'article_create' %}">
+                <i class="green add icon"></i>
             </a>
         </h1>
 
         <div class="ui three doubling stackable cards">
             {% for article in articles %}
                 <div class="ui card">
-                    <a class="image" href="{% url "article" article.pk %}">
-                        <img src="{{ article.image.url }}" alt="{% trans "Article image" %}"/>
+                    <a class="image" href="{% url 'article_detail' article.pk %}">
+                        <img src="{{ article.image.url }}"
+                             alt="{% blocktrans trimmed with title=article.title description=article.image_description %}
+                                 View the article “{{ title }}”; image description: {{ description }}
+                             {% endblocktrans %}"
+                        />
                     </a>
                     <div class="content">
-                        <a class="header" href="{% url "article" article.pk %}">{{ article.title }}</a>
+                        <a class="header" href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
                         <div class="meta">
                             {% if article.featured %}
                                 <div class="ui green mini label">
-                                    {% trans "Featured" %}
+                                    {% trans "featured"|capfirst %}
                                 </div>
                             {% endif %}
 
                             {% if article.hidden %}
                                 <div class="ui red mini label">
-                                    {% trans "Hidden" %}
+                                    {% trans "hidden"|capfirst %}
                                 </div>
                             {% endif %}
 
                             {% if article.private %}
                                 <div class="ui make-bg-yellow mini label">
-                                    {% trans "Internal" %}
+                                    {% trans "internal"|capfirst %}
                                 </div>
                             {% endif %}
                         </div>
                         <div class="description">{{ article.clickbait }}</div>
                     </div>
                     <div class="ui two bottom attached buttons">
-                        <a class="ui make-bg-yellow button" href="{% url "article-edit" article.pk %}">
-                            <i class="ui edit icon"></i>{% trans "Edit" %}
+                        <a class="ui make-bg-yellow button" href="{% url 'article_edit' article.pk %}">
+                            <i class="edit icon"></i>{% trans "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
                             <a class="delete-modal-button ui red button"
-                               data-url="{% url "article-delete" article.pk %}"
+                               data-url="{% url 'article_delete' article.pk %}"
                                data-obj-name="{{ article }}">
-                                <i class="ui trash icon"></i>{% trans "Delete" %}
+                                <i class="trash icon"></i>{% trans "Delete" %}
                             </a>
                         {% endif %}
                     </div>

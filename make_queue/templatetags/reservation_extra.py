@@ -1,37 +1,37 @@
 from datetime import date, datetime
 
 from django import template
+from django.templatetags.static import static
 from django.urls import reverse
 from django.utils import timezone
-from django.utils.formats import time_format
 from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from util.locale_utils import date_to_local, get_day_name
-from ..models.models import Machine, Quota, Reservation, ReservationRule
+from util.locale_utils import date_to_local
+from ..models.machine import Machine
+from ..models.reservation import Quota, Reservation
 
 register = template.Library()
 
 
 @register.simple_tag
 def calendar_url_reservation(reservation: Reservation):
-    return reverse('reservation_calendar',
-                   kwargs={'year': reservation.start_time.year, 'week': reservation.start_time.isocalendar()[1],
-                           'machine': reservation.machine})
+    return reverse('machine_detail',
+                   kwargs={'year': reservation.start_time.year, 'week': reservation.start_time.isocalendar()[1], 'pk': reservation.machine.pk})
 
 
 @register.simple_tag
 def current_calendar_url(machine: Machine):
     current_time = timezone.localtime()
-    return reverse('reservation_calendar',
-                   kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'machine': machine})
+    return reverse('machine_detail',
+                   kwargs={'year': current_time.year, 'week': current_time.isocalendar()[1], 'pk': machine.pk})
 
 
 @register.simple_tag
 def calendar_url_timestamp(machine: Machine, time: datetime):
-    return reverse("reservation_calendar",
-                   kwargs={"year": time.year, "week": time.isocalendar()[1], "machine": machine})
+    return reverse('machine_detail',
+                   kwargs={'year': time.year, 'week': time.isocalendar()[1], 'pk': machine.pk})
 
 
 @register.simple_tag
@@ -109,18 +109,6 @@ def invert(expression):
 
 
 @register.simple_tag
-def rule_period_start_text(period: ReservationRule.Period, locale):
-    start_day_name = get_day_name(int(period.start_time // 1), locale)
-    return f"{start_day_name} {time_format(period.rule.start_time)}"
-
-
-@register.simple_tag
-def rule_period_end_text(period: ReservationRule.Period, locale):
-    end_day_name = get_day_name(int(period.end_time // 1) % 7, locale)
-    return f"{end_day_name} {time_format(period.rule.end_time)}"
-
-
-@register.simple_tag
 def can_change_reservation(reservation: Reservation, user: User):
     return reservation.can_change(user) or reservation.can_change_end_time(user)
 
@@ -143,3 +131,12 @@ def can_mark_reservation_finished(reservation: Reservation):
 @register.simple_tag
 def is_future_reservation(reservation: Reservation):
     return reservation.end_time >= timezone.now()
+
+
+@register.simple_tag
+def get_stream_image_path(status: Machine.Status) -> str:
+    status_image_dict = {
+        Machine.Status.MAINTENANCE: static('make_queue/img/maintenance.svg'),
+        Machine.Status.OUT_OF_ORDER: static('make_queue/img/out_of_order.svg'),
+    }
+    return status_image_dict.get(status, static('make_queue/img/no_stream.svg'))

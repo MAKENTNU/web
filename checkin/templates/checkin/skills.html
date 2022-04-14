@@ -5,9 +5,9 @@
 {% load thumbnail %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'checkin/css/checkin.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <div class="ui text container">
@@ -24,7 +24,7 @@
                             {% empty %}
                                 src="{{ skill.image.url }}"
                             {% endthumbnail %}
-                                alt="{% blocktrans trimmed with skill=skill|locale_title:request.LANGUAGE_CODE %}Illustration image of {{ skill }}{% endblocktrans %}"
+                                alt="{% blocktrans trimmed with skill=skill|locale_title:CURRENT_LANGUAGE_CODE %}Illustration image of {{ skill }}{% endblocktrans %}"
                             />
                         {% else %}
                             <img src="{% static 'checkin/img/placeholder_skill.svg' %}"
@@ -34,7 +34,7 @@
 
                     </div>
                     <div class="content">
-                        <div class="skill-text">{{ skill|locale_title:request.LANGUAGE_CODE }}</div>
+                        <div class="skill-text">{{ skill|locale_title:CURRENT_LANGUAGE_CODE }}</div>
                         <div class="ui star rating skill-lvl" data-rating="{{ leveltime.0 }}" data-max-rating="3"></div>
                         <div class="date">{{ leveltime.1|timesince }}</div>
                     </div>
@@ -44,9 +44,9 @@
     </div>
 {% endblock body %}
 
-{% block scripts %}
+{% block extra_scripts %}
     <script>
         $(".ui.rating").rating();
         $(".rating.skill-lvl").rating('disable');
     </script>
-{% endblock scripts %}
+{% endblock extra_scripts %}

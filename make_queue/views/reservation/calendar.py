@@ -1,29 +1,32 @@
-from django.views.generic import TemplateView
+from django.views.generic import DetailView
 
 from util.locale_utils import year_and_week_to_monday
-from ...models.models import Machine, Quota
+from ...models.machine import Machine
+from ...models.reservation import Quota
 from ...templatetags.reservation_extra import reservation_denied_message
 
 
-class ReservationCalendarView(TemplateView):
+class MachineDetailView(DetailView):
     """Main view for showing the reservation calendar for a machine."""
+    model = Machine
     template_name = 'make_queue/machine_detail.html'
+    context_object_name = 'machine'
 
-    def get_context_data(self, year, week, machine):
+    def get_context_data(self, **kwargs):
         """
         Create the context required for the controls and the information to be displayed.
 
-        :param year: The year to show the calendar for
-        :param week: The week to show the calendar for
-        :param machine: The machine object to show the calendar for
         :return: context required to show the reservation calendar with controls
         """
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
+        year = self.kwargs['year']
+        week = self.kwargs['week']
+        machine = self.object
+
         context.update({
             'reservation_denied_message': reservation_denied_message(self.request.user, machine),
             'can_ignore_rules': False,
             'other_machines': Machine.objects.exclude(pk=machine.pk).filter(machine_type=machine.machine_type).default_order_by(),
-            'machine': machine,
             'year': year,
             'week': week,
             'date': year_and_week_to_monday(year, week),

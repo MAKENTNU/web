@@ -7,19 +7,19 @@
 {% endblock form_title %}
 
 {% block submit_button %}
-    {% trans "Submit" %}
+    {% trans "Add" %}
 {% endblock submit_button %}
 
 {% block messages %}
     {{ block.super }}
     {% if is_next %}
         <div class="ui positive message">
-            <i class="ui close icon"></i>
+            <i class="close icon"></i>
             {% trans "Registration of course participation successful" %}
         </div>
     {% endif %}
 {% endblock messages %}
 
 {% block form_action %}
-    {% url "create_course_registration" %}
+    {% url 'create_course_registration' %}
 {% endblock form_action %}

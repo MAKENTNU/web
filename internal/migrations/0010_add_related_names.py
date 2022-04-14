@@ -17,16 +17,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='member',
             name='committees',
-            field=models.ManyToManyField(blank=True, related_name='members', to='groups.Committee', verbose_name='Committees'),
+            field=models.ManyToManyField(blank=True, related_name='members', to='groups.Committee', verbose_name='committees'),
         ),
         migrations.AlterField(
             model_name='member',
             name='user',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='member', to=settings.AUTH_USER_MODEL, verbose_name='User'),
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='member', to=settings.AUTH_USER_MODEL, verbose_name='user'),
         ),
         migrations.AlterField(
             model_name='systemaccess',
             name='member',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='system_accesses', to='internal.member', verbose_name='Member'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='system_accesses', to='internal.member', verbose_name='member'),
         ),
     ]

@@ -1,0 +1,11 @@
+{% extends 'web/edit_form.html' %}
+{% load i18n %}
+
+
+{% block field_label_text %}
+    {% if field.name == 'image' %}
+        {{ field.label }} <i style="font-weight: normal;">({% trans "Preferred format is" %} 16:10)</i>
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_label_text %}

@@ -15,9 +15,9 @@
         <div class="ui relaxed divided list">
             {% for content in page.content_history.all reversed %}
                 {% if content == page.current_content %}
-                    {% url "page" pk=page as content_url %}
+                    {% url 'page_detail' page.pk as content_url %}
                 {% else %}
-                    {% url "old-page-content" pk=page content=content as content_url %}
+                    {% url 'old_page_content' page.pk content.pk as content_url %}
                 {% endif %}
                 <div class="item">
                     {% if forloop.last %}
@@ -46,7 +46,7 @@
                             </i>
                         </div>
                         <div class="description">
-                            {{ content.changed|long_datetime }}
+                            {{ content.last_modified|long_datetime }}
                         </div>
                     </div>
                 </div>

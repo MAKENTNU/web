@@ -23,11 +23,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='eventticket',
             name='_email',
-            field=models.EmailField(db_column='email', max_length=254, verbose_name='Email'),
+            field=models.EmailField(db_column='email', max_length=254, verbose_name='email'),
         ),
         migrations.AlterField(
             model_name='eventticket',
             name='_name',
-            field=models.CharField(db_column='name', max_length=128, verbose_name='Name'),
+            field=models.CharField(db_column='name', max_length=128, verbose_name='name'),
         ),
     ]

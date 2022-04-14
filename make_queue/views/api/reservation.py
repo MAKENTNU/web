@@ -1,28 +1,39 @@
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
+from django.views.generic import TemplateView
 
-from ...models.models import Machine, Quota
+from ..reservation.reservation import MachineRelatedViewMixin
+from ...models.reservation import Quota
 
 
-def get_machine_data(request, machine: Machine, reservation=None):
-    return JsonResponse({
-        "reservations": [
-            {"start_time": c_reservation.start_time, "end_time": c_reservation.end_time}
-            for c_reservation in machine.reservations.filter(end_time__gte=timezone.now())
-            if c_reservation != reservation
-        ],
-        "canIgnoreRules": any(quota.ignore_rules and quota.can_create_more_reservations(request.user) for quota in
-                              Quota.get_user_quotas(request.user, machine.machine_type)),
-        "rules": [
-            {
-                "periods": [
-                    [
-                        day + rule.start_time.hour / 24 + rule.start_time.minute / (24 * 60),
-                        (day + rule.days_changed + rule.end_time.hour / 24 + rule.end_time.minute / (24 * 60)) % 7
-                    ]
-                    for day, _ in enumerate(bin(rule.start_days)[2:][::-1]) if _ == "1"
-                ],
-                "max_hours": rule.max_hours,
-                "max_hours_crossed": rule.max_inside_border_crossed,
-            } for rule in machine.machine_type.reservation_rules.all()],
-    })
+class APIMachineDataView(MachineRelatedViewMixin, TemplateView):
+
+    def get_context_data(self, **kwargs):
+        if 'reservation_pk' in kwargs:
+            reservation_pk = kwargs['reservation_pk']
+            # Check that it exists on the machine
+            _reservation = get_object_or_404(self.machine.reservations, pk=reservation_pk)
+        else:
+            reservation_pk = None
+        return {
+            'reservations': [
+                {
+                    'start_time': r.start_time,
+                    'end_time': r.end_time,
+                } for r in self.machine.reservations.filter(end_time__gte=timezone.now()).exclude(pk=reservation_pk)
+            ],
+            'canIgnoreRules': any(
+                quota.ignore_rules and quota.can_create_more_reservations(self.request.user)
+                for quota in Quota.get_user_quotas(self.request.user, self.machine.machine_type)
+            ),
+            'rules': [
+                {
+                    'periods': rule.get_exact_start_and_end_times_list(iso=False, wrap_using_modulo=True),
+                    'max_hours': rule.max_hours,
+                    'max_hours_crossed': rule.max_inside_border_crossed,
+                } for rule in self.machine.machine_type.reservation_rules.all()],
+        }
+
+    def render_to_response(self, context, **response_kwargs):
+        return JsonResponse(context)

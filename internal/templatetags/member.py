@@ -1,4 +1,5 @@
 from django import template
+from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
 register = template.Library()
@@ -14,16 +15,17 @@ def get_membership_statuses(member):
     """
     statuses = []
     if member.quit:
-        statuses += [(_("Quit"), "red")]
+        # `capfirst()` to avoid duplicate translation differing only in case
+        statuses += [(capfirst(_("quit")), "red")]
     elif member.retired:
-        statuses += [(_("Retired"), "blue")]
+        statuses += [(capfirst(_("retired")), "blue")]
     elif not member.active:
-        statuses += [(_("Inactive"), "grey")]
+        statuses += [(capfirst(_("inactive")), "grey")]
     else:
-        statuses += [(_("Active"), "green")]
+        statuses += [(capfirst(_("active")), "green")]
 
     if member.honorary:
-        statuses += [(_("Honorary"), "make-bg-yellow")]
+        statuses += [(capfirst(_("honorary")), "make-bg-yellow")]
 
     return statuses
 
@@ -41,7 +43,7 @@ def get_system_accesses(member, user):
         access.get_name_display(),
         access.value,
         [_("No"), _("Yes")][access.value],
-        access.change_url if member.user == user or user.has_perm("internal.change_systemaccess") else "",
+        access.change_url if member.user == user or user.has_perm('internal.change_systemaccess') else "",
     ) for access in member.system_accesses.all()]
 
 

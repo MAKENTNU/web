@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 from typing import Any, Callable
 
 from django import template
@@ -12,6 +12,16 @@ from util.locale_utils import (
 )
 
 register = template.Library()
+
+
+@register.simple_tag
+def formatted_localtime(*, shift_hours=0):
+    return iso_datetime_format(timezone.localtime() + timedelta(hours=shift_hours))
+
+
+@register.simple_tag
+def localdate():
+    return str(timezone.localdate())
 
 
 def _format_helper(value, format_func: Callable[[Any], str]):

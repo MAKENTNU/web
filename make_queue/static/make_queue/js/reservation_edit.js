@@ -285,10 +285,6 @@ $("form").submit(function (event) {
     $("#end-time input").first().val(formatDate($endTimeField.calendar("get date")));
 });
 
-$(".message .close").on('click', function () {
-    $(this).closest('.message').transition('fade');
-});
-
 function timeSelectionPopupHTML() {
     /**
      * Creates a valid popup for the time selection utility in the reservation calendar

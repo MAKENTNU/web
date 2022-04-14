@@ -12,7 +12,7 @@
 {% block body %}
 
     <div class="ui container">
-        <form class="ui form" method="POST">
+        <form class="dont-prevent-leaving ui form" method="POST">
             {% csrf_token %}
             {{ form.non_field_errors }}
             <div class="ui two fields">
@@ -27,9 +27,9 @@
             </div>
 
             <button class="ui right floated make-bg-yellow button">
-                {% trans "Log in" %}
+                {% trans "log in"|capfirst %}
             </button>
-            <a class="ui right floated red button" href="{% url "front-page" %}">
+            <a class="ui right floated red button" href="{% url 'front_page' %}">
                 {% trans "Cancel" context "abort action" %}
             </a>
         </form>

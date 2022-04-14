@@ -2,7 +2,6 @@ from abc import ABC
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
-from django.contrib.auth.models import Permission
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 from django.utils import timezone
@@ -12,10 +11,14 @@ from news.models import Event, TimePlace
 from users.models import User
 from util.locale_utils import parse_datetime_localized
 from ...models.course import Printer3DCourse
-from ...models.models import Machine, MachineType, Quota, Reservation, ReservationRule
+from ...models.machine import Machine, MachineType
+from ...models.reservation import Quota, Reservation, ReservationRule
 
 
-class GeneralReservationTestCase(TestCase, ABC):
+Day = ReservationRule.Day
+
+
+class ReservationTestBase(TestCase, ABC):
 
     def init_objs(self, machine_type: MachineType):
         self.machine_type = machine_type
@@ -24,18 +27,20 @@ class GeneralReservationTestCase(TestCase, ABC):
         self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
         self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
                                                machine_type=self.machine_type)
-        self.course_registration = Printer3DCourse.objects.create(user=self.user, username=self.user.username,
-                                                                  date=datetime.now().date(),
-                                                                  name=self.user.get_full_name())
+        self.course_registration = Printer3DCourse.objects.create(
+            user=self.user, username=self.user.username, date=datetime.now().date(), name=self.user.get_full_name(),
+        )
         self.max_time_reservation = 5
-        ReservationRule.objects.create(machine_type=self.machine_type, start_time=parse_time("00:00"), end_time=parse_time("23:59"),
-                                       days_changed=6, start_days=1, max_hours=self.max_time_reservation,
-                                       max_inside_border_crossed=self.max_time_reservation)
+        ReservationRule.objects.create(
+            machine_type=self.machine_type, start_time=parse_time("00:00"), days_changed=6, end_time=parse_time("23:59"),
+            start_days=[Day.MONDAY], max_hours=self.max_time_reservation, max_inside_border_crossed=self.max_time_reservation,
+        )
         self.event = Event.objects.create(title="TEST EVENT")
-        self.timeplace = TimePlace.objects.create(publication_time=timezone.now(),
-                                                  start_time=timezone.now() + timedelta(seconds=1),
-                                                  end_time=timezone.now() + timedelta(minutes=1),
-                                                  event=self.event)
+        self.timeplace = TimePlace.objects.create(
+            event=self.event, publication_time=timezone.now(),
+            start_time=timezone.now() + timedelta(seconds=1),
+            end_time=timezone.now() + timedelta(minutes=1),
+        )
 
     def check_reservation_invalid(self, reservation, error_message):
         self.assertFalse(reservation.validate(), error_message)
@@ -60,7 +65,7 @@ class GeneralReservationTestCase(TestCase, ABC):
                            end_time=timezone.now() + relative_end_time, special=special, special_text=special_text)
 
 
-class GeneralReservationTestCases(GeneralReservationTestCase):
+class TestReservation(ReservationTestBase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
@@ -81,7 +86,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         Reservation.RESERVATION_FUTURE_LIMIT_DAYS = self.reservation_future_limit_days
 
     def give_user_event_permission(self):
-        self.user.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        self.user.add_perms('make_queue.can_create_event_reservation')
 
     def test_can_create_reservation(self):
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
@@ -271,7 +276,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
 
     def test_can_user_with_event_reservation_change_other_user_non_event_reservation(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.add_perms('make_queue.can_create_event_reservation')
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
@@ -281,7 +286,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     def test_can_user_with_event_reservation_change_other_user_event_reservation(self):
         self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.add_perms('make_queue.can_create_event_reservation')
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
@@ -291,7 +296,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
     def test_can_user_with_event_reservation_change_other_user_special_reservation(self):
         self.give_user_event_permission()
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-        user2.user_permissions.add(Permission.objects.get(name="Can create event reservation"))
+        user2.add_perms('make_queue.can_create_event_reservation')
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
@@ -345,7 +350,7 @@ class GeneralReservationTestCases(GeneralReservationTestCase):
         self.reset_reservation_future_limit_days()
 
 
-class AdvancedMachineReservationTestCases(GeneralReservationTestCase):
+class TestAdvancedMachineReservation(ReservationTestBase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default

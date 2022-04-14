@@ -1,0 +1,4 @@
+Contact: mailto:security@makentnu.no
+Preferred-Languages: no, en
+Hiring: https://makentnu.no/apply/
+Expires: 2024-01-01T00:00:00+01:00

@@ -3,13 +3,13 @@
 {% load i18n %}
 
 
-{% block head %}
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'groups/css/committee_admin.css' %}"/>
-{% endblock head %}
+{% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui text-centered make-col-yellow header">
-        {% trans "Committees" %}
+        {% trans "committees"|capfirst %}
     </h1>
     <div class="ui text container">
         {% if committees %}
@@ -41,7 +41,7 @@
                             </div>
                         </div>
                         <a class="make-col-blue edit-button" href="{% url 'committee_edit' committee.pk %}">
-                            <i class="ui edit icon"></i>
+                            <i class="edit icon"></i>
                         </a>
 
                     </div>
