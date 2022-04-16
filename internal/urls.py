@@ -50,6 +50,7 @@ quote_urlpatterns = [
 
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name='home'), name='home'),
+    path("history", views.HistoryView.as_view(url_name="history"), name="history"),
     path("contentbox/", include(internal_contentbox_urlpatterns)),
 
     path("", decorator_include(

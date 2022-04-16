@@ -304,3 +304,12 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
                 self.request.user.has_perm('internal.delete_quote')
                 or self.request.user == self.object.author
         )
+
+
+class HistoryView(DisplayContentBoxView):
+    template_name = 'internal/history.html'
+    extra_context = {
+        'base_template': 'internal/base.html',
+    }
+
+    change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)

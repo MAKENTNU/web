@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-01 19:35+0200\n"
+"POT-Creation-Date: 2022-04-16 15:25+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -199,7 +199,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile.html:97 docs/views.py:98
-#: internal/views.py:76
+#: internal/views.py:77
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:19
@@ -327,7 +327,7 @@ msgid "Extra permissions that are required for editing the content box."
 msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 
 #: contentbox/models.py:27 docs/models.py:57 faq/models.py:42
-#: groups/models.py:38 groups/models.py:107 internal/models.py:60
+#: groups/models.py:38 groups/models.py:109 internal/models.py:60
 #: internal/models.py:201 internal/models.py:254
 #: internal/templates/internal/secret_list.html:44
 #: make_queue/models/course.py:31 make_queue/models/machine.py:142
@@ -587,25 +587,25 @@ msgstr "foreldre"
 msgid "own permissions"
 msgstr "egne rettigheter"
 
-#: groups/models.py:100
+#: groups/models.py:102
 msgid "group"
 msgstr "gruppe"
 
-#: groups/models.py:102 news/models.py:40
+#: groups/models.py:104 news/models.py:40
 msgid "clickbait"
 msgstr "lokketekst"
 
-#: groups/models.py:103 internal/models.py:247 makerspace/models.py:23
+#: groups/models.py:105 internal/models.py:247 makerspace/models.py:23
 msgid "description"
 msgstr "beskrivelse"
 
-#: groups/models.py:104 internal/models.py:189 news/admin.py:310
+#: groups/models.py:106 internal/models.py:189 news/admin.py:310
 #: news/templates/admin/news/event/change_form_ticket_table.html:15
 #: users/admin.py:36
 msgid "email"
 msgstr "e-post"
 
-#: groups/models.py:106 makerspace/admin.py:17 makerspace/models.py:25
+#: groups/models.py:108 makerspace/admin.py:17 makerspace/models.py:25
 #: news/admin.py:40 news/models.py:42
 msgid "image"
 msgstr "bilde"
@@ -841,11 +841,19 @@ msgstr "Personen som blir sitert."
 msgid "context"
 msgstr "kontekst"
 
-#: internal/models.py:272
+#: internal/models.py:268
+#: make_queue/templates/make_queue/course/course_registration_list.html:94
+#: news/templates/news/event_list_contents.html:26
+#: web/templates/web/forms/widgets/semantic_date.html:9
+#: web/templates/web/forms/widgets/semantic_datetime.html:9
+msgid "date"
+msgstr "dato"
+
+#: internal/models.py:273
 msgid "author"
 msgstr "forfatter"
 
-#: internal/models.py:276
+#: internal/models.py:280
 #, python-brace-format
 msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
@@ -868,27 +876,31 @@ msgid "Secrets"
 msgstr "Hemmeligheter"
 
 #: internal/templates/internal/header.html:20
-#: internal/templates/internal/quotes_list.html:9
+#: internal/templates/internal/quote_list.html:9
 msgid "Quotes"
 msgstr "Sitater"
 
-#: internal/templates/internal/header.html:27
+#: internal/templates/internal/header.html:24
+msgid "Make's history"
+msgstr "Historien til MAKE"
+
+#: internal/templates/internal/header.html:31
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:31
+#: internal/templates/internal/header.html:35
 #: web/templates/web/header.html:104
 msgid "Django admin"
 msgstr "Django-admin"
 
-#: internal/templates/internal/header.html:35
+#: internal/templates/internal/header.html:39
 #: web/templates/web/header.html:116
 msgid "Log out"
 msgstr "Logg ut"
 
 #: internal/templates/internal/member_list.html:10
-#: internal/templates/internal/member_list.html:20 internal/views.py:67
-#: internal/views.py:159
+#: internal/templates/internal/member_list.html:20 internal/views.py:68
+#: internal/views.py:160
 msgid "Member list"
 msgstr "Medlemsliste"
 
@@ -990,11 +1002,11 @@ msgstr "registrerte medlemmer"
 msgid "Basic information"
 msgstr "Grunnleggende informasjon"
 
-#: internal/templates/internal/member_list.html:285 internal/views.py:132
+#: internal/templates/internal/member_list.html:285 internal/views.py:133
 msgid "Membership information"
 msgstr "Medlemskapsinformasjon"
 
-#: internal/templates/internal/member_list.html:341 internal/views.py:126
+#: internal/templates/internal/member_list.html:341 internal/views.py:127
 msgid "Extra information"
 msgstr "Ekstrainformasjon"
 
@@ -1023,7 +1035,7 @@ msgstr "Sett medlem som pang"
 msgid "Set member as not retired"
 msgstr "Sett medlem som ikke pang"
 
-#: internal/templates/internal/quotes_list.html:36
+#: internal/templates/internal/quote_list.html:36
 #, python-format
 msgid "“%(quote)s”"
 msgstr "«%(quote)s»"
@@ -1056,54 +1068,54 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: internal/views.py:74
+#: internal/views.py:75
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
 
-#: internal/views.py:113
+#: internal/views.py:114
 #, python-brace-format
 msgid "Change Information for {full_name}"
 msgstr "Endre informasjonen til {full_name}"
 
-#: internal/views.py:160
+#: internal/views.py:161
 msgid "Set retired"
 msgstr "Sett panget"
 
-#: internal/views.py:166
+#: internal/views.py:167
 #, python-brace-format
 msgid "Set member {name} as retired"
 msgstr "Sett medlem {name} som pang"
 
-#: internal/views.py:178
+#: internal/views.py:179
 msgid "Set quit"
 msgstr "Sett sluttet"
 
-#: internal/views.py:184
+#: internal/views.py:185
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
 
-#: internal/views.py:236
+#: internal/views.py:237
 msgid "Secrets list"
 msgstr "Liste med hemmeligheter"
 
-#: internal/views.py:242
+#: internal/views.py:243
 msgid "New Secret"
 msgstr "Ny hemmelighet"
 
-#: internal/views.py:248
+#: internal/views.py:249
 msgid "Edit Secret"
 msgstr "Rediger hemmelighet"
 
-#: internal/views.py:271
+#: internal/views.py:272
 msgid "Quotes page"
 msgstr "Sitatside"
 
-#: internal/views.py:277
+#: internal/views.py:281
 msgid "New Quote"
 msgstr "Nytt sitat"
 
-#: internal/views.py:285
+#: internal/views.py:289
 msgid "Edit Quote"
 msgstr "Endre sitat"
 
@@ -1508,13 +1520,6 @@ msgstr "Nullstill valg av brukere"
 #: make_queue/templates/make_queue/course/course_registration_list.html:80
 msgid "Toggle non-selected users"
 msgstr "Veksle visning av ikke-valgte brukere"
-
-#: make_queue/templates/make_queue/course/course_registration_list.html:94
-#: news/templates/news/event_list_contents.html:26
-#: web/templates/web/forms/widgets/semantic_date.html:9
-#: web/templates/web/forms/widgets/semantic_datetime.html:9
-msgid "date"
-msgstr "dato"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:96
 msgid "advanced"
@@ -2656,7 +2661,7 @@ msgstr ""
 msgid "Save"
 msgstr "Lagre"
 
-#: web/multilingual/formfields.py:20
+#: web/multilingual/formfields.py:21
 msgid "One or more languages have no content."
 msgstr "Ett eller flere språk mangler innhold."
 
