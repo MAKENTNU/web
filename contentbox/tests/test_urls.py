@@ -36,6 +36,7 @@ class UrlTests(TestCase):
             (reverse('rules'), self.main_client, True),
 
             (reverse_internal('home'), self.internal_client, False),
+            (reverse_internal('history'), self.internal_client, False),
         )
 
     def get_content_box_from_url(self, url: str, client: Client) -> ContentBox:
