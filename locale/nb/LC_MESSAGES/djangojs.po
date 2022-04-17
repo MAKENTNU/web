@@ -182,3 +182,9 @@ msgstr "Ingen resultater"
 #: web/static/web/js/forms/widgets/mazemap_search.js:47
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"
+
+#: web/static/web/js/forms/widgets/multi_lingual_text_field.js:91
+msgid "The field is missing a value for %(num)s language"
+msgid_plural "The field is missing a value for %(num)s languages"
+msgstr[0] "Feltet er ikke fylt ut for %(num)s språk"
+msgstr[1] "Feltet er ikke fylt ut for %(num)s språk"
