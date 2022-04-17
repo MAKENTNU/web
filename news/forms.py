@@ -16,8 +16,8 @@ class TimePlaceForm(forms.ModelForm):
         widgets = {
             'event': forms.HiddenInput(),
             'place': MazeMapSearchInput(url_field='place_url'),
-            'start_time': SemanticDateTimeInput(attrs={'end_calendar': 'end_time'}),
-            'end_time': SemanticDateTimeInput(attrs={'start_calendar': 'start_time'}),
+            'start_time': SemanticDateTimeInput(end_calendar_name='end_time'),
+            'end_time': SemanticDateTimeInput(start_calendar_name='start_time'),
             'publication_time': SemanticDateTimeInput(),
         }
 

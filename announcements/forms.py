@@ -10,6 +10,6 @@ class AnnouncementForm(ModelForm):
         fields = '__all__'
         widgets = {
             'classification': SemanticChoiceInput(),
-            'display_from': SemanticDateTimeInput(attrs={'end_calendar': 'display_to'}),
-            'display_to': SemanticDateTimeInput(attrs={'start_calendar': 'display_from', 'default_blank': True}),
+            'display_from': SemanticDateTimeInput(end_calendar_name='display_to'),
+            'display_to': SemanticDateTimeInput(start_calendar_name='display_from', default_blank=True),
         }
