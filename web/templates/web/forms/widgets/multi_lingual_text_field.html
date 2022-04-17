@@ -81,17 +81,22 @@
             });
 
             $widgetForm.find("input[type=submit]").click(function (event) {
-                // The constant check for the color of the tabs will set classes which we can use
+                // `checkFilled()` sets the `language-not-filled` class
                 const $languagesNotFilled = $widget.find(".menu .item.language-not-filled");
 
-                // Change to the first non-filled tab
-                const $firstLanguageNotFilled = $languagesNotFilled.first();
-                $firstLanguageNotFilled.tab("change tab", $firstLanguageNotFilled.data("tab"));
+                // Remove old error messages; we will create new ones if there are still errors
+                $widgetField.find(".error-message").remove();
+                if ($languagesNotFilled.length > 0) {
+                    $widgetField.toggleClass("error", true);
+                    // Change to the first non-filled tab
+                    const $firstLanguageNotFilled = $languagesNotFilled.first();
+                    $firstLanguageNotFilled.tab("change tab", $firstLanguageNotFilled.data("tab"));
 
-                // Remove old error messages, we are creating a new one if there are still errors
-                $widget.find(".ui.red.pointing.label").remove();
-                if ($languagesNotFilled.length) {
-                    const $languageMissingTextIndicator = $('<div class="ui red pointing label">');
+                    {# Add an error message label #}
+                    const $languageMissingTextIndicator = $(`
+                        <div class="error-message ui label"
+                             style="display: block; width: fit-content; width: -moz-fit-content; margin-left: auto;">
+                    `);
                     $languageMissingTextIndicator.text(interpolate(
                         ngettext(
                             "The field is missing a value for %(num)s language",
@@ -100,10 +105,13 @@
                         ),
                         {num: $languagesNotFilled.length}, true,
                     ));
-                    $widget.append($languageMissingTextIndicator);
+                    $widgetField.prepend($languageMissingTextIndicator);
+                    $languageMissingTextIndicator[0].scrollIntoView();
 
                     {# Prevent the form from submitting while there are errors #}
                     event.preventDefault();
+                } else {
+                    $widgetField.toggleClass("error", false);
                 }
             });
         {% endif %}
