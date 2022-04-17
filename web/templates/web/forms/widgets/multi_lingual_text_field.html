@@ -64,6 +64,21 @@
 
         const $tabs = $widget.find(".ui.tab");
 
+        $tabs.find(".django-ckeditor-widget").each(function () {
+            $(this).find("textarea").each(function () {
+                CKEDITOR.instances[this.id].on("change", function () {
+                    {% if widget.attrs.required %}
+                        checkFilled(this.element.$, this.getData());
+                    {% endif %}
+                    {# `$DIRTY_FORMS` is defined in `common_deferred_code.js` #}
+                    if ($widgetForm.is($DIRTY_FORMS)) {
+                        {# Prevent leaving the page after having edited the CKEditor widget at least once #}
+                        $widgetForm.dirty("setAsDirty");
+                    }
+                });
+            });
+        });
+
         {% if widget.attrs.required %}
             $tabs.find("input, textarea").each(function () {
                 checkFilled(this);
@@ -72,14 +87,8 @@
                 }.bind(this));
             });
 
-            $tabs.find(".django-ckeditor-widget").each(function () {
-                $(this).find("textarea").each(function () {
-                    CKEDITOR.instances[this.id].on("change", function () {
-                        checkFilled(this.element.$, this.getData());
-                    });
-                });
-            });
-
+            {# Shouldn't use the `submit` event on the form, as that seems to mess with `jquery.dirty.js`, #}
+            {# causing it to not prevent leaving after the event function below has run once #}
             $widgetForm.find("input[type=submit]").click(function (event) {
                 // `checkFilled()` sets the `language-not-filled` class
                 const $languagesNotFilled = $widget.find(".menu .item.language-not-filled");
