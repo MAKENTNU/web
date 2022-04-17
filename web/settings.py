@@ -153,15 +153,22 @@ ROOT_HOSTCONF = 'web.hosts'
 DEFAULT_HOST = 'main'
 # All hosted subdomains - defined in `web/hosts.py`
 ALL_SUBDOMAINS = (  # (custom setting)
-    'i', 'internal', 'internt', 'admin', 'docs', '',
+    'i', 'internal', 'internt', 'admin', 'docs',
 )
+
+
+def generate_all_hosts(subdomains):
+    return [
+        PARENT_HOST,
+        *[f'{subdomain}.{PARENT_HOST}' for subdomain in subdomains]
+    ]
+
+
 # Tells `social-auth-core` (requirement of `python-social-auth`) to allow
 # redirection to these host domains after logging in.
 # (Undocumented setting; only found in this file:
 # https://github.com/python-social-auth/social-core/blob/d66a2469609c7cfd6639b524981689db2f2d5540/social_core/actions.py#L22)
-ALLOWED_REDIRECT_HOSTS = [
-    f'{subdomain}.{PARENT_HOST}' for subdomain in ALL_SUBDOMAINS
-]
+ALLOWED_REDIRECT_HOSTS = generate_all_hosts(ALL_SUBDOMAINS)
 
 
 TEMPLATES = [
