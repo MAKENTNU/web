@@ -5,7 +5,7 @@
     <div class="ui right floated pointing secondary menu inline">
         {% for subwidget in widget.subwidgets %}
             <a class="{% if forloop.first %}active{% endif %} item"
-               data-tab="{{ subwidget.name }}{{ subwidget.attrs.language }}">
+               data-tab="{{ subwidget.name }}">
                 <i class="{% get_semantic_flag_code_from_language_code subwidget.attrs.language %} flag"></i>
                 {% get_local_name_from_language_code subwidget.attrs.language %}
             </a>
@@ -14,7 +14,7 @@
 
     {% for subwidget in widget.subwidgets %}
         <div class="ui tab {% if forloop.first %}active{% endif %}"
-             data-tab="{{ subwidget.name }}{{ subwidget.attrs.language }}">
+             data-tab="{{ subwidget.name }}">
             {% render subwidget %}
         </div>
     {% endfor %}
@@ -34,7 +34,8 @@
         $widget.find(".menu .item").tab({
             onVisible: function (tabPath) {
                 // Set the label's `for` attribute to the ID of the text input that has been made visible
-                const subwidgetInputID = $widget.find(`.tab[data-tab=${tabPath}] > :first-child`).attr("id");
+                const $activeSubwidgetTab = $widget.find(`.tab[data-tab="${tabPath}"]`);
+                const subwidgetInputID = $activeSubwidgetTab.find("input, textarea").attr("id");
                 $widgetLabel.attr("for", subwidgetInputID);
             },
         });
