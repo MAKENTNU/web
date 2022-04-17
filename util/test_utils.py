@@ -158,9 +158,9 @@ class PathPredicate(ABC):
 
 class Get(PathPredicate):
 
-    def __init__(self, *args, permanent_redirect=False, **kwargs):
+    def __init__(self, *args, redirect=False, **kwargs):
         super().__init__(*args, **kwargs)
-        self.permanent_redirect = permanent_redirect
+        self.redirect = redirect
 
     def do_request_assertion(self, client: Client, is_superuser: bool, test_case: SimpleTestCase):
         language_prefixes = self.LANGUAGE_PREFIXES if self.translated else [""]
@@ -172,8 +172,9 @@ class Get(PathPredicate):
     def _do_request_assertion_for_path(self, path: str, language_prefix: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
         response = client.get(path)
 
-        if self.permanent_redirect:
-            test_case.assertEqual(response.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        if self.redirect:
+            test_case.assertIn(response.status_code, {HTTPStatus.MOVED_PERMANENTLY, HTTPStatus.FOUND},
+                               "The response did not redirect as expected.")
             # Follow the redirect URL from the response, and do the rest of the assertions from the perspective of this URL
             response = client.get(response.url)
 

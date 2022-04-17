@@ -114,7 +114,7 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # machine_urlpatterns
             Get(reverse('create_machine'), public=False),
             *[
-                Get(reverse('machine_detail', args=[machine.pk]), public=True, success_code=302)
+                Get(reverse('machine_detail', args=[machine.pk]), public=True, redirect=True)
                 for machine in self.machines
             ],
             *[

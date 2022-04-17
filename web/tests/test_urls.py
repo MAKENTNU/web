@@ -63,14 +63,14 @@ class UrlTests(NewsTestBase, TestCase):
 
     def test_all_old_urls_succeed(self):
         path_predicates = [
-            Get('/rules/', public=True, permanent_redirect=True),
-            Get('/reservation/rules/1/', public=True, permanent_redirect=True),
-            Get('/reservation/rules/usage/1/', public=True, permanent_redirect=True),
+            Get('/rules/', public=True, redirect=True),
+            Get('/reservation/rules/1/', public=True, redirect=True),
+            Get('/reservation/rules/usage/1/', public=True, redirect=True),
 
-            Get(f'/news/article/{self.article1.pk}/', public=True, permanent_redirect=True),
-            Get(f'/news/event/{self.event1.pk}/', public=True, permanent_redirect=True),
-            Get(f'/news/ticket/{self.ticket1.pk}/', public=False, permanent_redirect=True),
-            Get(f'/news/ticket/me/', public=False, permanent_redirect=True),
+            Get(f'/news/article/{self.article1.pk}/', public=True, redirect=True),
+            Get(f'/news/event/{self.event1.pk}/', public=True, redirect=True),
+            Get(f'/news/ticket/{self.ticket1.pk}/', public=False, redirect=True),
+            Get(f'/news/ticket/me/', public=False, redirect=True),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
