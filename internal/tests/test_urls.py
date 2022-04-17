@@ -3,6 +3,7 @@ from typing import Set
 from unittest import TestCase as StandardTestCase
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.test import Client, TestCase
 from django.utils.dateparse import parse_date
 
@@ -16,7 +17,7 @@ from ..util import date_to_semester, semester_to_year, year_to_semester
 
 
 # Makes sure that the subdomain of all requests is `internal`
-INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': 'internal.testserver'}
+INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': f'internal.{settings.PARENT_HOST}'}
 
 
 class UrlTests(TestCase):

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar, Union
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.db.models import QuerySet
@@ -194,7 +195,7 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
     superuser = User.objects.create_user("unique_superuser_username", "admin@makentnu.no", password,
                                          is_superuser=True, is_staff=True)
 
-    server_name = f'{subdomain}.testserver' if subdomain else 'testserver'  # 'testserver' is Django's default server name
+    server_name = f'{subdomain}.{settings.PARENT_HOST}' if subdomain else settings.PARENT_HOST
     superuser_client = Client(SERVER_NAME=server_name)
     superuser_client.login(username=superuser.username, password=password)
     anon_client = Client(SERVER_NAME=server_name)

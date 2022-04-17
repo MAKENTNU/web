@@ -9,7 +9,7 @@ from util.test_utils import Get, assert_requesting_paths_succeeds
 
 
 # Makes sure that the subdomain of all requests is `admin`
-ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': 'admin.testserver'}
+ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': f'admin.{settings.PARENT_HOST}'}
 
 
 def reverse_admin(viewname: str, args=None, **kwargs):
