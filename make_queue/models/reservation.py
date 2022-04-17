@@ -106,7 +106,9 @@ class Quota(models.Model):
 
 
 class Reservation(models.Model):
-    RESERVATION_FUTURE_LIMIT_DAYS = 28
+    # The amount of time into the future that regular users are allowed to create reservations
+    # (applies to both `start_time` and `end_time`)
+    FUTURE_LIMIT = timedelta(days=28)
     # It's allowed to set start/end times up to this amount of time in the past
     GRACE_PERIOD_FOR_SETTING_TIMES = timedelta(minutes=5)
 
@@ -231,7 +233,7 @@ class Reservation(models.Model):
 
     def is_within_allowed_period(self):
         """Check if the reservation is made within the reservation_future_limit."""
-        return self.end_time <= timezone.now() + timedelta(days=self.RESERVATION_FUTURE_LIMIT_DAYS)
+        return self.end_time <= timezone.now() + self.FUTURE_LIMIT
 
     def check_machine_out_of_order(self):
         """Check if the machine is listed as out of order."""
