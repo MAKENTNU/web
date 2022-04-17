@@ -5,7 +5,7 @@ from django import forms
 from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
-from web.widgets import MazeMapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
+from web.widgets import MazeMapSearchInput, SemanticChoiceInput, SemanticDateTimeInput, SemanticFileInput
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
@@ -94,7 +94,7 @@ class EventRegistrationForm(forms.ModelForm):
         model = EventTicket
         fields = ('user', 'timeplace', 'event', 'language', 'comment')
         widgets = {
-            'language': SemanticSearchableChoiceInput(),
+            'language': SemanticChoiceInput(),
             'comment': forms.Textarea(attrs={
                 'cols': "40",
                 'rows': "3",

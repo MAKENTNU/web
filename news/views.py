@@ -498,10 +498,15 @@ class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, Time
         return reverse('admin_event_detail', args=[self.object.event.pk])
 
 
-class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, CreateView):
+class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, CustomFieldsetFormMixin, CreateView):
     model = EventTicket
     form_class = EventRegistrationForm
-    template_name = 'news/event/event_registration.html'
+
+    narrow = False
+    save_button_text = _("Register")
+    custom_fieldsets = [
+        {'fields': ('language', 'comment')},
+    ]
 
     event: Event
     ticket_event: Optional[Event]
@@ -574,11 +579,14 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Crea
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**{
-            'title': _("Register for the event “{title}”").format(title=self.event.title),
-            **kwargs,
-        })
+    def get_form_title(self):
+        return _("Register for the event “{title}”").format(title=self.event.title)
+
+    def get_back_button_link(self):
+        return self.event.get_absolute_url()
+
+    def get_back_button_text(self):
+        return str(self.event)
 
     def get_success_url(self):
         return self.object.get_absolute_url()
