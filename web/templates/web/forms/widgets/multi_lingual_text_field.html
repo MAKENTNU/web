@@ -1,5 +1,4 @@
 {% load language_tags %}
-{% load i18n %}
 
 
 <div class="multilingual-input" {% include 'django/forms/widgets/attrs.html' %}>
@@ -26,6 +25,8 @@
     {# Also because CKEditor is set up first after the DOM has loaded. #}
     $(document).ready(function () {
         const $widget = $("#{{ widget.attrs.id }}");
+        const $widgetField = $widget.closest(".field");
+        const $widgetForm = $widgetField.closest("form");
         {# If there were a CSS predecessor element selector (there will be one in CSS4), this could have been solved with pure CSS #}
         const $widgetLabel = $widget.prev("label");
         $widgetLabel.toggleClass("multilingual-label", true);
@@ -79,7 +80,7 @@
                 });
             });
 
-            $widget.closest("form").find("input[type=submit]").click(() => {
+            $widgetForm.find("input[type=submit]").click(function (event) {
                 // The constant check for the color of the tabs will set classes which we can use
                 const $languagesNotFilled = $widget.find(".menu .item.language-not-filled");
 
@@ -91,11 +92,18 @@
                 $widget.find(".ui.red.pointing.label").remove();
                 if ($languagesNotFilled.length) {
                     const $languageMissingTextIndicator = $('<div class="ui red pointing label">');
-                    const languagePlural = $languagesNotFilled.length > 1 ? {% trans "languages" %} : {% trans "language" %};
-                    $languageMissingTextIndicator.text(
-                        `{% trans "The field is missing a value for" %} ${$languagesNotFilled.length} ${languagePlural}.`,
-                    );
+                    $languageMissingTextIndicator.text(interpolate(
+                        ngettext(
+                            "The field is missing a value for %(num)s language",
+                            "The field is missing a value for %(num)s languages",
+                            $languagesNotFilled.length,
+                        ),
+                        {num: $languagesNotFilled.length}, true,
+                    ));
                     $widget.append($languageMissingTextIndicator);
+
+                    {# Prevent the form from submitting while there are errors #}
+                    event.preventDefault();
                 }
             });
         {% endif %}

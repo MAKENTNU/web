@@ -3027,14 +3027,6 @@ msgstr "Cookies"
 msgid "Privacy Policy"
 msgstr "Personvernerklæring"
 
-#: web/templates/web/forms/widgets/multi_lingual_text_field.html:98
-msgid "languages"
-msgstr "språk"
-
-#: web/templates/web/forms/widgets/multi_lingual_text_field.html:100
-msgid "The field is missing a value for"
-msgstr "Feltet er ikke fylt ut for"
-
 #: web/templates/web/forms/widgets/semantic_file.html:7
 msgid "Upload image"
 msgstr "Last opp bilde"
