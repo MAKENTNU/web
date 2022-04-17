@@ -16,8 +16,8 @@ from ...forms import Printer3DCourseForm
 from ...models.course import Printer3DCourse
 
 
-class Printer3DCourseListView(ListView):
-    permission_required = ('make_queue.view_printer3dcourse',)
+class Printer3DCourseListView(PermissionRequiredMixin, ListView):
+    permission_required = ('make_queue.view_printer3dcourse', 'make_queue.change_printer3dcourse')
     model = Printer3DCourse
     queryset = Printer3DCourse.objects.select_related('user').order_by('name')
     template_name = 'make_queue/course/course_registration_list.html'
@@ -54,10 +54,11 @@ class DeleteCourseRegistrationView(PermissionRequiredMixin, PreventGetRequestsMi
     success_url = reverse_lazy('course_registration_list')
 
 
-class BulkStatusUpdate(View):
+class BulkStatusUpdate(PermissionRequiredMixin, View):
     """
     Provides a method for bulk-updating the status of course registrations.
     """
+    permission_required = ('make_queue.change_printer3dcourse',)
 
     def post(self, request):
         status = request.POST.get('status')
@@ -67,7 +68,8 @@ class BulkStatusUpdate(View):
         return redirect('course_registration_list')
 
 
-class CourseXLSXView(View):
+class CourseXLSXView(PermissionRequiredMixin, View):
+    permission_required = ('make_queue.change_printer3dcourse',)
 
     def post(self, request):
         search_string = request.POST.get('search_text')

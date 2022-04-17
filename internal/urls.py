@@ -1,10 +1,9 @@
 from decorator_include import decorator_include
 from django.conf.urls.i18n import i18n_patterns
-from django.contrib.auth.decorators import permission_required
 from django.urls import include, path
 from django.views.generic import TemplateView
 
-from util.url_utils import debug_toolbar_urls
+from util.url_utils import debug_toolbar_urls, permission_required_else_denied
 from . import views
 
 
@@ -14,7 +13,7 @@ urlpatterns = [
 
     *debug_toolbar_urls(),
     path("i18n/", decorator_include(
-        permission_required('internal.is_internal'),
+        permission_required_else_denied('internal.is_internal'),
         'django.conf.urls.i18n'
     )),
 ]
@@ -62,22 +61,22 @@ internal_urlpatterns = [
     path("contentbox/", include(internal_contentbox_urlpatterns)),
 
     path("", decorator_include(
-        permission_required('internal.view_member'),
+        permission_required_else_denied('internal.view_member'),
         member_urlpatterns
     )),
     path("", decorator_include(
-        permission_required('internal.view_secret'),
+        permission_required_else_denied('internal.view_secret'),
         secret_urlpatterns
     )),
     path("", decorator_include(
-        permission_required('internal.view_quote'),
+        permission_required_else_denied('internal.view_quote'),
         quote_urlpatterns
     )),
 ]
 
 urlpatterns += i18n_patterns(
     path("", decorator_include(
-        permission_required('internal.is_internal'),
+        permission_required_else_denied('internal.is_internal'),
         internal_urlpatterns
     )),
 

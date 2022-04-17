@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from typing import Set
 from unittest import TestCase as StandardTestCase
-from urllib.parse import urlparse
 
 from django.conf import settings
 from django.test import Client, TestCase
@@ -70,10 +69,9 @@ class UrlTests(TestCase):
         disallowed_clients = self.all_clients - allowed_clients
         for client in disallowed_clients:
             response = self.generic_request(client, method, path)
-            # Non-member users should be redirected to login:
-            if client in {self.anon_client, self.non_member_client}:
-                self.assertEqual(response.status_code, HTTPStatus.FOUND)
-                self.assertTrue(urlparse(response.url).path.startswith("/login/"))
+            # Anonymous users should be redirected to the login page:
+            if client is self.anon_client:
+                assertRedirectsWithPathPrefix(self, response, "/login/")
             # Disallowed members should be rejected:
             else:
                 self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)

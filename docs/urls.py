@@ -1,10 +1,9 @@
 from decorator_include import decorator_include
 from django.conf.urls.i18n import i18n_patterns
-from django.contrib.auth.decorators import permission_required
 from django.urls import path, register_converter
 from django.views.generic import TemplateView
 
-from util.url_utils import debug_toolbar_urls
+from util.url_utils import debug_toolbar_urls, permission_required_else_denied
 from . import converters, views
 
 
@@ -16,7 +15,7 @@ urlpatterns = [
 
     *debug_toolbar_urls(),
     path("i18n/", decorator_include(
-        permission_required('docs.view_page'),
+        permission_required_else_denied('docs.view_page'),
         'django.conf.urls.i18n'
     )),
 ]
@@ -35,7 +34,7 @@ unsafe_urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path("", decorator_include(
-        permission_required('docs.view_page'),
+        permission_required_else_denied('docs.view_page'),
         unsafe_urlpatterns
     )),
 

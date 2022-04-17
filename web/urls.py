@@ -4,7 +4,7 @@ from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.urls import include, path, re_path
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
@@ -15,7 +15,7 @@ from social_core.utils import setting_name
 from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from dataporten.views import Logout, login_wrapper
 from news import urls as news_urls
-from util.url_utils import debug_toolbar_urls
+from util.url_utils import debug_toolbar_urls, permission_required_else_denied
 from . import views
 
 
@@ -31,8 +31,10 @@ urlpatterns = [
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
 
     # Based on the URLs in https://github.com/django-ckeditor/django-ckeditor/blob/9866ebe098794eca7a5132d6f2a4b1d1d837e735/ckeditor_uploader/urls.py
-    path("ckeditor/upload/", permission_required('contentbox.can_upload_image')(ckeditor_views.upload), name='ckeditor_upload'),
-    path("ckeditor/browse/", never_cache(permission_required('contentbox.can_browse_image')(ckeditor_views.browse)), name='ckeditor_browse'),
+    path("ckeditor/upload/", permission_required_else_denied('contentbox.can_upload_image')(ckeditor_views.upload),
+         name='ckeditor_upload'),
+    path("ckeditor/browse/", never_cache(permission_required_else_denied('contentbox.can_browse_image')(ckeditor_views.browse)),
+         name='ckeditor_browse'),
 ]
 
 admin_urlpatterns = [
