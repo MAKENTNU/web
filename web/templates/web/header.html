@@ -94,7 +94,7 @@
                                 <div class="text">{% trans "Internal pages" %}</div>
                             </a>
                         {% endif %}
-                        {% if user|has_any_permissions %}
+                        {% if user|can_view_admin_panel %}
                             <a class="item" href="{% host_url 'adminpanel' host 'main' %}">
                                 <div class="text">{% trans "Administration" %}</div>
                             </a>

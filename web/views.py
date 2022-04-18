@@ -1,11 +1,17 @@
 from http import HTTPStatus
 
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Prefetch
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
+from announcements.models import Announcement
 from contentbox.views import DisplayContentBoxView
+from faq.models import Category, Question
+from groups.models import Committee
+from make_queue.models.course import Printer3DCourse
+from make_queue.models.reservation import Quota
+from makerspace.models import Equipment
 from news.models import Article, Event, TimePlace
 
 
@@ -40,21 +46,26 @@ class IndexView(TemplateView):
         return context
 
 
-class AdminPanelView(UserPassesTestMixin, TemplateView):
-    template_name = 'web/admin_panel.html'
-    possible_permissions = [
-        'news.add_article', 'news.change_article', 'news.delete_article',
-        'news.add_event', 'news.change_event', 'news.delete_event',
-        'news.add_timeplace', 'news.change_timeplace', 'news.delete_timeplace',
+class AdminPanelView(PermissionRequiredMixin, TemplateView):
+    MODEL_LIST = [
+        Article, Event, TimePlace,
+        Printer3DCourse, Quota,
+        Equipment,
+        Category, Question,
+        Committee,
+        Announcement,
+    ]
+    # Extra permissions that are not among the `add`, `change` or `delete` permissions of the models in `MODEL_LIST`
+    EXTRA_PERMS = [
         'make_queue.can_create_event_reservation',
-        'make_queue.change_quota',
-        'make_queue.change_printer3dcourse',
-        'groups.can_edit_group',
-        'makerspace.add_equipment', 'makerspace.change_equipment', 'makerspace.delete_equipment',
     ]
 
-    def test_func(self):
-        return any(self.request.user.has_perm(permission) for permission in self.possible_permissions)
+    template_name = 'web/admin_panel.html'
+
+    def has_permission(self):
+        from util.templatetags.permission_tags import can_view_admin_panel  # avoids circular imports
+
+        return can_view_admin_panel(self.request.user)
 
 
 class View404(TemplateView):
