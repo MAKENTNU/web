@@ -30,19 +30,19 @@
             </div>
         {% endif %}
         <h3 class="edit tools">
-            <a class="explanation-popup" href="{% url 'page_history' page.pk %}" data-title="{% trans "History" %}"
+            <a class="popup-trigger" href="{% url 'page_history' page.pk %}" data-title="{% trans "History" %}"
                data-content="{% trans "Click to view the content history of the page" %}">
                 <i class="blue archive icon"></i>
             </a>
             {% if not old %}
                 {% if perms.docs.change_page %}
-                    <a class="explanation-popup" href="{% url 'edit_page' page.pk %}" data-title="{% trans "Edit" %}"
+                    <a class="popup-trigger" href="{% url 'edit_page' page.pk %}" data-title="{% trans "Edit" %}"
                        data-content="{% trans "Click to edit the content of the page" %}">
                         <i class="make-col-yellow edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.docs.delete_page and page.title != MAIN_PAGE_TITLE %}
-                    <a class="delete-modal-button explanation-popup"
+                    <a class="delete-modal-button popup-trigger"
                        data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}"
                        data-url="{% url 'delete_page' page.pk %}" data-obj-name="{{ page }}">
                         <i class="red trash icon"></i>

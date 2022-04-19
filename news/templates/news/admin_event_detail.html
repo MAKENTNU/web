@@ -86,7 +86,7 @@
         </h3>
         <div class="create-new-occurrence">
             {% if perms.news.add_timeplace %}
-                <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace_create' event.pk %}">
+                <a class="ui blue right floated button popup-trigger" href="{% url 'timeplace_create' event.pk %}">
                     <i class="time icon"></i>
                     {% trans "Add new occurrence" %}
                 </a>
