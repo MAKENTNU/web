@@ -27,9 +27,9 @@
             </div>
         </div>
 
-        <div class="machine-info-and-actions ui three column padded grid vpad">
+        <div class="machine-info-and-actions">
 
-            <div class="ui five wide no padding column">
+            <div class="machine-info">
                 <h3>{% trans "About the machine" %}</h3>
                 <div class="ui relaxed list">
                     <div class="item">
@@ -67,13 +67,9 @@
                 </div>
             </div>
 
-            <div class="ui right floated no padding column tablet computer only">
-                {% include 'make_queue/reservation_actions.html' %}
-            </div>
-
             {% if machine.machine_type.has_stream %}
-                <div class="ui right floated ten wide mobile five wide tablet five wide computer no padding column">
-                    <img class="ui right floated stream medium image" data-stream-name="{{ machine.stream_name }}"
+                <div class="machine-image">
+                    <img class="ui medium stream image" data-stream-name="{{ machine.stream_name }}"
                          src="{% get_stream_image_path machine.status %}"
                          alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
@@ -84,7 +80,7 @@
                 <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
             {% endif %}
 
-            <div class="ui right floated {% if machine.machine_type.has_stream %}sixteen{% else %}ten{% endif %} wide mobile only no padding column">
+            <div class="actions-list {% if machine.machine_type.has_stream %}{% else %}{% endif %}">
                 {% include 'make_queue/reservation_actions.html' %}
             </div>
 
