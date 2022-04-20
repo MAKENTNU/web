@@ -126,13 +126,6 @@ def assertRedirectsWithPathPrefix(self: SimpleTestCase, response, expected_path_
     self.assertEqual(redirected_response.status_code, HTTPStatus.OK)
 
 
-def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
-    collection_list = list(collection)
-    collection_set = set(collection_list)
-    self.assertEqual(len(collection_set), len(collection_list))
-    return collection_set
-
-
 class PathPredicate(ABC):
     LANGUAGE_PREFIXES = ["", "/en"]
 
@@ -190,21 +183,6 @@ class Get(PathPredicate):
                 test_case.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> List[str]:
-    from web.tests.test_urls import reverse_admin  # avoids circular imports
-
-    url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
-    return [
-        reverse_admin(f'{url_name_prefix}_changelist'),
-        reverse_admin(f'{url_name_prefix}_add'),
-        *[
-            reverse_admin(f'{url_name_prefix}_{url_name_suffix}', args=[obj.pk])
-            for obj in model_objs
-            for url_name_suffix in ['change', 'delete', 'history']
-        ],
-    ]
-
-
 def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List[PathPredicate], subdomain=''):
     previous_language = translation.get_language()
 
@@ -223,3 +201,25 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
 
     # Reactivate the previously set language, as requests to translated URLs change the active language
     translation.activate(previous_language)
+
+
+def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> List[str]:
+    from web.tests.test_urls import reverse_admin  # avoids circular imports
+
+    url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
+    return [
+        reverse_admin(f'{url_name_prefix}_changelist'),
+        reverse_admin(f'{url_name_prefix}_add'),
+        *[
+            reverse_admin(f'{url_name_prefix}_{url_name_suffix}', args=[obj.pk])
+            for obj in model_objs
+            for url_name_suffix in ['change', 'delete', 'history']
+        ],
+    ]
+
+
+def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
+    collection_list = list(collection)
+    collection_set = set(collection_list)
+    self.assertEqual(len(collection_set), len(collection_list))
+    return collection_set
