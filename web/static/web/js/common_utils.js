@@ -1,3 +1,7 @@
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 $(".message .close").click(function () {
     $(this)
         .closest(".message")
