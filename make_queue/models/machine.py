@@ -146,6 +146,11 @@ class Machine(models.Model):
     internal = models.BooleanField(default=False, verbose_name=_("internal"),
                                    help_text=_("If selected, the machine will only be visible to and reservable by MAKE members."))
     status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("status"))
+    info_message = models.TextField(blank=True, verbose_name=_("info message"), help_text=_(
+        "Information that's useful to know before using the machine, e.g. the filament that the 3D printer uses,"
+        " the needle that's currently inserted in the sewing machine, or just the machine's current state/“mood” (emojis are allowed 🤠)."
+    ))
+    info_message_date = models.DateTimeField(blank=True, default=timezone.localtime, verbose_name=_("time the info message was changed"))
     priority = models.IntegerField(
         null=True,
         blank=True,

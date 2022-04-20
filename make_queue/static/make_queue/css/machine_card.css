@@ -1,0 +1,8 @@
+.machine.card .info-message {
+    float: right;
+}
+
+.machine.card .info-message.label {
+    box-shadow: 0 0 0 1px #767676 inset; /* Same as Fomantic-UI's style for `.ui.basic.grey.button` */
+    border: none;
+}

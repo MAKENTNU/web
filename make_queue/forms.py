@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 from js_asset import JS
@@ -9,6 +10,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
+from util.templatetags.datetime_tags import long_datetime
 from web.widgets import (
     Direction, DirectionalCheckboxSelectMultiple, MazeMapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput,
     SemanticTimeInput,
@@ -235,12 +237,14 @@ class MachineFormBase(forms.ModelForm):
             'has-stream': lambda iterator_value: iterator_value.instance.has_stream if iterator_value else None,
         }),
     )
+    info_message_date = Machine._meta.get_field('info_message_date').formfield(disabled=True)
 
     class Meta:
         model = Machine
         fields = '__all__'
         widgets = {
             'location': MazeMapSearchInput(url_field='location_url'),
+            'info_message': forms.Textarea(attrs={'rows': 5}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -257,6 +261,7 @@ class MachineFormBase(forms.ModelForm):
             ],
             widget=SemanticChoiceInput(attrs={'required': True}),
         )
+        self.fields['info_message_date'].widget.format_value = long_datetime
 
     def clean(self):
         cleaned_data = super().clean()
@@ -286,6 +291,11 @@ class CreateMachineForm(MachineFormBase):
             JS('make_queue/js/machine_create.js', attrs={'defer': 'defer'}),
         )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Don't show the default value of `info_message_date` in the create form, as it might cause confusion
+        self.fields['info_message_date'].widget.format_value = lambda value: None
+
 
 class EditMachineForm(MachineFormBase):
     machine_type = None
@@ -300,5 +310,11 @@ class EditMachineForm(MachineFormBase):
             self.fields['stream_name'].disabled = True
 
     def clean(self):
+        # Force the machine type before doing any other cleaning
         self.cleaned_data['machine_type'] = self.instance.machine_type
-        return super().clean()
+        cleaned_data = super().clean()
+
+        if 'info_message' in self.changed_data:
+            cleaned_data['info_message_date'] = timezone.localtime()
+
+        return cleaned_data

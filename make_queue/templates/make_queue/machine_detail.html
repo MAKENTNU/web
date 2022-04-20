@@ -67,6 +67,18 @@
                 </div>
             </div>
 
+            {% if machine.info_message %}
+                <div class="info-message">
+                    <div class="ui header">
+                        <i class="make-col-yellow comment dots icon"></i>
+                        {% trans "info message"|capfirst %}
+                    </div>
+                    <div class="content">
+                        {{ machine.info_message|linebreaks }}
+                    </div>
+                </div>
+            {% endif %}
+
             {% if machine.machine_type.has_stream %}
                 <div class="machine-image">
                     <img class="ui medium stream image" data-stream-name="{{ machine.stream_name }}"

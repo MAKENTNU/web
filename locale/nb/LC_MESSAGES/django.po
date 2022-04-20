@@ -1338,6 +1338,26 @@ msgstr ""
 "Hvis valgt vil maskinen bare være synlig og mulig å reservere for MAKE-"
 "medlemmer."
 
+#: make_queue/models/machine.py:149
+#: make_queue/templates/make_queue/machine_detail.html:74
+msgid "info message"
+msgstr "infomelding"
+
+#: make_queue/models/machine.py:150
+msgid ""
+"Information that's useful to know before using the machine, e.g. the "
+"filament that the 3D printer uses, the needle that's currently inserted in "
+"the sewing machine, or just the machine's current state/“mood” (emojis are "
+"allowed 🤠)."
+msgstr ""
+"Informasjon som er nyttig å vite før man bruker maskinen, f.eks. filamentet "
+"som 3D-printeren bruker, nåla som er satt i symaskinen, eller "
+"tilstanden/«humøret» til maskinen for tida (emoji-er er tillatt 🤠)."
+
+#: make_queue/models/machine.py:153
+msgid "time the info message was changed"
+msgstr "tidspunkt infomeldingen ble endra"
+
 #: make_queue/models/machine.py:140
 msgid "If specified, the machines are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres maskinene stigende på denne verdien."

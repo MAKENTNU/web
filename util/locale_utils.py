@@ -17,7 +17,11 @@ def attempt_as_local(value):
     if (isinstance(value, datetime)
             # Each timezone has its own `tzinfo` subclass
             and type(value.tzinfo) is not type(DEFAULT_TIMEZONE)):
-        value = value.astimezone(DEFAULT_TIMEZONE)
+        try:
+            value = value.astimezone(DEFAULT_TIMEZONE)
+        except OSError:
+            # `value` is probably either too low (Unix epoch or before) or too high (around year 3000 or higher, it seems)
+            pass
     return value
 
 

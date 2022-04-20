@@ -40,6 +40,7 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
             {'fields': ('stream_name',), 'layout_class': "ui two fields"} if self.should_include_stream_name() else None,
             {'fields': ('location', 'location_url'), 'layout_class': "ui two fields"},
             {'fields': ('priority', 'status'), 'layout_class': "ui two fields"},
+            {'fields': ('info_message', 'info_message_date'), 'layout_class': "ui two fields"},
             {'fields': ('internal',), 'layout_class': "ui segment field"},
             {'fields': ('notes',)},
         ]
