@@ -14,7 +14,7 @@ class TestGenericMachine(TestCase):
 
     def test_status(self):
         user = User.objects.create_user("test")
-        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.localdate(), advanced_course=True)
+        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.localdate(), raise3d_course=True)
 
         for machine_type in MachineType.objects.all():
             with self.subTest(machine_type=machine_type):

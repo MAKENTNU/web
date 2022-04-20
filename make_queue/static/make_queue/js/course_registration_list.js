@@ -280,7 +280,7 @@ function setupState() {
                 cardNumber: ("0000000000" + $(this).data("card-number").toString()).slice(-10),
                 date: $(this).data("date"),
                 status: $(this).data("status"),
-                advancedCourse: $(this).data("advanced-course"),
+                raise3DCourse: $(this).data("raise3d-course"),
                 display: true,
                 $element: $(this),
             });

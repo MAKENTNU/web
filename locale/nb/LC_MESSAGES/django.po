@@ -188,20 +188,20 @@ msgid "You have not taken the 3D printer course"
 msgstr "Du har ikke tatt 3D-printerkurset"
 
 #: checkin/templates/checkin/profile.html:34
-msgid "You have completed the advanced 3D printer course"
-msgstr "Du har fullført det avanserte 3D-printerkurset"
+msgid "You have completed the Raise3D printer course"
+msgstr "Du har fullført Raise3D-printerkurset"
 
 #: checkin/templates/checkin/profile.html:35
 msgid ""
-"To use an advanced 3D printer, make a reservation in the calendar of one of "
-"the advanced 3D printers on the “Reservations” page."
+"To use a Raise3D printer, make a reservation in the calendar of one of the "
+"Raise3D printers on the “Reservations” page."
 msgstr ""
-"For å bruke en avansert 3D-printer, lag en reservasjon i kalenderen til en "
-"av de avanserte 3D-printerne på «Reservasjoner»-siden."
+"For å bruke en Raise3D-printer, lag en reservasjon i kalenderen til en av "
+"Raise3D-printerne på «Reservasjoner»-siden."
 
 #: checkin/templates/checkin/profile.html:38
-msgid "You have not taken the advanced 3D printer course"
-msgstr "Du har ikke tatt det avanserte 3D-printerkurset"
+msgid "You have not taken the Raise3D printer course"
+msgstr "Du har ikke tatt Raise3D-printerkurset"
 
 #: checkin/templates/checkin/profile.html:46
 #, python-format
@@ -1267,8 +1267,8 @@ msgid "course date"
 msgstr "kursdato"
 
 #: make_queue/models/course.py:30
-msgid "advanced course"
-msgstr "avansert kurs"
+msgid "Raise3D course"
+msgstr "Raise3D-kurs"
 
 #: make_queue/models/course.py:37
 msgid "3D printer course"
@@ -1287,8 +1287,8 @@ msgid "Taken the 3D printer course"
 msgstr "Tatt 3D-printerkurset"
 
 #: make_queue/models/machine.py:36
-msgid "Taken the advanced 3D printer course"
-msgstr "Tatt det avanserte 3D-printerkurset"
+msgid "Taken the course on Raise3D printers"
+msgstr "Tatt Raise3D-printerkurset"
 
 #: make_queue/models/machine.py:44
 msgid "usage requirement"
@@ -1606,10 +1606,6 @@ msgstr "Veksle visning av ikke-valgte brukere"
 #: make_queue/templates/make_queue/course/course_registration_list.html:88
 msgid "Select all shown users"
 msgstr "Velg alle viste brukere"
-
-#: make_queue/templates/make_queue/course/course_registration_list.html:100
-msgid "advanced"
-msgstr "avansert"
 
 #: make_queue/templates/make_queue/course/course_registration_list.html:122
 #, python-format

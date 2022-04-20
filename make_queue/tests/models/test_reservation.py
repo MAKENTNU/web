@@ -350,23 +350,23 @@ class TestReservation(ReservationTestBase):
         self.reset_reservation_future_limit_days()
 
 
-class TestAdvancedMachineReservation(ReservationTestBase):
+class TestRaise3DMachineReservation(ReservationTestBase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         super().init_objs(MachineType.objects.get(pk=6))
 
-    def test_booking_advanced_printer_without_any_course(self):
+    def test_booking_raise3d_printer_without_any_course(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2), user=user2),
                                        "Uses that cannot use a machine, should not be able to reserve it")
 
-    def test_booking_advanced_printer_with_normal_course(self):
+    def test_booking_raise3d_printer_with_normal_course(self):
         self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
                                        "Uses that cannot use a machine, should not be able to reserve it")
 
-    def test_booking_advanced_printer_with_advanced_course(self):
-        self.course_registration.advanced_course = True
+    def test_booking_raise3d_printer_with_raise3d_course(self):
+        self.course_registration.raise3d_course = True
         self.course_registration.save()
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
                                      "Uses that cannot use a machine, should not be able to reserve it")

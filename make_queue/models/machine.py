@@ -38,7 +38,7 @@ class MachineType(models.Model):
     class UsageRequirement(models.TextChoices):
         IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
         TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
-        TAKEN_ADVANCED_3D_PRINTER_COURSE = "A3DP", _("Taken the advanced 3D printer course")
+        TAKEN_RAISE3D_PRINTERS_COURSE = "R3DP", _("Taken the course on Raise3D printers")
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
@@ -67,8 +67,8 @@ class MachineType(models.Model):
             return user.is_authenticated
         elif self.usage_requirement == self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
             return self.can_use_3d_printer(user)
-        elif self.usage_requirement == self.UsageRequirement.TAKEN_ADVANCED_3D_PRINTER_COURSE:
-            return self.can_use_advanced_3d_printer(user)
+        elif self.usage_requirement == self.UsageRequirement.TAKEN_RAISE3D_PRINTERS_COURSE:
+            return self.can_use_raise3d_printer(user)
         return False
 
     @staticmethod
@@ -85,17 +85,17 @@ class MachineType(models.Model):
         return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
 
     @staticmethod
-    def can_use_advanced_3d_printer(user: Union[User, AnonymousUser]):
+    def can_use_raise3d_printer(user: Union[User, AnonymousUser]):
         if not user.is_authenticated:
             return False
         if Printer3DCourse.objects.filter(user=user).exists():
             course_registration = Printer3DCourse.objects.get(user=user)
-            return course_registration.advanced_course
+            return course_registration.raise3d_course
         if Printer3DCourse.objects.filter(username=user.username).exists():
             course_registration = Printer3DCourse.objects.get(username=user.username)
             course_registration.user = user
             course_registration.save()
-            return course_registration.advanced_course
+            return course_registration.raise3d_course
         return False
 
 

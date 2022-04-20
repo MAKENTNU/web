@@ -30,12 +30,12 @@
                 {% translate "You have not taken the 3D printer course" as text2 %}
                 {% include 'checkin/profile_completion_table_row.html' with completed=False text=text2 %}
             {% endif %}
-            {% if profile.user.printer_3d_course.advanced_course %}
-                {% translate "You have completed the advanced 3D printer course" as text3 %}
-                {% translate "To use an advanced 3D printer, make a reservation in the calendar of one of the advanced 3D printers on the “Reservations” page." as hint2 %}
+            {% if profile.user.printer_3d_course.raise3d_course %}
+                {% translate "You have completed the Raise3D printer course" as text3 %}
+                {% translate "To use a Raise3D printer, make a reservation in the calendar of one of the Raise3D printers on the “Reservations” page." as hint2 %}
                 {% include 'checkin/profile_completion_table_row.html' with completed=True text=text3 hint=hint2 %}
             {% else %}
-                {% translate "You have not taken the advanced 3D printer course" as text4 %}
+                {% translate "You have not taken the Raise3D printer course" as text4 %}
                 {% include 'checkin/profile_completion_table_row.html' with completed=False text=text4 %}
             {% endif %}
             </tbody>
