@@ -1,5 +1,6 @@
 from abc import ABC
 from datetime import datetime, timedelta
+from typing import Callable
 from unittest.mock import patch
 
 from django.core.exceptions import ValidationError
@@ -24,11 +25,12 @@ class ReservationTestBase(TestCase, ABC):
         self.machine_type = machine_type
         self.machine = Machine.objects.create(name="C1", location="Printer room", status=Machine.Status.AVAILABLE,
                                               machine_type=self.machine_type)
-        self.user = User.objects.create_user("User", "user@makentnu.no", "user_pass")
-        self.user_quota = Quota.objects.create(user=self.user, ignore_rules=False, number_of_reservations=2,
+        self.user_with_course_and_quota = User.objects.create_user("User", "user@makentnu.no", "user_pass")
+        self.user_quota = Quota.objects.create(user=self.user_with_course_and_quota, ignore_rules=False, number_of_reservations=2,
                                                machine_type=self.machine_type)
         self.course_registration = Printer3DCourse.objects.create(
-            user=self.user, username=self.user.username, date=datetime.now().date(), name=self.user.get_full_name(),
+            user=self.user_with_course_and_quota,
+            username=self.user_with_course_and_quota.username, name=self.user_with_course_and_quota.get_full_name(), date=datetime.now().date(),
         )
         self.max_time_reservation = 5
         ReservationRule.objects.create(
@@ -42,25 +44,25 @@ class ReservationTestBase(TestCase, ABC):
             end_time=timezone.now() + timedelta(minutes=1),
         )
 
-    def check_reservation_invalid(self, reservation, error_message):
-        self.assertFalse(reservation.validate(), error_message)
+    def check_reservation_invalid(self, reservation, failed_assertion_message=None):
+        self.assertFalse(reservation.validate(), failed_assertion_message)
         try:
             reservation.save()
-            self.fail(error_message)
+            self.fail(failed_assertion_message)
         except ValidationError:
             pass
 
-    def check_reservation_valid(self, reservation, error_message):
-        self.assertTrue(reservation.validate(), error_message)
+    def check_reservation_valid(self, reservation, failed_assertion_message=None):
+        self.assertTrue(reservation.validate(), failed_assertion_message)
         try:
             reservation.save()
         except ValidationError:
-            self.fail(error_message)
+            self.fail(failed_assertion_message)
 
     def create_reservation(self, relative_start_time: timedelta, relative_end_time: timedelta, event: Event = None,
                            user: User = None, machine: Machine = None, special=False, special_text=""):
         machine = machine or self.machine
-        user = user or self.user
+        user = user or self.user_with_course_and_quota
         return Reservation(user=user, machine=machine, event=event, start_time=timezone.now() + relative_start_time,
                            end_time=timezone.now() + relative_end_time, special=special, special_text=special_text)
 
@@ -86,7 +88,7 @@ class TestReservation(ReservationTestBase):
         Reservation.RESERVATION_FUTURE_LIMIT_DAYS = self.reservation_future_limit_days
 
     def give_user_event_permission(self):
-        self.user.add_perms('make_queue.can_create_event_reservation')
+        self.user_with_course_and_quota.add_perms('make_queue.can_create_event_reservation')
 
     def test_can_create_reservation(self):
         self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
@@ -94,11 +96,11 @@ class TestReservation(ReservationTestBase):
 
     def test_not_allowed_user_cannot_create_reservation(self):
         self.course_registration.delete()
-        self.user.refresh_from_db()
-        self.assertFalse(self.machine_type.can_user_use(self.user))
+        self.user_with_course_and_quota.refresh_from_db()
+        self.assertFalse(self.machine_type.can_user_use(self.user_with_course_and_quota))
         self.check_reservation_invalid(
             self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
-            "Uses that cannot use a machine, should not be able to reserve it"
+            "Users who are not allowed to use a machine, should not be able to reserve it"
         )
 
     def test_reserve_end_time_before_start_time(self):
@@ -125,14 +127,14 @@ class TestReservation(ReservationTestBase):
         self.user_quota.number_of_reservations = 5
         self.user_quota.save()
 
-        self.assertTrue(Quota.can_create_new_reservation(self.user, self.machine_type))
+        self.assertTrue(Quota.can_create_new_reservation(self.user_with_course_and_quota, self.machine_type))
 
         for reservation_number in range(5):
             self.check_reservation_valid(self.create_reservation(timedelta(days=reservation_number, hours=1),
                                                                  timedelta(days=reservation_number, hours=2)),
                                          "User should be able to make as many reservations as allowed")
 
-        self.assertFalse(Quota.can_create_new_reservation(self.user, self.machine_type))
+        self.assertFalse(Quota.can_create_new_reservation(self.user_with_course_and_quota, self.machine_type))
 
     def test_make_more_than_allowed_number_of_reservations(self):
         self.user_quota.number_of_reservations = 5
@@ -235,15 +237,15 @@ class TestReservation(ReservationTestBase):
             "Reservations on different printers should be able to overlap in time")
 
     def test_can_owner_change_future_reservation(self):
-        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_change(self.user))
+        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_change(self.user_with_course_and_quota))
 
     def test_can_owner_change_started_reservation(self):
-        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_change(self.user))
+        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_change(self.user_with_course_and_quota))
 
     def test_can_owner_change_end_time_of_started_reservation(self):
         reservation = self.create_reservation(timedelta(hours=-2), timedelta(hours=2))
         self.save_past_reservation(reservation)
-        self.assertTrue(reservation.can_change_end_time(self.user))
+        self.assertTrue(reservation.can_change_end_time(self.user_with_course_and_quota))
         reservation.end_time = timezone.now() + timedelta(hours=1)
         self.check_reservation_valid(reservation, "Should be able to change end time of started reservation")
         reservation.end_time = timezone.now() + timedelta(hours=-1)
@@ -252,26 +254,26 @@ class TestReservation(ReservationTestBase):
 
     def test_can_owner_change_end_time_of_ended_reservation(self):
         self.assertFalse(
-            self.create_reservation(timedelta(hours=-3), timedelta(hours=-1)).can_change_end_time(self.user))
+            self.create_reservation(timedelta(hours=-3), timedelta(hours=-1)).can_change_end_time(self.user_with_course_and_quota))
 
     def test_can_owner_change_started_event_reservation(self):
         self.give_user_event_permission()
 
         self.assertTrue(
             self.create_reservation(timedelta(hours=-1), timedelta(hours=2), event=self.timeplace).can_change(
-                self.user))
+                self.user_with_course_and_quota))
 
     def test_can_owner_change_started_special_reservation(self):
         self.give_user_event_permission()
 
         self.assertTrue(self.create_reservation(timedelta(hours=-1), timedelta(hours=2), special=True,
-                                                special_text="Test").can_change(self.user))
+                                                special_text="Test").can_change(self.user_with_course_and_quota))
 
     def test_can_other_user_change_future_reservation(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
-        self.assertTrue(reservation.can_change(self.user))
+        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_user_with_event_reservation_change_other_user_non_event_reservation(self):
@@ -280,7 +282,7 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
-        self.assertTrue(reservation.can_change(self.user))
+        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_user_with_event_reservation_change_other_user_event_reservation(self):
@@ -290,7 +292,7 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
-        self.assertTrue(reservation.can_change(self.user))
+        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
         self.assertTrue(reservation.can_change(user2))
 
     def test_can_user_with_event_reservation_change_other_user_special_reservation(self):
@@ -300,7 +302,7 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
-        self.assertTrue(reservation.can_change(self.user))
+        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
         self.assertTrue(reservation.can_change(user2))
 
     def test_can_user_without_event_reservation_change_other_user_special_reservation(self):
@@ -309,7 +311,7 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
-        self.assertTrue(reservation.can_change(self.user))
+        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_user_without_event_reservation_change_other_user_event_reservation(self):
@@ -318,14 +320,14 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
-        self.assertTrue(reservation.can_change(self.user))
+        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
         self.assertFalse(reservation.can_change(user2))
 
     def test_can_delete_future_reservation(self):
-        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_delete(self.user))
+        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_delete(self.user_with_course_and_quota))
 
     def test_cannot_delete_started_reservation(self):
-        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_delete(self.user))
+        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_delete(self.user_with_course_and_quota))
 
     def test_is_within_allowed_period_for_reservation(self):
         self.set_reservation_future_limit_days(7)
@@ -350,23 +352,35 @@ class TestReservation(ReservationTestBase):
         self.reset_reservation_future_limit_days()
 
 
-class TestRaise3DMachineReservation(ReservationTestBase):
+class TestReservationOfAdvancedPrinters(ReservationTestBase):
 
-    def setUp(self):
+    def test_raise3d_printer_can_only_be_reserved_by_users_with_raise3d_course(self):
+        def set_raise3d_course(course: Printer3DCourse):
+            course.raise3d_course = True
+            course.save()
+
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
-        super().init_objs(MachineType.objects.get(pk=6))
+        self._test_advanced_printer_can_only_be_reserved_by_users_with_advanced_course(MachineType.objects.get(pk=6), set_raise3d_course)
 
-    def test_booking_raise3d_printer_without_any_course(self):
+    def test_sla_printer_can_only_be_reserved_by_users_with_sla_course(self):
+        def set_sla_course(course: Printer3DCourse):
+            course.sla_course = True
+            course.save()
+
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        self._test_advanced_printer_can_only_be_reserved_by_users_with_advanced_course(MachineType.objects.get(pk=7), set_sla_course)
+
+    def _test_advanced_printer_can_only_be_reserved_by_users_with_advanced_course(self, machine_type: MachineType,
+                                                                                  set_advanced_course_func: Callable[[Printer3DCourse], None]):
+        super().init_objs(machine_type)
+
+        # User without a course should not be allowed
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
-        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2), user=user2),
-                                       "Uses that cannot use a machine, should not be able to reserve it")
+        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2), user=user2))
 
-    def test_booking_raise3d_printer_with_normal_course(self):
-        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
-                                       "Uses that cannot use a machine, should not be able to reserve it")
+        # User with a normal course should also not be allowed
+        self.check_reservation_invalid(self.create_reservation(timedelta(hours=1), timedelta(hours=2), user=self.user_with_course_and_quota))
 
-    def test_booking_raise3d_printer_with_raise3d_course(self):
-        self.course_registration.raise3d_course = True
-        self.course_registration.save()
-        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2)),
-                                     "Uses that cannot use a machine, should not be able to reserve it")
+        # User with the advanced course should be allowed
+        set_advanced_course_func(self.course_registration)
+        self.check_reservation_valid(self.create_reservation(timedelta(hours=1), timedelta(hours=2), user=self.user_with_course_and_quota))

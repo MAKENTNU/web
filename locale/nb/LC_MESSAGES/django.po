@@ -203,6 +203,22 @@ msgstr ""
 msgid "You have not taken the Raise3D printer course"
 msgstr "Du har ikke tatt Raise3D-printerkurset"
 
+#: checkin/templates/checkin/profile.html:42
+msgid "You have completed the SLA 3D printer course"
+msgstr "Du har fullført SLA 3D-printerkurset"
+
+#: checkin/templates/checkin/profile.html:43
+msgid ""
+"To use an SLA 3D printer, make a reservation in the calendar of one of the "
+"SLA 3D printers on the “Reservations” page."
+msgstr ""
+"For å bruke en SLA 3D-printer, lag en reservasjon i kalenderen til en av SLA "
+"3D-printerne på «Reservasjoner»-siden."
+
+#: checkin/templates/checkin/profile.html:46
+msgid "You have not taken the SLA 3D printer course"
+msgstr "Du har ikke tatt SLA 3D-printerkurset"
+
 #: checkin/templates/checkin/profile.html:46
 #, python-format
 msgid ""
@@ -1270,6 +1286,10 @@ msgstr "kursdato"
 msgid "Raise3D course"
 msgstr "Raise3D-kurs"
 
+#: make_queue/models/course.py:31
+msgid "SLA course"
+msgstr "SLA-kurs"
+
 #: make_queue/models/course.py:37
 msgid "3D printer course"
 msgstr "3D-printerkurs"
@@ -1289,6 +1309,10 @@ msgstr "Tatt 3D-printerkurset"
 #: make_queue/models/machine.py:36
 msgid "Taken the course on Raise3D printers"
 msgstr "Tatt Raise3D-printerkurset"
+
+#: make_queue/models/machine.py:42
+msgid "Taken the SLA 3D printer course"
+msgstr "Tatt SLA 3D-printerkurset"
 
 #: make_queue/models/machine.py:44
 msgid "usage requirement"

@@ -98,6 +98,7 @@
                 <th data-column-name="date">{% trans "date"|capfirst %}</th>
                 <th data-column-name="status">{% trans "status"|capfirst %}</th>
                 <th data-column-name="raise3DCourse">Raise3D</th>
+                <th data-column-name="slaCourse">SLA</th>
             </tr>
             </thead>
             <tbody>
@@ -110,6 +111,7 @@
                     data-date="{{ registration.date|iso_date }}"
                     data-status="{{ registration.status }}"
                     data-raise3d-course="{{ registration.raise3d_course }}"
+                    data-sla-course="{{ registration.sla_course }}"
                 >
                     <td>
                         {{ registration.name }}
@@ -147,6 +149,13 @@
                     </td>
                     <td>
                         {% if registration.raise3d_course %}
+                            {% trans "Yes" %}
+                        {% else %}
+                            {% trans "No" %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if registration.sla_course %}
                             {% trans "Yes" %}
                         {% else %}
                             {% trans "No" %}

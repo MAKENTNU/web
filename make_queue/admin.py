@@ -77,15 +77,15 @@ class ReservationRuleAdmin(admin.ModelAdmin):
 
 
 class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin):
-    list_display = ('username', 'user', 'name', 'date', 'status', 'raise3d_course', 'last_modified')
-    list_filter = ('status', 'raise3d_course')
+    list_display = ('username', 'user', 'name', 'date', 'status', 'raise3d_course', 'sla_course', 'last_modified')
+    list_filter = ('status', 'raise3d_course', 'sla_course')
     search_fields = (
         'username', 'name',
         'user__card_number', '_card_number',
         # The user search fields are appended in `UserSearchFieldsMixin`
     )
     user_lookup, name_for_full_name_lookup = 'user__', 'user_full_name'
-    list_editable = ('status', 'raise3d_course')
+    list_editable = ('status', 'raise3d_course', 'sla_course')
     ordering = ('date', 'username')
     list_select_related = ('user',)
 

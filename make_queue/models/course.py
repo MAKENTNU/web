@@ -28,6 +28,7 @@ class Printer3DCourse(models.Model):
     name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
     raise3d_course = models.BooleanField(default=False, verbose_name=_("Raise3D course"))
+    sla_course = models.BooleanField(default=False, verbose_name=_("SLA course"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:

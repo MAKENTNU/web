@@ -281,6 +281,7 @@ function setupState() {
                 date: $(this).data("date"),
                 status: $(this).data("status"),
                 raise3DCourse: $(this).data("raise3d-course"),
+                slaCourse: $(this).data("sla-course"),
                 display: true,
                 $element: $(this),
             });

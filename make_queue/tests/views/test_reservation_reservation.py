@@ -1,7 +1,7 @@
 from abc import ABC
 from datetime import timedelta
 from http import HTTPStatus
-from typing import Type, Union
+from typing import Callable, Type, Union
 from unittest.mock import patch
 
 from django.http import HttpResponse
@@ -230,8 +230,26 @@ class TestCreateReservationView(CreateOrEditReservationViewTestBase):
         self._test_only_internal_users_can_view_create_reservation_page_for_machine(self.user, machine)
 
     def test_only_users_with_raise3d_course_can_view_create_reservation_page_for_raise3d_printers(self):
+        def set_raise3d_course(course: Printer3DCourse):
+            course.raise3d_course = True
+            course.save()
+
         raise3d_machine_type = MachineType.objects.get(pk=6)
         machine = Machine.objects.create(name="Darwin", machine_model="Raise3D Pro2 Plus", machine_type=raise3d_machine_type)
+        self._test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(machine, set_raise3d_course)
+
+    def test_only_users_with_sla_course_can_view_create_reservation_page_for_sla_printers(self):
+        def set_sla_course(course: Printer3DCourse):
+            course.sla_course = True
+            course.save()
+
+        sla_machine_type = MachineType.objects.get(pk=7)
+        machine = Machine.objects.create(name="Unnamed SLA printer", machine_model="Formlabs Form 2", machine_type=sla_machine_type)
+        self._test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(machine, set_sla_course)
+
+    def _test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(
+            self, machine: Machine, set_advanced_course_func: Callable[[Printer3DCourse], None],
+    ):
         create_reservation_url = reverse('create_reservation', args=[machine.pk])
 
         self.client.force_login(self.user)
@@ -240,13 +258,12 @@ class TestCreateReservationView(CreateOrEditReservationViewTestBase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         course = Printer3DCourse.objects.create(user=self.user, date=timezone.now())
-        # Not having taken the Raise3D course should deny the user
+        # Not having taken the advanced course should deny the user
         response = self.client.get(create_reservation_url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        # Having taken the Raise3D course should allow the user
-        course.raise3d_course = True
-        course.save()
+        # Having taken the advanced course should allow the user
+        set_advanced_course_func(course)
         response = self.client.get(create_reservation_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
