@@ -4,7 +4,7 @@ from typing import Tuple, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.db import models
-from django.db.models import F, Prefetch
+from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -122,8 +122,13 @@ class MachineQuerySet(models.QuerySet):
     def visible_to(self, user: User):
         if user.has_perm('internal.is_internal'):
             return self.all()
-        else:
-            return self.exclude(internal=True)
+
+        exclude_query = Q(internal=True)
+        # Machines that require the SLA course should not be visible to non-internal users who have not taken the SLA course
+        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.sla_course:
+            exclude_query |= Q(machine_type__usage_requirement=MachineType.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE)
+
+        return self.exclude(exclude_query)
 
     def default_order_by(self):
         return self.order_by(

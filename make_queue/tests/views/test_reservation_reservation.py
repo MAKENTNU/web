@@ -255,12 +255,14 @@ class TestCreateReservationView(CreateOrEditReservationViewTestBase):
         self.client.force_login(self.user)
         # Not having taken the course at all should deny the user
         response = self.client.get(create_reservation_url)
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        # `NOT_FOUND` for SLA printers, `FORBIDDEN` otherwise
+        self.assertIn(response.status_code, {HTTPStatus.FORBIDDEN, HTTPStatus.NOT_FOUND})
 
         course = Printer3DCourse.objects.create(user=self.user, date=timezone.now())
         # Not having taken the advanced course should deny the user
         response = self.client.get(create_reservation_url)
-        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+        # `NOT_FOUND` for SLA printers, `FORBIDDEN` otherwise
+        self.assertIn(response.status_code, {HTTPStatus.FORBIDDEN, HTTPStatus.NOT_FOUND})
 
         # Having taken the advanced course should allow the user
         set_advanced_course_func(course)

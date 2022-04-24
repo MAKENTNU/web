@@ -4,9 +4,11 @@ from typing import List
 from django.templatetags.static import static
 from django.test import TestCase
 from django.urls import reverse
+from django.utils import timezone
 
 from users.models import User
 from ...forms import CreateMachineForm, EditMachineForm
+from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 
 
@@ -67,15 +69,8 @@ class TestMachineListView(TestCase):
         sewing2 = Machine.objects.create(name="Sewing machine 2", machine_type=self.sewing_machine_type)
         scanner1_internal = Machine.objects.create(name="Scanner 1", machine_type=MachineType.objects.get(pk=3), internal=True)
 
-        def assert_machine_list_contains(expected_machines_per_machine_type: List[List[Machine]]):
-            response = self.get_machine_list_response()
-            shown_machine_types = self.get_shown_machine_type_list(response)
-            self.assertEqual(len(shown_machine_types), len(expected_machines_per_machine_type))
-            for machine_type, expected_machines in zip(shown_machine_types, expected_machines_per_machine_type):
-                self.assertListEqual(list(machine_type.shown_machines), expected_machines)
-
         # The internal machines should not be shown to anonymous users
-        assert_machine_list_contains([
+        self.assert_machine_list_contains([
             [printer1, printer2, printer4],
             [sewing2],
         ])
@@ -83,18 +78,77 @@ class TestMachineListView(TestCase):
         # The internal machines should not be shown to unprivileged users
         user = User.objects.create_user("user1")
         self.client.force_login(user)
-        assert_machine_list_contains([
+        self.assert_machine_list_contains([
             [printer1, printer2, printer4],
             [sewing2],
         ])
 
         # The internal machines should be shown to MAKE members
         user.add_perms('internal.is_internal')
-        assert_machine_list_contains([
+        self.assert_machine_list_contains([
             [printer1, printer2, printer3_internal, printer4],
             [sewing1_internal, sewing2],
             [scanner1_internal],
         ])
+
+    def test_sla_machines_are_only_shown_to_internal_users_or_users_with_sla_course(self):
+        raise3d_printer_machine_type = MachineType.objects.get(pk=6)
+        sla_printer_machine_type = MachineType.objects.get(pk=7)
+
+        printer1 = Machine.objects.create(name="Printer 1", machine_type=self.printer_machine_type)
+        raise3d_printer1 = Machine.objects.create(name="Raise3dD printer 1", machine_type=raise3d_printer_machine_type)
+        sla_printer1 = Machine.objects.create(name="SLA printer 1", machine_type=sla_printer_machine_type)
+
+        # The SLA printer should not be shown to anonymous users
+        self.assert_machine_list_contains([
+            [printer1], [raise3d_printer1],
+        ])
+
+        # The SLA printer should not be shown to "normal" users
+        user = User.objects.create_user("user1")
+        self.client.force_login(user)
+        self.assert_machine_list_contains([
+            [printer1], [raise3d_printer1],
+        ])
+
+        # The SLA printer should not be shown to users with a standard course
+        course = Printer3DCourse.objects.create(user=user, date=timezone.now())
+        self.assert_machine_list_contains([
+            [printer1], [raise3d_printer1],
+        ])
+
+        # The SLA printer should be shown to users with an SLA course
+        course.sla_course = True
+        course.save()
+        self.assert_machine_list_contains([
+            [printer1], [raise3d_printer1], [sla_printer1],
+        ])
+
+        # The SLA printer should be shown to MAKE members with an SLA course
+        self.assertListEqual(list(user.user_permissions.all()), [])
+        user.add_perms('internal.is_internal')
+        self.assert_machine_list_contains([
+            [printer1], [raise3d_printer1], [sla_printer1],
+        ])
+
+        # The SLA printer should be shown to MAKE members without an SLA course
+        course.delete()
+        self.assert_machine_list_contains([
+            [printer1], [raise3d_printer1], [sla_printer1],
+        ])
+
+        # The SLA printer should not be shown to "normal" users, again
+        user.user_permissions.set([])
+        self.assert_machine_list_contains([
+            [printer1], [raise3d_printer1],
+        ])
+
+    def assert_machine_list_contains(self, expected_machines_per_machine_type: List[List[Machine]]):
+        response = self.get_machine_list_response()
+        shown_machine_types = self.get_shown_machine_type_list(response)
+        self.assertEqual(len(shown_machine_types), len(expected_machines_per_machine_type))
+        for machine_type, expected_machines in zip(shown_machine_types, expected_machines_per_machine_type):
+            self.assertListEqual(list(machine_type.shown_machines), expected_machines)
 
     def test_machines_are_sorted_correctly(self):
         correct_machine_orders = []
@@ -158,7 +212,11 @@ class TestMachineDetailView(TestCase):
 
                 # User should be allowed when machine is not internal
                 response = self.client.get(machine_detail_url)
-                self.assertEqual(response.status_code, HTTPStatus.OK)
+                expected_status_code = HTTPStatus.OK
+                # ...except if the machine requires the SLA course
+                if machine_type.usage_requirement == MachineType.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE:
+                    expected_status_code = HTTPStatus.NOT_FOUND
+                self.assertEqual(response.status_code, expected_status_code)
 
                 # User should not be able to find the machine when it's internal
                 machine.internal = True
