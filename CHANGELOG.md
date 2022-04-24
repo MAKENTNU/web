@@ -14,6 +14,15 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added [page for searching through all event participants](https://makentnu.no/admin/news/events/participants/search/)
 - Added table on [the profile page](https://makentnu.no/checkin/profile/) which displays the completion status of all available courses
   - Also, the profile button in the user dropdown is now visible to all users - not just MAKE members
+- Added a "Notes" field to machines
+  - This is only for internal use and is not displayed anywhere - except for in the machine change form itself, naturally
+- Added an "Internal" field to machines
+  - This makes machines only visible to and reservable by MAKE members
+- Added an "Info message" field to machines
+  - This is for displaying information that's useful to know before using the machine, e.g. the filament that the 3D printer uses,
+    the needle that's currently inserted in the sewing machine, or just the machine's current state/"mood"
+- Added an SLA 3D printer machine type, and an "SLA course" checkbox to course registrations
+  - SLA 3D printers are always visible to MAKE members, but only visible to other users after they have taken the SLA course
 
 ### Improvements
 - Significantly improved page performance when watching streams that fail to connect
@@ -22,6 +31,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Reordered [admin panel](https://makentnu.no/admin/) buttons
 - The code that reduces the size of uploaded images, now does not use the "reduced" image if it's not actually smaller -
   which could happen with some images
+- Some minor improvements to the layout of the information text, action buttons and stream image on each machine detail page
 
 ### Fixes
 - Fixed server error when users tried to change or delete quotes that they themselves had created
@@ -30,6 +40,12 @@ A summary of changes made to the codebase, grouped per deployment.
 - Fixed a bug after having selected a time in a calendar popup, which would cause nothing to happen when clicking the input field again
 - Fixed server error while reducing the size of an uploaded image that was larger than 2.5 MB
 - Fixed server error when uploading an image to an object that had its previous image file deleted - without also updating the database
+
+### Other changes
+- Renamed the "Advanced course" checkbox to "Raise3D course", and renamed the "Special 3D printers" machine type to "Raise3D printers"
+  - This reflects the fact that the course in question is only really for Raise3D printers specifically
+  - It also reduces the potential for confusion after having added the SLA course / machine type
+    (which can technically also be classified as an "advanced" course / "special" machine type)
 
 
 ## 2022-04-07 ([#434](https://github.com/MAKENTNU/web/pull/434) and [#437](https://github.com/MAKENTNU/web/pull/437))
