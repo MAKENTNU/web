@@ -21,12 +21,16 @@ class CompressedImageField(forms.ImageField):
     def clean(self, data: Union[InMemoryUploadedFile, bool, None], initial: ImageFieldFile = None):
         cleaned_data: Union[ImageFieldFile, InMemoryUploadedFile, TemporaryUploadedFile, bool, None] = super().clean(data, initial=initial)
         if data and cleaned_data:
-            if initial and file_contents_equal(cleaned_data, initial):
-                if not filenames_equal(cleaned_data, initial):
-                    # Return the cleaned data, so that the image will get the name of the uploaded file
-                    return cleaned_data
-                # Don't change the field at all (unlike returning `False`, which would clear the image field and delete the existing file)
-                return None
+            try:
+                if initial and file_contents_equal(cleaned_data, initial):
+                    if not filenames_equal(cleaned_data, initial):
+                        # Return the cleaned data, so that the image will get the name of the uploaded file
+                        return cleaned_data
+                    # Don't change the field at all
+                    # (unlike returning `False`, which would clear the image field (and delete the existing file through `django-cleanup`))
+                    return None
+            except FileNotFoundError:
+                pass
 
             try:
                 with Image.open(cleaned_data) as pillow_image:
