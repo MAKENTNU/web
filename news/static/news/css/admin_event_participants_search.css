@@ -1,4 +1,7 @@
-#found-users-list {
-    margin-right: 0;
-    padding: 0;
+.users-list {
+    margin-top: 2em;
+}
+
+.participant-tickets-list li.canceled {
+    text-decoration: line-through;
 }

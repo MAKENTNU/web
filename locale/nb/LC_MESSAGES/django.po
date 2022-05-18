@@ -2387,6 +2387,10 @@ msgstr[1] "%(counter)s framtidige forekomster"
 msgid "Admin"
 msgstr "Admin"
 
+#: news/templates/news/admin_event_participants_search.html:40
+msgid "No users found"
+msgstr "Ingen brukere funnet"
+
 #: news/templates/news/admin_event_ticket_list.html:16
 msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"

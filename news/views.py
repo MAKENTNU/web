@@ -8,6 +8,7 @@ from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Count, Max, Min, Prefetch, Q, QuerySet
+from django.db.models.functions import Concat
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -198,7 +199,7 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
                          last_standalone_event_occurrence=Max('event__timeplaces__start_time'),
                      ).prefetch_related('timeplace__event', 'event'),
                      to_attr='tickets'),
-        )
+        ).order_by(Concat('first_name', 'last_name'))
 
         def ticket_sorting_key(tickets):
             if tickets.timeplace:
