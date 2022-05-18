@@ -1,9 +1,6 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
 {% load static %}
-{% load thumbnail %}
-{% load html_tags %}
-{% load checkin_tags %}
 
 
 {% block extra_head %}
@@ -15,10 +12,10 @@
         <h1>
             {% trans "My profile" %}
         </h1>
-        <h2>{{ request.user.first_name }} {{ request.user.last_name }}</h2>
+        <h2>{{ request.user.get_full_name }}</h2>
 
-       {% if perms.internal.is_internal %}
-           {% include 'checkin/profile_internal.html' %}
+        {% if perms.internal.is_internal %}
+            {% include 'checkin/profile_internal.html' %}
             <br/>
         {% endif %}
 
@@ -37,14 +34,12 @@
                     {% trans "You do not have access to the Special-3D-printers. To get access, you need to take an advanced 3D-printer course." %}
                 </div>
             {% endif %}
-
         {% else %}
             <div class="ui container">
                 {% trans "You do not have access to the printer room. To get access, you need to take a 3D-printer course." %}
             </div>
         {% endif %}
     </div>
-
 {% endblock body %}
 
 {% block extra_scripts %}
