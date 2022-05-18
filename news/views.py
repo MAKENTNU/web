@@ -152,9 +152,20 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
         ).order_by('-latest_occurrence').prefetch_related('timeplaces')
 
 
-class AdminEventParticipantsSearchView(PermissionRequiredMixin, FormView):
+class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFormMixin, FormView):
     form_class = EventParticipantsSearchForm
     template_name = 'news/admin_event_participants_search.html'
+
+    form_title = _("Find events users have attended or are registered for")
+    narrow = False
+    back_button_link = reverse_lazy('admin_event_list')
+    back_button_text = _("Admin page for events")
+    save_button_text = _("Search")
+    cancel_button = False
+    right_floated_buttons = False
+    custom_fieldsets = [
+        {'fields': ('search_string',), 'layout_class': "two"},
+    ]
 
     def has_permission(self):
         return self.request.user.has_any_permissions_for(Event)

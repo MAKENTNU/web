@@ -1,35 +1,16 @@
-{% extends 'web/base.html' %}
+{% extends 'web/edit_form.html' %}
 {% load static %}
-{% load i18n %}
 
 
 {% block extra_head %}
+    {{ block.super }}
     <link rel="stylesheet" href="{% static 'news/css/admin_event_participants_search.css' %}"/>
 {% endblock extra_head %}
 
-{% block body %}
-    <h1 class="ui centered header">
-        {% translate "Find events users have attended or are registered for" %}
-    </h1>
-
-    <div class="ui text container">
-        <form class="dont-prevent-leaving ui small form" method="POST">
-            {% csrf_token %}
-            <div class="eight wide field">
-                <label>
-                    {{ form.search_string.label }}
-                    <span data-content="{{ form.search_string.help_text }}">
-                    <i class="make-col-yellow question circle icon"></i>
-                </span>
-                </label>
-                {{ form.search_string }}
-            </div>
-            <button class="ui make-col-blue button" type="submit">
-                {% translate "Search" %}
-            </button>
-        </form>
-        {% if found_users %}
-            <br/>
+{% block extra_post_content %}
+    {% if found_users %}
+        <br/>
+        <div>
             {% for user in found_users %}
                 <ul id="found-users-list">
                     <h1>{{ user.get_full_name }}</h1>
@@ -55,6 +36,6 @@
                     <hr/>
                 </ul>
             {% endfor %}
-        {% endif %}
-    </div>
-{% endblock body %}
+        </div>
+    {% endif %}
+{% endblock extra_post_content %}
