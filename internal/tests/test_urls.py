@@ -11,7 +11,7 @@ from contentbox.models import ContentBox
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
 from ..forms import MemberStatusForm
-from ..models import Member, Secret, SystemAccess
+from ..models import Member, Quote, Secret, SystemAccess
 from ..util import date_to_semester, semester_to_year, year_to_semester
 
 
@@ -19,8 +19,8 @@ from ..util import date_to_semester, semester_to_year, year_to_semester
 INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': 'internal.testserver'}
 
 
-def reverse_internal(viewname: str, **kwargs):
-    return reverse(viewname, kwargs=kwargs, host='internal', host_args=['internal'])
+def reverse_internal(viewname: str, *args):
+    return reverse(viewname, args=args, host='internal', host_args=['internal'])
 
 
 class UrlTests(TestCase):
@@ -54,6 +54,11 @@ class UrlTests(TestCase):
         self.secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
         self.secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
         self.secrets = (self.secret1, self.secret2)
+
+        self.quote1 = Quote.objects.create(quote="Ha ha.", quoted="Human 1", author=member_user, date="2022-02-02")
+        self.quote2 = Quote.objects.create(quote="I like human humor.", quoted="Human 2", author=member_editor_user,
+                                           date="2022-02-02")
+        self.quotes = (self.quote1, self.quote2)
 
     @staticmethod
     def generic_request(client: Client, method: str, path: str, data: dict = None):
@@ -92,14 +97,14 @@ class UrlTests(TestCase):
 
     def test_permissions(self):
         self._test_internal_url('GET', reverse_internal('member_list'))
-        self._test_internal_url('GET', reverse_internal('member_list', pk=self.member.pk))
+        self._test_internal_url('GET', reverse_internal('member_list', self.member.pk))
         self._test_editor_url('GET', reverse_internal('create_member'))
 
         # All members can edit themselves, but only editors can edit other members
-        self._test_internal_url('GET', reverse_internal('edit_member', pk=self.member.pk))
-        self._test_editor_url('GET', reverse_internal('edit_member', pk=self.member_editor.pk))
+        self._test_internal_url('GET', reverse_internal('edit_member', self.member.pk))
+        self._test_editor_url('GET', reverse_internal('edit_member', self.member_editor.pk))
 
-        self._test_editor_url('GET', reverse_internal('member_quit', pk=self.member.pk))
+        self._test_editor_url('GET', reverse_internal('member_quit', self.member.pk))
 
         path_data_assertion_tuples = (
             ('member_quit', {'date_quit_or_retired': "2000-01-01", 'reason_quit': "Whatever."}, lambda member: member.quit),
@@ -109,7 +114,7 @@ class UrlTests(TestCase):
         )
         for path, data, assertion in path_data_assertion_tuples:
             with self.subTest(path=path, data=data):
-                self._test_editor_url('POST', reverse_internal(path, pk=self.member.pk), data,
+                self._test_editor_url('POST', reverse_internal(path, self.member.pk), data,
                                       expected_redirect_url=f"/members/{self.member.pk}/")
                 self.member.refresh_from_db()
                 self.assertTrue(assertion(self.member))
@@ -119,7 +124,7 @@ class UrlTests(TestCase):
                 # No one is allowed to change their `WEBSITE` access. Other than that,
                 # all members can edit their own accesses, but only editors can edit other members'.
                 allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-                self._test_url_permissions('POST', reverse_internal('edit_system_access', member_pk=self.member.pk, pk=system_access.pk),
+                self._test_url_permissions('POST', reverse_internal('edit_system_access', self.member.pk, system_access.pk),
                                            {'value': True}, allowed_clients=allowed_clients,
                                            expected_redirect_url=f"/members/{self.member.pk}/")
 
@@ -127,7 +132,7 @@ class UrlTests(TestCase):
             with self.subTest(system_access=system_access):
                 # No one is allowed to change their `WEBSITE` access
                 allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
-                self._test_url_permissions('POST', reverse_internal('edit_system_access', member_pk=self.member_editor.pk, pk=system_access.pk),
+                self._test_url_permissions('POST', reverse_internal('edit_system_access', self.member_editor.pk, system_access.pk),
                                            {'value': True}, allowed_clients=allowed_clients,
                                            expected_redirect_url=f"/members/{self.member_editor.pk}/")
 
@@ -139,11 +144,18 @@ class UrlTests(TestCase):
     def test_all_non_member_get_request_paths_succeed(self):
         path_predicates = [
             Get(reverse_internal(self.home_content_box.url_name), public=False),
-            Get(reverse_internal('contentbox_edit', pk=self.home_content_box.pk), public=False),
+            Get(reverse_internal('contentbox_edit', self.home_content_box.pk), public=False),
+
             Get(reverse_internal('secret_list'), public=False),
             Get(reverse_internal('create_secret'), public=False),
-            Get(reverse_internal('edit_secret', pk=self.secret1.pk), public=False),
-            Get(reverse_internal('edit_secret', pk=self.secret2.pk), public=False),
+            Get(reverse_internal('edit_secret', self.secret1.pk), public=False),
+            Get(reverse_internal('edit_secret', self.secret2.pk), public=False),
+
+            Get(reverse_internal('quote_list'), public=False),
+            Get(reverse_internal('quote_create'), public=False),
+            Get(reverse_internal('quote_update', self.quote1.pk), public=False),
+            Get(reverse_internal('quote_update', self.quote2.pk), public=False),
+
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
         ]
@@ -157,13 +169,17 @@ class UrlTests(TestCase):
             ],
             *[
                 Get(admin_url, public=False)
+                for admin_url in generate_all_admin_urls_for_model_and_objs(SystemAccess, [access
+                                                                                           for member in self.members
+                                                                                           for access in member.system_accesses.all()])
+            ],
+            *[
+                Get(admin_url, public=False)
                 for admin_url in generate_all_admin_urls_for_model_and_objs(Secret, self.secrets)
             ],
             *[
                 Get(admin_url, public=False)
-                for admin_url in generate_all_admin_urls_for_model_and_objs(SystemAccess, [access
-                                                                                           for member in self.members
-                                                                                           for access in member.system_accesses.all()])
+                for admin_url in generate_all_admin_urls_for_model_and_objs(Quote, self.quotes)
             ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')

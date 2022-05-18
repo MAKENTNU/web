@@ -1,21 +1,22 @@
 from django.contrib.auth.decorators import login_required
-from django.urls import include, path, register_converter
+from django.urls import include, path
 
-from . import converters, views
+from . import views
 from .ical import SingleTimePlaceFeed
 
 
-register_converter(converters.SpecificArticle, 'Article')
-register_converter(converters.SpecificEvent, 'Event')
-
 article_urlpatterns = [
     path("", views.ArticleListView.as_view(), name='article_list'),
-    path("<Article:article>/", views.ArticleDetailView.as_view(), name='article_detail'),
+    path("<int:pk>/", views.ArticleDetailView.as_view(), name='article_detail'),
+]
+
+specific_time_place_urlpatterns = [
+    path("register/", login_required(views.EventRegistrationView.as_view()), name='register_timeplace'),
+    path("ical/", SingleTimePlaceFeed(), name='timeplace_ical'),
 ]
 
 time_place_urlpatterns = [
-    path("<int:time_place_pk>/register/", login_required(views.EventRegistrationView.as_view()), name='register_timeplace'),
-    path("<int:pk>/ical/", SingleTimePlaceFeed(), name='timeplace_ical'),
+    path("<int:time_place_pk>/", include(specific_time_place_urlpatterns)),
 ]
 
 specific_event_urlpatterns = [
@@ -26,7 +27,7 @@ specific_event_urlpatterns = [
 
 event_urlpatterns = [
     path("", views.EventListView.as_view(), name='event_list'),
-    path("<Event:event>/", include(specific_event_urlpatterns)),
+    path("<int:pk>/", include(specific_event_urlpatterns)),
 ]
 
 ticket_urlpatterns = [
@@ -52,7 +53,7 @@ specific_article_adminpatterns = [
 article_adminpatterns = [
     path("", views.AdminArticleListView.as_view(), name='admin_article_list'),
     path("create/", views.CreateArticleView.as_view(), name='article_create'),
-    path("<Article:article>/", include(specific_article_adminpatterns)),
+    path("<int:pk>/", include(specific_article_adminpatterns)),
 ]
 
 specific_time_place_adminpatterns = [
@@ -65,7 +66,7 @@ specific_time_place_adminpatterns = [
 
 time_place_adminpatterns = [
     path("create/", views.CreateTimePlaceView.as_view(), name='timeplace_create'),
-    path("<int:pk>/", include(specific_time_place_adminpatterns)),
+    path("<int:time_place_pk>/", include(specific_time_place_adminpatterns)),
 ]
 
 specific_event_adminpatterns = [
@@ -80,7 +81,7 @@ specific_event_adminpatterns = [
 event_adminpatterns = [
     path("", views.AdminEventListView.as_view(), name='admin_event_list'),
     path("create/", views.CreateEventView.as_view(), name='event_create'),
-    path("<Event:event>/", include(specific_event_adminpatterns)),
+    path("<int:pk>/", include(specific_event_adminpatterns)),
     path('search/', login_required(views.AdminEventsSearchView.as_view()), name='admin_events_search'),
 ]
 

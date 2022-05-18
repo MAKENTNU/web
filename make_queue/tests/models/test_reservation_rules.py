@@ -79,6 +79,16 @@ class TestPeriod(TestCase):
         self.assertFalse(period1.overlap(period4), "Periods on distinct days should not overlap")
         self.assertFalse(period4.overlap(period1), "Periods on distinct days should not overlap")
 
+    def test_subtraction(self):
+        period1 = Period(1, parse_time("00:00"), parse_time("06:00"), 0)
+        period2 = Period(1, parse_time("18:00"), parse_time("20:00"), 0)
+        self.assertEqual(period2 - period1, 0.5)
+        period3 = Period(2, parse_time("06:00"), parse_time("10:00"), 0)
+        self.assertEqual(period3 - period1, 1)
+        period4 = Period(7, parse_time("06:00"), parse_time("12:00"), 0)
+        self.assertEqual(period4 - period1, 6)
+        self.assertEqual(period1 - period4, 0.5)
+
 
 class TestReservationRule(TestCase):
 

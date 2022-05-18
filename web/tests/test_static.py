@@ -10,19 +10,23 @@ MANIFEST_HEX_SUFFIX_REGEX = r"\.[0-9a-f]{12}"
 
 
 class InterpolatedStaticFilesTests(LiveServerTestCase):
+    favicons_folders = [f"{base_folder}/img/favicons/" for base_folder in ('web', 'internal', 'admin')]
     interpolated_files_to_before_and_after_strings = {
         **{
-            f'{favicons_base_folder}/img/favicons/browserconfig.interpolated.xml': [
-                ("{% get_relative_static './mstile-150x150.png' %}", rf'\./mstile-150x150{MANIFEST_HEX_SUFFIX_REGEX}\.png')
+            f'{favicons_folder}browserconfig.interpolated.xml': [
+                (f"{{% static '{favicons_folder}mstile-150x150.png' %}}",
+                 rf'/static/{favicons_folder}mstile-150x150{MANIFEST_HEX_SUFFIX_REGEX}\.png')
             ]
-            for favicons_base_folder in ('web', 'internal', 'admin')
+            for favicons_folder in favicons_folders
         },
         **{
-            f'{favicons_base_folder}/img/favicons/site.interpolated.webmanifest': [
-                ("{% get_relative_static './android-chrome-192x192.png' %}", rf'\./android-chrome-192x192{MANIFEST_HEX_SUFFIX_REGEX}\.png'),
-                ("{% get_relative_static './android-chrome-512x512.png' %}", rf'\./android-chrome-512x512{MANIFEST_HEX_SUFFIX_REGEX}\.png'),
+            f'{favicons_folder}site.interpolated.webmanifest': [
+                (f"{{% static '{favicons_folder}android-chrome-192x192.png' %}}",
+                 rf'/static/{favicons_folder}android-chrome-192x192{MANIFEST_HEX_SUFFIX_REGEX}\.png'),
+                (f"{{% static '{favicons_folder}android-chrome-512x512.png' %}}",
+                 rf'/static/{favicons_folder}android-chrome-512x512{MANIFEST_HEX_SUFFIX_REGEX}\.png'),
             ]
-            for favicons_base_folder in ('web', 'internal', 'admin')
+            for favicons_folder in favicons_folders
         },
     }
 

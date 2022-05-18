@@ -1,6 +1,7 @@
 import copy
 import logging
 import sys
+from importlib.util import find_spec
 from pathlib import Path
 
 import django.views.static
@@ -32,6 +33,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+INTERNAL_IPS = ['127.0.0.1']
 MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
@@ -55,6 +57,9 @@ SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 # host we are running on. This currently points to "makentnu.localhost:8000", and should
 # be changed in production
 PARENT_HOST = "makentnu.localhost:8000"
+
+# Is `True` if `django-debug-toolbar` is installed
+USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 EMAIL_SITE_URL = "https://makentnu.no"  # (custom setting)
@@ -107,14 +112,23 @@ INSTALLED_APPS = [
 
     'util',
 
+    # Contains a lot of useful management commands, but is not strictly necessary for the project.
+    # See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html
+    'django_extensions',
+
+    *(['debug_toolbar'] if USE_DEBUG_TOOLBAR else []),
+
     # Should be placed last,
     # "to ensure that exceptions inside other apps' signal handlers do not affect the integrity of file deletions within transactions"
     'django_cleanup.apps.CleanupConfig',
 ]
 
+
 MIDDLEWARE = [
     # Must be the first entry (see https://django-hosts.readthedocs.io/en/latest/#installation)
     'django_hosts.middleware.HostsRequestMiddleware',
+
+    *(['debug_toolbar.middleware.DebugToolbarMiddleware'] if USE_DEBUG_TOOLBAR else []),
 
     # (See hints for ordering at https://docs.djangoproject.com/en/stable/ref/middleware/#middleware-ordering)
     'django.middleware.security.SecurityMiddleware',
@@ -172,7 +186,7 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'web.routing.application'
+ASGI_APPLICATION = 'web.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
@@ -288,7 +302,15 @@ STATIC_URL = '/static/'
 
 # This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
 # which avoids waiting for browsers' cache to update if a file's contents change
-STATICFILES_STORAGE = 'web.static.InterpolatingManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'web.static.ManifestStaticFilesStorage'
+# Ignores adding a hash to the files whose paths match these glob patterns:
+# NOTE: Ignored files should be named so that it's obvious that they should be renamed when their contents update,
+#       to avoid being "stuck" in browsers' cache - which is what `ManifestStaticFilesStorage` would have prevented
+#       if the files were not ignored.
+#       For example: placing ignored files inside a folder with a version number as its name.
+MANIFEST_STATICFILES_IGNORE_PATTERNS = [  # (custom setting)
+    'ckeditor/mathjax/*',
+]
 # Monkey patch view used for serving static and media files (for development only; Nginx is used in production)
 django.views.static.serve = serve_interpolated
 
@@ -302,7 +324,7 @@ def static_lazy(path):
 
 
 CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
-CKEDITOR_IMAGE_BACKEND = 'pillow'
+CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
@@ -320,7 +342,7 @@ CKEDITOR_CONFIGS = {
         ],
         'toolbar': 'main',
         # All MathJax files downloaded from https://github.com/mathjax/MathJax/tree/2.7.9
-        'mathJaxLib': static_lazy('ckeditor/mathjax/MathJax.js?config=TeX-AMS_HTML'),
+        'mathJaxLib': static_lazy('ckeditor/mathjax/v2.7.9/MathJax.js?config=TeX-AMS_HTML'),
         'tabSpaces': 4,
         'contentsCss': [
             static_lazy('web/css/font_faces.css'),
@@ -350,11 +372,43 @@ PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 SIMPLE_HISTORY_FILEFIELD_TO_CHARFIELD = True
 
 
+if USE_DEBUG_TOOLBAR:
+    DEBUG_TOOLBAR_CONFIG = {
+        'RENDER_PANELS': False,
+        'DISABLE_PANELS': {
+            # 'debug_toolbar.panels.history.HistoryPanel',
+            'debug_toolbar.panels.versions.VersionsPanel',
+            # 'debug_toolbar.panels.timer.TimerPanel',
+            # 'debug_toolbar.panels.settings.SettingsPanel',
+            # 'debug_toolbar.panels.headers.HeadersPanel',
+            # 'debug_toolbar.panels.request.RequestPanel',
+            'debug_toolbar.panels.sql.SQLPanel',
+            'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+            'debug_toolbar.panels.templates.TemplatesPanel',
+            'debug_toolbar.panels.cache.CachePanel',
+            'debug_toolbar.panels.signals.SignalsPanel',
+            # 'debug_toolbar.panels.logging.LoggingPanel',
+            'debug_toolbar.panels.redirects.RedirectsPanel',
+            'debug_toolbar.panels.profiling.ProfilingPanel',
+        },
+    }
+
+
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for
 # more details on how to customize your logging configuration.
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'standard': {
+            'format': "{message}",
+            'style': '{',
+        },
+        'verbose': {
+            'format': "{levelname}\t| {name}\t|\t{message}",
+            'style': '{',
+        },
+    },
     'filters': {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse',
@@ -371,15 +425,24 @@ LOGGING = {
         },
         'console': {
             'level': 'DEBUG',
-            'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
+            'formatter': 'standard',
         },
     },
     'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
+        },
+        **{
+            f'django.{disabled_logger_name}': {'propagate': False}
+            for disabled_logger_name in ['db', 'template', 'utils']
         },
     },
 }
@@ -388,9 +451,9 @@ LOGGING = {
 Uncomment to print all database queries to the console;
 useful for checking e.g. that a request doesn't query the database more times than necessary.
 """
-# LOGGING['loggers']['django.db.backends'] = {
+# LOGGING['loggers']['django.db'] = {
 #     'level': 'DEBUG',
-#     'handlers': ['console'],
+#     'propagate': True,
 # }
 
 

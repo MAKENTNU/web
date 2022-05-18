@@ -38,6 +38,15 @@
                     months: MONTH_TRANSLATIONS,
                     monthsShort: SHORT_MONTH_TRANSLATIONS,
                 },
+                onHidden: function () {
+                    {# Defined in `common_utils.js` #}
+                    fixFomanticUICalendarBlurBug($widget.find("input"));
+
+                    {% if widget.attrs.end_calendar %}
+                        {# Defined in `common_utils.js` #}
+                        fixFomanticUIEndCalendarRefreshBug($("#{{ widget.attrs.end_calendar }}"));
+                    {% endif %}
+                },
             });
         });
 

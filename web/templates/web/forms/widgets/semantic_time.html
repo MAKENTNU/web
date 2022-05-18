@@ -3,6 +3,10 @@
 <script>
     $("#{{ widget.attrs.id }}").parent(".ui.calendar").calendar({
         ampm: false,
-        type: 'time',
+        type: "time",
+        onHidden: function () {
+            {# Defined in `common_utils.js` #}
+            fixFomanticUICalendarBlurBug($("#{{ widget.attrs.id }}"));
+        },
     });
 </script>

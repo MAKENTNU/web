@@ -20,13 +20,13 @@
                         <div class="ui header">
                             {{ announcement.get_classification_display }}
                             {% if perms.announcements.change_announcement %}
-                                <a href="{% url 'edit_announcement' pk=announcement.pk %}">
+                                <a href="{% url 'edit_announcement' announcement.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
                             {% if perms.announcements.delete_announcement %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url 'delete_announcement' pk=announcement.pk %}"
+                                   data-url="{% url 'delete_announcement' announcement.pk %}"
                                    data-obj-name="{{ announcement }}">
                                     <i class="red trash icon"></i>
                                 </a>

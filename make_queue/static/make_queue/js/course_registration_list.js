@@ -1,3 +1,7 @@
+const DISPLAY_NONE_CLASS = "display-none";
+// Used to keep track of selected users
+const SELECTED_ROW_CLASS = "active";
+
 // Global state to reduce the number of DOM operations required
 const state = {
     page: 0,
@@ -13,16 +17,23 @@ const state = {
     onlyShowSelectedUsers: false,
 };
 
+function updateSelectedCountText() {
+    const usersSelectedText = interpolate(
+        ngettext("%(num)s user selected", "%(num)s users selected", state.selectedCount),
+        {num: state.selectedCount}, true,
+    );
+    $("#num-users-selected").text(usersSelectedText);
+}
+
 // Make each row selectable
 $("tbody tr").click(function () {
-    // Uses the active class to keep track of selected users
-    const hasClass = $(this).hasClass("active");
+    const hasClass = $(this).hasClass(SELECTED_ROW_CLASS);
 
-    state.selectedCount += Math.pow(-1, hasClass);
-    $(this).toggleClass("active", !hasClass);
+    state.selectedCount += hasClass ? -1 : 1;
+    $(this).toggleClass(SELECTED_ROW_CLASS, !hasClass);
 
-    $("#num-selected").text(state.selectedCount);
-    $("#selected-actions").toggleClass("display-none", state.selectedCount === 0);
+    updateSelectedCountText();
+    $("#selected-actions").toggleClass(DISPLAY_NONE_CLASS, state.selectedCount === 0);
     if (state.onlyShowSelectedUsers || state.selectedCount === 0) {
         state.onlyShowSelectedUsers = state.onlyShowSelectedUsers && state.selectedCount;
         filter();
@@ -32,9 +43,9 @@ $("tbody tr").click(function () {
 // Filters which registrations that fit the current state
 function filter() {
     let numRegistrationsFiltered = 0;
-    for (let element of state.elements) {
+    for (const element of state.elements) {
         if (state.onlyShowSelectedUsers) {
-            element.display = element.$element.hasClass("active");
+            element.display = element.$element.hasClass(SELECTED_ROW_CLASS);
         } else {
             element.display =
                 (element.name.includes(state.searchValue) || element.username.includes(state.searchValue))
@@ -42,9 +53,8 @@ function filter() {
         }
 
         numRegistrationsFiltered += element.display;
-        if (!element.display) {
-            element.$element.toggleClass("display-none", true);
-        }
+        if (!element.display)
+            element.$element.toggleClass(DISPLAY_NONE_CLASS, true);
     }
     $("#num-registrations-filtered").text(numRegistrationsFiltered);
     state.numPages = Math.ceil(numRegistrationsFiltered / state.elementsPerPage);
@@ -58,16 +68,15 @@ function sort() {
         return a[state.sortBy].localeCompare(b[state.sortBy]);
     });
 
-    if (!state.sortOrder) {
+    if (!state.sortOrder)
         state.elements.reverse();
-    }
 
     updateDisplay();
 }
 
 // Status filter element
 $("#status-filter").parent().dropdown({
-    onChange: function (value) {
+    onChange: function (value, text, $choice) {
         state.statusValue = value;
         filter();
     },
@@ -84,15 +93,34 @@ $("#clear-selected-users").click(function () {
     state.onlyShowSelectedUsers = false;
     state.selectedCount = 0;
     state.elements.forEach(function (element) {
-        element.$element.toggleClass("active", false);
+        element.$element.toggleClass(SELECTED_ROW_CLASS, false);
     });
-    $("#selected-actions").toggleClass("display-none", true);
+    $("#selected-actions").toggleClass(DISPLAY_NONE_CLASS, true);
     filter();
+});
+
+// TODO: reformat to reduce code duplication with other parts of the file
+// Button to select all shown users
+$("#select-shown-users").click(function () {
+    const shownUnselectedUserRows = state.elements.filter((e) =>
+        !e.$element.hasClass(DISPLAY_NONE_CLASS)
+        && !e.$element.hasClass(SELECTED_ROW_CLASS),
+    );
+    if (shownUnselectedUserRows.length === 0)
+        return;
+
+    shownUnselectedUserRows.forEach(function (e) {
+        e.$element.toggleClass(SELECTED_ROW_CLASS, true);
+    });
+    state.selectedCount += shownUnselectedUserRows.length;
+    updateSelectedCountText();
+    // Ensure that it's visible, even if it's already visible
+    $("#selected-actions").toggleClass(DISPLAY_NONE_CLASS, false);
 });
 
 // The bulk status change dropdown
 $("#status-set").parent().dropdown({
-    onChange: function (value, statusText) {
+    onChange: function (value, statusText, $choice) {
         const $modal = $("#set-status-modal");
 
         $("#set-status-text").text(statusText);
@@ -104,14 +132,13 @@ $("#status-set").parent().dropdown({
 
         const selectedUsers = [];
         state.elements.forEach(function (element) {
-            if (element.$element.hasClass("active")) {
+            if (element.$element.hasClass(SELECTED_ROW_CLASS)) {
                 $form.append($(`<input type="hidden" value="${element.pk}" name="users"/>`));
                 selectedUsers.push(element.$element.data("name"));
             }
         });
 
         $("#selected-users").text(selectedUsers.join(", "));
-
 
         $modal.find(".cancel.button").click(function () {
             $("#status-set").parent().dropdown("clear");
@@ -159,20 +186,17 @@ $("th").click(function () {
     $(this).append($(`<i class="sort ${sortDirection} icon"></i>`));
 });
 
-
 // Calculates the range of numbers to show in the pagination bar of the table
 function calculateRangePagination() {
     let start = Math.max(0, state.page - state.paginationElements);
     let end = Math.min(state.numPages - 1, state.page + state.paginationElements);
 
     // Special handling of edges to make sure that the correct number of elements are shown in the pagination bar
-    if (start === 0) {
+    if (start === 0)
         end = Math.min(state.numPages - 1, end + state.paginationElements - (state.page - start));
-    }
 
-    if (end === state.numPages - 1) {
+    if (end === state.numPages - 1)
         start = Math.max(0, start - state.paginationElements + (end - state.page));
-    }
 
     return {
         start: start,
@@ -191,12 +215,12 @@ function updateDisplay() {
     let lastInsertedElement = null;
 
     // Show or hide registrations based on filtering and the selected page
-    for (let registration of state.elements) {
+    for (const registration of state.elements) {
         if (!registration.display)
             continue;
 
         if (startIndex <= numRegistrationsFiltered && numRegistrationsFiltered < endIndex) {
-            registration.$element.toggleClass("display-none", false);
+            registration.$element.toggleClass(DISPLAY_NONE_CLASS, false);
 
             if (lastInsertedElement != null) {
                 // Elements are sorted in an array, as to update the DOM only when necessary
@@ -206,12 +230,16 @@ function updateDisplay() {
 
             displayedRegistrationsCount++;
         } else {
-            registration.$element.toggleClass("display-none", true);
+            registration.$element.toggleClass(DISPLAY_NONE_CLASS, true);
         }
 
         numRegistrationsFiltered++;
     }
-    $("#displayed-registrations-count").text(displayedRegistrationsCount);
+    const registrationsDisplayedHTML = interpolate(
+        ngettext("Displaying %(num)s registration", "Displaying %(num)s registrations", displayedRegistrationsCount),
+        {num: `<b>${displayedRegistrationsCount}</b>`}, true,
+    );
+    $("#num-registrations-displayed").html(registrationsDisplayedHTML);
 
     // Removes old numbers in pagination bar and adds new ones
     $("#pagination-bar").children().slice(2, -2).remove();
@@ -225,9 +253,9 @@ function updateDisplay() {
 
     for (let page = pageRange.start; page <= pageRange.end; page++) {
         const $pageElement = $(`<a class="item">${page + 1}</a>`);
-        if (page === state.page) {
+        if (page === state.page)
             $pageElement.toggleClass("active", true);
-        }
+
         $pageElement.click(function () {
             state.page = page;
             updateDisplay();
@@ -244,7 +272,6 @@ const $downloadUsersForm = $("#download-users");
 
 // Setup the initial state
 function setupState() {
-
     $("tbody tr").each(function () {
             state.elements.push({
                 pk: $(this).data("pk"),
@@ -285,9 +312,8 @@ function setupState() {
 
     $downloadUsersForm.submit(function () {
         let selected = [];
-        if (state.onlyShowSelectedUsers) {
+        if (state.onlyShowSelectedUsers)
             selected = state.elements.filter((e) => e.display).map(e => e.pk);
-        }
         $downloadUsersForm.find("#selected").val(selected);
     });
 

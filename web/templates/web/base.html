@@ -47,7 +47,7 @@
     <script defer src="{% static 'web/js/base.js' %}"></script>
 
     {% block analytics %}
-        <script defer src="https://www.googletagmanager.com/gtag/js?id=UA-113882146-1"></script>
+        <script defer src="https://www.googletagmanager.com/gtag/js?id=G-7KWS6X84KG"></script>
         <script defer src="{% static 'web/js/gtag_init.js' %}"></script>
     {% endblock analytics %}
 
@@ -57,7 +57,9 @@
         <script defer src="{% static 'web/js/header.js' %}"></script>
     {% endblock header_links %}
 
-    <script defer src="{% static 'web/js/common_utils.js' %}"></script>
+    {# `common_utils.js` should not be deferred, as it only contains function definitions #}
+    <script src="{% static 'web/js/common_utils.js' %}"></script>
+    <script defer src="{% static 'web/js/common_deferred_code.js' %}"></script>
     <script defer src="{% static 'web/js/delete_modal.js' %}"></script>
 
     {% block extra_head %}{% endblock extra_head %}

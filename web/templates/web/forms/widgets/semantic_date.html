@@ -34,6 +34,10 @@
             months: MONTH_TRANSLATIONS,
             monthsShort: SHORT_MONTH_TRANSLATIONS,
         },
+        onHidden: function () {
+            {# Defined in `common_utils.js` #}
+            fixFomanticUICalendarBlurBug($("#{{ widget.name }}").find("input"));
+        },
     });
 
     $("form").submit(function () {

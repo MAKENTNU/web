@@ -22,8 +22,8 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
             Get(reverse('makerspace_equipment_list'), public=True),
             Get(reverse('makerspace_admin_equipment_list'), public=False),
             Get(reverse('makerspace_equipment_create'), public=False),
-            Get(reverse('makerspace_equipment_edit', kwargs={'pk': self.equipment1.pk}), public=False),
-            Get(reverse('makerspace_equipment_detail', kwargs={'pk': self.equipment1.pk}), public=True),
+            Get(reverse('makerspace_equipment_edit', args=[self.equipment1.pk]), public=False),
+            Get(reverse('makerspace_equipment_detail', args=[self.equipment1.pk]), public=True),
             Get(reverse('rules'), public=True),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)

@@ -61,15 +61,36 @@ def get_user_details_from_LDAP(search_field: str, search_value: str) -> Dict[str
 
 
 def _get_user_details_from_user_field(field_name: str, field_value: str, use_cached: bool) -> Dict[str, str]:
+    user_details = {}
     if use_cached:
         user = User.objects.filter(**{field_name: field_value}).first()
         if user:
-            return {
+            user_details = {
                 'username': user.username,
                 'email': user.email,
                 'full_name': user.get_full_name(),
             }
-    return get_user_details_from_LDAP(field_name, field_value)
+
+    if (user_details
+            # If `user_details` contains values for all dict keys:
+            and all(value for value in user_details.values())):
+        return user_details
+
+    try:
+        LDAP_user_details = get_user_details_from_LDAP(field_name, field_value)
+    except ldap.LDAPError:
+        return user_details
+
+    if not LDAP_user_details:
+        return user_details
+    if not user_details:
+        return LDAP_user_details
+
+    # Update missing values with data from LDAP
+    for key, value in user_details.items():
+        if not value:
+            user_details[key] = LDAP_user_details[key]
+    return user_details
 
 
 def get_user_details_from_username(username: str, use_cached=True) -> Dict[str, str]:

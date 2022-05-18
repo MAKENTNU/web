@@ -24,7 +24,7 @@
         {% else %}
             <div class="ui error message">
                 {% trans "This ticket is registered to another account. Please" %}
-                <a href="{% url 'login' %}?next={% url 'ticket_detail' pk=ticket.pk %}">{% trans "log in" %}</a>
+                <a href="{% url 'login' %}?next={% url 'ticket_detail' ticket.pk %}">{% trans "log in" %}</a>
                 {% trans "to the correct account to see your ticket." %}
             </div>
         {% endif %}

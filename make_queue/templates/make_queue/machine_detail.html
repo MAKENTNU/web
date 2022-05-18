@@ -21,7 +21,7 @@
                 {{ machine.name }}
             </div>
             <div class="ui content">
-                <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine.machine_type %}">
+                <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine.machine_type.pk %}">
                     {% trans "Show rules" %}
                 </a>
             </div>
@@ -81,7 +81,7 @@
                 <div id="fader"></div>
                 <i id="closefullscreen" class="times icon"></i>
                 <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
-                <script src="{% static 'make_queue/js/stream.js' %}"></script>
+                <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
             {% endif %}
 
             <div class="ui right floated {% if machine.machine_type.has_stream %}sixteen{% else %}ten{% endif %} wide mobile only no padding column">

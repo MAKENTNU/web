@@ -31,7 +31,7 @@
                     {% for ticket in user.tickets%}
                         {% if ticket.active %}
                             {% if ticket.timeplace %}
-                                <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event ticket.timeplace.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.timeplace.event.title }}:
+                                <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.timeplace.event.title }}:
                                     {{ ticket.timeplace.start_time.date }}</a> <br/>
                             {% else %}
                                 {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence%}

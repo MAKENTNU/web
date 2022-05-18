@@ -1,3 +1,4 @@
+import itertools
 from datetime import datetime, time, timedelta
 from typing import Collection, List, Tuple
 
@@ -13,6 +14,7 @@ from multiselectfield import MultiSelectField
 from news.models import TimePlace
 from users.models import User
 from util.locale_utils import exact_weekday_to_day_name, short_datetime_format, timedelta_to_hours
+from util.model_utils import ComparisonType, comparison_boilerplate
 from web.modelfields import UnlimitedCharField
 from .machine import Machine, MachineType
 
@@ -147,6 +149,20 @@ class Reservation(models.Model):
         end_time = short_datetime_format(self.end_time)
         return f"{self.user.get_full_name()} har reservert {self.machine.name} fra {start_time} til {end_time}"
 
+    def __bool__(self):
+        # As long as the instance is not None, it should always return True.
+        # (Implementing this method explicitly, due to the below implementation of `__len__()`
+        # messing with Python's standard truth value testing.)
+        return True
+
+    def __len__(self) -> timedelta:
+        return self.end_time - self.start_time
+
+    def __sub__(self, other) -> timedelta:
+        comparison_boilerplate(self, other, ComparisonType.SUB)
+
+        return self.start_time - other.end_time
+
     def save(self, *args, **kwargs):
         if not self.validate():
             raise ValidationError("Not a valid reservation")
@@ -278,6 +294,19 @@ class ReservationRule(models.Model):
     def time_periods(self) -> List['Period']:
         return self.Period.list_from_start_weekdays(self.get_start_day_indices(), self.start_time, self.end_time, self.days_changed)
 
+    def get_exact_start_and_end_times_list(self, *, iso=True, wrap_using_modulo=False) -> List[Tuple[float, float]]:
+        mod_divisor = 8 if iso else 7
+
+        def mod(exact_weekday: float) -> float:
+            if not wrap_using_modulo:
+                return exact_weekday
+            return exact_weekday % mod_divisor
+
+        return [
+            (mod(p.exact_start_weekday), mod(p.exact_end_weekday))
+            for p in self.Period.list_from_start_weekdays(self.get_start_day_indices(iso=iso), self.start_time, self.end_time, self.days_changed)
+        ]
+
     def get_start_day_indices(self, *, iso=True):
         shift = 0 if iso else -1
         return [int(day_index_str) + shift for day_index_str in self.start_days]
@@ -337,6 +366,19 @@ class ReservationRule(models.Model):
         return [rule for rule in machine_type.reservation_rules.all()
                 if rule.hours_inside(start_time, end_time)]
 
+    @staticmethod
+    def rule_set_has_gaps(machine_type: MachineType):
+        rules = machine_type.reservation_rules.all()
+        if not rules:
+            return True
+        time_periods = itertools.chain(*(rule.time_periods for rule in rules))
+        time_periods = sorted(time_periods, key=lambda p: p.exact_start_weekday)
+        for i, period in enumerate(time_periods):
+            next_period = time_periods[(i + 1) % len(time_periods)]
+            if next_period - period > 0:
+                return True
+        return False
+
     class Period:
 
         def __init__(self, start_weekday: int, start_time: time, end_time: time, days_changed: int):
@@ -345,10 +387,31 @@ class ReservationRule(models.Model):
             self.exact_start_weekday = start_weekday + self.to_exact_num_days(start_time)
             self.exact_end_weekday = start_weekday + days_changed + self.to_exact_num_days(end_time)
 
+        def __repr__(self):
+            return f"<{type(self).__name__}: {self}>"
+
         def __str__(self):
             start_day_name = capfirst(exact_weekday_to_day_name(self.exact_start_weekday))
             end_day_name = exact_weekday_to_day_name(self.exact_end_weekday)
             return f"{start_day_name} {time_format(self.start_time)} &ndash; {end_day_name} {time_format(self.end_time)}"
+
+        def __bool__(self):
+            # As long as the instance is not None, it should always return True.
+            # (Implementing this method explicitly, due to the below implementation of `__len__()`
+            # messing with Python's standard truth value testing.)
+            return True
+
+        def __len__(self) -> float:
+            return self.exact_end_weekday - self.exact_start_weekday
+
+        def __sub__(self, other) -> float:
+            """Assumes that there is no overlap between the two periods."""
+            comparison_boilerplate(self, other, ComparisonType.SUB)
+
+            if self.exact_start_weekday >= other.exact_end_weekday:
+                return self.exact_start_weekday - other.exact_end_weekday
+            else:
+                return self.exact_start_weekday + 7 - other.exact_end_weekday
 
         @classmethod
         def from_rule(cls, start_weekday: int, rule: 'ReservationRule'):
@@ -384,7 +447,7 @@ class ReservationRule(models.Model):
         def to_exact_num_days(time_: time) -> float:
             return time_.hour / 24 + time_.minute / (24 * 60) + time_.second / (24 * 60 * 60)
 
-        def overlap(self, other):
+        def overlap(self, other: 'ReservationRule.Period'):
             hours_overlap = self.hours_overlap(
                 (self.exact_start_weekday, self.exact_end_weekday),
                 (other.exact_start_weekday, other.exact_end_weekday)

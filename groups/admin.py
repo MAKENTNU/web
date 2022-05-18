@@ -5,7 +5,7 @@ from util.admin_utils import DefaultAdminWidgetsMixin
 from .models import Committee, InheritanceGroup
 
 
-class InheritanceGroupAdmin(admin.ModelAdmin):
+class InheritanceGroupAdmin(SimpleHistoryAdmin):
     list_display = ('name', 'last_modified')
 
     fieldsets = (
