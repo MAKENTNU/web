@@ -80,7 +80,7 @@ class EventParticipantsSearchForm(forms.Form):
     search_string = forms.CharField(
         max_length=500,
         label=_("Search for users"),
-        help_text=_("You can search for users' name and username."),
+        help_text=_("You can search for users' name, username and email."),
     )
 
 

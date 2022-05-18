@@ -168,6 +168,8 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
         {'fields': ('search_string',), 'layout_class': "two"},
     ]
 
+    user_search_fields = ['first_name', 'last_name', 'username', 'email']
+
     def has_permission(self):
         return self.request.user.has_any_permissions_for(Event)
 
@@ -188,11 +190,14 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
 
         return context_data
 
-    @staticmethod
-    def get_users_matching_search(search_string: str) -> Tuple[List[User], List[User]]:
+    @classmethod
+    def get_users_matching_search(cls, search_string: str) -> Tuple[List[User], List[User]]:
         query = Q()
         for search_fragment in search_string.split():
-            query &= Q(first_name__icontains=search_fragment) | Q(last_name__icontains=search_fragment) | Q(username__icontains=search_fragment)
+            user_search_field_subquery = Q()
+            for field in cls.user_search_fields:
+                user_search_field_subquery |= Q(**{f"{field}__icontains": search_fragment})
+            query &= user_search_field_subquery
 
         found_users = User.objects.filter(query).prefetch_related(
             Prefetch('event_tickets',

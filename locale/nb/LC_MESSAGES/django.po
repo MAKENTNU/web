@@ -2149,8 +2149,8 @@ msgid "Search for users"
 msgstr "Søk etter brukere"
 
 #: news/forms.py:83
-msgid "You can search for users' name and username."
-msgstr "Du kan søke etter brukeres navn og brukernavn."
+msgid "You can search for users' name, username and email."
+msgstr "Du kan søke etter brukeres navn, brukernavn og e-post."
 
 #: news/forms.py:90
 msgid ""
