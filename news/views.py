@@ -7,7 +7,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Count, Max, Min, Prefetch, Q
+from django.db.models import Count, Max, Min, Prefetch, Q, QuerySet
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -168,32 +168,36 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, FormView):
         form = context_data['form']
         if form.is_bound:
             search_string = form.cleaned_data['search_string']
-            query = Q()
-            for search_fragment in search_string.split():
-                query &= Q(first_name__icontains=search_fragment) | Q(last_name__icontains=search_fragment) | Q(username__icontains=search_fragment)
-
-            found_users = User.objects.filter(query).prefetch_related(
-                Prefetch('event_tickets',
-                         queryset=EventTicket.objects.annotate(
-                             first_standalone_event_occurrence=Min('event__timeplaces__start_time'),
-                             last_standalone_event_occurrence=Max('event__timeplaces__start_time'),
-                         ).prefetch_related('timeplace__event', 'event'),
-                         to_attr='tickets'),
-            )
-
-            def ticket_sorting_key(tickets):
-                if tickets.timeplace:
-                    return tickets.timeplace.start_time
-                else:
-                    return tickets.first_standalone_event_occurrence
-
-            for user in found_users:
-                user.tickets = sorted(list(user.tickets), key=ticket_sorting_key)
             context_data.update({
-                'found_users': found_users,
+                'found_users': self.get_users_matching_search(search_string),
             })
 
         return context_data
+
+    @staticmethod
+    def get_users_matching_search(search_string: str) -> QuerySet[User]:
+        query = Q()
+        for search_fragment in search_string.split():
+            query &= Q(first_name__icontains=search_fragment) | Q(last_name__icontains=search_fragment) | Q(username__icontains=search_fragment)
+
+        found_users = User.objects.filter(query).prefetch_related(
+            Prefetch('event_tickets',
+                     queryset=EventTicket.objects.annotate(
+                         first_standalone_event_occurrence=Min('event__timeplaces__start_time'),
+                         last_standalone_event_occurrence=Max('event__timeplaces__start_time'),
+                     ).prefetch_related('timeplace__event', 'event'),
+                     to_attr='tickets'),
+        )
+
+        def ticket_sorting_key(tickets):
+            if tickets.timeplace:
+                return tickets.timeplace.start_time
+            else:
+                return tickets.first_standalone_event_occurrence
+
+        for user in found_users:
+            user.tickets = sorted(list(user.tickets), key=ticket_sorting_key)
+        return found_users
 
 
 class AdminEventDetailView(PermissionRequiredMixin, DetailView):
