@@ -1,13 +1,14 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import Optional, Set
+from typing import List, Optional, Set, Tuple
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Count, Max, Prefetch, Q
+from django.db.models import Count, Max, Min, Prefetch, Q
+from django.db.models.functions import Concat
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
@@ -18,12 +19,11 @@ from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import ModelFormMixin
 
 from mail import email
-from users.models import User
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
 from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ArticleForm, EventForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm, ToggleForm
-from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace
+from .forms import ArticleForm, EventForm, EventParticipantsSearchForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm, ToggleForm
+from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
 
 
 class EventListView(ListView):
@@ -151,6 +151,77 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
             latest_occurrence=Max('timeplaces__end_time'),
             num_future_occurrences=Count('timeplaces', filter=Q(timeplaces__end_time__gt=timezone.localtime())),
         ).order_by('-latest_occurrence').prefetch_related('timeplaces')
+
+
+class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFormMixin, FormView):
+    form_class = EventParticipantsSearchForm
+    template_name = 'news/admin_event_participants_search.html'
+
+    form_title = _("Find events users have attended or are registered for")
+    narrow = False
+    back_button_link = reverse_lazy('admin_event_list')
+    back_button_text = _("Admin page for events")
+    save_button_text = _("Search")
+    cancel_button = False
+    right_floated_buttons = False
+    custom_fieldsets = [
+        {'fields': ('search_string',), 'layout_class': "two"},
+    ]
+
+    user_search_fields = ['first_name', 'last_name', 'username', 'email']
+
+    def has_permission(self):
+        return self.request.user.has_any_permissions_for(Event)
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+
+        form = context_data['form']
+        if form.is_bound:
+            search_string = form.cleaned_data['search_string']
+            found_users_with_tickets, found_users_without_tickets = self.get_users_matching_search(search_string)
+            context_data.update({
+                'found_users_with_tickets': found_users_with_tickets,
+                'found_users_without_tickets': found_users_without_tickets,
+            })
+
+        return context_data
+
+    @classmethod
+    def get_users_matching_search(cls, search_string: str) -> Tuple[List[User], List[User]]:
+        query = Q()
+        for search_fragment in search_string.split():
+            user_search_field_subquery = Q()
+            for field in cls.user_search_fields:
+                user_search_field_subquery |= Q(**{f"{field}__icontains": search_fragment})
+            query &= user_search_field_subquery
+
+        found_users = User.objects.filter(query).prefetch_related(
+            Prefetch('event_tickets',
+                     queryset=EventTicket.objects.annotate(
+                         first_standalone_event_occurrence=Min('event__timeplaces__start_time'),
+                         last_standalone_event_occurrence=Max('event__timeplaces__start_time'),
+                     ).prefetch_related('timeplace__event', 'event'),
+                     to_attr='tickets'),
+        ).order_by(Concat('first_name', 'last_name'))
+
+        found_users_with_tickets = []
+        found_users_without_tickets = []
+        for user in found_users:
+            (found_users_with_tickets if user.tickets else found_users_without_tickets).append(user)
+
+        def ticket_sorting_key(tickets):
+            if tickets.timeplace:
+                return tickets.timeplace.start_time
+            else:
+                return tickets.first_standalone_event_occurrence
+
+        for user in found_users_with_tickets:
+            user.tickets = sorted(list(user.tickets), key=ticket_sorting_key)
+        return found_users_with_tickets, found_users_without_tickets
 
 
 class AdminEventDetailView(PermissionRequiredMixin, DetailView):

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-01 21:03+0200\n"
+"POT-Creation-Date: 2022-05-18 15:06+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -460,7 +460,7 @@ msgstr "Nåværende versjon"
 
 #: docs/templates/docs/header.html:11 docs/templates/docs/search.html:8
 #: docs/templates/docs/search.html:13
-#: make_queue/templates/make_queue/find_free_slot.html:36
+#: make_queue/templates/make_queue/find_free_slot.html:36 news/views.py:164
 msgid "Search"
 msgstr "Søk"
 
@@ -1470,7 +1470,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/reservation_edit.html:166
 #: news/templates/news/ticket_cancel.html:17
 #: web/templates/web/delete_modal.html:20
-#: web/templates/web/edit_form.html:100 web/templates/web/login.html:33
+#: web/templates/web/edit_form.html:104 web/templates/web/login.html:33
 msgctxt "abort action"
 msgid "Cancel"
 msgstr "Avbryt"
@@ -2090,7 +2090,7 @@ msgstr "arrangement skjult"
 
 #: news/admin.py:258 news/models.py:48 news/models.py:193
 #: news/templates/news/admin_article_list.html:35
-#: news/templates/news/admin_event_list.html:43
+#: news/templates/news/admin_event_list.html:46
 #: news/templates/news/admin_timeplace_listing.html:27
 msgid "hidden"
 msgstr "skjult"
@@ -2143,7 +2143,15 @@ msgstr "Hvis valgt vil {the_type} bare være synlig for administratorer."
 msgid "If selected, {the_type} will only be visible to members of MAKE NTNU."
 msgstr "Hvis valgt vil {the_type} bare vises for medlemmer av MAKE NTNU."
 
-#: news/forms.py:88
+#: news/forms.py:82
+msgid "Search for users"
+msgstr "Søk etter brukere"
+
+#: news/forms.py:83
+msgid "You can search for users' name, username and email."
+msgstr "Du kan søke etter brukeres navn, brukernavn og e-post."
+
+#: news/forms.py:96
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
 "organizers."
@@ -2168,12 +2176,12 @@ msgid "don't crop the image"
 msgstr "ikke crop bildet"
 
 #: news/models.py:47 news/templates/news/admin_article_list.html:29
-#: news/templates/news/admin_event_list.html:37
+#: news/templates/news/admin_event_list.html:40
 msgid "featured"
 msgstr "fremhevet"
 
 #: news/models.py:49 news/templates/news/admin_article_list.html:41
-#: news/templates/news/admin_event_list.html:49
+#: news/templates/news/admin_event_list.html:52
 msgid "internal"
 msgstr "internt"
 
@@ -2284,7 +2292,8 @@ msgstr "Artikler"
 msgid "View the article “%(title)s”; image description: %(description)s"
 msgstr "Vis artikkelen «%(title)s»; bildebeskrivelse: %(description)s"
 
-#: news/templates/news/admin_event_detail.html:21 news/views.py:247
+#: news/templates/news/admin_event_detail.html:21 news/views.py:163
+#: news/views.py:318
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
 
@@ -2361,22 +2370,30 @@ msgstr "Ingen framtidige forekomster finnes for dette arrangementet"
 msgid "No past occurrences exist for this event"
 msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
-#: news/templates/news/admin_event_list.html:18
+#: news/templates/news/admin_event_list.html:21
 #: news/templates/news/event_list_contents.html:36
 #, python-format
 msgid "View the event “%(title)s”; image description: %(description)s"
 msgstr "Vis arrangementet «%(title)s»; bildebeskrivelse: %(description)s"
 
-#: news/templates/news/admin_event_list.html:28
+#: news/templates/news/admin_event_list.html:31
 #, python-format
 msgid "1 future occurrence"
 msgid_plural "%(counter)s future occurrences"
 msgstr[0] "1 framtidig forekomst"
 msgstr[1] "%(counter)s framtidige forekomster"
 
-#: news/templates/news/admin_event_list.html:56
+#: news/templates/news/admin_event_list.html:59
 msgid "Admin"
 msgstr "Admin"
+
+#: news/templates/news/admin_event_participants_search.html:44
+msgid "Found the following users without any tickets"
+msgstr "Fant følgende brukere uten noen billetter"
+
+#: news/templates/news/admin_event_participants_search.html:52
+msgid "No users found"
+msgstr "Ingen brukere funnet"
 
 #: news/templates/news/admin_event_ticket_list.html:16
 msgid "Event admin page"
@@ -2570,58 +2587,62 @@ msgstr "logg inn"
 msgid "to the correct account to see your ticket."
 msgstr "til den riktige brukeren for å se billetten din."
 
-#: news/views.py:183 news/views.py:313
+#: news/views.py:160
+msgid "Find events users have attended or are registered for"
+msgstr "Finn arrangementer brukere har eller skal delta på"
+
+#: news/views.py:254 news/views.py:384
 msgid "Attributes"
 msgstr "Egenskaper"
 
-#: news/views.py:198
+#: news/views.py:269
 msgid "Admin page for articles"
 msgstr "Administrasjonsside for artikler"
 
-#: news/views.py:207
+#: news/views.py:278
 msgid "Edit Article"
 msgstr "Rediger artikkel"
 
-#: news/views.py:213
+#: news/views.py:284
 msgid "New Article"
 msgstr "Ny artikkel"
 
-#: news/views.py:237
+#: news/views.py:308
 msgid "Edit Event"
 msgstr "Rediger arrangement"
 
-#: news/views.py:240 news/views.py:305
+#: news/views.py:311 news/views.py:376
 #, python-brace-format
 msgid "Admin page for “{event_title}”"
 msgstr "Administrasjonsside for «{event_title}»"
 
-#: news/views.py:246
+#: news/views.py:317
 msgid "New Event"
 msgstr "Nytt arrangement"
 
-#: news/views.py:324
+#: news/views.py:395
 msgid "Edit Occurrence"
 msgstr "Rediger forekomst"
 
-#: news/views.py:333
+#: news/views.py:404
 msgid "New Occurrence"
 msgstr "Ny forekomst"
 
-#: news/views.py:495
+#: news/views.py:566
 msgid "Your ticket!"
 msgstr "Din billett!"
 
-#: news/views.py:507
+#: news/views.py:578
 #, python-brace-format
 msgid "Register for the event “{title}”"
 msgstr "Meld deg på arrangementet «{title}»"
 
-#: news/views.py:593
+#: news/views.py:664
 #, python-brace-format
 msgid " at {time}"
 msgstr " den {time}"
 
-#: news/views.py:596
+#: news/views.py:667
 #, python-brace-format
 msgid ""
 "Are you sure you want to cancel your ticket for<br/"
@@ -2788,7 +2809,7 @@ msgstr ""
 "for prosjektutvikling, både i privat og undervisningssammenheng, for alle "
 "studenter på NTNU."
 
-#: web/templates/web/base.html:69
+#: web/templates/web/base.html:71
 msgid "Skip to main content"
 msgstr "Hopp til hovedinnhold"
 
