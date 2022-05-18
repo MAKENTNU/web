@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 
+from users.models import User
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
 from ...forms import ReservationRuleForm
 from ...models.machine import MachineType, MachineUsageRule
@@ -49,10 +50,15 @@ class ReservationRuleListView(MachineTypeRelatedViewMixin, ListView):
             'title': _("Reservation rules for {machine_type}").format(machine_type=self.machine_type),
             **kwargs,
         })
-        if self.request.user.is_authenticated:
+        user: User = self.request.user
+        if user.is_authenticated:
             context_data.update({
-                'quotas': Quota.get_user_quotas(self.request.user, self.machine_type),
+                'quotas': Quota.get_user_quotas(user, self.machine_type),
             })
+            if user.has_any_permissions_for(ReservationRule):
+                context_data.update({
+                    'rule_set_has_gaps': ReservationRule.rule_set_has_gaps(self.machine_type),
+                })
         return context_data
 
 

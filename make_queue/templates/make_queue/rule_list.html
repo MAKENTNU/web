@@ -48,6 +48,13 @@
             </tr>
             </tbody>
         </table>
+
+        {% if rule_set_has_gaps %}
+            <div class="ui warning message">
+                <p>{% trans "There exists one or more gaps between the rules' periods, that are not covered" %}.</p>
+            </div>
+        {% endif %}
+
         <div class="ui cards">
             {% for rule in rules %}
                 <div class="ui card">
