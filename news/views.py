@@ -1,13 +1,13 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import Optional, Set
+from typing import List, Optional, Set, Tuple
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.db.models import Count, Max, Min, Prefetch, Q, QuerySet
+from django.db.models import Count, Max, Min, Prefetch, Q
 from django.db.models.functions import Concat
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
@@ -180,14 +180,16 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
         form = context_data['form']
         if form.is_bound:
             search_string = form.cleaned_data['search_string']
+            found_users_with_tickets, found_users_without_tickets = self.get_users_matching_search(search_string)
             context_data.update({
-                'found_users': self.get_users_matching_search(search_string),
+                'found_users_with_tickets': found_users_with_tickets,
+                'found_users_without_tickets': found_users_without_tickets,
             })
 
         return context_data
 
     @staticmethod
-    def get_users_matching_search(search_string: str) -> QuerySet[User]:
+    def get_users_matching_search(search_string: str) -> Tuple[List[User], List[User]]:
         query = Q()
         for search_fragment in search_string.split():
             query &= Q(first_name__icontains=search_fragment) | Q(last_name__icontains=search_fragment) | Q(username__icontains=search_fragment)
@@ -201,15 +203,20 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
                      to_attr='tickets'),
         ).order_by(Concat('first_name', 'last_name'))
 
+        found_users_with_tickets = []
+        found_users_without_tickets = []
+        for user in found_users:
+            (found_users_with_tickets if user.tickets else found_users_without_tickets).append(user)
+
         def ticket_sorting_key(tickets):
             if tickets.timeplace:
                 return tickets.timeplace.start_time
             else:
                 return tickets.first_standalone_event_occurrence
 
-        for user in found_users:
+        for user in found_users_with_tickets:
             user.tickets = sorted(list(user.tickets), key=ticket_sorting_key)
-        return found_users
+        return found_users_with_tickets, found_users_without_tickets
 
 
 class AdminEventDetailView(PermissionRequiredMixin, DetailView):

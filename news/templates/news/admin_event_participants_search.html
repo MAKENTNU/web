@@ -11,31 +11,43 @@
 {% block extra_post_content %}
     {% if form.is_bound %}
         <div class="users-list">
-            {% if found_users %}
-                {% for user in found_users %}
-                    <h3>{{ user.get_full_name }}</h3>
-                    <ul class="participant-tickets-list">
-                        {% for ticket in user.tickets %}
-                            <li class="{% if not ticket.active %}canceled{% endif %}">
-                                {% if ticket.timeplace %}
-                                    <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}" target="_blank">
-                                        {{ ticket.timeplace.event.title }}:
-                                        {{ ticket.timeplace.start_time.date }}
-                                    </a>
-                                {% else %}
-                                    <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank">
-                                        {{ ticket.event }}:
-                                        {{ ticket.first_standalone_event_occurrence.date }}
-                                        {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence %}
-                                            &ndash; {{ ticket.last_standalone_event_occurrence.date }}
-                                        {% endif %}
-                                    </a>
-                                {% endif %}
-                            </li>
+            {% if found_users_with_tickets or found_users_without_tickets %}
+                {% if found_users_with_tickets %}
+                    {% for user in found_users_with_tickets %}
+                        <h3>{{ user.get_full_name }}</h3>
+                        <ul class="participant-tickets-list">
+                            {% for ticket in user.tickets %}
+                                <li class="{% if not ticket.active %}canceled{% endif %}">
+                                    {% if ticket.timeplace %}
+                                        <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}" target="_blank">
+                                            {{ ticket.timeplace.event.title }}:
+                                            {{ ticket.timeplace.start_time.date }}
+                                        </a>
+                                    {% else %}
+                                        <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank">
+                                            {{ ticket.event }}:
+                                            {{ ticket.first_standalone_event_occurrence.date }}
+                                            {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence %}
+                                                &ndash; {{ ticket.last_standalone_event_occurrence.date }}
+                                            {% endif %}
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <hr/>
+                    {% endfor %}
+                {% endif %}
+
+                {% if found_users_without_tickets %}
+                    <br/>
+                    <h2>{% translate "Found the following users without any tickets" %}:</h2>
+                    <ul>
+                        {% for user in found_users_without_tickets %}
+                            <li>{{ user.get_full_name }}</li>
                         {% endfor %}
                     </ul>
-                    <hr/>
-                {% endfor %}
+                {% endif %}
             {% else %}
                 <h3>{% translate "No users found" %}.</h3>
             {% endif %}
