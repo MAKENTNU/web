@@ -2145,8 +2145,12 @@ msgid "If selected, {the_type} will only be visible to members of MAKE NTNU."
 msgstr "Hvis valgt vil {the_type} bare vises for medlemmer av MAKE NTNU."
 
 #: news/forms.py:79
-msgid "Search for user"
-msgstr "Søk etter en person"
+msgid "Search for users"
+msgstr "Søk etter brukere"
+
+#: news/forms.py:83
+msgid "You can search for users' name and username."
+msgstr "Du kan søke etter brukeres navn og brukernavn."
 
 #: news/forms.py:90
 msgid ""
@@ -2414,12 +2418,8 @@ msgid "No tickets have been registered for this event"
 msgstr "Ingen billetter har blitt registrert for dette arrangement"
 
 #: news/templates/news/admin_events_search.html:10
-msgid "Check if a user has attended or is registered for an event"
-msgstr "Sjekk om en bruker har deltatt eller skal delta på et arrangement"
-
-#: news/templates/news/admin_events_search.html:16
-msgid "Valid arguments are username, firstname or lastname"
-msgstr "Gyldige argumenter er brukernavn, fornavn og etternavn"
+msgid "Find events users have attended or are registered for"
+msgstr "Finn arrangementer brukere har eller skal delta på"
 
 #: news/templates/news/admin_timeplace_listing.html:29
 msgid "If selected, the occurrence is hidden for non-admin users."

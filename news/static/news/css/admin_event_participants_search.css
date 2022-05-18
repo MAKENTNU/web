@@ -1,9 +1,9 @@
-.ui.text.container{
-    width:90%; 
+.ui.text.container {
+    width: 90%;
     max-width: 100%;
 }
 
-#found-user{
-    margin-right: 0px;
-    padding: 0px;
+#found-users-list {
+    margin-right: 0;
+    padding: 0;
 }

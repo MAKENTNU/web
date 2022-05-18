@@ -21,7 +21,7 @@ from mail import email
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
 from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ArticleForm, EventForm, EventRegistrationForm, EventsSearchForm, NewsBaseForm, TimePlaceForm, ToggleForm
+from .forms import ArticleForm, EventForm, EventParticipantsSearchForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm, ToggleForm
 from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
 
 
@@ -152,53 +152,48 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
         ).order_by('-latest_occurrence').prefetch_related('timeplaces')
 
 
-class AdminEventsSearchView(PermissionRequiredMixin, FormView):
-    form_class = EventsSearchForm
+class AdminEventParticipantsSearchView(PermissionRequiredMixin, FormView):
+    form_class = EventParticipantsSearchForm
     template_name = 'news/admin_event_participants_search.html'
-    
+
+    def has_permission(self):
+        return self.request.user.has_any_permissions_for(Event)
+
+    def form_valid(self, form):
+        return self.render_to_response(self.get_context_data(form=form))
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+
         form = context_data['form']
         if form.is_bound:
-            searched_name = form.cleaned_data['name']
-            searched_name_split = searched_name.split()
-            
-            q=Q()
-            for i in searched_name_split:
-                q &= Q(first_name__icontains = i) | Q(last_name__icontains = i) | Q(username__icontains = i)
+            search_string = form.cleaned_data['search_string']
+            query = Q()
+            for search_fragment in search_string.split():
+                query &= Q(first_name__icontains=search_fragment) | Q(last_name__icontains=search_fragment) | Q(username__icontains=search_fragment)
 
-            users = User.objects.filter(q).prefetch_related(
+            found_users = User.objects.filter(query).prefetch_related(
                 Prefetch('event_tickets',
-                        queryset=EventTicket.objects.annotate(
-                            first_standalone_event_occurrence=Min('event__timeplaces__start_time'),
-                            last_standalone_event_occurrence=Max('event__timeplaces__start_time'),
-                        ).select_related(
-                            'timeplace',
-                        ), to_attr='tickets'),
+                         queryset=EventTicket.objects.annotate(
+                             first_standalone_event_occurrence=Min('event__timeplaces__start_time'),
+                             last_standalone_event_occurrence=Max('event__timeplaces__start_time'),
+                         ).prefetch_related('timeplace__event', 'event'),
+                         to_attr='tickets'),
             )
 
-            def sorting_key(tickets):
+            def ticket_sorting_key(tickets):
                 if tickets.timeplace:
                     return tickets.timeplace.start_time
                 else:
                     return tickets.first_standalone_event_occurrence
 
-            for user in users:
-                user.tickets = sorted(
-                list(user.tickets),
-                    key=sorting_key,
-                )
+            for user in found_users:
+                user.tickets = sorted(list(user.tickets), key=ticket_sorting_key)
             context_data.update({
-                'users': users,
-            })          
+                'found_users': found_users,
+            })
 
         return context_data
-
-    def form_valid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
-    def has_permission(self):
-        return self.request.user.has_any_permissions_for(Event)
 
 
 class AdminEventDetailView(PermissionRequiredMixin, DetailView):

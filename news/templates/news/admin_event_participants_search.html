@@ -2,53 +2,59 @@
 {% load static %}
 {% load i18n %}
 
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/admin_event_participants_search.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
-    <h1 class="ui centered header">{% translate "Check if a user has attended or is registered for an event" %}</h1>
-    
+    <h1 class="ui centered header">
+        {% translate "Find events users have attended or are registered for" %}
+    </h1>
+
     <div class="ui text container">
-    <form method="POST" class="ui small dont-prevent-leaving form">{% csrf_token %}
-        <div class="eight wide field">
-             <label>{{ form.name.label }}
-                <span data-content="{% translate "Valid arguments are username, firstname or lastname" %}">
-                    <i class="ui make-col-yellow question circle icon"></i>
+        <form class="dont-prevent-leaving ui small form" method="POST">
+            {% csrf_token %}
+            <div class="eight wide field">
+                <label>
+                    {{ form.search_string.label }}
+                    <span data-content="{{ form.search_string.help_text }}">
+                    <i class="make-col-yellow question circle icon"></i>
                 </span>
-            </label>
-            {{ form.name }}
-        </div>
-        <button class="ui make-col-blue button" type='submit'>
-            {% translate "Search" %}
-        </button>
-    </form>
-    <br>
-    {% if users %}
-        {% for user in users %}
-            <ul id="found-user">
-                <h1>{{ user.get_full_name}}</h1>
-                    {% for ticket in user.tickets%}
+                </label>
+                {{ form.search_string }}
+            </div>
+            <button class="ui make-col-blue button" type="submit">
+                {% translate "Search" %}
+            </button>
+        </form>
+        {% if found_users %}
+            <br/>
+            {% for user in found_users %}
+                <ul id="found-users-list">
+                    <h1>{{ user.get_full_name }}</h1>
+                    {% for ticket in user.tickets %}
                         {% if ticket.active %}
                             {% if ticket.timeplace %}
-                                <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.timeplace.event.title }}:
-                                    {{ ticket.timeplace.start_time.date }}</a> <br/>
+                                <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}" target="_blank">
+                                    {{ ticket.timeplace.event.title }}:
+                                    {{ ticket.timeplace.start_time.date }}
+                                </a>
                             {% else %}
-                                {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence%}
-                                    <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.event }}:
-                                        {{ ticket.first_standalone_event_occurrence.date }}
+                                <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank">
+                                    {{ ticket.event }}:
+                                    {{ ticket.first_standalone_event_occurrence.date }}
+                                    {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence %}
                                         &ndash; {{ ticket.last_standalone_event_occurrence.date }}
-                                        </a> <br/>
-                                {% else %}
-                                    <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank" rel="noopener noreferrer">{{ ticket.event }}:
-                                        {{ ticket.first_standalone_event_occurrence.date }}</a> <br/>
-                                {% endif %}
+                                    {% endif %}
+                                </a>
                             {% endif %}
+                            <br/>
                         {% endif %}
                     {% endfor %}
-                <hr/>
-            </ul>
-        {% endfor %}
-    {% endif %}
-        </div>
-{% endblock body%}
+                    <hr/>
+                </ul>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock body %}
