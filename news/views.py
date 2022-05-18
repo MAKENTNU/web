@@ -154,7 +154,7 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
 
 class AdminEventsSearchView(PermissionRequiredMixin, FormView):
     form_class = EventsSearchForm
-    template_name = 'news/admin_events_search.html'
+    template_name = 'news/admin_event_participants_search.html'
     
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
