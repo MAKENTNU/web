@@ -78,6 +78,7 @@ class UrlTests(NewsTestBase, TestCase):
         path_predicates = [
             Get(reverse('admin_article_list'), public=False),
             Get(reverse('admin_event_list'), public=False),
+            Get(reverse('admin_event_participants_search'), public=False),
             Get(reverse('admin_event_detail', args=[self.event1.pk]), public=False),
             Get(reverse('admin_event_detail', args=[self.event2.pk]), public=False),
             Get(reverse('article_list'), public=True),
