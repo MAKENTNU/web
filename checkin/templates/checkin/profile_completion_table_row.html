@@ -1,0 +1,22 @@
+<tr>
+    <td class="{% if completed %}green{% endif %} collapsing">
+        <div class="ui middle aligned read-only {% if completed %}checked{% endif %} checkbox">
+            <input type="checkbox" {% if completed %}checked{% endif %} aria-label="">
+            <label></label>
+        </div>
+    </td>
+    <td {% if not hint %}colspan="2"{% endif %}>
+        {% if completed %}
+            <b>{{ text }}</b>
+        {% else %}
+            {{ text }}
+        {% endif %}
+    </td>
+    {% if hint %}
+        <td class="collapsing">
+            <span data-content="{{ hint }}" data-variation="wide">
+                <i class="make-col-yellow question circle icon"></i>
+            </span>
+        </td>
+    {% endif %}
+</tr>

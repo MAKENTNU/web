@@ -11,34 +11,49 @@
     <div class="ui text container">
         <h1>
             {% trans "My profile" %}
+            &ndash; {{ request.user.get_full_name }}
         </h1>
-        <h2>{{ request.user.get_full_name }}</h2>
 
         {% if perms.internal.is_internal %}
             {% include 'checkin/profile_internal.html' %}
             <br/>
         {% endif %}
 
-        <h3>{% trans "Access to 3D-printers" %}:</h3>
-        {% if profile.user.printer_3d_course %}
-            <div class="ui container">
-                {% trans "You have access to the 3D-printer room. To use a 3D-printer, make a reservation." %}
-            </div>
-            <br/>
-            {% if profile.user.printer_3d_course.advanced_course %}
-                <div class="ui container">
-                    {% trans "You have access to the Special-3D-printers. To use a Special-3D-printer, you need to make a reservation." %}
-                </div>
+        <h3>{% trans "Completed courses" %}:</h3>
+        <table class="ui compact unstackable celled table">
+            <tbody>
+            {% if profile.user.printer_3d_course %}
+                {% translate "You have completed the 3D printer course" as text1 %}
+                {% translate "To use a 3D printer, make a reservation in the calendar of one of the 3D printers on the “Reservations” page." as hint1 %}
+                {% include 'checkin/profile_completion_table_row.html' with completed=True text=text1 hint=hint1 %}
             {% else %}
-                <div class="ui container">
-                    {% trans "You do not have access to the Special-3D-printers. To get access, you need to take an advanced 3D-printer course." %}
-                </div>
+                {% translate "You have not taken the 3D printer course" as text2 %}
+                {% include 'checkin/profile_completion_table_row.html' with completed=False text=text2 %}
             {% endif %}
-        {% else %}
-            <div class="ui container">
-                {% trans "You do not have access to the printer room. To get access, you need to take a 3D-printer course." %}
-            </div>
-        {% endif %}
+            {% if profile.user.printer_3d_course.advanced_course %}
+                {% translate "You have completed the advanced 3D printer course" as text3 %}
+                {% translate "To use an advanced 3D printer, make a reservation in the calendar of one of the advanced 3D printers on the “Reservations” page." as hint2 %}
+                {% include 'checkin/profile_completion_table_row.html' with completed=True text=text3 hint=hint2 %}
+            {% else %}
+                {% translate "You have not taken the advanced 3D printer course" as text4 %}
+                {% include 'checkin/profile_completion_table_row.html' with completed=False text=text4 %}
+            {% endif %}
+            </tbody>
+        </table>
+        <p>
+            <i>
+                {% url 'contact' as contact_url %}
+                {% blocktrans trimmed with link_start='<a href="'|add:contact_url|safe|add:'" target="_blank">' link_end='</a>' %}
+                    Please {{ link_start }}contact us{{ link_end }} if any of this information is incorrect,
+                    but keep in mind that it might take us a few days to register course participants.
+                {% endblocktrans %}
+                <br/>
+                {% url 'event_list' as event_list_url %}
+                {% blocktrans trimmed with link_start='<a href="'|add:event_list_url|safe|add:'" target="_blank">' link_end='</a>' %}
+                    Otherwise, see {{ link_start }}the events page{{ link_end }} for previous and upcoming courses.
+                {% endblocktrans %}
+            </i>
+        </p>
     </div>
 {% endblock body %}
 

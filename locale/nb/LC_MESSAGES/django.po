@@ -139,7 +139,7 @@ msgstr "tittel (engelsk)"
 msgid "illustration image"
 msgstr "illustrasjonsbilde"
 
-#: checkin/models.py:32 checkin/templates/checkin/profile_internal.html:16
+#: checkin/models.py:32 checkin/templates/checkin/profile_internal.html:14
 msgid "profile picture"
 msgstr "profilbilde"
 
@@ -163,90 +163,110 @@ msgstr "Viderekommen"
 msgid "Expert"
 msgstr "Ekspert"
 
-#: checkin/templates/checkin/profile.html:16
+#: checkin/templates/checkin/profile.html:13
 msgid "My profile"
 msgstr "Min profil"
 
-#: checkin/templates/checkin/profile.html:25
-msgid "Access to 3D-printers"
-msgstr "Tilgang til 3D-printere"
+#: checkin/templates/checkin/profile.html:22
+msgid "Completed courses"
+msgstr "Fullførte kurs"
 
-#: checkin/templates/checkin/profile.html:28
+#: checkin/templates/checkin/profile.html:26
+msgid "You have completed the 3D printer course"
+msgstr "Du har fullført 3D-printerkurset"
+
+#: checkin/templates/checkin/profile.html:27
 msgid ""
-"You have access to the 3D-printer room. To use a 3D-printer, make a "
-"reservation."
+"To use a 3D printer, make a reservation in the calendar of one of the 3D "
+"printers on the “Reservations” page."
 msgstr ""
-"Du har tilgang på printerrommet. For å bruke en 3D-printer, reserver en "
-"printer under reservasjoner."
+"For å bruke en 3D-printer, lag en reservasjon i kalenderen til en av 3D-"
+"printerne på «Reservasjoner»-siden."
 
-#: checkin/templates/checkin/profile.html:33
+#: checkin/templates/checkin/profile.html:30
+msgid "You have not taken the 3D printer course"
+msgstr "Du har ikke tatt 3D-printerkurset"
+
+#: checkin/templates/checkin/profile.html:34
+msgid "You have completed the advanced 3D printer course"
+msgstr "Du har fullført det avanserte 3D-printerkurset"
+
+#: checkin/templates/checkin/profile.html:35
 msgid ""
-"You have access to the Special-3D-printers. To use a Special-3D-printer, you "
-"need to make a reservation."
+"To use an advanced 3D printer, make a reservation in the calendar of one of "
+"the advanced 3D printers on the “Reservations” page."
 msgstr ""
-"Du har tilgang på Spesial-3D-printere. For å bruke en Spesial-3D-printer, "
-"reserver en printer under reservasjoner."
+"For å bruke en avansert 3D-printer, lag en reservasjon i kalenderen til en "
+"av de avanserte 3D-printerne på «Reservasjoner»-siden."
 
-#: checkin/templates/checkin/profile.html:37
+#: checkin/templates/checkin/profile.html:38
+msgid "You have not taken the advanced 3D printer course"
+msgstr "Du har ikke tatt det avanserte 3D-printerkurset"
+
+#: checkin/templates/checkin/profile.html:46
+#, python-format
 msgid ""
-"You do not have access to the Special-3D-printers. To get access, you need "
-"to take an advanced 3D-printer course."
+"Please %(link_start)scontact us%(link_end)s if any of this information is "
+"incorrect, but keep in mind that it might take us a few days to register "
+"course participants."
 msgstr ""
-"Du har ikke tilgang på Spesial-3D-printere. For å få tilgang, må du ta et "
-"avansert 3D-printerkurs."
+"Vennligst %(link_start)sta kontakt med oss%(link_end)s hvis noe av denne "
+"informasjonen ikke stemmer, men vær klar over at det kan ta oss noen få "
+"dager å registrere kursdeltakere."
 
-#: checkin/templates/checkin/profile.html:43
+#: checkin/templates/checkin/profile.html:52
+#, python-format
 msgid ""
-"You do not have access to the printer room. To get access, you need to take "
-"a 3D-printer course."
+"Otherwise, see %(link_start)sthe events page%(link_end)s for previous and "
+"upcoming courses."
 msgstr ""
-"Du har ikke tilgang på printerrommet. For å få tilgang, må du ta et 3D-"
-"printerkurs."
+"Ellers, se %(link_start)sarrangementsiden%(link_end)s for tidligere og "
+"kommende kurs."
 
-#: checkin/templates/checkin/profile.html:89 make_queue/models/course.py:14
+#: checkin/templates/checkin/profile.html:99 make_queue/models/course.py:14
 msgid "Registered"
 msgstr "Registrert"
 
-#: checkin/templates/checkin/profile.html:92
+#: checkin/templates/checkin/profile.html:102
 msgid "Scan card again!"
 msgstr "Skann kortet igjen!"
 
-#: checkin/templates/checkin/profile.html:97
+#: checkin/templates/checkin/profile.html:107
 msgid "Scan card"
 msgstr "Skann kort"
 
-#: checkin/templates/checkin/profile_internal.html:9
+#: checkin/templates/checkin/profile_internal.html:7
 msgid "Change picture"
 msgstr "Endre bilde"
 
-#: checkin/templates/checkin/profile_internal.html:20
-#: checkin/templates/checkin/profile_internal.html:53
+#: checkin/templates/checkin/profile_internal.html:18
+#: checkin/templates/checkin/profile_internal.html:51
 #: checkin/templates/checkin/skills.html:31
 #: checkin/templates/checkin/suggest_skill.html:71
 #: groups/templates/groups/committee_admin.html:29
 msgid "Placeholder image"
 msgstr "Plassholderbilde"
 
-#: checkin/templates/checkin/profile_internal.html:38
+#: checkin/templates/checkin/profile_internal.html:36
 msgid "My skills"
 msgstr "Mine ferdigheter"
 
-#: checkin/templates/checkin/profile_internal.html:49
+#: checkin/templates/checkin/profile_internal.html:47
 #: checkin/templates/checkin/skills.html:27
 #: checkin/templates/checkin/suggest_skill.html:66
 #, python-format
 msgid "Illustration image of %(skill)s"
 msgstr "Illustrasjonsbilde av %(skill)s"
 
-#: checkin/templates/checkin/profile_internal.html:72
+#: checkin/templates/checkin/profile_internal.html:70
 msgid "Add skills"
 msgstr "Legg til ferdigheter"
 
-#: checkin/templates/checkin/profile_internal.html:74
+#: checkin/templates/checkin/profile_internal.html:72
 msgid "Select/search"
 msgstr "Velg/søk"
 
-#: checkin/templates/checkin/profile_internal.html:84 docs/views.py:98
+#: checkin/templates/checkin/profile_internal.html:82 docs/views.py:98
 #: internal/views.py:77
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
@@ -256,32 +276,32 @@ msgstr "Velg/søk"
 msgid "Add"
 msgstr "Legg til"
 
-#: checkin/templates/checkin/profile_internal.html:88
+#: checkin/templates/checkin/profile_internal.html:86
 msgid "Suggest new skills"
 msgstr "Foreslå nye ferdigheter"
 
-#: checkin/templates/checkin/profile_internal.html:96
+#: checkin/templates/checkin/profile_internal.html:94
 msgid "No registered card"
 msgstr "Kort ikke registrert"
 
-#: checkin/templates/checkin/profile_internal.html:98
+#: checkin/templates/checkin/profile_internal.html:96
 msgid ""
 "Place the card on the card reader and press the button below to register the "
 "card"
 msgstr ""
 "Legg kortet på kortleseren og trykk på knappen under for å registrere kortet"
 
-#: checkin/templates/checkin/profile_internal.html:100
+#: checkin/templates/checkin/profile_internal.html:98
 #: news/templates/news/event_registration.html:27
 msgid "Register"
 msgstr "Registrer"
 
-#: checkin/templates/checkin/profile_internal.html:103 internal/forms.py:43
+#: checkin/templates/checkin/profile_internal.html:101 internal/forms.py:43
 #: make_queue/forms.py:206
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
-#: checkin/templates/checkin/profile_internal.html:105
+#: checkin/templates/checkin/profile_internal.html:103
 #, python-format
 msgid "Contact %(email)s to fix the problem."
 msgstr "Kontakt %(email)s for å fikse problemet."
@@ -2933,7 +2953,7 @@ msgstr "Internsider"
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: web/templates/web/header.html:108
+#: web/templates/web/header.html:109
 msgid "Profile"
 msgstr "Profil"
 
