@@ -1,13 +1,23 @@
-$(".message .close").click(function () {
-    $(this)
-        .closest(".message")
-        .fadeOut();
-});
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-$("span[data-content], .explanation-popup").popup();
+/**
+ * Fixes a bug (probably) in Fomantic-UI that prevents the user from making the calendar reappear after having selected a time,
+ * but before changing the focus to another element on the page. This would cause nothing to happen when clicking the input field again,
+ * unless the user made the input field lose focus (blur).
+ * This should be called from the `onHidden()` event callback; see https://fomantic-ui.com/modules/calendar.html#/settings.
+ * @param $widgetInput the `input` tag used by the widget, as a jQuery object
+ */
+function fixFomanticUICalendarBlurBug($widgetInput) {
+    $widgetInput.blur();
+}
 
-// Only forms that have not opted out (using the `dont-prevent-leaving` class),
-// and that have a `method` attribute that is not `GET` (case-insensitive) - as those forms shouldn't contain data that is saved in the backend
-$("form:not(.dont-prevent-leaving)[method]:not([method=GET])").dirty({
-    preventLeaving: true,
-});
+/**
+ * Fixes a bug in Fomantic-UI that doesn't update the end calendar's focused date when changing the date of the start calendar.
+ * This should be called from the `onHidden()` event callback; see https://fomantic-ui.com/modules/calendar.html#/settings.
+ * @param $endCalendar the Fomantic-UI end calendar, as a jQuery object
+ */
+function fixFomanticUIEndCalendarRefreshBug($endCalendar) {
+    $endCalendar.calendar("refresh");
+}

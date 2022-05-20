@@ -11,7 +11,7 @@
 
 {% block body %}
     <h1 class="ui text-centered make-col-yellow header">
-        {% trans "Equipment" %}
+        {% trans "equipment"|capfirst %}
         <a href="{% url 'makerspace_equipment_create' %}" title="{% trans "Add new equipment" %}">
             <i class="green add icon"></i>
         </a>

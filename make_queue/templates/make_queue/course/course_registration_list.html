@@ -44,7 +44,7 @@
                 <div class="ui six wide field">
                     {# Using label with non-blocking space to keep the download button further down #}
                     <label>&nbsp;</label>
-                    <button class="ui right floated make-bg-yellow button">
+                    <button class="ui right floated blue button">
                         {% trans "Download filtered users" %}
                     </button>
                 </div>
@@ -54,7 +54,7 @@
         {# Prepopulated area to be shown when one or more rows are selected #}
         <div id="selected-actions" class="display-none ui secondary segment">
             <h4>
-                <span id="num-selected"></span> {% trans "user(s) selected" %}
+                <span id="num-users-selected"></span>
             </h4>
             <div class="ui form">
                 <div class="ui fields">
@@ -73,7 +73,7 @@
                     </div>
                     <div class="ui ten wide field">
                         <label>&nbsp;</label>
-                        <button id="clear-selected-users" class="ui right floated make-bg-yellow button">
+                        <button id="clear-selected-users" class="ui right floated red button">
                             {% trans "Clear selected users" %}
                         </button>
                         <button id="show-selected-users" class="ui right floated make-bg-yellow button">
@@ -83,6 +83,10 @@
                 </div>
             </div>
         </div>
+
+        <button id="select-shown-users" class="ui make-bg-yellow button">
+            {% trans "Select all shown users" %}
+        </button>
 
         {# Table of registrations #}
         <table class="ui very simple selectable celled table">
@@ -176,13 +180,7 @@
             {% trans "registrations" %}
         </span>
         <br/>
-        <span>
-            {% trans "Displaying" %}
-            <b>
-                <span id="displayed-registrations-count">{{ registrations|length }}</span>/{{ registrations|length }}
-            </b>
-            {% trans "registrations" %}
-        </span>
+        <span id="num-registrations-displayed"></span>
     </div>
 
     {# Modal for confirmation of bulk status update on selected users #}

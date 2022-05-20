@@ -1,0 +1,7 @@
+.users-list {
+    margin-top: 2em;
+}
+
+.participant-tickets-list li.canceled {
+    text-decoration: line-through;
+}

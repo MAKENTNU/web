@@ -291,7 +291,7 @@ class QuoteUpdateView(PermissionRequiredMixin, QuoteFormMixin, UpdateView):
     def has_permission(self):
         return (
                 self.request.user.has_perm('internal.change_quote')
-                or self.request.user == self.object.author
+                or self.request.user == self.get_object().author
         )
 
 
@@ -302,5 +302,5 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
     def has_permission(self):
         return (
                 self.request.user.has_perm('internal.delete_quote')
-                or self.request.user == self.object.author
+                or self.request.user == self.get_object().author
         )
