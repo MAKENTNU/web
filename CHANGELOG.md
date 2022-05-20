@@ -7,12 +7,13 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added [changelog](https://github.com/MAKENTNU/web/blob/main/CHANGELOG.md), issue template and pull request template to
   [our GitHub page](https://github.com/MAKENTNU/web)
 - Added button for selecting all shown course registrations
+- Added [page for searching through all event participants](https://makentnu.no/admin/news/events/participants/search/)
 
 ### Improvements
 - Significantly improved page performance when watching streams that fail to connect
   (most notably on [the machine list](https://makentnu.no/reservation/))
 - Added warning message when there are gaps between the reservation rules of a machine type
-- Reordered admin panel buttons
+- Reordered [admin panel](https://makentnu.no/admin/) buttons
 - The code that reduces the size of uploaded images, now does not use the "reduced" image if it's not actually smaller -
   which could happen with some images
 
