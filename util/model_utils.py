@@ -9,3 +9,16 @@ def duplicate(obj: models.Model, **set_attrs):
         setattr(obj_copy, attr, value)
     obj_copy.save()
     return obj_copy
+
+
+class ComparisonType(models.TextChoices):
+    EQ = "compare", "with"
+    ADD = "add", "to"
+    SUB = "subtract", "from"
+
+
+def comparison_boilerplate(self, other, comparison_type: ComparisonType):
+    """Performs various common boilerplate checks for comparison methods on models."""
+    if not isinstance(other, type(self)):
+        verb, preposition = comparison_type.value, comparison_type.label
+        raise TypeError(f"Cannot {verb} '{type(other).__name__}' {preposition} {type(self).__name__}")

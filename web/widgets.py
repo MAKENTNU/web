@@ -193,7 +193,7 @@ class MazeMapSearchInput(forms.TextInput):
 
 class CKEditorWidget(ckeditor.widgets.CKEditorWidget):
     """
-    A subclass of CKEditor's base widget, which adds a linked JavaScript file that enables the user change the HTML source code directly
+    A subclass of CKEditor's base widget, which adds a linked JavaScript file that enables the user to change the HTML source code directly
     (including adding ``script`` tags) through an added "Source" toolbar button.
 
     NOTE: Make sure that the user has the ``internal.can_change_rich_text_source`` permission before using this widget.
