@@ -3,7 +3,11 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+
+
+## 2022-05-20 ([#453](https://github.com/MAKENTNU/web/pull/453))
 ### New features
+- Added a Docker container for development purposes
 - Added [changelog](https://github.com/MAKENTNU/web/blob/main/CHANGELOG.md), issue template and pull request template to
   [our GitHub page](https://github.com/MAKENTNU/web)
 - Added button for selecting all shown course registrations
