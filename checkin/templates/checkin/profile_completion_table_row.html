@@ -7,9 +7,9 @@
     </td>
     <td {% if not hint %}colspan="2"{% endif %}>
         {% if completed %}
-            <b>{{ text }}</b>
+            <b>{{ message }}</b>
         {% else %}
-            {{ text }}
+            {{ message }}
         {% endif %}
     </td>
     {% if hint %}
