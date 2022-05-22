@@ -14,7 +14,6 @@ from django.views.generic import TemplateView
 
 from card import utils as card_utils
 from card.views import RFIDView
-from make_queue.models.course import Printer3DCourse
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
@@ -98,28 +97,22 @@ class ProfilePageView(TemplateView):
     def get_context_data(self, **kwargs):
         profile, _created = Profile.objects.get_or_create(user=self.request.user)
 
-        # Connect card number from course registration to user
-        registration = Printer3DCourse.objects.filter(user__username=self.request.user.username).first()
-        if registration is not None:
-            registration.user = self.request.user
-            registration.save()
-
-        img = profile.image
+        """ Commented out because it's currently not in use; see the template code in `profile_internal.html`
         user_skills = profile.user_skills.all()
-
         skill_dict = {}
         for user_skill in user_skills:
             skill = user_skill.skill
             if skill not in skill_dict or skill.skill_level > skill_dict[skill][0]:
                 skill_dict[skill] = user_skill.skill_level
+        """
 
         context = super().get_context_data(**kwargs)
         context.update({
             'profile': profile,
-            'image': img,
-            'userskill': user_skills,
-            'skill_dict': skill_dict,
-            'all_skills': Skill.objects.all(),
+            # Commented out for the same reason as above
+            # 'userskill': user_skills,
+            # 'skill_dict': skill_dict,
+            # 'all_skills': Skill.objects.all(),
         })
         return context
 

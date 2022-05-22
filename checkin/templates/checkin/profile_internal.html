@@ -5,11 +5,11 @@
 
 <div class="ui container">
     <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
-        {% if image %}
-            <img {% thumbnail image "150x150" crop="center" as image_thumb %}
+        {% if profile.image %}
+            <img {% thumbnail profile.image "150x150" crop="center" as image_thumb %}
                 src="{{ image_thumb.url }}"
             {% empty %}
-                src="{{ image.url }}"
+                src="{{ profile.image.url }}"
             {% endthumbnail %}
                 id="profile-pic" alt="{% trans "profile picture"|capfirst %}"
             />
