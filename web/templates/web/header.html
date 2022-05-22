@@ -104,11 +104,10 @@
                                 <div class="text">{% trans "Django admin" %}</div>
                             </a>
                         {% endif %}
-                        {% if perms.internal.is_internal %}
-                            <a class="item" href="{% host_url 'profile' host 'main' %}">
-                                <div class="text">{% trans "Profile" %}</div>
-                            </a>
-                        {% endif %}
+
+                        <a class="item" href="{% host_url 'profile' host 'main' %}">
+                            <div class="text">{% trans "Profile" %}</div>
+                        </a>
                         <a class="item" href="{% host_url 'my_tickets_list' host 'main' %}">
                             <div class="text">{% trans "My tickets" %}</div>
                         </a>

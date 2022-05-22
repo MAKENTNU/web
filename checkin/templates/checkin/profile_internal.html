@@ -1,0 +1,112 @@
+{% load static %}
+{% load thumbnail %}
+{% load i18n %}
+
+
+<div class="ui container">
+    <div class="ui image" data-tooltip="{% trans "Change picture" %}" data-position="right center">
+        {% if image %}
+            <img {% thumbnail image "150x150" crop="center" as image_thumb %}
+                src="{{ image_thumb.url }}"
+            {% empty %}
+                src="{{ image.url }}"
+            {% endthumbnail %}
+                id="profile-pic" alt="{% trans "profile picture"|capfirst %}"
+            />
+        {% else %}
+            <img id="profile-pic" src="{% static 'checkin/img/placeholder_profile.png' %}"
+                 alt="{% trans "Placeholder image" %}"
+            />
+        {% endif %}
+    </div>
+    <div class="ui container">
+        <form id="image-form" class="ui form" method="POST" action="{% url 'profile_picture' %}"
+              enctype="multipart/form-data">
+            {% csrf_token %}
+            <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden/>
+        </form>
+    </div>
+</div>
+
+{% comment "Code for card registration and skills - commented out because it's currently not in use" %}
+<br/>
+
+    <div class="ui container">
+        <h4>
+            {% trans "My skills" %}
+        </h4>
+        {% for skill, level in skill_dict.items %}
+            <div class="ui basic image label">
+                {% if skill.image %}
+                    <img {% thumbnail skill.image "64x64" crop="center" as image_thumb %}
+                        src="{{ image_thumb.url }}"
+                    {% empty %}
+                        src="{{ skill.image.url }}"
+                    {% endthumbnail %}
+                        class="skill-image"
+                        alt="{% blocktrans trimmed with skill=skill|locale_title:CURRENT_LANGUAGE_CODE %}Illustration image of {{ skill }}{% endblocktrans %}"
+                    />
+                {% else %}
+                    <img class="skill-image" src="{% static 'checkin/img/placeholder_skill.svg' %}"
+                         alt="{% trans "Placeholder image" %}"
+                    />
+                {% endif %}
+                <span>{{ skill|locale_title:CURRENT_LANGUAGE_CODE }}</span>
+                <div class="detail make-bg-blue">
+                    <div class="ui star rating skill-lvl" data-rating="{{ level }}" data-max-rating="3"></div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <br/>
+
+    <div class="container">
+        <form class="ui form" method="POST">
+            {% csrf_token %}
+            <input id="rating-input" type="number" name="rating" value="1" hidden/>
+            <div class="inline fields">
+                <div class="ten wide field">
+                    <label>{% trans "Add skills" %}</label>
+                    <select class="ui fluid dropdown search" name="skill" required>
+                        <option value="">{% trans "Select/search" %}</option>
+                        {% for skill in all_skills %}
+                            <option value="{{ skill.pk }}">{{ skill|locale_title:CURRENT_LANGUAGE_CODE }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="two wide field">
+                    <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
+                </div>
+                <div class="three wide field">
+                    <button class="ui button" type="submit">{% trans "Add" %}</button>
+                </div>
+            </div>
+        </form>
+        <a href="{% url 'suggest' %}">{% trans "Suggest new skills" %}</a>
+    </div>
+
+
+<br/>
+
+{% if not profile.user.card_number %}
+    <div class="card-register">
+        <h3>{% trans "No registered card" %}</h3>
+        <p>
+            {% trans "Place the card on the card reader and press the button below to register the card" %}
+        </p>
+        <button class="ui button register-profile">{% trans "Register" %}</button>
+        <div id="duplicate-error" class="ui negative small message" style="display: none;">
+            <i class="close icon"></i>
+            <div class="header">{% trans "Card number is already in use" %}</div>
+            <p>
+                {% blocktrans trimmed with email="dev@makentnu.no"|urlize_target_blank %}
+                    Contact {{ email }} to fix the problem.
+                {% endblocktrans %}
+            </p>
+        </div>
+    </div>
+
+{% endif %}
+
+{% endcomment %}

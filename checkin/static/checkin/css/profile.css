@@ -27,3 +27,7 @@
     height: 29px !important;
     width: 29px !important;
 }
+
+.table .checkbox label {
+    padding: 0;
+}
