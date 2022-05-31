@@ -4,7 +4,7 @@ from django.db import models
 
 from .data_structures import MultiLingualTextStructure
 from .formfields import MultiLingualFormField, MultiLingualRichTextFormField, MultiLingualRichTextUploadingFormField
-from .widgets import MultiLingualRichText, MultiLingualRichTextUploading, MultiLingualTextInput
+from .widgets import MultiLingualRichText, MultiLingualRichTextUploading, MultiLingualTextEdit, MultiLingualTextInput
 
 
 class MultiLingualTextField(models.TextField):
@@ -13,11 +13,15 @@ class MultiLingualTextField(models.TextField):
     """
     widget = MultiLingualTextInput
     form_class = MultiLingualFormField
+    languages = MultiLingualTextStructure.SUPPORTED_LANGUAGES
     use_default_if_empty = True
 
-    def __init__(self, *args, widget=None, **kwargs):
+    def __init__(self, *args, widget=None, languages=None, **kwargs):
         # Allow for specification of a widget on creation, to allow for both textarea and text input
         self.widget = widget or self.widget
+        self.languages = languages or self.languages
+        if isinstance(self.widget, type) and issubclass(self.widget, MultiLingualTextEdit):
+            self.widget = self.widget(languages=self.languages)
         self.use_default_if_empty = kwargs.pop('use_default_if_empty', self.use_default_if_empty)
         super().__init__(*args, **kwargs)
 
@@ -29,7 +33,7 @@ class MultiLingualTextField(models.TextField):
             return value
         if isinstance(value, MultiLingualTextStructure):
             return value
-        return MultiLingualTextStructure(value, use_default_for_empty=self.use_default_if_empty)
+        return MultiLingualTextStructure(value, languages=self.languages, use_default_for_empty=self.use_default_if_empty)
 
     def get_prep_value(self, value):
         """
@@ -49,17 +53,21 @@ class MultiLingualTextField(models.TextField):
         """
         Converts the database value to the Python representation.
         """
-        return MultiLingualTextStructure(value, use_default_for_empty=self.use_default_if_empty)
+        return MultiLingualTextStructure(value, languages=self.languages, use_default_for_empty=self.use_default_if_empty)
 
     def formfield(self, **kwargs):
         """
         Sets up the form field.
         """
-        return super().formfield(**{
+        defaults = {
             'form_class': self.form_class,
             'widget': self.widget,
-            **kwargs,
-        })
+        }
+        if issubclass(self.form_class, MultiLingualFormField):
+            defaults['languages'] = self.languages
+
+        defaults.update(kwargs)
+        return super().formfield(**defaults)
 
 
 class MultiLingualRichTextField(MultiLingualTextField):
