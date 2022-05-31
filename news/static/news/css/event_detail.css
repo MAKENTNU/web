@@ -41,8 +41,8 @@
     visibility: hidden;
 }
 
-.card a.place {
-    line-height: 16px !important;
+.card .place {
+    font-weight: bold;
 }
 
 .card .calendar-link {

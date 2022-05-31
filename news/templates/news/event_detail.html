@@ -61,19 +61,16 @@
                             {% endif %}
                         </p>
                         {% if occurrence.place %}
-                            {% if occurrence.place_url %}
-                                <p>
-                                    <i class="make-col-yellow marker icon"></i>
-                                    <a class="make-col-blue place" href="{{ occurrence.place_url }}" target="_blank">
+                            <p class="place">
+                                <i class="make-col-yellow map marker alternate icon"></i>
+                                {% if occurrence.place_url %}
+                                    <a class="make-col-blue" href="{{ occurrence.place_url }}" target="_blank">
                                         {{ occurrence.place }}
                                     </a>
-                                </p>
-                            {% else %}
-                                <p>
-                                    <i class="make-col-yellow marker icon"></i>
+                                {% else %}
                                     {{ occurrence.place }}
-                                </p>
-                            {% endif %}
+                                {% endif %}
+                            </p>
                         {% endif %}
 
                         <a class="calendar-link" href="{% url 'timeplace_ical' news_obj.pk occurrence.pk %}" target="_blank">
@@ -204,19 +201,16 @@
                                 {% endif %}
                             </p>
                             {% if occurrence.place %}
-                                {% if occurrence.place_url %}
-                                    <p>
-                                        <i class="make-col-yellow marker icon"></i>
-                                        <a class="make-col-blue place" href="{{ occurrence.place_url }}" target="_blank">
+                                <p class="place">
+                                    <i class="make-col-yellow map marker alternate icon"></i>
+                                    {% if occurrence.place_url %}
+                                        <a class="make-col-blue" href="{{ occurrence.place_url }}" target="_blank">
                                             {{ occurrence.place }}
                                         </a>
-                                    </p>
-                                {% else %}
-                                    <p>
-                                        <i class="make-col-yellow marker icon"></i>
+                                    {% else %}
                                         {{ occurrence.place }}
-                                    </p>
-                                {% endif %}
+                                    {% endif %}
+                                </p>
                             {% endif %}
 
                             <a class="calendar-link" href="{% url 'timeplace_ical' news_obj.pk occurrence.pk %}" target="_blank">
