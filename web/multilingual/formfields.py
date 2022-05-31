@@ -46,7 +46,7 @@ class MultiLingualFormField(forms.MultiValueField):
         :param data_list: A list of the inputs of the different fields
         :return: A MultiLingualTextStructure element
         """
-        structure = MultiLingualTextStructure("", True)
+        structure = MultiLingualTextStructure("", languages=self.languages, use_default_for_empty=True)
         if not data_list:
             return structure
         if len(data_list) != len(self.languages):

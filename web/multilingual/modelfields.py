@@ -29,7 +29,7 @@ class MultiLingualTextField(models.TextField):
             return value
         if isinstance(value, MultiLingualTextStructure):
             return value
-        return MultiLingualTextStructure(value, self.use_default_if_empty)
+        return MultiLingualTextStructure(value, use_default_for_empty=self.use_default_if_empty)
 
     def get_prep_value(self, value):
         """
@@ -40,7 +40,7 @@ class MultiLingualTextField(models.TextField):
         if isinstance(value, MultiLingualTextStructure):
             # Save the content as a JSON object with languages as keys
             return json.dumps(
-                {language: value[language] for language in value.SUPPORTED_LANGUAGES},
+                value.languages,
                 ensure_ascii=False,  # prevents replacing unicode characters with \u encoding, which would have messed with searching
             )
         return value
@@ -49,7 +49,7 @@ class MultiLingualTextField(models.TextField):
         """
         Converts the database value to the Python representation.
         """
-        return MultiLingualTextStructure(value, self.use_default_if_empty)
+        return MultiLingualTextStructure(value, use_default_for_empty=self.use_default_if_empty)
 
     def formfield(self, **kwargs):
         """

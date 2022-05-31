@@ -264,5 +264,5 @@ class UrlTests(TestCase):
 
             # Check that the content has been bleached expectedly
             expected_content = bleached_content if should_be_bleached else original_content
-            for content in content_text_structure.languages.values():
-                self.assertHTMLEqual(content, expected_content)
+            for language in content_text_structure.languages:
+                self.assertHTMLEqual(content_text_structure[language], expected_content)

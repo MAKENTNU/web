@@ -104,4 +104,6 @@ class InternalContentBoxTests(TestCase):
                 content_box.refresh_from_db()
                 content_text_structure: MultiLingualTextStructure = content_box.content
                 # The content box should contain the same content for all languages
-                self.assertDictEqual(content_text_structure.languages, expected_content_languages)
+                self.assertEqual(len(content_text_structure.languages), len(expected_content_languages))
+                for language in expected_content_languages:
+                    self.assertEqual(content_text_structure[language], expected_content_languages[language])

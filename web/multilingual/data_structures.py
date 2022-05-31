@@ -13,9 +13,9 @@ class MultiLingualTextStructure:
     """
     SUPPORTED_LANGUAGES = [lang_code for lang_code, _lang_name in settings.LANGUAGES]
 
-    def __init__(self, json_content: str, use_default_for_empty: bool):
+    def __init__(self, json_content: str, *, languages=SUPPORTED_LANGUAGES, use_default_for_empty=True):
         self.use_default_for_empty = use_default_for_empty
-        self.languages = {language: "" for language in self.SUPPORTED_LANGUAGES}
+        self.languages = {language: "" for language in languages}
         self.set_content_for_languages(json_content)
 
     def set_content_for_languages(self, json_content):
