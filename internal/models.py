@@ -243,8 +243,9 @@ class Secret(models.Model):
         max_length=100,
         unique=True,
         verbose_name=_("title"),
+        languages={settings.LANGUAGE_CODE},
     )
-    content = MultiLingualRichTextUploadingField(verbose_name=_("description"))
+    content = MultiLingualRichTextUploadingField(verbose_name=_("description"), languages={settings.LANGUAGE_CODE})
     priority = models.IntegerField(
         null=True,
         blank=True,
