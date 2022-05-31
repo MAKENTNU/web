@@ -11,7 +11,7 @@ class MultiLingualTextStructure:
     """
     Data structure to keep track of multilingual string data.
     """
-    SUPPORTED_LANGUAGES = [lang_code for lang_code, _lang_name in settings.LANGUAGES]
+    SUPPORTED_LANGUAGES = tuple(lang_code for lang_code, _lang_name in settings.LANGUAGES)
 
     def __init__(self, json_content: str, *, languages=SUPPORTED_LANGUAGES, use_default_for_empty=True):
         self.use_default_for_empty = use_default_for_empty

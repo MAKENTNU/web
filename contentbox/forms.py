@@ -17,12 +17,12 @@ class ContentBoxForm(forms.ModelForm):
                                 will be copied to the other languages used by the website.
         :param content_extra_widget_kwargs: Extra kwargs for the widget of the ``content`` field.
         """
+        super().__init__(*args, **kwargs)
+
         self.single_language = single_language
         self.content_extra_widget_kwargs = content_extra_widget_kwargs or {}
         if self.single_language:
             self.content_extra_widget_kwargs['languages'] = [self.single_language]
-
-        super().__init__(*args, **kwargs)
 
         # Overwrite the form field of `title`
         if self.single_language:

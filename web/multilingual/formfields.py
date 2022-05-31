@@ -1,5 +1,3 @@
-from typing import List
-
 import bleach
 from bleach.css_sanitizer import CSSSanitizer
 from ckeditor.fields import RichTextFormField
@@ -22,12 +20,13 @@ class MultiLingualFormField(forms.MultiValueField):
     }
 
     subfield_class = forms.CharField
+    languages = MultiLingualTextStructure.SUPPORTED_LANGUAGES
 
-    def __init__(self, *args, languages: List[str] = MultiLingualTextStructure.SUPPORTED_LANGUAGES, **kwargs):
-        self.languages = languages
+    def __init__(self, *args, max_length=None, languages=None, **kwargs):
+        self.languages = languages or self.languages
 
         subfield_attrs = {
-            'max_length': kwargs.pop('max_length', None),
+            'max_length': max_length,
             **kwargs,
             'label': None,  # the `label` attribute is not used by the subfields, so override the one in `kwargs`
         }

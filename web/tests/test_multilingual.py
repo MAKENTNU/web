@@ -202,7 +202,7 @@ class TestMultiLingualFormField(TestCase):
         individual field before being passed to the method.
         """
         form_field = MultiLingualFormField()
-        compressed_data = form_field.compress(["test-en", "test-nb"])
+        compressed_data = form_field.compress(["test-nb", "test-en"])
         self.assertEqual(MultiLingualTextStructure, type(compressed_data))
-        self.assertEqual(compressed_data["nb"], "test-nb")
-        self.assertEqual(compressed_data["en"], "test-en")
+        self.assertEqual(compressed_data['nb'], "test-nb")
+        self.assertEqual(compressed_data['en'], "test-en")
