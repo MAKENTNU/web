@@ -1,4 +1,4 @@
-.lalign {
+.news-obj.left-align {
     width: calc(100% - 315px);
 }
 
@@ -12,7 +12,7 @@
     color: rgba(0, 0, 0, 0.6);
 }
 
-.rail {
+.time-places.rail {
     --rail-padding: 17px;
 
     padding-top: var(--rail-padding) !important; /* Overrides Fomantic-UI */
@@ -27,14 +27,7 @@
 }
 
 .card {
-    border: none !important;
-    box-shadow: 0 0 0 0 #000, 0 0 0 1px #EEE !important;
-    border-radius: 0 !important;
-}
-
-.card p,
-.accordion p {
-    margin: 0 !important;
+    box-shadow: 0 0 0 0 #000, 0 0 0 1px #EEE !important; /* Overrides Fomantic-UI */
 }
 
 .card .hidden.icon {
@@ -51,39 +44,38 @@
     right: 0.25em;
 }
 
-.card .button {
-    border-radius: 0 !important;
-    margin-bottom: -1px !important;
-}
-
-.accordion {
+.time-places.accordion {
     display: none;
 }
 
-.accordion .content {
+.ui.accordion {
+    width: 100% !important; /* Overrides Fomantic-UI */
+}
+
+.ui.accordion .content {
     position: relative;
 }
 
 
 /* Tablet and mobile layout */
 @media screen and (max-width: 1023px) {
-    .lalign {
+    .news-obj.left-align {
         width: 100%;
     }
 
-    .right.rail {
+    .time-places.rail {
         display: none;
+    }
+
+    .time-places.accordion {
+        display: block;
     }
 
     .accordion-padding {
         height: 3em;
     }
 
-    .accordion {
-        display: inline;
-    }
-
-    .accordion .card .calendar-link {
+    .ui.accordion .card .calendar-link {
         top: 0.4em;
         right: 0;
     }
@@ -92,7 +84,7 @@
 
 /* Mobile layout */
 @media screen and (max-width: 426px) {
-    .accordion .card {
+    .ui.accordion .card {
         width: auto;
     }
 }

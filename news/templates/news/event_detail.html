@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{% static 'news/css/event_detail.css' %}"/>
 {% endblock extra_head %}
 
-{% block extra_classes %}lalign{% endblock extra_classes %}
+{% block extra_classes %}left-align{% endblock extra_classes %}
 
 {% block admin_page %}
     {% if perms.news.change_event %}
@@ -18,7 +18,7 @@
             <a class="ui make-bg-yellow button" href="{% url 'admin_event_detail' news_obj.pk %}">
                 <i class="sticky note icon"></i>{% trans "Admin page" %}
             </a>
-            {% if news_obj.number_of_tickets and perms.news.change_event %}
+            {% if news_obj.number_of_tickets > 0 and perms.news.change_event %}
                 <a class="grey link text" href="{% url 'event_ticket_list' news_obj.pk %}">
                     <i class="ticket icon"></i>
                     {{ news_obj.number_of_active_tickets }} / {{ news_obj.number_of_tickets }}
@@ -30,7 +30,7 @@
 
 
 {% block rail %}
-    <div class="ui right attached rail">
+    <div class="time-places ui right attached rail">
         {% if is_old %}
             <div class="ui info message">
                 {% trans "You are viewing an old event" %}.
@@ -43,25 +43,23 @@
             {% for occurrence in timeplaces %}
                 <div class="ui card">
                     <div class="content">
-                        <p>
-                            <i class="make-col-yellow wait icon"></i>
-                            {% if occurrence.start_time.date == occurrence.end_time.date %}
-                                {{ occurrence.start_time|year_wise_long_date }}
-                            {% else %}
-                                {{ occurrence.start_time|year_wise_long_date }} {{ occurrence.start_time|only_time }}
-                            {% endif %}
-                            <br/>
-                            {# Hidden icon only for indenting to the same level as the icon above #}
-                            <i class="hidden wait icon"></i>
-                            {% if occurrence.start_time.date == occurrence.end_time.date %}
-                                {{ occurrence.start_time|only_time }}
-                                &ndash; {{ occurrence.end_time|only_time }}
-                            {% else %}
-                                &ndash;&nbsp; {{ occurrence.end_time|year_wise_long_date }} {{ occurrence.end_time|only_time }}
-                            {% endif %}
-                        </p>
+                        <i class="make-col-yellow wait icon"></i>
+                        {% if occurrence.start_time.date == occurrence.end_time.date %}
+                            {{ occurrence.start_time|year_wise_long_date }}
+                        {% else %}
+                            {{ occurrence.start_time|year_wise_long_date }} {{ occurrence.start_time|only_time }}
+                        {% endif %}
+                        <br/>
+                        {# Hidden icon only for indenting to the same level as the icon above #}
+                        <i class="hidden wait icon"></i>
+                        {% if occurrence.start_time.date == occurrence.end_time.date %}
+                            {{ occurrence.start_time|only_time }}
+                            &ndash; {{ occurrence.end_time|only_time }}
+                        {% else %}
+                            &ndash;&nbsp; {{ occurrence.end_time|year_wise_long_date }} {{ occurrence.end_time|only_time }}
+                        {% endif %}
                         {% if occurrence.place %}
-                            <p class="place">
+                            <div class="place">
                                 <i class="make-col-yellow map marker alternate icon"></i>
                                 {% if occurrence.place_url %}
                                     <a class="make-col-blue" href="{{ occurrence.place_url }}" target="_blank">
@@ -70,14 +68,14 @@
                                 {% else %}
                                     {{ occurrence.place }}
                                 {% endif %}
-                            </p>
+                            </div>
                         {% endif %}
 
                         <a class="calendar-link" href="{% url 'timeplace_ical' news_obj.pk occurrence.pk %}" target="_blank">
                             <i class="large make-col-yellow calendar outline icon"></i>
                         </a>
 
-                        {% if occurrence.number_of_tickets and perms.news.change_event %}
+                        {% if occurrence.number_of_tickets > 0 and perms.news.change_event %}
                             <div class="right floated meta">
                                 <a href="{% url 'timeplace_ticket_list' news_obj.pk occurrence.pk %}">
                                     <i class="ticket icon"></i>
@@ -87,42 +85,40 @@
                         {% endif %}
                     </div>
                     {% if occurrence.event.repeating %}
-                        {% if occurrence.number_of_tickets %}
+                        {% if occurrence.number_of_tickets > 0 %}
                             {% get_ticket occurrence user as ticket %}
                             {% if ticket %}
-                                <a class="ui green fluid button" href="{% url 'ticket_detail' ticket.pk %}">
+                                <a class="ui green bottom attached button" href="{% url 'ticket_detail' ticket.pk %}">
                                     {% trans "You are registered for this event" %}
                                 </a>
                             {% elif occurrence.number_of_active_tickets < occurrence.number_of_tickets %}
-                                <div class="ui two buttons">
-                                    <a class="ui make-bg-yellow black button"
-                                       href="{% url 'register_timeplace' news_obj.pk occurrence.pk %}">
-                                        {% trans "Registration" %}
-                                    </a>
-                                </div>
+                                <a class="ui make-bg-yellow bottom attached button"
+                                   href="{% url 'register_timeplace' news_obj.pk occurrence.pk %}">
+                                    {% trans "Registration" %}
+                                </a>
                             {% else %}
-                                <div class="ui two buttons">
-                                    <p class="ui disabled button">{% trans "Sold out" %}</p>
-                                </div>
+                                <p class="ui disabled bottom attached button">
+                                    {% trans "Sold out" %}
+                                </p>
                             {% endif %}
                         {% else %}
-                            <div class="ui two buttons">
-                                <p class="ui disabled button">-</p>
-                            </div>
+                            <p class="ui disabled bottom attached button">
+                                {% trans "No registration" %}
+                            </p>
                         {% endif %}
                     {% endif %}
                 </div>
             {% endfor %}
             {% if news_obj.standalone and news_obj.timeplaces.future %}
                 <div class="ui card">
-                    {% if news_obj.number_of_tickets %}
+                    {% if news_obj.number_of_tickets > 0 %}
                         {% get_ticket news_obj user as ticket %}
                         {% if ticket %}
-                            <a class="ui green fluid button" href="{% url 'ticket_detail' ticket.pk %}">
+                            <a class="ui green button" href="{% url 'ticket_detail' ticket.pk %}">
                                 {% trans "You are registered for this event" %}
                             </a>
                         {% elif news_obj.number_of_active_tickets < news_obj.number_of_tickets %}
-                            <a class="ui make-bg-yellow black button" href="{% url 'register_event' news_obj.pk %}">
+                            <a class="ui make-bg-yellow button" href="{% url 'register_event' news_obj.pk %}">
                                 {% trans "Registration" %}
                             </a>
                         {% else %}
@@ -143,9 +139,10 @@
 
 
 {% block accordion %}
-    <div class="accordion-padding"></div>
+    <div class="time-places accordion">
 
-    <div class="accordion">
+        <div class="accordion-padding"></div>
+
         {% if is_old %}
             <div class="ui info message">
                 {% trans "You are viewing an old event" %}.
@@ -154,108 +151,111 @@
                 {% endif %}
             </div>
         {% endif %}
-        {% if news_obj.standalone %}
-            {% if news_obj.number_of_tickets %}
-                {% get_ticket news_obj user as ticket %}
-                {% if ticket %}
-                    <a class="ui green fluid button" href="{% url 'ticket_detail' ticket.pk %}">
-                        {% trans "You are registered for this event" %}
-                    </a>
-                {% elif news_obj.number_of_active_tickets < news_obj.number_of_tickets %}
-                    <a class="ui make-bg-yellow black fluid button" href="{% url 'register_event' news_obj.pk %}"
-                       target="_blank">
-                        {% trans "Registration" %}
-                    </a>
+        {% if news_obj.standalone and news_obj.timeplaces.future %}
+            <div>
+                {% if news_obj.number_of_tickets > 0 %}
+                    {% get_ticket news_obj user as ticket %}
+                    {% if ticket %}
+                        <a class="ui green fluid button" href="{% url 'ticket_detail' ticket.pk %}">
+                            {% trans "You are registered for this event" %}
+                        </a>
+                    {% elif news_obj.number_of_active_tickets < news_obj.number_of_tickets %}
+                        <a class="ui make-bg-yellow fluid button" href="{% url 'register_event' news_obj.pk %}">
+                            {% trans "Registration" %}
+                        </a>
+                    {% else %}
+                        <p class="ui disabled fluid button">
+                            {% trans "Sold out" %}
+                        </p>
+                    {% endif %}
                 {% else %}
                     <p class="ui disabled fluid button">
-                        {% trans "Sold out" %}
+                        {% trans "No registration" %}
                     </p>
                 {% endif %}
-            {% elif timeplaces %}
-                <p class="ui disabled fluid button">
-                    {% trans "No registration" %}
-                </p>
-            {% endif %}
-        {% endif %}
-    </div>
-    <div class="ui styled accordion">
-        {% for occurrence in timeplaces %}
-            <div class="title">
-                <i class="dropdown icon"></i>
-                {{ occurrence.start_time|year_wise_long_date }}
             </div>
-            <div class="content">
-                <div class="transition hidden">
-                    <div class="ui card">
-                        <div class="content">
-                            <p>
-                                <i class="make-col-yellow wait icon"></i>
-                                {% if occurrence.start_time.date == occurrence.end_time.date %}
-                                    {{ occurrence.start_time|only_time }} &ndash; {{ occurrence.end_time|only_time }}
-                                {% else %}
-                                    {{ occurrence.start_time|year_wise_long_date }} {{ occurrence.start_time|only_time }}
-                                    <br/>
-                                    {# Hidden icon only for indenting to the same level as the icon above #}
-                                    <i class="hidden wait icon"></i>
-                                    &ndash;&nbsp; {{ occurrence.end_time|year_wise_long_date }} {{ occurrence.end_time|only_time }}
-                                {% endif %}
-                            </p>
-                            {% if occurrence.place %}
-                                <p class="place">
-                                    <i class="make-col-yellow map marker alternate icon"></i>
-                                    {% if occurrence.place_url %}
-                                        <a class="make-col-blue" href="{{ occurrence.place_url }}" target="_blank">
+        {% endif %}
+
+        <div class="ui styled accordion">
+            {% for occurrence in timeplaces %}
+                <div class="title">
+                    <i class="dropdown icon"></i>
+                    {{ occurrence.start_time|year_wise_long_date }}
+                </div>
+                <div class="content">
+                    <div class="transition hidden">
+                        <div class="ui card">
+                            <div class="content">
+                                <div>
+                                    <i class="make-col-yellow wait icon"></i>
+                                    {% if occurrence.start_time.date == occurrence.end_time.date %}
+                                        {{ occurrence.start_time|only_time }} &ndash; {{ occurrence.end_time|only_time }}
+                                    {% else %}
+                                        {{ occurrence.start_time|year_wise_long_date }} {{ occurrence.start_time|only_time }}
+                                        <br/>
+                                        {# Hidden icon only for indenting to the same level as the icon above #}
+                                        <i class="hidden wait icon"></i>
+                                        &ndash;&nbsp; {{ occurrence.end_time|year_wise_long_date }} {{ occurrence.end_time|only_time }}
+                                    {% endif %}
+                                </div>
+                                {% if occurrence.place %}
+                                    <div class="place">
+                                        <i class="make-col-yellow map marker alternate icon"></i>
+                                        {% if occurrence.place_url %}
+                                            <a class="make-col-blue" href="{{ occurrence.place_url }}" target="_blank">
+                                                {{ occurrence.place }}
+                                            </a>
+                                        {% else %}
                                             {{ occurrence.place }}
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+
+                                <a class="calendar-link" href="{% url 'timeplace_ical' news_obj.pk occurrence.pk %}" target="_blank">
+                                    <i class="large make-col-yellow calendar outline icon"></i>
+                                </a>
+
+                                {% if occurrence.number_of_tickets > 0 and perms.news.change_event %}
+                                    <div class="right floated meta">
+                                        <a href="{% url 'timeplace_ticket_list' news_obj.pk occurrence.pk %}">
+                                            <i class="ticket icon"></i>
+                                            {{ occurrence.number_of_active_tickets }} / {{ occurrence.number_of_tickets }}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% if occurrence.event.repeating %}
+                                {% if occurrence.number_of_tickets > 0 %}
+                                    {% get_ticket occurrence user as ticket %}
+                                    {% if ticket %}
+                                        <a class="ui green bottom attached button" href="{% url 'ticket_detail' ticket.pk %}">
+                                            {% trans "You are registered for this event" %}
+                                        </a>
+                                    {% elif occurrence.number_of_active_tickets < occurrence.number_of_tickets %}
+                                        <a class="ui make-bg-yellow bottom attached button"
+                                           href="{% url 'register_timeplace' news_obj.pk occurrence.pk %}">
+                                            {% trans "Registration" %}
                                         </a>
                                     {% else %}
-                                        {{ occurrence.place }}
+                                        <p class="ui disabled bottom attached button">
+                                            {% trans "Sold out" %}
+                                        </p>
                                     {% endif %}
-                                </p>
-                            {% endif %}
-
-                            <a class="calendar-link" href="{% url 'timeplace_ical' news_obj.pk occurrence.pk %}" target="_blank">
-                                <i class="large make-col-yellow calendar outline icon"></i>
-                            </a>
-
-                            {% if occurrence.number_of_tickets and perms.news.change_event %}
-                                <div class="right floated meta">
-                                    <a href="{% url 'timeplace_ticket_list' news_obj.pk occurrence.pk %}">
-                                        <i class="ticket icon"></i>
-                                        {{ occurrence.number_of_active_tickets }} / {{ occurrence.number_of_tickets }}
-                                    </a>
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        {% if occurrence.event.repeating %}
-                            {% if occurrence.number_of_tickets %}
-                                {% get_ticket occurrence user as ticket %}
-                                {% if ticket %}
-                                    <a class="ui bottom attached green button" href="{% url 'ticket_detail' ticket.pk %}">
-                                        {% trans "You are registered for this event" %}
-                                    </a>
-                                {% elif occurrence.number_of_active_tickets < occurrence.number_of_tickets %}
-                                    <a class="ui make-bg-yellow bottom attached button"
-                                       href="{% url 'register_timeplace' news_obj.pk occurrence.pk %}">
-                                        {% trans "Registration" %}
-                                    </a>
                                 {% else %}
                                     <p class="ui disabled bottom attached button">
-                                        {% trans "Sold out" %}
+                                        {% trans "No registration" %}
                                     </p>
                                 {% endif %}
-                            {% else %}
-                                <p class="ui disabled bottom attached button">
-                                    {% trans "No registration" %}
-                                </p>
                             {% endif %}
-                        {% endif %}
+                        </div>
                     </div>
                 </div>
-            </div>
-        {% endfor %}
+            {% endfor %}
+        </div>
+        <script>$(".ui.accordion").accordion('open', 0);</script>
+
     </div>
-    <script>$(".ui.accordion").accordion('open', 0);</script>
 {% endblock accordion %}
 
 
