@@ -30,8 +30,15 @@
     box-shadow: 0 0 0 0 #000, 0 0 0 1px #EEE !important; /* Overrides Fomantic-UI */
 }
 
-.card .hidden.icon {
-    visibility: hidden;
+.card .time-and-place {
+    display: grid;
+    grid-template-columns: [icon] auto [text] 1fr;
+    align-items: baseline;
+}
+
+.ui.accordion .card .time-and-place.same-date .time-date,
+.ui.accordion .card .time-and-place.same-date .second-row-icon-space {
+    display: none;
 }
 
 .card .place {
@@ -54,6 +61,10 @@
 
 .ui.accordion .content {
     position: relative;
+}
+
+.time-places.accordion .standalone-registration-button {
+    margin-bottom: 1em;
 }
 
 

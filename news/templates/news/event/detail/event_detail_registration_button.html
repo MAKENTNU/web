@@ -1,0 +1,26 @@
+{% load i18n %}
+{% load event_tags %}
+
+
+<div class="{{ extra_classes }}">
+    {% if event_or_time_place.number_of_tickets > 0 %}
+        {% get_ticket event_or_time_place user as ticket %}
+        {% if ticket %}
+            <a class="ui green {{ extra_button_classes }} button" href="{% url 'ticket_detail' ticket.pk %}">
+                {% translate "You are registered for this event" %}
+            </a>
+        {% elif event_or_time_place.number_of_active_tickets < event_or_time_place.number_of_tickets %}
+            <a class="ui make-bg-yellow {{ extra_button_classes }} button" href="{{ registration_url }}">
+                {% translate "Registration" %}
+            </a>
+        {% else %}
+            <div class="ui disabled {{ extra_button_classes }} button">
+                {% translate "Sold out" %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="ui disabled {{ extra_button_classes }} button">
+            {% translate "No registration" %}
+        </div>
+    {% endif %}
+</div>
