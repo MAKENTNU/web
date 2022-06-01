@@ -23,13 +23,13 @@
                     {% for time_place in ticket.event.timeplaces.all %}
                         {% if not time_place.hidden %}
                             <div class="ui item">
-                                {% include 'news/ticket_card_time_place.html' %}
+                                {% include 'news/event/ticket/ticket_card_time_place.html' %}
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             {% else %}
-                {% include 'news/ticket_card_time_place.html' with time_place=ticket.timeplace %}
+                {% include 'news/event/ticket/ticket_card_time_place.html' with time_place=ticket.timeplace %}
             {% endif %}
         </div>
     </div>

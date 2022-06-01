@@ -27,7 +27,7 @@ from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePl
 
 
 class EventListView(ListView):
-    template_name = 'news/event_list.html'
+    template_name = 'news/event/event_list.html'
 
     def get_queryset(self):
         return Event.objects.visible_to(self.request.user)
@@ -81,7 +81,7 @@ class EventListView(ListView):
 
 
 class ArticleListView(ListView):
-    template_name = 'news/article_list.html'
+    template_name = 'news/article/article_list.html'
     context_object_name = 'articles'
 
     def get_queryset(self):
@@ -90,7 +90,7 @@ class ArticleListView(ListView):
 
 class EventDetailView(PermissionRequiredMixin, DetailView):
     model = Event
-    template_name = 'news/event_detail.html'
+    template_name = 'news/event/detail/event_detail.html'
     context_object_name = 'news_obj'
 
     def has_permission(self):
@@ -115,7 +115,7 @@ class EventDetailView(PermissionRequiredMixin, DetailView):
 
 class ArticleDetailView(PermissionRequiredMixin, DetailView):
     model = Article
-    template_name = 'news/article_detail.html'
+    template_name = 'news/article/article_detail.html'
     context_object_name = 'news_obj'
 
     def has_permission(self):
@@ -130,7 +130,7 @@ class ArticleDetailView(PermissionRequiredMixin, DetailView):
 
 class AdminArticleListView(PermissionRequiredMixin, ListView):
     model = Article
-    template_name = 'news/admin_article_list.html'
+    template_name = 'news/article/admin_article_list.html'
     context_object_name = 'articles'
 
     def has_permission(self):
@@ -139,7 +139,7 @@ class AdminArticleListView(PermissionRequiredMixin, ListView):
 
 class AdminEventListView(PermissionRequiredMixin, ListView):
     model = Event
-    template_name = 'news/admin_event_list.html'
+    template_name = 'news/event/admin_event_list.html'
     context_object_name = 'events'
 
     def has_permission(self):
@@ -155,7 +155,7 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
 
 class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFormMixin, FormView):
     form_class = EventParticipantsSearchForm
-    template_name = 'news/admin_event_participants_search.html'
+    template_name = 'news/event/admin_event_participants_search.html'
 
     form_title = _("Find events users have attended or are registered for")
     narrow = False
@@ -227,7 +227,7 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
 class AdminEventDetailView(PermissionRequiredMixin, DetailView):
     permission_required = ('news.change_event',)
     model = Event
-    template_name = 'news/admin_event_detail.html'
+    template_name = 'news/event/admin_event_detail.html'
     context_object_name = 'event'
 
     def get_context_data(self, **kwargs):
@@ -242,7 +242,7 @@ class AdminEventDetailView(PermissionRequiredMixin, DetailView):
 class NewsBaseFormMixin(CustomFieldsetFormMixin, ABC):
     model: NewsBase
     form_class: NewsBaseForm
-    template_name = 'news/news_base_edit.html'
+    template_name = 'news/news_base_form.html'
 
     def get_custom_fieldsets(self):
         return [
@@ -287,7 +287,7 @@ class CreateArticleView(PermissionRequiredMixin, ArticleFormMixin, CreateView):
 class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
     model = Event
     form_class = EventForm
-    template_name = 'news/event_edit.html'
+    template_name = 'news/event/event_form.html'
     extra_context = {
         'Event': Event,  # for referencing Event.Type's choice values
     }
@@ -357,7 +357,7 @@ class TimePlaceRelatedViewMixin(EventRelatedViewMixin):
 class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC):
     model = TimePlace
     form_class = TimePlaceForm
-    template_name = 'news/timeplace_edit.html'
+    template_name = 'news/event/timeplace_edit.html'
 
     def get_form_kwargs(self):
         # Forcefully pass the event from the URL to the form
@@ -500,7 +500,7 @@ class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, Time
 class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, CreateView):
     model = EventTicket
     form_class = EventRegistrationForm
-    template_name = 'news/event_registration.html'
+    template_name = 'news/event/event_registration.html'
 
     event: Event
     ticket_event: Optional[Event]
@@ -585,12 +585,12 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Crea
 
 class TicketDetailView(DetailView):
     model = EventTicket
-    template_name = 'news/ticket_detail.html'
+    template_name = 'news/event/ticket/ticket_detail.html'
     context_object_name = 'ticket'
 
 
 class MyTicketsListView(ListView):
-    template_name = 'news/my_tickets_list.html'
+    template_name = 'news/event/ticket/my_tickets_list.html'
     context_object_name = 'tickets'
 
     def get_queryset(self):
@@ -601,7 +601,7 @@ class MyTicketsListView(ListView):
 
 class AdminEventTicketListView(PermissionRequiredMixin, EventRelatedViewMixin, ListView):
     model = EventTicket
-    template_name = 'news/admin_event_ticket_list.html'
+    template_name = 'news/event/admin_event_ticket_list.html'
     context_object_name = 'tickets'
 
     @property
@@ -634,7 +634,7 @@ class AdminTimeplaceTicketListView(TimePlaceRelatedViewMixin, AdminEventTicketLi
 class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView):
     model = EventTicket
     fields = ()
-    template_name = 'news/ticket_cancel.html'
+    template_name = 'news/event/ticket/ticket_cancel.html'
     context_object_name = 'ticket'
 
     ticket: EventTicket
