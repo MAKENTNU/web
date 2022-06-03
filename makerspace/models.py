@@ -35,5 +35,9 @@ class Equipment(models.Model):
 
     history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
 
+    class Meta:
+        verbose_name = _("equipment")
+        verbose_name_plural = _("equipment")
+
     def __str__(self):
         return str(self.title)

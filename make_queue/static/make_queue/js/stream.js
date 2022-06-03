@@ -10,8 +10,10 @@ function setupSocket($elem) {
         chatSocket.image.attr("src", `data:image/jpeg;base64,${data["image"]}`);
     };
 
-    chatSocket.onclose = function (e) {
+    chatSocket.onclose = async function (e) {
         console.error("Socket closed unexpectedly. Restarting");
+        // `sleep` is defined in `common_utils.js`
+        await sleep(1000);
         setupSocket($elem);
     };
 }

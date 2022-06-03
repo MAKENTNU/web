@@ -10,7 +10,9 @@ let canIgnoreRules = false;
 
 const $machineNameDropdown = $("#machine-name-dropdown");
 const $startTimeField = $("#start-time");
+const $startTimeFieldInput = $startTimeField.find("input");
 const $endTimeField = $("#end-time");
+const $endTimeFieldInput = $endTimeField.find("input");
 const $eventField = $("#event-pk");
 
 function getFutureReservations(machineID, forceNewTime) {
@@ -150,7 +152,7 @@ function updateMaxEndDate() {
 
 let minDateStartTime = new Date();
 if ($startTimeField.children("div").hasClass("disabled")) {
-    minDateStartTime = new Date(new Date($startTimeField.find("input").val()) - new Date(5 * 60 * 1000));
+    minDateStartTime = new Date(new Date($startTimeFieldInput.val()) - new Date(5 * 60 * 1000));
 }
 $startTimeField.calendar({
         minDate: minDateStartTime,
@@ -158,7 +160,7 @@ $startTimeField.calendar({
         ampm: false,
         mode: "minute",
         endCalendar: $endTimeField,
-        initialDate: new Date($startTimeField.find("input").val()),
+        initialDate: new Date($startTimeFieldInput.val()),
         firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
             if (date === undefined)
@@ -186,6 +188,12 @@ $startTimeField.calendar({
             }
             return shouldChange;
         },
+        onHidden: function () {
+            // Defined in `common_utils.js`
+            fixFomanticUICalendarBlurBug($startTimeFieldInput);
+            // Defined in `common_utils.js`
+            fixFomanticUIEndCalendarRefreshBug($endTimeField);
+        },
     },
 );
 
@@ -194,6 +202,10 @@ $endTimeField.calendar({
     firstDayOfWeek: 1,
     startCalendar: $startTimeField,
     minDate: new Date(),
+    onHidden: function () {
+        // Defined in `common_utils.js`
+        fixFomanticUICalendarBlurBug($endTimeFieldInput);
+    },
 });
 
 $(".ui.dropdown").dropdown();
@@ -254,8 +266,8 @@ function formatDate(date) {
 $("form").submit(function (event) {
     let is_valid = true;
     $machineNameDropdown.toggleClass("error-border", false);
-    $startTimeField.find("input").toggleClass("error-border", false);
-    $endTimeField.find("input").toggleClass("error-border", false);
+    $startTimeFieldInput.toggleClass("error-border", false);
+    $endTimeFieldInput.toggleClass("error-border", false);
     $eventField.toggleClass("error-border", false);
 
     if ($machineNameDropdown.dropdown("get value") === "default") {
@@ -264,12 +276,12 @@ $("form").submit(function (event) {
     }
 
     if ($startTimeField.calendar("get date") === null) {
-        $startTimeField.find("input").toggleClass("error-border", true);
+        $startTimeFieldInput.toggleClass("error-border", true);
         is_valid = false;
     }
 
     if ($endTimeField.calendar("get date") === null) {
-        $endTimeField.find("input").toggleClass("error-border", true);
+        $endTimeFieldInput.toggleClass("error-border", true);
         is_valid = false;
     }
 
@@ -313,4 +325,3 @@ const calendar = new ReservationCalendar($(".reservation-calendar"), {
 if ($startTimeField.calendar("get date") !== null) {
     calendar.showDate($startTimeField.calendar("get date"));
 }
-

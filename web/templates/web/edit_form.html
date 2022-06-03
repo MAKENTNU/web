@@ -23,6 +23,8 @@
             </h1>
         {% endblock form_header %}
 
+        {% block extra_pre_content %}{% endblock %}
+
         <form class="ui form {% if narrow %}text container{% endif %}" method="POST"
               {% if has_file_field %}enctype="multipart/form-data"{% endif %}>
             {% csrf_token %}
@@ -95,11 +97,16 @@
                 {% endif %}
             {% endfor %}
 
-            <input class="ui right floated make-bg-yellow submit button" type="submit" value="{{ save_button_text }}"/>
-            <a class="ui right floated red button" href="{{ back_button_link }}">
-                {% trans "Cancel" context "abort action" %}
-            </a>
+            <input class="ui {% if right_floated_buttons %}right floated{% endif %} make-bg-yellow submit button"
+                   type="submit" value="{{ save_button_text }}"/>
+            {% if cancel_button %}
+                <a class="ui {% if right_floated_buttons %}right floated{% endif %} red button" href="{{ back_button_link }}">
+                    {% trans "Cancel" context "abort action" %}
+                </a>
+            {% endif %}
         </form>
+
+        {% block extra_post_content %}{% endblock %}
 
     </div>
 {% endblock body %}

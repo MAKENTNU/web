@@ -3,9 +3,33 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+
+
+## 2022-05-20 ([#453](https://github.com/MAKENTNU/web/pull/453))
 ### New features
+- Added a Docker container for development purposes
 - Added [changelog](https://github.com/MAKENTNU/web/blob/main/CHANGELOG.md), issue template and pull request template to
   [our GitHub page](https://github.com/MAKENTNU/web)
+- Added button for selecting all shown course registrations
+- Added [page for searching through all event participants](https://makentnu.no/admin/news/events/participants/search/)
+- Added table on [the profile page](https://makentnu.no/checkin/profile/) which displays the completion status of all available courses
+  - Also, the profile button in the user dropdown is now visible to all users - not just MAKE members
+
+### Improvements
+- Significantly improved page performance when watching streams that fail to connect
+  (most notably on [the machine list](https://makentnu.no/reservation/))
+- Added warning message when there are gaps between the reservation rules of a machine type
+- Reordered [admin panel](https://makentnu.no/admin/) buttons
+- The code that reduces the size of uploaded images, now does not use the "reduced" image if it's not actually smaller -
+  which could happen with some images
+
+### Fixes
+- Fixed server error when users tried to change or delete quotes that they themselves had created
+- Fixed a bug that didn't update an end calendar's focused date when changing the date of the start calendar
+  (e.g. the start/end time fields on the page for creating a new occurrence for an event)
+- Fixed a bug after having selected a time in a calendar popup, which would cause nothing to happen when clicking the input field again
+- Fixed server error while reducing the size of an uploaded image that was larger than 2.5 MB
+- Fixed server error when uploading an image to an object that had its previous image file deleted - without also updating the database
 
 
 ## 2022-04-07 ([#434](https://github.com/MAKENTNU/web/pull/434) and [#437](https://github.com/MAKENTNU/web/pull/437))

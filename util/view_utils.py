@@ -30,6 +30,8 @@ class CustomFieldsetFormMixin(TemplateResponseMixin, FormMixin, ABC):
     back_button_link: str
     back_button_text: str
     save_button_text = _("Save")
+    cancel_button = True
+    right_floated_buttons = True
     custom_fieldsets: Iterable[dict] = None
 
     _has_file_field = False
@@ -65,6 +67,8 @@ class CustomFieldsetFormMixin(TemplateResponseMixin, FormMixin, ABC):
             'back_button_link': self.get_back_button_link(),
             'back_button_text': self.get_back_button_text(),
             'save_button_text': self.save_button_text,
+            'cancel_button': self.cancel_button,
+            'right_floated_buttons': self.right_floated_buttons,
             'fieldsets': fieldsets,
 
             'has_file_field': self._has_file_field,
