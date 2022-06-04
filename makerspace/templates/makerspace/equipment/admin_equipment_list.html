@@ -1,8 +1,6 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
-{% load thumbnail %}
-{% load css_tags %}
 
 
 {% block extra_head %}
@@ -11,8 +9,8 @@
 
 {% block body %}
     <h1 class="ui text-centered make-col-yellow header">
-        {% trans "equipment"|capfirst %}
-        <a href="{% url 'makerspace_equipment_create' %}" title="{% trans "Add new equipment" %}">
+        {% translate "equipment"|capfirst %}
+        <a href="{% url 'makerspace_equipment_create' %}" title="{% translate "Add new equipment" %}">
             <i class="green add icon"></i>
         </a>
     </h1>
@@ -23,16 +21,11 @@
                     <div class="item">
 
                         <a class="image" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
-                            <img {% thumbnail equipment.image "36x36" crop="center" as image_thumb %}
-                                src="{{ image_thumb.url }}"
-                            {% empty %}
-                                src="{{ equipment.image.url }}"
-                            {% endthumbnail %}
-                                style="{% img_square 36 %}"
-                                alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
+                            <img src="{{ equipment.image.url }}"
+                                 alt="{% blocktranslate trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
                             />
                         </a>
-                        <h3>
+                        <h3 class="equipment-title">
                             <a class="make-col-blue" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
                                 {{ equipment.title }}
                             </a>
