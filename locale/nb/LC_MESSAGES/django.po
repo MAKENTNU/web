@@ -935,9 +935,13 @@ msgstr "Hemmeligheter"
 msgid "Quotes"
 msgstr "Sitater"
 
+#: internal/templates/internal/header.html:25
+msgid "Misc."
+msgstr "Diverse"
+
 #: internal/templates/internal/header.html:24
-msgid "MAKE's history"
-msgstr "Historien til MAKE"
+msgid "The History of MAKE NTNU"
+msgstr "Historien til MAKE NTNU"
 
 #: internal/templates/internal/header.html:31
 msgid "Public pages"
