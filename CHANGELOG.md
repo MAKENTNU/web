@@ -3,6 +3,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+### New features
+- Added an internal page titled "[The History of MAKE NTNU](https://i.makentnu.no/make-history/)"
+  - This can be found under the new "Misc."/"Diverse" dropdown in the header on the internal site
 
 
 ## 2022-05-20 ([#453](https://github.com/MAKENTNU/web/pull/453))
