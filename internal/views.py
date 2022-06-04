@@ -20,13 +20,20 @@ from .forms import (
 from .models import Member, Quote, Secret, SystemAccess
 
 
-class HomeView(DisplayContentBoxView):
-    template_name = 'internal/home.html'
+class InternalDisplayContentBoxView(DisplayContentBoxView):
     extra_context = {
         'base_template': 'internal/base.html',
     }
 
     change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)
+
+
+class HomeView(InternalDisplayContentBoxView):
+    template_name = 'internal/home.html'
+
+
+class MAKEHistoryView(InternalDisplayContentBoxView):
+    template_name = 'internal/history.html'
 
 
 class EditInternalContentBoxView(EditContentBoxView):
@@ -304,12 +311,3 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
                 self.request.user.has_perm('internal.delete_quote')
                 or self.request.user == self.get_object().author
         )
-
-
-class HistoryView(DisplayContentBoxView):
-    template_name = 'internal/history.html'
-    extra_context = {
-        'base_template': 'internal/base.html',
-    }
-
-    change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)

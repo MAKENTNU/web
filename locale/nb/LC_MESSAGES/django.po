@@ -936,7 +936,7 @@ msgid "Quotes"
 msgstr "Sitater"
 
 #: internal/templates/internal/header.html:24
-msgid "Make's history"
+msgid "MAKE's history"
 msgstr "Historien til MAKE"
 
 #: internal/templates/internal/header.html:31
