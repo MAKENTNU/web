@@ -2731,6 +2731,48 @@ msgstr "viktige datoer"
 msgid "full name from LDAP"
 msgstr "fullt navn fra LDAP"
 
+#: util/locale_utils.py:13
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d år"
+msgstr[1] "%(num)d år"
+
+#: util/locale_utils.py:14
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d måned"
+msgstr[1] "%(num)d måneder"
+
+#: util/locale_utils.py:15
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d uke"
+msgstr[1] "%(num)d uker"
+
+#: util/locale_utils.py:16
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d dag"
+msgstr[1] "%(num)d dager"
+
+#: util/locale_utils.py:17
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d time"
+msgstr[1] "%(num)d timer"
+
+#: util/locale_utils.py:18
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d minutt"
+msgstr[1] "%(num)d minutter"
+
 #: util/validators.py:10
 msgid ""
 "This can only consist of lowercase English letters, numbers, hyphens or "
