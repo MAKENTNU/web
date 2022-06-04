@@ -2065,8 +2065,12 @@ msgid "Image of %(equipment)s"
 msgstr "Bilde av %(equipment)s"
 
 #: makerspace/templates/makerspace/equipment/equipment_list.html:14
-msgid "Available equipment at Makerverkstedet"
-msgstr "Tilgjengelig utstyr på Makerverkstedet"
+msgid "Some of the available equipment<br/>at Makerverkstedet"
+msgstr "Noe av det tilgjengelige utstyret<br/>på Makerverkstedet"
+
+#: makerspace/templates/makerspace/equipment/equipment_list.html:22
+msgid "Contents"
+msgstr "Innhold"
 
 #: makerspace/templates/makerspace/makerspace.html:18
 msgid ""

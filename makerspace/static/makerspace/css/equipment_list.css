@@ -1,9 +1,19 @@
+.accordion-and-list {
+    max-width: 933px; /* Same as the `width` of Fomantic-UI's `.ui.container` for tablet layout */
+    margin: 2em auto;
+}
+
+.accordion-and-list .accordion {
+    width: -moz-fit-content !important; /* Overrides Fomantic-UI */
+    width: fit-content !important; /* Overrides Fomantic-UI */
+    min-width: 250px;
+}
+
 .equipment-list {
     display: grid;
     grid-template-columns: auto 1fr;
     row-gap: 2em;
-    max-width: 933px; /* Same as the `width` of Fomantic-UI's `.ui.container` for tablet layout */
-    margin: 3em auto 2em;
+    margin-top: 3em;
 }
 
 .equipment-img-container img {
@@ -64,10 +74,13 @@
 
 /* Tablet and mobile layout */
 @media screen and (max-width: 991.98px) {
+    .accordion-and-list {
+        margin: 2em 10% 0;
+    }
+
     .equipment-list {
         grid-template-columns: 1fr;
         row-gap: 0;
-        margin: 3em 10% 0;
     }
 
     .equipment-img-container img {
@@ -85,7 +98,7 @@
 
 /* Mobile layout */
 @media screen and (max-width: 426px) {
-    .equipment-list {
-        margin: 3em 4% 0;
+    .accordion-and-list {
+        margin: 2em 4% 0;
     }
 }
