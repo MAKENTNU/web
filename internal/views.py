@@ -32,10 +32,6 @@ class HomeView(InternalDisplayContentBoxView):
     template_name = 'internal/home.html'
 
 
-class MAKEHistoryView(InternalDisplayContentBoxView):
-    template_name = 'internal/history.html'
-
-
 class EditInternalContentBoxView(EditContentBoxView):
     permission_required = ('contentbox.change_internal_contentbox',)
     raise_exception = True

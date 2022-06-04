@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 
 from util.url_utils import debug_toolbar_urls
 from . import views
+from .views import InternalDisplayContentBoxView
 
 
 urlpatterns = [
@@ -50,7 +51,7 @@ quote_urlpatterns = [
 
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name='home'), name='home'),
-    path("make-history/", views.MAKEHistoryView.as_view(url_name='make-history'), name='make-history'),
+    InternalDisplayContentBoxView.get_path('make-history'),
     path("contentbox/", include(internal_contentbox_urlpatterns)),
 
     path("", decorator_include(
