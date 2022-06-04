@@ -17,31 +17,28 @@
         <div class="equipment-list">
             {% for equipment in equipment_list %}
 
-                {# For the images #}
-                <a class="equipment-img" href="{% url 'makerspace_equipment_detail' equipment.pk %}">
-                    <img {% thumbnail equipment.image "250x250" crop="center" as image_thumb %}
+                <a class="equipment-img-container" href="{% url 'makerspace_equipment_detail' equipment.pk %}">
+                    <img {% thumbnail equipment.image "600x600" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
                     {% empty %}
                         src="{{ equipment.image.url }}"
                     {% endthumbnail %}
-                        style="{% img_square 250 %}"
                         alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
                     />
                 </a>
 
-                {# For the text #}
                 <div class="equipment-text
-                            {% if forloop.first %}equipment-first{% endif %}
-                            {% if forloop.last %}equipment-last{% endif %}">
+                            {% if forloop.first %}first{% endif %}
+                            {% if forloop.last %}last{% endif %}">
                     {% if forloop.first or forloop.last %}
-                        <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}" alt=""/>
-                        <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}" alt=""/>
-                        <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
-                        <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
+                        <img class="text-border-corner top left" src="{% static 'web/img/top_left.svg' %}" alt=""/>
+                        <img class="text-border-corner top right" src="{% static 'web/img/top_right.svg' %}" alt=""/>
+                        <img class="text-border-corner bottom left" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
+                        <img class="text-border-corner bottom right" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
                     {% endif %}
-                    <h2 class="word-breaking equipment-title">
+                    <h1 class="word-breaking equipment-title">
                         <a class="make-col-yellow" href="{% url 'makerspace_equipment_detail' equipment.pk %}">{{ equipment.title }}</a>
-                    </h2>
+                    </h1>
                 </div>
 
             {% endfor %}
