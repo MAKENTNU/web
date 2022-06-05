@@ -3043,6 +3043,10 @@ msgstr "Et bilde er krevd"
 msgid "The image is too big"
 msgstr "Bildet er for stort"
 
+#: web/templates/web/header.html:29
+msgid "Main"
+msgstr "Hoved"
+
 #: web/templates/web/header.html:45
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"

@@ -2,11 +2,14 @@ from django import template
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
 
+from users.models import User
+from ..models import Member
+
 register = template.Library()
 
 
 @register.simple_tag
-def get_membership_statuses(member):
+def get_membership_statuses(member: Member):
     """
     Returns a list of tuples (Membership status, Display color) of the statuses of the membership of the given member.
 
@@ -31,7 +34,7 @@ def get_membership_statuses(member):
 
 
 @register.simple_tag
-def get_system_accesses(member, user):
+def get_system_accesses(member: Member, user: User):
     """
     Returns a list of tuples (Name of system, Has access) of the systems the member could have access to.
 
@@ -66,18 +69,18 @@ def color_for_committee(committee_name: str, *, MAKE_col_prefixed=False, MAKE_bg
 
 
 @register.simple_tag
-def get_committees(member):
+def get_committees(member: Member):
     """
     Returns a list of tuples (Committee name, Display color) of the committees the given member is a part of.
 
     :param member: The member to find committees for
     :return: A list of committees with display color
     """
-    colors = {
-        "Dev": "green",
-        "Mentor": "red",
-        "Event": "blue",
-        "PR": "make-bg-yellow",
-        "Styret": "purple",
-    }
-    return sorted([(committee.name, colors[committee.name]) for committee in member.committees.all()]) or ""
+    committee_names = sorted(committee.name for committee in member.committees.all())
+    if not committee_names:
+        return ""
+
+    return [
+        (name, color_for_committee(name, MAKE_bg_prefixed=True))
+        for name in committee_names
+    ]
