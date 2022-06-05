@@ -18,6 +18,8 @@ A summary of changes made to the codebase, grouped per deployment.
     the needle that's currently inserted in the sewing machine, or just the machine's current state/"mood"
 - Added an SLA 3D printer machine type, and an "SLA course" checkbox to course registrations
   - SLA 3D printers are always visible to MAKE members, but only visible to other users after they have taken the SLA course
+- Added "bulletin boards" for each committee on [the internal site](https://i.makentnu.no/)
+  - These can e.g. contain notices, instructions, and links to common resources, and can act as a "hub" for each committee
 - Added an `.editorconfig` file, to make it easier to configure a text editor to format code to (roughly) fit the style guide
 
 ### Improvements
