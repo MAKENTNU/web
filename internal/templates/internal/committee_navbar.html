@@ -1,0 +1,14 @@
+{% load i18n %}
+{% load member %}
+
+
+{# Linking `committee_navbar.css` and `committee_navbar.js` is required when including this template #}
+
+<nav class="committee-navbar ui fluid five item menu" aria-label="{% translate "Committee bulletin boards" %}">
+    {% translate "Front page" as name %}
+    {% include 'internal/committee_navbar_item.html' with name=name url_name='home' selected_url_name=contentbox.url_name %}
+    {% include 'internal/committee_navbar_item.html' with name="Dev" url_name='dev-board' selected_url_name=contentbox.url_name %}
+    {% include 'internal/committee_navbar_item.html' with name="Event" url_name='event-board' selected_url_name=contentbox.url_name %}
+    {% include 'internal/committee_navbar_item.html' with name="Mentor" url_name='mentor-board' selected_url_name=contentbox.url_name %}
+    {% include 'internal/committee_navbar_item.html' with name="PR" url_name='pr-board' selected_url_name=contentbox.url_name %}
+</nav>

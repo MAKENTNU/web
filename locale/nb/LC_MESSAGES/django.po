@@ -87,6 +87,7 @@ msgid "Announcements"
 msgstr "Kunngjøringer"
 
 #: announcements/templates/announcements/announcement_admin.html:39
+msgctxt "location"
 msgid "Front page"
 msgstr "Forsiden"
 
@@ -932,6 +933,14 @@ msgstr "«{quote}» —{quoted}"
 #: internal/templates/internal/base.html:6
 msgid "MAKE NTNU Internal"
 msgstr "MAKE NTNU internsider"
+
+#: internal/templates/internal/committee_navbar.html:7
+msgid "Committee bulletin boards"
+msgstr "Komitéoppslagstavler"
+
+#: internal/templates/internal/committee_navbar.html:8
+msgid "Front page"
+msgstr "Forside"
 
 #: internal/templates/internal/favicon.html:7
 #: internal/templates/internal/favicon.html:9

@@ -1,0 +1,10 @@
+{% load member %}
+
+
+{% color_for_committee name as color %}
+<a class="{% if selected_url_name|lower == url_name|lower %}active{% endif %}
+          {% if color %}{{ color }} colored{% endif %} item"
+   href="{% url url_name %}"
+>
+    {{ name }}
+</a>

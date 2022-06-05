@@ -48,6 +48,24 @@ def get_system_accesses(member, user):
 
 
 @register.simple_tag
+def color_for_committee(committee_name: str, *, MAKE_col_prefixed=False, MAKE_bg_prefixed=False):
+    prefix = ""
+    if MAKE_col_prefixed:
+        prefix = "make-col-"
+    elif MAKE_bg_prefixed:
+        prefix = "make-bg-"
+
+    committee_to_color = {
+        'dev': "green",
+        'event': "blue",
+        'mentor': "red",
+        'pr': f"{prefix}yellow",
+        'styret': "purple",
+    }
+    return committee_to_color.get(committee_name.lower(), "")
+
+
+@register.simple_tag
 def get_committees(member):
     """
     Returns a list of tuples (Committee name, Display color) of the committees the given member is a part of.

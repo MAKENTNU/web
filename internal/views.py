@@ -32,6 +32,10 @@ class HomeView(InternalDisplayContentBoxView):
     template_name = 'internal/home.html'
 
 
+class CommitteeBulletinBoardView(InternalDisplayContentBoxView):
+    template_name = 'internal/committee_bulletin_board.html'
+
+
 class EditInternalContentBoxView(EditContentBoxView):
     permission_required = ('contentbox.change_internal_contentbox',)
     raise_exception = True
