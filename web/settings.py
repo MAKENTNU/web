@@ -270,8 +270,8 @@ SOCIAL_AUTH_DATAPORTEN_FEIDE_SECRET = SOCIAL_AUTH_DATAPORTEN_SECRET
 LANGUAGE_CODE = 'nb'
 
 LANGUAGES = (
-    ('en', 'English'),
     ('nb', 'Norsk'),
+    ('en', 'English'),
 )
 
 LOCALE_PATHS = (

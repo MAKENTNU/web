@@ -1,7 +1,6 @@
 from django import forms
 from django.conf import settings
 
-from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualRichTextUploading, MultiLingualTextInput
 from .models import ContentBox
 
@@ -18,12 +17,12 @@ class ContentBoxForm(forms.ModelForm):
                                 will be copied to the other languages used by the website.
         :param content_extra_widget_kwargs: Extra kwargs for the widget of the ``content`` field.
         """
+        super().__init__(*args, **kwargs)
+
         self.single_language = single_language
         self.content_extra_widget_kwargs = content_extra_widget_kwargs or {}
         if self.single_language:
             self.content_extra_widget_kwargs['languages'] = [self.single_language]
-
-        super().__init__(*args, **kwargs)
 
         # Overwrite the form field of `title`
         if self.single_language:
@@ -39,25 +38,6 @@ class ContentBoxForm(forms.ModelForm):
         if self.single_language:
             content_form_field_kwargs['languages'] = [self.single_language]
         self.fields['content'] = ContentBox._meta.get_field('content').formfield(**content_form_field_kwargs)
-
-    def clean_title(self):
-        title: MultiLingualTextStructure = self.cleaned_data['title']
-        if title:
-            self._set_same_content_for_languages_if_single_language(title)
-        return title
-
-    def clean_content(self):
-        content: MultiLingualTextStructure = self.cleaned_data['content']
-        if content:
-            self._set_same_content_for_languages_if_single_language(content)
-        return content
-
-    def _set_same_content_for_languages_if_single_language(self, text_structure: MultiLingualTextStructure):
-        if self.single_language:
-            single_language_content = text_structure[self.single_language]
-            # Set the same JSON content for all languages
-            for language in MultiLingualTextStructure.SUPPORTED_LANGUAGES:
-                text_structure[language] = single_language_content
 
 
 class EditSourceContentBoxForm(ContentBoxForm):

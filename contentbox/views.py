@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.urls import path, reverse
+from django.http import Http404
+from django.urls import NoReverseMatch, path, reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, pgettext
 from django.views.generic import DetailView, UpdateView
@@ -55,6 +56,14 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
     template_name = 'contentbox/edit.html'
 
     narrow = False
+
+    def get_object(self, *args, **kwargs):
+        obj: ContentBox = super().get_object(*args, **kwargs)
+        try:
+            reverse(obj.url_name)
+        except NoReverseMatch:
+            raise Http404()
+        return obj
 
     def get_permission_required(self):
         return self.permission_required + self.get_object().extra_change_perms_str_tuple

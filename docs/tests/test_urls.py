@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from django.conf import settings
 from django.test import TestCase
 from django.utils import timezone
 from django_hosts import reverse
@@ -7,6 +8,10 @@ from django_hosts import reverse
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
 from ..models import Content, Page
+
+
+# Makes sure that the subdomain of all requests is `docs`
+DOCS_CLIENT_DEFAULTS = {'SERVER_NAME': f'docs.{settings.PARENT_HOST}'}
 
 
 class UrlTests(TestCase):
