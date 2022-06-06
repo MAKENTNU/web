@@ -7,14 +7,14 @@
     </td>
     <td {% if not hint %}colspan="2"{% endif %}>
         {% if completed %}
-            <b>{{ text }}</b>
+            <b>{{ message }}</b>
         {% else %}
-            {{ text }}
+            {{ message }}
         {% endif %}
     </td>
     {% if hint %}
         <td class="collapsing">
-            <span data-content="{{ hint }}" data-variation="wide">
+            <span class="popup-trigger" data-content="{{ hint }}" data-variation="wide">
                 <i class="make-col-yellow question circle icon"></i>
             </span>
         </td>

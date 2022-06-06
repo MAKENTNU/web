@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import timedelta
 from http import HTTPStatus
 
@@ -14,7 +15,6 @@ from django.views.generic import TemplateView
 
 from card import utils as card_utils
 from card.views import RFIDView
-from make_queue.models.course import Printer3DCourse
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
@@ -71,6 +71,14 @@ class ShowSkillsView(TemplateView):
         return context
 
 
+@dataclass
+# `[...]DataClass` might have been a better name, but `[...]Struct` is shorter
+class CompletedCourseMessageStruct:
+    completed: bool
+    message: str
+    usage_hint: str = None
+
+
 class ProfilePageView(TemplateView):
     template_name = 'checkin/profile.html'
 
@@ -96,30 +104,57 @@ class ProfilePageView(TemplateView):
         return HttpResponseRedirect(reverse('profile'))
 
     def get_context_data(self, **kwargs):
-        profile, _created = Profile.objects.get_or_create(user=self.request.user)
+        user = self.request.user
+        profile, _created = Profile.objects.get_or_create(user=user)
 
-        # Connect card number from course registration to user
-        registration = Printer3DCourse.objects.filter(user__username=self.request.user.username).first()
-        if registration is not None:
-            registration.user = self.request.user
-            registration.save()
+        completed_3d_printer = hasattr(user, 'printer_3d_course')
+        completed_raise3d = completed_3d_printer and user.printer_3d_course.raise3d_course
+        completed_sla = completed_3d_printer and user.printer_3d_course.sla_course
 
-        img = profile.image
+        completed_course_message_structs = [
+            CompletedCourseMessageStruct(
+                completed=completed_3d_printer,
+                message=(_("You have completed the 3D printer course") if completed_3d_printer
+                         else _("You have not taken the 3D printer course")),
+                usage_hint=_(
+                    "To use a 3D printer, make a reservation in the calendar of one of the 3D printers on the “Reservations” page."
+                ) if completed_3d_printer else None,
+            ),
+            CompletedCourseMessageStruct(
+                completed=completed_raise3d,
+                message=(_("You have completed the Raise3D printer course") if completed_raise3d
+                         else _("You have not taken the Raise3D printer course")),
+                usage_hint=_(
+                    "To use a Raise3D printer, make a reservation in the calendar of one of the Raise3D printers on the “Reservations” page."
+                ) if completed_raise3d else None,
+            ),
+            CompletedCourseMessageStruct(
+                completed=completed_sla,
+                message=(_("You have completed the SLA 3D printer course") if completed_sla
+                         else _("You have not taken the SLA 3D printer course")),
+                usage_hint=_(
+                    "To use an SLA 3D printer, make a reservation in the calendar of one of the SLA 3D printers on the “Reservations” page."
+                ) if completed_sla else None,
+            ),
+        ]
+
+        """ Commented out because it's currently not in use; see the template code in `profile_internal.html`
         user_skills = profile.user_skills.all()
-
         skill_dict = {}
         for user_skill in user_skills:
             skill = user_skill.skill
             if skill not in skill_dict or skill.skill_level > skill_dict[skill][0]:
                 skill_dict[skill] = user_skill.skill_level
+        """
 
         context = super().get_context_data(**kwargs)
         context.update({
             'profile': profile,
-            'image': img,
-            'userskill': user_skills,
-            'skill_dict': skill_dict,
-            'all_skills': Skill.objects.all(),
+            'completed_course_message_structs': completed_course_message_structs,
+            # Commented out for the same reason as above
+            # 'userskill': user_skills,
+            # 'skill_dict': skill_dict,
+            # 'all_skills': Skill.objects.all(),
         })
         return context
 

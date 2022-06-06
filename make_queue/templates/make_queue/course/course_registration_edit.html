@@ -96,11 +96,18 @@
                 </div>
             </div>
 
-            <div class="ui one field">
+            <div class="ui fields">
                 <div class="ui field">
-                    <label>{{ form.advanced_course.label }}</label>
+                    <label>{{ form.raise3d_course.label }}</label>
                     <div class="ui checkbox">
-                        {{ form.advanced_course }}
+                        {{ form.raise3d_course }}
+                        <label>{% trans "Yes" %}</label>
+                    </div>
+                </div>
+                <div class="ui field">
+                    <label>{{ form.sla_course.label }}</label>
+                    <div class="ui checkbox">
+                        {{ form.sla_course }}
                         <label>{% trans "Yes" %}</label>
                     </div>
                 </div>

@@ -165,7 +165,7 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
     cancel_button = False
     right_floated_buttons = False
     custom_fieldsets = [
-        {'fields': ('search_string',), 'layout_class': "two"},
+        {'fields': ('search_string',), 'layout_class': "ui two fields"},
     ]
 
     user_search_fields = ['first_name', 'last_name', 'username', 'email']
@@ -252,7 +252,7 @@ class NewsBaseFormMixin(CustomFieldsetFormMixin, ABC):
             {'fields': ('image_description',)},
 
             {'heading': _("Attributes")},
-            {'fields': ('featured', 'hidden', 'private'), 'layout_class': "three inline"},
+            {'fields': ('featured', 'hidden', 'private'), 'layout_class': "ui three inline fields"},
         ]
 
     @abstractmethod
@@ -293,7 +293,7 @@ class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
     }
 
     def get_custom_news_fieldset(self) -> dict:
-        return {'fields': ('event_type', 'number_of_tickets',), 'layout_class': "two"}
+        return {'fields': ('event_type', 'number_of_tickets',), 'layout_class': "ui two fields"}
 
     def get_back_button_link(self):
         return self.get_success_url()

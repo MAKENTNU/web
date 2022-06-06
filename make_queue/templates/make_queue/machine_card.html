@@ -3,7 +3,9 @@
 {% load i18n %}
 
 
-<div class="ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
+{# Linking `machine_card.css` is required when including this template #}
+
+<div class="machine ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
     {% if machine.machine_type.has_stream %}
         <img class="stream image" data-stream-name="{{ machine.stream_name }}"
@@ -25,6 +27,14 @@
                    data-obj-name="{{ machine.name }}">
                     <i class="red trash icon"></i>
                 </a>
+            {% endif %}
+            {% if machine.info_message %}
+                <div class="info-message popup-trigger ui large grey basic label"
+                     data-html="{{ machine.info_message|linebreaks }}" data-variation="wide">
+                    <span>
+                        <i class="big make-col-yellow comment dots icon"></i>
+                    </span>
+                </div>
             {% endif %}
         </div>
         <div class="meta">

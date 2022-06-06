@@ -8,6 +8,7 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_list.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/machine_card.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
 {% endblock extra_head %}
 
@@ -31,21 +32,23 @@
         </div>
 
         {% for machine_type in machine_types %}
-            <div class="ui machine-title-field">
-                <div class="ui large header machine-title">
-                    {{ machine_type.name }}
+            {% if machine_type.shown_machines %}
+                <div class="ui machine-title-field">
+                    <div class="ui large header machine-title">
+                        {{ machine_type.name }}
+                    </div>
+                    <div class="ui content">
+                        <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine_type.pk %}">
+                            {% trans "Show rules" %}
+                        </a>
+                    </div>
                 </div>
-                <div class="ui content">
-                    <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine_type.pk %}">
-                        {% trans "Show rules" %}
-                    </a>
+                <div class="ui cards">
+                    {% for machine in machine_type.shown_machines %}
+                        {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
+                    {% endfor %}
                 </div>
-            </div>
-            <div class="ui cards">
-                {% for machine in machine_type.existing_machines %}
-                    {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
-                {% endfor %}
-            </div>
+            {% endif %}
         {% endfor %}
     </div>
 {% endblock body %}

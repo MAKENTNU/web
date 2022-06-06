@@ -49,8 +49,8 @@ class QuotaFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
     narrow = False
     centered_title = False
     custom_fieldsets = [
-        {'fields': ('number_of_reservations', 'machine_type'), 'layout_class': "two"},
-        {'fields': ('diminishing', 'ignore_rules', 'all'), 'layout_class': "inline"},
+        {'fields': ('number_of_reservations', 'machine_type'), 'layout_class': "ui two fields"},
+        {'fields': ('diminishing', 'ignore_rules', 'all'), 'layout_class': "ui inline fields"},
         {'fields': ('user',)},
     ]
 
