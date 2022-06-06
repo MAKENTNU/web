@@ -1,6 +1,6 @@
 let shouldKeepDropdownOpen = false;
 
-const $headerDropdowns = $("#nav-user-dropdown, #makerspace-dropdown");
+const $headerDropdowns = $("#header .dropdown");
 $headerDropdowns.focusout(function (e) {
     // Manually makes sure to prevent hiding the dropdowns when navigating with the "tab" key,
     // as there is no setting for doing this otherwise (https://fomantic-ui.com/modules/dropdown.html#/settings).

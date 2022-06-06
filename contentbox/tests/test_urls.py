@@ -66,6 +66,7 @@ class UrlTests(TestCase):
             ContentBoxAssertionStruct(reverse_main, 'rules', self.main_client, True),
 
             ContentBoxAssertionStruct(reverse_internal, 'home', self.internal_client, False),
+            ContentBoxAssertionStruct(reverse_internal, 'make-history', self.internal_client, True),
         )
 
     def get_content_box_from_url(self, url: str, client: Client) -> ContentBox:

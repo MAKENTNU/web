@@ -21,7 +21,10 @@
 {% endblock padding_top %}
 
 {% block body %}
-    <h1 class="ui text-centered make-col-blue header">
+    <h1 class="ui text-centered make-col-blue header"
+            {# Just for fun :)) #}
+        {% if contentbox.url_name == 'make-history' %}style="font: normal 3rem/1.25 'Hobbiton Brushhand', fantasy !important;"{% endif %}
+    >
         {{ contentbox.title }}
     </h1>
     <div class="contentbox ui container">

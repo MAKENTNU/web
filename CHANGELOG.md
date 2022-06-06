@@ -3,8 +3,14 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+### New features
 - Added table on [the profile page](https://makentnu.no/checkin/profile/) which displays the completion status of all available courses
   - Also, the profile button in the user dropdown is now visible to all users - not just MAKE members
+- Added an internal page titled "[The History of MAKE NTNU](https://i.makentnu.no/make-history/)"
+  - This can be found under the new "Misc."/"Diverse" dropdown in the header on the internal site
+- Added an `.editorconfig` file, to make it easier to configure a text editor to format code to (roughly) fit the style guide
+
+### Improvements
 - Made [secrets](https://i.makentnu.no/secrets/) only use one language
 
 

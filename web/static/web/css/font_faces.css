@@ -24,3 +24,11 @@
     /* See https://caniuse.com/woff2 for browser coverage */
     src: url("../fonts/ubuntu-v15-latin-ext_latin_greek-700.woff2") format("woff2")
 }
+
+/* Hobbiton Brushhand */
+@font-face {
+    font-family: "Hobbiton Brushhand";
+    font-style: normal;
+    font-weight: normal;
+    src: url("../fonts/hobbitonbrushhand.ttf") format("truetype")
+}
