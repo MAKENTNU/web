@@ -65,8 +65,7 @@
 
 #nav > .item:hover,
 #side-nav > .item:hover,
-#nav-user-dropdown.active,
-#makerspace-dropdown.active {
+#header .dropdown.active {
     /* Disables property from Fomantic-UI */
     background-color: transparent;
 }
@@ -136,32 +135,27 @@
     margin-right: 0;
 }
 
-#nav-user-dropdown .menu,
-#makerspace-dropdown .menu {
+#header .dropdown .menu {
     background-color: rgb(34, 43, 52);
     border-radius: 7px;
     border: 2px solid var(--make-light-grey);
 }
 
-#makerspace-dropdown .menu > .item,
-#nav-user-dropdown .menu > .item {
+#header .dropdown .menu > .item {
     /* For user dropdown: Fixes weird centering of dropdown items, caused by Fomantic-UI setting dropdown menu to `display: flex !important`
                           when it's too close to the right window edge.
        For makerspace dropdown: Fixes dropdown items not covering the entire width of the dropdown. */
     align-self: auto;
 }
 
-#makerspace-dropdown .menu > .active.item,
-#nav-user-dropdown .menu > .active.item {
+#header .dropdown .menu > .active.item {
     /* Prevents changing the font-weight to bold when focusing on a dropdown element,
        which happens due to the workaround code in `header.js` */
     font-weight: normal !important;
 }
 
-#nav-user-dropdown .menu > .item:hover,
-#nav-user-dropdown .menu > .item:focus,
-#makerspace-dropdown .menu > .item:hover,
-#makerspace-dropdown .menu > .item:focus {
+#header .dropdown .menu > .item:hover,
+#header .dropdown .menu > .item:focus {
     background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic-UI */
 }
 
@@ -188,12 +182,14 @@
     margin: 0 -5px 0 3px;
 }
 
+
 /* Narrower space between elements in navbar */
 @media screen and (max-width: 1199.98px) {
     #header {
         --nav-space-between: 1em;
     }
 }
+
 
 /* Switch to mobile layout with burger */
 @media screen and (max-width: 991.98px) {
@@ -253,7 +249,7 @@
         margin-bottom: 1em;
     }
 
-    #header.active #nav-user-dropdown .menu {
+    #header.active .dropdown .menu {
         /* Fixes Fomantic-UI de-centering the dropdown menu */
         left: initial;
     }
@@ -263,7 +259,9 @@
     }
 }
 
+
 /*** Logo size changes ***/
+
 
 @media screen and (min-width: 1200px) {
     #header .logo img.large {

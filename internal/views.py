@@ -20,13 +20,16 @@ from .forms import (
 from .models import Member, Quote, Secret, SystemAccess
 
 
-class HomeView(DisplayContentBoxView):
-    template_name = 'internal/home.html'
+class InternalDisplayContentBoxView(DisplayContentBoxView):
     extra_context = {
         'base_template': 'internal/base.html',
     }
 
     change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)
+
+
+class HomeView(InternalDisplayContentBoxView):
+    template_name = 'internal/home.html'
 
 
 class EditInternalContentBoxView(EditContentBoxView):
