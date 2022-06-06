@@ -1,0 +1,119 @@
+.articles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-flow: dense;
+    margin: 3em 0 2em;
+}
+
+.article-img-container img {
+    display: block;
+    object-fit: cover;
+}
+
+.article-img-container img.contain {
+    object-fit: contain;
+}
+
+.article-text .text-border-corner {
+    display: none;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+}
+
+.article-text .text-border-corner.top {
+    top: 0;
+}
+
+.article-text .text-border-corner.right {
+    right: 0;
+}
+
+.article-text .text-border-corner.left {
+    left: 0;
+}
+
+.article-text .text-border-corner.bottom {
+    bottom: 0;
+}
+
+.article-text p {
+    padding: 0 3em 3em;
+}
+
+.article-text .article-title {
+    margin-bottom: 0.25em;
+    padding: 0 1em;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+
+/* Articles are listed alternatingly left and right */
+@media screen and (min-width: 992px) {
+    .article-img-container,
+    .article-text {
+        position: relative;
+    }
+
+    .article-img-container img {
+        width: 100%;
+    }
+
+    .article-img-container.float-left,
+    .article-text.float-left {
+        grid-column: 2/3;
+    }
+
+    .article-img-container.float-right,
+    .article-text.float-right {
+        grid-column: 1/2;
+    }
+
+    .article-text {
+        display: flex;
+        align-items: center;
+    }
+
+    .article-text.first .text-border-corner.top.right,
+    .article-text.last.float-right .text-border-corner.bottom.left,
+    .article-text.last.float-left .text-border-corner.bottom.right {
+        display: inline;
+    }
+}
+
+
+/* Switch to mobile layout; articles are listed in one column */
+@media screen and (max-width: 991.98px) {
+    .articles {
+        grid-template-rows: auto;
+        grid-template-columns: 1fr;
+        margin: 3em 4% 0;
+    }
+
+    .article-img-container,
+    .article-text {
+        grid-column: 1/2;
+    }
+
+    .article-img-container img {
+        max-width: 100%;
+        max-height: 50vh;
+        margin: 0 auto;
+    }
+
+    .article-text {
+        max-height: 25em;
+        margin-bottom: 5em;
+    }
+
+    .article-text .article-title,
+    .article-text p {
+        padding: 0;
+    }
+
+    .article-text .article-title {
+        text-align: left;
+        margin-top: 1em;
+    }
+}

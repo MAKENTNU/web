@@ -8,7 +8,7 @@ from django.utils.timesince import timeuntil
 from django.utils.translation import gettext_lazy as _
 
 from users.models import User
-from util.locale_utils import date_to_local
+from util.locale_utils import TIME_STRINGS, date_to_local
 from ..models.machine import Machine
 from ..models.reservation import Quota, Reservation
 
@@ -70,7 +70,10 @@ def card_text_from_machine_status(machine: Machine):
     if (machine.get_status() == Machine.Status.AVAILABLE
             and next_reservation is not None
             and (next_reservation.start_time - timezone.localtime()).days < 1):
-        status = _("{machine_status} for {duration}").format(machine_status=status, duration=timeuntil(next_reservation.start_time))
+        status = _("{machine_status} for {duration}").format(
+            machine_status=status,
+            duration=timeuntil(next_reservation.start_time, time_strings=TIME_STRINGS),
+        )
     return status
 
 

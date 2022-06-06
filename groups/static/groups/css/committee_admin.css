@@ -3,11 +3,17 @@
     align-items: center;
 }
 
-.committee-list .item h3 {
+.committee-list .image img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+}
+
+.committee-list .committee-name {
     margin: 0;
 }
 
-.committee-list .item .edit-button {
+.committee-list .edit-button {
     margin-left: auto;
     font-size: 1.25em;
 }

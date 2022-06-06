@@ -9,9 +9,18 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added an internal page titled "[The History of MAKE NTNU](https://i.makentnu.no/make-history/)"
   - This can be found under the new "Misc."/"Diverse" dropdown in the header on the internal site
 - Added an `.editorconfig` file, to make it easier to configure a text editor to format code to (roughly) fit the style guide
+- Added list of contents to [the equipment list](https://makentnu.no/makerspace/equipment/)
 
 ### Improvements
 - Made [secrets](https://i.makentnu.no/secrets/) only use one language
+- Made the place/location text of events more visible
+  - This will hopefully reduce the number of people who meet at Makerverkstedet for 3D printer courses, because they didn't see the event's location
+- Sorted the news-related templates into folders, and refactored the event detail template into multiple sub-templates
+- Improved image sizing and text layout in the [equipment](https://makentnu.no/makerspace/equipment/)
+  and [article lists](https://makentnu.no/news/articles/)
+
+### Fixes
+- Fixed the machine status text times ("Available for X hours, XX minutes") not being translated to Norwegian
 
 
 ## 2022-05-20 ([#453](https://github.com/MAKENTNU/web/pull/453))

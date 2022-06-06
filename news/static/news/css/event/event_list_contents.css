@@ -27,6 +27,10 @@
     text-transform: uppercase;
 }
 
+.event .place {
+    font-weight: bold;
+}
+
 .no-events {
     text-align: center;
     font-style: italic;

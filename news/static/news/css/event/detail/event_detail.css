@@ -1,0 +1,101 @@
+.news-obj.left-align {
+    width: calc(100% - 315px);
+}
+
+.grey.link.text {
+    float: right;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.grey.link.text:hover,
+.grey.link.text:focus {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.time-places.rail {
+    --rail-padding: 17px;
+
+    padding-top: var(--rail-padding) !important; /* Overrides Fomantic-UI */
+}
+
+.rail-content {
+    padding: var(--rail-padding) 0;
+}
+
+.rail-content:first-child {
+    padding-top: 0;
+}
+
+.card {
+    box-shadow: 0 0 0 0 #000, 0 0 0 1px #EEE !important; /* Overrides Fomantic-UI */
+}
+
+.card .time-and-place {
+    display: grid;
+    grid-template-columns: [icon] auto [text] 1fr;
+    align-items: baseline;
+}
+
+.ui.accordion .card .time-and-place.same-date .time-date,
+.ui.accordion .card .time-and-place.same-date .second-row-icon-space {
+    display: none;
+}
+
+.card .place {
+    font-weight: bold;
+}
+
+.card .calendar-link {
+    position: absolute;
+    top: 1em;
+    right: 0.25em;
+}
+
+.time-places.accordion {
+    display: none;
+}
+
+.ui.accordion {
+    width: 100% !important; /* Overrides Fomantic-UI */
+}
+
+.ui.accordion .content {
+    position: relative;
+}
+
+.time-places.accordion .standalone-registration-button {
+    margin-bottom: 1em;
+}
+
+
+/* Tablet and mobile layout */
+@media screen and (max-width: 1023px) {
+    .news-obj.left-align {
+        width: 100%;
+    }
+
+    .time-places.rail {
+        display: none;
+    }
+
+    .time-places.accordion {
+        display: block;
+    }
+
+    .accordion-padding {
+        height: 3em;
+    }
+
+    .ui.accordion .card .calendar-link {
+        top: 0.4em;
+        right: 0;
+    }
+}
+
+
+/* Mobile layout */
+@media screen and (max-width: 426px) {
+    .ui.accordion .card {
+        width: auto;
+    }
+}
