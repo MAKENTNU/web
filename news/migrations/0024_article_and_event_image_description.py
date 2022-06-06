@@ -15,13 +15,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='article',
             name='image_description',
-            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', True), help_text='This should be a concise visual description of the image, which is mainly useful for people using a screen reader.', verbose_name='image description'),
+            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', use_default_for_empty=True), help_text='This should be a concise visual description of the image, which is mainly useful for people using a screen reader.', verbose_name='image description'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='event',
             name='image_description',
-            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', True), help_text='This should be a concise visual description of the image, which is mainly useful for people using a screen reader.', verbose_name='image description'),
+            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', use_default_for_empty=True), help_text='This should be a concise visual description of the image, which is mainly useful for people using a screen reader.', verbose_name='image description'),
             preserve_default=False,
         ),
     ]

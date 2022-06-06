@@ -267,7 +267,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile_internal.html:82 docs/views.py:98
-#: internal/views.py:77
+#: internal/views.py:80
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:19
@@ -391,7 +391,7 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 msgid "last modified"
 msgstr "sist endret"
 
-#: contentbox/templates/contentbox/display.html:18 contentbox/views.py:70
+#: contentbox/templates/contentbox/display.html:18 contentbox/views.py:79
 #: docs/templates/docs/documentation_page_detail.html:39
 #: faq/templates/faq/faq_list.html:39
 #: make_queue/templates/make_queue/usage_rules_detail.html:24
@@ -407,7 +407,7 @@ msgstr "Rediger"
 msgid "Missing language"
 msgstr "Manglende språk"
 
-#: contentbox/views.py:81
+#: contentbox/views.py:90
 msgctxt "view page"
 msgid "View"
 msgstr "Se"
@@ -935,23 +935,31 @@ msgstr "Hemmeligheter"
 msgid "Quotes"
 msgstr "Sitater"
 
-#: internal/templates/internal/header.html:27
+#: internal/templates/internal/header.html:25
+msgid "Misc."
+msgstr "Diverse"
+
+#: internal/templates/internal/header.html:31
+msgid "The History of MAKE NTNU"
+msgstr "Historien til MAKE NTNU"
+
+#: internal/templates/internal/header.html:39
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:31
+#: internal/templates/internal/header.html:43
 #: web/templates/web/header.html:104
 msgid "Django admin"
 msgstr "Django-admin"
 
-#: internal/templates/internal/header.html:35
+#: internal/templates/internal/header.html:47
 #: web/templates/web/header.html:115
 msgid "Log out"
 msgstr "Logg ut"
 
 #: internal/templates/internal/member_list.html:10
-#: internal/templates/internal/member_list.html:20 internal/views.py:68
-#: internal/views.py:160
+#: internal/templates/internal/member_list.html:20 internal/views.py:71
+#: internal/views.py:163
 msgid "Member list"
 msgstr "Medlemsliste"
 
@@ -1052,11 +1060,11 @@ msgstr "registrerte medlemmer"
 msgid "Basic information"
 msgstr "Grunnleggende informasjon"
 
-#: internal/templates/internal/member_list.html:285 internal/views.py:133
+#: internal/templates/internal/member_list.html:285 internal/views.py:136
 msgid "Membership information"
 msgstr "Medlemskapsinformasjon"
 
-#: internal/templates/internal/member_list.html:341 internal/views.py:127
+#: internal/templates/internal/member_list.html:341 internal/views.py:130
 msgid "Extra information"
 msgstr "Ekstrainformasjon"
 
@@ -1118,54 +1126,54 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: internal/views.py:75
+#: internal/views.py:78
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
 
-#: internal/views.py:114
+#: internal/views.py:117
 #, python-brace-format
 msgid "Change Information for {full_name}"
 msgstr "Endre informasjonen til {full_name}"
 
-#: internal/views.py:161
+#: internal/views.py:164
 msgid "Set retired"
 msgstr "Sett panget"
 
-#: internal/views.py:167
+#: internal/views.py:170
 #, python-brace-format
 msgid "Set member {name} as retired"
 msgstr "Sett medlem {name} som pang"
 
-#: internal/views.py:179
+#: internal/views.py:182
 msgid "Set quit"
 msgstr "Sett sluttet"
 
-#: internal/views.py:185
+#: internal/views.py:188
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
 
-#: internal/views.py:237
+#: internal/views.py:240
 msgid "Secrets list"
 msgstr "Liste med hemmeligheter"
 
-#: internal/views.py:243
+#: internal/views.py:246
 msgid "New Secret"
 msgstr "Ny hemmelighet"
 
-#: internal/views.py:249
+#: internal/views.py:252
 msgid "Edit Secret"
 msgstr "Rediger hemmelighet"
 
-#: internal/views.py:272
+#: internal/views.py:275
 msgid "Quotes page"
 msgstr "Sitatside"
 
-#: internal/views.py:281
+#: internal/views.py:284
 msgid "New Quote"
 msgstr "Nytt sitat"
 
-#: internal/views.py:289
+#: internal/views.py:292
 msgid "Edit Quote"
 msgstr "Endre sitat"
 
@@ -2772,7 +2780,7 @@ msgstr ""
 msgid "Save"
 msgstr "Lagre"
 
-#: web/multilingual/formfields.py:21
+#: web/multilingual/formfields.py:19
 msgid "One or more languages have no content."
 msgstr "Ett eller flere språk mangler innhold."
 

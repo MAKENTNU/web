@@ -27,7 +27,8 @@ def create_multi_lingual_admin_formfield(db_field, request, *, enable_changing_r
     # Different template for admin page, without Fomantic-UI
     properties['template_name'] = 'web/forms/widgets/admin_multi_lingual_text_field.html'
     # Want to copy widget, to not override the template for the normal forms
-    new_widget_type = type('AdminMultiLingualTextField', (db_field.widget,), properties)
+    base_class = db_field.widget if isinstance(db_field.widget, type) else type(db_field.widget)
+    new_widget_type = type('AdminMultiLingualTextField', (base_class,), properties)
 
     subwidget_kwargs = {}
     assert issubclass(new_widget_type, MultiLingualTextEdit)

@@ -30,7 +30,7 @@ class TestMultiLingualTextStructure(TestCase):
             "nb": "test-nb",
             "en": "test-en",
         })
-        structure = MultiLingualTextStructure(content, True)
+        structure = MultiLingualTextStructure(content, use_default_for_empty=True)
         self.assertEqual(structure["nb"], "test-nb")
         self.assertEqual(structure["en"], "test-en")
 
@@ -39,7 +39,7 @@ class TestMultiLingualTextStructure(TestCase):
         Tests if the constructor handles corrupt data (i.e. a string) correctly. That is, set the content of the
         default language to this string.
         """
-        structure = MultiLingualTextStructure("test-nb", True)
+        structure = MultiLingualTextStructure("test-nb", use_default_for_empty=True)
         self.assertEqual(structure["nb"], "test-nb")
         self.assertEqual(structure["en"], "test-nb")
 
@@ -47,7 +47,7 @@ class TestMultiLingualTextStructure(TestCase):
         """
         Tests if the constructor handles the ``None`` value correctly. That is, the same as if the structure is empty.
         """
-        structure = MultiLingualTextStructure(None, True)
+        structure = MultiLingualTextStructure(None, use_default_for_empty=True)
         self.assertEqual(structure["nb"], "")
         self.assertEqual(structure["en"], "")
 
@@ -60,7 +60,7 @@ class TestMultiLingualTextStructure(TestCase):
             "nb": "test-nb",
             "en": "test-en",
         })
-        structure = MultiLingualTextStructure(content, True)
+        structure = MultiLingualTextStructure(content, use_default_for_empty=True)
 
         translation.activate("nb")
         self.assertEqual(str(structure), "test-nb")
@@ -79,7 +79,7 @@ class TestMultiLingualTextStructure(TestCase):
             "nb": "test-nb",
             "en": "test-en",
         })
-        structure = MultiLingualTextStructure(content, True)
+        structure = MultiLingualTextStructure(content, use_default_for_empty=True)
 
         self.assertEqual(structure["nb"], "test-nb")
         self.assertEqual(structure["en"], "test-en")
@@ -107,7 +107,7 @@ class TestMultiLingualTextField(TestCase):
             "en": "test-en",
         })
 
-        structure = MultiLingualTextStructure(content, True)
+        structure = MultiLingualTextStructure(content, use_default_for_empty=True)
         self.assertEqual(structure, field.to_python(structure), "to_python of a MultiLingualTextStructure object should"
                                                                 " return the object. As this is already the correct "
                                                                 "representation.")
@@ -130,7 +130,7 @@ class TestMultiLingualTextField(TestCase):
             "nb": "test-nb",
             "en": "test-en",
         }
-        structure = MultiLingualTextStructure(json.dumps(content), True)
+        structure = MultiLingualTextStructure(json.dumps(content), use_default_for_empty=True)
         self.assertEqual(content, json.loads(field.get_prep_value(structure)),
                          "get_prep_value of a MultiLingualTextStructure should return serialized json of its content.")
 
@@ -150,7 +150,7 @@ class TestMultiLingualTextField(TestCase):
             "nb": "Test æøå",
             "en": "Test ???",
         }
-        structure = MultiLingualTextStructure(json.dumps(content), False)
+        structure = MultiLingualTextStructure(json.dumps(content), use_default_for_empty=False)
         self.assertIn('"nb": "Test æøå"', field.get_prep_value(structure))
 
     def test_from_db_value(self):
@@ -202,7 +202,7 @@ class TestMultiLingualFormField(TestCase):
         individual field before being passed to the method.
         """
         form_field = MultiLingualFormField()
-        compressed_data = form_field.compress(["test-en", "test-nb"])
+        compressed_data = form_field.compress(["test-nb", "test-en"])
         self.assertEqual(MultiLingualTextStructure, type(compressed_data))
-        self.assertEqual(compressed_data["nb"], "test-nb")
-        self.assertEqual(compressed_data["en"], "test-en")
+        self.assertEqual(compressed_data['nb'], "test-nb")
+        self.assertEqual(compressed_data['en'], "test-en")

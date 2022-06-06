@@ -41,9 +41,9 @@
                 <div class="make-bg-blue bubble-background"></div>
             </a>
 
-            <div id="makerspace-dropdown" class="ui dropdown item">
+            <div class="nav-dropdown ui dropdown item">
                 <div class="text">{% trans "Makerverkstedet" %}</div>
-                <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
+                <i class="dropdown icon text" tabindex{# for disabling focus on click #}></i>
                 <div class="make-bg-turquoise bubble-background"></div>
 
                 <nav class="menu transition" aria-label="Makerverkstedet">
@@ -84,7 +84,7 @@
         {% if user.is_authenticated %}
             <div id="nav-user-dropdown" class="ui dropdown item">
                 <div class="text">{{ user.first_name|first_word }}</div>
-                <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
+                <i class="dropdown icon text" tabindex{# for disabling focus on click #}></i>
                 <div class="make-bg-blue bubble-background"></div>
 
                 <nav class="menu transition" aria-label="User">
