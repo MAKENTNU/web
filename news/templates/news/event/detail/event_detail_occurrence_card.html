@@ -1,0 +1,58 @@
+{% load datetime_tags %}
+
+
+<div class="ui card">
+    <div class="content">
+        <div class="time-and-place {% if occurrence.start_time.date == occurrence.end_time.date %}same-date{% endif %}">
+            <i class="make-col-yellow wait icon"></i>
+            <div class="time-date">
+                {% if occurrence.start_time.date == occurrence.end_time.date %}
+                    {{ occurrence.start_time|year_wise_long_date }}
+                {% else %}
+                    {{ occurrence.start_time|year_wise_long_date }} {{ occurrence.start_time|only_time }}
+                {% endif %}
+            </div>
+
+            {# This div is only for taking up a grid space #}
+            <div class="second-row-icon-space"></div>
+            <div class="time-time">
+                {% if occurrence.start_time.date == occurrence.end_time.date %}
+                    {{ occurrence.start_time|only_time }}
+                    &ndash; {{ occurrence.end_time|only_time }}
+                {% else %}
+                    &ndash;&nbsp; {{ occurrence.end_time|year_wise_long_date }} {{ occurrence.end_time|only_time }}
+                {% endif %}
+            </div>
+
+            {% if occurrence.place %}
+                <i class="make-col-yellow map marker alternate icon"></i>
+                <div class="place">
+                    {% if occurrence.place_url %}
+                        <a class="make-col-blue" href="{{ occurrence.place_url }}" target="_blank">
+                            {{ occurrence.place }}
+                        </a>
+                    {% else %}
+                        {{ occurrence.place }}
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+
+        <a class="calendar-link" href="{% url 'timeplace_ical' news_obj.pk occurrence.pk %}" target="_blank">
+            <i class="large make-col-yellow calendar outline icon"></i>
+        </a>
+
+        {% if occurrence.number_of_tickets > 0 and perms.news.change_event %}
+            <div class="right floated meta">
+                <a href="{% url 'timeplace_ticket_list' news_obj.pk occurrence.pk %}">
+                    <i class="ticket icon"></i>
+                    {{ occurrence.number_of_active_tickets }} / {{ occurrence.number_of_tickets }}
+                </a>
+            </div>
+        {% endif %}
+    </div>
+    {% if occurrence.event.repeating %}
+        {% url 'register_timeplace' news_obj.pk occurrence.pk as registration_url %}
+        {% include 'news/event/detail/event_detail_registration_button.html' with event_or_time_place=occurrence extra_button_classes="bottom attached" registration_url=registration_url %}
+    {% endif %}
+</div>

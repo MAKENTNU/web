@@ -6,9 +6,9 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
-    <link rel="stylesheet" href="{% static 'news/css/event_list_contents.css' %}"/>
-    <link rel="stylesheet" href="{% static 'news/css/article_list_contents.css' %}"/>
-    <script defer src="{% static 'news/js/article_list_contents.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'news/css/event/event_list_contents.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/article/article_list_contents.css' %}"/>
+    <script defer src="{% static 'news/js/article/article_list_contents.js' %}"></script>
     <script src="{% static 'lib/parallax/parallax.min.js' %}"></script>
 {% endblock extra_head %}
 
@@ -34,12 +34,12 @@
     <div class="make-content-padding">{# Empty div for spacing #}</div>
 
     <div class="ui container">
-        {% include 'news/index_event_list_contents.html' with event_dicts=featured_event_dicts ribbon_extra_classes="yellow make-bg-yellow" %}
+        {% include 'news/event/index_event_list_contents.html' with event_dicts=featured_event_dicts ribbon_extra_classes="yellow make-bg-yellow" %}
         <hr class="make-bg-yellow event-article-border"/>
     </div>
 
     <div class="ui container">
-        {% include 'news/article_list_contents.html' with articles=featured_articles %}
+        {% include 'news/article/article_list_contents.html' with articles=featured_articles %}
     </div>
 {% endblock body %}
 

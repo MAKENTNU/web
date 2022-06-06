@@ -1,99 +1,104 @@
+.accordion-and-list {
+    max-width: 933px; /* Same as the `width` of Fomantic-UI's `.ui.container` for tablet layout */
+    margin: 2em auto;
+}
+
+.accordion-and-list .accordion {
+    width: -moz-fit-content !important; /* Overrides Fomantic-UI */
+    width: fit-content !important; /* Overrides Fomantic-UI */
+    min-width: 250px;
+}
+
 .equipment-list {
     display: grid;
-    grid-template-columns: 1fr 10fr 10fr 1fr;
-    grid-row-gap: 30px;
-    margin: 3em 0;
+    grid-template-columns: auto 1fr;
+    row-gap: 2em;
+    margin-top: 3em;
 }
 
-.equipment-img {
-    grid-column: 2/3;
-    width: max-content;
-}
-
-.equipment-img img {
+.equipment-img-container img {
     display: block;
+    max-width: 100%;
 }
 
-.equipment-text {
-    position: relative;
-    grid-column: 3/4;
-    display: grid;
-    justify-items: center;
-    align-items: center;
-    overflow-wrap: break-word;
-    overflow: hidden;
-}
-
-.equipment-title a {
-    text-transform: uppercase;
-    font-size: 50px;
-}
-
-.txtborder {
-    position: absolute;
+.equipment-text .text-border-corner {
     display: none;
-    width: 50px !important;
-    height: 50px !important;
+    position: absolute;
+    width: 50px;
+    height: 50px;
 }
 
-.txtborder.tl {
+.equipment-text .text-border-corner.top {
     top: 0;
-    left: 0;
 }
 
-.txtborder.tr {
-    top: 0;
+.equipment-text .text-border-corner.right {
     right: 0;
 }
 
-.txtborder.bl {
-    bottom: 0;
+.equipment-text .text-border-corner.left {
     left: 0;
 }
 
-.txtborder.br {
+.equipment-text .text-border-corner.bottom {
     bottom: 0;
-    right: 0;
 }
 
-.equipment-text.equipment-first .txtborder.tr,
-.equipment-text.equipment-last .txtborder.br {
-    display: inline;
+.equipment-text .equipment-title {
+    padding: 0 1em;
+    font-size: 3rem;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 
-/* Switch to mobile layout */
-@media screen and (max-width: 991.98px) {
-    .equipment-list {
-        grid-template-columns: 1fr 20fr 1fr;
-        grid-row-gap: 0;
-        justify-items: center;
+/* Desktop layout */
+@media screen and (min-width: 992px) {
+    .equipment-img-container img {
+        width: 250px;
     }
 
     .equipment-text {
-        grid-column: 2/3;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
-    .equipment-text:not(:last-child) {
-        margin-bottom: 60px;
+    .equipment-text.first .text-border-corner.top.right,
+    .equipment-text.last .text-border-corner.bottom.right {
+        display: inline;
+    }
+}
+
+
+/* Tablet and mobile layout */
+@media screen and (max-width: 991.98px) {
+    .accordion-and-list {
+        margin: 2em 10% 0;
     }
 
-    .equipment-title {
-        text-align: center;
+    .equipment-list {
+        grid-template-columns: 1fr;
+        row-gap: 0;
     }
 
-    .equipment-title:first-child {
-        margin-top: 1em; /* Overrides Fomantic-UI */
+    .equipment-img-container img {
+        margin: 0 auto;
+        max-height: 50vh;
     }
 
-    .equipment-title:last-child {
-        margin-bottom: 0.5em; /* Overrides Fomantic-UI */
+    .equipment-text .equipment-title {
+        margin: 0.25em 0 2em;
+        padding: 0;
+        text-align: start;
     }
+}
 
-    .txtborder.tl,
-    .txtborder.tr,
-    .txtborder.bl,
-    .txtborder.br {
-        display: none !important;
+
+/* Mobile layout */
+@media screen and (max-width: 426px) {
+    .accordion-and-list {
+        margin: 2em 4% 0;
     }
 }

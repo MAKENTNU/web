@@ -15,13 +15,13 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contentbox',
             name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', True), verbose_name='title'),
+            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', use_default_for_empty=True), verbose_name='title'),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='historicalcontentbox',
             name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', True), verbose_name='title'),
+            field=web.multilingual.modelfields.MultiLingualTextField(default=MultiLingualTextStructure('', use_default_for_empty=True), verbose_name='title'),
             preserve_default=False,
         ),
     ]

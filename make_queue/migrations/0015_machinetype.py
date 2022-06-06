@@ -103,10 +103,10 @@ def create_default_machine_types(apps, schema_editor):
     MachineType = apps.get_model('make_queue', 'MachineType')
     for machine_type in default_machine_types:
         MachineType.objects.get_or_create(
-            name=MultiLingualTextStructure(machine_type.name, True),
+            name=MultiLingualTextStructure(machine_type.name, use_default_for_empty=True),
             defaults={
                 'pk': machine_type.pk,
-                'cannot_use_text': MultiLingualTextStructure(machine_type.cannot_use_text, True),
+                'cannot_use_text': MultiLingualTextStructure(machine_type.cannot_use_text, use_default_for_empty=True),
                 'usage_requirement': machine_type.usage_requirement,
                 'has_stream': machine_type.has_stream,
                 'priority': machine_type.priority,

@@ -3,10 +3,16 @@
     align-items: center;
 }
 
-.equipment-list .item h3 {
+.equipment-list .image img {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+}
+
+.equipment-list .equipment-title {
     margin: 0;
 }
 
-.equipment-list .item .delete-modal-button {
+.equipment-list .delete-modal-button {
     margin-left: auto;
 }

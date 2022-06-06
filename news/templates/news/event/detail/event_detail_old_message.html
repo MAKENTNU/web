@@ -1,0 +1,12 @@
+{% load i18n %}
+{% load datetime_tags %}
+
+
+{% if is_old %}
+    <div class="ui info message">
+        {% translate "You are viewing an old event" %}.
+        {% if last_occurrence %}
+            {% translate "The last occurrence of this event was" %} {{ last_occurrence.start_time|short_date }}
+        {% endif %}
+    </div>
+{% endif %}

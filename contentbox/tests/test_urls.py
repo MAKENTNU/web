@@ -1,12 +1,15 @@
 import importlib
+from dataclasses import dataclass
+from functools import cached_property
 from http import HTTPStatus
-from typing import Callable, List, Tuple
+from typing import Callable, List, Protocol, Tuple
 from urllib.parse import urlparse
 
 from django.test import Client, TestCase
 from django.urls import URLPattern, URLResolver
 from django_hosts import reverse
 
+from docs.tests.test_urls import DOCS_CLIENT_DEFAULTS
 from internal.tests.test_urls import INTERNAL_CLIENT_DEFAULTS, reverse_internal
 from users.models import User
 from util.auth_utils import get_perm
@@ -14,8 +17,29 @@ from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_
 from web.hosts import host_patterns
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualTextEdit
+from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from ..models import ContentBox
 from ..views import DisplayContentBoxView
+
+
+class ReverseCallable(Protocol):
+    def __call__(self, viewname: str, *args) -> str: ...
+
+
+@dataclass
+class ContentBoxAssertionStruct:
+    reverse_func: ReverseCallable
+    viewname: str
+    client: Client
+    should_be_bleached: bool
+
+    @cached_property
+    def url(self) -> str:
+        return self.reverse_func(self.viewname)
+
+
+def reverse_main(viewname: str, *args):
+    return reverse(viewname, args=args)
 
 
 class UrlTests(TestCase):
@@ -25,17 +49,24 @@ class UrlTests(TestCase):
 
         self.main_client = Client()
         self.internal_client = Client(**INTERNAL_CLIENT_DEFAULTS)
-        self.url__client__should_be_bleached__tuples = (
-            (reverse('about'), self.main_client, True),
-            (reverse('contact'), self.main_client, True),
-            (reverse('apply'), self.main_client, True),
-            (reverse('cookies'), self.main_client, True),
-            (reverse('privacypolicy'), self.main_client, True),
+        admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
+        docs_client = Client(**DOCS_CLIENT_DEFAULTS)
+        self.all_clients = (
+            self.main_client, self.internal_client, admin_client, docs_client,
+        )
 
-            (reverse('makerspace'), self.main_client, True),
-            (reverse('rules'), self.main_client, True),
+        self.content_box_assertion_structs = (
+            ContentBoxAssertionStruct(reverse_main, 'about', self.main_client, True),
+            ContentBoxAssertionStruct(reverse_main, 'contact', self.main_client, True),
+            ContentBoxAssertionStruct(reverse_main, 'apply', self.main_client, True),
+            ContentBoxAssertionStruct(reverse_main, 'cookies', self.main_client, True),
+            ContentBoxAssertionStruct(reverse_main, 'privacypolicy', self.main_client, True),
 
-            (reverse_internal('home'), self.internal_client, False),
+            ContentBoxAssertionStruct(reverse_main, 'makerspace', self.main_client, True),
+            ContentBoxAssertionStruct(reverse_main, 'rules', self.main_client, True),
+
+            ContentBoxAssertionStruct(reverse_internal, 'home', self.internal_client, False),
+            ContentBoxAssertionStruct(reverse_internal, 'make-history', self.internal_client, True),
         )
 
     def get_content_box_from_url(self, url: str, client: Client) -> ContentBox:
@@ -48,7 +79,7 @@ class UrlTests(TestCase):
         all_content_box_url_patterns = self.get_all_content_box_url_patterns()
         self.assertEqual(
             len(all_content_box_url_patterns),
-            len(self.url__client__should_be_bleached__tuples)
+            len(self.content_box_assertion_structs)
             # + `/søk/` and `/sok/`
             + 2,
         )
@@ -81,14 +112,28 @@ class UrlTests(TestCase):
 
     def test_all_admin_get_request_paths_succeed(self):
         content_boxes = [
-            self.get_content_box_from_url(url, client)
-            for url, client, _ in self.url__client__should_be_bleached__tuples
+            self.get_content_box_from_url(struct.url, struct.client)
+            for struct in self.content_box_assertion_structs
         ]
         path_predicates = [
             Get(admin_url, public=False)
             for admin_url in generate_all_admin_urls_for_model_and_objs(ContentBox, content_boxes)
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')
+
+    def test_change_pages_can_only_be_reached_on_the_same_subdomain_as_the_display_pages(self):
+        for client in self.all_clients:
+            client.force_login(self.superuser)
+
+        for struct in self.content_box_assertion_structs:
+            content_box: ContentBox = struct.client.get(struct.url).context['object']
+            for client in self.all_clients:
+                with self.subTest(struct=struct, client=client):
+                    change_url = struct.reverse_func('contentbox_edit', content_box.pk)
+                    response = client.get(change_url)
+                    # Change pages should only be reachable on the same subdomain as the content box' display page is defined on
+                    same_subdomain = struct.client == client
+                    self.assertEqual(response.status_code, HTTPStatus.OK if same_subdomain else HTTPStatus.NOT_FOUND)
 
     def test_form_input_is_properly_bleached(self):
         # Facilitates printing the whole diff if the tests fail, which is useful due to the long strings in this test case
@@ -195,15 +240,15 @@ class UrlTests(TestCase):
                 bleach_mock_func: Callable[[str], str] = bleached_content
                 original_content__bleached_content__tuples[i] = (original_content, bleach_mock_func(original_content))
 
-        for url, client, should_be_bleached in self.url__client__should_be_bleached__tuples:
-            with self.subTest(url=url):
-                content_box = self.get_content_box_from_url(url, client)
-                if not should_be_bleached:
+        for struct in self.content_box_assertion_structs:
+            with self.subTest(url=struct.url):
+                content_box = self.get_content_box_from_url(struct.url, struct.client)
+                if not struct.should_be_bleached:
                     # Add the permission that is expected for non-bleached content boxes to have
                     content_box.extra_change_permissions.add(get_perm('internal.can_change_rich_text_source'))
 
-                self.assert_content_is_bleached_expectedly_when_posted(original_content__bleached_content__tuples, should_be_bleached, url,
-                                                                       content_box, client)
+                self.assert_content_is_bleached_expectedly_when_posted(original_content__bleached_content__tuples,
+                                                                       struct.should_be_bleached, struct.url, content_box, struct.client)
 
     def assert_content_is_bleached_expectedly_when_posted(self, original_content__bleached_content__tuples: List[Tuple[str, str]],
                                                           should_be_bleached: bool, url: str, content_box: ContentBox, client: Client):
@@ -220,5 +265,5 @@ class UrlTests(TestCase):
 
             # Check that the content has been bleached expectedly
             expected_content = bleached_content if should_be_bleached else original_content
-            for content in content_text_structure.languages.values():
-                self.assertHTMLEqual(content, expected_content)
+            for language in content_text_structure.languages:
+                self.assertHTMLEqual(content_text_structure[language], expected_content)

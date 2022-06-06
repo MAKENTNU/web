@@ -34,11 +34,7 @@
             </h1>
 
             <div class="news-obj-content">
-                {% if news_obj.content == "<p>x</p>" %}
-                    <p>{{ news_obj.clickbait }}</p>
-                {% else %}
-                    {{ news_obj.content|safe }}
-                {% endif %}
+                {{ news_obj.content|safe }}
             </div>
 
             {% block accordion %}

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-22 21:26+0200\n"
+"POT-Creation-Date: 2022-06-04 23:43+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -211,7 +211,7 @@ msgstr "Endre bilde"
 #: checkin/templates/checkin/profile_internal.html:51
 #: checkin/templates/checkin/skills.html:31
 #: checkin/templates/checkin/suggest_skill.html:71
-#: groups/templates/groups/committee_admin.html:29
+#: groups/templates/groups/committee_admin.html:27
 msgid "Placeholder image"
 msgstr "Plassholderbilde"
 
@@ -235,7 +235,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile_internal.html:82 docs/views.py:98
-#: internal/views.py:77
+#: internal/views.py:80
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:20
@@ -260,7 +260,7 @@ msgstr ""
 "Legg kortet på kortleseren og trykk på knappen under for å registrere kortet"
 
 #: checkin/templates/checkin/profile_internal.html:98
-#: news/templates/news/event_registration.html:27
+#: news/templates/news/event/event_registration.html:27
 msgid "Register"
 msgstr "Registrer"
 
@@ -313,9 +313,9 @@ msgstr "Stem"
 
 #: checkin/templates/checkin/suggest_skill.html:100
 #: docs/templates/docs/documentation_page_detail.html:46
-#: news/templates/news/admin_article_list.html:55
-#: news/templates/news/admin_event_detail.html:32
-#: news/templates/news/admin_timeplace_listing.html:41
+#: news/templates/news/article/admin_article_list.html:55
+#: news/templates/news/event/admin_event_detail.html:32
+#: news/templates/news/event/admin_timeplace_listing.html:41
 #: web/templates/web/delete_modal.html:16
 msgid "Delete"
 msgstr "Slett"
@@ -407,15 +407,15 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 msgid "last modified"
 msgstr "sist endret"
 
-#: contentbox/templates/contentbox/display.html:18 contentbox/views.py:70
+#: contentbox/templates/contentbox/display.html:18 contentbox/views.py:79
 #: docs/templates/docs/documentation_page_detail.html:39
 #: faq/templates/faq/faq_list.html:39
 #: make_queue/templates/make_queue/usage_rules_detail.html:24
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:37
-#: news/templates/news/admin_article_list.html:49
-#: news/templates/news/admin_event_detail.html:38
-#: news/templates/news/admin_timeplace_listing.html:33
-#: news/templates/news/article_detail.html:37
+#: news/templates/news/article/admin_article_list.html:49
+#: news/templates/news/article/article_detail.html:37
+#: news/templates/news/event/admin_event_detail.html:38
+#: news/templates/news/event/admin_timeplace_listing.html:33
 msgid "Edit"
 msgstr "Rediger"
 
@@ -423,7 +423,7 @@ msgstr "Rediger"
 msgid "Missing language"
 msgstr "Manglende språk"
 
-#: contentbox/views.py:81
+#: contentbox/views.py:90
 msgctxt "view page"
 msgid "View"
 msgstr "Se"
@@ -806,8 +806,8 @@ msgstr "sluttårsak"
 #: make_queue/templates/make_queue/reservation_edit.html:108
 #: news/models.py:260
 #: news/templates/admin/news/event/change_form_ticket_table.html:16
-#: news/templates/news/admin_event_ticket_list.html:62
-#: news/templates/news/ticket_card.html:42
+#: news/templates/news/event/admin_event_ticket_list.html:62
+#: news/templates/news/event/ticket/ticket_card.html:42
 msgid "comment"
 msgstr "kommentar"
 
@@ -914,7 +914,7 @@ msgstr "kontekst"
 
 #: internal/models.py:268
 #: make_queue/templates/make_queue/course/course_registration_list.html:98
-#: news/templates/news/event_list_contents.html:26
+#: news/templates/news/event/event_list_contents.html:26
 #: web/templates/web/forms/widgets/semantic_date.html:9
 #: web/templates/web/forms/widgets/semantic_datetime.html:9
 msgid "date"
@@ -951,23 +951,31 @@ msgstr "Hemmeligheter"
 msgid "Quotes"
 msgstr "Sitater"
 
-#: internal/templates/internal/header.html:27
+#: internal/templates/internal/header.html:25
+msgid "Misc."
+msgstr "Diverse"
+
+#: internal/templates/internal/header.html:31
+msgid "The History of MAKE NTNU"
+msgstr "Historien til MAKE NTNU"
+
+#: internal/templates/internal/header.html:39
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: internal/templates/internal/header.html:31
+#: internal/templates/internal/header.html:43
 #: web/templates/web/header.html:104
 msgid "Django admin"
 msgstr "Django-admin"
 
-#: internal/templates/internal/header.html:35
+#: internal/templates/internal/header.html:47
 #: web/templates/web/header.html:115
 msgid "Log out"
 msgstr "Logg ut"
 
 #: internal/templates/internal/member_list.html:10
-#: internal/templates/internal/member_list.html:20 internal/views.py:68
-#: internal/views.py:160
+#: internal/templates/internal/member_list.html:20 internal/views.py:71
+#: internal/views.py:163
 msgid "Member list"
 msgstr "Medlemsliste"
 
@@ -988,7 +996,7 @@ msgstr "Filtrer medlemskapsstatus"
 #: internal/templates/internal/member_list.html:42
 #: internal/templates/internal/member_list.html:411
 #: internal/templatetags/member.py:25 news/models.py:259
-#: news/templates/news/admin_event_ticket_list.html:42
+#: news/templates/news/event/admin_event_ticket_list.html:42
 msgid "active"
 msgstr "aktiv"
 
@@ -1071,11 +1079,11 @@ msgstr "registrerte medlemmer"
 msgid "Basic information"
 msgstr "Grunnleggende informasjon"
 
-#: internal/templates/internal/member_list.html:285 internal/views.py:133
+#: internal/templates/internal/member_list.html:285 internal/views.py:136
 msgid "Membership information"
 msgstr "Medlemskapsinformasjon"
 
-#: internal/templates/internal/member_list.html:341 internal/views.py:127
+#: internal/templates/internal/member_list.html:341 internal/views.py:130
 msgid "Extra information"
 msgstr "Ekstrainformasjon"
 
@@ -1137,54 +1145,54 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: internal/views.py:75
+#: internal/views.py:78
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
 
-#: internal/views.py:114
+#: internal/views.py:117
 #, python-brace-format
 msgid "Change Information for {full_name}"
 msgstr "Endre informasjonen til {full_name}"
 
-#: internal/views.py:161
+#: internal/views.py:164
 msgid "Set retired"
 msgstr "Sett panget"
 
-#: internal/views.py:167
+#: internal/views.py:170
 #, python-brace-format
 msgid "Set member {name} as retired"
 msgstr "Sett medlem {name} som pang"
 
-#: internal/views.py:179
+#: internal/views.py:182
 msgid "Set quit"
 msgstr "Sett sluttet"
 
-#: internal/views.py:185
+#: internal/views.py:188
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
 
-#: internal/views.py:237
+#: internal/views.py:240
 msgid "Secrets list"
 msgstr "Liste med hemmeligheter"
 
-#: internal/views.py:243
+#: internal/views.py:246
 msgid "New Secret"
 msgstr "Ny hemmelighet"
 
-#: internal/views.py:249
+#: internal/views.py:252
 msgid "Edit Secret"
 msgstr "Rediger hemmelighet"
 
-#: internal/views.py:272
+#: internal/views.py:275
 msgid "Quotes page"
 msgstr "Sitatside"
 
-#: internal/views.py:281
+#: internal/views.py:284
 msgid "New Quote"
 msgstr "Nytt sitat"
 
-#: internal/views.py:289
+#: internal/views.py:292
 msgid "Edit Quote"
 msgstr "Endre sitat"
 
@@ -1358,8 +1366,8 @@ msgid "location URL"
 msgstr "sted-URL"
 
 #: make_queue/models/machine.py:169 news/models.py:49
-#: news/templates/news/admin_article_list.html:41
-#: news/templates/news/admin_event_list.html:52
+#: news/templates/news/article/admin_article_list.html:41
+#: news/templates/news/event/admin_event_list.html:52
 msgid "internal"
 msgstr "internt"
 
@@ -1527,7 +1535,7 @@ msgid "Other reservations"
 msgstr "Andre reservasjoner"
 
 #: make_queue/templates/make_queue/calendar.html:95
-#: news/templates/news/admin_event_list.html:8
+#: news/templates/news/event/admin_event_list.html:8
 #: web/templates/web/admin_panel.html:15 web/templates/web/header.html:32
 msgid "Events"
 msgstr "Arrangementer"
@@ -1592,7 +1600,7 @@ msgstr "Lagre"
 #: make_queue/templates/make_queue/course/course_registration_edit.html:122
 #: make_queue/templates/make_queue/course/course_registration_list.html:218
 #: make_queue/templates/make_queue/reservation_edit.html:166
-#: news/templates/news/ticket_cancel.html:17
+#: news/templates/news/event/ticket/ticket_cancel.html:17
 #: web/templates/web/delete_modal.html:20
 #: web/templates/web/edit_form.html:104 web/templates/web/login.html:33
 msgctxt "abort action"
@@ -1790,7 +1798,7 @@ msgstr "Velg utstyrstype"
 
 #: make_queue/templates/make_queue/reservation_edit.html:54
 #: makerspace/models.py:39 makerspace/models.py:40
-#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:14
+#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:12
 #: makerspace/templates/makerspace/makerspace.html:17
 #: web/templates/web/admin_panel.html:63 web/templates/web/header.html:54
 msgid "equipment"
@@ -1973,16 +1981,16 @@ msgstr "Søn"
 msgid "{machine_status} for {duration}"
 msgstr "{machine_status} i {duration}"
 
-#: make_queue/templatetags/reservation_extra.py:94
+#: make_queue/templatetags/reservation_extra.py:97
 msgid "You must be logged in to create reservations."
 msgstr "Du må være logget inn for å kunne lage reservasjoner."
 
-#: make_queue/templatetags/reservation_extra.py:99
+#: make_queue/templatetags/reservation_extra.py:102
 #, python-brace-format
 msgid "The machine has status “{status}”."
 msgstr "Maskinen har status «{status}»."
 
-#: make_queue/templatetags/reservation_extra.py:101
+#: make_queue/templatetags/reservation_extra.py:104
 msgid "You have reached the maximum number of future reservations."
 msgstr "Du har nådd maksimalt antall framtidige reservasjoner."
 
@@ -2117,21 +2125,25 @@ msgstr "Bilde av {equipment}."
 msgid "If specified, the equipment is sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres utstyret stigende på denne verdien."
 
-#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:15
+#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:13
 msgid "Add new equipment"
 msgstr "Legg til nytt utstyr"
 
-#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:32
+#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:25
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:14
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:31
-#: makerspace/templates/makerspace/equipment/equipment_list.html:28
+#: makerspace/templates/makerspace/equipment/equipment_list.html:46
 #, python-format
 msgid "Image of %(equipment)s"
 msgstr "Bilde av %(equipment)s"
 
 #: makerspace/templates/makerspace/equipment/equipment_list.html:14
-msgid "Available equipment at Makerverkstedet"
-msgstr "Tilgjengelig utstyr på Makerverkstedet"
+msgid "Some of the available equipment<br/>at Makerverkstedet"
+msgstr "Noe av det tilgjengelige utstyret<br/>på Makerverkstedet"
+
+#: makerspace/templates/makerspace/equipment/equipment_list.html:22
+msgid "Contents"
+msgstr "Innhold"
 
 #: makerspace/templates/makerspace/makerspace.html:18
 msgid ""
@@ -2167,8 +2179,8 @@ msgid "number of reserved tickets"
 msgstr "antall reserverte billetter"
 
 #: news/admin.py:112 news/admin.py:220
-#: news/templates/news/admin_event_detail.html:69
-#: news/templates/news/admin_event_ticket_list.html:31
+#: news/templates/news/event/admin_event_detail.html:69
+#: news/templates/news/event/admin_event_ticket_list.html:31
 msgid "tickets"
 msgstr "billetter"
 
@@ -2210,9 +2222,9 @@ msgid "event hidden"
 msgstr "arrangement skjult"
 
 #: news/admin.py:258 news/models.py:48 news/models.py:193
-#: news/templates/news/admin_article_list.html:35
-#: news/templates/news/admin_event_list.html:46
-#: news/templates/news/admin_timeplace_listing.html:27
+#: news/templates/news/article/admin_article_list.html:35
+#: news/templates/news/event/admin_event_list.html:46
+#: news/templates/news/event/admin_timeplace_listing.html:27
 msgid "hidden"
 msgstr "skjult"
 
@@ -2296,8 +2308,8 @@ msgstr ""
 msgid "don't crop the image"
 msgstr "ikke crop bildet"
 
-#: news/models.py:47 news/templates/news/admin_article_list.html:29
-#: news/templates/news/admin_event_list.html:40
+#: news/models.py:47 news/templates/news/article/admin_article_list.html:29
+#: news/templates/news/event/admin_event_list.html:40
 msgid "featured"
 msgstr "fremhevet"
 
@@ -2309,11 +2321,11 @@ msgstr "publiseringstid"
 msgid "The article will be hidden until this date."
 msgstr "Artikkelen vil være skjult fram til publiseringstidspunktet."
 
-#: news/models.py:106 news/templates/news/event_edit.html:21
+#: news/models.py:106 news/templates/news/event/event_form.html:21
 msgid "Repeating"
 msgstr "Gjentagende"
 
-#: news/models.py:107 news/templates/news/event_edit.html:35
+#: news/models.py:107 news/templates/news/event/event_form.html:35
 msgid "Standalone"
 msgstr "Frittstående"
 
@@ -2352,8 +2364,8 @@ msgid "Number of tickets"
 msgstr "Antall billetter"
 
 #: news/templates/admin/news/event/change_form_ticket_table.html:13
-#: news/templates/news/admin_event_ticket_list.html:54
-#: news/templates/news/ticket_card.html:47
+#: news/templates/news/event/admin_event_ticket_list.html:54
+#: news/templates/news/event/ticket/ticket_card.html:47
 msgid "Ref #"
 msgstr "Ref #"
 
@@ -2396,32 +2408,32 @@ msgstr ""
 "Hvis du ønsker å avbestille billetten din, kan du gjøre dette ved å besøke "
 "følgende adresse"
 
-#: news/templates/news/admin_article_list.html:8
-#: news/templates/news/article_list.html:13
+#: news/templates/news/article/admin_article_list.html:8
+#: news/templates/news/article/article_list.html:13
 #: web/templates/web/admin_panel.html:27 web/templates/web/header.html:36
 msgid "Articles"
 msgstr "Artikler"
 
-#: news/templates/news/admin_article_list.html:19
-#: news/templates/news/article_list_contents.html:17
+#: news/templates/news/article/admin_article_list.html:19
+#: news/templates/news/article/article_list_contents.html:17
 #, python-format
 msgid "View the article “%(title)s”; image description: %(description)s"
 msgstr "Vis artikkelen «%(title)s»; bildebeskrivelse: %(description)s"
 
-#: news/templates/news/admin_event_detail.html:21 news/views.py:163
+#: news/templates/news/event/admin_event_detail.html:21 news/views.py:163
 #: news/views.py:318
 msgid "Admin page for events"
 msgstr "Administrasjonsside for arrangementer"
 
-#: news/templates/news/admin_event_detail.html:43
+#: news/templates/news/event/admin_event_detail.html:43
 msgid "Go to the event page"
 msgstr "Gå til arrangementsiden"
 
-#: news/templates/news/admin_event_detail.html:50
+#: news/templates/news/event/admin_event_detail.html:50
 msgid "Hidden event"
 msgstr "Skjult arrangement"
 
-#: news/templates/news/admin_event_detail.html:52
+#: news/templates/news/event/admin_event_detail.html:52
 msgid ""
 "This event is hidden! Non-admin users will not be able to see the event or "
 "its occurrences."
@@ -2429,11 +2441,11 @@ msgstr ""
 "Dette arrangementet er skjult! Ikke-administratorer vil ikke kunne se "
 "arrangementet eller dets forekomster."
 
-#: news/templates/news/admin_event_detail.html:56
+#: news/templates/news/event/admin_event_detail.html:56
 msgid "Featured event"
 msgstr "Fremhevet arrangement"
 
-#: news/templates/news/admin_event_detail.html:58
+#: news/templates/news/event/admin_event_detail.html:58
 msgid ""
 "This event is featured! Any future occurrences may be shown on the front "
 "page."
@@ -2441,168 +2453,155 @@ msgstr ""
 "Dette arrangementet er fremhevet! Alle framtidige forekomster kan bli vist "
 "på forsiden."
 
-#: news/templates/news/admin_event_detail.html:62
+#: news/templates/news/event/admin_event_detail.html:62
 msgid "Private event"
 msgstr "Privat arrangement"
 
-#: news/templates/news/admin_event_detail.html:64
+#: news/templates/news/event/admin_event_detail.html:64
 msgid "This event is private! It is only visible to members of MAKE NTNU."
 msgstr ""
 "Dette arrangementet er privat! Det vil bare vises for medlemmer av MAKE NTNU."
 
-#: news/templates/news/admin_event_detail.html:74
-#: news/templates/news/admin_event_ticket_list.html:33
-#: news/templates/news/admin_timeplace_listing.html:12
+#: news/templates/news/event/admin_event_detail.html:74
+#: news/templates/news/event/admin_event_ticket_list.html:33
+#: news/templates/news/event/admin_timeplace_listing.html:12
 #, python-format
 msgid "%(num_active_tickets)s/%(num_tickets)s tickets reserved"
 msgstr "%(num_active_tickets)s/%(num_tickets)s billetter reservert"
 
-#: news/templates/news/admin_event_detail.html:80
-#: news/templates/news/admin_timeplace_listing.html:17
+#: news/templates/news/event/admin_event_detail.html:80
+#: news/templates/news/event/admin_timeplace_listing.html:17
 msgid "No registration required"
 msgstr "Ingen påmelding krevd"
 
-#: news/templates/news/admin_event_detail.html:85
+#: news/templates/news/event/admin_event_detail.html:85
 msgid "Occurrences"
 msgstr "Forekomster"
 
-#: news/templates/news/admin_event_detail.html:91
+#: news/templates/news/event/admin_event_detail.html:91
 msgid "Add new occurrence"
 msgstr "Legg til ny forekomst"
 
-#: news/templates/news/admin_event_detail.html:96
+#: news/templates/news/event/admin_event_detail.html:96
 msgid "Future"
 msgstr "Framtidige"
 
-#: news/templates/news/admin_event_detail.html:99
+#: news/templates/news/event/admin_event_detail.html:99
 msgid "Past"
 msgstr "Tidligere"
 
-#: news/templates/news/admin_event_detail.html:109
+#: news/templates/news/event/admin_event_detail.html:109
 msgid "No future occurrences exist for this event"
 msgstr "Ingen framtidige forekomster finnes for dette arrangementet"
 
-#: news/templates/news/admin_event_detail.html:118
+#: news/templates/news/event/admin_event_detail.html:118
 msgid "No past occurrences exist for this event"
 msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
-#: news/templates/news/admin_event_list.html:21
-#: news/templates/news/event_list_contents.html:36
+#: news/templates/news/event/admin_event_list.html:21
+#: news/templates/news/event/event_list_contents.html:36
 #, python-format
 msgid "View the event “%(title)s”; image description: %(description)s"
 msgstr "Vis arrangementet «%(title)s»; bildebeskrivelse: %(description)s"
 
-#: news/templates/news/admin_event_list.html:31
+#: news/templates/news/event/admin_event_list.html:31
 #, python-format
 msgid "1 future occurrence"
 msgid_plural "%(counter)s future occurrences"
 msgstr[0] "1 framtidig forekomst"
 msgstr[1] "%(counter)s framtidige forekomster"
 
-#: news/templates/news/admin_event_list.html:59
+#: news/templates/news/event/admin_event_list.html:59
 msgid "Admin"
 msgstr "Admin"
 
-#: news/templates/news/admin_event_participants_search.html:44
+#: news/templates/news/event/admin_event_participants_search.html:44
 msgid "Found the following users without any tickets"
 msgstr "Fant følgende brukere uten noen billetter"
 
-#: news/templates/news/admin_event_participants_search.html:52
+#: news/templates/news/event/admin_event_participants_search.html:52
 msgid "No users found"
 msgstr "Ingen brukere funnet"
 
-#: news/templates/news/admin_event_ticket_list.html:16
+#: news/templates/news/event/admin_event_ticket_list.html:16
 msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"
 
-#: news/templates/news/admin_event_ticket_list.html:20
+#: news/templates/news/event/admin_event_ticket_list.html:20
 msgid "Email Addresses of Ticket Holders"
 msgstr "E-postadresser til deltakere"
 
-#: news/templates/news/admin_event_ticket_list.html:24
+#: news/templates/news/event/admin_event_ticket_list.html:24
 msgid ""
 "Click to copy the email addresses of the active tickets to the clipboard"
 msgstr ""
 "Klikk her for å kopiere e-postadressene til de aktive billettene til "
 "utklippstavlen"
 
-#: news/templates/news/admin_event_ticket_list.html:44
-#: news/templates/news/ticket_card.html:10
+#: news/templates/news/event/admin_event_ticket_list.html:44
+#: news/templates/news/event/ticket/ticket_card.html:10
 msgid "canceled"
 msgstr "kansellert"
 
-#: news/templates/news/admin_event_ticket_list.html:58
-#: news/templates/news/ticket_card.html:38
+#: news/templates/news/event/admin_event_ticket_list.html:58
+#: news/templates/news/event/ticket/ticket_card.html:38
 #: web/templates/web/forms/widgets/multi_lingual_text_field.html:98
 msgid "language"
 msgstr "språk"
 
-#: news/templates/news/admin_event_ticket_list.html:69
+#: news/templates/news/event/admin_event_ticket_list.html:69
 msgid "No tickets have been registered for this event"
 msgstr "Ingen billetter har blitt registrert for dette arrangement"
 
-#: news/templates/news/admin_timeplace_listing.html:29
+#: news/templates/news/event/admin_timeplace_listing.html:29
 msgid "If selected, the occurrence is hidden for non-admin users."
 msgstr "Hvis valgt vil forekomsten være skjult for ikke-administratorer."
 
-#: news/templates/news/admin_timeplace_listing.html:34
+#: news/templates/news/event/admin_timeplace_listing.html:34
 msgid "If clicked, a form for editing the occurrence is shown."
 msgstr "Klikk for å endre forekomsten."
 
-#: news/templates/news/admin_timeplace_listing.html:41
+#: news/templates/news/event/admin_timeplace_listing.html:41
 msgid "If clicked, the occurrence will be deleted."
 msgstr "Klikk for å slette forekomsten."
 
-#: news/templates/news/admin_timeplace_listing.html:48
+#: news/templates/news/event/admin_timeplace_listing.html:48
 msgid "Duplicate"
 msgstr "Dupliser"
 
-#: news/templates/news/admin_timeplace_listing.html:49
+#: news/templates/news/event/admin_timeplace_listing.html:49
 msgid "If clicked, the occurrence is duplicated."
 msgstr "Klikk for å duplisere forekomsten."
 
-#: news/templates/news/event_detail.html:19
+#: news/templates/news/event/detail/event_detail.html:18
 msgid "Admin page"
 msgstr "Administrasjonspanel"
 
-#: news/templates/news/event_detail.html:36
-#: news/templates/news/event_detail.html:154
+#: news/templates/news/event/detail/event_detail_old_message.html:7
 msgid "You are viewing an old event"
 msgstr "Du ser på et gammelt arrangement"
 
-#: news/templates/news/event_detail.html:38
-#: news/templates/news/event_detail.html:156
+#: news/templates/news/event/detail/event_detail_old_message.html:9
 msgid "The last occurrence of this event was"
 msgstr "Sist gang arrangement ble holdt var"
 
-#: news/templates/news/event_detail.html:97
-#: news/templates/news/event_detail.html:125
-#: news/templates/news/event_detail.html:165
-#: news/templates/news/event_detail.html:241
+#: news/templates/news/event/detail/event_detail_registration_button.html:10
 msgid "You are registered for this event"
 msgstr "Du er påmeldt dette arrangementet"
 
-#: news/templates/news/event_detail.html:103
-#: news/templates/news/event_detail.html:129
-#: news/templates/news/event_detail.html:170
-#: news/templates/news/event_detail.html:246
+#: news/templates/news/event/detail/event_detail_registration_button.html:14
 msgid "Registration"
 msgstr "Påmelding"
 
-#: news/templates/news/event_detail.html:108
-#: news/templates/news/event_detail.html:133
-#: news/templates/news/event_detail.html:174
-#: news/templates/news/event_detail.html:250
+#: news/templates/news/event/detail/event_detail_registration_button.html:18
 msgid "Sold out"
 msgstr "Utsolgt"
 
-#: news/templates/news/event_detail.html:138
-#: news/templates/news/event_detail.html:179
-#: news/templates/news/event_detail.html:255
+#: news/templates/news/event/detail/event_detail_registration_button.html:23
 msgid "No registration"
 msgstr "Ingen påmelding"
 
-#: news/templates/news/event_edit.html:23
+#: news/templates/news/event/event_form.html:23
 msgid ""
 "Used for repeating events where the user is to register for one of several "
 "occurrences. Each occurrence will have its own registration."
@@ -2610,7 +2609,7 @@ msgstr ""
 "Brukt for gjentagende arrangementer hvor brukeren registrerer seg for ett av "
 "flere tidspunkter. Hvert tidspunkt vil ha sin egen registrering."
 
-#: news/templates/news/event_edit.html:37
+#: news/templates/news/event/event_form.html:37
 msgid ""
 "Used for events that happen once, e.g. a weekend-long happening. All "
 "occurrences of the event will have a common registration."
@@ -2618,12 +2617,12 @@ msgstr ""
 "Brukt for arrangementer som skjer én gang, f.eks. en workshop i en helg. Det "
 "vil være en felles registrering for alle tidspunktene til arrangementet."
 
-#: news/templates/news/event_edit.html:53
-#: news/templates/news/timeplace_edit.html:7
+#: news/templates/news/event/event_form.html:53
+#: news/templates/news/event/timeplace_edit.html:7
 msgid "A value of zero indicates that no registration is required"
 msgstr "En verdi på 0 vil si at arrangementet ikke krever påmelding"
 
-#: news/templates/news/event_edit.html:57
+#: news/templates/news/event/event_form.html:57
 msgid ""
 "Only used for standalone events. For repeating events, tickets are "
 "administered per occurrence."
@@ -2631,77 +2630,77 @@ msgstr ""
 "Bare brukt til frittstående arrangementer. For gjentagende arrangementer er "
 "billettene administrert per tidspunkt."
 
-#: news/templates/news/event_list.html:11
+#: news/templates/news/event/event_list.html:11
 msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
-#: news/templates/news/event_list.html:12
+#: news/templates/news/event/event_list.html:12
 msgid "No upcoming events"
 msgstr "Ingen kommende arrangementer"
 
-#: news/templates/news/event_list.html:15
+#: news/templates/news/event/event_list.html:15
 msgid "Previous events"
 msgstr "Tidligere arrangementer"
 
-#: news/templates/news/event_list.html:16
+#: news/templates/news/event/event_list.html:16
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
 
-#: news/templates/news/event_list_contents.html:26
+#: news/templates/news/event/event_list_contents.html:26
 msgid "dates"
 msgstr "datoer"
 
-#: news/templates/news/index_event_list_contents.html:14
+#: news/templates/news/event/index_event_list_contents.html:14
 msgid "More events"
 msgstr "Flere arrangementer"
 
-#: news/templates/news/my_tickets_list.html:12
+#: news/templates/news/event/ticket/my_tickets_list.html:12
 #: web/templates/web/header.html:112
 msgid "My tickets"
 msgstr "Mine billetter"
 
-#: news/templates/news/news_base_edit.html:7
-msgid "Preferred format is"
-msgstr "Foretrukket format er"
-
-#: news/templates/news/ticket_cancel.html:6
+#: news/templates/news/event/ticket/ticket_cancel.html:6
 #, python-format
 msgid "Cancel your ticket for “%(event)s”"
 msgstr "Kanseller billetten din for «%(event)s»"
 
-#: news/templates/news/ticket_cancel.html:19
+#: news/templates/news/event/ticket/ticket_cancel.html:19
 msgid "Yes, I'm sure"
 msgstr "Ja, jeg er sikker"
 
-#: news/templates/news/ticket_card.html:56
+#: news/templates/news/event/ticket/ticket_card.html:56
 msgid "Cancel ticket"
 msgstr "Kanseller"
 
-#: news/templates/news/ticket_card.html:62
+#: news/templates/news/event/ticket/ticket_card.html:62
 msgid "Reactivate ticket"
 msgstr "Reaktiver"
 
-#: news/templates/news/ticket_detail.html:14
+#: news/templates/news/event/ticket/ticket_detail.html:14
 #, python-format
 msgid "Ticket for “%(title)s”"
 msgstr "Billett for «%(title)s»"
 
-#: news/templates/news/ticket_detail.html:16
+#: news/templates/news/event/ticket/ticket_detail.html:16
 msgid "Registered to"
 msgstr "Registrert på"
 
-#: news/templates/news/ticket_detail.html:26
+#: news/templates/news/event/ticket/ticket_detail.html:26
 msgid "This ticket is registered to another account. Please"
 msgstr "Denne billetten er knyttet til en annen bruker. Vennligst"
 
-#: news/templates/news/ticket_detail.html:27
+#: news/templates/news/event/ticket/ticket_detail.html:27
 #: web/templates/web/header.html:123 web/templates/web/login.html:30
 msgid "log in"
 msgstr "logg inn"
 
-#: news/templates/news/ticket_detail.html:28
+#: news/templates/news/event/ticket/ticket_detail.html:28
 msgid "to the correct account to see your ticket."
 msgstr "til den riktige brukeren for å se billetten din."
+
+#: news/templates/news/news_base_form.html:7
+msgid "Preferred format is"
+msgstr "Foretrukket format er"
 
 #: news/views.py:160
 msgid "Find events users have attended or are registered for"
@@ -2787,6 +2786,48 @@ msgstr "viktige datoer"
 msgid "full name from LDAP"
 msgstr "fullt navn fra LDAP"
 
+#: util/locale_utils.py:13
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] "%(num)d år"
+msgstr[1] "%(num)d år"
+
+#: util/locale_utils.py:14
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] "%(num)d måned"
+msgstr[1] "%(num)d måneder"
+
+#: util/locale_utils.py:15
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] "%(num)d uke"
+msgstr[1] "%(num)d uker"
+
+#: util/locale_utils.py:16
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] "%(num)d dag"
+msgstr[1] "%(num)d dager"
+
+#: util/locale_utils.py:17
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] "%(num)d time"
+msgstr[1] "%(num)d timer"
+
+#: util/locale_utils.py:18
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] "%(num)d minutt"
+msgstr[1] "%(num)d minutter"
+
 #: util/validators.py:10
 msgid ""
 "This can only consist of lowercase English letters, numbers, hyphens or "
@@ -2799,7 +2840,7 @@ msgstr ""
 msgid "Save"
 msgstr "Lagre"
 
-#: web/multilingual/formfields.py:21
+#: web/multilingual/formfields.py:19
 msgid "One or more languages have no content."
 msgstr "Ett eller flere språk mangler innhold."
 
