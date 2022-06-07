@@ -4,7 +4,7 @@ from typing import Tuple, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.db import models
-from django.db.models import F, Prefetch
+from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -19,13 +19,18 @@ from .course import Printer3DCourse
 
 class MachineTypeQuerySet(models.QuerySet):
 
-    def prefetch_machines_and_default_order_by(self, *, machines_attr_name: str):
+    def default_order_by(self):
+        return self.order_by('priority')
+
+    def prefetch_machines(self, *, machine_queryset=None, machines_attr_name: str):
         """
         Returns a ``QuerySet`` where all the machine types' machines have been prefetched
         and can be accessed through the attribute with the same name as ``machines_attr_name``.
         """
-        return self.order_by('priority').prefetch_related(
-            Prefetch('machines', queryset=Machine.objects.default_order_by(), to_attr=machines_attr_name)
+        if machine_queryset is None:
+            machine_queryset = Machine.objects.all()
+        return self.prefetch_related(
+            Prefetch('machines', queryset=machine_queryset, to_attr=machines_attr_name)
         )
 
 
@@ -33,7 +38,8 @@ class MachineType(models.Model):
     class UsageRequirement(models.TextChoices):
         IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
         TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
-        TAKEN_ADVANCED_3D_PRINTER_COURSE = "A3DP", _("Taken the advanced 3D printer course")
+        TAKEN_RAISE3D_PRINTERS_COURSE = "R3DP", _("Taken the course on Raise3D printers")
+        TAKEN_SLA_3D_PRINTER_COURSE = "SLAP", _("Taken the SLA 3D printer course")
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
@@ -62,8 +68,10 @@ class MachineType(models.Model):
             return user.is_authenticated
         elif self.usage_requirement == self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
             return self.can_use_3d_printer(user)
-        elif self.usage_requirement == self.UsageRequirement.TAKEN_ADVANCED_3D_PRINTER_COURSE:
-            return self.can_use_advanced_3d_printer(user)
+        elif self.usage_requirement == self.UsageRequirement.TAKEN_RAISE3D_PRINTERS_COURSE:
+            return self.can_use_raise3d_printer(user)
+        elif self.usage_requirement == self.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE:
+            return self.can_use_sla_printer(user)
         return False
 
     @staticmethod
@@ -80,21 +88,47 @@ class MachineType(models.Model):
         return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
 
     @staticmethod
-    def can_use_advanced_3d_printer(user: Union[User, AnonymousUser]):
+    def can_use_raise3d_printer(user: Union[User, AnonymousUser]):
         if not user.is_authenticated:
             return False
         if Printer3DCourse.objects.filter(user=user).exists():
             course_registration = Printer3DCourse.objects.get(user=user)
-            return course_registration.advanced_course
+            return course_registration.raise3d_course
         if Printer3DCourse.objects.filter(username=user.username).exists():
             course_registration = Printer3DCourse.objects.get(username=user.username)
             course_registration.user = user
             course_registration.save()
-            return course_registration.advanced_course
+            return course_registration.raise3d_course
+        return False
+
+    # TODO: reduce code duplication between this and the two methods above
+    @staticmethod
+    def can_use_sla_printer(user: Union[User, AnonymousUser]):
+        if not user.is_authenticated:
+            return False
+        if Printer3DCourse.objects.filter(user=user).exists():
+            course_registration = Printer3DCourse.objects.get(user=user)
+            return course_registration.sla_course
+        if Printer3DCourse.objects.filter(username=user.username).exists():
+            course_registration = Printer3DCourse.objects.get(username=user.username)
+            course_registration.user = user
+            course_registration.save()
+            return course_registration.sla_course
         return False
 
 
 class MachineQuerySet(models.QuerySet):
+
+    def visible_to(self, user: User):
+        if user.has_perm('internal.is_internal'):
+            return self.all()
+
+        exclude_query = Q(internal=True)
+        # Machines that require the SLA course should not be visible to non-internal users who have not taken the SLA course
+        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.sla_course:
+            exclude_query |= Q(machine_type__usage_requirement=MachineType.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE)
+
+        return self.exclude(exclude_query)
 
     def default_order_by(self):
         return self.order_by(
@@ -132,13 +166,21 @@ class Machine(models.Model):
     )
     location = UnlimitedCharField(verbose_name=_("location"))
     location_url = URLTextField(verbose_name=_("location URL"))
+    internal = models.BooleanField(default=False, verbose_name=_("internal"),
+                                   help_text=_("If selected, the machine will only be visible to and reservable by MAKE members."))
     status = models.CharField(choices=Status.choices, max_length=2, default=Status.AVAILABLE, verbose_name=_("status"))
+    info_message = models.TextField(blank=True, verbose_name=_("info message"), help_text=_(
+        "Information that's useful to know before using the machine, e.g. the filament that the 3D printer uses,"
+        " the needle that's currently inserted in the sewing machine, or just the machine's current state/“mood” (emojis are allowed 🤠)."
+    ))
+    info_message_date = models.DateTimeField(blank=True, default=timezone.localtime, verbose_name=_("time the info message was changed"))
     priority = models.IntegerField(
         null=True,
         blank=True,
         verbose_name=_("priority"),
         help_text=_("If specified, the machines are sorted ascending by this value."),
     )
+    notes = models.TextField(blank=True, verbose_name=_("notes"), help_text=_("This is only for internal use and is not displayed anywhere."))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = MachineQuerySet.as_manager()

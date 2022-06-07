@@ -2,6 +2,7 @@ import functools
 import shutil
 import tempfile
 from abc import ABC
+from datetime import datetime
 from http import HTTPStatus
 from pathlib import Path
 from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar
@@ -11,6 +12,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
 from django.test import Client, SimpleTestCase, override_settings
 from django.utils import translation
+from django.utils.dateparse import parse_time
 
 from users.models import User
 
@@ -126,13 +128,6 @@ def assertRedirectsWithPathPrefix(self: SimpleTestCase, response, expected_path_
     self.assertEqual(redirected_response.status_code, HTTPStatus.OK)
 
 
-def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
-    collection_list = list(collection)
-    collection_set = set(collection_list)
-    self.assertEqual(len(collection_set), len(collection_list))
-    return collection_set
-
-
 class PathPredicate(ABC):
     LANGUAGE_PREFIXES = ["", "/en"]
 
@@ -190,21 +185,6 @@ class Get(PathPredicate):
                 test_case.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> List[str]:
-    from web.tests.test_urls import reverse_admin  # avoids circular imports
-
-    url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
-    return [
-        reverse_admin(f'{url_name_prefix}_changelist'),
-        reverse_admin(f'{url_name_prefix}_add'),
-        *[
-            reverse_admin(f'{url_name_prefix}_{url_name_suffix}', args=[obj.pk])
-            for obj in model_objs
-            for url_name_suffix in ['change', 'delete', 'history']
-        ],
-    ]
-
-
 def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List[PathPredicate], subdomain=''):
     previous_language = translation.get_language()
 
@@ -223,3 +203,30 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
 
     # Reactivate the previously set language, as requests to translated URLs change the active language
     translation.activate(previous_language)
+
+
+def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> List[str]:
+    from web.tests.test_urls import reverse_admin  # avoids circular imports
+
+    url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
+    return [
+        reverse_admin(f'{url_name_prefix}_changelist'),
+        reverse_admin(f'{url_name_prefix}_add'),
+        *[
+            reverse_admin(f'{url_name_prefix}_{url_name_suffix}', args=[obj.pk])
+            for obj in model_objs
+            for url_name_suffix in ['change', 'delete', 'history']
+        ],
+    ]
+
+
+def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
+    collection_list = list(collection)
+    collection_set = set(collection_list)
+    self.assertEqual(len(collection_set), len(collection_list))
+    return collection_set
+
+
+def with_time(datetime_obj: datetime, time_str: str):
+    time_obj = parse_time(time_str)
+    return datetime_obj.replace(hour=time_obj.hour, minute=time_obj.minute, second=time_obj.second)

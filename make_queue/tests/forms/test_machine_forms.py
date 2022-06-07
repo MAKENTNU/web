@@ -1,10 +1,15 @@
+from datetime import datetime
+from unittest import mock
+
 from django.test import TestCase
 
+from util.locale_utils import parse_datetime_localized
+from util.test_utils import with_time
 from ...forms import CreateMachineForm, EditMachineForm
 from ...models.machine import Machine, MachineType
 
 
-class TestBaseMachineForm(TestCase):
+class TestCreateMachineForm(TestCase):
 
     def setUp(self):
         self.printer_machine_type = MachineType.objects.get(pk=1)
@@ -70,6 +75,28 @@ class TestBaseMachineForm(TestCase):
         self.assertTrue(form.is_valid())
         self.assertDictEqual({}, form.errors)
 
+    @mock.patch('django.utils.timezone.now')
+    def test_info_message_date_defaults_to_now(self, now_mock):
+        base_datetime = parse_datetime_localized("2022-04-20 00:00")
+        now_mock.return_value = base_datetime
+
+        form_data = self.valid_form_data
+        # Default info message date should be now
+        form = CreateMachineForm(data=form_data)
+        machine = form.save()
+        self.assertEqual(machine.info_message_date, base_datetime)
+
+    @mock.patch('django.utils.timezone.now')
+    def test_trying_to_set_info_message_date_is_ignored(self, now_mock):
+        base_datetime = parse_datetime_localized("2022-04-20 00:00")
+        now_mock.return_value = base_datetime
+
+        form_data = self.valid_form_data
+        form_data['info_message_date'] = with_time(base_datetime, "01:00")
+        form = CreateMachineForm(data=form_data)
+        machine = form.save()
+        self.assertEqual(machine.info_message_date, with_time(base_datetime, "00:00"))
+
     def assertErrorCodeInForm(self, field_name, error_code, form):
         """Asserts ``error_code`` appears among the errors for ``field_name`` in ``form``"""
         error_data = form.errors.as_data()
@@ -112,3 +139,45 @@ class TestEditMachineForm(TestCase):
 
         form = EditMachineForm(instance=self.machine, data=form_data)
         self.assertTrue(form.is_valid())
+
+    @mock.patch('django.utils.timezone.now')
+    def test_info_message_date_is_appropriately_set(self, now_mock):
+        base_datetime = parse_datetime_localized("2022-04-20 00:00")
+        now_mock.return_value = base_datetime
+
+        # Default info message date should be now
+        self.machine = Machine.objects.create(name="Test 2", machine_model="Ultimaker 2+", machine_type=self.printer_machine_type)
+        self.assertEqual(self.machine.info_message_date, base_datetime)
+
+        now_mock.return_value = with_time(base_datetime, "01:00")
+
+        form_data = self.valid_form_data
+
+        def assert_editing_machine_makes_info_message_date_equal(datetime_obj: datetime):
+            form = EditMachineForm(instance=self.machine, data=form_data)
+            self.machine = form.save()
+            self.assertEqual(self.machine.info_message_date, datetime_obj)
+
+        # Info message date should be updated when info message is changed
+        form_data['info_message'] = "Something is wrong :("
+        assert_editing_machine_makes_info_message_date_equal(with_time(base_datetime, "01:00"))
+
+        now_mock.return_value = with_time(base_datetime, "02:00")
+
+        # Info message date should remain unchanged when info message is also not changed
+        assert_editing_machine_makes_info_message_date_equal(with_time(base_datetime, "01:00"))
+
+        now_mock.return_value = with_time(base_datetime, "03:00")
+
+        # Trying to set info message date through the form should be ignored
+        form_data['info_message_date'] = with_time(base_datetime, "03:00")
+        assert_editing_machine_makes_info_message_date_equal(with_time(base_datetime, "01:00"))
+        del form_data['info_message_date']
+
+        now_mock.return_value = with_time(base_datetime, "04:00")
+
+        # Removing info message from the form data should be interpreted as it having changed (Django default),
+        # and so the info message date should also change
+        del form_data['info_message']
+        assert_editing_machine_makes_info_message_date_equal(with_time(base_datetime, "04:00"))
+        self.assertEqual(self.machine.info_message, "")

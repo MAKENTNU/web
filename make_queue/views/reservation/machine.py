@@ -13,14 +13,14 @@ from ...models.machine import Machine, MachineType
 class MachineListView(ListView):
     """View that shows all the machines -- listed per machine type."""
     model = MachineType
-    queryset = (
-        # Retrieves all machine types that have at least one existing machine
-        MachineType.objects.prefetch_machines_and_default_order_by(
-            machines_attr_name='existing_machines',
-        ).filter(machines__isnull=False).distinct()  # remove duplicates that can appear when filtering on values across tables
-    )
     template_name = 'make_queue/machine_list.html'
     context_object_name = 'machine_types'
+
+    def get_queryset(self):
+        machine_queryset = Machine.objects.visible_to(self.request.user).default_order_by()
+        return MachineType.objects.default_order_by().prefetch_machines(
+            machine_queryset=machine_queryset, machines_attr_name='shown_machines',
+        )
 
 
 class MachineFormMixin(CustomFieldsetFormMixin, ABC):
@@ -35,11 +35,14 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
 
     def get_custom_fieldsets(self):
         return [
-            {'fields': ('machine_type' if self.should_include_machine_type else None, 'machine_model'), 'layout_class': "two"},
-            {'fields': ('name',), 'layout_class': "two"},
-            {'fields': ('stream_name',), 'layout_class': "two"} if self.should_include_stream_name() else None,
-            {'fields': ('location', 'location_url'), 'layout_class': "two"},
-            {'fields': ('priority', 'status'), 'layout_class': "two"},
+            {'fields': ('machine_type' if self.should_include_machine_type else None, 'machine_model'), 'layout_class': "ui two fields"},
+            {'fields': ('name',), 'layout_class': "ui two fields"},
+            {'fields': ('stream_name',), 'layout_class': "ui two fields"} if self.should_include_stream_name() else None,
+            {'fields': ('location', 'location_url'), 'layout_class': "ui two fields"},
+            {'fields': ('priority', 'status'), 'layout_class': "ui two fields"},
+            {'fields': ('info_message', 'info_message_date'), 'layout_class': "ui two fields"},
+            {'fields': ('internal',), 'layout_class': "ui segment field"},
+            {'fields': ('notes',)},
         ]
 
     def should_include_stream_name(self):

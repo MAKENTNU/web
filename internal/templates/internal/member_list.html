@@ -63,19 +63,19 @@
                         <div class="menu">
                             <div class="scrolling menu">
                                 <div class="item" data-value="Dev">
-                                    <i class="green circle icon"></i>Dev
-                                </div>
-                                <div class="item" data-value="Mentor">
-                                    <i class="red circle icon"></i>Mentor
+                                    <i class="{% color_for_committee "Dev" %} circle icon"></i>Dev
                                 </div>
                                 <div class="item" data-value="Event">
-                                    <i class="blue circle icon"></i>Event
+                                    <i class="{% color_for_committee "Event" %} circle icon"></i>Event
+                                </div>
+                                <div class="item" data-value="Mentor">
+                                    <i class="{% color_for_committee "Mentor" %} circle icon"></i>Mentor
                                 </div>
                                 <div class="item" data-value="PR">
-                                    <i class="make-col-yellow circle icon"></i>PR
+                                    <i class="{% color_for_committee "PR" MAKE_col_prefixed=True %} circle icon"></i>PR
                                 </div>
                                 <div class="item" data-value="Styret">
-                                    <i class="purple circle icon"></i>Styret
+                                    <i class="{% color_for_committee "Styret" %} circle icon"></i>Styret
                                 </div>
                             </div>
                         </div>

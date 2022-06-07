@@ -1,11 +1,11 @@
-{% extends 'news/news_base_edit.html' %}
+{% extends 'news/news_base_form.html' %}
 {% load static %}
 {% load i18n %}
 
 
 {% block extra_head %}
     {{ block.super }}
-    <script defer src="{% static 'news/js/event_edit.js' %}"></script>
+    <script defer src="{% static 'news/js/event/event_form.js' %}"></script>
 {% endblock extra_head %}
 
 {% block field %}
@@ -19,7 +19,7 @@
                         <input id="repeating" type="radio" name="{{ field.name }}" value="{{ Event.Type.REPEATING }}"
                                {% if field.value == Event.Type.REPEATING %}checked{% endif %}/>
                         <label for="repeating">{% trans "Repeating" %}
-                            <span data-content="
+                            <span class="popup-trigger" data-content="
                                 {% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}
                             ">
                                 <i class="make-col-yellow question circle icon"></i>
@@ -33,7 +33,7 @@
                         <input id="standalone" type="radio" name="{{ field.name }}" value="{{ Event.Type.STANDALONE }}"
                                {% if field.value == Event.Type.STANDALONE %}checked{% endif %}/>
                         <label for="standalone">{% trans "Standalone" %}
-                            <span data-content="
+                            <span class="popup-trigger" data-content="
                                 {% trans "Used for events that happen once, e.g. a weekend-long happening. All occurrences of the event will have a common registration." %}
                             ">
                                 <i class="make-col-yellow question circle icon"></i>

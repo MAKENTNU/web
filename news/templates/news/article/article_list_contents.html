@@ -23,10 +23,10 @@
 			    {% if forloop.first %}first{% endif %}
 			    {% if forloop.last %}last{% endif %}">
             {% if forloop.first or forloop.last %}
-                <img class="txtborder tl" src="{% static 'web/img/top_left.svg' %}" alt=""/>
-                <img class="txtborder tr" src="{% static 'web/img/top_right.svg' %}" alt=""/>
-                <img class="txtborder bl" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
-                <img class="txtborder br" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
+                <img class="text-border-corner top left" src="{% static 'web/img/top_left.svg' %}" alt=""/>
+                <img class="text-border-corner top right" src="{% static 'web/img/top_right.svg' %}" alt=""/>
+                <img class="text-border-corner bottom left" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
+                <img class="text-border-corner bottom right" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
             {% endif %}
             <div>
                 <h1 class="word-breaking article-title">

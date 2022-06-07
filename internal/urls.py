@@ -19,6 +19,13 @@ urlpatterns = [
     )),
 ]
 
+committee_bulletin_urlpatterns = [
+    views.CommitteeBulletinBoardView.get_path('dev-board'),
+    views.CommitteeBulletinBoardView.get_path('event-board'),
+    views.CommitteeBulletinBoardView.get_path('mentor-board'),
+    views.CommitteeBulletinBoardView.get_path('pr-board'),
+]
+
 internal_contentbox_urlpatterns = [
     path("<int:pk>/edit/", views.EditInternalContentBoxView.as_view(), name='contentbox_edit'),
 ]
@@ -50,6 +57,8 @@ quote_urlpatterns = [
 
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name='home'), name='home'),
+    path("bulletins/", include(committee_bulletin_urlpatterns)),
+    views.InternalDisplayContentBoxView.get_path('make-history'),
     path("contentbox/", include(internal_contentbox_urlpatterns)),
 
     path("", decorator_include(

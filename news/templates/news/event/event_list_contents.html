@@ -44,12 +44,17 @@
                         <a class="make-col-yellow" href="{% url 'event_detail' event_dict.event.pk %}">{{ event_dict.event.title }}</a>
                     </h1>
                     <div class="meta">
-                        {% if event_dict.shown_occurrence.place_url %}
-                            <a class="make-col-blue" href="{{ event_dict.shown_occurrence.place_url }}" target="_blank">
-                                {{ event_dict.shown_occurrence.place }}
-                            </a>
-                        {% else %}
-                            {{ event_dict.shown_occurrence.place }}
+                        {% if event_dict.shown_occurrence.place %}
+                            <div class="place">
+                                <i class="make-col-yellow map marker alternate icon"></i>
+                                {% if event_dict.shown_occurrence.place_url %}
+                                    <a class="make-col-blue" href="{{ event_dict.shown_occurrence.place_url }}" target="_blank">
+                                        {{ event_dict.shown_occurrence.place }}
+                                    </a>
+                                {% else %}
+                                    {{ event_dict.shown_occurrence.place }}
+                                {% endif %}
+                            </div>
                         {% endif %}
                     </div>
                     <div class="description">

@@ -5,6 +5,45 @@ A summary of changes made to the codebase, grouped per deployment.
 ## Unreleased
 
 
+## 2022-06-07 ([#461](https://github.com/MAKENTNU/web/pull/461))
+### New features
+- Added table on [the profile page](https://makentnu.no/checkin/profile/) which displays the completion status of all available courses
+  - Also, the profile button in the user dropdown is now visible to all users - not just MAKE members
+- Added an internal page titled "[The History of MAKE NTNU](https://i.makentnu.no/make-history/)"
+  - This can be found under the new "Misc."/"Diverse" dropdown in the header on the internal site
+- Added list of contents to [the equipment list](https://makentnu.no/makerspace/equipment/)
+- Added a "Notes" field to machines
+  - This is only for internal use and is not displayed anywhere - except for in the machine change form itself, naturally
+- Added an "Internal" field to machines
+  - This makes machines only visible to and reservable by MAKE members
+- Added an "Info message" field to machines
+  - This is for displaying information that's useful to know before using the machine, e.g. the filament that the 3D printer uses,
+    the needle that's currently inserted in the sewing machine, or just the machine's current state/"mood"
+- Added an SLA 3D printer machine type, and an "SLA course" checkbox to course registrations
+  - SLA 3D printers are always visible to MAKE members, but only visible to other users after they have taken the SLA course
+- Added "bulletin boards" for each committee on [the internal site](https://i.makentnu.no/)
+  - These can e.g. contain notices, instructions, and links to common resources, and can act as a "hub" for each committee
+- Added an `.editorconfig` file, to make it easier to configure a text editor to format code to (roughly) fit the style guide
+
+### Improvements
+- Made [secrets](https://i.makentnu.no/secrets/) only use one language
+- Made the place/location text of events more visible
+  - This will hopefully reduce the number of people who meet at Makerverkstedet for 3D printer courses, because they didn't see the event's location
+- Sorted the news-related templates into folders, and refactored the event detail template into multiple sub-templates
+- Improved image sizing and text layout in the [equipment](https://makentnu.no/makerspace/equipment/)
+  and [article lists](https://makentnu.no/news/articles/)
+- Some minor improvements to the layout of the information text, action buttons and stream image on each machine detail page
+
+### Fixes
+- Fixed the machine status text times ("Available for X hours, XX minutes") not being translated to Norwegian
+
+### Other changes
+- Renamed the "Advanced course" checkbox to "Raise3D course", and renamed the "Special 3D printers" machine type to "Raise3D printers"
+  - This reflects the fact that the course in question is only really for Raise3D printers specifically
+  - It also reduces the potential for confusion after having added the SLA course / machine type
+    (which can technically also be classified as an "advanced" course / "special" machine type)
+
+
 ## 2022-05-20 ([#453](https://github.com/MAKENTNU/web/pull/453))
 ### New features
 - Added a Docker container for development purposes

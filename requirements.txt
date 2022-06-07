@@ -1,7 +1,7 @@
 # Django-related packages
-Django==4.0.4
+Django==4.0.5
 django-hosts==5.1
-django-ckeditor==6.4.1
+django-ckeditor==6.4.2
 django-cleanup==6.0.0
 django-decorator-include==3.0
 # (See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html)
@@ -23,7 +23,7 @@ channels-redis==3.4.0
 
 # Misc. packages
 bleach[css]==5.0.0
-phonenumbers==8.12.48
+phonenumbers==8.12.49
 Pillow==9.1.1
 uuid==1.30
 XlsxWriter==3.0.3

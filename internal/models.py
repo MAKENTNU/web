@@ -1,3 +1,4 @@
+from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.db import models
@@ -15,7 +16,6 @@ from simple_history.models import HistoricalRecords
 from groups.models import Committee
 from users.models import User
 from web.modelfields import UnlimitedCharField
-from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 from .modelfields import SemesterField
 from .util import date_to_semester, year_to_semester
 from .validators import WhitelistedEmailValidator, discord_username_validator
@@ -239,12 +239,12 @@ class SecretQuerySet(models.QuerySet):
 
 
 class Secret(models.Model):
-    title = MultiLingualTextField(
+    title = UnlimitedCharField(
         max_length=100,
         unique=True,
         verbose_name=_("title"),
     )
-    content = MultiLingualRichTextUploadingField(verbose_name=_("description"))
+    content = RichTextUploadingField(verbose_name=_("description"))
     priority = models.IntegerField(
         null=True,
         blank=True,

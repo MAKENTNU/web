@@ -5,7 +5,7 @@
 
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'news/css/ticket_card.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/event/ticket/ticket_card.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
@@ -19,7 +19,7 @@
             <br/>
 
             <div class="ui cards">
-                {% include 'news/ticket_card.html' with ticket=ticket %}
+                {% include 'news/event/ticket/ticket_card.html' with ticket=ticket %}
             </div>
         {% else %}
             <div class="ui error message">

@@ -26,7 +26,7 @@
 
     {# `aria-label` should be used in conjunction with `role="navigation"`, which the `nav` tag specifies implicitly #}
     {# See https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Roles/Navigation_Role #}
-    <nav id="nav" class="ui secondary huge inverted menu" aria-label="Main">
+    <nav id="nav" class="ui secondary huge inverted menu" aria-label="{% translate "Main" %}">
         {% block nav_buttons %}
             <a class="item" href="{% url 'event_list' %}">
                 <div class="text">{% trans "Events" %}</div>
@@ -41,12 +41,12 @@
                 <div class="make-bg-blue bubble-background"></div>
             </a>
 
-            <div id="makerspace-dropdown" class="ui dropdown item">
-                <div class="text">{% trans "Makerverkstedet" %}</div>
-                <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
+            <div class="nav-dropdown ui dropdown item">
+                <div class="text">{% translate "Makerverkstedet" %}</div>
+                <i class="dropdown icon text" tabindex{# for disabling focus on click #}></i>
                 <div class="make-bg-turquoise bubble-background"></div>
 
-                <nav class="menu transition" aria-label="Makerverkstedet">
+                <nav class="menu transition" aria-label="{% translate "Makerverkstedet" %}">
                     <a class="item" href="{% url 'makerspace' %}">
                         <div class="text">{% trans "About" %}</div>
                     </a>
@@ -84,10 +84,10 @@
         {% if user.is_authenticated %}
             <div id="nav-user-dropdown" class="ui dropdown item">
                 <div class="text">{{ user.first_name|first_word }}</div>
-                <i class="dropdown icon text" tabindex{# For disabling focus on click #}></i>
+                <i class="dropdown icon text" tabindex{# for disabling focus on click #}></i>
                 <div class="make-bg-blue bubble-background"></div>
 
-                <nav class="menu transition" aria-label="User">
+                <nav class="menu transition" aria-label="{% translate "user"|capfirst %}">
                     {% block user_dropdown_buttons %}
                         {% if perms.internal.is_internal %}
                             <a class="item" href="{% host_url 'home' host 'internal' 'i' %}">
@@ -104,11 +104,10 @@
                                 <div class="text">{% trans "Django admin" %}</div>
                             </a>
                         {% endif %}
-                        {% if perms.internal.is_internal %}
-                            <a class="item" href="{% host_url 'profile' host 'main' %}">
-                                <div class="text">{% trans "Profile" %}</div>
-                            </a>
-                        {% endif %}
+
+                        <a class="item" href="{% host_url 'profile' host 'main' %}">
+                            <div class="text">{% trans "Profile" %}</div>
+                        </a>
                         <a class="item" href="{% host_url 'my_tickets_list' host 'main' %}">
                             <div class="text">{% trans "My tickets" %}</div>
                         </a>

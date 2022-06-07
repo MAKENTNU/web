@@ -8,35 +8,53 @@
     margin-bottom: 1rem;
 }
 
-a.wrapped.button {
-    border-bottom-left-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
+.machine-info-and-actions {
+    display: grid;
+    grid-row-gap: 2em;
+    margin-bottom: 2em;
 }
 
-.ui.grid > .column.no.padding {
-    padding: 0;
-}
 
-.ui.grid.vpad > .column,
-.ui.grid.vpad > .column.no.padding {
-    padding-bottom: 1em;
-}
+/* Desktop and tablet layout */
+@media screen and (min-width: 768px) {
+    .machine-info-and-actions {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 
-/* Dropdown should not be overlapped by reservations, which have a maximum z-index of 200 (300 for current_time_indicator) */
-.ui.action.list .menu {
-    z-index: 301;
-    width: 100%;
+    .machine-info-and-actions .info-message {
+        grid-column: 1/3;
+        grid-row: 2;
+        margin-left: 5em;
+    }
+
+    .machine-info-and-actions .info-message .content {
+        max-width: 600px;
+    }
+
+    .machine-info-and-actions .machine-image {
+        justify-self: end;
+        align-self: center;
+        margin-left: 2em;
+    }
+
+    .machine-info-and-actions .actions-list {
+        grid-column: 2;
+        grid-row: 1;
+    }
 }
 
 
 /* Mobile layout */
-@media screen and (max-width: 426px) {
-    .machine-info-and-actions .ui {
-        flex: 1 1 100%;
+@media screen and (max-width: 767.98px) {
+    .machine-info-and-actions .info-message {
+        margin: 1em min(2em, 5%) 0;
     }
 
-    .machine-info-and-actions .stream.image {
-        margin: 2em auto !important; /* Overrides Fomantic-UI */
-        float: initial !important; /* Overrides Fomantic-UI */
+    .machine-info-and-actions .info-message .content {
+        max-width: 500px;
+    }
+
+    .machine-info-and-actions .machine-image {
+        margin: 0 auto;
     }
 }

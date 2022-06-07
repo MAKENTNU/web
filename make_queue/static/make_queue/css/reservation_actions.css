@@ -29,6 +29,12 @@
     cursor: default;
 }
 
+.action.list .menu {
+    /* Dropdown should not be overlapped by reservations, which have a maximum z-index of 200 (300 for current_time_indicator) */
+    z-index: 301;
+    width: 100%;
+}
+
 .negative-message {
     color: #DB2828; /* Same as Fomantic-UI's `color` for `.basic.negative.button` */
 }

@@ -1,4 +1,4 @@
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from django import forms
 
@@ -13,9 +13,10 @@ class MultiLingualTextEdit(forms.MultiWidget):
     template_name = 'web/forms/widgets/multi_lingual_text_field.html'
 
     subwidget_class = forms.TextInput
+    languages = MultiLingualTextStructure.SUPPORTED_LANGUAGES
 
-    def __init__(self, attrs=None, *, languages: List[str] = MultiLingualTextStructure.SUPPORTED_LANGUAGES, subwidget_kwargs: Dict[str, Any] = None):
-        self.languages = languages
+    def __init__(self, attrs=None, *, languages=None, subwidget_kwargs: Dict[str, Any] = None):
+        self.languages = languages or self.languages
 
         widgets = {}
         for language in self.languages:

@@ -90,11 +90,6 @@ li {
     text-align: center !important;
 }
 
-.square_36 {
-    width: 36px;
-    height: 36px;
-}
-
 .cke,
 .django-ckeditor-widget {
     width: 100% !important;

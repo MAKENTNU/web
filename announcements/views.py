@@ -28,8 +28,8 @@ class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
     back_button_link = success_url
     back_button_text = _("Admin page for announcements")
     custom_fieldsets = [
-        {'fields': ('classification', 'link'), 'layout_class': "two"},
-        {'fields': ('display_from', 'display_to'), 'layout_class': "two"},
+        {'fields': ('classification', 'link'), 'layout_class': "ui two fields"},
+        {'fields': ('display_from', 'display_to'), 'layout_class': "ui two fields"},
         {'fields': ('content', 'site_wide')},
     ]
 

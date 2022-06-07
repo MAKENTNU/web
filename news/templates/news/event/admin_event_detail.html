@@ -4,14 +4,14 @@
 
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'news/css/admin_event_detail.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/event/admin_event_detail.css' %}"/>
     <script>
         {# `csrfToken`, `privateEventIcon` and `publicEventIcon` are used in `admin_event_detail.js` #}
         var csrfToken = "{{ csrf_token }}";
         var privateEventIcon = "{% static 'web/img/logo_icon_allyellow.svg' %}";
         var publicEventIcon = "{% static 'web/img/logo_icon_allgrey.svg' %}";
     </script>
-    <script defer src="{% static 'news/js/admin_event_detail.js' %}"></script>
+    <script defer src="{% static 'news/js/event/admin_event_detail.js' %}"></script>
 {% endblock extra_head %}
 
 {% block body %}
@@ -86,7 +86,7 @@
         </h3>
         <div class="create-new-occurrence">
             {% if perms.news.add_timeplace %}
-                <a class="ui blue right floated button explanation-popup" href="{% url 'timeplace_create' event.pk %}">
+                <a class="ui blue right floated button popup-trigger" href="{% url 'timeplace_create' event.pk %}">
                     <i class="time icon"></i>
                     {% trans "Add new occurrence" %}
                 </a>
@@ -104,7 +104,7 @@
         <div class="ui active tab segment" data-tab="future">
             <div class="ui relaxed divided list">
                 {% for timeplace in future_timeplaces %}
-                    {% include 'news/admin_timeplace_listing.html' %}
+                    {% include 'news/event/admin_timeplace_listing.html' %}
                 {% empty %}
                     {% trans "No future occurrences exist for this event" %}
                 {% endfor %}
@@ -113,7 +113,7 @@
         <div class="ui bottom attached tab segment" data-tab="past">
             <div class="ui relaxed divided list">
                 {% for timeplace in past_timeplaces %}
-                    {% include 'news/admin_timeplace_listing.html' %}
+                    {% include 'news/event/admin_timeplace_listing.html' %}
                 {% empty %}
                     {% trans "No past occurrences exist for this event" %}
                 {% endfor %}

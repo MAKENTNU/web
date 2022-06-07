@@ -43,7 +43,7 @@
                 {% elif fieldset.type == 'fieldset' %}
                     {% block fieldset %}
                         {% if 'layout_class' in fieldset %}
-                            <div class="ui {{ fieldset.layout_class }} fields">
+                            <div class="{{ fieldset.layout_class }}">
                         {% endif %}
 
                         {% for field in fieldset.fields %}
@@ -65,7 +65,7 @@
                                                 {{ field.label }}
                                             {% endblock field_label_text %}
                                             {% if field.help_text %}
-                                                <span data-content="{{ field.help_text }}">
+                                                <span class="popup-trigger" data-content="{{ field.help_text }}">
                                                     <i class="make-col-yellow question circle icon"></i>
                                                 </span>
                                             {% endif %}

@@ -9,30 +9,42 @@
 
 {% block nav_buttons %}
     <a class="item" href="{% url 'member_list' %}">
-        <div class="text">{% trans "Members" %}</div>
+        <div class="text">{% translate "Members" %}</div>
         <div class="make-bg-yellow bubble-background"></div>
     </a>
     <a class="item" href="{% url 'secret_list' %}">
-        <div class="text">{% trans "Secrets" %}</div>
+        <div class="text">{% translate "Secrets" %}</div>
         <div class="make-bg-turquoise bubble-background"></div>
     </a>
     <a class="item" href="{% url 'quote_list' %}">
-        <div class="text">{% trans "Quotes" %}</div>
+        <div class="text">{% translate "Quotes" %}</div>
         <div class="make-bg-blue bubble-background"></div>
     </a>
+
+    <div class="nav-dropdown ui dropdown item">
+        <div class="text">{% translate "Misc." %}</div>
+        <i class="dropdown icon text" tabindex{# for disabling focus on click #}></i>
+        <div class="make-bg-yellow bubble-background"></div>
+
+        <nav class="menu transition" aria-label="{% translate "Misc." %}">
+            <a class="item" href="{% url 'make-history' %}">
+                <div class="text">{% translate "The History of MAKE NTNU" %}</div>
+            </a>
+        </nav>
+    </div>
 {% endblock nav_buttons %}
 
 {% block user_dropdown_buttons %}
     <a class="item" href="{% host_url 'front_page' host 'main' %}">
-        <div class="text">{% trans "Public pages" %}</div>
+        <div class="text">{% translate "Public pages" %}</div>
     </a>
     {% if user.is_staff %}
         <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
-            <div class="text">{% trans "Django admin" %}</div>
+            <div class="text">{% translate "Django admin" %}</div>
         </a>
     {% endif %}
     <a class="item" href="{% host_url 'logout' host 'main' %}">
-        <div class="text">{% trans "Log out" %}</div>
+        <div class="text">{% translate "Log out" %}</div>
     </a>
 {% endblock user_dropdown_buttons %}
 

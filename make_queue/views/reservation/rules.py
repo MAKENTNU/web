@@ -69,8 +69,8 @@ class BaseReservationRuleEditView(MachineTypeRelatedViewMixin, CustomFieldsetFor
     narrow = False
     centered_title = False
     custom_fieldsets = [
-        {'fields': ('start_time', 'days_changed', 'end_time'), 'layout_class': "three"},
-        {'fields': ('start_days', 'max_hours', 'max_inside_border_crossed'), 'layout_class': "three"},
+        {'fields': ('start_time', 'days_changed', 'end_time'), 'layout_class': "ui three fields"},
+        {'fields': ('start_days', 'max_hours', 'max_inside_border_crossed'), 'layout_class': "ui three fields"},
     ]
 
     def get_queryset(self):
