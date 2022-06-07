@@ -939,10 +939,6 @@ msgstr "MAKE NTNU internsider"
 msgid "Committee bulletin boards"
 msgstr "Komitéoppslagstavler"
 
-#: internal/templates/internal/committee_navbar.html:8
-msgid "Front page"
-msgstr "Forside"
-
 #: internal/templates/internal/favicon.html:7
 #: internal/templates/internal/favicon.html:9
 msgid "MAKE Internal"
