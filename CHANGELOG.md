@@ -3,6 +3,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+
+
+## 2022-06-07 ([#461](https://github.com/MAKENTNU/web/pull/461))
 ### New features
 - Added table on [the profile page](https://makentnu.no/checkin/profile/) which displays the completion status of all available courses
   - Also, the profile button in the user dropdown is now visible to all users - not just MAKE members
