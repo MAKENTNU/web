@@ -43,6 +43,10 @@
     border-color: var(--make-yellow);
 }
 
+.articles {
+    margin-top: 6em;
+}
+
 
 /* Events are listed alternatingly left and right */
 @media screen and (min-width: 1200px) {
