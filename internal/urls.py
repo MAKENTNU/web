@@ -6,7 +6,6 @@ from django.views.generic import TemplateView
 
 from util.url_utils import debug_toolbar_urls
 from . import views
-from .views import InternalDisplayContentBoxView
 
 
 urlpatterns = [
@@ -18,6 +17,13 @@ urlpatterns = [
         permission_required('internal.is_internal'),
         'django.conf.urls.i18n'
     )),
+]
+
+committee_bulletin_urlpatterns = [
+    views.CommitteeBulletinBoardView.get_path('dev-board'),
+    views.CommitteeBulletinBoardView.get_path('event-board'),
+    views.CommitteeBulletinBoardView.get_path('mentor-board'),
+    views.CommitteeBulletinBoardView.get_path('pr-board'),
 ]
 
 internal_contentbox_urlpatterns = [
@@ -51,7 +57,8 @@ quote_urlpatterns = [
 
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name='home'), name='home'),
-    InternalDisplayContentBoxView.get_path('make-history'),
+    path("bulletins/", include(committee_bulletin_urlpatterns)),
+    views.InternalDisplayContentBoxView.get_path('make-history'),
     path("contentbox/", include(internal_contentbox_urlpatterns)),
 
     path("", decorator_include(

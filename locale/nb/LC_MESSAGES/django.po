@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-04 23:43+0200\n"
+"POT-Creation-Date: 2022-06-05 22:20+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -87,6 +87,7 @@ msgid "Announcements"
 msgstr "Kunngjøringer"
 
 #: announcements/templates/announcements/announcement_admin.html:39
+msgctxt "location"
 msgid "Front page"
 msgstr "Forsiden"
 
@@ -235,7 +236,7 @@ msgid "Select/search"
 msgstr "Velg/søk"
 
 #: checkin/templates/checkin/profile_internal.html:82 docs/views.py:98
-#: internal/views.py:80
+#: internal/views.py:84
 #: make_queue/templates/make_queue/course/course_registration_create.html:10
 #: make_queue/templates/make_queue/course/course_registration_list.html:16
 #: make_queue/templates/make_queue/machine_list.html:20
@@ -751,6 +752,7 @@ msgstr ""
 #: make_queue/models/course.py:23 make_queue/models/reservation.py:30
 #: news/admin.py:303 news/models.py:239
 #: news/templates/admin/news/event/change_form_ticket_table.html:14
+#: web/templates/web/header.html:90
 msgid "user"
 msgstr "bruker"
 
@@ -825,13 +827,13 @@ msgstr "har sluttet"
 
 #: internal/models.py:54 internal/templates/internal/member_list.html:47
 #: internal/templates/internal/member_list.html:48
-#: internal/templatetags/member.py:21
+#: internal/templatetags/member.py:24
 msgid "retired"
 msgstr "pang"
 
 #: internal/models.py:55 internal/templates/internal/member_list.html:50
 #: internal/templates/internal/member_list.html:51
-#: internal/templatetags/member.py:28
+#: internal/templatetags/member.py:31
 msgid "honorary"
 msgstr "æresmedlem"
 
@@ -933,6 +935,10 @@ msgstr "«{quote}» —{quoted}"
 msgid "MAKE NTNU Internal"
 msgstr "MAKE NTNU internsider"
 
+#: internal/templates/internal/committee_navbar.html:7
+msgid "Committee bulletin boards"
+msgstr "Komitéoppslagstavler"
+
 #: internal/templates/internal/favicon.html:7
 #: internal/templates/internal/favicon.html:9
 msgid "MAKE Internal"
@@ -952,6 +958,7 @@ msgid "Quotes"
 msgstr "Sitater"
 
 #: internal/templates/internal/header.html:25
+#: internal/templates/internal/header.html:29
 msgid "Misc."
 msgstr "Diverse"
 
@@ -974,8 +981,8 @@ msgid "Log out"
 msgstr "Logg ut"
 
 #: internal/templates/internal/member_list.html:10
-#: internal/templates/internal/member_list.html:20 internal/views.py:71
-#: internal/views.py:163
+#: internal/templates/internal/member_list.html:20 internal/views.py:75
+#: internal/views.py:167
 msgid "Member list"
 msgstr "Medlemsliste"
 
@@ -995,20 +1002,20 @@ msgstr "Filtrer medlemskapsstatus"
 #: internal/templates/internal/member_list.html:41
 #: internal/templates/internal/member_list.html:42
 #: internal/templates/internal/member_list.html:411
-#: internal/templatetags/member.py:25 news/models.py:259
+#: internal/templatetags/member.py:28 news/models.py:259
 #: news/templates/news/event/admin_event_ticket_list.html:42
 msgid "active"
 msgstr "aktiv"
 
 #: internal/templates/internal/member_list.html:44
 #: internal/templates/internal/member_list.html:45
-#: internal/templatetags/member.py:23
+#: internal/templatetags/member.py:26
 msgid "inactive"
 msgstr "inaktiv"
 
 #: internal/templates/internal/member_list.html:53
 #: internal/templates/internal/member_list.html:54
-#: internal/templatetags/member.py:19
+#: internal/templatetags/member.py:22
 msgid "quit"
 msgstr "sluttet"
 
@@ -1050,7 +1057,7 @@ msgid "Date quit"
 msgstr "Sluttdato"
 
 #: internal/templates/internal/member_list.html:149
-#: internal/templatetags/member.py:45
+#: internal/templatetags/member.py:48
 #: make_queue/templates/make_queue/course/course_registration_edit.html:104
 #: make_queue/templates/make_queue/course/course_registration_edit.html:111
 #: make_queue/templates/make_queue/course/course_registration_list.html:152
@@ -1060,7 +1067,7 @@ msgid "Yes"
 msgstr "Ja"
 
 #: internal/templates/internal/member_list.html:151
-#: internal/templatetags/member.py:45
+#: internal/templatetags/member.py:48
 #: make_queue/templates/make_queue/course/course_registration_list.html:154
 #: make_queue/templates/make_queue/course/course_registration_list.html:161
 #: news/admin.py:264 util/admin_utils.py:119
@@ -1079,11 +1086,11 @@ msgstr "registrerte medlemmer"
 msgid "Basic information"
 msgstr "Grunnleggende informasjon"
 
-#: internal/templates/internal/member_list.html:285 internal/views.py:136
+#: internal/templates/internal/member_list.html:285 internal/views.py:140
 msgid "Membership information"
 msgstr "Medlemskapsinformasjon"
 
-#: internal/templates/internal/member_list.html:341 internal/views.py:130
+#: internal/templates/internal/member_list.html:341 internal/views.py:134
 msgid "Extra information"
 msgstr "Ekstrainformasjon"
 
@@ -1145,54 +1152,54 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: internal/views.py:78
+#: internal/views.py:82
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
 
-#: internal/views.py:117
+#: internal/views.py:121
 #, python-brace-format
 msgid "Change Information for {full_name}"
 msgstr "Endre informasjonen til {full_name}"
 
-#: internal/views.py:164
+#: internal/views.py:168
 msgid "Set retired"
 msgstr "Sett panget"
 
-#: internal/views.py:170
+#: internal/views.py:174
 #, python-brace-format
 msgid "Set member {name} as retired"
 msgstr "Sett medlem {name} som pang"
 
-#: internal/views.py:182
+#: internal/views.py:186
 msgid "Set quit"
 msgstr "Sett sluttet"
 
-#: internal/views.py:188
+#: internal/views.py:192
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
 
-#: internal/views.py:240
+#: internal/views.py:244
 msgid "Secrets list"
 msgstr "Liste med hemmeligheter"
 
-#: internal/views.py:246
+#: internal/views.py:250
 msgid "New Secret"
 msgstr "Ny hemmelighet"
 
-#: internal/views.py:252
+#: internal/views.py:256
 msgid "Edit Secret"
 msgstr "Rediger hemmelighet"
 
-#: internal/views.py:275
+#: internal/views.py:279
 msgid "Quotes page"
 msgstr "Sitatside"
 
-#: internal/views.py:284
+#: internal/views.py:288
 msgid "New Quote"
 msgstr "Nytt sitat"
 
-#: internal/views.py:292
+#: internal/views.py:296
 msgid "Edit Quote"
 msgstr "Endre sitat"
 
@@ -3034,7 +3041,11 @@ msgstr "Et bilde er krevd"
 msgid "The image is too big"
 msgstr "Bildet er for stort"
 
-#: web/templates/web/header.html:45
+#: web/templates/web/header.html:29
+msgid "Main"
+msgstr "Hoved"
+
+#: web/templates/web/header.html:45 web/templates/web/header.html:49
 msgid "Makerverkstedet"
 msgstr "Makerverkstedet"
 

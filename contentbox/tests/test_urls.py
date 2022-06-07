@@ -66,6 +66,11 @@ class UrlTests(TestCase):
             ContentBoxAssertionStruct(reverse_main, 'rules', self.main_client, True),
 
             ContentBoxAssertionStruct(reverse_internal, 'home', self.internal_client, False),
+            ContentBoxAssertionStruct(reverse_internal, 'dev-board', self.internal_client, False),
+            ContentBoxAssertionStruct(reverse_internal, 'event-board', self.internal_client, True),
+            ContentBoxAssertionStruct(reverse_internal, 'mentor-board', self.internal_client, True),
+            ContentBoxAssertionStruct(reverse_internal, 'pr-board', self.internal_client, True),
+
             ContentBoxAssertionStruct(reverse_internal, 'make-history', self.internal_client, True),
         )
 
