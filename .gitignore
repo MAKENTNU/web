@@ -68,6 +68,10 @@ coverage.xml
 .pytest_cache/
 cover/
 
+# Translations
+# Don't ignore .mo files, as they contain the compiled translations used by Django
+#*.mo
+
 # Django stuff:
 
 # Flask stuff:
@@ -281,27 +285,22 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 ### PyCharm+all Patch ###
-# Ignores the whole .idea folder and all .iml files
-# See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
+# Ignore everything but code style settings and run configurations
+# that are supposed to be shared within teams.
 
 .idea/*
 
-# Reason: https://github.com/joeblau/gitignore.io/issues/186#issuecomment-249601023
-
-*.iml
-modules.xml
-.idea/misc.xml
-*.ipr
-
-# Sonarlint plugin
-.idea/sonarlint
+# Don't include these, as we currently don't share things like this
+#!.idea/codeStyles
+#!.idea/runConfigurations
 
 ### venv ###
 # Virtualenv
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 [Bb]in
 [Ii]nclude
-# Can't ignore [Ll]ib, as that would ignore `web/static/lib`
+# Don't ignore lib (as that would ignore `web/static/lib`)
+#[Ll]ib
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
@@ -310,11 +309,12 @@ pip-selfcheck.json
 
 ### VisualStudioCode ###
 .vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-!.vscode/*.code-snippets
+# Don't include these, as we currently don't share things like this
+#!.vscode/settings.json
+#!.vscode/tasks.json
+#!.vscode/launch.json
+#!.vscode/extensions.json
+#!.vscode/*.code-snippets
 
 # Local History for Visual Studio Code
 .history/
