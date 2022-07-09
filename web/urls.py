@@ -6,6 +6,7 @@ from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import login_required
 from django.urls import include, path, re_path
+from django.views import defaults
 from django.views.decorators.cache import never_cache
 from django.views.generic import TemplateView
 from django.views.generic.base import RedirectView
@@ -116,5 +117,13 @@ urlpatterns += i18n_patterns(
     prefix_default_language=False,
 )
 
-handler404 = views.View404.as_view()
-handler500 = views.view_500
+
+# These handlers are automatically registered by Django
+# (see https://docs.djangoproject.com/en/stable/topics/http/views/#customizing-error-views)
+
+def handler404(request, exception):
+    return defaults.page_not_found(request, exception=exception, template_name='web/404.html')
+
+
+def handler500(request):
+    return defaults.server_error(request, template_name='web/500.html')

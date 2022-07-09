@@ -1,8 +1,5 @@
-from http import HTTPStatus
-
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Prefetch
-from django.shortcuts import render
 from django.views.generic import TemplateView
 
 from announcements.models import Announcement
@@ -66,17 +63,6 @@ class AdminPanelView(PermissionRequiredMixin, TemplateView):
         from util.templatetags.permission_tags import can_view_admin_panel  # avoids circular imports
 
         return can_view_admin_panel(self.request.user)
-
-
-class View404(TemplateView):
-    template_name = 'web/404.html'
-
-    def get(self, request, *args, **kwargs):
-        return self.render_to_response({}, status=HTTPStatus.NOT_FOUND)
-
-
-def view_500(request):
-    return render(request, template_name='web/500.html', status=HTTPStatus.INTERNAL_SERVER_ERROR)
 
 
 class AboutUsView(DisplayContentBoxView):
