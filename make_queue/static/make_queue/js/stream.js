@@ -25,19 +25,15 @@ $(".stream.image").each(function () {
     $("#fader, #close-fullscreen-button").toggleClass("fullscreen");
 });
 
-// The following code is scoped within a block, to avoid variable name collisions when linking this script multiple times
-{
-    function closeFullscreen() {
-        $(".fullscreen").each(function () {
-            $(this).removeClass("fullscreen");
-        });
-    }
-
-    $("html").keydown(function (event) {
-        if (event.key === "Escape") {
-            closeFullscreen();
-        }
+function closeFullscreen() {
+    $(".fullscreen").each(function () {
+        $(this).removeClass("fullscreen");
     });
-
-    $("#close-fullscreen-button").click(closeFullscreen);
 }
+
+$("html").keydown(function (event) {
+    if (event.key === "Escape")
+        closeFullscreen();
+});
+
+$("#close-fullscreen-button").click(closeFullscreen);
