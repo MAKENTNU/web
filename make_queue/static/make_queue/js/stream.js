@@ -1,25 +1,32 @@
-function setupSocket($elem) {
-    const chatSocket = new WebSocket(
-        `wss://${window.location.host}/ws/stream/${$elem.data("stream-name")}/`,
-    );
+const STREAM_INIT_TIMEOUT_SECONDS = 10;
 
-    chatSocket.image = $elem;
+function getStreamName($streamImage) {
+    return $streamImage.data("stream-name");
+}
 
-    chatSocket.onmessage = function (event) {
-        const data = JSON.parse(event.data);
-        chatSocket.image.attr("src", `data:image/jpeg;base64,${data["image"]}`);
+function initStream($streamImage) {
+    const streamName = getStreamName($streamImage);
+    const newImage = new Image();
+
+    const timeoutID = setTimeout(function () {
+        console.error(`Unable to load stream for '${streamName}' after ${STREAM_INIT_TIMEOUT_SECONDS} seconds (${newImage.src})`);
+        // Remove the `onload` event handler and cancel image loading
+        newImage.onload = undefined;
+        newImage.src = "";
+    }, STREAM_INIT_TIMEOUT_SECONDS * 1000);
+
+    newImage.onload = function (event) {
+        clearTimeout(timeoutID);
+        $streamImage.attr("src", newImage.src);
     };
-
-    chatSocket.onclose = async function () {
-        console.error("Socket closed unexpectedly. Restarting");
-        // `sleep` is defined in `common_utils.js`
-        await sleep(1000);
-        setupSocket($elem);
+    newImage.onerror = function (event) {
+        clearTimeout(timeoutID);
     };
+    newImage.src = `/reservation/machines/${streamName}/stream/`; // URL defined in the server's Nginx config
 }
 
 $(".stream.image").each(function () {
-    setupSocket($(this));
+    initStream($(this));
 }).click(function () {
     $(this).toggleClass("fullscreen");
     $("#fader, #close-fullscreen-button").toggleClass("fullscreen");
