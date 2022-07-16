@@ -15,7 +15,7 @@ sorl-thumbnail==12.8.0
 # Packages related to authentication and other "social" stuff
 social-auth-app-django==5.0.0
 python-dataporten-auth==2.0.0
-python-ldap==3.4.0
+python-ldap==3.4.2
 
 # Async-related packages (mainly for WebSockets)
 channels==3.0.5
