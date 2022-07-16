@@ -18,7 +18,7 @@ python-dataporten-auth==2.0.0
 python-ldap==3.4.0
 
 # Async-related packages (mainly for WebSockets)
-channels==3.0.4
+channels==3.0.5
 channels-redis==3.4.0
 
 # Misc. packages
