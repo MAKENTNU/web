@@ -19,7 +19,7 @@ python-ldap==3.4.2
 
 # Async-related packages (mainly for WebSockets)
 channels==3.0.5
-channels-redis==3.4.0
+channels-redis==3.4.1
 
 # Misc. packages
 bleach[css]==5.0.1
