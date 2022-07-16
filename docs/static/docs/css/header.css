@@ -19,30 +19,11 @@
 }
 
 #home-button img {
+    display: block;
     height: 100%;
     object-fit: contain;
-    display: none;
 }
 
-/*** Logo size changes ***/
-
-@media screen and (min-width: 751px) {
-    #home-button img.large {
-        display: block;
-    }
-}
-
-@media screen and (max-width: 750px) and (min-width: 601px) {
-    #home-button img.medium {
-        display: block;
-    }
-}
-
-@media screen and (max-width: 600px) {
-    #home-button img.small {
-        display: block;
-    }
-}
 
 @media screen and (max-width: 500px) {
     #page-search input {

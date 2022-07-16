@@ -38,7 +38,7 @@
 }
 
 #header .logo img {
-    display: none; /* Logo size changes at the bottom of this stylesheet */
+    display: block;
     margin: auto;
     max-height: 50px;
     object-fit: contain;
@@ -256,40 +256,5 @@
 
     #side-nav .set-language-form {
         position: static;
-    }
-}
-
-
-/*** Logo size changes ***/
-
-
-@media screen and (min-width: 1200px) {
-    #header .logo img.large {
-        display: block;
-    }
-}
-
-@media screen and (max-width: 1199.98px) and (min-width: 992px) {
-    #header .logo img.medium {
-        display: block;
-    }
-}
-
-/* Switch to mobile layout */
-@media screen and (max-width: 991.98px) and (min-width: 601px) {
-    #header .logo img.large {
-        display: block;
-    }
-}
-
-@media screen and (max-width: 600px) and (min-width: 341px) {
-    #header .logo img.medium {
-        display: block;
-    }
-}
-
-@media screen and (max-width: 340px) {
-    #header .logo img.small {
-        display: block;
     }
 }

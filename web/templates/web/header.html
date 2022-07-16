@@ -14,9 +14,13 @@
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% block logo_link_url %}{% host_url 'front_page' host 'main' %}{% endblock logo_link_url %}">
-            <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="medium" src="{% static 'web/img/logo_narrow.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="small" src="{% static 'web/img/logo_icon.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <picture>
+                <source srcset="{% static 'web/img/logo_icon.svg' %}"
+                        media="(max-width: 340px)"/>
+                <source srcset="{% static 'web/img/logo_narrow.svg' %}"
+                        media="(min-width: 341px) and (max-width: 600px), (min-width: 992px) and (max-width: 1199.98px)"/>
+                <img src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            </picture>
         </a>
     </div>
 
