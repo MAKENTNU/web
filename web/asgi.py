@@ -12,6 +12,11 @@ from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 from django.urls import path
 
+# Initialize the Django ASGI application early to ensure the `AppRegistry`
+# is populated before importing code that may import ORM models
+# (based on https://github.com/django/channels/commit/0539bcf5be30a8f6ad7cabec794219879e43ab89#diff-d9b149498982c0663c3b7170398773361ed5678f1a627e9c2fd8d2c955c563db)
+django_asgi_app = get_asgi_application()
+
 from mail.email import EmailConsumer
 from make_queue.views.stream.stream import StreamConsumer
 
@@ -25,7 +30,7 @@ channel_routes = {
 }
 
 application = ProtocolTypeRouter({
-    'http': get_asgi_application(),
+    'http': django_asgi_app,
     'websocket': AuthMiddlewareStack(
         URLRouter(websocket_urlpatterns)
     ),
