@@ -90,7 +90,7 @@
 
             {% if machine.machine_type.has_stream %}
                 <div class="machine-image">
-                    <img class="ui medium stream image" data-stream-name="{{ machine.stream_name }}"
+                    <img class="stream image" data-stream-name="{{ machine.stream_name }}"
                          src="{% get_stream_image_path machine.status %}"
                          alt="{% blocktrans with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
