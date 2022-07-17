@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_list.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_card.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
+    <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
 {% endblock extra_head %}
 
 {% block body %}
@@ -51,4 +52,8 @@
             {% endif %}
         {% endfor %}
     </div>
+
+    {# Used in `stream.js` #}
+    <div id="fader"></div>
+    <i id="close-fullscreen-button" class="times icon"></i>
 {% endblock body %}

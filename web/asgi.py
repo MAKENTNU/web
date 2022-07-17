@@ -7,10 +7,8 @@ import os
 # Should come before any of the other imports, in case they use the settings in some way
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
 
-from channels.auth import AuthMiddlewareStack
-from channels.routing import ChannelNameRouter, ProtocolTypeRouter, URLRouter
+from channels.routing import ChannelNameRouter, ProtocolTypeRouter
 from django.core.asgi import get_asgi_application
-from django.urls import path
 
 # Initialize the Django ASGI application early to ensure the `AppRegistry`
 # is populated before importing code that may import ORM models
@@ -18,12 +16,7 @@ from django.urls import path
 django_asgi_app = get_asgi_application()
 
 from mail.email import EmailConsumer
-from make_queue.views.stream.stream import StreamConsumer
 
-
-websocket_urlpatterns = [
-    path("ws/stream/<str:stream_name>/", StreamConsumer.as_asgi()),
-]
 
 channel_routes = {
     'email': EmailConsumer.as_asgi(),
@@ -31,8 +24,5 @@ channel_routes = {
 
 application = ProtocolTypeRouter({
     'http': django_asgi_app,
-    'websocket': AuthMiddlewareStack(
-        URLRouter(websocket_urlpatterns)
-    ),
     'channel': ChannelNameRouter(channel_routes),
 })

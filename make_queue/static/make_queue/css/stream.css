@@ -1,13 +1,17 @@
 .stream.image {
+    --stream-image-width: 290px; /* Same as Fomantic-UI's `width` for `.ui.card` */
+    --stream-image-ratio: calc(4 / 3);
+
+    width: var(--stream-image-width);
+    /* Necessary to set the height, as the stream image turns quadratic when it loses connection - `ERR_CONNECTION_RESET`, more specifically.
+       It would be a better solution to catch this error and change the image back to the original static one,
+       but the error seems to not be possible to catch, for some reason
+       - possibly since the error has a status code of 200 (using Chromium), curiously. */
+    height: calc(var(--stream-image-width) / var(--stream-image-ratio));
     cursor: pointer;
 }
 
-.stream.image:not(.ui) {
-    position: absolute;
-    width: 100%;
-}
-
-.ui.stream.image:not(.fullscreen) {
+.machine-info-and-actions .stream.image:not(.fullscreen) {
     border: 1px solid #A5BBC9;
     border-radius: 0.28571429rem;
 }
@@ -56,4 +60,21 @@
     right: 20px;
     font-size: 32px;
     z-index: 1010;
+}
+
+
+/* Tablet and desktop layout */
+@media screen and (min-width: 768px) {
+    .machine-info-and-actions .stream.image:not(.fullscreen) {
+        --stream-image-width: min(350px, 100%);
+    }
+}
+
+
+/* Medium and large mobile layout */
+@media screen and (min-width: 380px) and (max-width: 767.98px) {
+    .machine-info-and-actions .stream.image:not(.fullscreen) {
+        /* Can apparently not use the `min()` function like in the `@media` block above, as it makes the layout weird */
+        --stream-image-width: 350px;
+    }
 }
