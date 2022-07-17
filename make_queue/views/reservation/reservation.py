@@ -1,5 +1,4 @@
 from abc import ABC
-from datetime import timedelta
 from http import HTTPStatus
 from math import ceil
 
@@ -25,7 +24,7 @@ from ...templatetags.reservation_extra import calendar_url_reservation, can_dele
 #  so that it's more extendable, and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
 class CreateOrEditReservationView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
-    template_name = 'make_queue/reservation_edit.html'
+    template_name = 'make_queue/reservation_form.html'
 
     def get_error_message(self, form, reservation):
         """
@@ -36,7 +35,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
         :return: The error message
         """
         if not reservation.is_within_allowed_period() and not (reservation.special or reservation.event):
-            num_days = reservation.RESERVATION_FUTURE_LIMIT_DAYS
+            num_days = reservation.FUTURE_LIMIT.days
             return ngettext(
                 'Reservations can only be made {num_days} day ahead of time',
                 'Reservations can only be made {num_days} days ahead of time',
@@ -102,7 +101,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
                 )
                 if machine_type.can_user_use(self.request.user)
             ],
-            "maximum_days_in_advance": Reservation.RESERVATION_FUTURE_LIMIT_DAYS,
+            "maximum_days_in_advance": Reservation.FUTURE_LIMIT.days,
         }
 
         # If we are given a reservation, populate the information relevant to that reservation
@@ -373,7 +372,7 @@ class FindFreeSlotView(LoginRequiredMixin, FormView):
         if reservations:
             periods.append(self.format_period(
                 machine, reservations[-1].end_time,
-                timezone.now() + timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
+                timezone.now() + Reservation.FUTURE_LIMIT
             ))
         # If the machine is not reserved anytime in the future, we include the
         # whole allowed period
@@ -381,7 +380,7 @@ class FindFreeSlotView(LoginRequiredMixin, FormView):
             periods.append(self.format_period(
                 machine,
                 timezone.now(),
-                timezone.now() + timedelta(days=Reservation.RESERVATION_FUTURE_LIMIT_DAYS)
+                timezone.now() + Reservation.FUTURE_LIMIT
             ))
         return periods
 

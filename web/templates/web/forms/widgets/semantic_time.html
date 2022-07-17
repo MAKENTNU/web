@@ -1,7 +1,8 @@
 <div class="ui calendar">{% include 'django/forms/widgets/input.html' %}</div>
 
+{# Move this code to its own .js file if it gets more complex #}
 <script>
-    $("#{{ widget.attrs.id }}").parent(".ui.calendar").calendar({
+    $("#{{ widget.attrs.id }}").closest(".ui.calendar").calendar({
         ampm: false,
         type: "time",
         onHidden: function () {

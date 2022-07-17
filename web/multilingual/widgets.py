@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
 from django import forms
+from js_asset import JS
 
 from .data_structures import MultiLingualTextStructure
 from ..widgets import CKEditorUploadingWidget, CKEditorWidget
@@ -14,6 +15,11 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
     subwidget_class = forms.TextInput
     languages = MultiLingualTextStructure.SUPPORTED_LANGUAGES
+
+    class Media:
+        js = (
+            JS('web/js/forms/widgets/multi_lingual_text_field.js', attrs={'defer': 'defer'}),
+        )
 
     def __init__(self, attrs=None, *, languages=None, subwidget_kwargs: Dict[str, Any] = None):
         self.languages = languages or self.languages

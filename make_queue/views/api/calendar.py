@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.urls import reverse
 from django.utils.dateparse import parse_datetime
 from django.views.generic import ListView
 
@@ -38,7 +37,7 @@ class APIReservationListView(MachineRelatedViewMixin, ListView):
 
             if reservation.event:
                 reservation_data.update({
-                    'eventLink': reverse('event_detail', args=[reservation.event.event.pk]),
+                    'eventLink': reservation.event.event.get_absolute_url(),
                     'displayText': str(reservation.event.event.title),
                 })
             elif reservation.special:

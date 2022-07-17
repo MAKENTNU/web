@@ -5,7 +5,7 @@ from django import forms
 from django.db.models import Model
 from django.utils.translation import gettext_lazy as _
 
-from web.widgets import MazeMapSearchInput, SemanticDateTimeInput, SemanticFileInput, SemanticSearchableChoiceInput
+from web.widgets import MazeMapSearchInput, SemanticChoiceInput, SemanticDateTimeInput, SemanticFileInput
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
 
@@ -16,8 +16,8 @@ class TimePlaceForm(forms.ModelForm):
         widgets = {
             'event': forms.HiddenInput(),
             'place': MazeMapSearchInput(url_field='place_url'),
-            'start_time': SemanticDateTimeInput(attrs={'end_calendar': 'end_time'}),
-            'end_time': SemanticDateTimeInput(attrs={'start_calendar': 'start_time'}),
+            'start_time': SemanticDateTimeInput(end_calendar_name='end_time'),
+            'end_time': SemanticDateTimeInput(start_calendar_name='start_time'),
             'publication_time': SemanticDateTimeInput(),
         }
 
@@ -28,7 +28,12 @@ class TimePlaceForm(forms.ModelForm):
 
         if start_time and end_time:
             if start_time > end_time:
-                raise forms.ValidationError(_("The event cannot end before it starts"))
+                error_message = _("The event cannot end before it starts.")
+                code = 'invalid_relative_to_other_field'
+                raise forms.ValidationError({
+                    'start_time': forms.ValidationError(error_message, code=code),
+                    'end_time': forms.ValidationError(error_message, code=code),
+                })
 
         return cleaned_data
 
@@ -87,9 +92,9 @@ class EventParticipantsSearchForm(forms.Form):
 class EventRegistrationForm(forms.ModelForm):
     class Meta:
         model = EventTicket
-        fields = ('user', 'timeplace', 'event', 'comment', 'language')
+        fields = ('user', 'timeplace', 'event', 'language', 'comment')
         widgets = {
-            'language': SemanticSearchableChoiceInput(),
+            'language': SemanticChoiceInput(),
             'comment': forms.Textarea(attrs={
                 'cols': "40",
                 'rows': "3",

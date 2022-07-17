@@ -4,7 +4,6 @@ from django.contrib.auth.models import Group
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
@@ -15,6 +14,7 @@ from simple_history.models import HistoricalRecords
 
 from groups.models import Committee
 from users.models import User
+from util.url_utils import reverse_internal
 from web.modelfields import UnlimitedCharField
 from .modelfields import SemesterField
 from .util import date_to_semester, year_to_semester
@@ -24,7 +24,7 @@ from .validators import WhitelistedEmailValidator, discord_username_validator
 class Member(models.Model):
     user = models.OneToOneField(
         to=User,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.SET_NULL,
         null=True,
         related_name='member',
         verbose_name=_("user"),
@@ -85,6 +85,9 @@ class Member(models.Model):
 
             # Add user to the MAKE group
             self.set_membership(True)
+
+    def get_absolute_url(self):
+        return reverse_internal('member_list', self.pk)
 
     @property
     def phone_number_display(self):
@@ -220,10 +223,10 @@ class SystemAccess(models.Model):
         if not self.should_be_changed():
             return ""
 
-        # In the future it would be beneficial to create automated processes for adding, removing and revoking
+        # TODO: In the future it would be beneficial to create automated processes for adding, removing and revoking
         # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
         # channels, or using GSuite APIs to add and remove people from mailing lists.
-        return reverse('edit_system_access', args=(self.member.pk, self.pk))
+        return reverse_internal('edit_system_access', self.member.pk, self.pk)
 
     def should_be_changed(self):
         return self.name != self.WEBSITE
@@ -231,7 +234,7 @@ class SystemAccess(models.Model):
 
 class SecretQuerySet(models.QuerySet):
 
-    def default_order_by(self):
+    def default_order_by(self) -> 'SecretQuerySet[Secret]':
         return self.order_by(
             F('priority').asc(nulls_last=True),
             Lower('title'),

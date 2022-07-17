@@ -22,7 +22,7 @@
                     on {{ date }} at {{ time }}.
                 {% endblocktrans %}
                 {% trans "To view the current version, click" %}
-                <a href="{% url 'page_detail' page.pk %}">{% trans "here" %}</a>.
+                <a href="{{ page.get_absolute_url }}">{% trans "here" %}</a>.
                 {% if perms.docs.change_page %}
                     {% trans "To change the current version to this one, click" %}
                     <a id="change-current-version" href="">{% trans "here" %}</a>.
@@ -30,7 +30,7 @@
             </div>
         {% endif %}
         <h3 class="edit tools">
-            <a class="popup-trigger" href="{% url 'page_history' page.pk %}" data-title="{% trans "History" %}"
+            <a class="popup-trigger" href="{% url 'page_history_detail' page.pk %}" data-title="{% trans "History" %}"
                data-content="{% trans "Click to view the content history of the page" %}">
                 <i class="blue archive icon"></i>
             </a>
@@ -50,24 +50,26 @@
                 {% endif %}
             {% endif %}
         </h3>
-        <h1>{{ page.title }}</h1>
+        <h1 class="word-breaking hyphenated">{{ page.title }}</h1>
 
-        {% if content %}
-            {{ content.content|safe }}
-        {% elif page.current_content %}
-            {{ page.current_content.content|safe }}
-        {% else %}
-            <i>
-                {% if perms.docs.change_page %}
-                    {% url 'edit_page' page.pk as edit_page_url %}
-                    {% blocktrans trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
-                        No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
-                    {% endblocktrans %}
-                {% else %}
-                    {% trans "No content exists for this page" %}!
-                {% endif %}
-            </i>
-        {% endif %}
+        <div class="word-breaking hyphenated">
+            {% if content %}
+                {{ content.content|safe }}
+            {% elif page.current_content %}
+                {{ page.current_content.content|safe }}
+            {% else %}
+                <i>
+                    {% if perms.docs.change_page %}
+                        {% url 'edit_page' page.pk as edit_page_url %}
+                        {% blocktrans trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
+                            No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
+                        {% endblocktrans %}
+                    {% else %}
+                        {% trans "No content exists for this page" %}!
+                    {% endif %}
+                </i>
+            {% endif %}
+        </div>
     </div>
 
     {% if form and old and perms.docs.change_page %}

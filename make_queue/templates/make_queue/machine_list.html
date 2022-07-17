@@ -33,19 +33,19 @@
 
         {% for machine_type in machine_types %}
             {% if machine_type.shown_machines %}
-                <div class="ui machine-title-field">
-                    <div class="ui large header machine-title">
+                <div class="machine-type-title-field">
+                    <div class="word-breaking hyphenated machine-type-title ui large header">
                         {{ machine_type.name }}
                     </div>
                     <div class="ui content">
-                        <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine_type.pk %}">
+                        <a class="ui primary button" href="{{ machine_type.usage_rule.get_absolute_url }}">
                             {% trans "Show rules" %}
                         </a>
                     </div>
                 </div>
                 <div class="ui cards">
                     {% for machine in machine_type.shown_machines %}
-                        {% include 'make_queue/machine_card.html' with machine=machine calendar_link=1 %}
+                        {% include 'make_queue/machine_card.html' with machine=machine %}
                     {% endfor %}
                 </div>
             {% endif %}

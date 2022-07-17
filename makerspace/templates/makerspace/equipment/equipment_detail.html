@@ -1,7 +1,6 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
-{% load thumbnail %}
 {% load permission_tags %}
 {% load uri_tags %}
 
@@ -11,10 +10,11 @@
 {% block og_title %}{{ equipment.title }}{% endblock og_title %}
 {% block og_image_absolute_uri %}{% get_absolute_uri_for_path request equipment.image.url %}{% endblock og_image_absolute_uri %}
 {% block og_image_alt %}
-    {% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}
+    {% blocktrans with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}
 {% endblock og_image_alt %}
 
 {% block extra_head %}
+    <link rel="stylesheet" href="{% static 'makerspace/css/equipment_detail.css' %}"/>
     {% include 'ckeditor/mathjax_render.html' %}
 {% endblock extra_head %}
 
@@ -22,14 +22,11 @@
     <div class="equipment">
         <div class="ui container">
             <div class="ui text container basic segment">
-                <img {% thumbnail equipment.image "400" crop="center" as image_thumb %}
-                    src="{{ image_thumb.url }}"
-                {% empty %}
-                    src="{{ equipment.image.url }}"
-                {% endthumbnail %}
-                    class="ui image center" style="width: 400px;"
-                    alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
-                />
+                <div class="equipment-image-container ui container">
+                    <img class="ui centered image" src="{{ equipment.image.url }}"
+                         alt="{% blocktrans with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
+                    />
+                </div>
 
                 {% if user|has_any_permissions_for:'Equipment' %}
                     <br/>
@@ -38,8 +35,8 @@
                     </a>
                 {% endif %}
 
-                <h1>{{ equipment.title }}</h1>
-                <div>
+                <h1 class="word-breaking hyphenated">{{ equipment.title }}</h1>
+                <div class="equipment-description">
                     {{ equipment.description|safe }}
                 </div>
             </div>

@@ -1,11 +1,14 @@
 import io
 
 import xlsxwriter
+from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import redirect
+from django.template.defaultfilters import capfirst
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from util.view_utils import PreventGetRequestsMixin
@@ -13,7 +16,8 @@ from ...forms import Printer3DCourseForm
 from ...models.course import Printer3DCourse
 
 
-class Printer3DCourseListView(ListView):
+class Printer3DCourseListView(PermissionRequiredMixin, ListView):
+    permission_required = ('make_queue.view_printer3dcourse', 'make_queue.change_printer3dcourse')
     model = Printer3DCourse
     queryset = Printer3DCourse.objects.select_related('user').order_by('name')
     template_name = 'make_queue/course/course_registration_list.html'
@@ -24,25 +28,23 @@ class Printer3DCourseListView(ListView):
 
 
 class CreateCourseRegistrationView(PermissionRequiredMixin, CreateView):
-    is_next = False
     permission_required = ('make_queue.add_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = 'make_queue/course/course_registration_create.html'
-    success_url = reverse_lazy('create_course_registration_success')
+    # Redirect back to the same view, to make it easier to create multiple registrations
+    success_url = reverse_lazy('create_course_registration')
 
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        if self.is_next:
-            context_data['is_next'] = True
-        return context_data
+    def form_valid(self, form):
+        messages.success(self.request, _("Registration of course participation successful"))
+        return super().form_valid(form)
 
 
 class EditCourseRegistrationView(PermissionRequiredMixin, UpdateView):
     permission_required = ('make_queue.change_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = 'make_queue/course/course_registration_edit.html'
+    template_name = 'make_queue/course/course_registration_form.html'
     success_url = reverse_lazy('course_registration_list')
 
 
@@ -52,10 +54,11 @@ class DeleteCourseRegistrationView(PermissionRequiredMixin, PreventGetRequestsMi
     success_url = reverse_lazy('course_registration_list')
 
 
-class BulkStatusUpdate(View):
+class BulkStatusUpdate(PermissionRequiredMixin, View):
     """
     Provides a method for bulk-updating the status of course registrations.
     """
+    permission_required = ('make_queue.change_printer3dcourse',)
 
     def post(self, request):
         status = request.POST.get('status')
@@ -65,7 +68,8 @@ class BulkStatusUpdate(View):
         return redirect('course_registration_list')
 
 
-class CourseXLSXView(View):
+class CourseXLSXView(PermissionRequiredMixin, View):
+    permission_required = ('make_queue.change_printer3dcourse',)
 
     def post(self, request):
         search_string = request.POST.get('search_text')
@@ -85,7 +89,7 @@ class CourseXLSXView(View):
         output_file = io.BytesIO()
 
         workbook = xlsxwriter.Workbook(output_file, {'in_memory': True})
-        worksheet = workbook.add_worksheet("Kursdeltagere")
+        worksheet = workbook.add_worksheet(str(_("Course participants")))
 
         # Styles
         format_header = workbook.add_format({
@@ -93,7 +97,7 @@ class CourseXLSXView(View):
             "font_size": 10,
             "font_name": "Arial",
             "font_color": "#000000",
-            "bg_color": "#f8c700",
+            "bg_color": "#F8C811",
             "border": 1,
             "border_color": "#000000",
         })
@@ -102,7 +106,7 @@ class CourseXLSXView(View):
             "font_size": 10,
             "font_name": "Arial",
             "font_color": "#000000",
-            "bg_color": "#fff2cc",
+            "bg_color": "#FFF2CC",
             "border": 1,
             "border_color": "#000000",
         })
@@ -114,10 +118,11 @@ class CourseXLSXView(View):
         worksheet.set_column("D:D", 10)
 
         # Header
-        worksheet.write(0, 0, "Navn", format_header)
-        worksheet.write(0, 1, "Brukernavn", format_header)
-        worksheet.write(0, 2, "Kortnummer", format_header)
-        worksheet.write(0, 3, "Dato", format_header)
+        # `capfirst()` to avoid duplicate translation differing only in case
+        worksheet.write(0, 0, capfirst(_("name")), format_header)
+        worksheet.write(0, 1, capfirst(_("username")), format_header)
+        worksheet.write(0, 2, capfirst(_("card number")), format_header)
+        worksheet.write(0, 3, capfirst(_("date")), format_header)
 
         for index, registration in enumerate(course_registrations):
             worksheet.write(index + 1, 0, registration.name, format_row)
@@ -132,6 +137,7 @@ class CourseXLSXView(View):
         response = HttpResponse(output_file.read(),
                                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
 
-        response['Content-Disposition'] = 'attachment; filename="Kursdeltagere.xlsx"'
+        filename = "MAKE - " + _("Course participants")
+        response['Content-Disposition'] = f'attachment; filename="{filename}.xlsx"'
 
         return response

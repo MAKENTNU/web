@@ -9,7 +9,9 @@
         <i class="trash icon"></i>
         <span class="prompt">{% trans "Are you sure you want to delete?" %}</span>
     </div>
-    <form id="delete-form" class="dont-prevent-leaving" method="POST">{% csrf_token %}</form>
+    <form id="delete-form" class="dont-prevent-leaving" method="POST">
+        {% csrf_token %}
+    </form>
     <div class="actions">
         <div class="ui red inverted delete button">
             <i class="trash icon"></i>

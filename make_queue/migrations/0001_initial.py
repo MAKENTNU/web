@@ -43,7 +43,7 @@ class Migration(migrations.Migration):
                 ('max_number_of_reservations', models.IntegerField(default=3)),
             ],
             options={
-                'permissions': (('can_create_event_reservation', 'Can create event reservation'), ('can_edit_quota', 'Can edit quotas')),
+                'permissions': (('can_create_event_reservation', 'Can create event reservation'),),
             },
         ),
         migrations.CreateModel(

@@ -11,7 +11,7 @@
         <span>{{ time_place.start_time|long_datetime_no_year }}</span>
         <span>&ndash; {{ time_place.end_time|long_datetime_no_year }}</span>
     </b>
-    <div class="place description">
+    <div class="word-breaking hyphenated place description">
         <a href="{{ time_place.place_url }}" target="_blank">
             {{ time_place.place }}
         </a>

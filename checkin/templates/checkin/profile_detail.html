@@ -4,12 +4,12 @@
 
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'checkin/css/profile.css' %}"/>
+    <link rel="stylesheet" href="{% static 'checkin/css/profile_detail.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
     <div class="ui text container">
-        <h1>
+        <h1 class="word-breaking hyphenated">
             {% trans "My profile" %}
             &ndash; {{ request.user.get_full_name }}
         </h1>
@@ -73,7 +73,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: '/checkin/register/profile/',
+                url: "{% url 'register_profile' %}",
                 data: {},
                 success: function (data) {
                     if (data["scan_exists"]) {
@@ -96,7 +96,7 @@
                     }
                     $(".message.negative").fadeOut();
                 },
-                error: function (jqXHR, error, errorthrown) {
+                error: function (jqXHR, textStatus, errorthrown) {
                     if (jqXHR.status === 409) {
                         $("#duplicate-error").fadeIn();
                     }

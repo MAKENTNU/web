@@ -31,7 +31,7 @@ class TestLoginRedirect(TestCase):
         self.assertEqual(login_redirect_path, "/asdf/")
 
     def test_other_page_redirects_back(self):
-        # Should work regardless of the path, as non-existant paths return a 404 page with the same context variables
+        # Should work regardless of the path, as non-existent paths return a 404 page with the same context variables
         response = self.client.get("/about/")
         login_redirect_path = self.get_login_redirect_path(response)
         self.assertEqual(login_redirect_path, "/about/")

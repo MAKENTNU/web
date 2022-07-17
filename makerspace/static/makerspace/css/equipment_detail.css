@@ -1,0 +1,14 @@
+.equipment-image-container {
+    max-width: 600px;
+}
+
+.equipment-image-container .image {
+    max-height: 50vh;
+}
+
+.equipment-description img {
+    max-width: 100%;
+    /* Overrides images' `height` attribute (which is set by CKEditor by default),
+       to prevent them from getting skewed when `max-width` takes effect */
+    height: auto !important;
+}

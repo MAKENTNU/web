@@ -37,17 +37,17 @@
             <div class="equipment-list">
                 {% for equipment in equipment_list %}
                     <a id="equipment-{{ equipment.pk }}" class="equipment-img-container"
-                       href="{% url 'makerspace_equipment_detail' equipment.pk %}">
+                       href="{{ equipment.get_absolute_url }}">
                         <img {% thumbnail equipment.image "600x600" crop="center" as image_thumb %}
                             src="{{ image_thumb.url }}"
                         {% empty %}
                             src="{{ equipment.image.url }}"
                         {% endthumbnail %}
-                            alt="{% blocktrans trimmed with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
+                            alt="{% blocktrans with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
                         />
                     </a>
 
-                    <div class="equipment-text
+                    <div class="word-breaking hyphenated equipment-text
                             {% if forloop.first %}first{% endif %}
                             {% if forloop.last %}last{% endif %}">
                         {% if forloop.first or forloop.last %}
@@ -56,8 +56,8 @@
                             <img class="text-border-corner bottom left" src="{% static 'web/img/bottom_left.svg' %}" alt=""/>
                             <img class="text-border-corner bottom right" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
                         {% endif %}
-                        <h1 class="word-breaking equipment-title">
-                            <a class="make-col-yellow" href="{% url 'makerspace_equipment_detail' equipment.pk %}">{{ equipment.title }}</a>
+                        <h1 class="equipment-title">
+                            <a class="make-col-yellow" href="{{ equipment.get_absolute_url }}">{{ equipment.title }}</a>
                         </h1>
                     </div>
                 {% endfor %}

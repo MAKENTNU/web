@@ -1,8 +1,5 @@
 .clear-dropdown {
     color: #0E6EB8;
     float: right;
-}
-
-.clear-dropdown:hover {
     cursor: pointer;
 }

@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
 from util.modelfields import CompressedImageField
@@ -112,6 +113,9 @@ class Committee(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('committee_detail', args=[self.pk])
 
     @property
     def name(self):

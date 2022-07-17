@@ -9,16 +9,11 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>
+        <h1 class="word-breaking hyphenated">
             {% blocktrans with title=page.title %}History of “{{ title }}”{% endblocktrans %}
         </h1>
         <div class="ui relaxed divided list">
             {% for content in page.content_history.all reversed %}
-                {% if content == page.current_content %}
-                    {% url 'page_detail' page.pk as content_url %}
-                {% else %}
-                    {% url 'old_page_content' page.pk content.pk as content_url %}
-                {% endif %}
                 <div class="item">
                     {% if forloop.last %}
                         <i class="large middle aligned file outline icon"></i>
@@ -26,8 +21,8 @@
                         <i class="large middle aligned file alternate outline icon"></i>
                     {% endif %}
                     <div class="content">
-                        <div class="header">
-                            <a href="{{ content_url }}">
+                        <div class="word-breaking hyphenated header">
+                            <a href="{{ content.get_absolute_url }}">
                                 {% if forloop.last %}
                                     {% trans "Created by" %}
                                 {% else %}

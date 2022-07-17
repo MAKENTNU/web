@@ -5,12 +5,12 @@ function setupSocket($elem) {
 
     chatSocket.image = $elem;
 
-    chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
+    chatSocket.onmessage = function (event) {
+        const data = JSON.parse(event.data);
         chatSocket.image.attr("src", `data:image/jpeg;base64,${data["image"]}`);
     };
 
-    chatSocket.onclose = async function (e) {
+    chatSocket.onclose = async function () {
         console.error("Socket closed unexpectedly. Restarting");
         // `sleep` is defined in `common_utils.js`
         await sleep(1000);
@@ -22,8 +22,7 @@ $(".stream.image").each(function () {
     setupSocket($(this));
 }).click(function () {
     $(this).toggleClass("fullscreen");
-    $("#fader").toggleClass("fullscreen");
-    $("#closefullscreen").toggleClass("fullscreen");
+    $("#fader, #close-fullscreen-button").toggleClass("fullscreen");
 });
 
 // The following code is scoped within a block, to avoid variable name collisions when linking this script multiple times
@@ -40,5 +39,5 @@ $(".stream.image").each(function () {
         }
     });
 
-    $("#closefullscreen").click(closeFullscreen);
+    $("#close-fullscreen-button").click(closeFullscreen);
 }

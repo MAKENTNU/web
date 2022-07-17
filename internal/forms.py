@@ -14,7 +14,7 @@ class AddMemberForm(forms.ModelForm):
         model = Member
         fields = ['user', 'date_joined', 'committees']
         widgets = {
-            'user': SemanticSearchableChoiceInput(prompt_text=_("Choose user"), required=True),
+            'user': SemanticSearchableChoiceInput(prompt_text=_("Choose user")),
             'date_joined': SemanticDateInput(),
             'committees': SemanticMultipleSelectInput(prompt_text=_("Choose committees")),
         }

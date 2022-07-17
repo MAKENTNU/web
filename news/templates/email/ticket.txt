@@ -1,7 +1,9 @@
 {% load i18n %}
+{% load uri_tags %}
 
 
-{% blocktrans with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktrans %}
+{% blocktranslate with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktranslate %}
 
-{% trans "Thank you for registering for this event. You can view your ticket at the following URL" %}: {{ site }}{% url 'ticket_detail' ticket.pk %}
-{% trans "If you want to cancel your registration, you can do so by visiting the following URL" %}: {{ site }}{% url 'cancel_ticket' ticket.pk %}
+{% translate "Thank you for registering for this event. You can view your ticket at the following URL" %}: {% get_absolute_uri_for_path request ticket.get_absolute_url %}
+{% url 'cancel_ticket' ticket.pk as cancel_url %}
+{% translate "If you want to cancel your registration, you can do so by visiting the following URL" %}: {% get_absolute_uri_for_path request cancel_url %}

@@ -61,16 +61,16 @@ function showDetailedMemberInformation(member) {
         guidanceExemption: member.data.guidanceExemption,
         comment: member.data.comment,
     };
-    for (let textAttribute of Object.keys(textAttributeNamesToValues)) {
+    for (const textAttribute of Object.keys(textAttributeNamesToValues)) {
         $memberInfoModal.find(`#member-${textAttribute}`)
             .text(textAttributeNamesToValues[textAttribute]);
     }
 
-    for (let editAttribute of ["editUrl", "setQuitUrl", "canUndoQuit", "setRetiredUrl", "canUndoRetired"]) {
+    for (const editAttribute of ["editUrl", "setQuitUrl", "canUndoQuit", "setRetiredUrl", "canUndoRetired"]) {
         $memberInfoModal.find(`#member-${editAttribute}-button`)
             .toggleClass("display-none", member.data[editAttribute].isEmpty());
     }
-    for (let urlAttribute of ["editUrl", "setQuitUrl", "setRetiredUrl"]) {
+    for (const urlAttribute of ["editUrl", "setQuitUrl", "setRetiredUrl"]) {
         $memberInfoModal.find(`#member-${urlAttribute}-button`)
             .attr("href", member.data[urlAttribute]);
     }
@@ -85,7 +85,7 @@ function showDetailedMemberInformation(member) {
             $memberInfoModal.find("#edit-member-status-form").submit();
         });
 
-    for (let emailAttribute of ["contactEmail", "gmail", "MAKEEmail"]) {
+    for (const emailAttribute of ["contactEmail", "gmail", "MAKEEmail"]) {
         $memberInfoModal.find(`#member-${emailAttribute}`)
             .attr("href", `mailto:${member.data[emailAttribute]}`)
             .attr("target", "_blank");
@@ -95,7 +95,7 @@ function showDetailedMemberInformation(member) {
         .attr("href", `https://github.com/${member.data.githubUsername}`)
         .attr("target", "_blank");
 
-    for (let hideableAttribute of ["MAKEEmail", "dateQuitOrRetired", "reasonQuit", "role", "comment"]) {
+    for (const hideableAttribute of ["MAKEEmail", "dateQuitOrRetired", "reasonQuit", "role", "comment"]) {
         $memberInfoModal.find(`#member-${hideableAttribute}`)
             .closest("tr").toggleClass("display-none", member.data[hideableAttribute].isEmpty());
     }
@@ -330,7 +330,7 @@ function setup() {
         state.allMembers.push(member);
     });
 
-    for (let sortAttribute of ["name", "committees", "status", "dateJoinedSortable", "contactEmail", "role", "phone"]) {
+    for (const sortAttribute of ["name", "committees", "status", "dateJoinedSortable", "contactEmail", "role", "phone"]) {
         $(`#member-sort-${sortAttribute}`).closest("th").click((e) => setSort(
             sortAttribute, $(e.target).find(".icon"),
         ));

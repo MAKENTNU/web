@@ -1,6 +1,7 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_hosts import reverse
 
 from users.models import User
 from .validators import page_title_validator
@@ -24,12 +25,14 @@ class Page(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        # Can be used as a boolean field by `Content`
-        related_name='is_currently_on_page',
+        related_name='page_currently_on',
     )
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('page_detail', args=[self.pk], host='docs')
 
     @classmethod
     def get_main_page(cls) -> 'Page':
@@ -55,3 +58,6 @@ class Content(models.Model):
         verbose_name=_("made by"),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    def get_absolute_url(self):
+        return reverse('page_content_detail', args=[self.page.pk, self.pk], host='docs')

@@ -5,15 +5,15 @@
 
 {# Linking `machine_card.css` is required when including this template #}
 
-<div class="machine ui {% if color_bottom %}{% card_color_from_machine_status machine %}{% endif %} card">
+<div class="machine ui card">
     <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
     {% if machine.machine_type.has_stream %}
         <img class="stream image" data-stream-name="{{ machine.stream_name }}"
              src="{% get_stream_image_path machine.status %}"
-             alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
+             alt="{% blocktrans with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
         />
     {% endif %}
-    <div class="content">
+    <div class="word-breaking hyphenated content">
         <div class="header">
             {{ machine.name }}
             {% if perms.make_queue.change_machine %}
@@ -44,20 +44,18 @@
         </div>
         {{ machine.machine_model }}<br/>
         <a href="{{ machine.location_url }}" target="_blank">
-            <i class="icon location arrow"></i>{{ machine.location }}
+            <i class="icon location arrow"></i> {{ machine.location }}
         </a>
     </div>
-    {% if calendar_link %}
-        <div>
-            <a class="ui bottom attached button {% card_color_from_machine_status machine %}"
-               href="{% current_calendar_url machine %}">
-                {% trans "View in calendar" %}
-            </a>
-        </div>
-    {% endif %}
+    <div>
+        <a class="ui {% card_color_from_machine_status machine %} bottom attached button"
+           href="{{ machine.get_absolute_url }}">
+            {% trans "View in calendar" %}
+        </a>
+    </div>
     {% if machine.machine_type.has_stream %}
         <div id="fader"></div>
-        <i id="closefullscreen" class="times icon"></i>
+        <i id="close-fullscreen-button" class="times icon"></i>
         <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
     {% endif %}
 </div>

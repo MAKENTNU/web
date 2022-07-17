@@ -6,7 +6,7 @@
 {% load announcement_tags %}
 
 
-{# Linking `web/header.css`, `announcement.css` and `web/header.js` is required when including this template #}
+{# Linking `web/header.css`, `announcement_banner.css` and `web/header.js` is required when including this template #}
 
 <header id="header">
     <div class="logo-centering">{# Empty div for centering logo (on mobile), specified with grid-template-columns #}</div>
@@ -14,9 +14,13 @@
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
         <a href="{% block logo_link_url %}{% host_url 'front_page' host 'main' %}{% endblock logo_link_url %}">
-            <img class="large" src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="medium" src="{% static 'web/img/logo_narrow.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
-            <img class="small" src="{% static 'web/img/logo_icon.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            <picture>
+                <source srcset="{% static 'web/img/logo_icon.svg' %}"
+                        media="(max-width: 340px)"/>
+                <source srcset="{% static 'web/img/logo_narrow.svg' %}"
+                        media="(min-width: 341px) and (max-width: 600px), (min-width: 992px) and (max-width: 1199.98px)"/>
+                <img src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+            </picture>
         </a>
     </div>
 
@@ -94,7 +98,7 @@
                                 <div class="text">{% trans "Internal pages" %}</div>
                             </a>
                         {% endif %}
-                        {% if user|has_any_permissions %}
+                        {% if user|can_view_admin_panel %}
                             <a class="item" href="{% host_url 'adminpanel' host 'main' %}">
                                 <div class="text">{% trans "Administration" %}</div>
                             </a>
@@ -133,6 +137,6 @@
     {# Show all site-wide announcements #}
     {% site_wide_announcements as announcements %}
     {% for announcement in announcements %}
-        {% include 'announcements/announcement.html' with announcement=announcement %}
+        {% include 'announcements/announcement_banner.html' with announcement=announcement %}
     {% endfor %}
 {% endblock announcements %}

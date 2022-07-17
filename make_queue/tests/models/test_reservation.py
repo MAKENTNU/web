@@ -73,19 +73,17 @@ class TestReservation(ReservationTestBase):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         super().init_objs(MachineType.objects.get(pk=1))
 
+        self._original_reservation_future_limit = Reservation.FUTURE_LIMIT
+
+    def tearDown(self):
+        Reservation.FUTURE_LIMIT = self._original_reservation_future_limit
+
     @staticmethod
     def save_past_reservation(reservation):
         validate_function = reservation.validate
         reservation.validate = lambda: True
         reservation.save()
         reservation.validate = validate_function
-
-    def set_reservation_future_limit_days(self, days):
-        self.reservation_future_limit_days = Reservation.RESERVATION_FUTURE_LIMIT_DAYS
-        Reservation.RESERVATION_FUTURE_LIMIT_DAYS = days
-
-    def reset_reservation_future_limit_days(self):
-        Reservation.RESERVATION_FUTURE_LIMIT_DAYS = self.reservation_future_limit_days
 
     def give_user_event_permission(self):
         self.user_with_course_and_quota.add_perms('make_queue.can_create_event_reservation')
@@ -330,26 +328,23 @@ class TestReservation(ReservationTestBase):
         self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_delete(self.user_with_course_and_quota))
 
     def test_is_within_allowed_period_for_reservation(self):
-        self.set_reservation_future_limit_days(7)
+        Reservation.FUTURE_LIMIT = timedelta(days=7)
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
         self.assertTrue(reservation.is_within_allowed_period())
         reservation.end_time = timezone.now() + timedelta(days=7, minutes=2)
         self.assertFalse(reservation.is_within_allowed_period())
-        self.reset_reservation_future_limit_days()
 
     def test_create_reservation_too_far_in_the_future(self):
-        self.set_reservation_future_limit_days(7)
+        Reservation.FUTURE_LIMIT = timedelta(days=7)
         self.check_reservation_invalid(self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1)),
                                        "Reservation is too far in the future and should not be valid")
-        self.reset_reservation_future_limit_days()
 
     def test_make_event_reservation_too_far_in_the_future(self):
-        self.set_reservation_future_limit_days(7)
+        Reservation.FUTURE_LIMIT = timedelta(days=7)
         self.give_user_event_permission()
         self.check_reservation_valid(
             self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1), event=self.timeplace),
             "Event reservations are always valid no matter how far in the future they are")
-        self.reset_reservation_future_limit_days()
 
 
 class TestReservationOfAdvancedPrinters(ReservationTestBase):

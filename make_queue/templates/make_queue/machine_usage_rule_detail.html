@@ -10,7 +10,7 @@
 
 {% block body %}
     <div class="ui container">
-        <h1>
+        <h1 class="word-breaking hyphenated">
             {{ title }}
         </h1>
         <div style="margin-bottom: 10px">
@@ -25,7 +25,7 @@
                 </a>
             {% endif %}
         </div>
-        <div>
+        <div class="word-breaking hyphenated">
             {{ usage_rules.content|safe }}
         </div>
     </div>

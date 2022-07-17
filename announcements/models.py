@@ -9,7 +9,7 @@ from web.multilingual.modelfields import MultiLingualTextField
 
 class AnnouncementQuerySet(models.QuerySet):
 
-    def shown(self):
+    def shown(self) -> 'AnnouncementQuerySet[Announcement]':
         """Returns a ``QuerySet`` with only the announcements that are currently shown."""
         now = timezone.localtime()
         return self.filter(
@@ -17,7 +17,7 @@ class AnnouncementQuerySet(models.QuerySet):
             & (Q(display_to__isnull=True) | Q(display_to__gt=now))
         )
 
-    def not_shown(self):
+    def not_shown(self) -> 'AnnouncementQuerySet[Announcement]':
         """Returns a ``QuerySet`` with only the announcements that are currently not shown."""
         now = timezone.localtime()
         return self.filter(
@@ -25,11 +25,11 @@ class AnnouncementQuerySet(models.QuerySet):
             | Q(display_from__gt=now)
         )
 
-    def site_wide(self):
+    def site_wide(self) -> 'AnnouncementQuerySet[Announcement]':
         """Returns a ``QuerySet`` with only the announcements that should be displayed site-wide."""
         return self.filter(site_wide=True)
 
-    def non_site_wide(self):
+    def non_site_wide(self) -> 'AnnouncementQuerySet[Announcement]':
         """Returns a ``QuerySet`` with only the announcements that should not be displayed site-wide."""
         return self.filter(site_wide=False)
 

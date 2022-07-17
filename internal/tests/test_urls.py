@@ -1,26 +1,22 @@
 from http import HTTPStatus
 from typing import Set
 from unittest import TestCase as StandardTestCase
-from urllib.parse import urlparse
 
+from django.conf import settings
 from django.test import Client, TestCase
 from django.utils.dateparse import parse_date
-from django_hosts import reverse
 
 from contentbox.models import ContentBox
 from users.models import User
-from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
+from util.test_utils import Get, assertRedirectsWithPathPrefix, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
+from util.url_utils import reverse_internal
 from ..forms import MemberStatusForm
 from ..models import Member, Quote, Secret, SystemAccess
 from ..util import date_to_semester, semester_to_year, year_to_semester
 
 
 # Makes sure that the subdomain of all requests is `internal`
-INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': 'internal.testserver'}
-
-
-def reverse_internal(viewname: str, *args):
-    return reverse(viewname, args=args, host='internal', host_args=['internal'])
+INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': f'internal.{settings.PARENT_HOST}'}
 
 
 class UrlTests(TestCase):
@@ -69,31 +65,30 @@ class UrlTests(TestCase):
         else:
             raise ValueError(f'Method "{method}" not supported')
 
-    def _test_url_permissions(self, method: str, path: str, data: dict = None, *, allowed_clients: Set[Client], expected_redirect_url: str = None):
+    def _test_url_permissions(self, method: str, path: str, data: dict = None, *, allowed_clients: Set[Client], expected_redirect_path: str = None):
         disallowed_clients = self.all_clients - allowed_clients
         for client in disallowed_clients:
             response = self.generic_request(client, method, path)
-            # Non-member users should be redirected to login:
-            if client in {self.anon_client, self.non_member_client}:
-                self.assertEqual(response.status_code, HTTPStatus.FOUND)
-                self.assertTrue(urlparse(response.url).path.startswith("/login/"))
+            # Anonymous users should be redirected to the login page:
+            if client is self.anon_client:
+                assertRedirectsWithPathPrefix(self, response, "/login/")
             # Disallowed members should be rejected:
             else:
                 self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         for client in allowed_clients:
             response = self.generic_request(client, method, path, data)
-            if expected_redirect_url:
-                self.assertRedirects(response, expected_redirect_url)
+            if expected_redirect_path:
+                assertRedirectsWithPathPrefix(self, response, expected_redirect_path)
             else:
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def _test_internal_url(self, method: str, path: str, data: dict = None, *, expected_redirect_url: str = None):
+    def _test_internal_url(self, method: str, path: str, data: dict = None, *, expected_redirect_path: str = None):
         self._test_url_permissions(method, path, data, allowed_clients={self.member_client, self.member_editor_client},
-                                   expected_redirect_url=expected_redirect_url)
+                                   expected_redirect_path=expected_redirect_path)
 
-    def _test_editor_url(self, method: str, path: str, data: dict = None, *, expected_redirect_url: str = None):
+    def _test_editor_url(self, method: str, path: str, data: dict = None, *, expected_redirect_path: str = None):
         self._test_url_permissions(method, path, data, allowed_clients={self.member_editor_client},
-                                   expected_redirect_url=expected_redirect_url)
+                                   expected_redirect_path=expected_redirect_path)
 
     def test_permissions(self):
         self._test_internal_url('GET', reverse_internal('member_list'))
@@ -115,7 +110,7 @@ class UrlTests(TestCase):
         for path, data, assertion in path_data_assertion_tuples:
             with self.subTest(path=path, data=data):
                 self._test_editor_url('POST', reverse_internal(path, self.member.pk), data,
-                                      expected_redirect_url=f"/members/{self.member.pk}/")
+                                      expected_redirect_path=f"/members/{self.member.pk}/")
                 self.member.refresh_from_db()
                 self.assertTrue(assertion(self.member))
 
@@ -126,7 +121,7 @@ class UrlTests(TestCase):
                 allowed_clients = {self.member_client, self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
                 self._test_url_permissions('POST', reverse_internal('edit_system_access', self.member.pk, system_access.pk),
                                            {'value': True}, allowed_clients=allowed_clients,
-                                           expected_redirect_url=f"/members/{self.member.pk}/")
+                                           expected_redirect_path=f"/members/{self.member.pk}/")
 
         for system_access in self.member_editor.system_accesses.all():
             with self.subTest(system_access=system_access):
@@ -134,12 +129,12 @@ class UrlTests(TestCase):
                 allowed_clients = {self.member_editor_client} if system_access.name != SystemAccess.WEBSITE else set()
                 self._test_url_permissions('POST', reverse_internal('edit_system_access', self.member_editor.pk, system_access.pk),
                                            {'value': True}, allowed_clients=allowed_clients,
-                                           expected_redirect_url=f"/members/{self.member_editor.pk}/")
+                                           expected_redirect_path=f"/members/{self.member_editor.pk}/")
 
         self._test_internal_url('GET', reverse_internal('home'))
 
-        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'en'}, expected_redirect_url="/en/")
-        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'nb'}, expected_redirect_url="/")
+        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'en'}, expected_redirect_path="/en/")
+        self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'nb'}, expected_redirect_path="/")
 
     def test_all_non_member_get_request_paths_succeed(self):
         path_predicates = [

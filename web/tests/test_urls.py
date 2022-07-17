@@ -9,7 +9,7 @@ from util.test_utils import Get, assert_requesting_paths_succeeds
 
 
 # Makes sure that the subdomain of all requests is `admin`
-ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': 'admin.testserver'}
+ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': f'admin.{settings.PARENT_HOST}'}
 
 
 def reverse_admin(viewname: str, args=None, **kwargs):
@@ -63,18 +63,18 @@ class UrlTests(NewsTestBase, TestCase):
 
     def test_all_old_urls_succeed(self):
         path_predicates = [
-            Get('/rules/', public=True, permanent_redirect=True),
-            Get('/reservation/rules/1/', public=True, permanent_redirect=True),
-            Get('/reservation/rules/usage/1/', public=True, permanent_redirect=True),
+            Get('/rules/', public=True, redirect=True),
+            Get('/reservation/rules/1/', public=True, redirect=True),
+            Get('/reservation/rules/usage/1/', public=True, redirect=True),
 
-            Get(f'/news/article/{self.article1.pk}/', public=True, permanent_redirect=True),
-            Get(f'/news/event/{self.event1.pk}/', public=True, permanent_redirect=True),
-            Get(f'/news/ticket/{self.ticket1.pk}/', public=False, permanent_redirect=True),
-            Get(f'/news/ticket/me/', public=False, permanent_redirect=True),
+            Get(f'/news/article/{self.article1.pk}/', public=True, redirect=True),
+            Get(f'/news/event/{self.event1.pk}/', public=True, redirect=True),
+            Get(f'/news/ticket/{self.ticket1.pk}/', public=False, redirect=True),
+            Get(f'/news/ticket/me/', public=False, redirect=True),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
-    def test_set_language(self):
+    def test_setting_language_does_not_require_any_permissions(self):
         response = self.anon_client.post(reverse('set_language'), {'language': 'en'})
         self.assertRedirects(response, '/en/')
         response = self.anon_client.post(reverse('set_language'), {'language': 'nb'})

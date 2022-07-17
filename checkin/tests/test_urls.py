@@ -33,7 +33,7 @@ class UrlTests(TestCase):
         path_predicates = [
             Get(reverse('skills_present_list'), public=True),
             Get(reverse('profile'), public=False),
-            Get(reverse('suggest'), public=False),
+            Get(reverse('suggest_skill'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

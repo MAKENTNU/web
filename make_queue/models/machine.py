@@ -8,6 +8,7 @@ from django.db.models import F, Prefetch, Q
 from django.db.models.functions import Lower
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
 from users.models import User
@@ -188,6 +189,9 @@ class Machine(models.Model):
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
 
+    def get_absolute_url(self):
+        return reverse('machine_detail', args=[self.pk])
+
     def get_next_reservation(self):
         return self.reservations.filter(start_time__gt=timezone.now()).order_by('start_time').first()
 
@@ -237,3 +241,6 @@ class MachineUsageRule(models.Model):
 
     def __str__(self):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)
+
+    def get_absolute_url(self):
+        return reverse('machine_usage_rules_detail', args=[self.machine_type.pk])

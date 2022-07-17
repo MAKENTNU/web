@@ -1,6 +1,8 @@
 from django.contrib.auth.models import Permission
 from django.db import models
+from django.urls import NoReverseMatch
 from django.utils.translation import gettext_lazy as _
+from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
 from util.auth_utils import perm_to_str
@@ -40,6 +42,20 @@ class ContentBox(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+    def get_absolute_url(self):
+        # Should update this code if any content box URLs are placed under other subdomains
+        all_host_kwargs = [
+            {'host': 'main'},
+            {'host': 'internal', 'host_args': ['i']},
+            {'host': 'docs'},
+        ]
+        for host_kwargs in all_host_kwargs:
+            try:
+                return reverse(self.title, **host_kwargs)
+            except NoReverseMatch:
+                pass
+        raise NoReverseMatch(f"Unable to find {self._meta.object_name} with title '{self.title}'")
 
     @property
     def extra_change_perms_str_tuple(self):

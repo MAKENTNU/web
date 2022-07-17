@@ -17,7 +17,7 @@
         </h1>
         <div class="categories ui styled fluid accordion">
             {% for category in categories %}
-                <div class="title">
+                <div class="word-breaking hyphenated title">
                     <div class="ui header">
                         <i class="dropdown icon"></i>
                         {{ category.name }}
@@ -27,13 +27,13 @@
                     {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
                     <div class="questions styled fluid accordion">
                         {% for question in category.existing_questions %}
-                            <div class="title">
+                            <div class="word-breaking hyphenated title">
                                 <div class="ui make-col-blue header">
                                     <i class="dropdown icon"></i>
                                     {{ question.title }}
                                 </div>
                             </div>
-                            <div class="content">
+                            <div class="word-breaking hyphenated content">
                                 {% if perms.faq.change_question %}
                                     <a class="ui make-bg-yellow button" href="{% url 'question_update' question.pk %}">
                                         <i class="edit icon"></i>{% trans "Edit" %}
