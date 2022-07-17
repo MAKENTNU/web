@@ -17,7 +17,7 @@ social-auth-app-django==5.0.0
 python-dataporten-auth==2.0.0
 python-ldap==3.4.2
 
-# Async-related packages (mainly for WebSockets)
+# Async-related packages (mainly for sending of emails)
 channels==3.0.5
 channels-redis==3.4.1
 
