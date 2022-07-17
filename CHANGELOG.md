@@ -3,6 +3,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+
+
+## 2022-07-17 ([#478](https://github.com/MAKENTNU/web/pull/478))
 ### New features
 - Added a URL which always links to the current week for a machine reservation calendar
   - This URL can be copied by right-clicking the "View in calendar" button for a machine on [the machine list page](https://makentnu.no/reservation/),
