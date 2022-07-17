@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.urls import reverse
 from django_ical.views import ICalFeed
 
 from .models import TimePlace
@@ -28,7 +27,7 @@ class EventFeed(ICalFeed):
         return items
 
     def item_link(self, item: TimePlace):
-        return reverse('event_detail', args=[item.event.pk])
+        return item.event.get_absolute_url()
 
     def item_title(self, item: TimePlace):
         return item.event.title

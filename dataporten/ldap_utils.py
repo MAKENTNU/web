@@ -23,7 +23,7 @@ LDAP_FIELDS = {
 STANDARD_USER_DETAILS_FIELDS = ('username', 'email', 'full_name')
 
 
-def LDAP_search(search_field: str, search_value: str) -> List[Tuple[str, Dict[str, List[bytes]]]]:
+def ldap_search(search_field: str, search_value: str) -> List[Tuple[str, Dict[str, List[bytes]]]]:
     """
     Searches the LDAP server given by LDAP_HOST with the filter ``search_field=search_value``.
 
@@ -36,27 +36,27 @@ def LDAP_search(search_field: str, search_value: str) -> List[Tuple[str, Dict[st
     return ldap_obj.search_s(LDAP_BASE, ldap.SCOPE_SUBTREE, query)
 
 
-def get_LDAP_field(ldap_data: List[Tuple[str, Dict[str, List[bytes]]]], field: str) -> str:
+def get_ldap_field(ldap_data: List[Tuple[str, Dict[str, List[bytes]]]], field: str) -> str:
     """
     Retrieves the value of a field in ``ldap_data``.
 
-    :param ldap_data: Results from LDAP_search(). List of tuples with distinguished name and dictionary of attributes.
+    :param ldap_data: Results from ldap_search(). List of tuples with distinguished name and dictionary of attributes.
     :param field: Field in ldap_data whose value is to be returned.
     :return: Value of field in ldap_data. Empty string if the field does not exist.
     """
     return ldap_data[0][1].get(LDAP_FIELDS[field], [b''])[0].decode()
 
 
-def get_user_details_from_LDAP(search_field: str, search_value: str) -> Dict[str, str]:
+def get_user_details_from_ldap(search_field: str, search_value: str) -> Dict[str, str]:
     """
     Retrieves all relevant user details from LDAP.
     Searches the LDAP server given by LDAP_HOST with the filter ``search_field=search_value``.
 
     :return: Dictionary with user details. (full name, username, email)
     """
-    ldap_data = LDAP_search(search_field, search_value)
+    ldap_data = ldap_search(search_field, search_value)
     if ldap_data:
-        return {field: get_LDAP_field(ldap_data, field) for field in STANDARD_USER_DETAILS_FIELDS}
+        return {field: get_ldap_field(ldap_data, field) for field in STANDARD_USER_DETAILS_FIELDS}
     return {}
 
 
@@ -77,19 +77,19 @@ def _get_user_details_from_user_field(field_name: str, field_value: str, use_cac
         return user_details
 
     try:
-        LDAP_user_details = get_user_details_from_LDAP(field_name, field_value)
+        ldap_user_details = get_user_details_from_ldap(field_name, field_value)
     except ldap.LDAPError:
         return user_details
 
-    if not LDAP_user_details:
+    if not ldap_user_details:
         return user_details
     if not user_details:
-        return LDAP_user_details
+        return ldap_user_details
 
     # Update missing values with data from LDAP
     for key, value in user_details.items():
         if not value:
-            user_details[key] = LDAP_user_details[key]
+            user_details[key] = ldap_user_details[key]
     return user_details
 
 

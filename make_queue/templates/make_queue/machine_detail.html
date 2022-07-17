@@ -11,17 +11,38 @@
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_actions.css' %}"/>
+
+    {% if machine.machine_type.has_stream %}
+        <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
+        <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
+        <script>
+            {# `connectStreamsOutsideViewport` is used in `stream.js` #}
+            var connectStreamsOutsideViewport = true; // since there's always only one stream on the page
+        </script>
+    {% endif %}
 {% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
         {% csrf_token %}
-        <div class="ui machine-title-field">
-            <div class="ui huge header machine-title">
+        <div class="machine-title-field">
+            <div class="word-breaking hyphenated machine-title ui huge header">
                 {{ machine.name }}
+                {% if perms.make_queue.change_machine %}
+                    <a href="{% url 'edit_machine' machine.pk %}">
+                        <i class="small make-col-yellow pencil icon"></i>
+                    </a>
+                {% endif %}
+                {% if perms.make_queue.delete_machine %}
+                    <a class="delete-modal-button"
+                       data-url="{% url 'delete_machine' machine.pk %}"
+                       data-obj-name="{{ machine.name }}">
+                        <i class="small red trash icon"></i>
+                    </a>
+                {% endif %}
             </div>
             <div class="ui content">
-                <a class="ui primary button" href="{% url 'machine_usage_rules_detail' machine.machine_type.pk %}">
+                <a class="ui primary button" href="{{ machine.machine_type.usage_rule.get_absolute_url }}">
                     {% trans "Show rules" %}
                 </a>
             </div>
@@ -81,15 +102,13 @@
 
             {% if machine.machine_type.has_stream %}
                 <div class="machine-image">
-                    <img class="ui medium stream image" data-stream-name="{{ machine.stream_name }}"
+                    <img class="stream image" data-stream-name="{{ machine.stream_name }}"
                          src="{% get_stream_image_path machine.status %}"
-                         alt="{% blocktrans trimmed with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
+                         alt="{% blocktrans with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
                     />
                 </div>
                 <div id="fader"></div>
-                <i id="closefullscreen" class="times icon"></i>
-                <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
-                <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
+                <i id="close-fullscreen-button" class="times icon"></i>
             {% endif %}
 
             <div class="actions-list {% if machine.machine_type.has_stream %}{% else %}{% endif %}">

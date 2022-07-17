@@ -9,12 +9,12 @@
 {% block title %}{{ title }}{% endblock title %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/rule_list.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_rule_list.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
     <div class="ui container">
-        <h1>
+        <h1 class="word-breaking hyphenated">
             {{ title }}
             {% if perms.make_queue.add_reservationrule %}
                 <a href="{% url 'create_reservation_rule' machine_type.pk %}">
@@ -23,7 +23,7 @@
             {% endif %}
         </h1>
         <div>
-            <a class="ui blue button" href="{% url 'machine_usage_rules_detail' machine_type.pk %}">
+            <a class="ui blue button" href="{{ machine_type.usage_rule.get_absolute_url }}">
                 {% trans "Usage rules" %}
             </a>
         </div>

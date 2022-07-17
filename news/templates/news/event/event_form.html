@@ -19,9 +19,10 @@
                         <input id="repeating" type="radio" name="{{ field.name }}" value="{{ Event.Type.REPEATING }}"
                                {% if field.value == Event.Type.REPEATING %}checked{% endif %}/>
                         <label for="repeating">{% trans "Repeating" %}
-                            <span class="popup-trigger" data-content="
-                                {% trans "Used for repeating events where the user is to register for one of several occurrences. Each occurrence will have its own registration." %}
-                            ">
+                            <span class="popup-trigger" data-content="{% blocktrans trimmed %}
+                                Used for repeating events where the user is to register for one of several occurrences.
+                                Each occurrence will have its own registration.
+                            {% endblocktrans %}">
                                 <i class="make-col-yellow question circle icon"></i>
                             </span>
                         </label>
@@ -33,9 +34,10 @@
                         <input id="standalone" type="radio" name="{{ field.name }}" value="{{ Event.Type.STANDALONE }}"
                                {% if field.value == Event.Type.STANDALONE %}checked{% endif %}/>
                         <label for="standalone">{% trans "Standalone" %}
-                            <span class="popup-trigger" data-content="
-                                {% trans "Used for events that happen once, e.g. a weekend-long happening. All occurrences of the event will have a common registration." %}
-                            ">
+                            <span class="popup-trigger" data-content="{% blocktrans trimmed %}
+                                Used for events that happen once, e.g. a weekend-long happening.
+                                All occurrences of the event will have a common registration.
+                            {% endblocktrans %}">
                                 <i class="make-col-yellow question circle icon"></i>
                             </span>
                         </label>

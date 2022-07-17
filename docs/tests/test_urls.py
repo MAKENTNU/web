@@ -39,9 +39,9 @@ class UrlTests(TestCase):
         path_predicates = [
             Get(self.reverse('home'), public=False),
             Get(self.reverse('page_detail', self.page1.pk), public=False),
-            Get(self.reverse('page_history', self.page1.pk), public=False),
-            Get(self.reverse('old_page_content', self.page1.pk, self.content1.pk), public=False),
-            Get(self.reverse('old_page_content', self.page1.pk, self.content2.pk), public=False),
+            Get(self.reverse('page_history_detail', self.page1.pk), public=False),
+            Get(self.reverse('page_content_detail', self.page1.pk, self.content1.pk), public=False),
+            Get(self.reverse('page_content_detail', self.page1.pk, self.content2.pk), public=False),
             Get(self.reverse('create_page'), public=False),
             Get(self.reverse('edit_page', self.page1.pk), public=False),
             Get(self.reverse('search_pages'), public=False),

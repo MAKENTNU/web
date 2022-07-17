@@ -4,6 +4,7 @@ from typing import Optional
 from urllib.parse import urlparse
 
 from django.test import Client, TestCase
+from django.urls import reverse as django_reverse
 from django.utils import timezone
 from django_hosts import reverse
 
@@ -40,7 +41,8 @@ class TestEventTicketViews(TestCase):
         assert_response_status_code(reverse('register_event', args=[self.repeating_event.pk]), HTTPStatus.FORBIDDEN)
         assert_response_status_code(reverse('register_timeplace', args=[self.repeating_event.pk, self.repeating_time_place.pk]), HTTPStatus.OK)
         assert_response_status_code(reverse('register_event', args=[self.standalone_event.pk]), HTTPStatus.OK)
-        assert_response_status_code(reverse('register_timeplace', args=[self.standalone_event.pk, self.standalone_time_place.pk]), HTTPStatus.FORBIDDEN)
+        assert_response_status_code(reverse('register_timeplace', args=[self.standalone_event.pk, self.standalone_time_place.pk]),
+                                    HTTPStatus.FORBIDDEN)
 
     def test__event_registration_view__can_only_be_viewed_with_correct_combination_of_event_and_time_place(self):
         repeating_event1 = self.repeating_event
@@ -86,7 +88,7 @@ class TestEventTicketViews(TestCase):
                     self.assertEqual(time_place_or_event.tickets.count(), 1)
                     ticket = time_place_or_event.tickets.get()
 
-                    ticket_detail_url = urlparse(reverse('ticket_detail', args=[ticket.pk])).path
+                    ticket_detail_url = reverse('ticket_detail', args=[ticket.pk])
                     self.assertRedirects(response, ticket_detail_url)
 
                     self.assertEqual(ticket.language, expected_language)
@@ -113,7 +115,7 @@ class TestEventTicketViews(TestCase):
 
         for ticket in [ticket_repeating, ticket_standalone]:
             with self.subTest(ticket=ticket):
-                ticket_detail_url = urlparse(reverse('ticket_detail', args=[ticket.pk])).path
+                ticket_detail_url = reverse('ticket_detail', args=[ticket.pk])
                 ticket_cancel_url = reverse('cancel_ticket', args=[ticket.pk])
 
                 self.assertTrue(ticket.active)
@@ -139,7 +141,7 @@ class TestEventTicketViews(TestCase):
 
         for ticket in [ticket_repeating, ticket_standalone]:
             with self.subTest(ticket=ticket):
-                ticket_detail_url = urlparse(reverse('ticket_detail', args=[ticket.pk])).path
+                ticket_detail_url = reverse('ticket_detail', args=[ticket.pk])
                 ticket_cancel_url = reverse('cancel_ticket', args=[ticket.pk])
 
                 def assert_next_param_is_valid(next_param: str, valid: bool):
@@ -155,15 +157,21 @@ class TestEventTicketViews(TestCase):
                 ticket_repeating.active = True
                 ticket_repeating.save()
 
-                # Only `next` parameters that redirect the client to a URL on our website, are allowed
+                # Various external URLs, which should not be allowed
                 assert_next_param_is_valid("google.com", False)
                 assert_next_param_is_valid("/google.com", False)
                 assert_next_param_is_valid("//google.com", False)
                 assert_next_param_is_valid("http://google.com", False)
                 assert_next_param_is_valid("https://google.com", False)
                 assert_next_param_is_valid(f"google.com{ticket_detail_url}", False)
+                # The URLs listed in `CancelTicketView.get_allowed_next_params()`, which should be allowed
                 assert_next_param_is_valid(ticket_detail_url, True)
-                assert_next_param_is_valid(urlparse(reverse('my_tickets_list')).path, True)
-                assert_next_param_is_valid(urlparse(reverse('event_detail', args=[ticket.registered_event.pk])).path, True)
+                self.assertEqual(ticket.get_absolute_url(), ticket_detail_url)
+                assert_next_param_is_valid(django_reverse('ticket_detail', args=[ticket.pk]), True)
+                assert_next_param_is_valid(reverse('my_tickets_list'), True)
+                assert_next_param_is_valid(django_reverse('my_tickets_list'), True)
+                assert_next_param_is_valid(reverse('event_detail', args=[ticket.registered_event.pk]), True)
+                assert_next_param_is_valid(django_reverse('event_detail', args=[ticket.registered_event.pk]), True)
+                # Some other internal URLs, which should not be allowed
                 assert_next_param_is_valid("/", False)
                 assert_next_param_is_valid(urlparse(reverse('front_page')).path, False)

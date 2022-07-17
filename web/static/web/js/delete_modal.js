@@ -1,6 +1,6 @@
 function setupDeleteModal() {
-    $(".delete-modal-button").click(function (e) {
-        e.preventDefault();
+    $(".delete-modal-button").click(function (event) {
+        event.preventDefault();
 
         // Set `action` attribute of form
         const $deleteButton = $(this);
@@ -21,7 +21,7 @@ function setupDeleteModal() {
             $("#delete-modal .prompt").html(escape(prompt));
         }
 
-        $("#delete-modal .delete.button").click(function (e) {
+        $("#delete-modal .delete.button").click(function () {
             $("#delete-form").submit();
         });
         $("#delete-modal").modal('show');

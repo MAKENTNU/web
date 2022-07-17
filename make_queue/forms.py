@@ -141,7 +141,7 @@ class QuotaForm(forms.ModelForm):
 
     class Media:
         js = (
-            JS('make_queue/js/quota_edit.js', attrs={'defer': 'defer'}),
+            JS('make_queue/js/quota_form.js', attrs={'defer': 'defer'}),
         )
 
     def clean(self):

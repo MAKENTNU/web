@@ -8,12 +8,11 @@ from django.utils import timezone
 
 from users.models import User
 from util.locale_utils import parse_datetime_localized
+from util.templatetags.string_tags import invert
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
-from ...templatetags.reservation_extra import (
-    calendar_url_reservation, current_calendar_url, date_to_percentage, get_current_time_of_day, get_stream_image_path, invert, is_current_date,
-)
+from ...templatetags.reservation_extra import calendar_url_reservation, current_calendar_url, get_stream_image_path
 
 
 class TestReservationExtra(TestCase):
@@ -49,35 +48,6 @@ class TestReservationExtra(TestCase):
             current_calendar_url(printer),
             reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'pk': printer.pk}),
         )
-
-    @mock.patch('django.utils.timezone.now')
-    def test_is_current_data(self, now_mock):
-        now_mock.return_value = parse_datetime_localized("2017-03-05 11:18")
-
-        self.assertTrue(is_current_date(timezone.now().date()))
-        self.assertTrue(is_current_date((timezone.now() + timedelta(hours=1)).date()))
-        self.assertFalse(is_current_date((timezone.now() + timedelta(days=1)).date()))
-        self.assertFalse(is_current_date((timezone.now() + timedelta(days=-1)).date()))
-
-    @mock.patch('django.utils.timezone.now')
-    def test_get_current_time_of_day(self, now_mock):
-        def set_mock_value(time: str):
-            now_mock.return_value = parse_datetime_localized(f"2017-03-05 {time}")
-
-        set_mock_value("12:00")
-        self.assertEqual(get_current_time_of_day(), 50)
-
-        set_mock_value("00:00")
-        self.assertEqual(get_current_time_of_day(), 0)
-
-        set_mock_value("13:00")
-        self.assertEqual(get_current_time_of_day(), (13 / 24) * 100)
-
-    def test_date_to_percentage(self):
-        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 12:00")), 50)
-        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 00:00")), 0)
-        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 17:00")), (17 / 24) * 100)
-        self.assertEqual(date_to_percentage(parse_datetime_localized("2017-03-05 17:25")), (17 / 24 + 25 / (24 * 60)) * 100)
 
     def test_invert(self):
         self.assertEqual(invert(0), "true")

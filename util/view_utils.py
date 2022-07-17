@@ -21,7 +21,7 @@ def insert_form_field_values(form_kwargs: dict, field_name_to_value: Dict[str, A
 
 
 class CustomFieldsetFormMixin(TemplateResponseMixin, FormMixin, ABC):
-    template_name = 'web/edit_form.html'
+    template_name = 'web/generic_form.html'
 
     base_template = 'web/base.html'
     form_title: str

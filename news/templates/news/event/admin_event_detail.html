@@ -21,7 +21,7 @@
             <i class="angle double left icon"></i>{% trans "Admin page for events" %}
         </a>
 
-        <h1 class="title-with-buttons">
+        <h1 class="word-breaking hyphenated title-with-buttons">
             {{ event.title }}
 
             <div class="admin-actions ui secondary menu">
@@ -39,7 +39,7 @@
                     </a>
                 {% endif %}
 
-                <a class="ui make-bg-yellow button" href="{% url 'event_detail' event.pk %}">
+                <a class="ui make-bg-yellow button" href="{{ event.get_absolute_url }}">
                     <i class="sticky note icon"></i>{% trans "Go to the event page" %}
                 </a>
             </div>
@@ -104,7 +104,7 @@
         <div class="ui active tab segment" data-tab="future">
             <div class="ui relaxed divided list">
                 {% for timeplace in future_timeplaces %}
-                    {% include 'news/event/admin_timeplace_listing.html' %}
+                    {% include 'news/event/admin_time_place_listing.html' %}
                 {% empty %}
                     {% trans "No future occurrences exist for this event" %}
                 {% endfor %}
@@ -113,7 +113,7 @@
         <div class="ui bottom attached tab segment" data-tab="past">
             <div class="ui relaxed divided list">
                 {% for timeplace in past_timeplaces %}
-                    {% include 'news/event/admin_timeplace_listing.html' %}
+                    {% include 'news/event/admin_time_place_listing.html' %}
                 {% empty %}
                     {% trans "No past occurrences exist for this event" %}
                 {% endfor %}

@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
 from django.utils.translation import gettext_lazy as _
+from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
 from util.modelfields import CompressedImageField
@@ -11,7 +12,7 @@ from web.multilingual.modelfields import MultiLingualRichTextUploadingField, Mul
 
 class EquipmentQuerySet(models.QuerySet):
 
-    def default_order_by(self):
+    def default_order_by(self) -> 'EquipmentQuerySet[Equipment]':
         return self.order_by(
             F('priority').asc(nulls_last=True),
             Lower('title'),
@@ -41,3 +42,6 @@ class Equipment(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+    def get_absolute_url(self):
+        return reverse('makerspace_equipment_detail', args=[self.pk])

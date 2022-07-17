@@ -5,6 +5,41 @@ A summary of changes made to the codebase, grouped per deployment.
 ## Unreleased
 
 
+## 2022-07-17 ([#478](https://github.com/MAKENTNU/web/pull/478))
+### New features
+- Added a URL which always links to the current week for a machine reservation calendar
+  - This URL can be copied by right-clicking the "View in calendar" button for a machine on [the machine list page](https://makentnu.no/reservation/),
+    and selecting "Copy link address"
+- Made machine streams work with the new Raspberry Pi setup
+  - Also, only the visible streams are connected to;
+    once the page is scrolled so that a stream image is no longer rendered, the stream for that machine is disconnected,
+    which makes [the machine list page](https://makentnu.no/reservation/) use considerably less data (depending on how the page is scrolled)
+    - This does not apply to the machine detail (calendar) page, as there is always only one stream on the page
+
+### Improvements
+- Loading the member list has been made slightly faster
+- Renamed a lot of templates (and CSS and JavaScript files) to comply with the style guide
+- Improved word breaking (splitting a word between two lines, often using a hyphen) multiple places, like in titles and descriptions
+- Added translations to the spreadsheet containing course registrations, that can be downloaded from
+  [the course registrations page](https://makentnu.no/reservation/course/)
+- Improved the permission check for [the admin panel](https://makentnu.no/admin/)
+- Added edit and delete buttons on the machine detail (calendar) page
+- On the history page for a documentation page (on [docs.makentnu.no](https://docs.makentnu.no/)),
+  the current version link is now a permalink to that specific version
+
+### Fixes
+- Fixed endless redirect loop when a logged-in user visited a page that required a permission that the user didn't have
+- Fixed error messages for multilingual form fields (like the event "Content" field) not showing
+- Previously, editing CKEditor fields (like the event "Content" field) did not prevent the user from leaving the page;
+  this has now been fixed
+- Fixed sometimes being unable to close fullscreen machine streams, when clicking the close ("X") button
+- Fixed old page version warning when visiting the URL for a specific documentation page version which is the current version of that page
+
+### Other changes
+- Added setup instructions to the project's README file
+- Much code cleanup, yes
+
+
 ## 2022-06-07 ([#461](https://github.com/MAKENTNU/web/pull/461))
 ### New features
 - Added table on [the profile page](https://makentnu.no/checkin/profile/) which displays the completion status of all available courses

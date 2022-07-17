@@ -6,7 +6,7 @@
     {% if event_or_time_place.number_of_tickets > 0 %}
         {% get_ticket event_or_time_place user as ticket %}
         {% if ticket %}
-            <a class="ui green {{ extra_button_classes }} button" href="{% url 'ticket_detail' ticket.pk %}">
+            <a class="ui green {{ extra_button_classes }} button" href="{{ ticket.get_absolute_url }}">
                 {% translate "You are registered for this event" %}
             </a>
         {% elif event_or_time_place.number_of_active_tickets < event_or_time_place.number_of_tickets %}

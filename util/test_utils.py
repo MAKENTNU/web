@@ -5,11 +5,13 @@ from abc import ABC
 from datetime import datetime
 from http import HTTPStatus
 from pathlib import Path
-from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar
+from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar, Union
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db import models
+from django.db.models import QuerySet
 from django.test import Client, SimpleTestCase, override_settings
 from django.utils import translation
 from django.utils.dateparse import parse_time
@@ -157,9 +159,9 @@ class PathPredicate(ABC):
 
 class Get(PathPredicate):
 
-    def __init__(self, *args, permanent_redirect=False, **kwargs):
+    def __init__(self, *args, redirect=False, **kwargs):
         super().__init__(*args, **kwargs)
-        self.permanent_redirect = permanent_redirect
+        self.redirect = redirect
 
     def do_request_assertion(self, client: Client, is_superuser: bool, test_case: SimpleTestCase):
         language_prefixes = self.LANGUAGE_PREFIXES if self.translated else [""]
@@ -171,8 +173,9 @@ class Get(PathPredicate):
     def _do_request_assertion_for_path(self, path: str, language_prefix: str, client: Client, is_superuser: bool, test_case: SimpleTestCase):
         response = client.get(path)
 
-        if self.permanent_redirect:
-            test_case.assertEqual(response.status_code, HTTPStatus.MOVED_PERMANENTLY)
+        if self.redirect:
+            test_case.assertIn(response.status_code, {HTTPStatus.MOVED_PERMANENTLY, HTTPStatus.FOUND},
+                               "The response did not redirect as expected.")
             # Follow the redirect URL from the response, and do the rest of the assertions from the perspective of this URL
             response = client.get(response.url)
 
@@ -192,7 +195,7 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
     superuser = User.objects.create_user("unique_superuser_username", "admin@makentnu.no", password,
                                          is_superuser=True, is_staff=True)
 
-    server_name = f'{subdomain}.testserver' if subdomain else 'testserver'  # 'testserver' is Django's default server name
+    server_name = f'{subdomain}.{settings.PARENT_HOST}' if subdomain else settings.PARENT_HOST
     superuser_client = Client(SERVER_NAME=server_name)
     superuser_client.login(username=superuser.username, password=password)
     anon_client = Client(SERVER_NAME=server_name)
@@ -220,7 +223,7 @@ def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: 
     ]
 
 
-def set_without_duplicates(self: SimpleTestCase, collection: Collection[T]) -> Set[T]:
+def set_without_duplicates(self: SimpleTestCase, collection: Union[Collection[T], QuerySet[T]]) -> Set[T]:
     collection_list = list(collection)
     collection_set = set(collection_list)
     self.assertEqual(len(collection_set), len(collection_list))

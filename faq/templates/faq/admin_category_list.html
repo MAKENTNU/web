@@ -28,7 +28,7 @@
             {% for category in categories %}
                 <div class="item">
                     <div class="content">
-                        <div class="ui header">
+                        <div class="word-breaking hyphenated ui header">
                             {{ category.name }}
                             {% if perms.faq.change_category %}
                                 <a href="{% url 'category_update' category.pk %}">

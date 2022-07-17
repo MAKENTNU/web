@@ -63,7 +63,7 @@
                                     {% endthumbnail %}
                                         class="ui mini rounded image"
                                             {% with skill=suggestion.title|add:" / "|add:suggestion.title_en %}
-                                        alt="{% blocktrans trimmed with skill=skill %}Illustration image of {{ skill }}{% endblocktrans %}"
+                                        alt="{% blocktrans with skill=skill %}Illustration image of {{ skill }}{% endblocktrans %}"
                                             {% endwith %}
                                     />
                                 {% else %}
@@ -96,7 +96,8 @@
                         <td>
                             {% if request.user|can_delete_suggestion %}
 
-                                <button class="ui red button delete-suggestion" pk="{{ suggestion.pk }}">
+                                <button class="ui red button delete-suggestion"
+                                        data-delete-url="{% url 'delete_skill_suggestion' suggestion.pk %}">
                                     {% trans "Delete" %}
                                 </button>
 
@@ -118,7 +119,7 @@
         });
 
         $(".delete-suggestion").click(function () {
-            deleteSuggestionPost($(this), $(this).attr('pk'));
+            deleteSuggestionPost($(this), $(this).data("delete-url"));
         });
 
         function addVoterPost($element, pk, forced) {
@@ -129,7 +130,7 @@
             });
             $.ajax({
                 type: "POST",
-                url: '/checkin/suggest/vote/',
+                url: "{% url 'vote_for_skill_suggestion' %}",
                 data: {
                     "pk": pk,
                     "forced": forced,
@@ -153,7 +154,7 @@
             });
         }
 
-        function deleteSuggestionPost($element, pk) {
+        function deleteSuggestionPost($element, deleteURL) {
             $.ajaxSetup({
                 beforeSend: function (xhr, settings) {
                     xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
@@ -161,11 +162,8 @@
             });
 
             $.ajax({
-                type: "POST",
-                url: '/checkin/suggest/delete/',
-                data: {
-                    'pk': pk,
-                },
+                type: "DELETE",
+                url: deleteURL,
                 success: function (data) {
                     if (data["suggestion_deleted"]) {
                         $element.closest("tr").remove();

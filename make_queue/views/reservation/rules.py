@@ -37,7 +37,7 @@ class MachineTypeRelatedViewMixin:
 
 class ReservationRuleListView(MachineTypeRelatedViewMixin, ListView):
     model = ReservationRule
-    template_name = 'make_queue/rule_list.html'
+    template_name = 'make_queue/reservation_rule_list.html'
     context_object_name = 'rules'
 
     def get_queryset(self):
@@ -116,7 +116,7 @@ class DeleteReservationRuleView(PermissionRequiredMixin, PreventGetRequestsMixin
 
 class MachineUsageRulesDetailView(MachineTypeRelatedViewMixin, DetailView):
     model = MachineUsageRule
-    template_name = 'make_queue/usage_rules_detail.html'
+    template_name = 'make_queue/machine_usage_rule_detail.html'
     context_object_name = 'usage_rules'
 
     def get_object(self, queryset=None):
@@ -136,7 +136,7 @@ class EditUsageRulesView(PermissionRequiredMixin, CustomFieldsetFormMixin, Machi
     permission_required = ('make_queue.change_machineusagerule',)
     model = MachineUsageRule
     fields = ('content',)
-    template_name = 'contentbox/edit.html'
+    template_name = 'contentbox/content_box_form.html'
 
     narrow = False
 
@@ -153,4 +153,4 @@ class EditUsageRulesView(PermissionRequiredMixin, CustomFieldsetFormMixin, Machi
         return _("View usage rules for {machine_type}").format(machine_type=self.machine_type)
 
     def get_success_url(self):
-        return reverse('machine_usage_rules_detail', args=[self.machine_type.pk])
+        return self.get_object().get_absolute_url()

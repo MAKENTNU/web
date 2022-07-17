@@ -1,12 +1,11 @@
 {% load language_tags %}
-{% load i18n %}
 
 
-<div id="{{ widget.attrs.id }}" class="multilingual-input">
+<div class="multilingual-input" {% include 'django/forms/widgets/attrs.html' %}>
     <div class="ui right floated pointing secondary menu inline">
         {% for subwidget in widget.subwidgets %}
             <a class="{% if forloop.first %}active{% endif %} item"
-               data-tab="{{ subwidget.name }}{{ subwidget.attrs.language }}">
+               data-tab="{{ subwidget.name }}">
                 <i class="{% get_semantic_flag_code_from_language_code subwidget.attrs.language %} flag"></i>
                 {% get_local_name_from_language_code subwidget.attrs.language %}
             </a>
@@ -15,106 +14,8 @@
 
     {% for subwidget in widget.subwidgets %}
         <div class="ui tab {% if forloop.first %}active{% endif %}"
-             data-tab="{{ subwidget.name }}{{ subwidget.attrs.language }}">
+             data-tab="{{ subwidget.name }}">
             {% render subwidget %}
         </div>
     {% endfor %}
-
-    <script>
-        {# The following code is scoped within a block, to avoid variable name collisions when including this template multiple times #}
-        {
-            const widgetID = "#{{ widget.attrs.id }}";
-            const $widget = $(widgetID);
-            {# If there were a CSS predecessor element selector (there will be one in CSS4), this could have been solved with pure CSS #}
-            const $widgetLabel = $widget.prev("label");
-            $widgetLabel.toggleClass("multilingual-label", true);
-
-            $(`${widgetID} .menu .item`).tab({
-                onVisible: function (tabPath) {
-                    // Set the label's `for` attribute to the ID of the text input that has been made visible
-                    const subwidgetInputID = $(`${widgetID} .tab[data-tab=${tabPath}] > :first-child`).attr("id");
-                    $widgetLabel.attr("for", subwidgetInputID);
-                },
-            });
-
-            {% if widget.attrs.required %}
-                function isFilled(element, value) {
-                    /**
-                     * Checks if the given element has content or not.
-                     *
-                     * @value Used to explicitly pass the value of the element, e.g. in the case of CKEditor
-                     */
-                    if (value !== undefined) {
-                        return value !== "";
-                    }
-                    return $(element).val() !== "";
-                }
-
-                function checkFilled(element, value) {
-                    /**
-                     * Checks if the given element has content or not. If there is no content (and value is empty), the
-                     * menu element connected to the current tab is tagged as not filled.
-                     *
-                     * @value Used to explicitly pass the value of the element, e.g. in the case of CKEditor
-                     */
-                    const tabValue = $(element).closest(".ui.tab").data("tab");
-                    $(`.menu > .item[data-tab=${tabValue}]`).toggleClass("language-not-filled", !isFilled(element, value));
-                }
-
-                const $tabs = $widget.find(".ui.tab");
-
-                $tabs.find("input, textarea").each(function () {
-                    checkFilled(this);
-                    $(this).keyup(function () {
-                        checkFilled(this);
-                    }.bind(this));
-                });
-
-                {# CKEditor is setup first after the DOM has loaded #}
-                $tabs.find(".django-ckeditor-widget").each(function () {
-                    $(document).ready(function () {
-                        $(this).find("textarea").each(function () {
-                            CKEDITOR.instances[this.id].on("change", function () {
-                                checkFilled(this.element.$, this.getData());
-                            });
-                        });
-                    }.bind(this));
-                });
-
-                // Have to wait until the document is ready, as the submit button is usually at the end of the form
-                $(document).ready(function () {
-                    $widget.closest("form").find("input[type=submit]").click(() => {
-                        // The constant check for the color of the tabs will set classes which we can use
-                        const $languagesNotFilled = $widget.find(".menu .item.language-not-filled");
-
-                        // Change to the first non-filled tab
-                        const $firstLanguageNotFilled = $languagesNotFilled.first();
-                        $firstLanguageNotFilled.tab("change tab", $firstLanguageNotFilled.data("tab"));
-
-                        // Remove old error messages, we are creating a new one if there are still errors
-                        $widget.find(".ui.red.pointing.label").remove();
-                        if ($languagesNotFilled.length) {
-                            const $languageMissingTextIndicator = $('<div class="ui red pointing label">');
-                            const languagePlural = $languagesNotFilled.length > 1 ? {% trans "languages" %} : {% trans "language" %};
-                            $languageMissingTextIndicator.text(
-                                `{% trans "The field is missing a value for" %} ${$languagesNotFilled.length} ${languagePlural}.`,
-                            );
-                            $widget.append($languageMissingTextIndicator);
-                        }
-                    });
-                });
-
-                {# CKEditor is setup first after the DOM has loaded #}
-                $tabs.find(".django-ckeditor-widget").each(function () {
-                    $(document).ready(function () {
-                        $(this).find("textarea").each(function () {
-                            CKEDITOR.instances[this.id].on("change", function () {
-                                checkFilled(this.element.$, this.getData());
-                            });
-                        });
-                    }.bind(this));
-                });
-            {% endif %}
-        }
-    </script>
 </div>

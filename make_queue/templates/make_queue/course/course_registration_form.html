@@ -1,14 +1,14 @@
 {% extends 'web/base.html' %}
 {% load i18n %}
 {% load static %}
-{% load form_utility %}
+{% load form_tags %}
 
 
-{# TODO: make this template extend web/edit_form.html #}
+{# TODO: make this template extend web/generic_form.html #}
 
 {% block extra_head %}
     {{ form.media }}
-    <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_edit.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_form.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
@@ -28,7 +28,7 @@
                 </div>
                 <p>{% trans "Are you sure you entered the correct username?" %}</p>
             </div>
-            {% form_has_error form field="username" error_code="unique" as unique_error %}
+            {% form_has_error form field='username' error_code='unique' as unique_error %}
             {% if unique_error %}
                 <div class="ui error message">
                     <i class="close icon"></i>

@@ -47,6 +47,9 @@ li {
 
 .word-breaking {
     word-break: break-word;
+}
+
+.hyphenated {
     -webkit-hyphens: auto;
     -ms-hyphens: auto;
     hyphens: auto;

@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
 
@@ -5,8 +6,9 @@ from users.models import User
 from ...models.reservation import Quota
 
 
-class UserQuotaListView(ListView):
+class UserQuotaListView(PermissionRequiredMixin, ListView):
     """View for getting a rendered version of the quota of a specific user."""
+    permission_required = ('make_queue.change_quota',)
     model = Quota
     template_name = 'make_queue/quota/quota_user.html'
     context_object_name = 'user_quotas'

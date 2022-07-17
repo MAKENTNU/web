@@ -27,13 +27,13 @@
 
             {% block admin_page %}
             {% endblock admin_page %}
-            <h1>
+            <h1 class="word-breaking hyphenated">
                 {{ news_obj.title }}
                 {% if news_obj.hidden %}<i class="black eye slash icon"></i>{% endif %}
                 {% block title_extra %}{% endblock %}
             </h1>
 
-            <div class="news-obj-content">
+            <div class="word-breaking hyphenated news-obj-content">
                 {{ news_obj.content|safe }}
             </div>
 

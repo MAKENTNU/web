@@ -28,6 +28,19 @@ class SemanticDateTimeInput(forms.DateTimeInput):
     class Media:
         js = ('web/js/date_utils.js',)
 
+    def __init__(self, end_calendar_name: str = None, start_calendar_name: str = None, default_blank=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.end_calendar_name = end_calendar_name
+        self.start_calendar_name = start_calendar_name
+        self.default_blank = default_blank
+
+    def get_context(self, *args, **kwargs):
+        context = super().get_context(*args, **kwargs)
+        context['widget']['end_calendar_id'] = f"id_{self.end_calendar_name}"
+        context['widget']['start_calendar_id'] = f"id_{self.start_calendar_name}"
+        context['widget']['default_blank'] = self.default_blank
+        return context
+
 
 class SelectWithDataAttrsMixin(ChoiceWidget):
     """
@@ -74,19 +87,32 @@ class SemanticSearchableChoiceInput(SelectWithDataAttrsMixin, forms.Select):
     template_name = 'web/forms/widgets/semantic_search_select.html'
     prompt_text = _("Choose value")
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(attrs=kwargs.pop("attrs", {}))
-        self.attrs['prompt_text'] = kwargs.pop('prompt_text', self.prompt_text)
-        self.attrs['force_selection'] = kwargs.pop('force_selection', False)
+    def __init__(self, prompt_text=None, force_selection=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if prompt_text:
+            self.prompt_text = prompt_text
+        self.force_selection = force_selection
+
+    def get_context(self, *args, **kwargs):
+        context = super().get_context(*args, **kwargs)
+        context['widget']['prompt_text'] = self.prompt_text
+        context['widget']['force_selection'] = self.force_selection
+        return context
 
 
 class SemanticMultipleSelectInput(SelectWithDataAttrsMixin, forms.SelectMultiple):
     template_name = 'web/forms/widgets/semantic_select_multiple.html'
     prompt_text = _("Choose value")
 
-    def __init__(self, *args, **kwargs):
-        super().__init__()
-        self.attrs['prompt_text'] = kwargs.pop('prompt_text', self.prompt_text)
+    def __init__(self, prompt_text=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if prompt_text:
+            self.prompt_text = prompt_text
+
+    def get_context(self, *args, **kwargs):
+        context = super().get_context(*args, **kwargs)
+        context['widget']['prompt_text'] = self.prompt_text
+        return context
 
 
 class SemanticFileInput(forms.ClearableFileInput):
@@ -97,11 +123,9 @@ class SemanticFileInput(forms.ClearableFileInput):
             'all': ('web/css/forms/widgets/semantic_file.css',),
         }
 
-    def get_context(self, name, value, attrs):
-        context = super().get_context(name, value, attrs)
-        context.update({
-            "FILE_MAX_SIZE": settings.FILE_MAX_SIZE,
-        })
+    def get_context(self, *args, **kwargs):
+        context = super().get_context(*args, **kwargs)
+        context['widget']['FILE_MAX_SIZE'] = settings.FILE_MAX_SIZE
         return context
 
 

@@ -1,12 +1,20 @@
-{% extends 'web/edit_form.html' %}
+{% extends 'web/generic_form.html' %}
+{% load i18n %}
 
+
+{% block title %}{{ form_title|striptags }}{% endblock title %}
 
 {% block field_pre_content %}
     {% if field.name == 'content' %}
-        {% for error in field.errors %}
+        {% for error in field.errors.as_data %}
             <div class="ui negative message">
                 <i class="close icon"></i>
-                <b>{{ error }}</b>
+                {% if error.code == 'required' %}
+                    <div class="header">{% trans "Missing language" %}</div>
+                    <p>{{ error.message }}</p>
+                {% else %}
+                    <b>{{ error.message }}</b>
+                {% endif %}
             </div>
         {% endfor %}
     {% else %}

@@ -44,7 +44,6 @@ LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
 CHECKIN_KEY = ''  # (custom setting)
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
-STREAM_KEY = ''  # (custom setting)
 FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is 50 MiB)
 
 # When using more than one subdomain, the session cookie domain has to be set so
@@ -62,7 +61,6 @@ PARENT_HOST = "makentnu.localhost:8000"
 USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
-EMAIL_SITE_URL = "https://makentnu.no"  # (custom setting)
 
 # Set local settings
 try:
@@ -154,15 +152,22 @@ ROOT_HOSTCONF = 'web.hosts'
 DEFAULT_HOST = 'main'
 # All hosted subdomains - defined in `web/hosts.py`
 ALL_SUBDOMAINS = (  # (custom setting)
-    'i', 'internal', 'internt', 'admin', 'docs', '',
+    'i', 'internal', 'internt', 'admin', 'docs',
 )
+
+
+def generate_all_hosts(subdomains):
+    return [
+        PARENT_HOST,
+        *[f'{subdomain}.{PARENT_HOST}' for subdomain in subdomains]
+    ]
+
+
 # Tells `social-auth-core` (requirement of `python-social-auth`) to allow
 # redirection to these host domains after logging in.
 # (Undocumented setting; only found in this file:
 # https://github.com/python-social-auth/social-core/blob/d66a2469609c7cfd6639b524981689db2f2d5540/social_core/actions.py#L22)
-ALLOWED_REDIRECT_HOSTS = [
-    f'{subdomain}.{PARENT_HOST}' for subdomain in ALL_SUBDOMAINS
-]
+ALLOWED_REDIRECT_HOSTS = generate_all_hosts(ALL_SUBDOMAINS)
 
 
 TEMPLATES = [
@@ -311,7 +316,7 @@ STATICFILES_STORAGE = 'web.static.ManifestStaticFilesStorage'
 MANIFEST_STATICFILES_IGNORE_PATTERNS = [  # (custom setting)
     'ckeditor/mathjax/*',
 ]
-# Monkey patch view used for serving static and media files (for development only; Nginx is used in production)
+# Monkey patch view used for serving static files (for development only; Nginx is used in production)
 django.views.static.serve = serve_interpolated
 
 

@@ -41,12 +41,12 @@ class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
         return super().get_object(*args, **kwargs)
 
 
-class HistoryDocumentationPageView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageHistoryDetailView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_history.html'
     context_object_name = 'page'
 
 
-class OldDocumentationPageContentView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageContentDetailView(SpecificPageBasedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
@@ -62,7 +62,7 @@ class OldDocumentationPageContentView(SpecificPageBasedViewMixin, DetailView):
         context_data = super().get_context_data(**kwargs)
 
         context_data.update({
-            'old': True,
+            'old': not hasattr(self.content, 'page_currently_on'),
             'content': self.content,
             'last_edit_name': self.content.made_by.get_full_name() if self.content.made_by else _("Anonymous"),
             'form': ChangePageVersionForm(initial={'current_content': self.content}),
@@ -75,10 +75,10 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, SpecificPageBa
     form_class = ChangePageVersionForm
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('page_history', args=[self.get_object().pk]))
+        return HttpResponseRedirect(reverse('page_history_detail', args=[self.get_object().pk]))
 
     def get_success_url(self):
-        return reverse('page_detail', args=[self.get_object().pk])
+        return self.get_object().get_absolute_url()
 
     def form_invalid(self, form):
         return HttpResponseForbidden()
@@ -107,7 +107,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
         except Page.DoesNotExist:
             existing_page = None
         if existing_page:
-            return HttpResponseRedirect(reverse('page_detail', args=[existing_page.pk]))
+            return HttpResponseRedirect(existing_page.get_absolute_url())
         return super().form_invalid(form)
 
     def get_success_url(self):
@@ -117,7 +117,7 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
 class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, SpecificPageBasedViewMixin, UpdateView):
     permission_required = ('docs.change_page',)
     form_class = PageContentForm
-    template_name = 'docs/documentation_page_edit.html'
+    template_name = 'docs/documentation_page_form.html'
 
     base_template = 'docs/base.html'
     narrow = False
@@ -154,7 +154,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin
         return super(ModelFormMixin, self).form_valid(form)
 
     def get_success_url(self):
-        return reverse('page_detail', args=[self.object.pk])
+        return self.object.get_absolute_url()
 
 
 class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificPageBasedViewMixin, DeleteView):

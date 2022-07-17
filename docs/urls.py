@@ -1,10 +1,9 @@
 from decorator_include import decorator_include
 from django.conf.urls.i18n import i18n_patterns
-from django.contrib.auth.decorators import permission_required
 from django.urls import path, register_converter
 from django.views.generic import TemplateView
 
-from util.url_utils import debug_toolbar_urls
+from util.url_utils import debug_toolbar_urls, permission_required_else_denied
 from . import converters, views
 
 
@@ -16,7 +15,7 @@ urlpatterns = [
 
     *debug_toolbar_urls(),
     path("i18n/", decorator_include(
-        permission_required('docs.view_page'),
+        permission_required_else_denied('docs.view_page'),
         'django.conf.urls.i18n'
     )),
 ]
@@ -25,9 +24,9 @@ unsafe_urlpatterns = [
     path("", views.DocumentationPageDetailView.as_view(is_main_page=True), name='home'),
     path("page/create/", views.CreateDocumentationPageView.as_view(), name='create_page'),
     path("page/<PageTitle:title>/", views.DocumentationPageDetailView.as_view(), name='page_detail'),
-    path("page/<PageTitle:title>/history/", views.HistoryDocumentationPageView.as_view(), name='page_history'),
+    path("page/<PageTitle:title>/history/", views.DocumentationPageHistoryDetailView.as_view(), name='page_history_detail'),
     path("page/<PageTitle:title>/history/change/", views.ChangeDocumentationPageVersionView.as_view(), name='change_page_version'),
-    path("page/<PageTitle:title>/history/<int:content_pk>/", views.OldDocumentationPageContentView.as_view(), name='old_page_content'),
+    path("page/<PageTitle:title>/history/<int:content_pk>/", views.DocumentationPageContentDetailView.as_view(), name='page_content_detail'),
     path("page/<PageTitle:title>/edit/", views.EditDocumentationPageView.as_view(), name='edit_page'),
     path("page/<PageTitle:title>/delete/", views.DeleteDocumentationPageView.as_view(), name='delete_page'),
     path("search/", views.SearchPagesView.as_view(), name='search_pages'),
@@ -35,7 +34,7 @@ unsafe_urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path("", decorator_include(
-        permission_required('docs.view_page'),
+        permission_required_else_denied('docs.view_page'),
         unsafe_urlpatterns
     )),
 

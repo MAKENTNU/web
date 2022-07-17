@@ -14,9 +14,10 @@ from ...forms import QuotaForm
 from ...models.reservation import Quota
 
 
-class QuotaPanelView(TemplateView):
+class QuotaPanelView(PermissionRequiredMixin, TemplateView):
     """View for the quota admin panel that allows users to control the quotas of people."""
-    template_name = 'make_queue/quota/quota_panel.html'
+    permission_required = ('make_queue.change_quota',)
+    template_name = 'make_queue/quota/admin_quota_panel.html'
 
     user: Optional[User]
 

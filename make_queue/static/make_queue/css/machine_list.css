@@ -1,4 +1,4 @@
-.machine-title {
+.machine-type-title {
     vertical-align: sub;
     display: inline;
 }
@@ -7,7 +7,7 @@
     margin-top: 0.5em;
 }
 
-.machine-title-field {
+.machine-type-title-field {
     margin-top: 2rem;
     margin-bottom: 1rem;
 }

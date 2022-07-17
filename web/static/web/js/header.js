@@ -1,11 +1,11 @@
 let shouldKeepDropdownOpen = false;
 
 const $headerDropdowns = $("#header .dropdown");
-$headerDropdowns.focusout(function (e) {
+$headerDropdowns.focusout(function (event) {
     // Manually makes sure to prevent hiding the dropdowns when navigating with the "tab" key,
     // as there is no setting for doing this otherwise (https://fomantic-ui.com/modules/dropdown.html#/settings).
     const $thisDropdown = $(this);
-    const $targetGainingFocus = $(e.relatedTarget);
+    const $targetGainingFocus = $(event.relatedTarget);
     if ($thisDropdown.has($targetGainingFocus).length > 0) {
         shouldKeepDropdownOpen = true;
     } else {
@@ -42,7 +42,7 @@ $headerDropdowns.find("a.item")
         $(this).removeClass("active selected");
     });
 
-$("#burger").click(function (e) {
-    e.preventDefault();
+$("#burger").click(function (event) {
+    event.preventDefault();
     $("#header").toggleClass("active");
 });

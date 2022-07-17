@@ -17,6 +17,7 @@ from django.utils.translation import get_language, gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import ModelFormMixin
+from django_hosts import reverse as django_hosts_reverse
 
 from mail import email
 from util.locale_utils import short_datetime_format
@@ -34,7 +35,7 @@ class EventListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        queryset: EventQuerySet = self.get_queryset()
+        queryset: EventQuerySet[Event] = self.get_queryset()
 
         future = queryset.future().prefetch_related(
             'timeplaces',
@@ -357,7 +358,7 @@ class TimePlaceRelatedViewMixin(EventRelatedViewMixin):
 class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC):
     model = TimePlace
     form_class = TimePlaceForm
-    template_name = 'news/event/timeplace_edit.html'
+    template_name = 'news/event/time_place_form.html'
 
     def get_form_kwargs(self):
         # Forcefully pass the event from the URL to the form
@@ -497,10 +498,15 @@ class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, Time
         return reverse('admin_event_detail', args=[self.object.event.pk])
 
 
-class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, CreateView):
+class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, CustomFieldsetFormMixin, CreateView):
     model = EventTicket
     form_class = EventRegistrationForm
-    template_name = 'news/event/event_registration.html'
+
+    narrow = False
+    save_button_text = _("Register")
+    custom_fieldsets = [
+        {'fields': ('language', 'comment')},
+    ]
 
     event: Event
     ticket_event: Optional[Event]
@@ -529,7 +535,7 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Crea
         except EventTicket.DoesNotExist:
             pass
         else:
-            return HttpResponseRedirect(reverse('ticket_detail', args=[ticket.pk]))
+            return HttpResponseRedirect(ticket.get_absolute_url())
         return super().dispatch(request, *args, **kwargs)
 
     def get_form_kwargs(self):
@@ -573,14 +579,17 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Crea
 
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**{
-            'title': _("Register for the event “{title}”").format(title=self.event.title),
-            **kwargs,
-        })
+    def get_form_title(self):
+        return _("Register for the event “{title}”").format(title=self.event.title)
+
+    def get_back_button_link(self):
+        return self.event.get_absolute_url()
+
+    def get_back_button_text(self):
+        return str(self.event)
 
     def get_success_url(self):
-        return reverse('ticket_detail', args=[self.object.pk])
+        return self.object.get_absolute_url()
 
 
 class TicketDetailView(DetailView):
@@ -594,6 +603,7 @@ class MyTicketsListView(ListView):
     context_object_name = 'tickets'
 
     def get_queryset(self):
+        # Prefetching `timeplace__event` instead of selecting related, to prevent debug error messages when `timeplace` is `None`
         return self.request.user.event_tickets.prefetch_related(
             'event__timeplaces__event', 'timeplace__event',
         )
@@ -650,18 +660,21 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         )
 
     def get_allowed_next_params(self) -> Set[str]:
-        return {
-            reverse('ticket_detail', args=[self.ticket.pk]),
-            reverse('my_tickets_list'),
-            reverse('event_detail', args=[self.ticket.registered_event.pk]),
-        }
+        urls = set()
+        for reverse_func in (reverse, django_hosts_reverse):
+            urls |= {
+                reverse_func('ticket_detail', args=[self.ticket.pk]),
+                reverse_func('my_tickets_list'),
+                reverse_func('event_detail', args=[self.ticket.registered_event.pk]),
+            }
+        return urls
 
     def get_queryset(self):
         return self.request.user.event_tickets.all()
 
     def get_context_data(self, **kwargs):
         if self.ticket.timeplace:
-            at_time_string = _(" at {time}").format(time=short_datetime_format(self.ticket.timeplace.start_time))
+            at_time_string = " " + _("at {time}").format(time=short_datetime_format(self.ticket.timeplace.start_time))
         else:
             at_time_string = ""
         heading = _("Are you sure you want to cancel your ticket for<br/>“{event}”{at_time_string}?").format(
@@ -697,4 +710,4 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
     def get_success_url(self):
         if self.cleaned_next_param:
             return self.cleaned_next_param
-        return reverse('ticket_detail', args=[self.ticket.pk])
+        return self.ticket.get_absolute_url()

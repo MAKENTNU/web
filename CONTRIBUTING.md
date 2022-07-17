@@ -989,6 +989,7 @@ the `as_view()` call can be wrapped in one of the decorators corresponding to th
 (i.e. [`permission_required()`](https://docs.djangoproject.com/en/stable/topics/auth/default/#the-permission-required-decorator),
 [`login_required()`](https://docs.djangoproject.com/en/stable/topics/auth/default/#the-login-required-decorator),
 and [`user_passes_test()`](https://docs.djangoproject.com/en/stable/topics/auth/default/#django.contrib.auth.decorators.user_passes_test)).
+It's generally best to use our custom `permission_required_else_denied()` decorator, unless you're sure of otherwise.
 
 #### Modifying state in `GET` requests
 This includes things like modifying objects in the database or files on the server.
@@ -1266,7 +1267,7 @@ All statements should end with a `;`.
 
 #### Comparing values loosely (with `==`)
 The `===` operator should always be favored over `==`. [See some of the reasons in the answers to
-this question](https://stackoverflow.com/questions/359494/which-equals-operator-vs-should-be-used-in-javascript-comparisons).
+this question](https://stackoverflow.com/q/359494).
 
 Of course, this also applies to `!==` vs. `!=`.
 

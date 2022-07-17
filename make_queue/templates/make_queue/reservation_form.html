@@ -2,13 +2,14 @@
 {% load static %}
 {% load i18n %}
 {% load datetime_tags %}
+{% load string_tags %}
 {% load reservation_extra %}
 
 
-{# TODO: make this template extend web/edit_form.html #}
+{# TODO: make this template extend web/generic_form.html #}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_edit.css' %}"/>
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_form.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
@@ -43,7 +44,7 @@
                         <div class="menu">
                             {% for machine_type in machine_types %}
                                 {% if machine_type.instances %}
-                                    <div class="item {% if selected_machine.machine_type == machine_type %}selected_machine_type{% endif %}"
+                                    <div class="item {% if selected_machine.machine_type == machine_type %}selected-machine-type{% endif %}"
                                          data-value="{{ machine_type.pk }}">{{ machine_type.name }}</div>
                                 {% endif %}
                             {% endfor %}
@@ -173,11 +174,11 @@
     </div>
 
     <script>
-        {# `maximumDay` is used in `reservation_edit.js` #}
+        {# `maximumDay` is used in `reservation_form.js` #}
         var maximumDay = new Date();
         maximumDay.setDate(maximumDay.getDate() + {{ maximum_days_in_advance }});
     </script>
-    <script src="{% static 'make_queue/js/reservation_edit.js' %}"></script>
+    <script src="{% static 'make_queue/js/reservation_form.js' %}"></script>
     <script>
         getFutureReservations($("#machine-name-dropdown").dropdown('get value'), {% invert start_time %});
     </script>

@@ -11,10 +11,11 @@ from django.utils import timezone
 from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic import TemplateView
+from django.views.generic import DeleteView, TemplateView
 
 from card import utils as card_utils
 from card.views import RFIDView
+from util.view_utils import PreventGetRequestsMixin
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
@@ -34,7 +35,7 @@ class CheckInView(RFIDView):
 
 
 class ShowSkillsView(TemplateView):
-    template_name = 'checkin/skills.html'
+    template_name = 'checkin/user_skill_list.html'
     expiry_time = (60 * 60) * 3
 
     def is_checkin_expired(self, profile):
@@ -80,7 +81,7 @@ class CompletedCourseMessageStruct:
 
 
 class ProfilePageView(TemplateView):
-    template_name = 'checkin/profile.html'
+    template_name = 'checkin/profile_detail.html'
 
     def post(self, request):
         try:
@@ -174,17 +175,17 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
         if suggestion.strip() and not suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
         elif not suggestion.strip() and suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
         elif not suggestion.strip() and not suggestion_english.strip():
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
 
         if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(
                 title_en=suggestion_english).exists():
             messages.error(request, _("Skill already exists!"))
-            return HttpResponseRedirect(reverse('suggest'))
+            return HttpResponseRedirect(reverse('suggest_skill'))
         else:
             if SuggestSkill.objects.filter(title=suggestion).exists():
                 s = SuggestSkill.objects.get(title=suggestion)
@@ -201,14 +202,13 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
             if SuggestSkill.objects.get(title=suggestion).voters.count() >= 5:
                 Skill.objects.create(title=suggestion, image=image)
                 SuggestSkill.objects.get(title=suggestion).delete()
-                messages.info(request, _("Skill added!"))
+                messages.success(request, _("Skill added!"))
 
-        return HttpResponseRedirect(reverse('suggest'))
+        return HttpResponseRedirect(reverse('suggest_skill'))
 
 
-class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
+class VoteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
-    template_name = 'checkin/suggest_skill.html'
 
     def post(self, request):
         suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
@@ -232,17 +232,13 @@ class VoteSuggestionView(PermissionRequiredMixin, TemplateView):
         return JsonResponse(response_dict)
 
 
-class DeleteSuggestionView(PermissionRequiredMixin, TemplateView):
+class DeleteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('checkin.delete_suggestskill',)
-    template_name = 'checkin/suggest_skill.html'
+    model = SuggestSkill
 
-    def post(self, request):
-        data = {"suggestion_deleted": False, }
-        SuggestSkill.objects.get(pk=int(request.POST.get('pk'))).delete()
-        if not SuggestSkill.objects.filter(pk=int(request.POST.get('pk'))).exists():
-            data["suggestion_deleted"] = True
-
-        return JsonResponse(data)
+    def delete(self, request, *args, **kwargs):
+        self.get_object().delete()
+        return JsonResponse({'suggestion_deleted': True})
 
 
 class RegisterCardView(RFIDView):
@@ -256,7 +252,7 @@ class RegisterCardView(RFIDView):
             return HttpResponse("Card scanned", status=HTTPStatus.OK)
 
 
-class RegisterProfileView(TemplateView):
+class RegisterProfileView(PreventGetRequestsMixin, TemplateView):
 
     def post(self, request):
         scan_exists = RegisterProfile.objects.exists()
@@ -278,7 +274,7 @@ class RegisterProfileView(TemplateView):
         return JsonResponse(response_dict)
 
 
-class EditProfilePictureView(View):
+class EditProfilePictureView(PreventGetRequestsMixin, View):
 
     def post(self, request, *args, **kwargs):
         image = request.FILES.get('image')

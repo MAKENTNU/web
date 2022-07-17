@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'news/css/article/article_list_contents.css' %}"/>
     <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
     <script defer src="{% static 'news/js/article/article_list_contents.js' %}"></script>
-    <script src="{% static 'lib/parallax/parallax.min.js' %}"></script>
+    <script defer src="{% static 'lib/parallax/parallax.min.js' %}"></script>
 {% endblock extra_head %}
 
 {% block padding_top %}{% endblock %}
@@ -20,7 +20,7 @@
     {# Show non-site-wide announcements on the front page #}
     {% non_site_wide_announcements as announcements %}
     {% for announcement in announcements %}
-        {% include 'announcements/announcement.html' with announcement=announcement %}
+        {% include 'announcements/announcement_banner.html' with announcement=announcement %}
     {% endfor %}
 {% endblock header %}
 
@@ -45,6 +45,8 @@
 
 {% block extra_scripts %}
     <script>
-        $(".parallax-window").parallax({'speed': 0.5});
+        $(document).ready(function () {
+            $(".parallax-window").parallax({"speed": 0.5});
+        });
     </script>
 {% endblock extra_scripts %}

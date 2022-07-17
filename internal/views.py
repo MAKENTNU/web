@@ -51,6 +51,7 @@ class EditInternalContentBoxView(EditContentBoxView):
 
 class MemberListView(ListView):
     model = Member
+    queryset = Member.objects.select_related('user').prefetch_related('committees__group', 'system_accesses')
     template_name = 'internal/member_list.html'
     context_object_name = 'members'
 
@@ -153,7 +154,7 @@ class EditMemberView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
         return kwargs
 
     def get_success_url(self):
-        return reverse('member_list', args=(self.object.pk,))
+        return self.object.get_absolute_url()
 
 
 class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
@@ -177,7 +178,7 @@ class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateV
         return self.get_success_url()
 
     def get_success_url(self):
-        return reverse('member_list', args=(self.object.pk,))
+        return self.object.get_absolute_url()
 
 
 class MemberQuitView(MemberRetireView):
@@ -205,7 +206,7 @@ class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('member_list', args=(self.object.pk,))
+        return self.object.get_absolute_url()
 
 
 class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
@@ -224,7 +225,7 @@ class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
         )
 
     def get_success_url(self):
-        return reverse('member_list', args=(self.object.member.pk,))
+        return self.object.member.get_absolute_url()
 
 
 class SecretListView(ListView):

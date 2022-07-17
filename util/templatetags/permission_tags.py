@@ -1,22 +1,13 @@
 from typing import Type, Union
 
 from django import template
-from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import Q
 
 from users.models import User
+from web.views import AdminPanelView
 
 register = template.Library()
-
-
-@register.filter
-def has_any_permissions(user: User):
-    return (
-            Permission.objects.filter(Q(group__user=user) | Q(user=user)).exists()
-            or user.is_superuser
-    )
 
 
 @register.filter
@@ -43,3 +34,11 @@ def has_any_permissions_for(user: User, model__or__app_and_model: Union[Type[mod
         model = model__or__app_and_model
 
     return user.has_any_permissions_for(model)
+
+
+@register.filter
+def can_view_admin_panel(user: User):
+    return (
+            any(user.has_any_permissions_for(model) for model in AdminPanelView.MODEL_LIST)
+            or any(user.has_perm(perm) for perm in AdminPanelView.EXTRA_PERMS)
+    )

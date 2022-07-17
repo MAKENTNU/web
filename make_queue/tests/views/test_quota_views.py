@@ -48,7 +48,7 @@ class TestQuotaPanelView(TestCase):
         def assert_response_contains_expected_context(url: str, expected_requested_user: Optional[User]):
             response = self.superuser_client.get(url)
             context = response.context
-            self.assertIsInstance(context['view'], QuotaPanelView)
+            self.assertIs(type(context['view']), QuotaPanelView)
             self.assertListEqual(list(context['users']), [self.user, self.user2, self.superuser])
             self.assertListEqual(list(context['global_quotas']), [self.quota1, self.quota2])
             self.assertEqual(context['requested_user'], expected_requested_user)

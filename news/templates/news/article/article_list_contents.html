@@ -7,7 +7,7 @@
 
 <div class="articles">
     {% for article in articles %}
-        <a class="article-img-container {% cycle "float-right" "float-left" %}" href="{% url 'article_detail' article.pk %}">
+        <a class="article-img-container {% cycle "float-right" "float-left" %}" href="{{ article.get_absolute_url }}">
             <img {% thumbnail article.image "600" crop="center" as image_thumb %}
                 src="{{ image_thumb.url }}"
             {% empty %}
@@ -19,7 +19,7 @@
                 {% endblocktrans %}"
             />
         </a>
-        <div class="article-text {% cycle "float-left" "float-right" %}
+        <div class="word-breaking hyphenated article-text {% cycle "float-left" "float-right" %}
 			    {% if forloop.first %}first{% endif %}
 			    {% if forloop.last %}last{% endif %}">
             {% if forloop.first or forloop.last %}
@@ -29,8 +29,8 @@
                 <img class="text-border-corner bottom right" src="{% static 'web/img/bottom_right.svg' %}" alt=""/>
             {% endif %}
             <div>
-                <h1 class="word-breaking article-title">
-                    <a class="make-col-yellow" href="{% url 'article_detail' article.pk %}">{{ article.title }}</a>
+                <h1 class="article-title">
+                    <a class="make-col-yellow" href="{{ article.get_absolute_url }}">{{ article.title }}</a>
                 </h1>
                 <p>{{ article.clickbait }}</p>
             </div>
