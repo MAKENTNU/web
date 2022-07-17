@@ -3,6 +3,31 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+### New features
+- Added a URL which always links to the current week for a machine reservation calendar
+  - This URL can be copied by right-clicking the "View in calendar" button for a machine on [the machine list page](https://makentnu.no/reservation/),
+    and selecting "Copy link address"
+
+### Improvements
+- Loading the member list has been made slightly faster
+- Renamed a lot of templates (and CSS and JavaScript files) to comply with the style guide
+- Improved word breaking (splitting a word between two lines, often using a hyphen) multiple places, like in titles and descriptions
+- Added translations to the spreadsheet containing course registrations, that can be downloaded from
+  [the course registrations page](https://makentnu.no/reservation/course/)
+- Improved the permission check for the admin panel
+- On the history page for a documentation page (on [docs.makentnu.no](https://docs.makentnu.no/)),
+  the current version link is now a permalink to that specific version
+
+### Fixes
+- Fixed endless redirect loop when a logged-in user visited a page that required a permission that the user didn't have
+- Fixed error messages for multilingual form fields (like the event "Content" field) not showing
+- Previously, editing CKEditor fields (like the event "Content" field) did not prevent the user from leaving the page;
+  this has now been fixed
+- Fixed old page version warning when visiting the URL for a specific documentation page version which is the current version of that page
+
+### Other changes
+- Added setup instructions to the project's README file
+- Much code cleanup, yes
 
 
 ## 2022-06-07 ([#461](https://github.com/MAKENTNU/web/pull/461))
