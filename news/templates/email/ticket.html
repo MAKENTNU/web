@@ -14,7 +14,8 @@
     <thead style="width: 100%; background-color: rgb(34, 43, 52); margin: 0; padding: 0;">
     <tr style="padding: 0; margin: 0; width: 100%;">
         <th style="padding: 20px;">
-            <img src="{{ site }}{% static 'web/img/logo_white.svg' %}"
+            {% static 'web/img/logo_white.svg' as logo_url %}
+            <img src="{% get_absolute_uri_for_path request logo_url %}"
                  style="width: 500px; max-width: 100%;" alt="{% translate "MAKE NTNU's logo" %}"
             />
         </th>
@@ -23,7 +24,7 @@
     <tbody style="width: 100%;">
     <tr style="width: 100%">
         <td style="align-items: center; padding: 0; margin: 0;">
-            <img src="{{ site }}{{ ticket.registered_event.image.url }}"
+            <img src="{% get_absolute_uri_for_path request ticket.registered_event.image.url %}"
                  style="width: 100%;" alt="{{ ticket.registered_event.image_description }}"
             />
         </td>
