@@ -12,8 +12,9 @@ from django_hosts import reverse_lazy
 from .static import serve_interpolated
 
 
+is_testing = 'test' in sys.argv
 # Disable logging when testing
-if 'test' in sys.argv:
+if is_testing:
     # Disable calls with severity level equal to or less than `CRITICAL` (i.e. everything)
     logging.disable(logging.CRITICAL)
 
@@ -398,6 +399,8 @@ if USE_DEBUG_TOOLBAR:
         },
     }
 
+
+PRINT_EMAILS_TO_CONSOLE = DEBUG or is_testing  # (custom setting)
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for
 # more details on how to customize your logging configuration.
