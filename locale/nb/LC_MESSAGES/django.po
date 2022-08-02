@@ -2393,19 +2393,25 @@ msgstr "Ref #"
 msgid "Your ticket for “%(title)s”"
 msgstr "Din billett til «%(title)s»"
 
-#: news/templates/email/ticket.html:38
-msgid "Thank you for registering for this event. You can view your ticket on"
+#: news/templates/email/ticket.html:57
+#, python-format
+msgid ""
+"Thank you for registering for this event. You can also %(link_start)sview "
+"your ticket on our website%(link_end)s."
 msgstr ""
-"Takk for at du meldte deg på dette arrangementet. Du kan se billetten din på"
+"Takk for at du meldte deg på dette arrangementet. Du kan også "
+"%(link_start)sse billetten din på nettsiden vår%(link_end)s."
 
-#: news/templates/email/ticket.html:39 news/templates/email/ticket.html:43
-msgid "this page"
-msgstr "denne siden"
-
-#: news/templates/email/ticket.html:42
-msgid "If you want to cancel your registration, you can do so by going to"
+#: news/templates/email/ticket.html:66
+msgid ""
+"If you want to cancel your registration, you can do so by visiting the "
+"following page"
 msgstr ""
-"Hvis du ønsker å avbestille billetten din, kan du gjøre dette ved å gå til"
+"Hvis du ønsker å melde deg av, kan du gjøre dette ved å besøke følgende side"
+
+#: news/templates/email/ticket.html:68
+msgid "Cancel your ticket"
+msgstr "Avbestill billetten din"
 
 #: news/templates/email/ticket.html:48
 msgid "The reference number for your ticket is"
@@ -2413,19 +2419,18 @@ msgstr "Ditt referansenummer er"
 
 #: news/templates/email/ticket.txt:7
 msgid ""
-"Thank you for registering for this event. You can view your ticket at the "
-"following URL"
+"Thank you for registering for this event. You can also view your ticket on "
+"our website through the following link"
 msgstr ""
-"Takk for at du meldte deg på dette arrangementet. Du kan se billetten din på "
-"følgende adresse"
+"Takk for at du meldte deg på dette arrangementet. Du kan også se billetten "
+"din på nettsiden vår gjennom følgende lenke"
 
 #: news/templates/email/ticket.txt:9
 msgid ""
-"If you want to cancel your registration, you can do so by visiting the "
-"following URL"
+"If you want to cancel your registration, you can do so by following this link"
 msgstr ""
-"Hvis du ønsker å avbestille billetten din, kan du gjøre dette ved å besøke "
-"følgende adresse"
+"Hvis du ønsker å avbestille billetten din, kan du gjøre dette ved å følge "
+"denne lenken"
 
 #: news/templates/news/article/admin_article_list.html:8
 #: news/templates/news/article/article_list.html:13
@@ -2560,7 +2565,7 @@ msgstr ""
 #: news/templates/news/event/admin_event_ticket_list.html:44
 #: news/templates/news/event/ticket/ticket_card.html:10
 msgid "canceled"
-msgstr "kansellert"
+msgstr "avbestilt"
 
 #: news/templates/news/event/admin_event_ticket_list.html:59
 #: news/templates/news/event/ticket/ticket_card.html:38
@@ -2680,7 +2685,7 @@ msgstr "Mine billetter"
 #: news/templates/news/event/ticket/ticket_cancel.html:6
 #, python-format
 msgid "Cancel your ticket for “%(event)s”"
-msgstr "Kanseller billetten din for «%(event)s»"
+msgstr "Avbestill billetten din for «%(event)s»"
 
 #: news/templates/news/event/ticket/ticket_cancel.html:19
 msgid "Yes, I'm sure"
@@ -2688,7 +2693,7 @@ msgstr "Ja, jeg er sikker"
 
 #: news/templates/news/event/ticket/ticket_card.html:56
 msgid "Cancel ticket"
-msgstr "Kanseller"
+msgstr "Avbestill"
 
 #: news/templates/news/event/ticket/ticket_card.html:62
 msgid "Reactivate ticket"
@@ -2762,8 +2767,9 @@ msgid "New Occurrence"
 msgstr "Ny forekomst"
 
 #: news/views.py:572
-msgid "Your ticket!"
-msgstr "Din billett!"
+#, python-brace-format
+msgid "Your ticket for “{title}”!"
+msgstr "Din billett til «{title}»!"
 
 #: news/views.py:583
 #, python-brace-format
@@ -2781,7 +2787,7 @@ msgid ""
 "Are you sure you want to cancel your ticket for<br/"
 ">“{event}”{at_time_string}?"
 msgstr ""
-"Er du sikker på at du vil kansellere billetten din for<br/"
+"Er du sikker på at du vil avbestille billetten din for<br/"
 ">«{event}»{at_time_string}?"
 
 #: users/admin.py:25

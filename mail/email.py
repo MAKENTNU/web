@@ -92,7 +92,7 @@ def render_html(request, context: dict, html_template_name: str):
     })
 
 
-def render_text(request, context: dict, text="", text_template_name: str = None):
+def render_text(request, context: dict, text="", text_template_name: str = None, strip=True):
     """
     Helper for rendering text for use in an email. Must be done before sending the message from the thread of a request
     for correct translations.
@@ -101,13 +101,15 @@ def render_text(request, context: dict, text="", text_template_name: str = None)
     :param context: The context to render the text for if there is a template given
     :param text: The text to "render"
     :param text_template_name: The name of the template file
+    :param strip: If ``true``, the text rendered from the template will have leading and trailing whitespace removed before being returned.
     :return: A string representing the text content
     """
     if text_template_name:
-        return get_template(text_template_name).render({
+        rendered_text = get_template(text_template_name).render({
             'request': request,
             **context,
         })
+        return rendered_text.strip() if strip else rendered_text
 
     # Default to text attribute
     return text

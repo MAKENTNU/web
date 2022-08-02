@@ -2,8 +2,18 @@
 {% load uri_tags %}
 
 
-{% blocktranslate with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktranslate %}
+--- {% blocktranslate with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktranslate %} ---
 
-{% translate "Thank you for registering for this event. You can view your ticket at the following URL" %}: {% get_absolute_uri_for_path request ticket.get_absolute_url %}
+    {% translate "preferred language"|capfirst %}: {{ ticket.get_language_display }}
+    {% translate "comment"|capfirst %}: {{ ticket.comment }}
+
+{% blocktranslate trimmed %}
+    Thank you for registering for this event.
+    You can also view your ticket on our website through the following link
+{% endblocktranslate %}: {% get_absolute_uri_for_path request ticket.get_absolute_url %}
 {% url 'cancel_ticket' ticket.pk as cancel_url %}
-{% translate "If you want to cancel your registration, you can do so by visiting the following URL" %}: {% get_absolute_uri_for_path request cancel_url %}
+{% blocktranslate trimmed %}
+    If you want to cancel your registration, you can do so by following this link
+{% endblocktranslate %}: {% get_absolute_uri_for_path request cancel_url %}
+
+{% translate "The reference number for your ticket is" %}: "{{ ticket.uuid }}"

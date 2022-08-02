@@ -1,6 +1,7 @@
 {% load static %}
 {% load i18n %}
 {% load uri_tags %}
+{% load html_tags %}
 
 {# CSS styles should be inline, as most email clients don't support external stylesheets, and many don't support <style> tags. #}
 {# See https://css-tricks.com/using-css-in-html-emails-the-real-story/ for more details on what is and isn't supported. #}
@@ -14,34 +15,58 @@
     <thead style="width: 100%; background-color: rgb(34, 43, 52); margin: 0; padding: 0;">
     <tr style="padding: 0; margin: 0; width: 100%;">
         <th style="padding: 20px;">
-            {% static 'web/img/logo_white.svg' as logo_url %}
-            <img src="{% get_absolute_uri_for_path request logo_url %}"
-                 style="width: 500px; max-width: 100%;" alt="{% translate "MAKE NTNU's logo" %}"
-            />
+            {% url 'front_page' as front_page_url %}
+            <a href="{% get_absolute_uri_for_path request front_page_url %}" target="_blank">
+                {% static 'web/img/logo_white.svg' as logo_url %}
+                <img src="{% get_absolute_uri_for_path request logo_url %}"
+                     style="width: 500px; max-width: 100%;" alt="{% translate "MAKE NTNU's logo" %}"
+                />
+            </a>
         </th>
     </tr>
     </thead>
     <tbody style="width: 100%;">
+    {% get_absolute_uri_for_path request ticket.registered_event.get_absolute_url as event_url %}
     <tr style="width: 100%">
         <td style="align-items: center; padding: 0; margin: 0;">
-            <img src="{% get_absolute_uri_for_path request ticket.registered_event.image.url %}"
-                 style="width: 100%;" alt="{{ ticket.registered_event.image_description }}"
-            />
+            <a href="{{ event_url }}" target="_blank">
+                <img src="{% get_absolute_uri_for_path request ticket.registered_event.image.url %}"
+                     style="width: 100%;" alt="{{ ticket.registered_event.image_description }}"
+                />
+            </a>
         </td>
     </tr>
     <tr style="width: 100%">
-        <td style="padding: 30px 30px 0 30px; font-size: 30px; font-weight: bold;">
-            {% blocktranslate with title=ticket.registered_event.title %}Your ticket for “{{ title }}”{% endblocktranslate %}
+        <td style="padding: 30px 30px 15px; font-size: 30px; font-weight: bold;">
+            {% anchor_tag event_url ticket.registered_event.title as event_title_link %}
+            {% blocktranslate with title=event_title_link %}Your ticket for “{{ title }}”{% endblocktranslate %}
         </td>
     </tr>
     <tr style="width: 100%">
-        <td style="padding: 15px 30px 0 30px;">
-            {% translate "Thank you for registering for this event. You can view your ticket on" %}
-            <a href="{% get_absolute_uri_for_path request ticket.get_absolute_url %}">{% translate "this page" %}</a>.
-
+        <td style="padding: 15px 60px;">
+            <b style="color: grey;">{% translate "preferred language"|capfirst %}:</b>
+            {{ ticket.get_language_display }}
+            <br/>
+            <b style="color: grey;">{% translate "comment"|capfirst %}:</b>
+            {{ ticket.comment }}
+        </td>
+    </tr>
+    <tr style="width: 100%">
+        <td style="padding: 15px 30px 0;">
+            {% get_absolute_uri_for_path request ticket.get_absolute_url as ticket_url %}
+            {% blocktranslate trimmed with link_start='<a href="'|add:ticket_url|safe|add:'" target="_blank">' link_end='</a>' %}
+                Thank you for registering for this event.
+                You can also {{ link_start }}view your ticket on our website{{ link_end }}.
+            {% endblocktranslate %}
+        </td>
+    </tr>
+    <tr style="width: 100%">
+        <td style="padding: 15px 30px 0;">
             {% url 'cancel_ticket' ticket.pk as cancel_url %}
-            {% translate "If you want to cancel your registration, you can do so by going to" %}
-            <a href="{% get_absolute_uri_for_path request cancel_url %}">{% translate "this page" %}</a>.
+            {% translate "If you want to cancel your registration, you can do so by visiting the following page" %}:
+            <a href="{% get_absolute_uri_for_path request cancel_url %}" target="_blank">
+                {% translate "Cancel your ticket" %}
+            </a>
         </td>
     </tr>
     <tr style="width: 100%">
