@@ -567,8 +567,8 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
             async_to_sync(get_channel_layer().send)(
                 'email', {
                     'type': 'send_html',
-                    'html_render': email.render_html({'ticket': ticket}, 'email/ticket.html'),
-                    'text': email.render_text({'ticket': ticket}, text_template_name='email/ticket.txt'),
+                    'html_render': email.render_html(self.request, {'ticket': ticket}, html_template_name='email/ticket.html'),
+                    'text': email.render_text(self.request, {'ticket': ticket}, text_template_name='email/ticket.txt'),
                     'subject': str(_("Your ticket!")),  # pass the pure string object, instead of the proxy object from `gettext_lazy`
                     'from': settings.EVENT_TICKET_EMAIL,
                     'to': ticket.email,
