@@ -150,6 +150,10 @@ Common things to include in this part of the commit message, are:
   which other changes were necessary to facilitate the changes,
   which assumptions had to be made or which special conditions made the basis for the changes, etc.
 
+Finally, here is an excellent blog post from GitHub on the usefulness of keeping a logical commit structure and descriptive commit messages,
+with reasoning, examples and tips:
+["Write Better Commits, Build Better Projects"](https://github.blog/2022-06-30-write-better-commits-build-better-projects/).
+
 
 
 ## Python
