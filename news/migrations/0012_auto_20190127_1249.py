@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=128, verbose_name='name')),
                 ('email', models.EmailField(max_length=254, verbose_name='email')),
                 ('active', models.BooleanField(default=True, verbose_name='active')),
-                ('comment', models.TextField(blank=True, verbose_name='comment')),
+                ('comment', models.TextField(blank=True, max_length=1000, verbose_name='comment')),
                 ('language', models.CharField(choices=[('en', 'English'), ('nb', 'Norwegian')], default='en', max_length=2, verbose_name='preferred language')),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
             ],

@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from django.conf import settings
 from django.test import Client, TestCase
 from django.urls import reverse as django_reverse
-from django.utils import timezone
+from django.utils import lorem_ipsum, timezone
 from django_hosts import reverse
 
 from users.models import User
@@ -83,6 +83,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 "",
                 "A comment :)",
                 "Æøå",
+                self.get_max_length_ticket_comment(),
             )
         )
         for url in registration_urls:
@@ -117,6 +118,15 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
 
                     # Delete the ticket, so that the next for-loop iteration has a clean slate
                     ticket.delete()
+
+    @staticmethod
+    def get_max_length_ticket_comment():
+        comment_max_length = EventTicket._meta.get_field('comment').max_length
+        max_length_comment = lorem_ipsum.sentence()
+        while len(max_length_comment) < comment_max_length:
+            max_length_comment = f"{max_length_comment}\n{lorem_ipsum.sentence()}"
+        # Make each line shorter by placing a newline after every comma instead of a space
+        return max_length_comment.replace(", ", ",\n")[:comment_max_length]
 
     def test__event_registration_view__creates_and_reactivates_tickets_as_expected(self):
         for time_place_or_event in [self.repeating_time_place, self.standalone_event]:

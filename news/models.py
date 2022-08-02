@@ -270,7 +270,7 @@ class EventTicket(models.Model):
     active = models.BooleanField(default=True, verbose_name=_("active"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
                                 verbose_name=_("preferred language"))
-    comment = models.TextField(blank=True, verbose_name=_("comment"))
+    comment = models.TextField(blank=True, max_length=1000, verbose_name=_("comment"))
 
     class Meta:
         constraints = (
