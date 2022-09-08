@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.utils.dateparse import parse_datetime
 from django.utils.formats import date_format
 from django.utils.timezone import make_aware
@@ -17,6 +17,17 @@ TIME_STRINGS = {
     'hour': ngettext_lazy("%(num)d hour", "%(num)d hours", 'num'),
     'minute': ngettext_lazy("%(num)d minute", "%(num)d minutes", 'num'),
 }
+
+
+def localize_lazy_string(lazy_string_or_func, *, language_code: str):
+    previous_language = translation.get_language()
+    translation.activate(language_code)
+    try:
+        lazy_string = lazy_string_or_func() if callable(lazy_string_or_func) else lazy_string_or_func
+        # Un-lazify the string before returning - while the language activated above is still active
+        return str(lazy_string)
+    finally:
+        translation.activate(previous_language)
 
 
 def parse_datetime_localized(value):

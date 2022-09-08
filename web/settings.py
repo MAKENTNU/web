@@ -329,8 +329,15 @@ def static_lazy(path):
     return lazy(lambda: static(path), str)()
 
 
-CKEDITOR_UPLOAD_PATH = 'ckeditor-upload/'
+CKEDITOR_UPLOAD_PATH = 'ckeditor_upload/'
 CKEDITOR_IMAGE_BACKEND = 'ckeditor_uploader.backends.PillowBackend'
+
+# Group files by directories when browsing uploaded files
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_FILENAME_GENERATOR = 'util.ckeditor_utils.get_filename'
+# Don't place uploaded files in directories per date (placement is decided in `ckeditor_utils.py`)
+CKEDITOR_RESTRICT_BY_DATE = False
+
 CKEDITOR_CONFIGS = {
     'default': {
         'skin': 'moono-lisa',
