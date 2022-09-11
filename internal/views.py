@@ -10,6 +10,7 @@ from django.views.generic import TemplateView, ListView, CreateView, UpdateView,
 from internal.forms import AddMemberForm, EditMemberForm, MemberQuitForm, ToggleSystemAccessForm, SecretsForm, EditGuidanceHoursForm
 from internal.models import Member, SystemAccess, Secret, GuidanceHours
 from make_queue.models.course import Printer3DCourse
+from internal.templatetags.guidance_hours import has_reset_guidance_hours_permission
 
 
 class Home(TemplateView):
@@ -21,6 +22,17 @@ class GuidanceHoursView(ListView):
     model = GuidanceHours
     context_object_name = 'guidance_hours'
 
+    def post(self, request):
+        for slot in GuidanceHours.objects.all():
+            slot.slot_one = None
+            slot.slot_two = None
+            slot.slot_three = None
+            slot.slot_four = None
+
+            slot.save()
+
+        return HttpResponseRedirect(reverse("guidance-hours"))
+
     def get_queryset(self):
         week_days = {
             'Monday': [],
@@ -30,16 +42,10 @@ class GuidanceHoursView(ListView):
             'Friday': [],
         }
 
-        for hour in GuidanceHours.objects.all():
-            week_days.setdefault(hour.day, []).append(hour)
+        for slot in GuidanceHours.objects.all():
+            week_days.setdefault(slot.day, []).append(slot)
 
         return week_days
-
-    def get_context_data(self, **kwargs):
-        context = super(GuidanceHoursView, self).get_context_data(**kwargs)
-        context["members"] = Member.objects.filter(guidance_exemption=False) 
-
-        return context
 
         
 class EditGuidanceHoursView(UpdateView):
@@ -47,8 +53,9 @@ class EditGuidanceHoursView(UpdateView):
     model = GuidanceHours
     form_class = EditGuidanceHoursForm
     success_url = reverse_lazy('guidance-hours')
+    context_object_name = 'guidance_hour'
 
-    
+
 class SecretsView(ListView):
     template_name = "internal/secrets.html"
     model = Secret

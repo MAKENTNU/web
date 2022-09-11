@@ -2,6 +2,7 @@
 {% load i18n %}
 {% load static %}
 
+
 {%block head%}
 <style>
     .ui.selection.dropdown {
@@ -16,7 +17,7 @@
             <thead>
                 <tr>
                     <th> {% trans "Time" %} </th>
-                    <th> {% trans object.day %} </th>
+                    <th> {% trans guidance_hour.day %} </th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -25,21 +26,30 @@
 
             <tbody>
                 <tr>
-                    <td>{{ object.start_time }}-{{ object.end_time}} </td> 
+                    <td>{{ guidance_hour.start_time }}-{{ guidance_hour.end_time}} </td> 
                        
-                    <form method="post" action=""> {% csrf_token %}
+                    <form class="ui form" method="post" action=""> 
+                        {% csrf_token %}
                         {% for slot in form %}
-                            <td>
+                            <td class="field">
                                 {{ slot }}
+                                {% if slot.errors %}
+                                <div class="ui error mini floating message">
+                                    {{ slot.errors | striptags }}
+                                </div>
+                                {% endif %}
+                            </div>
+                            </div>
                             </td>
                         {% endfor %}
                         <input class="ui yellow button" type="submit" value="{% trans "Save" %}"/>
                     </form>
                 </tr>
-
             </tbody>
         </table>
-
     </div>
-
 {% endblock body %}
+
+{% block scripts %}
+
+{% endblock scripts %}

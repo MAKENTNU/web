@@ -22,7 +22,6 @@ class TestGetQuotaView(TestCase):
 
         self.assertEqual(context_data, {"user_quotas": [quota2]})
 
-
 class TestQuotaPanelView(TestCase):
 
     def setUp(self):

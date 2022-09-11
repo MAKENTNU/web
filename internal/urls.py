@@ -5,9 +5,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 from django_hosts import reverse
 
-from internal.views import MembersListView, AddMemberView, EditMemberView, MemberUndoQuitView, MemberQuitView, \
-    MemberUndoRetireView, MemberRetireView, ToggleSystemAccessView, SecretsView, EditSecretView, CreateSecretView, \
-    DeleteSecretView, GuidanceHoursView, EditGuidanceHoursView
+from internal.views import AddMemberView, CreateSecretView, DeleteSecretView, EditGuidanceHoursView, EditMemberView, EditSecretView , GuidanceHoursView, MemberQuitView, MemberRetireView, MemberUndoQuitView, MemberUndoRetireView, MembersListView, SecretsView, ToggleSystemAccessView
 
 unsafe_urlpatterns = [
     path("members", MembersListView.as_view(), name="members"),

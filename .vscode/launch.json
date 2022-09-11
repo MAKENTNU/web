@@ -1,0 +1,65 @@
+{
+    "configurations": [
+        {
+            "name": "Run selected test",
+            "type": "python",
+            "request": "launch",
+            // "preLaunchTask": "debug:tests",
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}\\manage.py",
+            "justMyCode": false,
+            "args": [
+                "test",
+                "${input:appName}.tests.${input:testCase}.${selectedText}"
+                // "echo ${fileDirname} "
+                
+            ],
+            "django": true
+        },
+        {
+            "name": "Django Test",
+            "type": "python",
+            "request": "launch",
+            "stopOnEntry": true,
+            "program": "${workspaceFolder}\\manage.py",
+            "cwd": "${workspaceRoot}",
+            "args": [
+                "test",
+            ],
+            "env": {},
+            "envFile": "..\\${workspaceFolder}",
+        },
+        {
+            "name": "Runserver",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}\\manage.py",
+            "args": [
+                "runserver"
+            ],
+            "django": true            
+        },
+    
+    ],
+    "inputs": [
+        {
+            "type": "pickString",
+            "id": "appName",
+            "description": "Which app to run the test?",
+            "options": [
+            "internal",
+          ],
+            "default": ""
+        },
+        {
+            "type": "pickString",
+            "id": "testCase",
+            "description": "Type the test case to test",
+            "options": [
+                "GuidanceHoursUpdateMemberTest",
+                "UrlTests",
+            ],
+            "default": ""
+        },
+      ]
+}

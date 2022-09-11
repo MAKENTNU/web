@@ -1,7 +1,7 @@
 import django.forms as forms
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-
+from internal.models import Member
 
 class SemanticTimeInput(forms.TimeInput):
     template_name = "web/forms/widgets/semantic_time.html"
@@ -15,6 +15,7 @@ class SemanticSearchableChoiceInput(forms.Select):
     template_name = "web/forms/widgets/semantic_search_select.html"
     prompt_text = _("Choose value")
     extra_attr = None
+    test = [("MONDAY", "MONDAY")]
 
     def __init__(self, *args, **kwargs):
         super().__init__(attrs=kwargs.pop("attrs", {}))

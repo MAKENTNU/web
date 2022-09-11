@@ -18,4 +18,3 @@ phonenumbers
 Pillow
 uuid
 xlsxwriter
-simple_history

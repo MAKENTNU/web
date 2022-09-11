@@ -75,7 +75,6 @@ INSTALLED_APPS = [
     'users',
     'card',
     'announcements',
-    'simple_history',
 ]
 
 MIDDLEWARE = [

@@ -6,8 +6,118 @@ from django.test import Client, TestCase, override_settings
 from django_hosts import reverse
 
 from users.models import User
-from .models import Member, SystemAccess
+from .models import Member, SystemAccess, GuidanceHours
 
+from internal.forms import EditGuidanceHoursForm
+import datetime
+from django.forms import model_to_dict
+from django.core import serializers
+
+from unittest import skip
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.exceptions import ValidationError
+from http import HTTPStatus
+from internal.templatetags import guidance_hours
+
+
+ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': 'admin.testserver'}
+class GuidanceHoursUpdateMemberTest(TestCase):
+    def setUp(self):
+        self.password = "TEST_PASS"
+        self.admin_user = User.objects.create_user(username="ADMIN", password=self.password, is_staff=True, is_superuser=True)
+        self.user = User.objects.create_user(username="USER", password=self.password)
+        self.member = Member.objects.create(user=self.admin_user)
+        self.non_member = User.objects.create_user(username='NON_MEMBER', password=self.password)
+        permission = Permission.objects.get(codename='is_internal')
+        reset_permission = Permission.objects.get(codename='can_change_guidancehours')
+        self.user.user_permissions.add(permission)
+        self.admin_user.user_permissions.add(permission)
+
+        self.member_client = Client(**ADMIN_CLIENT_DEFAULTS)
+        self.member_client.login(username=self.admin_user, password=self.password)
+        self.member_with_guidance_exemption = Member.objects.create(user=self.user, guidance_exemption=True)
+
+        day = 'Monday'
+        start_time = datetime.time(hour=14)
+        end_time = datetime.time(hour=16, minute=15)
+        self.member = Client()
+        self.monday_slot = GuidanceHours.objects.create(day=day, start_time=start_time, end_time=end_time)
+
+
+    def test_update_end_time(self):
+        change_url = reverse('admin:%s_%s_change' % (self.monday_slot._meta.app_label, self.monday_slot.__class__.__name__.lower()), args=[self.monday_slot.pk], host="admin")
+        data = model_to_dict(self.monday_slot, exclude=['id', 'slot_one', 'slot_two', 'slot_three', 'slot_four'])
+        hour_changed = 17
+        data['end_time'] = datetime.time(hour=hour_changed)
+
+        response = self.member_client.post(
+            change_url,
+            data
+        )
+        self.monday_slot.refresh_from_db()
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertEqual(self.monday_slot.end_time, datetime.time(hour=hour_changed))
+
+    def test_end_time_before_start_time(self):
+        INVALID_END_TIME = GuidanceHours.objects.create(
+            day='Tuesday',
+            start_time=datetime.time(hour=12),
+            end_time=datetime.time(hour=10)
+        )
+
+        self.assertRaises(ValidationError, INVALID_END_TIME.clean)
+
+    def test_valid_form_data_is_valid(self):
+        valid_form_data = {
+            'slot_one': '',
+            'slot_two': '',
+            'slot_three': '',
+            'slot_four': ''
+        }
+
+        VALID_EMPTY_FORM = EditGuidanceHoursForm(data=valid_form_data)
+        self.assertTrue(VALID_EMPTY_FORM.is_valid())
+
+        valid_form_data['slot_one'] = self.member
+        FORM_WITH_VALID_MEMBER = EditGuidanceHoursForm(data=valid_form_data)
+        self.assertTrue(FORM_WITH_VALID_MEMBER)
+
+    def test_add_non_member(self):
+
+        form_data = {
+            'slot_one': self.non_member,
+            'slot_two': '',
+            'slot_three': '',
+            'slot_four': ''
+        }
+
+        form = EditGuidanceHoursForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+
+    @skip('Not implemented')
+    def test_add_member_with_guidance_exemption(self):
+        form_data = {
+            'slot_one': self.member_with_guidance_exemption,
+            'slot_two': '',
+            'slot_three': '',
+            'slot_four': ''
+        }
+
+        form = EditGuidanceHoursForm(data=form_data)
+        self.assertFalse(form.is_valid())
+
+    def test_get_sorted_slots_by_earliest_start_time(self):
+        pass
+
+
+    def test_reset_guidance_hours_table(self):
+        pass
+
+    
+    def test_successful_response_guidance_hours_view(self):
+        pass
 
 class UrlTests(TestCase):
 

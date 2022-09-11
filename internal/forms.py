@@ -7,7 +7,7 @@ from card.forms import CardNumberField
 from internal.models import Member, SystemAccess, Secret, GuidanceHours
 from users.models import User
 from web.widgets import SemanticSearchableChoiceInput, SemanticDateInput, SemanticMultipleSelectInput
-
+from internal.models import Member
 
 class AddMemberForm(ModelForm):
     class Meta:
@@ -65,9 +65,23 @@ class EditGuidanceHoursForm(ModelForm):
 
         widgets = {}
 
-        for field in fields:
-            widgets[field] = SemanticSearchableChoiceInput(extra_attr="clearable make_bg_blue", prompt_text=_("Sign up"))
+        for slot in fields:
+            widgets[slot] = SemanticSearchableChoiceInput(
+                extra_attr="clearable make_bg_blue", 
+                prompt_text=_("Sign up"),
+            )
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for slot in self.fields:
+            self.fields[slot].queryset = Member.objects.filter(guidance_exemption=False)
 
+    def clean(self):
+        slots = self.cleaned_data
+        for field, slot in list(slots.items()):
+            if (slot != None) and slot not in Member.objects.filter(guidance_exemption=False):
+                self.add_error(field, _("Member not available for guidance hours"))                
+
+        return slots
 
 class MemberQuitForm(ModelForm):
     class Meta:

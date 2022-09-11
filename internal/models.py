@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models.signals import m2m_changed
 from django.dispatch import receiver
@@ -12,8 +13,6 @@ from internal.util import date_to_term
 from users.models import User
 
 from web.multilingual.database import MultiLingualRichTextUploadingField, MultiLingualTextField
-
-from simple_history.models import HistoricalRecords
 
 
 class Member(models.Model):
@@ -80,7 +79,6 @@ class Member(models.Model):
         :param reason: The reason why the member has quit
         :param date_quit: The date the member quit
         """
-        print("TEST", quit_status)
         self.status = quit_status
         if self.status == 'Q': 
             self.date_quit = date_quit
@@ -124,7 +122,7 @@ class Member(models.Model):
                 make.first().user_set.remove(self.user)
 
     def __str__(self):
-        return self.user.get_full_name()
+            return self.user.get_full_name()
 
 class GuidanceHours(models.Model):
     class Meta:
@@ -144,13 +142,17 @@ class GuidanceHours(models.Model):
     slot_two = models.ForeignKey(Member, null=True, blank=True, related_name="slot_two", verbose_name=_("Slot two"), on_delete=models.SET_NULL)
     slot_three = models.ForeignKey(Member, null=True, blank=True, related_name="slot_three", verbose_name=_("Slot three"), on_delete=models.SET_NULL)
     slot_four = models.ForeignKey(Member, null=True, blank=True, related_name="slot_four", verbose_name=_("Slot four"), on_delete=models.SET_NULL)
-    history = HistoricalRecords()
-
-    
+   
+   
     @property
     def get_slots(self):
         return [self.slot_one, self.slot_two, self.slot_three, self.slot_four]
     
+    def clean(self):
+        if self.start_time > self.end_time:
+            raise ValidationError('Start time cannot be after end time')
+        return super().clean()
+
     def __str__(self):
         return f'{self.day} {self.start_time.strftime("%H:%M")}-{self.end_time.strftime("%H:%M")}'
 
