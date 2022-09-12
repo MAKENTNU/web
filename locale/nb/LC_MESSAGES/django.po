@@ -880,6 +880,10 @@ msgstr "GitHub-brukernavn"
 msgid "Discord username"
 msgstr "Discord-brukernavn"
 
+#: internal/models.py:60
+msgid "The username must include the hashtag and the four digits at the end."
+msgstr "Brukernavnet må inkludere hashtaggen og de fire sifrene på slutten."
+
 #: internal/models.py:59 internal/templates/internal/member_list.html:361
 msgid "Minecraft username"
 msgstr "Minecraft-brukernavn"
