@@ -2,6 +2,9 @@
 {% load static %}
 
 
+{# Overwrite the super block's contents with nothing, as the Open Graph meta tags are not needed on an error page #}
+{% block open_graph_meta %}{% endblock open_graph_meta %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'web/css/error.css' %}"/>
 {% endblock extra_head %}
