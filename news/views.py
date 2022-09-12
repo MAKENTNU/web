@@ -688,6 +688,8 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         return urls
 
     def get_queryset(self):
+        if self.request.user.has_perm('news.cancel_ticket'):
+            return self.model.objects.all()
         return self.request.user.event_tickets.all()
 
     def get_context_data(self, **kwargs):
