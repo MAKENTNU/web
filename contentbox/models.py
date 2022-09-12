@@ -52,10 +52,10 @@ class ContentBox(models.Model):
         ]
         for host_kwargs in all_host_kwargs:
             try:
-                return reverse(self.title, **host_kwargs)
+                return reverse(self.url_name, **host_kwargs)
             except NoReverseMatch:
                 pass
-        raise NoReverseMatch(f"Unable to find {self._meta.object_name} with title '{self.title}'")
+        raise NoReverseMatch(f"Unable to find {self._meta.object_name} with url_name '{self.url_name}'")
 
     @property
     def extra_change_perms_str_tuple(self):
