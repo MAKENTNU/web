@@ -124,7 +124,7 @@
                                 <div id="special-checkbox" class="ui checkbox {% if not new_reservation %}disabled{% endif %}">
                                     <input id="special" type="checkbox" name="special"
                                            {% if not is_new_reservation and special %}checked{% endif %}/>
-                                    <label for="event">{% trans "MAKE NTNU" %}</label>
+                                    <label for="event">MAKE NTNU</label>
                                 </div>
                             </div>
                         </div>
@@ -180,6 +180,6 @@
     </script>
     <script src="{% static 'make_queue/js/reservation_form.js' %}"></script>
     <script>
-        getFutureReservations($("#machine-name-dropdown").dropdown('get value'), {% invert start_time %});
+        getFutureReservations($("#machine-name-dropdown").dropdown("get value"), {{ start_time|yesno:"false,true" }});
     </script>
 {% endblock body %}

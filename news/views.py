@@ -1,7 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import List, Optional, Set, Tuple
+from typing import List, Optional, Set, Tuple, Union
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -626,7 +626,7 @@ class AdminEventTicketListView(PermissionRequiredMixin, EventRelatedViewMixin, L
     context_object_name = 'tickets'
 
     @property
-    def focused_object(self):
+    def focused_object(self) -> Union[Event, TimePlace]:
         return self.event
 
     def has_permission(self):

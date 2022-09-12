@@ -43,7 +43,7 @@ class Member(models.Model):
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("phone number"))
     study_program = UnlimitedCharField(blank=True, verbose_name=_("study program"))
     ntnu_starting_semester = SemesterField(null=True, blank=True, verbose_name=_("starting semester at NTNU"),
-                                           help_text=_('Must be in the format [V/H][year], e.g. “V17” or “H2017”.'))
+                                           help_text=_("Must be in the format [V/H][year], e.g. “V17” or “H2017”."))
     date_joined = models.DateField(default=timezone.datetime.now, verbose_name=_("date joined"))
     date_quit_or_retired = models.DateField(null=True, blank=True, verbose_name=_("date quit or retired"))
     reason_quit = models.TextField(blank=True, verbose_name=_("reason quit"))
@@ -257,7 +257,6 @@ class Secret(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = SecretQuerySet.as_manager()
-
     history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
 
     def __str__(self):

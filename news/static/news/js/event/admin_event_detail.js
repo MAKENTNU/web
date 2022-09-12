@@ -1,15 +1,18 @@
-/* `csrfToken`, `privateEventIcon` and `publicEventIcon` must be defined when linking this script */
+/* These variables must be defined when linking this script */
+// noinspection ES6ConvertVarToLetConst
 var csrfToken;
+// noinspection ES6ConvertVarToLetConst
 var privateEventIcon;
+// noinspection ES6ConvertVarToLetConst
 var publicEventIcon;
 
 $(".tabular.menu .item").tab();
 
 $(".toggle").click(function () {
-    toggle_post($(this), $(this).data("post-url"), $(this).data("model"), $(this).data("toggle"));
+    togglePost($(this), $(this).data("post-url"), $(this).data("model"), $(this).data("toggle"));
 });
 
-function toggle_post($element, postURL, model, toggle) {
+function togglePost($element, postURL, model, toggle) {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
             xhr.setRequestHeader("X-CSRFToken", csrfToken);
@@ -26,11 +29,10 @@ function toggle_post($element, postURL, model, toggle) {
                 return;
 
             const color = data["color"];
-            if (toggle === "private") {
+            if (toggle === "private")
                 $element.attr("src", (color === "yellow") ? privateEventIcon : publicEventIcon);
-            } else {
+            else
                 $element.removeClass("yellow grey").addClass(color);
-            }
 
             if (model === "event")
                 $(`#message-${toggle}`).toggleClass("hidden", color === "grey");

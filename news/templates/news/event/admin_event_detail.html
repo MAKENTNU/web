@@ -5,8 +5,9 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/admin_event_detail.css' %}"/>
+    <!--suppress ES6ConvertVarToLetConst -->
     <script>
-        {# `csrfToken`, `privateEventIcon` and `publicEventIcon` are used in `admin_event_detail.js` #}
+        {# These variables are used in `admin_event_detail.js` #}
         var csrfToken = "{{ csrf_token }}";
         var privateEventIcon = "{% static 'web/img/logo_icon_allyellow.svg' %}";
         var publicEventIcon = "{% static 'web/img/logo_icon_allgrey.svg' %}";

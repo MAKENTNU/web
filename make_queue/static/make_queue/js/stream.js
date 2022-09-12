@@ -1,5 +1,7 @@
 /* `connectStreamsOutsideViewport` can optionally be defined when linking this script */
+// noinspection ES6ConvertVarToLetConst
 var connectStreamsOutsideViewport;
+
 const STREAM_INIT_TIMEOUT_SECONDS = 10;
 const streamNameToData = {};
 const streamNameToOriginalImg = {};

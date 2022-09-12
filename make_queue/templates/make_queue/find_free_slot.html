@@ -1,15 +1,12 @@
 {% extends 'web/base.html' %}
+{% load static %}
 {% load i18n %}
 {% load datetime_tags %}
 {% load reservation_extra %}
 
 
 {% block extra_head %}
-    <style>
-        .list {
-            max-width: 60em;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'make_queue/css/find_free_slot.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}

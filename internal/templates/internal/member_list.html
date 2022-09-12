@@ -211,7 +211,7 @@
     <div id="detailed-member-info" class="ui longer modal">
         <div class="header">
             <span id="member-name-header" class="word-breaking hyphenated"></span>
-            <a id="member-editUrl-button">
+            <a id="member-editURL-button">
                 <i class="make-col-yellow pencil icon"></i>
             </a>
             <span id="member-status-header"></span>
@@ -383,14 +383,14 @@
                 </h4>
                 <form id="edit-member-status-form" class="dont-prevent-leaving member-action-buttons" method="POST">
                     {% csrf_token %}
-                    <a id="member-setQuitUrl-button" class="ui red button">
+                    <a id="member-setQuitURL-button" class="ui red button">
                         {% trans "Set member as quit" %}
                     </a>
                     <button id="member-canUndoQuit-button" class="ui green button" type="submit"
                             data-status-action="{{ StatusAction.UNDO_QUIT }}">
                         {% trans "Set member as not quit" %}
                     </button>
-                    <a id="member-setRetiredUrl-button" class="ui make-bg-yellow button">
+                    <a id="member-setRetiredURL-button" class="ui make-bg-yellow button">
                         {% trans "Set member as retired" %}
                     </a>
                     <button id="member-canUndoRetired-button" class="ui make-bg-yellow button" type="submit"
@@ -407,26 +407,29 @@
 
 {% block extra_scripts %}
     <script>
-        $("div.ui.dropdown").dropdown();
+        $(".ui.dropdown").dropdown();
         $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "active"|capfirst %}"]);
     </script>
     <script src="{% static 'internal/js/member_list.js' %}"></script>
     {% if selected_member %}
         <script>
             showDetailedMemberInformation(state.allMembers.find(
-                (member) => member.data.pk === {{ selected_member.pk }}
+                    (member) => member.data.pk === {{ selected_member.pk }}
             ));
         </script>
     {% endif %}
 
-    {# Show any possible messages created by actions (changing retirement/quit status) #}
-    <script>
-        {% for message in messages %}
-            $("body").toast({
-                displayTime: 0,
-                message: "{{ message }}",
-                class: "warning",
-            });
-        {% endfor %}
-    </script>
+    {# Show any possible messages triggered by user actions (changing retirement/quit status) #}
+    {% if messages %}
+        <script>
+            const $body = $("body");
+            {% for message in messages %}
+                $body.toast({
+                    displayTime: 0,
+                    message: "{{ message }}",
+                    class: "warning",
+                });
+            {% endfor %}
+        </script>
+    {% endif %}
 {% endblock extra_scripts %}

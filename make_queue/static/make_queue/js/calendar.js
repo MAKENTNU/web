@@ -1,4 +1,4 @@
-/* Requires reservation_rule_utils.js and date_utils.js */
+/* This script requires linking `reservation_rule_utils.js` and `date_utils.js` */
 
 function ReservationCalendar($element, properties) {
     /**
@@ -413,8 +413,9 @@ ReservationCalendar.prototype.addReservation = function (reservation) {
     /**
      * Adds the given reservation to the calendar.
      */
-    reservation.start = new Date(Date.parse(reservation.start));
-    reservation.end = new Date(Date.parse(reservation.end));
+    // The values from the server are ISO-formatted strings
+    reservation.start = new Date(reservation.start);
+    reservation.end = new Date(reservation.end);
 
     this.drawReservation(reservation.start, reservation.end, `${reservation.type} reservation`, ($htmlElement) => {
         // If the reservation has some text to display on hover, create a popup

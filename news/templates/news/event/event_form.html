@@ -18,7 +18,7 @@
                     <div class="ui radio checkbox">
                         <input id="repeating" type="radio" name="{{ field.name }}" value="{{ Event.Type.REPEATING }}"
                                {% if field.value == Event.Type.REPEATING %}checked{% endif %}/>
-                        <label for="repeating">{% trans "Repeating" %}
+                        <label for="repeating">{{ Event.Type.REPEATING.label }}
                             <span class="popup-trigger" data-content="{% blocktrans trimmed %}
                                 Used for repeating events where the user is to register for one of several occurrences.
                                 Each occurrence will have its own registration.
@@ -33,7 +33,7 @@
                     <div class="ui radio checkbox">
                         <input id="standalone" type="radio" name="{{ field.name }}" value="{{ Event.Type.STANDALONE }}"
                                {% if field.value == Event.Type.STANDALONE %}checked{% endif %}/>
-                        <label for="standalone">{% trans "Standalone" %}
+                        <label for="standalone">{{ Event.Type.STANDALONE.label }}
                             <span class="popup-trigger" data-content="{% blocktrans trimmed %}
                                 Used for events that happen once, e.g. a weekend-long happening.
                                 All occurrences of the event will have a common registration.

@@ -80,7 +80,7 @@ def exact_weekday_to_day_name(exact_weekday: float) -> str:
 
 def year_and_week_to_monday(year: int, week: int) -> datetime:
     """
-    Returns the a datetime object for the monday in the given week and year.
+    Returns a ``datetime`` object for the Monday of the provided ``week`` and ``year``.
 
     :param year: The year to get the date for
     :param week: The week to get the date for
@@ -91,9 +91,9 @@ def year_and_week_to_monday(year: int, week: int) -> datetime:
 
 def timedelta_to_hours(timedelta_obj: timedelta) -> float:
     """
-    Converts a timedelta object into a float indicating the number of hours the timedelta covers.
+    Converts ``timedelta_obj`` into a ``float`` indicating the number of hours the ``timedelta`` object covers.
 
-    :param timedelta_obj: The timedelta object
+    :param timedelta_obj: The ``timedelta`` object
     :return: The number of hours it covers
     """
     return timedelta_obj.days * 24 + timedelta_obj.seconds / (60 * 60)

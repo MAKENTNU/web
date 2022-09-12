@@ -1539,13 +1539,6 @@ msgstr "I dag"
 msgid "Next"
 msgstr "Neste"
 
-#: make_queue/templates/make_queue/calendar.html:87
-#: make_queue/templates/make_queue/reservation_form.html:127
-#: web/templates/web/base.html:10 web/templates/web/favicon.html:16
-#: web/templates/web/favicon.html:18
-msgid "MAKE NTNU"
-msgstr "MAKE NTNU"
-
 #: make_queue/templates/make_queue/calendar.html:91
 msgid "Other reservations"
 msgstr "Andre reservasjoner"

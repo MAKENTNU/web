@@ -51,7 +51,6 @@ class NewsBase(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = NewsBaseQuerySet.as_manager()
-
     BASE_FIELDS_EXCLUDED_FROM_HISTORY = ['contain', 'featured', 'hidden', 'private', 'last_modified']
 
     class Meta:
@@ -72,7 +71,6 @@ class Article(NewsBase):
                                             help_text=_("The article will be hidden until this date."))
 
     objects = ArticleQuerySet.as_manager()
-
     history = HistoricalRecords(excluded_fields=NewsBase.BASE_FIELDS_EXCLUDED_FROM_HISTORY)
 
     class Meta(NewsBase.Meta):
@@ -119,7 +117,6 @@ class Event(NewsBase):
     number_of_tickets = models.IntegerField(default=0, verbose_name=_("number of available tickets"))
 
     objects = EventQuerySet.as_manager()
-
     history = HistoricalRecords(excluded_fields=['number_of_tickets', *NewsBase.BASE_FIELDS_EXCLUDED_FROM_HISTORY])
 
     class Meta(NewsBase.Meta):

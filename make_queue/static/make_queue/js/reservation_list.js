@@ -1,4 +1,5 @@
-/* `csrfToken` must be defined when linking this script */
+/* These variables must be defined when linking this script */
+// noinspection ES6ConvertVarToLetConst
 var csrfToken;
 
 $("#hide-old-reservations").checkbox({

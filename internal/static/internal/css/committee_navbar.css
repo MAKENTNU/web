@@ -8,17 +8,17 @@
 
 .committee-navbar .active.colored.blue.item,
 .committee-navbar .active.colored.blue.item:hover {
-    background-color: #2185D0; /* Same as Fomantic-UI's `background-color` for `ui.inverted.menu .blue.active.item` */
+    background-color: #2185D0; /* Same as Fomantic-UI's `background-color` for `.ui.inverted.menu .blue.active.item` */
 }
 
 .committee-navbar .active.colored.green.item,
 .committee-navbar .active.colored.green.item:hover {
-    background-color: #21BA45; /* Same as Fomantic-UI's `background-color` for `ui.inverted.menu .green.active.item` */
+    background-color: #21BA45; /* Same as Fomantic-UI's `background-color` for `.ui.inverted.menu .green.active.item` */
 }
 
 .committee-navbar .active.colored.red.item,
 .committee-navbar .active.colored.red.item:hover {
-    background-color: #DB2828; /* Same as Fomantic-UI's `background-color` for `ui.inverted.menu .red.active.item` */
+    background-color: #DB2828; /* Same as Fomantic-UI's `background-color` for `.ui.inverted.menu .red.active.item` */
 }
 
 .committee-navbar .active.colored.yellow.item,

@@ -128,7 +128,8 @@ jobs:
       - name: Set status
         # Only set the status if it's not already set,
         # or if it's a reopened issue/PR (as they're marked as 'Done' when closed - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
-        if: ${{ !env.STATUS_FIELD_VALUE || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == 'Done' }}
+        if: ${{ !env.STATUS_FIELD_VALUE
+          || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == 'Done' }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |

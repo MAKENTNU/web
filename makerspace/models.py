@@ -33,7 +33,6 @@ class Equipment(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = EquipmentQuerySet.as_manager()
-
     history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
 
     class Meta:

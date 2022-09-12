@@ -30,8 +30,8 @@ class MachineDetailView(DetailView):
         :return: context required to show the reservation calendar with controls
         """
         context = super().get_context_data(**kwargs)
-        year = self.kwargs['year']
-        week = self.kwargs['week']
+        selected_year = self.kwargs['year']
+        selected_week = self.kwargs['week']
         machine = self.object
 
         context.update({
@@ -42,9 +42,9 @@ class MachineDetailView(DetailView):
                     machine_type=machine.machine_type,
                 ).visible_to(self.request.user).default_order_by()
             ),
-            'year': year,
-            'week': week,
-            'date': year_and_week_to_monday(year, week),
+            'selected_year': selected_year,
+            'selected_week': selected_week,
+            'selected_date': year_and_week_to_monday(selected_year, selected_week),
         })
 
         if self.request.user.is_authenticated:

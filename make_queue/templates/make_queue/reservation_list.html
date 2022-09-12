@@ -15,8 +15,9 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_list.css' %}"/>
+    <!--suppress ES6ConvertVarToLetConst -->
     <script>
-        {# `csrfToken` is used in `reservation_list.js` #}
+        {# These variables are used in `reservation_list.js` #}
         var csrfToken = "{{ csrf_token }}";
     </script>
     <script defer src="{% static 'make_queue/js/reservation_list.js' %}"></script>

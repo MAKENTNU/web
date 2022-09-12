@@ -1,7 +1,8 @@
 /*
  * Linking `reservation_form.css` is required when linking this script.
- * `maximumDay` must also be defined.
+ * The `var` variables below must also be defined.
 */
+// noinspection ES6ConvertVarToLetConst
 var maximumDay;
 
 const reservations = [];
@@ -28,8 +29,9 @@ function getFutureReservations(machineID, forceNewTime) {
         reservations.length = 0;
         $.each(data.reservations, function (index, value) {
             reservations.push({
-                startTime: new Date(Date.parse(value.start_time)),
-                endTime: new Date(Date.parse(value.end_time)),
+                // The values from the server are ISO-formatted strings
+                startTime: new Date(value.start_time),
+                endTime: new Date(value.end_time),
             });
         });
 

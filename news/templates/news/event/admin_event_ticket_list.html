@@ -37,7 +37,7 @@
         <div class="ui relaxed divided list">
             {% for ticket in tickets %}
                 <div class="item">
-                    <span class="right floated ">
+                    <span class="right floated">
                         {% if ticket.active %}
                             <span class="ui green label">{% trans "active"|capfirst %}</span>
                         {% else %}
@@ -56,7 +56,7 @@
                                 <a href="{{ ticket.get_absolute_url }}">{{ ticket.uuid }}</a>
                             </div>
                             <div>
-                                <b>{% trans "language"|capfirst %}</b> {{ ticket.get_language_display }}
+                                <b>{% trans "language"|capfirst %}:</b> {{ ticket.get_language_display }}
                             </div>
                             {% if ticket.comment %}
                                 <div class="word-breaking hyphenated">

@@ -1,4 +1,4 @@
-function update_event_type() {
+function updateEventType() {
     const isStandalone = $("#standalone").prop('checked');
     $("#id_number_of_tickets").parent().toggleClass("disabled", !isStandalone);
     if (isStandalone) {
@@ -10,7 +10,8 @@ function update_event_type() {
     }
 }
 
-update_event_type();
 $("input[type=radio][name=event_type]").change(function () {
-    update_event_type();
+    updateEventType();
 });
+
+updateEventType();
