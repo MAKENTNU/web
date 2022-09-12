@@ -37,7 +37,8 @@ class Member(models.Model):
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("role"))
     contact_email = models.EmailField(blank=True, verbose_name=_("contact email"))
-    gmail = models.EmailField(blank=True, verbose_name=_("Gmail"))
+    # The email address of a Google user can potentially belong to any host, not just "gmail.com"
+    google_email = models.EmailField(blank=True, verbose_name=_("Google email"))
     MAKE_email = models.EmailField(blank=True, validators=[WhitelistedEmailValidator(valid_domains=["makentnu.no"])],
                                    verbose_name=_("MAKE email"))
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("phone number"))

@@ -801,8 +801,8 @@ msgid "contact email"
 msgstr "kontakt-e-post"
 
 #: internal/models.py:40 internal/templates/internal/member_list.html:249
-msgid "Gmail"
-msgstr "Gmail"
+msgid "Google email"
+msgstr "Google-e-post"
 
 #: internal/models.py:42 internal/templates/internal/member_list.html:257
 msgid "MAKE email"
