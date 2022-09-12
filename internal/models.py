@@ -61,6 +61,8 @@ class Member(models.Model):
     minecraft_username = UnlimitedCharField(blank=True, verbose_name=_("Minecraft username"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
+    history = HistoricalRecords(m2m_fields=[committees], excluded_fields=['last_modified'])
+
     class Meta:
         permissions = (
             ('is_internal', "Is a member of MAKE NTNU"),

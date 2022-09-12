@@ -186,6 +186,7 @@ class Machine(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = MachineQuerySet.as_manager()
+    history = HistoricalRecords(excluded_fields=['status', 'info_message_date', 'priority', 'last_modified'])
 
     def __str__(self):
         return f"{self.name} - {self.machine_model}"
