@@ -10,6 +10,12 @@
     font-size: 1.2em;
 }
 
+.cancel.label:hover,
+.cancel.label:active {
+    opacity: 15%;
+    color: transparent !important;
+}
+
 .cards {
     align-items: flex-start;
 }
