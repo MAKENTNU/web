@@ -8,8 +8,8 @@
         <i class="large make-col-yellow calendar plus outline icon"></i>
     </a>
     <b class="time description">
-        <span>{{ time_place.start_time|long_datetime_no_year }}</span>
-        <span>&ndash; {{ time_place.end_time|long_datetime_no_year }}</span>
+        <span class="no-wrap">{{ time_place.start_time|long_datetime_no_year }}</span>
+        <span class="no-wrap">&ndash; {{ time_place.end_time|long_datetime_no_year }}</span>
     </b>
     <div class="word-breaking hyphenated place description">
         <a href="{{ time_place.place_url }}" target="_blank">

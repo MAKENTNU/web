@@ -29,11 +29,6 @@
     grid-row: 1/3;
 }
 
-.ticket.card .time-place.content .time.description span {
-    display: inline-block;
-    white-space: nowrap;
-}
-
 .ticket.card .time-place.content .place.description {
     grid-row: 2/2;
 }
