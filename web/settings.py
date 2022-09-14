@@ -64,6 +64,10 @@ USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 
+ENROLL_MEMBERS_GUIDE_LINK = ""  # (custom setting)
+RETIRE_MEMBERS_GUIDE_LINK = ""  # (custom setting)
+QUIT_MEMBERS_GUIDE_LINK = ""  # (custom setting)
+
 # Set local settings
 try:
     from .local_settings import *

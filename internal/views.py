@@ -54,6 +54,9 @@ class MemberListView(ListView):
     queryset = Member.objects.select_related('user').prefetch_related('committees__group', 'system_accesses')
     template_name = 'internal/member_list.html'
     context_object_name = 'members'
+    extra_context = {
+        'settings': settings,
+    }
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -79,6 +82,10 @@ class MemberFormMixin(CustomFieldsetFormMixin, ABC):
 class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     permission_required = ('internal.add_member',)
     form_class = AddMemberForm
+    template_name = 'internal/member_add.html'
+    extra_context = {
+        'settings': settings,
+    }
 
     form_title = _("Add New Member")
     back_button_link = reverse_lazy('member_list')
@@ -161,6 +168,10 @@ class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateV
     permission_required = ('internal.can_edit_group_membership',)
     model = Member
     form_class = MemberRetireForm
+    template_name = 'internal/member_retire.html'
+    extra_context = {
+        'settings': settings,
+    }
 
     base_template = 'internal/base.html'
     narrow = False
@@ -183,6 +194,7 @@ class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateV
 
 class MemberQuitView(MemberRetireView):
     form_class = MemberQuitForm
+    template_name = 'internal/member_quit.html'
 
     save_button_text = _("Set quit")
     custom_fieldsets = [

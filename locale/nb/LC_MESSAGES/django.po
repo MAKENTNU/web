@@ -1020,6 +1020,11 @@ msgstr "Django-admin"
 msgid "Log out"
 msgstr "Logg ut"
 
+#: internal/templates/internal/member_add.html:8
+#: internal/templates/internal/member_list.html:31
+msgid "TODOs when a new member enrolls"
+msgstr "Ting som skal gjøres når et nytt medlem tas opp"
+
 #: internal/templates/internal/member_list.html:10
 #: internal/templates/internal/member_list.html:20 internal/views.py:76
 #: internal/views.py:168
@@ -1029,6 +1034,16 @@ msgstr "Medlemsliste"
 #: internal/templates/internal/member_list.html:23
 msgid "Add member"
 msgstr "Legg til medlem"
+
+#: internal/templates/internal/member_list.html:35
+#: internal/templates/internal/member_retire.html:8
+msgid "TODOs when a member retires"
+msgstr "Ting som skal gjøres når et medlem panger"
+
+#: internal/templates/internal/member_list.html:39
+#: internal/templates/internal/member_quit.html:8
+msgid "TODOs when a member quits"
+msgstr "Ting som skal gjøres når et medlem slutter"
 
 #: internal/templates/internal/member_list.html:31
 #: make_queue/templates/make_queue/course/course_registration_list.html:28
