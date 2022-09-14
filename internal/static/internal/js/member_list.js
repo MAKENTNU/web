@@ -1,3 +1,5 @@
+const SEARCH_FIELD_SEPARATOR = "∨"; // the Logical Or symbol (not a lowercase V)
+
 const $memberInfoModal = $("#detailed-member-info");
 
 // Global state to reduce number of jQuery calls
@@ -152,13 +154,13 @@ function filterMatches(filterValues, toMatch) {
     return filterValues.isEmpty() || filterValues.some(value => toMatch.includes(value));
 }
 
-function searchMatches(searchTerm, toMatch) {
+function searchMatches(searchTerm, member) {
     /**
-     * Matches if the search term is empty or if there is at least one match in `toMatch`.
+     * Matches if the search term is empty or if there is at least one match in `member.searchableDataString`.
      */
     searchTerm = searchTerm.trim().toLowerCase();
-    toMatch = toMatch.toLowerCase();
-    return searchTerm.isEmpty() || toMatch.includes(searchTerm);
+    // `searchableDataString` is already trimmed and lowercased when it's defined
+    return searchTerm.isEmpty() || member.searchableDataString.includes(searchTerm);
 }
 
 function getFilterValues(field) {
@@ -176,14 +178,18 @@ function filter() {
     const filters = [
         (member) => filterMatches(state.statusFilter, member.data.status.map(status => status.name)),
         (member) => filterMatches(state.committeeFilter, member.data.committees.map(committee => committee.name)),
-        (member) => searchMatches(state.searchValue, member.data.name),
+        (member) => searchMatches(state.searchValue, member),
     ];
 
     state.displayedMembers = [];
-    $.each(state.allMembers, (index, member) => {
-        if (filters.every(filter => filter(member)))
-            state.displayedMembers.push(member);
-    });
+    // On the off chance that a user searches for `SEARCH_FIELD_SEPARATOR`, don't display any search results
+    // - as it shouldn't match with any fields, and could otherwise be confusing
+    if (!state.searchValue.includes(SEARCH_FIELD_SEPARATOR)) {
+        $.each(state.allMembers, (index, member) => {
+            if (filters.every(filter => filter(member)))
+                state.displayedMembers.push(member);
+        });
+    }
     updateDisplayedTableRows();
     $("#displayed-members-count").text(state.displayedMembers.length);
 }
@@ -266,31 +272,37 @@ function setup() {
     $("#member-table tbody tr").each((index, row) => {
         const $row = $(row);
 
+        const searchableData = {
+            name: $row.data("name"),
+            phone: $row.data("phone"),
+            phoneDisplay: $row.data("phone-display"),
+            phoneWithoutSpaces: $row.data("phone").replaceAll(" ", ""),
+            contactEmail: $row.data("contact-email"),
+            googleEmail: $row.data("google-email"),
+            MAKEEmail: $row.data("make-email"),
+            cardNumber: $row.data("card-number"),
+            studyProgram: $row.data("study-program"),
+            ntnuStartingSemester: $row.data("ntnu-starting-semester"),
+            githubUsername: $row.data("github-username"),
+            discordUsername: $row.data("discord-username"),
+            minecraftUsername: $row.data("minecraft-username"),
+
+            semesterJoined: $row.data("semester-joined"),
+            reasonQuit: $.trim($row.data("reason-quit")),
+            role: $.trim($row.data("role")),
+            comment: $.trim($row.data("comment")),
+        };
+
         const member = {
             data: {
                 pk: $row.data("pk"),
-                name: $row.data("name"),
-                phone: $row.data("phone"),
-                phoneDisplay: $row.data("phone-display"),
-                contactEmail: $row.data("contact-email"),
-                googleEmail: $row.data("google-email"),
-                MAKEEmail: $row.data("make-email"),
-                cardNumber: $row.data("card-number"),
-                studyProgram: $row.data("study-program"),
-                ntnuStartingSemester: $row.data("ntnu-starting-semester"),
-                githubUsername: $row.data("github-username"),
-                discordUsername: $row.data("discord-username"),
-                minecraftUsername: $row.data("minecraft-username"),
+                ...searchableData,
 
                 dateJoined: $row.data("date-joined"),
                 dateJoinedSortable: $row.data("date-joined-sortable"),
-                semesterJoined: $row.data("semester-joined"),
                 dateQuitOrRetired: $row.data("date-quit-or-retired"),
                 dateQuitOrRetiredLabel: $.trim($row.data("date-quit-or-retired-label")),
                 semesterQuitOrRetired: $.trim($row.data("semester-quit-or-retired")),
-                reasonQuit: $.trim($row.data("reason-quit")),
-                role: $.trim($row.data("role")),
-                comment: $.trim($row.data("comment")),
                 guidanceExemption: $.trim($row.data("guidance-exemption")),
                 editURL: $.trim($row.data("edit-url")),
                 setQuitURL: $.trim($row.data("set-quit-url")),
@@ -325,6 +337,10 @@ function setup() {
                         color: committee[1],
                     })),
             },
+            // Searching using a precalculated string should be faster than iterating through every field of every member.
+            // Also, join the fields using an uncommon character,
+            // to not produce unexpected search results when e.g. a search term matches the end of one field and the beginning of the next.
+            searchableDataString: Object.values(searchableData).join(SEARCH_FIELD_SEPARATOR).toLowerCase(),
             $element: $row,
         };
 
