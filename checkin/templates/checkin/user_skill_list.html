@@ -27,11 +27,11 @@
                                 {% empty %}
                                     src="{{ skill.image.url }}"
                                 {% endthumbnail %}
-                                    alt="{% blocktrans with skill=skill_name %}Illustration image of {{ skill }}{% endblocktrans %}"
+                                    alt="{% blocktranslate with skill=skill_name %}Illustration image of {{ skill }}{% endblocktranslate %}"
                                 />
                             {% else %}
                                 <img src="{% static 'checkin/img/placeholder_skill.svg' %}"
-                                     alt="{% trans "Placeholder image" %}"
+                                     alt="{% translate "Placeholder image" %}"
                                 />
                             {% endif %}
 

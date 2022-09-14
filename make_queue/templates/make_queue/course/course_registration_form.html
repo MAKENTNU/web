@@ -18,7 +18,7 @@
     <div class="ui container">
         <h1>
             {% block form_title %}
-                {% trans "Edit course registration" %}
+                {% translate "Edit course registration" %}
             {% endblock form_title %}
         </h1>
 
@@ -26,18 +26,18 @@
             <div id="username-not-found-warning" class="ui warning message hidden">
                 <i class="close icon"></i>
                 <div class="header">
-                    {% trans "Could not find the user in the NTNU database" %}
+                    {% translate "Could not find the user in the NTNU database" %}
                 </div>
-                <p>{% trans "Are you sure you entered the correct username?" %}</p>
+                <p>{% translate "Are you sure you entered the correct username?" %}</p>
             </div>
             {% form_has_error form field='username' error_code='unique' as unique_error %}
             {% if unique_error %}
                 <div class="ui error message">
                     <i class="close icon"></i>
                     <div class="header">
-                        {% trans "A user with this username is already registered" %}
+                        {% translate "A user with this username is already registered" %}
                     </div>
-                    <p>{% trans "Either the user has already taken the course, or the username of another user has been entered" %}.</p>
+                    <p>{% translate "Either the user has already taken the course, or the username of another user has been entered" %}.</p>
                 </div>
             {% endif %}
         {% endblock messages %}
@@ -55,7 +55,7 @@
             {% csrf_token %}
 
             <div class="ui horizontal divider">
-                {% trans "User information" %}
+                {% translate "User information" %}
             </div>
 
             <div class="ui two fields">
@@ -73,7 +73,7 @@
                 <div class="ui field">
                     <label>
                         {{ form.user.label|capfirst }}
-                        <span class="clear-dropdown">{% trans "Clear selection" %}</span>
+                        <span class="clear-dropdown">{% translate "Clear selection" %}</span>
                     </label>
                     {{ form.user }}
                 </div>
@@ -84,7 +84,7 @@
             </div>
 
             <div class="ui horizontal divider">
-                {% trans "Registration status" %}
+                {% translate "Registration status" %}
             </div>
 
             <div class="ui two fields">
@@ -103,25 +103,25 @@
                     <label>{{ form.raise3d_course.label }}</label>
                     <div class="ui checkbox">
                         {{ form.raise3d_course }}
-                        <label>{% trans "Yes" %}</label>
+                        <label>{% translate "Yes" %}</label>
                     </div>
                 </div>
                 <div class="ui field">
                     <label>{{ form.sla_course.label }}</label>
                     <div class="ui checkbox">
                         {{ form.sla_course }}
-                        <label>{% trans "Yes" %}</label>
+                        <label>{% translate "Yes" %}</label>
                     </div>
                 </div>
             </div>
 
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}
-                    {% trans "Submit" context "edit" %}
+                    {% translate "Submit" context "edit" %}
                 {% endblock submit_button %}
             </button>
             <a class="ui right floated red button" href="{% url 'course_registration_list' %}">
-                {% trans "Cancel" context "abort action" %}
+                {% translate "Cancel" context "abort action" %}
             </a>
         </form>
     </div>

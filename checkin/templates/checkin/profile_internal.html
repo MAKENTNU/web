@@ -28,7 +28,7 @@
 
 <div class="ui container">
     <h4>
-        {% trans "My skills" %}
+        {% translate "My skills" %}
     </h4>
     {% for skill, level in skill_dict.items %}
         {% with skill_name=skill|locale_title:CURRENT_LANGUAGE_CODE %}
@@ -40,11 +40,11 @@
                         src="{{ skill.image.url }}"
                     {% endthumbnail %}
                         class="skill-image"
-                        alt="{% blocktrans with skill=skill_name %}Illustration image of {{ skill }}{% endblocktrans %}"
+                        alt="{% blocktranslate with skill=skill_name %}Illustration image of {{ skill }}{% endblocktranslate %}"
                     />
                 {% else %}
                     <img class="skill-image" src="{% static 'checkin/img/placeholder_skill.svg' %}"
-                         alt="{% trans "Placeholder image" %}"
+                         alt="{% translate "Placeholder image" %}"
                     />
                 {% endif %}
                 <span>{{ skill_name }}</span>
@@ -64,9 +64,9 @@
         <input id="rating-input" type="number" name="rating" value="1" hidden/>
         <div class="inline fields">
             <div class="ten wide field">
-                <label>{% trans "Add skills" %}</label>
+                <label>{% translate "Add skills" %}</label>
                 <select class="ui fluid dropdown search" name="skill" required>
-                    <option value="">{% trans "Select/search" %}</option>
+                    <option value="">{% translate "Select/search" %}</option>
                     {% for skill in all_skills %}
                         <option value="{{ skill.pk }}">{{ skill|locale_title:CURRENT_LANGUAGE_CODE }}</option>
                     {% endfor %}
@@ -76,29 +76,29 @@
                 <div id="star-rating" class="ui star rating" data-rating="1" data-max-rating="3"></div>
             </div>
             <div class="three wide field">
-                <button class="ui button" type="submit">{% trans "Add" %}</button>
+                <button class="ui button" type="submit">{% translate "Add" %}</button>
             </div>
         </div>
     </form>
-    <a href="{% url 'suggest_skill' %}">{% trans "Suggest new skills" %}</a>
+    <a href="{% url 'suggest_skill' %}">{% translate "Suggest new skills" %}</a>
 </div>
 
 <br/>
 
 {% if not profile.user.card_number %}
     <div class="card-register">
-        <h3>{% trans "No registered card" %}</h3>
+        <h3>{% translate "No registered card" %}</h3>
         <p>
-            {% trans "Place the card on the card reader and press the button below to register the card" %}
+            {% translate "Place the card on the card reader and press the button below to register the card" %}
         </p>
-        <button class="ui button register-profile">{% trans "Register" %}</button>
+        <button class="ui button register-profile">{% translate "Register" %}</button>
         <div id="duplicate-error" class="ui negative small message" style="display: none;">
             <i class="close icon"></i>
-            <div class="header">{% trans "Card number is already in use" %}</div>
+            <div class="header">{% translate "Card number is already in use" %}</div>
             <p>
-                {% blocktrans trimmed with email="dev@makentnu.no"|urlize_target_blank %}
+                {% blocktranslate trimmed with email="dev@makentnu.no"|urlize_target_blank %}
                     Contact {{ email }} to fix the problem.
-                {% endblocktrans %}
+                {% endblocktranslate %}
             </p>
         </div>
     </div>

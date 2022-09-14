@@ -4,7 +4,7 @@
 
 {% block field_post_content %}
     {% if field.name == 'number_of_tickets' %}
-        <div class="ui blue pointing basic label">{% trans "A value of zero indicates that no registration is required" %}.</div>
+        <div class="ui blue pointing basic label">{% translate "A value of zero indicates that no registration is required" %}.</div>
     {% else %}
         {{ block.super }}
     {% endif %}

@@ -8,7 +8,7 @@
         <i class="calendar icon"></i>
         <!--suppress HtmlFormInputWithoutLabel : The label should be added by the form template -->
         <input type="text" name="{{ widget.name }}"
-               placeholder="{% trans "date"|capfirst %}" {% if widget.value %}
+               placeholder="{% translate "date"|capfirst %}" {% if widget.value %}
                value="{{ widget.value }}"
         {% else %}
                value="{% localdate %}"

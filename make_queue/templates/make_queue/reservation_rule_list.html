@@ -24,25 +24,25 @@
         </h1>
         <div>
             <a class="ui blue button" href="{{ machine_type.usage_rule.get_absolute_url }}">
-                {% trans "Usage rules" %}
+                {% translate "Usage rules" %}
             </a>
         </div>
         <table class="ui definition table">
             <tbody>
             <tr>
-                <td>{% trans "Reservation duration within a single period" %}</td>
+                <td>{% translate "Reservation duration within a single period" %}</td>
                 <td>
-                    {% trans "Card's “single period” value; see cards below" %}
+                    {% translate "Card's “single period” value; see cards below" %}
                 </td>
             </tr>
             <tr>
-                <td>{% trans "Reservation duration spanning multiple periods" %}</td>
+                <td>{% translate "Reservation duration spanning multiple periods" %}</td>
                 <td>
                     <div>
-                        <b>{% trans "Total time" %}:</b> {% trans "Largest “single period” value" %}
+                        <b>{% translate "Total time" %}:</b> {% translate "Largest “single period” value" %}
                     </div>
                     <div>
-                        <b>{% trans "For each time period" %}:</b> {% trans "Card's “multi-period” value" %}
+                        <b>{% translate "For each time period" %}:</b> {% translate "Card's “multi-period” value" %}
                     </div>
                 </td>
             </tr>
@@ -51,7 +51,7 @@
 
         {% if rule_set_has_gaps %}
             <div class="ui warning message">
-                <p>{% trans "There exists one or more gaps between the rules' periods, that are not covered" %}.</p>
+                <p>{% translate "There exists one or more gaps between the rules' periods, that are not covered" %}.</p>
             </div>
         {% endif %}
 
@@ -73,14 +73,14 @@
                             {% endif %}
                         </div>
                         <div class="description">
-                            {% trans "Single period" %}:
-                            <b>{{ rule.max_hours|floatformat }} {% trans "hours" %}</b>
+                            {% translate "Single period" %}:
+                            <b>{{ rule.max_hours|floatformat }} {% translate "hours" %}</b>
                             <br/>
-                            {% trans "Multi-period" %}:
-                            <b>{{ rule.max_inside_border_crossed|floatformat }} {% trans "hours" %}</b>
+                            {% translate "Multi-period" %}:
+                            <b>{{ rule.max_inside_border_crossed|floatformat }} {% translate "hours" %}</b>
                         </div>
                         <h4 class="subheader">
-                            {% trans "Periods" %}
+                            {% translate "Periods" %}
                         </h4>
                         {% for period in rule.time_periods %}
                             <div>
@@ -92,53 +92,53 @@
             {% endfor %}
         </div>
         {% if quotas %}
-            <h3>{% trans "My quotas" %}</h3>
+            <h3>{% translate "My quotas" %}</h3>
             <div class="ui cards">
                 {% for quota in quotas %}
                     <div class="ui card">
                         <div class="content">
                             <div class="header">
                                 {% if quota.dimishing %}
-                                    {% trans "One-time quota" %}
+                                    {% translate "One-time quota" %}
                                 {% else %}
-                                    {% trans "Replenishing quota" %}
+                                    {% translate "Replenishing quota" %}
                                 {% endif %}
                             </div>
                             <div class="meta">
                                 {% if quota.all %}
-                                    {% trans "Global" %}
+                                    {% translate "Global" %}
                                 {% else %}
-                                    {% trans "Personal" %}
+                                    {% translate "Personal" %}
                                 {% endif %}
                             </div>
                             <div class="description">
                                 <span>
-                                    {% trans "Maximum number of reservations" %}: <b>{{ quota.number_of_reservations }}</b>
+                                    {% translate "Maximum number of reservations" %}: <b>{{ quota.number_of_reservations }}</b>
                                 </span>
                                 <br/>
                                 {% if quota.ignore_rules %}
-                                    <b>{% trans "ignores rules"|capfirst %}</b>
+                                    <b>{% translate "ignores rules"|capfirst %}</b>
                                 {% endif %}
                             </div>
                             <div class="ui small feed">
                                 {% get_unfinished_reservations quota user as unfinished_reservations %}
                                 {% if unfinished_reservations %}
-                                    <h5 class="ui header">{% trans "Reservations connected to quota" %}:</h5>
+                                    <h5 class="ui header">{% translate "Reservations connected to quota" %}:</h5>
                                     {% for reservation in unfinished_reservations %}
                                         <div class="event">
                                             <div class="content">
                                                 <div class="summary">
                                                     {% with start_time=reservation.start_time|short_datetime %}
-                                                        {% blocktrans trimmed with machine_name=reservation.machine.name time=start_time %}
+                                                        {% blocktranslate trimmed with machine_name=reservation.machine.name time=start_time %}
                                                             {{ machine_name }} at {{ time }}
-                                                        {% endblocktrans %}
+                                                        {% endblocktranslate %}
                                                     {% endwith %}
                                                 </div>
                                             </div>
                                         </div>
                                     {% endfor %}
                                 {% else %}
-                                    <i>{% trans "No reservations connected to quota" %}</i>
+                                    <i>{% translate "No reservations connected to quota" %}</i>
                                 {% endif %}
                             </div>
                         </div>

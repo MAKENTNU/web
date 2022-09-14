@@ -7,7 +7,7 @@
 <div class="ui ticket card">
     {% if not ticket.active %}
         <div class="ui red cancel label">
-            {% trans "canceled"|capfirst %}
+            {% translate "canceled"|capfirst %}
         </div>
     {% endif %}
 
@@ -35,16 +35,16 @@
     </div>
     <div class="extra content">
         <p>
-            <b>{% trans "preferred language"|capfirst %}:</b> {{ ticket.get_language_display }}
+            <b>{% translate "preferred language"|capfirst %}:</b> {{ ticket.get_language_display }}
         </p>
         {% if ticket.comment %}
             <p>
-                <b>{% trans "comment"|capfirst %}:</b> {{ ticket.comment }}
+                <b>{% translate "comment"|capfirst %}:</b> {{ ticket.comment }}
             </p>
         {% endif %}
     </div>
     <div class="extra content">
-        <b>{% trans "Ref #" %}:</b>
+        <b>{% translate "Ref #" %}:</b>
         <a href="{{ ticket.get_absolute_url }}">
             {{ ticket.uuid }}
         </a>
@@ -53,13 +53,13 @@
         {% if ticket.user == request.user or perms.news.cancel_ticket %}
             <a class="ui red bottom attached button"
                href="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
-                {% trans "Cancel ticket" %}
+                {% translate "Cancel ticket" %}
             </a>
         {% endif %}
     {% elif perms.news.cancel_ticket %}
         <button class="ui green bottom attached button" type="submit"
                 onclick="$('#reactivate-form-{{ ticket.pk }}').submit();">
-            {% trans "Reactivate ticket" %}
+            {% translate "Reactivate ticket" %}
         </button>
         <form id="reactivate-form-{{ ticket.pk }}"
               method="POST" action="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">

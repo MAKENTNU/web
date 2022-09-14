@@ -10,7 +10,7 @@
 {% block og_title %}{{ equipment.title }}{% endblock og_title %}
 {% block og_image_absolute_uri %}{% get_absolute_uri_for_path request equipment.image.url %}{% endblock og_image_absolute_uri %}
 {% block og_image_alt %}
-    {% blocktrans with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}
+    {% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}
 {% endblock og_image_alt %}
 
 {% block extra_head %}
@@ -24,14 +24,14 @@
             <div class="ui text container basic segment">
                 <div class="equipment-image-container ui container">
                     <img class="ui centered image" src="{{ equipment.image.url }}"
-                         alt="{% blocktrans with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
+                         alt="{% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
                     />
                 </div>
 
                 {% if user|has_any_permissions_for:'Equipment' %}
                     <br/>
                     <a class="ui make-bg-yellow button" href="{% url 'makerspace_equipment_edit' equipment.pk %}">
-                        <i class="edit icon"></i>{% trans "Edit" %}
+                        <i class="edit icon"></i>{% translate "Edit" %}
                     </a>
                 {% endif %}
 

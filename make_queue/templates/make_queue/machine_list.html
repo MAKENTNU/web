@@ -4,7 +4,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "machines"|capfirst %}{% endblock title %}
+{% block title %}{% translate "machines"|capfirst %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_list.css' %}"/>
@@ -16,19 +16,19 @@
 {% block body %}
     <div class="ui container">
         <div class="ui huge header">
-            {% trans "machines"|capfirst %}
+            {% translate "machines"|capfirst %}
             {% if perms.make_queue.add_machine %}
-                <a href="{% url 'create_machine' %}" data-tooltip="{% trans "Add" %}">
+                <a href="{% url 'create_machine' %}" data-tooltip="{% translate "Add" %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </div>
         <div class="reservation-management-buttons">
             <a class="ui primary button" href="{% url 'my_reservations_list' %}">
-                {% trans "My reservations" %}
+                {% translate "My reservations" %}
             </a>
             <a class="ui primary button" href="{% url 'find_free_slot' %}">
-                {% trans "Find free reservation slots" %}
+                {% translate "Find free reservation slots" %}
             </a>
         </div>
 
@@ -40,7 +40,7 @@
                     </div>
                     <div class="ui content">
                         <a class="ui primary button" href="{{ machine_type.usage_rule.get_absolute_url }}">
-                            {% trans "Show rules" %}
+                            {% translate "Show rules" %}
                         </a>
                     </div>
                 </div>

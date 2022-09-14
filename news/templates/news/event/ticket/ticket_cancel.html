@@ -3,7 +3,7 @@
 
 
 {% block title %}
-    {% blocktrans with event=event %}Cancel your ticket for “{{ event }}”{% endblocktrans %}
+    {% blocktranslate with event=event %}Cancel your ticket for “{{ event }}”{% endblocktranslate %}
 {% endblock title %}
 
 {% block body %}
@@ -14,9 +14,9 @@
             {% csrf_token %}
             <a class="ui red button" href="{% if request.GET.next %}{{ request.GET.next }}
                                            {% else %}{{ ticket.get_absolute_url }}{% endif %}">
-                {% trans "Cancel" context "abort action" %}
+                {% translate "Cancel" context "abort action" %}
             </a>
-            <button class="ui primary button" type="submit">{% trans "Yes, I'm sure" %}</button>
+            <button class="ui primary button" type="submit">{% translate "Yes, I'm sure" %}</button>
         </form>
     </div>
 {% endblock body %}

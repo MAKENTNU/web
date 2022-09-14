@@ -9,7 +9,7 @@
     {% if is_MAKE %}
         {% translate "MAKE NTNU reservations" %} | {% translate "Admin panel" %}
     {% else %}
-        {% trans "My reservations" %}
+        {% translate "My reservations" %}
     {% endif %}
 {% endblock title %}
 
@@ -28,12 +28,12 @@
 
         <div class="ui huge header">
             {% if is_MAKE %}
-                {% trans "MAKE NTNU reservations" %}
+                {% translate "MAKE NTNU reservations" %}
             {% else %}
-                {% trans "My reservations" %}
+                {% translate "My reservations" %}
                 {% if perms.make_queue.can_create_event_reservation %}
                     <a class="ui primary button" href="{% url 'MAKE_reservations_list' %}">
-                        {% trans "View MAKE's reservations" %}
+                        {% translate "View MAKE's reservations" %}
                     </a>
                 {% endif %}
             {% endif %}
@@ -41,13 +41,13 @@
 
         <div class="ui vertical segment">
             <a class="ui primary button" href="{% url 'machine_list' %}">
-                {% trans "machines"|capfirst %}
+                {% translate "machines"|capfirst %}
             </a>
             <div class="right-floated">
                 <div class="field">
                     <div id="hide-old-reservations" class="ui checkbox">
                         <input class="hidden" type="checkbox" checked/>
-                        <label>{% trans "Hide previous reservations" %}</label>
+                        <label>{% translate "Hide previous reservations" %}</label>
                     </div>
                 </div>
             </div>
@@ -57,14 +57,14 @@
         <table class="ui table reservation-list-desktop">
             <thead>
             <tr>
-                <th>{% trans "Reservation" %}</th>
-                <th>{% trans "Time" %}</th>
+                <th>{% translate "Reservation" %}</th>
+                <th>{% translate "Time" %}</th>
                 {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
-                    <th>{% trans "Information" %}</th>
+                    <th>{% translate "Information" %}</th>
                 {% endif %}
-                <th>{% trans "View in calendar" %}</th>
-                <th>{% trans "Change" %}</th>
-                <th>{% trans "Cancel" context "cancel reservation" %}</th>
+                <th>{% translate "View in calendar" %}</th>
+                <th>{% translate "Change" %}</th>
+                <th>{% translate "Cancel" context "cancel reservation" %}</th>
             </tr>
             </thead>
 
@@ -114,7 +114,7 @@
                     <td>
                         <a href="{% calendar_url_reservation reservation %}">
                             <div class="ui primary button">
-                                {% trans "Calendar" %}
+                                {% translate "Calendar" %}
                             </div>
                         </a>
                     </td>
@@ -123,7 +123,7 @@
                         {% if can_change %}
                             <a href="{% url 'edit_reservation' reservation.pk %}">
                                 <div class="ui make-bg-yellow button">
-                                    {% trans "Change" %}
+                                    {% translate "Change" %}
                                 </div>
                             </a>
                         {% endif %}
@@ -135,12 +135,12 @@
                             <input class="mark-reservation-finished ui green button" type="submit"
                                    data-pk="{{ reservation.pk }}"
                                    data-url="{% url 'mark_reservation_finished' reservation.pk %}"
-                                   value="{% trans "Finish now" %}"/>
+                                   value="{% translate "Finish now" %}"/>
                         {% elif can_delete %}
                             <input class="delete-reservation ui red button" type="submit"
                                    data-pk="{{ reservation.pk }}"
                                    data-url="{% url 'delete_reservation' reservation.pk %}"
-                                   value="{% trans "Cancel" context "cancel reservation" %}"/>
+                                   value="{% translate "Cancel" context "cancel reservation" %}"/>
                         {% endif %}
                     </td>
 
@@ -194,12 +194,12 @@
 
                     <div class="ui bottom attached buttons">
                         <a class="ui primary button" href="{% calendar_url_reservation reservation %}">
-                            {% trans "Calendar" %}
+                            {% translate "Calendar" %}
                         </a>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
                             <a class="ui make-bg-yellow button" href="{% url 'edit_reservation' reservation.pk %}">
-                                {% trans "Change" %}
+                                {% translate "Change" %}
                             </a>
                         {% endif %}
                         {% can_mark_reservation_finished reservation as can_mark_finished %}
@@ -208,12 +208,12 @@
                             <input class="mark-reservation-finished ui green button" type="submit"
                                    data-pk="{{ reservation.pk }}"
                                    data-url="{% url 'mark_reservation_finished' reservation.pk %}"
-                                   value="{% trans "Finish now" %}"/>
+                                   value="{% translate "Finish now" %}"/>
                         {% elif can_delete %}
                             <input class="delete-reservation ui red button" type="submit"
                                    data-pk="{{ reservation.pk }}"
                                    data-url="{% url 'delete_reservation' reservation.pk %}"
-                                   value="{% trans "Cancel" context "cancel reservation" %}"/>
+                                   value="{% translate "Cancel" context "cancel reservation" %}"/>
                         {% endif %}
                     </div>
 

@@ -15,35 +15,35 @@
         {% if old %}
             <div class="ui warning message">
                 <div class="ui header">
-                    {% trans "You are viewing an old version of this page" %}
+                    {% translate "You are viewing an old version of this page" %}
                 </div>
-                {% blocktrans trimmed with name=last_edit_name date=content.last_modified|short_date time=content.last_modified|only_time %}
+                {% blocktranslate trimmed with name=last_edit_name date=content.last_modified|short_date time=content.last_modified|only_time %}
                     You are viewing an old version of this page, where the last edit was made by {{ name }}
                     on {{ date }} at {{ time }}.
-                {% endblocktrans %}
-                {% trans "To view the current version, click" %}
-                <a href="{{ page.get_absolute_url }}">{% trans "here" %}</a>.
+                {% endblocktranslate %}
+                {% translate "To view the current version, click" %}
+                <a href="{{ page.get_absolute_url }}">{% translate "here" %}</a>.
                 {% if perms.docs.change_page %}
-                    {% trans "To change the current version to this one, click" %}
-                    <a id="change-current-version" href="">{% trans "here" %}</a>.
+                    {% translate "To change the current version to this one, click" %}
+                    <a id="change-current-version" href="">{% translate "here" %}</a>.
                 {% endif %}
             </div>
         {% endif %}
         <h3 class="edit tools">
-            <a class="popup-trigger" href="{% url 'page_history_detail' page.pk %}" data-title="{% trans "History" %}"
-               data-content="{% trans "Click to view the content history of the page" %}">
+            <a class="popup-trigger" href="{% url 'page_history_detail' page.pk %}" data-title="{% translate "History" %}"
+               data-content="{% translate "Click to view the content history of the page" %}">
                 <i class="blue archive icon"></i>
             </a>
             {% if not old %}
                 {% if perms.docs.change_page %}
-                    <a class="popup-trigger" href="{% url 'edit_page' page.pk %}" data-title="{% trans "Edit" %}"
-                       data-content="{% trans "Click to edit the content of the page" %}">
+                    <a class="popup-trigger" href="{% url 'edit_page' page.pk %}" data-title="{% translate "Edit" %}"
+                       data-content="{% translate "Click to edit the content of the page" %}">
                         <i class="make-col-yellow edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.docs.delete_page and page.title != MAIN_PAGE_TITLE %}
                     <a class="delete-modal-button popup-trigger"
-                       data-title="{% trans "Delete" %}" data-content="{% trans "Click to delete the page" %}"
+                       data-title="{% translate "Delete" %}" data-content="{% translate "Click to delete the page" %}"
                        data-url="{% url 'delete_page' page.pk %}" data-obj-name="{{ page }}">
                         <i class="red trash icon"></i>
                     </a>
@@ -61,11 +61,11 @@
                 <i>
                     {% if perms.docs.change_page %}
                         {% url 'edit_page' page.pk as edit_page_url %}
-                        {% blocktrans trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
+                        {% blocktranslate trimmed with link_start='<a href="'|add:edit_page_url|safe|add:'">' link_end='</a>' %}
                             No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
-                        {% endblocktrans %}
+                        {% endblocktranslate %}
                     {% else %}
-                        {% trans "No content exists for this page" %}!
+                        {% translate "No content exists for this page" %}!
                     {% endif %}
                 </i>
             {% endif %}

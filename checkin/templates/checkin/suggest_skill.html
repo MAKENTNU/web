@@ -16,7 +16,7 @@
             {% csrf_token %}
             <div class="inline fields">
                 <div class="ten wide field">
-                    <label>{% trans "title (Norwegian)"|capfirst %}</label>
+                    <label>{% translate "title (Norwegian)"|capfirst %}</label>
                     <input required type="text" name="suggested-skill" placeholder="Ferdighet"/>
                 </div>
                 <div class="five wide field">
@@ -24,13 +24,13 @@
                            accept="image/jpeg, image/png, image/svg, image/gif"/>
                 </div>
                 <div class="three wide field">
-                    <button class="ui button" type="submit">{% trans "Submit" %}</button>
+                    <button class="ui button" type="submit">{% translate "Submit" %}</button>
                 </div>
             </div>
 
             <div class="inline fields">
                 <div class="nine wide field">
-                    <label>{% trans "title (English)"|capfirst %}</label>
+                    <label>{% translate "title (English)"|capfirst %}</label>
                     <input required type="text" name="suggested-skill-english" placeholder="Skill"/>
                 </div>
             </div>
@@ -42,12 +42,12 @@
         <br/>
 
         {% if suggestions %}
-            <h3>{% trans "Suggested skills" %}</h3>
+            <h3>{% translate "Suggested skills" %}</h3>
             <table class="ui very basic collapsing celled table">
                 <thead>
                 <tr>
-                    <th>{% trans "Skill" %}</th>
-                    <th>{% trans "Number of votes" %}</th>
+                    <th>{% translate "Skill" %}</th>
+                    <th>{% translate "Number of votes" %}</th>
                     <th></th>
                     <th></th>
                 </tr>
@@ -65,12 +65,12 @@
                                     {% endthumbnail %}
                                         class="ui mini rounded image"
                                             {% with skill=suggestion.title|add:" / "|add:suggestion.title_en %}
-                                        alt="{% blocktrans with skill=skill %}Illustration image of {{ skill }}{% endblocktrans %}"
+                                        alt="{% blocktranslate with skill=skill %}Illustration image of {{ skill }}{% endblocktranslate %}"
                                             {% endwith %}
                                     />
                                 {% else %}
                                     <img class="ui mini rounded image" src="{% static 'checkin/img/placeholder_skill.svg' %}"
-                                         alt="{% trans "Placeholder image" %}"
+                                         alt="{% translate "Placeholder image" %}"
                                     />
                                 {% endif %}
                                 <div class="content">{{ suggestion.title }} / {{ suggestion.title_en }}</div>
@@ -82,15 +82,15 @@
                             {% if request.user|can_force_suggestion %}
                                 <button class="ui make-bg-yellow button add-voter"
                                         data-pk="{{ suggestion.pk }}" data-forced="true">
-                                    {% trans "Approve" %}
+                                    {% translate "Approve" %}
                                 </button>
                             {% else %}
                                 <button class="ui {% if suggestion|has_voter:request.user %}green disabled{% endif %} button add-voter"
                                         data-pk="{{ suggestion.pk }}" data-forced="false">
                                     {% if suggestion|has_voter:request.user %}
-                                        {% trans "Voted!" %}
+                                        {% translate "Voted!" %}
                                     {% else %}
-                                        {% trans "Vote" %}
+                                        {% translate "Vote" %}
                                     {% endif %}
                                 </button>
                             {% endif %}
@@ -100,7 +100,7 @@
 
                                 <button class="ui red button delete-suggestion"
                                         data-delete-url="{% url 'delete_skill_suggestion' suggestion.pk %}">
-                                    {% trans "Delete" %}
+                                    {% translate "Delete" %}
                                 </button>
 
                             {% endif %}
@@ -143,7 +143,7 @@
                     }
                     $element.addClass("green");
                     $element.addClass("disabled");
-                    $element.html('{% trans "Voted!" %}');
+                    $element.html('{% translate "Voted!" %}');
 
                     if (!data["user_exists"]) {
                         const incrementedCount = parseInt($element.parent().siblings("#vote-count").html()) + 1;

@@ -16,7 +16,7 @@
             <a href="{% url 'faq_admin_panel' %}">
                 <i class="blue chevron circle left icon"></i>
             </a>
-            {% trans "categories"|capfirst %}
+            {% translate "categories"|capfirst %}
             {% if perms.faq.add_category %}
                 <a href="{% url 'category_create' %}">
                     <i class="green plus icon"></i>

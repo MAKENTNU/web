@@ -7,7 +7,7 @@
 {% load hosts %}
 
 
-{% block title %}{% trans "Member list" %}{% endblock title %}
+{% block title %}{% translate "Member list" %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'internal/css/member_list.css' %}"/>
@@ -17,10 +17,10 @@
 
     <div class="ui container">
         <h1 class="title-with-buttons">
-            {% trans "Member list" %}
+            {% translate "Member list" %}
             {% if perms.internal.add_member %}
                 <a class="ui right floated make-bg-yellow button" href="{% url 'create_member' %}">
-                    <i class="plus icon"></i>{% trans "Add member" %}
+                    <i class="plus icon"></i>{% translate "Add member" %}
                 </a>
             {% endif %}
         </h1>
@@ -28,30 +28,30 @@
         <form class="dont-prevent-leaving ui form">
             <div id="filter-fields" class="ui fields">
                 <div class="ui six wide field">
-                    <input id="search" type="text" name="search-text" placeholder="{% trans "Search name and username" %}"/>
+                    <input id="search" type="text" name="search-text" placeholder="{% translate "Search name and username" %}"/>
                 </div>
                 <div id="filter-dropdowns" class="ui fields field">
 
                     <div class="ui multiple blue labeled compact button icon dropdown">
                         <input type="hidden" name="filter-status"/>
                         <i class="filter icon"></i>
-                        <span class="ui text">{% trans "Filter membership status" %}</span>
+                        <span class="ui text">{% translate "Filter membership status" %}</span>
                         <div class="menu">
                             <div class="scrolling menu">
-                                <div class="item" data-value="{% trans "active"|capfirst %}">
-                                    <i class="green circle icon"></i>{% trans "active"|capfirst %}
+                                <div class="item" data-value="{% translate "active"|capfirst %}">
+                                    <i class="green circle icon"></i>{% translate "active"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "inactive"|capfirst %}">
-                                    <i class="grey circle icon"></i>{% trans "inactive"|capfirst %}
+                                <div class="item" data-value="{% translate "inactive"|capfirst %}">
+                                    <i class="grey circle icon"></i>{% translate "inactive"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "retired"|capfirst %}">
-                                    <i class="blue circle icon"></i>{% trans "retired"|capfirst %}
+                                <div class="item" data-value="{% translate "retired"|capfirst %}">
+                                    <i class="blue circle icon"></i>{% translate "retired"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "honorary"|capfirst %}">
-                                    <i class="make-col-yellow circle icon"></i>{% trans "honorary"|capfirst %}
+                                <div class="item" data-value="{% translate "honorary"|capfirst %}">
+                                    <i class="make-col-yellow circle icon"></i>{% translate "honorary"|capfirst %}
                                 </div>
-                                <div class="item" data-value="{% trans "quit"|capfirst %}">
-                                    <i class="red circle icon"></i>{% trans "quit"|capfirst %}
+                                <div class="item" data-value="{% translate "quit"|capfirst %}">
+                                    <i class="red circle icon"></i>{% translate "quit"|capfirst %}
                                 </div>
                             </div>
                         </div>
@@ -59,7 +59,7 @@
                     <div class="ui multiple blue labeled compact button icon dropdown">
                         <input type="hidden" name="filter-committee"/>
                         <i class="filter icon"></i>
-                        <span class="ui text">{% trans "Filter committees" %}</span>
+                        <span class="ui text">{% translate "Filter committees" %}</span>
                         <div class="menu">
                             <div class="scrolling menu">
                                 <div class="item" data-value="Dev">
@@ -89,25 +89,25 @@
             <thead>
             <tr>
                 <th>
-                    {% trans "name"|capfirst %}<i id="member-sort-name" class="sort icon"></i>
+                    {% translate "name"|capfirst %}<i id="member-sort-name" class="sort icon"></i>
                 </th>
                 <th>
-                    {% trans "committee"|capfirst %}<i id="member-sort-committees" class="sort up icon"></i>
+                    {% translate "committee"|capfirst %}<i id="member-sort-committees" class="sort up icon"></i>
                 </th>
                 <th>
-                    {% trans "role"|capfirst %}<i id="member-sort-role" class="sort icon"></i>
+                    {% translate "role"|capfirst %}<i id="member-sort-role" class="sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "status"|capfirst %}<i id="member-sort-status" class="sort icon"></i>
+                    {% translate "status"|capfirst %}<i id="member-sort-status" class="sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "joined"|capfirst %}<i id="member-sort-dateJoinedSortable" class="sort icon"></i>
+                    {% translate "joined"|capfirst %}<i id="member-sort-dateJoinedSortable" class="sort icon"></i>
                 </th>
                 <th class="mobile hidden">
-                    {% trans "contact email"|capfirst %}<i id="member-sort-contactEmail" class="sort icon"></i>
+                    {% translate "contact email"|capfirst %}<i id="member-sort-contactEmail" class="sort icon"></i>
                 </th>
                 <th class="computer only">
-                    {% trans "phone number"|capfirst %}<i id="member-sort-phone" class="sort icon"></i>
+                    {% translate "phone number"|capfirst %}<i id="member-sort-phone" class="sort icon"></i>
                 </th>
             </tr>
             </thead>
@@ -135,9 +135,9 @@
                     data-date-quit-or-retired="{{ member.date_quit_or_retired|short_date }}"
                     data-date-quit-or-retired-label="
                             {% if member.retired %}
-                                {% trans "Date retired" %}
+                                {% translate "Date retired" %}
                             {% elif member.quit %}
-                                {% trans "Date quit" %}
+                                {% translate "Date quit" %}
                             {% endif %}"
                     data-semester-quit-or-retired="{{ member.semester_quit_or_retired|default:"" }}"
                     data-reason-quit="{% if member.quit and perms.internal.can_edit_group_membership %}{{ member.reason_quit }}{% endif %}"
@@ -146,9 +146,9 @@
                     data-role="{{ member.role }}"
                     data-guidance-exemption="
                             {% if member.guidance_exemption %}
-                                {% trans "Yes" %}
+                                {% translate "Yes" %}
                             {% else %}
-                                {% trans "No" %}
+                                {% translate "No" %}
                             {% endif %}"
                     data-comment="{{ member.comment }}"
                     data-system-accesses="{% get_system_accesses member request.user %}"
@@ -199,11 +199,11 @@
         </table>
 
         <span>
-            {% trans "Displaying" %}
+            {% translate "Displaying" %}
             <b>
                 <span id="displayed-members-count">{{ members|length }}</span>/{{ members|length }}
             </b>
-            {% trans "registered members" %}
+            {% translate "registered members" %}
         </span>
     </div>
 
@@ -218,19 +218,19 @@
         </div>
         <div class="scrolling content">
             <h4 class="ui horizontal divider header">
-                <i class="make-col-yellow user icon"></i>{% trans "Basic information" %}
+                <i class="make-col-yellow user icon"></i>{% translate "Basic information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
                 <tr>
                     <td class="six wide column">
-                        <b>{% trans "name"|capfirst %}</b>
+                        <b>{% translate "name"|capfirst %}</b>
                     </td>
                     <td id="member-name"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "phone number"|capfirst %}</b>
+                        <b>{% translate "phone number"|capfirst %}</b>
                     </td>
                     <td>
                         <b><a id="member-phone"></a></b>
@@ -238,7 +238,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "contact email"|capfirst %}</b>
+                        <b>{% translate "contact email"|capfirst %}</b>
                     </td>
                     <td>
                         <b><a id="member-contactEmail"></a></b>
@@ -246,7 +246,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Gmail" %}</b>
+                        <b>{% translate "Gmail" %}</b>
                     </td>
                     <td>
                         <b><a id="member-gmail"></a></b>
@@ -254,7 +254,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "MAKE email" %}</b>
+                        <b>{% translate "MAKE email" %}</b>
                     </td>
                     <td>
                         <b><a id="member-MAKEEmail"></a></b>
@@ -262,19 +262,19 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "card number"|capfirst %}</b>
+                        <b>{% translate "card number"|capfirst %}</b>
                     </td>
                     <td id="member-cardNumber"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "study program"|capfirst %}</b>
+                        <b>{% translate "study program"|capfirst %}</b>
                     </td>
                     <td id="member-studyProgram"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "starting semester at NTNU"|capfirst %}</b>
+                        <b>{% translate "starting semester at NTNU"|capfirst %}</b>
                     </td>
                     <td id="member-ntnuStartingSemester"></td>
                 </tr>
@@ -282,13 +282,13 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="make-col-yellow users icon"></i>{% trans "Membership information" %}
+                <i class="make-col-yellow users icon"></i>{% translate "Membership information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
                 <tr>
                     <td class="six wide column">
-                        <b>{% trans "joined"|capfirst %}</b>
+                        <b>{% translate "joined"|capfirst %}</b>
                     </td>
                     <td id="member-dateJoined"></td>
                 </tr>
@@ -300,37 +300,37 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "reason quit"|capfirst %}</b>
+                        <b>{% translate "reason quit"|capfirst %}</b>
                     </td>
                     <td id="member-reasonQuit"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "status"|capfirst %}</b>
+                        <b>{% translate "status"|capfirst %}</b>
                     </td>
                     <td id="member-status"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "committee"|capfirst %}</b>
+                        <b>{% translate "committee"|capfirst %}</b>
                     </td>
                     <td id="member-committee"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "role"|capfirst %}</b>
+                        <b>{% translate "role"|capfirst %}</b>
                     </td>
                     <td id="member-role"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "guidance exemption"|capfirst %}</b>
+                        <b>{% translate "guidance exemption"|capfirst %}</b>
                     </td>
                     <td id="member-guidanceExemption"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "comment"|capfirst %}</b>
+                        <b>{% translate "comment"|capfirst %}</b>
                     </td>
                     <td id="member-comment"></td>
                 </tr>
@@ -338,13 +338,13 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="make-col-yellow info circle icon"></i>{% trans "Extra information" %}
+                <i class="make-col-yellow info circle icon"></i>{% translate "Extra information" %}
             </h4>
             <table class="ui very basic unstackable celled table">
                 <tbody>
                 <tr>
                     <td class="six wide column">
-                        <b>{% trans "GitHub username" %}</b>
+                        <b>{% translate "GitHub username" %}</b>
                     </td>
                     <td>
                         <b><a id="member-githubUsername"></a></b>
@@ -352,13 +352,13 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Discord username" %}</b>
+                        <b>{% translate "Discord username" %}</b>
                     </td>
                     <td id="member-discordUsername"></td>
                 </tr>
                 <tr>
                     <td>
-                        <b>{% trans "Minecraft username" %}</b>
+                        <b>{% translate "Minecraft username" %}</b>
                     </td>
                     <td id="member-minecraftUsername"></td>
                 </tr>
@@ -366,7 +366,7 @@
             </table>
 
             <h4 class="ui horizontal divider header">
-                <i class="make-col-yellow key icon"></i>{% trans "system accesses"|capfirst %}
+                <i class="make-col-yellow key icon"></i>{% translate "system accesses"|capfirst %}
             </h4>
             <form id="edit-system-access-form" class="dont-prevent-leaving" method="POST">
                 {% csrf_token %}
@@ -379,23 +379,23 @@
 
             {% if perms.internal.can_edit_group_membership %}
                 <h4 class="ui horizontal divider header">
-                    <i class="make-col-yellow wrench icon"></i>{% trans "Actions" %}
+                    <i class="make-col-yellow wrench icon"></i>{% translate "Actions" %}
                 </h4>
                 <form id="edit-member-status-form" class="dont-prevent-leaving member-action-buttons" method="POST">
                     {% csrf_token %}
                     <a id="member-setQuitURL-button" class="ui red button">
-                        {% trans "Set member as quit" %}
+                        {% translate "Set member as quit" %}
                     </a>
                     <button id="member-canUndoQuit-button" class="ui green button" type="submit"
                             data-status-action="{{ StatusAction.UNDO_QUIT }}">
-                        {% trans "Set member as not quit" %}
+                        {% translate "Set member as not quit" %}
                     </button>
                     <a id="member-setRetiredURL-button" class="ui make-bg-yellow button">
-                        {% trans "Set member as retired" %}
+                        {% translate "Set member as retired" %}
                     </a>
                     <button id="member-canUndoRetired-button" class="ui make-bg-yellow button" type="submit"
                             data-status-action="{{ StatusAction.UNDO_RETIRE }}">
-                        {% trans "Set member as not retired" %}
+                        {% translate "Set member as not retired" %}
                     </button>
                     <input id="member-status-action" class="ui green button" type="hidden" name="status_action"/>
                 </form>
@@ -408,7 +408,7 @@
 {% block extra_scripts %}
     <script>
         $(".ui.dropdown").dropdown();
-        $("input[name=filter-status]").parent().dropdown("set selected", ["{% trans "active"|capfirst %}"]);
+        $("input[name=filter-status]").parent().dropdown("set selected", ["{% translate "active"|capfirst %}"]);
     </script>
     <script src="{% static 'internal/js/member_list.js' %}"></script>
     {% if selected_member %}

@@ -45,7 +45,7 @@
                         {% empty %}
                             src="{{ equipment.image.url }}"
                         {% endthumbnail %}
-                            alt="{% blocktrans with equipment=equipment.title %}Image of {{ equipment }}{% endblocktrans %}"
+                            alt="{% blocktranslate with equipment=equipment.title %}Image of {{ equipment }}{% endblocktranslate %}"
                         />
                     </a>
 

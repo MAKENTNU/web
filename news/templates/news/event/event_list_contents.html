@@ -23,7 +23,7 @@
                             {% if event_dict.number_of_occurrences > 1 %}
                                 <br/>
                                 +{{ event_dict.number_of_occurrences|add:-1 }}
-                                {% if event_dict.number_of_occurrences > 2 %}{% trans "dates" %}{% else %}{% trans "date" %}{% endif %}
+                                {% if event_dict.number_of_occurrences > 2 %}{% translate "dates" %}{% else %}{% translate "date" %}{% endif %}
                             {% endif %}
                         {% endblock ribbon_label %}
                     </p>
@@ -33,9 +33,9 @@
                         src="{{ event_dict.event.image.url }}"
                     {% endthumbnail %}
                         class="event-img o v e r r i d e {% if event_dict.event.contain %}contain{% endif %}"
-                        alt="{% blocktrans trimmed with title=event_dict.event.title description=event_dict.event.image_description %}
+                        alt="{% blocktranslate trimmed with title=event_dict.event.title description=event_dict.event.image_description %}
                             View the event “{{ title }}”; image description: {{ description }}
-                        {% endblocktrans %}"
+                        {% endblocktranslate %}"
                     />
                 </a>
 

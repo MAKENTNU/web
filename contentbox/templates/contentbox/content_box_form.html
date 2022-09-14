@@ -10,7 +10,7 @@
             <div class="ui negative message">
                 <i class="close icon"></i>
                 {% if error.code == 'required' %}
-                    <div class="header">{% trans "Missing language" %}</div>
+                    <div class="header">{% translate "Missing language" %}</div>
                     <p>{{ error.message }}</p>
                 {% else %}
                     <b>{{ error.message }}</b>

@@ -12,7 +12,7 @@
 {% block body %}
     <div class="ui text container">
         <h1 class="word-breaking hyphenated">
-            {% trans "My profile" %}
+            {% translate "My profile" %}
             &ndash; {{ request.user.get_full_name }}
         </h1>
 
@@ -21,7 +21,7 @@
             <br/>
         {% endif %}
 
-        <h3>{% trans "Completed courses" %}:</h3>
+        <h3>{% translate "Completed courses" %}:</h3>
         <table class="ui compact unstackable celled table">
             <tbody>
             {% for struct in completed_course_message_structs %}
@@ -32,15 +32,15 @@
         <p>
             <i>
                 {% url 'contact' as contact_url %}
-                {% blocktrans trimmed with link_start='<a href="'|add:contact_url|safe|add:'" target="_blank">' link_end='</a>' %}
+                {% blocktranslate trimmed with link_start='<a href="'|add:contact_url|safe|add:'" target="_blank">' link_end='</a>' %}
                     Please {{ link_start }}contact us{{ link_end }} if any of this information is incorrect,
                     but keep in mind that it might take us a few days to register course participants after a course has ended.
-                {% endblocktrans %}
+                {% endblocktranslate %}
                 <br/>
                 {% url 'event_list' as event_list_url %}
-                {% blocktrans trimmed with link_start='<a href="'|add:event_list_url|safe|add:'" target="_blank">' link_end='</a>' %}
+                {% blocktranslate trimmed with link_start='<a href="'|add:event_list_url|safe|add:'" target="_blank">' link_end='</a>' %}
                     Otherwise, see {{ link_start }}the events page{{ link_end }} for previous and upcoming courses.
-                {% endblocktrans %}
+                {% endblocktranslate %}
             </i>
         </p>
     </div>
@@ -85,15 +85,15 @@
                             $element.removeAttr("data-position");
                             $element.addClass("green");
                             $element.addClass("disabled");
-                            $element.html('{% trans "Registered" %}');
+                            $element.html('{% translate "Registered" %}');
                         } else {
                             $element.addClass("red");
-                            $element.attr("data-tooltip", '{% trans "Scan card again!" %}');
+                            $element.attr("data-tooltip", '{% translate "Scan card again!" %}');
                             $element.attr("data-position", "right center");
                         }
                     } else {
                         $element.addClass("red");
-                        $element.attr("data-tooltip", '{% trans "Scan card" %}');
+                        $element.attr("data-tooltip", '{% translate "Scan card" %}');
                         $element.attr("data-position", "right center");
                     }
                     $(".message.negative").fadeOut();

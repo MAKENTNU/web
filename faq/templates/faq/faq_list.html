@@ -3,7 +3,7 @@
 {% load static %}
 
 
-{% block title %}{% trans "Frequently Asked Questions" %}{% endblock title %}
+{% block title %}{% translate "Frequently Asked Questions" %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'faq/css/faq_list.css' %}"/>
@@ -13,7 +13,7 @@
 {% block body %}
     <div class="ui container">
         <h1 id="page-title" class="ui text-centered make-col-blue header">
-            {% trans "Frequently Asked Questions" %}
+            {% translate "Frequently Asked Questions" %}
         </h1>
         <div class="categories ui styled fluid accordion">
             {% for category in categories %}
@@ -36,7 +36,7 @@
                             <div class="word-breaking hyphenated content">
                                 {% if perms.faq.change_question %}
                                     <a class="ui make-bg-yellow button" href="{% url 'question_update' question.pk %}">
-                                        <i class="edit icon"></i>{% trans "Edit" %}
+                                        <i class="edit icon"></i>{% translate "Edit" %}
                                     </a>
                                 {% endif %}
                                 {{ question.answer|safe }}

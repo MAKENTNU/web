@@ -8,7 +8,7 @@
 {% block body %}
     <div class="ui container">
         <h1 class="ui header">
-            {% trans "Quotes" %}
+            {% translate "Quotes" %}
             {% if perms.internal.add_quote %}
                 <a href="{% url 'quote_create' %}">
                     <i class="green plus icon"></i>
@@ -35,7 +35,7 @@
                             {% endif %}
                         </div>
                         <div class="description">
-                            {% blocktrans with quote=quote.quote %}“{{ quote }}”{% endblocktrans %}
+                            {% blocktranslate with quote=quote.quote %}“{{ quote }}”{% endblocktranslate %}
                         </div>
                         <div class="meta">
                             {{ quote.context }}

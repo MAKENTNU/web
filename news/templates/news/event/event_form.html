@@ -19,10 +19,10 @@
                         <input id="repeating" type="radio" name="{{ field.name }}" value="{{ Event.Type.REPEATING }}"
                                {% if field.value == Event.Type.REPEATING %}checked{% endif %}/>
                         <label for="repeating">{{ Event.Type.REPEATING.label }}
-                            <span class="popup-trigger" data-content="{% blocktrans trimmed %}
+                            <span class="popup-trigger" data-content="{% blocktranslate trimmed %}
                                 Used for repeating events where the user is to register for one of several occurrences.
                                 Each occurrence will have its own registration.
-                            {% endblocktrans %}">
+                            {% endblocktranslate %}">
                                 <i class="make-col-yellow question circle icon"></i>
                             </span>
                         </label>
@@ -34,10 +34,10 @@
                         <input id="standalone" type="radio" name="{{ field.name }}" value="{{ Event.Type.STANDALONE }}"
                                {% if field.value == Event.Type.STANDALONE %}checked{% endif %}/>
                         <label for="standalone">{{ Event.Type.STANDALONE.label }}
-                            <span class="popup-trigger" data-content="{% blocktrans trimmed %}
+                            <span class="popup-trigger" data-content="{% blocktranslate trimmed %}
                                 Used for events that happen once, e.g. a weekend-long happening.
                                 All occurrences of the event will have a common registration.
-                            {% endblocktrans %}">
+                            {% endblocktranslate %}">
                                 <i class="make-col-yellow question circle icon"></i>
                             </span>
                         </label>
@@ -52,11 +52,11 @@
                 <label for="{{ field.id_for_label }}">{{ field.label }}</label>
                 {{ field }}
                 <div id="info-message-tickets" class="ui blue pointing basic label">
-                    {% trans "A value of zero indicates that no registration is required" %}.
+                    {% translate "A value of zero indicates that no registration is required" %}.
                 </div>
             </div>
             <div id="info-message-tickets-repeating" class="ui red pointing basic label">
-                {% trans "Only used for standalone events. For repeating events, tickets are administered per occurrence." %}
+                {% translate "Only used for standalone events. For repeating events, tickets are administered per occurrence." %}
             </div>
         </div>
     {% else %}

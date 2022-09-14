@@ -9,12 +9,12 @@
         <span class="ui right floated">
             {% if timeplace.number_of_tickets %}
                 <a href="{% url 'timeplace_ticket_list' timeplace.event.pk timeplace.pk %}">
-                    {% blocktrans trimmed with num_active_tickets=timeplace.number_of_active_tickets num_tickets=timeplace.number_of_tickets %}
+                    {% blocktranslate trimmed with num_active_tickets=timeplace.number_of_active_tickets num_tickets=timeplace.number_of_tickets %}
                         {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
-                    {% endblocktrans %}
+                    {% endblocktranslate %}
                 </a>
             {% else %}
-                <b>{% trans "No registration required" %}</b>
+                <b>{% translate "No registration required" %}</b>
             {% endif %}
         </span>
     {% endif %}
@@ -24,29 +24,29 @@
             <span>
                 &nbsp;&nbsp;
                     <i class="{% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle popup-trigger"
-                       data-title="{% trans "hidden"|capfirst %}"
+                       data-title="{% translate "hidden"|capfirst %}"
                        data-post-url="{% url 'timeplace_toggle' timeplace.event.pk timeplace.pk %}" data-toggle="hidden" data-model="timeplace"
-                       data-content="{% trans "If selected, the occurrence is hidden for non-admin users." %}">
+                       data-content="{% translate "If selected, the occurrence is hidden for non-admin users." %}">
                     </i>
                 &nbsp;&nbsp;
                 {% if perms.news.change_timeplace %}
-                    <a class="make-col-blue popup-trigger" data-title="{% trans "Edit" %}"
-                       data-content="{% trans "If clicked, a form for editing the occurrence is shown." %}"
+                    <a class="make-col-blue popup-trigger" data-title="{% translate "Edit" %}"
+                       data-content="{% translate "If clicked, a form for editing the occurrence is shown." %}"
                        href="{% url 'timeplace_edit' timeplace.event.pk timeplace.pk %}">
                         <i class="edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
                     <a class="delete-modal-button make-col-blue popup-trigger"
-                       data-title="{% trans "Delete" %}" data-content="{% trans "If clicked, the occurrence will be deleted." %}"
+                       data-title="{% translate "Delete" %}" data-content="{% translate "If clicked, the occurrence will be deleted." %}"
                        data-url="{% url 'timeplace_delete' timeplace.event.pk timeplace.pk %}" data-obj-name="{{ timeplace }}">
                         <i class="delete icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.add_timeplace %}
                     <a class="make-col-blue popup-trigger"
-                       data-title="{% trans "Duplicate" %}"
-                       data-content="{% trans "If clicked, the occurrence is duplicated." %}"
+                       data-title="{% translate "Duplicate" %}"
+                       data-content="{% translate "If clicked, the occurrence is duplicated." %}"
                        onclick="$('#duplication-form-{{ timeplace.pk }}').submit();">
                         <i class="copy icon"></i>
                     </a>

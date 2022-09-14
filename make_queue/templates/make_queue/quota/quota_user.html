@@ -6,9 +6,9 @@
         <div class="content">
             <div class="header">
                 {% if quota.diminishing %}
-                    {% trans "One-time quota" %}
+                    {% translate "One-time quota" %}
                 {% else %}
-                    {% trans "Replenishing quota" %}
+                    {% translate "Replenishing quota" %}
                 {% endif %}
                 <a href="{% url 'edit_quota' quota.pk %}">
                     <i class="make-col-yellow pencil icon"></i>
@@ -23,15 +23,15 @@
             </div>
             <div class="meta">{{ quota.machine_type.name }}</div>
             <span>
-                <b>{% trans "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
+                <b>{% translate "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
             </span>
             {% if quota.ignore_rules %}
-                <b>{% trans "ignores rules"|capfirst %}</b>
+                <b>{% translate "ignores rules"|capfirst %}</b>
             {% endif %}
         </div>
     </div>
 {% empty %}
     <div class="text-centered">
-        <i>{% trans "User has no personal quotas" %}</i>
+        <i>{% translate "User has no personal quotas" %}</i>
     </div>
 {% endfor %}
