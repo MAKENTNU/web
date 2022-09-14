@@ -3,6 +3,8 @@
 {% load i18n %}
 
 
+{% block title %}{{ committee.name|capfirst }} | {% translate "committees"|capfirst %}{% endblock title %}
+
 {% block body %}
     <div class="word-breaking hyphenated ui text container">
         {% if committee.image %}

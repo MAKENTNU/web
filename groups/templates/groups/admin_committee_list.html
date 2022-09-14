@@ -3,6 +3,8 @@
 {% load i18n %}
 
 
+{% block title %}{% translate "committees"|capfirst %} | {% translate "Admin panel" %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'groups/css/admin_committee_list.css' %}"/>
 {% endblock extra_head %}

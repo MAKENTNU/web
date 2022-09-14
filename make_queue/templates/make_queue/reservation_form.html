@@ -8,6 +8,14 @@
 
 {# TODO: make this template extend web/generic_form.html #}
 
+{% block title %}
+    {% if new_reservation %}
+        {% translate "New reservation" %}
+    {% else %}
+        {% translate "Edit reservation" %}
+    {% endif %}
+{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_form.css' %}"/>
 {% endblock extra_head %}

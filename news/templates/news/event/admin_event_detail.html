@@ -3,6 +3,8 @@
 {% load static %}
 
 
+{% block title %}{{ event.title }} | {% translate "Admin panel" %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/admin_event_detail.css' %}"/>
     <!--suppress ES6ConvertVarToLetConst -->

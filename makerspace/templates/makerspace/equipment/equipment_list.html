@@ -5,13 +5,15 @@
 {% load css_tags %}
 
 
+{% block title %}{% translate "Some of the available equipment <br/>at Makerverkstedet"|striptags %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'makerspace/css/equipment_list.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
     <h1 class="ui text-centered make-col-blue header">
-        {% trans "Some of the available equipment<br/>at Makerverkstedet" %}
+        {% translate "Some of the available equipment <br/>at Makerverkstedet" %}
     </h1>
     <div class="ui container">
 

@@ -4,6 +4,8 @@
 {% load announcement_tags %}
 
 
+{% block title %}{% translate "Front page" %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/event_list_contents.css' %}"/>
     <link rel="stylesheet" href="{% static 'news/css/article/article_list_contents.css' %}"/>

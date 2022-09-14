@@ -86,6 +86,23 @@ msgstr ""
 msgid "Announcements"
 msgstr "Kunngjøringer"
 
+#: announcements/templates/announcements/admin_announcement_list.html:6
+#: faq/templates/faq/admin_category_list.html:6
+#: faq/templates/faq/admin_question_list.html:6
+#: faq/templates/faq/faq_admin_panel.html:7
+#: groups/templates/groups/admin_committee_list.html:6
+#: make_queue/templates/make_queue/course/course_registration_list.html:7
+#: make_queue/templates/make_queue/quota/admin_quota_panel.html:6
+#: make_queue/templates/make_queue/reservation_list.html:10
+#: makerspace/templates/makerspace/equipment/admin_equipment_list.html:6
+#: news/templates/news/article/admin_article_list.html:5
+#: news/templates/news/event/admin_event_detail.html:6
+#: news/templates/news/event/admin_event_list.html:5
+#: web/templates/web/admin_panel.html:7
+#: web/templates/web/admin_panel.html:11
+msgid "Admin panel"
+msgstr "Administrasjonspanel"
+
 #: announcements/templates/announcements/admin_announcement_list.html:39
 msgctxt "location"
 msgid "Front page"
@@ -281,10 +298,6 @@ msgstr "Kortnummeret er allerede i bruk"
 msgid "Contact %(email)s to fix the problem."
 msgstr "Kontakt %(email)s for å fikse problemet."
 
-#: checkin/templates/checkin/suggest_skill.html:11
-msgid "Suggest new skills at Makerverkstedet"
-msgstr "Foreslå nye ferdigheter"
-
 #: checkin/templates/checkin/suggest_skill.html:25
 msgid "Submit"
 msgstr "Legg til"
@@ -324,8 +337,8 @@ msgid "Delete"
 msgstr "Slett"
 
 #: checkin/templates/checkin/user_skill_list.html:15
-msgid "People with these skills are at<br/>Makerverkstedet right now"
-msgstr "Folk med disse ferdighetene er på<br/>Makerverkstedet akkurat nå"
+msgid "People with these skills are at <br/>Makerverkstedet right now"
+msgstr "Folk med disse ferdighetene er på <br/>Makerverkstedet akkurat nå"
 
 #: checkin/views.py:118
 msgid "You have completed the 3D printer course"
@@ -456,9 +469,9 @@ msgstr "side"
 msgid "made by"
 msgstr "gjort av"
 
-#: docs/templates/docs/base.html:6
-msgid "MAKE NTNU Docs"
-msgstr "MAKE NTNU dokumentasjon"
+#: docs/templates/docs/base.html:6 docs/templates/docs/search.html:5
+msgid "Docs"
+msgstr "Dokumentasjon"
 
 #: docs/templates/docs/documentation_page_detail.html:18
 msgid "You are viewing an old version of this page"
@@ -553,6 +566,10 @@ msgstr "Ny side"
 msgid "MAKE NTNU's logo"
 msgstr "MAKE NTNUs logo"
 
+#: docs/templates/docs/search.html:5
+msgid "Search results"
+msgstr "Søkeresultater"
+
 #: docs/templates/docs/search.html:30
 msgid "No content"
 msgstr "Ikke noe innhold"
@@ -616,6 +633,10 @@ msgid "questions"
 msgstr "spørsmål"
 
 #: faq/templates/faq/faq_admin_panel.html:7
+#: web/templates/web/admin_panel.html:77 web/templates/web/header.html:61
+msgid "FAQ"
+msgstr "FAQ"
+
 #: faq/templates/faq/faq_admin_panel.html:15
 msgid "FAQ Admin Panel"
 msgstr "FAQ-administrasjonspanel"
@@ -938,9 +959,9 @@ msgstr "forfatter"
 msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
 
-#: internal/templates/internal/base.html:6
-msgid "MAKE NTNU Internal"
-msgstr "MAKE NTNU internsider"
+#: internal/templates/internal/base.html:6 web/templates/web/header.html:98
+msgid "Internal pages"
+msgstr "Internsider"
 
 #: internal/templates/internal/committee_navbar.html:7
 msgid "Committee bulletin boards"
@@ -1727,6 +1748,10 @@ msgstr "modell"
 msgid "Quota and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 
+#: make_queue/templates/make_queue/quota/admin_quota_panel.html:6
+msgid "Quotas"
+msgstr "Kvoter"
+
 #: make_queue/templates/make_queue/quota/admin_quota_panel.html:15
 msgid "Add new quota"
 msgstr "Legg til ny kvote"
@@ -2116,8 +2141,8 @@ msgstr "Ny regel for {machine_type}"
 
 #: make_queue/views/reservation/rules.py:105
 #, python-brace-format
-msgid "Rule for {machine_type}"
-msgstr "Regel for {machine_type}"
+msgid "Edit Rule for {machine_type}"
+msgstr "Rediger regel for {machine_type}"
 
 #: make_queue/views/reservation/rules.py:147
 #, python-brace-format
@@ -2151,8 +2176,8 @@ msgid "Image of %(equipment)s"
 msgstr "Bilde av %(equipment)s"
 
 #: makerspace/templates/makerspace/equipment/equipment_list.html:14
-msgid "Some of the available equipment<br/>at Makerverkstedet"
-msgstr "Noe av det tilgjengelige utstyret<br/>på Makerverkstedet"
+msgid "Some of the available equipment <br/>at Makerverkstedet"
+msgstr "Noe av det tilgjengelige utstyret <br/>på Makerverkstedet"
 
 #: makerspace/templates/makerspace/equipment/equipment_list.html:22
 msgid "Contents"
@@ -2543,6 +2568,11 @@ msgstr "Fant følgende brukere uten noen billetter"
 msgid "No users found"
 msgstr "Ingen brukere funnet"
 
+#: news/templates/news/event/admin_event_ticket_list.html:8
+#, python-format
+msgid "Tickets for “%(title)s”"
+msgstr "Billetter for «%(title)s»"
+
 #: news/templates/news/event/admin_event_ticket_list.html:16
 msgid "Event admin page"
 msgstr "Administrasjonsside for arrangementet"
@@ -2754,12 +2784,14 @@ msgid "New Event"
 msgstr "Nytt arrangement"
 
 #: news/views.py:397
-msgid "Edit Occurrence"
-msgstr "Rediger forekomst"
+#, python-brace-format
+msgid "Edit Occurrence for “{title}”"
+msgstr "Rediger forekomst for «{title}»"
 
 #: news/views.py:406
-msgid "New Occurrence"
-msgstr "Ny forekomst"
+#, python-brace-format
+msgid "New Occurrence for “{title}”"
+msgstr "Ny forekomst for «{title}»"
 
 #: news/views.py:572
 #, python-brace-format
@@ -2908,10 +2940,6 @@ msgstr "Kontaktinformasjon"
 msgid "click here to show various contact info, like email addresses"
 msgstr "klikk her for å vise diverse kontaktinformasjon, som e-postadresser"
 
-#: web/templates/web/admin_panel.html:9
-msgid "Admin panel"
-msgstr "Administrasjonspanel"
-
 #: web/templates/web/admin_panel.html:18
 msgid "Here you can create, edit and delete events and their occurrences"
 msgstr "Her kan du lage, endre og slette arrangementer og deres forekomster"
@@ -2943,10 +2971,6 @@ msgstr ""
 #: web/templates/web/admin_panel.html:66
 msgid "Here you can add or edit equipment at Makerverkstedet"
 msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
-
-#: web/templates/web/admin_panel.html:75 web/templates/web/header.html:61
-msgid "FAQ"
-msgstr "FAQ"
 
 #: web/templates/web/admin_panel.html:78
 msgid "Here you can add or edit frequently asked questions"
@@ -3061,10 +3085,6 @@ msgstr "Om"
 msgid "About us"
 msgstr "Om oss"
 
-#: web/templates/web/header.html:98
-msgid "Internal pages"
-msgstr "Internsider"
-
 #: web/templates/web/header.html:103
 msgid "Administration"
 msgstr "Administrasjon"
@@ -3072,6 +3092,10 @@ msgstr "Administrasjon"
 #: web/templates/web/header.html:113
 msgid "Profile"
 msgstr "Profil"
+
+#: web/templates/web/index.html:7
+msgid "Front page"
+msgstr "Forside"
 
 #: web/widgets.py:88 web/widgets.py:105
 msgid "Choose value"

@@ -6,6 +6,8 @@
 
 {# TODO: make this template extend web/generic_form.html #}
 
+{% block title %}{% translate "Edit course registration" %}{% endblock title %}
+
 {% block extra_head %}
     {{ form.media }}
     <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_form.css' %}"/>

@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "categories"|capfirst %}{% endblock title %}
+{% block title %}{% translate "categories"|capfirst %} | {% translate "Admin panel" %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'faq/css/admin_category_list.css' %}"/>

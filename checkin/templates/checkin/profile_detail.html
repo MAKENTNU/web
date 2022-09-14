@@ -3,6 +3,8 @@
 {% load static %}
 
 
+{% block title %}{% translate "My profile" %} &ndash; {{ request.user.get_full_name }}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'checkin/css/profile_detail.css' %}"/>
 {% endblock extra_head %}

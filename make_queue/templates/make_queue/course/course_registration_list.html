@@ -4,6 +4,8 @@
 {% load datetime_tags %}
 
 
+{% block title %}{% translate "Course registrations" %} | {% translate "Admin panel" %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/course_registration_list.css' %}"/>
 {% endblock extra_head %}

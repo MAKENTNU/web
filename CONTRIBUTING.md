@@ -754,6 +754,7 @@ there do exist scenarios where *not* getting rid of a code smell would be the mo
   + [For each view](#for-each-view)
     - [The view is a function](#the-view-is-a-function)
     - [Improper access control (permissions)](#improper-access-control-permissions)
+    - [Missing page title](#missing-page-title)
     - [Modifying state in `GET` requests](#modifying-state-in-get-requests)
     - [Doing input validation directly in view code](#doing-input-validation-directly-in-view-code)
     - [List view missing pagination](#list-view-missing-pagination)
@@ -782,6 +783,7 @@ there do exist scenarios where *not* getting rid of a code smell would be the mo
   + [For code in general](#for-code-in-general-5)
     - [Lacking accessibility](#lacking-accessibility)
     - [Using a model object's `id` instead of `pk`](#using-a-model-objects-id-instead-of-pk-1)
+    - [Missing page title](#missing-page-title-1)
     - [Page flow relying too much on JavaScript](#page-flow-relying-too-much-on-javascript)
     - [CSS directly in HTML](#css-directly-in-html)
   + [For each HTML tag](#for-each-html-tag-1)
@@ -1072,6 +1074,13 @@ the `as_view()` call can be wrapped in one of the decorators corresponding to th
 and [`user_passes_test()`](https://docs.djangoproject.com/en/stable/topics/auth/default/#django.contrib.auth.decorators.user_passes_test)).
 It's generally best to use our custom `permission_required_else_denied()` decorator, unless you're sure of otherwise.
 
+#### Missing page title
+
+Views responding with a complete webpage should always set the page title (i.e. the `<title>` tag),
+e.g. by setting the `page_title` context variable - which is used in [`web/base.html`](/web/templates/web/base.html).
+
+*See [the equivalent code smell for templates](#missing-page-title-1).*
+
 #### Modifying state in `GET` requests
 
 This includes things like modifying objects in the database or files on the server.
@@ -1286,6 +1295,15 @@ Lastly, to quote Mozilla's HTML and accessibility guide mentioned above:
 #### Using a model object's `id` instead of `pk`
 
 *See [the equivalent code smell for Python](#using-a-model-objects-id-instead-of-pk).*
+
+#### Missing page title
+
+Templates rendering a complete webpage should always set the page title (i.e. the `<title>` tag).
+
+If the template is extending [`web/base.html`](/web/templates/web/base.html) (directly or through another template),
+this can be done e.g. by setting the `page_title` context variable or by overriding the `title` block.
+
+*See [the equivalent code smell for views](#missing-page-title).*
 
 #### Page flow relying too much on JavaScript
 

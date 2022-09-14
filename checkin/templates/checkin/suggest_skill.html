@@ -5,10 +5,12 @@
 {% load i18n %}
 
 
+{% block title %}{% translate "Suggest new skills" %}{% endblock title %}
+
 {% block body %}
 
     <div class="ui text container">
-        <h1>{% trans "Suggest new skills at Makerverkstedet" %}</h1>
+        <h1>{% translate "Suggest new skills" %}</h1>
 
         <form class="ui form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}

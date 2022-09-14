@@ -3,6 +3,8 @@
 {% load i18n %}
 
 
+{% block title %}{% translate "Articles" %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/article/article_list_contents.css' %}"/>
     <script defer src="{% static 'news/js/article/article_list_contents.js' %}"></script>

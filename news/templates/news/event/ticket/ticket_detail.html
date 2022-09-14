@@ -4,6 +4,10 @@
 {% load html_tags %}
 
 
+{% block title %}
+    {% blocktranslate with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktranslate %}
+{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/ticket/ticket_card.css' %}"/>
 {% endblock extra_head %}

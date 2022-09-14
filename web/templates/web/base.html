@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="{{ CURRENT_LANGUAGE_CODE }}">
 <head>
-    <title>{% block title %}MAKE NTNU{% endblock title %}</title>
+    <title>{% block title_full %}{% block title %}{{ page_title }}{% endblock title %} | MAKE NTNU{% endblock title_full %}</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width"/>
     {% block favicon_template %}

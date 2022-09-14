@@ -394,16 +394,18 @@ class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC)
 class EditTimePlaceView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, BaseTimePlaceEditView, UpdateView):
     permission_required = ('news.change_timeplace',)
 
-    form_title = _("Edit Occurrence")
-
     def get_object(self, queryset=None):
         return self.time_place
+
+    def get_form_title(self):
+        return _("Edit Occurrence for “{title}”").format(title=self.event)
 
 
 class CreateTimePlaceView(PermissionRequiredMixin, BaseTimePlaceEditView, CreateView):
     permission_required = ('news.add_timeplace',)
 
-    form_title = _("New Occurrence")
+    def get_form_title(self):
+        return _("New Occurrence for “{title}”").format(title=self.event)
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, TimePlaceRelatedViewMixin, CreateView):

@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-{% block title %}{% trans "questions"|capfirst %}{% endblock title %}
+{% block title %}{% translate "questions"|capfirst %} | {% translate "Admin panel" %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'faq/css/admin_question_list.css' %}"/>

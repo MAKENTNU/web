@@ -4,6 +4,10 @@
 {% load html_tags %}
 
 
+{% block title %}
+    {% blocktranslate with title=event.title %}Tickets for “{{ title }}”{% endblocktranslate %}
+{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/admin_event_ticket_list.css' %}"/>
     <script defer src="{% static 'news/js/event/ticket/email_copy.js' %}"></script>

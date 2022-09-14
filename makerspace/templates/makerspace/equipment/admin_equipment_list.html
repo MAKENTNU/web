@@ -3,6 +3,8 @@
 {% load i18n %}
 
 
+{% block title %}{% translate "equipment"|capfirst %} | {% translate "Admin panel" %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'makerspace/css/admin_equipment_list.css' %}"/>
 {% endblock extra_head %}
