@@ -156,6 +156,8 @@ function searchMatches(searchTerm, toMatch) {
     /**
      * Matches if the search term is empty or if there is at least one match in `toMatch`.
      */
+    searchTerm = searchTerm.trim().toLowerCase();
+    toMatch = toMatch.toLowerCase();
     return searchTerm.isEmpty() || toMatch.includes(searchTerm);
 }
 
@@ -174,7 +176,7 @@ function filter() {
     const filters = [
         (member) => filterMatches(state.statusFilter, member.data.status.map(status => status.name)),
         (member) => filterMatches(state.committeeFilter, member.data.committees.map(committee => committee.name)),
-        (member) => searchMatches(state.searchValue, member.data.name.toLowerCase()),
+        (member) => searchMatches(state.searchValue, member.data.name),
     ];
 
     state.displayedMembers = [];
@@ -255,10 +257,10 @@ function setup() {
 
     const $searchInput = $("input[name=search-text]");
     $searchInput.on("input", () => {
-        state.searchValue = $searchInput.val().toLowerCase();
+        state.searchValue = $searchInput.val();
         filter();
     });
-    state.searchValue = $searchInput.val().toLowerCase();
+    state.searchValue = $searchInput.val();
 
     // Package member information
     $("#member-table tbody tr").each((index, row) => {
