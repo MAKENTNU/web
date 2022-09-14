@@ -6,7 +6,7 @@ from django.utils import timezone
 
 from users.models import User
 from util.locale_utils import parse_datetime_localized
-from util.test_utils import set_without_duplicates
+from util.test_utils import assertRaisesIntegrityError_withRollback, set_without_duplicates
 from ...models import Article, Event, EventTicket, TimePlace
 
 
@@ -173,6 +173,31 @@ class EventTicketTests(TestCase):
         self.repeating_event = Event.objects.create(title="Repeating event", event_type=Event.Type.REPEATING)
         self.standalone_time_place = TimePlace.objects.create(event=self.standalone_event, hidden=False)
         self.repeating_time_place = TimePlace.objects.create(event=self.repeating_event, hidden=False, number_of_tickets=10)
+
+    def test_event_ticket_unique_constraints_are_enforced(self):
+        self.assert_creating_ticket_raises_integrity_error(False, event=self.standalone_event, time_place=None)
+        # Creating a second ticket with the same arguments should fail
+        self.assert_creating_ticket_raises_integrity_error(True, event=self.standalone_event, time_place=None)
+
+        self.assert_creating_ticket_raises_integrity_error(False, event=None, time_place=self.repeating_time_place)
+        # Creating a second ticket with the same arguments should fail
+        self.assert_creating_ticket_raises_integrity_error(True, event=None, time_place=self.repeating_time_place)
+
+    def test_event_tickets_require_either_time_place_or_event_set(self):
+        # Invalid combinations
+        self.assert_creating_ticket_raises_integrity_error(True, event=None, time_place=None)
+        self.assert_creating_ticket_raises_integrity_error(True, event=self.standalone_event, time_place=self.standalone_time_place)
+        self.assert_creating_ticket_raises_integrity_error(True, event=self.repeating_event, time_place=self.repeating_time_place)
+        self.assert_creating_ticket_raises_integrity_error(True, event=self.standalone_event, time_place=self.repeating_time_place)
+
+        # Valid combinations
+        self.assert_creating_ticket_raises_integrity_error(False, event=self.standalone_event, time_place=None)
+        self.assert_creating_ticket_raises_integrity_error(False, event=None, time_place=self.repeating_time_place)
+
+    def assert_creating_ticket_raises_integrity_error(self, raises: bool, *, event: Event | None, time_place: TimePlace | None):
+        assertRaisesIntegrityError_withRollback(self,
+                                                lambda: EventTicket.objects.create(user=self.user, event=event, timeplace=time_place),
+                                                raises=raises)
 
     @mock.patch('django.utils.timezone.now')
     def test_event_tickets_have_equal__active_last_modified__and__creation_date__when_created(self, now_mock):
