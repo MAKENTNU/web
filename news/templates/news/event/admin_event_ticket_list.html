@@ -60,6 +60,27 @@
                                 <b>{% translate "Ref #" %}:</b>
                                 <a href="{{ ticket.get_absolute_url }}">{{ ticket.uuid }}</a>
                             </div>
+                            <div class="grey-text">
+                                <b>{% translate "original registration date"|capfirst %}:</b>
+                                <span>
+                                    {{ ticket.creation_date }}
+                                </span>
+                            </div>
+                            {# These should be set to the same value by the model's `save()` method, when the ticket object is first created #}
+                            {% if ticket.active_last_modified != ticket.creation_date %}
+                                <div class="grey-text">
+                                    <b>{% spaceless %}
+                                        {% if ticket.active %}
+                                            {% translate "Last reactivated" %}
+                                        {% else %}
+                                            {% translate "Last canceled" %}
+                                        {% endif %}
+                                    {% endspaceless %}:</b>
+                                    <span>
+                                        {{ ticket.active_last_modified }}
+                                    </span>
+                                </div>
+                            {% endif %}
                             <div>
                                 <b>{% translate "language"|capfirst %}:</b> {{ ticket.get_language_display }}
                             </div>

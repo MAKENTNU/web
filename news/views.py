@@ -565,8 +565,14 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
         })
 
     def form_valid(self, form):
-        form.instance.active = True  # this is done mainly for reactivating an existing ticket
-        ticket = form.save()
+        form_instance: EventTicket = form.instance
+        form_instance.active = True  # this is done mainly for reactivating an existing ticket
+        # If the ticket object already exists, update the timestamp
+        # (the model's `save()` method handles setting the timestamp when creating the ticket object)
+        if not form_instance._state.adding:
+            form_instance.active_last_modified = timezone.localtime()
+        ticket: EventTicket = form.save()
+
         # noinspection PyAttributeOutsideInit
         # Setting the `object` field, as is done in the super class `ModelFormMixin`
         self.object = ticket
@@ -640,7 +646,7 @@ class AdminEventTicketListView(PermissionRequiredMixin, EventRelatedViewMixin, L
         return self.request.user.has_perm('news.change_event') and self.focused_object.number_of_tickets
 
     def get_queryset(self):
-        return self.focused_object.tickets.order_by('-active')
+        return self.focused_object.tickets.order_by('-active', '-active_last_modified')
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**{
@@ -714,12 +720,15 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
+        previous_active_state = self.ticket.active
         # Allow for toggling if a ticket is canceled or not
         if self.request.user.has_perm('news.cancel_ticket'):
             self.ticket.active = not self.ticket.active
-            self.ticket.save()
         elif self.request.user == self.ticket.user and self.ticket.active:
             self.ticket.active = False
+
+        if self.ticket.active != previous_active_state:
+            self.ticket.active_last_modified = timezone.localtime()
             self.ticket.save()
 
         # noinspection PyAttributeOutsideInit

@@ -163,14 +163,17 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                     {'language': 'nb'},
                     expected_form_instance=None, expected_language='nb', expected_comment="",
                 )
+                self.assertEqual(created_ticket.active_last_modified, created_ticket.creation_date)
 
                 created_ticket.active = False
                 created_ticket.save()
 
-                assert_results_after_registering_for_event(
+                reactivated_ticket = assert_results_after_registering_for_event(
                     {'language': 'en', 'comment': "A comment :)"},
                     expected_form_instance=created_ticket, expected_language='en', expected_comment="A comment :)",
                 )
+                self.assertEqual(reactivated_ticket.creation_date, created_ticket.creation_date)
+                self.assertGreater(reactivated_ticket.active_last_modified, reactivated_ticket.creation_date)
 
     def test__cancel_ticket_view__cancels_and_reactivates_tickets_as_expected(self):
         ticket_repeating = EventTicket.objects.create(user=self.user1, timeplace=self.repeating_time_place)
@@ -182,6 +185,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 ticket_cancel_url = reverse('cancel_ticket', args=[ticket.pk])
 
                 self.assertTrue(ticket.active)
+                self.assertEqual(ticket.active_last_modified, ticket.creation_date)
 
                 def assert_ticket_active_after_posting(active: bool):
                     response = self.client1.post(ticket_cancel_url)
@@ -191,11 +195,17 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                     self.assertEqual(ticket.active, active)
 
                 assert_ticket_active_after_posting(False)
+                last_modified = ticket.active_last_modified
+                self.assertGreater(last_modified, ticket.creation_date)
                 # Posting to an already canceled ticket without the cancel permission, should do nothing
                 assert_ticket_active_after_posting(False)
+                self.assertEqual(ticket.active_last_modified, last_modified)
+
                 self.user1.add_perms('news.cancel_ticket')
                 assert_ticket_active_after_posting(True)
                 assert_ticket_active_after_posting(False)
+                self.assertGreater(ticket.active_last_modified, last_modified)
+
                 self.user1.user_permissions.clear()
 
     def test__cancel_ticket_view__only_allows_expected_next_params(self):

@@ -4,12 +4,13 @@ from unittest import mock
 from django.test import TestCase
 from django.utils import timezone
 
+from users.models import User
 from util.locale_utils import parse_datetime_localized
 from util.test_utils import set_without_duplicates
-from ...models import Article, Event, TimePlace
+from ...models import Article, Event, EventTicket, TimePlace
 
 
-class ModelTestCase(TestCase):
+class ArticleEventAndTimePlaceTests(TestCase):
 
     @staticmethod
     def create_time_place(event, *, relative_publication_time, relative_start_time,
@@ -162,3 +163,26 @@ class ModelTestCase(TestCase):
         })
         self.assertSetEqual(set(TimePlace.objects.published().future()), {event_future})
         self.assertSetEqual(set(TimePlace.objects.published().past()), {event_past})
+
+
+class EventTicketTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user("user1")
+        self.standalone_event = Event.objects.create(title="Standalone event", event_type=Event.Type.STANDALONE, number_of_tickets=10)
+        self.repeating_event = Event.objects.create(title="Repeating event", event_type=Event.Type.REPEATING)
+        self.standalone_time_place = TimePlace.objects.create(event=self.standalone_event, hidden=False)
+        self.repeating_time_place = TimePlace.objects.create(event=self.repeating_event, hidden=False, number_of_tickets=10)
+
+    @mock.patch('django.utils.timezone.now')
+    def test_event_tickets_have_equal__active_last_modified__and__creation_date__when_created(self, now_mock):
+        now = parse_datetime_localized("2022-09-14 15:31")
+        now_mock.return_value = now
+
+        ticket = EventTicket.objects.create(user=self.user, event=self.standalone_event)
+        self.assertEqual(ticket.creation_date, now)
+        self.assertEqual(ticket.active_last_modified, ticket.creation_date)
+
+        ticket = EventTicket.objects.create(user=self.user, timeplace=self.repeating_time_place)
+        self.assertEqual(ticket.creation_date, now)
+        self.assertEqual(ticket.active_last_modified, ticket.creation_date)

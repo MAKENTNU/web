@@ -16,3 +16,7 @@
     font-family: "Courier New", Courier, monospace !important;
     width: 100%;
 }
+
+.list .item .description .grey-text {
+    color: rgba(0, 0, 0, 0.4); /* Same as Fomantic-UI's `color` for `.ui.card>.extra` */
+}

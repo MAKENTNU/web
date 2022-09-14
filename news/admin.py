@@ -65,8 +65,10 @@ def get_ticket_table(tickets: QuerySet[EventTicket]):
             'user_email': ticket.email,
             'comment': ticket.comment,
             'language': ticket.get_language_display(),
+            'active_last_modified': ticket.active_last_modified,
+            'creation_date': ticket.creation_date,
         }
-        for ticket in tickets.select_related('user')
+        for ticket in tickets.order_by('-active_last_modified').select_related('user')
     ]
     return get_template('admin/news/event/change_form_ticket_table.html').render({
         'ticket_dicts': ticket_dicts,
@@ -280,7 +282,7 @@ class TimePlaceAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 
 
 class EventTicketAdmin(UserSearchFieldsMixin, admin.ModelAdmin):
-    list_display = ('uuid', 'get_user', 'get_email', 'get_timeplace', 'get_event', 'active', 'language')
+    list_display = ('uuid', 'get_user', 'get_email', 'get_timeplace', 'get_event', 'language', 'active', 'active_last_modified', 'creation_date')
     list_filter = (
         'active', 'language',
         ('timeplace', admin.EmptyFieldListFilter),
@@ -293,7 +295,9 @@ class EventTicketAdmin(UserSearchFieldsMixin, admin.ModelAdmin):
     )
     user_lookup, name_for_full_name_lookup = 'user__', 'user_full_name'
     list_editable = ('active',)
+    ordering = ('-active_last_modified',)
 
+    readonly_fields = ('creation_date',)
     autocomplete_fields = ('user',)
     raw_id_fields = ('timeplace', 'event')
 
