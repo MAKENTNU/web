@@ -24,8 +24,7 @@ class Skill(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(
         to=User,
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         related_name='profile',
     )
     image = models.ImageField(upload_to=UploadToUtils.get_pk_prefixed_filename_func('profiles'),
@@ -34,9 +33,7 @@ class Profile(models.Model):
     last_checkin = models.DateTimeField(auto_now=True, verbose_name=_("last checked in"))
 
     def __str__(self):
-        if self.user:
-            return self.user.username
-        return "None"
+        return str(self.user)
 
 
 class UserSkill(models.Model):
