@@ -8,6 +8,16 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'docs/css/documentation_page_detail.css' %}"/>
+    {% if old and perms.docs.change_page %}
+        <script>
+            $(document).ready(function () {
+                $("#change-current-version").click(() => {
+                    $("#change-version-form").submit();
+                    return false;
+                });
+            });
+        </script>
+    {% endif %}
 {% endblock extra_head %}
 
 {% block body %}
@@ -80,14 +90,3 @@
         </form>
     {% endif %}
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        {% if old and perms.docs.change_page %}
-            $("#change-current-version").click(() => {
-                $("#change-version-form").submit();
-                return false;
-            });
-        {% endif %}
-    </script>
-{% endblock extra_scripts %}

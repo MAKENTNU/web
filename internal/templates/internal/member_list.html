@@ -11,6 +11,29 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'internal/css/member_list.css' %}"/>
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `member_list.js` #}
+        var initialFilterStatuses = ["{% translate "active"|capfirst %}"];
+        var selectedMemberPK = {% if selected_member %}"{{ selected_member.pk }}"{% else %}null{% endif %};
+    </script>
+    <script defer src="{% static 'internal/js/member_list.js' %}"></script>
+
+    {# Show any potential messages triggered by user actions (changing retirement/quit status) #}
+    {% if messages %}
+        <script>
+            $(document).ready(function () {
+                const $body = $("body");
+                {% for message in messages %}
+                    $body.toast({
+                        displayTime: 0,
+                        message: "{{ message }}",
+                        class: "warning",
+                    });
+                {% endfor %}
+            });
+        </script>
+    {% endif %}
 {% endblock extra_head %}
 
 {% block body %}
@@ -420,32 +443,3 @@
     </div>
 
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(".ui.dropdown").dropdown();
-        $("input[name=filter-status]").parent().dropdown("set selected", ["{% translate "active"|capfirst %}"]);
-    </script>
-    <script src="{% static 'internal/js/member_list.js' %}"></script>
-    {% if selected_member %}
-        <script>
-            showDetailedMemberInformation(state.allMembers.find(
-                    (member) => member.data.pk === {{ selected_member.pk }}
-            ));
-        </script>
-    {% endif %}
-
-    {# Show any possible messages triggered by user actions (changing retirement/quit status) #}
-    {% if messages %}
-        <script>
-            const $body = $("body");
-            {% for message in messages %}
-                $body.toast({
-                    displayTime: 0,
-                    message: "{{ message }}",
-                    class: "warning",
-                });
-            {% endfor %}
-        </script>
-    {% endif %}
-{% endblock extra_scripts %}

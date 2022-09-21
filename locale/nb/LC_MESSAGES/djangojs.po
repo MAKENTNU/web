@@ -13,6 +13,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+#: checkin/static/checkin/js/profile_detail.js:44
+msgid "Registered"
+msgstr "Registrert"
+
+#: checkin/static/checkin/js/profile_detail.js:47
+msgid "Scan card again!"
+msgstr "Skann kortet igjen!"
+
+#: checkin/static/checkin/js/profile_detail.js:52
+msgid "Scan card"
+msgstr "Skann kort"
+
+#: checkin/static/checkin/js/suggest_skill.js:34
+msgid "Voted!"
+msgstr "Stemt!"
+
 #: make_queue/static/make_queue/js/calendar.js:99
 msgid "New reservation"
 msgstr "Ny reservasjon"

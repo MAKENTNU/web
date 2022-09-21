@@ -212,19 +212,6 @@ msgstr ""
 "Ellers, se %(link_start)sarrangementsiden%(link_end)s for tidligere og "
 "kommende kurs."
 
-#: checkin/templates/checkin/profile_detail.html:88
-#: make_queue/models/course.py:14
-msgid "Registered"
-msgstr "Registrert"
-
-#: checkin/templates/checkin/profile_detail.html:91
-msgid "Scan card again!"
-msgstr "Skann kortet igjen!"
-
-#: checkin/templates/checkin/profile_detail.html:96
-msgid "Scan card"
-msgstr "Skann kort"
-
 #: checkin/templates/checkin/profile_internal.html:7
 msgid "Change picture"
 msgstr "Endre bilde"
@@ -1335,6 +1322,10 @@ msgstr "Varighet i minutter"
 #: make_queue/forms.py:277
 msgid "Stream name cannot be empty when the machine type supports streaming."
 msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
+
+#: make_queue/models/course.py:14
+msgid "Registered"
+msgstr "Registrert"
 
 #: make_queue/models/course.py:15
 msgid "Sent to Building security"

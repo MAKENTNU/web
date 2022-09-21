@@ -11,6 +11,24 @@
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}"/>
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_actions.css' %}"/>
 
+    {# Files required for `calendar.html` #}
+    <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}"/>
+    <script defer src="{% static 'web/js/date_utils.js' %}"></script>
+    <script defer src="{% static 'make_queue/js/reservation_rule_utils.js' %}"></script>
+    <script defer src="{% static 'make_queue/js/calendar.js' %}"></script>
+
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `machine_detail.js` #}
+        var calendarProperties = {
+            machine: "{{ machine.pk }}",
+            selection: {% if reservation_denied_message %}false{% else %}true{% endif %},
+            canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
+            date: new Date("{{ selected_date|iso_datetime }}"),
+        };
+    </script>
+    <script defer src="{% static 'make_queue/js/machine_detail.js' %}"></script>
+
     {% if machine.machine_type.has_stream %}
         <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
         <!--suppress ES6ConvertVarToLetConst -->
@@ -118,13 +136,5 @@
         </div>
 
         {% include 'make_queue/calendar.html' %}
-        <script>
-            new ReservationCalendar($(".reservation-calendar"), {
-                machine: "{{ machine.pk }}",
-                selection: {% if reservation_denied_message %}false{% else %}true{% endif %},
-                canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
-                date: new Date("{{ selected_date|iso_datetime }}"),
-            });
-        </script>
     </div>
 {% endblock body %}

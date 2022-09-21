@@ -18,6 +18,21 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_form.css' %}"/>
+
+    {# Files required for `calendar.html` #}
+    <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}"/>
+    <script defer src="{% static 'web/js/date_utils.js' %}"></script>
+    <script defer src="{% static 'make_queue/js/reservation_rule_utils.js' %}"></script>
+    <script defer src="{% static 'make_queue/js/calendar.js' %}"></script>
+
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `reservation_form.js` #}
+        var maximumDay = new Date();
+        maximumDay.setDate(maximumDay.getDate() + {{ maximum_days_in_advance }});
+        var shouldForceNewTime = {{ start_time|yesno:"false,true" }};
+    </script>
+    <script defer src="{% static 'make_queue/js/reservation_form.js' %}"></script>
 {% endblock extra_head %}
 
 {% block body %}
@@ -180,14 +195,4 @@
         {% include 'make_queue/calendar.html' %}
 
     </div>
-
-    <script>
-        {# `maximumDay` is used in `reservation_form.js` #}
-        var maximumDay = new Date();
-        maximumDay.setDate(maximumDay.getDate() + {{ maximum_days_in_advance }});
-    </script>
-    <script src="{% static 'make_queue/js/reservation_form.js' %}"></script>
-    <script>
-        getFutureReservations($("#machine-name-dropdown").dropdown("get value"), {{ start_time|yesno:"false,true" }});
-    </script>
 {% endblock body %}

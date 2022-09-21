@@ -1,6 +1,15 @@
+/* These variables must be defined when linking this script */
+// noinspection ES6ConvertVarToLetConst
+var initialFilterStatuses;
+// noinspection ES6ConvertVarToLetConst
+var selectedMemberPK;
+
 const SEARCH_FIELD_SEPARATOR = "∨"; // the Logical Or symbol (not a lowercase V)
 
 const $memberInfoModal = $("#detailed-member-info");
+const $filterStatusInput = $("input[name=filter-status]");
+const $filterCommitteeInput = $("input[name=filter-committee]");
+const $searchInput = $("input[name=search-text]");
 
 // Global state to reduce number of jQuery calls
 const state = {
@@ -247,21 +256,18 @@ function setup() {
     /**
      * Setup of the global state and actions.
      */
-    const $statusInput = $("input[name=filter-status]");
-    $statusInput.change(() => {
-        state.statusFilter = getFilterValues($statusInput);
+    $filterStatusInput.change(() => {
+        state.statusFilter = getFilterValues($filterStatusInput);
         filter();
     });
-    state.statusFilter = getFilterValues($statusInput);
+    state.statusFilter = getFilterValues($filterStatusInput);
 
-    const $committeeInput = $("input[name=filter-committee]");
-    $committeeInput.change(() => {
-        state.committeeFilter = getFilterValues($committeeInput);
+    $filterCommitteeInput.change(() => {
+        state.committeeFilter = getFilterValues($filterCommitteeInput);
         filter();
     });
-    state.committeeFilter = getFilterValues($committeeInput);
+    state.committeeFilter = getFilterValues($filterCommitteeInput);
 
-    const $searchInput = $("input[name=search-text]");
     $searchInput.on("input", () => {
         state.searchValue = $searchInput.val();
         filter();
@@ -295,7 +301,7 @@ function setup() {
 
         const member = {
             data: {
-                pk: $row.data("pk"),
+                pk: $row.data("pk").toString(), // a PK can in principle be anything, not just an int
                 ...searchableData,
 
                 dateJoined: $row.data("date-joined"),
@@ -358,4 +364,13 @@ function setup() {
     sort();
 }
 
+$(".ui.dropdown").dropdown();
+$filterStatusInput.parent().dropdown("set selected", initialFilterStatuses);
+
 setup();
+
+if (selectedMemberPK) {
+    showDetailedMemberInformation(state.allMembers.find(
+        (member) => member.data.pk === selectedMemberPK,
+    ));
+}
