@@ -10,11 +10,13 @@
     {# it should be disabled if the user is logged in, but reservation is denied for some other reason; #}
     {# and it should lead to the `create_reservation` page when the user is logged in and reservation is allowed. #}
     <a class="item {% if user.is_authenticated and reservation_denied_message %}disable{% endif %}"
-       href="{% if user.is_authenticated %}
-                 {% url 'create_reservation' machine.pk %}
-             {% else %}
-                 {% url 'login' %}{{ login_next_param }}
-             {% endif %}"
+            {% if user.is_authenticated %}
+                {% if not reservation_denied_message %}
+       href="{% url 'create_reservation' machine.pk %}"
+                {% endif %}
+            {% else %}
+       href="{% url 'login' %}{{ login_next_param }}"
+            {% endif %}
     >
         <i class="large middle aligned make-col-yellow plus icon"></i>
         <div class="content">
@@ -72,11 +74,5 @@
 </div>
 
 <script>
-    $(".action.list a.item.disable").on("click touch", function (event) {
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
-    });
-
     $(".dropdown.item").dropdown();
 </script>
