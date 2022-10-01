@@ -3003,11 +3003,11 @@ msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse"
 msgid ""
 "MAKE NTNU is a voluntary student organization that works for a better "
 "environment for project development, both in private and educational "
-"contexts, for all students at NTNU."
+"contexts, for all students and employees at NTNU."
 msgstr ""
 "MAKE NTNU er en frivillig studentorganisasjon som jobber for et bedre miljø "
 "for prosjektutvikling, både i privat og undervisningssammenheng, for alle "
-"studenter på NTNU."
+"studenter og ansatte på NTNU."
 
 #: web/templates/web/base.html:72
 msgid "Skip to main content"
