@@ -36,7 +36,7 @@ internal_contentbox_urlpatterns = [
 
 member_urlpatterns = [
     path("members/", views.MemberListView.as_view(), name='member_list'),
-    path("members/<int:pk>/", views.MemberListView.as_view(), name='member_list'),
+    path("members/<int:pk>/", views.MemberListView.as_view(), name='member_detail'),
     path("members/create/", views.CreateMemberView.as_view(), name='create_member'),
     path("members/<int:pk>/edit/", views.EditMemberView.as_view(), name='edit_member'),
     path("members/<int:pk>/edit/status/", views.EditMemberStatusView.as_view(), name='edit_member_status'),
