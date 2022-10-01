@@ -15,6 +15,7 @@
     <script>
         {# These variables are used in `member_list.js` #}
         var initialFilterStatuses = ["{% translate "active"|capfirst %}"];
+        var memberListURL = "{% url 'member_list' %}";
         var selectedMemberPK = {% if selected_member %}"{{ selected_member.pk }}"{% else %}null{% endif %};
     </script>
     <script defer src="{% static 'internal/js/member_list.js' %}"></script>
@@ -155,6 +156,7 @@
                 {% get_committees member as committees %}
                 {% get_membership_statuses member as membership_status %}
                 <tr data-pk="{{ member.pk }}"
+                    data-detail-url="{% url 'member_detail' member.pk %}"
                     data-phone="{{ member.phone_number }}"
                     data-phone-display="{{ member.phone_number_display }}"
                     data-name="{{ member.user.get_full_name }}"
