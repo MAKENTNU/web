@@ -446,8 +446,10 @@ function getCurrentPageMemberPK(popEventState) {
     // or when the browser has no stored state for the page (e.g. when restoring a tab after having closed and restarted the browser)
     if (popEventState)
         return popEventState.memberPK;
-    if (selectedMemberPK)
-        return selectedMemberPK;
+    // Shouldn't use `selectedMemberPK` here, as in some browsers (like Firefox),
+    // when restoring the session of a tab whose current page was the `member_detail` page,
+    // and you're navigating backwards/forwards to the `member_list` page,
+    // that variable will still be set - which is unexpected to this script's code.
 
     const pathName = window.location.pathname;
     if (pathName === memberListURL)
