@@ -8,6 +8,7 @@ var selectedMemberPK;
 
 const SEARCH_FIELD_SEPARATOR = "∨"; // the Logical Or symbol (not a lowercase V)
 const PAGE_TITLE_SEPARATOR = " | ";
+const MODAL_DEFAULT_DURATION = 400; // see https://fomantic-ui.com/modules/modal.html#/settings
 
 const $pageTitle = $("head>title");
 const $memberInfoModal = $("#detailed-member-info");
@@ -406,6 +407,7 @@ $filterStatusInput.parent().dropdown("set selected", initialFilterStatuses);
 setup();
 
 $memberInfoModal.modal({
+    duration: MODAL_DEFAULT_DURATION,
     onHide: function ($element) {
         if (isChangingMemberModalStateThroughHistoryAPI) {
             isChangingMemberModalStateThroughHistoryAPI = false;
@@ -423,6 +425,9 @@ if (selectedMemberPK)
 // When the user navigates backwards or forwards in the browser history:
 window.onpopstate = function (event) {
     isChangingMemberModalStateThroughHistoryAPI = true;
+    // Make the closing/opening transitions happen instantaneously (will be reset below)
+    // - which also circumvents a bug that sometimes prevents the modal from opening when navigating the browser history too quickly, it seems
+    $memberInfoModal.modal("setting", "duration", 0);
 
     let pageTitlePrefixToRestore;
     const memberPK = getCurrentPageMemberPK(event.state);
@@ -439,6 +444,8 @@ window.onpopstate = function (event) {
     // (doing this is apparently necessary in Firefox, but not in Chrome).
     // (Also, must set the title *after* running code calling `pushState()`)
     setPageTitlePrefix(pageTitlePrefixToRestore);
+    // Reset the duration setting (after changing it above)
+    $memberInfoModal.modal("setting", "duration", MODAL_DEFAULT_DURATION);
 };
 
 function getCurrentPageMemberPK(popEventState) {
