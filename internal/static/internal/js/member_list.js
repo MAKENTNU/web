@@ -412,14 +412,9 @@ $memberInfoModal.modal({
             return true; // let the modal hide normally
         }
 
-        if (window.history.state) {
-            window.history.back();
-            // Resetting the page title is handled in the `onpopstate()` handler below
-        } else {
-            window.history.pushState({memberPK: null}, "", memberListURL);
-            // Must set the title *after* calling `pushState()`
-            setPageTitlePrefix("");
-        }
+        window.history.pushState({memberPK: null}, "", memberListURL);
+        // Must set the title *after* calling `pushState()`
+        setPageTitlePrefix("");
     },
 });
 if (selectedMemberPK)
