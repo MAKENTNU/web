@@ -407,6 +407,7 @@ $filterStatusInput.parent().dropdown("set selected", initialFilterStatuses);
 setup();
 
 $memberInfoModal.modal({
+    autofocus: false,
     duration: MODAL_DEFAULT_DURATION,
     onHide: function ($element) {
         if (isChangingMemberModalStateThroughHistoryAPI) {
