@@ -1,26 +1,29 @@
 # Code based on https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions#example-workflow-authenticating-with-a-github-app
 
-name: Add PR to project
+name: Add pull requests to project
+
 on:
   pull_request:
-    types:
-      - ready_for_review
+    types: [ opened, reopened, ready_for_review ]
+
 jobs:
-  track_pr:
+  add_to_project:
+    # Don't run the job if it's a draft PR
+    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - name: Generate token
         id: generate_token
-        uses: tibdex/github-app-token@36464acb844fc53b9b8b2401da68844f6b05ebb0
+        uses: tibdex/github-app-token@f717b5ecd4534d3c4df4ce9b5c1c2214f0f7cd06
         with:
-          app_id: ${{ secrets.APP_ID }}
-          private_key: ${{ secrets.APP_PEM }}
+          app_id: ${{ secrets.MAKE_BOT_APP_ID }}
+          private_key: ${{ secrets.MAKE_BOT_APP_PEM }}
 
       - name: Get project data
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          ORGANIZATION: YOUR_ORGANIZATION
-          PROJECT_NUMBER: YOUR_PROJECT_NUMBER
+          ORGANIZATION: MAKENTNU
+          PROJECT_NUMBER: 1
         run: |
           gh api graphql -f query='
             query ($org: String!, $number: Int!) {
@@ -51,7 +54,7 @@ jobs:
             echo "PROJECT_ID=$(jq '.data.organization.projectV2.id' project_data.json)"
             echo "DATE_FIELD_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name=="Date posted") | .id' project_data.json)"
             echo "STATUS_FIELD_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .id' project_data.json)"
-            echo "STATUS_FIELD_VALUE_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="Todo") | .id' project_data.json)"
+            echo "STATUS_FIELD_VALUE_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="Ready for Review") | .id' project_data.json)"
           } >> "$GITHUB_ENV"
 
       - name: Add PR to project
