@@ -23,11 +23,11 @@ jobs:
           PROJECT_NUMBER: YOUR_PROJECT_NUMBER
         run: |
           gh api graphql -f query='
-            query($org: String!, $number: Int!) {
-              organization(login: $org){
+            query ($org: String!, $number: Int!) {
+              organization(login: $org) {
                 projectV2(number: $number) {
                   id
-                  fields(first:20) {
+                  fields(first: 20) {
                     nodes {
                       ... on ProjectV2Field {
                         id
@@ -45,12 +45,14 @@ jobs:
                   }
                 }
               }
-            }' -f org=$ORGANIZATION -F number=$PROJECT_NUMBER > project_data.json
+            }' -f org="$ORGANIZATION" -F number="$PROJECT_NUMBER" > project_data.json
 
-          echo 'PROJECT_ID='$(jq '.data.organization.projectV2.id' project_data.json) >> $GITHUB_ENV
-          echo 'DATE_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Date posted") | .id' project_data.json) >> $GITHUB_ENV
-          echo 'STATUS_FIELD_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Status") | .id' project_data.json) >> $GITHUB_ENV
-          echo 'TODO_OPTION_ID='$(jq '.data.organization.projectV2.fields.nodes[] | select(.name== "Status") | .options[] | select(.name=="Todo") |.id' project_data.json) >> $GITHUB_ENV
+          {
+            echo "PROJECT_ID=$(jq '.data.organization.projectV2.id' project_data.json)"
+            echo "DATE_FIELD_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name=="Date posted") | .id' project_data.json)"
+            echo "STATUS_FIELD_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .id' project_data.json)"
+            echo "STATUS_FIELD_VALUE_ID=$(jq '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="Todo") | .id' project_data.json)"
+          } >> "$GITHUB_ENV"
 
       - name: Add PR to project
         env:
@@ -58,18 +60,18 @@ jobs:
           PR_ID: ${{ github.event.pull_request.node_id }}
         run: |
           item_id="$( gh api graphql -f query='
-            mutation($project:ID!, $pr:ID!) {
+            mutation ($project: ID!, $pr: ID!) {
               addProjectV2ItemById(input: {projectId: $project, contentId: $pr}) {
                 item {
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f pr=$PR_ID --jq '.data.addProjectV2ItemById.item.id')"
+            }' -f project="$PROJECT_ID" -f pr="$PR_ID" --jq '.data.addProjectV2ItemById.item.id' )"
 
-            echo 'ITEM_ID='$item_id >> $GITHUB_ENV
+          echo "ITEM_ID=$item_id" >> "$GITHUB_ENV"
 
       - name: Get date
-        run: echo "DATE=$(date +"%Y-%m-%d")" >> $GITHUB_ENV
+        run: echo "DATE=$(date --iso-8601)" >> "$GITHUB_ENV"
 
       - name: Set fields
         env:
@@ -88,19 +90,19 @@ jobs:
                 projectId: $project
                 itemId: $item
                 fieldId: $status_field
-                value: { 
+                value: {
                   singleSelectOptionId: $status_value
-                  }
+                }
               }) {
                 projectV2Item {
                   id
-                  }
+                }
               }
               set_date_posted: updateProjectV2ItemFieldValue(input: {
                 projectId: $project
                 itemId: $item
                 fieldId: $date_field
-                value: { 
+                value: {
                   date: $date_value
                 }
               }) {
@@ -108,4 +110,4 @@ jobs:
                   id
                 }
               }
-            }' -f project=$PROJECT_ID -f item=$ITEM_ID -f status_field=$STATUS_FIELD_ID -f status_value=${{ env.TODO_OPTION_ID }} -f date_field=$DATE_FIELD_ID -f date_value=$DATE --silent
+            }' -f project="$PROJECT_ID" -f item="$ITEM_ID" -f status_field="$STATUS_FIELD_ID" -f status_value="$STATUS_FIELD_VALUE_ID" -f date_field="$DATE_FIELD_ID" -f date_value="$DATE" --silent
