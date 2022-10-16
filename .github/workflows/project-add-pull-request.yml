@@ -134,7 +134,7 @@ jobs:
             }' -f project="$PROJECT_ID" -f item="$ITEM_ID" -f status_field="$STATUS_FIELD_ID" -f status_value="$STATUS_FIELD_VALUE_ID" --silent
 
       - name: Get date
-        run: echo "DATE=$(date --iso-8601)" >> "$GITHUB_ENV"
+        run: echo "DATE=$(TZ='Europe/Oslo' date --iso-8601)" >> "$GITHUB_ENV"
 
       - name: Set date
         # Only set the date if it's not already set
