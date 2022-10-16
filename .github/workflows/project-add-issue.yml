@@ -1,15 +1,13 @@
 # Code based on https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions#example-workflow-authenticating-with-a-github-app
 
-name: Add pull requests to project
+name: Add issues to project
 
 on:
-  pull_request:
-    types: [ opened, reopened, ready_for_review ]
+  issues:
+    types: [ opened, reopened ]
 
 jobs:
   add_to_project:
-    # Don't run the job if it's a draft PR
-    if: ${{ !github.event.pull_request.draft }}
     runs-on: ubuntu-latest
     steps:
       - name: Generate token
@@ -54,22 +52,22 @@ jobs:
             echo "PROJECT_ID=$(jq -r '.data.organization.projectV2.id' project_data.json)"
             echo "DATE_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Date posted") | .id' project_data.json)"
             echo "STATUS_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .id' project_data.json)"
-            echo "STATUS_FIELD_VALUE_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="Ready for Review") | .id' project_data.json)"
+            echo "STATUS_FIELD_VALUE_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name=="TODO") | .id' project_data.json)"
           } >> "$GITHUB_ENV"
 
-      - name: Add PR to project
+      - name: Add issue to project
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          PR_ID: ${{ github.event.pull_request.node_id }}
+          ISSUE_ID: ${{ github.event.issue.node_id }}
         run: |
           item_id="$( gh api graphql -f query='
-            mutation ($project: ID!, $pr: ID!) {
-              addProjectV2ItemById(input: {projectId: $project, contentId: $pr}) {
+            mutation ($project: ID!, $issue: ID!) {
+              addProjectV2ItemById(input: {projectId: $project, contentId: $issue}) {
                 item {
                   id
                 }
               }
-            }' -f project="$PROJECT_ID" -f pr="$PR_ID" --jq '.data.addProjectV2ItemById.item.id' )"
+            }' -f project="$PROJECT_ID" -f issue="$ISSUE_ID" --jq '.data.addProjectV2ItemById.item.id' )"
 
           echo "ITEM_ID=$item_id" >> "$GITHUB_ENV"
 
@@ -112,7 +110,7 @@ jobs:
 
       - name: Set status
         # Only set the status if it's not already set,
-        # or if it's a reopened PR (as they're marked as 'Done' when closed - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+        # or if it's a reopened issue (as they're marked as 'Done' when closed - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
         if: ${{ !env.STATUS_FIELD_VALUE || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == 'Done' }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
