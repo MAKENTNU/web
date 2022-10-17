@@ -71,6 +71,9 @@ except ImportError:
 
 
 INSTALLED_APPS = [
+    # `django-constance` should be listed before project apps (see https://django-constance.readthedocs.io/en/stable/#configuration)
+    'constance',
+    'constance.backends.database',
     # App used for things regarding the whole project or across other apps
     # (Should be listed first, to be able to override things like management commands)
     'web.apps.WebConfig',
@@ -185,6 +188,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'constance.context_processors.config',
+
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -255,6 +260,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
+
+# django-constance
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_CONFIG = {
+}
+CONSTANCE_CONFIG_FIELDSETS = (
+)
 
 # Dataporten
 
