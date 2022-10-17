@@ -71,16 +71,12 @@
                 <div class="make-bg-yellow bubble-background"></div>
             </a>
 
-            {% comment "Apply page" %}
-            The apply (søknad) page. This should only be available when people
-            can apply for MAKE. To make it available, move endcomment tag below
-            this line, before the <a> tag.
-            {% endcomment %}
-
-            <a class="item" href="{% url 'apply' %}">
-                <div class="text">Søk verv</div>
-                <div class="make-bg-blue bubble-background"></div>
-            </a>
+            {% if config.SHOW_APPLY_BUTTON_IN_HEADER_NAV %}
+                <a class="item" href="{% url 'apply' %}">
+                    <div class="text">Søk verv</div>
+                    <div class="make-bg-blue bubble-background"></div>
+                </a>
+            {% endif %}
         {% endblock nav_buttons %}
     </nav>
 
