@@ -1,6 +1,7 @@
 # Contribution guidelines
 
 ## Table of contents
+
 - [Code style guides](#code-style-guides)
 - [Code review guideline: Code smells](#code-review-guideline-code-smells)
 
@@ -11,6 +12,7 @@
 # Code style guides
 
 ## Table of contents
+
 * [Global](#global)
   + [Max line length](#max-line-length)
   + [Empty/blank lines](#emptyblank-lines)
@@ -91,19 +93,23 @@
 
 
 ## Global
+
 *Tip: [The project's `.editorconfig` file](.editorconfig) may be used to configure a text editor to format code to (roughly) fit this style guide -
 especially when using an IntelliJ-based IDE, like PyCharm.*
 
 #### Max line length
+
 150 (can be surpassed if it's impossible to wrap).
 
 #### Empty/blank lines
+
 All files (including committed third-party libraries, like jQuery) should end with exactly one empty line.
 
 There should be no more than two empty lines in a row in a file.
 Exceptions to this are documentation, and markup languages (like HTML and Markdown).
 
 #### MAKE vs. the word "make"
+
 If writing the name of the organization (MAKE), write it in capital letters, to avoid confusion with the verb "make".
 
 
@@ -111,6 +117,7 @@ If writing the name of the organization (MAKE), write it in capital letters, to 
 ## Git
 
 #### Branch name
+
 Use `kebab-case`.
 
 The type of changes that the branch will contain, can be prefixed -
@@ -122,6 +129,7 @@ Common name prefixes include:
 * `fix/` - Other fixes to the codebase
 
 #### Commit message
+
 Use the verb conjugation (e.g. past, present or imperative) you prefer.
 
 The first line of the commit message should concisely outline the changes in the commit.
@@ -149,6 +157,7 @@ Common things to include in this part of the commit message, are:
 ### For code in general
 
 #### PEP8
+
 In general, we follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide.
 <br/>*Tip: PyCharm marks (most) PEP 8 violations with a yellow squiggly line.
 Additionally, PyCharm can easily fix most of these inconsistencies - and enforce various other parts of this style guide -
@@ -156,6 +165,7 @@ using the [Reformat Code feature](https://www.jetbrains.com/pycharm/guide/tips/r
 possibly requiring some tweaking of the settings.*
 
 #### String quotation marks
+
 Use `'` for "code values" that are meant to be compared exactly against some other values.
 **In short: if these strings are changed, things *might* break.**
 Examples include:
@@ -178,6 +188,7 @@ If unsure, or if the case in question is in a grey area, use `'`.
 this library's coding standards](https://docs.ckan.org/en/ckan-2.7.3/contributing/python.html#use-single-quotes).*
 
 #### Quotation marks inside strings
+
 Prefer using the proper Unicode characters for quotation marks in the language of the string in question
 (e.g. `“` and `”` in English, and `«` and `»` in Norwegian).
 
@@ -185,6 +196,7 @@ Avoid using the `"` (or `\"`) character inside translated strings.
 Instead, use the Unicode characters mentioned above, or HTML character entities like `&quot;`.
 
 #### String concatenation
+
 Prefer using [f-strings](https://www.python.org/dev/peps/pep-0498/) for string concatenation;
 if an f-string is hard to read, extract inserted code to variables, and insert the variables instead.
 
@@ -192,10 +204,12 @@ For translation strings (using `gettext` or `gettext_lazy`), use the standard `f
 For example:<br/>`_("{chant} Batman!").format(chant="NaN" * 15)` (where `gettext_lazy` is imported as `_`).
 
 #### Trailing commas
+
 Always leave a trailing comma after the last element in a wrapped list/tuple/set/dictionary initialization expression
 or wrapped function/constructor call.
 
 #### Operator wrapping
+
 When wrapping an expression containing operators (like `+`, `&` and `and`),
 place the operators first on each wrapped line (instead of last on the previous lines).
 This also applies to similar things, like list comprehension expressions and conditional expressions (aka ternary operator).
@@ -225,6 +239,7 @@ def func(long_condition_expr, other_long_expr, list_of_lists):
 ```
 
 #### Imports
+
 Group imports in three "paragraphs" (separated by an empty line) in the following order:
 1. Modules from Python's standard library
 2. Third-party modules
@@ -243,9 +258,11 @@ All imports in a file that are from the same app as the mentioned file, should b
 ### For each module (file)
 
 #### Empty/blank lines
+
 Leave two empty lines between class and function (i.e. not method) definitions, and after all the imports in a module.
 
 #### Folder/directory location
+
 * Tests should be placed within a `tests` directory per app.
 * Templates should be placed within an `<app name>` directory, within a `templates` directory per app.
   * For example:
@@ -260,6 +277,7 @@ Leave two empty lines between class and function (i.e. not method) definitions, 
   should be placed within a `templatetags` directory per app.
 
 #### Filename
+
 Use `snake_case`.
 
 Additionally:
@@ -282,6 +300,7 @@ Additionally:
 * Test modules should be named with a `test_` prefix.
 
 ###### Migration filename:
+
 Migrations generated by Django that are named `<index>_auto_<timestamp>`, should be renamed to describe what the migration does.
 <br/>*Tip: If it's difficult to summarize what the migration does with a few words,
 it might be a sign that the migration should be split into multiple migrations.*
@@ -305,9 +324,11 @@ Example names include:
 ### For each class
 
 #### Class name
+
 Use `PascalCase`.
 
 #### Field and method order
+
 Sort the contents of a class in the following order:
 1. Constants
 1. Overridden fields
@@ -324,6 +345,7 @@ Sort the contents of a class in the following order:
 ### For each view class
 
 #### View class name
+
 In general, names of views related to model objects should comply with one of the following patterns:
 * `<Model name><Noun or verb>View` - in most cases;
 * `Admin<Model name><Noun or verb>View` - for views that only admins should have access to;
@@ -336,9 +358,11 @@ In general, names of views related to model objects should comply with one of th
       the word should be the name of the generic view - without the `View` suffix.
 
 #### View class order
+
 Sort views in the same order as they appear in the app's `urls.py` (see [Path order](#path-order)).
 
 #### View field order
+
 A view inheriting from one of Django's [generic views](https://docs.djangoproject.com/en/stable/ref/class-based-views/flattened-index/)
 (the views that are part of the `django.views.generic` module) - and possibly also `PermissionRequiredMixin` -
 should have its fields sorted in the following order:
@@ -355,6 +379,7 @@ should have its fields sorted in the following order:
 ### For each function/method
 
 #### Function/method name
+
 Use `snake_case`.
 
 Test methods should have a name that describes what they test and what the expected outcome is;
@@ -365,6 +390,7 @@ or `test_get_related_events_returns_expected_events()` (for a model method named
 ### For each URL path
 
 #### (Endpoint) path/route
+
 In general, try to make paths as [RESTful](https://hackernoon.com/restful-api-designing-guidelines-the-best-practices-60e1d954e7c9) as possible.
 
 For paths that refer to views inheriting from one of the following
@@ -393,12 +419,14 @@ Lastly, let all paths end with a `/`
 (except if the first argument to `path()` would have been `"/"`, in which case it should be an empty string).
 
 #### Path name
+
 Use `snake_case`.
 
 In general, paths should have the same name as the view they refer to (see [View class name](#view-class-name)),
 but `snake_case`d and without the `View` suffix.
 
 #### Path order
+
 In general, sort paths based on the following order:
 1. `""`
 1. `"<objects>/"`
@@ -410,6 +438,7 @@ In general, sort paths based on the following order:
 1. `"<other objects>/"`
 
 #### `urlpatterns` organization
+
 In general, place paths with a common prefix inside separate lists,
 that are then [`include()`d](https://docs.djangoproject.com/en/stable/ref/urls/#include) with the mentioned prefix.
 
@@ -455,6 +484,7 @@ urlpatterns = [
 ```
 
 ###### `urlpatterns` for admin/API view paths:
+
 For each app's `urls.py` file, place paths inside lists with the following names:
 * `adminpatterns` - if they refer to a view that only admins should have access to;
 * `apipatterns` - if they refer to a view responding with JSON;
@@ -501,6 +531,7 @@ urlpatterns = [
 ### For each variable/field
 
 #### Variable/field name
+
 Use `snake_case`.
 
 An exception to this is when the variable value is a reference to a specific model class -
@@ -508,11 +539,13 @@ in which case, the variable should have the same name as the model it references
 for example: `InheritanceGroup = apps.get_model('groups', 'InheritanceGroup')`.
 
 #### Model field definition arguments
+
 Pass all arguments as keyword arguments.
 
 Wrap all keyword arguments of relation fields (`ForeignKey`, `OneToOneField` and `ManyToManyField`) - i.e. place them on separate lines.
 
 ###### Model field keyword argument order:
+
 Sort the keyword arguments in the following order:
 1. `to`
 1. `on_delete`
@@ -528,6 +561,7 @@ Sort the keyword arguments in the following order:
 1. `help_text`
 
 ###### Model field argument value:
+
 * `verbose_name`s should start with a lowercase letter, except if it's a name (like MAKE or GitHub).
   * [See the docs for a description of this convention](https://docs.djangoproject.com/en/stable/topics/db/models/#verbose-field-names)
     (specifically at the end of the linked section).
@@ -542,6 +576,7 @@ Sort the keyword arguments in the following order:
 ### For code in general
 
 #### String quotation marks
+
 Use `"` for everything pure HTML and CSS.
 
 Inside template tags and filters, use [the same quotation marks as for Python](#string-quotation-marks).
@@ -553,48 +588,58 @@ Examples include:
   * `translate`/`trans` strings
 
 #### Hex (color) code literals
+
 Use uppercase `A`-`F`, to make them look more similar to the other digits.
 
 
 ### For each file
 
 #### Empty/blank lines
+
 Leave two empty lines after all the `extends` and `load` template tags in a template.
 
 #### Filename
+
 Use `snake_case`.
 
 ###### Django template filenames:
+
 In general, templates referred to by the `template_name` field of a view, should have the same name as that view
 (see [View class name](#view-class-name)), but `snake_case`d and without the `View` suffix.
 An exception to this is if the view inherits from `CreateView` or `UpdateView`,
 in which case the `<Noun or verb>` in the [view class name patterns](#view-class-name) should be `form` in the template name.
 
 ###### CSS filenames:
+
 If a `.css` file is the "main" stylesheet for a specific template, it should have the same name as the template.
 
 
 ### For each template block
 
 #### Block order
+
 Sort the blocks in a child template in the same order as they appear in the parent template(s).
 
 #### Block name
+
 Use `snake_case`.
 
 #### `endblock` name
+
 A block's name should always be repeated in the associated `endblock` template tag.
 
 
 ### For each template variable
 
 #### Template/context variable name
+
 Use `snake_case`. This also applies to variables defined using the `as` keyword or the `=` syntax.
 
 
 ### For each HTML tag
 
 #### Empty HTML tag
+
 Close empty tags with a `/>`.
 For example: `<br/>` or `<input type="submit"/>`.
 
@@ -602,19 +647,23 @@ For example: `<br/>` or `<input type="submit"/>`.
 ### For each HTML attribute
 
 #### Custom attribute name
+
 Use `kebab-case`, and prefix the custom attribute with [`data-`](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/data-*).
 *(This enables getting or setting the attribute using jQuery's [`.data()` function](https://api.jquery.com/data/).)*
 
 #### `class` and `id` name
+
 Use `kebab-case`.
 
 #### Attribute order
+
 If present, place `id` and `class` first - in that order.
 
 
 ### For each CSS rule
 
 #### Stylesheet rule order
+
 Sort the rules in a stylesheet in (ideally) the same order as the elements they select appear in the template the stylesheet belongs to.
 
 
@@ -624,6 +673,7 @@ Sort the rules in a stylesheet in (ideally) the same order as the elements they 
 ### For code in general
 
 #### String quotation marks
+
 Use `"`.
 This does not apply to template strings, of course.
 
@@ -631,6 +681,7 @@ This does not apply to template strings, of course.
 ### For each file
 
 #### Filename
+
 Use `snake_case`.
 
 If a `.js` file is the "main" script for a specific template, it should have the same name as the template.
@@ -639,18 +690,21 @@ If a `.js` file is the "main" script for a specific template, it should have the
 ### For each function
 
 #### Function name
+
 Use `camelCase`.
 
 
 ### For each variable
 
 #### Variable name
+
 Use `camelCase`.
 
 If the variable's value is a [jQuery object](https://learn.jquery.com/using-jquery-core/jquery-object/),
 prefix the variable name with `$`.
 
 #### Variable declaration (`let`/`const`/`var`)
+
 Use:
 * `const` wherever possible,
 * `var` when defining or declaring variables in a template that will be used in a linked JavaScript file,
@@ -661,11 +715,13 @@ Use:
 
 
 # Code review guideline: Code smells
+
 This list is meant as a guideline,
 and only provides hints that might enhance developers' ability to notice whether some code should be changed or not;
 there do exist scenarios where *not* getting rid of a code smell would be the most appropriate.
 
 ## Table of contents
+
 * [Global](#global-1)
   + [For code in general](#for-code-in-general-3)
     - [Outdated comments](#outdated-comments)
@@ -750,12 +806,15 @@ there do exist scenarios where *not* getting rid of a code smell would be the mo
 ### For code in general
 
 #### Outdated comments
+
 Comments should be kept updated and consistent with the code they're commenting on.
 
 #### Outdated tests
+
 Tests should be kept up-to-date and relevant to the code they test.
 
 #### Duplicated code
+
 Code that's commonly (accidentally) duplicated, includes:
 * Code in each branch of an `if` statement
 * String literals
@@ -771,11 +830,13 @@ Code that's commonly (accidentally) duplicated, includes:
 Note that this does not apply to things that are part of a library or framework's programming style, like reversing a Django path name.
 
 #### Magic numbers and strings
+
 ["Magic" numbers](https://en.wikipedia.org/wiki/Magic_number_(programming)) should be replaced by constants/variables.
 The same applies to "magic" string literals
 (e.g. a string where each character is used as a flag, or a function returning the name of a specific color).
 
 #### Translations only differing in case
+
 If there exists multiple translation strings with the only difference being the casing,
 they should ideally be replaced by the one with the "lowest" casing, and transformed after the translation has been invoked.
 
@@ -789,19 +850,23 @@ the latter instance can be replaced by `capfirst(_("event"))` in Python code, an
 ### For code in general
 
 #### Unused imports
+
 Unused imports should be removed.
 
 #### Unnecessary `print` statements
+
 These should be removed,
 or replaced by fitting `logging` calls - preferably through the utility functions in [`logging_utils.py`](util/logging_utils.py).
 
 #### Variable, function or class names shadowing built-in or imported names
+
 For example naming a parameter `int`, `filter` or `range` (shadowing built-in names),
 or `date`, `time` or `path` (shadowing imported names - if they're imported in the module in question).
 
 A common way to avoid this is by adding e.g. an `_` or `_obj` suffix, or by coming up with a different name altogether.
 
 #### Exception clause is too broad
+
 Having a bare `except` clause or simply catching `Exception` (or `BaseException`), should be avoided,
 as the appropriate reaction to an exception in most cases depends on the specific exception type.
 
@@ -812,10 +877,12 @@ if the caught exception is chained (using the `from` keyword) or if it's logged 
 this article](https://consideratecode.com/2018/10/17/how-not-to-handle-an-exception-in-python/).*
 
 #### Using a model object's `id` instead of `pk`
+
 The primary key field of a model can potentially be named something other than `id`,
 so the `pk` property should preferably always be used.
 
 #### Missing prefetch of related objects
+
 When iterating through querysets and using the value of the objects' relation fields (`ForeignKey`, `OneToOneField` and `ManyToManyField`),
 it's in most cases beneficial to prefetch the objects that the relation fields refer to,
 so that Django doesn't have to make an additional database query for each related object that the code uses the value of
@@ -879,6 +946,7 @@ def get_context_data():
 ```
 
 #### Unnecessary database queries
+
 Attempt to minimize the number of unnecessary database queries as much as practically possible.
 
 The number of database queries a request triggers, can be measured by adding the following code to the Django settings file:
@@ -903,6 +971,7 @@ LOGGING['loggers']['django.db.backends'] = {
 ### For each migration
 
 #### `RunPython` operations missing the `reverse_code` argument
+
 Custom-written migrations with [`RunPython` operations](https://docs.djangoproject.com/en/stable/ref/migration-operations/#runpython)
 should always provide the `reverse_code` argument,
 so that it's possible to [unapply a migration](https://docs.djangoproject.com/en/stable/topics/migrations/#reversing-migrations).
@@ -914,6 +983,7 @@ If the `RunPython` operation doesn't need to be unapplied, or if it doesn't make
 ### For each class
 
 #### Fields declared outside of the standard places
+
 All fields should be declared either at the top of the class body, or in the `__init__()` constructor -
 or in the `setUp()` method of a test class.
 A recommended way to declare fields that are not supposed to / don't need to have a default value,
@@ -926,12 +996,15 @@ one can instead add a `# noinspection PyAttributeOutsideInit` comment before the
 ### For each model
 
 #### Creating custom model permissions that perform the same role as one of Django's default permissions
+
 Use one (or more) of [Django's default permissions](https://docs.djangoproject.com/en/stable/topics/auth/default/#default-permissions) instead.
 
 #### Missing `__str__()` method
+
 It's often useful to be able to see a string representation of model objects - for example when debugging.
 
 #### Missing `get_absolute_url()` method
+
 If there exists a detail page for a specific object,
 the [`get_absolute_url()` method](https://docs.djangoproject.com/en/stable/ref/models/instances/#get-absolute-url)
 should be defined and made to return the URL for that page -
@@ -940,11 +1013,13 @@ preferably a URL returned by
 
 
 #### Missing custom admin class
+
 It's generally useful for models to have a registered
 [admin class](https://docs.djangoproject.com/en/stable/ref/contrib/admin/#modeladmin-objects),
 with properly customized fields (like `list_display`, `list_filter` and `search_fields`).
 
 #### Making the model do validation
+
 This includes doing validation in the
 [`save()` method](https://docs.djangoproject.com/en/stable/ref/models/instances/#django.db.models.Model.save),
 in custom querysets' [`update()` method](https://docs.djangoproject.com/en/stable/ref/models/querysets/#django.db.models.query.QuerySet.update),
@@ -970,11 +1045,13 @@ Another reason is that saving or updating model objects is never expected to e.g
 ### For each view
 
 #### The view is a function
+
 In almost all cases, views should be [class-based](https://docs.djangoproject.com/en/stable/topics/class-based-views/),
 as this often decreases the amount of code required, and the potential for accidentally creating bugs
 (by e.g. forgetting something that the class-based views implement by default), and increases the readability and reusability.
 
 #### Improper access control (permissions)
+
 All views that do not present a public page, should extend
 [`PermissionRequiredMixin`](https://docs.djangoproject.com/en/stable/topics/auth/default/#the-permissionrequiredmixin-mixin)
 and set their `permission_required` field to one or more appropriate permissions -
@@ -992,6 +1069,7 @@ and [`user_passes_test()`](https://docs.djangoproject.com/en/stable/topics/auth/
 It's generally best to use our custom `permission_required_else_denied()` decorator, unless you're sure of otherwise.
 
 #### Modifying state in `GET` requests
+
 This includes things like modifying objects in the database or files on the server.
 
 Modifying state should be avoided to prevent things like browsers caching or prefetching the URL, or web crawlers regularly visiting the URL,
@@ -1003,17 +1081,20 @@ Instead, implement the same functionality using a more proper HTTP method,
 like `POST` (`CreateView`), `PUT` (`UpdateView`) or `DELETE` (`DeleteView`).
 
 #### Doing input validation directly in view code
+
 This should almost always be done in a form - which is automatically done in views inheriting from
 [`ProcessFormView`](https://docs.djangoproject.com/en/stable/ref/class-based-views/mixins-editing/#django.views.generic.edit.ProcessFormView),
 like [`CreateView`](https://docs.djangoproject.com/en/stable/ref/class-based-views/generic-editing/#django.views.generic.edit.CreateView)
 and [`UpdateView`](https://docs.djangoproject.com/en/stable/ref/class-based-views/generic-editing/#django.views.generic.edit.UpdateView).
 
 #### List view missing pagination
+
 A view presenting a list of objects that has the potential to grow very long,
 should implement [pagination](https://docs.djangoproject.com/en/stable/topics/pagination/) -
 both so that it's easier to navigate, and so that it won't take an impractically long time to load the page.
 
 #### Missing `context_object_name`
+
 `context_object_name` should be explicitly defined - with a fitting name - so that it's easier to read and write the template code.
 This also implies that the default `object` and `object_list` template variables should preferably not be used.
 <br/>*(Naturally, this mainly applies to views inheriting from `ListView` or `DetailView` -
@@ -1023,6 +1104,7 @@ or `UpdateView` if the object that's being updated is used in the template outsi
 ### For each form class
 
 #### Missing empty field check
+
 This applies especially to the [`clean()` method](https://docs.djangoproject.com/en/stable/ref/forms/api/#django.forms.Form.clean),
 where field values should be looked up using dictionaries' `get()` method,
 and then checked for whether they're empty, before using/comparing them.
@@ -1057,6 +1139,7 @@ class EventOccurrenceForm(forms.Form):
 ```
 
 #### Missing error messages
+
 When the form data is invalid in some way,
 raise one or more [`ValidationError`s](https://docs.djangoproject.com/en/stable/ref/forms/validation/#raising-validationerror)
 (or call [`add_error()`](https://docs.djangoproject.com/en/stable/ref/forms/api/#django.forms.Form.add_error))
@@ -1064,6 +1147,7 @@ with an appropriate message, which should make the error understandable to the u
 including what the user can potentially do about the error (this can be implicit).
 
 #### Improperly validating user input
+
 Basic validation should preferably be done through validators set in the model fields'
 [`validators` argument](https://docs.djangoproject.com/en/stable/ref/models/fields/#validators),
 or through the model's [validation/cleaning methods](https://docs.djangoproject.com/en/stable/ref/models/instances/#validating-objects).
@@ -1080,6 +1164,7 @@ and/or `clean_<field name>()` methods (see the steps for [form and field validat
 ### For each test class
 
 #### Test cases not cleaning up media files
+
 When using temporary files (like [`test_utils.MOCK_JPG_FILE`](/util/test_utils.py), which is a `SimpleUploadedFile`) in tests,
 these files should always be removed after the tests have run.
 This can be done by simply letting the test case class extend [`test_utils.CleanUpTempFilesTestMixin`](/util/test_utils.py).
@@ -1089,6 +1174,7 @@ This can be done by simply letting the test case class extend [`test_utils.Clean
 ### For each function/method
 
 #### Mismatching overridden method signature
+
 When overriding a method, the base method signature should in most cases be directly copied - including default parameter values and type hints.
 Misnamed parameters, or too few or too many parameters,
 makes it more challenging to familiarize oneself with the code, and can cause hard-to-discover bugs.
@@ -1096,9 +1182,11 @@ makes it more challenging to familiarize oneself with the code, and can cause ha
 An exception to this, is "catching" parameters from the base method that are not used, in standard `*args` and `**kwargs` parameters.
 
 #### Missing call to overridden method
+
 If required, a method should always call the base method it overrides (i.e. `super().<method name>()`).
 
 #### Missing returning required data
+
 If required, a method - especially overridden methods - should always return the data expected by its caller.
 Examples include returning the cleaned data in a form's
 [`clean()` method](https://docs.djangoproject.com/en/stable/ref/forms/api/#django.forms.Form.clean)
@@ -1109,10 +1197,12 @@ or returning the created object in a form's [`save()` method](https://docs.djang
 ### For each URL path
 
 #### Missing `name` argument
+
 The `name` keyword argument should always be set to an appropriate and unique name
 ([see the docs for details on naming URL patterns](https://docs.djangoproject.com/en/stable/topics/http/urls/#naming-url-patterns)).
 
 #### Improper access control (permissions)
+
 *See the details of [the equivalent code smell for views](#improper-access-control-permissions);
 moreover, always prefer doing access control in the views.*
 
@@ -1123,16 +1213,19 @@ If multiple related paths should all have the same permission, they can be inclu
 ### For each model field
 
 #### Missing `blank=True` for non-required model fields
+
 Model fields that are not required to be specified when creating/updating objects (e.g. if they have `null=True`),
 should have their `blank` keyword argument set to `True`,
 so that [model forms](https://docs.djangoproject.com/en/stable/topics/forms/modelforms/) set their `required` attribute accordingly.
 
 #### String-based model fields with `null=True`
+
 *[Excerpt from the docs on the `null` option](https://docs.djangoproject.com/en/stable/ref/models/fields/#null):*
 > Avoid using `null` on string-based fields such as `CharField` and `TextField`.
 > If a string-based field has `null=True`, that means it has two possible values for “no data”: `NULL`, and the empty string.
 
 #### String-based model fields with unnecessary `max_length`
+
 The [`max_length` keyword argument](https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.CharField.max_length)
 should rarely be set - unless if it would break things to not always enforce a length limit;
 simply preventing users from submitting a ludicrously long string should instead be done by the forms.
@@ -1141,15 +1234,18 @@ An exception is for fields with the `choices` keyword argument set to a collecti
 where `max_length` could be set to this length.
 
 #### Missing `related_name` for relation fields
+
 Relation fields (`ForeignKey`, `OneToOneField` and `ManyToManyField`) should always be passed the
 [`related_name` keyword argument](https://docs.djangoproject.com/en/stable/ref/models/fields/#django.db.models.ForeignKey.related_name) -
 and it should be set to a sensible name.
 
 #### Missing `verbose_name`
+
 The [`verbose_name` keyword argument](https://docs.djangoproject.com/en/stable/ref/models/fields/#verbose-name)
 should always be set to a translated string.
 
 #### Missing appropriate constraint on field or combination of fields
+
 This should ideally be done by going through each of the [model fields' options](https://docs.djangoproject.com/en/stable/ref/models/fields/)
 (like `null`, `unique` or `max_length`) and considering whether they're appropriately set (or not set, if the default value is suitable),
 and by reviewing the existing [model constraints](https://docs.djangoproject.com/en/stable/ref/models/constraints/)
@@ -1165,6 +1261,7 @@ The latter can be used to e.g. ensure the value of a field is unique per value o
 ### For code in general
 
 #### Lacking accessibility
+
 [Mozilla's accessibility testing
 checklist](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Cross_browser_testing/Accessibility#accessibility_testing_checklist)
 includes a useful overview over things that can be checked that are relevant to this code smell.
@@ -1183,9 +1280,11 @@ Lastly, to quote Mozilla's HTML and accessibility guide mentioned above:
 > The goal isn't "all or nothing"; every improvement you can make will help the cause of accessibility.
 
 #### Using a model object's `id` instead of `pk`
+
 *See [the equivalent code smell for Python](#using-a-model-objects-id-instead-of-pk).*
 
 #### Page flow relying too much on JavaScript
+
 Django excels particularly at facilitating creating static pages, and so it's generally good practice to utilize that strength,
 as it will very often make the code considerably smaller (due to the large amount of generic code that is included with Django),
 easier to read and maintain, and easier to link to specific states of a page (by implementing URL query parameters).
@@ -1202,6 +1301,7 @@ Of course, the decision on whether to make a specific page more static or more d
 and by taking both user experience and code maintainability into consideration.
 
 #### CSS directly in HTML
+
 Inline CSS (in HTML tags' `style` attribute) and CSS in `<style>` tags,
 should be moved to stylesheets (`.css` files) and linked with:
 ```html
@@ -1212,11 +1312,13 @@ should be moved to stylesheets (`.css` files) and linked with:
 ### For each HTML tag
 
 #### `<link>` or `<script>` tags in a template that's `include`d elsewhere
+
 These should be moved to the `<head>` tag of the templates that `include` this template,
 so that the files linked are not potentially linked multiple times.
 Furthermore, it's good practice to add a comment in the original template, saying which files should be linked when `include`-ing the template.
 
 #### Links missing `target="_blank"`
+
 `<a>` tags leading the user away from the "flow" of the current page, should always have its `target` attribute set to `"_blank"`.
 This will make the link open in a new tab when clicked.
 
@@ -1224,18 +1326,22 @@ This will make the link open in a new tab when clicked.
 ### For each HTML attribute
 
 #### Unused/unnecessary attribute
+
 These should be removed.
 
 #### Unused class
+
 Classes of a `class` attribute that have no effect, should be removed.
 
 
 ### For each CSS rule
 
 #### Unused CSS rules
+
 These should be removed. This includes rules selecting classes or IDs that do not exist (anymore).
 
 #### Unnecessary CSS properties
+
 CSS properties that have no effect, should be removed.
 For example, setting the `left` property on an element that has `position: static`.
 
@@ -1246,6 +1352,7 @@ For example, setting the `left` property on an element that has `position: stati
 ### For code in general
 
 #### JavaScript directly in HTML
+
 JavaScript code written within `<script>` tags, should be moved to `.js` files and linked with:
 ```html
 <script <!-- execution attribute --> src="{% static '<!-- path -->' %}"></script>
@@ -1258,18 +1365,22 @@ which should also be declared at the top of the `.js` file(s) they're used in.
 In that case, it's good practice to include a comment saying where the values of these variables come from.
 
 #### Making code wait until the document is ready / window has loaded
+
 This includes writing code within functions like `$(document).ready(function () {})` or `(function() {})()`,
 and should be replaced by linking the code in a `<script>` tag with either the [`defer`](https://www.w3schools.com/tags/att_script_defer.asp)
 or [`async`](https://www.w3schools.com/tags/att_script_async.asp) attribute present.
 
 #### Missing semicolon
+
 All statements should end with a `;`.
 
 #### Comparing values loosely (with `==`)
+
 The `===` operator should always be favored over `==`. [See some of the reasons in the answers to
 this question](https://stackoverflow.com/q/359494).
 
 Of course, this also applies to `!==` vs. `!=`.
 
 #### Unnecessary `console.log()` statements
+
 *See [the equivalent code smell for Python](#unnecessary-print-statements).*

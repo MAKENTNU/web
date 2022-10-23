@@ -1,12 +1,15 @@
 ## Proposed changes
+
 <!-- Describe the changes you've made -->
 
 
 ## Areas to review closely
+
 <!-- Refer to areas of the changed code where you would like reviewers to take a closer look -->
 
 
 ## Checklist
+
 _(If any of the points are not relevant, mark them as checked)_
 
 - [ ] Created tests that fail without the changes, if relevant/possible
