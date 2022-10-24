@@ -6,9 +6,11 @@ on:
   workflow_call:
     inputs:
       content_id:
+        description: "The ID of an issue or a PR, to be added to this repo's GitHub project"
         required: true
         type: string
       status_field_value_name:
+        description: "The name of one of the values of the project's (single select) 'Status' field, to set for the added project item"
         required: true
         type: string
 
@@ -57,9 +59,13 @@ jobs:
             }' -f org="$ORGANIZATION" -F number="$PROJECT_NUMBER" > project_data.json
 
           {
+            # The ID of this repo's GitHub project
             echo "PROJECT_ID=$(jq -r '.data.organization.projectV2.id' project_data.json)"
+            # The ID of the project's 'Date posted' field
             echo "DATE_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Date posted") | .id' project_data.json)"
+            # The ID of the project's 'Status' field
             echo "STATUS_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .id' project_data.json)"
+            # The ID of one of the values of the project's (single select) 'Status' field, with name `inputs.status_field_value_name`
             echo "STATUS_FIELD_VALUE_ID=$(jq --arg STATUS_NAME "$STATUS_FIELD_VALUE_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name==$STATUS_NAME) | .id' project_data.json)"
           } >> "$GITHUB_ENV"
 
@@ -77,6 +83,7 @@ jobs:
               }
             }' -f project="$PROJECT_ID" -f content="$CONTENT_ID" --jq '.data.addProjectV2ItemById.item.id' )"
 
+          # The ID of the project item (representing an issue or a PR with ID `inputs.content_id`), which was either added or already existed
           echo "ITEM_ID=$item_id" >> "$GITHUB_ENV"
 
       - name: Get project item data
@@ -112,7 +119,9 @@ jobs:
             }' -f itemId="$ITEM_ID" > project_item_data.json
 
           {
+            # The value of the project item's 'Date posted' field (with ID `env.DATE_FIELD_ID`)
             echo "DATE_FIELD_VALUE=$(jq --arg FIELD_ID "$DATE_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .date' project_item_data.json)"
+            # The value of the project item's 'Status' field (with ID `env.STATUS_FIELD_ID`)
             echo "STATUS_FIELD_VALUE=$(jq --arg FIELD_ID "$STATUS_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .name' project_item_data.json)"
           } >> "$GITHUB_ENV"
 
