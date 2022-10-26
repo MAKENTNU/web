@@ -2379,12 +2379,12 @@ msgid "The article will be hidden until this date."
 msgstr "Artikkelen vil være skjult fram til publiseringstidspunktet."
 
 #: news/models.py:108
-msgid "Repeating"
-msgstr "Gjentagende"
+msgid "Standard (repeating)"
+msgstr "Standard (gjentagende)"
 
 #: news/models.py:109
-msgid "Standalone"
-msgstr "Frittstående"
+msgid "Multipart (standalone)"
+msgstr "Flerdagers (frittstående)"
 
 #: news/models.py:115
 msgid "type of event"
@@ -2671,20 +2671,19 @@ msgid "No registration"
 msgstr "Ingen påmelding"
 
 #: news/templates/news/event/event_form.html:22
-msgid ""
-"Used for repeating events where the user is to register for one of several "
-"occurrences. Each occurrence will have its own registration."
+msgid "Each created occurrence of this event will have its own registration."
 msgstr ""
-"Brukt for gjentagende arrangementer hvor brukeren registrerer seg for ett av "
-"flere tidspunkter. Hvert tidspunkt vil ha sin egen registrering."
+"Hver lagde forekomst av dette arrangementet vil ha sin egen registrering."
 
 #: news/templates/news/event/event_form.html:37
 msgid ""
-"Used for events that happen once, e.g. a weekend-long happening. All "
-"occurrences of the event will have a common registration."
+"All created occurrences of this event will have one common registration.<br/"
+"> (Used e.g. for a multiday workshop where ticket holders are encouraged to "
+"attend some or all of the occurrences.)"
 msgstr ""
-"Brukt for arrangementer som skjer én gang, f.eks. en workshop i en helg. Det "
-"vil være en felles registrering for alle tidspunktene til arrangementet."
+"Alle lagde forekomster av dette arrangementet vil ha én felles registrering."
+"<br/> (Brukt f.eks. for en flerdagers workshop hvor påmeldte er oppfordret "
+"til å delta på alle eller noen av forekomstene.)"
 
 #: news/templates/news/event/event_form.html:55
 #: news/templates/news/event/time_place_form.html:7
