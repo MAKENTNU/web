@@ -146,7 +146,11 @@ class Event(NewsBase):
         return self.event_type == self.Type.STANDALONE
 
     def can_register(self, user: User, *, fail_if_not_standalone):
-        # Admins should always be allowed
+        # Registering for an event with no time places should never be allowed - no matter the `event_type`
+        if not self.timeplaces.exists():
+            return False
+
+        # Admins should always be allowed (except for the above case)
         if user.has_perm('news.cancel_ticket'):
             return True
 

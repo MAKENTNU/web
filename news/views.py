@@ -519,6 +519,10 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
         time_place_pk = self.kwargs.get('time_place_pk')
         if time_place_pk is None:
             self.ticket_time_place = None
+            # Raise an error if the event has no time places (see the first `timeplaces` check in `Event.can_register()`)
+            if not self.event.timeplaces.exists():
+                raise Http404("Cannot register for an event with no time places")
+
             self.ticket_event = self.event
         else:
             self.ticket_time_place = get_object_or_404(TimePlace, pk=time_place_pk, event=self.event)
