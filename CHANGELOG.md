@@ -5,6 +5,11 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### New features
+
+- Added GitHub Actions workflows for automatically adding issues and PRs to [the repo's project](https://github.com/orgs/MAKENTNU/projects/1)
+  and setting adequate "Status" and "Date posted" values
+
 ### Improvements
 
 - Improved wording and added image links to the emails sent to users after registering for an event
