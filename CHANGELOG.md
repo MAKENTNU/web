@@ -3,6 +3,12 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+### Improvements
+- Improved wording and added image links to the emails sent to users after registering for an event
+- Emails are printed to console instead of being sent, when testing or debugging
+
+### Fixes
+- Fixed event registration emails not being sent
 
 
 ## 2022-07-17 ([#478](https://github.com/MAKENTNU/web/pull/478))
