@@ -1,0 +1,174 @@
+# This is a reusable workflow; see https://docs.github.com/en/actions/using-workflows/reusing-workflows
+
+name: Add content to project
+
+on:
+  workflow_call:
+    inputs:
+      content_id:
+        description: "The ID of an issue or a PR, to be added to this repo's GitHub project"
+        required: true
+        type: string
+      status_field_value_name:
+        description: "The name of one of the values of the project's (single select) 'Status' field, to set for the added project item"
+        required: true
+        type: string
+
+jobs:
+  add_content:
+    runs-on: ubuntu-latest
+    # Code based on https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/automating-projects-using-actions#example-workflow-authenticating-with-a-github-app
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@f717b5ecd4534d3c4df4ce9b5c1c2214f0f7cd06
+        with:
+          app_id: ${{ secrets.MAKE_BOT_APP_ID }}
+          private_key: ${{ secrets.MAKE_BOT_APP_PEM }}
+
+      - name: Get project data
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          ORGANIZATION: MAKENTNU
+          PROJECT_NUMBER: 1
+          STATUS_FIELD_VALUE_NAME: ${{ inputs.status_field_value_name }}
+        run: |
+          gh api graphql -f query='
+            query ($org: String!, $number: Int!) {
+              organization(login: $org) {
+                projectV2(number: $number) {
+                  id
+                  fields(first: 20) {
+                    nodes {
+                      ... on ProjectV2Field {
+                        id
+                        name
+                      }
+                      ... on ProjectV2SingleSelectField {
+                        id
+                        name
+                        options {
+                          id
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f org="$ORGANIZATION" -F number="$PROJECT_NUMBER" > project_data.json
+
+          {
+            # The ID of this repo's GitHub project
+            echo "PROJECT_ID=$(jq -r '.data.organization.projectV2.id' project_data.json)"
+            # The ID of the project's 'Date posted' field
+            echo "DATE_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Date posted") | .id' project_data.json)"
+            # The ID of the project's 'Status' field
+            echo "STATUS_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .id' project_data.json)"
+            # The ID of one of the values of the project's (single select) 'Status' field, with name `inputs.status_field_value_name`
+            echo "STATUS_FIELD_VALUE_ID=$(jq --arg STATUS_NAME "$STATUS_FIELD_VALUE_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name==$STATUS_NAME) | .id' project_data.json)"
+          } >> "$GITHUB_ENV"
+
+      - name: Add content to project
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+          CONTENT_ID: ${{ inputs.content_id }}
+        run: |
+          item_id="$( gh api graphql -f query='
+            mutation ($project: ID!, $content: ID!) {
+              addProjectV2ItemById(input: {projectId: $project, contentId: $content}) {
+                item {
+                  id
+                }
+              }
+            }' -f project="$PROJECT_ID" -f content="$CONTENT_ID" --jq '.data.addProjectV2ItemById.item.id' )"
+
+          # The ID of the project item (representing an issue or a PR with ID `inputs.content_id`), which was either added or already existed
+          echo "ITEM_ID=$item_id" >> "$GITHUB_ENV"
+
+      - name: Get project item data
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          gh api graphql -f query='
+            query ($itemId: ID!) {
+              node(id: $itemId) {
+                ... on ProjectV2Item {
+                  fieldValues(first: 20) {
+                    nodes {
+                      ... on ProjectV2ItemFieldSingleSelectValue {
+                        name
+                        field {
+                          ... on ProjectV2SingleSelectField {
+                            id
+                          }
+                        }
+                      }
+                      ... on ProjectV2ItemFieldDateValue {
+                        date
+                        field {
+                          ... on ProjectV2Field {
+                            id
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f itemId="$ITEM_ID" > project_item_data.json
+
+          {
+            # The value of the project item's 'Date posted' field (with ID `env.DATE_FIELD_ID`)
+            echo "DATE_FIELD_VALUE=$(jq --arg FIELD_ID "$DATE_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .date' project_item_data.json)"
+            # The value of the project item's 'Status' field (with ID `env.STATUS_FIELD_ID`)
+            echo "STATUS_FIELD_VALUE=$(jq --arg FIELD_ID "$STATUS_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .name' project_item_data.json)"
+          } >> "$GITHUB_ENV"
+
+      - name: Set status
+        # Only set the status if it's not already set,
+        # or if it's a reopened issue/PR (as they're marked as 'Done' when closed - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+        if: ${{ !env.STATUS_FIELD_VALUE || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == 'Done' }}
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          gh api graphql -f query='
+            mutation ($project: ID!, $item: ID!, $status_field: ID!, $status_value: String!) {
+              set_status: updateProjectV2ItemFieldValue(input: {
+                projectId: $project
+                itemId: $item
+                fieldId: $status_field
+                value: {
+                  singleSelectOptionId: $status_value
+                }
+              }) {
+                projectV2Item {
+                  id
+                }
+              }
+            }' -f project="$PROJECT_ID" -f item="$ITEM_ID" -f status_field="$STATUS_FIELD_ID" -f status_value="$STATUS_FIELD_VALUE_ID" --silent
+
+      - name: Get date
+        run: echo "DATE=$(TZ='Europe/Oslo' date --iso-8601)" >> "$GITHUB_ENV"
+
+      - name: Set date
+        # Only set the date if it's not already set
+        if: ${{ !env.DATE_FIELD_VALUE }}
+        env:
+          GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          gh api graphql -f query='
+            mutation ($project: ID!, $item: ID!, $date_field: ID!, $date_value: Date!) {
+              set_date_posted: updateProjectV2ItemFieldValue(input: {
+                projectId: $project
+                itemId: $item
+                fieldId: $date_field
+                value: {
+                  date: $date_value
+                }
+              }) {
+                projectV2Item {
+                  id
+                }
+              }
+            }' -f project="$PROJECT_ID" -f item="$ITEM_ID" -f date_field="$DATE_FIELD_ID" -f date_value="$DATE" --silent
