@@ -4,10 +4,12 @@
 
 
 ## Setup
+
 <details>
 <summary>Click to expand</summary>
 
 ### Prerequisites
+
 * Python 3.8+ (latest stable version preferred)
 * Having cloned this repository to your machine
   * For most purposes, check out [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev), as it's the base branch for all development:
@@ -17,6 +19,7 @@
     ```
 
 ### Installation
+
 * Create a virtual environment, presumably named `venv`:
   * This should be placed in the folder *containing* the project folder, and not inside the project folder itself
     * Example folder structure (where `web` is the name of the project folder):
@@ -60,6 +63,7 @@
     ```
 
 ### Running the server for the first time
+
 * Create an SQLite database file with the proper tables:
   ```shell
   python manage.py migrate
@@ -81,12 +85,14 @@
 
 
 ## Contribution guidelines
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the following topics:
 * [Code style guides](CONTRIBUTING.md#code-style-guides)
 * [Code review guideline: Code smells](CONTRIBUTING.md#code-review-guideline-code-smells)
 
 
 ## Changelog
+
 [The changelog](CHANGELOG.md) is updated on [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev) when changes are made to the codebase -
 specifically under [the "Unreleased" section](CHANGELOG.md#unreleased).
 This section is then renamed to the current date whenever a deployment pull request is merged into

@@ -72,8 +72,6 @@ class MultiLingualTextStructure:
     def __eq__(self, other):
         if type(other) is not MultiLingualTextStructure:
             return False
-        if super().__eq__(other):
-            return True
         return (
                 self.languages == other.languages
                 and self.use_default_for_empty == other.use_default_for_empty

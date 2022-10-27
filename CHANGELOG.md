@@ -1,18 +1,28 @@
 # Changelog
+
 A summary of changes made to the codebase, grouped per deployment.
 
 
 ## Unreleased
+
 ### Improvements
+
 - Improved wording and added image links to the emails sent to users after registering for an event
 - Emails are printed to console instead of being sent, when testing or debugging
 
 ### Fixes
+
 - Fixed event registration emails not being sent
+- Fixed wrong comparison of `MultiLingualTextStructure`
+- Fixed `ContentBox.get_absolute_url()` not working
+- Fixed unable to submit required search select widgets
+  - Which are - among other places - used in the "Add New Member" form
 
 
 ## 2022-07-17 ([#478](https://github.com/MAKENTNU/web/pull/478))
+
 ### New features
+
 - Added a URL which always links to the current week for a machine reservation calendar
   - This URL can be copied by right-clicking the "View in calendar" button for a machine on [the machine list page](https://makentnu.no/reservation/),
     and selecting "Copy link address"
@@ -23,6 +33,7 @@ A summary of changes made to the codebase, grouped per deployment.
     - This does not apply to the machine detail (calendar) page, as there is always only one stream on the page
 
 ### Improvements
+
 - Loading the member list has been made slightly faster
 - Renamed a lot of templates (and CSS and JavaScript files) to comply with the style guide
 - Improved word breaking (splitting a word between two lines, often using a hyphen) multiple places, like in titles and descriptions
@@ -34,6 +45,7 @@ A summary of changes made to the codebase, grouped per deployment.
   the current version link is now a permalink to that specific version
 
 ### Fixes
+
 - Fixed endless redirect loop when a logged-in user visited a page that required a permission that the user didn't have
 - Fixed error messages for multilingual form fields (like the event "Content" field) not showing
 - Previously, editing CKEditor fields (like the event "Content" field) did not prevent the user from leaving the page;
@@ -42,12 +54,15 @@ A summary of changes made to the codebase, grouped per deployment.
 - Fixed old page version warning when visiting the URL for a specific documentation page version which is the current version of that page
 
 ### Other changes
+
 - Added setup instructions to the project's README file
 - Much code cleanup, yes
 
 
 ## 2022-06-07 ([#461](https://github.com/MAKENTNU/web/pull/461))
+
 ### New features
+
 - Added table on [the profile page](https://makentnu.no/checkin/profile/) which displays the completion status of all available courses
   - Also, the profile button in the user dropdown is now visible to all users - not just MAKE members
 - Added an internal page titled "[The History of MAKE NTNU](https://i.makentnu.no/make-history/)"
@@ -67,6 +82,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added an `.editorconfig` file, to make it easier to configure a text editor to format code to (roughly) fit the style guide
 
 ### Improvements
+
 - Made [secrets](https://i.makentnu.no/secrets/) only use one language
 - Made the place/location text of events more visible
   - This will hopefully reduce the number of people who meet at Makerverkstedet for 3D printer courses, because they didn't see the event's location
@@ -76,9 +92,11 @@ A summary of changes made to the codebase, grouped per deployment.
 - Some minor improvements to the layout of the information text, action buttons and stream image on each machine detail page
 
 ### Fixes
+
 - Fixed the machine status text times ("Available for X hours, XX minutes") not being translated to Norwegian
 
 ### Other changes
+
 - Renamed the "Advanced course" checkbox to "Raise3D course", and renamed the "Special 3D printers" machine type to "Raise3D printers"
   - This reflects the fact that the course in question is only really for Raise3D printers specifically
   - It also reduces the potential for confusion after having added the SLA course / machine type
@@ -86,7 +104,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## 2022-05-20 ([#453](https://github.com/MAKENTNU/web/pull/453))
+
 ### New features
+
 - Added a Docker container for development purposes
 - Added [changelog](https://github.com/MAKENTNU/web/blob/main/CHANGELOG.md), issue template and pull request template to
   [our GitHub page](https://github.com/MAKENTNU/web)
@@ -94,6 +114,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added [page for searching through all event participants](https://makentnu.no/admin/news/events/participants/search/)
 
 ### Improvements
+
 - Significantly improved page performance when watching streams that fail to connect
   (most notably on [the machine list](https://makentnu.no/reservation/))
 - Added warning message when there are gaps between the reservation rules of a machine type
@@ -102,6 +123,7 @@ A summary of changes made to the codebase, grouped per deployment.
   which could happen with some images
 
 ### Fixes
+
 - Fixed server error when users tried to change or delete quotes that they themselves had created
 - Fixed a bug that didn't update an end calendar's focused date when changing the date of the start calendar
   (e.g. the start/end time fields on the page for creating a new occurrence for an event)
@@ -111,7 +133,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 
 ## 2022-04-07 ([#434](https://github.com/MAKENTNU/web/pull/434) and [#437](https://github.com/MAKENTNU/web/pull/437))
+
 ### New features
+
 - Made [the front page of the internal site](https://i.makentnu.no/) editable
   - This only uses Norwegian (not English), and allows editing the HTML source code for extra customization possibilities
 - Added an [internal page for quotes](https://i.makentnu.no/quotes/)
@@ -124,6 +148,7 @@ A summary of changes made to the codebase, grouped per deployment.
   and [`django-debug-toolbar`](https://pypi.org/project/django-debug-toolbar/) packages
 
 ### Improvements
+
 - Updated Django to version 4.0
 - Reordered the buttons in the user dropdown menu
 - Added some extra buttons to the CKEditor toolbar
@@ -144,15 +169,19 @@ A summary of changes made to the codebase, grouped per deployment.
 - Improvements to the change lists and forms of some of the Django admin pages
 
 ### Fixes
+
 - Made the course registration list load faster
 - Fixed hidden buttons for adding/changing/deleting reservation rules, and for the committee admin panel
 
 ### Other changes
+
 - Never-before-seen quanta of code cleanup
 
 
 ## 2022-01-10 ([#402](https://github.com/MAKENTNU/web/pull/402))
+
 ### New features
+
 - Added new favicon with better color contrast, and different favicons for the `i`/`internal`/`internt` and `admin` subdomains
 - Made "dirtied" (modified) forms prevent the user from leaving
 - Added an image description field to articles and events, which is useful for people using screen readers
@@ -161,30 +190,37 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added "Skip to main content" button for navigation using <kbd>Tab</kbd>
 
 ### Improvements
+
 - Articles and events are now stored fully in their own separate tables, instead of storing the common fields in a third table
 - Small improvements to the design of the event and article pages
 - Improved using <kbd>Tab</kbd> for navigating the buttons in the header
 - SEO improvements (see [#401](https://github.com/MAKENTNU/web/pull/401))
 
 ### Fixes
+
 - Fixed members being unable to have international phone number
 
 ### Other changes
+
 - A barely impressive volume of code cleanup
 
 
 ## 2021-10-29 ([#389](https://github.com/MAKENTNU/web/pull/389))
+
 ### New features
+
 - Added an [admin page for FAQ categories](https://makentnu.no/faq/admin/categories/)
 - For machines with streams: Added a new "no stream" image, in addition to images that are shown when the stream is down *and* the machine has either
   status "Maintenance" or "Out of order"
 
 ### Improvements
+
 - Improved layout of the FAQ page and the FAQ question admin page
 - Made "My reservations" and "Find free reservation slots" buttons visible when not logged in
 - Added Django admin button to user dropdown (visible to users with the "Is staff" status)
 
 ### Fixes
+
 - Fixed wrong sorting of members' date joined
 - Images for articles, events, etc. are now actually removed on the server when uploading a new image
 - Fixed occasionally disappearing course registration rows, which happened when clicking rows after the page had initially loaded
@@ -192,15 +228,19 @@ A summary of changes made to the codebase, grouped per deployment.
 - Fixed ribbon label on events being displaced by a few pixels
 
 ### Other changes
+
 - A respectable quantity of code cleanup
 
 
 ## 2021-10-21 ([#383](https://github.com/MAKENTNU/web/pull/383) and [#385](https://github.com/MAKENTNU/web/pull/385))
+
 ### New features
+
 - Machines now have a separate `stream_name` field, for specifying the name that's used to connect to their stream
 - Added button for manually hiding shown secrets
 
 ### Improvements
+
 - Made the "Rules" buttons on the machine list page more visible
 - Change system accesses directly from the member modal
 - Improved layout of secrets page
@@ -215,15 +255,19 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added a "More events" button on the front page, for when there exist more than 4 future events
 
 ### Fixes
+
 - Fixed error after registering for an event, which prevented ticket emails from being sent
 
 ### Other changes
+
 - Large amounts of code cleanup
 - Added code style guide and guideline for code smells
 
 
 ## 2021-05-11 ([#361](https://github.com/MAKENTNU/web/pull/361) and [#367](https://github.com/MAKENTNU/web/pull/367))
+
 ### New features
+
 - Added a "Special 3D printers" machine type
   - This is listed on [the machine list (reservations) page](https://makentnu.no/reservation/) when one or more machines of this type have been added
 - Added an "Advanced course" checkbox to course registrations
@@ -236,54 +280,69 @@ A summary of changes made to the codebase, grouped per deployment.
 - Articles, events, profile pictures and other things you can upload images for, now support GIFs
 
 ### Improvements
+
 - Updated Django to version 3.2
 - Visiting old URLs that have previously been changed, will redirect to the new URL
   - This applies e.g. to [makentnu.no/rules](https://makentnu.no/rules/), which is written in the old 3D printer course contracts;
     see [the full URL list in the code](https://github.com/MAKENTNU/web/blob/1631cdedddfa204af5b763201027df50ba89e324/web/urls.py#L81-L83)
 
 ### Fixes
+
 - (Finally) fixed the course registration list not showing updated info when one or more registrations were modified
 - Fixed a bug that prevented sorting and filtering of the member list from both working simultaneously
 - Fixed seeing the 404 page when visiting the English "About us" page
 
 ### Other changes
+
 - Lots of code cleanup
 
 
 ## 2021-04-13 ([#349](https://github.com/MAKENTNU/web/pull/349))
+
 ### New features
+
 - It's now possible to search for users by name in [the member list](https://i.makentnu.no/members/)
 
 ### Improvements
+
 - An error message is now shown when uploading an image that is too large
 
 ### Fixes
+
 - Fixed the recently discovered issue preventing new users' name from being stored in the database
 
 ### Known issues
+
 - Both filtering and sorting the member list simultaneously does currently not work
 
 
 ## 2021-03-10 ([#343](https://github.com/MAKENTNU/web/pull/343))
+
 ### New features
+
 - Added an [internal home page](https://i.makentnu.no/) (currently blank)
 - Added an [FAQ page](https://makentnu.no/faq/), including the ability to [add questions through the admin page](https://makentnu.no/faq/admin/)
 
 ### Fixes
+
 - Fixes for reservations
 - Fixes for searching course registrations
 - Fixes of other parts of the code
 
 ### Other changes
+
 - Code cleanup
 
 
 ## 2020-11-20 ([#334](https://github.com/MAKENTNU/web/pull/334))
+
 ### New features
+
 - Added an [internal secrets page](https://i.makentnu.no/secrets/)
 - Added [dedicated page for email lists](https://makentnu.no/email/)
 - Added support for copying the email addresses of event ticket holders
 - Added priority field to equipment
 
 ### Other changes
+
 - A lot of fixes
