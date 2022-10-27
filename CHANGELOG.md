@@ -13,6 +13,10 @@ A summary of changes made to the codebase, grouped per deployment.
 ### Fixes
 
 - Fixed event registration emails not being sent
+- Fixed wrong comparison of `MultiLingualTextStructure`
+- Fixed `ContentBox.get_absolute_url()` not working
+- Fixed unable to submit required search select widgets
+  - Which are - among other places - used in the "Add New Member" form
 
 
 ## 2022-07-17 ([#478](https://github.com/MAKENTNU/web/pull/478))
