@@ -32,7 +32,7 @@
                 {% url 'contact' as contact_url %}
                 {% blocktrans trimmed with link_start='<a href="'|add:contact_url|safe|add:'" target="_blank">' link_end='</a>' %}
                     Please {{ link_start }}contact us{{ link_end }} if any of this information is incorrect,
-                    but keep in mind that it might take us a few days to register course participants.
+                    but keep in mind that it might take us a few days to register course participants after a course has ended.
                 {% endblocktrans %}
                 <br/>
                 {% url 'event_list' as event_list_url %}

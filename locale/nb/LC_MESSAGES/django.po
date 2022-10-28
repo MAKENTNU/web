@@ -178,11 +178,11 @@ msgstr "Fullførte kurs"
 msgid ""
 "Please %(link_start)scontact us%(link_end)s if any of this information is "
 "incorrect, but keep in mind that it might take us a few days to register "
-"course participants."
+"course participants after a course has ended."
 msgstr ""
 "Vennligst %(link_start)sta kontakt med oss%(link_end)s hvis noe av denne "
 "informasjonen ikke stemmer, men vær klar over at det kan ta oss noen få "
-"dager å registrere kursdeltakere."
+"dager å registrere kursdeltakere etter et kurs er ferdig."
 
 #: checkin/templates/checkin/profile_detail.html:39
 #, python-format
