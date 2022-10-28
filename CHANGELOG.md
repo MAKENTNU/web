@@ -5,6 +5,25 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### Improvements
+
+- Place files uploaded through CKEditor in a separate folder for each model
+- Made all pages have a consistent (browser tab) title format
+  - Most pages will have " | MAKE NTNU" as suffix to the title;
+    subpages of the admin panel have " | Admin panel | MAKE NTNU" as suffix
+- Replaced the `trans` template tag with `translate`
+- Made the `user` field of `Profile` non-nullable
+- Added "and employees" to the end of the Open Graph description
+  (shown in some search engines and when embedding pages from the website on sites like Facebook)
+
+### Fixes
+
+- Made the CKEditor file uploader work on all subdomains
+
+### Other changes
+
+- Never-ending masses of code cleanup
+
 
 ## 2022-10-28 ([#567](https://github.com/MAKENTNU/web/pull/567))
 
