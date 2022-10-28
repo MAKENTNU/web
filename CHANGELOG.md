@@ -5,6 +5,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+
+## 2022-10-28 ([#567](https://github.com/MAKENTNU/web/pull/567))
+
 ### New features
 
 - Added GitHub Actions workflows for automatically adding issues and PRs to [the repo's project](https://github.com/orgs/MAKENTNU/projects/1)
