@@ -1,29 +1,29 @@
 # Django-related packages
-Django==4.0.6
+Django==4.0.7
 django-hosts==5.1
-django-ckeditor==6.4.2
+django-ckeditor==6.5.1
 django-cleanup==6.0.0
 django-decorator-include==3.0
 # (See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html)
-django-extensions==3.2.0
+django-extensions==3.2.1
 django-ical==1.8.3
 django-multiselectfield==0.1.12
 django-phonenumber-field==6.3.0
 django-simple-history==3.1.1
-sorl-thumbnail==12.8.0
+sorl-thumbnail==12.9.0
 
 # Packages related to authentication and other "social" stuff
 social-auth-app-django==5.0.0
 python-dataporten-auth==2.0.0
-python-ldap==3.4.2
+python-ldap==3.4.3
 
 # Async-related packages (mainly for sending of emails)
 channels==3.0.5
-channels-redis==3.4.1
+channels-redis==4.0.0
 
 # Misc. packages
 bleach[css]==5.0.1
-phonenumbers==8.12.51
+phonenumbers==8.12.57
 Pillow==9.2.0
 uuid==1.30
 XlsxWriter==3.0.3

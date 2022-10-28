@@ -7,6 +7,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.mail import get_connection, send_mail
 from django.db.models import Count, Max, Min, Prefetch, Q
 from django.db.models.functions import Concat
 from django.http import HttpResponseRedirect, JsonResponse
@@ -563,19 +564,29 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
         # Setting the `object` field, as is done in the super class `ModelFormMixin`
         self.object = ticket
 
-        try:
-            async_to_sync(get_channel_layer().send)(
-                'email', {
-                    'type': 'send_html',
-                    'html_render': email.render_html({'ticket': ticket}, 'email/ticket.html'),
-                    'text': email.render_text({'ticket': ticket}, text_template_name='email/ticket.txt'),
-                    'subject': str(_("Your ticket!")),  # pass the pure string object, instead of the proxy object from `gettext_lazy`
-                    'from': settings.EVENT_TICKET_EMAIL,
-                    'to': ticket.email,
-                }
+        email_message_dict = {
+            'type': 'send_html',
+            'html_render': email.render_html(self.request, {'ticket': ticket}, html_template_name='email/ticket.html'),
+            'text': email.render_text(self.request, {'ticket': ticket}, text_template_name='email/ticket.txt'),
+            # Pass a pure string, instead of the proxy object from `gettext_lazy`
+            'subject': str(_("Your ticket for “{title}”!").format(title=ticket.registered_event.title)),
+            'from': settings.EVENT_TICKET_EMAIL,
+            'to': ticket.email,
+        }
+        if settings.PRINT_EMAILS_TO_CONSOLE:
+            send_mail(
+                email_message_dict['subject'],
+                email_message_dict['text'],
+                email_message_dict['from'],
+                [email_message_dict['to']],
+                html_message=email_message_dict['html_render'],
+                connection=get_connection('django.core.mail.backends.console.EmailBackend'),
             )
-        except Exception as e:
-            log_request_exception("Sending event ticket email failed.", e, self.request)
+        else:
+            try:
+                async_to_sync(get_channel_layer().send)('email', email_message_dict)
+            except Exception as e:
+                log_request_exception("Sending event ticket email failed.", e, self.request)
 
         return HttpResponseRedirect(self.get_success_url())
 

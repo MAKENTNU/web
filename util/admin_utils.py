@@ -6,8 +6,6 @@ from django.contrib.admin.widgets import AdminTextInputWidget, AdminURLFieldWidg
 from django.db import models
 from django.db.models import Model, QuerySet
 from django.urls import reverse
-from django.utils.html import format_html
-from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from sorl.thumbnail.admin.current import AdminImageWidget
 
@@ -15,6 +13,7 @@ from card.modelfields import CardNumberField
 from card.widgets import CardNumberInput
 from users.models import User
 from util.html_utils import escape_to_named_characters
+from util.templatetags.html_tags import anchor_tag
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.admin import create_multi_lingual_admin_formfield
 
@@ -25,14 +24,10 @@ def link_to_admin_change_form(obj: Model, *, text=None, should_open_new_tab=True
     The tag's text is set to ``text``, or ``obj`` if not given.
     If ``should_open_new_tab`` is ``True``, the link is opened in a new tab or window when clicked.
     """
-    target_attr = 'target="_blank"' if should_open_new_tab else ""
     url = reverse(
         f'admin:{obj._meta.app_label}_{obj._meta.model_name}_change', args=[obj.pk]
     )
-    return format_html(
-        '<a href="{}" {}>{}</a>',
-        url, mark_safe(target_attr), text or obj,
-    )
+    return anchor_tag(url, text or obj, target_blank=should_open_new_tab)
 
 
 def search_escaped_and_unescaped(super_obj: admin.ModelAdmin, request, input_queryset: QuerySet, search_term: str):

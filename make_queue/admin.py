@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.db.models import Count
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped
+from util.templatetags.html_tags import anchor_tag
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
 from .models.reservation import Quota, Reservation, ReservationRule
@@ -46,7 +46,7 @@ class MachineAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
         description=_("location"),
     )
     def get_location(self, machine: Machine):
-        return format_html('<a href="{}" target="_blank">{}</a>', machine.location_url, machine.location)
+        return anchor_tag(machine.location_url, machine.location)
 
     def get_queryset(self, request):
         return super().get_queryset(request).default_order_by()

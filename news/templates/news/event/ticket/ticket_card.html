@@ -35,7 +35,7 @@
     </div>
     <div class="extra content">
         <p>
-            <b>{% trans "language"|capfirst %}:</b> {{ ticket.get_language_display }}
+            <b>{% trans "preferred language"|capfirst %}:</b> {{ ticket.get_language_display }}
         </p>
         {% if ticket.comment %}
             <p>

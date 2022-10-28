@@ -3,7 +3,6 @@ from django.db.models import Count, Max, Prefetch, Q, QuerySet
 from django.db.models.functions import Concat
 from django.template.loader import get_template
 from django.utils import timezone
-from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +13,7 @@ from util.admin_utils import (
     DefaultAdminWidgetsMixin, UserSearchFieldsMixin, link_to_admin_change_form, list_filter_factory, search_escaped_and_unescaped,
 )
 from util.locale_utils import short_datetime_format
-from util.templatetags.html_tags import urlize_target_blank
+from util.templatetags.html_tags import anchor_tag, urlize_target_blank
 from .forms import ArticleForm, EventForm, NewsBaseForm
 from .models import Article, Event, EventTicket, NewsBase, TimePlace
 
@@ -237,7 +236,7 @@ class TimePlaceAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
         description=_("location"),
     )
     def get_place(self, time_place: TimePlace):
-        return format_html('<a href="{}" target="_blank">{}</a>', time_place.place_url, time_place.place)
+        return anchor_tag(time_place.place_url, time_place.place)
 
     @admin.display(
         ordering='ticket_count',

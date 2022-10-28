@@ -1,8 +1,11 @@
+import io
+from contextlib import redirect_stdout
 from datetime import timedelta
 from http import HTTPStatus
 from typing import Optional
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.test import Client, TestCase
 from django.urls import reverse as django_reverse
 from django.utils import timezone
@@ -10,26 +13,30 @@ from django_hosts import reverse
 
 from users.models import User
 from util.model_utils import duplicate
+from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
+from web.multilingual.data_structures import MultiLingualTextStructure
 from ...models import Event, EventTicket, TimePlace
 
 
-class TestEventTicketViews(TestCase):
+class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
         now = timezone.localtime()
 
-        self.repeating_event = Event.objects.create(title="Repeating event", event_type=Event.Type.REPEATING)
+        self.repeating_event = Event.objects.create(title=MultiLingualTextStructure("Repeating event"), image=MOCK_JPG_FILE,
+                                                    event_type=Event.Type.REPEATING)
         self.repeating_time_place = TimePlace.objects.create(
             event=self.repeating_event, start_time=now, end_time=now + timedelta(hours=1), hidden=False,
             number_of_tickets=10,
         )
 
-        self.standalone_event = Event.objects.create(title="Standalone event", event_type=Event.Type.STANDALONE, number_of_tickets=10)
+        self.standalone_event = Event.objects.create(title=MultiLingualTextStructure("Standalone event"), image=MOCK_JPG_FILE,
+                                                     event_type=Event.Type.STANDALONE, number_of_tickets=10)
         self.standalone_time_place = TimePlace.objects.create(
             event=self.standalone_event, start_time=now, end_time=now + timedelta(hours=1), hidden=False,
         )
 
-        self.user1 = User.objects.create_user(username="user1")
+        self.user1 = User.objects.create_user(username="user1", email="dev@makentnu.no")
         self.client1 = Client()
         self.client1.force_login(self.user1)
 
@@ -64,6 +71,53 @@ class TestEventTicketViews(TestCase):
         assert_response_status_code([self.standalone_event.pk, repeating_time_place1.pk], HTTPStatus.NOT_FOUND)
         assert_response_status_code([self.standalone_event.pk, repeating_time_place2.pk], HTTPStatus.NOT_FOUND)
         assert_response_status_code([self.standalone_event.pk, self.standalone_time_place.pk], HTTPStatus.FORBIDDEN)
+
+    def test__event_registration_view__sends_emails(self):
+        registration_urls = (
+            reverse('register_timeplace', args=[self.repeating_event.pk, self.repeating_time_place.pk]),
+            reverse('register_event', args=[self.standalone_event.pk]),
+        )
+        ticket_data = (
+            {'language': language, 'comment': comment}
+            for language in EventTicket.Language.values
+            for comment in (
+                "",
+                "A comment :)",
+                "Æøå",
+            )
+        )
+        for url in registration_urls:
+            for data in ticket_data:
+                with self.subTest(url=url, data=data):
+                    self.assertEqual(self.user1.event_tickets.count(), 0)
+
+                    # Create a ticket by registering for the event, while capturing whatever is printed to the console
+                    console_output = io.StringIO()
+                    with redirect_stdout(console_output):
+                        response = self.client1.post(url, data)
+                    self.assertEqual(response.status_code, HTTPStatus.FOUND)
+
+                    # Get the created ticket
+                    self.assertEqual(self.user1.event_tickets.count(), 1)
+                    ticket: EventTicket = self.user1.event_tickets.get()
+
+                    # Check that the email was indeed printed to the console
+                    printed_email_str = console_output.getvalue()
+                    self.assertIn(f"From: {settings.EVENT_TICKET_EMAIL}", printed_email_str)
+                    self.assertIn(f"To: {self.user1.email}", printed_email_str)
+                    self.assertIn("Content-Type: text/plain", printed_email_str)
+                    self.assertIn("Content-Type: text/html", printed_email_str)
+
+                    def count_fail_message(search_str):
+                        return f'The following string did not contain the expected number of occurrences of "{search_str}":\n{printed_email_str}'
+
+                    self.assertEqual(printed_email_str.count(str(ticket.registered_event.title)), 2,
+                                     count_fail_message(ticket.registered_event.title))
+                    self.assertEqual(printed_email_str.count(str(ticket.uuid)), 6,
+                                     count_fail_message(ticket.uuid))
+
+                    # Delete the ticket, so that the next for-loop iteration has a clean slate
+                    ticket.delete()
 
     def test__event_registration_view__creates_and_reactivates_tickets_as_expected(self):
         for time_place_or_event in [self.repeating_time_place, self.standalone_event]:
