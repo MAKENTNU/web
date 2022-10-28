@@ -13,6 +13,9 @@ A summary of changes made to the codebase, grouped per deployment.
 ### Improvements
 
 - Updated Django to version 4.1
+- Started using new label names for each event type, which should be clearer with regard to their intended usage.
+  Also made their description - shown when clicking / hovering over the yellow question marks in an event form - (hopefully) easier to understand
+- Prevent registering for an event without any (past or future) occurrences
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
   - Most pages will have " | MAKE NTNU" as suffix to the title;
