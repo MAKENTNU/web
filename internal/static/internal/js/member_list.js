@@ -21,7 +21,7 @@ Array.prototype.isEmpty = function () {
 
 function compareElements(a, b) {
     /**
-     * Compares two elements a and b either using localCompare for strings or element by element for arrays
+     * Compares `a` and `b`, either using `localCompare()` for strings, or element by element for arrays.
      */
     if (typeof a === "string")
         return a.localeCompare(b);
@@ -38,7 +38,7 @@ function compareElements(a, b) {
 
 function showDetailedMemberInformation(member) {
     /**
-     * Displays the selected members information in a popup modal
+     * Displays the selected members' information in a popup modal.
      */
     const textAttributeNamesToValues = {
         "name-header": member.data.name,
@@ -66,17 +66,17 @@ function showDetailedMemberInformation(member) {
             .text(textAttributeNamesToValues[textAttribute]);
     }
 
-    for (const editAttribute of ["editUrl", "setQuitUrl", "canUndoQuit", "setRetiredUrl", "canUndoRetired"]) {
+    for (const editAttribute of ["editURL", "setQuitURL", "canUndoQuit", "setRetiredURL", "canUndoRetired"]) {
         $memberInfoModal.find(`#member-${editAttribute}-button`)
             .toggleClass("display-none", member.data[editAttribute].isEmpty());
     }
-    for (const urlAttribute of ["editUrl", "setQuitUrl", "setRetiredUrl"]) {
+    for (const urlAttribute of ["editURL", "setQuitURL", "setRetiredURL"]) {
         $memberInfoModal.find(`#member-${urlAttribute}-button`)
             .attr("href", member.data[urlAttribute]);
     }
     $memberInfoModal.find(`#member-dateQuitOrRetiredLabel`).text(member.data.dateQuitOrRetiredLabel);
     $memberInfoModal.find("#edit-member-status-form")
-        .attr("action", member.data.editStatusUrl)
+        .attr("action", member.data.editStatusURL)
         .find(".button[type=submit]")
         .click(function (event) {
             event.preventDefault(); // cancel form submission
@@ -111,10 +111,10 @@ function showDetailedMemberInformation(member) {
     const $memberSystemAccessesElement = $memberInfoModal.find("#member-system-accesses");
     $memberSystemAccessesElement.empty();
     $memberSystemAccessesElement.append(member.data.systemAccesses.map(access => {
-        const toggleForm = access.changeUrl.isEmpty() ? "" : `
+        const toggleForm = access.changeURL.isEmpty() ? "" : `
             <div class="ui right floated toggle checkbox">
                 <input type="checkbox" value="${!access.value}" ${access.value ? "checked" : ""}
-                       data-change-url="${access.changeUrl}"/>
+                       data-change-url="${access.changeURL}"/>
                 <label></label>
             </div>
         `;
@@ -145,23 +145,23 @@ function showDetailedMemberInformation(member) {
     $memberInfoModal.modal("show");
 }
 
-function filterAllows(filterValues, toMatch) {
+function filterMatches(filterValues, toMatch) {
     /**
-     * Checks if at least one of the filter values matches with the given array
+     * Matches if at least one of the filter values matches with the `toMatch` array.
      */
     return filterValues.isEmpty() || filterValues.some(value => toMatch.includes(value));
 }
 
-function searchAllows(searchValue, toMatch) {
+function searchMatches(searchTerm, toMatch) {
     /**
-     * Checks if the search value is empty or if there is at least one match on the value
+     * Matches if the search term is empty or if there is at least one match in `toMatch`.
      */
-    return searchValue.isEmpty() || toMatch.includes(searchValue);
+    return searchTerm.isEmpty() || toMatch.includes(searchTerm);
 }
 
 function getFilterValues(field) {
     /**
-     * Creates a list of values that the given filter field is set to
+     * Creates a list of values that the given filter field is set to.
      */
     return field.val().split(",").filter(value => value !== "");
 }
@@ -169,12 +169,12 @@ function getFilterValues(field) {
 
 function filter() {
     /**
-     * Filters the displayed rows based on the given state
+     * Filters the displayed rows based on the given state.
      */
     const filters = [
-        (member) => filterAllows(state.statusFilter, member.data.status.map(status => status.name)),
-        (member) => filterAllows(state.committeeFilter, member.data.committees.map(committee => committee.name)),
-        (member) => searchAllows(state.searchValue, member.data.name.toLowerCase()),
+        (member) => filterMatches(state.statusFilter, member.data.status.map(status => status.name)),
+        (member) => filterMatches(state.committeeFilter, member.data.committees.map(committee => committee.name)),
+        (member) => searchMatches(state.searchValue, member.data.name.toLowerCase()),
     ];
 
     state.displayedMembers = [];
@@ -188,7 +188,7 @@ function filter() {
 
 function setSort(attributeName, $element) {
     /**
-     * Toggles which attribute the table will be sorted by
+     * Toggles which attribute the table will be sorted by.
      */
     state.$sortElement.toggleClass(state.sortDirection === 1 ? "down" : "up", false);
     if (attributeName === state.sortBy) {
@@ -204,7 +204,7 @@ function setSort(attributeName, $element) {
 
 function sort() {
     /**
-     * Sorts the table based on the current state
+     * Sorts the table based on the current state.
      */
     state.displayedMembers.sort(function (a, b) {
         return compareElements(a.data[state.sortBy], b.data[state.sortBy]);
@@ -237,7 +237,7 @@ function updateDisplayedTableRows(onlyOrderChange = false) {
 
 function setup() {
     /**
-     * Setup of the global state and actions
+     * Setup of the global state and actions.
      */
     const $statusInput = $("input[name=filter-status]");
     $statusInput.change(() => {
@@ -290,13 +290,13 @@ function setup() {
                 role: $.trim($row.data("role")),
                 comment: $.trim($row.data("comment")),
                 guidanceExemption: $.trim($row.data("guidance-exemption")),
-                editUrl: $.trim($row.data("edit-url")),
-                setQuitUrl: $.trim($row.data("set-quit-url")),
+                editURL: $.trim($row.data("edit-url")),
+                setQuitURL: $.trim($row.data("set-quit-url")),
                 canUndoQuit: $.trim($row.data("can-undo-quit")),
-                setRetiredUrl: $.trim($row.data("set-retired-url")),
+                setRetiredURL: $.trim($row.data("set-retired-url")),
                 canUndoRetired: $.trim($row.data("can-undo-retired")),
-                editStatusUrl: $.trim($row.data("edit-status-url")),
-                // Membership status is a list of pairs of status name and color: [('Active', 'green')]. Need to parse this list.
+                editStatusURL: $.trim($row.data("edit-status-url")),
+                // This becomes a list of objects consisting of name and color; e.g.: [('Active', 'green')]
                 status: $row.data("status").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
                     .filter(status => status !== ", ")
                     .map(status => status.split(", "))
@@ -304,7 +304,7 @@ function setup() {
                         name: status[0],
                         color: status[1],
                     })),
-                // System accesses is a list of quads of name, value, displayText and changeUrl: [("Website", "True", "Yes", "https://...")]. Need to parse this list
+                // This becomes a list of objects consisting of name, value, displayText and changeURL; e.g.: [("Website", "True", "Yes", "https://...")]
                 systemAccesses: $row.data("system-accesses").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
                     .filter(access => access !== ", ")
                     .map(access => access.split(", "))
@@ -312,9 +312,9 @@ function setup() {
                         name: access[0],
                         value: access[1] === "True",
                         displayText: access[2],
-                        changeUrl: access[3],
+                        changeURL: access[3],
                     })),
-                // Committees is a list of pairs of name and color: [('Dev', 'green')]. Need to parse this list
+                // This becomes a list of objects consisting of name and color; e.g.: [('Dev', 'green')]
                 committees: $row.data("committees").slice(1, -1).replace(/'/g, "").match(/[^()]*/g)
                     .filter(committee => committee !== ", " && !committee.isEmpty())
                     .map(committee => committee.split(", "))

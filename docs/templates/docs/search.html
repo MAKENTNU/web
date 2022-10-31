@@ -2,14 +2,16 @@
 {% load i18n %}
 
 
+{% block title %}{% translate "Search results" %} | {% translate "Docs" %}{% endblock title %}
+
 {% block body %}
     <div class="ui container">
-        <h1>{% trans "Search" %}</h1>
+        <h1>{% translate "Search" %}</h1>
 
         <form class="dont-prevent-leaving ui form" method="GET">
             <div class="ui field">
                 <div class="ui icon input">
-                    <input type="text" name="query" placeholder="{% trans "Search" %}" value="{{ query }}"/>
+                    <input type="text" name="query" placeholder="{% translate "Search" %}" value="{{ query }}"/>
                     <i class="link search icon"></i>
                 </div>
             </div>
@@ -27,7 +29,7 @@
                                 {% if page.current_content %}
                                     {{ page.current_content.content|striptags|truncatechars:300 }}
                                 {% else %}
-                                    {% trans "No content" %}
+                                    {% translate "No content" %}
                                 {% endif %}
                             </div>
                         </div>
@@ -35,7 +37,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            {% trans "There are no documents for that search. Try searching for something else." %}
+            {% translate "There are no documents for that search. Try searching for something else." %}
         {% endif %}
 
         <form id="page-form" class="dont-prevent-leaving" method="GET">

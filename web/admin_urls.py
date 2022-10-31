@@ -8,7 +8,7 @@ from django.urls import path
 from django.views.generic import RedirectView, TemplateView
 from django_hosts import reverse
 
-from util.url_utils import debug_toolbar_urls
+from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls
 
 
 # Updates the "View site" link to this url
@@ -24,6 +24,8 @@ urlpatterns = [
         'django.conf.urls.i18n'
     )),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
+
+    *ckeditor_uploader_urls(),
 ]
 
 urlpatterns += i18n_patterns(

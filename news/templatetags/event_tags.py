@@ -1,13 +1,15 @@
+from typing import Union
+
 from django import template
 
 from users.models import User
-from ..models import Event
+from ..models import Event, TimePlace
 
 register = template.Library()
 
 
 @register.simple_tag
-def get_ticket(event_or_timeplace, user: User):
+def get_ticket(event_or_timeplace: Union[Event, TimePlace], user: User):
     if not user.is_authenticated:
         return None
     tickets = user.event_tickets.filter(active=True)

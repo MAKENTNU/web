@@ -8,7 +8,6 @@ from django.utils import timezone
 
 from users.models import User
 from util.locale_utils import parse_datetime_localized
-from util.templatetags.string_tags import invert
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
@@ -49,14 +48,12 @@ class TestReservationExtra(TestCase):
             reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'pk': printer.pk}),
         )
 
-    def test_invert(self):
-        self.assertEqual(invert(0), "true")
-        self.assertEqual(invert(1), "false")
-        self.assertEqual(invert(""), "true")
-        self.assertEqual(invert("true"), "false")
-        self.assertEqual(invert("test"), "false")
-        self.assertEqual(invert(False), "true")
-        self.assertEqual(invert(True), "false")
+        # Check the edge case of January 1st 2010 being week 53 of 2009
+        now_mock.return_value = parse_datetime_localized("2010-01-01 12:34")
+        self.assertEqual(
+            reverse('machine_detail', kwargs={'year': 2009, 'week': 53, 'pk': printer.pk}),
+            current_calendar_url(printer)
+        )
 
     def test_get_stream_image_path_returns_correct_image_path(self):
         no_stream_image_path = static('make_queue/img/no_stream.svg')

@@ -19,7 +19,7 @@
                         media="(max-width: 340px)"/>
                 <source srcset="{% static 'web/img/logo_narrow.svg' %}"
                         media="(min-width: 341px) and (max-width: 600px), (min-width: 992px) and (max-width: 1199.98px)"/>
-                <img src="{% static 'web/img/logo_white.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+                <img src="{% static 'web/img/logo_white.svg' %}" alt="{% translate "MAKE NTNU's logo" %}"/>
             </picture>
         </a>
     </div>
@@ -33,15 +33,15 @@
     <nav id="nav" class="ui secondary huge inverted menu" aria-label="{% translate "Main" %}">
         {% block nav_buttons %}
             <a class="item" href="{% url 'event_list' %}">
-                <div class="text">{% trans "Events" %}</div>
+                <div class="text">{% translate "Events" %}</div>
                 <div class="make-bg-yellow bubble-background"></div>
             </a>
             <a class="item" href="{% url 'article_list' %}">
-                <div class="text">{% trans "Articles" %}</div>
+                <div class="text">{% translate "Articles" %}</div>
                 <div class="make-bg-turquoise bubble-background"></div>
             </a>
             <a class="item" href="{% url 'machine_list' %}">
-                <div class="text">{% trans "Reservations" %}</div>
+                <div class="text">{% translate "Reservations" %}</div>
                 <div class="make-bg-blue bubble-background"></div>
             </a>
 
@@ -52,22 +52,22 @@
 
                 <nav class="menu transition" aria-label="{% translate "Makerverkstedet" %}">
                     <a class="item" href="{% url 'makerspace' %}">
-                        <div class="text">{% trans "About" %}</div>
+                        <div class="text">{% translate "About" %}</div>
                     </a>
                     <a class="item" href="{% url 'makerspace_equipment_list' %}">
-                        <div class="text">{% trans "equipment"|capfirst %}</div>
+                        <div class="text">{% translate "equipment"|capfirst %}</div>
                     </a>
                     <a class="item" href="{% url 'faq_list' %}">
-                        <div class="text">{% trans "FAQ" %}</div>
+                        <div class="text">{% translate "FAQ" %}</div>
                     </a>
                     <a class="item" href="{% url 'rules' %}">
-                        <div class="text">{% trans "Rules" %}</div>
+                        <div class="text">{% translate "Rules" %}</div>
                     </a>
                 </nav>
             </div>
 
             <a class="item" href="{% url 'about' %}">
-                <div class="text">{% trans "About us" %}</div>
+                <div class="text">{% translate "About us" %}</div>
                 <div class="make-bg-yellow bubble-background"></div>
             </a>
 
@@ -95,28 +95,28 @@
                     {% block user_dropdown_buttons %}
                         {% if perms.internal.is_internal %}
                             <a class="item" href="{% host_url 'home' host 'internal' 'i' %}">
-                                <div class="text">{% trans "Internal pages" %}</div>
+                                <div class="text">{% translate "Internal pages" %}</div>
                             </a>
                         {% endif %}
                         {% if user|can_view_admin_panel %}
                             <a class="item" href="{% host_url 'adminpanel' host 'main' %}">
-                                <div class="text">{% trans "Administration" %}</div>
+                                <div class="text">{% translate "Administration" %}</div>
                             </a>
                         {% endif %}
                         {% if user.is_staff %}
                             <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
-                                <div class="text">{% trans "Django admin" %}</div>
+                                <div class="text">{% translate "Django admin" %}</div>
                             </a>
                         {% endif %}
 
                         <a class="item" href="{% host_url 'profile' host 'main' %}">
-                            <div class="text">{% trans "Profile" %}</div>
+                            <div class="text">{% translate "Profile" %}</div>
                         </a>
                         <a class="item" href="{% host_url 'my_tickets_list' host 'main' %}">
-                            <div class="text">{% trans "My tickets" %}</div>
+                            <div class="text">{% translate "My tickets" %}</div>
                         </a>
                         <a class="item" href="{% host_url 'logout' host 'main' %}?next={{ request.path }}">
-                            <div class="text">{% trans "Log out" %}</div>
+                            <div class="text">{% translate "Log out" %}</div>
                         </a>
                     {% endblock user_dropdown_buttons %}
                 </nav>
@@ -124,7 +124,7 @@
             </div>
         {% else %}
             <a class="item" href="{% url 'login' %}{{ login_next_param }}">
-                <div class="text">{% trans "log in"|capfirst %}</div>
+                <div class="text">{% translate "log in"|capfirst %}</div>
                 <div class="make-bg-blue bubble-background"></div>
             </a>
         {% endif %}

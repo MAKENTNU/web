@@ -9,7 +9,7 @@
     {% if machine.machine_type.has_stream %}
         <img class="stream image" data-stream-name="{{ machine.stream_name }}"
              src="{% get_stream_image_path machine.status %}"
-             alt="{% blocktrans with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
+             alt="{% blocktranslate with name=machine.name %}Live stream of the machine {{ name }}{% endblocktranslate %}"
         />
     {% endif %}
     <div class="word-breaking hyphenated content">
@@ -49,7 +49,7 @@
     <div>
         <a class="ui {% card_color_from_machine_status machine %} bottom attached button"
            href="{{ machine.get_absolute_url }}">
-            {% trans "View in calendar" %}
+            {% translate "View in calendar" %}
         </a>
     </div>
 </div>

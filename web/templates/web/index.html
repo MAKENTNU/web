@@ -4,6 +4,8 @@
 {% load announcement_tags %}
 
 
+{% block title %}{% translate "Front page" %}{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/event_list_contents.css' %}"/>
     <link rel="stylesheet" href="{% static 'news/css/article/article_list_contents.css' %}"/>
@@ -28,7 +30,7 @@
     <div class="banner-container">
         <div class="banner-img large parallax-window" data-parallax="scroll" data-image-src="{% static 'web/img/topimg_2.jpg' %}"></div>
         <img class="banner-img small" src="{% static 'web/img/topimg_small.jpg' %}" alt=""/>
-        <img class="banner-logo" src="{% static 'web/img/logo_allblack.svg' %}" alt="{% trans "MAKE NTNU's logo" %}"/>
+        <img class="banner-logo" src="{% static 'web/img/logo_allblack.svg' %}" alt="{% translate "MAKE NTNU's logo" %}"/>
     </div>
 
     <div class="make-content-padding">{# Empty div for spacing #}</div>

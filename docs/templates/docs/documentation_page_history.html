@@ -4,13 +4,13 @@
 
 
 {% block title %}
-    {% blocktrans with title=page.title %}History of “{{ title }}”{% endblocktrans %}
+    {% blocktranslate with title=page.title %}History of “{{ title }}”{% endblocktranslate %}
 {% endblock title %}
 
 {% block body %}
     <div class="ui container">
         <h1 class="word-breaking hyphenated">
-            {% blocktrans with title=page.title %}History of “{{ title }}”{% endblocktrans %}
+            {% blocktranslate with title=page.title %}History of “{{ title }}”{% endblocktranslate %}
         </h1>
         <div class="ui relaxed divided list">
             {% for content in page.content_history.all reversed %}
@@ -24,19 +24,19 @@
                         <div class="word-breaking hyphenated header">
                             <a href="{{ content.get_absolute_url }}">
                                 {% if forloop.last %}
-                                    {% trans "Created by" %}
+                                    {% translate "Created by" %}
                                 {% else %}
-                                    {% trans "Edited by" %}
+                                    {% translate "Edited by" %}
                                 {% endif %}
                                 {% if content.made_by %}
                                     {{ content.made_by.get_full_name }}
                                 {% else %}
-                                    {% trans "Anonymous" %}
+                                    {% translate "Anonymous" %}
                                 {% endif %}
                             </a>
                             <i>
                                 {% if content == page.current_content %}
-                                    ({% trans "Current Version" %})
+                                    ({% translate "Current Version" %})
                                 {% endif %}
                             </i>
                         </div>

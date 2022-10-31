@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+from typing import Union
 
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.utils.dateparse import parse_datetime
 from django.utils.formats import date_format
 from django.utils.timezone import make_aware
@@ -17,6 +18,17 @@ TIME_STRINGS = {
     'hour': ngettext_lazy("%(num)d hour", "%(num)d hours", 'num'),
     'minute': ngettext_lazy("%(num)d minute", "%(num)d minutes", 'num'),
 }
+
+
+def localize_lazy_string(lazy_string_or_func, *, language_code: str):
+    previous_language = translation.get_language()
+    translation.activate(language_code)
+    try:
+        lazy_string = lazy_string_or_func() if callable(lazy_string_or_func) else lazy_string_or_func
+        # Un-lazify the string before returning - while the language activated above is still active
+        return str(lazy_string)
+    finally:
+        translation.activate(previous_language)
 
 
 def parse_datetime_localized(value):
@@ -71,6 +83,15 @@ def iso_datetime_format(value):
     return value.isoformat()
 
 
+def get_year_and_week(time_obj: Union[datetime, date]):
+    year, week, _weekday = time_obj.isocalendar()
+    return year, week
+
+
+def get_current_year_and_week():
+    return get_year_and_week(timezone.localtime())
+
+
 def exact_weekday_to_day_name(exact_weekday: float) -> str:
     from make_queue.models.reservation import ReservationRule  # avoids circular imports
 
@@ -80,7 +101,7 @@ def exact_weekday_to_day_name(exact_weekday: float) -> str:
 
 def year_and_week_to_monday(year: int, week: int) -> datetime:
     """
-    Returns the a datetime object for the monday in the given week and year.
+    Returns a ``datetime`` object for the Monday of the provided ``week`` and ``year``.
 
     :param year: The year to get the date for
     :param week: The week to get the date for
@@ -91,9 +112,9 @@ def year_and_week_to_monday(year: int, week: int) -> datetime:
 
 def timedelta_to_hours(timedelta_obj: timedelta) -> float:
     """
-    Converts a timedelta object into a float indicating the number of hours the timedelta covers.
+    Converts ``timedelta_obj`` into a ``float`` indicating the number of hours the ``timedelta`` object covers.
 
-    :param timedelta_obj: The timedelta object
+    :param timedelta_obj: The ``timedelta`` object
     :return: The number of hours it covers
     """
     return timedelta_obj.days * 24 + timedelta_obj.seconds / (60 * 60)

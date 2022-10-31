@@ -1,5 +1,4 @@
 {% load static %}
-{% load i18n %}
 
 
 {# Based on code generated at https://realfavicongenerator.net/ #}
@@ -13,9 +12,9 @@
       color="{% block mask_icon_color %}#F8C811{% endblock mask_icon_color %}"/>
 
 <meta name="apple-mobile-web-app-title"
-      content="{% block apple_mobile_web_app_title %}{% trans "MAKE NTNU" %}{% endblock apple_mobile_web_app_title %}"/>
+      content="{% block apple_mobile_web_app_title %}MAKE NTNU{% endblock apple_mobile_web_app_title %}"/>
 <meta name="application-name"
-      content="{% block application_name %}{% trans "MAKE NTNU" %}{% endblock application_name %}"/>
+      content="{% block application_name %}MAKE NTNU{% endblock application_name %}"/>
 <meta name="msapplication-TileColor"
       content="{% block msapplication_tile_color %}#0C426A{% endblock msapplication_tile_color %}"/>
 <meta name="msapplication-config" content="{% static favicons_folder|add:'/browserconfig.interpolated.xml' %}"/>

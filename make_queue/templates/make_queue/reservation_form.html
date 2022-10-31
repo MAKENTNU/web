@@ -8,6 +8,14 @@
 
 {# TODO: make this template extend web/generic_form.html #}
 
+{% block title %}
+    {% if new_reservation %}
+        {% translate "New reservation" %}
+    {% else %}
+        {% translate "Edit reservation" %}
+    {% endif %}
+{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/reservation_form.css' %}"/>
 {% endblock extra_head %}
@@ -23,9 +31,9 @@
         {% endif %}
         <div class="ui large header">
             {% if new_reservation %}
-                {% trans "New reservation" %}
+                {% translate "New reservation" %}
             {% else %}
-                {% trans "Edit reservation" %}
+                {% translate "Edit reservation" %}
             {% endif %}
         </div>
 
@@ -34,11 +42,11 @@
             {% csrf_token %}
             <div class="two fields">
                 <div class="field">
-                    <label>{% trans "Equipment type" %}</label>
+                    <label>{% translate "Equipment type" %}</label>
                     <div id="machine-type-dropdown" class="ui fluid selection dropdown {% if not new_reservation %}disabled{% endif %}">
                         <input type="hidden" name="machine_type" value="default"/>
                         <div class="default text">
-                            {% trans "Select equipment type" %}
+                            {% translate "Select equipment type" %}
                         </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -52,11 +60,11 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label>{% trans "equipment"|capfirst %}</label>
+                    <label>{% translate "equipment"|capfirst %}</label>
                     <div id="machine-name-dropdown" class="ui fluid selection dropdown disabled">
                         <input type="hidden" name="machine_name" value="default"/>
                         <div class="default text">
-                            {% trans "Select machine" %}
+                            {% translate "Select machine" %}
                         </div>
                         <i class="dropdown icon"></i>
                         <div class="menu">
@@ -73,11 +81,11 @@
 
             <div class="two fields">
                 <div class="field">
-                    <label>{% trans "start time"|capfirst %}</label>
+                    <label>{% translate "start time"|capfirst %}</label>
                     <div id="start-time" class="ui calendar">
                         <div class="ui input {% if not can_change_start_time %}disabled{% endif %} left icon">
                             <i class="calendar icon"></i>
-                            <input name="start_time" type="text" placeholder="{% trans "start time"|capfirst %}" value="{% spaceless %}
+                            <input name="start_time" type="text" placeholder="{% translate "start time"|capfirst %}" value="{% spaceless %}
                                 {% if start_time %}
                                     {{ start_time|iso_datetime }}
                                 {% else %}
@@ -88,11 +96,11 @@
                     </div>
                 </div>
                 <div class="field">
-                    <label>{% trans "end time"|capfirst %}</label>
+                    <label>{% translate "end time"|capfirst %}</label>
                     <div id="end-time" class="ui calendar">
                         <div class="ui input left icon">
                             <i class="calendar icon"></i>
-                            <input name="end_time" type="text" placeholder="{% trans "end time"|capfirst %}" value="{% spaceless %}
+                            <input name="end_time" type="text" placeholder="{% translate "end time"|capfirst %}" value="{% spaceless %}
                                 {% if end_time %}
                                     {{ end_time|iso_datetime }}
                                 {% else %}
@@ -104,9 +112,9 @@
                 </div>
             </div>
             <div class="field">
-                <label for="comment">{% trans "comment"|capfirst %}</label>
+                <label for="comment">{% translate "comment"|capfirst %}</label>
                 <textarea rows="2" maxlength="2000" id="comment" name="comment"
-                          placeholder="{% trans "comment"|capfirst %}">{{ comment }}</textarea>
+                          placeholder="{% translate "comment"|capfirst %}">{{ comment }}</textarea>
             </div>
 
             {% if perms.make_queue.can_create_event_reservation %}
@@ -117,24 +125,24 @@
                                 <div id="event-checkbox" class="ui checkbox {% if not new_reservation %}disabled{% endif %}">
                                     <input id="event" type="checkbox" name="event"
                                            {% if not is_new_reservation and event %}checked{% endif %}/>
-                                    <label for="event">{% trans "event"|capfirst %}</label>
+                                    <label for="event">{% translate "event"|capfirst %}</label>
                                 </div>
                             </div>
                             <div class="field">
                                 <div id="special-checkbox" class="ui checkbox {% if not new_reservation %}disabled{% endif %}">
                                     <input id="special" type="checkbox" name="special"
                                            {% if not is_new_reservation and special %}checked{% endif %}/>
-                                    <label for="event">{% trans "MAKE NTNU" %}</label>
+                                    <label for="event">MAKE NTNU</label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div id="event-name-input" class="ui field {% if not event %}display-none{% endif %}">
-                        <label>{% trans "event"|capfirst %}</label>
+                        <label>{% translate "event"|capfirst %}</label>
                         <div id="event-pk" class="ui field selection dropdown">
                             <input type="hidden" name="event_pk" value="{% if event %}{{ event.pk }}{% endif %}"/>
                             <div class="default text">
-                                {% trans "Select event" %}
+                                {% translate "Select event" %}
                             </div>
                             <i class="dropdown icon"></i>
                             <div class="menu">
@@ -152,9 +160,9 @@
                         </div>
                     </div>
                     <div id="special-input" class="ui field {% if not special %}display-none{% endif %}">
-                        <label>{% trans "Reservation text" %}</label>
+                        <label>{% translate "Reservation text" %}</label>
                         <div id="special-text" class="ui input">
-                            <input type="text" placeholder="{% trans "Reservation text" %}" maxlength=20 name="special_text"
+                            <input type="text" placeholder="{% translate "Reservation text" %}" maxlength=20 name="special_text"
                                    value="{% if special %}{{ special_text }}{% endif %}"/>
                         </div>
                     </div>
@@ -162,9 +170,9 @@
             {% endif %}
             <div class="float-fix">
                 <input class="ui right floated make-bg-yellow button" type="submit"
-                       value="{% if new_reservation %}{% trans "Reserve" %}{% else %}{% trans "Change" %}{% endif %}"/>
+                       value="{% if new_reservation %}{% translate "Reserve" %}{% else %}{% translate "Change" %}{% endif %}"/>
                 <a class="ui right floated red button" href="{% current_calendar_url selected_machine %}">
-                    {% trans "Cancel" context "abort action" %}
+                    {% translate "Cancel" context "abort action" %}
                 </a>
             </div>
         </form>
@@ -180,6 +188,6 @@
     </script>
     <script src="{% static 'make_queue/js/reservation_form.js' %}"></script>
     <script>
-        getFutureReservations($("#machine-name-dropdown").dropdown('get value'), {% invert start_time %});
+        getFutureReservations($("#machine-name-dropdown").dropdown("get value"), {{ start_time|yesno:"false,true" }});
     </script>
 {% endblock body %}

@@ -1,12 +1,11 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% load i18n %}
+{% load datetime_tags %}
 {% load reservation_extra %}
 
 
-{% block title %}
-    {{ machine.name }} - {{ machine.machine_model }}
-{% endblock title %}
+{% block title %}{{ machine.name }} - {{ machine.machine_model }}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/machine_detail.css' %}"/>
@@ -14,11 +13,12 @@
 
     {% if machine.machine_type.has_stream %}
         <link rel="stylesheet" href="{% static 'make_queue/css/stream.css' %}"/>
-        <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
+        <!--suppress ES6ConvertVarToLetConst -->
         <script>
-            {# `connectStreamsOutsideViewport` is used in `stream.js` #}
+            {# These variables are used in `stream.js` #}
             var connectStreamsOutsideViewport = true; // since there's always only one stream on the page
         </script>
+        <script defer src="{% static 'make_queue/js/stream.js' %}"></script>
     {% endif %}
 {% endblock extra_head %}
 
@@ -43,7 +43,7 @@
             </div>
             <div class="ui content">
                 <a class="ui primary button" href="{{ machine.machine_type.usage_rule.get_absolute_url }}">
-                    {% trans "Show rules" %}
+                    {% translate "Show rules" %}
                 </a>
             </div>
         </div>
@@ -51,33 +51,33 @@
         <div class="machine-info-and-actions">
 
             <div class="machine-info">
-                <h3>{% trans "About the machine" %}</h3>
+                <h3>{% translate "About the machine" %}</h3>
                 <div class="ui relaxed list">
                     <div class="item">
                         <i class="large middle aligned make-col-yellow location arrow icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "location"|capfirst %}</div>
+                            <div class="header">{% translate "location"|capfirst %}</div>
                             <a href="{{ machine.location_url }}" target="_blank">{{ machine.location }}</a>
                         </div>
                     </div>
                     <div class="item">
                         <i class="large middle aligned make-col-yellow cog icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "machine type"|capfirst %}</div>
+                            <div class="header">{% translate "machine type"|capfirst %}</div>
                             {{ machine.machine_type.name }}
                         </div>
                     </div>
                     <div class="item">
                         <i class="large middle aligned make-col-yellow wrench icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "model"|capfirst %}</div>
+                            <div class="header">{% translate "model"|capfirst %}</div>
                             {{ machine.machine_model }}
                         </div>
                     </div>
                     <div class="item">
                         <i class="large middle aligned make-col-yellow info circle icon"></i>
                         <div class="content">
-                            <div class="header">{% trans "status"|capfirst %}</div>
+                            <div class="header">{% translate "status"|capfirst %}</div>
                             <b>
                                 <span class="ui {% card_color_from_machine_status machine %} text">
                                     {% card_text_from_machine_status machine %}
@@ -92,7 +92,7 @@
                 <div class="info-message">
                     <div class="ui header">
                         <i class="make-col-yellow comment dots icon"></i>
-                        {% trans "info message"|capfirst %}
+                        {% translate "info message"|capfirst %}
                     </div>
                     <div class="content">
                         {{ machine.info_message|linebreaks }}
@@ -104,7 +104,7 @@
                 <div class="machine-image">
                     <img class="stream image" data-stream-name="{{ machine.stream_name }}"
                          src="{% get_stream_image_path machine.status %}"
-                         alt="{% blocktrans with name=machine.name %}Live stream of the machine {{ name }}{% endblocktrans %}"
+                         alt="{% blocktranslate with name=machine.name %}Live stream of the machine {{ name }}{% endblocktranslate %}"
                     />
                 </div>
                 <div id="fader"></div>
@@ -120,12 +120,11 @@
         {% include 'make_queue/calendar.html' %}
         <script>
             new ReservationCalendar($(".reservation-calendar"), {
-                machine: {{ machine.pk }},
+                machine: "{{ machine.pk }}",
                 selection: {% if reservation_denied_message %}false{% else %}true{% endif %},
                 canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
-                date: new Date(Date.parse("{{ date|date:"c" }}")),
+                date: new Date("{{ selected_date|iso_datetime }}"),
             });
         </script>
-
     </div>
 {% endblock body %}

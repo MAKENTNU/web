@@ -4,10 +4,12 @@
 {% load html_tags %}
 
 
+{% block title %}{% translate "committees"|capfirst %}{% endblock title %}
+
 {% block body %}
     <div class="ui text container">
         <h1>
-            <strong>{% trans "committees"|capfirst %}</strong>
+            <strong>{% translate "committees"|capfirst %}</strong>
         </h1>
     </div>
     <div class="committees ui divided items text container basic segment">
@@ -16,7 +18,7 @@
                 <a class="image" href="{{ committee.get_absolute_url }}">
                     {% if committee.image %}
                         <img src="{{ committee.image.url }}"
-                             alt="{% blocktrans with name=committee.name %}{{ name }} committee image{% endblocktrans %}"
+                             alt="{% blocktranslate with name=committee.name %}{{ name }} committee image{% endblocktranslate %}"
                         />
                     {% endif %}
                 </a>

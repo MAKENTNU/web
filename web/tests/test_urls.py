@@ -1,3 +1,6 @@
+from http import HTTPStatus
+from urllib.parse import urlparse
+
 from django.conf import settings
 from django.test import Client, TestCase
 from django.utils import translation
@@ -95,3 +98,26 @@ class UrlTests(NewsTestBase, TestCase):
 
         # Reset current language back to the default
         translation.activate(settings.LANGUAGE_CODE)
+
+    def test_ckeditor_uploader_urls_are_found_on_all_subdomains(self):
+        upload_path = urlparse(reverse('ckeditor_upload')).path
+        browse_path = urlparse(reverse('ckeditor_browse')).path
+        ckeditor_paths = (upload_path, browse_path)
+
+        for subdomain, expected_urlconf in (
+                ('', 'web.urls'),
+                ('i', 'internal.urls'),
+                ('admin', 'web.admin_urls'),
+                ('docs', 'docs.urls'),
+        ):
+            if subdomain:
+                client = Client(SERVER_NAME=f'{subdomain}.{settings.PARENT_HOST}')
+            else:
+                client = self.client
+
+            for path in ckeditor_paths:
+                with self.subTest(subdomain=subdomain, path=path):
+                    response = client.get(upload_path)
+                    # A redirect (to the login page) status code implies that the path exists
+                    self.assertEqual(response.status_code, HTTPStatus.FOUND)
+                    self.assertEqual(response.wsgi_request.urlconf, expected_urlconf)

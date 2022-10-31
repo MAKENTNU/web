@@ -4,6 +4,10 @@
 {% load html_tags %}
 
 
+{% block title %}
+    {% blocktranslate with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktranslate %}
+{% endblock title %}
+
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/ticket/ticket_card.css' %}"/>
 {% endblock extra_head %}
@@ -12,10 +16,10 @@
     <div class="ui container">
         {% if ticket.user == request.user or perms.news.view_eventticket %}
             <h1 class="word-breaking hyphenated">
-                {% blocktrans with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktrans %}
+                {% blocktranslate with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktranslate %}
             </h1>
             <div class="word-breaking hyphenated">
-                <b>{% trans "Registered to" %}:</b> {{ ticket.name }},
+                <b>{% translate "Registered to" %}:</b> {{ ticket.name }},
                 {{ ticket.email|urlize_target_blank }}
             </div>
             <br/>
@@ -25,9 +29,9 @@
             </div>
         {% else %}
             <div class="ui error message">
-                {% trans "This ticket is registered to another account. Please" %}
-                <a href="{% url 'login' %}?next={{ ticket.get_absolute_url }}">{% trans "log in" %}</a>
-                {% trans "to the correct account to see your ticket." %}
+                {% translate "This ticket is registered to another account. Please" %}
+                <a href="{% url 'login' %}?next={{ ticket.get_absolute_url }}">{% translate "log in" %}</a>
+                {% translate "to the correct account to see your ticket." %}
             </div>
         {% endif %}
     </div>

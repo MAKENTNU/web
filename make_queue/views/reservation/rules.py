@@ -102,7 +102,7 @@ class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRuleEditVi
     pk_url_kwarg = 'reservation_rule_pk'
 
     def get_form_title(self):
-        return _("Rule for {machine_type}").format(machine_type=self.machine_type)
+        return _("Edit Rule for {machine_type}").format(machine_type=self.machine_type)
 
 
 class DeleteReservationRuleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

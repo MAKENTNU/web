@@ -2,10 +2,12 @@
 {% load i18n %}
 
 
+{% block title %}{% translate "Articles" %} | {% translate "Admin panel" %}{% endblock title %}
+
 {% block body %}
     <div class="ui container">
         <h1 class="ui text-centered">
-            {% trans "Articles" %}
+            {% translate "Articles" %}
             <a href="{% url 'article_create' %}">
                 <i class="green add icon"></i>
             </a>
@@ -16,9 +18,9 @@
                 <div class="ui card">
                     <a class="image" href="{{ article.get_absolute_url }}">
                         <img src="{{ article.image.url }}"
-                             alt="{% blocktrans trimmed with title=article.title description=article.image_description %}
+                             alt="{% blocktranslate trimmed with title=article.title description=article.image_description %}
                                  View the article “{{ title }}”; image description: {{ description }}
-                             {% endblocktrans %}"
+                             {% endblocktranslate %}"
                         />
                     </a>
                     <div class="content">
@@ -28,19 +30,19 @@
                         <div class="meta">
                             {% if article.featured %}
                                 <div class="ui green mini label">
-                                    {% trans "featured"|capfirst %}
+                                    {% translate "featured"|capfirst %}
                                 </div>
                             {% endif %}
 
                             {% if article.hidden %}
                                 <div class="ui red mini label">
-                                    {% trans "hidden"|capfirst %}
+                                    {% translate "hidden"|capfirst %}
                                 </div>
                             {% endif %}
 
                             {% if article.private %}
                                 <div class="ui make-bg-yellow mini label">
-                                    {% trans "internal"|capfirst %}
+                                    {% translate "internal"|capfirst %}
                                 </div>
                             {% endif %}
                         </div>
@@ -48,13 +50,13 @@
                     </div>
                     <div class="ui two bottom attached buttons">
                         <a class="ui make-bg-yellow button" href="{% url 'article_edit' article.pk %}">
-                            <i class="edit icon"></i>{% trans "Edit" %}
+                            <i class="edit icon"></i>{% translate "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}
                             <a class="delete-modal-button ui red button"
                                data-url="{% url 'article_delete' article.pk %}"
                                data-obj-name="{{ article }}">
-                                <i class="trash icon"></i>{% trans "Delete" %}
+                                <i class="trash icon"></i>{% translate "Delete" %}
                             </a>
                         {% endif %}
                     </div>

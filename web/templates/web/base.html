@@ -7,7 +7,7 @@
 <!DOCTYPE html>
 <html lang="{{ CURRENT_LANGUAGE_CODE }}">
 <head>
-    <title>{% block title %}{% trans "MAKE NTNU" %}{% endblock title %}</title>
+    <title>{% block title_full %}{% block title %}{{ page_title }}{% endblock title %} | MAKE NTNU{% endblock title_full %}</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width"/>
     {% block favicon_template %}
@@ -23,8 +23,8 @@
                 {% get_absolute_uri_for_path request og_image_url %}
             {% endblock og_image_absolute_uri %}
         {% endspaceless %}"/>
-        <meta property="og:image:alt" content="{% block og_image_alt %}{% trans "MAKE NTNU's logo" %}{% endblock og_image_alt %}"/>
-        {% trans "MAKE NTNU is a voluntary student organization that works for a better environment for project development, both in private and educational contexts, for all students at NTNU." as site_description %}
+        <meta property="og:image:alt" content="{% block og_image_alt %}{% translate "MAKE NTNU's logo" %}{% endblock og_image_alt %}"/>
+        {% translate "MAKE NTNU is a voluntary student organization that works for a better environment for project development, both in private and educational contexts, for all students and employees at NTNU." as site_description %}
         <meta property="og:description" content="{% block og_description %}{{ site_description }}{% endblock og_description %}"/>
         <meta property="description" content="{% block description %}{{ site_description }}{% endblock description %}"/>
         <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}"/>
@@ -69,7 +69,7 @@
 
 {# Should always be the first child of `<body>` #}
 <a class="skip-to-main-content" href="">
-    {% trans "Skip to main content" %}
+    {% translate "Skip to main content" %}
 </a>
 
 <div class="wrapper">

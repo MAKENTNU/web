@@ -9,6 +9,8 @@
     do not actually have a password registered for our site.
 {% endcomment %}
 
+{% block title %}{% translate "log in"|capfirst %}{% endblock title %}
+
 {% block body %}
 
     <div class="ui container">
@@ -27,10 +29,10 @@
             </div>
 
             <button class="ui right floated make-bg-yellow button">
-                {% trans "log in"|capfirst %}
+                {% translate "log in"|capfirst %}
             </button>
             <a class="ui right floated red button" href="{% url 'front_page' %}">
-                {% trans "Cancel" context "abort action" %}
+                {% translate "Cancel" context "abort action" %}
             </a>
         </form>
     </div>

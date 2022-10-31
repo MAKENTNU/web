@@ -1,7 +1,7 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import List, Optional, Set, Tuple
+from typing import List, Optional, Set, Tuple, Union
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -394,16 +394,18 @@ class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC)
 class EditTimePlaceView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, BaseTimePlaceEditView, UpdateView):
     permission_required = ('news.change_timeplace',)
 
-    form_title = _("Edit Occurrence")
-
     def get_object(self, queryset=None):
         return self.time_place
+
+    def get_form_title(self):
+        return _("Edit Occurrence for “{title}”").format(title=self.event)
 
 
 class CreateTimePlaceView(PermissionRequiredMixin, BaseTimePlaceEditView, CreateView):
     permission_required = ('news.add_timeplace',)
 
-    form_title = _("New Occurrence")
+    def get_form_title(self):
+        return _("New Occurrence for “{title}”").format(title=self.event)
 
 
 class DuplicateTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, TimePlaceRelatedViewMixin, CreateView):
@@ -626,7 +628,7 @@ class AdminEventTicketListView(PermissionRequiredMixin, EventRelatedViewMixin, L
     context_object_name = 'tickets'
 
     @property
-    def focused_object(self):
+    def focused_object(self) -> Union[Event, TimePlace]:
         return self.event
 
     def has_permission(self):

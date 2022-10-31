@@ -62,7 +62,7 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
         try:
             reverse(obj.url_name)
         except NoReverseMatch:
-            raise Http404()
+            raise Http404(f"Unable to find the URL for the ContentBox with url_name '{obj.url_name}'")
         return obj
 
     def get_permission_required(self):

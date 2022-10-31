@@ -3,6 +3,7 @@ from django.utils.dateparse import parse_datetime
 from django.views.generic import ListView
 
 from users.models import User
+from util.locale_utils import iso_datetime_format
 from ..reservation.reservation import MachineRelatedViewMixin
 from ...models.reservation import Reservation, ReservationRule
 
@@ -30,8 +31,8 @@ class APIReservationListView(MachineRelatedViewMixin, ListView):
         reservations = []
         for reservation in self.object_list:
             reservation_data = {
-                'start': reservation.start_time,
-                'end': reservation.end_time,
+                'start': iso_datetime_format(reservation.start_time),
+                'end': iso_datetime_format(reservation.end_time),
                 'type': reservation_type(reservation, self.request.user),
             }
 

@@ -1,9 +1,11 @@
 from decorator_include import decorator_include
+from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
+from django.conf.urls.static import static
 from django.urls import include, path
 from django.views.generic import TemplateView
 
-from util.url_utils import debug_toolbar_urls, permission_required_else_denied
+from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, permission_required_else_denied
 from . import views
 
 
@@ -16,6 +18,9 @@ urlpatterns = [
         permission_required_else_denied('internal.is_internal'),
         'django.conf.urls.i18n'
     )),
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
+
+    *ckeditor_uploader_urls(),
 ]
 
 committee_bulletin_urlpatterns = [

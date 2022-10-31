@@ -3,10 +3,12 @@
 {% load datetime_tags %}
 
 
+{% block title %}{% translate "Announcements" %} | {% translate "Admin panel" %}{% endblock title %}
+
 {% block body %}
     <div class="ui container">
         <h1>
-            {% trans "Announcements" %}
+            {% translate "Announcements" %}
             {% if perms.announcements.add_announcement %}
                 <a href="{% url 'create_announcement' %}">
                     <i class="green plus icon"></i>
@@ -34,9 +36,9 @@
                         </div>
                         <div class="meta">
                             {% if announcement.site_wide %}
-                                <i class="make-col-yellow globe icon"></i>{% trans "site-wide"|capfirst %}
+                                <i class="make-col-yellow globe icon"></i>{% translate "site-wide"|capfirst %}
                             {% else %}
-                                <i class="make-col-yellow home icon"></i>{% trans "Front page" context "location" %}
+                                <i class="make-col-yellow home icon"></i>{% translate "Front page" context "location" %}
                             {% endif %}
                         </div>
                         <div class="word-breaking description">{{ announcement.content }}</div>
@@ -45,7 +47,7 @@
                             {% if announcement.display_to %}
                                 {{ announcement.display_from|short_datetime }} &ndash; {{ announcement.display_to|short_datetime }}
                             {% else %}
-                                {% trans "From" %} {{ announcement.display_from|short_datetime }}
+                                {% translate "From" %} {{ announcement.display_from|short_datetime }}
                             {% endif %}
                             </span>
                         </div>

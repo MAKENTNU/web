@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.generic import TemplateView
 
+from util.locale_utils import iso_datetime_format
 from ..reservation.reservation import MachineRelatedViewMixin
 from ...models.reservation import Quota
 
@@ -19,8 +20,8 @@ class APIMachineDataView(MachineRelatedViewMixin, TemplateView):
         return {
             'reservations': [
                 {
-                    'start_time': r.start_time,
-                    'end_time': r.end_time,
+                    'start_time': iso_datetime_format(r.start_time),
+                    'end_time': iso_datetime_format(r.end_time),
                 } for r in self.machine.reservations.filter(end_time__gte=timezone.now()).exclude(pk=reservation_pk)
             ],
             'canIgnoreRules': any(

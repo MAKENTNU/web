@@ -14,9 +14,9 @@
                 src="{{ article.image.url }}"
             {% endthumbnail %}
                 {% if article.contain %}class="contain"{% endif %}
-                alt="{% blocktrans trimmed with title=article.title description=article.image_description %}
+                alt="{% blocktranslate trimmed with title=article.title description=article.image_description %}
                     View the article “{{ title }}”; image description: {{ description }}
-                {% endblocktrans %}"
+                {% endblocktranslate %}"
             />
         </a>
         <div class="word-breaking hyphenated article-text {% cycle "float-left" "float-right" %}
