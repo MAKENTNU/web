@@ -18,7 +18,7 @@ python-dataporten-auth==2.0.0
 python-ldap==3.4.3
 
 # Async-related packages (mainly for sending of emails)
-channels==3.0.5
+channels[daphne]==4.0.0
 channels-redis==4.0.0
 
 # Misc. packages

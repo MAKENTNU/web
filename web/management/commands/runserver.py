@@ -1,14 +1,14 @@
 import re
 import traceback
 
-from channels.management.commands import runserver
+from daphne.management.commands import runserver
 from django.conf import settings
 
 
 class Command(runserver.Command):
     """
     Overrides the ``runserver`` management command.
-    It's currently extending ``channels``' command, as it's the one we would normally be using.
+    It's currently extending ``daphne``'s command, as it's the one we would normally be using.
 
     This requires that the ``web`` app is listed before other apps that override ``runserver``, in the ``INSTALLED_APPS`` setting.
     """
