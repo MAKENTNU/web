@@ -74,6 +74,10 @@ INSTALLED_APPS = [
     # The main entrypoint app; should be listed first, to be able to override things like management commands
     'web',
 
+    # Should be listed before `django.contrib.staticfiles`
+    # (see https://channels.readthedocs.io/en/stable/releases/4.0.0.html#decoupling-of-the-daphne-application-server)
+    'daphne',
+
     # Built-in Django apps
     'django.contrib.admin',
     'django.contrib.auth',
