@@ -10,7 +10,7 @@
 
 ### Prerequisites
 
-* Python 3.8+ (latest stable version preferred)
+* Python 3.10+ (latest stable version preferred)
 * Having cloned this repository to your machine
   * For most purposes, check out [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev), as it's the base branch for all development:
     ```shell
@@ -35,7 +35,7 @@
     [the "Configure a virtual environment" guide](https://www.jetbrains.com/help/pycharm/creating-virtual-environment.html#python_create_virtual_env)
   * Otherwise, `cd` to the project folder, and run:
     ```shell
-    [newest installed Python command, like python3.10] -m venv ../venv
+    [newest installed Python command, like python3.11] -m venv ../venv
     ```
 * Activate the virtual environment:
   * If using PyCharm, this should be done automatically when opening a terminal tab inside the IDE
