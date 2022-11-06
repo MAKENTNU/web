@@ -32,20 +32,27 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Default values
 DATABASE = 'sqlite'  # (custom setting; used below for selecting database configuration)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
+
 MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
+
 SOCIAL_AUTH_DATAPORTEN_KEY = ''
 SOCIAL_AUTH_DATAPORTEN_SECRET = ''
+
 LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('front_page')
 LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
+
 CHECKIN_KEY = ''  # (custom setting)
+
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
+
 FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is 50 MiB)
 
 # When using more than one subdomain, the session cookie domain has to be set so

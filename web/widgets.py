@@ -234,14 +234,13 @@ class CKEditorWidget(ckeditor.widgets.CKEditorWidget):
     @property
     def media(self):
         config_data_attrs = {
-            # Boolean values should be converted to strings, to make it easier for JavaScript code to parse the data attributes
-            'should-allow-all-tags': json.dumps(self.config_name == settings.CKEDITOR_EDIT_SOURCE_CONFIG_NAME),
+            'should-allow-all-tags': self.config_name == settings.CKEDITOR_EDIT_SOURCE_CONFIG_NAME,
         }
         return forms.Media(
             js=(
                 JS('ckeditor/ckeditor/config_from_django.js', attrs={
                     'id': 'config-from-django',
-                    **{f"data-{name}": value for name, value in config_data_attrs.items()},
+                    **{f"data-{name}": json.dumps(value) for name, value in config_data_attrs.items()},
                 }),
             ),
         ) + super().media

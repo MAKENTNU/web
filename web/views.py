@@ -60,7 +60,7 @@ class AdminPanelView(PermissionRequiredMixin, TemplateView):
     template_name = 'web/admin_panel.html'
 
     def has_permission(self):
-        from util.templatetags.permission_tags import can_view_admin_panel  # avoids circular imports
+        from util.templatetags.permission_tags import can_view_admin_panel  # Avoids circular importing
 
         return can_view_admin_panel(self.request.user)
 

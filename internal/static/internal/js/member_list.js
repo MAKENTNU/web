@@ -353,7 +353,7 @@ function setup() {
                 setRetiredURL: $.trim($row.data("set-retired-url")),
                 canUndoRetired: $.trim($row.data("can-undo-retired")),
                 editStatusURL: $.trim($row.data("edit-status-url")),
-                // This becomes a list of objects consisting of name and color; e.g.: [('Active', 'green')]
+                // This becomes a list of objects consisting of name and color; e.g.: [("Active", "green")]
                 status: $row.data("status").slice(1, -1).replace(/'/g, "").match(/[^()]+/g)
                     .filter(status => status !== ", ")
                     .map(status => status.split(", "))
@@ -371,7 +371,7 @@ function setup() {
                         displayText: access[2],
                         changeURL: access[3],
                     })),
-                // This becomes a list of objects consisting of name and color; e.g.: [('Dev', 'green')]
+                // This becomes a list of objects consisting of name and color; e.g.: [("Dev", "green")]
                 committees: $row.data("committees").slice(1, -1).replace(/'/g, "").match(/[^()]*/g)
                     .filter(committee => committee !== ", " && !committee.isEmpty())
                     .map(committee => committee.split(", "))

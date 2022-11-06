@@ -13,10 +13,10 @@ $(".mark-reservation-finished").click(function () {
     const $button = $(this);
 
     function successFunc() {
-        $(`.reservation-pk-${$button.data('pk')}`).addClass("display-none");
+        $(`.reservation-pk-${$button.data("pk")}`).addClass("display-none");
     }
 
-    sendAjaxRequest('POST', $button.data('url'), successFunc,
+    sendAjaxRequest("POST", $button.data("url"), successFunc,
         gettext("Marking reservation as finished failed with the following error message: %(error)s."));
 });
 
@@ -24,17 +24,17 @@ $(".delete-reservation").click(function () {
     const $button = $(this);
 
     function successFunc() {
-        $(`.reservation-pk-${$button.data('pk')}`).remove();
+        $(`.reservation-pk-${$button.data("pk")}`).remove();
     }
 
-    sendAjaxRequest('DELETE', $button.data('url'), successFunc,
+    sendAjaxRequest("DELETE", $button.data("url"), successFunc,
         gettext("Deleting reservation failed with the following error message: %(error)s."));
 });
 
 function sendAjaxRequest(type, url, successFunc, unknownErrorMessage) {
     $.ajaxSetup({
         beforeSend: function (xhr, settings) {
-            xhr.setRequestHeader('X-CSRFToken', csrfToken);
+            xhr.setRequestHeader("X-CSRFToken", csrfToken);
         },
     });
     $.ajax({

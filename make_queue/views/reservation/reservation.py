@@ -162,7 +162,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
 # noinspection PyUnresolvedReferences
 class MachineRelatedViewMixin:
     """
-    Note: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
+    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
     which will be used to query the database for the machine that the object(s) are related to.
     If found, the machine will be assigned to a ``machine`` field on the view, otherwise, a 404 error will be raised.
     """

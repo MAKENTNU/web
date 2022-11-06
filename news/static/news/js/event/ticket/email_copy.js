@@ -2,7 +2,7 @@ let popupTimer;
 
 function delayPopup($popup) {
     popupTimer = setTimeout(function () {
-        $popup.popup('hide');
+        $popup.popup("hide");
     }, 4200);
 }
 
@@ -15,15 +15,15 @@ $(".copy-token").click(function () {
     $input.select();
 
     // Copy the text inside the text field
-    document.execCommand('copy');
+    document.execCommand("copy");
 
     $copyButton
         .popup({
             title: gettext("Successfully copied to clipboard!"),
-            on: 'manual',
+            on: "manual",
             exclusive: true,
         })
-        .popup('show');
+        .popup("show");
     // Hide popup after 5 seconds
     delayPopup($copyButton);
 });

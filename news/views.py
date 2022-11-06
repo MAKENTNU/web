@@ -328,7 +328,7 @@ class CreateEventView(PermissionRequiredMixin, EventFormMixin, CreateView):
 
 class EventRelatedViewMixin:
     """
-    Note: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
+    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
     which will be used to query the database for the event that the object(s) are related to.
     If found, the event will be assigned to an ``event`` field on the view, otherwise, a 404 error will be raised.
     """
@@ -343,7 +343,7 @@ class EventRelatedViewMixin:
 
 class TimePlaceRelatedViewMixin(EventRelatedViewMixin):
     """
-    Note: When extending this mixin class, it's required to have an ``int`` path converter named ``time_place_pk`` as part of the view's path,
+    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``time_place_pk`` as part of the view's path,
     which will be used to query the database for the time place that the object(s) are related to.
     If either the time place's PK does not exist, or if the time place is not related to the event found by the parent class
     ``EventRelatedViewMixin``, a 404 error will be raised. Otherwise, the time place will be assigned to a ``time_place`` field on the view.

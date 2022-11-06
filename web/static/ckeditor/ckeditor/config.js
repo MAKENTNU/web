@@ -1,5 +1,5 @@
 /*
-  Note: To make this configuration file apply, the `ckeditor` app must be listed after `web.apps.WebConfig` in `INSTALLED_APPS`.
+  NOTE: To make this configuration file apply, the `ckeditor` app must be listed after `web.apps.WebConfig` in `INSTALLED_APPS`.
 */
 // `CKEDITOR_CONFIG_FROM_DJANGO` is defined in `config_from_django.js`
 // noinspection ES6ConvertVarToLetConst
@@ -15,8 +15,8 @@ CKEDITOR.stylesSet.add(customStylesName, [
 
 CKEDITOR.editorConfig = function (config) {
     // Define changes to default configuration here. For example:
-    // config.language = 'fr';
-    // config.uiColor = '#AADC6E';
+    // config.language = "fr";
+    // config.uiColor = "#AADC6E";
     config.format_tags = "p;h1;h2;h3;h4;h5;h6;pre";
     config.stylesSet = customStylesName;
 

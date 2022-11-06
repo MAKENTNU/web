@@ -219,7 +219,7 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: list
 
 
 def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> list[str]:
-    from web.tests.test_urls import reverse_admin  # avoids circular imports
+    from web.tests.test_urls import reverse_admin  # Avoids circular importing
 
     url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
     return [

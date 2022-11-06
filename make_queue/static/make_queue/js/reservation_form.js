@@ -125,7 +125,7 @@ function getMaxDateReservation(date) {
      */
     let maxDate = new Date(date.valueOf());
     let shouldRestrictToRules = !canIgnoreRules;
-    if ($("#event-checkbox input").is(':checked') || $("#special-checkbox input").is(":checked")) {
+    if ($("#event-checkbox input").is(":checked") || $("#special-checkbox input").is(":checked")) {
         maxDate.setDate(maxDate.getDate() + 56);
         shouldRestrictToRules = false;
     } else {
@@ -146,11 +146,11 @@ function getMaxDateReservation(date) {
 
 function updateMaxEndDate() {
     /**
-     * Updates the max date of the calender indicating the end time of the reservation.
+     * Updates the max date of the calendar indicating the end time of the reservation.
      */
     const currentStartDate = $startTimeField.calendar("get date");
     if (currentStartDate !== null) {
-        $endTimeField.calendar("setting", 'maxDate', getMaxDateReservation(currentStartDate));
+        $endTimeField.calendar("setting", "maxDate", getMaxDateReservation(currentStartDate));
     }
 }
 
@@ -188,7 +188,7 @@ $startTimeField.calendar({
                 return true;
             const shouldChange = isNonReservedDate(value);
             if (shouldChange) {
-                $endTimeField.calendar("setting", 'maxDate', getMaxDateReservation(value));
+                $endTimeField.calendar("setting", "maxDate", getMaxDateReservation(value));
             }
             return shouldChange;
         },
@@ -215,8 +215,8 @@ $endTimeField.calendar({
 $(".ui.dropdown").dropdown();
 $("#event-checkbox").checkbox({
     onChange: function () {
-        $("#event-name-input").toggleClass("display-none", !$(this).is(':checked'));
-        if ($(this).is(':checked')) {
+        $("#event-name-input").toggleClass("display-none", !$(this).is(":checked"));
+        if ($(this).is(":checked")) {
             $("#special-checkbox").checkbox("uncheck");
             $startTimeField.calendar("setting", "maxDate", null);
         } else {
@@ -227,8 +227,8 @@ $("#event-checkbox").checkbox({
 });
 $("#special-checkbox").checkbox({
     onChange: function () {
-        $("#special-input").toggleClass("display-none", !$(this).is(':checked'));
-        if ($(this).is(':checked')) {
+        $("#special-input").toggleClass("display-none", !$(this).is(":checked"));
+        if ($(this).is(":checked")) {
             $("#event-checkbox").checkbox("uncheck");
             $startTimeField.calendar("setting", "maxDate", null);
         } else {
@@ -256,7 +256,7 @@ $machineNameDropdown.dropdown(
     "set selected", $(".selected-machine-name").data("value"),
 ).dropdown({
     onChange: function (value, text, $choice) {
-        if (value !== "default" && value !== "") {
+        if (value && value !== "default") {
             getFutureReservations(value, true);
             calendar.changeMachine(value);
         }
@@ -297,7 +297,7 @@ $("form").submit(function (event) {
         is_valid = false;
     }
 
-    if ($("#event-checkbox input").is(':checked') && $eventField.dropdown("get value") === "") {
+    if ($("#event-checkbox input").is(":checked") && $eventField.dropdown("get value") === "") {
         $eventField.toggleClass("error-border", true);
         is_valid = false;
     }

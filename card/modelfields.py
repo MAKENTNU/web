@@ -22,7 +22,7 @@ class CardNumberField(models.CharField):
         })
 
     def formfield(self, **kwargs):
-        from . import formfields  # avoids circular imports
+        from . import formfields  # Avoids circular importing
 
         return super().formfield(**{
             'form_class': formfields.CardNumberField,
@@ -42,7 +42,7 @@ class CardNumberField(models.CharField):
                 # `value` is either None or not an acceptable value
                 return None
 
-    def from_db_value(self, value, expression, connection):
+    def from_db_value(self, value, *args, **kwargs):
         if value:
             return CardNumber(value)
         return None

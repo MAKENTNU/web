@@ -1,5 +1,5 @@
 """
-Note: querying NTNU's LDAP server requires connection to NTNU's VPN.
+NOTE: querying NTNU's LDAP server requires connection to NTNU's VPN.
 """
 import ldap
 

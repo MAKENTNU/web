@@ -76,6 +76,7 @@ urlpatterns += i18n_patterns(
 if settings.USES_DATAPORTEN_AUTH:
     urlpatterns += i18n_patterns(
         path("login/", RedirectView.as_view(url="/login/dataporten/", query_string=True), name='login'),
+        # Logs out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
         path("logout/", Logout.as_view(), name='logout'),
 
         # This line must come before including `social_django.urls` below, to override social_django's `complete` view
@@ -94,7 +95,8 @@ else:
             # This allows the `next` query parameter (used when logging in) to redirect to pages on all the subdomains
             success_url_allowed_hosts=set(settings.ALLOWED_REDIRECT_HOSTS),
         ), name='login'),
-        path("logout/", auth_views.LogoutView.as_view(next_page="/"), name='logout'),
+        # Logs out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
+        path("logout/", auth_views.LogoutView.as_view(), name='logout'),
 
         prefix_default_language=False,
     )
