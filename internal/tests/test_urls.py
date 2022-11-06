@@ -58,12 +58,13 @@ class UrlTests(TestCase):
 
     @staticmethod
     def generic_request(client: Client, method: str, path: str, data: dict = None):
-        if method == 'GET':
-            return client.get(path)
-        elif method == 'POST':
-            return client.post(path, data)
-        else:
-            raise ValueError(f'Method "{method}" not supported')
+        match method:
+            case 'GET':
+                return client.get(path)
+            case 'POST':
+                return client.post(path, data)
+            case _:
+                raise ValueError(f'Method "{method}" not supported')
 
     def _test_url_permissions(self, method: str, path: str, data: dict = None, *, allowed_clients: Set[Client], expected_redirect_path: str = None):
         disallowed_clients = self.all_clients - allowed_clients

@@ -131,26 +131,28 @@ class MemberStatusForm(forms.ModelForm):
             return cleaned_data
 
         member = self.instance
-        if status_action == self.StatusAction.UNDO_QUIT and not member.quit:
-            raise forms.ValidationError(
-                _("Member's “quit” status was not undone, as the member did not have the status “quit”."),
-                code='warning_message',
-            )
-        elif status_action == self.StatusAction.UNDO_RETIRE and not member.retired:
-            raise forms.ValidationError(
-                _("Member's retirement was not undone, as the member did not have the status “retired”."),
-                code='warning_message',
-            )
+        match status_action:
+            case self.StatusAction.UNDO_QUIT if not member.quit:
+                raise forms.ValidationError(
+                    _("Member's “quit” status was not undone, as the member did not have the status “quit”."),
+                    code='warning_message',
+                )
+            case self.StatusAction.UNDO_RETIRE if not member.retired:
+                raise forms.ValidationError(
+                    _("Member's retirement was not undone, as the member did not have the status “retired”."),
+                    code='warning_message',
+                )
         return cleaned_data
 
     def save(self, commit=True):
         member = super().save(commit=False)
         status_action = self.cleaned_data['status_action']
 
-        if status_action == self.StatusAction.UNDO_QUIT:
-            member.set_quit(False)
-        elif status_action == self.StatusAction.UNDO_RETIRE:
-            member.set_retirement(False)
+        match status_action:
+            case self.StatusAction.UNDO_QUIT:
+                member.set_quit(False)
+            case self.StatusAction.UNDO_RETIRE:
+                member.set_retirement(False)
         member.save()
         return member
 

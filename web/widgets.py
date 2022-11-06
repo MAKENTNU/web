@@ -154,20 +154,22 @@ class DirectionalCheckboxSelectMultiple(forms.CheckboxSelectMultiple):
         if self.container_classes:
             return self.container_classes
         else:
-            if self.direction == Direction.HORIZONTAL:
-                return f"{self.NUMBERS_TO_WORDS.get(len(self.choices), '')} fields"
-            elif self.direction == Direction.VERTICAL:
-                return "list"
+            match self.direction:
+                case Direction.HORIZONTAL:
+                    return f"{self.NUMBERS_TO_WORDS.get(len(self.choices), '')} fields"
+                case Direction.VERTICAL:
+                    return "list"
         return ""
 
     def get_option_classes(self):
         if self.option_classes:
             return self.option_classes
         else:
-            if self.direction == Direction.HORIZONTAL:
-                return "field"
-            elif self.direction == Direction.VERTICAL:
-                return "item"
+            match self.direction:
+                case Direction.HORIZONTAL:
+                    return "field"
+                case Direction.VERTICAL:
+                    return "item"
         return ""
 
     def get_context(self, *args, **kwargs):

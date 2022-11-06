@@ -65,15 +65,17 @@ class MachineType(models.Model):
         return str(self.name)
 
     def can_user_use(self, user: User):
-        if self.usage_requirement == self.UsageRequirement.IS_AUTHENTICATED:
-            return user.is_authenticated
-        elif self.usage_requirement == self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
-            return self.can_use_3d_printer(user)
-        elif self.usage_requirement == self.UsageRequirement.TAKEN_RAISE3D_PRINTERS_COURSE:
-            return self.can_use_raise3d_printer(user)
-        elif self.usage_requirement == self.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE:
-            return self.can_use_sla_printer(user)
-        return False
+        match self.usage_requirement:
+            case self.UsageRequirement.IS_AUTHENTICATED:
+                return user.is_authenticated
+            case self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
+                return self.can_use_3d_printer(user)
+            case self.UsageRequirement.TAKEN_RAISE3D_PRINTERS_COURSE:
+                return self.can_use_raise3d_printer(user)
+            case self.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE:
+                return self.can_use_sla_printer(user)
+            case _:
+                return False
 
     @staticmethod
     def can_use_3d_printer(user: Union[User, AnonymousUser]):
