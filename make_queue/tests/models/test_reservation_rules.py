@@ -107,9 +107,7 @@ class TestReservationRule(TestCase):
             Period.from_rule(Day.SATURDAY, rule),
         ]
 
-        self.assertEqual(len(time_periods), len(correct_time_periods))
-
-        for calculated_period, correct_period in zip(time_periods, correct_time_periods):
+        for calculated_period, correct_period in zip(time_periods, correct_time_periods, strict=True):
             self.assertEqual(calculated_period.exact_start_weekday, correct_period.exact_start_weekday)
             self.assertEqual(calculated_period.exact_end_weekday, correct_period.exact_end_weekday)
             self.assertTrue(calculated_period.overlap(correct_period))

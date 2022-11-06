@@ -72,7 +72,7 @@ class ShowSkillsView(TemplateView):
         return context
 
 
-@dataclass
+@dataclass(kw_only=True)
 # `[...]DataClass` might have been a better name, but `[...]Struct` is shorter
 class CompletedCourseMessageStruct:
     completed: bool

@@ -1,6 +1,6 @@
 import importlib
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import cached_property
 from http import HTTPStatus
 from typing import Protocol
@@ -32,7 +32,7 @@ class ContentBoxAssertionStruct:
     reverse_func: ReverseCallable
     viewname: str
     client: Client
-    should_be_bleached: bool
+    should_be_bleached: bool = field(kw_only=True)
 
     @cached_property
     def url(self) -> str:
@@ -57,22 +57,22 @@ class UrlTests(TestCase):
         )
 
         self.content_box_assertion_structs = (
-            ContentBoxAssertionStruct(reverse_main, 'about', self.main_client, True),
-            ContentBoxAssertionStruct(reverse_main, 'contact', self.main_client, True),
-            ContentBoxAssertionStruct(reverse_main, 'apply', self.main_client, True),
-            ContentBoxAssertionStruct(reverse_main, 'cookies', self.main_client, True),
-            ContentBoxAssertionStruct(reverse_main, 'privacypolicy', self.main_client, True),
+            ContentBoxAssertionStruct(reverse_main, 'about', self.main_client, should_be_bleached=True),
+            ContentBoxAssertionStruct(reverse_main, 'contact', self.main_client, should_be_bleached=True),
+            ContentBoxAssertionStruct(reverse_main, 'apply', self.main_client, should_be_bleached=True),
+            ContentBoxAssertionStruct(reverse_main, 'cookies', self.main_client, should_be_bleached=True),
+            ContentBoxAssertionStruct(reverse_main, 'privacypolicy', self.main_client, should_be_bleached=True),
 
-            ContentBoxAssertionStruct(reverse_main, 'makerspace', self.main_client, True),
-            ContentBoxAssertionStruct(reverse_main, 'rules', self.main_client, True),
+            ContentBoxAssertionStruct(reverse_main, 'makerspace', self.main_client, should_be_bleached=True),
+            ContentBoxAssertionStruct(reverse_main, 'rules', self.main_client, should_be_bleached=True),
 
-            ContentBoxAssertionStruct(reverse_internal, 'home', self.internal_client, False),
-            ContentBoxAssertionStruct(reverse_internal, 'dev-board', self.internal_client, False),
-            ContentBoxAssertionStruct(reverse_internal, 'event-board', self.internal_client, True),
-            ContentBoxAssertionStruct(reverse_internal, 'mentor-board', self.internal_client, True),
-            ContentBoxAssertionStruct(reverse_internal, 'pr-board', self.internal_client, True),
+            ContentBoxAssertionStruct(reverse_internal, 'home', self.internal_client, should_be_bleached=False),
+            ContentBoxAssertionStruct(reverse_internal, 'dev-board', self.internal_client, should_be_bleached=False),
+            ContentBoxAssertionStruct(reverse_internal, 'event-board', self.internal_client, should_be_bleached=True),
+            ContentBoxAssertionStruct(reverse_internal, 'mentor-board', self.internal_client, should_be_bleached=True),
+            ContentBoxAssertionStruct(reverse_internal, 'pr-board', self.internal_client, should_be_bleached=True),
 
-            ContentBoxAssertionStruct(reverse_internal, 'make-history', self.internal_client, True),
+            ContentBoxAssertionStruct(reverse_internal, 'make-history', self.internal_client, should_be_bleached=True),
         )
 
     def get_content_box_from_url(self, url: str, client: Client) -> ContentBox:
@@ -260,10 +260,11 @@ class UrlTests(TestCase):
                                                           should_be_bleached: bool, url: str, content_box: ContentBox, client: Client):
         change_url = reverse('contentbox_edit', args=[content_box.pk])
         for original_content, bleached_content in original_content__bleached_content__tuples:
-            response = client.post(change_url, {
-                **{subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')},
-                **{subwidget_name: original_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')},
-            })
+            response = client.post(
+                change_url,
+                {subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')}
+                | {subwidget_name: original_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')},
+            )
             # `url` contains a relative scheme and a host, so only compare the paths
             self.assertRedirects(response, urlparse(url).path)
             content_box.refresh_from_db()

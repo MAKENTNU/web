@@ -145,8 +145,7 @@ class TestMachineListView(TestCase):
     def assert_machine_list_contains(self, expected_machines_per_machine_type: list[list[Machine]]):
         response = self.get_machine_list_response()
         shown_machine_types = self.get_shown_machine_type_list(response)
-        self.assertEqual(len(shown_machine_types), len(expected_machines_per_machine_type))
-        for machine_type, expected_machines in zip(shown_machine_types, expected_machines_per_machine_type):
+        for machine_type, expected_machines in zip(shown_machine_types, expected_machines_per_machine_type, strict=True):
             self.assertListEqual(list(machine_type.shown_machines), expected_machines)
 
     def test_machines_are_sorted_correctly(self):
@@ -169,7 +168,7 @@ class TestMachineListView(TestCase):
 
         response = self.get_machine_list_response()
         shown_machine_types = self.get_shown_machine_type_list(response)
-        for machine_type, correct_machine_order in zip(shown_machine_types, correct_machine_orders):
+        for machine_type, correct_machine_order in zip(shown_machine_types, correct_machine_orders, strict=True):
             with self.subTest(machine_type=machine_type):
                 self.assertListEqual(list(machine_type.shown_machines), correct_machine_order)
 
