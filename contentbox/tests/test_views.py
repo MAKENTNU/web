@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Optional, Type
+from typing import Type
 from urllib.parse import urlparse
 
 from django.contrib.auth.models import Permission
@@ -84,7 +84,7 @@ class SimpleModelAndViewTests(TestCase):
         user.add_perms('contentbox.change_contentbox')
         self.client.force_login(user)
 
-        def assert_edit_page_response_with(*, status_code: int, form: Optional[Type[BaseForm]]):
+        def assert_edit_page_response_with(*, status_code: int, form: Type[BaseForm] | None):
             response = self.client.get(self.edit_url1)
             self.assertEqual(response.status_code, status_code)
             if form:

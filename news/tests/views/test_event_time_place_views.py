@@ -1,6 +1,5 @@
 from datetime import timedelta
 from http import HTTPStatus
-from typing import List, Tuple, Union
 
 from django.test import TestCase
 from django.urls import reverse
@@ -148,8 +147,8 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
 
         self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
-    def assert_context_ticket_emails(self, url_name: str, event: Union[Event, TimePlace],
-                                     username_and_ticket_state_tuples: List[Tuple[str, bool]], expected_context_ticket_emails: str):
+    def assert_context_ticket_emails(self, url_name: str, event: Event | TimePlace,
+                                     username_and_ticket_state_tuples: list[tuple[str, bool]], expected_context_ticket_emails: str):
         """
         Asserts that the ``ticket_emails`` in context at ``url_name`` equals ``expected_context_ticket_emails``.
 
@@ -170,7 +169,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
 
     @staticmethod
-    def create_tickets_for(event: Union[Event, TimePlace], username_and_ticket_state_tuples: List[Tuple[str, bool]]):
+    def create_tickets_for(event: Event | TimePlace, username_and_ticket_state_tuples: list[tuple[str, bool]]):
         """
         Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
 

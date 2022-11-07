@@ -1,8 +1,6 @@
 """
 Note: querying NTNU's LDAP server requires connection to NTNU's VPN.
 """
-from typing import Dict, List, Tuple
-
 import ldap
 
 from users.models import User
@@ -23,7 +21,7 @@ LDAP_FIELDS = {
 STANDARD_USER_DETAILS_FIELDS = ('username', 'email', 'full_name')
 
 
-def ldap_search(search_field: str, search_value: str) -> List[Tuple[str, Dict[str, List[bytes]]]]:
+def ldap_search(search_field: str, search_value: str) -> list[tuple[str, dict[str, list[bytes]]]]:
     """
     Searches the LDAP server given by LDAP_HOST with the filter ``search_field=search_value``.
 
@@ -36,7 +34,7 @@ def ldap_search(search_field: str, search_value: str) -> List[Tuple[str, Dict[st
     return ldap_obj.search_s(LDAP_BASE, ldap.SCOPE_SUBTREE, query)
 
 
-def get_ldap_field(ldap_data: List[Tuple[str, Dict[str, List[bytes]]]], field: str) -> str:
+def get_ldap_field(ldap_data: list[tuple[str, dict[str, list[bytes]]]], field: str) -> str:
     """
     Retrieves the value of a field in ``ldap_data``.
 
@@ -47,7 +45,7 @@ def get_ldap_field(ldap_data: List[Tuple[str, Dict[str, List[bytes]]]], field: s
     return ldap_data[0][1].get(LDAP_FIELDS[field], [b''])[0].decode()
 
 
-def get_user_details_from_ldap(search_field: str, search_value: str) -> Dict[str, str]:
+def get_user_details_from_ldap(search_field: str, search_value: str) -> dict[str, str]:
     """
     Retrieves all relevant user details from LDAP.
     Searches the LDAP server given by LDAP_HOST with the filter ``search_field=search_value``.
@@ -60,7 +58,7 @@ def get_user_details_from_ldap(search_field: str, search_value: str) -> Dict[str
     return {}
 
 
-def _get_user_details_from_user_field(field_name: str, field_value: str, use_cached: bool) -> Dict[str, str]:
+def _get_user_details_from_user_field(field_name: str, field_value: str, use_cached: bool) -> dict[str, str]:
     user_details = {}
     if use_cached:
         user = User.objects.filter(**{field_name: field_value}).first()
@@ -93,7 +91,7 @@ def _get_user_details_from_user_field(field_name: str, field_value: str, use_cac
     return user_details
 
 
-def get_user_details_from_username(username: str, use_cached=True) -> Dict[str, str]:
+def get_user_details_from_username(username: str, use_cached=True) -> dict[str, str]:
     """
     Retrieves details for user given by username, either from database or LDAP server.
 
@@ -104,7 +102,7 @@ def get_user_details_from_username(username: str, use_cached=True) -> Dict[str, 
     return _get_user_details_from_user_field('username', username, use_cached)
 
 
-def get_user_details_from_email(email: str, use_cached=True) -> Dict[str, str]:
+def get_user_details_from_email(email: str, use_cached=True) -> dict[str, str]:
     """
     Retrieves details for user given by email, either from database or LDAP server.
 

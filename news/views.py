@@ -1,7 +1,6 @@
 import math
 from abc import ABC, abstractmethod
 from datetime import timedelta
-from typing import List, Optional, Set, Tuple, Union
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -193,7 +192,7 @@ class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFo
         return context_data
 
     @classmethod
-    def get_users_matching_search(cls, search_string: str) -> Tuple[List[User], List[User]]:
+    def get_users_matching_search(cls, search_string: str) -> tuple[list[User], list[User]]:
         query = Q()
         for search_fragment in search_string.split():
             user_search_field_subquery = Q()
@@ -512,8 +511,8 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
     ]
 
     event: Event
-    ticket_event: Optional[Event]
-    ticket_time_place: Optional[TimePlace]
+    ticket_event: Event | None
+    ticket_time_place: TimePlace | None
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -628,7 +627,7 @@ class AdminEventTicketListView(PermissionRequiredMixin, EventRelatedViewMixin, L
     context_object_name = 'tickets'
 
     @property
-    def focused_object(self) -> Union[Event, TimePlace]:
+    def focused_object(self) -> Event | TimePlace:
         return self.event
 
     def has_permission(self):
@@ -672,7 +671,7 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
                 or self.request.user == self.ticket.user
         )
 
-    def get_allowed_next_params(self) -> Set[str]:
+    def get_allowed_next_params(self) -> set[str]:
         urls = set()
         for reverse_func in (reverse, django_hosts_reverse):
             urls |= {

@@ -1,6 +1,5 @@
 from abc import abstractmethod
 from datetime import datetime, timedelta
-from typing import Tuple, Union
 
 from django.contrib.auth.models import AnonymousUser
 from django.db import models
@@ -78,7 +77,7 @@ class MachineType(models.Model):
                 return False
 
     @staticmethod
-    def can_use_3d_printer(user: Union[User, AnonymousUser]):
+    def can_use_3d_printer(user: User | AnonymousUser):
         if not user.is_authenticated:
             return False
         if hasattr(user, 'printer_3d_course'):
@@ -91,7 +90,7 @@ class MachineType(models.Model):
         return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
 
     @staticmethod
-    def can_use_raise3d_printer(user: Union[User, AnonymousUser]):
+    def can_use_raise3d_printer(user: User | AnonymousUser):
         if not user.is_authenticated:
             return False
         if Printer3DCourse.objects.filter(user=user).exists():
@@ -106,7 +105,7 @@ class MachineType(models.Model):
 
     # TODO: reduce code duplication between this and the two methods above
     @staticmethod
-    def can_use_sla_printer(user: Union[User, AnonymousUser]):
+    def can_use_sla_printer(user: User | AnonymousUser):
         if not user.is_authenticated:
             return False
         if Printer3DCourse.objects.filter(user=user).exists():
@@ -220,7 +219,7 @@ class Machine(models.Model):
             return self.STATUS_CHOICES_DICT[self.get_status()]
         return super()._get_FIELD_display(field)
 
-    def reservable_status_display_tuple(self) -> Tuple[bool, str]:
+    def reservable_status_display_tuple(self) -> tuple[bool, str]:
         return (
             self.get_status() in {self.Status.AVAILABLE, self.Status.RESERVED, self.Status.IN_USE},
             self.get_status_display(),

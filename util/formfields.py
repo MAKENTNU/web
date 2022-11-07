@@ -1,7 +1,6 @@
 import os
 import sys
 from io import BytesIO
-from typing import Union
 
 from PIL import Image
 from django import forms
@@ -19,8 +18,8 @@ class CompressedImageField(forms.ImageField):
     This only applies to JPEG images; images of all other formats will be left unchanged.
     """
 
-    def clean(self, data: Union[InMemoryUploadedFile, bool, None], initial: ImageFieldFile = None):
-        cleaned_data: Union[ImageFieldFile, InMemoryUploadedFile, TemporaryUploadedFile, bool, None] = super().clean(data, initial=initial)
+    def clean(self, data: InMemoryUploadedFile | bool | None, initial: ImageFieldFile = None):
+        cleaned_data: ImageFieldFile | InMemoryUploadedFile | TemporaryUploadedFile | bool | None = super().clean(data, initial=initial)
         if data and cleaned_data:
             try:
                 if initial and file_contents_equal(cleaned_data, initial):
@@ -69,5 +68,5 @@ class CompressedImageField(forms.ImageField):
         return cleaned_data
 
     @staticmethod
-    def _save_reduced_image(image: Image, file: Union[BytesIO, File]):
+    def _save_reduced_image(image: Image, file: BytesIO | File):
         image.save(file, format='JPEG', quality=90)

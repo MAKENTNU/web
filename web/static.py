@@ -2,7 +2,6 @@ import re
 from fnmatch import fnmatchcase
 from io import BytesIO
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 from django.conf import settings
 from django.contrib.staticfiles.storage import HashedFilesMixin, ManifestStaticFilesStorage as DjangoManifestStaticFilesStorage
@@ -83,7 +82,7 @@ class _PureInterpolatingFilesMixin(HashedFilesMixin):
     patterns = INTERPOLATION_PATTERNS
 
 
-_compiled_interpolation_patterns: Dict[str, List[Tuple[re.Pattern, str]]] = _PureInterpolatingFilesMixin()._patterns
+_compiled_interpolation_patterns: dict[str, list[tuple[re.Pattern, str]]] = _PureInterpolatingFilesMixin()._patterns
 
 
 def serve_interpolated(request, path, *args, **kwargs):

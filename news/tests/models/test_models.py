@@ -1,5 +1,4 @@
 from datetime import timedelta
-from typing import Tuple
 from unittest import mock
 
 from django.test import TestCase
@@ -61,7 +60,7 @@ class ModelTestCase(TestCase):
         now = parse_datetime_localized("2021-04-15 12:00")
         now_mock.return_value = now
 
-        def create_event(event_type: Event.Type, title_and_relative_start_and_end_time_tuples: Tuple[str, Tuple[Tuple[int, int], ...]]) -> Event:
+        def create_event(event_type: Event.Type, title_and_relative_start_and_end_time_tuples: tuple[str, tuple[tuple[int, int], ...]]) -> Event:
             title, relative_start_and_end_time_tuples = title_and_relative_start_and_end_time_tuples
             event = Event.objects.create(
                 title=f"{event_type.name.lower()}_{title}",
@@ -76,10 +75,10 @@ class ModelTestCase(TestCase):
                 )
             return event
 
-        def create_standalone(title_and_relative_start_and_end_time_tuples: Tuple[str, Tuple[Tuple[int, int], ...]]) -> Event:
+        def create_standalone(title_and_relative_start_and_end_time_tuples: tuple[str, tuple[tuple[int, int], ...]]) -> Event:
             return create_event(Event.Type.STANDALONE, title_and_relative_start_and_end_time_tuples)
 
-        def create_repeating(title_and_relative_start_and_end_time_tuples: Tuple[str, Tuple[Tuple[int, int], ...]]) -> Event:
+        def create_repeating(title_and_relative_start_and_end_time_tuples: tuple[str, tuple[tuple[int, int], ...]]) -> Event:
             return create_event(Event.Type.REPEATING, title_and_relative_start_and_end_time_tuples)
 
         all_ended = ("all_ended", (

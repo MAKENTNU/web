@@ -1,5 +1,4 @@
 from datetime import date, datetime, timedelta
-from typing import Union
 
 from django.utils import timezone, translation
 from django.utils.dateparse import parse_datetime
@@ -83,7 +82,7 @@ def iso_datetime_format(value):
     return value.isoformat()
 
 
-def get_year_and_week(time_obj: Union[datetime, date]):
+def get_year_and_week(time_obj: datetime | date):
     year, week, _weekday = time_obj.isocalendar()
     return year, week
 

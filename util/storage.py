@@ -1,8 +1,8 @@
 import re
 import secrets
+from collections.abc import Callable, Collection
 from functools import partial
 from pathlib import Path, PurePosixPath
-from typing import Callable, Collection, Optional, Union
 
 from django.core.files.storage import FileSystemStorage
 from django.core.management.base import SystemCheckError
@@ -56,7 +56,7 @@ class UploadToUtils:
         return f"{cls.REPLACEABLE_TOKEN_START}-{token_middle}-{cls.REPLACEABLE_TOKEN_END}"
 
     @classmethod
-    def get_pk_prefixed_filename_func(cls, upload_to: Union[str, Callable[[models.Model, str], str]]):
+    def get_pk_prefixed_filename_func(cls, upload_to: str | Callable[[models.Model, str], str]):
         """
         Prefixes filenames with the PK (primary key) of each instance.
         When saving a newly created instance (which has no PK), the filename is instead prefixed with a token,
@@ -74,7 +74,7 @@ class UploadToUtils:
         return partial(cls._actual_upload_to, upload_to=upload_to)
 
     @classmethod
-    def _actual_upload_to(cls, instance: models.Model, filename: str, *, upload_to: Union[str, Callable[[models.Model, str], str]]):
+    def _actual_upload_to(cls, instance: models.Model, filename: str, *, upload_to: str | Callable[[models.Model, str], str]):
         """This method should only be used by ``get_pk_prefixed_filename_func()``; do not use this method directly."""
         if isinstance(upload_to, str):
             base_path = PurePosixPath(upload_to) / filename
@@ -94,7 +94,7 @@ class UploadToUtils:
         return str(prefixed_filename_path)
 
     @classmethod
-    def rename_files_of_created_instances(cls, instance: models.Model, created, raw, update_fields: Optional[Collection], **kwargs):
+    def rename_files_of_created_instances(cls, instance: models.Model, created, raw, update_fields: Collection | None, **kwargs):
         """
         This signal receiver renames the files belonging to ``FileField``s (or subclasses) of model instances when they're created,
         if the filename matches the token regex used by ``get_pk_prefixed_filename_func()``.

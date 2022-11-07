@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import List
 
 from django.templatetags.static import static
 from django.test import TestCase
@@ -143,7 +142,7 @@ class TestMachineListView(TestCase):
             [printer1], [raise3d_printer1],
         ])
 
-    def assert_machine_list_contains(self, expected_machines_per_machine_type: List[List[Machine]]):
+    def assert_machine_list_contains(self, expected_machines_per_machine_type: list[list[Machine]]):
         response = self.get_machine_list_response()
         shown_machine_types = self.get_shown_machine_type_list(response)
         self.assertEqual(len(shown_machine_types), len(expected_machines_per_machine_type))

@@ -1,5 +1,5 @@
+from collections.abc import Sequence
 from html.entities import html5
-from typing import Sequence, Union
 
 from django.db.models import QuerySet
 from django.utils.html import escape, format_html, format_html_join
@@ -32,7 +32,7 @@ def escape_to_named_characters(string: str):
     return "".join(ESCAPE_UNICODE_TO_HTML5.get(c, c) for c in string)
 
 
-def block_join(object_collection: Union[Sequence, QuerySet], sep="<b>&bull;</b>", multiline=True):
+def block_join(object_collection: Sequence | QuerySet, sep="<b>&bull;</b>", multiline=True):
     if len(object_collection) == 0:
         return ""
 

@@ -1,5 +1,5 @@
 import copy
-from typing import Callable
+from collections.abc import Callable
 
 from django.contrib import admin
 from django.contrib.admin.widgets import AdminTextInputWidget, AdminURLFieldWidget, ForeignKeyRawIdWidget

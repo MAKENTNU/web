@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 from http import HTTPStatus
-from typing import List
 
 from django.test import Client, TestCase
 from django.utils import timezone
@@ -43,7 +42,7 @@ class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
         return client.get(self.path).context
 
     def test_context_data_contains_expected_event_dict_values(self):
-        def assert_context_event_dicts_equal(expected_event_dicts: List[dict]):
+        def assert_context_event_dicts_equal(expected_event_dicts: list[dict]):
             response_context = self.get_response_context()
             self.assertListEqual(response_context['featured_event_dicts'], expected_event_dicts)
 

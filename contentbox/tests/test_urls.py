@@ -1,8 +1,9 @@
 import importlib
+from collections.abc import Callable
 from dataclasses import dataclass
 from functools import cached_property
 from http import HTTPStatus
-from typing import Callable, List, Protocol, Tuple
+from typing import Protocol
 from urllib.parse import urlparse
 
 from django.test import Client, TestCase
@@ -91,7 +92,7 @@ class UrlTests(TestCase):
 
     # Code based on https://stackoverflow.com/a/19162337
     @staticmethod
-    def get_all_content_box_url_patterns() -> List[URLPattern]:
+    def get_all_content_box_url_patterns() -> list[URLPattern]:
         patterns = []
 
         def check_urls(urlpatterns, prefix=''):
@@ -255,7 +256,7 @@ class UrlTests(TestCase):
                 self.assert_content_is_bleached_expectedly_when_posted(original_content__bleached_content__tuples,
                                                                        struct.should_be_bleached, struct.url, content_box, struct.client)
 
-    def assert_content_is_bleached_expectedly_when_posted(self, original_content__bleached_content__tuples: List[Tuple[str, str]],
+    def assert_content_is_bleached_expectedly_when_posted(self, original_content__bleached_content__tuples: list[tuple[str, str]],
                                                           should_be_bleached: bool, url: str, content_box: ContentBox, client: Client):
         change_url = reverse('contentbox_edit', args=[content_box.pk])
         for original_content, bleached_content in original_content__bleached_content__tuples:

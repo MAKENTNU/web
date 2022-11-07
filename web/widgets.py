@@ -1,6 +1,7 @@
 import json
+from collections.abc import Callable
 from enum import Enum
-from typing import Any, Callable, Dict
+from typing import Any
 
 import ckeditor.widgets
 import ckeditor_uploader.widgets
@@ -48,7 +49,7 @@ class SelectWithDataAttrsMixin(ChoiceWidget):
     which allows adding data attributes to each option of the widget's generated ``<select>`` tag.
     """
 
-    def __init__(self, attr_name_to_attr_value_getter: Dict[str, Callable[[Any], Any]] = None, *args, **kwargs):
+    def __init__(self, attr_name_to_attr_value_getter: dict[str, Callable[[Any], Any]] = None, *args, **kwargs):
         """
         :param attr_name_to_attr_value_getter: A dictionary that maps from the name of the data attribute to add,
                                                to a function that accepts the option's value and returns the value of the data attribute.

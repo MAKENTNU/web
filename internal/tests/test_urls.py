@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from typing import Set
 from unittest import TestCase as StandardTestCase
 
 from django.conf import settings
@@ -66,7 +65,7 @@ class UrlTests(TestCase):
             case _:
                 raise ValueError(f'Method "{method}" not supported')
 
-    def _test_url_permissions(self, method: str, path: str, data: dict = None, *, allowed_clients: Set[Client], expected_redirect_path: str = None):
+    def _test_url_permissions(self, method: str, path: str, data: dict = None, *, allowed_clients: set[Client], expected_redirect_path: str = None):
         disallowed_clients = self.all_clients - allowed_clients
         for client in disallowed_clients:
             response = self.generic_request(client, method, path)

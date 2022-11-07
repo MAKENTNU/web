@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from django.contrib.auth.models import Permission
 from django.db.models import Q, QuerySet
 
@@ -14,7 +12,7 @@ def get_perms(*app_labels_and_codenames: str) -> QuerySet[Permission]:
     return perms
 
 
-def _check_perms(filtered_perms: QuerySet[Permission], perm_strings: Tuple[str, ...]):
+def _check_perms(filtered_perms: QuerySet[Permission], perm_strings: tuple[str, ...]):
     if filtered_perms.count() != len(perm_strings):
         perm_strings_set = set(perm_strings)
         if len(perm_strings_set) != len(perm_strings):
