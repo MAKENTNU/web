@@ -115,17 +115,10 @@
                         <a class="item" href="{% host_url 'my_tickets_list' host 'main' %}">
                             <div class="text">{% translate "My tickets" %}</div>
                         </a>
-                        {% host_url 'logout' host 'main' as logout_url %}
-                        {% if USES_DATAPORTEN_AUTH %}
-                            <a class="item" href="{{ logout_url }}?next={{ request.path }}">
-                                <div class="text">{% translate "Log out" %}</div>
-                            </a>
-                        {% else %}
-                            <form class="logout-form item" method="POST" action="{{ logout_url }}?next={{ request.path }}">
-                                {% csrf_token %}
-                                <button class="text" type="submit">{% translate "Log out" %}</button>
-                            </form>
-                        {% endif %}
+                        <form class="logout-form item" method="POST" action="{% host_url 'logout' host 'main' %}?next={{ request.path }}">
+                            {% csrf_token %}
+                            <button class="text" type="submit">{% translate "Log out" %}</button>
+                        </form>
                     {% endblock user_dropdown_buttons %}
                 </nav>
 
