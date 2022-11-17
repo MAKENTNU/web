@@ -71,8 +71,9 @@ except ImportError:
 
 
 INSTALLED_APPS = [
-    # The main entrypoint app; should be listed first, to be able to override things like management commands
-    'web',
+    # App used for things regarding the whole project or across other apps
+    # (Should be listed first, to be able to override things like management commands)
+    'web.apps.WebConfig',
 
     # Should be listed before `django.contrib.staticfiles`
     # (see https://channels.readthedocs.io/en/stable/releases/4.0.0.html#decoupling-of-the-daphne-application-server)
@@ -92,7 +93,7 @@ INSTALLED_APPS = [
 
     # Other third-party packages
     'social_django',
-    'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
+    'ckeditor',  # must be listed after `web.apps.WebConfig` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
     'simple_history',

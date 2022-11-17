@@ -1,5 +1,5 @@
 /*
-  Note: To make this configuration file apply, the `ckeditor` app must be listed after `web` in `INSTALLED_APPS`.
+  Note: To make this configuration file apply, the `ckeditor` app must be listed after `web.apps.WebConfig` in `INSTALLED_APPS`.
 */
 // `CKEDITOR_CONFIG_FROM_DJANGO` is defined in `config_from_django.js`
 // noinspection ES6ConvertVarToLetConst

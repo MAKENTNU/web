@@ -10,7 +10,7 @@ class Command(runserver.Command):
     Overrides the ``runserver`` management command.
     It's currently extending ``daphne``'s command, as it's the one we would normally be using.
 
-    This requires that the ``web`` app is listed before other apps that override ``runserver``, in the ``INSTALLED_APPS`` setting.
+    This requires that ``web.apps.WebConfig`` is listed before other apps that override ``runserver``, in the ``INSTALLED_APPS`` setting.
     """
 
     def inner_run(self, *args, **options):
