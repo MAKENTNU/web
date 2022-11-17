@@ -16,6 +16,7 @@ class CommonContextVariablesTests(TestCase):
         context = self.client.get("/").context
         self.assertEqual(context['DEFAULT_LANGUAGE_CODE'], default_language_code)
         self.assertEqual(context['CURRENT_LANGUAGE_CODE'], default_language_code)
+        self.assertEqual(context['USES_DATAPORTEN_AUTH'], False)
 
 
 class TestLoginRedirect(TestCase):

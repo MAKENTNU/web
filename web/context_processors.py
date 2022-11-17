@@ -8,6 +8,7 @@ def common_context_variables(request):
     return {
         'DEFAULT_LANGUAGE_CODE': settings.LANGUAGE_CODE,
         'CURRENT_LANGUAGE_CODE': get_language(),
+        'USES_DATAPORTEN_AUTH': settings.USES_DATAPORTEN_AUTH,
     }
 
 

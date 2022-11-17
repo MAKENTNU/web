@@ -73,7 +73,7 @@ urlpatterns += i18n_patterns(
 )
 
 # Configure login based on if we have configured Dataporten or not.
-if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
+if settings.USES_DATAPORTEN_AUTH:
     urlpatterns += i18n_patterns(
         path("login/", RedirectView.as_view(url="/login/dataporten/", query_string=True), name='login'),
         path("logout/", Logout.as_view(), name='logout'),

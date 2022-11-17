@@ -196,6 +196,9 @@ TEMPLATES = [
     },
 ]
 
+# TODO: should be removed when upgrading to Django 5.0 (see https://docs.djangoproject.com/en/4.1/releases/4.1/#forms)
+FORM_RENDERER = 'django.forms.renderers.DjangoDivFormRenderer'
+
 ASGI_APPLICATION = 'web.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
@@ -253,6 +256,8 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.User'
 
 # Dataporten
+
+USES_DATAPORTEN_AUTH = SOCIAL_AUTH_DATAPORTEN_KEY and SOCIAL_AUTH_DATAPORTEN_SECRET  # (custom setting)
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')

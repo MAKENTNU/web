@@ -287,7 +287,8 @@ class ReservationRule(models.Model):
     start_time = models.TimeField(verbose_name=_("start time"))
     end_time = models.TimeField(verbose_name=_("end time"))
     days_changed = models.IntegerField(verbose_name=_("days"), help_text=_("Number of times midnight is passed between start and end time."))
-    start_days = MultiSelectField(choices=Day.choices, min_choices=1, verbose_name=_("start days for rule periods"))
+    # TODO: remove the explicitly set `max_length` when https://github.com/goinnn/django-multiselectfield/issues/131 is resolved
+    start_days = MultiSelectField(choices=Day.choices, min_choices=1, max_length=13, verbose_name=_("start days for rule periods"))
     max_hours = models.FloatField(verbose_name=_("hours single period"))
     max_inside_border_crossed = models.FloatField(verbose_name=_("hours multi-period"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))

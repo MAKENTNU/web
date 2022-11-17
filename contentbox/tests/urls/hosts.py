@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.views import SuccessURLAllowedHostsMixin
+from django.contrib.auth.views import RedirectURLMixin
 from django_hosts import host
 
 from web.hosts import host_patterns as base_host_patterns
@@ -19,7 +19,7 @@ settings.ALL_SUBDOMAINS = (
 )
 settings.ALLOWED_REDIRECT_HOSTS = generate_all_hosts(settings.ALL_SUBDOMAINS)
 # [See the comment in `web/hosts.py`]
-SuccessURLAllowedHostsMixin.success_url_allowed_hosts = set(settings.ALLOWED_REDIRECT_HOSTS)
+RedirectURLMixin.success_url_allowed_hosts = set(settings.ALLOWED_REDIRECT_HOSTS)
 
 # Makes sure that the subdomain of all requests is `test-internal`
 TEST_INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': f'test-internal.{settings.PARENT_HOST}'}

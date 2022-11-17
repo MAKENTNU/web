@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.contrib.auth.views import SuccessURLAllowedHostsMixin
+from django.contrib.auth.views import RedirectURLMixin
 from django_hosts import host
 
 
@@ -11,4 +11,4 @@ host_patterns = [
 ]
 
 # This allows the next parameter in login to redirect to pages on all the subdomains
-SuccessURLAllowedHostsMixin.success_url_allowed_hosts = set(settings.ALLOWED_REDIRECT_HOSTS)
+RedirectURLMixin.success_url_allowed_hosts = set(settings.ALLOWED_REDIRECT_HOSTS)

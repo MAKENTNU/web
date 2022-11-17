@@ -33,7 +33,7 @@ class ViewTestCase(TestCase):
         self.user = User.objects.create_user(username=username, password=password)
         self.client.login(username=username, password=password)
         self.assertTrue(get_user(self.client).is_authenticated)
-        self.client.get(reverse('logout'))
+        self.client.post(reverse('logout'))
         self.assertFalse(get_user(self.client).is_authenticated)
 
     @mock_module_attrs({

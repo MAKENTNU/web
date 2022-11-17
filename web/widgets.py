@@ -234,7 +234,7 @@ class CKEditorWidget(ckeditor.widgets.CKEditorWidget):
     @property
     def media(self):
         config_data_attrs = {
-            # Boolean values should be converted to strings (for use by JavaScript), as the `JS` class does not properly support boolean attributes
+            # Boolean values should be converted to strings, to make it easier for JavaScript code to parse the data attributes
             'should-allow-all-tags': json.dumps(self.config_name == settings.CKEDITOR_EDIT_SOURCE_CONFIG_NAME),
         }
         return forms.Media(

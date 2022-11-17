@@ -141,7 +141,7 @@ class QuotaForm(forms.ModelForm):
 
     class Media:
         js = (
-            JS('make_queue/js/quota_form.js', attrs={'defer': 'defer'}),
+            JS('make_queue/js/quota_form.js', attrs={'defer': True}),
         )
 
     def clean(self):
@@ -288,7 +288,7 @@ class MachineFormBase(forms.ModelForm):
 class CreateMachineForm(MachineFormBase):
     class Media:
         js = (
-            JS('make_queue/js/machine_create.js', attrs={'defer': 'defer'}),
+            JS('make_queue/js/machine_create.js', attrs={'defer': True}),
         )
 
     def __init__(self, *args, **kwargs):
