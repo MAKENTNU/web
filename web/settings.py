@@ -80,12 +80,12 @@ INSTALLED_APPS = [
     'daphne',
 
     # Built-in Django apps
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'web.apps.WebAdminConfig',  # replaces 'django.contrib.admin'
 
     # Third-party packages with significant effect on Django's functionality
     'django_hosts',
