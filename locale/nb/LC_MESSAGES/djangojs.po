@@ -91,9 +91,13 @@ msgstr ""
 msgid "Please refresh the page or contact the developers."
 msgstr "Last inn siden på nytt eller kontakt utviklerne."
 
-#: news/static/news/js/event/ticket/email_copy.js:22
-msgid "Successfully copied to clipboard!"
+#: news/static/news/js/event/ticket/email_copy.js:34
+msgid "Copied to clipboard!"
 msgstr "Kopiert til utklippstavlen!"
+
+#: news/static/news/js/event/ticket/email_copy.js:38
+msgid "Failed to copy to clipboard!"
+msgstr "Kopiering til utklippstavlen mislyktes!"
 
 #: web/static/ckeditor/ckeditor/config.js:10
 msgid "Big"
