@@ -28,7 +28,7 @@ class ContentBox(models.Model):
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
-    history = HistoricalRecords(excluded_fields=['last_modified'])
+    history = HistoricalRecords(m2m_fields=[extra_change_permissions], excluded_fields=['last_modified'])
 
     class Meta:
         permissions = (
