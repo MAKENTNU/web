@@ -8,7 +8,7 @@ django-decorator-include==3.0
 django-extensions==3.2.1
 django-ical==1.8.3
 django-multiselectfield==0.1.12
-django-phonenumber-field==6.3.0
+django-phonenumber-field[phonenumbers]==7.0.0
 django-simple-history==3.1.1
 sorl-thumbnail==12.9.0
 
@@ -23,7 +23,6 @@ channels-redis==4.0.0
 
 # Misc. packages
 bleach[css]==5.0.1
-phonenumbers==8.13.0
 Pillow==9.3.0
 uuid==1.30
 XlsxWriter==3.0.3
