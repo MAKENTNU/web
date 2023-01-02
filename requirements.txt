@@ -25,4 +25,4 @@ channels-redis==4.0.0
 bleach[css]==5.0.1
 Pillow==9.3.0
 uuid==1.30
-XlsxWriter==3.0.3
+XlsxWriter==3.0.5
