@@ -1,5 +1,13 @@
 # This workflow makes a naive attempt at enforcing our internal convention that
-# PRs should generally always and only be labeled with the `deployment` label if it merges the `dev` branch into `main`.
+# PRs should generally always and only be labeled with the deployment label if it merges the development branch into the production branch.
+#
+# The workflow requires that the following repository variables have been created:
+# - `REPOSITORY_NAME` - The name of the repository
+# - `PRODUCTION_BRANCH_NAME` - The name of the repository's production branch (e.g. `main`)
+# - `DEVELOPMENT_BRANCH_NAME` - The name of the repository's development branch (e.g. `dev`)
+# - `DEPLOYMENT_LABEL_NAME` - The name of the deployment label used in the repository (typically `deployment`)
+# and the following organization variables:
+# - `ORGANIZATION_NAME` - The name of the organization in the project URL (https://github.com/orgs/MAKENTNU/projects/1)
 
 name: Label deployment pull requests
 
@@ -11,8 +19,8 @@ on:
 jobs:
   manage_deployment_label_of_pull_request:
     # Do a rough check - which will weed out most PRs - before doing more detailed checks in the steps below
-    if: ${{ github.base_ref == 'main' && github.head_ref == 'dev'
-      || contains(github.event.pull_request.labels.*.name, 'deployment') }}
+    if: ${{ github.base_ref == vars.PRODUCTION_BRANCH_NAME && github.head_ref == vars.DEVELOPMENT_BRANCH_NAME
+      || contains(github.event.pull_request.labels.*.name, vars.DEPLOYMENT_LABEL_NAME) }}
     runs-on: ubuntu-latest
     steps:
       - name: Generate token
@@ -25,9 +33,9 @@ jobs:
       - name: Get label data
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          ORGANIZATION: MAKENTNU
-          REPOSITORY_NAME: web
-          DEPLOYMENT_LABEL_NAME: deployment
+          ORGANIZATION: ${{ vars.ORGANIZATION_NAME }}
+          REPOSITORY_NAME: ${{ vars.REPOSITORY_NAME }}
+          DEPLOYMENT_LABEL_NAME: ${{ vars.DEPLOYMENT_LABEL_NAME }}
         run: |
           gh api graphql -f query='
             query ($org: String!, $repoName: String!) {
@@ -47,9 +55,10 @@ jobs:
           echo "LABEL_ID=$(jq --arg LABEL_NAME "$DEPLOYMENT_LABEL_NAME" -r '.data.organization.repository.labels.nodes[] | select(.name==$LABEL_NAME) | .id' repo_data.json)" >> "$GITHUB_ENV"
 
       - name: Label deployment pull request
-        # Add the `deployment` label if the PR merges `dev` into `main`, and it doesn't already have the `deployment` label
-        if: ${{ github.base_ref == 'main' && github.head_ref == 'dev'
-          && !contains(github.event.pull_request.labels.*.name, 'deployment') }}
+        # Add the deployment label if the PR merges the development branch into the production branch,
+        # and it doesn't already have the deployment label
+        if: ${{ github.base_ref == vars.PRODUCTION_BRANCH_NAME && github.head_ref == vars.DEVELOPMENT_BRANCH_NAME
+          && !contains(github.event.pull_request.labels.*.name, vars.DEPLOYMENT_LABEL_NAME) }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
           CONTENT_ID: ${{ github.event.pull_request.node_id }}
@@ -66,9 +75,9 @@ jobs:
             }' -f content="$CONTENT_ID" -f label="$LABEL_ID" --silent
 
       - name: Remove label from non-deployment pull request
-        # Remove the `deployment` label if the PR is not for merging `dev` into `main`
-        if: ${{ (github.base_ref != 'main' || github.head_ref != 'dev')
-          && contains(github.event.pull_request.labels.*.name, 'deployment') }}
+        # Remove the deployment label if the PR is not for merging the development branch into the production branch
+        if: ${{ (github.base_ref != vars.PRODUCTION_BRANCH_NAME || github.head_ref != vars.DEVELOPMENT_BRANCH_NAME)
+          && contains(github.event.pull_request.labels.*.name, vars.DEPLOYMENT_LABEL_NAME) }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
           CONTENT_ID: ${{ github.event.pull_request.node_id }}
