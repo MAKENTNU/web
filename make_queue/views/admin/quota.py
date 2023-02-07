@@ -1,6 +1,7 @@
 from abc import ABC
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models.functions import Concat
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -35,7 +36,7 @@ class QuotaPanelView(PermissionRequiredMixin, TemplateView):
         :return: A list of all users
         """
         return super().get_context_data(**{
-            'users': User.objects.all(),
+            'users': User.objects.order_by(Concat('first_name', 'last_name'), 'username'),
             'global_quotas': Quota.objects.filter(all=True),
             'requested_user': self.user,
             **kwargs,

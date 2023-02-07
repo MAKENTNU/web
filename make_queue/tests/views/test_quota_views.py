@@ -47,7 +47,7 @@ class TestQuotaPanelView(TestCase):
             response = self.superuser_client.get(url)
             context = response.context
             self.assertIs(type(context['view']), QuotaPanelView)
-            self.assertListEqual(list(context['users']), [self.user, self.user2, self.superuser])
+            self.assertListEqual(list(context['users']), [self.superuser, self.user, self.user2])
             self.assertListEqual(list(context['global_quotas']), [self.quota1, self.quota2])
             self.assertEqual(context['requested_user'], expected_requested_user)
 

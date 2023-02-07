@@ -63,7 +63,7 @@
                 <div class="default text">{% translate "Select user" %}</div>
                 <div class="menu">
                     {% for user in users %}
-                        <div class="item" data-value="{{ user.pk }}">{{ user.get_full_name }}</div>
+                        <div class="item" data-value="{{ user.pk }}">{{ user.get_full_name }} &nbsp;&ndash;&nbsp; {{ user.username }}</div>
                     {% endfor %}
                 </div>
             </div>
