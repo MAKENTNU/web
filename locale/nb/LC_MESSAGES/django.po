@@ -1301,6 +1301,9 @@ msgstr "Bruker kan ikke være satt når «Alle brukere» er satt."
 msgid "Must select either specific user or all users."
 msgstr "Må velge enten én spesifikk bruker eller alle brukere."
 
+#. Translators: See the Norwegian and English versions of this page for
+#. a translation of "Building security":
+#. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
 #: make_queue/forms.py:196
 msgid ""
 "The card number was detected to be the phone number of Building security at "
@@ -1325,6 +1328,9 @@ msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
 msgid "Registered"
 msgstr "Registrert"
 
+#. Translators: See the Norwegian and English versions of this page for
+#. a translation of "Building security":
+#. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
 #: make_queue/models/course.py:15
 msgid "Sent to Building security"
 msgstr "Sendt til Vakt og service"
@@ -2325,21 +2331,25 @@ msgstr "arrangementet"
 msgid "The main description of the event."
 msgstr "Brødteksten til arrangementet."
 
+#. Translators: `the_type` is either "the article" or "the event"
 #: news/forms.py:61
 #, python-brace-format
 msgid "A short text designed to bait users into clicking {the_type}."
 msgstr "En kort tekst for å lokke brukerne til å klikke på {the_type}."
 
+#. Translators: `the_type` is either "the article" or "the event"
 #: news/forms.py:62
 #, python-brace-format
 msgid "If selected, {the_type} may be shown on the front page."
 msgstr "Hvis valgt kan {the_type} bli vist på forsiden."
 
+#. Translators: `the_type` is either "the article" or "the event"
 #: news/forms.py:63
 #, python-brace-format
 msgid "If selected, {the_type} will only be visible to admin users."
 msgstr "Hvis valgt vil {the_type} bare være synlig for administratorer."
 
+#. Translators: `the_type` is either "the article" or "the event"
 #: news/forms.py:64
 #, python-brace-format
 msgid "If selected, {the_type} will only be visible to members of MAKE NTNU."

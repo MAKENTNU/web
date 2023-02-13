@@ -190,9 +190,12 @@ class Printer3DCourseForm(forms.ModelForm):
         card_number: str = self.cleaned_data['card_number']
         if card_number:
             # This accident prevention was requested by the Mentor committee.
-            # Phone number is from https://innsida.ntnu.no/wiki/-/wiki/Norsk/Vakthold+og+assistanse+utenfor+arbeidstid
+            # Phone number is from https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
             if card_number.lstrip("0") == "91897373":
                 raise forms.ValidationError(
+                    # Translators: See the Norwegian and English versions of this page for
+                    # a translation of "Building security":
+                    # https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
                     _("The card number was detected to be the phone number of Building security at NTNU. Please enter a valid card number.")
                 )
         return card_number
