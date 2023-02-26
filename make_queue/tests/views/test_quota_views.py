@@ -1,5 +1,3 @@
-from typing import Optional
-
 from django.test import Client, TestCase
 from django_hosts import reverse
 
@@ -45,7 +43,7 @@ class TestQuotaPanelView(TestCase):
         self.superuser_client.force_login(self.superuser)
 
     def test_quota_panel_responds_with_expected_context(self):
-        def assert_response_contains_expected_context(url: str, expected_requested_user: Optional[User]):
+        def assert_response_contains_expected_context(url: str, expected_requested_user: User | None):
             response = self.superuser_client.get(url)
             context = response.context
             self.assertIs(type(context['view']), QuotaPanelView)

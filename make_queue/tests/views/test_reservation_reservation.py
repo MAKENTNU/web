@@ -1,7 +1,8 @@
 from abc import ABC
+from collections.abc import Callable
 from datetime import timedelta
 from http import HTTPStatus
-from typing import Callable, Type, Union
+from typing import Type
 from unittest.mock import patch
 
 from django.http import HttpResponse
@@ -40,7 +41,7 @@ class CreateOrEditReservationViewTestBase(TestCase, ABC):
                                                   start_time=timezone.localtime() + timedelta(hours=1),
                                                   end_time=timezone.localtime() + timedelta(hours=2))
 
-    def get_view(self, view_class: Union[Type[CreateReservationView], Type[EditReservationView]], **kwargs):
+    def get_view(self, view_class: Type[CreateReservationView] | Type[EditReservationView], **kwargs):
         view = view_class()
         view.setup(request_with_user(self.user), **kwargs)
         return view

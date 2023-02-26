@@ -1,6 +1,7 @@
 import copy
 from abc import ABC
-from typing import Any, Dict, Iterable, Optional, Set
+from collections.abc import Iterable
+from typing import Any
 
 from django.forms import BoundField, FileInput, Form
 from django.http import Http404, QueryDict
@@ -9,7 +10,7 @@ from django.views.generic.base import TemplateResponseMixin
 from django.views.generic.edit import FormMixin
 
 
-def insert_form_field_values(form_kwargs: dict, field_name_to_value: Dict[str, Any]):
+def insert_form_field_values(form_kwargs: dict, field_name_to_value: dict[str, Any]):
     # If the request contains posted data:
     if 'data' in form_kwargs:
         data: QueryDict = form_kwargs['data'].copy()
@@ -125,7 +126,7 @@ class CleanNextParamMixin:
     # * `//`, as this allows for protocol-relative URLs (e.g. `//google.com`).
     allowed_next_params = set()
 
-    cleaned_next_param: Optional[str]
+    cleaned_next_param: str | None
 
     def dispatch(self, request, *args, **kwargs):
         next_param = request.GET.get('next')
@@ -140,5 +141,5 @@ class CleanNextParamMixin:
         self.cleaned_next_param = next_param
         return super().dispatch(request, *args, **kwargs)
 
-    def get_allowed_next_params(self) -> Set[str]:
+    def get_allowed_next_params(self) -> set[str]:
         return self.allowed_next_params

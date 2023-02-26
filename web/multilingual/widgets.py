@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from django import forms
 from js_asset import JS
@@ -21,7 +21,7 @@ class MultiLingualTextEdit(forms.MultiWidget):
             JS('web/js/forms/widgets/multi_lingual_text_field.js', attrs={'defer': 'defer'}),
         )
 
-    def __init__(self, attrs=None, *, languages=None, subwidget_kwargs: Dict[str, Any] = None):
+    def __init__(self, attrs=None, *, languages=None, subwidget_kwargs: dict[str, Any] = None):
         self.languages = languages or self.languages
 
         widgets = {}

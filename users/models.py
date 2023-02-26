@@ -1,4 +1,4 @@
-from typing import Tuple, Type
+from typing import Type
 
 from django.contrib.auth.models import AbstractUser, Permission
 from django.db import models
@@ -40,7 +40,7 @@ class User(AbstractUser):
         self.user_permissions.add(*perms)
 
     @staticmethod
-    def get_user_search_fields(prefix='user__', *, annotated_full_name_lookup: str = None) -> Tuple[str, ...]:
+    def get_user_search_fields(prefix='user__', *, annotated_full_name_lookup: str = None) -> tuple[str, ...]:
         search_fields = []
         search_fields_to_prefix = ['username', 'ldap_full_name', 'email']
         if annotated_full_name_lookup:

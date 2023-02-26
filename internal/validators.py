@@ -1,5 +1,5 @@
 import re
-from typing import Collection
+from collections.abc import Collection
 
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator, RegexValidator

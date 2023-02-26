@@ -1,6 +1,7 @@
 import itertools
+from collections.abc import Collection
 from datetime import datetime, time, timedelta
-from typing import Collection, List, Optional, Tuple
+from typing import Optional
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -299,10 +300,10 @@ class ReservationRule(models.Model):
         return f"Regel for {self.machine_type}: {start_time}-{end_time} på {self.start_days}; {days_str}"
 
     @property
-    def time_periods(self) -> List['Period']:
+    def time_periods(self) -> list['Period']:
         return self.Period.list_from_start_weekdays(self.get_start_day_indices(), self.start_time, self.end_time, self.days_changed)
 
-    def get_exact_start_and_end_times_list(self, *, iso=True, wrap_using_modulo=False) -> List[Tuple[float, float]]:
+    def get_exact_start_and_end_times_list(self, *, iso=True, wrap_using_modulo=False) -> list[tuple[float, float]]:
         mod_divisor = 8 if iso else 7
 
         def mod(exact_weekday: float) -> float:
@@ -438,7 +439,7 @@ class ReservationRule(models.Model):
             )
 
         @staticmethod
-        def hours_overlap(exact_weekday_range1: Tuple[float, float], exact_weekday_range2: Tuple[float, float]) -> float:
+        def hours_overlap(exact_weekday_range1: tuple[float, float], exact_weekday_range2: tuple[float, float]) -> float:
             start_weekday_1, end_weekday_1 = exact_weekday_range1
             start_weekday_2, end_weekday_2 = exact_weekday_range2
 

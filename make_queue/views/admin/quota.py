@@ -1,5 +1,4 @@
 from abc import ABC
-from typing import Optional
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import get_object_or_404
@@ -19,7 +18,7 @@ class QuotaPanelView(PermissionRequiredMixin, TemplateView):
     permission_required = ('make_queue.change_quota',)
     template_name = 'make_queue/quota/admin_quota_panel.html'
 
-    user: Optional[User]
+    user: User | None
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)

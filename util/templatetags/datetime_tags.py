@@ -1,5 +1,6 @@
+from collections.abc import Callable
 from datetime import date, timedelta
-from typing import Any, Callable
+from typing import Any
 
 from django import template
 from django.template.defaultfilters import date as date_filter

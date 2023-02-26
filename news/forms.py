@@ -1,5 +1,5 @@
 from abc import ABCMeta
-from typing import Dict, Type
+from typing import Type
 
 from django import forms
 from django.db.models import Model
@@ -45,10 +45,10 @@ class NewsBaseForm(forms.ModelForm):
         widgets = {
             'image': SemanticFileInput(),
         }
-        help_texts: Dict[str, str]
+        help_texts: dict[str, str]
 
         @staticmethod
-        def get_help_texts(news_class: Type[NewsBase]) -> Dict[str, str]:
+        def get_help_texts(news_class: Type[NewsBase]) -> dict[str, str]:
             the_type, content_help_text = None, None
             if news_class is Article:
                 the_type = _("the article")

@@ -22,6 +22,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Other changes
 
+- Set minimum required Python version to 3.10
 - Never-ending masses of code cleanup
 
 

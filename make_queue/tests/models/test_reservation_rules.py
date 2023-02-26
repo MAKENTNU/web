@@ -1,5 +1,4 @@
 from datetime import timedelta
-from typing import Tuple
 
 from django.test import TestCase
 from django.utils.dateparse import parse_datetime, parse_time
@@ -20,7 +19,7 @@ class TestPeriod(TestCase):
         self.machine_type = MachineType.objects.get(pk=1)
 
     @staticmethod
-    def round_hours_overlap(exact_weekday_range1: Tuple[float, float], exact_weekday_range2: Tuple[float, float]):
+    def round_hours_overlap(exact_weekday_range1: tuple[float, float], exact_weekday_range2: tuple[float, float]):
         return round(Period.hours_overlap(exact_weekday_range1, exact_weekday_range2), 2)
 
     def test_hours_overlap_inside(self):
@@ -108,9 +107,7 @@ class TestReservationRule(TestCase):
             Period.from_rule(Day.SATURDAY, rule),
         ]
 
-        self.assertEqual(len(time_periods), len(correct_time_periods))
-
-        for calculated_period, correct_period in zip(time_periods, correct_time_periods):
+        for calculated_period, correct_period in zip(time_periods, correct_time_periods, strict=True):
             self.assertEqual(calculated_period.exact_start_weekday, correct_period.exact_start_weekday)
             self.assertEqual(calculated_period.exact_end_weekday, correct_period.exact_end_weekday)
             self.assertTrue(calculated_period.overlap(correct_period))

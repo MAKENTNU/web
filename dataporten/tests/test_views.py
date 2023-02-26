@@ -1,5 +1,4 @@
 import uuid
-from typing import Tuple
 
 from django.contrib.auth import get_user
 from django.http import HttpRequest
@@ -99,7 +98,7 @@ class ViewTestCase(TestCase):
         )
 
     @staticmethod
-    def create_social_user(username, email_username, first_and_last_name: Tuple[str, str],
+    def create_social_user(username, email_username, first_and_last_name: tuple[str, str],
                            *, ldap_full_name, social_data_fullname):
         first_name, last_name = first_and_last_name
         user = User.objects.create_user(

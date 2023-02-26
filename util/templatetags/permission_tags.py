@@ -1,4 +1,4 @@
-from typing import Type, Union
+from typing import Type
 
 from django import template
 from django.contrib.contenttypes.models import ContentType
@@ -11,7 +11,7 @@ register = template.Library()
 
 
 @register.filter
-def has_any_permissions_for(user: User, model__or__app_and_model: Union[Type[models.Model], str]):
+def has_any_permissions_for(user: User, model__or__app_and_model: Type[models.Model] | str):
     """
     :param user: the user to check permissions for
     :param model__or__app_and_model: either a model type, a string with the name of a uniquely named model,

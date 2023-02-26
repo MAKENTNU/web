@@ -1,5 +1,5 @@
 import copy
-from typing import Callable
+from collections.abc import Callable
 
 from django.contrib import admin
 from django.contrib.admin.widgets import AdminTextInputWidget, AdminURLFieldWidget, ForeignKeyRawIdWidget
@@ -87,7 +87,7 @@ class DefaultAdminWidgetsMixin:
         for klass in db_field.__class__.mro():
             if klass in self.formfield_overrides:
                 formfield_overrides_kwargs = copy.deepcopy(self.formfield_overrides[klass])
-                new_kwargs = {**formfield_overrides_kwargs, **kwargs}
+                new_kwargs = formfield_overrides_kwargs | kwargs
                 # Always override the widget:
                 widget = formfield_overrides_kwargs.get('widget')
                 if widget:

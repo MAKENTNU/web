@@ -30,15 +30,17 @@ class CardNumberField(models.CharField):
         })
 
     def get_prep_value(self, value):
-        if isinstance(value, CardNumber):
-            return str(value.number)
-        elif isinstance(value, str):
-            value = value.strip()
-            # Only try to remove an EM prefix if the string is not just whitespace
-            if value:
-                return value.split()[-1]  # Remove possible EM prefix
-        # `value` is either None or not an acceptable value
-        return None
+        match value:
+            case CardNumber():
+                return str(value.number)
+            case str():
+                value = value.strip()
+                # Only try to remove an EM prefix if the string is not just whitespace
+                if value:
+                    return value.split()[-1]  # Remove possible EM prefix
+            case _:
+                # `value` is either None or not an acceptable value
+                return None
 
     def from_db_value(self, value, expression, connection):
         if value:

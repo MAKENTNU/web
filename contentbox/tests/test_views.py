@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from typing import Optional, Type
+from typing import Type
 from urllib.parse import urlparse
 
 from django.contrib.auth.models import Permission
@@ -67,10 +67,10 @@ class SimpleModelAndViewTests(TestCase):
         self.client.force_login(user)
 
         def assert_response_contains_error_message(posted_content: str, error: bool):
-            data = {
-                **{subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')},
-                **{subwidget_name: posted_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')},
-            }
+            data = (
+                    {subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')}
+                    | {subwidget_name: posted_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')}
+            )
             response = self.client.post(self.edit_url1, data=data)
             # The form will redirect if valid, and stay on the same page if not
             self.assertEqual(response.status_code, HTTPStatus.OK if error else HTTPStatus.FOUND)
@@ -84,7 +84,7 @@ class SimpleModelAndViewTests(TestCase):
         user.add_perms('contentbox.change_contentbox')
         self.client.force_login(user)
 
-        def assert_edit_page_response_with(*, status_code: int, form: Optional[Type[BaseForm]]):
+        def assert_edit_page_response_with(*, status_code: int, form: Type[BaseForm] | None):
             response = self.client.get(self.edit_url1)
             self.assertEqual(response.status_code, status_code)
             if form:

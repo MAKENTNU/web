@@ -2,10 +2,11 @@ import functools
 import shutil
 import tempfile
 from abc import ABC
+from collections.abc import Callable, Collection, Iterable
 from datetime import datetime
 from http import HTTPStatus
 from pathlib import Path
-from typing import Any, Callable, Collection, Dict, Iterable, List, Set, Tuple, Type, TypeVar, Union
+from typing import Any, Type, TypeVar
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -66,7 +67,7 @@ class CleanUpTempFilesTestMixin(ABC):
         super().tearDownClass()
 
 
-def mock_module_attrs(module_and_attrname_to_newattr: Dict[Tuple[Any, str], Any]):
+def mock_module_attrs(module_and_attrname_to_newattr: dict[tuple[Any, str], Any]):
     """
     A decorator for monkey patching attributes of modules while the decorated function is executed;
     the original module attributes are monkey patched back after execution.
@@ -188,7 +189,7 @@ class Get(PathPredicate):
                 test_case.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List[PathPredicate], subdomain=''):
+def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: list[PathPredicate], subdomain=''):
     previous_language = translation.get_language()
 
     password = "1234"
@@ -208,7 +209,7 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: List
     translation.activate(previous_language)
 
 
-def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> List[str]:
+def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> list[str]:
     from web.tests.test_urls import reverse_admin  # avoids circular imports
 
     url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
@@ -223,7 +224,7 @@ def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: 
     ]
 
 
-def set_without_duplicates(self: SimpleTestCase, collection: Union[Collection[T], QuerySet[T]]) -> Set[T]:
+def set_without_duplicates(self: SimpleTestCase, collection: Collection[T] | QuerySet[T]) -> set[T]:
     collection_list = list(collection)
     collection_set = set(collection_list)
     self.assertEqual(len(collection_set), len(collection_list))

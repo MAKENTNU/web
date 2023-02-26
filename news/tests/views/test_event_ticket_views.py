@@ -2,7 +2,6 @@ import io
 from contextlib import redirect_stdout
 from datetime import timedelta
 from http import HTTPStatus
-from typing import Optional
 from urllib.parse import urlparse
 
 from django.conf import settings
@@ -129,7 +128,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
 
                 self.assertEqual(time_place_or_event.tickets.count(), 0)
 
-                def assert_results_after_registering_for_event(posted_data: dict, *, expected_form_instance: Optional[EventTicket],
+                def assert_results_after_registering_for_event(posted_data: dict, *, expected_form_instance: EventTicket | None,
                                                                expected_language: str, expected_comment: str) -> EventTicket:
                     form_instance = self.client1.get(registration_url).context['form'].instance
                     if expected_form_instance:
