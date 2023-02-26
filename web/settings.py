@@ -60,10 +60,12 @@ REDIS_PORT = 6379  # (custom setting)
 
 FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is 50 MiB)
 
-# When using more than one subdomain, the session cookie domain has to be set so that the subdomains can use the same session.
+# The `SESSION_COOKIE_DOMAIN`, `CSRF_COOKIE_DOMAIN` and `LANGUAGE_COOKIE_DOMAIN` will be set to this value
 # NOTE: This must be changed in production!
-# (Cannot use only ".localhost", as domains for cookies are required to have two dots in them.)
-SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
+COOKIE_DOMAIN = ".makentnu.localhost"  # (custom setting)
+# The `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` and `LANGUAGE_COOKIE_SECURE` will be set to this value
+# NOTE: This should be set to `True` in production!
+COOKIE_SECURE = False  # (custom setting)
 
 # For `django-hosts` to redirect correctly across subdomains, we have to specify the host we are running on.
 # NOTE: This must be changed in production!
@@ -77,6 +79,20 @@ try:
 except ImportError:
     pass
 
+
+# When using more than one subdomain, the session cookie domain has to be set so that the subdomains can use the same session
+# (Cannot use only ".localhost", as domains for cookies are required to have two dots in them)
+SESSION_COOKIE_DOMAIN = COOKIE_DOMAIN
+# Whether browsers may ensure that the session cookie is only sent under an HTTPS connection
+SESSION_COOKIE_SECURE = COOKIE_SECURE
+# The domain to be used when setting the CSRF cookie, which *must* start with a dot (.) to allow cross-subdomain POST/PUT/etc. requests
+CSRF_COOKIE_DOMAIN = COOKIE_DOMAIN
+# Whether browsers may ensure that the CSRF cookie is only sent under an HTTPS connection
+CSRF_COOKIE_SECURE = COOKIE_SECURE
+# The domain to use for the language cookie
+LANGUAGE_COOKIE_DOMAIN = COOKIE_DOMAIN
+# Whether browsers may ensure that the language cookie is only sent under an HTTPS connection
+LANGUAGE_COOKIE_SECURE = COOKIE_SECURE
 
 # The call to `find_spec()` returns something other than `None` only if `django-debug-toolbar` is installed
 USE_DEBUG_TOOLBAR = DEBUG and find_spec('debug_toolbar') is not None  # (custom setting)
