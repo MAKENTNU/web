@@ -66,9 +66,6 @@ SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 # be changed in production
 PARENT_HOST = "makentnu.localhost:8000"
 
-# Is `True` if `django-debug-toolbar` is installed
-USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
-
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 
 # Set local settings
@@ -77,6 +74,9 @@ try:
 except ImportError:
     pass
 
+
+# The call to `find_spec()` returns something other than `None` only if `django-debug-toolbar` is installed
+USE_DEBUG_TOOLBAR = DEBUG and find_spec('debug_toolbar') is not None  # (custom setting)
 
 INSTALLED_APPS = [
     # `django-constance` should be listed before project apps (see https://django-constance.readthedocs.io/en/stable/#configuration)
