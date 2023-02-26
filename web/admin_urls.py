@@ -11,9 +11,6 @@ from django_hosts import reverse
 from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls
 
 
-# Updates the "View site" link to this url
-admin.site.site_url = f"//{settings.PARENT_HOST}/"
-
 urlpatterns = [
     path("robots.txt", TemplateView.as_view(template_name='admin/robots.txt', content_type='text/plain')),
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
