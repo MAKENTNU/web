@@ -1,8 +1,10 @@
 from django.conf import settings
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
+from django.utils.http import urlencode
 from django.views import View
 from social_django import views as social_views
+from social_django.models import UserSocialAuth
 
 from users.models import User
 from util.logging_utils import log_request_exception
@@ -16,8 +18,22 @@ get_user_details_from_email = ldap_utils.get_user_details_from_email
 class Logout(View):
 
     def post(self, request):
+        user: User = request.user
         logout(request)
-        return HttpResponseRedirect(settings.LOGOUT_URL)
+
+        try:
+            id_token = user.social_auth.first().extra_data['id_token']
+        except (AttributeError, UserSocialAuth.DoesNotExist, KeyError):
+            return HttpResponseRedirect(settings.DATAPORTEN_LOGOUT_URL)
+
+        # See https://docs.feide.no/service_providers/manage/openid_connect/redir_etter_logout.html
+        url_parameter_string = urlencode({
+            # NOTE: This can be either the Norwegian or the English URL depending on the user visiting, so both of those URLs must be registered
+            # as allowed "Redirect URI[s] for logout" in the OpenID Connect configuration in Feide's customer portal!
+            'post_logout_redirect_uri': request.build_absolute_uri(settings.LOGOUT_REDIRECT_URL),
+            'id_token_hint': id_token,
+        })
+        return HttpResponseRedirect(f"{settings.DATAPORTEN_LOGOUT_URL}?{url_parameter_string}")
 
 
 def login_wrapper(request, backend, *args, **kwargs):

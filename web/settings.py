@@ -326,6 +326,10 @@ SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')
 SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('front_page')
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
+# This URL is the value of the `end_session_endpoint` key from https://auth.dataporten.no/.well-known/openid-configuration
+# (see https://docs.feide.no/service_providers/manage/openid_connect/redir_etter_logout.html)
+DATAPORTEN_LOGOUT_URL = "https://auth.dataporten.no/openid/endsession"  # (custom setting)
+
 # The following code is based on
 # https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/demosite/settings.py#L111-L127
 
