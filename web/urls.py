@@ -73,7 +73,7 @@ urlpatterns += i18n_patterns(
 )
 
 # Configure login based on if we have configured Dataporten or not.
-if settings.SOCIAL_AUTH_DATAPORTEN_SECRET:
+if settings.USES_DATAPORTEN_AUTH:
     urlpatterns += i18n_patterns(
         path("login/", RedirectView.as_view(url="/login/dataporten/", query_string=True), name='login'),
         path("logout/", Logout.as_view(), name='logout'),
@@ -88,7 +88,12 @@ else:
     # If it is not configured, we would like to have a simple login page. So that
     # we can test with non-superusers without giving them access to the admin page.
     urlpatterns += i18n_patterns(
-        path("login/", auth_views.LoginView.as_view(template_name='web/login.html', redirect_authenticated_user=True), name='login'),
+        path("login/", auth_views.LoginView.as_view(
+            template_name='web/login.html',
+            redirect_authenticated_user=True,
+            # This allows the `next` query parameter (used when logging in) to redirect to pages on all the subdomains
+            success_url_allowed_hosts=set(settings.ALLOWED_REDIRECT_HOSTS),
+        ), name='login'),
         path("logout/", auth_views.LogoutView.as_view(next_page="/"), name='logout'),
 
         prefix_default_language=False,

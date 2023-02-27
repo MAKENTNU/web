@@ -18,7 +18,7 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
     class Media:
         js = (
-            JS('web/js/forms/widgets/multi_lingual_text_field.js', attrs={'defer': 'defer'}),
+            JS('web/js/forms/widgets/multi_lingual_text_field.js', attrs={'defer': True}),
         )
 
     def __init__(self, attrs=None, *, languages=None, subwidget_kwargs: dict[str, Any] = None):

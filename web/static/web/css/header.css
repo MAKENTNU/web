@@ -159,6 +159,16 @@
     background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic-UI */
 }
 
+#side-nav .logout-form button[type=submit] {
+    width: 100%;
+    height: 100%;
+    text-align: start;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+}
+
 #side-nav .set-language-form {
     position: absolute;
     margin: 0;

@@ -71,20 +71,21 @@ except ImportError:
 
 
 INSTALLED_APPS = [
-    # The main entrypoint app; should be listed first, to be able to override things like management commands
-    'web',
+    # App used for things regarding the whole project or across other apps
+    # (Should be listed first, to be able to override things like management commands)
+    'web.apps.WebConfig',
 
     # Should be listed before `django.contrib.staticfiles`
     # (see https://channels.readthedocs.io/en/stable/releases/4.0.0.html#decoupling-of-the-daphne-application-server)
     'daphne',
 
     # Built-in Django apps
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'web.apps.WebAdminConfig',  # replaces 'django.contrib.admin'
 
     # Third-party packages with significant effect on Django's functionality
     'django_hosts',
@@ -92,7 +93,7 @@ INSTALLED_APPS = [
 
     # Other third-party packages
     'social_django',
-    'ckeditor',  # must be listed after `web` to make the custom `ckeditor/config.js` apply
+    'ckeditor',  # must be listed after `web.apps.WebConfig` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
     'simple_history',
@@ -196,6 +197,9 @@ TEMPLATES = [
     },
 ]
 
+# TODO: should be removed when upgrading to Django 5.0 (see https://docs.djangoproject.com/en/4.1/releases/4.1/#forms)
+FORM_RENDERER = 'django.forms.renderers.DjangoDivFormRenderer'
+
 ASGI_APPLICATION = 'web.asgi.application'
 CHANNEL_LAYERS = {
     'default': {
@@ -253,6 +257,8 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'users.User'
 
 # Dataporten
+
+USES_DATAPORTEN_AUTH = SOCIAL_AUTH_DATAPORTEN_KEY and SOCIAL_AUTH_DATAPORTEN_SECRET  # (custom setting)
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')

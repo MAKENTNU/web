@@ -15,7 +15,7 @@ get_user_details_from_email = ldap_utils.get_user_details_from_email
 
 class Logout(View):
 
-    def get(self, request):
+    def post(self, request):
         logout(request)
         return HttpResponseRedirect(settings.LOGOUT_URL)
 

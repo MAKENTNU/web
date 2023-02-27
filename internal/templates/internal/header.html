@@ -43,9 +43,10 @@
             <div class="text">{% translate "Django admin" %}</div>
         </a>
     {% endif %}
-    <a class="item" href="{% host_url 'logout' host 'main' %}">
-        <div class="text">{% translate "Log out" %}</div>
-    </a>
+    <form class="logout-form item" method="POST" action="{% host_url 'logout' host 'main' %}">
+        {% csrf_token %}
+        <button class="text" type="submit">{% translate "Log out" %}</button>
+    </form>
 {% endblock user_dropdown_buttons %}
 
 {% block announcements %}{% endblock announcements %}

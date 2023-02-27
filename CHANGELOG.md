@@ -7,6 +7,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Improvements
 
+- Updated Django to version 4.1
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
   - Most pages will have " | MAKE NTNU" as suffix to the title;
@@ -19,10 +20,13 @@ A summary of changes made to the codebase, grouped per deployment.
 ### Fixes
 
 - Made the CKEditor file uploader work on all subdomains
+- Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
+  by requiring logout requests being sent using `POST` instead of `GET`
 
 ### Other changes
 
 - Set minimum required Python version to 3.10
+- Changed order of the apps listed on [the Django admin index page](https://admin.makentnu.no/)
 - Never-ending masses of code cleanup
 
 

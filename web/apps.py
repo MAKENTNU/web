@@ -1,4 +1,5 @@
 from django.apps import AppConfig
+from django.contrib.admin.apps import AdminConfig
 
 
 class WebConfig(AppConfig):
@@ -12,3 +13,7 @@ class WebConfig(AppConfig):
 
         # Register / connect to the signals here when the app starts
         signals.connect()
+
+
+class WebAdminConfig(AdminConfig):
+    default_site = 'web.admin.WebAdminSite'
