@@ -166,7 +166,7 @@ $startTimeField.calendar({
         initialDate: new Date($startTimeFieldInput.val()),
         firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
-            if (date === undefined)
+            if (!date)
                 return true;
             if (mode === "minute")
                 return !isNonReservedDate(date);
