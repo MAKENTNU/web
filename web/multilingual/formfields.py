@@ -97,9 +97,9 @@ class MultiLingualRichTextFormField(MultiLingualFormField):
             for language, content in value.languages.items():
                 value.languages[language] = bleach.clean(
                     content,
-                    tags=list(self.ALLOWED_TAGS),
+                    tags=self.ALLOWED_TAGS,
                     attributes=self.ALLOWED_ATTRIBUTES,
-                    protocols=list(self.ALLOWED_PROTOCOLS),
+                    protocols=self.ALLOWED_PROTOCOLS,
                     css_sanitizer=CSSSanitizer(allowed_css_properties=self.ALLOWED_CSS_PROPERTIES),
                 )
         return value
