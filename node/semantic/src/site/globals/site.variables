@@ -1,0 +1,8 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+/* Don't include anything font-related, as we use our own font (see `web/css/style.css`) */
+@fontName: "";
+@importFonts: false;
+@fonts: {};
