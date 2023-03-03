@@ -76,6 +76,7 @@ function sort() {
 
 // Status filter element
 $("#status-filter").parent().dropdown({
+    showOnFocus: true,
     onChange: function (value, text, $choice) {
         state.statusValue = value;
         filter();
@@ -120,6 +121,7 @@ $("#select-shown-users").click(function () {
 
 // The bulk status change dropdown
 $("#status-set").parent().dropdown({
+    showOnFocus: true,
     onChange: function (value, statusText, $choice) {
         const $modal = $("#set-status-modal");
 

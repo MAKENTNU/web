@@ -38,18 +38,5 @@
             months: MONTH_TRANSLATIONS,
             monthsShort: SHORT_MONTH_TRANSLATIONS,
         },
-        onHidden: function () {
-            {# Defined in `common_utils.js` #}
-            fixFomanticUICalendarBlurBug(${{ widget.attrs.id }}Input);
-        },
-    });
-
-    ${{ widget.attrs.id }}Calendar.closest("form").submit(function () {
-        const zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
-        const date = ${{ widget.attrs.id }}Calendar.calendar("get date");
-        const year = date.getFullYear();
-        const month = zeroPadDateElement(date.getMonth() + 1);
-        const day = zeroPadDateElement(date.getDate());
-        ${{ widget.attrs.id }}Input.val(`${year}-${month}-${day}`);
     });
 </script>

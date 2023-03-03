@@ -7,4 +7,6 @@ const calendar = new ReservationCalendar($(".reservation-calendar"), calendarPro
 
 /*** Code for `reservation_actions.html` ***/
 
-$(".dropdown.item").dropdown();
+$(".dropdown.item").dropdown({
+    showOnFocus: true,
+});

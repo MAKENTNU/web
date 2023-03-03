@@ -401,7 +401,9 @@ function setup() {
     sort();
 }
 
-$(".ui.dropdown").dropdown();
+$(".ui.dropdown").dropdown({
+    showOnFocus: true,
+});
 $filterStatusInput.parent().dropdown("set selected", initialFilterStatuses);
 
 setup();
