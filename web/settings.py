@@ -7,6 +7,7 @@ from pathlib import Path
 import django.views.static
 from django.conf.locale.en import formats as en_formats
 from django.conf.locale.nb import formats as nb_formats
+from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse_lazy
 
 from .static import serve_interpolated
@@ -71,6 +72,9 @@ except ImportError:
 
 
 INSTALLED_APPS = [
+    # `django-constance` should be listed before project apps (see https://django-constance.readthedocs.io/en/stable/#configuration)
+    'constance',
+    'constance.backends.database',
     # App used for things regarding the whole project or across other apps
     # (Should be listed first, to be able to override things like management commands)
     'web.apps.WebConfig',
@@ -185,6 +189,8 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'constance.context_processors.config',
+
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -255,6 +261,20 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = 'users.User'
+
+# django-constance
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_CONFIG = {
+    'SHOW_APPLY_BUTTON_IN_HEADER_NAV': (
+        True,
+        _("Determines whether the “Søk verv” button in the navigation menu in the header is visible."),
+    ),
+}
+CONSTANCE_CONFIG_FIELDSETS = (
+    (
+        _("Main Site Settings"), ('SHOW_APPLY_BUTTON_IN_HEADER_NAV',),
+    ),
+)
 
 # Dataporten
 

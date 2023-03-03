@@ -5,6 +5,11 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### New features
+
+- Added [the `django-constance` package](https://django-constance.readthedocs.io/en/stable/)
+- Added [a dynamic setting](https://admin.makentnu.no/constance/config/) for hiding/showing the apply ("Søk verv") button in the header
+
 ### Improvements
 
 - Updated Django to version 4.1
