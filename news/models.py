@@ -105,8 +105,11 @@ class EventQuerySet(NewsBaseQuerySet):
 
 class Event(NewsBase):
     class Type(models.TextChoices):
-        REPEATING = 'R', _("Repeating")
-        STANDALONE = 'S', _("Standalone")
+        # TODO: remove the "repeating" and "standalone" parentheses and rename the choice variables to `STANDARD` and `MULTIPART`,
+        #       after a grace period (a couple months?) where old users have time to learn that the choices are simply getting new names
+        #       (See https://github.com/MAKENTNU/web/issues/563 for more details)
+        REPEATING = 'R', _("Standard (repeating)")
+        STANDALONE = 'S', _("Multipart (standalone)")
 
     event_type = models.CharField(
         choices=Type.choices,
@@ -146,7 +149,11 @@ class Event(NewsBase):
         return self.event_type == self.Type.STANDALONE
 
     def can_register(self, user: User, *, fail_if_not_standalone):
-        # Admins should always be allowed
+        # Registering for an event with no time places should never be allowed - no matter the `event_type`
+        if not self.timeplaces.exists():
+            return False
+
+        # Admins should always be allowed (except for the above case)
         if user.has_perm('news.cancel_ticket'):
             return True
 
