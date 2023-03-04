@@ -9,6 +9,8 @@ A summary of changes made to the codebase, grouped per deployment.
 
 - Added [the `django-constance` package](https://django-constance.readthedocs.io/en/stable/)
 - Added [a dynamic setting](https://admin.makentnu.no/constance/config/) for hiding/showing the apply ("Søk verv") button in the header
+- Added two fields to event tickets: one for when the ticket was first created and one for when it was last reactivated/canceled,
+  which can be useful for e.g. keeping statistics over when and how fast tickets were sold
 
 ### Improvements
 
@@ -16,6 +18,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Started using new label names for each event type, which should be clearer with regard to their intended usage.
   Also made their description - shown when clicking / hovering over the yellow question marks in an event form - (hopefully) easier to understand
 - Prevent registering for an event without any (past or future) occurrences
+- Made the red "Canceled" ribbon on tickets transparent when clicking / hovering over it, to be able to read the text behind it
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
   - Most pages will have " | MAKE NTNU" as suffix to the title;
@@ -27,6 +30,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Fixes
 
+- Fixed admins not being able to cancel other users' tickets
 - Made the CKEditor file uploader work on all subdomains
 - Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
   by requiring logout requests being sent using `POST` instead of `GET`
@@ -35,6 +39,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 - Set minimum required Python version to 3.10
 - Changed order of the apps listed on [the Django admin index page](https://admin.makentnu.no/)
+- Set a max length of 1000 characters to event ticket comments
 - Never-ending masses of code cleanup
 
 
