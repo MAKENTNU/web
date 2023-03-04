@@ -35,6 +35,24 @@
     </div>
     <div class="extra content">
         <p>
+            <b>{% translate "original registration date"|capfirst %}:</b> {{ ticket.creation_date|short_datetime }}
+        </p>
+        {# These should be set to the same value by the model's `save()` method, when the ticket object is first created #}
+        {% if ticket.active_last_modified != ticket.creation_date %}
+            <p>
+                <b>{% spaceless %}
+                    {% if ticket.active %}
+                        {% translate "Last reactivated" %}
+                    {% else %}
+                        {% translate "Last canceled" %}
+                    {% endif %}
+                {% endspaceless %}:</b>
+                {{ ticket.active_last_modified|short_datetime }}
+            </p>
+        {% endif %}
+    </div>
+    <div class="extra content">
+        <p>
             <b>{% translate "preferred language"|capfirst %}:</b> {{ ticket.get_language_display }}
         </p>
         {% if ticket.comment %}

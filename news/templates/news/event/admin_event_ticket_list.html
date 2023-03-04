@@ -42,16 +42,16 @@
         <div class="ui relaxed divided list">
             {% for ticket in tickets %}
                 <div class="item">
-                    <span class="right floated">
-                        {% if ticket.active %}
-                            <span class="ui green label">{% translate "active"|capfirst %}</span>
-                        {% else %}
-                            <span class="ui red label">{% translate "canceled"|capfirst %}</span>
-                        {% endif %}
-                    </span>
                     <i class="very large middle aligned {% if ticket.active %}green{% else %}red{% endif %} circle icon"></i>
                     <div class="ui content">
                         <div class="word-breaking hyphenated header">
+                            <div class="active-label right floated">
+                                {% if ticket.active %}
+                                    <span class="ui green label">{% translate "active"|capfirst %}</span>
+                                {% else %}
+                                    <span class="ui red label">{% translate "canceled"|capfirst %}</span>
+                                {% endif %}
+                            </div>
                             {{ ticket.name }}
                             &ndash; {{ ticket.email|urlize_target_blank }}
                         </div>
@@ -60,6 +60,27 @@
                                 <b>{% translate "Ref #" %}:</b>
                                 <a href="{{ ticket.get_absolute_url }}">{{ ticket.uuid }}</a>
                             </div>
+                            <div class="grey-text">
+                                <b>{% translate "original registration date"|capfirst %}:</b>
+                                <span class="no-wrap">
+                                    {{ ticket.creation_date }}
+                                </span>
+                            </div>
+                            {# These should be set to the same value by the model's `save()` method, when the ticket object is first created #}
+                            {% if ticket.active_last_modified != ticket.creation_date %}
+                                <div class="last-modified grey-text">
+                                    <b>{% spaceless %}
+                                        {% if ticket.active %}
+                                            {% translate "Last reactivated" %}
+                                        {% else %}
+                                            {% translate "Last canceled" %}
+                                        {% endif %}
+                                    {% endspaceless %}:</b>
+                                    <span class="no-wrap">
+                                        {{ ticket.active_last_modified }}
+                                    </span>
+                                </div>
+                            {% endif %}
                             <div>
                                 <b>{% translate "language"|capfirst %}:</b> {{ ticket.get_language_display }}
                             </div>

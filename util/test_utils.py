@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 
 from django.conf import settings
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.db.models import QuerySet
 from django.test import Client, SimpleTestCase, override_settings
 from django.utils import translation
@@ -96,6 +96,15 @@ def mock_module_attrs(module_and_attrname_to_newattr: dict[tuple[Any, str], Any]
         return wrapper
 
     return decorator
+
+
+# noinspection PyPep8Naming
+def assertRaisesIntegrityError_withRollback(self: SimpleTestCase, transaction_func: Callable[[], None], *, raises: bool):
+    if raises:
+        with transaction.atomic(), self.assertRaises(IntegrityError):
+            transaction_func()
+    else:
+        transaction_func()
 
 
 # noinspection PyPep8Naming

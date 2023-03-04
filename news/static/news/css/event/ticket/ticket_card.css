@@ -10,6 +10,12 @@
     font-size: 1.2em;
 }
 
+.cancel.label:hover,
+.cancel.label:active {
+    opacity: 15%;
+    color: transparent !important;
+}
+
 .cards {
     align-items: flex-start;
 }
@@ -27,11 +33,6 @@
 
 .ticket.card .time-place.content .calendar-button {
     grid-row: 1/3;
-}
-
-.ticket.card .time-place.content .time.description span {
-    display: inline-block;
-    white-space: nowrap;
 }
 
 .ticket.card .time-place.content .place.description {

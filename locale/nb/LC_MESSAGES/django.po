@@ -2411,6 +2411,18 @@ msgstr "Engelsk"
 msgid "Norwegian"
 msgstr "Norsk"
 
+#: news/models.py:267
+#: news/templates/admin/news/event/change_form_ticket_table.html:21
+#: news/templates/news/event/admin_event_ticket_list.html:60
+#: news/templates/news/event/ticket/ticket_card.html:38
+msgid "original registration date"
+msgstr "opprinnelig påmeldingsdato"
+
+#: news/models.py:269
+#: news/templates/admin/news/event/change_form_ticket_table.html:20
+msgid "last reactivated/canceled"
+msgstr "sist reaktivert/avbestilt"
+
 #: news/models.py:265
 #: news/templates/admin/news/event/change_form_ticket_table.html:17
 #: news/templates/email/ticket.html:47 news/templates/email/ticket.txt:7
@@ -2613,6 +2625,16 @@ msgstr ""
 #: news/templates/news/event/ticket/ticket_card.html:10
 msgid "canceled"
 msgstr "avbestilt"
+
+#: news/templates/news/event/admin_event_ticket_list.html:70
+#: news/templates/news/event/ticket/ticket_card.html:45
+msgid "Last reactivated"
+msgstr "Sist reaktivert"
+
+#: news/templates/news/event/admin_event_ticket_list.html:72
+#: news/templates/news/event/ticket/ticket_card.html:47
+msgid "Last canceled"
+msgstr "Sist avbestilt"
 
 #: news/templates/news/event/admin_event_ticket_list.html:64
 msgid "language"

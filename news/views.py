@@ -9,11 +9,13 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.mail import get_connection, send_mail
 from django.db.models import Count, Max, Min, Prefetch, Q
 from django.db.models.functions import Concat
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404
+from django.template.loader import get_template
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
-from django.utils.translation import get_language, gettext_lazy as _
+from django.utils.safestring import mark_safe
+from django.utils.translation import get_language, gettext_lazy as _, trim_whitespace
 from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import ModelFormMixin
@@ -565,8 +567,14 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
         })
 
     def form_valid(self, form):
-        form.instance.active = True  # this is done mainly for reactivating an existing ticket
-        ticket = form.save()
+        form_instance: EventTicket = form.instance
+        form_instance.active = True  # this is done mainly for reactivating an existing ticket
+        # If the ticket object already exists, update the timestamp
+        # (the model's `save()` method handles setting the timestamp when creating the ticket object)
+        if not form_instance._state.adding:
+            form_instance.active_last_modified = timezone.localtime()
+        ticket: EventTicket = form.save()
+
         # noinspection PyAttributeOutsideInit
         # Setting the `object` field, as is done in the super class `ModelFormMixin`
         self.object = ticket
@@ -636,11 +644,34 @@ class AdminEventTicketListView(PermissionRequiredMixin, EventRelatedViewMixin, L
     def focused_object(self) -> Event | TimePlace:
         return self.event
 
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        focused_object = self.focused_object
+        if (
+                # If the event / time place has no tickets
+                not focused_object.tickets.exists()
+                # ...and the event is of the "wrong" type to view the tickets connected to `focused_object`:
+                and (isinstance(focused_object, Event) and self.event.repeating
+                     or isinstance(focused_object, TimePlace) and self.event.standalone)
+        ):
+            raise Http404(self._get_event_type_error_message())
+
+        return response
+
+    def _get_event_type_error_message(self):
+        message = get_template('news/event/admin_event_ticket_list__event_type_error.html').render({
+            'event': self.event,
+        })
+        if settings.DEBUG:
+            # Should remove the excess whitespace when displayed on Django's debug error page
+            message = mark_safe(trim_whitespace(message))
+        return message
+
     def has_permission(self):
-        return self.request.user.has_perm('news.change_event') and self.focused_object.number_of_tickets
+        return self.request.user.has_perm('news.change_event')
 
     def get_queryset(self):
-        return self.focused_object.tickets.order_by('-active')
+        return self.focused_object.tickets.order_by('-active', '-active_last_modified')
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(**{
@@ -688,6 +719,8 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         return urls
 
     def get_queryset(self):
+        if self.request.user.has_perm('news.cancel_ticket'):
+            return self.model.objects.all()
         return self.request.user.event_tickets.all()
 
     def get_context_data(self, **kwargs):
@@ -712,12 +745,15 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
+        previous_active_state = self.ticket.active
         # Allow for toggling if a ticket is canceled or not
         if self.request.user.has_perm('news.cancel_ticket'):
             self.ticket.active = not self.ticket.active
-            self.ticket.save()
         elif self.request.user == self.ticket.user and self.ticket.active:
             self.ticket.active = False
+
+        if self.ticket.active != previous_active_state:
+            self.ticket.active_last_modified = timezone.localtime()
             self.ticket.save()
 
         # noinspection PyAttributeOutsideInit

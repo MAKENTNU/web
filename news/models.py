@@ -267,10 +267,12 @@ class EventTicket(models.Model):
         related_name='tickets',
         verbose_name=_("event"),
     )
+    creation_date = models.DateTimeField(auto_now_add=True, verbose_name=_("original registration date"))
     active = models.BooleanField(default=True, verbose_name=_("active"))
+    active_last_modified = models.DateTimeField(blank=True, default=timezone.localtime, verbose_name=_("last reactivated/canceled"))
     language = models.CharField(choices=Language.choices, max_length=2, default=Language.ENGLISH,
                                 verbose_name=_("preferred language"))
-    comment = models.TextField(blank=True, verbose_name=_("comment"))
+    comment = models.TextField(blank=True, max_length=1000, verbose_name=_("comment"))
 
     class Meta:
         constraints = (
@@ -287,6 +289,16 @@ class EventTicket(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.event if self.event else self.timeplace}"
+
+    def save(self, *args, **kwargs):
+        adding = self._state.adding
+        super().save(*args, **kwargs)
+
+        if adding:
+            # When creating the ticket object, make these timestamps equal (for comparison in templates and views)
+            # - this has to be done after the object is created above, so that the `creation_date` is set
+            self.active_last_modified = self.creation_date
+            super().save(update_fields=['active_last_modified'])
 
     def get_absolute_url(self):
         return reverse('ticket_detail', args=[self.pk])
