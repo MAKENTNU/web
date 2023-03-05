@@ -4,6 +4,17 @@
 
 {% block title %}{% translate "Search results" %} | {% translate "Docs" %}{% endblock title %}
 
+{% block extra_head %}
+    <script>
+        $(document).ready(function () {
+            $(".page-selector").click((event) => {
+                $("#page-form-page-input").val($(event.target).data("page"));
+                $("#page-form").submit();
+            });
+        });
+    </script>
+{% endblock extra_head %}
+
 {% block body %}
     <div class="ui container">
         <h1>{% translate "Search" %}</h1>
@@ -56,12 +67,3 @@
         </div>
     </div>
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(".page-selector").click((event) => {
-            $("#page-form-page-input").val($(event.target).data("page"));
-            $("#page-form").submit();
-        });
-    </script>
-{% endblock extra_scripts %}

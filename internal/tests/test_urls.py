@@ -92,7 +92,7 @@ class UrlTests(TestCase):
 
     def test_permissions(self):
         self._test_internal_url('GET', reverse_internal('member_list'))
-        self._test_internal_url('GET', reverse_internal('member_list', self.member.pk))
+        self._test_internal_url('GET', reverse_internal('member_detail', self.member.pk))
         self._test_editor_url('GET', reverse_internal('create_member'))
 
         # All members can edit themselves, but only editors can edit other members

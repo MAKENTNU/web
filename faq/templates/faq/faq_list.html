@@ -7,6 +7,11 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'faq/css/faq_list.css' %}"/>
+    <script>
+        $(document).ready(function () {
+            $(".ui.accordion").accordion();
+        });
+    </script>
     {% include 'ckeditor/mathjax_render.html' %}
 {% endblock extra_head %}
 
@@ -49,9 +54,3 @@
         </div>
     </div>
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(".ui.accordion").accordion();
-    </script>
-{% endblock extra_scripts %}

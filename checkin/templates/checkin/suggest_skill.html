@@ -7,6 +7,16 @@
 
 {% block title %}{% translate "Suggest new skills" %}{% endblock title %}
 
+{% block extra_head %}
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `suggest_skill.js` #}
+        var csrfToken = "{{ csrf_token }}";
+        var voteForSkillSuggestionURL = "{% url 'vote_for_skill_suggestion' %}";
+    </script>
+    <script defer src="{% static "checkin/js/suggest_skill.js" %}"></script>
+{% endblock extra_head %}
+
 {% block body %}
 
     <div class="ui text container">
@@ -113,65 +123,3 @@
     </div>
 
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(".add-voter").click(function () {
-            addVoterPost($(this), $(this).data("pk"), $(this).data("forced"));
-        });
-
-        $(".delete-suggestion").click(function () {
-            deleteSuggestionPost($(this), $(this).data("delete-url"));
-        });
-
-        function addVoterPost($element, pk, forced) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-                },
-            });
-            $.ajax({
-                type: "POST",
-                url: "{% url 'vote_for_skill_suggestion' %}",
-                data: {
-                    "pk": pk,
-                    "forced": forced,
-                },
-                success: function (data) {
-                    if (data["is_forced"]) {
-                        $element.closest("tr").remove();
-                    }
-                    $element.addClass("green");
-                    $element.addClass("disabled");
-                    $element.html('{% translate "Voted!" %}');
-
-                    if (!data["user_exists"]) {
-                        const incrementedCount = parseInt($element.parent().siblings("#vote-count").html()) + 1;
-                        $element.parent().siblings("#vote-count").html(incrementedCount);
-                    }
-                    if (data["skill_passed"]) {
-                        $element.closest("tr").remove();
-                    }
-                },
-            });
-        }
-
-        function deleteSuggestionPost($element, deleteURL) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-                },
-            });
-
-            $.ajax({
-                type: "DELETE",
-                url: deleteURL,
-                success: function (data) {
-                    if (data["suggestion_deleted"]) {
-                        $element.closest("tr").remove();
-                    }
-                },
-            });
-        }
-    </script>
-{% endblock extra_scripts %}

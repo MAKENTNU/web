@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
     <script defer src="{% static 'news/js/article/article_list_contents.js' %}"></script>
     <script defer src="{% static 'lib/parallax/parallax.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $(".parallax-window").parallax({"speed": 0.5});
+        });
+    </script>
 {% endblock extra_head %}
 
 {% block padding_top %}{% endblock %}
@@ -44,11 +49,3 @@
         {% include 'news/article/article_list_contents.html' with articles=featured_articles %}
     </div>
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(document).ready(function () {
-            $(".parallax-window").parallax({"speed": 0.5});
-        });
-    </script>
-{% endblock extra_scripts %}

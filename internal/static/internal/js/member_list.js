@@ -1,6 +1,20 @@
-const SEARCH_FIELD_SEPARATOR = "∨"; // the Logical Or symbol (not a lowercase V)
+/* These variables must be defined when linking this script */
+// noinspection ES6ConvertVarToLetConst
+var initialFilterStatuses;
+// noinspection ES6ConvertVarToLetConst
+var memberListURL;
+// noinspection ES6ConvertVarToLetConst
+var selectedMemberPK;
 
+const SEARCH_FIELD_SEPARATOR = "∨"; // the Logical Or symbol (not a lowercase V)
+const PAGE_TITLE_SEPARATOR = " | ";
+const MODAL_DEFAULT_DURATION = 400; // see https://fomantic-ui.com/modules/modal.html#/settings
+
+const $pageTitle = $("head>title");
 const $memberInfoModal = $("#detailed-member-info");
+const $filterStatusInput = $("input[name=filter-status]");
+const $filterCommitteeInput = $("input[name=filter-committee]");
+const $searchInput = $("input[name=search-text]");
 
 // Global state to reduce number of jQuery calls
 const state = {
@@ -13,6 +27,9 @@ const state = {
     sortDirection: -1,
     $sortElement: $("#member-sort-committees"),
 };
+
+let isChangingMemberModalStateThroughHistoryAPI = false;
+const initialPageTitle = $pageTitle.text();
 
 String.prototype.isEmpty = function () {
     return this.length === 0;
@@ -36,6 +53,18 @@ function compareElements(a, b) {
         return a.length - b.length;
     }
     return 0;
+}
+
+function setPageTitlePrefix(titlePrefix) {
+    $pageTitle.text(titlePrefix
+        ? `${titlePrefix}${PAGE_TITLE_SEPARATOR}${initialPageTitle}`
+        : initialPageTitle);
+}
+
+function getMember(pk) {
+    return state.allMembers.find(
+        (member) => member.data.pk === pk,
+    );
 }
 
 function showDetailedMemberInformation(member) {
@@ -145,6 +174,22 @@ function showDetailedMemberInformation(member) {
     ));
 
     $memberInfoModal.modal("show");
+    changeHistoryAfterShowingMemberModal(member);
+}
+
+function changeHistoryAfterShowingMemberModal(member) {
+    if (isChangingMemberModalStateThroughHistoryAPI) {
+        isChangingMemberModalStateThroughHistoryAPI = false;
+        return;
+    }
+    // If this is right after the page has initially loaded with a selected member (i.e. directly visiting the `member_detail` URL):
+    if (!window.history.state && selectedMemberPK) {
+        setPageTitlePrefix(member.data.name);
+        return;
+    }
+    window.history.pushState({memberPK: member.data.pk}, "", member.data.detailURL);
+    // Must set the title *after* calling `pushState()`
+    setPageTitlePrefix(member.data.name);
 }
 
 function filterMatches(filterValues, toMatch) {
@@ -247,21 +292,18 @@ function setup() {
     /**
      * Setup of the global state and actions.
      */
-    const $statusInput = $("input[name=filter-status]");
-    $statusInput.change(() => {
-        state.statusFilter = getFilterValues($statusInput);
+    $filterStatusInput.change(() => {
+        state.statusFilter = getFilterValues($filterStatusInput);
         filter();
     });
-    state.statusFilter = getFilterValues($statusInput);
+    state.statusFilter = getFilterValues($filterStatusInput);
 
-    const $committeeInput = $("input[name=filter-committee]");
-    $committeeInput.change(() => {
-        state.committeeFilter = getFilterValues($committeeInput);
+    $filterCommitteeInput.change(() => {
+        state.committeeFilter = getFilterValues($filterCommitteeInput);
         filter();
     });
-    state.committeeFilter = getFilterValues($committeeInput);
+    state.committeeFilter = getFilterValues($filterCommitteeInput);
 
-    const $searchInput = $("input[name=search-text]");
     $searchInput.on("input", () => {
         state.searchValue = $searchInput.val();
         filter();
@@ -295,7 +337,8 @@ function setup() {
 
         const member = {
             data: {
-                pk: $row.data("pk"),
+                pk: $row.data("pk").toString(), // a PK can in principle be anything, not just an int
+                detailURL: $row.data("detail-url"),
                 ...searchableData,
 
                 dateJoined: $row.data("date-joined"),
@@ -358,4 +401,72 @@ function setup() {
     sort();
 }
 
+$(".ui.dropdown").dropdown();
+$filterStatusInput.parent().dropdown("set selected", initialFilterStatuses);
+
 setup();
+
+$memberInfoModal.modal({
+    autofocus: false,
+    duration: MODAL_DEFAULT_DURATION,
+    onHide: function ($element) {
+        if (isChangingMemberModalStateThroughHistoryAPI) {
+            isChangingMemberModalStateThroughHistoryAPI = false;
+            return true; // let the modal hide normally
+        }
+
+        window.history.pushState({memberPK: null}, "", memberListURL);
+        // Must set the title *after* calling `pushState()`
+        setPageTitlePrefix("");
+    },
+});
+if (selectedMemberPK)
+    showDetailedMemberInformation(getMember(selectedMemberPK));
+
+// When the user navigates backwards or forwards in the browser history:
+window.onpopstate = function (event) {
+    isChangingMemberModalStateThroughHistoryAPI = true;
+    // Make the closing/opening transitions happen instantaneously (will be reset below)
+    // - which also circumvents a bug that sometimes prevents the modal from opening when navigating the browser history too quickly, it seems
+    $memberInfoModal.modal("setting", "duration", 0);
+
+    let pageTitlePrefixToRestore;
+    const memberPK = getCurrentPageMemberPK(event.state);
+    if (memberPK) {
+        const member = getMember(memberPK);
+        showDetailedMemberInformation(member);
+        pageTitlePrefixToRestore = member.data.name;
+    } else {
+        $memberInfoModal.modal("hide");
+        pageTitlePrefixToRestore = "";
+    }
+
+    // Make the page title match the current URL when navigating backwards or forwards in the browser history
+    // (doing this is apparently necessary in Firefox, but not in Chrome).
+    // (Also, must set the title *after* running code calling `pushState()`)
+    setPageTitlePrefix(pageTitlePrefixToRestore);
+    // Reset the duration setting (after changing it above)
+    $memberInfoModal.modal("setting", "duration", MODAL_DEFAULT_DURATION);
+};
+
+function getCurrentPageMemberPK(popEventState) {
+    // `popEventState` will be `null` when the user navigates back to when the page was initially loaded,
+    // or when the browser has no stored state for the page (e.g. when restoring a tab after having closed and restarted the browser)
+    if (popEventState)
+        return popEventState.memberPK;
+    // Shouldn't use `selectedMemberPK` here, as in some browsers (like Firefox),
+    // when restoring the session of a tab whose current page was the `member_detail` page,
+    // and you're navigating backwards/forwards to the `member_list` page,
+    // that variable will still be set - which is unexpected to this script's code.
+
+    const pathName = window.location.pathname;
+    if (pathName === memberListURL)
+        return null;
+    else {
+        const member = state.allMembers.find(member => member.data.detailURL === pathName);
+        if (member)
+            return member.data.pk;
+        else
+            console.error(`Unable to find member with detail URL ${pathName}`);
+    }
+}

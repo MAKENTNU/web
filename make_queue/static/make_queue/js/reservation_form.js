@@ -4,6 +4,8 @@
 */
 // noinspection ES6ConvertVarToLetConst
 var maximumDay;
+// noinspection ES6ConvertVarToLetConst
+var shouldForceNewTime;
 
 const reservations = [];
 const reservationRules = [];
@@ -335,3 +337,5 @@ const calendar = new ReservationCalendar($(".reservation-calendar"), {
 if ($startTimeField.calendar("get date") !== null) {
     calendar.showDate($startTimeField.calendar("get date"));
 }
+
+getFutureReservations($machineNameDropdown.dropdown("get value"), shouldForceNewTime);

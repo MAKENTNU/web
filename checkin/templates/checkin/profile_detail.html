@@ -7,6 +7,13 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'checkin/css/profile_detail.css' %}"/>
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `profile_detail.js` #}
+        var csrfToken = "{{ csrf_token }}";
+        var registerProfileURL = "{% url 'register_profile' %}";
+    </script>
+    <script defer src="{% static "checkin/js/profile_detail.js" %}"></script>
 {% endblock extra_head %}
 
 {% block body %}
@@ -45,73 +52,3 @@
         </p>
     </div>
 {% endblock body %}
-
-{% block extra_scripts %}
-    <script>
-        $(".ui.rating").rating();
-        $(".ui.dropdown").dropdown();
-        $(".rating.skill-lvl").rating("disable");
-
-        $("#star-rating").click(function () {
-            const rating = $(this).rating("get rating");
-            const $ratingInput = $("#rating-input");
-            if (rating === $ratingInput.val()) {
-                $ratingInput.val(0);
-                $(this).rating("set rating", 0);
-            } else {
-                $ratingInput.val(rating);
-            }
-        });
-
-        $(".register-profile").click(function () {
-            registerProfilePost($(this));
-        });
-
-        function registerProfilePost($element) {
-            $.ajaxSetup({
-                beforeSend: function (xhr, settings) {
-                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-                },
-            });
-            $.ajax({
-                type: "POST",
-                url: "{% url 'register_profile' %}",
-                data: {},
-                success: function (data) {
-                    if (data["scan_exists"]) {
-                        if (data["scan_is_recent"]) {
-                            $element.removeClass("red");
-                            $element.removeAttr("data-tooltip");
-                            $element.removeAttr("data-position");
-                            $element.addClass("green");
-                            $element.addClass("disabled");
-                            $element.html('{% translate "Registered" %}');
-                        } else {
-                            $element.addClass("red");
-                            $element.attr("data-tooltip", '{% translate "Scan card again!" %}');
-                            $element.attr("data-position", "right center");
-                        }
-                    } else {
-                        $element.addClass("red");
-                        $element.attr("data-tooltip", '{% translate "Scan card" %}');
-                        $element.attr("data-position", "right center");
-                    }
-                    $(".message.negative").fadeOut();
-                },
-                error: function (jqXHR, textStatus, errorthrown) {
-                    if (jqXHR.status === 409) {
-                        $("#duplicate-error").fadeIn();
-                    }
-                },
-            });
-        }
-
-        $("#profile-pic").click(function () {
-            $("#input-image").click();
-        });
-
-        $("#input-image").change(function () {
-            $("#image-form").submit();
-        });
-    </script>
-{% endblock extra_scripts %}

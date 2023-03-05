@@ -7,6 +7,12 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/admin_quota_panel.css' %}"/>
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `admin_quota_panel.js` #}
+        var requestedUserPK = {% if requested_user %}"{{ requested_user.pk }}"{% else %}null{% endif %};
+    </script>
+    <script defer src="{% static 'make_queue/js/admin_quota_panel.js' %}"></script>
 {% endblock extra_head %}
 
 {% block body %}
@@ -67,11 +73,4 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'make_queue/js/admin_quota_panel.js' %}"></script>
-    <script>
-        $(".tabular.menu .item").tab();
-        {% if requested_user %}
-            $("#user").parent().dropdown("set selected", "{{ requested_user.pk }}");
-        {% endif %}
-    </script>
 {% endblock body %}

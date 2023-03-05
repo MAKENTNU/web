@@ -91,7 +91,7 @@ class Member(models.Model):
             self.set_membership(True)
 
     def get_absolute_url(self):
-        return reverse_internal('member_list', self.pk)
+        return reverse_internal('member_detail', self.pk)
 
     @property
     def phone_number_display(self):
