@@ -11,6 +11,11 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added [a dynamic setting](https://admin.makentnu.no/constance/config/) for hiding/showing the apply ("Søk verv") button in the header
 - Added two fields to event tickets: one for when the ticket was first created and one for when it was last reactivated/canceled,
   which can be useful for e.g. keeping statistics over when and how fast tickets were sold
+- Added history tracking to the `Member` and `Machine` models, as well as the following many-to-many fields:
+  - `ContentBox.extra_change_permissions`, `Question.categories` and `InheritanceGroup.own_permissions`
+    - Note that the many-to-many selection for these fields *are* correctly saved, they're just currently not correctly displayed in the objects'
+      history page in Django admin (the *current* M2M selection is always shown);
+      see [this issue](https://github.com/jazzband/django-simple-history/issues/1063)
 
 ### Improvements
 
@@ -19,6 +24,8 @@ A summary of changes made to the codebase, grouped per deployment.
   Also made their description - shown when clicking / hovering over the yellow question marks in an event form - (hopefully) easier to understand
 - Prevent registering for an event without any (past or future) occurrences
 - Made the red "Canceled" ribbon on tickets transparent when clicking / hovering over it, to be able to read the text behind it
+- Added a "help text" yellow question mark icon next to the "Discord username" field in member info forms
+  (displayed when clicked / hovered over)
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
   - Most pages will have " | MAKE NTNU" as suffix to the title;
@@ -38,6 +45,7 @@ A summary of changes made to the codebase, grouped per deployment.
 ### Other changes
 
 - Set minimum required Python version to 3.10
+- Renamed members' `gmail` field to `google_email`, as the email address of a Google user can potentially belong to any host, not just "gmail.com"
 - Changed order of the apps listed on [the Django admin index page](https://admin.makentnu.no/)
 - Set a max length of 1000 characters to event ticket comments
 - Never-ending masses of code cleanup
