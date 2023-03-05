@@ -2971,9 +2971,25 @@ msgstr ""
 "Bestemmer om «Søk verv»-knappen skal være synlig i navigasjonsmenyen i "
 "toppteksten."
 
+#: web/settings.py:283
+msgid "Link to the guide on what should be done when a new member enrolls."
+msgstr "Lenke til guiden med ting som skal gjøres når et nytt medlem tas opp."
+
+#: web/settings.py:288
+msgid "Link to the guide on what should be done when a member retires."
+msgstr "Lenke til guiden med ting som skal gjøres når et medlem panger."
+
+#: web/settings.py:293
+msgid "Link to the guide on what should be done when a member quits."
+msgstr "Lenke til guiden med ting som skal gjøres når et medlem slutter."
+
 #: web/settings.py:272
 msgid "Main Site Settings"
 msgstr "Hovedsideinnstillinger"
+
+#: web/settings.py:302
+msgid "Internal Site Settings"
+msgstr "Internsideinnstillinger"
 
 #: web/templates/admin/base_site.html:12
 msgid "Django site admin"

@@ -27,15 +27,15 @@
 
         {% if perms.internal.add_member or perms.internal.change_member %}
             <p>
-                <a href="{{ settings.ENROLL_MEMBERS_GUIDE_LINK }}" target="_blank">
+                <a href="{{ config.ENROLL_MEMBERS_GUIDE_LINK }}" target="_blank">
                     {% translate "TODOs when a new member enrolls" %} <i class="external alternate icon"></i>
                 </a>
                 <br/>
-                <a href="{{ settings.RETIRE_MEMBERS_GUIDE_LINK }}" target="_blank">
+                <a href="{{ config.RETIRE_MEMBERS_GUIDE_LINK }}" target="_blank">
                     {% translate "TODOs when a member retires" %} <i class="external alternate icon"></i>
                 </a>
                 <br/>
-                <a href="{{ settings.QUIT_MEMBERS_GUIDE_LINK }}" target="_blank">
+                <a href="{{ config.QUIT_MEMBERS_GUIDE_LINK }}" target="_blank">
                     {% translate "TODOs when a member quits" %} <i class="external alternate icon"></i>
                 </a>
             </p>
