@@ -11,6 +11,9 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added [a dynamic setting](https://admin.makentnu.no/constance/config/) for hiding/showing the apply ("Søk verv") button in the header
 - Added two fields to event tickets: one for when the ticket was first created and one for when it was last reactivated/canceled,
   which can be useful for e.g. keeping statistics over when and how fast tickets were sold
+- Made opening/closing the member modal in [the member list](https://i.makentnu.no/members/) change the browser URL
+  - This makes it possible to navigate backwards and forwards using e.g. the back/forward buttons on a mouse, or the back button on most Android
+    devices. It also makes it easier to get the URL for linking directly to a specific member's info in the member list.
 - Added history tracking to the `Member` and `Machine` models, as well as the following many-to-many fields:
   - `ContentBox.extra_change_permissions`, `Question.categories` and `InheritanceGroup.own_permissions`
     - Note that the many-to-many selection for these fields *are* correctly saved, they're just currently not correctly displayed in the objects'
@@ -42,6 +45,8 @@ A summary of changes made to the codebase, grouped per deployment.
 
 - Fixed admins not being able to cancel other users' tickets
 - Made the CKEditor file uploader work on all subdomains
+- Fixed always auto-scrolling to the first toggle button when opening a member's info modal in [the member list](https://i.makentnu.no/members/)
+  - The modal should now instead open with the previous scroll position when hiding and re-showing it (even when showing a different member)
 - Fixed missing card numbers being displayed as "None" instead of simply showing a blank field, in [the member list](https://i.makentnu.no/members/)
 - Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
   by requiring logout requests being sent using `POST` instead of `GET`
