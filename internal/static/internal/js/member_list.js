@@ -45,7 +45,7 @@ function showDetailedMemberInformation(member) {
         name: member.data.name,
         phone: member.data.phoneDisplay,
         contactEmail: member.data.contactEmail,
-        gmail: member.data.gmail,
+        googleEmail: member.data.googleEmail,
         MAKEEmail: member.data.MAKEEmail,
         cardNumber: member.data.cardNumber,
         studyProgram: member.data.studyProgram,
@@ -85,7 +85,7 @@ function showDetailedMemberInformation(member) {
             $memberInfoModal.find("#edit-member-status-form").submit();
         });
 
-    for (const emailAttribute of ["contactEmail", "gmail", "MAKEEmail"]) {
+    for (const emailAttribute of ["contactEmail", "googleEmail", "MAKEEmail"]) {
         $memberInfoModal.find(`#member-${emailAttribute}`)
             .attr("href", `mailto:${member.data[emailAttribute]}`)
             .attr("target", "_blank");
@@ -271,7 +271,7 @@ function setup() {
                 phone: $row.data("phone"),
                 phoneDisplay: $row.data("phone-display"),
                 contactEmail: $row.data("contact-email"),
-                gmail: $row.data("gmail"),
+                googleEmail: $row.data("google-email"),
                 MAKEEmail: $row.data("make-email"),
                 cardNumber: $row.data("card-number"),
                 studyProgram: $row.data("study-program"),

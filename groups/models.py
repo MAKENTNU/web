@@ -38,7 +38,8 @@ class InheritanceGroup(Group):
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
-    history = HistoricalRecords(excluded_fields=['last_modified'])
+    # TODO: Add `parents` to `m2m_fields` when https://github.com/jazzband/django-simple-history/issues/1126 is resolved
+    history = HistoricalRecords(m2m_fields=[own_permissions], excluded_fields=['last_modified'])
 
     @property
     def inherited_permissions(self):

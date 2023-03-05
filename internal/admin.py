@@ -7,7 +7,7 @@ from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, se
 from .models import Member, Quote, Secret, SystemAccess
 
 
-class MemberAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
+class MemberAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
     list_display = ('get_name', 'last_modified')
     list_select_related = ('user',)
 

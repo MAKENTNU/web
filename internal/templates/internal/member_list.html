@@ -120,7 +120,7 @@
                     data-phone-display="{{ member.phone_number_display }}"
                     data-name="{{ member.user.get_full_name }}"
                     data-contact-email="{{ member.contact_email }}"
-                    data-gmail="{{ member.gmail }}"
+                    data-google-email="{{ member.google_email }}"
                     data-make-email="{{ member.MAKE_email }}" {# HTML attributes cannot be uppercase #}
                     data-card-number="{{ member.user.card_number }}"
                     data-study-program="{{ member.study_program }}"
@@ -246,10 +246,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <b>{% translate "Gmail" %}</b>
+                        <b>{% translate "Google email" %}</b>
                     </td>
                     <td>
-                        <b><a id="member-gmail"></a></b>
+                        <b><a id="member-googleEmail"></a></b>
                     </td>
                 </tr>
                 <tr>

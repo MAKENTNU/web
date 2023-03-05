@@ -128,7 +128,7 @@ class EditMemberView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
         full_form = self.user_has_edit_perm()
         custom_fieldsets = [
             {'fields': ('contact_email', 'phone_number'), 'layout_class': "ui two fields"},
-            {'fields': ('gmail', 'MAKE_email' if full_form else None), 'layout_class': "ui two fields"},
+            {'fields': ('google_email', 'MAKE_email' if full_form else None), 'layout_class': "ui two fields"},
             {'fields': ('study_program', 'ntnu_starting_semester'), 'layout_class': "ui two fields"},
             {'fields': ('card_number',), 'layout_class': "ui two fields"},
 

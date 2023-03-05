@@ -32,7 +32,7 @@ class MachineTypeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
         return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
-class MachineAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
+class MachineAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
     list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'internal', 'status', 'priority', 'last_modified')
     list_filter = ('machine_type', 'machine_model', 'location', 'status')
     search_fields = ('name', 'stream_name', 'machine_model', 'machine_type__name', 'location', 'location_url')

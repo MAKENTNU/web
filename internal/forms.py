@@ -55,7 +55,7 @@ class RestrictedEditMemberForm(EditMemberForm):
     class Meta:
         model = Member
         fields = [
-            'contact_email', 'gmail',
+            'contact_email', 'google_email',
             'phone_number',
             'study_program', 'ntnu_starting_semester', 'card_number',
             'github_username', 'discord_username', 'minecraft_username',

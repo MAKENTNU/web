@@ -37,7 +37,8 @@ class Member(models.Model):
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("role"))
     contact_email = models.EmailField(blank=True, verbose_name=_("contact email"))
-    gmail = models.EmailField(blank=True, verbose_name=_("Gmail"))
+    # The email address of a Google user can potentially belong to any host, not just "gmail.com"
+    google_email = models.EmailField(blank=True, verbose_name=_("Google email"))
     MAKE_email = models.EmailField(blank=True, validators=[WhitelistedEmailValidator(valid_domains=["makentnu.no"])],
                                    verbose_name=_("MAKE email"))
     phone_number = PhoneNumberField(max_length=32, blank=True, verbose_name=_("phone number"))
@@ -55,9 +56,12 @@ class Member(models.Model):
     honorary = models.BooleanField(default=False, verbose_name=_("honorary"))
     # Our code shouldn't have to keep track of these services' username length constraints, so we should not limit the length
     github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
-    discord_username = UnlimitedCharField(blank=True, validators=[discord_username_validator], verbose_name=_("Discord username"))
+    discord_username = UnlimitedCharField(blank=True, validators=[discord_username_validator], verbose_name=_("Discord username"),
+                                          help_text=_("The username must include the hashtag and the four digits at the end."))
     minecraft_username = UnlimitedCharField(blank=True, verbose_name=_("Minecraft username"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    history = HistoricalRecords(m2m_fields=[committees], excluded_fields=['last_modified'])
 
     class Meta:
         permissions = (
