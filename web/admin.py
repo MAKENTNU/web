@@ -3,6 +3,8 @@ from django.contrib import admin
 
 class WebAdminSite(admin.AdminSite):
     apps_listed_first = (
+        'constance',
+
         'users',
         'groups',
         'contentbox',
