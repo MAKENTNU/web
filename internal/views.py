@@ -79,6 +79,7 @@ class MemberFormMixin(CustomFieldsetFormMixin, ABC):
 class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     permission_required = ('internal.add_member',)
     form_class = AddMemberForm
+    template_name = 'internal/member_add.html'
 
     form_title = _("Add New Member")
     back_button_link = reverse_lazy('member_list')
@@ -161,6 +162,7 @@ class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateV
     permission_required = ('internal.can_edit_group_membership',)
     model = Member
     form_class = MemberRetireForm
+    template_name = 'internal/member_retire.html'
 
     base_template = 'internal/base.html'
     narrow = False
@@ -183,6 +185,7 @@ class MemberRetireView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateV
 
 class MemberQuitView(MemberRetireView):
     form_class = MemberQuitForm
+    template_name = 'internal/member_quit.html'
 
     save_button_text = _("Set quit")
     custom_fieldsets = [

@@ -7,7 +7,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
-- Added [the `django-constance` package](https://django-constance.readthedocs.io/en/stable/)
+- Added [the `django-constance` package](https://django-constance.readthedocs.io/en/stable/), for adding dynamic settings
 - Added [a dynamic setting](https://admin.makentnu.no/constance/config/) for hiding/showing the apply ("Søk verv") button in the header
 - Added two fields to event tickets: one for when the ticket was first created and one for when it was last reactivated/canceled,
   which can be useful for e.g. keeping statistics over when and how fast tickets were sold
@@ -16,10 +16,13 @@ A summary of changes made to the codebase, grouped per deployment.
     - Note that the many-to-many selection for these fields *are* correctly saved, they're just currently not correctly displayed in the objects'
       history page in Django admin (the *current* M2M selection is always shown);
       see [this issue](https://github.com/jazzband/django-simple-history/issues/1063)
+- Added links to the guides on what should be done when a member enrolls/retires/quits, in [the member list](https://i.makentnu.no/members/)
+  - These can be changed through [the dynamic settings in Django admin](https://admin.makentnu.no/constance/config/)
 
 ### Improvements
 
 - Updated Django to version 4.1
+- Made it possible to search for _all_ member fields in the member list - not just the ones visible in the list
 - Started using new label names for each event type, which should be clearer with regard to their intended usage.
   Also made their description - shown when clicking / hovering over the yellow question marks in an event form - (hopefully) easier to understand
 - Prevent registering for an event without any (past or future) occurrences
@@ -39,6 +42,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 - Fixed admins not being able to cancel other users' tickets
 - Made the CKEditor file uploader work on all subdomains
+- Fixed missing card numbers being displayed as "None" instead of simply showing a blank field, in [the member list](https://i.makentnu.no/members/)
 - Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
   by requiring logout requests being sent using `POST` instead of `GET`
 

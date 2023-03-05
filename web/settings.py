@@ -264,15 +264,46 @@ AUTH_USER_MODEL = 'users.User'
 
 # django-constance
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_ADDITIONAL_FIELDS = {
+    'url_field': ['django.forms.fields.URLField', {
+        'max_length': 500,
+        'widget': 'django.forms.widgets.Textarea',
+        'widget_kwargs': {
+            'attrs': {'cols': 40, 'rows': 2},
+        },
+    }],
+}
 CONSTANCE_CONFIG = {
     'SHOW_APPLY_BUTTON_IN_HEADER_NAV': (
         True,
         _("Determines whether the “Søk verv” button in the navigation menu in the header is visible."),
     ),
+    'ENROLL_MEMBERS_GUIDE_LINK': (
+        "",
+        _("Link to the guide on what should be done when a new member enrolls."),
+        'url_field',
+    ),
+    'RETIRE_MEMBERS_GUIDE_LINK': (
+        "",
+        _("Link to the guide on what should be done when a member retires."),
+        'url_field',
+    ),
+    'QUIT_MEMBERS_GUIDE_LINK': (
+        "",
+        _("Link to the guide on what should be done when a member quits."),
+        'url_field',
+    ),
 }
 CONSTANCE_CONFIG_FIELDSETS = (
     (
         _("Main Site Settings"), ('SHOW_APPLY_BUTTON_IN_HEADER_NAV',),
+    ),
+    (
+        _("Internal Site Settings"), (
+            'ENROLL_MEMBERS_GUIDE_LINK',
+            'RETIRE_MEMBERS_GUIDE_LINK',
+            'QUIT_MEMBERS_GUIDE_LINK',
+        ),
     ),
 )
 

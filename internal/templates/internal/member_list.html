@@ -25,10 +25,26 @@
             {% endif %}
         </h1>
 
+        {% if perms.internal.add_member or perms.internal.change_member %}
+            <p>
+                <a href="{{ config.ENROLL_MEMBERS_GUIDE_LINK }}" target="_blank">
+                    {% translate "TODOs when a new member enrolls" %} <i class="external alternate icon"></i>
+                </a>
+                <br/>
+                <a href="{{ config.RETIRE_MEMBERS_GUIDE_LINK }}" target="_blank">
+                    {% translate "TODOs when a member retires" %} <i class="external alternate icon"></i>
+                </a>
+                <br/>
+                <a href="{{ config.QUIT_MEMBERS_GUIDE_LINK }}" target="_blank">
+                    {% translate "TODOs when a member quits" %} <i class="external alternate icon"></i>
+                </a>
+            </p>
+        {% endif %}
+
         <form class="dont-prevent-leaving ui form">
             <div id="filter-fields" class="ui fields">
                 <div class="ui six wide field">
-                    <input id="search" type="text" name="search-text" placeholder="{% translate "Search name and username" %}"/>
+                    <input id="search" type="text" name="search-text" placeholder="{% translate "Search for user info" %}"/>
                 </div>
                 <div id="filter-dropdowns" class="ui fields field">
 
@@ -122,7 +138,7 @@
                     data-contact-email="{{ member.contact_email }}"
                     data-google-email="{{ member.google_email }}"
                     data-make-email="{{ member.MAKE_email }}" {# HTML attributes cannot be uppercase #}
-                    data-card-number="{{ member.user.card_number }}"
+                    data-card-number="{{ member.user.card_number|default:"" }}"
                     data-study-program="{{ member.study_program }}"
                     data-ntnu-starting-semester="{{ member.ntnu_starting_semester_display }}"
                     data-github-username="{{ member.github_username }}"
