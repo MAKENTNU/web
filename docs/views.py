@@ -16,7 +16,7 @@ from .models import Content, MAIN_PAGE_TITLE, Page
 
 class SpecificPageBasedViewMixin:
     """
-    Note: When extending this mixin class, it's required to have a ``PageTitle`` path converter named ``title`` as part of the view's path,
+    NOTE: When extending this mixin class, it's required to have a ``PageTitle`` path converter named ``title`` as part of the view's path,
     which will be used to query the database for the requested page by title.
     """
     model = Page

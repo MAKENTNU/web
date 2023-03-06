@@ -58,9 +58,13 @@ class NewsBaseForm(forms.ModelForm):
                 content_help_text = _("The main description of the event.")
             return {
                 'content': content_help_text,
+                # Translators: `the_type` is either "the article" or "the event"
                 'clickbait': _("A short text designed to bait users into clicking {the_type}.").format(the_type=the_type),
+                # Translators: `the_type` is either "the article" or "the event"
                 'featured': _("If selected, {the_type} may be shown on the front page.").format(the_type=the_type),
+                # Translators: `the_type` is either "the article" or "the event"
                 'hidden': _("If selected, {the_type} will only be visible to admin users.").format(the_type=the_type),
+                # Translators: `the_type` is either "the article" or "the event"
                 'private': _("If selected, {the_type} will only be visible to members of MAKE NTNU.").format(the_type=the_type),
             }
 

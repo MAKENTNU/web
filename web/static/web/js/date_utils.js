@@ -89,21 +89,21 @@ function zeroPad(value) {
 
 Date.prototype.timeString = function () {
     /**
-     * Returns a string in the format HH:MM
+     * Returns a string in the format `HH:mm`
      */
     return `${zeroPad(this.getHours())}:${zeroPad(this.getMinutes())}`;
 };
 
 Date.prototype.dateString = function () {
     /**
-     * Returns a string in the format DD:MM:YYYY
+     * Returns a string in the format `DD.MM.YYYY`
      */
     return `${zeroPad(this.getDate())}.${zeroPad(this.getMonth() + 1)}.${this.getFullYear()}`;
 };
 
 Date.prototype.djangoFormat = function () {
     /**
-     * Returns a string of the date in the format YYYY-mm-dd HH:MM, which is one of the formats Django accepts
+     * Returns a string of the date in the format `YYYY-MM-DD HH:mm`, which is one of the formats Django accepts
      */
     return `${this.getFullYear()}-${this.getMonth() + 1}-${this.getDate()} ${zeroPad(this.getHours())}:${zeroPad(this.getMinutes())}`;
 };

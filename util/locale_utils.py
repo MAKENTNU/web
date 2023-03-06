@@ -92,7 +92,7 @@ def get_current_year_and_week():
 
 
 def exact_weekday_to_day_name(exact_weekday: float) -> str:
-    from make_queue.models.reservation import ReservationRule  # avoids circular imports
+    from make_queue.models.reservation import ReservationRule  # Avoids circular importing
 
     truncated_and_wrapped_weekday = int(exact_weekday - 1) % 7 + 1
     return ReservationRule.DAY_INDEX_TO_NAME[truncated_and_wrapped_weekday]

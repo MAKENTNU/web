@@ -32,35 +32,42 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # Default values
 DATABASE = 'sqlite'  # (custom setting; used below for selecting database configuration)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# NOTE: These settings must be changed in production!
 SECRET_KEY = ' '
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
+
 MEDIA_ROOT = BASE_DIR.parent / 'media'
 MEDIA_URL = '/media/'
-SOCIAL_AUTH_DATAPORTEN_KEY = ''
-SOCIAL_AUTH_DATAPORTEN_SECRET = ''
+
+# Based on https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/demosite/settings.py#L120-L121
+SOCIAL_AUTH_DATAPORTEN_KEY = ''  # "Client ID" in the OpenID Connect configuration in Feide's customer portal
+SOCIAL_AUTH_DATAPORTEN_SECRET = ''  # "Client Secret" in the same configuration
+
+# These will be internationalized since `reverse_lazy()` is used
+# (i.e. these will be English URLs when the user is on the English version of the website, and vice versa for Norwegian)
 LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('front_page')
 LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
+
+# NOTE: This must be changed in production!
 CHECKIN_KEY = ''  # (custom setting)
+
 REDIS_IP = '127.0.0.1'  # (custom setting)
 REDIS_PORT = 6379  # (custom setting)
+
 FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is 50 MiB)
 
-# When using more than one subdomain, the session cookie domain has to be set so
-# that the subdomains can use the same session. Currently points to "makentnu.localhost"
-# should be changed in production. Cannot use only "localhost", as domains for cookies
-# are required to have two dots in them.
+# When using more than one subdomain, the session cookie domain has to be set so that the subdomains can use the same session.
+# NOTE: This must be changed in production!
+# (Cannot use only ".localhost", as domains for cookies are required to have two dots in them.)
 SESSION_COOKIE_DOMAIN = ".makentnu.localhost"
 
-# For `django-hosts` to redirect correctly across subdomains, we have to specify the
-# host we are running on. This currently points to "makentnu.localhost:8000", and should
-# be changed in production
+# For `django-hosts` to redirect correctly across subdomains, we have to specify the host we are running on.
+# NOTE: This must be changed in production!
 PARENT_HOST = "makentnu.localhost:8000"
-
-# Is `True` if `django-debug-toolbar` is installed
-USE_DEBUG_TOOLBAR = find_spec('debug_toolbar') is not None  # (custom setting)
 
 EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
 
@@ -70,6 +77,9 @@ try:
 except ImportError:
     pass
 
+
+# The call to `find_spec()` returns something other than `None` only if `django-debug-toolbar` is installed
+USE_DEBUG_TOOLBAR = DEBUG and find_spec('debug_toolbar') is not None  # (custom setting)
 
 INSTALLED_APPS = [
     # `django-constance` should be listed before project apps (see https://django-constance.readthedocs.io/en/stable/#configuration)
@@ -315,6 +325,9 @@ SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')
 SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('front_page')
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+
+# The following code is based on
+# https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/demosite/settings.py#L111-L127
 
 AUTHENTICATION_BACKENDS = (
     # 'dataporten.social.DataportenFeideOAuth2',

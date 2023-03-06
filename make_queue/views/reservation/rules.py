@@ -17,7 +17,7 @@ from ...models.reservation import Quota, ReservationRule
 # noinspection PyUnresolvedReferences
 class MachineTypeRelatedViewMixin:
     """
-    Note: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
+    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
     which will be used to query the database for the machine type that the object(s) are related to.
     If found, the machine type will be assigned to a ``machine_type`` field on the view, otherwise, a 404 error will be raised.
     """

@@ -208,6 +208,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
 
                 self.user1.user_permissions.clear()
 
+    # noinspection HttpUrlsUsage
     def test__cancel_ticket_view__only_allows_expected_next_params(self):
         ticket_repeating = EventTicket.objects.create(user=self.user1, timeplace=self.repeating_time_place)
         ticket_standalone = EventTicket.objects.create(user=self.user1, event=self.standalone_event)

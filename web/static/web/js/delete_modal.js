@@ -4,13 +4,13 @@ function setupDeleteModal() {
 
         // Set `action` attribute of form
         const $deleteButton = $(this);
-        const url = $deleteButton.data('url');
-        $("#delete-form").attr('action', url);
+        const url = $deleteButton.data("url");
+        $("#delete-form").attr("action", url);
 
         // Update prompt text, if specified
-        let prompt = $deleteButton.data('prompt');
+        let prompt = $deleteButton.data("prompt");
         if (!prompt) {
-            const objName = $deleteButton.data('obj-name');
+            const objName = $deleteButton.data("obj-name");
             if (objName) {
                 prompt = interpolate(
                     gettext("Are you sure you want to delete “%(objName)s”?"), {objName: objName}, true,
@@ -24,7 +24,7 @@ function setupDeleteModal() {
         $("#delete-modal .delete.button").click(function () {
             $("#delete-form").submit();
         });
-        $("#delete-modal").modal('show');
+        $("#delete-modal").modal("show");
     });
 }
 

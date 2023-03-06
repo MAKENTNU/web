@@ -49,7 +49,7 @@ class MultiLingualTextField(models.TextField):
             )
         return value
 
-    def from_db_value(self, value, expression, connection):
+    def from_db_value(self, value, *args, **kwargs):
         """
         Converts the database value to the Python representation.
         """

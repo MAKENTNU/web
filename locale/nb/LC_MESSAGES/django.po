@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-05 21:02+0100\n"
+"POT-Creation-Date: 2023-03-06 01:40+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -280,7 +280,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: checkin/templates/checkin/profile_internal.html:97 internal/forms.py:43
-#: make_queue/forms.py:208
+#: make_queue/forms.py:211
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -412,7 +412,7 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 #: groups/models.py:39 groups/models.py:111 internal/models.py:62
 #: internal/models.py:208 internal/models.py:261
 #: internal/templates/internal/secret_list.html:46
-#: make_queue/models/course.py:34 make_queue/models/machine.py:186
+#: make_queue/models/course.py:37 make_queue/models/machine.py:186
 #: make_queue/models/machine.py:240 make_queue/models/reservation.py:294
 #: makerspace/models.py:33 news/models.py:51 news/models.py:207
 msgid "last modified"
@@ -724,7 +724,7 @@ msgstr "Administrasjonsside for komiteer"
 msgid "Edit {committee}"
 msgstr "Rediger {committee}"
 
-#: internal/admin.py:20 make_queue/models/course.py:26
+#: internal/admin.py:20 make_queue/models/course.py:29
 msgid "full name"
 msgstr "fullt navn"
 
@@ -769,7 +769,7 @@ msgstr ""
 "«pang»."
 
 #: internal/models.py:30 make_queue/forms.py:128
-#: make_queue/models/course.py:23 make_queue/models/reservation.py:31
+#: make_queue/models/course.py:26 make_queue/models/reservation.py:31
 #: news/admin.py:306 news/models.py:250
 #: news/templates/admin/news/event/change_form_ticket_table.html:16
 #: web/templates/web/header.html:90
@@ -1078,7 +1078,7 @@ msgstr "komité"
 
 #: internal/templates/internal/member_list.html:141
 #: internal/templates/internal/member_list.html:350
-#: make_queue/models/course.py:31 make_queue/models/machine.py:173
+#: make_queue/models/course.py:34 make_queue/models/machine.py:173
 #: make_queue/templates/make_queue/course/course_registration_list.html:101
 #: make_queue/templates/make_queue/machine_detail.html:98
 msgid "status"
@@ -1278,14 +1278,14 @@ msgstr ""
 msgid "Select user"
 msgstr "Velg bruker"
 
-#: make_queue/forms.py:133 make_queue/forms.py:223
-#: make_queue/forms.py:234 make_queue/models/machine.py:167
+#: make_queue/forms.py:133 make_queue/forms.py:226
+#: make_queue/forms.py:237 make_queue/models/machine.py:167
 #: make_queue/models/reservation.py:37 make_queue/models/reservation.py:285
 #: make_queue/templates/make_queue/machine_detail.html:84
 msgid "machine type"
 msgstr "maskintype"
 
-#: make_queue/forms.py:134 make_queue/forms.py:235
+#: make_queue/forms.py:134 make_queue/forms.py:238
 msgid "Select machine type"
 msgstr "Velg maskintype"
 
@@ -1301,7 +1301,10 @@ msgstr "Bruker kan ikke være satt når «Alle brukere» er satt."
 msgid "Must select either specific user or all users."
 msgstr "Må velge enten én spesifikk bruker eller alle brukere."
 
-#: make_queue/forms.py:196
+#. Translators: See the Norwegian and English versions of this page for
+#. a translation of "Building security":
+#. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
+#: make_queue/forms.py:199
 msgid ""
 "The card number was detected to be the phone number of Building security at "
 "NTNU. Please enter a valid card number."
@@ -1309,15 +1312,15 @@ msgstr ""
 "Kortnummeret ble oppdaget å være telefonnummeret til Vakt og service på "
 "NTNU. Vennligst fyll inn et gyldig kortnummer."
 
-#: make_queue/forms.py:226
+#: make_queue/forms.py:229
 msgid "Duration in hours"
 msgstr "Varighet i timer"
 
-#: make_queue/forms.py:227
+#: make_queue/forms.py:230
 msgid "Duration in minutes"
 msgstr "Varighet i minutter"
 
-#: make_queue/forms.py:277
+#: make_queue/forms.py:280
 msgid "Stream name cannot be empty when the machine type supports streaming."
 msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
 
@@ -1325,37 +1328,40 @@ msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
 msgid "Registered"
 msgstr "Registrert"
 
-#: make_queue/models/course.py:15
+#. Translators: See the Norwegian and English versions of this page for
+#. a translation of "Building security":
+#. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
+#: make_queue/models/course.py:18
 msgid "Sent to Building security"
 msgstr "Sendt til Vakt og service"
 
-#: make_queue/models/course.py:16
+#: make_queue/models/course.py:19
 msgid "Access granted"
 msgstr "Tilgang gitt"
 
-#: make_queue/models/course.py:25
+#: make_queue/models/course.py:28
 #: make_queue/templates/make_queue/course/course_registration_list.html:98
 #: make_queue/views/admin/course.py:123
 msgid "username"
 msgstr "brukernavn"
 
-#: make_queue/models/course.py:30
+#: make_queue/models/course.py:33
 msgid "course date"
 msgstr "kursdato"
 
-#: make_queue/models/course.py:32
+#: make_queue/models/course.py:35
 msgid "Raise3D course"
 msgstr "Raise3D-kurs"
 
-#: make_queue/models/course.py:33
+#: make_queue/models/course.py:36
 msgid "SLA course"
 msgstr "SLA-kurs"
 
-#: make_queue/models/course.py:40
+#: make_queue/models/course.py:43
 msgid "3D printer course"
 msgstr "3D-printerkurs"
 
-#: make_queue/models/course.py:41
+#: make_queue/models/course.py:44
 msgid "3D printer courses"
 msgstr "3D-printerkurs"
 
@@ -2325,35 +2331,39 @@ msgstr "arrangementet"
 msgid "The main description of the event."
 msgstr "Brødteksten til arrangementet."
 
-#: news/forms.py:61
+#. Translators: `the_type` is either "the article" or "the event"
+#: news/forms.py:62
 #, python-brace-format
 msgid "A short text designed to bait users into clicking {the_type}."
 msgstr "En kort tekst for å lokke brukerne til å klikke på {the_type}."
 
-#: news/forms.py:62
+#. Translators: `the_type` is either "the article" or "the event"
+#: news/forms.py:64
 #, python-brace-format
 msgid "If selected, {the_type} may be shown on the front page."
 msgstr "Hvis valgt kan {the_type} bli vist på forsiden."
 
-#: news/forms.py:63
+#. Translators: `the_type` is either "the article" or "the event"
+#: news/forms.py:66
 #, python-brace-format
 msgid "If selected, {the_type} will only be visible to admin users."
 msgstr "Hvis valgt vil {the_type} bare være synlig for administratorer."
 
-#: news/forms.py:64
+#. Translators: `the_type` is either "the article" or "the event"
+#: news/forms.py:68
 #, python-brace-format
 msgid "If selected, {the_type} will only be visible to members of MAKE NTNU."
 msgstr "Hvis valgt vil {the_type} bare vises for medlemmer av MAKE NTNU."
 
-#: news/forms.py:87
+#: news/forms.py:91
 msgid "Search for users"
 msgstr "Søk etter brukere"
 
-#: news/forms.py:88
+#: news/forms.py:92
 msgid "You can search for users' name, username and email."
 msgstr "Du kan søke etter brukeres navn, brukernavn og e-post."
 
-#: news/forms.py:101
+#: news/forms.py:105
 msgid ""
 "Here you can enter any requests or information you want to provide to the "
 "organizers."
@@ -2952,7 +2962,7 @@ msgstr "Lagre"
 msgid "One or more languages have no content."
 msgstr "Ett eller flere språk mangler innhold."
 
-#: web/settings.py:279
+#: web/settings.py:289
 msgid ""
 "Determines whether the “Søk verv” button in the navigation menu in the "
 "header is visible."
@@ -2960,23 +2970,23 @@ msgstr ""
 "Bestemmer om «Søk verv»-knappen skal være synlig i navigasjonsmenyen i "
 "toppteksten."
 
-#: web/settings.py:283
+#: web/settings.py:293
 msgid "Link to the guide on what should be done when a new member enrolls."
 msgstr "Lenke til guiden med ting som skal gjøres når et nytt medlem tas opp."
 
-#: web/settings.py:288
+#: web/settings.py:298
 msgid "Link to the guide on what should be done when a member retires."
 msgstr "Lenke til guiden med ting som skal gjøres når et medlem panger."
 
-#: web/settings.py:293
+#: web/settings.py:303
 msgid "Link to the guide on what should be done when a member quits."
 msgstr "Lenke til guiden med ting som skal gjøres når et medlem slutter."
 
-#: web/settings.py:299
+#: web/settings.py:309
 msgid "Main Site Settings"
 msgstr "Hovedsideinnstillinger"
 
-#: web/settings.py:302
+#: web/settings.py:312
 msgid "Internal Site Settings"
 msgstr "Internsideinnstillinger"
 
@@ -3106,35 +3116,31 @@ msgstr "Er du sikker på at du vil slette?"
 msgid "You can find us here!"
 msgstr "Du kan finne oss her!"
 
-#: web/templates/web/footer.html:15
-msgid "Makerverkstedet<br/>Realfagbygget U1<br/>7034 Trondheim"
-msgstr "Makerverkstedet<br/>Realfagbygget U1<br/>7034 Trondheim"
-
-#: web/templates/web/footer.html:24
+#: web/templates/web/footer.html:26
 msgid "Like us on Facebook!"
 msgstr "Lik oss på Facebook!"
 
-#: web/templates/web/footer.html:29
+#: web/templates/web/footer.html:31
 msgid "Chat with us on Slack!"
 msgstr "Prat med oss på Slack!"
 
-#: web/templates/web/footer.html:35
+#: web/templates/web/footer.html:37
 msgid "Report an issue or suggest an improvement on GitHub!"
 msgstr "Meld ifra om et problem eller foreslå en forbedring på GitHub!"
 
-#: web/templates/web/footer.html:40
+#: web/templates/web/footer.html:42
 msgid "Contact us by email!"
 msgstr "Kontakt oss på e-post!"
 
-#: web/templates/web/footer.html:45
+#: web/templates/web/footer.html:47
 msgid "Follow us on Instagram!"
 msgstr "Følg oss på Instagram!"
 
-#: web/templates/web/footer.html:54
+#: web/templates/web/footer.html:56
 msgid "Cookies"
 msgstr "Cookies"
 
-#: web/templates/web/footer.html:55
+#: web/templates/web/footer.html:57
 msgid "Privacy Policy"
 msgstr "Personvernerklæring"
 

@@ -3,6 +3,7 @@ from django.test import SimpleTestCase
 from ..templatetags.html_tags import anchor_tag, urlize_target_blank
 
 
+# noinspection HttpUrlsUsage
 class HtmlTagTests(SimpleTestCase):
 
     def test__urlize_target_blank__returns_expected_html(self):

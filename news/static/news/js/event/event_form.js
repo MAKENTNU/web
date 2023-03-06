@@ -1,5 +1,5 @@
 function updateEventType() {
-    const isStandalone = $("#standalone").prop('checked');
+    const isStandalone = $("#standalone").prop("checked");
     $("#id_number_of_tickets").parent().toggleClass("disabled", !isStandalone);
     if (isStandalone) {
         $("#info-message-tickets").show();

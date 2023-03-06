@@ -50,6 +50,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Fixed missing card numbers being displayed as "None" instead of simply showing a blank field, in [the member list](https://i.makentnu.no/members/)
 - Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
   by requiring logout requests being sent using `POST` instead of `GET`
+- Fixed the "View site" button in the English Django admin not leading to the English front page
 
 ### Other changes
 
