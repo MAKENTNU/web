@@ -12,9 +12,9 @@ from django.views.i18n import JavaScriptCatalog
 from social_core.utils import setting_name
 
 from contentbox.views import DisplayContentBoxView, EditContentBoxView
-from dataporten.views import Logout, login_wrapper
+from dataporten.views import login_wrapper
 from news import urls as news_urls
-from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls
+from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, logout_urls
 from . import views
 
 
@@ -76,8 +76,6 @@ urlpatterns += i18n_patterns(
 if settings.USES_DATAPORTEN_AUTH:
     urlpatterns += i18n_patterns(
         path("login/", RedirectView.as_view(url="/login/dataporten/", query_string=True), name='login'),
-        # Logs out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
-        path("logout/", Logout.as_view(), name='logout'),
 
         # This line must come before including `social_django.urls` below, to override social_django's `complete` view
         re_path(rf"^complete/(?P<backend>[^/]+){extra}$", login_wrapper),
@@ -95,11 +93,10 @@ else:
             # This allows the `next` query parameter (used when logging in) to redirect to pages on all the subdomains
             success_url_allowed_hosts=set(settings.ALLOWED_REDIRECT_HOSTS),
         ), name='login'),
-        # Logs out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
-        path("logout/", auth_views.LogoutView.as_view(), name='logout'),
 
         prefix_default_language=False,
     )
+urlpatterns += logout_urls()
 
 # --- Old URLs ---
 # URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs.

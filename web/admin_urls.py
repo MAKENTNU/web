@@ -8,7 +8,7 @@ from django.urls import path
 from django.views.generic import RedirectView, TemplateView
 from django_hosts import reverse
 
-from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls
+from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, logout_urls
 
 
 urlpatterns = [
@@ -24,6 +24,7 @@ urlpatterns = [
 
     *ckeditor_uploader_urls(),
 ]
+urlpatterns += logout_urls()
 
 urlpatterns += i18n_patterns(
     # Including `admin.site.urls` must be done last, to prevent other paths being "hidden" behind Django admin's catch-all path

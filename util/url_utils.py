@@ -1,11 +1,14 @@
 from ckeditor_uploader import views as ckeditor_views
 from django.conf import settings
+from django.conf.urls.i18n import i18n_patterns
+from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.urls import include, path
 from django.views.decorators.cache import never_cache
 from django_hosts import reverse
 
+from dataporten import views as dataporten_views
 from users.models import User
 
 
@@ -35,6 +38,30 @@ def permission_required_else_denied(perm, login_url=None):
         raise PermissionDenied
 
     return user_passes_test(check_perms, login_url=login_url)
+
+
+def logout_urls():
+    """
+    Should be used in every URL config referenced in ``web/hosts.py``, so that the user can log out from each of the corresponding subdomains.
+
+    DEV: It should technically be possible to only have one logout URL on e.g. the main subdomain, but when submitting the logout form on other
+    subdomains (i.e. pressing the "Log out" button), multiple browsers (like Chrome) send an ``Origin`` header with a value of ``null``, which causes
+    the CSRF verification to always fail.
+    """
+    # Both of these views log the user out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
+    if settings.USES_DATAPORTEN_AUTH:
+        logout_view = dataporten_views.Logout.as_view()
+    else:
+        logout_view = auth_views.LogoutView.as_view()
+
+    return i18n_patterns(
+        # This path's `name` should be the same as the one for Django admin's logout URL
+        # (https://github.com/django/django/blob/4.1.7/django/contrib/admin/sites.py#L270),
+        # so that this path can override it, and consequently be used as intended in `admin_urls.py`
+        path("logout/", logout_view, name='logout'),
+
+        prefix_default_language=False,
+    )
 
 
 def ckeditor_uploader_urls():

@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from django.urls import path, register_converter
 from django.views.generic import TemplateView
 
-from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, permission_required_else_denied
+from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, logout_urls, permission_required_else_denied
 from . import converters, views
 
 
@@ -24,6 +24,7 @@ urlpatterns = [
 
     *ckeditor_uploader_urls(),
 ]
+urlpatterns += logout_urls()
 
 unsafe_urlpatterns = [
     path("", views.DocumentationPageDetailView.as_view(is_main_page=True), name='home'),

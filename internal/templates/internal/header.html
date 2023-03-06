@@ -43,7 +43,7 @@
             <div class="text">{% translate "Django admin" %}</div>
         </a>
     {% endif %}
-    <form class="logout-form item" method="POST" action="{% host_url 'logout' host 'main' %}">
+    <form class="logout-form item" method="POST" action="{% url 'logout' %}">
         {% csrf_token %}
         <button class="text" type="submit">{% translate "Log out" %}</button>
     </form>

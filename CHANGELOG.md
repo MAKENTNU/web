@@ -45,6 +45,8 @@ A summary of changes made to the codebase, grouped per deployment.
 
 - Fixed admins not being able to cancel other users' tickets
 - Made the CKEditor file uploader work on all subdomains
+- Fixed logging out not working on subdomains other than the "main" subdomain (https://makentnu.no/)
+- Fixed logging out not automatically redirecting to the front page
 - Fixed always auto-scrolling to the first toggle button when opening a member's info modal in [the member list](https://i.makentnu.no/members/)
   - The modal should now instead open with the previous scroll position when hiding and re-showing it (even when showing a different member)
 - Fixed missing card numbers being displayed as "None" instead of simply showing a blank field, in [the member list](https://i.makentnu.no/members/)
@@ -58,6 +60,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Renamed members' `gmail` field to `google_email`, as the email address of a Google user can potentially belong to any host, not just "gmail.com"
 - Changed order of the apps listed on [the Django admin index page](https://admin.makentnu.no/)
 - Set a max length of 1000 characters to event ticket comments
+- Updated the "social" config for authenticating with Dataporten
 - Never-ending masses of code cleanup
 
 
