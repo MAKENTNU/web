@@ -21,6 +21,7 @@ A summary of changes made to the codebase, grouped per deployment.
       see [this issue](https://github.com/jazzband/django-simple-history/issues/1063)
 - Added links to the guides on what should be done when a member enrolls/retires/quits, in [the member list](https://i.makentnu.no/members/)
   - These can be changed through [the dynamic settings in Django admin](https://admin.makentnu.no/constance/config/)
+- Added GitHub Actions workflow for automatically labeling deployment PRs
 
 ### Improvements
 
@@ -61,6 +62,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Changed order of the apps listed on [the Django admin index page](https://admin.makentnu.no/)
 - Set a max length of 1000 characters to event ticket comments
 - Updated the "social" config for authenticating with Dataporten
+- Changed the CodeQL configuration to be scheduled to run just once a week
 - Never-ending masses of code cleanup
 
 

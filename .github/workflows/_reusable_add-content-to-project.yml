@@ -1,4 +1,25 @@
-# This is a reusable workflow; see https://docs.github.com/en/actions/using-workflows/reusing-workflows
+# This is a reusable workflow; see https://docs.github.com/en/actions/using-workflows/reusing-workflows.
+# It was created because GitHub projects' workflows (see e.g. https://github.com/orgs/MAKENTNU/projects/1/workflows)
+# don't (currently) support doing the specific things done in the steps below.
+#
+# The workflow requires that the following repository variables have been created:
+# - `ORGANIZATION_PROJECT_NUMBER` - The number/ID in the project URL (https://github.com/orgs/MAKENTNU/projects/1)
+# - `ORGANIZATION_PROJECT__DATE_FIELD_NAME` - The name of the project's date field
+# - `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` - The value of the 'Status' field set for an item when closed
+#                                                           (see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+# and the following organization variables:
+# - `ORGANIZATION_NAME` - The name of the organization in the project URL (https://github.com/orgs/MAKENTNU/projects/1)
+#
+# The workflow also expects that the following project workflows are turned on for the project:
+# - "Item closed" (https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450):
+#   - "When an item is closed": "issue, pull request"
+#   - "Set value": "Status: <the value of the `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` repository variable>"
+# and that the following project workflows are turned off:
+# - "Item added to project"
+# - "Item reopened"
+# (The "Pull request merged" project workflow (https://github.com/orgs/MAKENTNU/projects/1/workflows/3569451)
+# does not affect and is not affected by any of this.
+# However, it could be natural that it sets the same value as the "Item closed" project workflow.)
 
 name: Add content to project
 
@@ -29,9 +50,10 @@ jobs:
       - name: Get project data
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          ORGANIZATION: MAKENTNU
-          PROJECT_NUMBER: 1
-          DATE_FIELD_NAME: Date posted
+          ORGANIZATION: ${{ vars.ORGANIZATION_NAME }}
+          PROJECT_NUMBER: ${{ vars.ORGANIZATION_PROJECT_NUMBER }}
+          DATE_FIELD_NAME: ${{ vars.ORGANIZATION_PROJECT__DATE_FIELD_NAME }}
+          # This name is hardcoded by GitHub and cannot be changed
           STATUS_FIELD_NAME: Status
           STATUS_FIELD_VALUE_NAME: ${{ inputs.status_field_value_name }}
         run: |
@@ -129,9 +151,10 @@ jobs:
 
       - name: Set status
         # Only set the status if it's not already set,
-        # or if it's a reopened issue/PR (as they're marked as 'Done' when closed - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+        # or if it's a reopened issue/PR (as they should be marked with the value of `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` when closed
+        # - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
         if: ${{ !env.STATUS_FIELD_VALUE
-          || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == 'Done' }}
+          || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == vars.ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
