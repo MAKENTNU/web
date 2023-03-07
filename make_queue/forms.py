@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.db.models.functions import Concat
 from django.utils import timezone
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
@@ -122,7 +123,7 @@ class ReservationRuleForm(forms.ModelForm):
 
 class QuotaForm(forms.ModelForm):
     user = UserModelChoiceField(
-        queryset=User.objects.all(),
+        queryset=User.objects.order_by(Concat('first_name', 'last_name'), 'username'),
         widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
         # `capfirst()` to avoid duplicate translation differing only in case
         label=capfirst(_("user")),

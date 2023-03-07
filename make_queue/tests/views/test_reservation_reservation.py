@@ -19,6 +19,7 @@ from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
+from ...templatetags.reservation_extra import can_change_reservation
 from ...views.admin.reservation import MAKEReservationsListView
 from ...views.reservation.reservation import CreateReservationView, EditReservationView
 
@@ -162,14 +163,22 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
         context_data["machine_types"] = set(context_data["machine_types"])
 
         self.assertDictEqual(context_data, {
-            "can_change_start_time": True, "event_timeplaces": [self.timeplace], "new_reservation": False,
+            "can_change_start_time": True,
+            "can_change_end_time": True,
+            "event_timeplaces": [self.timeplace],
+            "new_reservation": False,
             "machine_types": {
                 machine_type for machine_type in MachineType.objects.all()
                 if machine_type.can_user_use(self.user)
             },
-            "start_time": reservation.start_time, "end_time": reservation.end_time, "selected_machine": self.machine,
-            "event": self.timeplace, "special": False, "special_text": "",
-            "maximum_days_in_advance": Reservation.FUTURE_LIMIT.days, "comment": "Comment",
+            "start_time": reservation.start_time,
+            "end_time": reservation.end_time,
+            "selected_machine": self.machine,
+            "event": self.timeplace,
+            "special": False,
+            "special_text": "",
+            "maximum_days_in_advance": Reservation.FUTURE_LIMIT.days,
+            "comment": "Comment",
             "reservation_pk": reservation.pk,
         })
 
@@ -181,12 +190,15 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
 
         self.assertDictEqual(context_data, {
             "can_change_start_time": True,
-            "event_timeplaces": [self.timeplace], "new_reservation": True,
+            "can_change_end_time": True,
+            "event_timeplaces": [self.timeplace],
+            "new_reservation": True,
             "machine_types": {
                 machine_type for machine_type in MachineType.objects.all()
                 if machine_type.can_user_use(self.user)
             },
-            "start_time": start_time, "selected_machine": self.machine,
+            "start_time": start_time,
+            "selected_machine": self.machine,
             "maximum_days_in_advance": Reservation.FUTURE_LIMIT.days,
         })
 
@@ -505,9 +517,9 @@ class TestMarkReservationFinishedView(TestCase):
 
     @patch('django.utils.timezone.now')
     def test_valid_post_request_succeeds(self, now_mock):
-        # Lock the return value of `timezone.now()` and set it to 1 minute after `self.reservation1` has started
+        # Freeze the return value of `timezone.now()` and set it to 1 minute after `self.reservation1` has started
         now_mock.return_value = self.now + timedelta(hours=1, minutes=1)
-        self.assertTrue(self.reservation1.can_change_end_time(self.user))
+        self.assertTrue(can_change_reservation(self.reservation1, self.user))
 
         response = self.post_to(self.reservation1)
         self.assertEqual(response.status_code, HTTPStatus.OK)
@@ -536,7 +548,7 @@ class TestMarkReservationFinishedView(TestCase):
 
     @patch('django.utils.timezone.now')
     def test_finishing_just_before_other_reservation_starts_succeeds(self, now_mock):
-        # Lock the return value of `timezone.now()`
+        # Freeze the return value of `timezone.now()`
         now_mock.return_value = self.now
 
         self.reservation1.delete()
@@ -557,3 +569,22 @@ class TestMarkReservationFinishedView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         reservation2.refresh_from_db()
         self.assertEqual(reservation2.end_time, timezone.now())
+
+    @patch('django.utils.timezone.now')
+    def test_can_finish_existing_reservations_for_machine_out_of_order_or_on_maintenance(self, now_mock):
+        # Freeze the return value of `timezone.now()`
+        now_mock.return_value = self.now
+
+        for machine_status in (Machine.Status.OUT_OF_ORDER, Machine.Status.MAINTENANCE):
+            with self.subTest(machine_status=machine_status):
+                machine = self.reservation1.machine
+                machine.status = machine_status
+                machine.save()
+
+                # Set "now" to 5 minutes before `self.reservation1` ends
+                now_mock.return_value = self.reservation1.end_time - timedelta(minutes=5)
+
+                response = self.post_to(self.reservation1)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
+                self.reservation1.refresh_from_db()
+                self.assertEqual(self.reservation1.end_time, timezone.now())

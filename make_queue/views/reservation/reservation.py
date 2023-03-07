@@ -17,7 +17,7 @@ from util.view_utils import PreventGetRequestsMixin
 from ...forms import FreeSlotForm, ReservationForm
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Reservation, ReservationRule
-from ...templatetags.reservation_extra import calendar_url_reservation, can_delete_reservation, can_mark_reservation_finished
+from ...templatetags.reservation_extra import calendar_url_reservation, can_change_reservation, can_delete_reservation, can_mark_reservation_finished
 
 
 # TODO: rewrite this whole view (and everything that uses it),
@@ -116,7 +116,8 @@ class CreateOrEditReservationView(TemplateView, ABC):
             context_data["special"] = reservation.special
             context_data["special_text"] = reservation.special_text
             context_data["comment"] = reservation.comment
-            context_data["can_change_start_time"] = reservation.can_change(self.request.user)
+            context_data["can_change_start_time"] = reservation.can_change_start_time()
+            context_data["can_change_end_time"] = reservation.can_change_end_time()
         # Otherwise populate with default information given to the view
         else:
             if hasattr(self, 'machine'):
@@ -129,6 +130,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
             context_data["can_change_start_time"] = True
+            context_data["can_change_end_time"] = True
 
         return context_data
 
@@ -250,7 +252,7 @@ class EditReservationView(CreateOrEditReservationView):
         """
         reservation = self.reservation
         # User must be able to change the given reservation
-        if reservation.can_change(request.user) or reservation.can_change_end_time(request.user):
+        if can_change_reservation(reservation, request.user):
             return super().dispatch(request, *args, **kwargs)
         else:
             return redirect('my_reservations_list')

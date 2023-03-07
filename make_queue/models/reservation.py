@@ -167,6 +167,7 @@ class Reservation(models.Model):
 
         return self.start_time - other.end_time
 
+    # TODO: move all validation out of the `save()` method and to a form
     def save(self, *args, **kwargs):
         if not self.validate():
             raise ValidationError("Not a valid reservation")
@@ -199,23 +200,38 @@ class Reservation(models.Model):
         if not self.is_within_allowed_period():
             return False
 
-        # Check if machine is listed as out of order or maintenance
-        if self.check_machine_out_of_order() or self.check_machine_maintenance():
-            return False
-
+        machine_out_of_order_or_maintenance = self.check_machine_out_of_order() or self.check_machine_maintenance()
         earliest_allowed_time_to_set = self.get_earliest_allowed_time_to_set()
-        # Check if the user can change the reservation
+        # If this reservation object already exists and is being changed:
         if self.pk:
-            old_reservation = Reservation.objects.get(pk=self.pk)
-            can_change = self.can_change(self.user)
-            can_change_end_time = old_reservation.can_change_end_time(self.user)
-            valid_end_time_change = (old_reservation.start_time == self.start_time
-                                     and self.end_time >= earliest_allowed_time_to_set)
-            if not can_change and not (can_change_end_time and valid_end_time_change):
+            # Check if the user can change the reservation
+            if not self.can_be_changed_by(self.user):
                 return False
 
-        if not self.pk and self.start_time < earliest_allowed_time_to_set:
-            return False
+            old_reservation = Reservation.objects.get(pk=self.pk)
+            # If the start time has been changed:
+            if self.start_time != old_reservation.start_time:
+                if not old_reservation.can_change_start_time() or self.start_time < earliest_allowed_time_to_set:
+                    return False
+                # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
+                if machine_out_of_order_or_maintenance and self.start_time < old_reservation.start_time:
+                    return False
+
+            # If the end time has been changed:
+            if self.end_time != old_reservation.end_time:
+                if not old_reservation.can_change_end_time() or self.end_time < earliest_allowed_time_to_set:
+                    return False
+                # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
+                if machine_out_of_order_or_maintenance and self.end_time > old_reservation.end_time:
+                    return False
+        # If this reservation object is being created:
+        else:
+            if machine_out_of_order_or_maintenance:
+                return False
+
+            # Don't need to check `end_time`, as it's already been checked to be equal to or after `start_time`
+            if self.start_time < earliest_allowed_time_to_set:
+                return False
 
         # Check if the user can make the given reservation/edit
         return self.quota_can_create_reservation()
@@ -248,21 +264,22 @@ class Reservation(models.Model):
     def get_earliest_allowed_time_to_set(cls) -> datetime:
         return timezone.now() - cls.GRACE_PERIOD_FOR_SETTING_TIMES
 
-    def can_delete(self, user: User):
+    def can_be_deleted_by(self, user: User):
         if user.has_perm('make_queue.delete_reservation'):
             return True
         return self.user == user and self.start_time > timezone.now()
 
-    def can_change(self, user: User):
+    def can_be_changed_by(self, user: User):
         if (user.has_perm('make_queue.can_create_event_reservation')
-                and (self.special or (self.event is not None))):
+                and (self.special or self.event)):
             return True
-        if self.start_time < timezone.now():
-            return False
         return self.user == user or user.is_superuser
 
-    def can_change_end_time(self, user: User):
-        return self.end_time > timezone.now() and (self.user == user or user.is_superuser)
+    def can_change_start_time(self):
+        return timezone.now() < self.start_time
+
+    def can_change_end_time(self):
+        return timezone.now() < self.end_time
 
 
 class ReservationRule(models.Model):
