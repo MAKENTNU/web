@@ -167,6 +167,7 @@ class Reservation(models.Model):
 
         return self.start_time - other.end_time
 
+    # TODO: move all validation out of the `save()` method and to a form
     def save(self, *args, **kwargs):
         if not self.validate():
             raise ValidationError("Not a valid reservation")
@@ -207,14 +208,19 @@ class Reservation(models.Model):
         # If this reservation object already exists and is being changed:
         if self.pk:
             # Check if the user can change the reservation
-            old_reservation = Reservation.objects.get(pk=self.pk)
-            can_user_change = self.can_be_changed_by(self.user)
-            can_change_start_time = old_reservation.can_change_start_time()
-            can_change_end_time = old_reservation.can_change_end_time()
-            valid_end_time_change = (old_reservation.start_time == self.start_time
-                                     and self.end_time >= earliest_allowed_time_to_set)
-            if not all((can_user_change, can_change_start_time, can_change_end_time, valid_end_time_change)):
+            if not self.can_be_changed_by(self.user):
                 return False
+
+            old_reservation = Reservation.objects.get(pk=self.pk)
+            # If the start time has been changed:
+            if self.start_time != old_reservation.start_time:
+                if not old_reservation.can_change_start_time() or self.start_time < earliest_allowed_time_to_set:
+                    return False
+
+            # If the end time has been changed:
+            if self.end_time != old_reservation.end_time:
+                if not old_reservation.can_change_end_time() or self.end_time < earliest_allowed_time_to_set:
+                    return False
         # If this reservation object is being created:
         else:
             # Don't need to check `end_time`, as it's already been checked to be equal to or after `start_time`
