@@ -14,6 +14,7 @@ from util.locale_utils import parse_datetime_localized
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
+from ...templatetags.reservation_extra import can_change_reservation
 
 
 Day = ReservationRule.Day
@@ -235,15 +236,19 @@ class TestReservation(ReservationTestBase):
             "Reservations on different printers should be able to overlap in time")
 
     def test_can_owner_change_future_reservation(self):
-        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_change(self.user_with_course_and_quota))
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
 
     def test_can_owner_change_started_reservation(self):
-        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_change(self.user_with_course_and_quota))
+        reservation = self.create_reservation(timedelta(hours=-1), timedelta(hours=2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
+        self.assertFalse(reservation.can_change_start_time())
+        self.assertTrue(reservation.can_change_end_time())
 
     def test_can_owner_change_end_time_of_started_reservation(self):
         reservation = self.create_reservation(timedelta(hours=-2), timedelta(hours=2))
         self.save_past_reservation(reservation)
-        self.assertTrue(reservation.can_change_end_time(self.user_with_course_and_quota))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
         reservation.end_time = timezone.now() + timedelta(hours=1)
         self.check_reservation_valid(reservation, "Should be able to change end time of started reservation")
         reservation.end_time = timezone.now() + timedelta(hours=-1)
@@ -251,28 +256,27 @@ class TestReservation(ReservationTestBase):
                                        "Should not be able to change end time of started reservation to before the current time")
 
     def test_can_owner_change_end_time_of_ended_reservation(self):
-        self.assertFalse(
-            self.create_reservation(timedelta(hours=-3), timedelta(hours=-1)).can_change_end_time(self.user_with_course_and_quota))
+        reservation = self.create_reservation(timedelta(hours=-3), timedelta(hours=-1))
+        self.assertFalse(can_change_reservation(reservation, self.user_with_course_and_quota))
 
     def test_can_owner_change_started_event_reservation(self):
         self.give_user_event_permission()
 
-        self.assertTrue(
-            self.create_reservation(timedelta(hours=-1), timedelta(hours=2), event=self.timeplace).can_change(
-                self.user_with_course_and_quota))
+        reservation = self.create_reservation(timedelta(hours=-1), timedelta(hours=2), event=self.timeplace)
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
 
     def test_can_owner_change_started_special_reservation(self):
         self.give_user_event_permission()
 
-        self.assertTrue(self.create_reservation(timedelta(hours=-1), timedelta(hours=2), special=True,
-                                                special_text="Test").can_change(self.user_with_course_and_quota))
+        reservation = self.create_reservation(timedelta(hours=-1), timedelta(hours=2), special=True, special_text="Test")
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
 
     def test_can_other_user_change_future_reservation(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
-        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
-        self.assertFalse(reservation.can_change(user2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
+        self.assertFalse(can_change_reservation(reservation, user2))
 
     def test_can_user_with_event_reservation_change_other_user_non_event_reservation(self):
         user2 = User.objects.create_user("test", "user2@makentnu.no", "test_pass")
@@ -280,8 +284,8 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
 
-        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
-        self.assertFalse(reservation.can_change(user2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
+        self.assertFalse(can_change_reservation(reservation, user2))
 
     def test_can_user_with_event_reservation_change_other_user_event_reservation(self):
         self.give_user_event_permission()
@@ -290,8 +294,8 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
-        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
-        self.assertTrue(reservation.can_change(user2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
+        self.assertTrue(can_change_reservation(reservation, user2))
 
     def test_can_user_with_event_reservation_change_other_user_special_reservation(self):
         self.give_user_event_permission()
@@ -300,8 +304,8 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
-        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
-        self.assertTrue(reservation.can_change(user2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
+        self.assertTrue(can_change_reservation(reservation, user2))
 
     def test_can_user_without_event_reservation_change_other_user_special_reservation(self):
         self.give_user_event_permission()
@@ -309,8 +313,8 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), special=True, special_text="Test")
 
-        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
-        self.assertFalse(reservation.can_change(user2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
+        self.assertFalse(can_change_reservation(reservation, user2))
 
     def test_can_user_without_event_reservation_change_other_user_event_reservation(self):
         self.give_user_event_permission()
@@ -318,14 +322,14 @@ class TestReservation(ReservationTestBase):
 
         reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2), event=self.timeplace)
 
-        self.assertTrue(reservation.can_change(self.user_with_course_and_quota))
-        self.assertFalse(reservation.can_change(user2))
+        self.assertTrue(can_change_reservation(reservation, self.user_with_course_and_quota))
+        self.assertFalse(can_change_reservation(reservation, user2))
 
     def test_can_delete_future_reservation(self):
-        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_delete(self.user_with_course_and_quota))
+        self.assertTrue(self.create_reservation(timedelta(hours=1), timedelta(hours=2)).can_be_deleted_by(self.user_with_course_and_quota))
 
     def test_cannot_delete_started_reservation(self):
-        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_delete(self.user_with_course_and_quota))
+        self.assertFalse(self.create_reservation(timedelta(hours=-1), timedelta(hours=2)).can_be_deleted_by(self.user_with_course_and_quota))
 
     def test_is_within_allowed_period_for_reservation(self):
         Reservation.FUTURE_LIMIT = timedelta(days=7)

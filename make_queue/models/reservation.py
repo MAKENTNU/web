@@ -208,11 +208,12 @@ class Reservation(models.Model):
         if self.pk:
             # Check if the user can change the reservation
             old_reservation = Reservation.objects.get(pk=self.pk)
-            can_change = self.can_change(self.user)
-            can_change_end_time = old_reservation.can_change_end_time(self.user)
+            can_user_change = self.can_be_changed_by(self.user)
+            can_change_start_time = old_reservation.can_change_start_time()
+            can_change_end_time = old_reservation.can_change_end_time()
             valid_end_time_change = (old_reservation.start_time == self.start_time
                                      and self.end_time >= earliest_allowed_time_to_set)
-            if not can_change and not (can_change_end_time and valid_end_time_change):
+            if not all((can_user_change, can_change_start_time, can_change_end_time, valid_end_time_change)):
                 return False
         # If this reservation object is being created:
         else:
@@ -251,21 +252,22 @@ class Reservation(models.Model):
     def get_earliest_allowed_time_to_set(cls) -> datetime:
         return timezone.now() - cls.GRACE_PERIOD_FOR_SETTING_TIMES
 
-    def can_delete(self, user: User):
+    def can_be_deleted_by(self, user: User):
         if user.has_perm('make_queue.delete_reservation'):
             return True
         return self.user == user and self.start_time > timezone.now()
 
-    def can_change(self, user: User):
+    def can_be_changed_by(self, user: User):
         if (user.has_perm('make_queue.can_create_event_reservation')
                 and (self.special or self.event)):
             return True
-        if self.start_time < timezone.now():
-            return False
         return self.user == user or user.is_superuser
 
-    def can_change_end_time(self, user: User):
-        return self.end_time > timezone.now() and (self.user == user or user.is_superuser)
+    def can_change_start_time(self):
+        return timezone.now() < self.start_time
+
+    def can_change_end_time(self):
+        return timezone.now() < self.end_time
 
 
 class ReservationRule(models.Model):

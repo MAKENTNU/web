@@ -19,6 +19,7 @@ from ...forms import ReservationForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
+from ...templatetags.reservation_extra import can_change_reservation
 from ...views.admin.reservation import MAKEReservationsListView
 from ...views.reservation.reservation import CreateReservationView, EditReservationView
 
@@ -516,7 +517,7 @@ class TestMarkReservationFinishedView(TestCase):
     def test_valid_post_request_succeeds(self, now_mock):
         # Freeze the return value of `timezone.now()` and set it to 1 minute after `self.reservation1` has started
         now_mock.return_value = self.now + timedelta(hours=1, minutes=1)
-        self.assertTrue(self.reservation1.can_change_end_time(self.user))
+        self.assertTrue(can_change_reservation(self.reservation1, self.user))
 
         response = self.post_to(self.reservation1)
         self.assertEqual(response.status_code, HTTPStatus.OK)

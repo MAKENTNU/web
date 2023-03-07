@@ -94,12 +94,12 @@ def reservation_denied_message(user: User, machine: Machine):
 
 @register.simple_tag
 def can_change_reservation(reservation: Reservation, user: User):
-    return reservation.can_change(user) or reservation.can_change_end_time(user)
+    return reservation.can_be_changed_by(user) and (reservation.can_change_start_time() or reservation.can_change_end_time())
 
 
 @register.simple_tag
 def can_delete_reservation(reservation: Reservation, user: User):
-    return reservation.can_delete(user)
+    return reservation.can_be_deleted_by(user)
 
 
 @register.simple_tag
