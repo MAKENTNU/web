@@ -33,6 +33,8 @@ A summary of changes made to the codebase, grouped per deployment.
 - Made the red "Canceled" ribbon on tickets transparent when clicking / hovering over it, to be able to read the text behind it
 - Added a "help text" yellow question mark icon next to the "Discord username" field in member info forms
   (displayed when clicked / hovered over)
+- Made the user dropdowns on both [the quota admin page](https://makentnu.no/reservation/quota/) and
+  [the quota form page](https://makentnu.no/reservation/quota/create/), function equally
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
   - Most pages will have " | MAKE NTNU" as suffix to the title;
@@ -44,6 +46,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Fixes
 
+- Fixed users being unable to mark reservations as finished when the machine's status is set to "Out of order" or "Maintenance"
 - Fixed admins not being able to cancel other users' tickets
 - Made the CKEditor file uploader work on all subdomains
 - Fixed logging out not working on subdomains other than the "main" subdomain (https://makentnu.no/)
