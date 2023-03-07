@@ -79,3 +79,18 @@ class TestDeleteReservationView(TestCase):
         response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
+
+    def test_can_cancel_existing_reservation_for_machine_out_of_order(self):
+        self._test_can_cancel_existing_reservation_for_machine_with_status(Machine.Status.OUT_OF_ORDER)
+
+    def test_can_cancel_existing_reservation_for_machine_on_maintenance(self):
+        self._test_can_cancel_existing_reservation_for_machine_with_status(Machine.Status.MAINTENANCE)
+
+    def _test_can_cancel_existing_reservation_for_machine_with_status(self, machine_status: Machine.Status):
+        machine = self.reservation.machine
+        machine.status = machine_status
+        machine.save()
+
+        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())

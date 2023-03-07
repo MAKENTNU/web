@@ -200,10 +200,7 @@ class Reservation(models.Model):
         if not self.is_within_allowed_period():
             return False
 
-        # Check if machine is listed as out of order or maintenance
-        if self.check_machine_out_of_order() or self.check_machine_maintenance():
-            return False
-
+        machine_out_of_order_or_maintenance = self.check_machine_out_of_order() or self.check_machine_maintenance()
         earliest_allowed_time_to_set = self.get_earliest_allowed_time_to_set()
         # If this reservation object already exists and is being changed:
         if self.pk:
@@ -216,13 +213,22 @@ class Reservation(models.Model):
             if self.start_time != old_reservation.start_time:
                 if not old_reservation.can_change_start_time() or self.start_time < earliest_allowed_time_to_set:
                     return False
+                # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
+                if machine_out_of_order_or_maintenance and self.start_time < old_reservation.start_time:
+                    return False
 
             # If the end time has been changed:
             if self.end_time != old_reservation.end_time:
                 if not old_reservation.can_change_end_time() or self.end_time < earliest_allowed_time_to_set:
                     return False
+                # If the machine is out of order or on maintenance, only allow the change if the reserved period is made smaller
+                if machine_out_of_order_or_maintenance and self.end_time > old_reservation.end_time:
+                    return False
         # If this reservation object is being created:
         else:
+            if machine_out_of_order_or_maintenance:
+                return False
+
             # Don't need to check `end_time`, as it's already been checked to be equal to or after `start_time`
             if self.start_time < earliest_allowed_time_to_set:
                 return False

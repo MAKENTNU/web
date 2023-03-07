@@ -569,3 +569,22 @@ class TestMarkReservationFinishedView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         reservation2.refresh_from_db()
         self.assertEqual(reservation2.end_time, timezone.now())
+
+    @patch('django.utils.timezone.now')
+    def test_can_finish_existing_reservations_for_machine_out_of_order_or_on_maintenance(self, now_mock):
+        # Freeze the return value of `timezone.now()`
+        now_mock.return_value = self.now
+
+        for machine_status in (Machine.Status.OUT_OF_ORDER, Machine.Status.MAINTENANCE):
+            with self.subTest(machine_status=machine_status):
+                machine = self.reservation1.machine
+                machine.status = machine_status
+                machine.save()
+
+                # Set "now" to 5 minutes before `self.reservation1` ends
+                now_mock.return_value = self.reservation1.end_time - timedelta(minutes=5)
+
+                response = self.post_to(self.reservation1)
+                self.assertEqual(response.status_code, HTTPStatus.OK)
+                self.reservation1.refresh_from_db()
+                self.assertEqual(self.reservation1.end_time, timezone.now())

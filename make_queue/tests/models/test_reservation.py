@@ -350,6 +350,95 @@ class TestReservation(ReservationTestBase):
             self.create_reservation(timedelta(days=7), timedelta(days=7, hours=1), event=self.timeplace),
             "Event reservations are always valid no matter how far in the future they are")
 
+    def set_machine_status(self, status: Machine.Status):
+        self.machine.status = status
+        self.machine.save()
+
+    def test_cannot_create_reservations_for_machines_out_of_order_or_on_maintenance(self):
+        reservation = self.create_reservation(timedelta(hours=1), timedelta(hours=2))
+        # Invalid when out of order:
+        self.set_machine_status(Machine.Status.OUT_OF_ORDER)
+        self.check_reservation_invalid(reservation)
+        # Invalid when on maintenance:
+        self.set_machine_status(Machine.Status.MAINTENANCE)
+        self.check_reservation_invalid(reservation)
+        # Valid when available:
+        self.set_machine_status(Machine.Status.AVAILABLE)
+        self.check_reservation_valid(reservation)
+
+    @patch('django.utils.timezone.now')
+    def test_can_make_existing_reservations_shorter_for_machine_out_of_order_or_on_maintenance(self, now_mock):
+        # Freeze the return value of `timezone.now()`
+        now_mock.return_value = parse_datetime_localized("2023-03-06 18:00")
+
+        self.set_machine_status(Machine.Status.AVAILABLE)
+        reservation1 = self.create_reservation(timedelta(hours=1), timedelta(hours=5))
+        self.check_reservation_valid(reservation1)  # This also saves it
+
+        initial_start_time = reservation1.start_time
+        initial_end_time = reservation1.end_time
+        for machine_status in (Machine.Status.OUT_OF_ORDER, Machine.Status.MAINTENANCE):
+            with self.subTest(machine_status=machine_status):
+                self.set_machine_status(machine_status)
+
+                # Making the reservation longer is invalid:
+                reservation1.start_time -= timedelta(hours=0.5)
+                self.check_reservation_invalid(reservation1)
+                reservation1.end_time += timedelta(hours=0.5)
+                self.check_reservation_invalid(reservation1)
+                reservation1.start_time = initial_start_time
+                self.check_reservation_invalid(reservation1)
+                reservation1.end_time = initial_end_time
+
+                # Making the reservation shorter is valid:
+                reservation1.start_time = initial_start_time + timedelta(hours=0.5)
+                self.check_reservation_valid(reservation1)
+                reservation1.end_time = initial_end_time - timedelta(hours=0.5)
+                self.check_reservation_valid(reservation1)
+                reservation1.start_time = initial_start_time + timedelta(hours=1)
+                reservation1.end_time = initial_end_time - timedelta(hours=1)
+                self.check_reservation_valid(reservation1)
+
+                # Making the reservation longer is valid if the machine is available:
+                self.set_machine_status(Machine.Status.AVAILABLE)
+                reservation1.start_time -= timedelta(hours=0.5)
+                self.check_reservation_valid(reservation1)
+                reservation1.end_time += timedelta(hours=0.5)
+                self.check_reservation_valid(reservation1)
+                # Make it even longer (than it was above) and reset it for the next loop iteration
+                reservation1.start_time = initial_start_time
+                reservation1.end_time = initial_end_time
+                self.check_reservation_valid(reservation1)
+
+        # Skip forward a day and create a new reservation
+        now_mock.return_value += timedelta(days=1)
+        self.set_machine_status(Machine.Status.AVAILABLE)
+        reservation2 = self.create_reservation(timedelta(hours=1), timedelta(hours=5))
+        self.check_reservation_valid(reservation2)  # This also saves it
+        # Changing the reservation duration after the reservation has started should produce the same results
+        now_mock.return_value += timedelta(hours=2)
+
+        initial_end_time = reservation2.end_time
+        for machine_status in (Machine.Status.OUT_OF_ORDER, Machine.Status.MAINTENANCE):
+            with self.subTest(machine_status=machine_status):
+                self.set_machine_status(machine_status)
+
+                # Making the reservation longer is invalid:
+                reservation2.end_time += timedelta(hours=0.5)
+                self.check_reservation_invalid(reservation2)
+
+                # Making the reservation shorter is valid:
+                reservation2.end_time = initial_end_time - timedelta(hours=1)
+                self.check_reservation_valid(reservation2)
+
+                # Making the reservation longer is valid if the machine is available:
+                self.set_machine_status(Machine.Status.AVAILABLE)
+                reservation2.end_time += timedelta(hours=0.5)
+                self.check_reservation_valid(reservation2)
+                # Make it even longer (than it was above) and reset it for the next loop iteration
+                reservation2.end_time = initial_end_time
+                self.check_reservation_valid(reservation2)
+
 
 class TestReservationOfAdvancedPrinters(ReservationTestBase):
 
