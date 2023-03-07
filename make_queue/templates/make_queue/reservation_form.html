@@ -113,7 +113,7 @@
                 <div class="field">
                     <label>{% translate "end time"|capfirst %}</label>
                     <div id="end-time" class="ui calendar">
-                        <div class="ui input left icon">
+                        <div class="ui input {% if not can_change_end_time %}disabled{% endif %} left icon">
                             <i class="calendar icon"></i>
                             <input name="end_time" type="text" placeholder="{% translate "end time"|capfirst %}" value="{% spaceless %}
                                 {% if end_time %}

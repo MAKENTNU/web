@@ -164,6 +164,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
 
         self.assertDictEqual(context_data, {
             "can_change_start_time": True,
+            "can_change_end_time": True,
             "event_timeplaces": [self.timeplace],
             "new_reservation": False,
             "machine_types": {
@@ -189,6 +190,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
 
         self.assertDictEqual(context_data, {
             "can_change_start_time": True,
+            "can_change_end_time": True,
             "event_timeplaces": [self.timeplace],
             "new_reservation": True,
             "machine_types": {

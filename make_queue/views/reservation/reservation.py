@@ -117,6 +117,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
             context_data["special_text"] = reservation.special_text
             context_data["comment"] = reservation.comment
             context_data["can_change_start_time"] = reservation.can_change_start_time()
+            context_data["can_change_end_time"] = reservation.can_change_end_time()
         # Otherwise populate with default information given to the view
         else:
             if hasattr(self, 'machine'):
@@ -129,6 +130,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
             context_data["can_change_start_time"] = True
+            context_data["can_change_end_time"] = True
 
         return context_data
 
