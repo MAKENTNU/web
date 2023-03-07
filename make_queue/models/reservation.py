@@ -204,8 +204,9 @@ class Reservation(models.Model):
             return False
 
         earliest_allowed_time_to_set = self.get_earliest_allowed_time_to_set()
-        # Check if the user can change the reservation
+        # If this reservation object already exists and is being changed:
         if self.pk:
+            # Check if the user can change the reservation
             old_reservation = Reservation.objects.get(pk=self.pk)
             can_change = self.can_change(self.user)
             can_change_end_time = old_reservation.can_change_end_time(self.user)
@@ -213,9 +214,11 @@ class Reservation(models.Model):
                                      and self.end_time >= earliest_allowed_time_to_set)
             if not can_change and not (can_change_end_time and valid_end_time_change):
                 return False
-
-        if not self.pk and self.start_time < earliest_allowed_time_to_set:
-            return False
+        # If this reservation object is being created:
+        else:
+            # Don't need to check `end_time`, as it's already been checked to be equal to or after `start_time`
+            if self.start_time < earliest_allowed_time_to_set:
+                return False
 
         # Check if the user can make the given reservation/edit
         return self.quota_can_create_reservation()
@@ -255,7 +258,7 @@ class Reservation(models.Model):
 
     def can_change(self, user: User):
         if (user.has_perm('make_queue.can_create_event_reservation')
-                and (self.special or (self.event is not None))):
+                and (self.special or self.event)):
             return True
         if self.start_time < timezone.now():
             return False

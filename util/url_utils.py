@@ -8,9 +8,6 @@ from django.urls import include, path
 from django.views.decorators.cache import never_cache
 from django_hosts import reverse
 
-from dataporten import views as dataporten_views
-from users.models import User
-
 
 def reverse_internal(viewname: str, *args):
     return reverse(viewname, args=args, host='internal', host_args=['i'])
@@ -23,6 +20,7 @@ def permission_required_else_denied(perm, login_url=None):
     When the user does not have the permission, they will be redirected to the login page if not logged in,
     and a ``PermissionDenied`` will be raised if already logged in.
     """
+    from users.models import User  # Avoids circular importing
 
     def check_perms(user: User):
         if not user.is_authenticated:
@@ -48,6 +46,8 @@ def logout_urls():
     subdomains (i.e. pressing the "Log out" button), multiple browsers (like Chrome) send an ``Origin`` header with a value of ``null``, which causes
     the CSRF verification to always fail.
     """
+    from dataporten import views as dataporten_views  # Avoids circular importing
+
     # Both of these views log the user out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
     if settings.USES_DATAPORTEN_AUTH:
         logout_view = dataporten_views.Logout.as_view()
