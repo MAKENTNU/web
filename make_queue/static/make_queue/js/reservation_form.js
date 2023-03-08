@@ -200,7 +200,7 @@ $endTimeField.calendar({
     minDate: new Date(),
 });
 
-$(".ui.dropdown").dropdown();
+$("#reservation-form .ui.dropdown").dropdown();
 $("#event-checkbox").checkbox({
     onChange: function () {
         $("#event-name-input").toggleClass("display-none", !$(this).is(":checked"));
