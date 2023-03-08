@@ -49,14 +49,12 @@
 
         <div class="ui styled accordion">
             {% for occurrence in timeplaces %}
-                <div class="title">
+                <div class="title {% if forloop.first %}active{% endif %}">
                     <i class="dropdown icon"></i>
                     {{ occurrence.start_time|year_wise_long_date }}
                 </div>
-                <div class="content">
-                    <div class="transition hidden">
-                        {% include 'news/event/detail/event_detail_occurrence_card.html' %}
-                    </div>
+                <div class="content {% if forloop.first %}active{% endif %}">
+                    {% include 'news/event/detail/event_detail_occurrence_card.html' %}
                 </div>
             {% endfor %}
         </div>
