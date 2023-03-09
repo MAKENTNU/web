@@ -107,8 +107,8 @@ class EventDetailView(PermissionRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         event = self.object
-        time_places = event.timeplaces.all()
-        future_time_places = event.timeplaces.published().future()
+        time_places = event.timeplaces.published()
+        future_time_places = time_places.future()
         return super().get_context_data(**{
             'timeplaces': time_places if event.standalone else future_time_places,
             # Don't show the "is old" message if the event has no time places at all
