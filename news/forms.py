@@ -63,7 +63,7 @@ class NewsBaseForm(forms.ModelForm):
                 # Translators: `the_type` is either "the article" or "the event"
                 'featured': _("If selected, {the_type} may be shown on the front page.").format(the_type=the_type),
                 # Translators: `the_type` is either "the article" or "the event"
-                'hidden': _("If selected, {the_type} will only be visible to admin users.").format(the_type=the_type),
+                'hidden': _("If selected, {the_type} will be hidden for all users.").format(the_type=the_type),
                 # Translators: `the_type` is either "the article" or "the event"
                 'private': _("If selected, {the_type} will only be visible to members of MAKE NTNU.").format(the_type=the_type),
             }

@@ -26,7 +26,7 @@
                     <i class="{% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle popup-trigger"
                        data-title="{% translate "hidden"|capfirst %}"
                        data-post-url="{% url 'timeplace_toggle' timeplace.event.pk timeplace.pk %}" data-toggle="hidden" data-model="timeplace"
-                       data-content="{% translate "If selected, the occurrence is hidden for non-admin users." %}">
+                       data-content="{% translate "If selected, the occurrence is hidden for all users." %}">
                     </i>
                 &nbsp;&nbsp;
                 {% if perms.news.change_timeplace %}
