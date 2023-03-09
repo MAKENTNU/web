@@ -456,7 +456,7 @@ class AdminNewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, FormVi
         setattr(obj, toggle_attr, toggled_attr_value)
         obj.save()
         return JsonResponse({
-            'color': 'yellow' if toggled_attr_value else 'grey',
+            'is_hidden': toggled_attr_value,
         })
 
     def form_invalid(self, form):

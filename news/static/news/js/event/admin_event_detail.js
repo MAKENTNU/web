@@ -28,14 +28,19 @@ function togglePost($element, postURL, model, toggle) {
             if ($.isEmptyObject(data))
                 return;
 
-            const color = data["color"];
+            const isHidden = data["is_hidden"];
             if (toggle === "private")
-                $element.attr("src", (color === "yellow") ? privateEventIcon : publicEventIcon);
-            else
-                $element.removeClass("yellow grey").addClass(color);
+                $element.attr("src", isHidden ? privateEventIcon : publicEventIcon);
+            else {
+                const $parent = $element.parent();
+                const $shownIcon = $parent.find(".shown.hidden-field")
+                const $hiddenIcon = $parent.find(".hidden.hidden-field")
+                $shownIcon.toggleClass("display-none", isHidden);
+                $hiddenIcon.toggleClass("display-none", !isHidden);
+            }
 
             if (model === "event")
-                $(`#message-${toggle}`).toggleClass("hidden", color === "grey");
+                $(`#message-${toggle}`).toggleClass("hidden", !isHidden);
         },
     });
 }

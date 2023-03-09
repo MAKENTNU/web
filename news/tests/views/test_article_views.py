@@ -57,11 +57,10 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
             return json.loads(response.content)
 
         self.user.add_perms('news.change_article')
-        self.assertEquals(toggle(self.article.pk, 'non_existent_attr'), {})
+        self.assertDictEqual(toggle(self.article.pk, 'non_existent_attr'), {})
 
-        hidden = self.article.hidden
-        self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'grey' if hidden else 'yellow'})
-        self.assertEquals(toggle(self.article.pk, 'hidden'), {'color': 'yellow' if hidden else 'grey'})
+        self.assertDictEqual(toggle(self.article.pk, 'hidden'), {'is_hidden': True})
+        self.assertDictEqual(toggle(self.article.pk, 'hidden'), {'is_hidden': False})
 
     def test_private_article(self):
         response = self.client.get(self.article_url)

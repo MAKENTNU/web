@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-06 01:40+0100\n"
+"POT-Creation-Date: 2023-03-09 17:28+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -15,6 +15,7 @@ msgstr ""
 "X-Generator: Poedit 2.2.1\n"
 
 #: announcements/admin.py:14 announcements/admin.py:23
+#: news/templates/news/event/admin_time_place_listing.html:26
 msgid "shown"
 msgstr "vist"
 
@@ -253,7 +254,7 @@ msgstr "Velg/søk"
 #: make_queue/templates/make_queue/course/course_registration_create.html:12
 #: make_queue/templates/make_queue/course/course_registration_list.html:18
 #: make_queue/templates/make_queue/machine_list.html:21
-#: make_queue/views/admin/quota.py:74
+#: make_queue/views/admin/quota.py:75
 #: make_queue/views/reservation/machine.py:57
 msgid "Add"
 msgstr "Legg til"
@@ -280,7 +281,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: checkin/templates/checkin/profile_internal.html:97 internal/forms.py:43
-#: make_queue/forms.py:211
+#: make_queue/forms.py:212
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -321,7 +322,7 @@ msgstr "Stem"
 #: docs/templates/docs/documentation_page_detail.html:56
 #: news/templates/news/article/admin_article_list.html:59
 #: news/templates/news/event/admin_event_detail.html:35
-#: news/templates/news/event/admin_time_place_listing.html:41
+#: news/templates/news/event/admin_time_place_listing.html:42
 #: web/templates/web/delete_modal.html:18
 msgid "Delete"
 msgstr "Slett"
@@ -413,7 +414,7 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 #: internal/models.py:208 internal/models.py:261
 #: internal/templates/internal/secret_list.html:46
 #: make_queue/models/course.py:37 make_queue/models/machine.py:186
-#: make_queue/models/machine.py:240 make_queue/models/reservation.py:294
+#: make_queue/models/machine.py:240 make_queue/models/reservation.py:311
 #: makerspace/models.py:33 news/models.py:51 news/models.py:207
 msgid "last modified"
 msgstr "sist endret"
@@ -421,13 +422,13 @@ msgstr "sist endret"
 #: contentbox/templates/contentbox/content_box_detail.html:18
 #: contentbox/views.py:79
 #: docs/templates/docs/documentation_page_detail.html:49
-#: faq/templates/faq/faq_list.html:44
+#: faq/templates/faq/faq_list.html:40
 #: make_queue/templates/make_queue/machine_usage_rule_detail.html:24
 #: makerspace/templates/makerspace/equipment/equipment_detail.html:34
 #: news/templates/news/article/admin_article_list.html:53
 #: news/templates/news/article/article_detail.html:37
 #: news/templates/news/event/admin_event_detail.html:41
-#: news/templates/news/event/admin_time_place_listing.html:33
+#: news/templates/news/event/admin_time_place_listing.html:34
 msgid "Edit"
 msgstr "Rediger"
 
@@ -768,7 +769,7 @@ msgstr ""
 "Medlemmets «pang»-status ble ikke omgjort, fordi medlemmet ikke hadde status "
 "«pang»."
 
-#: internal/models.py:30 make_queue/forms.py:128
+#: internal/models.py:30 make_queue/forms.py:129
 #: make_queue/models/course.py:26 make_queue/models/reservation.py:31
 #: news/admin.py:306 news/models.py:250
 #: news/templates/admin/news/event/change_form_ticket_table.html:16
@@ -1258,53 +1259,53 @@ msgstr "maskiner"
 msgid "location"
 msgstr "sted"
 
-#: make_queue/forms.py:99
+#: make_queue/forms.py:100
 msgid ""
 "Period is either too long (7+ days) or start time is earlier than end time."
 msgstr ""
 "Perioden er enten for lang (7+ dager) eller starttiden er før sluttiden."
 
-#: make_queue/forms.py:108
+#: make_queue/forms.py:109
 msgid "Rule has internal overlap of time periods."
 msgstr "Tidsperiodene innad i regelen overlapper hverandre."
 
-#: make_queue/forms.py:118
+#: make_queue/forms.py:119
 msgid "Rule time periods overlap with time periods of other rules."
 msgstr ""
 "Tidsperiodene til regelen overlapper med tidsperiodene til andre regler."
 
-#: make_queue/forms.py:126 make_queue/forms.py:183
+#: make_queue/forms.py:127 make_queue/forms.py:184
 #: make_queue/templates/make_queue/quota/admin_quota_panel.html:63
 msgid "Select user"
 msgstr "Velg bruker"
 
-#: make_queue/forms.py:133 make_queue/forms.py:226
-#: make_queue/forms.py:237 make_queue/models/machine.py:167
-#: make_queue/models/reservation.py:37 make_queue/models/reservation.py:285
+#: make_queue/forms.py:134 make_queue/forms.py:227
+#: make_queue/forms.py:238 make_queue/models/machine.py:167
+#: make_queue/models/reservation.py:37 make_queue/models/reservation.py:302
 #: make_queue/templates/make_queue/machine_detail.html:84
 msgid "machine type"
 msgstr "maskintype"
 
-#: make_queue/forms.py:134 make_queue/forms.py:238
+#: make_queue/forms.py:135 make_queue/forms.py:239
 msgid "Select machine type"
 msgstr "Velg maskintype"
 
-#: make_queue/forms.py:154
+#: make_queue/forms.py:155
 msgid "User must be set when “All users” is not set."
 msgstr "Bruker må oppgis når «Alle brukere» ikke er satt."
 
-#: make_queue/forms.py:156
+#: make_queue/forms.py:157
 msgid "User cannot be set when “All users” is set."
 msgstr "Bruker kan ikke være satt når «Alle brukere» er satt."
 
-#: make_queue/forms.py:160
+#: make_queue/forms.py:161
 msgid "Must select either specific user or all users."
 msgstr "Må velge enten én spesifikk bruker eller alle brukere."
 
 #. Translators: See the Norwegian and English versions of this page for
 #. a translation of "Building security":
 #. https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
-#: make_queue/forms.py:199
+#: make_queue/forms.py:200
 msgid ""
 "The card number was detected to be the phone number of Building security at "
 "NTNU. Please enter a valid card number."
@@ -1312,15 +1313,15 @@ msgstr ""
 "Kortnummeret ble oppdaget å være telefonnummeret til Vakt og service på "
 "NTNU. Vennligst fyll inn et gyldig kortnummer."
 
-#: make_queue/forms.py:229
+#: make_queue/forms.py:230
 msgid "Duration in hours"
 msgstr "Varighet i timer"
 
-#: make_queue/forms.py:230
+#: make_queue/forms.py:231
 msgid "Duration in minutes"
 msgstr "Varighet i minutter"
 
-#: make_queue/forms.py:280
+#: make_queue/forms.py:281
 msgid "Stream name cannot be empty when the machine type supports streaming."
 msgstr "Videostrømnavn må oppgis når maskintypen støtter videostrømming."
 
@@ -1509,65 +1510,65 @@ msgstr "<ingen>"
 msgid "Quota for {user} on {machine_type}"
 msgstr "Kvote for {user} på {machine_type}"
 
-#: make_queue/models/reservation.py:271
+#: make_queue/models/reservation.py:288
 msgid "Monday"
 msgstr "Mandag"
 
-#: make_queue/models/reservation.py:272
+#: make_queue/models/reservation.py:289
 msgid "Tuesday"
 msgstr "Tirsdag"
 
-#: make_queue/models/reservation.py:273
+#: make_queue/models/reservation.py:290
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: make_queue/models/reservation.py:274
+#: make_queue/models/reservation.py:291
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: make_queue/models/reservation.py:275
+#: make_queue/models/reservation.py:292
 msgid "Friday"
 msgstr "Fredag"
 
-#: make_queue/models/reservation.py:276
+#: make_queue/models/reservation.py:293
 msgid "Saturday"
 msgstr "Lørdag"
 
-#: make_queue/models/reservation.py:277
+#: make_queue/models/reservation.py:294
 msgid "Sunday"
 msgstr "Søndag"
 
-#: make_queue/models/reservation.py:287
+#: make_queue/models/reservation.py:304
 #: make_queue/templates/make_queue/reservation_form.html:99
 #: make_queue/templates/make_queue/reservation_form.html:103
 #: news/models.py:200
 msgid "start time"
 msgstr "starttidspunkt"
 
-#: make_queue/models/reservation.py:288
+#: make_queue/models/reservation.py:305
 #: make_queue/templates/make_queue/reservation_form.html:114
 #: make_queue/templates/make_queue/reservation_form.html:118
 #: news/models.py:201
 msgid "end time"
 msgstr "sluttidspunkt"
 
-#: make_queue/models/reservation.py:289
+#: make_queue/models/reservation.py:306
 msgid "days"
 msgstr "dager"
 
-#: make_queue/models/reservation.py:289
+#: make_queue/models/reservation.py:306
 msgid "Number of times midnight is passed between start and end time."
 msgstr "Antall ganger midnatt passeres mellom start- og sluttid."
 
-#: make_queue/models/reservation.py:291
+#: make_queue/models/reservation.py:308
 msgid "start days for rule periods"
 msgstr "startdager for regelperioder"
 
-#: make_queue/models/reservation.py:292
+#: make_queue/models/reservation.py:309
 msgid "hours single period"
 msgstr "timer enkeltperiode"
 
-#: make_queue/models/reservation.py:293
+#: make_queue/models/reservation.py:310
 msgid "hours multi-period"
 msgstr "timer fler-periode"
 
@@ -2068,19 +2069,19 @@ msgstr "Registrering av kursdeltakelse vellykket"
 msgid "Course participants"
 msgstr "Kursdeltakere"
 
-#: make_queue/views/admin/quota.py:61 make_queue/views/admin/quota.py:87
+#: make_queue/views/admin/quota.py:62 make_queue/views/admin/quota.py:88
 msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"
 
-#: make_queue/views/admin/quota.py:73
+#: make_queue/views/admin/quota.py:74
 msgid "New Quota"
 msgstr "Ny kvote"
 
-#: make_queue/views/admin/quota.py:80
+#: make_queue/views/admin/quota.py:81
 msgid "Edit Quota"
 msgstr "Endre kvote"
 
-#: make_queue/views/admin/quota.py:89
+#: make_queue/views/admin/quota.py:90
 #, python-brace-format
 msgid "Admin page for the quotas of {user_full_name}"
 msgstr "Administrasjonsside for kvotene til {user_full_name}"
@@ -2144,7 +2145,7 @@ msgstr "Reservasjonen kan ikke starte i fortiden"
 msgid "The time slot is not available"
 msgstr "Tidspunktet er ikke tilgjengelig"
 
-#: make_queue/views/reservation/reservation.py:223
+#: make_queue/views/reservation/reservation.py:225
 msgid ""
 "Cannot delete reservation when it has already started. Mark it as finished "
 "instead."
@@ -2152,15 +2153,15 @@ msgstr ""
 "Kan ikke slette reservasjonen når den allerede har startet. Sett den som "
 "ferdig istedenfor."
 
-#: make_queue/views/reservation/reservation.py:225
+#: make_queue/views/reservation/reservation.py:227
 msgid "Cannot delete reservation when it has already ended."
 msgstr "Kan ikke slette reservasjonen når den allerede er over."
 
-#: make_queue/views/reservation/reservation.py:300
+#: make_queue/views/reservation/reservation.py:302
 msgid "Cannot mark reservation as finished when it has not started yet."
 msgstr "Kan ikke sette reservasjonen som ferdig når den ikke har startet ennå."
 
-#: make_queue/views/reservation/reservation.py:302
+#: make_queue/views/reservation/reservation.py:304
 msgid "Cannot mark reservation as finished when it has already ended."
 msgstr "Kan ikke sette reservasjonen som ferdig når den allerede er over."
 
@@ -2299,7 +2300,7 @@ msgstr "arrangement skjult"
 #: news/admin.py:259 news/models.py:49 news/models.py:204
 #: news/templates/news/article/admin_article_list.html:39
 #: news/templates/news/event/admin_event_list.html:50
-#: news/templates/news/event/admin_time_place_listing.html:27
+#: news/templates/news/event/admin_time_place_listing.html:29
 msgid "hidden"
 msgstr "skjult"
 
@@ -2666,23 +2667,27 @@ msgstr "språk"
 msgid "No tickets have been registered for this event"
 msgstr "Ingen billetter har blitt registrert for dette arrangement"
 
-#: news/templates/news/event/admin_time_place_listing.html:29
-msgid "If selected, the occurrence is hidden for all users."
-msgstr "Hvis valgt vil forekomsten være skjult for alle brukere."
+#: news/templates/news/event/admin_time_place_listing.html:27
+msgid "The occurrence is shown for all users."
+msgstr "Forekomsten er vist for alle brukere."
 
-#: news/templates/news/event/admin_time_place_listing.html:34
+#: news/templates/news/event/admin_time_place_listing.html:30
+msgid "The occurrence is hidden for all users."
+msgstr "Forekomsten er skjult for alle brukere."
+
+#: news/templates/news/event/admin_time_place_listing.html:35
 msgid "If clicked, a form for editing the occurrence is shown."
 msgstr "Klikk for å endre forekomsten."
 
-#: news/templates/news/event/admin_time_place_listing.html:41
+#: news/templates/news/event/admin_time_place_listing.html:42
 msgid "If clicked, the occurrence will be deleted."
 msgstr "Klikk for å slette forekomsten."
 
-#: news/templates/news/event/admin_time_place_listing.html:48
+#: news/templates/news/event/admin_time_place_listing.html:49
 msgid "Duplicate"
 msgstr "Dupliser"
 
-#: news/templates/news/event/admin_time_place_listing.html:49
+#: news/templates/news/event/admin_time_place_listing.html:50
 msgid "If clicked, the occurrence is duplicated."
 msgstr "Klikk for å duplisere forekomsten."
 
@@ -2962,7 +2967,7 @@ msgstr "Lagre"
 msgid "One or more languages have no content."
 msgstr "Ett eller flere språk mangler innhold."
 
-#: web/settings.py:289
+#: web/settings.py:305
 msgid ""
 "Determines whether the “Søk verv” button in the navigation menu in the "
 "header is visible."
@@ -2970,23 +2975,23 @@ msgstr ""
 "Bestemmer om «Søk verv»-knappen skal være synlig i navigasjonsmenyen i "
 "toppteksten."
 
-#: web/settings.py:293
+#: web/settings.py:309
 msgid "Link to the guide on what should be done when a new member enrolls."
 msgstr "Lenke til guiden med ting som skal gjøres når et nytt medlem tas opp."
 
-#: web/settings.py:298
+#: web/settings.py:314
 msgid "Link to the guide on what should be done when a member retires."
 msgstr "Lenke til guiden med ting som skal gjøres når et medlem panger."
 
-#: web/settings.py:303
+#: web/settings.py:319
 msgid "Link to the guide on what should be done when a member quits."
 msgstr "Lenke til guiden med ting som skal gjøres når et medlem slutter."
 
-#: web/settings.py:309
+#: web/settings.py:325
 msgid "Main Site Settings"
 msgstr "Hovedsideinnstillinger"
 
-#: web/settings.py:312
+#: web/settings.py:328
 msgid "Internal Site Settings"
 msgstr "Internsideinnstillinger"
 
@@ -3104,7 +3109,7 @@ msgstr ""
 "for prosjektutvikling, både i privat og undervisningssammenheng, for alle "
 "studenter og ansatte på NTNU."
 
-#: web/templates/web/base.html:72
+#: web/templates/web/base.html:73
 msgid "Skip to main content"
 msgstr "Hopp til hovedinnhold"
 
