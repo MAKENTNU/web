@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('clickbait', web.multilingual.modelfields.MultiLingualTextField(verbose_name='clickbait')),
                 ('image', models.CharField(max_length=100, verbose_name='image')),
                 ('image_description', web.multilingual.modelfields.MultiLingualTextField(help_text='This should be a concise visual description of the image, which is mainly useful for people using a screen reader.', verbose_name='image description')),
-                ('event_type', models.CharField(choices=[('R', 'Repeating'), ('S', 'Standalone')], default='R', max_length=1, verbose_name='type of event')),
+                ('event_type', models.CharField(choices=[('R', 'Standard (repeating)'), ('S', 'Multipart (standalone)')], default='R', max_length=1, verbose_name='type of event')),
                 ('history_id', models.AutoField(primary_key=True, serialize=False)),
                 ('history_date', models.DateTimeField()),
                 ('history_change_reason', models.CharField(max_length=100, null=True)),
