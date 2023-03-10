@@ -15,6 +15,7 @@ $headerDropdowns.focusout(function (event) {
     }
 });
 $headerDropdowns.dropdown({
+    showOnFocus: true,
     selectOnKeydown: false,
     action: function (text, value, $element) {
         $element.click();

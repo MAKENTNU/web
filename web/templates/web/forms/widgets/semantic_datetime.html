@@ -29,7 +29,6 @@
 
         $calendar.calendar({
             type: "datetime",
-            ampm: false,
             firstDayOfWeek: 1,
             monthFirst: false,
             {% if widget.start_calendar_id %}
@@ -43,28 +42,6 @@
                 months: MONTH_TRANSLATIONS,
                 monthsShort: SHORT_MONTH_TRANSLATIONS,
             },
-            onHidden: function () {
-                {# Defined in `common_utils.js` #}
-                fixFomanticUICalendarBlurBug($calendarInput);
-
-                {% if widget.end_calendar_id %}
-                    {# Defined in `common_utils.js` #}
-                    fixFomanticUIEndCalendarRefreshBug($endCalendar);
-                {% endif %}
-            },
-        });
-
-        $calendar.closest("form").submit(function () {
-            const pad = (val) => (val < 10) ? `0${val}` : val;
-            const date = $calendar.calendar("get date");
-            if (date === null)
-                return;
-            const year = date.getFullYear();
-            const month = pad(date.getMonth() + 1);
-            const day = pad(date.getDate());
-            const hours = pad(date.getHours());
-            const minutes = pad(date.getMinutes());
-            $calendarInput.val(`${year}-${month}-${day} ${hours}:${minutes}`);
         });
     });
 </script>

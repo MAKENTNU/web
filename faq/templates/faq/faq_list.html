@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="{% static 'faq/css/faq_list.css' %}"/>
     <script>
         $(document).ready(function () {
-            $(".ui.accordion").accordion();
+            $(".container .ui.accordion").accordion();
         });
     </script>
     {% include 'ckeditor/mathjax_render.html' %}
@@ -23,20 +23,16 @@
         <div class="categories ui styled fluid accordion">
             {% for category in categories %}
                 <div class="word-breaking hyphenated title">
-                    <div class="ui header">
-                        <i class="dropdown icon"></i>
-                        {{ category.name }}
-                    </div>
+                    <i class="dropdown icon"></i>
+                    {{ category.name }}
                 </div>
                 <div class="content">
                     {# The content of the outer accordion contains another accordion. It makes the accordion nested #}
                     <div class="questions styled fluid accordion">
                         {% for question in category.existing_questions %}
                             <div class="word-breaking hyphenated title">
-                                <div class="ui make-col-blue header">
-                                    <i class="dropdown icon"></i>
-                                    {{ question.title }}
-                                </div>
+                                <i class="dropdown icon"></i>
+                                {{ question.title }}
                             </div>
                             <div class="word-breaking hyphenated content">
                                 {% if perms.faq.change_question %}

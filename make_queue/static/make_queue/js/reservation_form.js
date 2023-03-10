@@ -161,7 +161,6 @@ if ($startTimeField.children("div").hasClass("disabled")) {
 $startTimeField.calendar({
         minDate: minDateStartTime,
         maxDate: maximumDay,
-        ampm: false,
         mode: "minute",
         endCalendar: $endTimeField,
         initialDate: new Date($startTimeFieldInput.val()),
@@ -192,27 +191,16 @@ $startTimeField.calendar({
             }
             return shouldChange;
         },
-        onHidden: function () {
-            // Defined in `common_utils.js`
-            fixFomanticUICalendarBlurBug($startTimeFieldInput);
-            // Defined in `common_utils.js`
-            fixFomanticUIEndCalendarRefreshBug($endTimeField);
-        },
     },
 );
 
 $endTimeField.calendar({
-    ampm: false,
     firstDayOfWeek: 1,
     startCalendar: $startTimeField,
     minDate: new Date(),
-    onHidden: function () {
-        // Defined in `common_utils.js`
-        fixFomanticUICalendarBlurBug($endTimeFieldInput);
-    },
 });
 
-$(".ui.dropdown").dropdown();
+$("#reservation-form .ui.dropdown").dropdown();
 $("#event-checkbox").checkbox({
     onChange: function () {
         $("#event-name-input").toggleClass("display-none", !$(this).is(":checked"));
@@ -265,16 +253,6 @@ $machineNameDropdown.dropdown(
     },
 });
 
-zeroPadDateElement = (val) => (val < 10) ? `0${val}` : val;
-
-function formatDate(date) {
-    /**
-     * Formats the given date in a format that Django understands
-     */
-    return date.getFullYear() + "-" + zeroPadDateElement(date.getMonth() + 1) + "-" + zeroPadDateElement(date.getDate())
-        + " " + zeroPadDateElement(date.getHours()) + ":" + zeroPadDateElement(date.getMinutes());
-}
-
 $("form").submit(function (event) {
     let is_valid = true;
     $machineNameDropdown.toggleClass("error-border", false);
@@ -304,9 +282,6 @@ $("form").submit(function (event) {
 
     if (!is_valid)
         return event.preventDefault();
-
-    $("#start-time input").first().val(formatDate($startTimeField.calendar("get date")));
-    $("#end-time input").first().val(formatDate($endTimeField.calendar("get date")));
 });
 
 function timeSelectionPopupHTML() {

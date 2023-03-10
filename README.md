@@ -91,6 +91,10 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the following topics:
 * [Code review guideline: Code smells](CONTRIBUTING.md#code-review-guideline-code-smells)
 
 
+## [Wiki](https://github.com/MAKENTNU/web/wiki)
+[Visit the wiki](https://github.com/MAKENTNU/web/wiki) to read about various things related to development of this project!
+
+
 ## Changelog
 
 [The changelog](CHANGELOG.md) is updated on [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev) when changes are made to the codebase -

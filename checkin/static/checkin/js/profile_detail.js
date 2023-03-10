@@ -4,8 +4,8 @@ var csrfToken;
 // noinspection ES6ConvertVarToLetConst
 var registerProfileURL;
 
-$(".ui.rating").rating();
-$(".ui.dropdown").dropdown();
+$(".container .ui.rating").rating();
+$(".container .ui.dropdown").dropdown();
 $(".rating.skill-lvl").rating("disable");
 
 $("#star-rating").click(function () {
