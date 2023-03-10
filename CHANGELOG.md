@@ -39,10 +39,12 @@ A summary of changes made to the codebase, grouped per deployment.
 - Made all pages have a consistent (browser tab) title format
   - Most pages will have " | MAKE NTNU" as suffix to the title;
     subpages of the admin panel have " | Admin panel | MAKE NTNU" as suffix
+- Improved the design of the title text of the categories and questions on the [FAQ page](https://makentnu.no/faq/)
 - Replaced the `trans` template tag with `translate`
 - Made the `user` field of `Profile` non-nullable
 - Added "and employees" to the end of the Open Graph description
   (shown in some search engines and when embedding pages from the website on sites like Facebook)
+- Updated all of the self-hosted JavaScript libraries the website uses
 
 ### Fixes
 
