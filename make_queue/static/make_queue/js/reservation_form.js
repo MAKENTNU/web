@@ -166,7 +166,7 @@ $startTimeField.calendar({
         initialDate: new Date($startTimeFieldInput.val()),
         firstDayOfWeek: 1,
         isDisabled: function (date, mode) {
-            if (date === undefined)
+            if (!date)
                 return true;
             if (mode === "minute")
                 return !isNonReservedDate(date);
@@ -229,11 +229,16 @@ $("#special-checkbox").checkbox({
 $("#machine-type-dropdown").dropdown({
     onChange: function (selectedMachineType, text, $choice) {
         if (!$("#machine-type-dropdown").is(".disabled")) {
-            $machineNameDropdown.toggleClass("disabled", false).dropdown("restore defaults");
+            $machineNameDropdown.toggleClass("disabled", false);
 
             // Replace the shown machine items from the last selected machine type with the ones from the currently selected machine type
             $("#machine-name-dropdown .menu .item").toggleClass("display-none", true);
-            $(`#machine-name-dropdown .menu .item.machine-type-${selectedMachineType}`).toggleClass("display-none", false);
+            const $machinesOfSelectedType = $(`#machine-name-dropdown .menu .item.machine-type-${selectedMachineType}`);
+            $machinesOfSelectedType.toggleClass("display-none", false);
+            // Select the first machine of the selected machine type
+            $machineNameDropdown.dropdown(
+                "set selected", $machinesOfSelectedType.first().data("value"),
+            );
         }
     },
 }).dropdown(

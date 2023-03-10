@@ -1,4 +1,4 @@
-{% if news_obj.standalone and news_obj.timeplaces.future %}
+{% if news_obj.standalone and timeplaces.future %}
     {% url 'register_event' news_obj.pk as registration_url %}
     {% include 'news/event/detail/event_detail_registration_button.html' with event_or_time_place=news_obj extra_classes=extra_classes|add:" standalone-registration-button" registration_url=registration_url %}
 {% endif %}

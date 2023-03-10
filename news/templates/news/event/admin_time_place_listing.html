@@ -23,11 +23,12 @@
             {{ timeplace.start_time|long_datetime }}
             <span>
                 &nbsp;&nbsp;
-                    <i class="{% if timeplace.hidden %}yellow{% else %}grey{% endif %} eye slash icon toggle popup-trigger"
-                       data-title="{% translate "hidden"|capfirst %}"
-                       data-post-url="{% url 'timeplace_toggle' timeplace.event.pk timeplace.pk %}" data-toggle="hidden" data-model="timeplace"
-                       data-content="{% translate "If selected, the occurrence is hidden for non-admin users." %}">
-                    </i>
+                {% translate "shown"|capfirst as popup_title %}
+                {% translate "The occurrence is shown for all users." as popup_content %}
+                {% include './admin_time_place_listing__hidden_toggle_button.html' with time_place=timeplace class_name='shown' popup_title=popup_title popup_content=popup_content %}
+                {% translate "hidden"|capfirst as popup_title %}
+                {% translate "The occurrence is hidden for all users." as popup_content %}
+                {% include './admin_time_place_listing__hidden_toggle_button.html' with time_place=timeplace class_name='hidden' popup_title=popup_title popup_content=popup_content %}
                 &nbsp;&nbsp;
                 {% if perms.news.change_timeplace %}
                     <a class="make-col-blue popup-trigger" data-title="{% translate "Edit" %}"

@@ -43,8 +43,8 @@ class TestGenericMachine(TestCase):
 
     def assert_status_is_as_expected_after_being_set(self, machine: Machine, set_status: Machine.Status, expexted_status: Machine.Status):
         machine.status = set_status
-        self.assertEquals(machine.get_status(), expexted_status)
-        self.assertEquals(machine.get_status_display(), Machine.STATUS_CHOICES_DICT[expexted_status])
+        self.assertEqual(machine.get_status(), expexted_status)
+        self.assertEqual(machine.get_status_display(), Machine.STATUS_CHOICES_DICT[expexted_status])
 
 
 class TestCanUse3DPrinter(TestCase):

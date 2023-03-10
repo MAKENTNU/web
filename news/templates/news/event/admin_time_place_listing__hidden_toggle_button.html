@@ -1,0 +1,15 @@
+<i class="{{ class_name }} hidden-field
+        {% if class_name == 'shown' %}
+            {% if time_place.hidden %}display-none{% endif %}
+            grey eye icon
+        {% elif class_name == 'hidden' %}
+            {% if not time_place.hidden %}display-none{% endif %}
+            yellow eye slash icon
+        {% endif %}
+        toggle popup-trigger"
+   data-post-url="{% url 'timeplace_toggle' time_place.event.pk time_place.pk %}"
+   data-toggle="hidden"
+   data-model="timeplace"
+   data-title="{{ popup_title }}"
+   data-content="{{ popup_content }}"
+></i>

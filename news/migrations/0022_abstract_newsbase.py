@@ -74,7 +74,7 @@ class Migration(migrations.Migration):
                 ('featured', models.BooleanField(default=True, verbose_name='featured')),
                 ('hidden', models.BooleanField(default=False, verbose_name='hidden')),
                 ('private', models.BooleanField(default=False, verbose_name='internal')),
-                ('event_type', models.CharField(choices=[('R', 'Repeating'), ('S', 'Standalone')], default='R', max_length=1, verbose_name='type of event')),
+                ('event_type', models.CharField(choices=[('R', 'Standard (repeating)'), ('S', 'Multipart (standalone)')], default='R', max_length=1, verbose_name='type of event')),
                 ('number_of_tickets', models.IntegerField(default=0, verbose_name='number of available tickets')),
             ],
             options={

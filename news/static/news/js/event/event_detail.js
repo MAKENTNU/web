@@ -1,5 +1,4 @@
-// Start with the first accordion element open
-$(".time-places.accordion").accordion("open", 0);
+$(".time-places.accordion").accordion();
 
 /*
 Fomantic-UI sticky does not adjust the height of the context element when the sticky part is taller. In the
