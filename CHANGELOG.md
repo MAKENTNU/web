@@ -21,6 +21,11 @@ A summary of changes made to the codebase, grouped per deployment.
       see [this issue](https://github.com/jazzband/django-simple-history/issues/1063)
 - Added links to the guides on what should be done when a member enrolls/retires/quits, in [the member list](https://i.makentnu.no/members/)
   - These can be changed through [the dynamic settings in Django admin](https://admin.makentnu.no/constance/config/)
+- Set the default value of event occurrences' `hidden` field to `False`
+- Fixed displaying unpublished and hidden occurrences on multipart/standalone events
+- Fixed showing the registration button on standalone events when they only had future occurrences that were either unpublished or hidden
+- Fixed not loading a machine's page when using the keyboard to select a different machine in the dropdown on a machine detail page
+- Fixed JavaScript errors when changing the machine or machine type in the reservation creation form
 - Added GitHub Actions workflow for automatically labeling deployment PRs
 
 ### Improvements
@@ -35,11 +40,15 @@ A summary of changes made to the codebase, grouped per deployment.
   (displayed when clicked / hovered over)
 - Made the user dropdowns on both [the quota admin page](https://makentnu.no/reservation/quota/) and
   [the quota form page](https://makentnu.no/reservation/quota/create/), function equally
+- When changing machine type in the reservation creation form, made the first machine of that type be automatically selected
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
   - Most pages will have " | MAKE NTNU" as suffix to the title;
     subpages of the admin panel have " | Admin panel | MAKE NTNU" as suffix
 - Improved the design of the title text of the categories and questions on the [FAQ page](https://makentnu.no/faq/)
+- Improved the feedback of the toggle button for hiding each occurrence on an event admin page
+- Made the description of the `hidden` field of articles and events not erroneously state that the articles/events will be visible to admin users
+  when hidden
 - Replaced the `trans` template tag with `translate`
 - Made the `user` field of `Profile` non-nullable
 - Added "and employees" to the end of the Open Graph description
