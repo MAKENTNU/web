@@ -18,7 +18,6 @@ social-auth-app-django==5.0.0
 # This is already a requirement of `social-auth-app-django`, but it's listed here to provide the `openidconnect` extra
 # (see https://python-social-auth.readthedocs.io/en/stable/installing.html#using-the-extras-options)
 social-auth-core[openidconnect]==4.3.0
-python-dataporten-auth==2.0.0
 python-ldap==3.4.3
 
 # Async-related packages (mainly for sending of emails)

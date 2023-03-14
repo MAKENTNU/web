@@ -18,6 +18,21 @@
     git checkout -B dev origin/dev
     ```
 
+#### PyCharm
+
+We recommend using [PyCharm](https://www.jetbrains.com/pycharm/) for development, mostly because of its excellent Django support,
+and because it's able to integrate all the IntelliJ-specific settings in [the project's `.editorconfig` file](.editorconfig).
+
+If you decide to use this IDE, open the repo folder cloned as part of the prerequisites, through PyCharm (File → Open...),
+and set the following settings (File → Settings...):
+* Under "**Languages & Frameworks**" → "Django":
+  * Make sure the "Enable Django Support" checkbox is checked
+  * "Django project root:" `<repo folder location>/src`
+  * "Settings:" `web/settings.py`
+  * "Manage script:" `<repo folder location>/manage.py`
+* Under "**Project: \<repo folder name\>**" → "Project Structure":
+  * Mark the `src` folder as "Sources"
+
 ### Installation
 
 * Create a virtual environment, presumably named `venv`:

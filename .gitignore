@@ -438,8 +438,7 @@ fabric.properties
 # http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
 [Bb]in
 [Ii]nclude
-# Don't ignore lib (as that would ignore `web/static/lib`)
-#[Ll]ib
+[Ll]ib
 [Ll]ib64
 [Ll]ocal
 [Ss]cripts
@@ -475,4 +474,5 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/django,pycharm+all,venv,visualstudiocode,macos,node
 
 
+!src/web/static/lib/
 local_settings_post.py
