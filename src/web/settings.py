@@ -21,6 +21,8 @@ if is_testing:
 
 # Build paths inside the project like this: BASE_DIR / ...
 BASE_DIR = Path(__file__).resolve().parent.parent
+REPO_DIR = BASE_DIR.parent
+TESTS_DIR = BASE_DIR
 
 # Make Django trust that the `X-Forwarded-Proto` HTTP header contains whether the request is actually over HTTPS,
 # as the connection between Nginx (the proxy we're using) and Django (run by Channel's Daphne server) is currently always over HTTP
@@ -39,7 +41,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['*']
 INTERNAL_IPS = ['127.0.0.1']
 
-MEDIA_ROOT = BASE_DIR.parent / 'media'
+MEDIA_ROOT = REPO_DIR.parent / 'media'
 MEDIA_URL = '/media/'
 
 # Based on https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/demosite/settings.py#L120-L121
@@ -264,7 +266,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': str(BASE_DIR / 'db.sqlite3'),
+            'NAME': str(REPO_DIR / 'db.sqlite3'),
         },
     }
 
@@ -397,7 +399,7 @@ nb_formats.DECIMAL_SEPARATOR = '.'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/stable/howto/static-files/
 
-STATIC_ROOT = BASE_DIR.parent / 'static'
+STATIC_ROOT = REPO_DIR.parent / 'static'
 STATIC_URL = '/static/'
 
 # This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,

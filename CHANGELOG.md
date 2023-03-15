@@ -71,6 +71,10 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Other changes
 
+- **Moved most Django-related code to [a new top-level `src` folder](https://github.com/MAKENTNU/web/tree/main/src)**
+  - _Refer to the new "PyCharm" section in the README (click "Click to expand" under
+    [the "Setup" section](https://github.com/MAKENTNU/web/blob/04230ed2cde4819ee47e05bdcbd16b745d0326b5/README.md#setup) to make it visible)
+    for instructions on which PyCharm settings need to be set to accommodate this new setup_
 - Set minimum required Python version to 3.10
 - Renamed members' `gmail` field to `google_email`, as the email address of a Google user can potentially belong to any host, not just "gmail.com"
 - Changed order of the apps listed on [the Django admin index page](https://admin.makentnu.no/)

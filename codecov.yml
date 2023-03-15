@@ -9,11 +9,9 @@ coverage:
 
 ignore:
   - "manage.py"
-  - "web/settings.py"
-  - "**/apps.py"
-  - "**/wsgi.py"
-  - "**/asgi.py"
-  - "**/test*.py"
-  - "**/*test.py"
-  - "**/migrations/**"
-  - "**/__init__.py"
+  - "src/web/settings.py"
+  - "src/**/apps.py"
+  - "src/**/wsgi.py"
+  - "src/**/asgi.py"
+  - "src/**/test*.py"
+  - "src/**/migrations/**"
