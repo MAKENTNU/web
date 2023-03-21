@@ -3,7 +3,7 @@ name: build
 on: [ push, pull_request ]
 
 jobs:
-  build:
+  test:
     name: Python ${{ matrix.python-version }}
     runs-on: ubuntu-latest
     strategy:
@@ -44,3 +44,18 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
+
+  # Based on https://github.com/orgs/community/discussions/26822#discussioncomment-5122101
+  test-results:
+    name: Tests passed
+    runs-on: ubuntu-latest
+    needs: [test]
+    if: ${{ always() }}
+
+    steps:
+      - if: >- # Starts a multiline string (see https://stackoverflow.com/a/67532120)
+          ${{
+               contains(needs.*.result, 'failure')
+            || contains(needs.*.result, 'cancelled')
+          }}
+        run: exit 1
