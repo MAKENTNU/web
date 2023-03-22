@@ -1,11 +1,22 @@
 coverage:
+  range: "75..90"
   status:
     project:
       default:
-        threshold: 80%
+        target: auto
+        threshold: 5%
     patch:
       default:
-        threshold: 80%
+        target: 80%
+        threshold: 30%
+
+codecov:
+  require_ci_to_pass: false
+
+comment:
+  layout: "reach, diff, files"
+  behavior: default
+  require_changes: false
 
 ignore:
   - "manage.py"
