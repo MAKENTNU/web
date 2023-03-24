@@ -5,6 +5,10 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### Other changes
+
+- Code cleanup? Ye.
+
 
 ## 2023-03-30 ([#615](https://github.com/MAKENTNU/web/pull/615))
 

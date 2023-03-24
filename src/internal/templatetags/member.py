@@ -50,6 +50,7 @@ def get_system_accesses(member: Member, user: User):
     ) for access in member.system_accesses.all()]
 
 
+# noinspection PyPep8Naming
 @register.simple_tag
 def color_for_committee(committee_name: str, *, MAKE_col_prefixed=False, MAKE_bg_prefixed=False):
     prefix = ""

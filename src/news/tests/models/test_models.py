@@ -70,7 +70,7 @@ class ArticleEventAndTimePlaceTests(TestCase):
             for relative_start_time, relative_end_time in relative_start_and_end_time_tuples:
                 TimePlace.objects.create(
                     event=event,
-                    publication_time=now + timedelta(days=1),  # publication time should not affect the `past()` or `future()` methods
+                    publication_time=now + timedelta(days=1),  # Publication time should not affect the `past()` or `future()` methods
                     start_time=now + timedelta(hours=relative_start_time),
                     end_time=now + timedelta(hours=relative_end_time),
                 )

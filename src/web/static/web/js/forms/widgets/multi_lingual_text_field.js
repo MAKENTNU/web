@@ -81,7 +81,7 @@ $(".multilingual-input").each(function () {
                 const $firstLanguageNotFilled = $languagesNotFilled.first();
                 $firstLanguageNotFilled.tab("change tab", $firstLanguageNotFilled.data("tab"));
 
-                // Add an error message label #}
+                // Add an error message label
                 const $languageMissingTextIndicator = $(`
                     <div class="error-message ui label"
                          style="display: block; width: fit-content; width: -moz-fit-content; margin-left: auto;">
@@ -97,7 +97,7 @@ $(".multilingual-input").each(function () {
                 $widgetField.prepend($languageMissingTextIndicator);
                 $languageMissingTextIndicator[0].scrollIntoView();
 
-                // Prevent the form from submitting while there are errors #}
+                // Prevent the form from submitting while there are errors
                 event.preventDefault();
             } else {
                 $widgetField.toggleClass("error", false);

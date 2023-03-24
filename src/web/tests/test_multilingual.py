@@ -23,8 +23,8 @@ class TestMultiLingualTextStructure(TestCase):
 
     def test_constructor_serialized_json(self):
         """
-        Tests if the constructor handles JSON correctly. That is, set the the content of each language to the value
-        given in the serialized json.
+        Tests if the constructor handles JSON correctly. That is, set the content of each language to the value
+        given in the serialized JSON.
         """
         content = json.dumps({
             "nb": "test-nb",
@@ -120,7 +120,7 @@ class TestMultiLingualTextField(TestCase):
 
     def test_get_prep_value(self):
         """
-        Tests the ``get_prep_value()`` method. This should return ``None`` (if ``None`` given), serialized json of its content if
+        Tests the ``get_prep_value()`` method. This should return ``None`` (if ``None`` given), serialized JSON of its content if
         ``MultiLingualTextStructure`` is given, or just the value otherwise.
         """
         field = MultiLingualTextField()

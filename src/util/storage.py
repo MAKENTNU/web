@@ -46,7 +46,7 @@ class UploadToUtils:
     """
     REPLACEABLE_TOKEN_START = "--replacedByPK"
     REPLACEABLE_TOKEN_MIDDLE_NUM_BYTES = 4
-    REPLACEABLE_TOKEN_END = REPLACEABLE_TOKEN_START[::-1]  # reverse the start part of the token
+    REPLACEABLE_TOKEN_END = REPLACEABLE_TOKEN_START[::-1]  # Reverse the start part of the token
     REPLACEABLE_TOKEN_REGEX = re.compile(rf"({REPLACEABLE_TOKEN_START}-[0-9a-f]+-{REPLACEABLE_TOKEN_END})")
 
     @classmethod

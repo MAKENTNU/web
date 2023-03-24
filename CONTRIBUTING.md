@@ -496,7 +496,7 @@ For each app's `urls.py` file, place paths inside lists with the following names
 
 Each of these lists should now only contain paths referring to views with the corresponding prefixes listed in [View class name](#view-class-name).
 
-These lists should then be imported in [`web/urls.py`](web/urls.py), and `include()`d in
+These lists should then be imported in [`web/urls.py`](src/web/urls.py), and `include()`d in
 `admin_urlpatterns`, `api_urlpatterns` and `admin_api_urlpatterns`, respectively -
 with the same path route argument as the app's other paths.
 (This ensures that all paths start with the relevant `admin/`, `api/` or `api/admin/` prefix.)
@@ -862,7 +862,7 @@ Unused imports should be removed.
 #### Unnecessary `print` statements
 
 These should be removed,
-or replaced by fitting `logging` calls - preferably through the utility functions in [`logging_utils.py`](util/logging_utils.py).
+or replaced by fitting `logging` calls - preferably through the utility functions in [`logging_utils.py`](src/util/logging_utils.py).
 
 #### Variable, function or class names shadowing built-in or imported names
 
@@ -1077,7 +1077,7 @@ It's generally best to use our custom `permission_required_else_denied()` decora
 #### Missing page title
 
 Views responding with a complete webpage should always set the page title (i.e. the `<title>` tag),
-e.g. by setting the `page_title` context variable - which is used in [`web/base.html`](/web/templates/web/base.html).
+e.g. by setting the `page_title` context variable - which is used in [`web/base.html`](src/web/templates/web/base.html).
 
 *See [the equivalent code smell for templates](#missing-page-title-1).*
 
@@ -1178,9 +1178,9 @@ and/or `clean_<field name>()` methods (see the steps for [form and field validat
 
 #### Test cases not cleaning up media files
 
-When using temporary files (like [`test_utils.MOCK_JPG_FILE`](/util/test_utils.py), which is a `SimpleUploadedFile`) in tests,
+When using temporary files (like [`test_utils.MOCK_JPG_FILE`](src/util/test_utils.py), which is a `SimpleUploadedFile`) in tests,
 these files should always be removed after the tests have run.
-This can be done by simply letting the test case class extend [`test_utils.CleanUpTempFilesTestMixin`](/util/test_utils.py).
+This can be done by simply letting the test case class extend [`test_utils.CleanUpTempFilesTestMixin`](src/util/test_utils.py).
 
 
 
@@ -1300,7 +1300,7 @@ Lastly, to quote Mozilla's HTML and accessibility guide mentioned above:
 
 Templates rendering a complete webpage should always set the page title (i.e. the `<title>` tag).
 
-If the template is extending [`web/base.html`](/web/templates/web/base.html) (directly or through another template),
+If the template is extending [`web/base.html`](src/web/templates/web/base.html) (directly or through another template),
 this can be done e.g. by setting the `page_title` context variable or by overriding the `title` block.
 
 *See [the equivalent code smell for views](#missing-page-title).*

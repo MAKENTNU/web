@@ -20,7 +20,7 @@ urlpatterns = [
         permission_required_else_denied('docs.view_page'),
         'django.conf.urls.i18n'
     )),
-    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # For development only; Nginx is used in production
 
     *ckeditor_uploader_urls(),
 ]

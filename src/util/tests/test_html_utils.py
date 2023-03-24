@@ -16,7 +16,7 @@ class Test(TestCase):
         unicode_to_expected_values = {
             "a": "a",
             "\n": "\n",
-            string.printable: string.printable,  # printable characters should remain unescaped
+            string.printable: string.printable,  # Printable characters should remain unescaped
             "æøå": "&aelig;&oslash;&aring;",
             "ÆØÅ": "&AElig;&Oslash;&Aring;",
             # From https://no.wikipedia.org/w/index.php?title=Diakritisk_tegn&oldid=21691316

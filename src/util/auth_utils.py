@@ -28,10 +28,10 @@ def _check_perms(filtered_perms: QuerySet[Permission], perm_strings: tuple[str, 
 
 
 def get_perm(app_label_and_codename: str) -> Permission:
-    """Find the permission object for an <app_label>.<codename> string."""
+    """Find the permission object for an ``<app_label>.<codename>`` string."""
     return get_perms(app_label_and_codename).get()
 
 
 def perm_to_str(permission: Permission) -> str:
-    """Find the <app_label>.<codename> string for a permission object."""
+    """Find the ``<app_label>.<codename>`` string for a permission object."""
     return f'{permission.content_type.app_label}.{permission.codename}'

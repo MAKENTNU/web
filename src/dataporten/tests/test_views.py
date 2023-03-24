@@ -51,7 +51,7 @@ class ViewTestCase(TestCase):
                 user1, expected_username="user1", expected_full_name="Name Nameson", expected_ldap_full_name="Name Nameson",
             )
 
-        fixed_num_queries = 1  # number of queries that are always executed (currently only `user.social_auth`)
+        fixed_num_queries = 1  # Number of queries that are always executed (currently only `user.social_auth`)
         with self.assertNumQueries(2 + fixed_num_queries):
             assert_original_user1_values()
         # All combinations of missing name fields should result in the same values

@@ -20,8 +20,8 @@ from ...models.reservation import Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation, can_change_reservation, can_delete_reservation, can_mark_reservation_finished
 
 
-# TODO: rewrite this whole view (and everything that uses it),
-#  so that it's more extendable, and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
+# TODO: rewrite this whole view (and everything that uses it), so that it's more extendable,
+#       and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
 class CreateOrEditReservationView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
     template_name = 'make_queue/reservation_form.html'
@@ -107,7 +107,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
         # If we are given a reservation, populate the information relevant to that reservation
         if 'reservation_pk' in kwargs:
             # noinspection PyUnresolvedReferences
-            reservation = self.reservation  # defined in `EditReservationView`
+            reservation = self.reservation  # Defined in `EditReservationView`
             context_data["start_time"] = reservation.start_time
             context_data["reservation_pk"] = reservation.pk
             context_data["end_time"] = reservation.end_time

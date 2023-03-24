@@ -146,7 +146,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
         response = view.validate_and_save(reservation, form)
         # Second reservation should not be saved
         self.assertEqual(Reservation.objects.count(), 1)
-        # 200 to re render the form
+        # 200 to re-render the form
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_get_context_data_reservation(self):

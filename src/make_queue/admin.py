@@ -26,7 +26,7 @@ class MachineTypeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.annotate(Count('machines'))  # facilitates querying `machines__count`
+        return qs.annotate(Count('machines'))  # Facilitates querying `machines__count`
 
     def get_search_results(self, request, queryset, search_term):
         return search_escaped_and_unescaped(super(), request, queryset, search_term)

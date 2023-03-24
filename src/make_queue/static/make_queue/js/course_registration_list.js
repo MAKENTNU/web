@@ -100,7 +100,7 @@ $("#clear-selected-users").click(function () {
     filter();
 });
 
-// TODO: reformat to reduce code duplication with other parts of the file
+// TODO: refactor to reduce code duplication with other parts of the file
 // Button to select all shown users
 $("#select-shown-users").click(function () {
     const shownUnselectedUserRows = state.elements.filter((e) =>
@@ -272,8 +272,8 @@ const $leftChangeElement = $("#left-change");
 const $leftSkipElement = $("#left-skip");
 const $downloadUsersForm = $("#download-users");
 
-// Setup the initial state
-function setupState() {
+// Set up the initial state
+function setUpState() {
     $("tbody tr").each(function () {
             state.elements.push({
                 pk: $(this).data("pk"),
@@ -292,7 +292,7 @@ function setupState() {
 
     state.numPages = Math.ceil(state.elements.length / state.elementsPerPage);
 
-    // Setup the action of each of the default buttons in the pagination bar
+    // Set up the action of each of the default buttons in the pagination bar
     $rightChangeElement.click(function () {
         state.page = Math.min(state.page + 1, state.numPages - 1);
         updateDisplay();
@@ -324,4 +324,4 @@ function setupState() {
     sort();
 }
 
-setupState();
+setUpState();
