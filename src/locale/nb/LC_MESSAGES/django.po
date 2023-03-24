@@ -442,6 +442,10 @@ msgstr "Rediger"
 msgid "Missing language"
 msgstr "Manglende språk"
 
+#: src/contentbox/templates/contentbox/content_box_form.html:40
+msgid "The extra change permissions can be edited in Django admin"
+msgstr "De ekstra endringsrettighetene kan endres i Django-admin"
+
 #: src/contentbox/views.py:90
 msgctxt "view page"
 msgid "View"
