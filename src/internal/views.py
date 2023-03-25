@@ -236,6 +236,9 @@ class SecretListView(ListView):
     queryset = Secret.objects.default_order_by()
     template_name = 'internal/secret_list.html'
     context_object_name = 'secrets'
+    extra_context = {
+        'secrets_shown_seconds': 10,
+    }
 
 
 class SecretFormMixin(CustomFieldsetFormMixin, ABC):
