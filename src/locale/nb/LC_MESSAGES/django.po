@@ -1218,6 +1218,11 @@ msgstr "Klikk for å vise – bare hvis du er alene!"
 msgid "Hide – someone's behind me!"
 msgstr "Skjul – noen er bak meg!"
 
+#: src/internal/templates/internal/secret_list.html:78
+#, python-format
+msgid "Delay hiding for %(num_seconds)s seconds"
+msgstr "Utsett å skjule i %(num_seconds)s sekunder"
+
 #: src/internal/validators.py:12
 msgid "Enter a valid email address ending in “@makentnu.no”."
 msgstr "Oppgi en gyldig e-postadresse som slutter med «@makentnu.no»."

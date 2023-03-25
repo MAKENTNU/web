@@ -238,6 +238,7 @@ class SecretListView(ListView):
     context_object_name = 'secrets'
     extra_context = {
         'secrets_shown_seconds': 10,
+        'secrets_shown_delayed_seconds': 30,
     }
 
 

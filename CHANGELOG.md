@@ -5,6 +5,10 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### New features
+
+- Added a button for delaying hiding secrets for 30 seconds, in [the secret list](https://i.makentnu.no/secrets/)
+
 ### Improvements
 
 - Added a link to the Django admin change form at the bottom of the form of "content boxes" that have extra change permissions
