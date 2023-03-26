@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-06 01:40+0100\n"
+"POT-Creation-Date: 2023-03-26 22:51+0200\n"
 "PO-Revision-Date: 2018-04-18 21:29+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -13,67 +13,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: checkin/static/checkin/js/profile_detail.js:44
+#: src/checkin/static/checkin/js/profile_detail.js:44
 msgid "Registered"
 msgstr "Registrert"
 
-#: checkin/static/checkin/js/profile_detail.js:47
+#: src/checkin/static/checkin/js/profile_detail.js:47
 msgid "Scan card again!"
 msgstr "Skann kortet igjen!"
 
-#: checkin/static/checkin/js/profile_detail.js:52
+#: src/checkin/static/checkin/js/profile_detail.js:52
 msgid "Scan card"
 msgstr "Skann kort"
 
-#: checkin/static/checkin/js/suggest_skill.js:34
+#: src/checkin/static/checkin/js/suggest_skill.js:34
 msgid "Voted!"
 msgstr "Stemt!"
 
-#: make_queue/static/make_queue/js/calendar.js:99
+#: src/make_queue/static/make_queue/js/calendar.js:99
 msgid "New reservation"
 msgstr "Ny reservasjon"
 
-#: make_queue/static/make_queue/js/calendar.js:105
+#: src/make_queue/static/make_queue/js/calendar.js:105
 msgid "Reserve"
 msgstr "Reserver"
 
-#: make_queue/static/make_queue/js/calendar.js:468
+#: src/make_queue/static/make_queue/js/calendar.js:468
 msgid "Reservation"
 msgstr "Reservasjon"
 
-#: make_queue/static/make_queue/js/calendar.js:469
+#: src/make_queue/static/make_queue/js/calendar.js:469
 msgid "Name"
 msgstr "Navn"
 
-#: make_queue/static/make_queue/js/calendar.js:470
+#: src/make_queue/static/make_queue/js/calendar.js:470
 msgid "Email"
 msgstr "E-post"
 
-#: make_queue/static/make_queue/js/calendar.js:471
+#: src/make_queue/static/make_queue/js/calendar.js:471
 msgid "Time"
 msgstr "Tidspunkt"
 
-#: make_queue/static/make_queue/js/calendar.js:475
+#: src/make_queue/static/make_queue/js/calendar.js:475
 msgid "Comment"
 msgstr "Kommentar"
 
-#: make_queue/static/make_queue/js/course_registration_list.js:22
+#: src/make_queue/static/make_queue/js/course_registration_list.js:22
 msgid "%(num)s user selected"
 msgid_plural "%(num)s users selected"
 msgstr[0] "%(num)s bruker valgt"
 msgstr[1] "%(num)s brukere valgt"
 
-#: make_queue/static/make_queue/js/course_registration_list.js:239
+#: src/make_queue/static/make_queue/js/course_registration_list.js:241
 msgid "Displaying %(num)s registration"
 msgid_plural "Displaying %(num)s registrations"
 msgstr[0] "Viser %(num)s registrering"
 msgstr[1] "Viser %(num)s registreringer"
 
-#: make_queue/static/make_queue/js/reservation_form.js:316
+#: src/make_queue/static/make_queue/js/reservation_form.js:296
 msgid "Choose time"
 msgstr "Velg tid"
 
-#: make_queue/static/make_queue/js/reservation_list.js:20
+#: src/make_queue/static/make_queue/js/reservation_list.js:20
 msgid ""
 "Marking reservation as finished failed with the following error message: "
 "%(error)s."
@@ -81,129 +81,129 @@ msgstr ""
 "Markering av reservasjonen som ferdig mislyktes med følgende feilmelding: "
 "%(error)s."
 
-#: make_queue/static/make_queue/js/reservation_list.js:31
+#: src/make_queue/static/make_queue/js/reservation_list.js:31
 msgid ""
 "Deleting reservation failed with the following error message: %(error)s."
 msgstr ""
 "Sletting av reservasjonen mislyktes med følgende feilmelding: %(error)s."
 
-#: make_queue/static/make_queue/js/reservation_list.js:49
+#: src/make_queue/static/make_queue/js/reservation_list.js:49
 msgid "Please refresh the page or contact the developers."
 msgstr "Last inn siden på nytt eller kontakt utviklerne."
 
-#: news/static/news/js/event/ticket/email_copy.js:34
+#: src/news/static/news/js/event/ticket/email_copy.js:34
 msgid "Copied to clipboard!"
 msgstr "Kopiert til utklippstavlen!"
 
-#: news/static/news/js/event/ticket/email_copy.js:38
+#: src/news/static/news/js/event/ticket/email_copy.js:38
 msgid "Failed to copy to clipboard!"
 msgstr "Kopiering til utklippstavlen mislyktes!"
 
-#: web/static/ckeditor/ckeditor/config.js:10
+#: src/web/static/ckeditor/ckeditor/config.js:10
 msgid "Big"
 msgstr "Stor"
 
-#: web/static/ckeditor/ckeditor/config.js:11
+#: src/web/static/ckeditor/ckeditor/config.js:11
 msgid "Small"
 msgstr "Liten"
 
-#: web/static/ckeditor/ckeditor/config.js:12
+#: src/web/static/ckeditor/ckeditor/config.js:12
 msgid "Code"
 msgstr "Kode"
 
-#: web/static/ckeditor/ckeditor/config.js:13
+#: src/web/static/ckeditor/ckeditor/config.js:13
 msgid "Quotation"
 msgstr "Sitat"
 
-#: web/static/web/js/date_utils.js:3
+#: src/web/static/web/js/date_utils.js:3
 msgid "January"
 msgstr "Januar"
 
-#: web/static/web/js/date_utils.js:4
+#: src/web/static/web/js/date_utils.js:4
 msgid "February"
 msgstr "Februar"
 
-#: web/static/web/js/date_utils.js:5
+#: src/web/static/web/js/date_utils.js:5
 msgid "March"
 msgstr "Mars"
 
-#: web/static/web/js/date_utils.js:6
+#: src/web/static/web/js/date_utils.js:6
 msgid "April"
 msgstr "April"
 
-#: web/static/web/js/date_utils.js:7
+#: src/web/static/web/js/date_utils.js:7
 msgid "May"
 msgstr "Mai"
 
-#: web/static/web/js/date_utils.js:8
+#: src/web/static/web/js/date_utils.js:8
 msgid "June"
 msgstr "Juni"
 
-#: web/static/web/js/date_utils.js:9
+#: src/web/static/web/js/date_utils.js:9
 msgid "July"
 msgstr "Juli"
 
-#: web/static/web/js/date_utils.js:10
+#: src/web/static/web/js/date_utils.js:10
 msgid "August"
 msgstr "August"
 
-#: web/static/web/js/date_utils.js:11
+#: src/web/static/web/js/date_utils.js:11
 msgid "September"
 msgstr "September"
 
-#: web/static/web/js/date_utils.js:12
+#: src/web/static/web/js/date_utils.js:12
 msgid "October"
 msgstr "Oktober"
 
-#: web/static/web/js/date_utils.js:13
+#: src/web/static/web/js/date_utils.js:13
 msgid "November"
 msgstr "November"
 
-#: web/static/web/js/date_utils.js:14
+#: src/web/static/web/js/date_utils.js:14
 msgid "December"
 msgstr "Desember"
 
-#: web/static/web/js/date_utils.js:19
+#: src/web/static/web/js/date_utils.js:19
 msgid "Sunday"
 msgstr "Søndag"
 
-#: web/static/web/js/date_utils.js:20
+#: src/web/static/web/js/date_utils.js:20
 msgid "Monday"
 msgstr "Mandag"
 
-#: web/static/web/js/date_utils.js:21
+#: src/web/static/web/js/date_utils.js:21
 msgid "Tuesday"
 msgstr "Tirsdag"
 
-#: web/static/web/js/date_utils.js:22
+#: src/web/static/web/js/date_utils.js:22
 msgid "Wednesday"
 msgstr "Onsdag"
 
-#: web/static/web/js/date_utils.js:23
+#: src/web/static/web/js/date_utils.js:23
 msgid "Thursday"
 msgstr "Torsdag"
 
-#: web/static/web/js/date_utils.js:24
+#: src/web/static/web/js/date_utils.js:24
 msgid "Friday"
 msgstr "Fredag"
 
-#: web/static/web/js/date_utils.js:25
+#: src/web/static/web/js/date_utils.js:25
 msgid "Saturday"
 msgstr "Lørdag"
 
-#: web/static/web/js/delete_modal.js:16
+#: src/web/static/web/js/delete_modal.js:16
 msgid "Are you sure you want to delete “%(objName)s”?"
 msgstr "Er du sikker på at du vil slette «%(objName)s»?"
 
-#: web/static/web/js/forms/widgets/mazemap_search.js:44
+#: src/web/static/web/js/forms/widgets/mazemap_search.js:44
 msgid "No Results"
 msgstr "Ingen resultater"
 
-#: web/static/web/js/forms/widgets/mazemap_search.js:47
+#: src/web/static/web/js/forms/widgets/mazemap_search.js:47
 msgid "Your search returned no results"
 msgstr "Søket ditt ga ingen resultater"
 
-#: web/static/web/js/forms/widgets/multi_lingual_text_field.js:91
+#: src/web/static/web/js/forms/widgets/multi_lingual_text_field.js:91
 msgid "The field is missing a value for %(num)s language"
 msgid_plural "The field is missing a value for %(num)s languages"
 msgstr[0] "Feltet er ikke fylt ut for %(num)s språk"
