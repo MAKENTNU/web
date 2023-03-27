@@ -27,6 +27,9 @@ A summary of changes made to the codebase, grouped per deployment.
 - Fixed not loading a machine's page when using the keyboard to select a different machine in the dropdown on a machine detail page
 - Fixed JavaScript errors when changing the machine or machine type in the reservation creation form
 - Added GitHub Actions workflow for automatically labeling deployment PRs
+- Made the `makemessages` management command automatically convert the path format of the file location comments in `.po` files generated on Windows,
+  to the format generated on Linux - i.e. forward slashes (`/`) instead of backslashes (`\`) and no leading `.\` - so that developers using Windows
+  don't have to do this manually anymore :)
 
 ### Improvements
 
