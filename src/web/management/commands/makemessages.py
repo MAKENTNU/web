@@ -39,7 +39,6 @@ class Command(makemessages.Command):
         po_file = locale_dir / f'{self.domain}.po'
 
         original_po_file_contents = po_file.read_text(encoding='utf-8')
-        changed = False
         po_file_lines = original_po_file_contents.splitlines(keepends=True)
         for i, line in enumerate(po_file_lines):
             if line.startswith("#:"):
@@ -47,11 +46,9 @@ class Command(makemessages.Command):
                     self._path_prefix_regex.sub(self._path_prefix_replacement, line)
                     .replace("\\", "/")
                 )
-                changed = True
 
-        # Faster to check this bool than compare the new and old file contents - especially if nothing was changed
-        if changed:
-            new_po_file_contents = "".join(po_file_lines)
+        new_po_file_contents = "".join(po_file_lines)
+        if new_po_file_contents != original_po_file_contents:
             # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L707-L708
             with open(po_file, 'w', encoding='utf-8') as fp:
                 fp.write(new_po_file_contents)
