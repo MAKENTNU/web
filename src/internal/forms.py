@@ -166,7 +166,7 @@ class SystemAccessValueForm(forms.ModelForm):
 class SecretsForm(forms.ModelForm):
     class Meta:
         model = Secret
-        fields = '__all__'
+        exclude = ('extra_view_permissions',)
 
 
 class QuoteForm(forms.ModelForm):

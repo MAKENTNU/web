@@ -9,6 +9,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic.detail import SingleObjectMixin
 
 from contentbox.views import DisplayContentBoxView, EditContentBoxView
 from make_queue.models.course import Printer3DCourse
@@ -233,7 +234,6 @@ class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
 
 class SecretListView(ListView):
     model = Secret
-    queryset = Secret.objects.default_order_by()
     template_name = 'internal/secret_list.html'
     context_object_name = 'secrets'
     extra_context = {
@@ -241,10 +241,14 @@ class SecretListView(ListView):
         'secrets_shown_delayed_seconds': 30,
     }
 
+    def get_queryset(self):
+        return Secret.objects.visible_to(self.request.user).default_order_by()
+
 
 class SecretFormMixin(CustomFieldsetFormMixin, ABC):
     model = Secret
     form_class = SecretsForm
+    template_name = 'internal/secret_form.html'
     success_url = reverse_lazy('secret_list')
 
     base_template = 'internal/base.html'
@@ -258,13 +262,19 @@ class CreateSecretView(PermissionRequiredMixin, SecretFormMixin, CreateView):
     form_title = _("New Secret")
 
 
-class EditSecretView(PermissionRequiredMixin, SecretFormMixin, UpdateView):
+class ExistingSecretPermissionRequiredMixin(PermissionRequiredMixin, SingleObjectMixin, ABC):
+
+    def get_permission_required(self):
+        return self.permission_required + self.get_object().extra_view_perms_str_tuple
+
+
+class EditSecretView(ExistingSecretPermissionRequiredMixin, SecretFormMixin, UpdateView):
     permission_required = ('internal.change_secret',)
 
     form_title = _("Edit Secret")
 
 
-class DeleteSecretView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class DeleteSecretView(ExistingSecretPermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('internal.delete_secret',)
     model = Secret
     success_url = reverse_lazy('secret_list')

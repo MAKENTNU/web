@@ -748,6 +748,10 @@ msgstr "Rediger {committee}"
 msgid "full name"
 msgstr "fullt navn"
 
+#: src/internal/admin.py:50 internal/models.py:279
+msgid "extra view permissions"
+msgstr "ekstra visningsrettigheter"
+
 #: src/internal/forms.py:17
 msgid "Choose user"
 msgstr "Velg bruker"
@@ -958,6 +962,14 @@ msgstr "prioritet"
 #: src/internal/models.py:259
 msgid "If specified, the secrets are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
+
+#: src/internal/models.py:281
+msgid ""
+"Extra permissions that are required for viewing the secret. If a user does "
+"not have all the chosen permissions, it will be hidden to them."
+msgstr ""
+"Ekstra rettigheter som kreves for å se hemmeligheten. Hvis en bruker ikke "
+"har alle de valgte rettighetene vil den være skjult for vedkommende."
 
 #: src/internal/models.py:271
 msgid "quote"
@@ -1205,10 +1217,18 @@ msgstr "Sett medlem som ikke pang"
 msgid "“%(quote)s”"
 msgstr "«%(quote)s»"
 
+#: src/internal/templates/internal/secret_form.html:17
+msgid "Extra view permissions can be added/edited in Django admin"
+msgstr "Ekstra visningsrettigheter kan legges til / endres i Django-admin"
+
 #: src/internal/templates/internal/secret_list.html:7
 #: src/internal/templates/internal/secret_list.html:18
 msgid "Internal secrets"
 msgstr "Internhemmeligheter"
+
+#: src/internal/templates/internal/secret_list.html:54
+msgid "You can see this secret because you have the following permissions"
+msgstr "Du kan se denne hemmeligheten fordi du har følgende rettigheter"
 
 #: src/internal/templates/internal/secret_list.html:51
 msgid "Click to show – only if you're alone!"
