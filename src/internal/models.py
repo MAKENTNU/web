@@ -286,6 +286,12 @@ class Secret(models.Model):
     objects = SecretQuerySet.as_manager()
     history = HistoricalRecords(m2m_fields=[extra_view_permissions], excluded_fields=['priority', 'last_modified'])
 
+    class Meta:
+        permissions = (
+            ('can_view_board_secrets', "Can view secrets that only members of the board need"),
+            ('can_view_dev_secrets', "Can view secrets that only members of the Dev committee need"),
+        )
+
     def __str__(self):
         return str(self.title)
 
