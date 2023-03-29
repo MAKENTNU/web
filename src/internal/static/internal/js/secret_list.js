@@ -13,10 +13,12 @@ const DISABLED_CLASS_NAME = "disabled";
 const secretDataObjects = {};
 
 function populateSecretDataFor(secretID) {
+    const $secretButtonsContainer = $(`[data-${SECRET_ID_DATA_NAME}="${secretID}"]`);
     const secretData = {
         $secret: $(`#${secretID}`),
-        $secretShowButton: $(`.secret-show-button[data-${SECRET_ID_DATA_NAME}="${secretID}"]`),
-        $secretDelayHidingButton: $(`.secret-delay-hiding-button[data-${SECRET_ID_DATA_NAME}="${secretID}"]`),
+        $secretShowButton: $secretButtonsContainer.find(".secret-show-button"),
+        $secretHideButton: $secretButtonsContainer.find(".secret-hide-button"),
+        $secretDelayHidingButton: $secretButtonsContainer.find(".secret-delay-hiding-button"),
         timer: null,
         delayHidingButtonTimer: null,
     };
@@ -33,12 +35,18 @@ function getSecretData($elementWithSecretID) {
     return secretData;
 }
 
-function hideSecret(secretData) {
-    secretData.$secret.addClass(HIDDEN_CLASS_NAME);
-    secretData.$secretShowButton.removeClass(HIDDEN_CLASS_NAME);
-    // Also reset the potentially disabled delay button
-    clearTimeout(secretData.delayHidingButtonTimer);
-    enableSecretDelayHidingButton(secretData);
+function displaySecret(displayState, secretData) {
+    const hide = displayState === DisplayState.HIDDEN;
+    secretData.$secret.toggleClass(HIDDEN_CLASS_NAME, hide);
+    secretData.$secretShowButton.toggleClass(HIDDEN_CLASS_NAME, !hide);
+    secretData.$secretHideButton.toggleClass(HIDDEN_CLASS_NAME, hide);
+    secretData.$secretDelayHidingButton.toggleClass(HIDDEN_CLASS_NAME, hide);
+
+    if (hide) {
+        // Also reset the potentially disabled delay button
+        clearTimeout(secretData.delayHidingButtonTimer);
+        enableSecretDelayHidingButton(secretData);
+    }
 }
 
 function enableSecretDelayHidingButton(secretData) {
@@ -47,25 +55,24 @@ function enableSecretDelayHidingButton(secretData) {
 
 function setHideTimeout(inNumSeconds, secretData) {
     secretData.timer = setTimeout(() => {
-        hideSecret(secretData);
+        displaySecret(DisplayState.HIDDEN, secretData);
     }, inNumSeconds * 1000);
 }
 
 $(".secret-show-button").click(function () {
-    const secretData = getSecretData($(this));
-    secretData.$secret.removeClass(HIDDEN_CLASS_NAME);
-    secretData.$secretShowButton.addClass(HIDDEN_CLASS_NAME);
+    const secretData = getSecretData($(this).closest(".control-buttons"));
+    displaySecret(DisplayState.SHOWN, secretData);
     setHideTimeout(secretsShownSeconds, secretData);
 });
 
 $(".secret-hide-button").click(function () {
-    const secretData = getSecretData($(this));
-    hideSecret(secretData);
+    const secretData = getSecretData($(this).closest(".control-buttons"));
+    displaySecret(DisplayState.HIDDEN, secretData);
     clearTimeout(secretData.timer);
 });
 
 $(".secret-delay-hiding-button").click(function () {
-    const secretData = getSecretData($(this));
+    const secretData = getSecretData($(this).closest(".control-buttons"));
     // Delay hiding
     clearTimeout(secretData.timer);
     setHideTimeout(secretsShownDelayedSeconds, secretData);
