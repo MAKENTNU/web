@@ -1,0 +1,103 @@
+{% load static %}
+{% load i18n %}
+{% load hosts %}
+{% load uri_tags %}
+
+
+<!DOCTYPE html>
+<html lang="{{ CURRENT_LANGUAGE_CODE }}">
+<head>
+    <title>{% block title_full %}{% block title %}{{ page_title }}{% endblock title %} | MAKE NTNU{% endblock title_full %}</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    {% block favicon_template %}
+        {% include 'web/favicon.html' with favicons_folder='web/img/favicons' %}
+    {% endblock favicon_template %}
+
+    {% block open_graph_meta %}
+        <meta property="og:title" content="{% block og_title %}MAKE NTNU{% endblock og_title %}"/>
+        <meta property="og:site_name" content="MAKE NTNU"/>
+        <meta property="og:image" content="{% spaceless %}
+            {% block og_image_absolute_uri %}
+                {% static 'web/img/logo_og_thumbnail.png' as og_image_url %}
+                {% get_absolute_uri_for_path request og_image_url %}
+            {% endblock og_image_absolute_uri %}
+        {% endspaceless %}"/>
+        <meta property="og:image:alt" content="{% block og_image_alt %}{% translate "MAKE NTNU's logo" %}{% endblock og_image_alt %}"/>
+        {% translate "MAKE NTNU is a voluntary student organization that works for a better environment for project development, both in private and educational contexts, for all students and employees at NTNU." as site_description %}
+        <meta property="og:description" content="{% block og_description %}{{ site_description }}{% endblock og_description %}"/>
+        <meta property="description" content="{% block description %}{{ site_description }}{% endblock description %}"/>
+        <meta property="og:type" content="{% block og_type %}website{% endblock og_type %}"/>
+        <meta property="og:url" content="{% get_absolute_uri_no_query request %}"/>
+    {% endblock open_graph_meta %}
+
+    <link rel="stylesheet" href="{% static 'web/css/font_faces.css' %}"/>
+    <link rel="stylesheet" href="{% static 'lib/fomantic-ui/semantic.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'web/css/style.css' %}"/>
+    <script src="{% host_url 'javascript_catalog' host 'main' %}"></script>
+    <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'lib/jquery/jquery.dirty.js' %}"></script>
+    <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
+    <script src="{% static 'fomantic-ui/settings.js' %}"></script>
+    <script>
+        const LANG_PREFIX = {% if CURRENT_LANGUAGE_CODE == DEFAULT_LANGUAGE_CODE %} "" {% else %} "/{{ CURRENT_LANGUAGE_CODE }}" {% endif %};
+    </script>
+    {# Temporary fix for CKEditor not being able to find its static files (see https://django-ckeditor.readthedocs.io/en/latest/#required) #}
+    <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+
+    <script defer src="{% static 'web/js/base.js' %}"></script>
+
+    {% block analytics %}
+        <script defer src="https://www.googletagmanager.com/gtag/js?id=G-7KWS6X84KG"></script>
+        <script defer src="{% static 'web/js/gtag_init.js' %}"></script>
+    {% endblock analytics %}
+
+    {% block header_links %}
+        <link rel="stylesheet" href="{% static 'web/css/header.css' %}"/>
+        <link rel="stylesheet" href="{% static 'announcements/css/announcement_banner.css' %}"/>
+        <script defer src="{% static 'web/js/header.js' %}"></script>
+    {% endblock header_links %}
+
+    {# `common_utils.js` should not be deferred, as it only contains function definitions #}
+    <script src="{% static 'web/js/common_utils.js' %}"></script>
+    <script defer src="{% static 'web/js/common_deferred_code.js' %}"></script>
+    <script defer src="{% static 'web/js/delete_modal.js' %}"></script>
+
+    {# Should be kept at the bottom of `<head>`, so that deferred form media scripts are loaded after the scripts linked above #}
+    {% block extra_head %}{% endblock extra_head %}
+</head>
+<body>
+
+{# Should always be the first child of `<body>` #}
+<a class="skip-to-main-content" href="">
+    {% translate "Skip to main content" %}
+</a>
+
+<div class="wrapper">
+    <div class="content">
+        {% block header %}
+            {% include 'web/header.html' %}
+        {% endblock header %}
+
+        {% block padding_top %}
+            <div class="make-content-padding"></div>
+        {% endblock padding_top %}
+
+        <main id="main">
+            {% block body %}
+            {% endblock body %}
+        </main>
+
+        {% block padding_bottom %}
+            <div class="make-content-padding"></div>
+        {% endblock padding_bottom %}
+    </div>
+
+    {% include 'web/delete_modal.html' %}
+    {% block footer %}
+        {% include 'web/footer.html' %}
+    {% endblock footer %}
+</div>
+
+</body>
+</html>

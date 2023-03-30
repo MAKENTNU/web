@@ -1,0 +1,15 @@
+#page-title {
+    margin-bottom: 2em;
+}
+
+.categories.accordion > .title {
+    font-size: large;
+}
+
+.categories.accordion .questions.accordion > .title {
+    font-size: medium;
+}
+
+.questions.accordion .content .button {
+    margin: -1em 0 1em;
+}

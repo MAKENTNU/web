@@ -1,0 +1,25 @@
+{% load static %}
+{% load i18n %}
+
+
+{# Linking `delete_modal.js` is required when including this template #}
+
+<div id="delete-modal" class="ui basic small modal">
+    <div class="ui icon header">
+        <i class="trash icon"></i>
+        <span class="prompt">{% translate "Are you sure you want to delete?" %}</span>
+    </div>
+    <form id="delete-form" class="dont-prevent-leaving" method="POST">
+        {% csrf_token %}
+    </form>
+    <div class="actions">
+        <div class="ui red inverted delete button">
+            <i class="trash icon"></i>
+            {% translate "Delete" %}
+        </div>
+        <div class="ui white ok inverted button">
+            <i class="cancel icon"></i>
+            {% translate "Cancel" context "abort action" %}
+        </div>
+    </div>
+</div>

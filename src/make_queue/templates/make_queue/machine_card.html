@@ -1,0 +1,55 @@
+{% load static %}
+{% load reservation_extra %}
+{% load i18n %}
+
+
+{# Linking `machine_card.css`, `stream.css` and `stream.js` is required when including this template #}
+
+<div class="machine ui card">
+    {% if machine.machine_type.has_stream %}
+        <img class="stream image" data-stream-name="{{ machine.stream_name }}"
+             src="{% get_stream_image_path machine.status %}"
+             alt="{% blocktranslate with name=machine.name %}Live stream of the machine {{ name }}{% endblocktranslate %}"
+        />
+    {% endif %}
+    <div class="word-breaking hyphenated content">
+        <div class="header">
+            {{ machine.name }}
+            {% if perms.make_queue.change_machine %}
+                <a href="{% url 'edit_machine' machine.pk %}">
+                    <i class="make-col-yellow pencil icon"></i>
+                </a>
+            {% endif %}
+            {% if perms.make_queue.delete_machine %}
+                <a class="delete-modal-button"
+                   data-url="{% url 'delete_machine' machine.pk %}"
+                   data-obj-name="{{ machine.name }}">
+                    <i class="red trash icon"></i>
+                </a>
+            {% endif %}
+            {% if machine.info_message %}
+                <div class="info-message popup-trigger ui large grey basic label"
+                     data-html="{{ machine.info_message|linebreaks }}" data-variation="wide">
+                    <span>
+                        <i class="big make-col-yellow comment dots icon"></i>
+                    </span>
+                </div>
+            {% endif %}
+        </div>
+        <div class="meta">
+            <div class="ui {% card_color_from_machine_status machine %} tiny header no_bold">
+                {% card_text_from_machine_status machine %}
+            </div>
+        </div>
+        {{ machine.machine_model }}<br/>
+        <a href="{{ machine.location_url }}" target="_blank">
+            <i class="icon location arrow"></i> {{ machine.location }}
+        </a>
+    </div>
+    <div>
+        <a class="ui {% card_color_from_machine_status machine %} bottom attached button"
+           href="{{ machine.get_absolute_url }}">
+            {% translate "View in calendar" %}
+        </a>
+    </div>
+</div>

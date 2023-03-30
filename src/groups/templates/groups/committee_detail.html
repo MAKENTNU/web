@@ -1,0 +1,27 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{{ committee.name|capfirst }} | {% translate "committees"|capfirst %}{% endblock title %}
+
+{% block body %}
+    <div class="word-breaking hyphenated ui text container">
+        {% if committee.image %}
+            <img class="ui centered aligned image" src="{{ committee.image.url }}"
+                 alt="{% blocktranslate with name=committee.name %}{{ name }} committee image{% endblocktranslate %}"
+            />
+        {% endif %}
+
+        <h1>
+            <strong>{{ committee.name|capfirst }}</strong>
+        </h1>
+
+        {% if committee.clickbait %}
+            <p>{{ committee.clickbait }}</p>
+            <br/>
+        {% endif %}
+
+        {{ committee.description|safe }}
+    </div>
+{% endblock body %}

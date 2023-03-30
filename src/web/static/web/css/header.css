@@ -1,0 +1,270 @@
+#header {
+    --logo-padding: 30px;
+    --logo-width: 360px;
+    --logo-min-width: 120px;
+    --logo-space: minmax(var(--logo-min-width), var(--logo-width));
+
+    --burger-margin: 2em;
+
+    /* nav */
+    --nav-space-between: 2em;
+    --bubble-background-extra-width: calc(1.5 * var(--nav-space-between));
+    --dur: 0.15s;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    width: 100%;
+    height: var(--header-height);
+    background-color: rgb(34, 43, 52);
+}
+
+#header .item > .text {
+    color: var(--make-light-grey);
+}
+
+#header .item:hover > .text,
+#header .item:focus > .text {
+    color: #EEE;
+}
+
+#header div.logo-centering {
+    display: none;
+}
+
+#header .logo {
+    display: grid;
+    grid-template-columns: var(--logo-padding) var(--logo-space) minmax(var(--nav-space-between), var(--logo-padding));
+    align-self: center;
+}
+
+#header .logo img {
+    display: block;
+    margin: auto;
+    max-height: 50px;
+    object-fit: contain;
+}
+
+#burger {
+    display: none;
+    align-self: center;
+    justify-self: end;
+    margin-right: var(--burger-margin);
+}
+
+#burger .icon {
+    margin: 0;
+}
+
+#nav > .item,
+#side-nav > .item {
+    height: 3em;
+    margin: calc(var(--nav-space-between) / 2);
+    padding: 0;
+    justify-content: center;
+}
+
+#nav > .item:hover,
+#side-nav > .item:hover,
+#header .dropdown.active {
+    /* Disables property from Fomantic-UI */
+    background-color: transparent;
+}
+
+#nav > .item:focus,
+#side-nav > .item:focus {
+    /* Disable native outline when focusing, as we provide our own with the `.bubble-background` elements */
+    outline: none;
+}
+
+#nav > .item .bubble-background,
+#side-nav > .item .bubble-background {
+    position: absolute;
+    width: 100%;
+    height: 1em;
+    border-radius: 2em;
+    opacity: 0;
+    transition: width var(--dur) linear, height var(--dur) linear, opacity var(--dur) ease-out;
+}
+
+#nav > .item:hover .bubble-background,
+#nav > .item:focus-within .bubble-background,
+#side-nav > .item:hover .bubble-background,
+#side-nav > .item:focus-within .bubble-background {
+    width: calc(100% + var(--bubble-background-extra-width));
+    height: 3em;
+    opacity: 1;
+}
+
+#nav > .item:active .bubble-background,
+#side-nav > .item:active .bubble-background {
+    /* Prevents the bubble-backgrounds from only partially expanding before the new page loads
+       (when clicking on a link in the navbar), on fast mobile devices */
+    transition: all 0s;
+}
+
+#nav > .item > .text,
+#side-nav > .item > .text {
+    z-index: 1;
+    transition: color var(--dur) ease;
+}
+
+#nav > .item .make-bg-yellow.bubble-background {
+    filter: brightness(90%);
+}
+
+#nav > .item .make-bg-turquoise.bubble-background {
+    filter: brightness(90%);
+}
+
+#nav > .item .make-bg-blue.bubble-background,
+#side-nav > .item .make-bg-blue.bubble-background {
+    filter: brightness(130%);
+}
+
+#side-nav {
+    --estimated-max-name-length: 10em;
+
+    margin: 0;
+    justify-self: end;
+    display: grid;
+    grid-template-columns: var(--estimated-max-name-length) calc(var(--logo-padding) + 10px);
+    justify-items: end;
+}
+
+#side-nav > .item {
+    margin-right: 0;
+}
+
+#header .dropdown .menu {
+    background-color: rgb(34, 43, 52);
+    border-radius: 7px;
+    border: 2px solid var(--make-light-grey);
+}
+
+#header .dropdown .menu > .item {
+    /* For user dropdown: Fixes weird centering of dropdown items, caused by Fomantic-UI setting dropdown menu to `display: flex !important`
+                          when it's too close to the right window edge.
+       For makerspace dropdown: Fixes dropdown items not covering the entire width of the dropdown. */
+    align-self: auto;
+}
+
+#header .dropdown .menu > .active.item {
+    /* Prevents changing the font-weight to bold when focusing on a dropdown element,
+       which happens due to the workaround code in `header.js` */
+    font-weight: normal !important;
+}
+
+#header .dropdown .menu > .item:hover,
+#header .dropdown .menu > .item:focus {
+    background-color: rgba(255, 255, 255, 0.08) !important; /* Overrides Fomantic-UI */
+}
+
+#side-nav .logout-form button[type=submit] {
+    width: 100%;
+    height: 100%;
+    text-align: start;
+    border: none;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+}
+
+#side-nav .set-language-form {
+    position: absolute;
+    margin: 0;
+    top: 0;
+    right: 0;
+}
+
+#side-nav .set-language-form .button {
+    margin: 0;
+    padding: 0.75em;
+    box-shadow: none;
+}
+
+#side-nav .set-language-form .inverted.make-col-ligrey.button:hover,
+#side-nav .set-language-form .inverted.make-col-ligrey.button:focus {
+    box-shadow: 0 0 0 2px var(--make-light-grey) inset; /* Same as Fomantic-UI's style for inverted buttons, except the color */
+    background-color: transparent;
+}
+
+#side-nav .set-language-form .button .globe.icon {
+    margin: 0 -5px 0 3px;
+}
+
+
+/* Narrower space between elements in navbar */
+@media screen and (max-width: 1199.98px) {
+    #header {
+        --nav-space-between: 1em;
+    }
+}
+
+
+/* Switch to mobile layout with burger */
+@media screen and (max-width: 991.98px) {
+    #header {
+        --burger-space: minmax(calc(3em + var(--burger-margin)), 1fr);
+
+        grid-template-columns: var(--burger-space) auto var(--burger-space);
+        grid-template-rows: var(--header-height);
+    }
+
+    #header.active {
+        height: auto;
+    }
+
+    #header div.logo-centering {
+        display: inline;
+    }
+
+    #header .logo {
+        grid-template-columns: var(--logo-padding) var(--logo-space) var(--logo-padding);
+    }
+
+    #burger {
+        display: inline;
+    }
+
+    #nav {
+        grid-row: 2;
+        grid-column-start: 1;
+        grid-column-end: 4;
+        margin: 0;
+        justify-self: center; /* Makes the navbar not take up the entire width of its parent, which most noticably applies to the buttons inside */
+    }
+
+    #nav,
+    #side-nav {
+        display: none;
+    }
+
+    #header.active #nav,
+    #header.active #side-nav {
+        display: inline;
+    }
+
+    #nav > .item,
+    #side-nav > .item {
+        margin: 0;
+    }
+
+    #side-nav {
+        align-self: end;
+        justify-self: center;
+        grid-row-start: 3;
+        grid-column-start: 1;
+        grid-column-end: 5;
+        margin-top: 2em;
+        margin-bottom: 1em;
+    }
+
+    #header.active .dropdown .menu {
+        /* Fixes Fomantic-UI de-centering the dropdown menu */
+        left: initial;
+    }
+
+    #side-nav .set-language-form {
+        position: static;
+    }
+}

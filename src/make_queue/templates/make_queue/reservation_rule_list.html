@@ -1,0 +1,150 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load datetime_tags %}
+{% load reservation_extra %}
+{% load quota %}
+
+
+{% block title %}{{ title }}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_rule_list.css' %}"/>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="word-breaking hyphenated">
+            {{ title }}
+            {% if perms.make_queue.add_reservationrule %}
+                <a href="{% url 'create_reservation_rule' machine_type.pk %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+        <div>
+            <a class="ui blue button" href="{{ machine_type.usage_rule.get_absolute_url }}">
+                {% translate "Usage rules" %}
+            </a>
+        </div>
+        <table class="ui definition table">
+            <tbody>
+            <tr>
+                <td>{% translate "Reservation duration within a single period" %}</td>
+                <td>
+                    {% translate "Card's “single period” value; see cards below" %}
+                </td>
+            </tr>
+            <tr>
+                <td>{% translate "Reservation duration spanning multiple periods" %}</td>
+                <td>
+                    <div>
+                        <b>{% translate "Total time" %}:</b> {% translate "Largest “single period” value" %}
+                    </div>
+                    <div>
+                        <b>{% translate "For each time period" %}:</b> {% translate "Card's “multi-period” value" %}
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        {% if rule_set_has_gaps %}
+            <div class="ui warning message">
+                <p>{% translate "There exists one or more gaps between the rules' periods, that are not covered" %}.</p>
+            </div>
+        {% endif %}
+
+        <div class="ui cards">
+            {% for rule in rules %}
+                <div class="ui card">
+                    <div class="content">
+                        <div class="meta">
+                            {% if perms.make_queue.change_reservationrule %}
+                                <a href="{% url 'edit_reservation_rule' machine_type.pk rule.pk %}">
+                                    <i class="make-col-yellow pencil icon"></i>
+                                </a>
+                            {% endif %}
+                            {% if perms.make_queue.delete_reservationrule %}
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'delete_reservation_rule' machine_type.pk rule.pk %}">
+                                    <i class="red trash icon"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="description">
+                            {% translate "Single period" %}:
+                            <b>{{ rule.max_hours|floatformat }} {% translate "hours" %}</b>
+                            <br/>
+                            {% translate "Multi-period" %}:
+                            <b>{{ rule.max_inside_border_crossed|floatformat }} {% translate "hours" %}</b>
+                        </div>
+                        <h4 class="subheader">
+                            {% translate "Periods" %}
+                        </h4>
+                        {% for period in rule.time_periods %}
+                            <div>
+                                {{ period|safe }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if quotas %}
+            <h3>{% translate "My quotas" %}</h3>
+            <div class="ui cards">
+                {% for quota in quotas %}
+                    <div class="ui card">
+                        <div class="content">
+                            <div class="header">
+                                {% if quota.dimishing %}
+                                    {% translate "One-time quota" %}
+                                {% else %}
+                                    {% translate "Replenishing quota" %}
+                                {% endif %}
+                            </div>
+                            <div class="meta">
+                                {% if quota.all %}
+                                    {% translate "Global" %}
+                                {% else %}
+                                    {% translate "Personal" %}
+                                {% endif %}
+                            </div>
+                            <div class="description">
+                                <span>
+                                    {% translate "Maximum number of reservations" %}: <b>{{ quota.number_of_reservations }}</b>
+                                </span>
+                                <br/>
+                                {% if quota.ignore_rules %}
+                                    <b>{% translate "ignores rules"|capfirst %}</b>
+                                {% endif %}
+                            </div>
+                            <div class="ui small feed">
+                                {% get_unfinished_reservations quota user as unfinished_reservations %}
+                                {% if unfinished_reservations %}
+                                    <h5 class="ui header">{% translate "Reservations connected to quota" %}:</h5>
+                                    {% for reservation in unfinished_reservations %}
+                                        <div class="event">
+                                            <div class="content">
+                                                <div class="summary">
+                                                    {% with start_time=reservation.start_time|short_datetime %}
+                                                        {% blocktranslate trimmed with machine_name=reservation.machine.name time=start_time %}
+                                                            {{ machine_name }} at {{ time }}
+                                                        {% endblocktranslate %}
+                                                    {% endwith %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% else %}
+                                    <i>{% translate "No reservations connected to quota" %}</i>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock body %}

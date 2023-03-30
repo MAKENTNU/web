@@ -1,0 +1,53 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "questions"|capfirst %} | {% translate "Admin panel" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'faq/css/admin_question_list.css' %}"/>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+
+        <h1 id="page-title" class="ui header">
+            <a href="{% url 'faq_admin_panel' %}">
+                <i class="blue chevron circle left icon"></i>
+            </a>
+            {% translate "questions"|capfirst %}
+            {% if perms.faq.add_question %}
+                <a href="{% url 'question_create' %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+
+        <div class="ui relaxed divided list">
+            {% for question in questions %}
+                <div class="item">
+                    <div class="content">
+                        <div class="word-breaking hyphenated ui header">
+                            {{ question.title }}
+                            {% if perms.faq.change_question %}
+                                <a href="{% url 'question_update' question.pk %}">
+                                    <i class="make-col-yellow pencil icon"></i>
+                                </a>
+                            {% endif %}
+
+                            {% if perms.faq.delete_question %}
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'question_delete' question.pk %}"
+                                   data-obj-name="{{ question }}">
+                                    <i class="large red delete icon"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+{% endblock body %}

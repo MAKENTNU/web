@@ -1,0 +1,127 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}{{ event.title }} | {% translate "Admin panel" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'news/css/event/admin_event_detail.css' %}"/>
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `admin_event_detail.js` #}
+        var csrfToken = "{{ csrf_token }}";
+        var privateEventIcon = "{% static 'web/img/logo_icon_allyellow.svg' %}";
+        var publicEventIcon = "{% static 'web/img/logo_icon_allgrey.svg' %}";
+    </script>
+    <script defer src="{% static 'news/js/event/admin_event_detail.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+
+        <a href="{% url 'admin_event_list' %}">
+            <i class="angle double left icon"></i>{% translate "Admin page for events" %}
+        </a>
+
+        <h1 class="word-breaking hyphenated title-with-buttons">
+            {{ event.title }}
+
+            <div class="admin-actions ui secondary menu">
+                {% if perms.news.delete_event %}
+                    <a class="delete-modal-button ui red button"
+                       data-url="{% url 'event_delete' event.pk %}"
+                       data-obj-name="{{ event }}">
+                        <i class="trash icon"></i>{% translate "Delete" %}
+                    </a>
+                {% endif %}
+
+                {% if perms.news.change_event %}
+                    <a class="ui blue button" href="{% url 'event_edit' event.pk %}">
+                        <i class="edit icon"></i>{% translate "Edit" %}
+                    </a>
+                {% endif %}
+
+                <a class="ui make-bg-yellow button" href="{{ event.get_absolute_url }}">
+                    <i class="sticky note icon"></i>{% translate "Go to the event page" %}
+                </a>
+            </div>
+        </h1>
+
+        <div id="message-hidden" class="ui info {% if not event.hidden %}hidden{% endif %} message">
+            <div class="header">
+                {% translate "Hidden event" %}
+            </div>
+            {% translate "This event is hidden! No users will be able to see the event or its occurrences." %}
+        </div>
+        <div id="message-featured" class="ui info {% if not event.featured %}hidden{% endif %} message">
+            <div class="header">
+                {% translate "Featured event" %}
+            </div>
+            {% translate "This event is featured! Any future occurrences may be shown on the front page." %}
+        </div>
+        <div id="message-private" class="ui info {% if not event.private %}hidden{% endif %} message">
+            <div class="header">
+                {% translate "Private event" %}
+            </div>
+            {% translate "This event is private! It is only visible to members of MAKE NTNU." %}
+        </div>
+
+        {% if event.standalone %}
+            <h3 class="ui horizontal divider header">
+                <i class="ticket icon"></i> {% translate "tickets"|capfirst %}
+            </h3>
+            {% if event.number_of_tickets %}
+                <b>
+                    <a href="{% url 'event_ticket_list' event.pk %}">
+                        {% blocktranslate trimmed with num_active_tickets=event.number_of_active_tickets num_tickets=event.number_of_tickets %}
+                            {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
+                        {% endblocktranslate %}
+                    </a>
+                </b>
+            {% else %}
+                <b>{% translate "No registration required" %}</b>
+            {% endif %}
+        {% endif %}
+
+        <h3 class="ui horizontal divider header">
+            <i class="time icon"></i>{% translate "Occurrences" %}
+        </h3>
+        <div class="create-new-occurrence">
+            {% if perms.news.add_timeplace %}
+                <a class="ui blue right floated button popup-trigger" href="{% url 'timeplace_create' event.pk %}">
+                    <i class="time icon"></i>
+                    {% translate "Add new occurrence" %}
+                </a>
+            {% endif %}
+        </div>
+        <div class="ui tabular pointing secondary menu">
+            <a class="active item" data-tab="future">{% translate "Future" %}
+                <div class="ui blue label">{{ future_timeplaces.count }}</div>
+            </a>
+            <a class="item" data-tab="past">{% translate "Past" %}
+                <div class="ui red label">{{ past_timeplaces.count }}</div>
+            </a>
+        </div>
+
+        <div class="ui active tab segment" data-tab="future">
+            <div class="ui relaxed divided list">
+                {% for timeplace in future_timeplaces %}
+                    {% include 'news/event/admin_time_place_listing.html' %}
+                {% empty %}
+                    {% translate "No future occurrences exist for this event" %}
+                {% endfor %}
+            </div>
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="past">
+            <div class="ui relaxed divided list">
+                {% for timeplace in past_timeplaces %}
+                    {% include 'news/event/admin_time_place_listing.html' %}
+                {% empty %}
+                    {% translate "No past occurrences exist for this event" %}
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+{% endblock body %}

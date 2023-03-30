@@ -1,0 +1,31 @@
+{% extends 'web/generic_form.html' %}
+{% load i18n %}
+
+
+{% block title %}{{ form_title|striptags }}{% endblock title %}
+
+{% block field_pre_content %}
+    {% if field.name == 'content' %}
+        {% for error in field.errors.as_data %}
+            <div class="ui negative message">
+                <i class="close icon"></i>
+                {% if error.code == 'required' %}
+                    <div class="header">{% translate "Missing language" %}</div>
+                    <p>{{ error.message }}</p>
+                {% else %}
+                    <b>{{ error.message }}</b>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_pre_content %}
+
+{% block field_errors %}
+    {% if field.name == 'content' %}
+        {# Remove the block's content and add it in the `field_pre_content` block above instead #}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field_errors %}

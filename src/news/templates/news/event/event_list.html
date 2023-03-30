@@ -1,0 +1,20 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Events" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'news/css/event/event_list_contents.css' %}"/>
+{% endblock extra_head %}
+
+{% block body %}
+    {% translate "Upcoming events" as upcoming_title %}
+    {% translate "No upcoming events" as no_upcoming_events %}
+    {% include 'news/event/event_list_contents.html' with event_dicts=future_event_dicts title=upcoming_title no_events_message=no_upcoming_events ribbon_extra_classes="yellow make-bg-yellow" %}
+
+    {% translate "Previous events" as previous_title %}
+    {% translate "No previous events" as no_previous_events %}
+    {% include 'news/event/event_list_contents.html' with event_dicts=past_event_dicts title=previous_title no_events_message=no_previous_events ribbon_extra_classes="grey make-bg-ligrey make-col-dkgrey" %}
+{% endblock body %}

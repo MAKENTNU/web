@@ -1,19 +1,33 @@
 coverage:
+  range: "75..90"
   status:
     project:
       default:
-        threshold: 80%
+        target: auto
+        threshold: 5%
     patch:
       default:
-        threshold: 80%
+        target: 80%
+        threshold: 30%
+
+codecov:
+  require_ci_to_pass: false
+
+comment:
+  layout: "reach, diff, files"
+  behavior: default
+  require_changes: false
+  # Codecov occasionally does not post a comment on PRs for some reason; the two lines below force Codecov to always post a comment
+  # (see https://docs.codecov.com/docs/pull-request-comments#requiring-the-base-andor-head-commit)
+  # (They can be removed if the above stops happening)
+  require_head: false
+  require_base: false
 
 ignore:
   - "manage.py"
-  - "web/settings.py"
-  - "**/apps.py"
-  - "**/wsgi.py"
-  - "**/asgi.py"
-  - "**/test*.py"
-  - "**/*test.py"
-  - "**/migrations/**"
-  - "**/__init__.py"
+  - "src/web/settings.py"
+  - "src/**/apps.py"
+  - "src/**/wsgi.py"
+  - "src/**/asgi.py"
+  - "src/**/test*.py"
+  - "src/**/migrations/**"

@@ -1,0 +1,21 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Docs" %}{% endblock title %}
+
+{% block open_graph_meta %}{% endblock open_graph_meta %}
+
+{% block analytics %}{% endblock analytics %}
+
+{% block header_links %}
+    <link rel="stylesheet" href="{% static 'docs/css/header.css' %}"/>
+    <script defer src="{% static 'docs/js/header.js' %}"></script>
+{% endblock header_links %}
+
+{% block header %}
+    {% include 'docs/header.html' %}
+{% endblock header %}
+
+{% block footer %}{% endblock footer %}

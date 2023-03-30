@@ -1,0 +1,27 @@
+{% extends 'contentbox/content_box_detail.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'makerspace/css/makerspace.css' %}"/>
+{% endblock extra_head %}
+
+{% block extra_post_content %}
+    <br/>
+
+    <div class="makerspace-sub-pages">
+        <p>
+            <span class="title">
+                <a href="{% url 'makerspace_equipment_list' %}">{% translate "equipment"|capfirst %}</a>
+            </span> &nbsp;&ndash;&nbsp; {% translate "an overview of the various equipment at the workshop, and instructions on how to use it" %}.
+        </p>
+
+        <p>
+            <span class="title">
+                <a href="{% url 'rules' %}">{% translate "Rules" %}</a>
+            </span> &nbsp;&ndash;&nbsp; {% translate "you must follow these to be allowed to use the workshop" %}.
+        </p>
+    </div>
+{% endblock extra_post_content %}

@@ -1,0 +1,22 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+
+
+{% block title %}
+    {% blocktranslate with event=event %}Cancel your ticket for “{{ event }}”{% endblocktranslate %}
+{% endblock title %}
+
+{% block body %}
+    <div class="ui center aligned text container">
+        <h2 class="word-breaking hyphenated">{{ heading|safe }}</h2>
+
+        <form class="ui form" method="POST">
+            {% csrf_token %}
+            <a class="ui red button" href="{% if request.GET.next %}{{ request.GET.next }}
+                                           {% else %}{{ ticket.get_absolute_url }}{% endif %}">
+                {% translate "Cancel" context "abort action" %}
+            </a>
+            <button class="ui primary button" type="submit">{% translate "Yes, I'm sure" %}</button>
+        </form>
+    </div>
+{% endblock body %}

@@ -1,0 +1,31 @@
+{% load i18n %}
+
+
+<div class="card-number-field ui right labeled input">
+    <div class="ui label">EM</div>
+    {% include 'django/forms/widgets/text.html' %}
+
+    <div id="{{ widget.name }}-card-number-count" class="ui label">{{ widget.value|length }}</div>
+</div>
+<div id="{{ widget.name }}-card-number-error" class="ui pointing red basic label hidden">
+    {% translate "Card number must be between seven and ten digits long." %}
+</div>
+
+<script>
+    let required = $("input[name={{ widget.name }}]").prop("required");
+
+    {# Allow input to be empty if not required #}
+    {% if widget.attrs.required %}
+        const pattern = /^[0-9]{7,10}$/;
+    {% else %}
+        const pattern = /^([0-9]{7,10})?$/;
+    {% endif %}
+
+    const $cardNumberLengthCount = $("#{{ widget.name }}-card-number-count");
+    $("input[name={{ widget.name }}]").on("keyup paste", (event) => {
+        $cardNumberLengthCount.text(event.target.value.length);
+        const isValid = pattern.test(event.target.value);
+        $("#{{ widget.name }}-card-number-error").toggleClass("hidden", isValid);
+        $cardNumberLengthCount.toggleClass("red", !isValid);
+    });
+</script>

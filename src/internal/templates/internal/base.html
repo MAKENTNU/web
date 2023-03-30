@@ -1,0 +1,25 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Internal pages" %}{% endblock title %}
+
+{% block favicon_template %}
+    {% include 'internal/favicon.html' with favicons_folder='internal/img/favicons' %}
+{% endblock favicon_template %}
+
+{% block open_graph_meta %}{% endblock open_graph_meta %}
+
+{% block analytics %}{% endblock analytics %}
+
+{% block header_links %}
+    <link rel="stylesheet" href="{% static 'web/css/header.css' %}"/>
+    <script defer src="{% static 'web/js/header.js' %}"></script>
+{% endblock header_links %}
+
+{% block header %}
+    {% include 'internal/header.html' %}
+{% endblock header %}
+
+{% block footer %}{% endblock footer %}

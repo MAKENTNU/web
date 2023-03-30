@@ -1,0 +1,20 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Articles" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'news/css/article/article_list_contents.css' %}"/>
+    <script defer src="{% static 'news/js/article/article_list_contents.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+    <h1 class="ui text-centered make-col-blue header">
+        {% translate "Articles" %}
+    </h1>
+    <div class="ui container">
+        {% include 'news/article/article_list_contents.html' %}
+    </div>
+{% endblock body %}

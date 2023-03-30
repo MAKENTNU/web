@@ -1,0 +1,22 @@
+{% load static %}
+
+
+{# Based on code generated at https://realfavicongenerator.net/ #}
+<link rel="icon" href="{% static favicons_folder|add:'/favicon.ico' %}"/>
+<link rel="icon" type="image/png" sizes="16x16" href="{% static favicons_folder|add:'/favicon-16x16.png' %}"/>
+<link rel="icon" type="image/png" sizes="32x32" href="{% static favicons_folder|add:'/favicon-32x32.png' %}"/>
+<link rel="apple-touch-icon" sizes="180x180" href="{% static favicons_folder|add:'/apple-touch-icon.png' %}"/>
+<link rel="icon" type="image/svg+xml" href="{% static favicons_folder|add:'/favicon.svg' %}"/>
+<link rel="manifest" href="{% static favicons_folder|add:'/site.interpolated.webmanifest' %}"/>
+<link rel="mask-icon" href="{% static favicons_folder|add:'/safari-pinned-tab.svg' %}"
+      color="{% block mask_icon_color %}#F8C811{% endblock mask_icon_color %}"/>
+
+<meta name="apple-mobile-web-app-title"
+      content="{% block apple_mobile_web_app_title %}MAKE NTNU{% endblock apple_mobile_web_app_title %}"/>
+<meta name="application-name"
+      content="{% block application_name %}MAKE NTNU{% endblock application_name %}"/>
+<meta name="msapplication-TileColor"
+      content="{% block msapplication_tile_color %}#0C426A{% endblock msapplication_tile_color %}"/>
+<meta name="msapplication-config" content="{% static favicons_folder|add:'/browserconfig.interpolated.xml' %}"/>
+<meta name="theme-color"
+      content="{% block theme_color %}#F8C811{% endblock theme_color %}"/>

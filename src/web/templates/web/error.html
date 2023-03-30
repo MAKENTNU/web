@@ -1,0 +1,17 @@
+{% extends 'web/base.html' %}
+{% load static %}
+
+
+{# Overwrite the super block's contents with nothing, as the Open Graph meta tags are not needed on an error page #}
+{% block open_graph_meta %}{% endblock open_graph_meta %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'web/css/error.css' %}"/>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui text container">
+        <h1 class="text-centered make-col-blue">{% block error_title %}{% endblock %}</h1>
+        <div class="error-text">{% block error_text %}{% endblock %}</div>
+    </div>
+{% endblock body %}

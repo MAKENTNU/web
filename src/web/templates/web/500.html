@@ -1,0 +1,12 @@
+{% extends 'web/error.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block error_title %}
+    {% translate "Something went terribly wrong" %}
+{% endblock error_title %}
+
+{% block error_text %}
+    {% translate "Sorry, something went terribly wrong while handling your request. One of our developers will have a look at the issue as soon as possible. Please try again later." %}
+{% endblock error_text %}

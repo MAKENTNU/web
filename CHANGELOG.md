@@ -5,6 +5,87 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### New features
+
+- Added [the `django-constance` package](https://django-constance.readthedocs.io/en/stable/), for adding dynamic settings
+- Added [a dynamic setting](https://admin.makentnu.no/constance/config/) for hiding/showing the apply ("Søk verv") button in the header
+- Added two fields to event tickets: one for when the ticket was first created and one for when it was last reactivated/canceled,
+  which can be useful for e.g. keeping statistics over when and how fast tickets were sold
+- Made opening/closing the member modal in [the member list](https://i.makentnu.no/members/) change the browser URL
+  - This makes it possible to navigate backwards and forwards using e.g. the back/forward buttons on a mouse, or the back button on most Android
+    devices. It also makes it easier to get the URL for linking directly to a specific member's info in the member list.
+- Added history tracking to the `Member` and `Machine` models, as well as the following many-to-many fields:
+  - `ContentBox.extra_change_permissions`, `Question.categories` and `InheritanceGroup.own_permissions`
+    - Note that the many-to-many selection for these fields *are* correctly saved, they're just currently not correctly displayed in the objects'
+      history page in Django admin (the *current* M2M selection is always shown);
+      see [this issue](https://github.com/jazzband/django-simple-history/issues/1063)
+- Added links to the guides on what should be done when a member enrolls/retires/quits, in [the member list](https://i.makentnu.no/members/)
+  - These can be changed through [the dynamic settings in Django admin](https://admin.makentnu.no/constance/config/)
+- Set the default value of event occurrences' `hidden` field to `False`
+- Fixed displaying unpublished and hidden occurrences on multipart/standalone events
+- Fixed showing the registration button on standalone events when they only had future occurrences that were either unpublished or hidden
+- Fixed not loading a machine's page when using the keyboard to select a different machine in the dropdown on a machine detail page
+- Fixed JavaScript errors when changing the machine or machine type in the reservation creation form
+- Added GitHub Actions workflow for automatically labeling deployment PRs
+- Made the `makemessages` management command automatically convert the path format of the file location comments in `.po` files generated on Windows,
+  to the format generated on Linux - i.e. forward slashes (`/`) instead of backslashes (`\`) and no leading `.\` - so that developers using Windows
+  don't have to do this manually anymore :)
+
+### Improvements
+
+- Updated Django to version 4.1
+- Made it possible to search for _all_ member fields in the member list - not just the ones visible in the list
+- Started using new label names for each event type, which should be clearer with regard to their intended usage.
+  Also made their description - shown when clicking / hovering over the yellow question marks in an event form - (hopefully) easier to understand
+- Prevent registering for an event without any (past or future) occurrences
+- Made the red "Canceled" ribbon on tickets transparent when clicking / hovering over it, to be able to read the text behind it
+- Added a "help text" yellow question mark icon next to the "Discord username" field in member info forms
+  (displayed when clicked / hovered over)
+- Made the user dropdowns on both [the quota admin page](https://makentnu.no/reservation/quota/) and
+  [the quota form page](https://makentnu.no/reservation/quota/create/), function equally
+- When changing machine type in the reservation creation form, made the first machine of that type be automatically selected
+- Place files uploaded through CKEditor in a separate folder for each model
+- Made all pages have a consistent (browser tab) title format
+  - Most pages will have " | MAKE NTNU" as suffix to the title;
+    subpages of the admin panel have " | Admin panel | MAKE NTNU" as suffix
+- Improved the design of the title text of the categories and questions on the [FAQ page](https://makentnu.no/faq/)
+- Improved the feedback of the toggle button for hiding each occurrence on an event admin page
+- Made the description of the `hidden` field of articles and events not erroneously state that the articles/events will be visible to admin users
+  when hidden
+- Replaced the `trans` template tag with `translate`
+- Made the `user` field of `Profile` non-nullable
+- Added "and employees" to the end of the Open Graph description
+  (shown in some search engines and when embedding pages from the website on sites like Facebook)
+- Updated all of the self-hosted JavaScript libraries the website uses
+
+### Fixes
+
+- Fixed users being unable to mark reservations as finished when the machine's status is set to "Out of order" or "Maintenance"
+- Fixed admins not being able to cancel other users' tickets
+- Made the CKEditor file uploader work on all subdomains
+- Fixed logging out not working on subdomains other than the "main" subdomain (https://makentnu.no/)
+- Fixed logging out not automatically redirecting to the front page
+- Fixed always auto-scrolling to the first toggle button when opening a member's info modal in [the member list](https://i.makentnu.no/members/)
+  - The modal should now instead open with the previous scroll position when hiding and re-showing it (even when showing a different member)
+- Fixed missing card numbers being displayed as "None" instead of simply showing a blank field, in [the member list](https://i.makentnu.no/members/)
+- Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
+  by requiring logout requests being sent using `POST` instead of `GET`
+- Fixed the "View site" button in the English Django admin not leading to the English front page
+
+### Other changes
+
+- **Moved most Django-related code to [a new top-level `src` folder](https://github.com/MAKENTNU/web/tree/main/src)**
+  - _Refer to the new "PyCharm" section in the README (click "Click to expand" under
+    [the "Setup" section](https://github.com/MAKENTNU/web/blob/04230ed2cde4819ee47e05bdcbd16b745d0326b5/README.md#setup) to make it visible)
+    for instructions on which PyCharm settings need to be set to accommodate this new setup_
+- Set minimum required Python version to 3.10
+- Renamed members' `gmail` field to `google_email`, as the email address of a Google user can potentially belong to any host, not just "gmail.com"
+- Changed order of the apps listed on [the Django admin index page](https://admin.makentnu.no/)
+- Set a max length of 1000 characters to event ticket comments
+- Updated the "social" config for authenticating with Dataporten
+- Changed the CodeQL configuration to be scheduled to run just once a week
+- Never-ending masses of code cleanup
+
 
 ## 2022-10-28 ([#567](https://github.com/MAKENTNU/web/pull/567))
 

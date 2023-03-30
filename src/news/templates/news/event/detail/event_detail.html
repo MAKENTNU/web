@@ -1,0 +1,62 @@
+{% extends 'news/news_base_detail.html' %}
+{% load static %}
+{% load i18n %}
+{% load datetime_tags %}
+
+
+{% block extra_head %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'news/css/event/detail/event_detail.css' %}"/>
+    <script defer src="{% static "news/js/event/event_detail.js" %}"></script>
+{% endblock extra_head %}
+
+{% block extra_classes %}left-align{% endblock extra_classes %}
+
+{% block admin_page %}
+    {% if perms.news.change_event %}
+        <div>
+            <a class="ui make-bg-yellow button" href="{% url 'admin_event_detail' news_obj.pk %}">
+                <i class="sticky note icon"></i>{% translate "Admin page" %}
+            </a>
+            {% if news_obj.number_of_tickets > 0 and perms.news.change_event %}
+                <a class="grey link text" href="{% url 'event_ticket_list' news_obj.pk %}">
+                    <i class="ticket icon"></i>
+                    {{ news_obj.number_of_active_tickets }} / {{ news_obj.number_of_tickets }}
+                </a>
+            {% endif %}
+        </div>
+    {% endif %}
+{% endblock admin_page %}
+
+{% block rail %}
+    <div class="time-places ui right attached rail">
+        {% include 'news/event/detail/event_detail_old_message.html' %}
+        <div class="ui sticky rail-content">
+            {% for occurrence in timeplaces %}
+                {% include 'news/event/detail/event_detail_occurrence_card.html' %}
+            {% endfor %}
+            {% include 'news/event/detail/event_detail_standalone_registration_button.html' with extra_classes="ui card" %}
+        </div>
+    </div>
+{% endblock rail %}
+
+{% block accordion %}
+    <div class="time-places accordion">
+        <div class="accordion-padding"></div>
+
+        {% include 'news/event/detail/event_detail_old_message.html' %}
+        {% include 'news/event/detail/event_detail_standalone_registration_button.html' with extra_button_classes="fluid" %}
+
+        <div class="ui styled accordion">
+            {% for occurrence in timeplaces %}
+                <div class="title {% if forloop.first %}active{% endif %}">
+                    <i class="dropdown icon"></i>
+                    {{ occurrence.start_time|year_wise_long_date }}
+                </div>
+                <div class="content {% if forloop.first %}active{% endif %}">
+                    {% include 'news/event/detail/event_detail_occurrence_card.html' %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock accordion %}

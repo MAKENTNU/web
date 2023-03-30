@@ -1,0 +1,198 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load datetime_tags %}
+{% load string_tags %}
+{% load reservation_extra %}
+
+
+{# TODO: make this template extend web/generic_form.html #}
+
+{% block title %}
+    {% if new_reservation %}
+        {% translate "New reservation" %}
+    {% else %}
+        {% translate "Edit reservation" %}
+    {% endif %}
+{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/reservation_form.css' %}"/>
+
+    {# Files required for `calendar.html` #}
+    <link rel="stylesheet" href="{% static 'make_queue/css/calendar.css' %}"/>
+    <script defer src="{% static 'web/js/date_utils.js' %}"></script>
+    <script defer src="{% static 'make_queue/js/reservation_rule_utils.js' %}"></script>
+    <script defer src="{% static 'make_queue/js/calendar.js' %}"></script>
+
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `reservation_form.js` #}
+        var maximumDay = new Date();
+        maximumDay.setDate(maximumDay.getDate() + {{ maximum_days_in_advance }});
+        var shouldForceNewTime = {{ start_time|yesno:"false,true" }};
+    </script>
+    <script defer src="{% static 'make_queue/js/reservation_form.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+
+        {% if error %}
+            <div class="ui red message">
+                <i class="close icon"></i>
+                {{ error }}
+            </div>
+        {% endif %}
+        <div class="ui large header">
+            {% if new_reservation %}
+                {% translate "New reservation" %}
+            {% else %}
+                {% translate "Edit reservation" %}
+            {% endif %}
+        </div>
+
+        <form id="reservation-form" class="ui form" method="POST"
+              {% if not new_reservation %}data-reservation="{{ reservation_pk }}"{% endif %}>
+            {% csrf_token %}
+            <div class="two fields">
+                <div class="field">
+                    <label>{% translate "Equipment type" %}</label>
+                    <div id="machine-type-dropdown" class="ui fluid selection dropdown {% if not new_reservation %}disabled{% endif %}">
+                        <input type="hidden" name="machine_type" value="default"/>
+                        <div class="default text">
+                            {% translate "Select equipment type" %}
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            {% for machine_type in machine_types %}
+                                {% if machine_type.instances %}
+                                    <div class="item {% if selected_machine.machine_type == machine_type %}selected-machine-type{% endif %}"
+                                         data-value="{{ machine_type.pk }}">{{ machine_type.name }}</div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>{% translate "equipment"|capfirst %}</label>
+                    <div id="machine-name-dropdown" class="ui fluid selection dropdown disabled">
+                        <input type="hidden" name="machine_name" value="default"/>
+                        <div class="default text">
+                            {% translate "Select machine" %}
+                        </div>
+                        <i class="dropdown icon"></i>
+                        <div class="menu">
+                            {% for machine_type in machine_types %}
+                                {% for instance in machine_type.instances %}
+                                    <div class="machine-type-{{ machine_type.pk }} item {% if selected_machine == instance %}selected-machine-name{% endif %}"
+                                         data-value="{{ instance.pk }}">{{ instance.name }}</div>
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="two fields">
+                <div class="field">
+                    <label>{% translate "start time"|capfirst %}</label>
+                    <div id="start-time" class="ui calendar">
+                        <div class="ui input {% if not can_change_start_time %}disabled{% endif %} left icon">
+                            <i class="calendar icon"></i>
+                            <input name="start_time" type="text" placeholder="{% translate "start time"|capfirst %}" value="{% spaceless %}
+                                {% if start_time %}
+                                    {{ start_time|iso_datetime }}
+                                {% else %}
+                                    {% formatted_localtime %}
+                                {% endif %}
+                            {% endspaceless %}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>{% translate "end time"|capfirst %}</label>
+                    <div id="end-time" class="ui calendar">
+                        <div class="ui input {% if not can_change_end_time %}disabled{% endif %} left icon">
+                            <i class="calendar icon"></i>
+                            <input name="end_time" type="text" placeholder="{% translate "end time"|capfirst %}" value="{% spaceless %}
+                                {% if end_time %}
+                                    {{ end_time|iso_datetime }}
+                                {% else %}
+                                    {% formatted_localtime shift_hours=2 %}
+                                {% endif %}
+                            {% endspaceless %}"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label for="comment">{% translate "comment"|capfirst %}</label>
+                <textarea rows="2" maxlength="2000" id="comment" name="comment"
+                          placeholder="{% translate "comment"|capfirst %}">{{ comment }}</textarea>
+            </div>
+
+            {% if perms.make_queue.can_create_event_reservation %}
+                <div class="two fields">
+                    <div class="ui field">
+                        <div class="two fields">
+                            <div class="field">
+                                <div id="event-checkbox" class="ui checkbox {% if not new_reservation %}disabled{% endif %}">
+                                    <input id="event" type="checkbox" name="event"
+                                           {% if not is_new_reservation and event %}checked{% endif %}/>
+                                    <label for="event">{% translate "event"|capfirst %}</label>
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div id="special-checkbox" class="ui checkbox {% if not new_reservation %}disabled{% endif %}">
+                                    <input id="special" type="checkbox" name="special"
+                                           {% if not is_new_reservation and special %}checked{% endif %}/>
+                                    <label for="event">MAKE NTNU</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="event-name-input" class="ui field {% if not event %}display-none{% endif %}">
+                        <label>{% translate "event"|capfirst %}</label>
+                        <div id="event-pk" class="ui field selection dropdown">
+                            <input type="hidden" name="event_pk" value="{% if event %}{{ event.pk }}{% endif %}"/>
+                            <div class="default text">
+                                {% translate "Select event" %}
+                            </div>
+                            <i class="dropdown icon"></i>
+                            <div class="menu">
+                                {% for event_timeplace in event_timeplaces %}
+                                    <div class="item" data-value="{{ event_timeplace.pk }}">
+                                        <b>{{ event_timeplace.event.title }}</b><br/>
+                                        {% if event_timeplace.start_time.date == event_timeplace.end_time.date %}
+                                            {{ event_timeplace.start_time|short_datetime }}
+                                        {% else %}
+                                            {{ event_timeplace.start_time|short_date }} &ndash; {{ event_timeplace.end_time|short_date }}
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div id="special-input" class="ui field {% if not special %}display-none{% endif %}">
+                        <label>{% translate "Reservation text" %}</label>
+                        <div id="special-text" class="ui input">
+                            <input type="text" placeholder="{% translate "Reservation text" %}" maxlength=20 name="special_text"
+                                   value="{% if special %}{{ special_text }}{% endif %}"/>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="float-fix">
+                <input class="ui right floated make-bg-yellow button" type="submit"
+                       value="{% if new_reservation %}{% translate "Reserve" %}{% else %}{% translate "Change" %}{% endif %}"/>
+                <a class="ui right floated red button" href="{% current_calendar_url selected_machine %}">
+                    {% translate "Cancel" context "abort action" %}
+                </a>
+            </div>
+        </form>
+
+        {% include 'make_queue/calendar.html' %}
+
+    </div>
+{% endblock body %}

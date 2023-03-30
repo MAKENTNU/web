@@ -1,0 +1,76 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Quotas" %} | {% translate "Admin panel" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/admin_quota_panel.css' %}"/>
+    <!--suppress ES6ConvertVarToLetConst -->
+    <script>
+        {# These variables are used in `admin_quota_panel.js` #}
+        var requestedUserPK = {% if requested_user %}"{{ requested_user.pk }}"{% else %}null{% endif %};
+    </script>
+    <script defer src="{% static 'make_queue/js/admin_quota_panel.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+        <a class="ui make-bg-yellow button" href="{% url 'create_quota' %}">
+            <i class="plus icon"></i>{% translate "Add new quota" %}
+        </a>
+        <div class="ui tabular pointing secondary menu">
+            <a class="{% if not requested_user %}active{% endif %} item" data-tab="global">{% translate "Global" %}</a>
+            <a class="{% if requested_user %}active{% endif %} item" data-tab="users">{% translate "Users" %}</a>
+        </div>
+        <div class="quotas ui tab {% if not requested_user %}active{% endif %}" data-tab="global">
+            {% for quota in global_quotas %}
+                <div class="ui card">
+                    <div class="content">
+                        <div class="header">
+                            {% if quota.dimishing %}
+                                {% translate "One-time quota" %}
+                            {% else %}
+                                {% translate "Replenishing quota" %}
+                            {% endif %}
+                            <a href="{% url 'edit_quota' quota.pk %}">
+                                <i class="make-col-yellow pencil icon"></i>
+                            </a>
+                            {% if perms.make_queue.delete_quota %}
+                                <a class="delete-modal-button"
+                                   data-url="{% url 'delete_quota' quota.pk %}"
+                                   data-obj-name="{{ quota }}">
+                                    <i class="red trash icon"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="meta">{{ quota.machine_type.name }}</div>
+                        <span>
+                            <b>{% translate "Maximum number of reservations" %}:</b> {{ quota.number_of_reservations }}
+                        </span>
+                        {% if quota.ignore_rules %}
+                            <b>{% translate "ignores rules"|capfirst %}</b>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="ui {% if requested_user %}active{% endif %} tab" data-tab="users">
+            <div class="ui fluid search selection dropdown">
+                <input id="user" type="hidden" name="user"/>
+                <i class="dropdown icon"></i>
+                <div class="default text">{% translate "Select user" %}</div>
+                <div class="menu">
+                    {% for user in users %}
+                        <div class="item" data-value="{{ user.pk }}">{{ user.get_full_name }} &nbsp;&ndash;&nbsp; {{ user.username }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="make-content-padding"></div>
+            <div id="user-quotas">
+
+            </div>
+        </div>
+    </div>
+{% endblock body %}

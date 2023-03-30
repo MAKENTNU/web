@@ -1,0 +1,52 @@
+.copy-button-container {
+    font-size: large;
+    margin-bottom: 0.5em;
+}
+
+.copy-button-container .copy-token.button {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+}
+
+.copy-button-container i.icon {
+    font-size: large;
+}
+
+.input-monospace {
+    font-family: "Courier New", Courier, monospace !important;
+    width: 100%;
+}
+
+.list .item .header {
+    margin-bottom: 0.25em !important; /* Overrides Fomantic-UI */
+}
+
+.list .item .description .grey-text {
+    color: rgba(0, 0, 0, 0.4); /* Same as Fomantic-UI's `color` for `.ui.card>.extra` */
+}
+
+
+/* Desktop and tablet layout */
+@media screen and (min-width: 768px) {
+    .list .item {
+        position: relative;
+    }
+
+    .list .item .active-label {
+        position: absolute;
+        right: 0;
+    }
+
+    .list .item .description {
+        display: grid !important; /* Overrides Fomantic-UI */
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .list .item .description :not(.last-modified) {
+        grid-column: 1/2;
+    }
+
+    .list .item .description .last-modified {
+        justify-self: end;
+    }
+}

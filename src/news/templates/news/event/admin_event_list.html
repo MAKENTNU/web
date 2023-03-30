@@ -1,0 +1,69 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Events" %} | {% translate "Admin panel" %}{% endblock title %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="ui text-centered header">
+            {% translate "Events" %}
+            <a class="popup-trigger" href="{% url 'event_create' %}">
+                <i class="green add icon"></i>
+            </a>
+            <a href="{% url 'admin_event_participants_search' %}">
+                <i class="make-col-yellow search icon"></i>
+            </a>
+        </h1>
+        <div class="ui four doubling stackable cards">
+            {% for event in events %}
+                <div class="ui card">
+                    <a class="image" href="{{ event.get_absolute_url }}">
+                        <img src="{{ event.image.url }}"
+                             alt="{% blocktranslate trimmed with title=event.title description=event.image_description %}
+                                 View the event “{{ title }}”; image description: {{ description }}
+                             {% endblocktranslate %}"
+                        />
+                    </a>
+                    <div class="content">
+                        <a class="word-breaking hyphenated header" href="{{ event.get_absolute_url }}">
+                            {{ event.title }}
+                        </a>
+                        <div class="meta">
+                            {% if event.num_future_occurrences %}
+                                <div>
+                                    {% blocktranslate trimmed count counter=event.num_future_occurrences %}
+                                        1 future occurrence
+                                    {% plural %}
+                                        {{ counter }} future occurrences
+                                    {% endblocktranslate %}
+                                </div>
+                            {% endif %}
+                            {% if event.featured %}
+                                <span class="ui green mini label">
+                                    {% translate "featured"|capfirst %}
+                                </span>
+                            {% endif %}
+
+                            {% if event.hidden %}
+                                <span class="ui red mini label">
+                                    {% translate "hidden"|capfirst %}
+                                </span>
+                            {% endif %}
+
+                            {% if event.private %}
+                                <span class="ui make-bg-yellow mini label">
+                                    {% translate "internal"|capfirst %}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="word-breaking hyphenated description">{{ event.clickbait }}</div>
+                    </div>
+                    <a class="ui make-bg-yellow bottom attached button" href="{% url 'admin_event_detail' event.pk %}">
+                        {% translate "Admin" %}
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

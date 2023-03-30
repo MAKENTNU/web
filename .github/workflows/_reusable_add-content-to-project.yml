@@ -1,4 +1,25 @@
-# This is a reusable workflow; see https://docs.github.com/en/actions/using-workflows/reusing-workflows
+# This is a reusable workflow; see https://docs.github.com/en/actions/using-workflows/reusing-workflows.
+# It was created because GitHub projects' workflows (see e.g. https://github.com/orgs/MAKENTNU/projects/1/workflows)
+# don't (currently) support doing the specific things done in the steps below.
+#
+# The workflow requires that the following repository variables have been created:
+# - `ORGANIZATION_PROJECT_NUMBER` - The number/ID in the project URL (https://github.com/orgs/MAKENTNU/projects/1)
+# - `ORGANIZATION_PROJECT__DATE_FIELD_NAME` - The name of the project's date field
+# - `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` - The value of the 'Status' field set for an item when closed
+#                                                           (see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+# and the following organization variables:
+# - `ORGANIZATION_NAME` - The name of the organization in the project URL (https://github.com/orgs/MAKENTNU/projects/1)
+#
+# The workflow also expects that the following project workflows are turned on for the project:
+# - "Item closed" (https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450):
+#   - "When an item is closed": "issue, pull request"
+#   - "Set value": "Status: <the value of the `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` repository variable>"
+# and that the following project workflows are turned off:
+# - "Item added to project"
+# - "Item reopened"
+# (The "Pull request merged" project workflow (https://github.com/orgs/MAKENTNU/projects/1/workflows/3569451)
+# does not affect and is not affected by any of this.
+# However, it could be natural that it sets the same value as the "Item closed" project workflow.)
 
 name: Add content to project
 
@@ -21,7 +42,7 @@ jobs:
     steps:
       - name: Generate token
         id: generate_token
-        uses: tibdex/github-app-token@f717b5ecd4534d3c4df4ce9b5c1c2214f0f7cd06
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
         with:
           app_id: ${{ secrets.MAKE_BOT_APP_ID }}
           private_key: ${{ secrets.MAKE_BOT_APP_PEM }}
@@ -29,8 +50,11 @@ jobs:
       - name: Get project data
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
-          ORGANIZATION: MAKENTNU
-          PROJECT_NUMBER: 1
+          ORGANIZATION: ${{ vars.ORGANIZATION_NAME }}
+          PROJECT_NUMBER: ${{ vars.ORGANIZATION_PROJECT_NUMBER }}
+          DATE_FIELD_NAME: ${{ vars.ORGANIZATION_PROJECT__DATE_FIELD_NAME }}
+          # This name is hardcoded by GitHub and cannot be changed
+          STATUS_FIELD_NAME: Status
           STATUS_FIELD_VALUE_NAME: ${{ inputs.status_field_value_name }}
         run: |
           gh api graphql -f query='
@@ -61,12 +85,12 @@ jobs:
           {
             # The ID of this repo's GitHub project
             echo "PROJECT_ID=$(jq -r '.data.organization.projectV2.id' project_data.json)"
-            # The ID of the project's 'Date posted' field
-            echo "DATE_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Date posted") | .id' project_data.json)"
-            # The ID of the project's 'Status' field
-            echo "STATUS_FIELD_ID=$(jq -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .id' project_data.json)"
-            # The ID of one of the values of the project's (single select) 'Status' field, with name `inputs.status_field_value_name`
-            echo "STATUS_FIELD_VALUE_ID=$(jq --arg STATUS_NAME "$STATUS_FIELD_VALUE_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name=="Status") | .options[] | select(.name==$STATUS_NAME) | .id' project_data.json)"
+            # The ID of the project's date field
+            echo "DATE_FIELD_ID=$(jq --arg FIELD_NAME "$DATE_FIELD_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name==$FIELD_NAME) | .id' project_data.json)"
+            # The ID of the project's status field
+            echo "STATUS_FIELD_ID=$(jq --arg FIELD_NAME "$STATUS_FIELD_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name==$FIELD_NAME) | .id' project_data.json)"
+            # The ID of one of the values of the project's (single select) status field, with name `inputs.status_field_value_name`
+            echo "STATUS_FIELD_VALUE_ID=$(jq --arg FIELD_NAME "$STATUS_FIELD_NAME" --arg STATUS_NAME "$STATUS_FIELD_VALUE_NAME" -r '.data.organization.projectV2.fields.nodes[] | select(.name==$FIELD_NAME) | .options[] | select(.name==$STATUS_NAME) | .id' project_data.json)"
           } >> "$GITHUB_ENV"
 
       - name: Add content to project
@@ -119,16 +143,18 @@ jobs:
             }' -f itemId="$ITEM_ID" > project_item_data.json
 
           {
-            # The value of the project item's 'Date posted' field (with ID `env.DATE_FIELD_ID`)
+            # The value of the project item's date field (with ID `env.DATE_FIELD_ID`)
             echo "DATE_FIELD_VALUE=$(jq --arg FIELD_ID "$DATE_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .date' project_item_data.json)"
-            # The value of the project item's 'Status' field (with ID `env.STATUS_FIELD_ID`)
+            # The value of the project item's status field (with ID `env.STATUS_FIELD_ID`)
             echo "STATUS_FIELD_VALUE=$(jq --arg FIELD_ID "$STATUS_FIELD_ID" -r '.data.node.fieldValues.nodes[] | select(.field.id==$FIELD_ID) | .name' project_item_data.json)"
           } >> "$GITHUB_ENV"
 
       - name: Set status
         # Only set the status if it's not already set,
-        # or if it's a reopened issue/PR (as they're marked as 'Done' when closed - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
-        if: ${{ !env.STATUS_FIELD_VALUE || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == 'Done' }}
+        # or if it's a reopened issue/PR (as they should be marked with the value of `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS` when closed
+        # - see https://github.com/orgs/MAKENTNU/projects/1/workflows/3569450)
+        if: ${{ !env.STATUS_FIELD_VALUE
+          || github.event.action == 'reopened' && env.STATUS_FIELD_VALUE == vars.ORGANIZATION_PROJECT__STATUS_VALUE_FOR_CLOSED_ITEMS }}
         env:
           GITHUB_TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |

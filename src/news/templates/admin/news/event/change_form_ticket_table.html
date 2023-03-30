@@ -1,0 +1,42 @@
+{% load i18n %}
+{% load datetime_tags %}
+
+
+<h3>
+    {% translate "Number of tickets" %}: {{ ticket_dicts|length }}
+</h3>
+<br/>
+
+{% if ticket_dicts %}
+    <div style="width: 100%; overflow-x: auto;">
+        <table>
+            <thead>
+            <tr>
+                <th>{% translate "Ref #" %}</th>
+                <th>{% translate "user"|capfirst %}</th>
+                <th>{% translate "email"|capfirst %}</th>
+                <th>{% translate "comment"|capfirst %}</th>
+                <th>{% translate "preferred language"|capfirst %}</th>
+                <th>{% translate "last reactivated/canceled"|capfirst %}</th>
+                <th>{% translate "original registration date"|capfirst %}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for ticket_dict in ticket_dicts %}
+                <tr>
+                    <td>
+                        <b>{{ ticket_dict.ref_link|truncatechars_html:10 }}</b>
+                    </td>
+                    <td>{{ ticket_dict.user_name_link }}</td>
+                    <td>{{ ticket_dict.user_email|urlize }}</td>
+                    <td>{{ ticket_dict.comment }}</td>
+                    <td>{{ ticket_dict.language }}</td>
+                    <td>{{ ticket_dict.active_last_modified|short_datetime }}</td>
+                    <td>{{ ticket_dict.creation_date|short_datetime }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endif %}

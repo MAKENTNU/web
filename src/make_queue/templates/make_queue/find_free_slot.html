@@ -1,0 +1,62 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load datetime_tags %}
+{% load reservation_extra %}
+
+
+{% block title %}{% translate "Find free reservation slots" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'make_queue/css/find_free_slot.css' %}"/>
+{% endblock extra_head %}
+
+{% block body %}
+
+    <div class="ui container">
+        <h1>{% translate "Find free reservation slots" %}</h1>
+        <form class="dont-prevent-leaving ui form" method="POST">
+            {% csrf_token %}
+            <div class="ui fields">
+                <div class="ui six wide field">
+                    <label>{{ form.machine_type.label }}</label>
+                    {{ form.machine_type }}
+                </div>
+                <div id="hour-field" class="ui three wide field">
+                    <label>{{ form.hours.label }}</label>
+                    {{ form.hours }}
+                </div>
+                <div class="ui three wide field">
+                    <label>{{ form.minutes.label }}</label>
+                    {{ form.minutes }}
+                </div>
+                <div class="ui two wide field">
+                    <label>&nbsp;</label>
+                    <button class="ui primary button">{% translate "Search" %}</button>
+                </div>
+            </div>
+        </form>
+        {% if free_slots %}
+            <div class="ui divider"></div>
+            <h2>{% translate "Free reservation slots" %}</h2>
+            <div class="ui selection relaxed divided list">
+                {% for slot in free_slots %}
+                    <a class="ui item" href="{% calendar_url_timestamp machine=slot.machine time=slot.start_time %}">
+                        <div class="right floated content">
+                            {{ slot.duration }}{% translate "h" %}
+                        </div>
+                        <i class="middle aligned clock icon"></i>
+                        <div class="content">
+                            <div class="header">
+                                {{ slot.machine.name }}
+                            </div>
+                            <div class="description">
+                                {{ slot.start_time|long_datetime_no_year }} &ndash; {{ slot.end_time|long_datetime_no_year }}
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock body %}

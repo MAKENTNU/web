@@ -1,0 +1,64 @@
+{% extends 'news/news_base_form.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block extra_head %}
+    {{ block.super }}
+    <script defer src="{% static 'news/js/event/event_form.js' %}"></script>
+{% endblock extra_head %}
+
+{% block field %}
+    {% if field.name == 'event_type' %}
+        <div class="ui field">
+            <div class="grouped fields">
+                <label>{{ field.label }}</label>
+
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input id="repeating" type="radio" name="{{ field.name }}" value="{{ Event.Type.REPEATING }}"
+                               {% if field.value == Event.Type.REPEATING %}checked{% endif %}/>
+                        <label for="repeating">{{ Event.Type.REPEATING.label }}
+                            <span class="popup-trigger" data-content="{% blocktranslate trimmed %}
+                                Each created occurrence of this event will have its own registration.
+                            {% endblocktranslate %}">
+                                <i class="make-col-yellow question circle icon"></i>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="ui radio checkbox">
+                        <input id="standalone" type="radio" name="{{ field.name }}" value="{{ Event.Type.STANDALONE }}"
+                               {% if field.value == Event.Type.STANDALONE %}checked{% endif %}/>
+                        <label for="standalone">{{ Event.Type.STANDALONE.label }}
+                            <span class="popup-trigger" data-html="{% blocktranslate trimmed %}
+                                All created occurrences of this event will have one common registration.<br/>
+                                (Used e.g. for a multiday workshop where ticket holders are encouraged to attend some or all of the occurrences.)
+                            {% endblocktranslate %}" data-variation="wide">
+                                <i class="make-col-yellow question circle icon"></i>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% elif field.name == 'number_of_tickets' %}
+        <div class="ui field">
+            <div class="ui field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                <div id="info-message-tickets" class="ui blue pointing basic label">
+                    {% translate "A value of zero indicates that no registration is required" %}.
+                </div>
+            </div>
+            <div id="info-message-tickets-repeating" class="ui red pointing basic label">
+                {% translate "Only used for standalone events. For repeating events, tickets are administered per occurrence." %}
+            </div>
+        </div>
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock field %}

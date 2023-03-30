@@ -1,0 +1,41 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load html_tags %}
+
+
+{% block title %}{% translate "committees"|capfirst %}{% endblock title %}
+
+{% block body %}
+    <div class="ui text container">
+        <h1>
+            <strong>{% translate "committees"|capfirst %}</strong>
+        </h1>
+    </div>
+    <div class="committees ui divided items text container basic segment">
+        {% for committee in committees %}
+            <div class="item">
+                <a class="image" href="{{ committee.get_absolute_url }}">
+                    {% if committee.image %}
+                        <img src="{{ committee.image.url }}"
+                             alt="{% blocktranslate with name=committee.name %}{{ name }} committee image{% endblocktranslate %}"
+                        />
+                    {% endif %}
+                </a>
+                <div class="word-breaking hyphenated content">
+                    <div class="header">
+                        <a class="make-col-blue" href="{{ committee.get_absolute_url }}">
+                            {{ committee.name|capfirst }}
+                        </a>
+                    </div>
+                    <div class="meta">
+                        {{ committee.email|urlize_target_blank }}
+                    </div>
+                    <div class="description">
+                        {{ committee.clickbait }}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock body %}
