@@ -24,11 +24,6 @@ A summary of changes made to the codebase, grouped per deployment.
       see [this issue](https://github.com/jazzband/django-simple-history/issues/1063)
 - Added links to the guides on what should be done when a member enrolls/retires/quits, in [the member list](https://i.makentnu.no/members/)
   - These can be changed through [the dynamic settings in Django admin](https://admin.makentnu.no/constance/config/)
-- Set the default value of event occurrences' `hidden` field to `False`
-- Fixed displaying unpublished and hidden occurrences on multipart/standalone events
-- Fixed showing the registration button on standalone events when they only had future occurrences that were either unpublished or hidden
-- Fixed not loading a machine's page when using the keyboard to select a different machine in the dropdown on a machine detail page
-- Fixed JavaScript errors when changing the machine or machine type in the reservation creation form
 - Added GitHub Actions workflow for automatically labeling deployment PRs
 - Made the `makemessages` management command automatically convert the path format of the file location comments in `.po` files generated on Windows,
   to the format generated on Linux - i.e. forward slashes (`/`) instead of backslashes (`\`) and no leading `.\` - so that developers using Windows
@@ -40,6 +35,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Made it possible to search for _all_ member fields in the member list - not just the ones visible in the list
 - Started using new label names for each event type, which should be clearer with regard to their intended usage.
   Also made their description - shown when clicking / hovering over the yellow question marks in an event form - (hopefully) easier to understand
+- Set the default value of event occurrences' `hidden` field to `False`
 - Prevent registering for an event without any (past or future) occurrences
 - Made the red "Canceled" ribbon on tickets transparent when clicking / hovering over it, to be able to read the text behind it
 - Added a "help text" yellow question mark icon next to the "Discord username" field in member info forms
@@ -71,6 +67,10 @@ A summary of changes made to the codebase, grouped per deployment.
 - Fixed always auto-scrolling to the first toggle button when opening a member's info modal in [the member list](https://i.makentnu.no/members/)
   - The modal should now instead open with the previous scroll position when hiding and re-showing it (even when showing a different member)
 - Fixed missing card numbers being displayed as "None" instead of simply showing a blank field, in [the member list](https://i.makentnu.no/members/)
+- Fixed displaying unpublished and hidden occurrences on multipart/standalone events
+- Fixed showing the registration button on standalone events when they only had future occurrences that were either unpublished or hidden
+- Fixed not loading a machine's page when using the keyboard to select a different machine in the dropdown on a machine detail page
+- Fixed JavaScript errors when changing the machine or machine type in the reservation creation form
 - Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
   by requiring logout requests being sent using `POST` instead of `GET`
 - Fixed the "View site" button in the English Django admin not leading to the English front page
