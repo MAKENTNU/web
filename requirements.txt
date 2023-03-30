@@ -23,7 +23,7 @@ python-ldap==3.4.3
 
 # Async-related packages (mainly for sending of emails)
 channels[daphne]==4.0.0
-channels-redis==4.0.0
+channels-redis==4.1.0
 
 # Misc. packages
 bleach[css]==6.0.0
