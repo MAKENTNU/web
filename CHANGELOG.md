@@ -5,6 +5,9 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+
+## 2023-03-30 ([#615](https://github.com/MAKENTNU/web/pull/615))
+
 ### New features
 
 - Added [the `django-constance` package](https://django-constance.readthedocs.io/en/stable/), for adding dynamic settings
