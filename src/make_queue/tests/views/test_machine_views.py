@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from django.templatetags.static import static
 from django.test import TestCase
-from django.urls import reverse
 from django.utils import timezone
+from django_hosts import reverse
 
 from users.models import User
 from ...forms import CreateMachineForm, EditMachineForm
@@ -200,6 +200,7 @@ class TestMachineListView(TestCase):
 class TestMachineDetailView(TestCase):
 
     def test_only_internal_users_can_view_internal_machines(self):
+        self.assertGreaterEqual(MachineType.objects.count(), 1)
         for machine_type in MachineType.objects.all():
             with self.subTest(machine_type=machine_type):
                 user = User.objects.create_user(username=f"user{machine_type.pk}")

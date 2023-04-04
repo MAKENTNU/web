@@ -101,7 +101,7 @@ def render_text(request, context: dict, template_name: str, strip=True):
     :param request: The request object from the view.
     :param context: The context to render the text for if there is a template given
     :param template_name: The name of the template file
-    :param strip: If ``true``, the text rendered from the template will have leading and trailing whitespace removed before being returned.
+    :param strip: If ``True``, the text rendered from the template will have leading and trailing whitespace removed before being returned.
     :return: A string representing the text content
     """
     rendered_text = get_template(template_name).render({

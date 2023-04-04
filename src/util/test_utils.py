@@ -146,7 +146,7 @@ class PathPredicate(ABC):
     def __init__(self, path: str, *, public: bool, translated=True):
         """
         :param path: the path to be tested (e.g. from ``reverse()``)
-        :param public: whether a user does not have to be authenticated or not to successfully request the path
+        :param public: whether a user has to be authenticated or not to successfully request the path
         :param translated: whether the path has a translated version (typically prefixed with e.g. ``/en``)
         """
         self.path = path

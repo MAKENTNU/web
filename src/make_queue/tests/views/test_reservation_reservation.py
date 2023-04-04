@@ -7,9 +7,9 @@ from unittest.mock import patch
 
 from django.http import HttpResponse
 from django.test import TestCase
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_time
+from django_hosts import reverse
 
 from news.models import Event, TimePlace
 from users.models import User

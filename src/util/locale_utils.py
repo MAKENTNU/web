@@ -82,7 +82,7 @@ def iso_datetime_format(value):
     return value.isoformat()
 
 
-def get_year_and_week(time_obj: datetime | date):
+def get_year_and_week(time_obj: datetime | date) -> tuple[int, int]:
     year, week, _weekday = time_obj.isocalendar()
     return year, week
 
@@ -102,9 +102,9 @@ def year_and_week_to_monday(year: int, week: int) -> datetime:
     """
     Returns a ``datetime`` object for the Monday of the provided ``week`` and ``year``.
 
-    :param year: The year to get the date for
-    :param week: The week to get the date for
-    :return: The monday in the given week of the given year
+    :param year: The year to get the date for.
+    :param week: The week to get the date for.
+    :return: The Monday of the given week of the given year.
     """
     return datetime.strptime(f"{year:04d} {week:02d} 1", "%G %V %w")
 

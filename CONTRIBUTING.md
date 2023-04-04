@@ -416,8 +416,7 @@ and the names of the corresponding [default model permissions](https://docs.djan
 If a model is conceptually subordinated another model (e.g. an event occurrence model that is connected to an event model),
 the paths for the views related to that "sub-model" should be relative to the paths of the "super-model" -
 while still complying with the guidelines above.
-For example: `event/<Event:event>/occurrences/<int:pk>/change/`
-([see the docs on custom path converters](https://docs.djangoproject.com/en/stable/topics/http/urls/#registering-custom-path-converters)).
+For example: `event/<int:pk>/occurrences/<int:occurrence_pk>/change/`.
 
 Lastly, let all paths end with a `/`
 (except if the first argument to `path()` would have been `"/"`, in which case it should be an empty string).
@@ -454,10 +453,10 @@ from django.urls import path
 urlpatterns = [
     path("events/", ..., name='event_list'),
     path("events/add/", ..., name='event_create'),
-    path("events/<Event:event>/", ..., name='event_detail'),
-    path("events/<Event:event>/change/", ..., name='event_update'),
-    path("events/<Event:event>/occurrences/", ..., name='event_occurrence_list'),
-    path("events/<Event:event>/occurrences/<int:pk>/", ..., name='event_occurrence_detail'),
+    path("events/<int:pk>/", ..., name='event_detail'),
+    path("events/<int:pk>/change/", ..., name='event_update'),
+    path("events/<int:pk>/occurrences/", ..., name='event_occurrence_list'),
+    path("events/<int:pk>/occurrences/<int:occurrence_pk>/", ..., name='event_occurrence_detail'),
 ]
 ```
 would be:
@@ -479,7 +478,7 @@ specific_event_urlpatterns = [
 event_urlpatterns = [
     path("", ..., name='event_list'),
     path("add/", ..., name='event_create'),
-    path("<Event:event>/", include(specific_event_urlpatterns)),
+    path("<int:pk>/", include(specific_event_urlpatterns)),
 ]
 
 urlpatterns = [

@@ -37,8 +37,8 @@ function getFutureReservations(machineID, forceNewTime) {
             });
         });
 
-        calendar.updateCanBreakRules(data.canIgnoreRules);
-        canIgnoreRules = data.canIgnoreRules;
+        canIgnoreRules = data.can_ignore_rules;
+        calendar.updateCanIgnoreRules(canIgnoreRules);
 
         reservationRules.length = 0;
         $.each(data.rules, function (index, value) {
@@ -310,7 +310,7 @@ const calendar = new ReservationCalendar($(".reservation-calendar"), {
     date: new Date(),
     machine: getMachine(),
     selection: true,
-    canBreakRules: false,
+    canIgnoreRules: false,
     selectionPopupContent: timeSelectionPopupHTML,
 });
 

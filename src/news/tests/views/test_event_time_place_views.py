@@ -2,8 +2,9 @@ from datetime import timedelta
 from http import HTTPStatus
 
 from django.test import TestCase
-from django.urls import reverse
+from django.urls import reverse as django_reverse
 from django.utils import timezone
+from django_hosts import reverse
 
 from users.models import User
 from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
@@ -31,7 +32,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
             number_of_tickets=29,
         )
 
-    def test_event_create(self):
+    def test_event_create_view(self):
         response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
@@ -57,7 +58,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.post(reverse('timeplace_duplicate', args=[self.event.pk, time_place.pk]))
 
         duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
-        self.assertRedirects(response, reverse('timeplace_edit', args=[self.event.pk, duplicated_time_place.pk]))
+        self.assertRedirects(response, django_reverse('timeplace_edit', args=[self.event.pk, duplicated_time_place.pk]))
 
         new_start_time = time_place.start_time + timedelta(weeks=1)
         new_end_time = time_place.end_time + timedelta(weeks=1)
@@ -65,7 +66,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(duplicated_time_place.start_time, new_start_time)
         self.assertEqual(duplicated_time_place.end_time, new_end_time)
 
-    def test_timplace_duplicate_old(self):
+    def test_time_place_duplicate_old(self):
         self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
 
         start_time = timezone.now() - timedelta(weeks=2, days=3)
@@ -77,7 +78,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.post(reverse('timeplace_duplicate', args=[self.event.pk, time_place.pk]))
         duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
 
-        self.assertRedirects(response, reverse('timeplace_edit', args=[self.event.pk, duplicated_time_place.pk]))
+        self.assertRedirects(response, django_reverse('timeplace_edit', args=[self.event.pk, duplicated_time_place.pk]))
         self.assertEqual(duplicated_time_place.start_time, new_start_time)
         self.assertEqual(duplicated_time_place.end_time, new_end_time)
 

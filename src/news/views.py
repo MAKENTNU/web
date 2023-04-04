@@ -504,7 +504,7 @@ class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, Time
         return reverse('admin_event_detail', args=[self.object.event.pk])
 
 
-class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, CustomFieldsetFormMixin, CreateView):
+class EventRegistrationView(PermissionRequiredMixin, CustomFieldsetFormMixin, EventRelatedViewMixin, CreateView):
     model = EventTicket
     form_class = EventRegistrationForm
 

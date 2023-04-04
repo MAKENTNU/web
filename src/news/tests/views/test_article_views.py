@@ -3,8 +3,8 @@ from datetime import timedelta
 from http import HTTPStatus
 
 from django.test import TestCase
-from django.urls import reverse
 from django.utils import timezone
+from django_hosts import reverse
 
 from users.models import User
 from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE
@@ -26,7 +26,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         )
         self.article_url = self.article.get_absolute_url()
 
-    def test_admin(self):
+    def test_admin_article_list_view(self):
         response = self.client.get(reverse('admin_article_list'))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
@@ -34,7 +34,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('admin_article_list'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_article_create(self):
+    def test_article_create_view(self):
         response = self.client.get(reverse('article_create'))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 

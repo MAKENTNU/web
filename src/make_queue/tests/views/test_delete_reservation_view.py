@@ -2,8 +2,8 @@ from datetime import timedelta
 from http import HTTPStatus
 
 from django.test import Client, TestCase
-from django.urls import reverse
 from django.utils import timezone
+from django_hosts import reverse
 
 from users.models import User
 from ...models.course import Printer3DCourse

@@ -36,7 +36,7 @@ admin_urlpatterns = [
     path("news/", include(news_urls.adminpatterns)),
 ]
 
-contentbox_urlpatterns = [
+content_box_urlpatterns = [
     path("<int:pk>/edit/", EditContentBoxView.as_view(base_template='web/base.html'), name='contentbox_edit'),
 ]
 
@@ -59,7 +59,7 @@ urlpatterns += i18n_patterns(
     path("reservation/", include('make_queue.urls')),
 
     # ContentBox paths:
-    path("contentbox/", include(contentbox_urlpatterns)),
+    path("contentbox/", include(content_box_urlpatterns)),
     path("about/", include(about_urlpatterns)),
     *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
     DisplayContentBoxView.get_path('cookies'),

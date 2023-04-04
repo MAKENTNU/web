@@ -23,7 +23,7 @@
         var calendarProperties = {
             machine: "{{ machine.pk }}",
             selection: {% if reservation_denied_message %}false{% else %}true{% endif %},
-            canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
+            canIgnoreRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
             date: new Date("{{ selected_date|iso_datetime }}"),
         };
     </script>

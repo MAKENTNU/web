@@ -26,6 +26,8 @@ class CreateOrEditReservationView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
     template_name = 'make_queue/reservation_form.html'
 
+    new_reservation: bool
+
     def get_error_message(self, form, reservation):
         """
         Generates the correct error message for the given form.

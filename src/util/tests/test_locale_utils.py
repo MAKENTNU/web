@@ -1,13 +1,14 @@
 from datetime import timedelta
+from unittest import TestCase
 
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.utils.dateparse import parse_datetime
 
 from make_queue.models.reservation import ReservationRule
 from ..locale_utils import exact_weekday_to_day_name, timedelta_to_hours, year_and_week_to_monday
 
 
-class WeekUtilTest(TestCase):
+class WeekUtilTest(SimpleTestCase):
 
     def test_exact_weekday_to_day_name_returns_expected_values(self):
         for week_offset in range(3):

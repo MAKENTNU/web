@@ -16,6 +16,7 @@ class TestGenericMachine(TestCase):
         user = User.objects.create_user("test")
         Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.localdate(), raise3d_course=True, sla_course=True)
 
+        self.assertGreaterEqual(MachineType.objects.count(), 1)
         for machine_type in MachineType.objects.all():
             with self.subTest(machine_type=machine_type):
                 machine = Machine.objects.create(name=f"{machine_type.name} 1", location="Makerverkstedet",

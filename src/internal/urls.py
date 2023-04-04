@@ -31,7 +31,7 @@ committee_bulletin_urlpatterns = [
     views.CommitteeBulletinBoardView.get_path('pr-board'),
 ]
 
-internal_contentbox_urlpatterns = [
+internal_content_box_urlpatterns = [
     path("<int:pk>/edit/", views.EditInternalContentBoxView.as_view(), name='contentbox_edit'),
 ]
 
@@ -65,7 +65,7 @@ internal_urlpatterns = [
     path("bulletins/", include(committee_bulletin_urlpatterns)),
     # The proper `url_name` for this would be `MAKE-history`, but the validator of the model's field requires it to be lowercase
     views.InternalDisplayContentBoxView.get_path('make-history'),
-    path("contentbox/", include(internal_contentbox_urlpatterns)),
+    path("contentbox/", include(internal_content_box_urlpatterns)),
 
     path("", decorator_include(
         permission_required_else_denied('internal.view_member'),
