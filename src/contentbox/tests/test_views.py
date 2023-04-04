@@ -118,6 +118,9 @@ class MultiSubdomainTests(TestCase):
 
         self.internal_user = User.objects.create_user("internal_user")
         self.internal_admin = User.objects.create_user("internal_admin", is_staff=True)
+        # This superuser should not have any permissions added to their `user_permissions` or through groups,
+        # to test that they have all permissions without having to grant any explicitly
+        self.superuser = User.objects.create_user("superuser", is_staff=True, is_superuser=True)
         change_content_box_perms = ('internal.is_internal', 'contentbox.change_contentbox')
         self.internal_user.add_perms(*change_content_box_perms)
         self.internal_admin.add_perms(*change_content_box_perms, internal_change_perm)
@@ -128,6 +131,9 @@ class MultiSubdomainTests(TestCase):
         self.internal_admin__public_client = Client()
         self.internal_admin__internal_client = Client(**TEST_INTERNAL_CLIENT_DEFAULTS)
         self.internal_admin__admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
+        self.superuser__public_client = Client()
+        self.superuser__internal_client = Client(**TEST_INTERNAL_CLIENT_DEFAULTS)
+        self.superuser__admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
 
         self.internal_user__public_client.force_login(self.internal_user)
         self.internal_user__internal_client.force_login(self.internal_user)
@@ -135,6 +141,9 @@ class MultiSubdomainTests(TestCase):
         self.internal_admin__public_client.force_login(self.internal_admin)
         self.internal_admin__internal_client.force_login(self.internal_admin)
         self.internal_admin__admin_client.force_login(self.internal_admin)
+        self.superuser__public_client.force_login(self.superuser)
+        self.superuser__internal_client.force_login(self.superuser)
+        self.superuser__admin_client.force_login(self.superuser)
 
         # Creates the content boxes by requesting them
         self.internal_user__public_client.get(reverse(TEST_URL_NAME))
@@ -151,6 +160,7 @@ class MultiSubdomainTests(TestCase):
         # Users with the `change_contentbox` permission can edit public content boxes
         self.assertEqual(self.internal_user__public_client.get(self.public_edit_url).status_code, HTTPStatus.OK)
         self.assertEqual(self.internal_admin__public_client.get(self.public_edit_url).status_code, HTTPStatus.OK)
+        self.assertEqual(self.superuser__public_client.get(self.public_edit_url).status_code, HTTPStatus.OK)
 
         def assert_staff_can_change_through_django_admin(can_change: bool, client: Client, url: str):
             response = client.get(url)
@@ -163,9 +173,12 @@ class MultiSubdomainTests(TestCase):
         # Only users with the `internal_change_perm` permission can edit internal content boxes
         self.assertEqual(self.internal_user__internal_client.get(self.internal_edit_url).status_code, HTTPStatus.FORBIDDEN)
         self.assertEqual(self.internal_admin__internal_client.get(self.internal_edit_url).status_code, HTTPStatus.OK)
+        self.assertEqual(self.superuser__internal_client.get(self.internal_edit_url).status_code, HTTPStatus.OK)
         # Only staff can change content boxes through Django admin
         assert_staff_can_change_through_django_admin(True, self.internal_admin__admin_client, self.public_admin_edit_url)
         assert_staff_can_change_through_django_admin(True, self.internal_admin__admin_client, self.internal_admin_edit_url)
+        assert_staff_can_change_through_django_admin(True, self.superuser__admin_client, self.public_admin_edit_url)
+        assert_staff_can_change_through_django_admin(True, self.superuser__admin_client, self.internal_admin_edit_url)
         # Non-staff users are redirected to the login page by Django admin if they lack the required permissions
         self.assertRedirects(self.internal_user__admin_client.get(self.public_admin_edit_url),
                              f"/login/?next={urlparse(self.public_admin_edit_url).path}")
@@ -185,3 +198,6 @@ class MultiSubdomainTests(TestCase):
         self.internal_admin.user_permissions.add(extra_perm)
         self.assertEqual(self.internal_admin__internal_client.get(self.internal_edit_url).status_code, HTTPStatus.OK)
         assert_staff_can_change_through_django_admin(True, self.internal_admin__admin_client, self.internal_admin_edit_url)
+        # Superusers always have all permissions
+        self.assertEqual(self.superuser__internal_client.get(self.internal_edit_url).status_code, HTTPStatus.OK)
+        assert_staff_can_change_through_django_admin(True, self.superuser__admin_client, self.internal_admin_edit_url)
