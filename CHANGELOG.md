@@ -5,6 +5,14 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### New features
+
+- Added a button for delaying hiding secrets for 30 seconds, in [the secret list](https://i.makentnu.no/secrets/)
+- Added an `extra_view_permissions` field to secrets
+  - This makes it possible to create secrets that not all MAKE members need to know
+    - _Examples can be passwords to Google workspace users that only exist for technical purposes,
+      or credentials for the admin page of a physical router_
+
 ### Improvements
 
 - Added a link to the Django admin change form at the bottom of the form of "content boxes" that have extra change permissions
