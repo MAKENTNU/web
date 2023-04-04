@@ -40,7 +40,7 @@ def search_escaped_and_unescaped(super_obj: admin.ModelAdmin, request, input_que
     # Try both with and without escaping:
     for search_term_repr in (search_term, escape_to_named_characters(search_term)):
         searched_queryset, use_distinct = super_obj.get_search_results(request, input_queryset, search_term_repr)
-        combined_searched_querysets = combined_searched_querysets.union(searched_queryset.order_by())  # clear ordering
+        combined_searched_querysets = combined_searched_querysets.union(searched_queryset.order_by())  # Clear ordering
         use_distinct_result |= use_distinct
 
     result_queryset = input_queryset.filter(pk__in={cb.pk for cb in combined_searched_querysets})
@@ -49,8 +49,8 @@ def search_escaped_and_unescaped(super_obj: admin.ModelAdmin, request, input_que
 
 # noinspection PyUnresolvedReferences
 class UserSearchFieldsMixin:
-    user_lookup: str  # e.g. 'user__'
-    name_for_full_name_lookup: str  # e.g. 'full_name'; used in `User.get_user_search_fields()` and `User.annotate_full_name()`
+    user_lookup: str  # E.g. 'user__'
+    name_for_full_name_lookup: str  # E.g. 'full_name'; used in `User.get_user_search_fields()` and `User.annotate_full_name()`
 
     def get_search_fields(self, request):
         search_fields = super().get_search_fields(request)

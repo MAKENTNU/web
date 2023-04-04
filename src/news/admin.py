@@ -25,7 +25,7 @@ class NewsBaseAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
     list_filter = ('featured', 'hidden', 'private')
     search_fields = ('title', 'content', 'clickbait', 'image_description')
     list_editable = ('contain', 'featured', 'hidden', 'private')
-    list_display = ('__str__', *list_editable)  # prevents Django system check errors; the field is actually set in `get_list_display()` below
+    list_display = ('__str__', *list_editable)  # Prevents Django system check errors; the field is actually set in `get_list_display()` below
 
     readonly_fields = ('last_modified',)
 
@@ -91,7 +91,7 @@ class TimePlaceInline(DefaultAdminWidgetsMixin, admin.TabularInline):
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         qs = qs.select_related('event')
-        return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
+        return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # Facilitates querying `ticket_count`
 
 
 class EventAdmin(NewsBaseAdmin):
@@ -173,15 +173,15 @@ class EventAdmin(NewsBaseAdmin):
         # Passing `distinct=True` to make multiple aggregations work
         # (see https://docs.djangoproject.com/en/stable/topics/db/aggregation/#combining-multiple-aggregations)
         qs = qs.annotate(
-            num_time_places=Count('timeplaces', distinct=True),  # facilitates querying `num_time_places`;
-            ticket_count=Count('tickets', filter=Q(tickets__active=True), distinct=True),  # facilitates querying `ticket_count`
+            num_time_places=Count('timeplaces', distinct=True),  # Facilitates querying `num_time_places`;
+            ticket_count=Count('tickets', filter=Q(tickets__active=True), distinct=True),  # Facilitates querying `ticket_count`
         )
         qs = qs.prefetch_related(
             Prefetch('timeplaces',
                      queryset=TimePlace.objects.annotate(
                          ticket_count=Count('tickets', filter=Q(tickets__active=True)),
                      ).order_by('-start_time'),
-                     to_attr='existing_time_places'),  # facilitates querying `ticket_count` for each `existing_time_places`
+                     to_attr='existing_time_places'),  # Facilitates querying `ticket_count` for each `existing_time_places`
             Prefetch('timeplaces',
                      queryset=TimePlace.objects.future().order_by('-start_time'),
                      to_attr='future_time_places'),
@@ -278,7 +278,7 @@ class TimePlaceAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # facilitates querying `ticket_count`
+        return qs.annotate(ticket_count=Count('tickets', filter=Q(tickets__active=True)))  # Facilitates querying `ticket_count`
 
 
 class EventTicketAdmin(UserSearchFieldsMixin, admin.ModelAdmin):

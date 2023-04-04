@@ -86,14 +86,14 @@ class UrlTests(NewsTestBase, TestCase):
             Get(reverse('article_edit', args=[self.article1.pk]), public=False),
             Get(reverse('article_edit', args=[self.article2.pk]), public=False),
             Get(reverse('article_detail', args=[self.article1.pk]), public=True),
-            Get(reverse('article_detail', args=[self.article2.pk]), public=False),  # this article is private
+            Get(reverse('article_detail', args=[self.article2.pk]), public=False),  # This article is private
             Get(reverse('event_list'), public=True),
             Get(reverse('event_create'), public=False),
             Get(reverse('event_edit', args=[self.event1.pk]), public=False),
             Get(reverse('event_edit', args=[self.event2.pk]), public=False),
-            Get(reverse('event_ticket_list', args=[self.event2.pk]), public=False),  # can't test `event1`, as it has no tickets
+            Get(reverse('event_ticket_list', args=[self.event2.pk]), public=False),  # Can't test `event1`, as it has no tickets
             Get(reverse('event_detail', args=[self.event1.pk]), public=True),
-            Get(reverse('event_detail', args=[self.event2.pk]), public=False),  # this event is private
+            Get(reverse('event_detail', args=[self.event2.pk]), public=False),  # This event is private
             Get(reverse('register_event', args=[self.event1.pk]), public=False),
             Get(reverse('register_event', args=[self.event2.pk]), public=False),
             *[
@@ -104,7 +104,7 @@ class UrlTests(NewsTestBase, TestCase):
             Get(reverse('timeplace_create', args=[self.event2.pk]), public=False),
             *[
                 Get(reverse('timeplace_ticket_list', args=[time_place.event.pk, time_place.pk]), public=False)
-                for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
+                for time_place in self.time_places if time_place != self.time_place3  # Can't test `time_place3`, as it has no tickets
             ],
             *[
                 Get(reverse('timeplace_ical', args=[time_place.event.pk, time_place.pk]), public=True)
@@ -112,7 +112,7 @@ class UrlTests(NewsTestBase, TestCase):
             ],
             *[
                 Get(reverse('register_timeplace', args=[time_place.event.pk, time_place.pk]), public=False)
-                for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
+                for time_place in self.time_places if time_place != self.time_place3  # Can't test `time_place3`, as it has no tickets
             ],
             *[
                 Get(reverse('ticket_detail', args=[ticket.pk]), public=False)

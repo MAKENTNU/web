@@ -26,4 +26,4 @@ urlpatterns = i18n_patterns(
          ), name='contentbox_edit'),
 
     prefix_default_language=False,
-) + internal_urlpatterns  # should be appended, so that they can be overridden by the above patterns
+) + internal_urlpatterns  # Should be appended, so that they can be overridden by the above patterns

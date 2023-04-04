@@ -26,7 +26,7 @@ urlpatterns = [
 
     *debug_toolbar_urls(),
     path("i18n/", include('django.conf.urls.i18n')),
-    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # For development only; Nginx is used in production
 
     *ckeditor_uploader_urls(),
 ]

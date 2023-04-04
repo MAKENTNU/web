@@ -294,7 +294,7 @@ class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
     form_class = EventForm
     template_name = 'news/event/event_form.html'
     extra_context = {
-        'Event': Event,  # for referencing Event.Type's choice values
+        'Event': Event,  # For referencing Event.Type's choice values
     }
 
     def get_custom_news_fieldset(self) -> dict:
@@ -423,7 +423,7 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, T
             weeks = math.ceil(delta_days / 7)
         else:
             weeks = 1
-        self.time_place.pk = None  # duplicates the object when saving
+        self.time_place.pk = None  # Duplicates the object when saving
         self.time_place.start_time += timedelta(weeks=weeks)
         self.time_place.end_time += timedelta(weeks=weeks)
         self.time_place.hidden = True
@@ -568,7 +568,7 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
 
     def form_valid(self, form):
         form_instance: EventTicket = form.instance
-        form_instance.active = True  # this is done mainly for reactivating an existing ticket
+        form_instance.active = True  # This is done mainly for reactivating an existing ticket
         # If the ticket object already exists, update the timestamp
         # (the model's `save()` method handles setting the timestamp when creating the ticket object)
         if not form_instance._state.adding:
@@ -581,8 +581,8 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
 
         email_message_dict = {
             'type': 'send_html',
-            'html_render': email.render_html(self.request, {'ticket': ticket}, html_template_name='email/ticket.html'),
-            'text': email.render_text(self.request, {'ticket': ticket}, text_template_name='email/ticket.txt'),
+            'html_render': email.render_html(self.request, {'ticket': ticket}, template_name='email/ticket.html'),
+            'text': email.render_text(self.request, {'ticket': ticket}, template_name='email/ticket.txt'),
             # Pass a pure string, instead of the proxy object from `gettext_lazy`
             'subject': str(_("Your ticket for “{title}”!").format(title=ticket.registered_event.title)),
             'from': settings.EVENT_TICKET_EMAIL,

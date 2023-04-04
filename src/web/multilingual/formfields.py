@@ -28,7 +28,7 @@ class MultiLingualFormField(forms.MultiValueField):
         subfield_attrs = {
             'max_length': max_length,
             **kwargs,
-            'label': None,  # the `label` attribute is not used by the subfields, so override the one in `kwargs`
+            'label': None,  # The `label` attribute is not used by the subfields, so override the one in `kwargs`
         }
         subfields = []
         for language in self.languages:

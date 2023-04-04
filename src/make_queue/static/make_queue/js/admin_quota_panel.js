@@ -12,7 +12,7 @@ $userDropdown.dropdown({
         $.ajax(`${LANG_PREFIX}/reservation/quota/user/${userPK}/`, {
             success: function (data, textStatus) {
                 $("#user-quotas").html(data);
-                setupDeleteModal();
+                setUpDeleteModal();
             },
         });
     },

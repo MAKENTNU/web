@@ -63,7 +63,7 @@ def login_wrapper(request, backend, *args, **kwargs):
     _update_ldap_full_name_if_different(user, social_data)
 
     try:
-        # Try to retrieve username from NTNUs LDAP server. Otherwise use the first part of the email as the username
+        # Try to retrieve username from NTNUs LDAP server. Otherwise, use the first part of the email as the username
         ldap_data = get_user_details_from_email(user.email, use_cached=False)
     except Exception as e:
         log_request_exception("Looking up user details through LDAP failed.", e, request)

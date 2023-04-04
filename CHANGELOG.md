@@ -5,6 +5,16 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ## Unreleased
 
+### Improvements
+
+- Added a link to the Django admin change form at the bottom of the form of "content boxes" that have extra change permissions
+  (like [the front page of the internal site](https://i.makentnu.no/))
+  - This is only visible to users who have permission to modify those content boxes through Django admin
+
+### Other changes
+
+- Code cleanup? Ye.
+
 
 ## 2023-03-30 ([#615](https://github.com/MAKENTNU/web/pull/615))
 

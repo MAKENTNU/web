@@ -33,8 +33,8 @@ function togglePost($element, postURL, model, toggle) {
                 $element.attr("src", isHidden ? privateEventIcon : publicEventIcon);
             else {
                 const $parent = $element.parent();
-                const $shownIcon = $parent.find(".shown.hidden-field")
-                const $hiddenIcon = $parent.find(".hidden.hidden-field")
+                const $shownIcon = $parent.find(".shown.hidden-field");
+                const $hiddenIcon = $parent.find(".hidden.hidden-field");
                 $shownIcon.toggleClass("display-none", isHidden);
                 $hiddenIcon.toggleClass("display-none", !isHidden);
             }

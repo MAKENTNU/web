@@ -15,7 +15,7 @@ class FAQListView(ListView):
     queryset = (
         Category.objects.prefetch_questions_and_default_order_by(
             questions_attr_name='existing_questions',
-        ).filter(questions__isnull=False).distinct()  # remove duplicates that can appear when filtering on values across tables
+        ).filter(questions__isnull=False).distinct()  # Remove duplicates that can appear when filtering on values across tables
     )
     template_name = 'faq/faq_list.html'
     context_object_name = 'categories'

@@ -1,4 +1,4 @@
-function setupDeleteModal() {
+function setUpDeleteModal() {
     $(".delete-modal-button").click(function (event) {
         event.preventDefault();
 
@@ -33,4 +33,4 @@ function escape(str) {
     return $("<i>").text(str).html();
 }
 
-setupDeleteModal();
+setUpDeleteModal();

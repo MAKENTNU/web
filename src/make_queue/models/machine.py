@@ -87,7 +87,7 @@ class MachineType(models.Model):
             course_registration.user = user
             course_registration.save()
             return True
-        return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
+        return user.has_perm('make_queue.add_reservation')  # This will typically only be the case for superusers
 
     @staticmethod
     def can_use_raise3d_printer(user: User | AnonymousUser):

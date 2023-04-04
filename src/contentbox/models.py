@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
-from util.auth_utils import perm_to_str
+from util.auth_utils import perms_to_str
 from util.validators import lowercase_slug_validator
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
@@ -59,6 +59,4 @@ class ContentBox(models.Model):
 
     @property
     def extra_change_perms_str_tuple(self):
-        return tuple(
-            perm_to_str(perm) for perm in self.extra_change_permissions.all()
-        )
+        return perms_to_str(self.extra_change_permissions.all())

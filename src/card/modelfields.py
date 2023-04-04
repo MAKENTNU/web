@@ -8,7 +8,7 @@ class CardNumberField(models.CharField):
     """
     Custom field for card numbers, doing some extra validation.
     """
-    empty_strings_allowed = False  # empty values should be stored as None
+    empty_strings_allowed = False  # Empty values should be stored as None
     default_validators = [card_number_validator]
 
     def __init__(self, **kwargs):

@@ -16,7 +16,7 @@ class InheritanceGroup(Group):
     by the ``parents`` field.
 
     The permissions that this group has independently
-    from its parents, are given by the ``own_permissions`` field.
+    of its parents, are given by the ``own_permissions`` field.
 
     The standard ``permissions`` field will contain the group's own
     permissions, and those it has inherited. This field should not

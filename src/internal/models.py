@@ -222,14 +222,14 @@ class SystemAccess(models.Model):
         """
         The URL to change the system access. Depends on the type of system.
 
-        :return: An URL for the page where the access can be changed. Is an empty string if it should not be changed
+        :return: A URL for the page where the access can be changed. Is an empty string if it should not be changed
         """
         if not self.should_be_changed():
             return ""
 
         # TODO: In the future it would be beneficial to create automated processes for adding, removing and revoking
-        # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
-        # channels, or using GSuite APIs to add and remove people from mailing lists.
+        #       access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
+        #       channels, or using GSuite APIs to add and remove people from mailing lists.
         return reverse_internal('edit_system_access', self.member.pk, self.pk)
 
     def should_be_changed(self):

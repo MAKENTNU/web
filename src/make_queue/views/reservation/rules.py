@@ -136,7 +136,7 @@ class EditUsageRulesView(PermissionRequiredMixin, CustomFieldsetFormMixin, Machi
     permission_required = ('make_queue.change_machineusagerule',)
     model = MachineUsageRule
     fields = ('content',)
-    template_name = 'contentbox/content_box_form.html'
+    template_name = 'make_queue/machine_usage_rule_form.html'
 
     narrow = False
 

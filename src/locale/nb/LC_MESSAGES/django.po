@@ -442,6 +442,10 @@ msgstr "Rediger"
 msgid "Missing language"
 msgstr "Manglende språk"
 
+#: src/contentbox/templates/contentbox/content_box_form.html:40
+msgid "The extra change permissions can be edited in Django admin"
+msgstr "De ekstra endringsrettighetene kan endres i Django-admin"
+
 #: src/contentbox/views.py:90
 msgctxt "view page"
 msgid "View"
@@ -1207,12 +1211,12 @@ msgid "Internal secrets"
 msgstr "Internhemmeligheter"
 
 #: src/internal/templates/internal/secret_list.html:51
-msgid "Click to show - only if you're alone!"
-msgstr "Klikk for å vise - bare hvis du er alene!"
+msgid "Click to show – only if you're alone!"
+msgstr "Klikk for å vise – bare hvis du er alene!"
 
 #: src/internal/templates/internal/secret_list.html:56
-msgid "Close - someone's behind me!"
-msgstr "Skjul - noen er bak meg!"
+msgid "Hide – someone's behind me!"
+msgstr "Skjul – noen er bak meg!"
 
 #: src/internal/validators.py:12
 msgid "Enter a valid email address ending in “@makentnu.no”."
@@ -1224,10 +1228,10 @@ msgstr "Oppgi et gyldig format for et semester."
 
 #: src/internal/validators.py:40
 msgid ""
-"Enter a valid Discord username - including the hashtag and the four digits "
+"Enter a valid Discord username – including the hashtag and the four digits "
 "at the end."
 msgstr ""
-"Oppgi et gyldig Discord-brukernavn - inkludert hashtaggen og de fire sifrene "
+"Oppgi et gyldig Discord-brukernavn – inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
 #: src/internal/views.py:84

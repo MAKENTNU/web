@@ -55,7 +55,7 @@ class CleanUpTempFilesTestMixin(ABC):
         """
         for child in self._temp_media_root.iterdir():
             if child.is_file() or child.is_symlink():
-                child.unlink()  # deletes the file/symlink
+                child.unlink()  # Deletes the file/symlink
             elif child.is_dir():
                 shutil.rmtree(child)
 
