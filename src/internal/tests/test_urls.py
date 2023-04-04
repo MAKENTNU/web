@@ -96,6 +96,7 @@ class UrlTests(TestCase):
         self._test_internal_url('GET', reverse_internal('edit_member', self.member.pk))
         self._test_editor_url('GET', reverse_internal('edit_member', self.member_editor.pk))
 
+        self._test_editor_url('GET', reverse_internal('member_retire', self.member.pk))
         self._test_editor_url('GET', reverse_internal('member_quit', self.member.pk))
 
         path_data_assertion_tuples = (
