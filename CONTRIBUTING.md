@@ -1278,6 +1278,9 @@ The latter can be used to e.g. ensure the value of a field is unique per value o
 [Mozilla's accessibility testing
 checklist](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Cross_browser_testing/Accessibility#accessibility_testing_checklist)
 includes a useful overview over things that can be checked that are relevant to this code smell.
+A more complete and detailed "checklist" is [the Web Content Accessibility Guidelines (WCAG) standard](
+https://www.w3.org/WAI/WCAG21/quickref/?currentsidebar=%23col_customize&levels=aa%2Caaa),
+which provides a customizable quick reference - including choosing between three levels of conformance to the standard.
 
 To implement proper accessibility practices, Mozilla has a must-read [introductory guide on
 HTML and accessibility](https://developer.mozilla.org/en-US/docs/Learn/Accessibility/HTML), and [a guide on
