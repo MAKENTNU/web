@@ -35,7 +35,7 @@
 {% endblock nav_buttons %}
 
 {% block user_dropdown_buttons %}
-    <a class="item" href="{% host_url 'front_page' host 'main' %}">
+    <a class="item" href="{% host_url 'index_page' host 'main' %}">
         <div class="text">{% translate "Public pages" %}</div>
     </a>
     {% if user.is_staff %}

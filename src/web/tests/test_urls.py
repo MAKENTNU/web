@@ -37,7 +37,7 @@ class UrlTests(NewsTestBase, TestCase):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
-            Get(reverse('front_page'), public=True),
+            Get(reverse('index_page'), public=True),
             Get(reverse('admin_panel'), public=False),
             Get(reverse('about'), public=True),
             Get(reverse('contact'), public=True),

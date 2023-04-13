@@ -8,13 +8,13 @@ from django_hosts import reverse
 from news.models import Event, TimePlace
 from users.models import User
 from util.test_utils import CleanUpTempFilesTestMixin, MOCK_JPG_FILE, assertRedirectsWithPathPrefix
-from web.views import IndexView
+from web.views import IndexPageView
 
 
-class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
+class IndexPageViewTests(CleanUpTempFilesTestMixin, TestCase):
 
     def setUp(self):
-        self.path = reverse('front_page')
+        self.path = reverse('index_page')
 
     @staticmethod
     def create_time_place(*, start_time: datetime, event: Event) -> TimePlace:
@@ -102,8 +102,8 @@ class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
 
         # Create events in chronological order, up until the max shown events limit
         ordered_events = []
-        self.assertEqual(IndexView.MAX_EVENTS_SHOWN, 4)
-        for event_num in range(1, IndexView.MAX_EVENTS_SHOWN + 1):
+        self.assertEqual(IndexPageView.MAX_EVENTS_SHOWN, 4)
+        for event_num in range(1, IndexPageView.MAX_EVENTS_SHOWN + 1):
             with self.subTest(event_num=event_num):
                 event = self.create_event_with_one_time_place(event_type=Event.Type.STANDALONE, start_time=now + timedelta(days=event_num))
                 ordered_events.append(event)
@@ -122,8 +122,8 @@ class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
         event = self.create_event_with_one_time_place(event_type=Event.Type.STANDALONE, start_time=now + timedelta(days=0.5))
         response_context = self.get_response_context()
         response_event_dicts = response_context['featured_event_dicts']
-        self.assertEqual(Event.objects.count(), IndexView.MAX_EVENTS_SHOWN + 1)
-        self.assertEqual(len(response_event_dicts), IndexView.MAX_EVENTS_SHOWN)
+        self.assertEqual(Event.objects.count(), IndexPageView.MAX_EVENTS_SHOWN + 1)
+        self.assertEqual(len(response_event_dicts), IndexPageView.MAX_EVENTS_SHOWN)
         self.assertEqual(response_event_dicts[0]['event'], event)
         self.assertTrue(response_context['more_events_exist'])
 

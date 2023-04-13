@@ -46,7 +46,7 @@ about_urlpatterns = [
 ]
 
 urlpatterns += i18n_patterns(
-    path("", views.IndexView.as_view(), name='front_page'),
+    path("", views.IndexPageView.as_view(), name='index_page'),
     path("admin/", decorator_include(login_required, admin_urlpatterns)),
 
     # App paths:

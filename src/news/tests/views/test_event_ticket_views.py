@@ -248,4 +248,4 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 assert_next_param_is_valid(django_reverse('event_detail', args=[ticket.registered_event.pk]), True)
                 # Some other internal URLs, which should not be allowed
                 assert_next_param_is_valid("/", False)
-                assert_next_param_is_valid(urlparse(reverse('front_page')).path, False)
+                assert_next_param_is_valid(urlparse(reverse('index_page')).path, False)

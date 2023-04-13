@@ -3,7 +3,7 @@ from django_hosts import reverse_lazy
 
 
 class WebAdminSite(admin.AdminSite):
-    site_url = reverse_lazy('front_page')
+    site_url = reverse_lazy('index_page')
 
     apps_listed_first = (
         'constance',

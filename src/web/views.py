@@ -12,7 +12,7 @@ from makerspace.models import Equipment
 from news.models import Article, Event, TimePlace
 
 
-class IndexView(TemplateView):
+class IndexPageView(TemplateView):
     MAX_EVENTS_SHOWN = 4
     MAX_ARTICLES_SHOWN = 4
 

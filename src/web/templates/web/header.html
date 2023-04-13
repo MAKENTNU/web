@@ -13,7 +13,7 @@
 
     <div class="logo">
         <div>{# Empty div for spacing left of logo, specified with grid-template-columns #}</div>
-        <a href="{% block logo_link_url %}{% host_url 'front_page' host 'main' %}{% endblock logo_link_url %}">
+        <a href="{% block logo_link_url %}{% host_url 'index_page' host 'main' %}{% endblock logo_link_url %}">
             <picture>
                 <source srcset="{% static 'web/img/logo_icon.svg' %}"
                         media="(max-width: 340px)"/>
