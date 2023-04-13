@@ -44,6 +44,8 @@ class Quota(models.Model):
         permissions = (
             ('can_create_event_reservation', "Can create event reservation"),
         )
+        verbose_name = _("quota")
+        verbose_name_plural = _("quotas")
 
     def __str__(self):
         if self.all:

@@ -1547,6 +1547,17 @@ msgstr "oppbrukbar"
 msgid "ignores rules"
 msgstr "ignorerer regler"
 
+#: src/make_queue/models/reservation.py:47
+msgid "quota"
+msgstr "kvote"
+
+#: src/make_queue/models/reservation.py:48
+#: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:6
+#: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:22
+#: src/web/templates/web/admin_panel.html:53
+msgid "quotas"
+msgstr "kvoter"
+
 #: src/make_queue/models/reservation.py:50
 msgid "<all users>"
 msgstr "<alle brukere>"
@@ -1818,13 +1829,8 @@ msgid "Find free reservation slots"
 msgstr "Finn ledige reservasjonstidspunkter"
 
 #: src/make_queue/templates/make_queue/machine_usage_rule_detail.html:18
-msgid "Quota and detailed rules for reservation duration"
+msgid "Quotas and detailed rules for reservation duration"
 msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
-
-#: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:6
-#: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:22
-msgid "Quotas"
-msgstr "Kvoter"
 
 #: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:31
 #: src/make_queue/templates/make_queue/reservation_rule_list.html:109
@@ -3112,10 +3118,6 @@ msgid ""
 msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
 "printerkurset"
-
-#: src/web/templates/web/admin_panel.html:53
-msgid "quota"
-msgstr "kvote"
 
 #: src/web/templates/web/admin_panel.html:56
 msgid ""

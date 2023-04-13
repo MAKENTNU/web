@@ -15,7 +15,7 @@
         </h1>
         <div style="margin-bottom: 10px">
             <a class="ui blue button" href="{% url 'reservation_rule_list' machine_type.pk %}">
-                {% translate "Quota and detailed rules for reservation duration" %}
+                {% translate "Quotas and detailed rules for reservation duration" %}
             </a>
 
             {% if perms.make_queue.change_machineusagerule %}

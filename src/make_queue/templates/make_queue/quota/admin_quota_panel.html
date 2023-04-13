@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-{% block title %}{% translate "Quotas" %} | {% translate "Admin panel" %}{% endblock title %}
+{% block title %}{% translate "quotas"|capfirst %} | {% translate "Admin panel" %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/admin_quota_panel.css' %}"/>
@@ -19,7 +19,7 @@
     <div class="ui container">
 
         <h1 class="ui header">
-            {% translate "Quotas" %}
+            {% translate "quotas"|capfirst %}
             {% if perms.make_queue.add_quota %}
                 <a href="{% url 'quota_create' %}">
                     <i class="green plus icon"></i>
