@@ -3,7 +3,7 @@ from django.db.models import Prefetch
 from django.views.generic import TemplateView
 
 from announcements.models import Announcement
-from contentbox.views import DisplayContentBoxView
+from contentbox.views import ContentBoxDetailView
 from faq.models import Category, Question
 from groups.models import Committee
 from make_queue.models.course import Printer3DCourse
@@ -65,5 +65,5 @@ class AdminPanelView(PermissionRequiredMixin, TemplateView):
         return can_view_admin_panel(self.request.user)
 
 
-class AboutUsView(DisplayContentBoxView):
+class AboutUsView(ContentBoxDetailView):
     template_name = 'web/about.html'

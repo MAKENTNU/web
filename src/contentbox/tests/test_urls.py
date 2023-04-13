@@ -20,7 +20,7 @@ from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from ..models import ContentBox
-from ..views import DisplayContentBoxView
+from ..views import ContentBoxDetailView
 
 
 class ReverseCallable(Protocol):
@@ -107,7 +107,7 @@ class UrlTests(TestCase):
 
                 pattern: URLPattern
                 view_class = getattr(pattern.callback, 'view_class', None)
-                if view_class and issubclass(view_class, DisplayContentBoxView):
+                if view_class and issubclass(view_class, ContentBoxDetailView):
                     patterns.append(pattern)
 
         for host in host_patterns:

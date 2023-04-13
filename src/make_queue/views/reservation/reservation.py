@@ -4,7 +4,7 @@ from math import ceil
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _, ngettext
@@ -22,7 +22,7 @@ from ...templatetags.reservation_extra import calendar_url_reservation, can_chan
 
 # TODO: rewrite this whole view (and everything that uses it), so that it's more extendable,
 #       and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
-class CreateOrEditReservationView(TemplateView, ABC):
+class ReservationCreateOrUpdateView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
     template_name = 'make_queue/reservation_form.html'
 
@@ -72,7 +72,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
                  the reservation cannot be validated
         """
         if not reservation.validate():
-            # Hack to "simulate" `EditReservationView`
+            # Hack to "simulate" `ReservationUpdateView`
             self.reservation = reservation
             context_data = self.get_context_data(reservation_pk=reservation.pk)
             context_data["error"] = self.get_error_message(form, reservation)
@@ -109,7 +109,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
         # If we are given a reservation, populate the information relevant to that reservation
         if 'reservation_pk' in kwargs:
             # noinspection PyUnresolvedReferences
-            reservation = self.reservation  # Defined in `EditReservationView`
+            reservation = self.reservation  # Defined in `ReservationUpdateView`
             context_data["start_time"] = reservation.start_time
             context_data["reservation_pk"] = reservation.pk
             context_data["end_time"] = reservation.end_time
@@ -123,7 +123,7 @@ class CreateOrEditReservationView(TemplateView, ABC):
         # Otherwise populate with default information given to the view
         else:
             if hasattr(self, 'machine'):
-                # Set in `CreateReservationView`
+                # Set in `ReservationCreateView`
                 selected_machine = self.machine
             else:
                 # `machine_pk` is only set in `test_get_context_data_non_reservation()` 🙃🔥
@@ -178,7 +178,7 @@ class MachineRelatedViewMixin:
         self.machine = get_object_or_404(Machine.objects.visible_to(self.request.user), pk=machine_pk)
 
 
-class CreateReservationView(PermissionRequiredMixin, MachineRelatedViewMixin, CreateOrEditReservationView):
+class ReservationCreateView(PermissionRequiredMixin, MachineRelatedViewMixin, ReservationCreateOrUpdateView):
     """View for creating a new reservation."""
     new_reservation = True
 
@@ -210,7 +210,7 @@ class CreateReservationView(PermissionRequiredMixin, MachineRelatedViewMixin, Cr
         return self.validate_and_save(reservation, form)
 
 
-class DeleteReservationView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class APIReservationDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     model = Reservation
 
     def has_permission(self):
@@ -232,10 +232,10 @@ class DeleteReservationView(PermissionRequiredMixin, PreventGetRequestsMixin, De
             return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.delete()
-        return HttpResponse(status=HTTPStatus.OK)
+        return JsonResponse({}, status=HTTPStatus.OK)
 
 
-class EditReservationView(CreateOrEditReservationView):
+class ReservationUpdateView(ReservationCreateOrUpdateView):
     """View for changing a reservation (Cannot be UpdateView due to the abstract inheritance of reservations)."""
     new_reservation = False
 
@@ -288,7 +288,7 @@ class EditReservationView(CreateOrEditReservationView):
         return self.validate_and_save(reservation, form)
 
 
-class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
+class APIReservationMarkFinishedView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
     model = Reservation
 
     def has_permission(self):
@@ -310,10 +310,10 @@ class MarkReservationFinishedView(PermissionRequiredMixin, PreventGetRequestsMix
 
         reservation.end_time = timezone.localtime()
         reservation.save()
-        return HttpResponse(status=HTTPStatus.OK)
+        return JsonResponse({}, status=HTTPStatus.OK)
 
 
-class MyReservationsListView(LoginRequiredMixin, ListView):
+class ReservationMyListView(LoginRequiredMixin, ListView):
     """View for seeing the user's reservations."""
     model = Reservation
     template_name = 'make_queue/reservation_list.html'
@@ -326,7 +326,7 @@ class MyReservationsListView(LoginRequiredMixin, ListView):
         return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
 
 
-class FindFreeSlotView(LoginRequiredMixin, FormView):
+class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
     """
     View to find free time slots for reservations.
     """

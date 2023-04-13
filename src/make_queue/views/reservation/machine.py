@@ -49,7 +49,7 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
         return True
 
 
-class CreateMachineView(PermissionRequiredMixin, MachineFormMixin, CreateView):
+class MachineCreateView(PermissionRequiredMixin, MachineFormMixin, CreateView):
     permission_required = ('make_queue.add_machine',)
     form_class = CreateMachineForm
 
@@ -59,7 +59,7 @@ class CreateMachineView(PermissionRequiredMixin, MachineFormMixin, CreateView):
     should_include_machine_type = True
 
 
-class EditMachineView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
+class MachineUpdateView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
     permission_required = ('make_queue.change_machine',)
     form_class = EditMachineForm
 
@@ -71,7 +71,7 @@ class EditMachineView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
         return self.object.machine_type.has_stream
 
 
-class DeleteMachineView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class MachineDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_machine',)
     model = Machine
     success_url = reverse_lazy('machine_list')

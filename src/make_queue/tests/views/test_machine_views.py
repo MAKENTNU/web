@@ -229,7 +229,7 @@ class TestMachineDetailView(TestCase):
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
-class TestCreateAndEditMachineView(TestCase):
+class TestMachineCreateAndUpdateView(TestCase):
 
     def setUp(self):
         username = "TEST_USER"

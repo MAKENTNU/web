@@ -11,7 +11,7 @@ from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
 from social_core.utils import setting_name
 
-from contentbox.views import DisplayContentBoxView, EditContentBoxView
+from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from dataporten.views import login_wrapper
 from news import urls as news_urls
 from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, logout_urls
@@ -37,12 +37,12 @@ admin_urlpatterns = [
 ]
 
 content_box_urlpatterns = [
-    path("<int:pk>/edit/", EditContentBoxView.as_view(base_template='web/base.html'), name='contentbox_edit'),
+    path("<int:pk>/edit/", ContentBoxUpdateView.as_view(base_template='web/base.html'), name='contentbox_edit'),
 ]
 
 about_urlpatterns = [
     path("", views.AboutUsView.as_view(url_name='about'), name='about'),
-    DisplayContentBoxView.get_path('contact'),
+    ContentBoxDetailView.get_path('contact'),
 ]
 
 urlpatterns += i18n_patterns(
@@ -61,9 +61,9 @@ urlpatterns += i18n_patterns(
     # ContentBox paths:
     path("contentbox/", include(content_box_urlpatterns)),
     path("about/", include(about_urlpatterns)),
-    *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
-    DisplayContentBoxView.get_path('cookies'),
-    DisplayContentBoxView.get_path('privacypolicy'),
+    *ContentBoxDetailView.get_multi_path('apply', 'søk', 'sok'),
+    ContentBoxDetailView.get_path('cookies'),
+    ContentBoxDetailView.get_path('privacypolicy'),
 
     # This path must be wrapped by `i18n_patterns()`
     # (see https://docs.djangoproject.com/en/stable/topics/i18n/translation/#django.views.i18n.JavaScriptCatalog)

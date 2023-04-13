@@ -10,7 +10,7 @@ from .forms import AnnouncementForm
 from .models import Announcement
 
 
-class AnnouncementAdminView(PermissionRequiredMixin, ListView):
+class AdminAnnouncementListView(PermissionRequiredMixin, ListView):
     permission_required = ('announcements.change_announcement',)
     model = Announcement
     queryset = Announcement.objects.order_by('-display_from')
@@ -34,19 +34,19 @@ class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
     ]
 
 
-class CreateAnnouncementView(PermissionRequiredMixin, AnnouncementFormMixin, CreateView):
+class AnnouncementCreateView(PermissionRequiredMixin, AnnouncementFormMixin, CreateView):
     permission_required = ('announcements.add_announcement',)
 
     form_title = _("New Announcement")
 
 
-class EditAnnouncementView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):
+class AnnouncementUpdateView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):
     permission_required = ('announcements.change_announcement',)
 
     form_title = _("Edit Announcement")
 
 
-class DeleteAnnouncementView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class AnnouncementDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('announcements.delete_announcement',)
     model = Announcement
     success_url = reverse_lazy('announcement_admin')

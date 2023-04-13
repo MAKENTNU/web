@@ -8,10 +8,10 @@ from ..utility import request_with_user
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
-from ...views.reservation.reservation import MyReservationsListView
+from ...views.reservation.reservation import ReservationMyListView
 
 
-class TestMyReservationsListView(TestCase):
+class TestReservationMyListView(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("user", "user@makentnu.no")
@@ -32,7 +32,7 @@ class TestMyReservationsListView(TestCase):
     def test_get_user_reservations_single_reservation(self):
         self.assertListEqual(
             [Reservation.objects.get(user=self.user)],
-            list(MyReservationsListView.as_view()(request_with_user(self.user)).context_data['reservations'])
+            list(ReservationMyListView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )
 
     def test_get_user_reservations_multiple_reservations(self):
@@ -43,7 +43,7 @@ class TestMyReservationsListView(TestCase):
 
         self.assertListEqual(
             list(self.user.reservations.order_by("-start_time")),
-            list(MyReservationsListView.as_view()(request_with_user(self.user)).context_data['reservations'])
+            list(ReservationMyListView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )
 
     def test_get_user_reservations_different_types(self):
@@ -63,5 +63,5 @@ class TestMyReservationsListView(TestCase):
                 Reservation.objects.get(user=self.user, machine__machine_type=sewing_machine_type),
                 Reservation.objects.get(user=self.user, machine__machine_type=self.printer_machine_type),
             ],
-            list(MyReservationsListView.as_view()(request_with_user(self.user)).context_data['reservations'])
+            list(ReservationMyListView.as_view()(request_with_user(self.user)).context_data['reservations'])
         )

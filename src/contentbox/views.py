@@ -10,7 +10,7 @@ from .forms import ContentBoxForm, EditSourceContentBoxForm
 from .models import ContentBox
 
 
-class DisplayContentBoxView(DetailView):
+class ContentBoxDetailView(DetailView):
     model = ContentBox
     template_name = 'contentbox/content_box_detail.html'
     context_object_name = 'contentbox'
@@ -49,7 +49,7 @@ class DisplayContentBoxView(DetailView):
         )
 
 
-class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
+class ContentBoxUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
     permission_required = ('contentbox.change_contentbox',)
     model = ContentBox
     form_class = ContentBoxForm

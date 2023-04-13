@@ -8,7 +8,7 @@ from .forms import CommitteeForm
 from .models import Committee
 
 
-class CommitteeList(ListView):
+class CommitteeListView(ListView):
     model = Committee
     queryset = Committee.objects.select_related('group')
     template_name = 'groups/committee_list.html'
@@ -21,7 +21,7 @@ class CommitteeDetailView(DetailView):
     context_object_name = 'committee'
 
 
-class EditCommitteeView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
+class CommitteeUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
     permission_required = ('groups.change_committee',)
     model = Committee
     form_class = CommitteeForm
@@ -34,7 +34,7 @@ class EditCommitteeView(PermissionRequiredMixin, CustomFieldsetFormMixin, Update
         return _("Edit {committee}").format(committee=self.object)
 
 
-class CommitteeAdminView(PermissionRequiredMixin, ListView):
+class AdminCommitteeListView(PermissionRequiredMixin, ListView):
     permission_required = ('groups.change_committee',)
     model = Committee
     queryset = Committee.objects.select_related('group')

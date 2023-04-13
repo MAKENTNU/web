@@ -6,7 +6,7 @@ from users.models import User
 from ...models.reservation import Quota
 
 
-class UserQuotaListView(PermissionRequiredMixin, ListView):
+class AdminUserQuotaListView(PermissionRequiredMixin, ListView):
     """View for getting a rendered version of the quotas of a specific user."""
     permission_required = ('make_queue.change_quota',)
     model = Quota

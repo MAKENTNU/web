@@ -238,7 +238,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 assert_next_param_is_valid("http://google.com", False)
                 assert_next_param_is_valid("https://google.com", False)
                 assert_next_param_is_valid(f"google.com{ticket_detail_url}", False)
-                # The URLs listed in `CancelTicketView.get_allowed_next_params()`, which should be allowed
+                # The URLs listed in `EventTicketCancelView.get_allowed_next_params()`, which should be allowed
                 assert_next_param_is_valid(ticket_detail_url, True)
                 self.assertEqual(ticket.get_absolute_url(), ticket_detail_url)
                 assert_next_param_is_valid(django_reverse('ticket_detail', args=[ticket.pk]), True)
