@@ -20,6 +20,7 @@ A summary of changes made to the codebase, grouped per deployment.
   (like [the front page of the internal site](https://i.makentnu.no/))
   - This is only visible to users who have permission to modify those content boxes through Django admin
 - Changed cropping of images in article and event lists so that they always have equal proportions
+- Added a title to the quota admin panel, and switched out the "Add new quota" button for a green plus button, like other admin panel pages
 
 ### Other changes
 

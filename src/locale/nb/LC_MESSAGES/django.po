@@ -1851,10 +1851,6 @@ msgstr "Kvoter og detaljerte regler rundt reservasjonstid"
 msgid "Quotas"
 msgstr "Kvoter"
 
-#: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:21
-msgid "Add new quota"
-msgstr "Legg til ny kvote"
-
 #: src/make_queue/templates/make_queue/quota/admin_quota_panel.html:24
 #: src/make_queue/templates/make_queue/reservation_rule_list.html:109
 msgid "Global"
