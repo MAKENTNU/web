@@ -22,7 +22,7 @@ class FAQListView(ListView):
 
 
 class FAQAdminPanelView(PermissionRequiredMixin, TemplateView):
-    template_name = 'faq/faq_admin_panel.html'
+    template_name = 'faq/admin_faq_panel.html'
 
     def has_permission(self):
         user: User = self.request.user

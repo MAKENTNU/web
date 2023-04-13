@@ -42,7 +42,7 @@ class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
 
 
 class DocumentationPageHistoryDetailView(SpecificPageBasedViewMixin, DetailView):
-    template_name = 'docs/documentation_page_history.html'
+    template_name = 'docs/documentation_page_history_detail.html'
     context_object_name = 'page'
 
 
@@ -164,7 +164,7 @@ class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMix
 
 
 class SearchPagesView(TemplateView):
-    template_name = 'docs/search.html'
+    template_name = 'docs/documentation_page_search.html'
     page_size = 10
 
     @staticmethod

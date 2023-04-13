@@ -331,7 +331,7 @@ class FindFreeSlotView(LoginRequiredMixin, FormView):
     View to find free time slots for reservations.
     """
     form_class = FreeSlotForm
-    template_name = 'make_queue/find_free_slot.html'
+    template_name = 'make_queue/reservation_find_free_slots.html'
 
     def get_initial(self):
         return {'machine_type': MachineType.objects.first()}

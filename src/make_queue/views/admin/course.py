@@ -20,7 +20,7 @@ class Printer3DCourseListView(PermissionRequiredMixin, ListView):
     permission_required = ('make_queue.view_printer3dcourse', 'make_queue.change_printer3dcourse')
     model = Printer3DCourse
     queryset = Printer3DCourse.objects.select_related('user').order_by('name')
-    template_name = 'make_queue/course/course_registration_list.html'
+    template_name = 'make_queue/course/printer_3d_course_list.html'
     context_object_name = 'registrations'
     extra_context = {
         'possible_statuses': Printer3DCourse.Status.choices,
@@ -31,7 +31,7 @@ class CreateCourseRegistrationView(PermissionRequiredMixin, CreateView):
     permission_required = ('make_queue.add_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = 'make_queue/course/course_registration_create.html'
+    template_name = 'make_queue/course/printer_3d_course_create.html'
     # Redirect back to the same view, to make it easier to create multiple registrations
     success_url = reverse_lazy('create_course_registration')
 
@@ -44,7 +44,7 @@ class EditCourseRegistrationView(PermissionRequiredMixin, UpdateView):
     permission_required = ('make_queue.change_printer3dcourse',)
     model = Printer3DCourse
     form_class = Printer3DCourseForm
-    template_name = 'make_queue/course/course_registration_form.html'
+    template_name = 'make_queue/course/printer_3d_course_form.html'
     success_url = reverse_lazy('course_registration_list')
 
 

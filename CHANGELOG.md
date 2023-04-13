@@ -24,6 +24,8 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Other changes
 
+- Renamed lots of templates to comply with
+  [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
 - Code cleanup? Ye.
 
 

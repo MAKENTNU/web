@@ -2,7 +2,7 @@
 {% load datetime_tags %}
 
 
-{# Linking `ticket_card.css` is required when including this template #}
+{# Linking `event_ticket_card.css` is required when including this template #}
 
 <div class="ui ticket card">
     {% if not ticket.active %}
@@ -23,13 +23,13 @@
                     {% for time_place in ticket.event.timeplaces.all %}
                         {% if not time_place.hidden %}
                             <div class="ui item">
-                                {% include 'news/event/ticket/ticket_card_time_place.html' %}
+                                {% include 'news/event/ticket/event_ticket_card_time_place.html' %}
                             </div>
                         {% endif %}
                     {% endfor %}
                 </div>
             {% else %}
-                {% include 'news/event/ticket/ticket_card_time_place.html' with time_place=ticket.timeplace %}
+                {% include 'news/event/ticket/event_ticket_card_time_place.html' with time_place=ticket.timeplace %}
             {% endif %}
         </div>
     </div>

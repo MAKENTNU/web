@@ -80,7 +80,7 @@ class MemberFormMixin(CustomFieldsetFormMixin, ABC):
 class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     permission_required = ('internal.add_member',)
     form_class = AddMemberForm
-    template_name = 'internal/member_add.html'
+    template_name = 'internal/member_create.html'
 
     form_title = _("Add New Member")
     back_button_link = reverse_lazy('member_list')

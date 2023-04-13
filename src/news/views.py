@@ -620,12 +620,12 @@ class EventRegistrationView(PermissionRequiredMixin, CustomFieldsetFormMixin, Ev
 
 class TicketDetailView(DetailView):
     model = EventTicket
-    template_name = 'news/event/ticket/ticket_detail.html'
+    template_name = 'news/event/ticket/event_ticket_detail.html'
     context_object_name = 'ticket'
 
 
 class MyTicketsListView(ListView):
-    template_name = 'news/event/ticket/my_tickets_list.html'
+    template_name = 'news/event/ticket/event_ticket_my_list.html'
     context_object_name = 'tickets'
 
     def get_queryset(self):
@@ -693,7 +693,7 @@ class AdminTimeplaceTicketListView(TimePlaceRelatedViewMixin, AdminEventTicketLi
 class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView):
     model = EventTicket
     fields = ()
-    template_name = 'news/event/ticket/ticket_cancel.html'
+    template_name = 'news/event/ticket/event_ticket_cancel.html'
     context_object_name = 'ticket'
 
     ticket: EventTicket

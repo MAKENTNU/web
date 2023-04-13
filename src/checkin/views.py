@@ -139,7 +139,7 @@ class ProfilePageView(TemplateView):
             ),
         ]
 
-        """ Commented out because it's currently not in use; see the template code in `profile_internal.html`
+        """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
         user_skills = profile.user_skills.all()
         skill_dict = {}
         for user_skill in user_skills:
@@ -162,7 +162,7 @@ class ProfilePageView(TemplateView):
 
 class SuggestSkillView(PermissionRequiredMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
-    template_name = 'checkin/suggest_skill.html'
+    template_name = 'checkin/admin_suggest_skill.html'
     extra_context = {
         'suggestions': SuggestSkill.objects.all(),
     }
