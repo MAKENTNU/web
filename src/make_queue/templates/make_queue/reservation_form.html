@@ -10,9 +10,9 @@
 
 {% block title %}
     {% if new_reservation %}
-        {% translate "New reservation" %}
+        {% translate "New reservation"|title_en %}
     {% else %}
-        {% translate "Edit reservation" %}
+        {% translate "Change Reservation" %}
     {% endif %}
 {% endblock title %}
 
@@ -46,9 +46,9 @@
         {% endif %}
         <div class="ui large header">
             {% if new_reservation %}
-                {% translate "New reservation" %}
+                {% translate "New reservation"|title_en %}
             {% else %}
-                {% translate "Edit reservation" %}
+                {% translate "Change Reservation" %}
             {% endif %}
         </div>
 

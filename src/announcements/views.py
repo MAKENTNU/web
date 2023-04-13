@@ -37,13 +37,13 @@ class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
 class AnnouncementCreateView(PermissionRequiredMixin, AnnouncementFormMixin, CreateView):
     permission_required = ('announcements.add_announcement',)
 
-    form_title = _("New Announcement")
+    form_title = _("Add Announcement")
 
 
 class AnnouncementUpdateView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):
     permission_required = ('announcements.change_announcement',)
 
-    form_title = _("Edit Announcement")
+    form_title = _("Change Announcement")
 
 
 class AnnouncementDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

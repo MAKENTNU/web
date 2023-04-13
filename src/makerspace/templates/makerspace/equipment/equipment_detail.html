@@ -31,7 +31,7 @@
                 {% if user|has_any_permissions_for:'Equipment' %}
                     <br/>
                     <a class="ui make-bg-yellow button" href="{% url 'equipment_update' equipment.pk %}">
-                        <i class="edit icon"></i>{% translate "Edit" %}
+                        <i class="edit icon"></i>{% translate "Change" %}
                     </a>
                 {% endif %}
 

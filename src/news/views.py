@@ -280,13 +280,13 @@ class ArticleFormMixin(NewsBaseFormMixin, ABC):
 class ArticleUpdateView(PermissionRequiredMixin, ArticleFormMixin, UpdateView):
     permission_required = ('news.change_article',)
 
-    form_title = _("Edit Article")
+    form_title = _("Change Article")
 
 
 class ArticleCreateView(PermissionRequiredMixin, ArticleFormMixin, CreateView):
     permission_required = ('news.add_article',)
 
-    form_title = _("New Article")
+    form_title = _("Add Article")
 
 
 class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
@@ -310,7 +310,7 @@ class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
 class EventUpdateView(PermissionRequiredMixin, EventFormMixin, UpdateView):
     permission_required = ('news.change_event',)
 
-    form_title = _("Edit Event")
+    form_title = _("Change Event")
 
     def get_back_button_text(self):
         return _("Admin page for “{event_title}”").format(event_title=self.object.title)
@@ -319,7 +319,7 @@ class EventUpdateView(PermissionRequiredMixin, EventFormMixin, UpdateView):
 class EventCreateView(PermissionRequiredMixin, EventFormMixin, CreateView):
     permission_required = ('news.add_event',)
 
-    form_title = _("New Event")
+    form_title = _("Add Event")
     back_button_text = _("Admin page for events")
 
     def get_back_button_link(self):
@@ -401,14 +401,14 @@ class TimePlaceUpdateView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, Ti
         return self.time_place
 
     def get_form_title(self):
-        return _("Edit Occurrence for “{title}”").format(title=self.event)
+        return _("Change Occurrence of “{title}”").format(title=self.event)
 
 
 class TimePlaceCreateView(PermissionRequiredMixin, TimePlaceFormMixin, CreateView):
     permission_required = ('news.add_timeplace',)
 
     def get_form_title(self):
-        return _("New Occurrence for “{title}”").format(title=self.event)
+        return _("Add Occurrence of “{title}”").format(title=self.event)
 
 
 class TimePlaceDuplicateCreateView(PermissionRequiredMixin, PreventGetRequestsMixin, TimePlaceRelatedViewMixin, CreateView):

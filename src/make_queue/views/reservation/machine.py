@@ -53,7 +53,7 @@ class MachineCreateView(PermissionRequiredMixin, MachineFormMixin, CreateView):
     permission_required = ('make_queue.add_machine',)
     form_class = AddMachineForm
 
-    form_title = _("Create Machine")
+    form_title = _("Add Machine")
     save_button_text = _("Add")
 
     should_include_machine_type = True
@@ -63,7 +63,7 @@ class MachineUpdateView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
     permission_required = ('make_queue.change_machine',)
     form_class = ChangeMachineForm
 
-    form_title = _("Edit Machine")
+    form_title = _("Change Machine")
 
     should_include_machine_type = False
 

@@ -31,15 +31,15 @@
                 {% include './admin_time_place_listing__hidden_toggle_button.html' with time_place=timeplace class_name='hidden' popup_title=popup_title popup_content=popup_content %}
                 &nbsp;&nbsp;
                 {% if perms.news.change_timeplace %}
-                    <a class="make-col-blue popup-trigger" data-title="{% translate "Edit" %}"
-                       data-content="{% translate "If clicked, a form for editing the occurrence is shown." %}"
+                    <a class="make-col-blue popup-trigger" data-title="{% translate "Change" %}"
+                       data-content="{% translate "Click to change the occurrence." %}"
                        href="{% url 'time_place_update' timeplace.event.pk timeplace.pk %}">
                         <i class="edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
                     <a class="delete-modal-button make-col-blue popup-trigger"
-                       data-title="{% translate "Delete" %}" data-content="{% translate "If clicked, the occurrence will be deleted." %}"
+                       data-title="{% translate "Delete" %}" data-content="{% translate "Click to delete the occurrence." %}"
                        data-url="{% url 'time_place_delete' timeplace.event.pk timeplace.pk %}" data-obj-name="{{ timeplace }}">
                         <i class="delete icon"></i>
                     </a>
@@ -47,7 +47,7 @@
                 {% if perms.news.add_timeplace %}
                     <a class="make-col-blue popup-trigger"
                        data-title="{% translate "Duplicate" %}"
-                       data-content="{% translate "If clicked, the occurrence is duplicated." %}"
+                       data-content="{% translate "Click to duplicate the occurrence." %}"
                        onclick="$('#duplication-form-{{ timeplace.pk }}').submit();">
                         <i class="copy icon"></i>
                     </a>

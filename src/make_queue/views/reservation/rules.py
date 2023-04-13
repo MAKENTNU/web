@@ -94,7 +94,7 @@ class ReservationRuleCreateView(PermissionRequiredMixin, ReservationRuleFormMixi
     permission_required = ('make_queue.add_reservation_rule',)
 
     def get_form_title(self):
-        return _("New Rule for {machine_type}").format(machine_type=self.machine_type)
+        return _("Add Rule for {machine_type}").format(machine_type=self.machine_type)
 
 
 class ReservationRuleUpdateView(PermissionRequiredMixin, ReservationRuleFormMixin, UpdateView):
@@ -102,7 +102,7 @@ class ReservationRuleUpdateView(PermissionRequiredMixin, ReservationRuleFormMixi
     pk_url_kwarg = 'reservation_rule_pk'
 
     def get_form_title(self):
-        return _("Edit Rule for {machine_type}").format(machine_type=self.machine_type)
+        return _("Change Rule for {machine_type}").format(machine_type=self.machine_type)
 
 
 class ReservationRuleDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -144,7 +144,7 @@ class MachineUsageRuleUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixi
         return self.machine_type.usage_rule
 
     def get_form_title(self):
-        return _("Edit usage rules for {machine_type}").format(machine_type=self.machine_type)
+        return _("Change Usage Rules for {machine_type}").format(machine_type=self.machine_type)
 
     def get_back_button_link(self):
         return self.get_success_url()

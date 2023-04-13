@@ -31,7 +31,7 @@ class CommitteeUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, Upda
     back_button_text = _("Admin page for committees")
 
     def get_form_title(self):
-        return _("Edit {committee}").format(committee=self.object)
+        return _("Change {committee}").format(committee=self.object)
 
 
 class AdminCommitteeListView(PermissionRequiredMixin, ListView):

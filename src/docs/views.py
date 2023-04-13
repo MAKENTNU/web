@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 
+from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
 from .forms import AddPageForm, ChangePageVersionForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
@@ -90,7 +91,6 @@ class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMix
     form_class = AddPageForm
 
     base_template = 'docs/base.html'
-    form_title = _("Create a New Page")
     narrow = False
     centered_title = False
     back_button_link = reverse_lazy('home')
@@ -100,6 +100,9 @@ class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMix
     def get_form_kwargs(self):
         # Forcefully insert the user into the form
         return insert_form_field_values(super().get_form_kwargs(), {'created_by': self.request.user})
+
+    def get_form_title(self):
+        return title_en(_("Add page"))
 
     def form_invalid(self, form):
         try:
@@ -139,7 +142,7 @@ class DocumentationPageUpdateView(PermissionRequiredMixin, CustomFieldsetFormMix
         })
 
     def get_form_title(self):
-        return _("Edit “{title}”").format(title=self.object)
+        return _("Change “{title}”").format(title=self.object)
 
     def get_back_button_link(self):
         return self.get_success_url()

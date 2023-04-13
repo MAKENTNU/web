@@ -24,9 +24,9 @@
                         <div class="word-breaking hyphenated header">
                             <a href="{{ content.get_absolute_url }}">
                                 {% if forloop.last %}
-                                    {% translate "Created by" %}
+                                    {% translate "Added by" %}
                                 {% else %}
-                                    {% translate "Edited by" %}
+                                    {% translate "Changed by" %}
                                 {% endif %}
                                 {% if content.made_by %}
                                     {{ content.made_by.get_full_name }}

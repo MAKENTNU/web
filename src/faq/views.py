@@ -61,13 +61,13 @@ class QuestionFormMixin(CustomFieldsetFormMixin, ABC):
 class QuestionCreateView(PermissionRequiredMixin, QuestionFormMixin, CreateView):
     permission_required = ('faq.add_question',)
 
-    form_title = _("New Question")
+    form_title = _("Add Question")
 
 
 class QuestionUpdateView(PermissionRequiredMixin, QuestionFormMixin, UpdateView):
     permission_required = ('faq.change_question',)
 
-    form_title = _("Edit Question")
+    form_title = _("Change Question")
 
 
 class QuestionDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -88,13 +88,13 @@ class CategoryFormMixin(CustomFieldsetFormMixin, ABC):
 class CategoryCreateView(PermissionRequiredMixin, CategoryFormMixin, CreateView):
     permission_required = ('faq.add_category',)
 
-    form_title = _("New Category")
+    form_title = _("Add Category")
 
 
 class CategoryUpdateView(PermissionRequiredMixin, CategoryFormMixin, UpdateView):
     permission_required = ('faq.change_category',)
 
-    form_title = _("Edit Category")
+    form_title = _("Change Category")
 
 
 class CategoryDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

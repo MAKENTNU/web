@@ -37,7 +37,7 @@
                             <div class="word-breaking hyphenated content">
                                 {% if perms.faq.change_question %}
                                     <a class="ui make-bg-yellow button" href="{% url 'question_update' question.pk %}">
-                                        <i class="edit icon"></i>{% translate "Edit" %}
+                                        <i class="edit icon"></i>{% translate "Change" %}
                                     </a>
                                 {% endif %}
                                 {{ question.answer|safe }}

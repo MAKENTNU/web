@@ -120,12 +120,12 @@ msgid "Admin page for announcements"
 msgstr "Administrasjonsside for kunngjøringer"
 
 #: src/announcements/views.py:40
-msgid "New Announcement"
-msgstr "Ny kunngjøring"
+msgid "Add Announcement"
+msgstr "Legg til kunngjøring"
 
 #: src/announcements/views.py:46
-msgid "Edit Announcement"
-msgstr "Rediger kunngjøring"
+msgid "Change Announcement"
+msgstr "Endre kunngjøring"
 
 #: src/card/formfields.py:20 src/card/modelfields.py:16
 #: src/checkin/models.py:96
@@ -410,7 +410,7 @@ msgid "title"
 msgstr "tittel"
 
 #: src/contentbox/models.py:27
-msgid "Extra permissions that are required for editing the content box."
+msgid "Extra permissions that are required for changing the content box."
 msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 
 #: src/contentbox/models.py:29 src/docs/models.py:60 src/faq/models.py:42
@@ -435,15 +435,15 @@ msgstr "sist endret"
 #: src/news/templates/news/article/article_detail.html:41
 #: src/news/templates/news/event/admin_event_detail.html:41
 #: src/news/templates/news/event/admin_time_place_listing.html:34
-msgid "Edit"
-msgstr "Rediger"
+msgid "Change"
+msgstr "Endre"
 
 #: src/contentbox/templates/contentbox/content_box_form.html:14
 msgid "Missing language"
 msgstr "Manglende språk"
 
 #: src/contentbox/templates/contentbox/content_box_form.html:40
-msgid "The extra change permissions can be edited in Django admin"
+msgid "The extra change permissions can be changed in Django admin"
 msgstr "De ekstra endringsrettighetene kan endres i Django-admin"
 
 #: src/contentbox/views.py:90
@@ -483,8 +483,8 @@ msgstr "Du ser på en gammel versjon av denne siden"
 #: src/docs/templates/docs/documentation_page_detail.html:30
 #, python-format
 msgid ""
-"You are viewing an old version of this page, where the last edit was made by "
-"%(name)s on %(date)s at %(time)s."
+"You are viewing an old version of this page, where the last change was made "
+"by %(name)s on %(date)s at %(time)s."
 msgstr ""
 "Du ser på en gammel versjon av denne siden, hvor siste endring ble gjort av "
 "%(name)s den %(date)s kl. %(time)s."
@@ -511,25 +511,20 @@ msgid "Click to view the content history of the page"
 msgstr "Klikk for å vise innholdshistorikken til denne siden"
 
 #: src/docs/templates/docs/documentation_page_detail.html:50
-msgid "Click to edit the content of the page"
-msgstr "Klikk for å endre innholdet til siden"
+msgid "Click to change the content of the page"
+msgstr "Klikk for å endre på innholdet til siden"
 
 #: src/docs/templates/docs/documentation_page_detail.html:56
 msgid "Click to delete the page"
 msgstr "Klikk for å slette siden"
 
-#: src/docs/templates/docs/documentation_page_detail.html:74
-#, python-format
-msgid ""
-"No content exists for this page. Do you wish to %(link_start)screate"
-"%(link_end)s some?"
-msgstr ""
-"Det eksisterer ikke noe innhold for denne siden. Ønsker du å "
-"%(link_start)slage%(link_end)s noe innhold?"
-
 #: src/docs/templates/docs/documentation_page_detail.html:78
 msgid "No content exists for this page"
 msgstr "Det eksisterer ikke noe innhold for denne siden"
+
+#: src/docs/templates/docs/documentation_page_detail.html:75
+msgid "Click here to add content"
+msgstr "Klikk her for å legge til innhold"
 
 #: src/docs/templates/docs/documentation_page_history_detail.html:7
 #: src/docs/templates/docs/documentation_page_history_detail.html:13
@@ -538,12 +533,12 @@ msgid "History of “%(title)s”"
 msgstr "Historikk for «%(title)s»"
 
 #: src/docs/templates/docs/documentation_page_history_detail.html:27
-msgid "Created by"
-msgstr "Laget av"
+msgid "Added by"
+msgstr "Lagt til av"
 
 #: src/docs/templates/docs/documentation_page_history_detail.html:29
-msgid "Edited by"
-msgstr "Redigert av"
+msgid "Changed by"
+msgstr "Endret av"
 
 #: src/docs/templates/docs/documentation_page_history_detail.html:34
 #: src/docs/views.py:67
@@ -578,8 +573,8 @@ msgstr ""
 "annet søk."
 
 #: src/docs/templates/docs/header.html:19
-msgid "New page"
-msgstr "Ny side"
+msgid "Add page"
+msgstr "Legg til side"
 
 #: src/docs/templates/docs/header.html:29
 #: src/news/templates/email/ticket.html:22
@@ -592,18 +587,14 @@ msgstr "MAKE NTNUs logo"
 msgid "Only numbers, letters, spaces, parentheses and colons are allowed."
 msgstr "Kun tall, bokstaver, mellomrom, parenteser og kolon er tillatt."
 
-#: src/docs/views.py:93
-msgid "Create a New Page"
-msgstr "Lag en ny side"
-
 #: src/docs/views.py:97
 msgid "Documentation home page"
 msgstr "Hjemmeside for dokumentasjon"
 
 #: src/docs/views.py:142
 #, python-brace-format
-msgid "Edit “{title}”"
-msgstr "Rediger «{title}»"
+msgid "Change “{title}”"
+msgstr "Endre «{title}»"
 
 #: src/docs/views.py:148
 #, python-brace-format
@@ -650,12 +641,12 @@ msgid "FAQ Admin Panel"
 msgstr "FAQ-administrasjonspanel"
 
 #: src/faq/templates/faq/admin_faq_panel.html:25
-msgid "Here you can create, edit and delete questions"
-msgstr "Her kan du lage, endre og slette spørsmål"
+msgid "Here you can add, change and delete questions"
+msgstr "Her kan du legge til, endre og slette spørsmål"
 
 #: src/faq/templates/faq/admin_faq_panel.html:36
-msgid "Here you can create, edit and delete categories"
-msgstr "Her kan du lage, endre og slette kategorier"
+msgid "Here you can add, change and delete categories"
+msgstr "Her kan du legge til, endre og slette kategorier"
 
 #: src/faq/templates/faq/faq_list.html:6
 #: src/faq/templates/faq/faq_list.html:21
@@ -667,11 +658,11 @@ msgid "Admin page for questions"
 msgstr "Administrasjonsside for spørsmål"
 
 #: src/faq/views.py:64
-msgid "New Question"
-msgstr "Nytt spørsmål"
+msgid "Add Question"
+msgstr "Legg til spørsmål"
 
 #: src/faq/views.py:70
-msgid "Edit Question"
+msgid "Change Question"
 msgstr "Endre spørsmål"
 
 #: src/faq/views.py:85
@@ -679,11 +670,11 @@ msgid "Admin page for categories"
 msgstr "Administrasjonsside for kategorier"
 
 #: src/faq/views.py:91
-msgid "New Category"
-msgstr "Ny kategori"
+msgid "Add Category"
+msgstr "Legg til kategori"
 
 #: src/faq/views.py:97
-msgid "Edit Category"
+msgid "Change Category"
 msgstr "Endre kategori"
 
 #: src/groups/models.py:31
@@ -741,8 +732,8 @@ msgstr "Administrasjonsside for komiteer"
 
 #: src/groups/views.py:34
 #, python-brace-format
-msgid "Edit {committee}"
-msgstr "Rediger {committee}"
+msgid "Change {committee}"
+msgstr "Endre {committee}"
 
 #: src/internal/admin.py:21 src/make_queue/models/course.py:29
 msgid "full name"
@@ -1218,7 +1209,7 @@ msgid "“%(quote)s”"
 msgstr "«%(quote)s»"
 
 #: src/internal/templates/internal/secret_form.html:17
-msgid "Extra view permissions can be added/edited in Django admin"
+msgid "Extra view permissions can be added/changed in Django admin"
 msgstr "Ekstra visningsrettigheter kan legges til / endres i Django-admin"
 
 #: src/internal/templates/internal/secret_list.html:7
@@ -1291,23 +1282,23 @@ msgid "Secrets list"
 msgstr "Liste med hemmeligheter"
 
 #: src/internal/views.py:262
-msgid "New Secret"
-msgstr "Ny hemmelighet"
+msgid "Add Secret"
+msgstr "Legg til hemmelighet"
 
 #: src/internal/views.py:274
-msgid "Edit Secret"
-msgstr "Rediger hemmelighet"
+msgid "Change Secret"
+msgstr "Endre hemmelighet"
 
 #: src/internal/views.py:297
 msgid "Quotes page"
 msgstr "Sitatside"
 
 #: src/internal/views.py:306
-msgid "New Quote"
-msgstr "Nytt sitat"
+msgid "Add Quote"
+msgstr "Legg til sitat"
 
 #: src/internal/views.py:314
-msgid "Edit Quote"
+msgid "Change Quote"
 msgstr "Endre sitat"
 
 #: src/make_queue/admin.py:22
@@ -1670,12 +1661,12 @@ msgstr "Mine reservasjoner"
 
 #: src/make_queue/templates/make_queue/course/printer_3d_course_create.html:5
 #: src/make_queue/templates/make_queue/course/printer_3d_course_create.html:8
-msgid "Add course registration"
+msgid "Add Course Registration"
 msgstr "Legg til kursregistrering"
 
 #: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:9
 #: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:22
-msgid "Edit course registration"
+msgid "Change Course Registration"
 msgstr "Endre kursregistrering"
 
 #: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:30
@@ -1729,7 +1720,7 @@ msgstr "Avbryt"
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:7
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:17
 #: src/web/templates/web/admin_panel.html:41
-msgid "Course registrations"
+msgid "Course Registrations"
 msgstr "Kursregistreringer"
 
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:27
@@ -1917,7 +1908,7 @@ msgstr "t"
 
 #: src/make_queue/templates/make_queue/reservation_form.html:15
 #: src/make_queue/templates/make_queue/reservation_form.html:51
-msgid "Edit reservation"
+msgid "Change Reservation"
 msgstr "Endre reservasjon"
 
 #: src/make_queue/templates/make_queue/reservation_form.html:60
@@ -1960,13 +1951,6 @@ msgstr "Reservasjonstekst"
 #: src/make_queue/templates/make_queue/reservation_form.html:188
 msgid "Reserve"
 msgstr "Reserver"
-
-#: src/make_queue/templates/make_queue/reservation_form.html:188
-#: src/make_queue/templates/make_queue/reservation_list.html:66
-#: src/make_queue/templates/make_queue/reservation_list.html:126
-#: src/make_queue/templates/make_queue/reservation_list.html:202
-msgid "Change"
-msgstr "Endre"
 
 #: src/make_queue/templates/make_queue/reservation_list.html:10
 #: src/make_queue/templates/make_queue/reservation_list.html:31
@@ -2139,11 +2123,11 @@ msgid "Admin page for quotas"
 msgstr "Administrasjonsside for kvoter"
 
 #: src/make_queue/views/admin/quota.py:74
-msgid "New Quota"
-msgstr "Ny kvote"
+msgid "Add Quota"
+msgstr "Legg til kvote"
 
 #: src/make_queue/views/admin/quota.py:81
-msgid "Edit Quota"
+msgid "Change Quota"
 msgstr "Endre kvote"
 
 #: src/make_queue/views/admin/quota.py:90
@@ -2156,12 +2140,12 @@ msgid "Machine list"
 msgstr "Maskinliste"
 
 #: src/make_queue/views/reservation/machine.py:56
-msgid "Create Machine"
+msgid "Add Machine"
 msgstr "Legg til maskin"
 
 #: src/make_queue/views/reservation/machine.py:66
-msgid "Edit Machine"
-msgstr "Rediger maskin"
+msgid "Change Machine"
+msgstr "Endre maskin"
 
 #: src/make_queue/views/reservation/reservation.py:42
 #, python-brace-format
@@ -2238,18 +2222,18 @@ msgstr "Reservasjonsregler for {machine_type}"
 
 #: src/make_queue/views/reservation/rules.py:97
 #, python-brace-format
-msgid "New Rule for {machine_type}"
-msgstr "Ny regel for {machine_type}"
+msgid "Add Rule for {machine_type}"
+msgstr "Legg til regel for {machine_type}"
 
 #: src/make_queue/views/reservation/rules.py:105
 #, python-brace-format
-msgid "Edit Rule for {machine_type}"
-msgstr "Rediger regel for {machine_type}"
+msgid "Change Rule for {machine_type}"
+msgstr "Endre regel for {machine_type}"
 
 #: src/make_queue/views/reservation/rules.py:147
 #, python-brace-format
-msgid "Edit usage rules for {machine_type}"
-msgstr "Rediger bruksregler for {machine_type}"
+msgid "Change Usage Rules for {machine_type}"
+msgstr "Endre bruksregler for {machine_type}"
 
 #: src/make_queue/views/reservation/rules.py:153
 #, python-brace-format
@@ -2266,8 +2250,8 @@ msgid "If specified, the equipment is sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres utstyret stigende på denne verdien."
 
 #: src/makerspace/templates/makerspace/equipment/admin_equipment_list.html:15
-msgid "Add new equipment"
-msgstr "Legg til nytt utstyr"
+msgid "Add equipment"
+msgstr "Legg til utstyr"
 
 #: src/makerspace/templates/makerspace/equipment/admin_equipment_list.html:27
 #: src/makerspace/templates/makerspace/equipment/equipment_detail.html:13
@@ -2307,13 +2291,9 @@ msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 msgid "Admin page for equipment"
 msgstr "Administrasjonsside for utstyr"
 
-#: src/makerspace/views.py:53
-msgid "New Equipment"
-msgstr "Nytt utstyr"
-
 #: src/makerspace/views.py:59
-msgid "Edit Equipment"
-msgstr "Rediger utstyr"
+msgid "Change Equipment"
+msgstr "Endre utstyr"
 
 #: src/news/admin.py:87 src/news/admin.py:144 src/news/admin.py:245
 msgid "number of reserved tickets"
@@ -2657,8 +2637,8 @@ msgid "Occurrences"
 msgstr "Forekomster"
 
 #: src/news/templates/news/event/admin_event_detail.html:94
-msgid "Add new occurrence"
-msgstr "Legg til ny forekomst"
+msgid "Add occurrence"
+msgstr "Legg til forekomst"
 
 #: src/news/templates/news/event/admin_event_detail.html:99
 msgid "Future"
@@ -2760,11 +2740,11 @@ msgid "The occurrence is hidden for all users."
 msgstr "Forekomsten er skjult for alle brukere."
 
 #: src/news/templates/news/event/admin_time_place_listing.html:35
-msgid "If clicked, a form for editing the occurrence is shown."
+msgid "Click to change the occurrence."
 msgstr "Klikk for å endre forekomsten."
 
 #: src/news/templates/news/event/admin_time_place_listing.html:42
-msgid "If clicked, the occurrence will be deleted."
+msgid "Click to delete the occurrence."
 msgstr "Klikk for å slette forekomsten."
 
 #: src/news/templates/news/event/admin_time_place_listing.html:49
@@ -2772,7 +2752,7 @@ msgid "Duplicate"
 msgstr "Dupliser"
 
 #: src/news/templates/news/event/admin_time_place_listing.html:50
-msgid "If clicked, the occurrence is duplicated."
+msgid "Click to duplicate the occurrence."
 msgstr "Klikk for å duplisere forekomsten."
 
 #: src/news/templates/news/event/detail/event_detail.html:23
@@ -2919,16 +2899,16 @@ msgid "Admin page for articles"
 msgstr "Administrasjonsside for artikler"
 
 #: src/news/views.py:283
-msgid "Edit Article"
-msgstr "Rediger artikkel"
+msgid "Change Article"
+msgstr "Endre artikkel"
 
 #: src/news/views.py:289
-msgid "New Article"
-msgstr "Ny artikkel"
+msgid "Add Article"
+msgstr "Legg til artikkel"
 
 #: src/news/views.py:313
-msgid "Edit Event"
-msgstr "Rediger arrangement"
+msgid "Change Event"
+msgstr "Endre arrangement"
 
 #: src/news/views.py:316 src/news/views.py:381
 #, python-brace-format
@@ -2936,18 +2916,18 @@ msgid "Admin page for “{event_title}”"
 msgstr "Administrasjonsside for «{event_title}»"
 
 #: src/news/views.py:322
-msgid "New Event"
-msgstr "Nytt arrangement"
+msgid "Add Event"
+msgstr "Legg til arrangement"
 
 #: src/news/views.py:404
 #, python-brace-format
-msgid "Edit Occurrence for “{title}”"
-msgstr "Rediger forekomst for «{title}»"
+msgid "Change Occurrence of “{title}”"
+msgstr "Endre forekomst av «{title}»"
 
 #: src/news/views.py:411
 #, python-brace-format
-msgid "New Occurrence for “{title}”"
-msgstr "Ny forekomst for «{title}»"
+msgid "Add Occurrence of “{title}”"
+msgstr "Legg til forekomst av «{title}»"
 
 #: src/news/views.py:587
 #, python-brace-format
@@ -3126,16 +3106,17 @@ msgid "click here to show various contact info, like email addresses"
 msgstr "klikk her for å vise diverse kontaktinformasjon, som e-postadresser"
 
 #: src/web/templates/web/admin_panel.html:20
-msgid "Here you can create, edit and delete events and their occurrences"
-msgstr "Her kan du lage, endre og slette arrangementer og deres forekomster"
+msgid "Here you can add, change and delete events and their occurrences"
+msgstr ""
+"Her kan du legge til, endre og slette arrangementer og deres forekomster"
 
 #: src/web/templates/web/admin_panel.html:32
-msgid "Here you can create, edit and delete articles"
-msgstr "Her kan du lage, endre og slette artikler"
+msgid "Here you can add, change and delete articles"
+msgstr "Her kan du legge til, endre og slette artikler"
 
 #: src/web/templates/web/admin_panel.html:44
 msgid ""
-"Here you can add and edit information about persons who have taken the 3D "
+"Here you can add and change information about people who have taken the 3D "
 "printer course"
 msgstr ""
 "Her kan du legge til og endre informasjon om personer som har tatt 3D-"
@@ -3147,23 +3128,23 @@ msgstr "kvote"
 
 #: src/web/templates/web/admin_panel.html:56
 msgid ""
-"Here you can create and edit both global and personal quotas for "
-"reservations of machines"
+"Here you can add and change both global and personal quotas for reservations "
+"of machines"
 msgstr ""
-"Her kan du lage og endre både globale og personlige kvoter for reservasjoner "
-"av maskiner"
+"Her kan du legge til og endre både globale og personlige kvoter for "
+"reservasjoner av maskiner"
 
 #: src/web/templates/web/admin_panel.html:68
-msgid "Here you can add or edit equipment at Makerverkstedet"
-msgstr "Her kan du legge til eller redigere utstyr på Makerverkstedet"
+msgid "Here you can add and change equipment at Makerverkstedet"
+msgstr "Her kan du legge til og endre utstyr på Makerverkstedet"
 
 #: src/web/templates/web/admin_panel.html:80
-msgid "Here you can add or edit frequently asked questions"
-msgstr "Her kan du legge til eller redigere ofte stilte spørsmål"
+msgid "Here you can add and change frequently asked questions"
+msgstr "Her kan du legge til og endre ofte stilte spørsmål"
 
 #: src/web/templates/web/admin_panel.html:92
 msgid ""
-"Here you can create and modify announcements to be shown on either the front "
+"Here you can add and change announcements to be shown on either the front "
 "page or the entire website"
 msgstr ""
 "Her kan du legge til og endre kunngjøringer som kan vises på forsiden eller "
@@ -3182,7 +3163,7 @@ msgstr ""
 "sammenhenger"
 
 #: src/web/templates/web/admin_panel.html:116
-msgid "Here you can edit the committees' description, image and email"
+msgid "Here you can change the committees' description, image and email"
 msgstr "Her kan du endre komiteenes beskrivelse, bilde og e-postadresse"
 
 #: src/web/templates/web/base.html:27
