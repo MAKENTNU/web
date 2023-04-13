@@ -27,6 +27,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Renamed lots of views, forms and templates to comply with
   [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
 - Made the use of add/change verbs consistent among page titles and buttons, and some other parts of the website's UI
+- Made some "Add" buttons green, to follow the convention that green means to add
 - Code cleanup? Ye.
 
 
