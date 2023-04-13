@@ -435,7 +435,7 @@ class TimePlaceDuplicateCreateView(PermissionRequiredMixin, PreventGetRequestsMi
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('timeplace_edit', args=[self.event.pk, self.time_place.pk])
+        return reverse('time_place_update', args=[self.event.pk, self.time_place.pk])
 
 
 class AdminAPINewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, FormView, ABC):
@@ -712,8 +712,8 @@ class EventTicketCancelView(PermissionRequiredMixin, CleanNextParamMixin, Update
         urls = set()
         for reverse_func in (reverse, django_hosts_reverse):
             urls |= {
-                reverse_func('ticket_detail', args=[self.ticket.pk]),
-                reverse_func('my_tickets_list'),
+                reverse_func('event_ticket_detail', args=[self.ticket.pk]),
+                reverse_func('event_ticket_my_list'),
                 reverse_func('event_detail', args=[self.ticket.registered_event.pk]),
             }
         return urls

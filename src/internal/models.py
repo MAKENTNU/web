@@ -228,7 +228,7 @@ class SystemAccess(models.Model):
         if not self.should_be_changed():
             return ""
 
-        return reverse_internal('edit_system_access', self.member.pk, self.pk)
+        return reverse_internal('system_access_update', self.member.pk, self.pk)
 
     def should_be_changed(self):
         return self.name != self.WEBSITE

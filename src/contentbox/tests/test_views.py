@@ -27,7 +27,7 @@ class SimpleModelAndViewTests(TestCase):
 
     def setUp(self):
         self.content_box1 = ContentBox.objects.create(url_name=TEST_URL_NAME)
-        self.edit_url1 = reverse('contentbox_edit', args=[self.content_box1.pk])
+        self.edit_url1 = reverse('content_box_update', args=[self.content_box1.pk])
 
     def test_get_content_box_retrieves_correctly(self):
         paths_to_test = (reverse(TEST_URL_NAME), f'/{TEST_URL_NAME}/')
@@ -151,9 +151,9 @@ class MultiSubdomainTests(TestCase):
         self.public_content_box = ContentBox.objects.get(url_name=TEST_URL_NAME)
         self.internal_content_box = ContentBox.objects.get(url_name=INTERNAL_TEST_URL_NAME)
 
-        self.public_edit_url = reverse('contentbox_edit', args=[self.public_content_box.pk])
+        self.public_edit_url = reverse('content_box_update', args=[self.public_content_box.pk])
         self.public_admin_edit_url = reverse_admin('contentbox_contentbox_change', args=[self.public_content_box.pk])
-        self.internal_edit_url = reverse('contentbox_edit', args=[self.internal_content_box.pk], host='test_internal')
+        self.internal_edit_url = reverse('content_box_update', args=[self.internal_content_box.pk], host='test_internal')
         self.internal_admin_edit_url = reverse_admin('contentbox_contentbox_change', args=[self.internal_content_box.pk])
 
     def test_content_box_edit_urls_are_only_accessible_with_required_permissions(self):

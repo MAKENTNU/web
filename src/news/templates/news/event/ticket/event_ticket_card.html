@@ -70,7 +70,7 @@
     {% if ticket.active %}
         {% if ticket.user == request.user or perms.news.cancel_ticket %}
             <a class="ui red bottom attached button"
-               href="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
+               href="{% url 'event_ticket_cancel' ticket.pk %}?next={{ request.path }}">
                 {% translate "Cancel ticket" %}
             </a>
         {% endif %}
@@ -80,7 +80,7 @@
             {% translate "Reactivate ticket" %}
         </button>
         <form id="reactivate-form-{{ ticket.pk }}"
-              method="POST" action="{% url 'cancel_ticket' ticket.pk %}?next={{ request.path }}">
+              method="POST" action="{% url 'event_ticket_cancel' ticket.pk %}?next={{ request.path }}">
             {% csrf_token %}
         </form>
     {% endif %}

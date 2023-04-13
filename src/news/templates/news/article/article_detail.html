@@ -37,7 +37,7 @@
 {% block admin_page %}
     {% if perms.news.change_article %}
         <div>
-            <a class="ui make-bg-yellow button" href="{% url 'article_edit' news_obj.pk %}">
+            <a class="ui make-bg-yellow button" href="{% url 'article_update' news_obj.pk %}">
                 <i class="edit icon"></i>{% translate "Edit" %}
             </a>
         </div>

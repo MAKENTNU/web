@@ -20,9 +20,9 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
-            Get(reverse('announcement_admin'), public=False),
-            Get(reverse('create_announcement'), public=False),
-            Get(reverse('edit_announcement', args=[self.announcement1.pk]), public=False),
+            Get(reverse('admin_announcement_list'), public=False),
+            Get(reverse('announcement_create'), public=False),
+            Get(reverse('announcement_update', args=[self.announcement1.pk]), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

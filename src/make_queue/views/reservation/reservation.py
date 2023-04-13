@@ -257,7 +257,7 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
         if can_change_reservation(reservation, request.user):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return redirect('my_reservations_list')
+            return redirect('reservation_my_list')
 
     def form_valid(self, form, **kwargs):
         """
@@ -269,11 +269,11 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
         reservation = self.reservation
         # The user is not allowed to change the machine for a reservation
         if reservation.machine != form.cleaned_data["machine"]:
-            return redirect('my_reservations_list')
+            return redirect('reservation_my_list')
 
         # If the reservation has begun, the user is not allowed to change the start time
         if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
-            return redirect('my_reservations_list')
+            return redirect('reservation_my_list')
 
         reservation.comment = form.cleaned_data["comment"]
 

@@ -33,7 +33,7 @@ class Printer3DCourseCreateView(PermissionRequiredMixin, CreateView):
     form_class = Printer3DCourseForm
     template_name = 'make_queue/course/printer_3d_course_create.html'
     # Redirect back to the same view, to make it easier to create multiple registrations
-    success_url = reverse_lazy('create_course_registration')
+    success_url = reverse_lazy('printer_3d_course_create')
 
     def form_valid(self, form):
         messages.success(self.request, _("Registration of course participation successful"))
@@ -45,13 +45,13 @@ class Printer3DCourseUpdateView(PermissionRequiredMixin, UpdateView):
     model = Printer3DCourse
     form_class = Printer3DCourseForm
     template_name = 'make_queue/course/printer_3d_course_form.html'
-    success_url = reverse_lazy('course_registration_list')
+    success_url = reverse_lazy('printer_3d_course_list')
 
 
 class Printer3DCourseDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_printer3dcourse',)
     model = Printer3DCourse
-    success_url = reverse_lazy('course_registration_list')
+    success_url = reverse_lazy('printer_3d_course_list')
 
 
 class Printer3DCourseStatusBulkUpdateView(PermissionRequiredMixin, View):
@@ -65,7 +65,7 @@ class Printer3DCourseStatusBulkUpdateView(PermissionRequiredMixin, View):
         registrations = list(map(int, request.POST.getlist('users')))
         Printer3DCourse.objects.filter(pk__in=registrations).update(status=status)
 
-        return redirect('course_registration_list')
+        return redirect('printer_3d_course_list')
 
 
 class Printer3DCourseXLSXView(PermissionRequiredMixin, View):

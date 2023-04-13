@@ -229,16 +229,16 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
     def test_only_users_with_3d_printer_course_can_view_create_reservation_page_for_3d_printers(self):
         printer_machine_type = MachineType.objects.get(pk=1)
         machine = Machine.objects.create(name="Lovelace", machine_model="Ultimaker 2+", machine_type=printer_machine_type)
-        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+        reservation_create_url = reverse('reservation_create', args=[machine.pk])
 
         self.client.force_login(self.user)
         # Not having taken the course should deny the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         Printer3DCourse.objects.create(user=self.user, date=timezone.now())
         # Having taken the course should allow the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self._test_only_internal_users_can_view_create_reservation_page_for_machine(self.user, machine)
@@ -264,44 +264,44 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
     def _test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(
             self, machine: Machine, set_advanced_course_func: Callable[[Printer3DCourse], None],
     ):
-        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+        reservation_create_url = reverse('reservation_create', args=[machine.pk])
 
         self.client.force_login(self.user)
         # Not having taken the course at all should deny the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         # `NOT_FOUND` for SLA printers, `FORBIDDEN` otherwise
         self.assertIn(response.status_code, {HTTPStatus.FORBIDDEN, HTTPStatus.NOT_FOUND})
 
         course = Printer3DCourse.objects.create(user=self.user, date=timezone.now())
         # Not having taken the advanced course should deny the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         # `NOT_FOUND` for SLA printers, `FORBIDDEN` otherwise
         self.assertIn(response.status_code, {HTTPStatus.FORBIDDEN, HTTPStatus.NOT_FOUND})
 
         # Having taken the advanced course should allow the user
         set_advanced_course_func(course)
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self._test_only_internal_users_can_view_create_reservation_page_for_machine(self.user, machine)
 
     def _test_only_internal_users_can_view_create_reservation_page_for_machine(self, user: User, machine: Machine):
-        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+        reservation_create_url = reverse('reservation_create', args=[machine.pk])
         self.client.force_login(user)
 
         # User should be allowed when machine is not internal
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         # User should not be able to find the machine when it's internal
         machine.internal = True
         machine.save()
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
         # User should be allowed when they're internal
         user.add_perms('internal.is_internal')
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_form_valid_normal_reservation(self):
@@ -509,10 +509,10 @@ class TestAPIReservationMarkFinishedView(TestCase):
         )
 
     def post_to(self, reservation: Reservation):
-        return self.client.post(reverse('mark_reservation_finished', args=[reservation.pk]))
+        return self.client.post(reverse('api_reservation_mark_finished', args=[reservation.pk]))
 
     def test_get_request_fails(self):
-        response = self.client.get(reverse('mark_reservation_finished', args=[self.reservation1.pk]))
+        response = self.client.get(reverse('api_reservation_mark_finished', args=[self.reservation1.pk]))
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     @patch('django.utils.timezone.now')

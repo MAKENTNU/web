@@ -75,7 +75,7 @@ class DocumentationPageVersionUpdateView(PermissionRequiredMixin, DocumentationP
     form_class = ChangePageVersionForm
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('page_history_detail', args=[self.get_object().pk]))
+        return HttpResponseRedirect(reverse('documentation_page_history_detail', args=[self.get_object().pk]))
 
     def get_success_url(self):
         return self.get_object().get_absolute_url()
@@ -111,7 +111,7 @@ class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMix
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse('edit_page', args=[self.object.pk])
+        return reverse('documentation_page_update', args=[self.object.pk])
 
 
 class DocumentationPageUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, DocumentationPageRelatedViewMixin, UpdateView):

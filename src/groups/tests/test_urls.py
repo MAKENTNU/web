@@ -24,8 +24,8 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
         path_predicates = [
             Get(reverse('committee_list'), public=True),
             Get(reverse('committee_detail', args=[self.committee1.pk]), public=True),
-            Get(reverse('committee_edit', args=[self.committee1.pk]), public=False),
-            Get(reverse('committee_admin'), public=False),
+            Get(reverse('committee_update', args=[self.committee1.pk]), public=False),
+            Get(reverse('admin_committee_list'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

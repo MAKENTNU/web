@@ -32,25 +32,25 @@ committee_bulletin_urlpatterns = [
 ]
 
 internal_content_box_urlpatterns = [
-    path("<int:pk>/edit/", views.InternalContentBoxUpdateView.as_view(), name='contentbox_edit'),
+    path("<int:pk>/edit/", views.InternalContentBoxUpdateView.as_view(), name='content_box_update'),
 ]
 
 member_urlpatterns = [
     path("members/", views.MemberListView.as_view(), name='member_list'),
     path("members/<int:pk>/", views.MemberListView.as_view(), name='member_detail'),
-    path("members/create/", views.MemberCreateView.as_view(), name='create_member'),
-    path("members/<int:pk>/edit/", views.MemberUpdateView.as_view(), name='edit_member'),
-    path("members/<int:pk>/edit/status/", views.MemberStatusUpdateView.as_view(), name='edit_member_status'),
+    path("members/create/", views.MemberCreateView.as_view(), name='member_create'),
+    path("members/<int:pk>/edit/", views.MemberUpdateView.as_view(), name='member_update'),
+    path("members/<int:pk>/edit/status/", views.MemberStatusUpdateView.as_view(), name='member_status_update'),
     path("members/<int:pk>/edit/status/quit/", views.MemberQuitView.as_view(), name='member_quit'),
     path("members/<int:pk>/edit/status/retire/", views.MemberRetireView.as_view(), name='member_retire'),
-    path("members/<int:member_pk>/access/<int:pk>/edit/", views.SystemAccessUpdateView.as_view(), name='edit_system_access'),
+    path("members/<int:member_pk>/access/<int:pk>/edit/", views.SystemAccessUpdateView.as_view(), name='system_access_update'),
 ]
 
 secret_urlpatterns = [
     path("secrets/", views.SecretListView.as_view(), name='secret_list'),
-    path("secrets/create/", views.SecretCreateView.as_view(), name='create_secret'),
-    path("secrets/<int:pk>/edit/", views.SecretUpdateView.as_view(), name='edit_secret'),
-    path("secrets/<int:pk>/delete/", views.SecretDeleteView.as_view(), name='delete_secret'),
+    path("secrets/create/", views.SecretCreateView.as_view(), name='secret_create'),
+    path("secrets/<int:pk>/edit/", views.SecretUpdateView.as_view(), name='secret_update'),
+    path("secrets/<int:pk>/delete/", views.SecretDeleteView.as_view(), name='secret_delete'),
 ]
 
 quote_urlpatterns = [

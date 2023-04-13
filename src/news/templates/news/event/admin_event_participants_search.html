@@ -19,12 +19,13 @@
                             {% for ticket in user.tickets %}
                                 <li class="{% if not ticket.active %}canceled{% endif %}">
                                     {% if ticket.timeplace %}
-                                        <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}" target="_blank">
+                                        <a href="{% url 'admin_time_place_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}"
+                                           target="_blank">
                                             {{ ticket.timeplace.event.title }}:
                                             {{ ticket.timeplace.start_time.date }}
                                         </a>
                                     {% else %}
-                                        <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank">
+                                        <a href="{% url 'admin_event_ticket_list' ticket.event.pk %}" target="_blank">
                                             {{ ticket.event }}:
                                             {{ ticket.first_standalone_event_occurrence.date }}
                                             {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence %}

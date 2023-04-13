@@ -245,4 +245,4 @@ class MachineUsageRule(models.Model):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)
 
     def get_absolute_url(self):
-        return reverse('machine_usage_rules_detail', args=[self.machine_type.pk])
+        return reverse('machine_usage_rule_detail', args=[self.machine_type.pk])

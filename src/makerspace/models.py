@@ -43,4 +43,4 @@ class Equipment(models.Model):
         return str(self.title)
 
     def get_absolute_url(self):
-        return reverse('makerspace_equipment_detail', args=[self.pk])
+        return reverse('equipment_detail', args=[self.pk])

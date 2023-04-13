@@ -42,7 +42,7 @@ class InternalContentBoxTests(TestCase):
         # Add these extra change perms (mainly `internal.can_change_rich_text_source`),
         # so that the content box uses the form that allows editing the HTML source code
         self.home_content_box.extra_change_permissions.add(*get_perms(*internal_admin_perms))
-        self.home_edit_url = reverse_internal('contentbox_edit', self.home_content_box.pk)
+        self.home_edit_url = reverse_internal('content_box_update', self.home_content_box.pk)
 
         self.internal_content_boxes = (self.home_content_box,)
 
@@ -99,7 +99,7 @@ class InternalContentBoxTests(TestCase):
 
         for content_box in self.internal_content_boxes:
             with self.subTest(content_box=content_box):
-                edit_url = reverse_internal('contentbox_edit', content_box.pk)
+                edit_url = reverse_internal('content_box_update', content_box.pk)
                 response = self.internal_admin_client.post(edit_url, {
                     f'title_{settings.LANGUAGE_CODE}': "Mock Title",
                     f'content_{settings.LANGUAGE_CODE}': mock_content,
@@ -163,7 +163,7 @@ class SecretTests(TestCase):
 
     def test_users_can_only_change_secrets_they_have_permission_to_view(self):
         def assert_users_can_change_secret(secret: Secret, *, is_board_secret: bool):
-            change_url = reverse_internal('edit_secret', secret.pk)
+            change_url = reverse_internal('secret_update', secret.pk)
             self.assertEqual(self.member_client.get(change_url).status_code, HTTPStatus.FORBIDDEN if is_board_secret else HTTPStatus.OK)
             self.assertEqual(self.board_member_client.get(change_url).status_code, HTTPStatus.OK)
             self.assertEqual(self.superuser_client.get(change_url).status_code, HTTPStatus.OK)
@@ -173,7 +173,7 @@ class SecretTests(TestCase):
 
     def test_users_can_only_delete_secrets_they_have_permission_to_view(self):
         def assert_user_can_delete_secret(client: Client, secret: Secret, *, can_delete: bool):
-            delete_url = reverse_internal('delete_secret', secret.pk)
+            delete_url = reverse_internal('secret_delete', secret.pk)
             try:
                 with transaction.atomic():
                     # `FOUND` means that the request was successful and that the client is redirected to the view's `success_url`

@@ -91,7 +91,7 @@ class MemberCreateView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     ]
 
     def get_success_url(self):
-        return reverse('edit_member', args=(self.object.pk,))
+        return reverse('member_update', args=(self.object.pk,))
 
     def form_valid(self, form):
         user = form.cleaned_data['user']

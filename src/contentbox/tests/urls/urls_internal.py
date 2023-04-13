@@ -23,7 +23,7 @@ urlpatterns = i18n_patterns(
          ContentBoxUpdateView.as_view(
              permission_required=ContentBoxUpdateView.permission_required + (internal_change_perm,),
              base_template='internal/base.html',
-         ), name='contentbox_edit'),
+         ), name='content_box_update'),
 
     prefix_default_language=False,
 ) + internal_urlpatterns  # Should be appended, so that they can be overridden by the above patterns

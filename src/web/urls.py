@@ -32,12 +32,12 @@ urlpatterns = [
 ]
 
 admin_urlpatterns = [
-    path("", views.AdminPanelView.as_view(), name='adminpanel'),
+    path("", views.AdminPanelView.as_view(), name='admin_panel'),
     path("news/", include(news_urls.adminpatterns)),
 ]
 
 content_box_urlpatterns = [
-    path("<int:pk>/edit/", ContentBoxUpdateView.as_view(base_template='web/base.html'), name='contentbox_edit'),
+    path("<int:pk>/edit/", ContentBoxUpdateView.as_view(base_template='web/base.html'), name='content_box_update'),
 ]
 
 about_urlpatterns = [
@@ -104,12 +104,12 @@ urlpatterns += logout_urls()
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(pattern_name='rules', permanent=True)),
     path("reservation/rules/<int:pk>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
-    path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+    path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rule_detail', permanent=True)),
 
     path("news/article/<int:pk>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
     path("news/event/<int:pk>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
-    path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='ticket_detail', permanent=True)),
-    path("news/ticket/me/", RedirectView.as_view(pattern_name='my_tickets_list', permanent=True)),
+    path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='event_ticket_detail', permanent=True)),
+    path("news/ticket/me/", RedirectView.as_view(pattern_name='event_ticket_my_list', permanent=True)),
 
     prefix_default_language=False,
 )

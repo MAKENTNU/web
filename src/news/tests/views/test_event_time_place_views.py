@@ -40,25 +40,25 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_event_edit(self):
-        response = self.client.get(reverse('event_edit', args=[self.event.pk]))
+    def test_event_update_view(self):
+        response = self.client.get(reverse('event_update', args=[self.event.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_event')
-        response = self.client.get(reverse('event_edit', args=[self.event.pk]))
+        response = self.client.get(reverse('event_update', args=[self.event.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_timeplace_duplicate(self):
+    def test_time_place_duplicate_create_view(self):
         time_place = TimePlace.objects.create(event=self.event, start_time=timezone.now() + timedelta(minutes=5),
                                               end_time=timezone.now() + timedelta(minutes=10))
-        response = self.client.post(reverse('timeplace_duplicate', args=[self.event.pk, time_place.pk]))
+        response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
-        response = self.client.post(reverse('timeplace_duplicate', args=[self.event.pk, time_place.pk]))
+        response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
 
         duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
-        self.assertRedirects(response, django_reverse('timeplace_edit', args=[self.event.pk, duplicated_time_place.pk]))
+        self.assertRedirects(response, django_reverse('time_place_update', args=[self.event.pk, duplicated_time_place.pk]))
 
         new_start_time = time_place.start_time + timedelta(weeks=1)
         new_end_time = time_place.end_time + timedelta(weeks=1)
@@ -75,10 +75,10 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         new_end_time = end_time + timedelta(weeks=3)
 
         time_place = TimePlace.objects.create(event=self.event, start_time=start_time, end_time=end_time, hidden=False)
-        response = self.client.post(reverse('timeplace_duplicate', args=[self.event.pk, time_place.pk]))
+        response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
         duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
 
-        self.assertRedirects(response, django_reverse('timeplace_edit', args=[self.event.pk, duplicated_time_place.pk]))
+        self.assertRedirects(response, django_reverse('time_place_update', args=[self.event.pk, duplicated_time_place.pk]))
         self.assertEqual(duplicated_time_place.start_time, new_start_time)
         self.assertEqual(duplicated_time_place.end_time, new_end_time)
 
@@ -107,7 +107,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = 'event_ticket_list'
+        url_name = 'admin_event_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -117,8 +117,8 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
 
         self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
-    def test_timeplace_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = 'timeplace_ticket_list'
+    def test_time_place_context_ticket_emails_only_returns_active_tickets_emails(self):
+        url_name = 'admin_time_place_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -129,7 +129,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
     def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = 'event_ticket_list'
+        url_name = 'admin_event_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", False),
             ("user2", True),
@@ -138,8 +138,8 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
 
         self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
 
-    def test_timeplace_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = 'timeplace_ticket_list'
+    def test_time_place_context_ticket_emails_returns_tickets_email_after_reregistration(self):
+        url_name = 'admin_time_place_ticket_list'
         username_and_ticket_state_tuples = [
             ("user2", False),
             ("user2", True),

@@ -19,7 +19,7 @@ class TestAdminUserQuotaListView(TestCase):
         Quota.objects.create(user=user2, machine_type=machine_type, number_of_reservations=2)
 
         self.client.force_login(user)
-        context_data = self.client.get(reverse('user_quota_list', args=[user.pk])).context
+        context_data = self.client.get(reverse('admin_user_quota_list', args=[user.pk])).context
         self.assertListEqual(list(context_data['user_quotas']), [quota2])
 
 
@@ -42,7 +42,7 @@ class TestAdminQuotaPanelView(TestCase):
         self.superuser_client = Client()
         self.superuser_client.force_login(self.superuser)
 
-    def test_quota_panel_responds_with_expected_context(self):
+    def test_admin_quota_panel_responds_with_expected_context(self):
         def assert_response_contains_expected_context(url: str, expected_requested_user: User | None):
             response = self.superuser_client.get(url)
             context = response.context
@@ -51,5 +51,5 @@ class TestAdminQuotaPanelView(TestCase):
             self.assertListEqual(list(context['global_quotas']), [self.quota1, self.quota2])
             self.assertEqual(context['requested_user'], expected_requested_user)
 
-        assert_response_contains_expected_context(reverse('quota_panel'), None)
-        assert_response_contains_expected_context(reverse('quota_panel', args=[self.user.pk]), self.user)
+        assert_response_contains_expected_context(reverse('admin_quota_panel'), None)
+        assert_response_contains_expected_context(reverse('admin_quota_panel', args=[self.user.pk]), self.user)

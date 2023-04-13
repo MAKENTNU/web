@@ -152,7 +152,7 @@ class IndexViewTests(CleanUpTempFilesTestMixin, TestCase):
 class AdminPanelViewTests(TestCase):
 
     def setUp(self):
-        self.path = reverse('adminpanel')
+        self.path = reverse('admin_panel')
 
     def test_only_users_with_required_permissions_can_view_page(self):
         def assert_visiting_page_produces_status_code(expected_status_code: int):

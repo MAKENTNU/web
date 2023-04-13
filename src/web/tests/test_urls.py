@@ -38,7 +38,7 @@ class UrlTests(NewsTestBase, TestCase):
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
             Get(reverse('front_page'), public=True),
-            Get(reverse('adminpanel'), public=False),
+            Get(reverse('admin_panel'), public=False),
             Get(reverse('about'), public=True),
             Get(reverse('contact'), public=True),
             Get(reverse('apply'), public=True),

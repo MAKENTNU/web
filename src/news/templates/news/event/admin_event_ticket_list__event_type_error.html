@@ -6,14 +6,14 @@ and therefore has no tickets connected to {% if event.standalone %}each time pla
 see {% if not event.standalone %}one of{% endif %} the following page{% if not event.standalone %}s{% endif %} instead:
 {% if event.standalone %}
     <br/>
-    <a href="{% url 'event_ticket_list' event.pk %}">
+    <a href="{% url 'admin_event_ticket_list' event.pk %}">
         Ticket list for “{% language "en" %}{{ event }}{% endlanguage %}”
     </a>
 {% else %}
     <ul>
         {% for time_place in event.timeplaces.all %}
             <li>
-                <a href="{% url 'timeplace_ticket_list' event.pk time_place.pk %}">
+                <a href="{% url 'admin_time_place_ticket_list' event.pk time_place.pk %}">
                     Ticket list for “{% language "en" %}{{ time_place }}{% endlanguage %}”
                 </a>
             </li>

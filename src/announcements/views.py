@@ -21,7 +21,7 @@ class AdminAnnouncementListView(PermissionRequiredMixin, ListView):
 class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
     model = Announcement
     form_class = AnnouncementForm
-    success_url = reverse_lazy('announcement_admin')
+    success_url = reverse_lazy('admin_announcement_list')
 
     narrow = False
     centered_title = False
@@ -49,4 +49,4 @@ class AnnouncementUpdateView(PermissionRequiredMixin, AnnouncementFormMixin, Upd
 class AnnouncementDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('announcements.delete_announcement',)
     model = Announcement
-    success_url = reverse_lazy('announcement_admin')
+    success_url = reverse_lazy('admin_announcement_list')

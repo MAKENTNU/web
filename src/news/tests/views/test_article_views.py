@@ -42,17 +42,17 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('article_create'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_article_edit(self):
-        response = self.client.get(reverse('article_edit', args=[self.article.pk]))
+    def test_article_update_view(self):
+        response = self.client.get(reverse('article_update', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         self.user.add_perms('news.change_article')
-        response = self.client.get(reverse('article_edit', args=[self.article.pk]))
+        response = self.client.get(reverse('article_update', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
-    def test_admin_article_toggle_view(self):
+    def test_admin_api_article_toggle_view(self):
         def toggle(pk, attr):
-            response = self.client.post(reverse('article_toggle', args=[pk]), {'toggle_attr': attr})
+            response = self.client.post(reverse('admin_api_article_toggle', args=[pk]), {'toggle_attr': attr})
             self.assertEqual(response.status_code, HTTPStatus.OK)
             return json.loads(response.content)
 

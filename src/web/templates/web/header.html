@@ -54,7 +54,7 @@
                     <a class="item" href="{% url 'makerspace' %}">
                         <div class="text">{% translate "About" %}</div>
                     </a>
-                    <a class="item" href="{% url 'makerspace_equipment_list' %}">
+                    <a class="item" href="{% url 'equipment_list' %}">
                         <div class="text">{% translate "equipment"|capfirst %}</div>
                     </a>
                     <a class="item" href="{% url 'faq_list' %}">
@@ -95,7 +95,7 @@
                             </a>
                         {% endif %}
                         {% if user|can_view_admin_panel %}
-                            <a class="item" href="{% host_url 'adminpanel' host 'main' %}">
+                            <a class="item" href="{% host_url 'admin_panel' host 'main' %}">
                                 <div class="text">{% translate "Administration" %}</div>
                             </a>
                         {% endif %}
@@ -105,10 +105,10 @@
                             </a>
                         {% endif %}
 
-                        <a class="item" href="{% host_url 'profile' host 'main' %}">
+                        <a class="item" href="{% host_url 'profile_detail' host 'main' %}">
                             <div class="text">{% translate "Profile" %}</div>
                         </a>
-                        <a class="item" href="{% host_url 'my_tickets_list' host 'main' %}">
+                        <a class="item" href="{% host_url 'event_ticket_my_list' host 'main' %}">
                             <div class="text">{% translate "My tickets" %}</div>
                         </a>
                         <form class="logout-form item" method="POST" action="{% url 'logout' %}">

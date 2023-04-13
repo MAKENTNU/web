@@ -41,7 +41,7 @@ class AdminEquipmentListView(PermissionRequiredMixin, ListView):
 class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):
     model = Equipment
     form_class = EquipmentForm
-    success_url = reverse_lazy('makerspace_admin_equipment_list')
+    success_url = reverse_lazy('admin_equipment_list')
 
     back_button_link = success_url
     back_button_text = _("Admin page for equipment")
@@ -62,4 +62,4 @@ class EquipmentUpdateView(PermissionRequiredMixin, EquipmentFormMixin, UpdateVie
 class EquipmentDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
-    success_url = reverse_lazy('makerspace_admin_equipment_list')
+    success_url = reverse_lazy('admin_equipment_list')

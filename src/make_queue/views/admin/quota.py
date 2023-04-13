@@ -56,16 +56,16 @@ class QuotaFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
     ]
 
     def get_back_button_link(self):
-        return reverse('quota_panel')
+        return reverse('admin_quota_panel')
 
     def get_back_button_text(self):
         return _("Admin page for quotas")
 
     def get_success_url(self):
         if self.object.all:
-            return reverse('quota_panel')
+            return reverse('admin_quota_panel')
         else:
-            return reverse('quota_panel', args=[self.object.user.pk])
+            return reverse('admin_quota_panel', args=[self.object.user.pk])
 
 
 class QuotaCreateView(PermissionRequiredMixin, QuotaFormMixin, CreateView):
@@ -98,6 +98,6 @@ class QuotaDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
 
     def get_success_url(self):
         if self.object.all:
-            return reverse('quota_panel')
+            return reverse('admin_quota_panel')
         else:
-            return reverse('quota_panel', args=[self.object.user.pk])
+            return reverse('admin_quota_panel', args=[self.object.user.pk])

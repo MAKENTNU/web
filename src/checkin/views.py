@@ -88,7 +88,7 @@ class ProfileDetailView(TemplateView):
             rating = int(request.POST.get('rating'))
             skill_id = int(request.POST.get('skill'))
         except ValueError:
-            return HttpResponseRedirect(reverse('profile'))
+            return HttpResponseRedirect(reverse('profile_detail'))
 
         profile = request.user.profile
         skill = get_object_or_404(Skill, id=skill_id)
@@ -102,7 +102,7 @@ class ProfileDetailView(TemplateView):
             elif rating != 0:
                 UserSkill.objects.create(skill=skill, profile=profile, skill_level=rating)
 
-        return HttpResponseRedirect(reverse('profile'))
+        return HttpResponseRedirect(reverse('profile_detail'))
 
     def get_context_data(self, **kwargs):
         user = self.request.user
@@ -175,17 +175,17 @@ class AdminSuggestSkillView(PermissionRequiredMixin, TemplateView):
 
         if suggestion.strip() and not suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         elif not suggestion.strip() and suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         elif not suggestion.strip() and not suggestion_english.strip():
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
 
         if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(
                 title_en=suggestion_english).exists():
             messages.error(request, _("Skill already exists!"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         else:
             if SuggestSkill.objects.filter(title=suggestion).exists():
                 s = SuggestSkill.objects.get(title=suggestion)
@@ -204,7 +204,7 @@ class AdminSuggestSkillView(PermissionRequiredMixin, TemplateView):
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.success(request, _("Skill added!"))
 
-        return HttpResponseRedirect(reverse('suggest_skill'))
+        return HttpResponseRedirect(reverse('admin_suggest_skill'))
 
 
 class AdminAPISuggestSkillVoteView(PermissionRequiredMixin, PreventGetRequestsMixin, TemplateView):
@@ -281,4 +281,4 @@ class AdminProfilePictureUpdateView(PreventGetRequestsMixin, View):
         profile = request.user.profile
         profile.image = image
         profile.save()
-        return HttpResponseRedirect(reverse('profile'))
+        return HttpResponseRedirect(reverse('profile_detail'))

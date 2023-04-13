@@ -44,10 +44,10 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
             response = self.client1.get(url)
             self.assertEqual(response.status_code, status_code)
 
-        assert_response_status_code(reverse('register_event', args=[self.repeating_event.pk]), HTTPStatus.FORBIDDEN)
-        assert_response_status_code(reverse('register_timeplace', args=[self.repeating_event.pk, self.repeating_time_place.pk]), HTTPStatus.OK)
-        assert_response_status_code(reverse('register_event', args=[self.standalone_event.pk]), HTTPStatus.OK)
-        assert_response_status_code(reverse('register_timeplace', args=[self.standalone_event.pk, self.standalone_time_place.pk]),
+        assert_response_status_code(reverse('event_ticket_create', args=[self.repeating_event.pk]), HTTPStatus.FORBIDDEN)
+        assert_response_status_code(reverse('event_ticket_create', args=[self.repeating_event.pk, self.repeating_time_place.pk]), HTTPStatus.OK)
+        assert_response_status_code(reverse('event_ticket_create', args=[self.standalone_event.pk]), HTTPStatus.OK)
+        assert_response_status_code(reverse('event_ticket_create', args=[self.standalone_event.pk, self.standalone_time_place.pk]),
                                     HTTPStatus.FORBIDDEN)
 
     def test__event_registration_view__can_only_be_viewed_with_correct_combination_of_event_and_time_place(self):
@@ -57,7 +57,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
         repeating_time_place2 = duplicate(self.repeating_time_place, event=repeating_event2)
 
         def assert_response_status_code(url_args: list, status_code: int):
-            url = reverse('register_timeplace', args=url_args)
+            url = reverse('event_ticket_create', args=url_args)
             response = self.client1.get(url)
             self.assertEqual(response.status_code, status_code)
 
@@ -73,8 +73,8 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
 
     def test__event_registration_view__sends_emails(self):
         registration_urls = (
-            reverse('register_timeplace', args=[self.repeating_event.pk, self.repeating_time_place.pk]),
-            reverse('register_event', args=[self.standalone_event.pk]),
+            reverse('event_ticket_create', args=[self.repeating_event.pk, self.repeating_time_place.pk]),
+            reverse('event_ticket_create', args=[self.standalone_event.pk]),
         )
         ticket_data = (
             {'language': language, 'comment': comment}
@@ -132,9 +132,9 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
         for time_place_or_event in [self.repeating_time_place, self.standalone_event]:
             with self.subTest(time_place_or_event=time_place_or_event):
                 if isinstance(time_place_or_event, TimePlace):
-                    registration_url = reverse('register_timeplace', args=[time_place_or_event.event.pk, time_place_or_event.pk])
+                    registration_url = reverse('event_ticket_create', args=[time_place_or_event.event.pk, time_place_or_event.pk])
                 else:
-                    registration_url = reverse('register_event', args=[time_place_or_event.pk])
+                    registration_url = reverse('event_ticket_create', args=[time_place_or_event.pk])
 
                 self.assertEqual(time_place_or_event.tickets.count(), 0)
 
@@ -151,7 +151,7 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                     self.assertEqual(time_place_or_event.tickets.count(), 1)
                     ticket = time_place_or_event.tickets.get()
 
-                    ticket_detail_url = reverse('ticket_detail', args=[ticket.pk])
+                    ticket_detail_url = reverse('event_ticket_detail', args=[ticket.pk])
                     self.assertRedirects(response, ticket_detail_url)
 
                     self.assertEqual(ticket.language, expected_language)
@@ -175,14 +175,14 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 self.assertEqual(reactivated_ticket.creation_date, created_ticket.creation_date)
                 self.assertGreater(reactivated_ticket.active_last_modified, reactivated_ticket.creation_date)
 
-    def test__cancel_ticket_view__cancels_and_reactivates_tickets_as_expected(self):
+    def test__event_ticket_cancel_view__cancels_and_reactivates_tickets_as_expected(self):
         ticket_repeating = EventTicket.objects.create(user=self.user1, timeplace=self.repeating_time_place)
         ticket_standalone = EventTicket.objects.create(user=self.user1, event=self.standalone_event)
 
         for ticket in [ticket_repeating, ticket_standalone]:
             with self.subTest(ticket=ticket):
-                ticket_detail_url = reverse('ticket_detail', args=[ticket.pk])
-                ticket_cancel_url = reverse('cancel_ticket', args=[ticket.pk])
+                ticket_detail_url = reverse('event_ticket_detail', args=[ticket.pk])
+                ticket_cancel_url = reverse('event_ticket_cancel', args=[ticket.pk])
 
                 self.assertTrue(ticket.active)
                 self.assertEqual(ticket.active_last_modified, ticket.creation_date)
@@ -209,14 +209,14 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 self.user1.user_permissions.clear()
 
     # noinspection HttpUrlsUsage
-    def test__cancel_ticket_view__only_allows_expected_next_params(self):
+    def test__event_ticket_cancel_view__only_allows_expected_next_params(self):
         ticket_repeating = EventTicket.objects.create(user=self.user1, timeplace=self.repeating_time_place)
         ticket_standalone = EventTicket.objects.create(user=self.user1, event=self.standalone_event)
 
         for ticket in [ticket_repeating, ticket_standalone]:
             with self.subTest(ticket=ticket):
-                ticket_detail_url = reverse('ticket_detail', args=[ticket.pk])
-                ticket_cancel_url = reverse('cancel_ticket', args=[ticket.pk])
+                ticket_detail_url = reverse('event_ticket_detail', args=[ticket.pk])
+                ticket_cancel_url = reverse('event_ticket_cancel', args=[ticket.pk])
 
                 def assert_next_param_is_valid(next_param: str, valid: bool):
                     response = self.client1.post(f"{ticket_cancel_url}?next={next_param}")
@@ -241,9 +241,9 @@ class TestEventTicketViews(CleanUpTempFilesTestMixin, TestCase):
                 # The URLs listed in `EventTicketCancelView.get_allowed_next_params()`, which should be allowed
                 assert_next_param_is_valid(ticket_detail_url, True)
                 self.assertEqual(ticket.get_absolute_url(), ticket_detail_url)
-                assert_next_param_is_valid(django_reverse('ticket_detail', args=[ticket.pk]), True)
-                assert_next_param_is_valid(reverse('my_tickets_list'), True)
-                assert_next_param_is_valid(django_reverse('my_tickets_list'), True)
+                assert_next_param_is_valid(django_reverse('event_ticket_detail', args=[ticket.pk]), True)
+                assert_next_param_is_valid(reverse('event_ticket_my_list'), True)
+                assert_next_param_is_valid(django_reverse('event_ticket_my_list'), True)
                 assert_next_param_is_valid(reverse('event_detail', args=[ticket.registered_event.pk]), True)
                 assert_next_param_is_valid(django_reverse('event_detail', args=[ticket.registered_event.pk]), True)
                 # Some other internal URLs, which should not be allowed

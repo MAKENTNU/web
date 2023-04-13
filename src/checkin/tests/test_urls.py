@@ -31,9 +31,9 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
-            Get(reverse('skills_present_list'), public=True),
-            Get(reverse('profile'), public=False),
-            Get(reverse('suggest_skill'), public=False),
+            Get(reverse('user_skill_list'), public=True),
+            Get(reverse('profile_detail'), public=False),
+            Get(reverse('admin_suggest_skill'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

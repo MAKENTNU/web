@@ -25,7 +25,7 @@ class CommitteeUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, Upda
     permission_required = ('groups.change_committee',)
     model = Committee
     form_class = CommitteeForm
-    success_url = reverse_lazy('committee_admin')
+    success_url = reverse_lazy('admin_committee_list')
 
     back_button_link = success_url
     back_button_text = _("Admin page for committees")

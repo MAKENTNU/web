@@ -28,14 +28,15 @@ urlpatterns += logout_urls()
 
 unsafe_urlpatterns = [
     path("", views.DocumentationPageDetailView.as_view(is_main_page=True), name='home'),
-    path("page/create/", views.DocumentationPageCreateView.as_view(), name='create_page'),
-    path("page/<PageTitle:title>/", views.DocumentationPageDetailView.as_view(), name='page_detail'),
-    path("page/<PageTitle:title>/history/", views.DocumentationPageHistoryDetailView.as_view(), name='page_history_detail'),
-    path("page/<PageTitle:title>/history/change/", views.DocumentationPageVersionUpdateView.as_view(), name='change_page_version'),
-    path("page/<PageTitle:title>/history/<int:content_pk>/", views.DocumentationPageContentDetailView.as_view(), name='page_content_detail'),
-    path("page/<PageTitle:title>/edit/", views.DocumentationPageUpdateView.as_view(), name='edit_page'),
-    path("page/<PageTitle:title>/delete/", views.DocumentationPageDeleteView.as_view(), name='delete_page'),
-    path("search/", views.DocumentationPageSearchView.as_view(), name='search_pages'),
+    path("page/create/", views.DocumentationPageCreateView.as_view(), name='documentation_page_create'),
+    path("page/<PageTitle:title>/", views.DocumentationPageDetailView.as_view(), name='documentation_page_detail'),
+    path("page/<PageTitle:title>/history/", views.DocumentationPageHistoryDetailView.as_view(), name='documentation_page_history_detail'),
+    path("page/<PageTitle:title>/history/change/", views.DocumentationPageVersionUpdateView.as_view(), name='documentation_page_version_update'),
+    path("page/<PageTitle:title>/history/<int:content_pk>/", views.DocumentationPageContentDetailView.as_view(),
+         name='documentation_page_content_detail'),
+    path("page/<PageTitle:title>/edit/", views.DocumentationPageUpdateView.as_view(), name='documentation_page_update'),
+    path("page/<PageTitle:title>/delete/", views.DocumentationPageDeleteView.as_view(), name='documentation_page_delete'),
+    path("search/", views.DocumentationPageSearchView.as_view(), name='documentation_page_search'),
 ]
 
 urlpatterns += i18n_patterns(

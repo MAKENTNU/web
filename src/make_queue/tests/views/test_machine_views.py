@@ -238,20 +238,20 @@ class TestMachineCreateAndUpdateView(TestCase):
         self.user.add_perms('make_queue.add_machine', 'make_queue.change_machine')
         self.client.login(username=username, password=password)
 
-    def test_edit_machine_context_data_has_correct_form(self):
+    def test_machine_update_has_correct_form_in_context_data(self):
         printer_machine_type = MachineType.objects.get(pk=1)
         machine = Machine.objects.create(
             name="Test",
             machine_model="Ultimaker 2+",
             machine_type=printer_machine_type,
         )
-        response = self.client.get(reverse('edit_machine', args=[machine.pk]))
+        response = self.client.get(reverse('machine_update', args=[machine.pk]))
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTrue(isinstance(response.context_data['form'], EditMachineForm))
 
-    def test_create_machine_context_data_has_correct_form(self):
-        response = self.client.get(reverse('create_machine'))
+    def test_machine_create_has_correct_form_in_context_data(self):
+        response = self.client.get(reverse('machine_create'))
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTrue(isinstance(response.context_data['form'], CreateMachineForm))

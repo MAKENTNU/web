@@ -11,8 +11,8 @@ article_urlpatterns = [
 ]
 
 specific_time_place_urlpatterns = [
-    path("register/", login_required(views.EventTicketCreateView.as_view()), name='register_timeplace'),
-    path("ical/", SingleTimePlaceFeed(), name='timeplace_ical'),
+    path("register/", login_required(views.EventTicketCreateView.as_view()), name='event_ticket_create'),
+    path("ical/", SingleTimePlaceFeed(), name='time_place_ical'),
 ]
 
 time_place_urlpatterns = [
@@ -21,7 +21,7 @@ time_place_urlpatterns = [
 
 specific_event_urlpatterns = [
     path("", views.EventDetailView.as_view(), name='event_detail'),
-    path("register/", login_required(views.EventTicketCreateView.as_view()), name='register_event'),
+    path("register/", login_required(views.EventTicketCreateView.as_view()), name='event_ticket_create'),
     path("timeplaces/", include(time_place_urlpatterns)),
 ]
 
@@ -31,9 +31,9 @@ event_urlpatterns = [
 ]
 
 ticket_urlpatterns = [
-    path("<uuid:pk>/", login_required(views.EventTicketDetailView.as_view()), name='ticket_detail'),
-    path("<uuid:pk>/cancel/", login_required(views.EventTicketCancelView.as_view()), name='cancel_ticket'),
-    path("me/", login_required(views.EventTicketMyListView.as_view()), name='my_tickets_list'),
+    path("<uuid:pk>/", login_required(views.EventTicketDetailView.as_view()), name='event_ticket_detail'),
+    path("<uuid:pk>/cancel/", login_required(views.EventTicketCancelView.as_view()), name='event_ticket_cancel'),
+    path("me/", login_required(views.EventTicketMyListView.as_view()), name='event_ticket_my_list'),
 ]
 
 urlpatterns = [
@@ -45,9 +45,9 @@ urlpatterns = [
 # --- Admin URL patterns (imported in `web/urls.py`) ---
 
 specific_article_adminpatterns = [
-    path("edit/", views.ArticleUpdateView.as_view(), name='article_edit'),
+    path("edit/", views.ArticleUpdateView.as_view(), name='article_update'),
     path("delete/", views.ArticleDeleteView.as_view(), name='article_delete'),
-    path("toggle/", views.AdminAPIArticleToggleView.as_view(), name='article_toggle'),
+    path("toggle/", views.AdminAPIArticleToggleView.as_view(), name='admin_api_article_toggle'),
 ]
 
 article_adminpatterns = [
@@ -57,24 +57,24 @@ article_adminpatterns = [
 ]
 
 specific_time_place_adminpatterns = [
-    path("edit/", views.TimePlaceUpdateView.as_view(), name='timeplace_edit'),
-    path("duplicate/", views.TimePlaceDuplicateCreateView.as_view(), name='timeplace_duplicate'),
-    path("delete/", views.TimePlaceDeleteView.as_view(), name='timeplace_delete'),
-    path("toggle/", views.AdminAPITimePlaceToggleView.as_view(), name='timeplace_toggle'),
-    path("tickets/", views.AdminTimePlaceTicketListView.as_view(), name='timeplace_ticket_list'),
+    path("edit/", views.TimePlaceUpdateView.as_view(), name='time_place_update'),
+    path("duplicate/", views.TimePlaceDuplicateCreateView.as_view(), name='time_place_duplicate_create'),
+    path("delete/", views.TimePlaceDeleteView.as_view(), name='time_place_delete'),
+    path("toggle/", views.AdminAPITimePlaceToggleView.as_view(), name='admin_api_time_place_toggle'),
+    path("tickets/", views.AdminTimePlaceTicketListView.as_view(), name='admin_time_place_ticket_list'),
 ]
 
 time_place_adminpatterns = [
-    path("create/", views.TimePlaceCreateView.as_view(), name='timeplace_create'),
+    path("create/", views.TimePlaceCreateView.as_view(), name='time_place_create'),
     path("<int:time_place_pk>/", include(specific_time_place_adminpatterns)),
 ]
 
 specific_event_adminpatterns = [
     path("", views.AdminEventDetailView.as_view(), name='admin_event_detail'),
-    path("edit/", views.EventUpdateView.as_view(), name='event_edit'),
+    path("edit/", views.EventUpdateView.as_view(), name='event_update'),
     path("delete/", views.EventDeleteView.as_view(), name='event_delete'),
-    path("toggle/", views.AdminAPIEventToggleView.as_view(), name='event_toggle'),
-    path("tickets/", views.AdminEventTicketListView.as_view(), name='event_ticket_list'),
+    path("toggle/", views.AdminAPIEventToggleView.as_view(), name='admin_api_event_toggle'),
+    path("tickets/", views.AdminEventTicketListView.as_view(), name='admin_event_ticket_list'),
     path("timeplaces/", include(time_place_adminpatterns)),
 ]
 

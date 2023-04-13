@@ -62,7 +62,7 @@
     </tr>
     <tr style="width: 100%">
         <td style="padding: 15px 30px 0;">
-            {% url 'cancel_ticket' ticket.pk as cancel_url %}
+            {% url 'event_ticket_cancel' ticket.pk as cancel_url %}
             {% translate "If you want to cancel your registration, you can do so by visiting the following page" %}:
             <a href="{% get_absolute_uri_for_path request cancel_url %}" target="_blank">
                 {% translate "Cancel your ticket" %}

@@ -301,7 +301,7 @@ class EventTicket(models.Model):
             super().save(update_fields=['active_last_modified'])
 
     def get_absolute_url(self):
-        return reverse('ticket_detail', args=[self.pk])
+        return reverse('event_ticket_detail', args=[self.pk])
 
     @property
     def registered_event(self) -> Event:
