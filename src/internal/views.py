@@ -260,6 +260,7 @@ class SecretCreateView(PermissionRequiredMixin, SecretFormMixin, CreateView):
     permission_required = ('internal.add_secret',)
 
     form_title = _("Add Secret")
+    save_button_text = _("Add")
 
 
 class ExistingSecretPermissionRequiredMixin(PermissionRequiredMixin, SingleObjectMixin, ABC):
@@ -304,6 +305,7 @@ class QuoteCreateView(PermissionRequiredMixin, QuoteFormMixin, CreateView):
     }
 
     form_title = _("Add Quote")
+    save_button_text = _("Add")
 
     def form_valid(self, form):
         form.instance.author = self.request.user

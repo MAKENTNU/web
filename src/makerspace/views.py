@@ -51,6 +51,8 @@ class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):
 class EquipmentCreateView(PermissionRequiredMixin, EquipmentFormMixin, CreateView):
     permission_required = ('makerspace.add_equipment',)
 
+    save_button_text = _("Add")
+
     def get_form_title(self):
         return title_en(_("Add equipment"))
 

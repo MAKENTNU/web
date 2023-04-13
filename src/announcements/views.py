@@ -38,6 +38,7 @@ class AnnouncementCreateView(PermissionRequiredMixin, AnnouncementFormMixin, Cre
     permission_required = ('announcements.add_announcement',)
 
     form_title = _("Add Announcement")
+    save_button_text = _("Add")
 
 
 class AnnouncementUpdateView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):

@@ -192,10 +192,6 @@ msgstr "Ekspert"
 msgid "Suggest new skills"
 msgstr "Foreslå nye ferdigheter"
 
-#: src/checkin/templates/checkin/admin_suggest_skill.html:37
-msgid "Submit"
-msgstr "Legg til"
-
 #: src/checkin/templates/checkin/admin_suggest_skill.html:55
 msgid "Suggested skills"
 msgstr "Foreslåtte ferdigheter"

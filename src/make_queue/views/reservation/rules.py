@@ -93,6 +93,8 @@ class ReservationRuleFormMixin(MachineTypeRelatedViewMixin, CustomFieldsetFormMi
 class ReservationRuleCreateView(PermissionRequiredMixin, ReservationRuleFormMixin, CreateView):
     permission_required = ('make_queue.add_reservation_rule',)
 
+    save_button_text = _("Add")
+
     def get_form_title(self):
         return _("Add Rule for {machine_type}").format(machine_type=self.machine_type)
 

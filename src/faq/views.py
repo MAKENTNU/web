@@ -62,6 +62,7 @@ class QuestionCreateView(PermissionRequiredMixin, QuestionFormMixin, CreateView)
     permission_required = ('faq.add_question',)
 
     form_title = _("Add Question")
+    save_button_text = _("Add")
 
 
 class QuestionUpdateView(PermissionRequiredMixin, QuestionFormMixin, UpdateView):
@@ -89,6 +90,7 @@ class CategoryCreateView(PermissionRequiredMixin, CategoryFormMixin, CreateView)
     permission_required = ('faq.add_category',)
 
     form_title = _("Add Category")
+    save_button_text = _("Add")
 
 
 class CategoryUpdateView(PermissionRequiredMixin, CategoryFormMixin, UpdateView):

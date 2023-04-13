@@ -287,6 +287,7 @@ class ArticleCreateView(PermissionRequiredMixin, ArticleFormMixin, CreateView):
     permission_required = ('news.add_article',)
 
     form_title = _("Add Article")
+    save_button_text = _("Add")
 
 
 class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
@@ -321,6 +322,7 @@ class EventCreateView(PermissionRequiredMixin, EventFormMixin, CreateView):
 
     form_title = _("Add Event")
     back_button_text = _("Admin page for events")
+    save_button_text = _("Add")
 
     def get_back_button_link(self):
         return reverse('admin_event_list')
@@ -406,6 +408,8 @@ class TimePlaceUpdateView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, Ti
 
 class TimePlaceCreateView(PermissionRequiredMixin, TimePlaceFormMixin, CreateView):
     permission_required = ('news.add_timeplace',)
+
+    save_button_text = _("Add")
 
     def get_form_title(self):
         return _("Add Occurrence of “{title}”").format(title=self.event)
