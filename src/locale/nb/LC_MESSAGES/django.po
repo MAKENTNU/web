@@ -1697,11 +1697,6 @@ msgstr "Nullstill valg"
 msgid "Registration status"
 msgstr "Registreringsstatus"
 
-#: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:121
-msgctxt "edit"
-msgid "Submit"
-msgstr "Lagre"
-
 #: src/make_queue/templates/make_queue/course/printer_3d_course_form.html:125
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:220
 #: src/make_queue/templates/make_queue/reservation_form.html:190

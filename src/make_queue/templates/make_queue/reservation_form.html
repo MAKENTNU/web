@@ -185,7 +185,7 @@
             {% endif %}
             <div class="float-fix">
                 <input class="ui right floated make-bg-yellow button" type="submit"
-                       value="{% if new_reservation %}{% translate "Reserve" %}{% else %}{% translate "Change" %}{% endif %}"/>
+                       value="{% if new_reservation %}{% translate "Reserve" %}{% else %}{% translate "Save" %}{% endif %}"/>
                 <a class="ui right floated red button" href="{% current_calendar_url selected_machine %}">
                     {% translate "Cancel" context "abort action" %}
                 </a>
