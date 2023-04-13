@@ -150,8 +150,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 Get(reverse('api_machine_data', args=[reservation.machine.pk, reservation.pk]), public=False)
                 for reservation in self.reservations
             ],
-            Get(reverse('user_json', args=[self.user1.username]), public=False),
-            Get(reverse('user_json', args=[self.user2.username]), public=False),
+            Get(reverse('admin_api_basic_user_info', args=[self.user1.username]), public=False),
+            Get(reverse('admin_api_basic_user_info', args=[self.user2.username]), public=False),
 
             # Back to urlpatterns
             *[

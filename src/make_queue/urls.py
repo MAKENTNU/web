@@ -1,7 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.urls import include, path, register_converter
 
-from util.url_utils import permission_required_else_denied
 from . import converters
 from .views.admin import course, quota, reservation as reservation_admin
 from .views.api import calendar as calendar_api, reservation as reservation_api, user_info
@@ -27,8 +26,7 @@ calendar_urlpatterns = [
 json_urlpatterns = [
     path("<int:pk>/", login_required(reservation_api.APIMachineDataView.as_view()), name='api_machine_data'),
     path("<int:pk>/<int:reservation_pk>/", login_required(reservation_api.APIMachineDataView.as_view()), name='api_machine_data'),
-    path("<str:username>/", permission_required_else_denied('make_queue.add_printer3dcourse')(user_info.get_user_info_from_username),
-         name='user_json'),
+    path("<str:username>/", user_info.AdminAPIBasicUserInfoView.as_view(), name='admin_api_basic_user_info'),
 ]
 
 rules_urlpatterns = [
