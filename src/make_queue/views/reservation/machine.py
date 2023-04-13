@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-from ...forms import CreateMachineForm, EditMachineForm
+from ...forms import AddMachineForm, ChangeMachineForm
 from ...models.machine import Machine, MachineType
 
 
@@ -51,7 +51,7 @@ class MachineFormMixin(CustomFieldsetFormMixin, ABC):
 
 class MachineCreateView(PermissionRequiredMixin, MachineFormMixin, CreateView):
     permission_required = ('make_queue.add_machine',)
-    form_class = CreateMachineForm
+    form_class = AddMachineForm
 
     form_title = _("Create Machine")
     save_button_text = _("Add")
@@ -61,7 +61,7 @@ class MachineCreateView(PermissionRequiredMixin, MachineFormMixin, CreateView):
 
 class MachineUpdateView(PermissionRequiredMixin, MachineFormMixin, UpdateView):
     permission_required = ('make_queue.change_machine',)
-    form_class = EditMachineForm
+    form_class = ChangeMachineForm
 
     form_title = _("Edit Machine")
 

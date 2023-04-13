@@ -93,7 +93,7 @@ class EventParticipantsSearchForm(forms.Form):
     )
 
 
-class EventRegistrationForm(forms.ModelForm):
+class EventTicketForm(forms.ModelForm):
     class Meta:
         model = EventTicket
         fields = ('user', 'timeplace', 'event', 'language', 'comment')

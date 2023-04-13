@@ -6,7 +6,7 @@ from django.utils import timezone
 from django_hosts import reverse
 
 from users.models import User
-from ...forms import CreateMachineForm, EditMachineForm
+from ...forms import AddMachineForm, ChangeMachineForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 
@@ -248,10 +248,10 @@ class TestMachineCreateAndUpdateView(TestCase):
         response = self.client.get(reverse('machine_update', args=[machine.pk]))
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTrue(isinstance(response.context_data['form'], EditMachineForm))
+        self.assertTrue(isinstance(response.context_data['form'], ChangeMachineForm))
 
     def test_machine_create_has_correct_form_in_context_data(self):
         response = self.client.get(reverse('machine_create'))
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTrue(isinstance(response.context_data['form'], CreateMachineForm))
+        self.assertTrue(isinstance(response.context_data['form'], AddMachineForm))

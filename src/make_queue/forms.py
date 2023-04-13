@@ -221,7 +221,7 @@ class Printer3DCourseForm(forms.ModelForm):
         return course
 
 
-class FreeSlotForm(forms.Form):
+class ReservationFindFreeSlotsForm(forms.Form):
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by('priority'),
         # `capfirst()` to avoid duplicate translation differing only in case
@@ -290,7 +290,7 @@ class MachineFormBase(forms.ModelForm):
         return cleaned_data
 
 
-class CreateMachineForm(MachineFormBase):
+class AddMachineForm(MachineFormBase):
     class Media:
         js = (
             JS('make_queue/js/machine_create.js', attrs={'defer': True}),
@@ -302,7 +302,7 @@ class CreateMachineForm(MachineFormBase):
         self.fields['info_message_date'].widget.format_value = lambda value: None
 
 
-class EditMachineForm(MachineFormBase):
+class ChangeMachineForm(MachineFormBase):
     machine_type = None
 
     class Meta(MachineFormBase.Meta):

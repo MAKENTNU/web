@@ -10,7 +10,7 @@ from django.views.generic import CreateView, DeleteView, DetailView, TemplateVie
 from django.views.generic.edit import ModelFormMixin
 
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
+from .forms import AddPageForm, ChangePageVersionForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
 
 
@@ -87,7 +87,7 @@ class DocumentationPageVersionUpdateView(PermissionRequiredMixin, DocumentationP
 class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView):
     permission_required = ('docs.add_page',)
     model = Page
-    form_class = CreatePageForm
+    form_class = AddPageForm
 
     base_template = 'docs/base.html'
     form_title = _("Create a New Page")

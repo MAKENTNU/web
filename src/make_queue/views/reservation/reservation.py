@@ -14,7 +14,7 @@ from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
 from util.view_utils import PreventGetRequestsMixin
-from ...forms import FreeSlotForm, ReservationForm
+from ...forms import ReservationFindFreeSlotsForm, ReservationForm
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation, can_change_reservation, can_delete_reservation, can_mark_reservation_finished
@@ -330,7 +330,7 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
     """
     View to find free time slots for reservations.
     """
-    form_class = FreeSlotForm
+    form_class = ReservationFindFreeSlotsForm
     template_name = 'make_queue/reservation_find_free_slots.html'
 
     def get_initial(self):
@@ -392,7 +392,7 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
         """
         Renders the page with free slots in respect to the valid form.
 
-        :param form: A valid FreeSlotForm form
+        :param form: A valid ``ReservationFindFreeSlotsForm`` form
         :return: A HTTP response rendering the page with the found free slots
         """
         context = self.get_context_data()

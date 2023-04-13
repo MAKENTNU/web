@@ -25,7 +25,7 @@ from mail import email
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
 from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ArticleForm, EventForm, EventParticipantsSearchForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm, ToggleForm
+from .forms import ArticleForm, EventForm, EventParticipantsSearchForm, EventTicketForm, NewsBaseForm, TimePlaceForm, ToggleForm
 from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
 
 
@@ -506,7 +506,7 @@ class TimePlaceDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, Time
 
 class EventTicketCreateView(PermissionRequiredMixin, CustomFieldsetFormMixin, EventRelatedViewMixin, CreateView):
     model = EventTicket
-    form_class = EventRegistrationForm
+    form_class = EventTicketForm
 
     narrow = False
     save_button_text = _("Register")

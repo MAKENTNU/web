@@ -15,7 +15,7 @@ from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import (
-    AddMemberForm, EditMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedEditMemberForm, SecretsForm,
+    AddMemberForm, ChangeMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedChangeMemberForm, SecretsForm,
     SystemAccessValueForm,
 )
 from .models import Member, Quote, Secret, SystemAccess
@@ -116,8 +116,8 @@ class MemberUpdateView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
 
     def get_form_class(self):
         if not self.user_has_edit_perm():
-            return RestrictedEditMemberForm
-        return EditMemberForm
+            return RestrictedChangeMemberForm
+        return ChangeMemberForm
 
     def get_form_title(self):
         full_name = self.get_object().user.get_full_name()

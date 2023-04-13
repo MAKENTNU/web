@@ -5,7 +5,7 @@ from web.widgets import CKEditorUploadingWidget
 from .models import Content, Page
 
 
-class CreatePageForm(forms.ModelForm):
+class AddPageForm(forms.ModelForm):
     class Meta:
         model = Page
         fields = ('title', 'created_by')
