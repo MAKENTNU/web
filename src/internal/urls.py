@@ -32,24 +32,24 @@ committee_bulletin_urlpatterns = [
 ]
 
 internal_content_box_urlpatterns = [
-    path("<int:pk>/edit/", views.InternalContentBoxUpdateView.as_view(), name='content_box_update'),
+    path("<int:pk>/change/", views.InternalContentBoxUpdateView.as_view(), name='content_box_update'),
 ]
 
 member_urlpatterns = [
     path("members/", views.MemberListView.as_view(), name='member_list'),
     path("members/<int:pk>/", views.MemberListView.as_view(), name='member_detail'),
-    path("members/create/", views.MemberCreateView.as_view(), name='member_create'),
-    path("members/<int:pk>/edit/", views.MemberUpdateView.as_view(), name='member_update'),
-    path("members/<int:pk>/edit/status/", views.MemberStatusUpdateView.as_view(), name='member_status_update'),
-    path("members/<int:pk>/edit/status/quit/", views.MemberQuitView.as_view(), name='member_quit'),
-    path("members/<int:pk>/edit/status/retire/", views.MemberRetireView.as_view(), name='member_retire'),
-    path("members/<int:member_pk>/access/<int:pk>/edit/", views.SystemAccessUpdateView.as_view(), name='system_access_update'),
+    path("members/add/", views.MemberCreateView.as_view(), name='member_create'),
+    path("members/<int:pk>/change/", views.MemberUpdateView.as_view(), name='member_update'),
+    path("members/<int:pk>/change/status/", views.MemberStatusUpdateView.as_view(), name='member_status_update'),
+    path("members/<int:pk>/change/status/quit/", views.MemberQuitView.as_view(), name='member_quit'),
+    path("members/<int:pk>/change/status/retire/", views.MemberRetireView.as_view(), name='member_retire'),
+    path("members/<int:member_pk>/access/<int:pk>/change/", views.SystemAccessUpdateView.as_view(), name='system_access_update'),
 ]
 
 secret_urlpatterns = [
     path("secrets/", views.SecretListView.as_view(), name='secret_list'),
-    path("secrets/create/", views.SecretCreateView.as_view(), name='secret_create'),
-    path("secrets/<int:pk>/edit/", views.SecretUpdateView.as_view(), name='secret_update'),
+    path("secrets/add/", views.SecretCreateView.as_view(), name='secret_create'),
+    path("secrets/<int:pk>/change/", views.SecretUpdateView.as_view(), name='secret_update'),
     path("secrets/<int:pk>/delete/", views.SecretDeleteView.as_view(), name='secret_delete'),
 ]
 

@@ -37,7 +37,7 @@ admin_urlpatterns = [
 ]
 
 content_box_urlpatterns = [
-    path("<int:pk>/edit/", ContentBoxUpdateView.as_view(base_template='web/base.html'), name='content_box_update'),
+    path("<int:pk>/change/", ContentBoxUpdateView.as_view(base_template='web/base.html'), name='content_box_update'),
 ]
 
 about_urlpatterns = [

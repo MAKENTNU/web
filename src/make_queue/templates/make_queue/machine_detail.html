@@ -22,6 +22,7 @@
         {# These variables are used in `machine_detail.js` #}
         var calendarProperties = {
             machine: "{{ machine.pk }}",
+            machineReservationURL: "{% url 'reservation_create' machine.pk %}",
             selection: {% if reservation_denied_message %}false{% else %}true{% endif %},
             canIgnoreRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
             date: new Date("{{ selected_date|iso_datetime }}"),
