@@ -91,7 +91,7 @@ class ReservationRuleFormMixin(MachineTypeRelatedViewMixin, CustomFieldsetFormMi
 
 
 class ReservationRuleCreateView(PermissionRequiredMixin, ReservationRuleFormMixin, CreateView):
-    permission_required = ('make_queue.add_reservation_rule',)
+    permission_required = ('make_queue.add_reservationrule',)
 
     save_button_text = _("Add")
 
@@ -100,7 +100,7 @@ class ReservationRuleCreateView(PermissionRequiredMixin, ReservationRuleFormMixi
 
 
 class ReservationRuleUpdateView(PermissionRequiredMixin, ReservationRuleFormMixin, UpdateView):
-    permission_required = ('make_queue.change_reservation_rule',)
+    permission_required = ('make_queue.change_reservationrule',)
     pk_url_kwarg = 'reservation_rule_pk'
 
     def get_form_title(self):
@@ -108,7 +108,7 @@ class ReservationRuleUpdateView(PermissionRequiredMixin, ReservationRuleFormMixi
 
 
 class ReservationRuleDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('make_queue.delete_reservation_rule',)
+    permission_required = ('make_queue.delete_reservationrule',)
     model = ReservationRule
     pk_url_kwarg = 'reservation_rule_pk'
 

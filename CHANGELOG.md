@@ -22,6 +22,11 @@ A summary of changes made to the codebase, grouped per deployment.
 - Changed cropping of images in article and event lists so that they always have equal proportions
 - Added a title to the quota admin panel, and switched out the "Add new quota" button for a green plus button, like other admin panel pages
 
+### Fixes
+
+- Fixed board members not being allowed to add, change and delete reservation rules
+  (e.g. [the reservation rules for 3D printers](https://makentnu.no/reservation/machinetypes/1/rules/))
+
 ### Other changes
 
 - Renamed lots of views, forms and templates to comply with
