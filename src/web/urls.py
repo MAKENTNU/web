@@ -57,6 +57,7 @@ urlpatterns += i18n_patterns(
     path("makerspace/", include('makerspace.urls')),
     path("news/", include('news.urls')),
     path("reservation/", include('make_queue.urls')),
+    path("users/", include('users.urls')),
 
     # ContentBox paths:
     path("contentbox/", include(content_box_urlpatterns)),

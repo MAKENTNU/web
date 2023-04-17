@@ -6,7 +6,7 @@ from dataporten.ldap_utils import get_user_details_from_username
 
 
 class AdminAPIBasicUserInfoView(PermissionRequiredMixin, View):
-    permission_required = ('make_queue.add_printer3dcourse',)
+    permission_required = ('users.view_user',)
 
     def get(self, request, *args, **kwargs):
         username = kwargs['username']
