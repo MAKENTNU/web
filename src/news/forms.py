@@ -85,8 +85,9 @@ class EventForm(NewsBaseForm):
         help_texts = NewsBaseForm.Meta.get_help_texts(model)
 
 
-class EventParticipantsSearchForm(forms.Form):
+class EventParticipantsSearchQueryForm(forms.Form):
     search_string = forms.CharField(
+        required=False,
         max_length=500,
         label=_("Search for users"),
         help_text=_("You can search for users' name, username and email."),

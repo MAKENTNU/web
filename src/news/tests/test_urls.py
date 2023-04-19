@@ -49,7 +49,7 @@ class NewsTestBase(CleanUpTempFilesTestMixin, ABC):
         self.time_places = (self.time_place1, self.time_place2, self.time_place3)
 
         self.user1 = User.objects.create_user(username="user1")
-        self.user2 = User.objects.create_user(username="user2")
+        self.user2 = User.objects.create_user(username="user2", first_name="Hey", last_name="It's Me")
 
         self.ticket1 = EventTicket.objects.create(
             user=self.user1, timeplace=self.time_place1, comment="Looking forward to this!!", language=EventTicket.Language.ENGLISH,
@@ -79,6 +79,9 @@ class UrlTests(NewsTestBase, TestCase):
             Get(reverse('admin_article_list'), public=False),
             Get(reverse('admin_event_list'), public=False),
             Get(reverse('admin_event_participants_search'), public=False),
+            Get(f"{reverse('admin_event_participants_search')}?search_string={self.user1.username}", public=False),
+            Get(f"{reverse('admin_event_participants_search')}?search_string={self.user2.get_full_name()}", public=False),
+            Get(f"{reverse('admin_event_participants_search')}?search_string=stringthatdoesntmatchanything", public=False),
             Get(reverse('admin_event_detail', args=[self.event1.pk]), public=False),
             Get(reverse('admin_event_detail', args=[self.event2.pk]), public=False),
             Get(reverse('article_list'), public=True),

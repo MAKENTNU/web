@@ -16,7 +16,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language, gettext_lazy as _, trim_whitespace
-from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, TemplateView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 from django.views.generic.edit import ModelFormMixin
 from django_hosts import reverse as django_hosts_reverse
@@ -24,8 +24,8 @@ from django_hosts import reverse as django_hosts_reverse
 from mail import email
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
-from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ArticleForm, EventForm, EventParticipantsSearchForm, EventTicketForm, NewsBaseForm, TimePlaceForm, ToggleForm
+from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, insert_form_field_values
+from .forms import ArticleForm, EventForm, EventParticipantsSearchQueryForm, EventTicketForm, NewsBaseForm, TimePlaceForm, ToggleForm
 from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
 
 
@@ -158,40 +158,30 @@ class AdminEventListView(PermissionRequiredMixin, ListView):
         ).order_by('-latest_occurrence').prefetch_related('timeplaces')
 
 
-class AdminEventParticipantsSearchView(PermissionRequiredMixin, CustomFieldsetFormMixin, FormView):
-    form_class = EventParticipantsSearchForm
+class AdminEventParticipantsSearchView(PermissionRequiredMixin, QueryParameterFormMixin, TemplateView):
+    form_class = EventParticipantsSearchQueryForm
     template_name = 'news/event/admin_event_participants_search.html'
-
-    form_title = _("Find events users have attended or are registered for")
-    narrow = False
-    back_button_link = reverse_lazy('admin_event_list')
-    back_button_text = _("Admin page for events")
-    save_button_text = _("Search")
-    cancel_button = False
-    right_floated_buttons = False
-    custom_fieldsets = [
-        {'fields': ('search_string',), 'layout_class': "ui two fields"},
-    ]
+    extra_context = {
+        'form_title': _("Find events users have attended or are registered for"),
+    }
 
     user_search_fields = ['first_name', 'last_name', 'username', 'email']
 
     def has_permission(self):
         return self.request.user.has_any_permissions_for(Event)
 
-    def form_valid(self, form):
-        return self.render_to_response(self.get_context_data(form=form))
-
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
 
-        form = context_data['form']
-        if form.is_bound:
-            search_string = form.cleaned_data['search_string']
-            found_users_with_tickets, found_users_without_tickets = self.get_users_matching_search(search_string)
-            context_data.update({
-                'found_users_with_tickets': found_users_with_tickets,
-                'found_users_without_tickets': found_users_without_tickets,
-            })
+        if self.query_params:
+            search_string = self.query_params['search_string']
+            if search_string:
+                found_users_with_tickets, found_users_without_tickets = self.get_users_matching_search(search_string)
+                context_data.update({
+                    'search_string': search_string,
+                    'found_users_with_tickets': found_users_with_tickets,
+                    'found_users_without_tickets': found_users_without_tickets,
+                })
 
         return context_data
 
