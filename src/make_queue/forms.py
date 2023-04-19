@@ -323,3 +323,12 @@ class ChangeMachineForm(MachineFormBase):
             cleaned_data['info_message_date'] = timezone.localtime()
 
         return cleaned_data
+
+
+class AdminQuotaPanelQueryForm(forms.Form):
+    user = forms.ModelChoiceField(
+        User.objects.all(),
+        error_messages={
+            'invalid_choice': "User with pk=%(value)s was not found."
+        },
+    )

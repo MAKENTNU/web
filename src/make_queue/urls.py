@@ -47,7 +47,6 @@ quota_urlpatterns = [
     path("<int:pk>/change/", quota.QuotaUpdateView.as_view(), name='quota_update'),
     path("<int:pk>/delete/", quota.QuotaDeleteView.as_view(), name='quota_delete'),
     path("user/<int:pk>/", user.AdminUserQuotaListView.as_view(), name='admin_user_quota_list'),
-    path("<int:pk>/", quota.AdminQuotaPanelView.as_view(), name='admin_quota_panel'),
 ]
 
 course_urlpatterns = [

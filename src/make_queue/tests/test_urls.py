@@ -187,8 +187,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
             ],
             Get(reverse('admin_user_quota_list', args=[self.user1.pk]), public=False),
             Get(reverse('admin_user_quota_list', args=[self.user2.pk]), public=False),
-            Get(reverse('admin_quota_panel', args=[self.user1.pk]), public=False),
-            Get(reverse('admin_quota_panel', args=[self.user2.pk]), public=False),
+            Get(f"{reverse('admin_quota_panel')}?user={self.user1.pk}", public=False),
+            Get(f"{reverse('admin_quota_panel')}?user={self.user2.pk}", public=False),
 
             # course_urlpatterns
             Get(reverse('printer_3d_course_list'), public=False),
