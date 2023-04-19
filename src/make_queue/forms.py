@@ -1,6 +1,6 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import Q
+from django.db.models import Q, TextChoices
 from django.db.models.functions import Concat
 from django.utils import timezone
 from django.utils.text import capfirst
@@ -323,6 +323,14 @@ class ChangeMachineForm(MachineFormBase):
             cleaned_data['info_message_date'] = timezone.localtime()
 
         return cleaned_data
+
+
+class ReservationListQueryForm(forms.Form):
+    class Owner(TextChoices):
+        ME = "me", "Me"
+        MAKE = "MAKE", "MAKE"
+
+    owner = forms.TypedChoiceField(choices=Owner.choices, coerce=Owner)
 
 
 class AdminQuotaPanelQueryForm(forms.Form):

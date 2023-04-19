@@ -12,6 +12,7 @@ from users.models import User
 from util.test_utils import (
     CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
 )
+from ..forms import ReservationListQueryForm
 from ..models.course import Printer3DCourse
 from ..models.machine import Machine, MachineType, MachineUsageRule
 from ..models.reservation import Quota, Reservation, ReservationRule
@@ -160,8 +161,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 Get(reverse('reservation_update', args=[reservation.pk]), public=False)
                 for reservation in self.reservations if reservation != self.reservation2  # `reservation2` starts in the future
             ],
-            Get(reverse('reservation_my_list'), public=False),
-            Get(reverse('admin_reservation_MAKE_list'), public=False),
+            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.ME}", public=False),
+            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.MAKE}", public=False),
             Get(reverse('reservation_find_free_slots'), public=False),
 
             # rules_urlpatterns

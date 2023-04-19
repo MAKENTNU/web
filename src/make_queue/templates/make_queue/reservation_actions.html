@@ -29,7 +29,7 @@
             {% endif %}
         </div>
     </a>
-    <a class="item" href="{% url 'reservation_my_list' %}">
+    <a class="item" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.ME }}">
         <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">
             <div class="header">{% translate "My reservations" %}</div>

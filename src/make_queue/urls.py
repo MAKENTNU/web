@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import include, path, register_converter
 
 from . import converters
-from .views.admin import course, quota, reservation as reservation_admin
+from .views.admin import course, quota
 from .views.api import calendar as calendar_api, reservation as reservation_api
 from .views.quota import user
 from .views.reservation import calendar, machine, reservation, rules
@@ -68,8 +68,7 @@ urlpatterns = [
     path("<int:reservation_pk>/change/", login_required(reservation.ReservationUpdateView.as_view()), name='reservation_update'),
     path("<int:pk>/finish/", login_required(reservation.APIReservationMarkFinishedView.as_view()), name='api_reservation_mark_finished'),
     path("<int:pk>/", login_required(reservation.APIReservationDeleteView.as_view()), name='api_reservation_delete'),
-    path("me/", reservation.ReservationMyListView.as_view(), name='reservation_my_list'),
-    path("admin/", reservation_admin.AdminReservationMAKEListView.as_view(), name='admin_reservation_MAKE_list'),
+    path("reservations/", reservation.ReservationListView.as_view(), name='reservation_list'),
     path("slot/", reservation.ReservationFindFreeSlotsView.as_view(), name='reservation_find_free_slots'),
     path("machinetypes/<int:pk>/", include(specific_machinetype_urlpatterns)),
     path("quota/", include(quota_urlpatterns)),

@@ -88,6 +88,10 @@ class UrlTests(NewsTestBase, TestCase):
     def test_all_old_urls_succeed(self):
         path_predicates = [
             Get('/rules/', public=True, redirect=True),
+
+            Get('/reservation/me/', public=False, redirect=True),
+            Get('/reservation/admin/', public=False, redirect=True),
+
             Get('/reservation/rules/1/', public=True, redirect=True),
             Get('/reservation/rules/usage/1/', public=True, redirect=True),
 

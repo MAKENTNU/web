@@ -7,8 +7,10 @@ from typing import Any
 from django.forms import BoundField, FileInput, Form
 from django.http import Http404, JsonResponse, QueryDict
 from django.utils.translation import gettext_lazy as _
-from django.views.generic.base import TemplateResponseMixin
+from django.views.generic.base import RedirectView, TemplateResponseMixin
 from django.views.generic.edit import FormMixin
+
+from .url_utils import urljoin_query
 
 
 def insert_form_field_values(form_kwargs: dict, field_name_to_value: dict[str, Any]):
@@ -20,6 +22,14 @@ def insert_form_field_values(form_kwargs: dict, field_name_to_value: dict[str, A
         data._mutable = False
         form_kwargs['data'] = data
     return form_kwargs
+
+
+class RedirectViewWithStaticQuery(RedirectView):
+    query: dict | str = None
+
+    def get_redirect_url(self, *args, **kwargs):
+        base_url = super().get_redirect_url(*args, **kwargs)
+        return urljoin_query(base_url, self.query or {})
 
 
 # noinspection PyUnresolvedReferences
