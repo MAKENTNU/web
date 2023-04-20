@@ -1,9 +1,8 @@
-from django.http import JsonResponse
 from django.utils import timezone
 from django.views.generic import TemplateView
 
 from util.locale_utils import iso_datetime_format
-from util.view_utils import QueryParameterFormMixin
+from util.view_utils import QueryParameterFormMixin, UTF8JsonResponse
 from ..reservation.reservation import MachineRelatedViewMixin
 from ...forms import APIMachineDataQueryForm
 from ...models.reservation import Quota
@@ -40,4 +39,4 @@ class APIMachineDataView(MachineRelatedViewMixin, QueryParameterFormMixin, Templ
         }
 
     def render_to_response(self, context, **response_kwargs):
-        return JsonResponse(context)
+        return UTF8JsonResponse(context)

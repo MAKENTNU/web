@@ -4,7 +4,7 @@ from math import ceil
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.http import urlencode
@@ -15,7 +15,7 @@ from django_hosts import reverse
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
-from util.view_utils import PreventGetRequestsMixin, QueryParameterFormMixin
+from util.view_utils import PreventGetRequestsMixin, QueryParameterFormMixin, UTF8JsonResponse
 from ...forms import ReservationFindFreeSlotsForm, ReservationForm, ReservationListQueryForm
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Reservation, ReservationRule
@@ -231,10 +231,10 @@ class APIReservationDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin,
                     message = _("Cannot delete reservation when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
+            return UTF8JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.delete()
-        return JsonResponse({}, status=HTTPStatus.OK)
+        return UTF8JsonResponse({}, status=HTTPStatus.OK)
 
 
 class ReservationUpdateView(ReservationCreateOrUpdateView):
@@ -313,11 +313,11 @@ class APIReservationMarkFinishedView(PermissionRequiredMixin, PreventGetRequests
                 message = _("Cannot mark reservation as finished when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
+            return UTF8JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.end_time = timezone.localtime()
         reservation.save()
-        return JsonResponse({}, status=HTTPStatus.OK)
+        return UTF8JsonResponse({}, status=HTTPStatus.OK)
 
 
 class ReservationListView(PermissionRequiredMixin, QueryParameterFormMixin, ListView):

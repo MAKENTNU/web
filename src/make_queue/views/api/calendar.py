@@ -1,9 +1,8 @@
-from django.http import JsonResponse
 from django.views.generic import ListView
 
 from users.models import User
 from util.locale_utils import iso_datetime_format
-from util.view_utils import QueryParameterFormMixin
+from util.view_utils import QueryParameterFormMixin, UTF8JsonResponse
 from ..reservation.reservation import MachineRelatedViewMixin
 from ...forms import APIReservationListQueryForm
 from ...models.reservation import Reservation, ReservationRule
@@ -61,7 +60,7 @@ class APIReservationListView(MachineRelatedViewMixin, QueryParameterFormMixin, L
         return reservation_data
 
     def render_to_response(self, context, **response_kwargs):
-        return JsonResponse(context)
+        return UTF8JsonResponse(context)
 
 
 class APIReservationRuleListView(MachineRelatedViewMixin, ListView):
@@ -82,4 +81,4 @@ class APIReservationRuleListView(MachineRelatedViewMixin, ListView):
         }
 
     def render_to_response(self, context, **response_kwargs):
-        return JsonResponse(context)
+        return UTF8JsonResponse(context)

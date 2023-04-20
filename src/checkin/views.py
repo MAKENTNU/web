@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
@@ -15,7 +15,7 @@ from django.views.generic import DeleteView, TemplateView
 
 from card import utils as card_utils
 from card.views import RFIDView
-from util.view_utils import PreventGetRequestsMixin
+from util.view_utils import PreventGetRequestsMixin, UTF8JsonResponse
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
@@ -221,7 +221,7 @@ class AdminAPISuggestSkillVoteView(PermissionRequiredMixin, PreventGetRequestsMi
         if forced:
             Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
             suggestion.delete()
-            return JsonResponse(response_dict)
+            return UTF8JsonResponse(response_dict)
 
         suggestion.voters.add(request.user.profile)
         response_dict['skill_passed'] = suggestion.voters.count() >= 5
@@ -229,7 +229,7 @@ class AdminAPISuggestSkillVoteView(PermissionRequiredMixin, PreventGetRequestsMi
             Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
             suggestion.delete()
 
-        return JsonResponse(response_dict)
+        return UTF8JsonResponse(response_dict)
 
 
 class AdminAPISuggestSkillDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -238,7 +238,7 @@ class AdminAPISuggestSkillDeleteView(PermissionRequiredMixin, PreventGetRequests
 
     def delete(self, request, *args, **kwargs):
         self.get_object().delete()
-        return JsonResponse({'suggestion_deleted': True})
+        return UTF8JsonResponse({'suggestion_deleted': True})
 
 
 class AdminRegisterCardView(RFIDView):
@@ -271,7 +271,7 @@ class AdminAPIRegisterProfileView(PreventGetRequestsMixin, TemplateView):
                 request.user.card_number = card_number
                 request.user.save()
         RegisterProfile.objects.all().delete()
-        return JsonResponse(response_dict)
+        return UTF8JsonResponse(response_dict)
 
 
 class AdminProfilePictureUpdateView(PreventGetRequestsMixin, View):

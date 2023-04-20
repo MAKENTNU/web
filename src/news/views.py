@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.mail import get_connection, send_mail
 from django.db.models import Count, Max, Min, Prefetch, Q
 from django.db.models.functions import Concat
-from django.http import Http404, HttpResponseRedirect, JsonResponse
+from django.http import Http404, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.template.loader import get_template
 from django.urls import reverse, reverse_lazy
@@ -24,7 +24,9 @@ from django_hosts import reverse as django_hosts_reverse
 from mail import email
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
-from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, insert_form_field_values
+from util.view_utils import (
+    CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, UTF8JsonResponse, insert_form_field_values,
+)
 from .forms import ArticleForm, EventForm, EventParticipantsSearchQueryForm, EventTicketForm, NewsBaseForm, TimePlaceForm, ToggleForm
 from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
 
@@ -449,12 +451,12 @@ class AdminAPINewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, For
         toggled_attr_value = not attr_value
         setattr(obj, toggle_attr, toggled_attr_value)
         obj.save()
-        return JsonResponse({
+        return UTF8JsonResponse({
             'is_hidden': toggled_attr_value,
         })
 
     def form_invalid(self, form):
-        return JsonResponse({})
+        return UTF8JsonResponse({})
 
 
 class AdminAPIArticleToggleView(PermissionRequiredMixin, AdminAPINewsBaseToggleView):
