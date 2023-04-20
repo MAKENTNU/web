@@ -1,5 +1,4 @@
 from abc import ABC
-from http import HTTPStatus
 from math import ceil
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -9,17 +8,18 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _, ngettext
-from django.views.generic import DeleteView, FormView, ListView, TemplateView, UpdateView
+from django.views.generic import FormView, ListView, TemplateView
 from django_hosts import reverse
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
-from util.view_utils import PreventGetRequestsMixin, QueryParameterFormMixin, UTF8JsonResponse
-from ...forms import ReservationFindFreeSlotsForm, ReservationForm, ReservationListQueryForm
-from ...models.machine import Machine, MachineType
-from ...models.reservation import Reservation, ReservationRule
-from ...templatetags.reservation_extra import calendar_url_reservation, can_change_reservation, can_delete_reservation, can_mark_reservation_finished
+from util.view_utils import QueryParameterFormMixin
+from .machine import MachineRelatedViewMixin
+from ..forms.reservation import ReservationFindFreeSlotsForm, ReservationForm, ReservationListQueryForm
+from ..models.machine import Machine, MachineType
+from ..models.reservation import Reservation, ReservationRule
+from ..templatetags.reservation_extra import calendar_url_reservation, can_change_reservation
 
 
 # TODO: rewrite this whole view (and everything that uses it), so that it's more extendable,
@@ -166,21 +166,6 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
         return self.get(request, **kwargs)
 
 
-# noinspection PyUnresolvedReferences
-class MachineRelatedViewMixin:
-    """
-    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
-    which will be used to query the database for the machine that the object(s) are related to.
-    If found, the machine will be assigned to a ``machine`` field on the view, otherwise, a 404 error will be raised.
-    """
-    machine: Machine
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        machine_pk = self.kwargs['pk']
-        self.machine = get_object_or_404(Machine.objects.visible_to(self.request.user), pk=machine_pk)
-
-
 class ReservationCreateView(PermissionRequiredMixin, MachineRelatedViewMixin, ReservationCreateOrUpdateView):
     """View for creating a new reservation."""
     new_reservation = True
@@ -211,31 +196,6 @@ class ReservationCreateView(PermissionRequiredMixin, MachineRelatedViewMixin, Re
             reservation.special_text = form.cleaned_data["special_text"]
 
         return self.validate_and_save(reservation, form)
-
-
-class APIReservationDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    model = Reservation
-
-    def has_permission(self):
-        user = self.request.user
-        return (user.has_perm('make_queue.delete_reservation')
-                or user == self.get_object().user)
-
-    def delete(self, request, *args, **kwargs):
-        reservation = self.get_object()
-        if not can_delete_reservation(reservation, self.request.user):
-            now = timezone.now()
-            if reservation.start_time <= now:
-                if reservation.end_time > now:
-                    message = _("Cannot delete reservation when it has already started. Mark it as finished instead.")
-                else:
-                    message = _("Cannot delete reservation when it has already ended.")
-            else:
-                message = None
-            return UTF8JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
-
-        reservation.delete()
-        return UTF8JsonResponse({}, status=HTTPStatus.OK)
 
 
 class ReservationUpdateView(ReservationCreateOrUpdateView):
@@ -293,31 +253,6 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
             reservation.special_text = form.cleaned_data["special_text"]
 
         return self.validate_and_save(reservation, form)
-
-
-class APIReservationMarkFinishedView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
-    model = Reservation
-
-    def has_permission(self):
-        user = self.request.user
-        return (user.has_perm('make_queue.change_reservation')
-                or user == self.get_object().user)
-
-    def post(self, request, *args, **kwargs):
-        reservation = self.get_object()
-        if not can_mark_reservation_finished(reservation):
-            now = timezone.now()
-            if reservation.start_time > now:
-                message = _("Cannot mark reservation as finished when it has not started yet.")
-            elif reservation.end_time <= now:
-                message = _("Cannot mark reservation as finished when it has already ended.")
-            else:
-                message = None
-            return UTF8JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
-
-        reservation.end_time = timezone.localtime()
-        reservation.save()
-        return UTF8JsonResponse({}, status=HTTPStatus.OK)
 
 
 class ReservationListView(PermissionRequiredMixin, QueryParameterFormMixin, ListView):

@@ -17,7 +17,7 @@ from dataporten.views import login_wrapper
 from faq import urls as faq_urls
 from groups import urls as groups_urls
 from make_queue import urls as make_queue_urls
-from make_queue.forms import ReservationListQueryForm
+from make_queue.forms.reservation import ReservationListQueryForm
 from makerspace import urls as makerspace_urls
 from news import urls as news_urls
 from users import urls as users_urls

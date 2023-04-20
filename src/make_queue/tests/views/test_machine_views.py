@@ -8,7 +8,7 @@ from django.utils.dateparse import parse_datetime
 from django_hosts import reverse
 
 from users.models import User
-from ...forms import AddMachineForm, ChangeMachineForm
+from ...forms.machine import AddMachineForm, ChangeMachineForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 

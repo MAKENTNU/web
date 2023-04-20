@@ -12,7 +12,7 @@ from users.models import User
 from util.test_utils import (
     CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
 )
-from ..forms import ReservationListQueryForm
+from ..forms.reservation import ReservationListQueryForm
 from ..models.course import Printer3DCourse
 from ..models.machine import Machine, MachineType, MachineUsageRule
 from ..models.reservation import Quota, Reservation, ReservationRule

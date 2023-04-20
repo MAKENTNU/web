@@ -12,8 +12,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from util.view_utils import PreventGetRequestsMixin
-from ...forms import Printer3DCourseForm
-from ...models.course import Printer3DCourse
+from ..forms.course import Printer3DCourseForm
+from ..models.course import Printer3DCourse
 
 
 class Printer3DCourseListView(PermissionRequiredMixin, ListView):

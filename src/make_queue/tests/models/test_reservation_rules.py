@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils.dateparse import parse_datetime, parse_time
 
-from ...forms import ReservationRuleForm
+from ...forms.reservation_rule import ReservationRuleForm
 from ...models.machine import MachineType
 from ...models.reservation import ReservationRule
 

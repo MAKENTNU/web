@@ -16,12 +16,12 @@ from users.models import User
 from util.locale_utils import iso_datetime_format, parse_datetime_localized
 from util.test_utils import set_without_duplicates
 from ..utility import post_request_with_user, request_with_user
-from ...forms import ReservationForm, ReservationListQueryForm
+from ...forms.reservation import ReservationForm, ReservationListQueryForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
 from ...templatetags.reservation_extra import can_change_reservation
-from ...views.reservation.reservation import ReservationCreateView, ReservationUpdateView
+from ...views.reservation import ReservationCreateView, ReservationUpdateView
 
 
 Day = ReservationRule.Day

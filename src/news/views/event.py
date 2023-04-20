@@ -1,5 +1,5 @@
 import math
-from abc import ABC, abstractmethod
+from abc import ABC
 from datetime import timedelta
 
 from asgiref.sync import async_to_sync
@@ -16,19 +16,17 @@ from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import get_language, gettext_lazy as _, trim_whitespace
-from django.views.generic import CreateView, DeleteView, DetailView, FormView, ListView, TemplateView, UpdateView
-from django.views.generic.detail import SingleObjectMixin
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 from django_hosts import reverse as django_hosts_reverse
 
 from mail import email
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
-from util.view_utils import (
-    CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, UTF8JsonResponse, insert_form_field_values,
-)
-from .forms import ArticleForm, EventForm, EventParticipantsSearchQueryForm, EventTicketForm, NewsBaseForm, TimePlaceForm, ToggleForm
-from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
+from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, insert_form_field_values
+from .article import NewsBaseFormMixin
+from ..forms import EventForm, EventParticipantsSearchQueryForm, EventTicketForm, TimePlaceForm
+from ..models import Event, EventQuerySet, EventTicket, TimePlace, User
 
 
 class EventListView(ListView):
@@ -85,14 +83,6 @@ class EventListView(ListView):
         return context
 
 
-class ArticleListView(ListView):
-    template_name = 'news/article/article_list.html'
-    context_object_name = 'articles'
-
-    def get_queryset(self):
-        return Article.objects.published().visible_to(self.request.user).order_by('-publication_time')
-
-
 class EventDetailView(PermissionRequiredMixin, DetailView):
     model = Event
     template_name = 'news/event/detail/event_detail.html'
@@ -118,30 +108,6 @@ class EventDetailView(PermissionRequiredMixin, DetailView):
             'last_occurrence': event.get_past_occurrences().first(),
             **kwargs,
         })
-
-
-class ArticleDetailView(PermissionRequiredMixin, DetailView):
-    model = Article
-    template_name = 'news/article/article_detail.html'
-    context_object_name = 'news_obj'
-
-    def has_permission(self):
-        article = self.get_object()
-        if article not in Article.objects.published() and not self.request.user.has_perm('news.change_article'):
-            return False
-        elif article.private and not self.request.user.has_perm('news.can_view_private'):
-            return False
-        else:
-            return True
-
-
-class AdminArticleListView(PermissionRequiredMixin, ListView):
-    model = Article
-    template_name = 'news/article/admin_article_list.html'
-    context_object_name = 'articles'
-
-    def has_permission(self):
-        return self.request.user.has_any_permissions_for(Article)
 
 
 class AdminEventListView(PermissionRequiredMixin, ListView):
@@ -234,52 +200,6 @@ class AdminEventDetailView(PermissionRequiredMixin, DetailView):
             'past_timeplaces': event.timeplaces.past().order_by('-start_time'),
             **kwargs,
         })
-
-
-class NewsBaseFormMixin(CustomFieldsetFormMixin, ABC):
-    model: NewsBase
-    form_class: NewsBaseForm
-    template_name = 'news/news_base_form.html'
-
-    def get_custom_fieldsets(self):
-        return [
-            {'fields': ('title', 'content', 'clickbait')},
-            self.get_custom_news_fieldset(),
-            {'fields': ('image', 'contain')},
-            {'fields': ('image_description',)},
-
-            {'heading': _("Attributes")},
-            {'fields': ('featured', 'hidden', 'private'), 'layout_class': "ui three inline fields"},
-        ]
-
-    @abstractmethod
-    def get_custom_news_fieldset(self) -> dict:
-        raise NotImplementedError
-
-
-class ArticleFormMixin(NewsBaseFormMixin, ABC):
-    model = Article
-    form_class = ArticleForm
-    success_url = reverse_lazy('admin_article_list')
-
-    back_button_link = success_url
-    back_button_text = _("Admin page for articles")
-
-    def get_custom_news_fieldset(self) -> dict:
-        return {'fields': ('publication_time',)}
-
-
-class ArticleUpdateView(PermissionRequiredMixin, ArticleFormMixin, UpdateView):
-    permission_required = ('news.change_article',)
-
-    form_title = _("Change Article")
-
-
-class ArticleCreateView(PermissionRequiredMixin, ArticleFormMixin, CreateView):
-    permission_required = ('news.add_article',)
-
-    form_title = _("Add Article")
-    save_button_text = _("Add")
 
 
 class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
@@ -432,55 +352,6 @@ class TimePlaceDuplicateCreateView(PermissionRequiredMixin, PreventGetRequestsMi
 
     def get_success_url(self):
         return reverse('time_place_update', args=[self.event.pk, self.time_place.pk])
-
-
-class AdminAPINewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, FormView, ABC):
-    form_class = ToggleForm
-
-    def get_form_kwargs(self):
-        return {
-            **super().get_form_kwargs(),
-            'instance': self.get_object(),
-        }
-
-    def form_valid(self, form):
-        obj = self.get_object()
-        toggle_attr = form.cleaned_data['toggle_attr']
-        attr_value = getattr(obj, toggle_attr)
-
-        toggled_attr_value = not attr_value
-        setattr(obj, toggle_attr, toggled_attr_value)
-        obj.save()
-        return UTF8JsonResponse({
-            'is_hidden': toggled_attr_value,
-        })
-
-    def form_invalid(self, form):
-        return UTF8JsonResponse({})
-
-
-class AdminAPIArticleToggleView(PermissionRequiredMixin, AdminAPINewsBaseToggleView):
-    permission_required = ('news.change_article',)
-    model = Article
-
-
-class AdminAPIEventToggleView(PermissionRequiredMixin, AdminAPINewsBaseToggleView):
-    permission_required = ('news.change_event',)
-    model = Event
-
-
-class AdminAPITimePlaceToggleView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, AdminAPINewsBaseToggleView):
-    permission_required = ('news.change_timeplace',)
-    model = TimePlace
-
-    def get_object(self, queryset=None):
-        return self.time_place
-
-
-class ArticleDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('news.delete_article',)
-    model = Article
-    success_url = reverse_lazy('admin_article_list')
 
 
 class EventDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

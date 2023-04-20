@@ -38,6 +38,7 @@ A summary of changes made to the codebase, grouped per deployment.
   - The path segments (i.e. `/the-text-between-the-forward-slashes/`) now all have a more consistent structure,
     including prefixing all admin pages' paths with `admin/` and all API endpoints with `api/`
   - Permanent redirects have been added for the URLs deemed most relevant, to redirect from the old to the new URL
+- Moved lots of views and forms around between files, to have them more practically organized
 - Renamed lots of views, forms and templates to comply with
   [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
 - Changed multiple pages' URLs to use [query parameters](https://en.wikipedia.org/wiki/Query_string),

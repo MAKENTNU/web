@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import include, path
 
 from . import views
+from .api import views as api_views
 
 
 urlpatterns = [
@@ -21,11 +22,11 @@ adminpatterns = [
 # --- Admin API URL patterns (imported in `web/urls.py`) ---
 
 suggest_skill_adminapipatterns = [
-    path("vote/", views.AdminAPISuggestSkillVoteView.as_view(), name='admin_api_suggest_skill_vote'),
-    path("<int:pk>/delete/", views.AdminAPISuggestSkillDeleteView.as_view(), name='admin_api_suggest_skill_delete'),
+    path("vote/", api_views.AdminAPISuggestSkillVoteView.as_view(), name='admin_api_suggest_skill_vote'),
+    path("<int:pk>/delete/", api_views.AdminAPISuggestSkillDeleteView.as_view(), name='admin_api_suggest_skill_delete'),
 ]
 
 adminapipatterns = [
-    path("register/profile/", views.AdminAPIRegisterProfileView.as_view(), name='admin_api_register_profile'),
+    path("register/profile/", api_views.AdminAPIRegisterProfileView.as_view(), name='admin_api_register_profile'),
     path("suggest/", include(suggest_skill_adminapipatterns)),
 ]

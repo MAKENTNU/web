@@ -1,38 +1,16 @@
 from abc import ABC
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 
 from users.models import User
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from ...forms import ReservationRuleForm
-from ...models.machine import MachineType, MachineUsageRule
-from ...models.reservation import Quota, ReservationRule
-
-
-# noinspection PyUnresolvedReferences
-class MachineTypeRelatedViewMixin:
-    """
-    NOTE: When extending this mixin class, it's required to have an ``int`` path converter named ``pk`` as part of the view's path,
-    which will be used to query the database for the machine type that the object(s) are related to.
-    If found, the machine type will be assigned to a ``machine_type`` field on the view, otherwise, a 404 error will be raised.
-    """
-    machine_type: MachineType
-
-    def setup(self, request, *args, **kwargs):
-        super().setup(request, *args, **kwargs)
-        machine_type_pk = self.kwargs['pk']
-        self.machine_type = get_object_or_404(MachineType, pk=machine_type_pk)
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**{
-            'machine_type': self.machine_type,
-            **kwargs,
-        })
+from ..forms.reservation_rule import ReservationRuleForm
+from ..models.reservation import Quota, ReservationRule
+from ..views.machine import MachineTypeRelatedViewMixin
 
 
 class ReservationRuleListView(MachineTypeRelatedViewMixin, ListView):
@@ -114,45 +92,3 @@ class ReservationRuleDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin
 
     def get_success_url(self):
         return reverse('reservation_rule_list', args=[self.object.machine_type.pk])
-
-
-class MachineUsageRuleDetailView(MachineTypeRelatedViewMixin, DetailView):
-    model = MachineUsageRule
-    template_name = 'make_queue/machine_usage_rule_detail.html'
-    context_object_name = 'usage_rules'
-
-    def get_object(self, queryset=None):
-        usage_rule, _created = MachineUsageRule.objects.get_or_create(machine_type=self.machine_type)
-        return usage_rule
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(**{
-            # This translation is here instead of in the template, to avoid two translation entries
-            # differing only in format syntax (`{var}` vs `%(var)s`)
-            'title': _("Usage rules for {machine_type}").format(machine_type=self.machine_type),
-            **kwargs,
-        })
-
-
-class MachineUsageRuleUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, MachineTypeRelatedViewMixin, UpdateView):
-    permission_required = ('make_queue.change_machineusagerule',)
-    model = MachineUsageRule
-    fields = ('content',)
-    template_name = 'make_queue/machine_usage_rule_form.html'
-
-    narrow = False
-
-    def get_object(self, queryset=None):
-        return self.machine_type.usage_rule
-
-    def get_form_title(self):
-        return _("Change Usage Rules for {machine_type}").format(machine_type=self.machine_type)
-
-    def get_back_button_link(self):
-        return self.get_success_url()
-
-    def get_back_button_text(self):
-        return _("View usage rules for {machine_type}").format(machine_type=self.machine_type)
-
-    def get_success_url(self):
-        return self.get_object().get_absolute_url()

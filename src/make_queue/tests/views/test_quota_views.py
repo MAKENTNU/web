@@ -6,7 +6,7 @@ from django_hosts import reverse
 from users.models import User
 from ...models.machine import MachineType
 from ...models.reservation import Quota
-from ...views.admin.quota import AdminQuotaPanelView
+from ...views.quota import AdminQuotaPanelView
 
 
 class TestAdminUserQuotaListView(TestCase):
