@@ -385,8 +385,8 @@ ReservationCalendar.prototype.update = function () {
     const calendar = this;
 
     $.get(`${window.location.origin}/reservation/calendar/${this.machine}/reservations/`, {
-        startDate: this.date.djangoFormat(),
-        endDate: this.date.nextWeek().djangoFormat(),
+        start_date: this.date.djangoFormat(),
+        end_date: this.date.nextWeek().djangoFormat(),
     }, (data) => calendar.updateReservations.apply(calendar, [data]), "json");
 
     $.get(`${window.location.origin}/reservation/calendar/${this.machine}/rules/`, {}, (data) => {

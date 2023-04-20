@@ -373,6 +373,26 @@ class ReservationListQueryForm(forms.Form):
     owner = forms.TypedChoiceField(choices=Owner.choices, coerce=Owner)
 
 
+class APIReservationListQueryForm(forms.Form):
+    start_date = forms.DateTimeField()
+    end_date = forms.DateTimeField()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date and end_date:
+            if start_date > end_date:
+                code = 'invalid_relative_to_other_field'
+                raise forms.ValidationError({
+                    'start_date': forms.ValidationError("This must be before 'end_date'.", code=code),
+                    'end_date': forms.ValidationError("This must be after 'start_date'.", code=code),
+                })
+
+        return cleaned_data
+
+
 class AdminQuotaPanelQueryForm(forms.Form):
     user = forms.ModelChoiceField(
         User.objects.all(),

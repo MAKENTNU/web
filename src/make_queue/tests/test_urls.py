@@ -103,9 +103,9 @@ class UrlTests(MakeQueueTestBase, TestCase):
     def test_all_get_request_paths_succeed(self):
         year, week_number, _weekday = timezone.localtime().isocalendar()
         # Create URL params to query all reservations
-        api_reservation_list_url_params = urlencode({
-            'startDate': Reservation.objects.earliest('start_time').start_time.isoformat(),
-            'endDate': Reservation.objects.latest('end_time').end_time.isoformat(),
+        api_reservation_list_params = urlencode({
+            'start_date': Reservation.objects.earliest('start_time').start_time.isoformat(),
+            'end_date': Reservation.objects.latest('end_time').end_time.isoformat(),
         })
 
         path_predicates = [
@@ -130,7 +130,7 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # calendar_urlpatterns
             *[
                 Get(
-                    f"{reverse('api_reservation_list', args=[machine.pk])}?{api_reservation_list_url_params}",
+                    f"{reverse('api_reservation_list', args=[machine.pk])}?{api_reservation_list_params}",
                     public=True,
                 )
                 for machine in self.machines
