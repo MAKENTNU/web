@@ -1,3 +1,5 @@
+import datetime
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.db.models import Q, TextChoices
@@ -11,6 +13,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
+from util.locale_utils import last_week_of_year, year_and_week_to_monday
 from util.templatetags.datetime_tags import long_datetime
 from web.widgets import (
     Direction, DirectionalCheckboxSelectMultiple, MazeMapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput,
@@ -323,6 +326,43 @@ class ChangeMachineForm(MachineFormBase):
             cleaned_data['info_message_date'] = timezone.localtime()
 
         return cleaned_data
+
+
+class MachineDetailQueryForm(forms.Form):
+    calendar_year = forms.IntegerField(required=False, min_value=datetime.MINYEAR, max_value=datetime.MAXYEAR)
+    calendar_week = forms.IntegerField(required=False, min_value=1, max_value=53)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        calendar_year = cleaned_data.get('calendar_year')
+        calendar_week = cleaned_data.get('calendar_week')
+
+        match calendar_year, calendar_week:
+            case None, int():
+                raise self._get_all_fields_must_be_set_validation_error()
+            case int(), None:
+                raise self._get_all_fields_must_be_set_validation_error()
+
+            case int(), int():
+                invalid_week = calendar_week > last_week_of_year(calendar_year)
+                if not invalid_week:
+                    try:
+                        year_and_week_to_monday(calendar_year, calendar_week)
+                    except ValueError:
+                        invalid_week = True
+
+                if invalid_week:
+                    raise forms.ValidationError({
+                        'calendar_week': forms.ValidationError(f"{calendar_week} is not a valid week number for the year {calendar_year}.",
+                                                               code='invalid_calendar_week'),
+                    })
+
+        return cleaned_data
+
+    @staticmethod
+    def _get_all_fields_must_be_set_validation_error():
+        return forms.ValidationError("Either both 'calendar_year' and 'calendar_week' must be set, or none of them.",
+                                     code='all_or_no_fields_must_be_set')
 
 
 class ReservationListQueryForm(forms.Form):

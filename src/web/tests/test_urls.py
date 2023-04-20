@@ -6,6 +6,7 @@ from django.test import Client, TestCase
 from django.utils import translation
 from django_hosts import reverse
 
+from make_queue.models.machine import Machine
 from news.tests.test_urls import NewsTestBase
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds
@@ -86,8 +87,12 @@ class UrlTests(NewsTestBase, TestCase):
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')
 
     def test_all_old_urls_succeed(self):
+        machine1 = Machine.objects.create(name="Machine 1", machine_type_id=1)
+
         path_predicates = [
             Get('/rules/', public=True, redirect=True),
+
+            Get(f'/reservation/2023/16/{machine1.pk}/', public=True, redirect=True),
 
             Get('/reservation/me/', public=False, redirect=True),
             Get('/reservation/admin/', public=False, redirect=True),

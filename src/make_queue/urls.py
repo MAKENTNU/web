@@ -1,19 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.urls import include, path, register_converter
+from django.urls import include, path
 
-from . import converters
 from .views.admin import course, quota
 from .views.api import calendar as calendar_api, reservation as reservation_api
 from .views.quota import user
 from .views.reservation import calendar, machine, reservation, rules
 
 
-register_converter(converters.Year, 'year')
-register_converter(converters.Week, 'week')
-
 machine_urlpatterns = [
     path("add/", machine.MachineCreateView.as_view(), name='machine_create'),
-    path("<int:pk>/", calendar.MachineDetailView.as_view(redirect_to_current_week=True), name='machine_detail'),
+    path("<int:pk>/", calendar.MachineDetailView.as_view(), name='machine_detail'),
     path("<int:pk>/change/", machine.MachineUpdateView.as_view(), name='machine_update'),
     path("<int:pk>/delete/", machine.MachineDeleteView.as_view(), name='machine_delete'),
 ]
@@ -61,7 +57,6 @@ course_urlpatterns = [
 urlpatterns = [
     path("", machine.MachineListView.as_view(), name='machine_list'),
     path("machines/", include(machine_urlpatterns)),
-    path("<year:year>/<week:week>/<int:pk>/", calendar.MachineDetailView.as_view(), name='machine_detail'),
     path("calendar/", include(calendar_urlpatterns)),
     path("json/", include(json_urlpatterns)),
     path("add/<int:pk>/", login_required(reservation.ReservationCreateView.as_view()), name='reservation_create'),

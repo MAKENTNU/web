@@ -108,6 +108,9 @@ Owner = ReservationListQueryForm.Owner
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(pattern_name='rules', permanent=True)),
 
+    path("reservation/<int:year>/<int:week>/<int:pk>/",
+         RedirectView.as_view(url='/reservation/machines/%(pk)s/?calendar_year=%(year)s&calendar_week=%(week)s', permanent=True)),
+
     path("reservation/me/", RedirectViewWithStaticQuery.as_view(pattern_name='reservation_list', query={'owner': Owner.ME}, permanent=True)),
     path("reservation/admin/", RedirectViewWithStaticQuery.as_view(pattern_name='reservation_list', query={'owner': Owner.MAKE}, permanent=True)),
 

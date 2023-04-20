@@ -115,17 +115,15 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # machine_urlpatterns
             Get(reverse('machine_create'), public=False),
             *[
-                Get(reverse('machine_detail', args=[machine.pk]), public=True, redirect=True)
+                Get(reverse('machine_detail', args=[machine.pk]), public=True)
+                for machine in self.machines
+            ],
+            *[
+                Get(f"{reverse('machine_detail', args=[machine.pk])}?calendar_year={year}&calendar_week={week_number}", public=True)
                 for machine in self.machines
             ],
             *[
                 Get(reverse('machine_update', args=[machine.pk]), public=False)
-                for machine in self.machines
-            ],
-
-            # Back to urlpatterns
-            *[
-                Get(reverse('machine_detail', kwargs={'year': year, 'week': week_number, 'pk': machine.pk}), public=True)
                 for machine in self.machines
             ],
 
