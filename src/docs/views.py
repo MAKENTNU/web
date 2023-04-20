@@ -10,8 +10,8 @@ from django.views.generic import CreateView, DeleteView, DetailView, TemplateVie
 from django.views.generic.edit import ModelFormMixin
 
 from util.templatetags.string_tags import title_en
-from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import AddPageForm, ChangePageVersionForm, PageContentForm
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, insert_form_field_values
+from .forms import AddPageForm, ChangePageVersionForm, DocumentationPageSearchQueryForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
 
 
@@ -166,8 +166,10 @@ class DocumentationPageDeleteView(PermissionRequiredMixin, PreventGetRequestsMix
     success_url = reverse_lazy('home')
 
 
-class DocumentationPageSearchView(TemplateView):
+class DocumentationPageSearchView(QueryParameterFormMixin, TemplateView):
+    form_class = DocumentationPageSearchQueryForm
     template_name = 'docs/documentation_page_search.html'
+
     page_size = 10
 
     @staticmethod
@@ -180,9 +182,9 @@ class DocumentationPageSearchView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        query = self.query_params['query']
+        page = self.query_params['page'] or 1
 
-        query = self.request.GET.get('query', "")
-        page = int(self.request.GET.get('page', 1))
         pages = Page.objects.filter(Q(title__icontains=query) | Q(current_content__content__icontains=query))
         n_pages = ceil(pages.count() / self.page_size)
         context_data.update({
