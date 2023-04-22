@@ -21,7 +21,6 @@ calendar_urlpatterns = [
 
 json_urlpatterns = [
     path("<int:pk>/", login_required(reservation_api.APIMachineDataView.as_view()), name='api_machine_data'),
-    path("<int:pk>/<int:reservation_pk>/", login_required(reservation_api.APIMachineDataView.as_view()), name='api_machine_data'),
 ]
 
 rules_urlpatterns = [

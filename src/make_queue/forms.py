@@ -22,7 +22,7 @@ from web.widgets import (
 from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType
-from .models.reservation import Quota, ReservationRule
+from .models.reservation import Quota, Reservation, ReservationRule
 
 
 class ReservationForm(forms.Form):
@@ -363,6 +363,16 @@ class MachineDetailQueryForm(forms.Form):
     def _get_all_fields_must_be_set_validation_error():
         return forms.ValidationError("Either both 'calendar_year' and 'calendar_week' must be set, or none of them.",
                                      code='all_or_no_fields_must_be_set')
+
+
+class APIMachineDataQueryForm(forms.Form):
+    exclude_reservation = forms.ModelChoiceField(
+        Reservation.objects.all(),
+        required=False,
+        error_messages={
+            'invalid_choice': "Reservation with pk=%(value)s was not found."
+        },
+    )
 
 
 class ReservationListQueryForm(forms.Form):

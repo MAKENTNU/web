@@ -25,7 +25,7 @@ function getFutureReservations(machineID, forceNewTime) {
     let jsonUrl = `${LANG_PREFIX}/reservation/json/${machineID}/`;
     const reservationPK = $("#reservation-form").data("reservation");
     if (reservationPK) {
-        jsonUrl += `${reservationPK}/`;
+        jsonUrl += `?exclude_reservation=${reservationPK}`;
     }
     $.getJSON(jsonUrl, function (data) {
         reservations.length = 0;

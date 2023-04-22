@@ -146,7 +146,7 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 for machine in self.machines
             ],
             *[
-                Get(reverse('api_machine_data', args=[reservation.machine.pk, reservation.pk]), public=False)
+                Get(f"{reverse('api_machine_data', args=[reservation.machine.pk])}?exclude_reservation={reservation.pk}", public=False)
                 for reservation in self.reservations
             ],
 
