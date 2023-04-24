@@ -13,7 +13,7 @@ class TestAdminUserQuotaListView(TestCase):
 
     def test_get_user_quota(self):
         user = User.objects.create_user("test")
-        user.add_perms('make_queue.change_quota')
+        user.add_perms('internal.is_internal', 'make_queue.change_quota')
         user2 = User.objects.create_user("test2")
         machine_type = MachineType.objects.first()
         Quota.objects.create(all=True, user=user, machine_type=machine_type, number_of_reservations=2)

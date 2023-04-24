@@ -109,11 +109,13 @@ class UrlTests(MakeQueueTestBase, TestCase):
         })
 
         path_predicates = [
-            # urlpatterns
-            Get(reverse('machine_list'), public=True),
+            # specific_machinetype_urlpatterns
+            Get(reverse('reservation_rule_list', args=[self.printer_machine_type.pk]), public=True),
+            Get(reverse('reservation_rule_list', args=[self.sewing_machine_type.pk]), public=True),
+            Get(reverse('machine_usage_rule_detail', args=[self.printer_machine_type.pk]), public=True),
+            Get(reverse('machine_usage_rule_detail', args=[self.sewing_machine_type.pk]), public=True),
 
-            # machine_urlpatterns
-            Get(reverse('machine_create'), public=False),
+            # specific_machine_urlpatterns
             *[
                 Get(reverse('machine_detail', args=[machine.pk]), public=True)
                 for machine in self.machines
@@ -123,24 +125,27 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 for machine in self.machines
             ],
             *[
-                Get(reverse('machine_update', args=[machine.pk]), public=False)
+                Get(reverse('reservation_create', args=[machine.pk]), public=False)
                 for machine in self.machines
             ],
+            # machine_urlpatterns
+            Get(reverse('machine_list'), public=True),
 
-            # calendar_urlpatterns
+            # specific_reservation_urlpatterns
             *[
-                Get(
-                    f"{reverse('api_reservation_list', args=[machine.pk])}?{api_reservation_list_params}",
-                    public=True,
-                )
-                for machine in self.machines
+                Get(reverse('reservation_update', args=[reservation.pk]), public=False)
+                for reservation in self.reservations if reservation != self.reservation2  # `reservation2` starts in the future
             ],
-            *[
-                Get(reverse('api_reservation_rule_list', args=[machine.pk]), public=True)
-                for machine in self.machines
-            ],
+            # reservation_urlpatterns
+            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.ME}", public=False),
+            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.MAKE}", public=False),
+            Get(reverse('reservation_find_free_slots'), public=False),
 
-            # json_urlpatterns
+            # specific_machinetype_apipatterns
+            Get(reverse('api_reservation_rule_list', args=[self.printer_machine_type.pk]), public=True),
+            Get(reverse('api_reservation_rule_list', args=[self.sewing_machine_type.pk]), public=True),
+
+            # specific_machine_apipatterns
             *[
                 Get(reverse('api_machine_data', args=[machine.pk]), public=False)
                 for machine in self.machines
@@ -149,51 +154,50 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 Get(f"{reverse('api_machine_data', args=[reservation.machine.pk])}?exclude_reservation={reservation.pk}", public=False)
                 for reservation in self.reservations
             ],
-
-            # Back to urlpatterns
             *[
-                Get(reverse('reservation_create', args=[machine.pk]), public=False)
+                Get(f"{reverse('api_reservation_list', args=[machine.pk])}?{api_reservation_list_params}", public=True)
                 for machine in self.machines
             ],
-            *[
-                Get(reverse('reservation_update', args=[reservation.pk]), public=False)
-                for reservation in self.reservations if reservation != self.reservation2  # `reservation2` starts in the future
-            ],
-            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.ME}", public=False),
-            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.MAKE}", public=False),
-            Get(reverse('reservation_find_free_slots'), public=False),
 
-            # rules_urlpatterns
-            Get(reverse('reservation_rule_list', args=[self.printer_machine_type.pk]), public=True),
-            Get(reverse('reservation_rule_list', args=[self.sewing_machine_type.pk]), public=True),
-            Get(reverse('reservation_rule_create', args=[self.printer_machine_type.pk]), public=False),
-            Get(reverse('reservation_rule_create', args=[self.sewing_machine_type.pk]), public=False),
+            # specific_reservation_rule_adminpatterns
             *[
                 Get(reverse('reservation_rule_update', args=[rule.machine_type.pk, rule.pk]), public=False)
                 for rule in self.rules
             ],
-            Get(reverse('machine_usage_rule_detail', args=[self.printer_machine_type.pk]), public=True),
-            Get(reverse('machine_usage_rule_detail', args=[self.sewing_machine_type.pk]), public=True),
+            # reservation_rules_adminpatterns
+            Get(reverse('reservation_rule_create', args=[self.printer_machine_type.pk]), public=False),
+            Get(reverse('reservation_rule_create', args=[self.sewing_machine_type.pk]), public=False),
+            # specific_machinetype_adminpatterns
             Get(reverse('machine_usage_rule_update', args=[self.printer_machine_type.pk]), public=False),
             Get(reverse('machine_usage_rule_update', args=[self.sewing_machine_type.pk]), public=False),
 
-            # quota_urlpatterns
-            Get(reverse('admin_quota_panel'), public=False),
-            Get(reverse('quota_create'), public=False),
+            # specific_machine_adminpatterns
+            *[
+                Get(reverse('machine_update', args=[machine.pk]), public=False)
+                for machine in self.machines
+            ],
+            # machine_adminpatterns
+            Get(reverse('machine_create'), public=False),
+
+            # specific_course_adminpatterns
+            Get(reverse('printer_3d_course_update', args=[self.course1.pk]), public=False),
+            Get(reverse('printer_3d_course_update', args=[self.course2.pk]), public=False),
+            # course_adminpatterns
+            Get(reverse('printer_3d_course_list'), public=False),
+            Get(reverse('printer_3d_course_create'), public=False),
+
+            # specific_quota_adminpatterns
             *[
                 Get(reverse('quota_update', args=[quota.pk]), public=False)
                 for quota in self.quotas
             ],
-            Get(reverse('admin_user_quota_list', args=[self.user1.pk]), public=False),
-            Get(reverse('admin_user_quota_list', args=[self.user2.pk]), public=False),
+            # quota_adminpatterns
+            Get(reverse('admin_quota_panel'), public=False),
             Get(f"{reverse('admin_quota_panel')}?user={self.user1.pk}", public=False),
             Get(f"{reverse('admin_quota_panel')}?user={self.user2.pk}", public=False),
-
-            # course_urlpatterns
-            Get(reverse('printer_3d_course_list'), public=False),
-            Get(reverse('printer_3d_course_create'), public=False),
-            Get(reverse('printer_3d_course_update', args=[self.course1.pk]), public=False),
-            Get(reverse('printer_3d_course_update', args=[self.course2.pk]), public=False),
+            Get(reverse('quota_create'), public=False),
+            Get(reverse('admin_user_quota_list', args=[self.user1.pk]), public=False),
+            Get(reverse('admin_user_quota_list', args=[self.user2.pk]), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

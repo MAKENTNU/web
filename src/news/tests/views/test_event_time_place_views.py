@@ -36,7 +36,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.add_event')
+        self.user.add_perms('internal.is_internal', 'news.add_event')
         response = self.client.get(reverse('event_create'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -44,7 +44,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('event_update', args=[self.event.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.change_event')
+        self.user.add_perms('internal.is_internal', 'news.change_event')
         response = self.client.get(reverse('event_update', args=[self.event.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -54,7 +54,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
+        self.user.add_perms('internal.is_internal', 'news.add_timeplace', 'news.change_timeplace')
         response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
 
         duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
@@ -67,7 +67,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(duplicated_time_place.end_time, new_end_time)
 
     def test_time_place_duplicate_old(self):
-        self.user.add_perms('news.add_timeplace', 'news.change_timeplace')
+        self.user.add_perms('internal.is_internal', 'news.add_timeplace', 'news.change_timeplace')
 
         start_time = timezone.now() - timedelta(weeks=2, days=3)
         end_time = start_time + timedelta(days=1)
@@ -162,7 +162,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         """
 
         self.create_tickets_for(event, username_and_ticket_state_tuples)
-        self.user.add_perms('news.change_event')
+        self.user.add_perms('internal.is_internal', 'news.change_event')
 
         url_args = [event.event.pk, event.pk] if isinstance(event, TimePlace) else [event.pk]
         response = self.client.get(reverse(url_name, args=url_args))

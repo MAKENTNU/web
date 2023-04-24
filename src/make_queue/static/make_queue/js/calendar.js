@@ -20,6 +20,7 @@ function ReservationCalendar($element, properties) {
     this.informationHeaders = $element.find("thead th").toArray();
     this.days = $element.find("tbody .day .reservations").toArray();
     this.$element = $element;
+    this.machineType = properties.machineType;
     this.machine = properties.machine;
     this.machineReservationURL = properties.machineReservationURL;
     this.selection = properties.selection;
@@ -384,12 +385,12 @@ ReservationCalendar.prototype.update = function () {
     this.updateInformationHeaders();
     const calendar = this;
 
-    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/reservations/`, {
+    $.get(`${window.location.origin}/api/reservation/machines/${this.machine}/reservations/`, {
         start_date: this.date.djangoFormat(),
         end_date: this.date.nextWeek().djangoFormat(),
     }, (data) => calendar.updateReservations.apply(calendar, [data]), "json");
 
-    $.get(`${window.location.origin}/reservation/calendar/${this.machine}/rules/`, {}, (data) => {
+    $.get(`${window.location.origin}/api/reservation/machinetypes/${this.machineType}/reservationrules/`, {}, (data) => {
         calendar.reservationRules = data.rules;
     });
 };

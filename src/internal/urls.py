@@ -14,10 +14,7 @@ urlpatterns = [
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
 
     *debug_toolbar_urls(),
-    path("i18n/", decorator_include(
-        permission_required_else_denied('internal.is_internal'),
-        'django.conf.urls.i18n'
-    )),
+    path("i18n/", decorator_include(permission_required_else_denied('internal.is_internal'), 'django.conf.urls.i18n')),
     *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # For development only; Nginx is used in production
 
     *ckeditor_uploader_urls(),
@@ -35,29 +32,44 @@ internal_content_box_urlpatterns = [
     path("<int:pk>/change/", views.InternalContentBoxUpdateView.as_view(), name='content_box_update'),
 ]
 
+change_status_of_specific_member_urlpatterns = [
+    path("", views.MemberStatusUpdateView.as_view(), name='member_status_update'),
+    path("quit/", views.MemberQuitView.as_view(), name='member_quit'),
+    path("retire/", views.MemberRetireView.as_view(), name='member_retire'),
+]
+change_specific_member_urlpatterns = [
+    path("", views.MemberUpdateView.as_view(), name='member_update'),
+    path("status/", include(change_status_of_specific_member_urlpatterns)),
+]
+specific_member_urlpatterns = [
+    path("", views.MemberListView.as_view(), name='member_detail'),
+    path("change/", include(change_specific_member_urlpatterns)),
+    path("access/<int:system_access_pk>/change/", views.SystemAccessUpdateView.as_view(), name='system_access_update'),
+]
 member_urlpatterns = [
-    path("members/", views.MemberListView.as_view(), name='member_list'),
-    path("members/<int:pk>/", views.MemberListView.as_view(), name='member_detail'),
-    path("members/add/", views.MemberCreateView.as_view(), name='member_create'),
-    path("members/<int:pk>/change/", views.MemberUpdateView.as_view(), name='member_update'),
-    path("members/<int:pk>/change/status/", views.MemberStatusUpdateView.as_view(), name='member_status_update'),
-    path("members/<int:pk>/change/status/quit/", views.MemberQuitView.as_view(), name='member_quit'),
-    path("members/<int:pk>/change/status/retire/", views.MemberRetireView.as_view(), name='member_retire'),
-    path("members/<int:member_pk>/access/<int:pk>/change/", views.SystemAccessUpdateView.as_view(), name='system_access_update'),
+    path("", views.MemberListView.as_view(), name='member_list'),
+    path("add/", views.MemberCreateView.as_view(), name='member_create'),
+    path("<int:pk>/", include(specific_member_urlpatterns)),
 ]
 
+specific_secret_urlpatterns = [
+    path("change/", views.SecretUpdateView.as_view(), name='secret_update'),
+    path("delete/", views.SecretDeleteView.as_view(), name='secret_delete'),
+]
 secret_urlpatterns = [
-    path("secrets/", views.SecretListView.as_view(), name='secret_list'),
-    path("secrets/add/", views.SecretCreateView.as_view(), name='secret_create'),
-    path("secrets/<int:pk>/change/", views.SecretUpdateView.as_view(), name='secret_update'),
-    path("secrets/<int:pk>/delete/", views.SecretDeleteView.as_view(), name='secret_delete'),
+    path("", views.SecretListView.as_view(), name='secret_list'),
+    path("add/", views.SecretCreateView.as_view(), name='secret_create'),
+    path("<int:pk>/", include(specific_secret_urlpatterns)),
 ]
 
+specific_quote_urlpatterns = [
+    path("change/", views.QuoteUpdateView.as_view(), name='quote_update'),
+    path("delete/", views.QuoteDeleteView.as_view(), name='quote_delete'),
+]
 quote_urlpatterns = [
-    path("quotes/", views.QuoteListView.as_view(), name='quote_list'),
-    path("quotes/add/", views.QuoteCreateView.as_view(), name='quote_create'),
-    path("quotes/<int:pk>/change/", views.QuoteUpdateView.as_view(), name='quote_update'),
-    path("quotes/<int:pk>/delete/", views.QuoteDeleteView.as_view(), name='quote_delete'),
+    path("", views.QuoteListView.as_view(), name='quote_list'),
+    path("add/", views.QuoteCreateView.as_view(), name='quote_create'),
+    path("<int:pk>/", include(specific_quote_urlpatterns)),
 ]
 
 internal_urlpatterns = [
@@ -67,25 +79,13 @@ internal_urlpatterns = [
     views.InternalContentBoxDetailView.get_path('make-history'),
     path("contentbox/", include(internal_content_box_urlpatterns)),
 
-    path("", decorator_include(
-        permission_required_else_denied('internal.view_member'),
-        member_urlpatterns
-    )),
-    path("", decorator_include(
-        permission_required_else_denied('internal.view_secret'),
-        secret_urlpatterns
-    )),
-    path("", decorator_include(
-        permission_required_else_denied('internal.view_quote'),
-        quote_urlpatterns
-    )),
+    path("members/", decorator_include(permission_required_else_denied('internal.view_member'), member_urlpatterns)),
+    path("secrets/", decorator_include(permission_required_else_denied('internal.view_secret'), secret_urlpatterns)),
+    path("quotes/", decorator_include(permission_required_else_denied('internal.view_quote'), quote_urlpatterns)),
 ]
 
 urlpatterns += i18n_patterns(
-    path("", decorator_include(
-        permission_required_else_denied('internal.is_internal'),
-        internal_urlpatterns
-    )),
+    path("", decorator_include(permission_required_else_denied('internal.is_internal'), internal_urlpatterns)),
 
     prefix_default_language=False,
 )

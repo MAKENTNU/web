@@ -158,8 +158,8 @@ class TestReservationCreateOrUpdateView(ReservationCreateOrUpdateViewTestBase):
             end_time=now + timedelta(hours=2),
             event=self.timeplace, comment="Comment",
         )
-        view = self.get_view(ReservationUpdateView, reservation_pk=reservation.pk)
-        context_data = view.get_context_data(reservation_pk=reservation.pk)
+        view = self.get_view(ReservationUpdateView, pk=reservation.pk)
+        context_data = view.get_context_data(pk=reservation.pk)
         context_data["machine_types"] = set(context_data["machine_types"])
 
         self.assertDictEqual(context_data, {
@@ -179,7 +179,7 @@ class TestReservationCreateOrUpdateView(ReservationCreateOrUpdateViewTestBase):
             "special_text": "",
             "maximum_days_in_advance": Reservation.FUTURE_LIMIT.days,
             "comment": "Comment",
-            "reservation_pk": reservation.pk,
+            "reservation": reservation,
         })
 
     def test_get_context_data_non_reservation(self):
@@ -358,9 +358,9 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
 
     def test_post_changeable_reservation(self):
         reservation = self.create_reservation(self.create_form(start_time_delta=timedelta(hours=1), end_time_delta=timedelta(hours=2)))
-        view = self.get_view(reservation_pk=reservation.pk)
+        view = self.get_view(pk=reservation.pk)
         view.request.method = 'POST'
-        response = view.dispatch(view.request, reservation_pk=reservation.pk)
+        response = view.dispatch(view.request, pk=reservation.pk)
         # Response should be the edit page for the reservation, as no form is posted with the data
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertListEqual(response.template_name, ['make_queue/reservation_form.html'])
@@ -373,9 +373,9 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
 
         now_mock.return_value = timezone.localtime() + timedelta(hours=2, minutes=1)
 
-        view = self.get_view(reservation_pk=reservation.pk)
+        view = self.get_view(pk=reservation.pk)
         view.request.method = 'POST'
-        response = view.dispatch(view.request, reservation_pk=reservation.pk)
+        response = view.dispatch(view.request, pk=reservation.pk)
         # An unchangeable reservation should have redirect
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
@@ -386,8 +386,8 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
         reservation = self.create_reservation(self.create_form(start_time_delta=timedelta(hours=1), end_time_delta=timedelta(hours=2)))
         form = self.create_form(start_time_delta=timedelta(hours=1), end_time_delta=timedelta(hours=3))
         self.assertTrue(form.is_valid())
-        view = self.get_view(reservation_pk=reservation.pk)
-        response = view.form_valid(form, reservation_pk=reservation.pk)
+        view = self.get_view(pk=reservation.pk)
+        response = view.form_valid(form)
         self.assertEqual(Reservation.objects.count(), 1)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.first().end_time, timezone.localtime() + timedelta(hours=3))
@@ -401,8 +401,8 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
         self.machine = Machine.objects.create(name="M1", machine_model="Generic", machine_type=self.sewing_machine_type)
         form = self.create_form(start_time_delta=timedelta(hours=1), end_time_delta=timedelta(hours=3))
         self.assertTrue(form.is_valid())
-        view = self.get_view(reservation_pk=reservation.pk)
-        response = view.form_valid(form, reservation_pk=reservation.pk)
+        view = self.get_view(pk=reservation.pk)
+        response = view.form_valid(form)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.count(), 1)
         self.assertEqual(Reservation.objects.first().end_time, timezone.localtime() + timedelta(hours=2))
@@ -425,8 +425,8 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
                                                   end_time=now + timedelta(hours=2))
         form = self.create_form(start_time_delta=timedelta(hours=1), end_time_delta=timedelta(hours=2), event=self.timeplace)
         self.assertTrue(form.is_valid())
-        view = self.get_view(reservation_pk=reservation.pk)
-        response = view.form_valid(form, reservation_pk=reservation.pk)
+        view = self.get_view(pk=reservation.pk)
+        response = view.form_valid(form)
         self.assertEqual(Reservation.objects.count(), 1)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.first().event, self.timeplace)
@@ -445,8 +445,8 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
         )
         form = self.create_form(start_time_delta=timedelta(hours=1), end_time_delta=timedelta(hours=2), special=True, special_text="Test2")
         self.assertTrue(form.is_valid())
-        view = self.get_view(reservation_pk=reservation.pk)
-        response = view.form_valid(form, reservation_pk=reservation.pk)
+        view = self.get_view(pk=reservation.pk)
+        response = view.form_valid(form)
         self.assertEqual(Reservation.objects.count(), 1)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(Reservation.objects.first().special_text, "Test2")

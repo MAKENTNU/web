@@ -37,18 +37,24 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
-            Get(self.reverse('home'), public=False),
+            # urlpatterns
+            Get('/robots.txt', public=True, translated=False),
+            Get('/.well-known/security.txt', public=True, translated=False),
+
+            # specific_documentation_page_urlpatterns
             Get(self.reverse('documentation_page_detail', self.page1.pk), public=False),
             Get(self.reverse('documentation_page_history_detail', self.page1.pk), public=False),
             Get(self.reverse('documentation_page_content_detail', self.page1.pk, self.content1.pk), public=False),
             Get(self.reverse('documentation_page_content_detail', self.page1.pk, self.content2.pk), public=False),
-            Get(self.reverse('documentation_page_create'), public=False),
             Get(self.reverse('documentation_page_update', self.page1.pk), public=False),
+            # documentation_page_urlpatterns
+            Get(self.reverse('documentation_page_create'), public=False),
+
+            # unsafe_urlpatterns
+            Get(self.reverse('home'), public=False),
             Get(self.reverse('documentation_page_search'), public=False),
             Get(f"{self.reverse('documentation_page_search')}?query=lorem", public=False),
             Get(f"{self.reverse('documentation_page_search')}?query=lorem&page=2", public=False),
-            Get('/robots.txt', public=True, translated=False),
-            Get('/.well-known/security.txt', public=True, translated=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'docs')
 

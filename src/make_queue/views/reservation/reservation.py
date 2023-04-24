@@ -29,6 +29,7 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
     template_name = 'make_queue/reservation_form.html'
 
     new_reservation: bool
+    reservation: Reservation = None
 
     def get_error_message(self, form, reservation):
         """
@@ -76,7 +77,7 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
         if not reservation.validate():
             # Hack to "simulate" `ReservationUpdateView`
             self.reservation = reservation
-            context_data = self.get_context_data(reservation_pk=reservation.pk)
+            context_data = self.get_context_data()
             context_data["error"] = self.get_error_message(form, reservation)
             return render(self.request, self.template_name, context_data)
 
@@ -108,12 +109,12 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
             "maximum_days_in_advance": Reservation.FUTURE_LIMIT.days,
         }
 
-        # If we are given a reservation, populate the information relevant to that reservation
-        if 'reservation_pk' in kwargs:
+        # If we are updating an existing reservation, populate the information relevant to that reservation
+        if not self.new_reservation or self.reservation:
             # noinspection PyUnresolvedReferences
             reservation = self.reservation  # Defined in `ReservationUpdateView`
             context_data["start_time"] = reservation.start_time
-            context_data["reservation_pk"] = reservation.pk
+            context_data["reservation"] = reservation
             context_data["end_time"] = reservation.end_time
             context_data["selected_machine"] = reservation.machine
             context_data["event"] = reservation.event
@@ -240,7 +241,6 @@ class APIReservationDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin,
 class ReservationUpdateView(ReservationCreateOrUpdateView):
     """View for changing a reservation (Cannot be UpdateView due to the abstract inheritance of reservations)."""
     new_reservation = False
-
     reservation: Reservation
 
     @property
@@ -250,7 +250,7 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        reservation_pk = self.kwargs['reservation_pk']
+        reservation_pk = self.kwargs['pk']
         self.reservation = get_object_or_404(Reservation, pk=reservation_pk)
 
     def dispatch(self, request, *args, **kwargs):

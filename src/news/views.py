@@ -5,7 +5,7 @@ from datetime import timedelta
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.conf import settings
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.mail import get_connection, send_mail
 from django.db.models import Count, Max, Min, Prefetch, Q
 from django.db.models.functions import Concat
@@ -614,13 +614,13 @@ class EventTicketCreateView(PermissionRequiredMixin, CustomFieldsetFormMixin, Ev
         return self.object.get_absolute_url()
 
 
-class EventTicketDetailView(DetailView):
+class EventTicketDetailView(LoginRequiredMixin, DetailView):
     model = EventTicket
     template_name = 'news/event/ticket/event_ticket_detail.html'
     context_object_name = 'ticket'
 
 
-class EventTicketMyListView(ListView):
+class EventTicketMyListView(LoginRequiredMixin, ListView):
     template_name = 'news/event/ticket/event_ticket_my_list.html'
     context_object_name = 'tickets'
 

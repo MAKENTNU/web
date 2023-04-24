@@ -21,6 +21,7 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
+            # adminapipatterns
             Get(reverse('admin_api_basic_user_info', args=[self.user1.username]), public=False),
             Get(reverse('admin_api_basic_user_info', args=[self.user_with_basic_info.username]), public=False),
         ]

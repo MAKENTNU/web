@@ -9,7 +9,7 @@ $userDropdown.dropdown({
     fullTextSearch: true,
     forceSelection: true,
     onChange: function (userPK, text, $choice) {
-        $.ajax(`${LANG_PREFIX}/reservation/quota/user/${userPK}/`, {
+        $.ajax(`${LANG_PREFIX}/admin/reservation/quotas/users/${userPK}/`, {
             success: function (data, textStatus) {
                 $("#user-quotas").html(data);
                 setUpDeleteModal();

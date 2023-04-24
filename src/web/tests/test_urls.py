@@ -36,18 +36,27 @@ class UrlTests(NewsTestBase, TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
+            # urlpatterns
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
-            Get(reverse('index_page'), public=True),
+            # ckeditor_uploader_urls()
+            Get(reverse('ckeditor_browse'), public=False, translated=False),
+
+            # admin_urlpatterns
             Get(reverse('admin_panel'), public=False),
+
+            # about_urlpatterns
             Get(reverse('about'), public=True),
             Get(reverse('contact'), public=True),
+
+            # urlpatterns
+            Get(reverse('index_page'), public=True),
             Get(reverse('apply'), public=True),
             Get('/søk/', public=True),
             Get('/sok/', public=True),
             Get(reverse('cookies'), public=True),
             Get(reverse('privacypolicy'), public=True),
-            Get(reverse('ckeditor_browse'), public=False, translated=False),
+            Get(reverse('javascript_catalog'), public=True),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
@@ -92,13 +101,17 @@ class UrlTests(NewsTestBase, TestCase):
         path_predicates = [
             Get('/rules/', public=True, redirect=True),
 
+            Get('/reservation/', public=True, redirect=True),
             Get(f'/reservation/2023/16/{machine1.pk}/', public=True, redirect=True),
 
             Get('/reservation/me/', public=False, redirect=True),
             Get('/reservation/admin/', public=False, redirect=True),
+            Get('/reservation/slots/', public=False, redirect=True),
 
             Get('/reservation/rules/1/', public=True, redirect=True),
+            Get('/reservation/machinetypes/1/rules/', public=True, redirect=True),
             Get('/reservation/rules/usage/1/', public=True, redirect=True),
+            Get('/reservation/machinetypes/1/rules/usage/', public=True, redirect=True),
 
             Get(f'/news/article/{self.article1.pk}/', public=True, redirect=True),
             Get(f'/news/event/{self.event1.pk}/', public=True, redirect=True),

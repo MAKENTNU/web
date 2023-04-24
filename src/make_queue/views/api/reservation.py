@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils import timezone
 from django.views.generic import TemplateView
 
@@ -8,7 +9,7 @@ from ...forms import APIMachineDataQueryForm
 from ...models.reservation import Quota
 
 
-class APIMachineDataView(MachineRelatedViewMixin, QueryParameterFormMixin, TemplateView):
+class APIMachineDataView(LoginRequiredMixin, MachineRelatedViewMixin, QueryParameterFormMixin, TemplateView):
     form_class = APIMachineDataQueryForm
 
     def get_form(self, form_class=None):

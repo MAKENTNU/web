@@ -31,8 +31,11 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
+            # urlpatterns
             Get(reverse('user_skill_list'), public=True),
             Get(reverse('profile_detail'), public=False),
+
+            # adminpatterns
             Get(reverse('admin_suggest_skill'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
