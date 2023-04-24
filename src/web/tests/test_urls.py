@@ -10,14 +10,11 @@ from make_queue.models.machine import Machine
 from news.tests.test_urls import NewsTestBase
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds
+from util.url_utils import reverse_admin
 
 
 # Makes sure that the subdomain of all requests is `admin`
 ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': f'admin.{settings.PARENT_HOST}'}
-
-
-def reverse_admin(viewname: str, args=None, **kwargs):
-    return reverse(f'admin:{viewname}', args=args, kwargs=kwargs, host='admin')
 
 
 class UrlTests(NewsTestBase, TestCase):

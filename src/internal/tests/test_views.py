@@ -13,9 +13,9 @@ from contentbox.forms import EditSourceContentBoxForm
 from contentbox.models import ContentBox
 from users.models import User
 from util.auth_utils import get_perms, perm_to_str
-from util.url_utils import reverse_internal
+from util.url_utils import reverse_admin, reverse_internal
 from web.multilingual.data_structures import MultiLingualTextStructure
-from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS, reverse_admin
+from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from .test_urls import INTERNAL_CLIENT_DEFAULTS
 from ..models import Secret
 

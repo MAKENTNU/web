@@ -6,7 +6,8 @@ from django.test import Client, TestCase
 
 from users.models import User
 from util.test_utils import set_without_duplicates
-from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS, reverse_admin
+from util.url_utils import reverse_admin
+from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from ..admin import InheritanceGroupAdmin
 from ..models import InheritanceGroup
 
