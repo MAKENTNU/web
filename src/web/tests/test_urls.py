@@ -6,6 +6,7 @@ from django.test import Client, TestCase
 from django.utils import translation
 from django_hosts import reverse
 
+from contentbox.models import ContentBox
 from make_queue.models.machine import Machine
 from news.tests.test_urls import NewsTestBase
 from users.models import User
@@ -28,6 +29,11 @@ class UrlTests(NewsTestBase, TestCase):
         self.user_client = Client()
         self.user_client.login(username=username, password=password)
 
+        self.about_content_box = ContentBox.objects.create(url_name='about')
+        self.content_box1 = ContentBox.objects.create(url_name='content_box1')
+        self.content_box2 = ContentBox.objects.create(url_name='content_box2')
+        self.content_boxes = (self.about_content_box, self.content_box1, self.content_box2)
+
         # Populate the front page
         self.init_objs()
 
@@ -41,6 +47,12 @@ class UrlTests(NewsTestBase, TestCase):
 
             # admin_urlpatterns
             Get(reverse('admin_panel'), public=False),
+
+            # content_box_urlpatterns
+            *[
+                Get(reverse('content_box_update', args=[content_box.pk]), public=False)
+                for content_box in self.content_boxes
+            ],
 
             # about_urlpatterns
             Get(reverse('about'), public=True),

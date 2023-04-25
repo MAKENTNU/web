@@ -6,6 +6,7 @@ from http import HTTPStatus
 from typing import Protocol
 from urllib.parse import urlparse
 
+from django.conf import settings
 from django.test import Client, TestCase
 from django.urls import URLPattern, URLResolver
 from django_hosts import reverse
@@ -15,6 +16,7 @@ from internal.tests.test_urls import INTERNAL_CLIENT_DEFAULTS, reverse_internal
 from users.models import User
 from util.auth_utils import get_perm
 from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
+from util.url_utils import get_reverse_host_kwargs_from_url, reverse_admin
 from web.hosts import host_patterns
 from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualTextEdit
@@ -48,12 +50,21 @@ class UrlTests(TestCase):
     def setUp(self):
         self.superuser = User.objects.create_user("superuser", is_superuser=True, is_staff=True)
 
-        self.main_client = Client()
+        self.main_client = Client(SERVER_NAME=settings.PARENT_HOST)
         self.internal_client = Client(**INTERNAL_CLIENT_DEFAULTS)
-        admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
-        docs_client = Client(**DOCS_CLIENT_DEFAULTS)
+        self.admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
+        self.docs_client = Client(**DOCS_CLIENT_DEFAULTS)
         self.all_clients = (
-            self.main_client, self.internal_client, admin_client, docs_client,
+            self.main_client, self.internal_client, self.admin_client, self.docs_client,
+        )
+        # Should update this code if any content box change URLs are added under other subdomains
+        self.clients_for_all_hosts_with_content_box_change_urls = {
+            self.main_client,
+            self.internal_client,
+        }
+        self.host_kwargs_for_all_hosts_with_content_box_change_urls = (
+            {'host': 'main'},
+            {'host': 'internal', 'host_args': ['i']},
         )
 
         self.content_box_assertion_structs = (
@@ -88,6 +99,7 @@ class UrlTests(TestCase):
             len(self.content_box_assertion_structs)
             # + `/søk/` and `/sok/`
             + 2,
+            "One or more ContentBox URLs have not been added to `content_box_assertion_structs`, or it contains duplicate URLs"
         )
 
     # Code based on https://stackoverflow.com/a/19162337
@@ -134,12 +146,43 @@ class UrlTests(TestCase):
         for struct in self.content_box_assertion_structs:
             content_box: ContentBox = struct.client.get(struct.url).context['object']
             for client in self.all_clients:
-                with self.subTest(struct=struct, client=client):
+                with self.subTest(url=struct.url, client_server_name=client.defaults['SERVER_NAME']):
                     change_url = struct.reverse_func('content_box_update', content_box.pk)
                     response = client.get(change_url)
-                    # Change pages should only be reachable on the same subdomain as the content box' display page is defined on
-                    same_subdomain = struct.client == client
-                    self.assertEqual(response.status_code, HTTPStatus.OK if same_subdomain else HTTPStatus.NOT_FOUND)
+                    # Change pages should only be reachable on the same subdomain as the content box's display page is defined on;
+                    # other subdomains should redirect to that subdomain
+                    same_subdomain = client == struct.client
+                    if same_subdomain:
+                        self.assertEqual(response.status_code, HTTPStatus.OK)
+                        self.assertIn('form', response.context)
+                    elif client in self.clients_for_all_hosts_with_content_box_change_urls:
+                        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+                        redirect_url = response.url
+                        expected_redirect_host = struct.client.defaults['SERVER_NAME']
+                        self.assertEqual(urlparse(redirect_url).netloc, expected_redirect_host)
+                        host_kwargs = get_reverse_host_kwargs_from_url(redirect_url)
+                        self.assertEqual(redirect_url, reverse('content_box_update', args=[content_box.pk], **host_kwargs))
+                    else:
+                        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_change_page_for_content_box_without_registered_url_redirects_to_django_admin(self):
+        for client in self.all_clients:
+            client.force_login(self.superuser)
+
+        content_box_without_url = ContentBox.objects.create(url_name="content_box_without_url")
+        content_box_without_url__admin_url = reverse_admin('contentbox_contentbox_change', args=[content_box_without_url.pk])
+
+        for host_kwargs in self.host_kwargs_for_all_hosts_with_content_box_change_urls:
+            change_url = reverse('content_box_update', args=[content_box_without_url.pk], **host_kwargs)
+            for client in self.all_clients:
+                with self.subTest(host_kwargs=host_kwargs, client_server_name=client.defaults['SERVER_NAME']):
+                    response = client.get(change_url)
+                    if client in self.clients_for_all_hosts_with_content_box_change_urls:
+                        self.assertEqual(response.status_code, HTTPStatus.OK)
+                        self.assertNotIn('form', response.context)
+                        self.assertEqual(response.context['django_admin_change_url'], content_box_without_url__admin_url)
+                    else:
+                        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     def test_form_input_is_properly_bleached(self):
         # Facilitates printing the whole diff if the tests fail, which is useful due to the long strings in this test case
@@ -265,8 +308,7 @@ class UrlTests(TestCase):
                 {subwidget_name: subwidget_name.title() for subwidget_name in MultiLingualTextEdit.get_subwidget_names('title')}
                 | {subwidget_name: original_content for subwidget_name in MultiLingualTextEdit.get_subwidget_names('content')},
             )
-            # `url` contains a relative scheme and a host, so only compare the paths
-            self.assertRedirects(response, urlparse(url).path)
+            self.assertRedirects(response, url)
             content_box.refresh_from_db()
             content_text_structure: MultiLingualTextStructure = content_box.content
 

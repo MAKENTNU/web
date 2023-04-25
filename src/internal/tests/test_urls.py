@@ -11,8 +11,8 @@ from ..forms import MemberStatusForm
 from ..models import Member, Quote, Secret, SystemAccess
 
 
-# Makes sure that the subdomain of all requests is `internal`
-INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': f'internal.{settings.PARENT_HOST}'}
+# Makes sure that the subdomain of all requests is `i`
+INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': f'i.{settings.PARENT_HOST}'}
 
 
 class UrlTests(TestCase):

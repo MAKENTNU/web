@@ -22,6 +22,9 @@ A summary of changes made to the codebase, grouped per deployment.
 - Changed cropping of images in article and event lists so that they always have equal proportions
 - Added a title to the quota admin panel, and switched out the "Add new quota" button for a green plus button, like other admin panel pages
 - Added an additional permission check for all admin pages (incl. API endpoints), that requires the user to have the `internal.is_internal` permission
+- When requesting to change a `ContentBox` on a subdomain its path is not registered on (like trying to change the "About us" `ContentBox` on
+  [i.makentnu.no](https://i.makentnu.no/), or the "MAKE NTNU internsider" `ContentBox` on [makentnu.no](https://makentnu.no/)),
+  you're redirected to the proper subdomain, instead of being shown a "404 Not Found" page
 
 ### Fixes
 

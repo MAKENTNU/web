@@ -451,6 +451,18 @@ msgstr "Manglende språk"
 msgid "The extra change permissions can be changed in Django admin"
 msgstr "De ekstra endringsrettighetene kan endres i Django-admin"
 
+#: src/contentbox/templates/contentbox/content_box_form__error_display_url_not_found.html:15
+msgid "Cancel and go to the front page"
+msgstr "Avbryt og gå til forsiden"
+
+#: src/contentbox/templates/contentbox/content_box_form__error_display_url_not_found.html:18
+msgid "Continue changing in Django admin"
+msgstr "Fortsett å endre i Django-admin"
+
+#: src/contentbox/views.py:95
+msgid "Cannot change this ContentBox on this subdomain"
+msgstr "Kan ikke endre denne ContentBox-en på dette subdomenet"
+
 #: src/contentbox/views.py:90
 msgctxt "view page"
 msgid "View"
