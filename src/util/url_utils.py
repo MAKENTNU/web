@@ -1,3 +1,5 @@
+from urllib.parse import parse_qsl, urlparse, urlunparse
+
 from ckeditor_uploader import views as ckeditor_views
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
@@ -5,8 +7,25 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.urls import include, path
+from django.utils.http import urlencode
 from django.views.decorators.cache import never_cache
 from django_hosts import reverse
+
+
+def urljoin_query(base_url: str, query: dict | str):
+    """
+    A version of `urljoin() <https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urljoin>`_
+    that adds the query parameters in ``query`` to ``base_url``.
+    """
+    if isinstance(query, str):
+        query = dict(parse_qsl(query.strip().lstrip("?")))
+
+    # Based on https://stackoverflow.com/a/2506477
+    url_parts = list(urlparse(base_url))
+    base_query = dict(parse_qsl(url_parts[4]))
+
+    url_parts[4] = urlencode(base_query | query)
+    return urlunparse(url_parts)
 
 
 def reverse_internal(viewname: str, *args):
