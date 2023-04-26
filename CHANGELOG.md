@@ -48,6 +48,8 @@ A summary of changes made to the codebase, grouped per deployment.
     the code](https://github.com/MAKENTNU/web/pull/650/files#diff-37d0e0a00e828360d35d68a7ada510a98e03252045f3d51d36a81fedfaea7907R111-R115)
 - Changed some URLs so that they all consistently use `add` (instead of `create`) and `change` (instead of `edit` or `update`),
   to comply with [the style guide](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#endpoint-pathroute)
+- Temporarily disabled most of the "`checkin`" URLs (those related to user skills, registering cards and checking in),
+  to reduce the risk of exposing potentially insecure or buggy code
 - Made the use of add/change verbs consistent among page titles and buttons, and some other parts of the website's UI
 - Made some "Add" buttons green, to follow the convention that green means to add
 - Code cleanup? Ye.

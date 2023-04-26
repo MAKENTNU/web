@@ -12,7 +12,9 @@
         <script>
             {# These variables are used in `profile_detail.js` #}
             var csrfToken = "{{ csrf_token }}";
+            {% comment "This URL is currently not in use; see the comments `checkin/urls.py`" %}
             var registerProfileURL = "{% url 'admin_api_register_profile' %}";
+            {% endcomment %}
         </script>
         <script defer src="{% static "checkin/js/profile_detail.js" %}"></script>
     {% endif %}
