@@ -190,7 +190,7 @@ class TestAPIReservationMarkFinishedView(TestCase):
 
     def test_get_request_fails(self):
         response = self.client.get(reverse('api_reservation_mark_finished', args=[self.reservation1.pk]))
-        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+        self.assertEqual(response.status_code, HTTPStatus.METHOD_NOT_ALLOWED)
 
     @patch('django.utils.timezone.now')
     def test_valid_post_request_succeeds(self, now_mock):

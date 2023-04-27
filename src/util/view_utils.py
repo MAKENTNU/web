@@ -5,9 +5,9 @@ from http import HTTPStatus
 from typing import Any
 
 from django.forms import BoundField, FileInput, Form
-from django.http import Http404, JsonResponse, QueryDict
+from django.http import JsonResponse, QueryDict
 from django.utils.translation import gettext_lazy as _
-from django.views.generic.base import RedirectView, TemplateResponseMixin
+from django.views.generic.base import RedirectView, TemplateResponseMixin, View
 from django.views.generic.edit import FormMixin
 
 from .url_utils import urljoin_query
@@ -195,10 +195,8 @@ class CustomFieldsetFormMixin(TemplateResponseMixin, FormMixin, ABC):
             self._has_file_field = True
 
 
-class PreventGetRequestsMixin:
-
-    def get(self, *args, **kwargs):
-        raise Http404()
+class PreventGetRequestsMixin(View):
+    http_method_names = [name for name in View.http_method_names if name != 'get']
 
 
 # noinspection PyUnresolvedReferences
