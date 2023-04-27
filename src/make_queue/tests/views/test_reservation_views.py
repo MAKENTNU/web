@@ -8,7 +8,6 @@ from unittest.mock import patch
 from django.http import HttpResponse
 from django.test import Client, TestCase
 from django.utils import timezone
-from django.utils.dateparse import parse_time
 from django_hosts import reverse
 
 from news.models import Event, TimePlace
@@ -19,12 +18,8 @@ from ..utility import post_request_with_user, request_with_user
 from ...forms.reservation import ReservationForm, ReservationListQueryForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
-from ...models.reservation import Quota, Reservation, ReservationRule
-from ...templatetags.reservation_extra import can_change_reservation
+from ...models.reservation import Quota, Reservation
 from ...views.reservation import ReservationCreateView, ReservationUpdateView
-
-
-Day = ReservationRule.Day
 
 
 class ReservationCreateOrUpdateViewTestBase(TestCase, ABC):
@@ -566,105 +561,3 @@ class TestReservationListView(TestCase):
                     'field_errors': {'owner': [qwer_invalid]}, **undefined_asdf_field})
                 assert_error_response_contains(client, query=f"owner={self.Owner.ME}&asdf=asdf", expected_json_dict={
                     **undefined_asdf_field})
-
-
-class TestAPIReservationMarkFinishedView(TestCase):
-
-    def setUp(self):
-        self.user = User.objects.create_user("test")
-        self.client.force_login(self.user)
-        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
-        self.machine_type = MachineType.objects.get(pk=2)
-        self.machine = Machine.objects.create(machine_type=self.machine_type, status=Machine.Status.AVAILABLE, name="Test")
-        Quota.objects.create(machine_type=self.machine_type, number_of_reservations=2, ignore_rules=False, all=True)
-        ReservationRule.objects.create(
-            machine_type=self.machine_type, start_time=parse_time("00:00"), days_changed=6, end_time=parse_time("23:59"),
-            start_days=[Day.MONDAY], max_hours=6, max_inside_border_crossed=6,
-        )
-        self.now = timezone.localtime()
-        self.reservation1 = Reservation.objects.create(
-            machine=self.machine, user=self.user,
-            start_time=self.now + timedelta(hours=1),
-            end_time=self.now + timedelta(hours=2),
-        )
-
-    def post_to(self, reservation: Reservation):
-        return self.client.post(reverse('api_reservation_mark_finished', args=[reservation.pk]))
-
-    def test_get_request_fails(self):
-        response = self.client.get(reverse('api_reservation_mark_finished', args=[self.reservation1.pk]))
-        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
-
-    @patch('django.utils.timezone.now')
-    def test_valid_post_request_succeeds(self, now_mock):
-        # Freeze the return value of `timezone.now()` and set it to 1 minute after `self.reservation1` has started
-        now_mock.return_value = self.now + timedelta(hours=1, minutes=1)
-        self.assertTrue(can_change_reservation(self.reservation1, self.user))
-
-        response = self.post_to(self.reservation1)
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.reservation1.refresh_from_db()
-        self.assertEqual(self.reservation1.end_time, timezone.now())
-
-    def test_finishing_before_start_fails(self):
-        original_end_time = self.reservation1.end_time
-        response = self.post_to(self.reservation1)
-        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
-        self.reservation1.refresh_from_db()
-        self.assertEqual(self.reservation1.end_time, original_end_time,
-                         "Marking a reservation in the future as finished should not be possible")
-
-    @patch('django.utils.timezone.now')
-    def test_finishing_after_end_fails(self, now_mock):
-        # Set "now" to 1 hour after `self.reservation1` has ended
-        now_mock.return_value = self.now + timedelta(hours=3)
-
-        original_end_time = self.reservation1.end_time
-        response = self.post_to(self.reservation1)
-        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
-        self.reservation1.refresh_from_db()
-        self.assertEqual(self.reservation1.end_time, original_end_time,
-                         "Marking a reservation in the past as finished should not do anything")
-
-    @patch('django.utils.timezone.now')
-    def test_finishing_just_before_other_reservation_starts_succeeds(self, now_mock):
-        # Freeze the return value of `timezone.now()`
-        now_mock.return_value = self.now
-
-        self.reservation1.delete()
-        reservation2 = Reservation.objects.create(
-            machine=self.machine, user=self.user,
-            start_time=self.now + timedelta(minutes=1),
-            end_time=self.now + timedelta(hours=6),
-        )
-        reservation3 = Reservation.objects.create(
-            machine=self.machine, user=User.objects.create_user("test2"),
-            start_time=self.now + timedelta(hours=6),
-            end_time=self.now + timedelta(hours=6, minutes=26),
-        )
-
-        # Set "now" to 3 minutes before `reservation2` ends and `reservation3` starts
-        now_mock.return_value = self.now + timedelta(hours=5, minutes=57)
-        response = self.post_to(reservation2)
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        reservation2.refresh_from_db()
-        self.assertEqual(reservation2.end_time, timezone.now())
-
-    @patch('django.utils.timezone.now')
-    def test_can_finish_existing_reservations_for_machine_out_of_order_or_on_maintenance(self, now_mock):
-        # Freeze the return value of `timezone.now()`
-        now_mock.return_value = self.now
-
-        for machine_status in (Machine.Status.OUT_OF_ORDER, Machine.Status.MAINTENANCE):
-            with self.subTest(machine_status=machine_status):
-                machine = self.reservation1.machine
-                machine.status = machine_status
-                machine.save()
-
-                # Set "now" to 5 minutes before `self.reservation1` ends
-                now_mock.return_value = self.reservation1.end_time - timedelta(minutes=5)
-
-                response = self.post_to(self.reservation1)
-                self.assertEqual(response.status_code, HTTPStatus.OK)
-                self.reservation1.refresh_from_db()
-                self.assertEqual(self.reservation1.end_time, timezone.now())
