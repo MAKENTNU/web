@@ -7,7 +7,7 @@ django-constance[database]==2.9.1
 django-decorator-include==3.0
 # (See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html)
 django-extensions==3.2.1
-django-ical==1.9.0
+django-ical==1.9.1
 django-multiselectfield==0.1.12
 django-phonenumber-field[phonenumbers]==7.1.0
 django-simple-history==3.3.0
