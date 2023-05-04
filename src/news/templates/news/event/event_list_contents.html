@@ -25,7 +25,6 @@
                                 +{{ event_dict.number_of_occurrences|add:-1 }}
                                 {% if event_dict.number_of_occurrences > 2 %}{% translate "dates" %}{% else %}{% translate "date" %}{% endif %}
                             {% endif %}
-                    <img {% thumbnail event_dict.event.image "300" crop="center" as image_thumb %}
                         </p>
                         {% if event_dict.event.private %}
                             <p class="ui {{ internal_ribbon_extra_classes }} news-label ribbon label secondary">
@@ -33,6 +32,7 @@
                             </p>
                         {% endif %}
                     {% endblock ribbon_labels %}
+                    <img {% thumbnail event_dict.event.image "300x300" crop="center" as image_thumb %}
                         src="{{ image_thumb.url }}"
                     {% empty %}
                         src="{{ event_dict.event.image.url }}"
