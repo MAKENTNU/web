@@ -1,0 +1,21 @@
+.image .news-label.ribbon.label.primary {
+    position: absolute;
+    top: 20px;
+}
+
+.image .news-label.ribbon.label.secondary {
+    position: absolute;
+    top: unset;
+    bottom: 10px;
+}
+
+.image .news-label.ribbon.label {
+    position: absolute;
+    top: 10px;
+}
+
+.news-label.ribbon.label.secondary:after {
+    top: unset;
+    bottom: 100%;
+    border-width: 1.2em 1.2em 0 0;
+}

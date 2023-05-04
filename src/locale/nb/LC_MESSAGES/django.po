@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-04 00:14+0200\n"
+"POT-Creation-Date: 2023-05-02 16:07+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -432,7 +432,7 @@ msgstr "sist endret"
 #: src/make_queue/templates/make_queue/machine_usage_rule_detail.html:24
 #: src/makerspace/templates/makerspace/equipment/equipment_detail.html:34
 #: src/news/templates/news/article/admin_article_list.html:53
-#: src/news/templates/news/article/article_detail.html:37
+#: src/news/templates/news/article/article_detail.html:41
 #: src/news/templates/news/event/admin_event_detail.html:41
 #: src/news/templates/news/event/admin_time_place_listing.html:34
 msgid "Edit"
@@ -569,7 +569,7 @@ msgstr "Ny side"
 #: src/docs/templates/docs/header.html:29
 #: src/news/templates/email/ticket.html:22
 #: src/web/templates/web/base.html:26 src/web/templates/web/footer.html:11
-#: src/web/templates/web/header.html:22 src/web/templates/web/index.html:38
+#: src/web/templates/web/header.html:22 src/web/templates/web/index.html:39
 msgid "MAKE NTNU's logo"
 msgstr "MAKE NTNUs logo"
 
@@ -1492,8 +1492,6 @@ msgid "location URL"
 msgstr "sted-URL"
 
 #: src/make_queue/models/machine.py:171 src/news/models.py:50
-#: src/news/templates/news/article/admin_article_list.html:45
-#: src/news/templates/news/event/admin_event_list.html:56
 msgid "internal"
 msgstr "internt"
 
@@ -2584,17 +2582,24 @@ msgstr ""
 #: src/news/templates/news/article/admin_article_list.html:5
 #: src/news/templates/news/article/admin_article_list.html:10
 #: src/news/templates/news/article/article_list.html:6
-#: src/news/templates/news/article/article_list.html:15
+#: src/news/templates/news/article/article_list.html:16
 #: src/web/templates/web/admin_panel.html:29
 #: src/web/templates/web/header.html:40
 msgid "Articles"
 msgstr "Artikler"
 
 #: src/news/templates/news/article/admin_article_list.html:21
-#: src/news/templates/news/article/article_list_contents.html:17
+#: src/news/templates/news/article/article_list_contents.html:23
 #, python-format
 msgid "View the article “%(title)s”; image description: %(description)s"
 msgstr "Vis artikkelen «%(title)s»; bildebeskrivelse: %(description)s"
+
+#: src/news/templates/news/article/admin_article_list.html:45
+#: src/news/templates/news/article/article_detail.html:34
+#: src/news/templates/news/article/article_list_contents.html:14
+msgctxt "article"
+msgid "internal"
+msgstr "intern"
 
 #: src/news/templates/news/event/admin_event_detail.html:24
 #: src/news/views.py:168 src/news/views.py:323
@@ -2675,7 +2680,7 @@ msgid "No past occurrences exist for this event"
 msgstr "Ingen tidligere forekomster finnes for dette arrangementet"
 
 #: src/news/templates/news/event/admin_event_list.html:23
-#: src/news/templates/news/event/event_list_contents.html:36
+#: src/news/templates/news/event/event_list_contents.html:41
 #, python-format
 msgid "View the event “%(title)s”; image description: %(description)s"
 msgstr "Vis arrangementet «%(title)s»; bildebeskrivelse: %(description)s"
@@ -2686,6 +2691,13 @@ msgid "1 future occurrence"
 msgid_plural "%(counter)s future occurrences"
 msgstr[0] "1 framtidig forekomst"
 msgstr[1] "%(counter)s framtidige forekomster"
+
+#: src/news/templates/news/event/admin_event_list.html:56
+#: src/news/templates/news/event/detail/event_detail.html:16
+#: src/news/templates/news/event/event_list_contents.html:31
+msgctxt "event"
+msgid "internal"
+msgstr "internt"
 
 #: src/news/templates/news/event/admin_event_list.html:63
 msgid "Admin"
@@ -2766,7 +2778,7 @@ msgstr "Dupliser"
 msgid "If clicked, the occurrence is duplicated."
 msgstr "Klikk for å duplisere forekomsten."
 
-#: src/news/templates/news/event/detail/event_detail.html:19
+#: src/news/templates/news/event/detail/event_detail.html:23
 msgid "Admin page"
 msgstr "Administrasjonspanel"
 
@@ -2822,19 +2834,19 @@ msgstr ""
 "Bare brukt til frittstående arrangementer. For gjentagende arrangementer er "
 "billettene administrert per tidspunkt."
 
-#: src/news/templates/news/event/event_list.html:13
+#: src/news/templates/news/event/event_list.html:14
 msgid "Upcoming events"
 msgstr "Kommende arrangementer"
 
-#: src/news/templates/news/event/event_list.html:14
+#: src/news/templates/news/event/event_list.html:15
 msgid "No upcoming events"
 msgstr "Ingen kommende arrangementer"
 
-#: src/news/templates/news/event/event_list.html:17
+#: src/news/templates/news/event/event_list.html:18
 msgid "Previous events"
 msgstr "Tidligere arrangementer"
 
-#: src/news/templates/news/event/event_list.html:18
+#: src/news/templates/news/event/event_list.html:19
 msgid "No previous events"
 msgstr "Ingen tidligere arrangementer"
 

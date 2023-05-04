@@ -12,12 +12,14 @@ A summary of changes made to the codebase, grouped per deployment.
   - This makes it possible to create secrets that not all MAKE members need to know
     - _Examples can be passwords to Google workspace users that only exist for technical purposes,
       or credentials for the admin page of a physical router_
+- Added an "internal" ribbon label on internal articles and events
 
 ### Improvements
 
 - Added a link to the Django admin change form at the bottom of the form of "content boxes" that have extra change permissions
   (like [the front page of the internal site](https://i.makentnu.no/))
   - This is only visible to users who have permission to modify those content boxes through Django admin
+- Changed cropping of images in article and event lists so that they always have equal proportions
 
 ### Other changes
 

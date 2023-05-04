@@ -12,6 +12,10 @@
 
 {% block extra_classes %}left-align{% endblock extra_classes %}
 
+{% block image_internal_label_text %}
+    {% translate "internal"|capfirst context "event" %}
+{% endblock image_internal_label_text %}
+
 {% block admin_page %}
     {% if perms.news.change_event %}
         <div>
