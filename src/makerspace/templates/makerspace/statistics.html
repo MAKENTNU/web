@@ -1,0 +1,68 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Statistics" %}{% endblock title %}
+
+{% block extra_head %}
+    <script defer src="{% static 'makerspace/js/statistics_charts.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body%}
+<div class="ui container">
+    <h1 class="ui text-centered make-col-blue header"> {% translate "Statistics" %}</h1>
+    <div class="ui column cards">
+    <div class="card " style="height: 50vh; width: 65vh">
+            <div class="content">
+            <div class="header">{% translate "How long each 3D-printer* has been reserved in total:" %} </div>
+            {{ span_of_printer_reservations|json_script:"span_of_printer_reservations" }}
+            <canvas id="span_printer_reservations" width="800" height="550">
+            </canvas>
+            </div>
+        </div>
+
+    <div class="card" style="height: 50vh; width: 65vh">
+            <div class="content">
+            <div class="header"> {% translate "Number of times each 3D-printer* has been reserved:" %} </div>
+            {{ number_of_printer_reservations|json_script:"number_of_printer_reservations" }}
+            <canvas id="printer_reservations" width="800" height="550"></canvas>
+            </div>
+        </div>
+
+    <div class="card" style="height: 50vh; width: 65vh">
+            <div class="content">
+            <div class="header">{% translate "How long each sewingmachine has been reserved in total:" %} </div>
+                {{ span_of_sewingmachine_reservations|json_script:"span_of_sewingmachine_reservations" }}
+            <canvas id= "span_sewingmachine_reservations" width="800" height="550"></canvas>
+            </div>
+        </div>
+
+    <div class="card" style="height: 50vh; width: 65vh;">
+            <div class="content">
+                <div class="header"> {% translate "Number of times each sewing machine has been reserved:"%} </div>
+                {{ number_of_sewingmachine_reservations|json_script:"number_of_sewingmachine_reservations" }}
+            <canvas id= "sewingmachine_reservations" width="800" height="550"></canvas>
+            </div>
+        </div>
+
+        <div class="card " style="height: 50vh; width: 65vh">
+            <div class="content">
+                <div class="header">{% translate "Top 3 longest 3D-printer* reservations:"%}  </div>
+                {{ longest_printer_reservations|json_script:"longest_printer_reservations" }}
+                <canvas id="3_longest_printer_reservations" width="800" height="550"></canvas>
+            </div>
+        </div>
+
+        <div class="card" style="height: 50vh; width: 65vh">
+            <div class="content">
+                <div class="header">{% translate "Traffic:" %}</div>
+                {{ time|json_script:"time" }}
+                <canvas id="timespan" width="800" height="550"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

@@ -38,7 +38,10 @@
     <script src="{% static 'lib/jquery/jquery.min.js' %}"></script>
     <script src="{% static 'lib/jquery/jquery.dirty.js' %}"></script>
     <script src="{% static 'lib/fomantic-ui/semantic.min.js' %}"></script>
+    <script src="{% static 'lib/chartsjs/charts.min.js' %}"></script>
+
     <script src="{% static 'fomantic-ui/settings.js' %}"></script>
+
     <script>
         const LANG_PREFIX = {% if CURRENT_LANGUAGE_CODE == DEFAULT_LANGUAGE_CODE %} "" {% else %} "/{{ CURRENT_LANGUAGE_CODE }}" {% endif %};
     </script>

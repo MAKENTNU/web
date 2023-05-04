@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-07 21:15+0200\n"
+"POT-Creation-Date: 2023-08-17 19:09+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -133,7 +133,7 @@ msgstr "Legg til kunngjøring"
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:18
 #: src/make_queue/templates/make_queue/machine_list.html:21
 #: src/make_queue/views/machine.py:178 src/make_queue/views/quota.py:88
-#: src/make_queue/views/reservation_rule.py:74 src/makerspace/views.py:54
+#: src/make_queue/views/reservation_rule.py:74 src/makerspace/views.py:57
 #: src/news/views/article.py:88 src/news/views/event.py:237
 #: src/news/views/event.py:324
 msgid "Add"
@@ -806,7 +806,7 @@ msgstr ""
 #: src/make_queue/models/reservation.py:31 src/news/admin.py:306
 #: src/news/models.py:250
 #: src/news/templates/admin/news/event/change_form_ticket_table.html:16
-#: src/web/templates/web/header.html:90
+#: src/web/templates/web/header.html:93
 msgid "user"
 msgstr "bruker"
 
@@ -1015,7 +1015,7 @@ msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
 
 #: src/internal/templates/internal/base.html:6
-#: src/web/templates/web/header.html:94
+#: src/web/templates/web/header.html:97
 msgid "Internal pages"
 msgstr "Internsider"
 
@@ -1056,12 +1056,12 @@ msgid "Public pages"
 msgstr "Offentlige sider"
 
 #: src/internal/templates/internal/header.html:43
-#: src/web/templates/web/header.html:104
+#: src/web/templates/web/header.html:107
 msgid "Django admin"
 msgstr "Django-admin"
 
 #: src/internal/templates/internal/header.html:48
-#: src/web/templates/web/header.html:116
+#: src/web/templates/web/header.html:119
 msgid "Log out"
 msgstr "Logg ut"
 
@@ -2273,7 +2273,7 @@ msgid "If specified, the equipment is sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres utstyret stigende på denne verdien."
 
 #: src/makerspace/templates/makerspace/equipment/admin_equipment_list.html:15
-#: src/makerspace/views.py:57
+#: src/makerspace/views.py:60
 msgid "Add equipment"
 msgstr "Legg til utstyr"
 
@@ -2311,11 +2311,41 @@ msgstr "Regler"
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
-#: src/makerspace/views.py:48
+#: src/makerspace/templates/makerspace/statistics.html:6
+#: src/makerspace/templates/makerspace/statistics.html:14
+#: src/web/templates/web/header.html:67
+msgid "Statistics"
+msgstr "Statistikk"
+
+#: src/makerspace/templates/makerspace/statistics.html:18
+msgid "How long each 3D-printer* has been reserved in total:"
+msgstr "Totalt hvor lenge hver 3D-printer* har blitt reservert:"
+
+#: src/makerspace/templates/makerspace/statistics.html:27
+msgid "Number of times each 3D-printer* has been reserved:"
+msgstr "Antall ganger hver 3D-printer* har blitt reservert:"
+
+#: src/makerspace/templates/makerspace/statistics.html:35
+msgid "How long each sewingmachine has been reserved in total:"
+msgstr "Totalt hvor lenge hver symaskin har blitt reservert:"
+
+#: src/makerspace/templates/makerspace/statistics.html:43
+msgid "Number of times each sewing machine has been reserved:"
+msgstr "Antall ganger hver symaskin har blitt reservert:"
+
+#: src/makerspace/templates/makerspace/statistics.html:51
+msgid "Top 3 longest 3D-printer* reservations:"
+msgstr "Top 3 lengste 3D-printer reservasjoner:"
+
+#: src/makerspace/templates/makerspace/statistics.html:59
+msgid "Traffic:"
+msgstr "Trafikk:"
+
+#: src/makerspace/views.py:51
 msgid "Admin page for equipment"
 msgstr "Administrasjonsside for utstyr"
 
-#: src/makerspace/views.py:63
+#: src/makerspace/views.py:66
 msgid "Change Equipment"
 msgstr "Endre utstyr"
 
@@ -2892,7 +2922,7 @@ msgid "This ticket is registered to another account. Please"
 msgstr "Denne billetten er knyttet til en annen bruker. Vennligst"
 
 #: src/news/templates/news/event/ticket/event_ticket_detail.html:33
-#: src/web/templates/web/header.html:124
+#: src/web/templates/web/header.html:127
 #: src/web/templates/web/login.html:12 src/web/templates/web/login.html:32
 msgid "log in"
 msgstr "logg inn"
@@ -2903,7 +2933,7 @@ msgstr "til den riktige brukeren for å se billetten din."
 
 #: src/news/templates/news/event/ticket/event_ticket_my_list.html:6
 #: src/news/templates/news/event/ticket/event_ticket_my_list.html:14
-#: src/web/templates/web/header.html:112
+#: src/web/templates/web/header.html:115
 msgid "My tickets"
 msgstr "Mine billetter"
 
@@ -3193,7 +3223,7 @@ msgstr ""
 "for prosjektutvikling, både i privat og undervisningssammenheng, for alle "
 "studenter og ansatte på NTNU."
 
-#: src/web/templates/web/base.html:73
+#: src/web/templates/web/base.html:76
 msgid "Skip to main content"
 msgstr "Hopp til hovedinnhold"
 
@@ -3262,15 +3292,15 @@ msgstr "Makerverkstedet"
 msgid "About"
 msgstr "Om"
 
-#: src/web/templates/web/header.html:70
+#: src/web/templates/web/header.html:73
 msgid "About us"
 msgstr "Om oss"
 
-#: src/web/templates/web/header.html:99
+#: src/web/templates/web/header.html:102
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: src/web/templates/web/header.html:109
+#: src/web/templates/web/header.html:112
 msgid "Profile"
 msgstr "Profil"
 

@@ -2,14 +2,17 @@ from abc import ABC
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.db.models import Prefetch, Count, F, Sum, IntegerField, Q
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView, TemplateView
 
 from contentbox.views import ContentBoxDetailView
 from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import EquipmentForm
 from .models import Equipment
+from make_queue.models.reservation import Reservation
+from make_queue.models.machine import Machine
 
 
 class MakerspaceView(ContentBoxDetailView):
@@ -67,3 +70,40 @@ class EquipmentDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, Dele
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
     success_url = reverse_lazy('admin_equipment_list')
+
+
+class StatisticsView(TemplateView):
+    template_name = 'makerspace/statistics.html'
+    get_time_in_hours = 3600000000  # number the reservation length needs to be divided by to get the length in hours
+
+    reservations = Reservation.objects.prefetch_related(Prefetch('machine', queryset=Machine.objects.
+                                                                 prefetch_related('machine_type'))).annotate(q_overnight=Sum(F('start_time__hour') - F('end_time__hour')))
+    sewingmachines = Machine.objects.prefetch_related('machine_type', 'reservation').filter(machine_type__name__icontains="Symaskiner").annotate(len=(Sum((F('reservations__end_time')-F('reservations__start_time'))/get_time_in_hours, output_field=IntegerField()))).\
+        annotate(number_of_reservations=Count('reservations'))
+    printers = Machine.objects.prefetch_related('machine_type', 'reservation').filter(machine_type__name__icontains="3D-printere").annotate(len=(Sum((F('reservations__end_time')-F('reservations__start_time'))/get_time_in_hours, output_field=IntegerField()))).\
+        annotate(number_of_reservations=Count('reservations'))
+
+    def get_time_distribution(self):
+        overnight = self.reservations.filter(q_overnight__gte=0)  # reservations overnight has to be counted differently
+        not_overnight = self.reservations.exclude(q_overnight__gte=0)
+        time = {}
+        for r in range(0, 24):
+            time[r] = not_overnight.filter(Q(start_time__hour__lte=r) & Q(end_time__hour__gte=(r - 1))).count()
+            time[r] += overnight.filter(Q(start_time__hour__lte=r) | Q(end_time__hour__gte=(r-1))).count()
+        return dict(time.items())
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        span_of_printer_reservations = list(self.printers.values('id', 'name', 'len'))
+        number_of_printer_reservations = list(self.printers.values('id', 'name', 'number_of_reservations'))
+        longest_printer_reservations = list(self.printers.order_by('-len').values('id', 'name', 'reservations', 'len'))[:3]
+        span_of_sewingmachine_reservations = list(self.sewingmachines.values('id', 'name', 'reservations', 'len'))
+        number_of_sewingmachine_reservations = list(self.sewingmachines.values('id', 'name', 'number_of_reservations'))
+        get_time_distribution = self.get_time_distribution()
+        context.update({'span_of_printer_reservations': span_of_printer_reservations,
+                        'span_of_sewingmachine_reservations': span_of_sewingmachine_reservations,
+                        'longest_printer_reservations': longest_printer_reservations,
+                        'number_of_printer_reservations': number_of_printer_reservations,
+                        'number_of_sewingmachine_reservations': number_of_sewingmachine_reservations,
+                        'time': get_time_distribution, })
+        return context
