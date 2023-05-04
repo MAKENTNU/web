@@ -3,7 +3,7 @@
 {% load thumbnail %}
 
 
-{# Linking `article_list_contents.css` and `article_list_contents.js` is required when including this template #}
+{# Linking `article_list_contents.css`, `news_labels.css` and `article_list_contents.js` is required when including this template #}
 
 <div class="articles">
     {% for article in articles %}
@@ -18,6 +18,13 @@
                     View the article “{{ title }}”; image description: {{ description }}
                 {% endblocktranslate %}"
             />
+            <div class="ui fluid image">
+                {% if article.private %}
+                    <p class="ui blue make-bg-blue news-label ribbon label primary large">
+                        {% translate "internal"|capfirst context "article" %}
+                    </p>
+                {% endif %}
+            </div>
         </a>
         <div class="word-breaking hyphenated article-text {% cycle "float-left" "float-right" %}
 			    {% if forloop.first %}first{% endif %}

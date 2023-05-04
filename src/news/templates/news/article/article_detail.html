@@ -30,6 +30,10 @@
     {% endblock google_seo_json %}
 {% endblock extra_head %}
 
+{% block image_internal_label_text %}
+    {% translate "internal"|capfirst context "article" %}
+{% endblock image_internal_label_text %}
+
 {% block admin_page %}
     {% if perms.news.change_article %}
         <div>
