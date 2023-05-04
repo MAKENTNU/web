@@ -1,6 +1,7 @@
 {% extends 'web/base.html' %}
 {% load static %}
 {% load uri_tags %}
+{% load i18n %}
 
 
 {% block title %}{{ news_obj.title }}{% endblock title %}
@@ -13,6 +14,7 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/news_base_detail.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/news_labels.css' %}"/>
     <script>
         $(document).ready(function () {
             $(".news-obj .ui.sticky").sticky({
@@ -26,9 +28,15 @@
 {% block body %}
     <div class="news-obj {% block extra_classes %}{% endblock extra_classes %}">
         <div id="sticky" class="ui text container basic segment">
-            <img class="news-obj-image {% if news_obj.contain %}contain{% endif %}"
-                 src="{{ news_obj.image.url }}" alt="{{ news_obj.image_description }}"/>
-
+            <div class="ui fluid image">
+                {% if news_obj.private %}
+                    <p class="ui blue make-bg-blue news-label ribbon label primary large">
+                        {% block image_internal_label_text %}{% endblock image_internal_label_text %}
+                    </p>
+                {% endif %}
+                <img class="news-obj-image {% if news_obj.contain %}contain{% endif %}"
+                     src="{{ news_obj.image.url }}" alt="{{ news_obj.image_description }}"/>
+            </div>
             {% block rail %}
             {% endblock rail %}
 

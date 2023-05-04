@@ -4,7 +4,7 @@
 {% load datetime_tags %}
 
 
-{# Linking `event_list_contents.css` is required when including this template #}
+{# Linking `event_list_contents.css` and `news_labels.css` is required when including this template #}
 
 {% block list_title %}
     <h1 class="ui text-centered make-col-blue header">
@@ -17,17 +17,22 @@
         {% for event_dict in event_dicts %}
             <div class="event item">
                 <a class="ui small image" href="{{ event_dict.event.get_absolute_url }}">
-                    <p class="ui {{ ribbon_extra_classes }} ribbon label">
-                        {% block ribbon_label %}
+                    {% block ribbon_labels %}
+                        <p class="ui {{ date_ribbon_extra_classes }} news-label ribbon label">
                             {{ event_dict.shown_occurrence.start_time|year_wise_short_date }}
                             {% if event_dict.number_of_occurrences > 1 %}
                                 <br/>
                                 +{{ event_dict.number_of_occurrences|add:-1 }}
                                 {% if event_dict.number_of_occurrences > 2 %}{% translate "dates" %}{% else %}{% translate "date" %}{% endif %}
                             {% endif %}
-                        {% endblock ribbon_label %}
-                    </p>
                     <img {% thumbnail event_dict.event.image "300" crop="center" as image_thumb %}
+                        </p>
+                        {% if event_dict.event.private %}
+                            <p class="ui {{ internal_ribbon_extra_classes }} news-label ribbon label secondary">
+                                {% translate "internal"|capfirst context "event" %}
+                            </p>
+                        {% endif %}
+                    {% endblock ribbon_labels %}
                         src="{{ image_thumb.url }}"
                     {% empty %}
                         src="{{ event_dict.event.image.url }}"
