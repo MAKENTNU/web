@@ -7,9 +7,9 @@ from unittest.mock import patch
 
 from django.http import HttpResponse
 from django.test import TestCase
-from django.urls import reverse
 from django.utils import timezone
 from django.utils.dateparse import parse_time
+from django_hosts import reverse
 
 from news.models import Event, TimePlace
 from users.models import User
@@ -20,14 +20,14 @@ from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
 from ...templatetags.reservation_extra import can_change_reservation
-from ...views.admin.reservation import MAKEReservationsListView
-from ...views.reservation.reservation import CreateReservationView, EditReservationView
+from ...views.admin.reservation import AdminReservationMAKEListView
+from ...views.reservation.reservation import ReservationCreateView, ReservationUpdateView
 
 
 Day = ReservationRule.Day
 
 
-class CreateOrEditReservationViewTestBase(TestCase, ABC):
+class ReservationCreateOrUpdateViewTestBase(TestCase, ABC):
 
     def setUp(self):
         Reservation.FUTURE_LIMIT = timedelta(days=7)
@@ -42,7 +42,7 @@ class CreateOrEditReservationViewTestBase(TestCase, ABC):
                                                   start_time=timezone.localtime() + timedelta(hours=1),
                                                   end_time=timezone.localtime() + timedelta(hours=2))
 
-    def get_view(self, view_class: Type[CreateReservationView] | Type[EditReservationView], **kwargs):
+    def get_view(self, view_class: Type[ReservationCreateView] | Type[ReservationUpdateView], **kwargs):
         view = view_class()
         view.setup(request_with_user(self.user), **kwargs)
         return view
@@ -60,7 +60,7 @@ class CreateOrEditReservationViewTestBase(TestCase, ABC):
         }
 
 
-class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
+class TestReservationCreateOrUpdateView(ReservationCreateOrUpdateViewTestBase):
 
     def test_get_error_message_non_event(self):
         form = self.create_form(start_time_delta=timedelta(hours=1), end_time_delta=timedelta(hours=2))
@@ -70,7 +70,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             start_time=form.cleaned_data["start_time"],
             end_time=form.cleaned_data["end_time"],
         )
-        view = self.get_view(CreateReservationView, pk=self.machine.pk)
+        view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         self.assertEqual(view.get_error_message(form, reservation),
                          "Det er ikke mulig å reservere maskinen på dette tidspunktet. Sjekk reglene for hvilke "
                          "perioder det er mulig å reservere maskinen i")
@@ -84,7 +84,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             end_time=form.cleaned_data["end_time"],
         )
         self.user.add_perms('make_queue.can_create_event_reservation')
-        view = self.get_view(CreateReservationView, pk=self.machine.pk)
+        view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         self.assertEqual(view.get_error_message(form, reservation),
                          "Tidspunktet eller arrangementet er ikke lenger tilgjengelig")
 
@@ -97,7 +97,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             start_time=form.cleaned_data["start_time"],
             end_time=form.cleaned_data["end_time"],
         )
-        view = self.get_view(CreateReservationView, pk=self.machine.pk)
+        view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         self.assertEqual(view.get_error_message(form, reservation),
                          f"Reservasjoner kan bare lages {Reservation.FUTURE_LIMIT.days} dager fram i tid")
 
@@ -111,7 +111,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             start_time=form.cleaned_data["start_time"],
             end_time=form.cleaned_data["end_time"],
         )
-        view = self.get_view(CreateReservationView, pk=machine.pk)
+        view = self.get_view(ReservationCreateView, pk=machine.pk)
         self.assertEqual(view.get_error_message(form, reservation),
                          "Maskinen er i ustand")
 
@@ -123,7 +123,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             start_time=form.cleaned_data["start_time"],
             end_time=form.cleaned_data["end_time"],
         )
-        view = self.get_view(CreateReservationView, pk=self.machine.pk)
+        view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         response = view.validate_and_save(reservation, form)
         self.assertEqual(Reservation.objects.count(), 1)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
@@ -142,7 +142,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             start_time=form.cleaned_data["start_time"],
             end_time=form.cleaned_data["end_time"],
         )
-        view = self.get_view(CreateReservationView, pk=self.machine.pk)
+        view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         response = view.validate_and_save(reservation, form)
         # Second reservation should not be saved
         self.assertEqual(Reservation.objects.count(), 1)
@@ -158,7 +158,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
             end_time=now + timedelta(hours=2),
             event=self.timeplace, comment="Comment",
         )
-        view = self.get_view(EditReservationView, reservation_pk=reservation.pk)
+        view = self.get_view(ReservationUpdateView, reservation_pk=reservation.pk)
         context_data = view.get_context_data(reservation_pk=reservation.pk)
         context_data["machine_types"] = set(context_data["machine_types"])
 
@@ -184,7 +184,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
 
     def test_get_context_data_non_reservation(self):
         start_time = timezone.localtime() + timedelta(hours=1)
-        view = self.get_view(CreateReservationView, pk=self.machine.pk)
+        view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         context_data = view.get_context_data(machine_pk=self.machine.pk, start_time=start_time)
         context_data["machine_types"] = set(context_data["machine_types"])
 
@@ -203,7 +203,7 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
         })
 
     def test_post_valid_form(self):
-        view = self.get_view(CreateReservationView, pk=self.machine.pk)
+        view = self.get_view(ReservationCreateView, pk=self.machine.pk)
         view.request = post_request_with_user(self.user, data=self.create_form_data(timedelta(hours=1), timedelta(hours=2)))
         # Need to handle the valid form function
         valid_form_calls = {"calls": 0}
@@ -218,9 +218,9 @@ class TestCreateOrEditReservationView(CreateOrEditReservationViewTestBase):
         self.assertEqual(valid_form_calls["calls"], 1)
 
 
-class TestCreateReservationView(CreateOrEditReservationViewTestBase):
+class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
 
-    def get_view(self, view_class=CreateReservationView, **kwargs):
+    def get_view(self, view_class=ReservationCreateView, **kwargs):
         return super().get_view(view_class, **{
             'pk': self.machine.pk,
             **kwargs,
@@ -229,16 +229,16 @@ class TestCreateReservationView(CreateOrEditReservationViewTestBase):
     def test_only_users_with_3d_printer_course_can_view_create_reservation_page_for_3d_printers(self):
         printer_machine_type = MachineType.objects.get(pk=1)
         machine = Machine.objects.create(name="Lovelace", machine_model="Ultimaker 2+", machine_type=printer_machine_type)
-        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+        reservation_create_url = reverse('reservation_create', args=[machine.pk])
 
         self.client.force_login(self.user)
         # Not having taken the course should deny the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
         Printer3DCourse.objects.create(user=self.user, date=timezone.now())
         # Having taken the course should allow the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self._test_only_internal_users_can_view_create_reservation_page_for_machine(self.user, machine)
@@ -264,44 +264,44 @@ class TestCreateReservationView(CreateOrEditReservationViewTestBase):
     def _test_only_users_with_advanced_course_can_view_create_reservation_page_for_advanced_printers(
             self, machine: Machine, set_advanced_course_func: Callable[[Printer3DCourse], None],
     ):
-        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+        reservation_create_url = reverse('reservation_create', args=[machine.pk])
 
         self.client.force_login(self.user)
         # Not having taken the course at all should deny the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         # `NOT_FOUND` for SLA printers, `FORBIDDEN` otherwise
         self.assertIn(response.status_code, {HTTPStatus.FORBIDDEN, HTTPStatus.NOT_FOUND})
 
         course = Printer3DCourse.objects.create(user=self.user, date=timezone.now())
         # Not having taken the advanced course should deny the user
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         # `NOT_FOUND` for SLA printers, `FORBIDDEN` otherwise
         self.assertIn(response.status_code, {HTTPStatus.FORBIDDEN, HTTPStatus.NOT_FOUND})
 
         # Having taken the advanced course should allow the user
         set_advanced_course_func(course)
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         self._test_only_internal_users_can_view_create_reservation_page_for_machine(self.user, machine)
 
     def _test_only_internal_users_can_view_create_reservation_page_for_machine(self, user: User, machine: Machine):
-        create_reservation_url = reverse('create_reservation', args=[machine.pk])
+        reservation_create_url = reverse('reservation_create', args=[machine.pk])
         self.client.force_login(user)
 
         # User should be allowed when machine is not internal
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
         # User should not be able to find the machine when it's internal
         machine.internal = True
         machine.save()
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
         # User should be allowed when they're internal
         user.add_perms('internal.is_internal')
-        response = self.client.get(create_reservation_url)
+        response = self.client.get(reservation_create_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_form_valid_normal_reservation(self):
@@ -343,9 +343,9 @@ class TestCreateReservationView(CreateOrEditReservationViewTestBase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
-class TestEditReservationView(CreateOrEditReservationViewTestBase):
+class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
 
-    def get_view(self, view_class=EditReservationView, **kwargs):
+    def get_view(self, view_class=ReservationUpdateView, **kwargs):
         return super().get_view(view_class, **kwargs)
 
     def create_reservation(self, form):
@@ -452,7 +452,7 @@ class TestEditReservationView(CreateOrEditReservationViewTestBase):
         self.assertEqual(Reservation.objects.first().special_text, "Test2")
 
 
-class TestMAKEReservationsListView(TestCase):
+class TestAdminReservationMAKEListView(TestCase):
 
     def test_get_MAKE_reservations(self):
         user = User.objects.create_user("test")
@@ -483,12 +483,12 @@ class TestMAKEReservationsListView(TestCase):
             event=timeplace,
         )
 
-        context_data = MAKEReservationsListView.as_view()(request_with_user(user)).context_data
+        context_data = AdminReservationMAKEListView.as_view()(request_with_user(user)).context_data
         self.assertEqual(context_data["is_MAKE"], True)
         self.assertSetEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
 
 
-class TestMarkReservationFinishedView(TestCase):
+class TestAPIReservationMarkFinishedView(TestCase):
 
     def setUp(self):
         self.user = User.objects.create_user("test")
@@ -509,10 +509,10 @@ class TestMarkReservationFinishedView(TestCase):
         )
 
     def post_to(self, reservation: Reservation):
-        return self.client.post(reverse('mark_reservation_finished', args=[reservation.pk]))
+        return self.client.post(reverse('api_reservation_mark_finished', args=[reservation.pk]))
 
     def test_get_request_fails(self):
-        response = self.client.get(reverse('mark_reservation_finished', args=[self.reservation1.pk]))
+        response = self.client.get(reverse('api_reservation_mark_finished', args=[self.reservation1.pk]))
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
     @patch('django.utils.timezone.now')

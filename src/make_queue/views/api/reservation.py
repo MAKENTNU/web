@@ -14,7 +14,7 @@ class APIMachineDataView(MachineRelatedViewMixin, TemplateView):
         if 'reservation_pk' in kwargs:
             reservation_pk = kwargs['reservation_pk']
             # Check that it exists on the machine
-            _reservation = get_object_or_404(self.machine.reservations, pk=reservation_pk)
+            get_object_or_404(self.machine.reservations, pk=reservation_pk)
         else:
             reservation_pk = None
         return {
@@ -24,9 +24,9 @@ class APIMachineDataView(MachineRelatedViewMixin, TemplateView):
                     'end_time': iso_datetime_format(r.end_time),
                 } for r in self.machine.reservations.filter(end_time__gte=timezone.now()).exclude(pk=reservation_pk)
             ],
-            'canIgnoreRules': any(
-                quota.ignore_rules and quota.can_create_more_reservations(self.request.user)
-                for quota in Quota.get_user_quotas(self.request.user, self.machine.machine_type)
+            'can_ignore_rules': any(
+                quota.can_create_more_reservations(self.request.user)
+                for quota in Quota.get_user_quotas(self.request.user, self.machine.machine_type).filter(ignore_rules=True)
             ),
             'rules': [
                 {

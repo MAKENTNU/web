@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from ...models.reservation import Reservation
 
 
-class MAKEReservationsListView(PermissionRequiredMixin, ListView):
+class AdminReservationMAKEListView(PermissionRequiredMixin, ListView):
     """View to see all reservations that are either event reservations or MAKE NTNU's reservations."""
     permission_required = ('make_queue.can_create_event_reservation',)
     model = Reservation

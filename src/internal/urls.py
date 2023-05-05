@@ -31,26 +31,26 @@ committee_bulletin_urlpatterns = [
     views.CommitteeBulletinBoardView.get_path('pr-board'),
 ]
 
-internal_contentbox_urlpatterns = [
-    path("<int:pk>/edit/", views.EditInternalContentBoxView.as_view(), name='contentbox_edit'),
+internal_content_box_urlpatterns = [
+    path("<int:pk>/edit/", views.InternalContentBoxUpdateView.as_view(), name='content_box_update'),
 ]
 
 member_urlpatterns = [
     path("members/", views.MemberListView.as_view(), name='member_list'),
     path("members/<int:pk>/", views.MemberListView.as_view(), name='member_detail'),
-    path("members/create/", views.CreateMemberView.as_view(), name='create_member'),
-    path("members/<int:pk>/edit/", views.EditMemberView.as_view(), name='edit_member'),
-    path("members/<int:pk>/edit/status/", views.EditMemberStatusView.as_view(), name='edit_member_status'),
+    path("members/create/", views.MemberCreateView.as_view(), name='member_create'),
+    path("members/<int:pk>/edit/", views.MemberUpdateView.as_view(), name='member_update'),
+    path("members/<int:pk>/edit/status/", views.MemberStatusUpdateView.as_view(), name='member_status_update'),
     path("members/<int:pk>/edit/status/quit/", views.MemberQuitView.as_view(), name='member_quit'),
     path("members/<int:pk>/edit/status/retire/", views.MemberRetireView.as_view(), name='member_retire'),
-    path("members/<int:member_pk>/access/<int:pk>/edit/", views.EditSystemAccessView.as_view(), name='edit_system_access'),
+    path("members/<int:member_pk>/access/<int:pk>/edit/", views.SystemAccessUpdateView.as_view(), name='system_access_update'),
 ]
 
 secret_urlpatterns = [
     path("secrets/", views.SecretListView.as_view(), name='secret_list'),
-    path("secrets/create/", views.CreateSecretView.as_view(), name='create_secret'),
-    path("secrets/<int:pk>/edit/", views.EditSecretView.as_view(), name='edit_secret'),
-    path("secrets/<int:pk>/delete/", views.DeleteSecretView.as_view(), name='delete_secret'),
+    path("secrets/create/", views.SecretCreateView.as_view(), name='secret_create'),
+    path("secrets/<int:pk>/edit/", views.SecretUpdateView.as_view(), name='secret_update'),
+    path("secrets/<int:pk>/delete/", views.SecretDeleteView.as_view(), name='secret_delete'),
 ]
 
 quote_urlpatterns = [
@@ -64,8 +64,8 @@ internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name='home'), name='home'),
     path("bulletins/", include(committee_bulletin_urlpatterns)),
     # The proper `url_name` for this would be `MAKE-history`, but the validator of the model's field requires it to be lowercase
-    views.InternalDisplayContentBoxView.get_path('make-history'),
-    path("contentbox/", include(internal_contentbox_urlpatterns)),
+    views.InternalContentBoxDetailView.get_path('make-history'),
+    path("contentbox/", include(internal_content_box_urlpatterns)),
 
     path("", decorator_include(
         permission_required_else_denied('internal.view_member'),

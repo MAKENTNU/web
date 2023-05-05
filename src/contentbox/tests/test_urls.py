@@ -20,7 +20,7 @@ from web.multilingual.data_structures import MultiLingualTextStructure
 from web.multilingual.widgets import MultiLingualTextEdit
 from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from ..models import ContentBox
-from ..views import DisplayContentBoxView
+from ..views import ContentBoxDetailView
 
 
 class ReverseCallable(Protocol):
@@ -107,7 +107,7 @@ class UrlTests(TestCase):
 
                 pattern: URLPattern
                 view_class = getattr(pattern.callback, 'view_class', None)
-                if view_class and issubclass(view_class, DisplayContentBoxView):
+                if view_class and issubclass(view_class, ContentBoxDetailView):
                     patterns.append(pattern)
 
         for host in host_patterns:
@@ -135,7 +135,7 @@ class UrlTests(TestCase):
             content_box: ContentBox = struct.client.get(struct.url).context['object']
             for client in self.all_clients:
                 with self.subTest(struct=struct, client=client):
-                    change_url = struct.reverse_func('contentbox_edit', content_box.pk)
+                    change_url = struct.reverse_func('content_box_update', content_box.pk)
                     response = client.get(change_url)
                     # Change pages should only be reachable on the same subdomain as the content box' display page is defined on
                     same_subdomain = struct.client == client
@@ -258,7 +258,7 @@ class UrlTests(TestCase):
 
     def assert_content_is_bleached_expectedly_when_posted(self, original_content__bleached_content__tuples: list[tuple[str, str]],
                                                           should_be_bleached: bool, url: str, content_box: ContentBox, client: Client):
-        change_url = reverse('contentbox_edit', args=[content_box.pk])
+        change_url = reverse('content_box_update', args=[content_box.pk])
         for original_content, bleached_content in original_content__bleached_content__tuples:
             response = client.post(
                 change_url,

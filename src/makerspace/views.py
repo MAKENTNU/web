@@ -5,13 +5,13 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
-from contentbox.views import DisplayContentBoxView
+from contentbox.views import ContentBoxDetailView
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import EquipmentForm
 from .models import Equipment
 
 
-class MakerspaceView(DisplayContentBoxView):
+class MakerspaceView(ContentBoxDetailView):
     template_name = 'makerspace/makerspace.html'
 
 
@@ -41,25 +41,25 @@ class AdminEquipmentListView(PermissionRequiredMixin, ListView):
 class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):
     model = Equipment
     form_class = EquipmentForm
-    success_url = reverse_lazy('makerspace_admin_equipment_list')
+    success_url = reverse_lazy('admin_equipment_list')
 
     back_button_link = success_url
     back_button_text = _("Admin page for equipment")
 
 
-class CreateEquipmentView(PermissionRequiredMixin, EquipmentFormMixin, CreateView):
+class EquipmentCreateView(PermissionRequiredMixin, EquipmentFormMixin, CreateView):
     permission_required = ('makerspace.add_equipment',)
 
     form_title = _("New Equipment")
 
 
-class EditEquipmentView(PermissionRequiredMixin, EquipmentFormMixin, UpdateView):
+class EquipmentUpdateView(PermissionRequiredMixin, EquipmentFormMixin, UpdateView):
     permission_required = ('makerspace.change_equipment',)
 
     form_title = _("Edit Equipment")
 
 
-class DeleteEquipmentView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class EquipmentDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
-    success_url = reverse_lazy('makerspace_admin_equipment_list')
+    success_url = reverse_lazy('admin_equipment_list')

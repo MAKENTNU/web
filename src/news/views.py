@@ -25,7 +25,7 @@ from mail import email
 from util.locale_utils import short_datetime_format
 from util.logging_utils import log_request_exception
 from util.view_utils import CleanNextParamMixin, CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ArticleForm, EventForm, EventParticipantsSearchForm, EventRegistrationForm, NewsBaseForm, TimePlaceForm, ToggleForm
+from .forms import ArticleForm, EventForm, EventParticipantsSearchForm, EventTicketForm, NewsBaseForm, TimePlaceForm, ToggleForm
 from .models import Article, Event, EventQuerySet, EventTicket, NewsBase, TimePlace, User
 
 
@@ -277,13 +277,13 @@ class ArticleFormMixin(NewsBaseFormMixin, ABC):
         return {'fields': ('publication_time',)}
 
 
-class EditArticleView(PermissionRequiredMixin, ArticleFormMixin, UpdateView):
+class ArticleUpdateView(PermissionRequiredMixin, ArticleFormMixin, UpdateView):
     permission_required = ('news.change_article',)
 
     form_title = _("Edit Article")
 
 
-class CreateArticleView(PermissionRequiredMixin, ArticleFormMixin, CreateView):
+class ArticleCreateView(PermissionRequiredMixin, ArticleFormMixin, CreateView):
     permission_required = ('news.add_article',)
 
     form_title = _("New Article")
@@ -307,7 +307,7 @@ class EventFormMixin(NewsBaseFormMixin, ModelFormMixin, ABC):
         return reverse('admin_event_detail', args=[self.object.pk])
 
 
-class EditEventView(PermissionRequiredMixin, EventFormMixin, UpdateView):
+class EventUpdateView(PermissionRequiredMixin, EventFormMixin, UpdateView):
     permission_required = ('news.change_event',)
 
     form_title = _("Edit Event")
@@ -316,7 +316,7 @@ class EditEventView(PermissionRequiredMixin, EventFormMixin, UpdateView):
         return _("Admin page for “{event_title}”").format(event_title=self.object.title)
 
 
-class CreateEventView(PermissionRequiredMixin, EventFormMixin, CreateView):
+class EventCreateView(PermissionRequiredMixin, EventFormMixin, CreateView):
     permission_required = ('news.add_event',)
 
     form_title = _("New Event")
@@ -359,7 +359,7 @@ class TimePlaceRelatedViewMixin(EventRelatedViewMixin):
         self.time_place = get_object_or_404(self.event.timeplaces, pk=time_place_pk)
 
 
-class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC):
+class TimePlaceFormMixin(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC):
     model = TimePlace
     form_class = TimePlaceForm
     template_name = 'news/event/time_place_form.html'
@@ -394,7 +394,7 @@ class BaseTimePlaceEditView(CustomFieldsetFormMixin, EventRelatedViewMixin, ABC)
         return reverse('admin_event_detail', args=[self.event.pk])
 
 
-class EditTimePlaceView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, BaseTimePlaceEditView, UpdateView):
+class TimePlaceUpdateView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, TimePlaceFormMixin, UpdateView):
     permission_required = ('news.change_timeplace',)
 
     def get_object(self, queryset=None):
@@ -404,14 +404,14 @@ class EditTimePlaceView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, Base
         return _("Edit Occurrence for “{title}”").format(title=self.event)
 
 
-class CreateTimePlaceView(PermissionRequiredMixin, BaseTimePlaceEditView, CreateView):
+class TimePlaceCreateView(PermissionRequiredMixin, TimePlaceFormMixin, CreateView):
     permission_required = ('news.add_timeplace',)
 
     def get_form_title(self):
         return _("New Occurrence for “{title}”").format(title=self.event)
 
 
-class DuplicateTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, TimePlaceRelatedViewMixin, CreateView):
+class TimePlaceDuplicateCreateView(PermissionRequiredMixin, PreventGetRequestsMixin, TimePlaceRelatedViewMixin, CreateView):
     permission_required = ('news.add_timeplace',)
     model = TimePlace
     fields = ()
@@ -435,10 +435,10 @@ class DuplicateTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, T
         return HttpResponseRedirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse('timeplace_edit', args=[self.event.pk, self.time_place.pk])
+        return reverse('time_place_update', args=[self.event.pk, self.time_place.pk])
 
 
-class AdminNewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, FormView, ABC):
+class AdminAPINewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, FormView, ABC):
     form_class = ToggleForm
 
     def get_form_kwargs(self):
@@ -463,17 +463,17 @@ class AdminNewsBaseToggleView(PreventGetRequestsMixin, SingleObjectMixin, FormVi
         return JsonResponse({})
 
 
-class AdminArticleToggleView(PermissionRequiredMixin, AdminNewsBaseToggleView):
+class AdminAPIArticleToggleView(PermissionRequiredMixin, AdminAPINewsBaseToggleView):
     permission_required = ('news.change_article',)
     model = Article
 
 
-class AdminEventToggleView(PermissionRequiredMixin, AdminNewsBaseToggleView):
+class AdminAPIEventToggleView(PermissionRequiredMixin, AdminAPINewsBaseToggleView):
     permission_required = ('news.change_event',)
     model = Event
 
 
-class AdminTimeplaceToggleView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, AdminNewsBaseToggleView):
+class AdminAPITimePlaceToggleView(PermissionRequiredMixin, TimePlaceRelatedViewMixin, AdminAPINewsBaseToggleView):
     permission_required = ('news.change_timeplace',)
     model = TimePlace
 
@@ -481,19 +481,19 @@ class AdminTimeplaceToggleView(PermissionRequiredMixin, TimePlaceRelatedViewMixi
         return self.time_place
 
 
-class DeleteArticleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class ArticleDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_article',)
     model = Article
     success_url = reverse_lazy('admin_article_list')
 
 
-class DeleteEventView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class EventDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('news.delete_event',)
     model = Event
     success_url = reverse_lazy('admin_event_list')
 
 
-class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, TimePlaceRelatedViewMixin, DeleteView):
+class TimePlaceDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, TimePlaceRelatedViewMixin, DeleteView):
     permission_required = ('news.delete_timeplace',)
     model = TimePlace
 
@@ -504,9 +504,9 @@ class DeleteTimePlaceView(PermissionRequiredMixin, PreventGetRequestsMixin, Time
         return reverse('admin_event_detail', args=[self.object.event.pk])
 
 
-class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, CustomFieldsetFormMixin, CreateView):
+class EventTicketCreateView(PermissionRequiredMixin, CustomFieldsetFormMixin, EventRelatedViewMixin, CreateView):
     model = EventTicket
-    form_class = EventRegistrationForm
+    form_class = EventTicketForm
 
     narrow = False
     save_button_text = _("Register")
@@ -618,14 +618,14 @@ class EventRegistrationView(PermissionRequiredMixin, EventRelatedViewMixin, Cust
         return self.object.get_absolute_url()
 
 
-class TicketDetailView(DetailView):
+class EventTicketDetailView(DetailView):
     model = EventTicket
-    template_name = 'news/event/ticket/ticket_detail.html'
+    template_name = 'news/event/ticket/event_ticket_detail.html'
     context_object_name = 'ticket'
 
 
-class MyTicketsListView(ListView):
-    template_name = 'news/event/ticket/my_tickets_list.html'
+class EventTicketMyListView(ListView):
+    template_name = 'news/event/ticket/event_ticket_my_list.html'
     context_object_name = 'tickets'
 
     def get_queryset(self):
@@ -682,7 +682,7 @@ class AdminEventTicketListView(PermissionRequiredMixin, EventRelatedViewMixin, L
         })
 
 
-class AdminTimeplaceTicketListView(TimePlaceRelatedViewMixin, AdminEventTicketListView):
+class AdminTimePlaceTicketListView(TimePlaceRelatedViewMixin, AdminEventTicketListView):
     time_place: TimePlace
 
     @property
@@ -690,10 +690,10 @@ class AdminTimeplaceTicketListView(TimePlaceRelatedViewMixin, AdminEventTicketLi
         return self.time_place
 
 
-class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView):
+class EventTicketCancelView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView):
     model = EventTicket
     fields = ()
-    template_name = 'news/event/ticket/ticket_cancel.html'
+    template_name = 'news/event/ticket/event_ticket_cancel.html'
     context_object_name = 'ticket'
 
     ticket: EventTicket
@@ -712,8 +712,8 @@ class CancelTicketView(PermissionRequiredMixin, CleanNextParamMixin, UpdateView)
         urls = set()
         for reverse_func in (reverse, django_hosts_reverse):
             urls |= {
-                reverse_func('ticket_detail', args=[self.ticket.pk]),
-                reverse_func('my_tickets_list'),
+                reverse_func('event_ticket_detail', args=[self.ticket.pk]),
+                reverse_func('event_ticket_my_list'),
                 reverse_func('event_detail', args=[self.ticket.registered_event.pk]),
             }
         return urls

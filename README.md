@@ -10,7 +10,7 @@
 
 ### Prerequisites
 
-* Python 3.10+ (latest, stable version preferred)
+* Python **3.10**+ (latest, stable version preferred)
 * Having cloned this repository to your machine
   * For most purposes, check out [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev), as it's the base branch for all development:
     ```shell

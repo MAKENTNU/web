@@ -2,11 +2,11 @@ from http import HTTPStatus
 
 from django.templatetags.static import static
 from django.test import TestCase
-from django.urls import reverse
 from django.utils import timezone
+from django_hosts import reverse
 
 from users.models import User
-from ...forms import CreateMachineForm, EditMachineForm
+from ...forms import AddMachineForm, ChangeMachineForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 
@@ -200,6 +200,7 @@ class TestMachineListView(TestCase):
 class TestMachineDetailView(TestCase):
 
     def test_only_internal_users_can_view_internal_machines(self):
+        self.assertGreaterEqual(MachineType.objects.count(), 1)
         for machine_type in MachineType.objects.all():
             with self.subTest(machine_type=machine_type):
                 user = User.objects.create_user(username=f"user{machine_type.pk}")
@@ -228,7 +229,7 @@ class TestMachineDetailView(TestCase):
                 self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
-class TestCreateAndEditMachineView(TestCase):
+class TestMachineCreateAndUpdateView(TestCase):
 
     def setUp(self):
         username = "TEST_USER"
@@ -237,20 +238,20 @@ class TestCreateAndEditMachineView(TestCase):
         self.user.add_perms('make_queue.add_machine', 'make_queue.change_machine')
         self.client.login(username=username, password=password)
 
-    def test_edit_machine_context_data_has_correct_form(self):
+    def test_machine_update_has_correct_form_in_context_data(self):
         printer_machine_type = MachineType.objects.get(pk=1)
         machine = Machine.objects.create(
             name="Test",
             machine_model="Ultimaker 2+",
             machine_type=printer_machine_type,
         )
-        response = self.client.get(reverse('edit_machine', args=[machine.pk]))
+        response = self.client.get(reverse('machine_update', args=[machine.pk]))
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTrue(isinstance(response.context_data['form'], EditMachineForm))
+        self.assertTrue(isinstance(response.context_data['form'], ChangeMachineForm))
 
-    def test_create_machine_context_data_has_correct_form(self):
-        response = self.client.get(reverse('create_machine'))
+    def test_machine_create_has_correct_form_in_context_data(self):
+        response = self.client.get(reverse('machine_create'))
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertTrue(isinstance(response.context_data['form'], CreateMachineForm))
+        self.assertTrue(isinstance(response.context_data['form'], AddMachineForm))

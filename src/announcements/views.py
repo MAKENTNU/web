@@ -10,7 +10,7 @@ from .forms import AnnouncementForm
 from .models import Announcement
 
 
-class AnnouncementAdminView(PermissionRequiredMixin, ListView):
+class AdminAnnouncementListView(PermissionRequiredMixin, ListView):
     permission_required = ('announcements.change_announcement',)
     model = Announcement
     queryset = Announcement.objects.order_by('-display_from')
@@ -21,7 +21,7 @@ class AnnouncementAdminView(PermissionRequiredMixin, ListView):
 class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
     model = Announcement
     form_class = AnnouncementForm
-    success_url = reverse_lazy('announcement_admin')
+    success_url = reverse_lazy('admin_announcement_list')
 
     narrow = False
     centered_title = False
@@ -34,19 +34,19 @@ class AnnouncementFormMixin(CustomFieldsetFormMixin, ABC):
     ]
 
 
-class CreateAnnouncementView(PermissionRequiredMixin, AnnouncementFormMixin, CreateView):
+class AnnouncementCreateView(PermissionRequiredMixin, AnnouncementFormMixin, CreateView):
     permission_required = ('announcements.add_announcement',)
 
     form_title = _("New Announcement")
 
 
-class EditAnnouncementView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):
+class AnnouncementUpdateView(PermissionRequiredMixin, AnnouncementFormMixin, UpdateView):
     permission_required = ('announcements.change_announcement',)
 
     form_title = _("Edit Announcement")
 
 
-class DeleteAnnouncementView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class AnnouncementDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('announcements.delete_announcement',)
     model = Announcement
-    success_url = reverse_lazy('announcement_admin')
+    success_url = reverse_lazy('admin_announcement_list')

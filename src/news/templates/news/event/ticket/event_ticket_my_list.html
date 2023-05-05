@@ -6,7 +6,7 @@
 {% block title %}{% translate "My tickets" %}{% endblock title %}
 
 {% block extra_head %}
-    <link rel="stylesheet" href="{% static 'news/css/event/ticket/ticket_card.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/event/ticket/event_ticket_card.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
@@ -14,7 +14,7 @@
         <h1>{% translate "My tickets" %}</h1>
         <div class="ui cards">
             {% for ticket in tickets %}
-                {% include 'news/event/ticket/ticket_card.html' %}
+                {% include 'news/event/ticket/event_ticket_card.html' %}
             {% endfor %}
         </div>
     </div>

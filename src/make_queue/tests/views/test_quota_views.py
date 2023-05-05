@@ -4,10 +4,10 @@ from django_hosts import reverse
 from users.models import User
 from ...models.machine import MachineType
 from ...models.reservation import Quota
-from ...views.admin.quota import QuotaPanelView
+from ...views.admin.quota import AdminQuotaPanelView
 
 
-class TestUserQuotaListView(TestCase):
+class TestAdminUserQuotaListView(TestCase):
 
     def test_get_user_quota(self):
         user = User.objects.create_user("test")
@@ -19,11 +19,11 @@ class TestUserQuotaListView(TestCase):
         Quota.objects.create(user=user2, machine_type=machine_type, number_of_reservations=2)
 
         self.client.force_login(user)
-        context_data = self.client.get(reverse('user_quota_list', args=[user.pk])).context
+        context_data = self.client.get(reverse('admin_user_quota_list', args=[user.pk])).context
         self.assertListEqual(list(context_data['user_quotas']), [quota2])
 
 
-class TestQuotaPanelView(TestCase):
+class TestAdminQuotaPanelView(TestCase):
 
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
@@ -42,14 +42,14 @@ class TestQuotaPanelView(TestCase):
         self.superuser_client = Client()
         self.superuser_client.force_login(self.superuser)
 
-    def test_quota_panel_responds_with_expected_context(self):
+    def test_admin_quota_panel_responds_with_expected_context(self):
         def assert_response_contains_expected_context(url: str, expected_requested_user: User | None):
             response = self.superuser_client.get(url)
             context = response.context
-            self.assertIs(type(context['view']), QuotaPanelView)
+            self.assertIs(type(context['view']), AdminQuotaPanelView)
             self.assertListEqual(list(context['users']), [self.superuser, self.user, self.user2])
             self.assertListEqual(list(context['global_quotas']), [self.quota1, self.quota2])
             self.assertEqual(context['requested_user'], expected_requested_user)
 
-        assert_response_contains_expected_context(reverse('quota_panel'), None)
-        assert_response_contains_expected_context(reverse('quota_panel', args=[self.user.pk]), self.user)
+        assert_response_contains_expected_context(reverse('admin_quota_panel'), None)
+        assert_response_contains_expected_context(reverse('admin_quota_panel', args=[self.user.pk]), self.user)

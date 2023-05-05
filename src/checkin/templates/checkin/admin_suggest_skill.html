@@ -12,7 +12,7 @@
     <script>
         {# These variables are used in `suggest_skill.js` #}
         var csrfToken = "{{ csrf_token }}";
-        var voteForSkillSuggestionURL = "{% url 'vote_for_skill_suggestion' %}";
+        var voteForSkillSuggestionURL = "{% url 'admin_api_suggest_skill_vote' %}";
     </script>
     <script defer src="{% static "checkin/js/suggest_skill.js" %}"></script>
 {% endblock extra_head %}
@@ -109,7 +109,7 @@
                             {% if request.user|can_delete_suggestion %}
 
                                 <button class="ui red button delete-suggestion"
-                                        data-delete-url="{% url 'delete_skill_suggestion' suggestion.pk %}">
+                                        data-delete-url="{% url 'admin_api_suggest_skill_delete' suggestion.pk %}">
                                     {% translate "Delete" %}
                                 </button>
 

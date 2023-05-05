@@ -6,11 +6,11 @@ from users.models import User
 from ...models.reservation import Quota
 
 
-class UserQuotaListView(PermissionRequiredMixin, ListView):
-    """View for getting a rendered version of the quota of a specific user."""
+class AdminUserQuotaListView(PermissionRequiredMixin, ListView):
+    """View for getting a rendered version of the quotas of a specific user."""
     permission_required = ('make_queue.change_quota',)
     model = Quota
-    template_name = 'make_queue/quota/quota_user.html'
+    template_name = 'make_queue/quota/admin_user_quota_list.html'
     context_object_name = 'user_quotas'
 
     user: User

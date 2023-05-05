@@ -13,7 +13,7 @@
     <a class="item {% if user.is_authenticated and reservation_denied_message %}disable{% endif %}"
             {% if user.is_authenticated %}
                 {% if not reservation_denied_message %}
-       href="{% url 'create_reservation' machine.pk %}"
+       href="{% url 'reservation_create' machine.pk %}"
                 {% endif %}
             {% else %}
        href="{% url 'login' %}{{ login_next_param }}"
@@ -29,7 +29,7 @@
             {% endif %}
         </div>
     </a>
-    <a class="item" href="{% url 'my_reservations_list' %}">
+    <a class="item" href="{% url 'reservation_my_list' %}">
         <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">
             <div class="header">{% translate "My reservations" %}</div>

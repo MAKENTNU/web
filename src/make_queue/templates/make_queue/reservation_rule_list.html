@@ -17,7 +17,7 @@
         <h1 class="word-breaking hyphenated">
             {{ title }}
             {% if perms.make_queue.add_reservationrule %}
-                <a href="{% url 'create_reservation_rule' machine_type.pk %}">
+                <a href="{% url 'reservation_rule_create' machine_type.pk %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -61,13 +61,13 @@
                     <div class="content">
                         <div class="meta">
                             {% if perms.make_queue.change_reservationrule %}
-                                <a href="{% url 'edit_reservation_rule' machine_type.pk rule.pk %}">
+                                <a href="{% url 'reservation_rule_update' machine_type.pk rule.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
                             {% if perms.make_queue.delete_reservationrule %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url 'delete_reservation_rule' machine_type.pk rule.pk %}">
+                                   data-url="{% url 'reservation_rule_delete' machine_type.pk rule.pk %}">
                                     <i class="red trash icon"></i>
                                 </a>
                             {% endif %}

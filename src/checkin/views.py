@@ -19,7 +19,7 @@ from util.view_utils import PreventGetRequestsMixin
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
-class CheckInView(RFIDView):
+class AdminCheckInView(RFIDView):
 
     def card_number_valid(self, card_number):
         profiles = Profile.objects.filter(user__card_number=card_number)
@@ -34,7 +34,7 @@ class CheckInView(RFIDView):
             return HttpResponse('check in'.encode(), status=HTTPStatus.OK)
 
 
-class ShowSkillsView(TemplateView):
+class UserSkillListView(TemplateView):
     template_name = 'checkin/user_skill_list.html'
     expiry_time = (60 * 60) * 3
 
@@ -80,7 +80,7 @@ class CompletedCourseMessageStruct:
     usage_hint: str = None
 
 
-class ProfilePageView(TemplateView):
+class ProfileDetailView(TemplateView):
     template_name = 'checkin/profile_detail.html'
 
     def post(self, request):
@@ -88,7 +88,7 @@ class ProfilePageView(TemplateView):
             rating = int(request.POST.get('rating'))
             skill_id = int(request.POST.get('skill'))
         except ValueError:
-            return HttpResponseRedirect(reverse('profile'))
+            return HttpResponseRedirect(reverse('profile_detail'))
 
         profile = request.user.profile
         skill = get_object_or_404(Skill, id=skill_id)
@@ -102,7 +102,7 @@ class ProfilePageView(TemplateView):
             elif rating != 0:
                 UserSkill.objects.create(skill=skill, profile=profile, skill_level=rating)
 
-        return HttpResponseRedirect(reverse('profile'))
+        return HttpResponseRedirect(reverse('profile_detail'))
 
     def get_context_data(self, **kwargs):
         user = self.request.user
@@ -139,7 +139,7 @@ class ProfilePageView(TemplateView):
             ),
         ]
 
-        """ Commented out because it's currently not in use; see the template code in `profile_internal.html`
+        """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
         user_skills = profile.user_skills.all()
         skill_dict = {}
         for user_skill in user_skills:
@@ -160,9 +160,9 @@ class ProfilePageView(TemplateView):
         return context
 
 
-class SuggestSkillView(PermissionRequiredMixin, TemplateView):
+class AdminSuggestSkillView(PermissionRequiredMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
-    template_name = 'checkin/suggest_skill.html'
+    template_name = 'checkin/admin_suggest_skill.html'
     extra_context = {
         'suggestions': SuggestSkill.objects.all(),
     }
@@ -175,17 +175,17 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
         if suggestion.strip() and not suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         elif not suggestion.strip() and suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         elif not suggestion.strip() and not suggestion_english.strip():
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
 
         if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(
                 title_en=suggestion_english).exists():
             messages.error(request, _("Skill already exists!"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         else:
             if SuggestSkill.objects.filter(title=suggestion).exists():
                 s = SuggestSkill.objects.get(title=suggestion)
@@ -204,10 +204,10 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.success(request, _("Skill added!"))
 
-        return HttpResponseRedirect(reverse('suggest_skill'))
+        return HttpResponseRedirect(reverse('admin_suggest_skill'))
 
 
-class VoteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, TemplateView):
+class AdminAPISuggestSkillVoteView(PermissionRequiredMixin, PreventGetRequestsMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
 
     def post(self, request):
@@ -232,7 +232,7 @@ class VoteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, Templ
         return JsonResponse(response_dict)
 
 
-class DeleteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class AdminAPISuggestSkillDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('checkin.delete_suggestskill',)
     model = SuggestSkill
 
@@ -241,7 +241,7 @@ class DeleteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, Del
         return JsonResponse({'suggestion_deleted': True})
 
 
-class RegisterCardView(RFIDView):
+class AdminRegisterCardView(RFIDView):
 
     def card_number_valid(self, card_number):
         if Profile.objects.filter(user__card__number=card_number).exists():
@@ -252,7 +252,7 @@ class RegisterCardView(RFIDView):
             return HttpResponse("Card scanned", status=HTTPStatus.OK)
 
 
-class RegisterProfileView(PreventGetRequestsMixin, TemplateView):
+class AdminAPIRegisterProfileView(PreventGetRequestsMixin, TemplateView):
 
     def post(self, request):
         scan_exists = RegisterProfile.objects.exists()
@@ -274,11 +274,11 @@ class RegisterProfileView(PreventGetRequestsMixin, TemplateView):
         return JsonResponse(response_dict)
 
 
-class EditProfilePictureView(PreventGetRequestsMixin, View):
+class AdminProfilePictureUpdateView(PreventGetRequestsMixin, View):
 
     def post(self, request, *args, **kwargs):
         image = request.FILES.get('image')
         profile = request.user.profile
         profile.image = image
         profile.save()
-        return HttpResponseRedirect(reverse('profile'))
+        return HttpResponseRedirect(reverse('profile_detail'))

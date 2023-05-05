@@ -10,11 +10,11 @@ from django.views.generic import CreateView, DeleteView, DetailView, TemplateVie
 from django.views.generic.edit import ModelFormMixin
 
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
+from .forms import AddPageForm, ChangePageVersionForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
 
 
-class SpecificPageBasedViewMixin:
+class DocumentationPageRelatedViewMixin:
     """
     NOTE: When extending this mixin class, it's required to have a ``PageTitle`` path converter named ``title`` as part of the view's path,
     which will be used to query the database for the requested page by title.
@@ -28,7 +28,7 @@ class SpecificPageBasedViewMixin:
     pk_url_kwarg = None
 
 
-class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageDetailView(DocumentationPageRelatedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
@@ -41,12 +41,12 @@ class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
         return super().get_object(*args, **kwargs)
 
 
-class DocumentationPageHistoryDetailView(SpecificPageBasedViewMixin, DetailView):
-    template_name = 'docs/documentation_page_history.html'
+class DocumentationPageHistoryDetailView(DocumentationPageRelatedViewMixin, DetailView):
+    template_name = 'docs/documentation_page_history_detail.html'
     context_object_name = 'page'
 
 
-class DocumentationPageContentDetailView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageContentDetailView(DocumentationPageRelatedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
@@ -70,12 +70,12 @@ class DocumentationPageContentDetailView(SpecificPageBasedViewMixin, DetailView)
         return context_data
 
 
-class ChangeDocumentationPageVersionView(PermissionRequiredMixin, SpecificPageBasedViewMixin, UpdateView):
+class DocumentationPageVersionUpdateView(PermissionRequiredMixin, DocumentationPageRelatedViewMixin, UpdateView):
     permission_required = ('docs.change_page',)
     form_class = ChangePageVersionForm
 
     def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('page_history_detail', args=[self.get_object().pk]))
+        return HttpResponseRedirect(reverse('documentation_page_history_detail', args=[self.get_object().pk]))
 
     def get_success_url(self):
         return self.get_object().get_absolute_url()
@@ -84,10 +84,10 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, SpecificPageBa
         return HttpResponseForbidden()
 
 
-class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView):
+class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView):
     permission_required = ('docs.add_page',)
     model = Page
-    form_class = CreatePageForm
+    form_class = AddPageForm
 
     base_template = 'docs/base.html'
     form_title = _("Create a New Page")
@@ -111,10 +111,10 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse('edit_page', args=[self.object.pk])
+        return reverse('documentation_page_update', args=[self.object.pk])
 
 
-class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, SpecificPageBasedViewMixin, UpdateView):
+class DocumentationPageUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, DocumentationPageRelatedViewMixin, UpdateView):
     permission_required = ('docs.change_page',)
     form_class = PageContentForm
     template_name = 'docs/documentation_page_form.html'
@@ -157,14 +157,14 @@ class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin
         return self.object.get_absolute_url()
 
 
-class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificPageBasedViewMixin, DeleteView):
+class DocumentationPageDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DocumentationPageRelatedViewMixin, DeleteView):
     permission_required = ('docs.delete_page',)
     queryset = Page.objects.exclude(title=MAIN_PAGE_TITLE)
     success_url = reverse_lazy('home')
 
 
-class SearchPagesView(TemplateView):
-    template_name = 'docs/search.html'
+class DocumentationPageSearchView(TemplateView):
+    template_name = 'docs/documentation_page_search.html'
     page_size = 10
 
     @staticmethod

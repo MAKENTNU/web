@@ -37,8 +37,8 @@ class UrlTests(NewsTestBase, TestCase):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
-            Get(reverse('front_page'), public=True),
-            Get(reverse('adminpanel'), public=False),
+            Get(reverse('index_page'), public=True),
+            Get(reverse('admin_panel'), public=False),
             Get(reverse('about'), public=True),
             Get(reverse('contact'), public=True),
             Get(reverse('apply'), public=True),
@@ -54,12 +54,33 @@ class UrlTests(NewsTestBase, TestCase):
         path_predicates = [
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
+
             Get(reverse_admin('index'), public=False),
             Get(reverse_admin('password_change'), public=False),
             *[
                 Get(reverse_admin('app_list', args=[app_label]), public=False)
-                for app_label in ['announcements', 'auth', 'checkin', 'contentbox', 'docs', 'faq', 'groups', 'internal', 'make_queue', 'makerspace',
-                                  'news', 'social_django', 'users']
+                for app_label in [
+                    # The apps are listed in order of appearance on the admin index page,
+                    # which is controlled by `web.admin.WebAdminSite`
+                    'constance',
+
+                    'users',
+                    'groups',
+                    'contentbox',
+                    'announcements',
+                    'news',
+                    'make_queue',
+                    'makerspace',
+                    'faq',
+
+                    'internal',
+                    'docs',
+
+                    'checkin',
+                    'auth',
+
+                    'social_django',
+                ]
             ],
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'admin')
@@ -73,7 +94,7 @@ class UrlTests(NewsTestBase, TestCase):
             Get(f'/news/article/{self.article1.pk}/', public=True, redirect=True),
             Get(f'/news/event/{self.event1.pk}/', public=True, redirect=True),
             Get(f'/news/ticket/{self.ticket1.pk}/', public=False, redirect=True),
-            Get(f'/news/ticket/me/', public=False, redirect=True),
+            Get('/news/ticket/me/', public=False, redirect=True),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

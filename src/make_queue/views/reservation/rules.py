@@ -62,7 +62,7 @@ class ReservationRuleListView(MachineTypeRelatedViewMixin, ListView):
         return context_data
 
 
-class BaseReservationRuleEditView(MachineTypeRelatedViewMixin, CustomFieldsetFormMixin, ModelFormMixin, ABC):
+class ReservationRuleFormMixin(MachineTypeRelatedViewMixin, CustomFieldsetFormMixin, ModelFormMixin, ABC):
     model = ReservationRule
     form_class = ReservationRuleForm
 
@@ -90,14 +90,14 @@ class BaseReservationRuleEditView(MachineTypeRelatedViewMixin, CustomFieldsetFor
         return reverse('reservation_rule_list', args=[self.machine_type.pk])
 
 
-class CreateReservationRuleView(PermissionRequiredMixin, BaseReservationRuleEditView, CreateView):
+class ReservationRuleCreateView(PermissionRequiredMixin, ReservationRuleFormMixin, CreateView):
     permission_required = ('make_queue.add_reservation_rule',)
 
     def get_form_title(self):
         return _("New Rule for {machine_type}").format(machine_type=self.machine_type)
 
 
-class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRuleEditView, UpdateView):
+class ReservationRuleUpdateView(PermissionRequiredMixin, ReservationRuleFormMixin, UpdateView):
     permission_required = ('make_queue.change_reservation_rule',)
     pk_url_kwarg = 'reservation_rule_pk'
 
@@ -105,7 +105,7 @@ class EditReservationRuleView(PermissionRequiredMixin, BaseReservationRuleEditVi
         return _("Edit Rule for {machine_type}").format(machine_type=self.machine_type)
 
 
-class DeleteReservationRuleView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class ReservationRuleDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_reservation_rule',)
     model = ReservationRule
     pk_url_kwarg = 'reservation_rule_pk'
@@ -114,7 +114,7 @@ class DeleteReservationRuleView(PermissionRequiredMixin, PreventGetRequestsMixin
         return reverse('reservation_rule_list', args=[self.object.machine_type.pk])
 
 
-class MachineUsageRulesDetailView(MachineTypeRelatedViewMixin, DetailView):
+class MachineUsageRuleDetailView(MachineTypeRelatedViewMixin, DetailView):
     model = MachineUsageRule
     template_name = 'make_queue/machine_usage_rule_detail.html'
     context_object_name = 'usage_rules'
@@ -132,7 +132,7 @@ class MachineUsageRulesDetailView(MachineTypeRelatedViewMixin, DetailView):
         })
 
 
-class EditUsageRulesView(PermissionRequiredMixin, CustomFieldsetFormMixin, MachineTypeRelatedViewMixin, UpdateView):
+class MachineUsageRuleUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, MachineTypeRelatedViewMixin, UpdateView):
     permission_required = ('make_queue.change_machineusagerule',)
     model = MachineUsageRule
     fields = ('content',)

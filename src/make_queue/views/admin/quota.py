@@ -14,7 +14,7 @@ from ...forms import QuotaForm
 from ...models.reservation import Quota
 
 
-class QuotaPanelView(PermissionRequiredMixin, TemplateView):
+class AdminQuotaPanelView(PermissionRequiredMixin, TemplateView):
     """View for the quota admin panel that allows users to control the quotas of people."""
     permission_required = ('make_queue.change_quota',)
     template_name = 'make_queue/quota/admin_quota_panel.html'
@@ -56,26 +56,26 @@ class QuotaFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
     ]
 
     def get_back_button_link(self):
-        return reverse('quota_panel')
+        return reverse('admin_quota_panel')
 
     def get_back_button_text(self):
         return _("Admin page for quotas")
 
     def get_success_url(self):
         if self.object.all:
-            return reverse('quota_panel')
+            return reverse('admin_quota_panel')
         else:
-            return reverse('quota_panel', args=[self.object.user.pk])
+            return reverse('admin_quota_panel', args=[self.object.user.pk])
 
 
-class CreateQuotaView(PermissionRequiredMixin, QuotaFormMixin, CreateView):
+class QuotaCreateView(PermissionRequiredMixin, QuotaFormMixin, CreateView):
     permission_required = ('make_queue.add_quota',)
 
     form_title = _("New Quota")
     save_button_text = _("Add")
 
 
-class EditQuotaView(PermissionRequiredMixin, QuotaFormMixin, UpdateView):
+class QuotaUpdateView(PermissionRequiredMixin, QuotaFormMixin, UpdateView):
     permission_required = ('make_queue.change_quota',)
 
     form_title = _("Edit Quota")
@@ -92,12 +92,12 @@ class EditQuotaView(PermissionRequiredMixin, QuotaFormMixin, UpdateView):
             )
 
 
-class DeleteQuotaView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class QuotaDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('make_queue.delete_quota',)
     model = Quota
 
     def get_success_url(self):
         if self.object.all:
-            return reverse('quota_panel')
+            return reverse('admin_quota_panel')
         else:
-            return reverse('quota_panel', args=[self.object.user.pk])
+            return reverse('admin_quota_panel', args=[self.object.user.pk])

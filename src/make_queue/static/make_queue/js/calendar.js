@@ -6,7 +6,7 @@ function ReservationCalendar($element, properties) {
      *
      * machine - The pk of the machine to display for
      * selection - A boolean indicating if selection is allowed
-     * canBreakRules - A boolean indicating if the user can break the reservation rules
+     * canIgnoreRules - A boolean indicating whether the user can ignore the reservation rules
      * date [optional] - The date to show at the start
      * onSelect [optional] - A function to handle what should be shown on selection
      * selectionPopupContent [optional] - A function to generate the content to be shown in the popup made by the
@@ -22,7 +22,7 @@ function ReservationCalendar($element, properties) {
     this.$element = $element;
     this.machine = properties.machine;
     this.selection = properties.selection;
-    this.canBreakRules = properties.canBreakRules;
+    this.canIgnoreRules = properties.canIgnoreRules;
 
     if (properties.onSelect) {
         this.onSelection = properties.onSelect;
@@ -289,14 +289,14 @@ ReservationCalendar.prototype.getHoverDate = function (event, day) {
 
 ReservationCalendar.prototype.getSelectionStartTime = function () {
     /**
-     * Simple endpoint for getting the start time of the selection without handling getSelectionTimes.
+     * Simple helper method for getting the start time of the selection without having to deal with `getSelectionTimes()`.
      */
     return this.getSelectionTimes()[0];
 };
 
 ReservationCalendar.prototype.getSelectionEndTime = function () {
     /**
-     * Simple endpoint for getting the end time of the selection without handling getSelectionTimes.
+     * Simple helper method for getting the end time of the selection without having to deal with `getSelectionTimes()`.
      */
     return this.getSelectionTimes()[1];
 };
@@ -334,7 +334,7 @@ ReservationCalendar.prototype.getSelectionTimes = function () {
         });
     }
 
-    if (!this.canBreakRules) {
+    if (!this.canIgnoreRules) {
         // Decrease the end time or increase the start time based on the reservation rules. Decrease the end time if it
         // is later than where the user clicked in the calendar (rounded due to endTime being rounded), otherwise
         // increase the start time
@@ -364,11 +364,11 @@ ReservationCalendar.prototype.changeMachine = function (machine) {
     this.update();
 };
 
-ReservationCalendar.prototype.updateCanBreakRules = function (canbreakRules) {
+ReservationCalendar.prototype.updateCanIgnoreRules = function (canIgnoreRules) {
     /**
-     * Setter for the canBreakRules property.
+     * Setter for the `canIgnoreRules` property.
      */
-    this.canBreakRules = canbreakRules;
+    this.canIgnoreRules = canIgnoreRules;
 };
 
 ReservationCalendar.prototype.showDate = function (date) {

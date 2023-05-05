@@ -8,7 +8,7 @@
     {% if timeplace.event.repeating %}
         <span class="ui right floated">
             {% if timeplace.number_of_tickets %}
-                <a href="{% url 'timeplace_ticket_list' timeplace.event.pk timeplace.pk %}">
+                <a href="{% url 'admin_time_place_ticket_list' timeplace.event.pk timeplace.pk %}">
                     {% blocktranslate trimmed with num_active_tickets=timeplace.number_of_active_tickets num_tickets=timeplace.number_of_tickets %}
                         {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
                     {% endblocktranslate %}
@@ -33,14 +33,14 @@
                 {% if perms.news.change_timeplace %}
                     <a class="make-col-blue popup-trigger" data-title="{% translate "Edit" %}"
                        data-content="{% translate "If clicked, a form for editing the occurrence is shown." %}"
-                       href="{% url 'timeplace_edit' timeplace.event.pk timeplace.pk %}">
+                       href="{% url 'time_place_update' timeplace.event.pk timeplace.pk %}">
                         <i class="edit icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.news.delete_timeplace %}
                     <a class="delete-modal-button make-col-blue popup-trigger"
                        data-title="{% translate "Delete" %}" data-content="{% translate "If clicked, the occurrence will be deleted." %}"
-                       data-url="{% url 'timeplace_delete' timeplace.event.pk timeplace.pk %}" data-obj-name="{{ timeplace }}">
+                       data-url="{% url 'time_place_delete' timeplace.event.pk timeplace.pk %}" data-obj-name="{{ timeplace }}">
                         <i class="delete icon"></i>
                     </a>
                 {% endif %}
@@ -52,7 +52,7 @@
                         <i class="copy icon"></i>
                     </a>
                     <form id="duplication-form-{{ timeplace.pk }}"
-                          method="POST" action="{% url 'timeplace_duplicate' timeplace.event.pk timeplace.pk %}">
+                          method="POST" action="{% url 'time_place_duplicate_create' timeplace.event.pk timeplace.pk %}">
                         {% csrf_token %}
                     </form>
                 {% endif %}

@@ -2,8 +2,8 @@ from datetime import timedelta
 from http import HTTPStatus
 
 from django.test import Client, TestCase
-from django.urls import reverse
 from django.utils import timezone
+from django_hosts import reverse
 
 from users.models import User
 from ...models.course import Printer3DCourse
@@ -11,7 +11,7 @@ from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
 
 
-class TestDeleteReservationView(TestCase):
+class TestAPIReservationDeleteView(TestCase):
 
     def setUp(self):
         password = "weak_pass"
@@ -44,12 +44,12 @@ class TestDeleteReservationView(TestCase):
         )
 
     def test_delete_own_reservation_succeeds(self):
-        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        response = self.client1.delete(reverse('api_reservation_delete', args=[self.reservation.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
     def test_delete_other_users_reservation_fails(self):
-        response = self.client2.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        response = self.client2.delete(reverse('api_reservation_delete', args=[self.reservation.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
@@ -62,7 +62,7 @@ class TestDeleteReservationView(TestCase):
             end_time=now + timedelta(hours=8),
         )
 
-        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        response = self.client1.delete(reverse('api_reservation_delete', args=[self.reservation.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
         self.assertTrue(Reservation.objects.filter(pk=reservation2.pk).exists())
@@ -70,13 +70,13 @@ class TestDeleteReservationView(TestCase):
     def test_delete_reservation_after_start_fails(self):
         now = timezone.localtime()
         Reservation.objects.filter(pk=self.reservation.pk).update(start_time=now)
-        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        response = self.client1.delete(reverse('api_reservation_delete', args=[self.reservation.pk]))
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
         self.assertTrue(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
         # Setting the start time to the future should allow deletion
         Reservation.objects.filter(pk=self.reservation.pk).update(start_time=now + timedelta(hours=1))
-        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        response = self.client1.delete(reverse('api_reservation_delete', args=[self.reservation.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())
 
@@ -91,6 +91,6 @@ class TestDeleteReservationView(TestCase):
         machine.status = machine_status
         machine.save()
 
-        response = self.client1.delete(reverse('delete_reservation', args=[self.reservation.pk]))
+        response = self.client1.delete(reverse('api_reservation_delete', args=[self.reservation.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertFalse(Reservation.objects.filter(pk=self.reservation.pk).exists())

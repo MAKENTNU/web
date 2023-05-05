@@ -20,7 +20,7 @@
 {% block body %}
     <div class="ui container">
 
-        <a href="{% url 'admin_event_list' %}">
+        <a href="{% url 'admin_event_list' %}" style="font-size: 1.15rem;">
             <i class="angle double left icon"></i>{% translate "Admin page for events" %}
         </a>
 
@@ -37,7 +37,7 @@
                 {% endif %}
 
                 {% if perms.news.change_event %}
-                    <a class="ui blue button" href="{% url 'event_edit' event.pk %}">
+                    <a class="ui blue button" href="{% url 'event_update' event.pk %}">
                         <i class="edit icon"></i>{% translate "Edit" %}
                     </a>
                 {% endif %}
@@ -73,7 +73,7 @@
             </h3>
             {% if event.number_of_tickets %}
                 <b>
-                    <a href="{% url 'event_ticket_list' event.pk %}">
+                    <a href="{% url 'admin_event_ticket_list' event.pk %}">
                         {% blocktranslate trimmed with num_active_tickets=event.number_of_active_tickets num_tickets=event.number_of_tickets %}
                             {{ num_active_tickets }}/{{ num_tickets }} tickets reserved
                         {% endblocktranslate %}
@@ -89,7 +89,7 @@
         </h3>
         <div class="create-new-occurrence">
             {% if perms.news.add_timeplace %}
-                <a class="ui blue right floated button popup-trigger" href="{% url 'timeplace_create' event.pk %}">
+                <a class="ui blue right floated button popup-trigger" href="{% url 'time_place_create' event.pk %}">
                     <i class="time icon"></i>
                     {% translate "Add new occurrence" %}
                 </a>

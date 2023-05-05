@@ -2,14 +2,14 @@ from django.conf.urls.i18n import i18n_patterns
 from django.urls import path
 
 from internal.urls import urlpatterns as internal_urlpatterns
-from ...views import DisplayContentBoxView, EditContentBoxView
+from ...views import ContentBoxDetailView, ContentBoxUpdateView
 
 
 INTERNAL_TEST_URL_NAME = 'internal_test_url_name'
 internal_change_perm = 'contentbox.perm1'
 
 
-class InternalDisplayContentBoxView(DisplayContentBoxView):
+class InternalContentBoxDetailView(ContentBoxDetailView):
     extra_context = {
         'base_template': 'internal/base.html',
     }
@@ -18,12 +18,12 @@ class InternalDisplayContentBoxView(DisplayContentBoxView):
 
 
 urlpatterns = i18n_patterns(
-    InternalDisplayContentBoxView.get_path(INTERNAL_TEST_URL_NAME),
+    InternalContentBoxDetailView.get_path(INTERNAL_TEST_URL_NAME),
     path("contentbox/<int:pk>/edit/",
-         EditContentBoxView.as_view(
-             permission_required=EditContentBoxView.permission_required + (internal_change_perm,),
+         ContentBoxUpdateView.as_view(
+             permission_required=ContentBoxUpdateView.permission_required + (internal_change_perm,),
              base_template='internal/base.html',
-         ), name='contentbox_edit'),
+         ), name='content_box_update'),
 
     prefix_default_language=False,
 ) + internal_urlpatterns  # Should be appended, so that they can be overridden by the above patterns

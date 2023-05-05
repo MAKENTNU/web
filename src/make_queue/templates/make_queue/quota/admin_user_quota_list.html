@@ -10,12 +10,12 @@
                 {% else %}
                     {% translate "Replenishing quota" %}
                 {% endif %}
-                <a href="{% url 'edit_quota' quota.pk %}">
+                <a href="{% url 'quota_update' quota.pk %}">
                     <i class="make-col-yellow pencil icon"></i>
                 </a>
                 {% if perms.make_queue.delete_quota %}
                     <a class="delete-modal-button"
-                       data-url="{% url 'delete_quota' quota.pk %}"
+                       data-url="{% url 'quota_delete' quota.pk %}"
                        data-obj-name="{{ quota }}">
                         <i class="red trash icon"></i>
                     </a>

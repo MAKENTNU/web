@@ -15,8 +15,8 @@
     <thead style="width: 100%; background-color: rgb(34, 43, 52); margin: 0; padding: 0;">
     <tr style="padding: 0; margin: 0; width: 100%;">
         <th style="padding: 20px;">
-            {% url 'front_page' as front_page_url %}
-            <a href="{% get_absolute_uri_for_path request front_page_url %}" target="_blank">
+            {% url 'index_page' as index_page_url %}
+            <a href="{% get_absolute_uri_for_path request index_page_url %}" target="_blank">
                 {% static 'web/img/logo_white.svg' as logo_url %}
                 <img src="{% get_absolute_uri_for_path request logo_url %}"
                      style="width: 500px; max-width: 100%;" alt="{% translate "MAKE NTNU's logo" %}"
@@ -62,7 +62,7 @@
     </tr>
     <tr style="width: 100%">
         <td style="padding: 15px 30px 0;">
-            {% url 'cancel_ticket' ticket.pk as cancel_url %}
+            {% url 'event_ticket_cancel' ticket.pk as cancel_url %}
             {% translate "If you want to cancel your registration, you can do so by visiting the following page" %}:
             <a href="{% get_absolute_uri_for_path request cancel_url %}" target="_blank">
                 {% translate "Cancel your ticket" %}

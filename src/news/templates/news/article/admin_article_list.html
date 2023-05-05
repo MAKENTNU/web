@@ -49,7 +49,7 @@
                         <div class="word-breaking hyphenated description">{{ article.clickbait }}</div>
                     </div>
                     <div class="ui two bottom attached buttons">
-                        <a class="ui make-bg-yellow button" href="{% url 'article_edit' article.pk %}">
+                        <a class="ui make-bg-yellow button" href="{% url 'article_update' article.pk %}">
                             <i class="edit icon"></i>{% translate "Edit" %}
                         </a>
                         {% if perms.news.delete_article %}

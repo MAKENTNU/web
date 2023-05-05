@@ -51,8 +51,8 @@ SOCIAL_AUTH_DATAPORTEN_SECRET = ''  # "Client Secret" in the same configuration
 # These will be internationalized since `reverse_lazy()` is used
 # (i.e. these will be English URLs when the user is on the English version of the website, and vice versa for Norwegian)
 LOGIN_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('front_page')
-LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
+LOGIN_REDIRECT_URL = reverse_lazy('index_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('index_page')
 
 # NOTE: This must be changed in production!
 CHECKIN_KEY = ''  # (custom setting)
@@ -340,8 +340,8 @@ CONSTANCE_CONFIG_FIELDSETS = (
 USES_DATAPORTEN_AUTH = SOCIAL_AUTH_DATAPORTEN_KEY and SOCIAL_AUTH_DATAPORTEN_SECRET  # (custom setting)
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('front_page')
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('index_page')
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('index_page')
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # This URL is the value of the `end_session_endpoint` key from https://auth.dataporten.no/.well-known/openid-configuration

@@ -155,6 +155,7 @@ class QuotaForm(forms.ModelForm):
             user_error_message = _("User must be set when “All users” is not set.")
         if user and all_users:
             user_error_message = _("User cannot be set when “All users” is set.")
+
         if user_error_message:
             # Can't raise ValidationError when adding errors for both a specific field and the whole form (field=None)
             self.add_error('user', user_error_message)
@@ -220,7 +221,7 @@ class Printer3DCourseForm(forms.ModelForm):
         return course
 
 
-class FreeSlotForm(forms.Form):
+class ReservationFindFreeSlotsForm(forms.Form):
     machine_type = forms.ModelChoiceField(
         queryset=MachineType.objects.order_by('priority'),
         # `capfirst()` to avoid duplicate translation differing only in case
@@ -289,7 +290,7 @@ class MachineFormBase(forms.ModelForm):
         return cleaned_data
 
 
-class CreateMachineForm(MachineFormBase):
+class AddMachineForm(MachineFormBase):
     class Media:
         js = (
             JS('make_queue/js/machine_create.js', attrs={'defer': True}),
@@ -301,7 +302,7 @@ class CreateMachineForm(MachineFormBase):
         self.fields['info_message_date'].widget.format_value = lambda value: None
 
 
-class EditMachineForm(MachineFormBase):
+class ChangeMachineForm(MachineFormBase):
     machine_type = None
 
     class Meta(MachineFormBase.Meta):

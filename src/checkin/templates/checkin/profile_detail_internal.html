@@ -15,7 +15,7 @@
         />
     </div>
     <div class="ui container">
-        <form id="image-form" class="ui form" method="POST" action="{% url 'profile_picture' %}"
+        <form id="image-form" class="ui form" method="POST" action="{% url 'admin_profile_picture_update' %}"
               enctype="multipart/form-data">
             {% csrf_token %}
             <input id="input-image" type="file" name="image" accept="image/jpeg, image/png, image/svg" hidden/>
@@ -80,7 +80,7 @@
             </div>
         </div>
     </form>
-    <a href="{% url 'suggest_skill' %}">{% translate "Suggest new skills" %}</a>
+    <a href="{% url 'admin_suggest_skill' %}">{% translate "Suggest new skills" %}</a>
 </div>
 
 <br/>

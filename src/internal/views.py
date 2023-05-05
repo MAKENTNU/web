@@ -11,33 +11,33 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.views.generic.detail import SingleObjectMixin
 
-from contentbox.views import DisplayContentBoxView, EditContentBoxView
+from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import (
-    AddMemberForm, EditMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedEditMemberForm, SecretsForm,
+    AddMemberForm, ChangeMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedChangeMemberForm, SecretsForm,
     SystemAccessValueForm,
 )
 from .models import Member, Quote, Secret, SystemAccess
 
 
-class InternalDisplayContentBoxView(DisplayContentBoxView):
+class InternalContentBoxDetailView(ContentBoxDetailView):
     extra_context = {
         'base_template': 'internal/base.html',
     }
 
-    change_perms = DisplayContentBoxView.change_perms + ('contentbox.change_internal_contentbox',)
+    change_perms = ContentBoxDetailView.change_perms + ('contentbox.change_internal_contentbox',)
 
 
-class HomeView(InternalDisplayContentBoxView):
+class HomeView(InternalContentBoxDetailView):
     template_name = 'internal/home.html'
 
 
-class CommitteeBulletinBoardView(InternalDisplayContentBoxView):
+class CommitteeBulletinBoardView(InternalContentBoxDetailView):
     template_name = 'internal/committee_bulletin_board.html'
 
 
-class EditInternalContentBoxView(EditContentBoxView):
+class InternalContentBoxUpdateView(ContentBoxUpdateView):
     permission_required = ('contentbox.change_internal_contentbox',)
     raise_exception = True
 
@@ -77,10 +77,10 @@ class MemberFormMixin(CustomFieldsetFormMixin, ABC):
     back_button_text = _("Member list")
 
 
-class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
+class MemberCreateView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     permission_required = ('internal.add_member',)
     form_class = AddMemberForm
-    template_name = 'internal/member_add.html'
+    template_name = 'internal/member_create.html'
 
     form_title = _("Add New Member")
     back_button_link = reverse_lazy('member_list')
@@ -91,7 +91,7 @@ class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
     ]
 
     def get_success_url(self):
-        return reverse('edit_member', args=(self.object.pk,))
+        return reverse('member_update', args=(self.object.pk,))
 
     def form_valid(self, form):
         user = form.cleaned_data['user']
@@ -105,7 +105,7 @@ class CreateMemberView(PermissionRequiredMixin, MemberFormMixin, CreateView):
         return super().form_valid(form)
 
 
-class EditMemberView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
+class MemberUpdateView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
 
     def has_permission(self):
         return (self.request.user == self.get_object().user
@@ -116,8 +116,8 @@ class EditMemberView(PermissionRequiredMixin, MemberFormMixin, UpdateView):
 
     def get_form_class(self):
         if not self.user_has_edit_perm():
-            return RestrictedEditMemberForm
-        return EditMemberForm
+            return RestrictedChangeMemberForm
+        return ChangeMemberForm
 
     def get_form_title(self):
         full_name = self.get_object().user.get_full_name()
@@ -197,7 +197,7 @@ class MemberQuitView(MemberRetireView):
         return _("Set member {name} as quit").format(name=self.object.user.get_full_name())
 
 
-class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
+class MemberStatusUpdateView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
     permission_required = ('internal.can_edit_group_membership',)
     model = Member
     form_class = MemberStatusForm
@@ -213,7 +213,7 @@ class EditMemberStatusView(PermissionRequiredMixin, PreventGetRequestsMixin, Upd
         return self.object.get_absolute_url()
 
 
-class EditSystemAccessView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
+class SystemAccessUpdateView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
     model = SystemAccess
     form_class = SystemAccessValueForm
 
@@ -256,7 +256,7 @@ class SecretFormMixin(CustomFieldsetFormMixin, ABC):
     back_button_text = _("Secrets list")
 
 
-class CreateSecretView(PermissionRequiredMixin, SecretFormMixin, CreateView):
+class SecretCreateView(PermissionRequiredMixin, SecretFormMixin, CreateView):
     permission_required = ('internal.add_secret',)
 
     form_title = _("New Secret")
@@ -268,13 +268,13 @@ class ExistingSecretPermissionRequiredMixin(PermissionRequiredMixin, SingleObjec
         return self.permission_required + self.get_object().extra_view_perms_str_tuple
 
 
-class EditSecretView(ExistingSecretPermissionRequiredMixin, SecretFormMixin, UpdateView):
+class SecretUpdateView(ExistingSecretPermissionRequiredMixin, SecretFormMixin, UpdateView):
     permission_required = ('internal.change_secret',)
 
     form_title = _("Edit Secret")
 
 
-class DeleteSecretView(ExistingSecretPermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+class SecretDeleteView(ExistingSecretPermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     permission_required = ('internal.delete_secret',)
     model = Secret
     success_url = reverse_lazy('secret_list')

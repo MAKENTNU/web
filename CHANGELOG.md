@@ -10,7 +10,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added a button for delaying hiding secrets for 30 seconds, in [the secret list](https://i.makentnu.no/secrets/)
 - Added an `extra_view_permissions` field to secrets
   - This makes it possible to create secrets that not all MAKE members need to know
-    - _Examples can be passwords to Google workspace users that only exist for technical purposes,
+    - _Examples can be passwords of Google Workspace users that only exist for technical purposes,
       or credentials for the admin page of a physical router_
 - Added an "internal" ribbon label on internal articles and events
 
@@ -20,9 +20,12 @@ A summary of changes made to the codebase, grouped per deployment.
   (like [the front page of the internal site](https://i.makentnu.no/))
   - This is only visible to users who have permission to modify those content boxes through Django admin
 - Changed cropping of images in article and event lists so that they always have equal proportions
+- Added a title to the quota admin panel, and switched out the "Add new quota" button for a green plus button, like other admin panel pages
 
 ### Other changes
 
+- Renamed lots of views, forms and templates to comply with
+  [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
 - Code cleanup? Ye.
 
 

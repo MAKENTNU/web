@@ -45,11 +45,11 @@ class ContentBox(models.Model):
 
     def get_absolute_url(self):
         # Should update this code if any content box URLs are placed under other subdomains
-        all_host_kwargs = [
+        all_host_kwargs = (
             {'host': 'main'},
             {'host': 'internal', 'host_args': ['i']},
             {'host': 'docs'},
-        ]
+        )
         for host_kwargs in all_host_kwargs:
             try:
                 return reverse(self.url_name, **host_kwargs)

@@ -17,9 +17,16 @@
 
 {% block body %}
     <div class="ui container">
-        <a class="ui make-bg-yellow button" href="{% url 'create_quota' %}">
-            <i class="plus icon"></i>{% translate "Add new quota" %}
-        </a>
+
+        <h1 class="ui header">
+            {% translate "Quotas" %}
+            {% if perms.make_queue.add_quota %}
+                <a href="{% url 'quota_create' %}">
+                    <i class="green plus icon"></i>
+                </a>
+            {% endif %}
+        </h1>
+
         <div class="ui tabular pointing secondary menu">
             <a class="{% if not requested_user %}active{% endif %} item" data-tab="global">{% translate "Global" %}</a>
             <a class="{% if requested_user %}active{% endif %} item" data-tab="users">{% translate "Users" %}</a>
@@ -34,12 +41,12 @@
                             {% else %}
                                 {% translate "Replenishing quota" %}
                             {% endif %}
-                            <a href="{% url 'edit_quota' quota.pk %}">
+                            <a href="{% url 'quota_update' quota.pk %}">
                                 <i class="make-col-yellow pencil icon"></i>
                             </a>
                             {% if perms.make_queue.delete_quota %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url 'delete_quota' quota.pk %}"
+                                   data-url="{% url 'quota_delete' quota.pk %}"
                                    data-obj-name="{{ quota }}">
                                     <i class="red trash icon"></i>
                                 </a>
@@ -72,5 +79,6 @@
 
             </div>
         </div>
+
     </div>
 {% endblock body %}

@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth import get_user
 from django.http import HttpRequest
 from django.test import TestCase
-from django.urls import reverse
+from django_hosts import reverse
 from social_django.models import UserSocialAuth
 
 from users.models import User

@@ -32,7 +32,7 @@
             {% else %}
                 {% translate "My reservations" %}
                 {% if perms.make_queue.can_create_event_reservation %}
-                    <a class="ui primary button" href="{% url 'MAKE_reservations_list' %}">
+                    <a class="ui primary button" href="{% url 'admin_reservation_MAKE_list' %}">
                         {% translate "View MAKE's reservations" %}
                     </a>
                 {% endif %}
@@ -121,7 +121,7 @@
                     <td>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a href="{% url 'edit_reservation' reservation.pk %}">
+                            <a href="{% url 'reservation_update' reservation.pk %}">
                                 <div class="ui make-bg-yellow button">
                                     {% translate "Change" %}
                                 </div>
@@ -134,12 +134,12 @@
                         {% if can_mark_finished %}
                             <input class="mark-reservation-finished ui green button" type="submit"
                                    data-pk="{{ reservation.pk }}"
-                                   data-url="{% url 'mark_reservation_finished' reservation.pk %}"
+                                   data-url="{% url 'api_reservation_mark_finished' reservation.pk %}"
                                    value="{% translate "Finish now" %}"/>
                         {% elif can_delete %}
                             <input class="delete-reservation ui red button" type="submit"
                                    data-pk="{{ reservation.pk }}"
-                                   data-url="{% url 'delete_reservation' reservation.pk %}"
+                                   data-url="{% url 'api_reservation_delete' reservation.pk %}"
                                    value="{% translate "Cancel" context "cancel reservation" %}"/>
                         {% endif %}
                     </td>
@@ -198,7 +198,7 @@
                         </a>
                         {% can_change_reservation reservation user as can_change %}
                         {% if can_change %}
-                            <a class="ui make-bg-yellow button" href="{% url 'edit_reservation' reservation.pk %}">
+                            <a class="ui make-bg-yellow button" href="{% url 'reservation_update' reservation.pk %}">
                                 {% translate "Change" %}
                             </a>
                         {% endif %}
@@ -207,12 +207,12 @@
                         {% if can_mark_finished %}
                             <input class="mark-reservation-finished ui green button" type="submit"
                                    data-pk="{{ reservation.pk }}"
-                                   data-url="{% url 'mark_reservation_finished' reservation.pk %}"
+                                   data-url="{% url 'api_reservation_mark_finished' reservation.pk %}"
                                    value="{% translate "Finish now" %}"/>
                         {% elif can_delete %}
                             <input class="delete-reservation ui red button" type="submit"
                                    data-pk="{{ reservation.pk }}"
-                                   data-url="{% url 'delete_reservation' reservation.pk %}"
+                                   data-url="{% url 'api_reservation_delete' reservation.pk %}"
                                    value="{% translate "Cancel" context "cancel reservation" %}"/>
                         {% endif %}
                     </div>

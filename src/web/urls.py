@@ -11,7 +11,7 @@ from django.views.generic.base import RedirectView
 from django.views.i18n import JavaScriptCatalog
 from social_core.utils import setting_name
 
-from contentbox.views import DisplayContentBoxView, EditContentBoxView
+from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from dataporten.views import login_wrapper
 from news import urls as news_urls
 from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, logout_urls
@@ -32,21 +32,21 @@ urlpatterns = [
 ]
 
 admin_urlpatterns = [
-    path("", views.AdminPanelView.as_view(), name='adminpanel'),
+    path("", views.AdminPanelView.as_view(), name='admin_panel'),
     path("news/", include(news_urls.adminpatterns)),
 ]
 
-contentbox_urlpatterns = [
-    path("<int:pk>/edit/", EditContentBoxView.as_view(base_template='web/base.html'), name='contentbox_edit'),
+content_box_urlpatterns = [
+    path("<int:pk>/edit/", ContentBoxUpdateView.as_view(base_template='web/base.html'), name='content_box_update'),
 ]
 
 about_urlpatterns = [
     path("", views.AboutUsView.as_view(url_name='about'), name='about'),
-    DisplayContentBoxView.get_path('contact'),
+    ContentBoxDetailView.get_path('contact'),
 ]
 
 urlpatterns += i18n_patterns(
-    path("", views.IndexView.as_view(), name='front_page'),
+    path("", views.IndexPageView.as_view(), name='index_page'),
     path("admin/", decorator_include(login_required, admin_urlpatterns)),
 
     # App paths:
@@ -59,11 +59,11 @@ urlpatterns += i18n_patterns(
     path("reservation/", include('make_queue.urls')),
 
     # ContentBox paths:
-    path("contentbox/", include(contentbox_urlpatterns)),
+    path("contentbox/", include(content_box_urlpatterns)),
     path("about/", include(about_urlpatterns)),
-    *DisplayContentBoxView.get_multi_path('apply', 'søk', 'sok'),
-    DisplayContentBoxView.get_path('cookies'),
-    DisplayContentBoxView.get_path('privacypolicy'),
+    *ContentBoxDetailView.get_multi_path('apply', 'søk', 'sok'),
+    ContentBoxDetailView.get_path('cookies'),
+    ContentBoxDetailView.get_path('privacypolicy'),
 
     # This path must be wrapped by `i18n_patterns()`
     # (see https://docs.djangoproject.com/en/stable/topics/i18n/translation/#django.views.i18n.JavaScriptCatalog)
@@ -104,12 +104,12 @@ urlpatterns += logout_urls()
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(pattern_name='rules', permanent=True)),
     path("reservation/rules/<int:pk>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
-    path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rules_detail', permanent=True)),
+    path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rule_detail', permanent=True)),
 
     path("news/article/<int:pk>/", RedirectView.as_view(pattern_name='article_detail', permanent=True)),
     path("news/event/<int:pk>/", RedirectView.as_view(pattern_name='event_detail', permanent=True)),
-    path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='ticket_detail', permanent=True)),
-    path("news/ticket/me/", RedirectView.as_view(pattern_name='my_tickets_list', permanent=True)),
+    path("news/ticket/<uuid:pk>/", RedirectView.as_view(pattern_name='event_ticket_detail', permanent=True)),
+    path("news/ticket/me/", RedirectView.as_view(pattern_name='event_ticket_my_list', permanent=True)),
 
     prefix_default_language=False,
 )

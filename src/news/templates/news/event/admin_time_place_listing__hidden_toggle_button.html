@@ -7,7 +7,7 @@
             yellow eye slash icon
         {% endif %}
         toggle popup-trigger"
-   data-post-url="{% url 'timeplace_toggle' time_place.event.pk time_place.pk %}"
+   data-post-url="{% url 'admin_api_time_place_toggle' time_place.event.pk time_place.pk %}"
    data-toggle="hidden"
    data-model="timeplace"
    data-title="{{ popup_title }}"
