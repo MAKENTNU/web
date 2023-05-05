@@ -21,6 +21,7 @@ function ReservationCalendar($element, properties) {
     this.days = $element.find("tbody .day .reservations").toArray();
     this.$element = $element;
     this.machine = properties.machine;
+    this.machineReservationURL = properties.machineReservationURL;
     this.selection = properties.selection;
     this.canIgnoreRules = properties.canIgnoreRules;
 
@@ -110,7 +111,7 @@ ReservationCalendar.prototype.selectionPopupContent = function () {
     $popupContent.find(".button").on("mousedown touchstart", () => {
         // Create and submit a hidden form to create a new reservation
         const $form = $(
-            `<form class="dont-prevent-leaving display-none" method="POST" action="${LANG_PREFIX}/reservation/create/${calendar.machine}/">`,
+            `<form class="dont-prevent-leaving display-none" method="POST" action="${calendar.machineReservationURL}">`,
         ).appendTo($popupContent);
         $("input[name=csrfmiddlewaretoken]").clone().appendTo($form);
         $('<input name="start_time"/>').val(startTime.djangoFormat()).appendTo($form);

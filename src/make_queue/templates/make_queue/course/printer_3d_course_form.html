@@ -6,7 +6,7 @@
 
 {# TODO: make this template extend web/generic_form.html #}
 
-{% block title %}{% translate "Edit course registration" %}{% endblock title %}
+{% block title %}{% translate "Change Course Registration" %}{% endblock title %}
 
 {% block extra_head %}
     {{ form.media }}
@@ -19,7 +19,7 @@
     <div class="ui container">
         <h1>
             {% block form_title %}
-                {% translate "Edit course registration" %}
+                {% translate "Change Course Registration" %}
             {% endblock form_title %}
         </h1>
 
@@ -118,7 +118,7 @@
 
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}
-                    {% translate "Submit" context "edit" %}
+                    {% translate "Save" %}
                 {% endblock submit_button %}
             </button>
             <a class="ui right floated red button" href="{% url 'printer_3d_course_list' %}">

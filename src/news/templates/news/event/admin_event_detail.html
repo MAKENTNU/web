@@ -38,7 +38,7 @@
 
                 {% if perms.news.change_event %}
                     <a class="ui blue button" href="{% url 'event_update' event.pk %}">
-                        <i class="edit icon"></i>{% translate "Edit" %}
+                        <i class="edit icon"></i>{% translate "Change" %}
                     </a>
                 {% endif %}
 
@@ -89,9 +89,9 @@
         </h3>
         <div class="create-new-occurrence">
             {% if perms.news.add_timeplace %}
-                <a class="ui blue right floated button popup-trigger" href="{% url 'time_place_create' event.pk %}">
-                    <i class="time icon"></i>
-                    {% translate "Add new occurrence" %}
+                <a class="ui green right floated button popup-trigger" href="{% url 'time_place_create' event.pk %}">
+                    <i class="plus icon"></i>
+                    {% translate "Add occurrence" %}
                 </a>
             {% endif %}
         </div>

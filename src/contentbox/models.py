@@ -24,7 +24,7 @@ class ContentBox(models.Model):
         blank=True,
         related_name='content_boxes_with_extra_change_perm',
         verbose_name=_("extra change permissions"),
-        help_text=_("Extra permissions that are required for editing the content box."),
+        help_text=_("Extra permissions that are required for changing the content box."),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 

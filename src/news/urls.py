@@ -45,19 +45,19 @@ urlpatterns = [
 # --- Admin URL patterns (imported in `web/urls.py`) ---
 
 specific_article_adminpatterns = [
-    path("edit/", views.ArticleUpdateView.as_view(), name='article_update'),
+    path("change/", views.ArticleUpdateView.as_view(), name='article_update'),
     path("delete/", views.ArticleDeleteView.as_view(), name='article_delete'),
     path("toggle/", views.AdminAPIArticleToggleView.as_view(), name='admin_api_article_toggle'),
 ]
 
 article_adminpatterns = [
     path("", views.AdminArticleListView.as_view(), name='admin_article_list'),
-    path("create/", views.ArticleCreateView.as_view(), name='article_create'),
+    path("add/", views.ArticleCreateView.as_view(), name='article_create'),
     path("<int:pk>/", include(specific_article_adminpatterns)),
 ]
 
 specific_time_place_adminpatterns = [
-    path("edit/", views.TimePlaceUpdateView.as_view(), name='time_place_update'),
+    path("change/", views.TimePlaceUpdateView.as_view(), name='time_place_update'),
     path("duplicate/", views.TimePlaceDuplicateCreateView.as_view(), name='time_place_duplicate_create'),
     path("delete/", views.TimePlaceDeleteView.as_view(), name='time_place_delete'),
     path("toggle/", views.AdminAPITimePlaceToggleView.as_view(), name='admin_api_time_place_toggle'),
@@ -65,13 +65,13 @@ specific_time_place_adminpatterns = [
 ]
 
 time_place_adminpatterns = [
-    path("create/", views.TimePlaceCreateView.as_view(), name='time_place_create'),
+    path("add/", views.TimePlaceCreateView.as_view(), name='time_place_create'),
     path("<int:time_place_pk>/", include(specific_time_place_adminpatterns)),
 ]
 
 specific_event_adminpatterns = [
     path("", views.AdminEventDetailView.as_view(), name='admin_event_detail'),
-    path("edit/", views.EventUpdateView.as_view(), name='event_update'),
+    path("change/", views.EventUpdateView.as_view(), name='event_update'),
     path("delete/", views.EventDeleteView.as_view(), name='event_delete'),
     path("toggle/", views.AdminAPIEventToggleView.as_view(), name='admin_api_event_toggle'),
     path("tickets/", views.AdminEventTicketListView.as_view(), name='admin_event_ticket_list'),
@@ -80,7 +80,7 @@ specific_event_adminpatterns = [
 
 event_adminpatterns = [
     path("", views.AdminEventListView.as_view(), name='admin_event_list'),
-    path("create/", views.EventCreateView.as_view(), name='event_create'),
+    path("add/", views.EventCreateView.as_view(), name='event_create'),
     path("<int:pk>/", include(specific_event_adminpatterns)),
     path("participants/search/", views.AdminEventParticipantsSearchView.as_view(), name='admin_event_participants_search'),
 ]

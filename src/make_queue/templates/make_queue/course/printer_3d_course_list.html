@@ -4,7 +4,7 @@
 {% load datetime_tags %}
 
 
-{% block title %}{% translate "Course registrations" %} | {% translate "Admin panel" %}{% endblock title %}
+{% block title %}{% translate "Course Registrations" %} | {% translate "Admin panel" %}{% endblock title %}
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'make_queue/css/printer_3d_course_list.css' %}"/>
@@ -14,7 +14,7 @@
 
     <div class="ui container">
         <h1>
-            {% translate "Course registrations" %}
+            {% translate "Course Registrations" %}
             <a href="{% url 'printer_3d_course_create' %}" data-tooltip="{% translate "Add" %}">
                 <i class="green plus icon"></i>
             </a>

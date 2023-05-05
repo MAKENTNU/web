@@ -259,7 +259,8 @@ class SecretFormMixin(CustomFieldsetFormMixin, ABC):
 class SecretCreateView(PermissionRequiredMixin, SecretFormMixin, CreateView):
     permission_required = ('internal.add_secret',)
 
-    form_title = _("New Secret")
+    form_title = _("Add Secret")
+    save_button_text = _("Add")
 
 
 class ExistingSecretPermissionRequiredMixin(PermissionRequiredMixin, SingleObjectMixin, ABC):
@@ -271,7 +272,7 @@ class ExistingSecretPermissionRequiredMixin(PermissionRequiredMixin, SingleObjec
 class SecretUpdateView(ExistingSecretPermissionRequiredMixin, SecretFormMixin, UpdateView):
     permission_required = ('internal.change_secret',)
 
-    form_title = _("Edit Secret")
+    form_title = _("Change Secret")
 
 
 class SecretDeleteView(ExistingSecretPermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -303,7 +304,8 @@ class QuoteCreateView(PermissionRequiredMixin, QuoteFormMixin, CreateView):
         'date': timezone.localdate,
     }
 
-    form_title = _("New Quote")
+    form_title = _("Add Quote")
+    save_button_text = _("Add")
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -311,7 +313,7 @@ class QuoteCreateView(PermissionRequiredMixin, QuoteFormMixin, CreateView):
 
 
 class QuoteUpdateView(PermissionRequiredMixin, QuoteFormMixin, UpdateView):
-    form_title = _("Edit Quote")
+    form_title = _("Change Quote")
 
     def has_permission(self):
         return (

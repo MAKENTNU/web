@@ -57,7 +57,7 @@ class InternalContentBoxTests(TestCase):
         self.assertEqual(self.internal_admin_client.get(self.home_edit_url).status_code, HTTPStatus.OK)
 
     def test_internal_content_boxes_only_contain_visible_edit_buttons_when_user_has_required_permission(self):
-        home_content_box_edit_path = f"/contentbox/{self.home_content_box.pk}/edit/"
+        home_content_box_edit_path = f"/contentbox/{self.home_content_box.pk}/change/"
 
         def assert_visible_edit_button_in_response(should_button_be_present: bool, client: Client):
             response_html = client.get(self.home_url).content.decode()

@@ -28,7 +28,7 @@
                     {% translate "You are viewing an old version of this page" %}
                 </div>
                 {% blocktranslate trimmed with name=last_edit_name date=content.last_modified|short_date time=content.last_modified|only_time %}
-                    You are viewing an old version of this page, where the last edit was made by {{ name }}
+                    You are viewing an old version of this page, where the last change was made by {{ name }}
                     on {{ date }} at {{ time }}.
                 {% endblocktranslate %}
                 {% translate "To view the current version, click" %}
@@ -46,8 +46,8 @@
             </a>
             {% if not old %}
                 {% if perms.docs.change_page %}
-                    <a class="popup-trigger" href="{% url 'documentation_page_update' page.pk %}" data-title="{% translate "Edit" %}"
-                       data-content="{% translate "Click to edit the content of the page" %}">
+                    <a class="popup-trigger" href="{% url 'documentation_page_update' page.pk %}" data-title="{% translate "Change" %}"
+                       data-content="{% translate "Click to change the content of the page" %}">
                         <i class="make-col-yellow edit icon"></i>
                     </a>
                 {% endif %}
@@ -69,13 +69,11 @@
                 {{ page.current_content.content|safe }}
             {% else %}
                 <i>
+                    {% translate "No content exists for this page" %}.
                     {% if perms.docs.change_page %}
-                        {% url 'documentation_page_update' page.pk as page_update_url %}
-                        {% blocktranslate trimmed with link_start='<a href="'|add:page_update_url|safe|add:'">' link_end='</a>' %}
-                            No content exists for this page. Do you wish to {{ link_start }}create{{ link_end }} some?
-                        {% endblocktranslate %}
-                    {% else %}
-                        {% translate "No content exists for this page" %}!
+                        <a href="{% url 'documentation_page_update' page.pk %}">
+                            {% translate "Click here to add content" %}.
+                        </a>
                     {% endif %}
                 </i>
             {% endif %}

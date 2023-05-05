@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
 from contentbox.views import ContentBoxDetailView
+from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import EquipmentForm
 from .models import Equipment
@@ -50,13 +51,16 @@ class EquipmentFormMixin(CustomFieldsetFormMixin, ABC):
 class EquipmentCreateView(PermissionRequiredMixin, EquipmentFormMixin, CreateView):
     permission_required = ('makerspace.add_equipment',)
 
-    form_title = _("New Equipment")
+    save_button_text = _("Add")
+
+    def get_form_title(self):
+        return title_en(_("Add equipment"))
 
 
 class EquipmentUpdateView(PermissionRequiredMixin, EquipmentFormMixin, UpdateView):
     permission_required = ('makerspace.change_equipment',)
 
-    form_title = _("Edit Equipment")
+    form_title = _("Change Equipment")
 
 
 class EquipmentDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

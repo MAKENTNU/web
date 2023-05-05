@@ -43,7 +43,7 @@
         <h1 class="title-with-buttons">
             {% translate "Member list" %}
             {% if perms.internal.add_member %}
-                <a class="ui right floated make-bg-yellow button" href="{% url 'member_create' %}">
+                <a class="ui right floated green button" href="{% url 'member_create' %}">
                     <i class="plus icon"></i>{% translate "Add member" %}
                 </a>
             {% endif %}

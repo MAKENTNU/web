@@ -71,14 +71,14 @@ class QuotaFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):
 class QuotaCreateView(PermissionRequiredMixin, QuotaFormMixin, CreateView):
     permission_required = ('make_queue.add_quota',)
 
-    form_title = _("New Quota")
+    form_title = _("Add Quota")
     save_button_text = _("Add")
 
 
 class QuotaUpdateView(PermissionRequiredMixin, QuotaFormMixin, UpdateView):
     permission_required = ('make_queue.change_quota',)
 
-    form_title = _("Edit Quota")
+    form_title = _("Change Quota")
 
     def get_back_button_link(self):
         return self.get_success_url()

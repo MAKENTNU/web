@@ -14,6 +14,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='contentbox',
             name='extra_change_permissions',
-            field=models.ManyToManyField(blank=True, help_text='Extra permissions that are required for editing the content box.', related_name='content_boxes_with_extra_change_perm', to='auth.Permission', verbose_name='extra change permissions'),
+            field=models.ManyToManyField(blank=True, help_text='Extra permissions that are required for changing the content box.', related_name='content_boxes_with_extra_change_perm', to='auth.Permission', verbose_name='extra change permissions'),
         ),
     ]

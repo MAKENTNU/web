@@ -76,7 +76,7 @@ class ContentBoxUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, Upd
         return super().get_form_class()
 
     def get_form_title(self):
-        return self._get_page_title(_("Edit"))
+        return self._get_page_title(_("Change"))
 
     def _get_page_title(self, prefixed_verb: str = None):
         prefix = f"{prefixed_verb} " if prefixed_verb else ""

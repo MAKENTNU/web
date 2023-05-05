@@ -19,7 +19,7 @@ class InternalContentBoxDetailView(ContentBoxDetailView):
 
 urlpatterns = i18n_patterns(
     InternalContentBoxDetailView.get_path(INTERNAL_TEST_URL_NAME),
-    path("contentbox/<int:pk>/edit/",
+    path("contentbox/<int:pk>/change/",
          ContentBoxUpdateView.as_view(
              permission_required=ContentBoxUpdateView.permission_required + (internal_change_perm,),
              base_template='internal/base.html',

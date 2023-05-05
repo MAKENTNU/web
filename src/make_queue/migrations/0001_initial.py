@@ -44,6 +44,8 @@ class Migration(migrations.Migration):
             ],
             options={
                 'permissions': (('can_create_event_reservation', 'Can create event reservation'),),
+                'verbose_name': 'quota',
+                'verbose_name_plural': 'quotas',
             },
         ),
         migrations.CreateModel(

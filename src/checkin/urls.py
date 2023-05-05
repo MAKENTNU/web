@@ -7,7 +7,7 @@ from . import views
 urlpatterns = [
     path("", views.UserSkillListView.as_view(), name='user_skill_list'),
     path("profile/", login_required(views.ProfileDetailView.as_view()), name='profile_detail'),
-    path("profile/edit/image/", login_required(views.AdminProfilePictureUpdateView.as_view()), name='admin_profile_picture_update'),
+    path("profile/change/image/", login_required(views.AdminProfilePictureUpdateView.as_view()), name='admin_profile_picture_update'),
     path("post/", views.AdminCheckInView.as_view()),
     path("register/card/", views.AdminRegisterCardView.as_view()),
     path("register/profile/", login_required(views.AdminAPIRegisterProfileView.as_view()), name='admin_api_register_profile'),

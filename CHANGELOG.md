@@ -22,10 +22,19 @@ A summary of changes made to the codebase, grouped per deployment.
 - Changed cropping of images in article and event lists so that they always have equal proportions
 - Added a title to the quota admin panel, and switched out the "Add new quota" button for a green plus button, like other admin panel pages
 
+### Fixes
+
+- Fixed board members not being allowed to add, change and delete reservation rules
+  (e.g. [the reservation rules for 3D printers](https://makentnu.no/reservation/machinetypes/1/rules/))
+
 ### Other changes
 
 - Renamed lots of views, forms and templates to comply with
   [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
+- Changed some URLs so that they all consistently use `add` (instead of `create`) and `change` (instead of `edit` or `update`),
+  to comply with [the style guide](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#endpoint-pathroute)
+- Made the use of add/change verbs consistent among page titles and buttons, and some other parts of the website's UI
+- Made some "Add" buttons green, to follow the convention that green means to add
 - Code cleanup? Ye.
 
 
@@ -64,7 +73,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Added a "help text" yellow question mark icon next to the "Discord username" field in member info forms
   (displayed when clicked / hovered over)
 - Made the user dropdowns on both [the quota admin page](https://makentnu.no/reservation/quota/) and
-  [the quota form page](https://makentnu.no/reservation/quota/create/), function equally
+  [the quota form page](https://makentnu.no/reservation/quota/add/), function equally
 - When changing machine type in the reservation creation form, made the first machine of that type be automatically selected
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
