@@ -25,9 +25,8 @@ comment:
 
 ignore:
   - "manage.py"
+  - "src/web/wsgi.py"
+  - "src/web/asgi.py"
   - "src/web/settings.py"
-  - "src/**/apps.py"
-  - "src/**/wsgi.py"
-  - "src/**/asgi.py"
-  - "src/**/test*.py"
+  - "src/**/tests/**"
   - "src/**/migrations/**"

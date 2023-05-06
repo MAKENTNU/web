@@ -267,7 +267,10 @@ Leave two empty lines between class and function (i.e. not method) definitions, 
 
 #### Folder/directory location
 
-* Tests should be placed within a `tests` directory per app.
+* Tests should always be placed within a `tests` directory per app.
+  * _In addition to helping keep the file structure clean, this also makes writing various configuration files easier,
+    like the `ignore` patterns in [`codecov.yml`](codecov.yml), and the `exclude_patterns` and `tests_patterns` in
+    [`.codeclimate.yml`](.codeclimate.yml)._
 * Templates should be placed within an `<app name>` directory, within a `templates` directory per app.
   * For example:
     * `app_name/templates/app_name/template_name.html`
