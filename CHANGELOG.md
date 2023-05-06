@@ -29,6 +29,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Other changes
 
+- Enabled automated code quality checks from [Code Climate](https://codeclimate.com/quality)
 - Renamed lots of views, forms and templates to comply with
   [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
 - Changed some URLs so that they all consistently use `add` (instead of `create`) and `change` (instead of `edit` or `update`),
