@@ -34,10 +34,12 @@ A summary of changes made to the codebase, grouped per deployment.
 ### Other changes
 
 - Enabled automated code quality checks from [Code Climate](https://codeclimate.com/quality)
-- Restructured lots of URLs to comply with the style guide
+- Restructured lots of URLs to comply with
+  [the style guide](https://github.com/MAKENTNU/web/blob/2103a95a279e7624159b62450e18345b82717385/CONTRIBUTING.md#urlpatterns-organization)
   - The path segments (i.e. `/the-text-between-the-forward-slashes/`) now all have a more consistent structure,
     including prefixing all admin pages' paths with `admin/` and all API endpoints with `api/`
-  - Permanent redirects have been added for the URLs deemed most relevant, to redirect from the old to the new URL
+  - Permanent redirects have been added for the URLs deemed most relevant, to redirect from the old to the new URL; see [a list of the added URLs in
+    the code](https://github.com/MAKENTNU/web/commit/2103a95a279e7624159b62450e18345b82717385#diff-37d0e0a00e828360d35d68a7ada510a98e03252045f3d51d36a81fedfaea7907R143-R154)
 - Moved lots of views and forms around between files, to have them more practically organized
 - Renamed lots of views, forms and templates to comply with
   [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
