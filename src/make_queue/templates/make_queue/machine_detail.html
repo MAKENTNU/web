@@ -21,6 +21,7 @@
     <script>
         {# These variables are used in `machine_detail.js` #}
         var calendarProperties = {
+            machineType: "{{ machine.machine_type.pk }}",
             machine: "{{ machine.pk }}",
             machineReservationURL: "{% url 'reservation_create' machine.pk %}",
             selection: {% if reservation_denied_message %}false{% else %}true{% endif %},

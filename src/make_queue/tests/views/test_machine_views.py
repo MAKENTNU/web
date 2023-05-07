@@ -8,7 +8,7 @@ from django.utils.dateparse import parse_datetime
 from django_hosts import reverse
 
 from users.models import User
-from ...forms import AddMachineForm, ChangeMachineForm
+from ...forms.machine import AddMachineForm, ChangeMachineForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 
@@ -342,7 +342,7 @@ class TestMachineCreateAndUpdateView(TestCase):
         username = "TEST_USER"
         password = "TEST_PASS"
         self.user = User.objects.create_user(username=username, password=password)
-        self.user.add_perms('make_queue.add_machine', 'make_queue.change_machine')
+        self.user.add_perms('internal.is_internal', 'make_queue.add_machine', 'make_queue.change_machine')
         self.client.login(username=username, password=password)
 
     def test_machine_update_has_correct_form_in_context_data(self):

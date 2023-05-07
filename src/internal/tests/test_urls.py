@@ -11,8 +11,8 @@ from ..forms import MemberStatusForm
 from ..models import Member, Quote, Secret, SystemAccess
 
 
-# Makes sure that the subdomain of all requests is `internal`
-INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': f'internal.{settings.PARENT_HOST}'}
+# Makes sure that the subdomain of all requests is `i`
+INTERNAL_CLIENT_DEFAULTS = {'SERVER_NAME': f'i.{settings.PARENT_HOST}'}
 
 
 class UrlTests(TestCase):
@@ -43,6 +43,17 @@ class UrlTests(TestCase):
         self.member_editor_client.login(username=member_editor_user, password=password)
 
         self.home_content_box = ContentBox.objects.create(url_name='home')
+        self.dev_board_content_box = ContentBox.objects.create(url_name='dev-board')
+        self.event_board_content_box = ContentBox.objects.create(url_name='event-board')
+        self.mentor_board_content_box = ContentBox.objects.create(url_name='mentor-board')
+        self.pr_board_content_box = ContentBox.objects.create(url_name='pr-board')
+        self.MAKE_history_content_box = ContentBox.objects.create(url_name='make-history')
+        self.content_boxes = (
+            self.home_content_box,
+            self.dev_board_content_box, self.event_board_content_box, self.mentor_board_content_box, self.pr_board_content_box,
+            self.MAKE_history_content_box,
+        )
+
         self.secret1 = Secret.objects.create(title="Key storage box", content="Code: 1234")
         self.secret2 = Secret.objects.create(title="YouTube account", content="<p>Email: make@gmail.com</p><p>Password: password</p>")
         self.secrets = (self.secret1, self.secret2)
@@ -134,23 +145,64 @@ class UrlTests(TestCase):
         self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'en'}, expected_redirect_path="/en/")
         self._test_internal_url('POST', reverse_internal('set_language'), {'language': 'nb'}, expected_redirect_path="/")
 
-    def test_all_non_member_get_request_paths_succeed(self):
+    def test_all_get_request_paths_succeed(self):
         path_predicates = [
-            Get(reverse_internal(self.home_content_box.url_name), public=False),
-            Get(reverse_internal('content_box_update', self.home_content_box.pk), public=False),
-
-            Get(reverse_internal('secret_list'), public=False),
-            Get(reverse_internal('secret_create'), public=False),
-            Get(reverse_internal('secret_update', self.secret1.pk), public=False),
-            Get(reverse_internal('secret_update', self.secret2.pk), public=False),
-
-            Get(reverse_internal('quote_list'), public=False),
-            Get(reverse_internal('quote_create'), public=False),
-            Get(reverse_internal('quote_update', self.quote1.pk), public=False),
-            Get(reverse_internal('quote_update', self.quote2.pk), public=False),
-
+            # urlpatterns
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
+
+            # committee_bulletin_urlpatterns
+            Get(reverse_internal(self.dev_board_content_box.url_name), public=False),
+            Get(reverse_internal(self.event_board_content_box.url_name), public=False),
+            Get(reverse_internal(self.mentor_board_content_box.url_name), public=False),
+            Get(reverse_internal(self.pr_board_content_box.url_name), public=False),
+
+            # internal_content_box_urlpatterns
+            *[
+                Get(reverse_internal('content_box_update', content_box.pk), public=False)
+                for content_box in self.content_boxes
+            ],
+
+            # change_status_of_specific_member_urlpatterns
+            *[
+                Get(reverse_internal('member_quit', member.pk), public=False)
+                for member in self.members
+            ],
+            *[
+                Get(reverse_internal('member_retire', member.pk), public=False)
+                for member in self.members
+            ],
+            # change_specific_member_urlpatterns
+            *[
+                Get(reverse_internal('member_update', member.pk), public=False)
+                for member in self.members
+            ],
+            # specific_member_urlpatterns
+            *[
+                Get(reverse_internal('member_detail', member.pk), public=False)
+                for member in self.members
+            ],
+            # member_urlpatterns
+            Get(reverse_internal('member_list'), public=False),
+            Get(reverse_internal('member_create'), public=False),
+
+            # specific_secret_urlpatterns
+            Get(reverse_internal('secret_update', self.secret1.pk), public=False),
+            Get(reverse_internal('secret_update', self.secret2.pk), public=False),
+            # secret_urlpatterns
+            Get(reverse_internal('secret_list'), public=False),
+            Get(reverse_internal('secret_create'), public=False),
+
+            # specific_quote_urlpatterns
+            Get(reverse_internal('quote_update', self.quote1.pk), public=False),
+            Get(reverse_internal('quote_update', self.quote2.pk), public=False),
+            # quote_urlpatterns
+            Get(reverse_internal('quote_list'), public=False),
+            Get(reverse_internal('quote_create'), public=False),
+
+            # internal_urlpatterns
+            Get(reverse_internal(self.home_content_box.url_name), public=False),
+            Get(reverse_internal(self.MAKE_history_content_box.url_name), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates, 'internal')
 

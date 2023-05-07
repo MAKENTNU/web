@@ -356,13 +356,15 @@ Sort the contents of a class in the following order:
 In general, names of views related to model objects should comply with one of the following patterns:
 * `<Model name><Noun or verb>View` - in most cases;
 * `Admin<Model name><Noun or verb>View` - for views that only admins should have access to;
-* `API<Model name><Noun or verb>View` - for views responding with JSON;
-* `AdminAPI<Model name><Noun or verb>View` - for views responding with JSON that only admins should have access to;
+* `API<Model name><Noun or verb>View` - for views responding exclusively with JSON;
+* `AdminAPI<Model name><Noun or verb>View` - for views responding exclusively with JSON that only admins should have access to;
 * where:
   * `<Model name>` is the name of the model class that the view is related to.
   * `<Noun or verb>` is a word concisely outlining the contents of the view.
     * If the view inherits from one of Django's top-level generic views (`ListView`, `DetailView`, `CreateView`, `UpdateView` or `DeleteView`),
       the word should be the name of the generic view - without the `View` suffix.
+
+(Note that the `Admin`/`API`/`AdminAPI` prefixes correspond with the path prefixes mentioned in [Path prefixes](#path-prefixes).)
 
 #### View class order
 
@@ -400,6 +402,17 @@ or `test_get_related_events_returns_expected_events()` (for a model method named
 
 In general, try to make paths as [RESTful](https://hackernoon.com/restful-api-designing-guidelines-the-best-practices-60e1d954e7c9) as possible.
 
+Let all paths end with a `/`
+(except if the first argument to `path()` would have been just `"/"`, in which case the argument should be an empty string).
+
+###### Path naming conventions:
+
+Use `kebab-case`, and concatenate compound nouns - as long as it's still fairly legible.
+Examples:
+* `machinetypes/` is preferable over `machine-types/`;
+* `softwareengineers/` is preferable over `software-engineers/` - even if there's a double E, which makes it slightly less legible;
+* `find-free-slots/` is preferable over `findfreeslots/`.
+
 For paths that refer to views inheriting from one of the following
 [generic views](https://docs.djangoproject.com/en/stable/ref/class-based-views/flattened-index/),
 the path specified is encouraged:
@@ -416,15 +429,26 @@ This makes the paths consistent with the ones used by the
 [Django admin site](https://docs.djangoproject.com/en/stable/ref/contrib/admin/#reversing-admin-urls),
 and the names of the corresponding [default model permissions](https://docs.djangoproject.com/en/stable/topics/auth/default/#default-permissions).
 
+###### Path prefixes:
+
+Prefix all endpoints' paths with the following patterns:
+* `admin/` - if the endpoint/webpage should only be accessed by admins;
+* `api/` - if the endpoint responds exclusively with JSON;
+* `api/admin/` - if the endpoint responds exclusively with JSON **and** should only be accessed by admins.
+
+See [`urlpatterns` for admin/API view paths](#urlpatterns-for-adminapi-view-paths) for how to manage this with `urlpatterns`.
+
+_The language path prefix is not affected by the above rules,
+so e.g. the English version of `/api/admin/some-path/` being `/en/api/admin/some-path/` is perfectly fine._
+
+###### Other path grouping:
+
 If a model is conceptually subordinated another model (e.g. an event occurrence model that is connected to an event model),
 the paths for the views related to that "sub-model" should be relative to the paths of the "super-model" -
 while still complying with the guidelines above.
 For example: `event/<int:pk>/occurrences/<int:occurrence_pk>/change/`.
 
-Lastly, let all paths end with a `/`
-(except if the first argument to `path()` would have been `"/"`, in which case it should be an empty string).
-
-#### Path name
+#### Path `name` (the argument of `path()`)
 
 Use `snake_case`.
 
@@ -471,13 +495,11 @@ event_occurrence_urlpatterns = [
     path("", ..., name='event_occurrence_list'),
     path("<int:pk>/", ..., name='event_occurrence_detail'),
 ]
-
 specific_event_urlpatterns = [
     path("", ..., name='event_detail'),
     path("change/", ..., name='event_update'),
     path("occurrences/", include(event_occurrence_urlpatterns)),
 ]
-
 event_urlpatterns = [
     path("", ..., name='event_list'),
     path("add/", ..., name='event_create'),
@@ -493,15 +515,17 @@ urlpatterns = [
 
 For each app's `urls.py` file, place paths inside lists with the following names:
 * `adminpatterns` - if they refer to a view that only admins should have access to;
-* `apipatterns` - if they refer to a view responding with JSON;
-* `adminapipatterns` - if they refer to a view responding with JSON that only admins should have access to.
+* `apipatterns` - if they refer to a view responding exclusively with JSON;
+* `adminapipatterns` - if they refer to a view responding exclusively with JSON that only admins should have access to.
 
-Each of these lists should now only contain paths referring to views with the corresponding prefixes listed in [View class name](#view-class-name).
+_Each of these lists should now only contain paths referring to views with the corresponding class name prefixes listed in
+[View class name](#view-class-name)._
 
 These lists should then be imported in [`web/urls.py`](src/web/urls.py), and `include()`d in
 `admin_urlpatterns`, `api_urlpatterns` and `admin_api_urlpatterns`, respectively -
 with the same path route argument as the app's other paths.
-(This ensures that all paths start with the relevant `admin/`, `api/` or `api/admin/` prefix.)
+(This ensures that all paths start with the relevant `admin/`, `api/` or `api/admin/` prefix;
+see [Path prefixes](#path-prefixes).)
 For example:
 ```python
 from django.urls import include, path

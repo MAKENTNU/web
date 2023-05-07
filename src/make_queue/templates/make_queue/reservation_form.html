@@ -53,7 +53,7 @@
         </div>
 
         <form id="reservation-form" class="ui form" method="POST"
-              {% if not new_reservation %}data-reservation="{{ reservation_pk }}"{% endif %}>
+              {% if not new_reservation %}data-reservation="{{ reservation.pk }}"{% endif %}>
             {% csrf_token %}
             <div class="two fields">
                 <div class="field">

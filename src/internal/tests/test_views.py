@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from urllib.parse import urlparse
 
 from django.conf import settings
 from django.contrib.auth.models import Permission
@@ -13,9 +12,9 @@ from contentbox.forms import EditSourceContentBoxForm
 from contentbox.models import ContentBox
 from users.models import User
 from util.auth_utils import get_perms, perm_to_str
-from util.url_utils import reverse_internal
+from util.url_utils import reverse_admin, reverse_internal
 from web.multilingual.data_structures import MultiLingualTextStructure
-from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS, reverse_admin
+from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS
 from .test_urls import INTERNAL_CLIENT_DEFAULTS
 from ..models import Secret
 
@@ -105,8 +104,7 @@ class InternalContentBoxTests(TestCase):
                     f'content_{settings.LANGUAGE_CODE}': mock_content,
                 })
                 display_url = reverse_internal(content_box.url_name)
-                # `display_url` contains a relative scheme and a host, so only compare the paths
-                self.assertRedirects(response, urlparse(display_url).path)
+                self.assertRedirects(response, display_url)
                 content_box.refresh_from_db()
                 content_text_structure: MultiLingualTextStructure = content_box.content
                 # The content box should contain the same content for all languages

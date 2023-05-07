@@ -30,7 +30,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('admin_article_list'))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.change_article')
+        self.user.add_perms('internal.is_internal', 'news.change_article')
         response = self.client.get(reverse('admin_article_list'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -38,7 +38,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('article_create'))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.add_article')
+        self.user.add_perms('internal.is_internal', 'news.add_article')
         response = self.client.get(reverse('article_create'))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -46,7 +46,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(reverse('article_update', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.change_article')
+        self.user.add_perms('internal.is_internal', 'news.change_article')
         response = self.client.get(reverse('article_update', args=[self.article.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -56,7 +56,7 @@ class ArticleViewTests(CleanUpTempFilesTestMixin, TestCase):
             self.assertEqual(response.status_code, HTTPStatus.OK)
             return json.loads(response.content)
 
-        self.user.add_perms('news.change_article')
+        self.user.add_perms('internal.is_internal', 'news.change_article')
         self.assertDictEqual(toggle(self.article.pk, 'non_existent_attr'), {})
 
         self.assertDictEqual(toggle(self.article.pk, 'hidden'), {'is_hidden': True})

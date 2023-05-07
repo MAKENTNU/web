@@ -71,12 +71,9 @@ class DocumentationPageContentDetailView(DocumentationPageRelatedViewMixin, Deta
         return context_data
 
 
-class DocumentationPageVersionUpdateView(PermissionRequiredMixin, DocumentationPageRelatedViewMixin, UpdateView):
+class DocumentationPageVersionUpdateView(PermissionRequiredMixin, PreventGetRequestsMixin, DocumentationPageRelatedViewMixin, UpdateView):
     permission_required = ('docs.change_page',)
     form_class = ChangePageVersionForm
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('documentation_page_history_detail', args=[self.get_object().pk]))
 
     def get_success_url(self):
         return self.get_object().get_absolute_url()

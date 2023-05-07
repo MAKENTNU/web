@@ -168,5 +168,8 @@ class AdminPanelViewTests(TestCase):
         self.client.force_login(user)
         assert_visiting_page_produces_status_code(HTTPStatus.FORBIDDEN)
 
+        user.add_perms('internal.is_internal')
+        assert_visiting_page_produces_status_code(HTTPStatus.FORBIDDEN)
+
         user.add_perms('news.add_article')
         assert_visiting_page_produces_status_code(HTTPStatus.OK)

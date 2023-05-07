@@ -1,4 +1,5 @@
 import requests
+from django.urls import reverse
 
 """
 Module for testing the RFID functionality on makentnu.no when running locally and/or without an RFID scanner.
@@ -15,8 +16,8 @@ def _card(path, card_id, secret):
 
 
 def register(card_id="0123456789", secret=""):
-    return _card("checkin/register/card/", card_id, secret)
+    return _card(reverse('admin_register_card'), card_id, secret)
 
 
 def check(card_id="0123456789", secret=""):
-    return _card("checkin/post/", card_id, secret)
+    return _card(reverse('admin_check_in'), card_id, secret)

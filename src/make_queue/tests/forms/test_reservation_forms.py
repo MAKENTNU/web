@@ -4,7 +4,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from news.models import Event, TimePlace
-from ...forms import ReservationForm
+from ...forms.reservation import ReservationForm
 from ...models.machine import Machine, MachineType
 
 

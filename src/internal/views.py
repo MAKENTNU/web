@@ -215,10 +215,11 @@ class MemberStatusUpdateView(PermissionRequiredMixin, PreventGetRequestsMixin, U
 
 class SystemAccessUpdateView(PermissionRequiredMixin, PreventGetRequestsMixin, UpdateView):
     model = SystemAccess
+    pk_url_kwarg = 'system_access_pk'
     form_class = SystemAccessValueForm
 
     def get_queryset(self):
-        return get_object_or_404(Member, pk=self.kwargs['member_pk']).system_accesses
+        return get_object_or_404(Member, pk=self.kwargs['pk']).system_accesses
 
     def has_permission(self):
         system_access: SystemAccess = self.get_object()

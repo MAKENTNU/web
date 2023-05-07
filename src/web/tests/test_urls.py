@@ -6,18 +6,16 @@ from django.test import Client, TestCase
 from django.utils import translation
 from django_hosts import reverse
 
+from contentbox.models import ContentBox
 from make_queue.models.machine import Machine
 from news.tests.test_urls import NewsTestBase
 from users.models import User
 from util.test_utils import Get, assert_requesting_paths_succeeds
+from util.url_utils import reverse_admin
 
 
 # Makes sure that the subdomain of all requests is `admin`
 ADMIN_CLIENT_DEFAULTS = {'SERVER_NAME': f'admin.{settings.PARENT_HOST}'}
-
-
-def reverse_admin(viewname: str, args=None, **kwargs):
-    return reverse(f'admin:{viewname}', args=args, kwargs=kwargs, host='admin')
 
 
 class UrlTests(NewsTestBase, TestCase):
@@ -31,23 +29,43 @@ class UrlTests(NewsTestBase, TestCase):
         self.user_client = Client()
         self.user_client.login(username=username, password=password)
 
+        self.about_content_box = ContentBox.objects.create(url_name='about')
+        self.content_box1 = ContentBox.objects.create(url_name='content_box1')
+        self.content_box2 = ContentBox.objects.create(url_name='content_box2')
+        self.content_boxes = (self.about_content_box, self.content_box1, self.content_box2)
+
         # Populate the front page
         self.init_objs()
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
+            # urlpatterns
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
-            Get(reverse('index_page'), public=True),
+            # ckeditor_uploader_urls()
+            Get(reverse('ckeditor_browse'), public=False, translated=False),
+
+            # admin_urlpatterns
             Get(reverse('admin_panel'), public=False),
+
+            # content_box_urlpatterns
+            *[
+                Get(reverse('content_box_update', args=[content_box.pk]), public=False)
+                for content_box in self.content_boxes
+            ],
+
+            # about_urlpatterns
             Get(reverse('about'), public=True),
             Get(reverse('contact'), public=True),
+
+            # urlpatterns
+            Get(reverse('index_page'), public=True),
             Get(reverse('apply'), public=True),
             Get('/søk/', public=True),
             Get('/sok/', public=True),
             Get(reverse('cookies'), public=True),
             Get(reverse('privacypolicy'), public=True),
-            Get(reverse('ckeditor_browse'), public=False, translated=False),
+            Get(reverse('javascript_catalog'), public=True),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 
@@ -92,13 +110,17 @@ class UrlTests(NewsTestBase, TestCase):
         path_predicates = [
             Get('/rules/', public=True, redirect=True),
 
+            Get('/reservation/', public=True, redirect=True),
             Get(f'/reservation/2023/16/{machine1.pk}/', public=True, redirect=True),
 
             Get('/reservation/me/', public=False, redirect=True),
             Get('/reservation/admin/', public=False, redirect=True),
+            Get('/reservation/slots/', public=False, redirect=True),
 
             Get('/reservation/rules/1/', public=True, redirect=True),
+            Get('/reservation/machinetypes/1/rules/', public=True, redirect=True),
             Get('/reservation/rules/usage/1/', public=True, redirect=True),
+            Get('/reservation/machinetypes/1/rules/usage/', public=True, redirect=True),
 
             Get(f'/news/article/{self.article1.pk}/', public=True, redirect=True),
             Get(f'/news/event/{self.event1.pk}/', public=True, redirect=True),

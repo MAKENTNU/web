@@ -1,7 +1,7 @@
 from django.test import Client, TestCase
 
 from users.models import User
-from ...forms import Printer3DCourseForm
+from ...forms.course import Printer3DCourseForm
 from ...models.course import Printer3DCourse
 
 

@@ -2,16 +2,17 @@ from abc import ABC
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.db.models.functions import Concat
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, TemplateView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, TemplateView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 
 from users.models import User
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin
-from ...forms import AdminQuotaPanelQueryForm, QuotaForm
-from ...models.reservation import Quota
+from ..forms.quota import AdminQuotaPanelQueryForm, QuotaForm
+from ..models.reservation import Quota
 
 
 class AdminQuotaPanelView(PermissionRequiredMixin, QueryParameterFormMixin, TemplateView):
@@ -34,6 +35,24 @@ class AdminQuotaPanelView(PermissionRequiredMixin, QueryParameterFormMixin, Temp
             'requested_user': (self.query_params or {}).get('user'),
             **kwargs,
         })
+
+
+class AdminUserQuotaListView(PermissionRequiredMixin, ListView):
+    """View for getting a rendered version of the quotas of a specific user."""
+    permission_required = ('make_queue.change_quota',)
+    model = Quota
+    template_name = 'make_queue/quota/admin_user_quota_list.html'
+    context_object_name = 'user_quotas'
+
+    user: User
+
+    def setup(self, request, *args, **kwargs):
+        super().setup(request, *args, **kwargs)
+        user_pk = self.kwargs['pk']
+        self.user = get_object_or_404(User, pk=user_pk)
+
+    def get_queryset(self):
+        return self.user.quotas.filter(all=False)
 
 
 class QuotaFormMixin(CustomFieldsetFormMixin, ModelFormMixin, ABC):

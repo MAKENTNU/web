@@ -6,7 +6,7 @@ from announcements.models import Announcement
 from contentbox.views import ContentBoxDetailView
 from faq.models import Category, Question
 from groups.models import Committee
-from make_queue.forms import ReservationListQueryForm
+from make_queue.forms.reservation import ReservationListQueryForm
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.reservation import Quota
 from makerspace.models import Equipment

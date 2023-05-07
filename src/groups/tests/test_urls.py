@@ -22,10 +22,13 @@ class UrlTests(CleanUpTempFilesTestMixin, TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
+            # urlpatterns
             Get(reverse('committee_list'), public=True),
             Get(reverse('committee_detail', args=[self.committee1.pk]), public=True),
-            Get(reverse('committee_update', args=[self.committee1.pk]), public=False),
+
+            # adminpatterns
             Get(reverse('admin_committee_list'), public=False),
+            Get(reverse('committee_update', args=[self.committee1.pk]), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

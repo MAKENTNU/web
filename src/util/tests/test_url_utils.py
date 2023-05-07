@@ -1,6 +1,7 @@
+from django.conf import settings
 from django.test import SimpleTestCase
 
-from ..url_utils import urljoin_query
+from ..url_utils import get_reverse_host_kwargs_from_url, urljoin_query
 
 
 class UrlUtilsTests(SimpleTestCase):
@@ -35,3 +36,30 @@ class UrlUtilsTests(SimpleTestCase):
 
                 self.assertEqual(urljoin_query(f"{base_path}?a=1&b=1", {"a": 3, "b": 3, "c": 3}), f"{base_path}?a=3&b=3&c=3")
                 self.assertEqual(urljoin_query(f"{base_path}?a=1&b=1", "a=3&b=3&c=3"), f"{base_path}?a=3&b=3&c=3")
+
+    def test_get_reverse_host_kwargs_from_url_returns_expected_host_object(self):
+        def assert_url_returns(*, url_subdomain: str, expected_host: str, expected_host_args: str | None):
+            host_kwargs = get_reverse_host_kwargs_from_url(f"{scheme}{url_subdomain}{settings.PARENT_HOST}{path}")
+            self.assertDictEqual(host_kwargs, {'host': expected_host, 'host_args': expected_host_args})
+
+        def get_expected_value_error_message(url_: str):
+            return f"The passed URL ({url_}) must be internal, i.e. makentnu.localhost:8000 must be part of the URL's host."
+
+        for scheme in ("http://", "https://", "//"):
+            for path in ("", "/", "/asdf/", "/asdf/?qwer=2"):
+                with self.subTest(scheme=scheme, path=path):
+                    assert_url_returns(url_subdomain="", expected_host='main', expected_host_args=None)
+                    assert_url_returns(url_subdomain=".", expected_host='main', expected_host_args=None)
+                    assert_url_returns(url_subdomain="i.", expected_host='internal', expected_host_args='i')
+                    assert_url_returns(url_subdomain="internal.", expected_host='internal', expected_host_args='internal')
+                    assert_url_returns(url_subdomain="internt.", expected_host='internal', expected_host_args='internt')
+                    assert_url_returns(url_subdomain="admin.", expected_host='admin', expected_host_args=None)
+                    assert_url_returns(url_subdomain="docs.", expected_host='docs', expected_host_args=None)
+
+                    url = f"{scheme}makentnu.no{path}"
+                    with self.assertRaisesMessage(ValueError, get_expected_value_error_message(url)):
+                        get_reverse_host_kwargs_from_url(url)
+
+                    url = f"{scheme}i.makentnu.localhost{path}"
+                    with self.assertRaisesMessage(ValueError, get_expected_value_error_message(url)):
+                        get_reverse_host_kwargs_from_url(url)
