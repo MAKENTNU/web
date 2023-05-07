@@ -1,19 +1,15 @@
 from django.contrib.auth.decorators import login_required
-from django.urls import include, path, register_converter
+from django.urls import include, path
 
-from . import converters
-from .views.admin import course, quota, reservation as reservation_admin
-from .views.api import calendar as calendar_api, reservation as reservation_api, user_info
+from .views.admin import course, quota
+from .views.api import calendar as calendar_api, reservation as reservation_api
 from .views.quota import user
 from .views.reservation import calendar, machine, reservation, rules
 
 
-register_converter(converters.Year, 'year')
-register_converter(converters.Week, 'week')
-
 machine_urlpatterns = [
     path("add/", machine.MachineCreateView.as_view(), name='machine_create'),
-    path("<int:pk>/", calendar.MachineDetailView.as_view(redirect_to_current_week=True), name='machine_detail'),
+    path("<int:pk>/", calendar.MachineDetailView.as_view(), name='machine_detail'),
     path("<int:pk>/change/", machine.MachineUpdateView.as_view(), name='machine_update'),
     path("<int:pk>/delete/", machine.MachineDeleteView.as_view(), name='machine_delete'),
 ]
@@ -25,8 +21,6 @@ calendar_urlpatterns = [
 
 json_urlpatterns = [
     path("<int:pk>/", login_required(reservation_api.APIMachineDataView.as_view()), name='api_machine_data'),
-    path("<int:pk>/<int:reservation_pk>/", login_required(reservation_api.APIMachineDataView.as_view()), name='api_machine_data'),
-    path("<str:username>/", user_info.AdminAPIBasicUserInfoView.as_view(), name='admin_api_basic_user_info'),
 ]
 
 rules_urlpatterns = [
@@ -48,7 +42,6 @@ quota_urlpatterns = [
     path("<int:pk>/change/", quota.QuotaUpdateView.as_view(), name='quota_update'),
     path("<int:pk>/delete/", quota.QuotaDeleteView.as_view(), name='quota_delete'),
     path("user/<int:pk>/", user.AdminUserQuotaListView.as_view(), name='admin_user_quota_list'),
-    path("<int:pk>/", quota.AdminQuotaPanelView.as_view(), name='admin_quota_panel'),
 ]
 
 course_urlpatterns = [
@@ -63,15 +56,13 @@ course_urlpatterns = [
 urlpatterns = [
     path("", machine.MachineListView.as_view(), name='machine_list'),
     path("machines/", include(machine_urlpatterns)),
-    path("<year:year>/<week:week>/<int:pk>/", calendar.MachineDetailView.as_view(), name='machine_detail'),
     path("calendar/", include(calendar_urlpatterns)),
     path("json/", include(json_urlpatterns)),
     path("add/<int:pk>/", login_required(reservation.ReservationCreateView.as_view()), name='reservation_create'),
     path("<int:reservation_pk>/change/", login_required(reservation.ReservationUpdateView.as_view()), name='reservation_update'),
     path("<int:pk>/finish/", login_required(reservation.APIReservationMarkFinishedView.as_view()), name='api_reservation_mark_finished'),
     path("<int:pk>/", login_required(reservation.APIReservationDeleteView.as_view()), name='api_reservation_delete'),
-    path("me/", reservation.ReservationMyListView.as_view(), name='reservation_my_list'),
-    path("admin/", reservation_admin.AdminReservationMAKEListView.as_view(), name='admin_reservation_MAKE_list'),
+    path("reservations/", reservation.ReservationListView.as_view(), name='reservation_list'),
     path("slot/", reservation.ReservationFindFreeSlotsView.as_view(), name='reservation_find_free_slots'),
     path("machinetypes/<int:pk>/", include(specific_machinetype_urlpatterns)),
     path("quota/", include(quota_urlpatterns)),

@@ -2,7 +2,7 @@
 {% load i18n %}
 
 
-{% block title %}{% translate "Search results" %} | {% translate "Docs" %}{% endblock title %}
+{% block title %}{% translate "Search results" %}: "{{ query }}" | {% translate "Docs" %}{% endblock title %}
 
 {% block extra_head %}
     <script>

@@ -12,6 +12,7 @@ from users.models import User
 from util.test_utils import (
     CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
 )
+from ..forms import ReservationListQueryForm
 from ..models.course import Printer3DCourse
 from ..models.machine import Machine, MachineType, MachineUsageRule
 from ..models.reservation import Quota, Reservation, ReservationRule
@@ -102,9 +103,9 @@ class UrlTests(MakeQueueTestBase, TestCase):
     def test_all_get_request_paths_succeed(self):
         year, week_number, _weekday = timezone.localtime().isocalendar()
         # Create URL params to query all reservations
-        api_reservation_list_url_params = urlencode({
-            'startDate': Reservation.objects.earliest('start_time').start_time.isoformat(),
-            'endDate': Reservation.objects.latest('end_time').end_time.isoformat(),
+        api_reservation_list_params = urlencode({
+            'start_date': Reservation.objects.earliest('start_time').start_time.isoformat(),
+            'end_date': Reservation.objects.latest('end_time').end_time.isoformat(),
         })
 
         path_predicates = [
@@ -114,7 +115,11 @@ class UrlTests(MakeQueueTestBase, TestCase):
             # machine_urlpatterns
             Get(reverse('machine_create'), public=False),
             *[
-                Get(reverse('machine_detail', args=[machine.pk]), public=True, redirect=True)
+                Get(reverse('machine_detail', args=[machine.pk]), public=True)
+                for machine in self.machines
+            ],
+            *[
+                Get(f"{reverse('machine_detail', args=[machine.pk])}?calendar_year={year}&calendar_week={week_number}", public=True)
                 for machine in self.machines
             ],
             *[
@@ -122,16 +127,10 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 for machine in self.machines
             ],
 
-            # Back to urlpatterns
-            *[
-                Get(reverse('machine_detail', kwargs={'year': year, 'week': week_number, 'pk': machine.pk}), public=True)
-                for machine in self.machines
-            ],
-
             # calendar_urlpatterns
             *[
                 Get(
-                    f"{reverse('api_reservation_list', args=[machine.pk])}?{api_reservation_list_url_params}",
+                    f"{reverse('api_reservation_list', args=[machine.pk])}?{api_reservation_list_params}",
                     public=True,
                 )
                 for machine in self.machines
@@ -147,11 +146,9 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 for machine in self.machines
             ],
             *[
-                Get(reverse('api_machine_data', args=[reservation.machine.pk, reservation.pk]), public=False)
+                Get(f"{reverse('api_machine_data', args=[reservation.machine.pk])}?exclude_reservation={reservation.pk}", public=False)
                 for reservation in self.reservations
             ],
-            Get(reverse('admin_api_basic_user_info', args=[self.user1.username]), public=False),
-            Get(reverse('admin_api_basic_user_info', args=[self.user2.username]), public=False),
 
             # Back to urlpatterns
             *[
@@ -162,8 +159,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
                 Get(reverse('reservation_update', args=[reservation.pk]), public=False)
                 for reservation in self.reservations if reservation != self.reservation2  # `reservation2` starts in the future
             ],
-            Get(reverse('reservation_my_list'), public=False),
-            Get(reverse('admin_reservation_MAKE_list'), public=False),
+            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.ME}", public=False),
+            Get(f"{reverse('reservation_list')}?owner={ReservationListQueryForm.Owner.MAKE}", public=False),
             Get(reverse('reservation_find_free_slots'), public=False),
 
             # rules_urlpatterns
@@ -189,8 +186,8 @@ class UrlTests(MakeQueueTestBase, TestCase):
             ],
             Get(reverse('admin_user_quota_list', args=[self.user1.pk]), public=False),
             Get(reverse('admin_user_quota_list', args=[self.user2.pk]), public=False),
-            Get(reverse('admin_quota_panel', args=[self.user1.pk]), public=False),
-            Get(reverse('admin_quota_panel', args=[self.user2.pk]), public=False),
+            Get(f"{reverse('admin_quota_panel')}?user={self.user1.pk}", public=False),
+            Get(f"{reverse('admin_quota_panel')}?user={self.user2.pk}", public=False),
 
             # course_urlpatterns
             Get(reverse('printer_3d_course_list'), public=False),

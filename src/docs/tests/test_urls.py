@@ -45,6 +45,8 @@ class UrlTests(TestCase):
             Get(self.reverse('documentation_page_create'), public=False),
             Get(self.reverse('documentation_page_update', self.page1.pk), public=False),
             Get(self.reverse('documentation_page_search'), public=False),
+            Get(f"{self.reverse('documentation_page_search')}?query=lorem", public=False),
+            Get(f"{self.reverse('documentation_page_search')}?query=lorem&page=2", public=False),
             Get('/robots.txt', public=True, translated=False),
             Get('/.well-known/security.txt', public=True, translated=False),
         ]

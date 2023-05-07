@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-from ...forms import AddMachineForm, ChangeMachineForm
+from ...forms import AddMachineForm, ChangeMachineForm, ReservationListQueryForm
 from ...models.machine import Machine, MachineType
 
 
@@ -15,6 +15,9 @@ class MachineListView(ListView):
     model = MachineType
     template_name = 'make_queue/machine_list.html'
     context_object_name = 'machine_types'
+    extra_context = {
+        'ReservationOwner': ReservationListQueryForm.Owner,
+    }
 
     def get_queryset(self):
         machine_queryset = Machine.objects.visible_to(self.request.user).default_order_by()

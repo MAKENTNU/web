@@ -5,7 +5,7 @@ $(".clear-dropdown").click(function () {
 });
 
 $("input[name='username']").focusout((event) => {
-    $.ajax(`${LANG_PREFIX}/reservation/json/${$(event.target).val()}/`, {
+    $.ajax(`${LANG_PREFIX}/users/username/${$(event.target).val()}/`, {
         success: function (data) {
             const fullName = data["full_name"];
             if (fullName)

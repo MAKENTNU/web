@@ -6,6 +6,7 @@ from announcements.models import Announcement
 from contentbox.views import ContentBoxDetailView
 from faq.models import Category, Question
 from groups.models import Committee
+from make_queue.forms import ReservationListQueryForm
 from make_queue.models.course import Printer3DCourse
 from make_queue.models.reservation import Quota
 from makerspace.models import Equipment
@@ -58,6 +59,9 @@ class AdminPanelView(PermissionRequiredMixin, TemplateView):
     ]
 
     template_name = 'web/admin_panel.html'
+    extra_context = {
+        'ReservationOwner': ReservationListQueryForm.Owner,
+    }
 
     def has_permission(self):
         from util.templatetags.permission_tags import can_view_admin_panel  # Avoids circular importing

@@ -1,28 +1,30 @@
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from django.views.generic import TemplateView
 
 from util.locale_utils import iso_datetime_format
+from util.view_utils import QueryParameterFormMixin, UTF8JsonResponse
 from ..reservation.reservation import MachineRelatedViewMixin
+from ...forms import APIMachineDataQueryForm
 from ...models.reservation import Quota
 
 
-class APIMachineDataView(MachineRelatedViewMixin, TemplateView):
+class APIMachineDataView(MachineRelatedViewMixin, QueryParameterFormMixin, TemplateView):
+    form_class = APIMachineDataQueryForm
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['exclude_reservation'].queryset = self.machine.reservations
+        return form
 
     def get_context_data(self, **kwargs):
-        if 'reservation_pk' in kwargs:
-            reservation_pk = kwargs['reservation_pk']
-            # Check that it exists on the machine
-            get_object_or_404(self.machine.reservations, pk=reservation_pk)
-        else:
-            reservation_pk = None
+        exclude_reservation = self.query_params['exclude_reservation']
+        exclude_reservation_pk = exclude_reservation.pk if exclude_reservation else None
         return {
             'reservations': [
                 {
                     'start_time': iso_datetime_format(r.start_time),
                     'end_time': iso_datetime_format(r.end_time),
-                } for r in self.machine.reservations.filter(end_time__gte=timezone.now()).exclude(pk=reservation_pk)
+                } for r in self.machine.reservations.filter(end_time__gte=timezone.now()).exclude(pk=exclude_reservation_pk)
             ],
             'can_ignore_rules': any(
                 quota.can_create_more_reservations(self.request.user)
@@ -37,4 +39,4 @@ class APIMachineDataView(MachineRelatedViewMixin, TemplateView):
         }
 
     def render_to_response(self, context, **response_kwargs):
-        return JsonResponse(context)
+        return UTF8JsonResponse(context)

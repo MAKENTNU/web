@@ -45,14 +45,14 @@ class TestReservationExtra(TestCase):
 
         self.assertEqual(
             current_calendar_url(printer),
-            reverse('machine_detail', kwargs={'year': 2017, 'week': 52, 'pk': printer.pk}),
+            f"{reverse('machine_detail', args=[printer.pk])}?calendar_year=2017&calendar_week=52",
         )
 
         # Check the edge case of January 1st 2010 being week 53 of 2009
         now_mock.return_value = parse_datetime_localized("2010-01-01 12:34")
         self.assertEqual(
-            reverse('machine_detail', kwargs={'year': 2009, 'week': 53, 'pk': printer.pk}),
-            current_calendar_url(printer)
+            current_calendar_url(printer),
+            f"{reverse('machine_detail', args=[printer.pk])}?calendar_year=2009&calendar_week=53",
         )
 
     def test_get_stream_image_path_returns_correct_image_path(self):

@@ -13,8 +13,10 @@ from social_core.utils import setting_name
 
 from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
 from dataporten.views import login_wrapper
+from make_queue.forms import ReservationListQueryForm
 from news import urls as news_urls
 from util.url_utils import ckeditor_uploader_urls, debug_toolbar_urls, logout_urls
+from util.view_utils import RedirectViewWithStaticQuery
 from . import views
 
 
@@ -57,6 +59,7 @@ urlpatterns += i18n_patterns(
     path("makerspace/", include('makerspace.urls')),
     path("news/", include('news.urls')),
     path("reservation/", include('make_queue.urls')),
+    path("users/", include('users.urls')),
 
     # ContentBox paths:
     path("contentbox/", include(content_box_urlpatterns)),
@@ -98,11 +101,19 @@ else:
     )
 urlpatterns += logout_urls()
 
+Owner = ReservationListQueryForm.Owner
 # --- Old URLs ---
 # URLs kept for "backward-compatibility" after paths were changed, so that users are simply redirected to the new URLs.
 # These need only be URLs for pages that are likely to be linked to.
 urlpatterns += i18n_patterns(
     path("rules/", RedirectView.as_view(pattern_name='rules', permanent=True)),
+
+    path("reservation/<int:year>/<int:week>/<int:pk>/",
+         RedirectView.as_view(url='/reservation/machines/%(pk)s/?calendar_year=%(year)s&calendar_week=%(week)s', permanent=True)),
+
+    path("reservation/me/", RedirectViewWithStaticQuery.as_view(pattern_name='reservation_list', query={'owner': Owner.ME}, permanent=True)),
+    path("reservation/admin/", RedirectViewWithStaticQuery.as_view(pattern_name='reservation_list', query={'owner': Owner.MAKE}, permanent=True)),
+
     path("reservation/rules/<int:pk>/", RedirectView.as_view(pattern_name='reservation_rule_list', permanent=True)),
     path("reservation/rules/usage/<int:pk>/", RedirectView.as_view(pattern_name='machine_usage_rule_detail', permanent=True)),
 

@@ -1,51 +1,67 @@
-from django.contrib.admin.sites import AdminSite
-from django.test import TestCase
+from http import HTTPStatus
 
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+from django.test import Client, TestCase
+
+from users.models import User
+from util.test_utils import set_without_duplicates
+from web.tests.test_urls import ADMIN_CLIENT_DEFAULTS, reverse_admin
 from ..admin import InheritanceGroupAdmin
 from ..models import InheritanceGroup
-
-
-class MockRequest:
-    pass
-
-
-class MockSuperUser:
-
-    def has_perm(self, *args, **kwargs):
-        return True
 
 
 class InheritanceGroupAdminTestCase(TestCase):
 
     def setUp(self):
-        self.site = AdminSite()
-        self.request = MockRequest()
-        self.request.user = MockSuperUser()
-        org = InheritanceGroup.objects.create(name='Org')
-        mentor = InheritanceGroup.objects.create(name='Mentor')
-        mentor.parents.add(org)
-        dev = InheritanceGroup.objects.create(name='Dev')
-        dev.parents.add(org)
-        arr = InheritanceGroup.objects.create(name='Arrangement')
-        arr.parents.add(org)
-        InheritanceGroup.objects.create(name='Leder').parents.add(mentor, dev, arr)
+        self.admin = User.objects.create_user("admin", is_staff=True, is_superuser=True)
+        self.admin_client = Client(**ADMIN_CLIENT_DEFAULTS)
+        self.admin_client.force_login(self.admin)
 
-    def test_get_form(self):
-        admin = InheritanceGroupAdmin(InheritanceGroup, self.site)
+        self.org = InheritanceGroup.objects.create(name='Org')
+        self.mentor = InheritanceGroup.objects.create(name='Mentor')
+        self.dev = InheritanceGroup.objects.create(name='Dev')
+        self.event = InheritanceGroup.objects.create(name='Event')
+        self.chairperson = InheritanceGroup.objects.create(name='Leder')
+
+        self.mentor.parents.add(self.org)
+        self.dev.parents.add(self.org)
+        self.event.parents.add(self.org)
+        self.chairperson.parents.add(self.mentor, self.dev, self.event)
+
+        self.org_perms = {
+            Permission.objects.create(codename='perm1', name="Perm 1", content_type=ContentType.objects.get_for_model(InheritanceGroup))
+        }
+        self.org.own_permissions.add(*self.org_perms)
+
+        self.admin_add_url = reverse_admin('groups_inheritancegroup_add')
+        self.admin_change_dev_url = reverse_admin('groups_inheritancegroup_change', args=[self.dev.pk])
+
+    def test_form_contains_expected_fields_and_related_field_querysets(self):
+        response = self.admin_client.get(self.admin_add_url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        form = response.context['adminform']
         expected_fields = ['name', 'parents', 'own_permissions']
-        form = admin.get_form(self.request)
-        self.assertListEqual(list(form.base_fields), expected_fields)
+        self.assertListEqual(list(form.fields), expected_fields)
+        self.assertSetEqual(
+            set_without_duplicates(self, form.fields['parents'].queryset),
+            set(InheritanceGroup.objects.all()),
+        )
 
-        expected_parents = InheritanceGroup.objects.all()
-        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+        response = self.admin_client.get(self.admin_change_dev_url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        form = response.context['adminform']
+        self.assertListEqual(list(form.fields), expected_fields)
+        self.assertSetEqual(
+            set_without_duplicates(self, form.fields['parents'].queryset),
+            set(self.dev.get_available_parents()),
+        )
 
-        form = admin.get_form(self.request, obj=InheritanceGroup.objects.get(name='Dev'))
-        expected_parents = InheritanceGroup.objects.get(name='Dev').get_available_parents()
-        self.assertSetEqual(set(form.base_fields['parents'].queryset), set(expected_parents))
+    def test_get_inherited_permissions_contains_expected_permissions(self):
+        response = self.admin_client.get(self.admin_change_dev_url)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        admin: InheritanceGroupAdmin = response.context['adminform'].model_admin
 
-    def test_inherited_permissions(self):
-        admin = InheritanceGroupAdmin(InheritanceGroup, self.site)
-        dev = InheritanceGroup.objects.get(name='Dev')
-        permissions = set(admin.get_inherited_permissions(dev))
-        for perm in dev.inherited_permissions:
-            self.assertIn(str(perm), permissions)
+        permissions_string = admin.get_inherited_permissions(self.dev)
+        permissions = set_without_duplicates(self, permissions_string.splitlines())
+        self.assertSetEqual(permissions, {str(perm) for perm in self.org_perms})

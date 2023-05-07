@@ -96,7 +96,7 @@
             {% endif %}
             {% if perms.make_queue.can_create_event_reservation %}
                 <div class="ui yellow card">
-                    <a class="content" href="{% url 'admin_reservation_MAKE_list' %}">
+                    <a class="content" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.MAKE }}">
                         <div class="center aligned header">
                             <i class="grey cogs icon"></i>{% translate "Reservations" %}
                         </div>

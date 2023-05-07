@@ -24,7 +24,7 @@
             {% endif %}
         </div>
         <div class="reservation-management-buttons">
-            <a class="ui primary button" href="{% url 'reservation_my_list' %}">
+            <a class="ui primary button" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.ME }}">
                 {% translate "My reservations" %}
             </a>
             <a class="ui primary button" href="{% url 'reservation_find_free_slots' %}">

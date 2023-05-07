@@ -1,8 +1,10 @@
+from datetime import datetime
 from http import HTTPStatus
 
 from django.templatetags.static import static
 from django.test import TestCase
 from django.utils import timezone
+from django.utils.dateparse import parse_datetime
 from django_hosts import reverse
 
 from users.models import User
@@ -199,6 +201,111 @@ class TestMachineListView(TestCase):
 
 class TestMachineDetailView(TestCase):
 
+    def setUp(self):
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        printer_machine_type = MachineType.objects.get(pk=1)
+        sewing_machine_type = MachineType.objects.get(pk=2)
+
+        printer1 = Machine.objects.create(name="Printer 1", machine_model="Ultimaker", machine_type=printer_machine_type)
+        printer2 = Machine.objects.create(name="Printer 2", machine_model="Ultimaker", machine_type=printer_machine_type)
+        sewing_machine1 = Machine.objects.create(name="Sewing 1", machine_model="Janome", machine_type=sewing_machine_type)
+        self.machines = (printer1, printer2, sewing_machine1)
+
+    def test_year_and_week_query_parameters_responds_with_expected_context(self):
+        def assert_context_has(url: str, *, selected_year: int, selected_week: int, selected_date: datetime):
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, HTTPStatus.OK)
+            context = response.context
+            self.assertEqual(context['selected_year'], selected_year)
+            self.assertEqual(context['selected_week'], selected_week)
+            self.assertEqual(context['selected_date'], selected_date)
+
+        for machine in self.machines:
+            with self.subTest(machine=machine):
+                base_url = reverse('machine_detail', args=[machine.pk])
+                # (`calendar_year=1&calendar_week=1` causes an `OverflowError`, but not consistently in all test environments)
+                assert_context_has(f"{base_url}?calendar_year=1&calendar_week=2",
+                                   selected_year=1, selected_week=2, selected_date=parse_datetime("0001-01-08"))
+                # The first week of 2020 started with the last few days of December 2019
+                assert_context_has(f"{base_url}?calendar_year=2020&calendar_week=1",
+                                   selected_year=2020, selected_week=1, selected_date=parse_datetime("2019-12-30"))
+                assert_context_has(f"{base_url}?calendar_year=2020&calendar_week=2",
+                                   selected_year=2020, selected_week=2, selected_date=parse_datetime("2020-01-06"))
+                assert_context_has(f"{base_url}?calendar_year=2020&calendar_week=52",
+                                   selected_year=2020, selected_week=52, selected_date=parse_datetime("2020-12-21"))
+                assert_context_has(f"{base_url}?calendar_year=2020&calendar_week=53",
+                                   selected_year=2020, selected_week=53, selected_date=parse_datetime("2020-12-28"))
+                assert_context_has(f"{base_url}?calendar_year=2021&calendar_week=1",
+                                   selected_year=2021, selected_week=1, selected_date=parse_datetime("2021-01-04"))
+                assert_context_has(f"{base_url}?calendar_year=9999&calendar_week=52",
+                                   selected_year=9999, selected_week=52, selected_date=parse_datetime("9999-12-27"))
+
+    def test_year_and_week_query_parameters_responds_with_expected_errors(self):
+        def assert_error_response_contains(url: str, *, expected_json_dict: dict):
+            response = self.client.get(url)
+            self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+            self.assertDictEqual(response.json(), expected_json_dict)
+
+        value_greater_or_equal_1 = "Verdien må være større enn eller lik 1."
+        value_less_or_equal_53 = "Verdien må være mindre enn eller lik 53."
+        value_less_or_equal_9999 = "Verdien må være mindre enn eller lik 9999."
+        value_not_int = "Oppgi et heltall."
+        both_fields_must_be_set = {'__all__': ["Either both 'calendar_year' and 'calendar_week' must be set, or none of them."]}
+        undefined_asdf_field = {'undefined_fields': {'message': "These provided fields are not defined in the API.", 'fields': ['asdf']}}
+        for machine in self.machines:
+            with self.subTest(machine=machine):
+                base_url = reverse('machine_detail', args=[machine.pk])
+                assert_error_response_contains(f"{base_url}?asdf=asdf", expected_json_dict={
+                    **undefined_asdf_field})
+                assert_error_response_contains(f"{base_url}?calendar_year=2020&calendar_week=1&asdf=asdf", expected_json_dict={
+                    **undefined_asdf_field})
+
+                assert_error_response_contains(f"{base_url}?calendar_year=1&calendar_week=0", expected_json_dict={
+                    'field_errors': {'calendar_week': [value_greater_or_equal_1], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=2020&calendar_week=-1", expected_json_dict={
+                    'field_errors': {'calendar_week': [value_greater_or_equal_1], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=2020&calendar_week=0", expected_json_dict={
+                    'field_errors': {'calendar_week': [value_greater_or_equal_1], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=2019&calendar_week=53", expected_json_dict={
+                    'field_errors': {'calendar_week': ["53 is not a valid week number for the year 2019."]}})
+                assert_error_response_contains(f"{base_url}?calendar_year=2019&calendar_week=1000", expected_json_dict={
+                    'field_errors': {'calendar_week': [value_less_or_equal_53], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=9999&calendar_week=53", expected_json_dict={
+                    'field_errors': {'calendar_week': ["53 is not a valid week number for the year 9999."]}})
+                assert_error_response_contains(f"{base_url}?calendar_year=2020&calendar_week=qwer", expected_json_dict={
+                    'field_errors': {'calendar_week': [value_not_int], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=2019&calendar_week=53&asdf=asdf", expected_json_dict={
+                    'field_errors': {'calendar_week': ["53 is not a valid week number for the year 2019."]}, **undefined_asdf_field})
+
+                assert_error_response_contains(f"{base_url}?calendar_year=-1&calendar_week=1", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_greater_or_equal_1], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=0&calendar_week=53", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_greater_or_equal_1], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=10000&calendar_week=1", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_less_or_equal_9999], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=qwer&calendar_week=1", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_not_int], **both_fields_must_be_set}})
+                assert_error_response_contains(f"{base_url}?calendar_year=qwer&calendar_week=1&asdf=asdf", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_not_int], **both_fields_must_be_set}, **undefined_asdf_field})
+
+                assert_error_response_contains(f"{base_url}?calendar_year=-0&calendar_week=-0", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_greater_or_equal_1], 'calendar_week': [value_greater_or_equal_1]}})
+                assert_error_response_contains(f"{base_url}?calendar_year=0&calendar_week=54", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_greater_or_equal_1], 'calendar_week': [value_less_or_equal_53]}})
+                assert_error_response_contains(f"{base_url}?calendar_year=10000&calendar_week=0", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_less_or_equal_9999], 'calendar_week': [value_greater_or_equal_1]}})
+                assert_error_response_contains(f"{base_url}?calendar_year=10000&calendar_week=1000", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_less_or_equal_9999], 'calendar_week': [value_less_or_equal_53]}})
+                assert_error_response_contains(f"{base_url}?calendar_year=qwer&calendar_week=asdf", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_not_int], 'calendar_week': [value_not_int]}})
+                assert_error_response_contains(f"{base_url}?calendar_year=10000&calendar_week=1000&asdf=asdf", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_less_or_equal_9999], 'calendar_week': [value_less_or_equal_53]}, **undefined_asdf_field})
+                assert_error_response_contains(f"{base_url}?calendar_year=qwer&calendar_week=asdf&asdf=asdf", expected_json_dict={
+                    'field_errors': {'calendar_year': [value_not_int], 'calendar_week': [value_not_int]}, **undefined_asdf_field})
+
+
+class TestMachineDetailViewWithInternalMachines(TestCase):
+
     def test_only_internal_users_can_view_internal_machines(self):
         self.assertGreaterEqual(MachineType.objects.count(), 1)
         for machine_type in MachineType.objects.all():
@@ -207,7 +314,7 @@ class TestMachineDetailView(TestCase):
                 self.client.force_login(user)
 
                 machine = Machine.objects.create(name=f"{machine_type} 1", machine_type=machine_type)
-                machine_detail_url = reverse('machine_detail', args=[2022, 1, machine.pk])
+                machine_detail_url = reverse('machine_detail', args=[machine.pk])
 
                 # User should be allowed when machine is not internal
                 response = self.client.get(machine_detail_url)

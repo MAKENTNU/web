@@ -6,7 +6,7 @@ from typing import Type
 from unittest.mock import patch
 
 from django.http import HttpResponse
-from django.test import TestCase
+from django.test import Client, TestCase
 from django.utils import timezone
 from django.utils.dateparse import parse_time
 from django_hosts import reverse
@@ -14,13 +14,13 @@ from django_hosts import reverse
 from news.models import Event, TimePlace
 from users.models import User
 from util.locale_utils import iso_datetime_format, parse_datetime_localized
+from util.test_utils import set_without_duplicates
 from ..utility import post_request_with_user, request_with_user
-from ...forms import ReservationForm
+from ...forms import ReservationForm, ReservationListQueryForm
 from ...models.course import Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
 from ...templatetags.reservation_extra import can_change_reservation
-from ...views.admin.reservation import AdminReservationMAKEListView
 from ...views.reservation.reservation import ReservationCreateView, ReservationUpdateView
 
 
@@ -452,40 +452,120 @@ class TestReservationUpdateView(ReservationCreateOrUpdateViewTestBase):
         self.assertEqual(Reservation.objects.first().special_text, "Test2")
 
 
-class TestAdminReservationMAKEListView(TestCase):
+class TestReservationListView(TestCase):
 
-    def test_get_MAKE_reservations(self):
-        user = User.objects.create_user("test")
-        printer_machine_type = MachineType.objects.get(pk=1)
-        Quota.objects.create(machine_type=printer_machine_type, number_of_reservations=10, ignore_rules=True, user=user)
-        user.add_perms('make_queue.can_create_event_reservation')
-        event = Event.objects.create(title="Test_event")
+    def setUp(self):
         now = timezone.localtime()
-        timeplace = TimePlace.objects.create(event=event, start_time=now + timedelta(hours=1),
-                                             end_time=now + timedelta(hours=2))
-        printer = Machine.objects.create(machine_type=printer_machine_type, machine_model="Ultimaker")
-        Printer3DCourse.objects.create(user=user, username=user.username, name=user.get_full_name(), date=now)
-        special_reservation = Reservation.objects.create(
-            machine=printer, user=user,
+        # See the `0015_machinetype.py` migration for which MachineTypes are created by default
+        printer_machine_type = MachineType.objects.get(pk=1)
+        sewing_machine_type = MachineType.objects.get(pk=2)
+
+        self.admin = User.objects.create_user("admin")
+        self.admin.add_perms('make_queue.can_create_event_reservation')
+        self.user = User.objects.create_user("user")
+
+        self.admin_client = Client()
+        self.user_client = Client()
+        self.admin_client.force_login(self.admin)
+        self.user_client.force_login(self.user)
+
+        Printer3DCourse.objects.create(user=self.admin, username=self.admin.username, date=now)
+        Printer3DCourse.objects.create(user=self.user, username=self.user.username, date=now)
+        Quota.objects.create(all=True, machine_type=printer_machine_type, number_of_reservations=10, ignore_rules=True)
+        Quota.objects.create(all=True, machine_type=sewing_machine_type, number_of_reservations=10, ignore_rules=True)
+
+        event = Event.objects.create(title="Test_event")
+        time_place = TimePlace.objects.create(event=event, start_time=now + timedelta(hours=1), end_time=now + timedelta(hours=2))
+
+        printer = Machine.objects.create(name="Blobbin'", machine_model="Ultimaker", machine_type=printer_machine_type)
+        self.special_reservation_by_admin = Reservation.objects.create(
+            machine=printer, user=self.admin,
             start_time=now + timedelta(hours=1),
             end_time=now + timedelta(hours=2),
             special=True, special_text="Test",
         )
-        normal_reservation = Reservation.objects.create(
-            machine=printer, user=user,
+        self.normal_reservation_by_admin = Reservation.objects.create(
+            machine=printer, user=self.admin,
             start_time=now + timedelta(hours=2),
             end_time=now + timedelta(hours=3),
         )
-        event_reservation = Reservation.objects.create(
-            machine=printer, user=user,
+        self.event_reservation_by_admin = Reservation.objects.create(
+            machine=printer, user=self.admin,
             start_time=now + timedelta(hours=3),
             end_time=now + timedelta(hours=4),
-            event=timeplace,
+            event=time_place,
+        )
+        self.normal_reservation_by_user = Reservation.objects.create(
+            machine=printer, user=self.user,
+            start_time=now + timedelta(hours=4),
+            end_time=now + timedelta(hours=5),
         )
 
-        context_data = AdminReservationMAKEListView.as_view()(request_with_user(user)).context_data
-        self.assertEqual(context_data["is_MAKE"], True)
-        self.assertSetEqual(set(context_data["reservations"]), {special_reservation, event_reservation})
+        sewing_machine = Machine.objects.create(name="Bobbin hehe", machine_model="Janome", machine_type=sewing_machine_type)
+        self.sewing_reservation_by_admin = Reservation.objects.create(
+            machine=sewing_machine, user=self.admin,
+            start_time=now + timedelta(hours=1),
+            end_time=now + timedelta(hours=2),
+        )
+        self.sewing_reservation_by_user = Reservation.objects.create(
+            machine=sewing_machine, user=self.user,
+            start_time=now + timedelta(hours=2),
+            end_time=now + timedelta(hours=3),
+        )
+
+        self.Owner = ReservationListQueryForm.Owner
+        self.base_url = reverse('reservation_list')
+        self.my_reservations_url = f"{self.base_url}?owner={self.Owner.ME}"
+        self.MAKEs_reservations_url = f"{self.base_url}?owner={self.Owner.MAKE}"
+
+    # noinspection PyPep8Naming
+    def assert_context_has(self, response, *, reservations: set[Reservation], reservations_owned_by_MAKE: bool, has_admin_perms: bool):
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        context = response.context
+        self.assertSetEqual(set_without_duplicates(self, context['reservations']), reservations)
+        self.assertEqual(context['reservations_owned_by_MAKE'], reservations_owned_by_MAKE)
+        self.assertEqual(context['has_admin_perms'], has_admin_perms)
+
+    def test_responds_with_expected_context_data_for_all_owner_param_choices(self):
+        # owner=ReservationListQueryForm.Owner.MAKE
+        self.assertEqual(self.user_client.get(self.MAKEs_reservations_url).status_code, HTTPStatus.FORBIDDEN)
+
+        self.assert_context_has(self.admin_client.get(self.MAKEs_reservations_url),
+                                reservations={self.special_reservation_by_admin, self.event_reservation_by_admin},
+                                reservations_owned_by_MAKE=True, has_admin_perms=True)
+
+        # owner=ReservationListQueryForm.Owner.ME
+        self.assert_context_has(self.user_client.get(self.my_reservations_url),
+                                reservations={self.normal_reservation_by_user, self.sewing_reservation_by_user},
+                                reservations_owned_by_MAKE=False, has_admin_perms=False)
+        self.assert_context_has(self.admin_client.get(self.my_reservations_url),
+                                reservations={self.special_reservation_by_admin, self.normal_reservation_by_admin, self.event_reservation_by_admin,
+                                              self.sewing_reservation_by_admin},
+                                reservations_owned_by_MAKE=False, has_admin_perms=True)
+
+    def test_responds_with_expected_query_parameter_errors(self):
+        def assert_error_response_contains(client_: Client, *, query: str, expected_json_dict: dict):
+            url = f"{self.base_url}?{query}" if query else self.base_url
+            response = client_.get(url)
+            self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+            self.assertDictEqual(response.json(), expected_json_dict)
+
+        field_required = "Feltet er påkrevet."
+        qwer_invalid = "Velg et gyldig valg. qwer er ikke et av de tilgjengelige valgene."
+        undefined_asdf_field = {'undefined_fields': {'message': "These provided fields are not defined in the API.", 'fields': ['asdf']}}
+        for user, client in ((self.admin, self.admin_client),
+                             (self.user, self.user_client)):
+            with self.subTest(user=user):
+                assert_error_response_contains(client, query="", expected_json_dict={
+                    'field_errors': {'owner': [field_required]}})
+                assert_error_response_contains(client, query="owner=qwer", expected_json_dict={
+                    'field_errors': {'owner': [qwer_invalid]}})
+                assert_error_response_contains(client, query="asdf=asdf", expected_json_dict={
+                    'field_errors': {'owner': [field_required]}, **undefined_asdf_field})
+                assert_error_response_contains(client, query="owner=qwer&asdf=asdf", expected_json_dict={
+                    'field_errors': {'owner': [qwer_invalid]}, **undefined_asdf_field})
+                assert_error_response_contains(client, query=f"owner={self.Owner.ME}&asdf=asdf", expected_json_dict={
+                    **undefined_asdf_field})
 
 
 class TestAPIReservationMarkFinishedView(TestCase):

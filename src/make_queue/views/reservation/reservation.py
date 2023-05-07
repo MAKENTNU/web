@@ -4,17 +4,19 @@ from math import ceil
 
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _, ngettext
 from django.views.generic import DeleteView, FormView, ListView, TemplateView, UpdateView
+from django_hosts import reverse
 
 from news.models import TimePlace
 from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
-from util.view_utils import PreventGetRequestsMixin
-from ...forms import ReservationFindFreeSlotsForm, ReservationForm
+from util.view_utils import PreventGetRequestsMixin, QueryParameterFormMixin, UTF8JsonResponse
+from ...forms import ReservationFindFreeSlotsForm, ReservationForm, ReservationListQueryForm
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Reservation, ReservationRule
 from ...templatetags.reservation_extra import calendar_url_reservation, can_change_reservation, can_delete_reservation, can_mark_reservation_finished
@@ -229,10 +231,10 @@ class APIReservationDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin,
                     message = _("Cannot delete reservation when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
+            return UTF8JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.delete()
-        return JsonResponse({}, status=HTTPStatus.OK)
+        return UTF8JsonResponse({}, status=HTTPStatus.OK)
 
 
 class ReservationUpdateView(ReservationCreateOrUpdateView):
@@ -240,6 +242,11 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
     new_reservation = False
 
     reservation: Reservation
+
+    @property
+    def success_url(self):
+        owner_param = urlencode({'owner': ReservationListQueryForm.Owner.ME})
+        return f"{reverse('reservation_list')}?{owner_param}"
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
@@ -257,7 +264,7 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
         if can_change_reservation(reservation, request.user):
             return super().dispatch(request, *args, **kwargs)
         else:
-            return redirect('reservation_my_list')
+            return HttpResponseRedirect(self.success_url)
 
     def form_valid(self, form, **kwargs):
         """
@@ -269,11 +276,11 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
         reservation = self.reservation
         # The user is not allowed to change the machine for a reservation
         if reservation.machine != form.cleaned_data["machine"]:
-            return redirect('reservation_my_list')
+            return HttpResponseRedirect(self.success_url)
 
         # If the reservation has begun, the user is not allowed to change the start time
         if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
-            return redirect('reservation_my_list')
+            return HttpResponseRedirect(self.success_url)
 
         reservation.comment = form.cleaned_data["comment"]
 
@@ -306,24 +313,59 @@ class APIReservationMarkFinishedView(PermissionRequiredMixin, PreventGetRequests
                 message = _("Cannot mark reservation as finished when it has already ended.")
             else:
                 message = None
-            return JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
+            return UTF8JsonResponse({'message': message} if message else {}, status=HTTPStatus.BAD_REQUEST)
 
         reservation.end_time = timezone.localtime()
         reservation.save()
-        return JsonResponse({}, status=HTTPStatus.OK)
+        return UTF8JsonResponse({}, status=HTTPStatus.OK)
 
 
-class ReservationMyListView(LoginRequiredMixin, ListView):
-    """View for seeing the user's reservations."""
+class ReservationListView(PermissionRequiredMixin, QueryParameterFormMixin, ListView):
+    """View for listing either the user's reservations or MAKE's."""
     model = Reservation
+    form_class = ReservationListQueryForm
     template_name = 'make_queue/reservation_list.html'
     context_object_name = 'reservations'
+    extra_context = {
+        'ReservationOwner': ReservationListQueryForm.Owner,
+    }
+
+    def has_permission(self):
+        self.validate_query_params()
+        if self._query_param_errors:
+            return self.form_invalid()
+
+        match self.query_params['owner']:
+            case ReservationListQueryForm.Owner.ME:
+                return self.request.user.is_authenticated
+            case ReservationListQueryForm.Owner.MAKE:
+                return self.user_has_admin_perms()
+
+    def user_has_admin_perms(self):
+        return self.request.user.has_perm('make_queue.can_create_event_reservation')
 
     def get_queryset(self):
-        filter_query = Q(user=self.request.user)
-        if not self.request.user.has_perm('make_queue.can_create_event_reservation'):
-            filter_query &= Q(event=None, special=False)
-        return Reservation.objects.filter(filter_query).order_by('-end_time', '-start_time')
+        non_admin_reservations_query = Q(event=None, special=False)
+
+        match self.query_params['owner']:
+            case ReservationListQueryForm.Owner.ME:
+                filter_query = Q(user=self.request.user)
+                if not self.user_has_admin_perms():
+                    filter_query &= non_admin_reservations_query
+                queryset = Reservation.objects.filter(filter_query)
+
+            case ReservationListQueryForm.Owner.MAKE:
+                queryset = Reservation.objects.exclude(non_admin_reservations_query)
+
+        # noinspection PyUnboundLocalVariable
+        return queryset.order_by('-end_time', '-start_time')
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(**{
+            'reservations_owned_by_MAKE': self.query_params['owner'] == ReservationListQueryForm.Owner.MAKE,
+            'has_admin_perms': self.user_has_admin_perms(),
+            **kwargs,
+        })
 
 
 class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):

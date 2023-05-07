@@ -1,6 +1,8 @@
+import datetime
+
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import Q
+from django.db.models import Q, TextChoices
 from django.db.models.functions import Concat
 from django.utils import timezone
 from django.utils.text import capfirst
@@ -11,6 +13,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from news.models import TimePlace
 from users.models import User
+from util.locale_utils import last_week_of_year, year_and_week_to_monday
 from util.templatetags.datetime_tags import long_datetime
 from web.widgets import (
     Direction, DirectionalCheckboxSelectMultiple, MazeMapSearchInput, SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput,
@@ -19,7 +22,7 @@ from web.widgets import (
 from .formfields import UserModelChoiceField
 from .models.course import Printer3DCourse
 from .models.machine import Machine, MachineType
-from .models.reservation import Quota, ReservationRule
+from .models.reservation import Quota, Reservation, ReservationRule
 
 
 class ReservationForm(forms.Form):
@@ -323,3 +326,87 @@ class ChangeMachineForm(MachineFormBase):
             cleaned_data['info_message_date'] = timezone.localtime()
 
         return cleaned_data
+
+
+class MachineDetailQueryForm(forms.Form):
+    calendar_year = forms.IntegerField(required=False, min_value=datetime.MINYEAR, max_value=datetime.MAXYEAR)
+    calendar_week = forms.IntegerField(required=False, min_value=1, max_value=53)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        calendar_year = cleaned_data.get('calendar_year')
+        calendar_week = cleaned_data.get('calendar_week')
+
+        match calendar_year, calendar_week:
+            case None, int():
+                raise self._get_all_fields_must_be_set_validation_error()
+            case int(), None:
+                raise self._get_all_fields_must_be_set_validation_error()
+
+            case int(), int():
+                invalid_week = calendar_week > last_week_of_year(calendar_year)
+                if not invalid_week:
+                    try:
+                        year_and_week_to_monday(calendar_year, calendar_week)
+                    except ValueError:
+                        invalid_week = True
+
+                if invalid_week:
+                    raise forms.ValidationError({
+                        'calendar_week': forms.ValidationError(f"{calendar_week} is not a valid week number for the year {calendar_year}.",
+                                                               code='invalid_calendar_week'),
+                    })
+
+        return cleaned_data
+
+    @staticmethod
+    def _get_all_fields_must_be_set_validation_error():
+        return forms.ValidationError("Either both 'calendar_year' and 'calendar_week' must be set, or none of them.",
+                                     code='all_or_no_fields_must_be_set')
+
+
+class APIMachineDataQueryForm(forms.Form):
+    exclude_reservation = forms.ModelChoiceField(
+        Reservation.objects.all(),
+        required=False,
+        error_messages={
+            'invalid_choice': "Reservation with pk=%(value)s was not found."
+        },
+    )
+
+
+class ReservationListQueryForm(forms.Form):
+    class Owner(TextChoices):
+        ME = "me", "Me"
+        MAKE = "MAKE", "MAKE"
+
+    owner = forms.TypedChoiceField(choices=Owner.choices, coerce=Owner)
+
+
+class APIReservationListQueryForm(forms.Form):
+    start_date = forms.DateTimeField()
+    end_date = forms.DateTimeField()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date and end_date:
+            if start_date > end_date:
+                code = 'invalid_relative_to_other_field'
+                raise forms.ValidationError({
+                    'start_date': forms.ValidationError("This must be before 'end_date'.", code=code),
+                    'end_date': forms.ValidationError("This must be after 'start_date'.", code=code),
+                })
+
+        return cleaned_data
+
+
+class AdminQuotaPanelQueryForm(forms.Form):
+    user = forms.ModelChoiceField(
+        User.objects.all(),
+        error_messages={
+            'invalid_choice': "User with pk=%(value)s was not found."
+        },
+    )

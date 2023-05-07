@@ -32,6 +32,11 @@ A summary of changes made to the codebase, grouped per deployment.
 - Enabled automated code quality checks from [Code Climate](https://codeclimate.com/quality)
 - Renamed lots of views, forms and templates to comply with
   [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
+- Changed multiple pages' URLs to use [query parameters](https://en.wikipedia.org/wiki/Query_string),
+  instead of having multiple distinct paths for practically the same page
+  (see [#650](https://github.com/MAKENTNU/web/pull/650) for a list of all the URLs affected)
+  - Permanent redirects have been added for the URLs deemed most relevant, to redirect from the old to the new URL; see [a list of the added URLs in
+    the code](https://github.com/MAKENTNU/web/pull/650/files#diff-37d0e0a00e828360d35d68a7ada510a98e03252045f3d51d36a81fedfaea7907R111-R115)
 - Changed some URLs so that they all consistently use `add` (instead of `create`) and `change` (instead of `edit` or `update`),
   to comply with [the style guide](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#endpoint-pathroute)
 - Made the use of add/change verbs consistent among page titles and buttons, and some other parts of the website's UI

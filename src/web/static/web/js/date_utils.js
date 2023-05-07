@@ -84,7 +84,11 @@ Date.prototype.previousWeek = function () {
 };
 
 function zeroPad(value) {
-    return value < 10 ? `0${value}` : `${value}`;
+    /**
+     * Converts `value` to a string and pads the start of it with zeros, so that it's *at least* **2** characters long.
+     * Intended to be used for ints between 0 and 99 (both inclusive).
+     */
+    return String(value).padStart(2, "0");
 }
 
 Date.prototype.timeString = function () {
@@ -105,7 +109,8 @@ Date.prototype.djangoFormat = function () {
     /**
      * Returns a string of the date in the format `YYYY-MM-DD HH:mm`, which is one of the formats Django accepts
      */
-    return `${this.getFullYear()}-${this.getMonth() + 1}-${this.getDate()} ${zeroPad(this.getHours())}:${zeroPad(this.getMinutes())}`;
+    return `${String(this.getFullYear()).padStart(4, "0")}-${zeroPad(this.getMonth() + 1)}-${zeroPad(this.getDate())}`
+        + ` ${zeroPad(this.getHours())}:${zeroPad(this.getMinutes())}`;
 };
 
 Date.prototype.getMonthText = function () {

@@ -6,7 +6,7 @@
 
 
 {% block title %}
-    {% if is_MAKE %}
+    {% if reservations_owned_by_MAKE %}
         {% translate "MAKE NTNU reservations" %} | {% translate "Admin panel" %}
     {% else %}
         {% translate "My reservations" %}
@@ -27,12 +27,12 @@
     <div class="ui container">
 
         <div class="ui huge header">
-            {% if is_MAKE %}
+            {% if reservations_owned_by_MAKE %}
                 {% translate "MAKE NTNU reservations" %}
             {% else %}
                 {% translate "My reservations" %}
-                {% if perms.make_queue.can_create_event_reservation %}
-                    <a class="ui primary button" href="{% url 'admin_reservation_MAKE_list' %}">
+                {% if has_admin_perms %}
+                    <a class="ui primary button" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.MAKE }}">
                         {% translate "View MAKE's reservations" %}
                     </a>
                 {% endif %}
@@ -59,7 +59,7 @@
             <tr>
                 <th>{% translate "Reservation" %}</th>
                 <th>{% translate "Time" %}</th>
-                {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
+                {% if reservations_owned_by_MAKE or has_admin_perms %}
                     <th>{% translate "Information" %}</th>
                 {% endif %}
                 <th>{% translate "View in calendar" %}</th>
@@ -92,7 +92,7 @@
                             <div>&ndash;&nbsp; {{ reservation.end_time|short_datetime }}</div>
                         {% endif %}
                     </td>
-                    {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
+                    {% if reservations_owned_by_MAKE or has_admin_perms %}
                         <td>
                             {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
                             {% if reservation_text %}
@@ -172,7 +172,7 @@
                             <div>&ndash;&nbsp; {{ reservation.end_time|short_datetime }}</div>
                         {% endif %}
 
-                        {% if is_MAKE or perms.make_queue.can_create_event_reservation %}
+                        {% if reservations_owned_by_MAKE or has_admin_perms %}
                             {% firstof reservation.event.event.title reservation.special_text as reservation_text %}
                             {% if reservation_text %}
                                 <div class="ui vertical segment"></div>

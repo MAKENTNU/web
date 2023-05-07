@@ -29,7 +29,7 @@
             {% endif %}
         </div>
     </a>
-    <a class="item" href="{% url 'reservation_my_list' %}">
+    <a class="item" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.ME }}">
         <i class="large middle aligned make-col-yellow list ul icon"></i>
         <div class="content">
             <div class="header">{% translate "My reservations" %}</div>
@@ -57,7 +57,7 @@
                 </h4>
                 {% for other_machine in other_machines %}
                     <a class="item"
-                       href="{% url 'machine_detail' pk=other_machine.pk year=selected_year week=selected_week %}">
+                       href="{% url 'machine_detail' other_machine.pk %}?calendar_year={{ selected_year }}&calendar_week={{ selected_week }}">
                         {{ other_machine.name }}
                     </a>
                 {% endfor %}

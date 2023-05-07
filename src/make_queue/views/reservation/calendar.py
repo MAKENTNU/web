@@ -1,24 +1,22 @@
-from django.http import HttpResponseRedirect
 from django.views.generic import DetailView
 
-from util.locale_utils import year_and_week_to_monday
+from util.locale_utils import get_current_year_and_week, year_and_week_to_monday
+from util.view_utils import QueryParameterFormMixin
+from ...forms import MachineDetailQueryForm, ReservationListQueryForm
 from ...models.machine import Machine
 from ...models.reservation import Quota
-from ...templatetags.reservation_extra import current_calendar_url, reservation_denied_message
+from ...templatetags.reservation_extra import reservation_denied_message
 
 
-class MachineDetailView(DetailView):
+class MachineDetailView(QueryParameterFormMixin, DetailView):
     """Main view for showing the reservation calendar for a machine."""
     model = Machine
+    form_class = MachineDetailQueryForm
     template_name = 'make_queue/machine_detail.html'
     context_object_name = 'machine'
-
-    redirect_to_current_week = False
-
-    def get(self, request, *args, **kwargs):
-        if self.redirect_to_current_week:
-            return HttpResponseRedirect(current_calendar_url(self.get_object()))
-        return super().get(request, *args, **kwargs)
+    extra_context = {
+        'ReservationOwner': ReservationListQueryForm.Owner,
+    }
 
     def get_queryset(self):
         return Machine.objects.visible_to(self.request.user)
@@ -30,9 +28,11 @@ class MachineDetailView(DetailView):
         :return: context required to show the reservation calendar with controls
         """
         context = super().get_context_data(**kwargs)
-        selected_year = self.kwargs['year']
-        selected_week = self.kwargs['week']
-        machine = self.object
+        machine: Machine = self.object
+        if self.request.GET:
+            selected_year, selected_week = self.query_params['calendar_year'], self.query_params['calendar_week']
+        else:
+            selected_year, selected_week = get_current_year_and_week()
 
         context.update({
             'reservation_denied_message': reservation_denied_message(self.request.user, machine),
