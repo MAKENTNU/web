@@ -2,8 +2,26 @@
 
 A summary of changes made to the codebase, grouped per deployment.
 
-
 ## Unreleased
+
+### New features
+
+- 
+
+### Improvements
+
+- 
+
+### Fixes
+
+- 
+
+### Other changes
+
+-
+
+
+## 2023-05-10 ([#654](https://github.com/MAKENTNU/web/pull/654))
 
 ### New features
 
