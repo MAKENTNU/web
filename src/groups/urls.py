@@ -4,8 +4,13 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.CommitteeList.as_view(), name='committee_list'),
+    path("", views.CommitteeListView.as_view(), name='committee_list'),
     path("<int:pk>/", views.CommitteeDetailView.as_view(), name='committee_detail'),
-    path("<int:pk>/edit/", views.EditCommitteeView.as_view(), name='committee_edit'),
-    path("admin/", views.CommitteeAdminView.as_view(), name='committee_admin'),
+]
+
+# --- Admin URL patterns (imported in `web/urls.py`) ---
+
+adminpatterns = [
+    path("", views.AdminCommitteeListView.as_view(), name='admin_committee_list'),
+    path("<int:pk>/change/", views.CommitteeUpdateView.as_view(), name='committee_update'),
 ]

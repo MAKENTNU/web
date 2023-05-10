@@ -16,7 +16,7 @@ class DataportenOAuth2(OpenIdConnectAuth):
     # (<claim name - returned by `get_user_details()`>, <key for the JSON key/value pair stored through `extra_data`>)
     EXTRA_DATA = OpenIdConnectAuth.EXTRA_DATA + [
         'scope',
-        'username',  # used as the base username for new users; it's set in `get_user_details()` below
+        'username',  # Used as the base username for new users; it's set in `get_user_details()` below
         'email',
         ('name', 'fullname'),
     ]

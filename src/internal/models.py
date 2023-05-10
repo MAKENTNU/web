@@ -1,6 +1,6 @@
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.conf import settings
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, Permission
 from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
@@ -14,6 +14,7 @@ from simple_history.models import HistoricalRecords
 
 from groups.models import Committee
 from users.models import User
+from util.auth_utils import perm_to_str, perms_to_str
 from util.url_utils import reverse_internal
 from web.modelfields import UnlimitedCharField
 from .modelfields import SemesterField
@@ -222,15 +223,12 @@ class SystemAccess(models.Model):
         """
         The URL to change the system access. Depends on the type of system.
 
-        :return: An URL for the page where the access can be changed. Is an empty string if it should not be changed
+        :return: A URL for the page where the access can be changed. Is an empty string if it should not be changed
         """
         if not self.should_be_changed():
             return ""
 
-        # TODO: In the future it would be beneficial to create automated processes for adding, removing and revoking
-        # access to the different systems automatically. E.g. a Slack App for adding/removing the user to the right
-        # channels, or using GSuite APIs to add and remove people from mailing lists.
-        return reverse_internal('edit_system_access', self.member.pk, self.pk)
+        return reverse_internal('system_access_update', self.member.pk, self.pk)
 
     def should_be_changed(self):
         return self.name != self.WEBSITE
@@ -243,6 +241,18 @@ class SecretQuerySet(models.QuerySet):
             F('priority').asc(nulls_last=True),
             Lower('title'),
         )
+
+    def visible_to(self, user: User) -> 'SecretQuerySet[Secret]':
+        all_existing_extra_view_perms = (
+            Permission.objects.filter(secrets_with_extra_view_perm__extra_view_permissions__isnull=False)
+            .distinct()  # Remove duplicates that can appear when filtering on values across tables
+            .select_related('content_type')  # The `content_type` field is used in `perm_to_str()` below
+        )
+        extra_view_perms_user_is_missing = [
+            perm_str for perm_str in all_existing_extra_view_perms
+            if not user.has_perm(perm_to_str(perm_str))
+        ]
+        return self.exclude(extra_view_permissions__in=extra_view_perms_user_is_missing)
 
 
 class Secret(models.Model):
@@ -258,13 +268,33 @@ class Secret(models.Model):
         verbose_name=_("priority"),
         help_text=_("If specified, the secrets are sorted ascending by this value."),
     )
+    extra_view_permissions = models.ManyToManyField(
+        to=Permission,
+        blank=True,
+        related_name='secrets_with_extra_view_perm',
+        verbose_name=_("extra view permissions"),
+        help_text=_(
+            "Extra permissions that are required for viewing the secret."
+            " If a user does not have all the chosen permissions, it will be hidden to them."
+        ),
+    )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     objects = SecretQuerySet.as_manager()
-    history = HistoricalRecords(excluded_fields=['priority', 'last_modified'])
+    history = HistoricalRecords(m2m_fields=[extra_view_permissions], excluded_fields=['priority', 'last_modified'])
+
+    class Meta:
+        permissions = (
+            ('can_view_board_secrets', "Can view secrets that only members of the board need"),
+            ('can_view_dev_secrets', "Can view secrets that only members of the Dev committee need"),
+        )
 
     def __str__(self):
         return str(self.title)
+
+    @property
+    def extra_view_perms_str_tuple(self):
+        return perms_to_str(self.extra_view_permissions.all())
 
 
 class Quote(models.Model):

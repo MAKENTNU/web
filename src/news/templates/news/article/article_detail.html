@@ -30,11 +30,15 @@
     {% endblock google_seo_json %}
 {% endblock extra_head %}
 
+{% block image_internal_label_text %}
+    {% translate "internal"|capfirst context "article" %}
+{% endblock image_internal_label_text %}
+
 {% block admin_page %}
     {% if perms.news.change_article %}
         <div>
-            <a class="ui make-bg-yellow button" href="{% url 'article_edit' news_obj.pk %}">
-                <i class="edit icon"></i>{% translate "Edit" %}
+            <a class="ui make-bg-yellow button" href="{% url 'article_update' news_obj.pk %}">
+                <i class="edit icon"></i>{% translate "Change" %}
             </a>
         </div>
     {% endif %}

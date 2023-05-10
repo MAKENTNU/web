@@ -20,7 +20,7 @@ class CommonContextVariablesTests(TestCase):
 
 class TestLoginRedirect(TestCase):
 
-    def test_front_page_has_no_next_parameter(self):
+    def test_index_page_has_no_next_parameter(self):
         response = self.client.get("/")
         self.assertEqual(response.context['login_next_param'], "")
 

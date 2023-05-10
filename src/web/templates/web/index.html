@@ -9,6 +9,7 @@
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/event_list_contents.css' %}"/>
     <link rel="stylesheet" href="{% static 'news/css/article/article_list_contents.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/news_labels.css' %}"/>
     <link rel="stylesheet" href="{% static 'web/css/index.css' %}"/>
     <script defer src="{% static 'news/js/article/article_list_contents.js' %}"></script>
     <script defer src="{% static 'lib/parallax/parallax.min.js' %}"></script>
@@ -41,7 +42,7 @@
     <div class="make-content-padding">{# Empty div for spacing #}</div>
 
     <div class="ui container">
-        {% include 'news/event/index_event_list_contents.html' with event_dicts=featured_event_dicts ribbon_extra_classes="yellow make-bg-yellow" %}
+        {% include 'news/event/index_event_list_contents.html' with event_dicts=featured_event_dicts date_ribbon_extra_classes="yellow make-bg-yellow" internal_ribbon_extra_classes="blue make-bg-blue" %}
         <hr class="make-bg-yellow event-article-border"/>
     </div>
 

@@ -6,6 +6,8 @@ from django.core.management.commands import test
 class Command(test.Command):
     help = "Discover and run tests in the specified modules or the directory determined by 'settings.TESTS_DIR'."
 
+    # It could be better to override `handle()` instead, but PyCharm's `django_test_manage.py` overrides that method without calling
+    # the super class (this class). It doesn't override `execute()`, though, which is why it's overridden here.
     def execute(self, *args, **options):
         relative_tests_dir = settings.TESTS_DIR.relative_to(settings.REPO_DIR)
         if not args:

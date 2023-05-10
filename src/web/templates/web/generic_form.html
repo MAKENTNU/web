@@ -1,5 +1,4 @@
 {% extends base_template %}
-{% load static %}
 {% load i18n %}
 
 
@@ -96,6 +95,8 @@
                     {% endblock fieldset %}
                 {% endif %}
             {% endfor %}
+
+            {% block fields_post_content %}{% endblock fields_post_content %}
 
             <input class="ui {% if right_floated_buttons %}right floated{% endif %} make-bg-yellow submit button"
                    type="submit" value="{{ save_button_text }}"/>

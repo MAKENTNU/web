@@ -5,7 +5,7 @@ from django.test import TestCase
 
 from util.locale_utils import parse_datetime_localized
 from util.test_utils import with_time
-from ...forms import CreateMachineForm, EditMachineForm
+from ...forms.machine import AddMachineForm, ChangeMachineForm
 from ...models.machine import Machine, MachineType
 
 
@@ -24,7 +24,7 @@ class TestCreateMachineForm(TestCase):
         }
 
     def test_valid_machine_form(self):
-        form = CreateMachineForm(data=self.valid_form_data)
+        form = AddMachineForm(data=self.valid_form_data)
 
         self.assertTrue(form.is_valid())
 
@@ -32,7 +32,7 @@ class TestCreateMachineForm(TestCase):
         form_data = self.valid_form_data
         form_data['stream_name'] = "invalid form"
 
-        form = CreateMachineForm(data=form_data)
+        form = AddMachineForm(data=form_data)
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
@@ -44,7 +44,7 @@ class TestCreateMachineForm(TestCase):
         form_data = self.valid_form_data
         form_data['stream_name'] = "schrödinger"
 
-        form = CreateMachineForm(data=form_data)
+        form = AddMachineForm(data=form_data)
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
@@ -57,7 +57,7 @@ class TestCreateMachineForm(TestCase):
         form_data['machine_type'] = self.printer_machine_type
         form_data['stream_name'] = ""
 
-        form = CreateMachineForm(data=form_data)
+        form = AddMachineForm(data=form_data)
 
         self.assertErrorCodeInForm(
             field_name='stream_name',
@@ -70,7 +70,7 @@ class TestCreateMachineForm(TestCase):
         form_data['machine_type'] = MachineType.objects.get(pk=2)
         form_data['stream_name'] = ""
 
-        form = CreateMachineForm(data=form_data)
+        form = AddMachineForm(data=form_data)
 
         self.assertTrue(form.is_valid())
         self.assertDictEqual({}, form.errors)
@@ -82,7 +82,7 @@ class TestCreateMachineForm(TestCase):
 
         form_data = self.valid_form_data
         # Default info message date should be now
-        form = CreateMachineForm(data=form_data)
+        form = AddMachineForm(data=form_data)
         machine = form.save()
         self.assertEqual(machine.info_message_date, base_datetime)
 
@@ -93,7 +93,7 @@ class TestCreateMachineForm(TestCase):
 
         form_data = self.valid_form_data
         form_data['info_message_date'] = with_time(base_datetime, "01:00")
-        form = CreateMachineForm(data=form_data)
+        form = AddMachineForm(data=form_data)
         machine = form.save()
         self.assertEqual(machine.info_message_date, with_time(base_datetime, "00:00"))
 
@@ -121,14 +121,14 @@ class TestEditMachineForm(TestCase):
         }
 
     def test_valid_machine_form(self):
-        form = EditMachineForm(instance=self.machine, data=self.valid_form_data)
+        form = ChangeMachineForm(instance=self.machine, data=self.valid_form_data)
         self.assertTrue(form.is_valid())
 
     def test_empty_stream_name_when_3dprinter_returns_false(self):
         form_data = self.valid_form_data
         form_data['stream_name'] = ""
 
-        form = EditMachineForm(instance=self.machine, data=form_data)
+        form = ChangeMachineForm(instance=self.machine, data=form_data)
         self.assertFalse(form.is_valid())
 
     def test_empty_stream_name_when_not_3dprinter_returns_true(self):
@@ -137,7 +137,7 @@ class TestEditMachineForm(TestCase):
         form_data = self.valid_form_data
         form_data['stream_name'] = ""
 
-        form = EditMachineForm(instance=self.machine, data=form_data)
+        form = ChangeMachineForm(instance=self.machine, data=form_data)
         self.assertTrue(form.is_valid())
 
     @mock.patch('django.utils.timezone.now')
@@ -154,7 +154,7 @@ class TestEditMachineForm(TestCase):
         form_data = self.valid_form_data
 
         def assert_editing_machine_makes_info_message_date_equal(datetime_obj: datetime):
-            form = EditMachineForm(instance=self.machine, data=form_data)
+            form = ChangeMachineForm(instance=self.machine, data=form_data)
             self.machine = form.save()
             self.assertEqual(self.machine.info_message_date, datetime_obj)
 

@@ -51,8 +51,8 @@ SOCIAL_AUTH_DATAPORTEN_SECRET = ''  # "Client Secret" in the same configuration
 # These will be internationalized since `reverse_lazy()` is used
 # (i.e. these will be English URLs when the user is on the English version of the website, and vice versa for Norwegian)
 LOGIN_URL = reverse_lazy('login')
-LOGIN_REDIRECT_URL = reverse_lazy('front_page')
-LOGOUT_REDIRECT_URL = reverse_lazy('front_page')
+LOGIN_REDIRECT_URL = reverse_lazy('index_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('index_page')
 
 # NOTE: This must be changed in production!
 CHECKIN_KEY = ''  # (custom setting)
@@ -64,16 +64,16 @@ FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is
 
 # The `SESSION_COOKIE_DOMAIN`, `CSRF_COOKIE_DOMAIN` and `LANGUAGE_COOKIE_DOMAIN` will be set to this value
 # NOTE: This must be changed in production!
-COOKIE_DOMAIN = ".makentnu.localhost"  # (custom setting)
+COOKIE_DOMAIN = '.makentnu.localhost'  # (custom setting)
 # The `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` and `LANGUAGE_COOKIE_SECURE` will be set to this value
 # NOTE: This should be set to `True` in production!
 COOKIE_SECURE = False  # (custom setting)
 
 # For `django-hosts` to redirect correctly across subdomains, we have to specify the host we are running on.
 # NOTE: This must be changed in production!
-PARENT_HOST = "makentnu.localhost:8000"
+PARENT_HOST = 'makentnu.localhost:8000'
 
-EVENT_TICKET_EMAIL = "ticket@makentnu.no"  # (custom setting)
+EVENT_TICKET_EMAIL = 'ticket@makentnu.no'  # (custom setting)
 
 # Set local settings
 try:
@@ -117,7 +117,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'web.apps.WebAdminConfig',  # replaces 'django.contrib.admin'
+    'web.apps.WebAdminConfig',  # Replaces 'django.contrib.admin'
 
     # Third-party packages with significant effect on Django's functionality
     'django_hosts',
@@ -125,7 +125,7 @@ INSTALLED_APPS = [
 
     # Other third-party packages
     'social_django',
-    'ckeditor',  # must be listed after `web.apps.WebConfig` to make the custom `ckeditor/config.js` apply
+    'ckeditor',  # Must be listed after `web.apps.WebConfig` to make the custom `ckeditor/config.js` apply
     'ckeditor_uploader',
     'phonenumber_field',
     'simple_history',
@@ -212,7 +212,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'web/templates',  # for overriding Django admin templates
+            BASE_DIR / 'web/templates',  # For overriding Django admin templates
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -340,13 +340,13 @@ CONSTANCE_CONFIG_FIELDSETS = (
 USES_DATAPORTEN_AUTH = SOCIAL_AUTH_DATAPORTEN_KEY and SOCIAL_AUTH_DATAPORTEN_SECRET  # (custom setting)
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
-SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('front_page')
-SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('front_page')
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('index_page')
+SOCIAL_AUTH_NEW_USER_REDIRECT_URL = reverse_lazy('index_page')
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 
 # This URL is the value of the `end_session_endpoint` key from https://auth.dataporten.no/.well-known/openid-configuration
 # (see https://docs.feide.no/service_providers/manage/openid_connect/redir_etter_logout.html)
-DATAPORTEN_LOGOUT_URL = "https://auth.dataporten.no/openid/endsession"  # (custom setting)
+DATAPORTEN_LOGOUT_URL = 'https://auth.dataporten.no/openid/endsession'  # (custom setting)
 
 # The following code is based on
 # https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/demosite/settings.py#L111-L127

@@ -32,7 +32,7 @@ class Page(models.Model):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('page_detail', args=[self.pk], host='docs')
+        return reverse('documentation_page_detail', args=[self.pk], host='docs')
 
     @classmethod
     def get_main_page(cls) -> 'Page':
@@ -60,4 +60,4 @@ class Content(models.Model):
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     def get_absolute_url(self):
-        return reverse('page_content_detail', args=[self.page.pk, self.pk], host='docs')
+        return reverse('documentation_page_content_detail', args=[self.page.pk, self.pk], host='docs')

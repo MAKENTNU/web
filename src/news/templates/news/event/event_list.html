@@ -7,14 +7,15 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/event_list_contents.css' %}"/>
+    <link rel="stylesheet" href="{% static 'news/css/news_labels.css' %}"/>
 {% endblock extra_head %}
 
 {% block body %}
     {% translate "Upcoming events" as upcoming_title %}
     {% translate "No upcoming events" as no_upcoming_events %}
-    {% include 'news/event/event_list_contents.html' with event_dicts=future_event_dicts title=upcoming_title no_events_message=no_upcoming_events ribbon_extra_classes="yellow make-bg-yellow" %}
+    {% include 'news/event/event_list_contents.html' with event_dicts=future_event_dicts title=upcoming_title no_events_message=no_upcoming_events date_ribbon_extra_classes="yellow make-bg-yellow" internal_ribbon_extra_classes="blue make-bg-blue" %}
 
     {% translate "Previous events" as previous_title %}
     {% translate "No previous events" as no_previous_events %}
-    {% include 'news/event/event_list_contents.html' with event_dicts=past_event_dicts title=previous_title no_events_message=no_previous_events ribbon_extra_classes="grey make-bg-ligrey make-col-dkgrey" %}
+    {% include 'news/event/event_list_contents.html' with event_dicts=past_event_dicts title=previous_title no_events_message=no_previous_events date_ribbon_extra_classes="grey make-bg-ligrey make-col-dkgrey" internal_ribbon_extra_classes="grey make-bg-ligrey make-col-dkgrey" %}
 {% endblock body %}

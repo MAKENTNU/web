@@ -16,11 +16,8 @@ urlpatterns = [
     path(".well-known/security.txt", TemplateView.as_view(template_name='web/security.txt', content_type='text/plain')),
 
     *debug_toolbar_urls(),
-    path("i18n/", decorator_include(
-        staff_member_required,
-        'django.conf.urls.i18n'
-    )),
-    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # for development only; Nginx is used in production
+    path("i18n/", decorator_include(staff_member_required, 'django.conf.urls.i18n')),
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),  # For development only; Nginx is used in production
 
     *ckeditor_uploader_urls(),
 ]

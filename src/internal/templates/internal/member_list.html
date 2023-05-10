@@ -43,7 +43,7 @@
         <h1 class="title-with-buttons">
             {% translate "Member list" %}
             {% if perms.internal.add_member %}
-                <a class="ui right floated make-bg-yellow button" href="{% url 'create_member' %}">
+                <a class="ui right floated green button" href="{% url 'member_create' %}">
                     <i class="plus icon"></i>{% translate "Add member" %}
                 </a>
             {% endif %}
@@ -195,7 +195,7 @@
                     data-system-accesses="{% get_system_accesses member request.user %}"
                     data-edit-url="
                             {% if member.user == request.user or perms.internal.change_member %}
-                                {% url 'edit_member' member.pk %}
+                                {% url 'member_update' member.pk %}
                             {% endif %}"
                     data-set-quit-url="
                             {% if not member.retired and not member.quit and perms.internal.can_edit_group_membership %}
@@ -207,7 +207,7 @@
                                 {% url 'member_retire' member.pk %}
                             {% endif %}"
                     data-can-undo-retired="{% if member.retired and perms.internal.can_edit_group_membership %}true{% endif %}"
-                    data-edit-status-url="{% url 'edit_member_status' member.pk %}"
+                    data-edit-status-url="{% url 'member_status_update' member.pk %}"
                 >
                     <td>{{ member.user.get_short_full_name }}</td>
                     <td class="label-cell">

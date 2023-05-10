@@ -1,0 +1,19 @@
+{% load datetime_tags %}
+
+
+{# Linking `event_ticket_card.css` is required when including this template #}
+
+<div class="time-place content">
+    <a class="calendar-button" href="{% url 'time_place_ical' time_place.event.pk time_place.pk %}" target="_blank">
+        <i class="large make-col-yellow calendar plus outline icon"></i>
+    </a>
+    <b class="time description">
+        <span class="no-wrap">{{ time_place.start_time|long_datetime_no_year }}</span>
+        <span class="no-wrap">&ndash; {{ time_place.end_time|long_datetime_no_year }}</span>
+    </b>
+    <div class="word-breaking hyphenated place description">
+        <a href="{{ time_place.place_url }}" target="_blank">
+            {{ time_place.place }}
+        </a>
+    </div>
+</div>

@@ -21,9 +21,11 @@
     <script>
         {# These variables are used in `machine_detail.js` #}
         var calendarProperties = {
+            machineType: "{{ machine.machine_type.pk }}",
             machine: "{{ machine.pk }}",
+            machineReservationURL: "{% url 'reservation_create' machine.pk %}",
             selection: {% if reservation_denied_message %}false{% else %}true{% endif %},
-            canBreakRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
+            canIgnoreRules: {% if can_ignore_rules %}true{% else %}false{% endif %},
             date: new Date("{{ selected_date|iso_datetime }}"),
         };
     </script>
@@ -47,13 +49,13 @@
             <div class="word-breaking hyphenated machine-title ui huge header">
                 {{ machine.name }}
                 {% if perms.make_queue.change_machine %}
-                    <a href="{% url 'edit_machine' machine.pk %}">
+                    <a href="{% url 'machine_update' machine.pk %}">
                         <i class="small make-col-yellow pencil icon"></i>
                     </a>
                 {% endif %}
                 {% if perms.make_queue.delete_machine %}
                     <a class="delete-modal-button"
-                       data-url="{% url 'delete_machine' machine.pk %}"
+                       data-url="{% url 'machine_delete' machine.pk %}"
                        data-obj-name="{{ machine.name }}">
                         <i class="small red trash icon"></i>
                     </a>

@@ -5,7 +5,7 @@ from web.widgets import CKEditorUploadingWidget
 from .models import Content, Page
 
 
-class CreatePageForm(forms.ModelForm):
+class AddPageForm(forms.ModelForm):
     class Meta:
         model = Page
         fields = ('title', 'created_by')
@@ -77,3 +77,8 @@ class ChangePageVersionForm(forms.ModelForm):
                     'current_content': _("The content does not belong to the given page"),
                 })
         return cleaned_data
+
+
+class DocumentationPageSearchQueryForm(forms.Form):
+    query = forms.CharField(required=False, max_length=1000, strip=False)
+    page = forms.IntegerField(required=False, min_value=1)

@@ -21,20 +21,29 @@ class UrlTests(TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
+            # urlpatterns
             Get(reverse('faq_list'), public=True),
-            Get(reverse('faq_admin_panel'), public=False),
-            Get(reverse('admin_question_list'), public=False),
-            Get(reverse('question_create'), public=False),
+
+            # specific_question_adminpatterns
             *[
                 Get(reverse('question_update', args=[question.pk]), public=False)
                 for question in self.questions
             ],
-            Get(reverse('admin_category_list'), public=False),
-            Get(reverse('category_create'), public=False),
+            # question_adminpatterns
+            Get(reverse('admin_question_list'), public=False),
+            Get(reverse('question_create'), public=False),
+
+            # specific_category_adminpatterns
             *[
                 Get(reverse('category_update', args=[category.pk]), public=False)
                 for category in self.categories
             ],
+            # category_adminpatterns
+            Get(reverse('admin_category_list'), public=False),
+            Get(reverse('category_create'), public=False),
+
+            # adminpatterns
+            Get(reverse('admin_faq_panel'), public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

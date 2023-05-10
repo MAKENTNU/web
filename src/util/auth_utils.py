@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 from django.contrib.auth.models import Permission
 from django.db.models import Q, QuerySet
 
@@ -18,7 +20,7 @@ def _check_perms(filtered_perms: QuerySet[Permission], perm_strings: tuple[str, 
         if len(perm_strings_set) != len(perm_strings):
             raise ValueError("The permission arguments provided contain duplicates")
 
-        perms_not_found = perm_strings_set - {perm_to_str(perm) for perm in filtered_perms}
+        perms_not_found = perm_strings_set - set(perms_to_str(filtered_perms))
         if not perms_not_found:
             # If all the perm arguments were found, it means that the filtered perms contain duplicate
             # combinations of app labels and codenames, in which case it's fine to just return them
@@ -28,10 +30,21 @@ def _check_perms(filtered_perms: QuerySet[Permission], perm_strings: tuple[str, 
 
 
 def get_perm(app_label_and_codename: str) -> Permission:
-    """Find the permission object for an <app_label>.<codename> string."""
+    """Find the permission object for an ``<app_label>.<codename>`` string."""
     return get_perms(app_label_and_codename).get()
 
 
 def perm_to_str(permission: Permission) -> str:
-    """Find the <app_label>.<codename> string for a permission object."""
+    """Find the ``<app_label>.<codename>`` string for a permission object."""
     return f'{permission.content_type.app_label}.{permission.codename}'
+
+
+def perms_to_str(permissions: QuerySet[Permission] | Sequence[Permission]) -> tuple[str]:
+    """Find the ``<app_label>.<codename>`` strings for a collection of permission objects."""
+    if isinstance(permissions, QuerySet):
+        return tuple(
+            f'{app_label}.{codename}' for app_label, codename in
+            permissions.values_list('content_type__app_label', 'codename')
+        )
+    else:
+        return tuple(perm_to_str(perm) for perm in permissions)

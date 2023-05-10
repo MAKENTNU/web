@@ -1,3 +1,5 @@
+from urllib.parse import parse_qsl, urlparse, urlunparse
+
 from ckeditor_uploader import views as ckeditor_views
 from django.conf import settings
 from django.conf.urls.i18n import i18n_patterns
@@ -5,12 +7,78 @@ from django.contrib.auth import views as auth_views
 from django.contrib.auth.decorators import user_passes_test
 from django.core.exceptions import PermissionDenied
 from django.urls import include, path
+from django.utils import regex_helper
+from django.utils.http import urlencode
 from django.views.decorators.cache import never_cache
 from django_hosts import reverse
+from django_hosts.defaults import host
+from django_hosts.middleware import HostsBaseMiddleware
+
+
+def urljoin_query(base_url: str, query: dict | str):
+    """
+    A version of `urljoin() <https://docs.python.org/3/library/urllib.parse.html#urllib.parse.urljoin>`_
+    that adds the query parameters in ``query`` to ``base_url``.
+    """
+    if isinstance(query, str):
+        query = dict(parse_qsl(query.strip().lstrip("?")))
+
+    # Based on https://stackoverflow.com/a/2506477
+    url_parts = list(urlparse(base_url))
+    base_query = dict(parse_qsl(url_parts[4]))
+
+    url_parts[4] = urlencode(base_query | query)
+    return urlunparse(url_parts)
 
 
 def reverse_internal(viewname: str, *args):
     return reverse(viewname, args=args, host='internal', host_args=['i'])
+
+
+def reverse_admin(viewname: str, args=None, **kwargs):
+    return reverse(f'admin:{viewname}', args=args, kwargs=kwargs, host='admin')
+
+
+def reverse_docs(viewname: str, *args):
+    return reverse(viewname, args=args, host='docs')
+
+
+def get_host_object_from_url(url: str) -> host:
+    """
+    This does kind of the opposite of ``django_hosts.resolvers.reverse_host()``
+    (which returns the host part of a URL from :class:`django_hosts.defaults.host` arguments),
+    in that a :class:`django_hosts.defaults.host` instance is returned from the host part of the passed ``url``.
+
+    :raises ValueError: if the passed ``url`` is not an internal URL, i.e. if the URL's host doesn't contain``settings.PARENT_HOST``
+    """
+    url_host = urlparse(url).netloc
+    if settings.PARENT_HOST not in url_host:
+        raise ValueError(f"The passed URL ({url}) must be internal, i.e. {settings.PARENT_HOST} must be part of the URL's host.")
+
+    hosts_middleware = HostsBaseMiddleware(get_response=lambda request: None)
+    host_obj, _kwargs = hosts_middleware.get_host(url_host)
+    return host_obj
+
+
+def get_reverse_host_kwargs_from_url(url: str) -> dict:
+    """
+    :return: A ``dict`` containing the ``host`` and ``host_args`` kwargs that can be passed to ``django_hosts.resolvers.reverse_host()``
+             to return a URL on the same subdomain as the passed ``url``.
+    """
+    host_obj = get_host_object_from_url(url)
+    result__params__tuples = regex_helper.normalize(host_obj.regex)
+    assert len(result__params__tuples) == 1
+    _result, params = result__params__tuples[0]
+    if params:
+        url_host = urlparse(url).netloc
+        subdomain, _rest = url_host.split(settings.PARENT_HOST, maxsplit=1)
+        subdomain = subdomain.strip(".")
+    else:
+        subdomain = None
+    return {
+        'host': host_obj.name,
+        'host_args': subdomain,
+    }
 
 
 # Code based on https://github.com/django/django/blob/9c19aff7c7561e3a82978a272ecdaad40dda5c00/django/contrib/auth/decorators.py#L60-L82

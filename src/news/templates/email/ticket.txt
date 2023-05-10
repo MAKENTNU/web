@@ -11,7 +11,7 @@
     Thank you for registering for this event.
     You can also view your ticket on our website through the following link
 {% endblocktranslate %}: {% get_absolute_uri_for_path request ticket.get_absolute_url %}
-{% url 'cancel_ticket' ticket.pk as cancel_url %}
+{% url 'event_ticket_cancel' ticket.pk as cancel_url %}
 {% blocktranslate trimmed %}
     If you want to cancel your registration, you can do so by following this link
 {% endblocktranslate %}: {% get_absolute_uri_for_path request cancel_url %}

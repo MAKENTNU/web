@@ -11,6 +11,7 @@ const reservations = [];
 const reservationRules = [];
 let canIgnoreRules = false;
 
+const $machineTypeDropdown = $("#machine-type-dropdown");
 const $machineNameDropdown = $("#machine-name-dropdown");
 const $startTimeField = $("#start-time");
 const $startTimeFieldInput = $startTimeField.find("input");
@@ -22,10 +23,10 @@ function getFutureReservations(machineID, forceNewTime) {
     /**
      * Retrieves future reservations and all reservation rules from the server.
      */
-    let jsonUrl = `${LANG_PREFIX}/reservation/json/${machineID}/`;
+    let jsonUrl = `${LANG_PREFIX}/api/reservation/machines/${machineID}/data/`;
     const reservationPK = $("#reservation-form").data("reservation");
     if (reservationPK) {
-        jsonUrl += `${reservationPK}/`;
+        jsonUrl += `?exclude_reservation=${reservationPK}`;
     }
     $.getJSON(jsonUrl, function (data) {
         reservations.length = 0;
@@ -37,8 +38,8 @@ function getFutureReservations(machineID, forceNewTime) {
             });
         });
 
-        calendar.updateCanBreakRules(data.canIgnoreRules);
-        canIgnoreRules = data.canIgnoreRules;
+        canIgnoreRules = data.can_ignore_rules;
+        calendar.updateCanIgnoreRules(canIgnoreRules);
 
         reservationRules.length = 0;
         $.each(data.rules, function (index, value) {
@@ -226,7 +227,7 @@ $("#special-checkbox").checkbox({
     },
 });
 
-$("#machine-type-dropdown").dropdown({
+$machineTypeDropdown.dropdown({
     onChange: function (selectedMachineType, text, $choice) {
         if (!$("#machine-type-dropdown").is(".disabled")) {
             $machineNameDropdown.toggleClass("disabled", false);
@@ -302,15 +303,20 @@ function timeSelectionPopupHTML() {
     return $button;
 }
 
+function getMachineType() {
+    return $machineTypeDropdown.dropdown("get value");
+}
+
 function getMachine() {
     return $machineNameDropdown.dropdown("get value");
 }
 
 const calendar = new ReservationCalendar($(".reservation-calendar"), {
     date: new Date(),
+    machineType: getMachineType(),
     machine: getMachine(),
     selection: true,
-    canBreakRules: false,
+    canIgnoreRules: false,
     selectionPopupContent: timeSelectionPopupHTML,
 });
 

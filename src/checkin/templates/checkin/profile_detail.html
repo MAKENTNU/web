@@ -7,13 +7,17 @@
 
 {% block extra_head %}
     <link rel="stylesheet" href="{% static 'checkin/css/profile_detail.css' %}"/>
-    <!--suppress ES6ConvertVarToLetConst -->
-    <script>
-        {# These variables are used in `profile_detail.js` #}
-        var csrfToken = "{{ csrf_token }}";
-        var registerProfileURL = "{% url 'register_profile' %}";
-    </script>
-    <script defer src="{% static "checkin/js/profile_detail.js" %}"></script>
+    {% if perms.internal.is_internal %}
+        <!--suppress ES6ConvertVarToLetConst -->
+        <script>
+            {# These variables are used in `profile_detail.js` #}
+            var csrfToken = "{{ csrf_token }}";
+            {% comment "This URL is currently not in use; see the comments `checkin/urls.py`" %}
+            var registerProfileURL = "{% url 'admin_api_register_profile' %}";
+            {% endcomment %}
+        </script>
+        <script defer src="{% static "checkin/js/profile_detail.js" %}"></script>
+    {% endif %}
 {% endblock extra_head %}
 
 {% block body %}
@@ -24,7 +28,7 @@
         </h1>
 
         {% if perms.internal.is_internal %}
-            {% include 'checkin/profile_internal.html' %}
+            {% include 'checkin/profile_detail_internal.html' %}
             <br/>
         {% endif %}
 

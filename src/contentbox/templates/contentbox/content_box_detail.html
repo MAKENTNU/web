@@ -13,9 +13,9 @@
 {% block padding_top %}
     <div class="ui container">
         <a class="{% if not user_can_change %}hidden{% endif %} edit-button ui make-bg-yellow button"
-           {% if user_can_change %}href="{% url 'contentbox_edit' contentbox.pk %}"{% endif %}
+           {% if user_can_change %}href="{% url 'content_box_update' contentbox.pk %}"{% endif %}
         >
-            <i class="edit icon"></i>{% translate "Edit" %}
+            <i class="edit icon"></i>{% translate "Change" %}
         </a>
     </div>
 {% endblock padding_top %}

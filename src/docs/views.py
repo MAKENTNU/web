@@ -9,12 +9,13 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, TemplateView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 
-from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, insert_form_field_values
-from .forms import ChangePageVersionForm, CreatePageForm, PageContentForm
+from util.templatetags.string_tags import title_en
+from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin, QueryParameterFormMixin, insert_form_field_values
+from .forms import AddPageForm, ChangePageVersionForm, DocumentationPageSearchQueryForm, PageContentForm
 from .models import Content, MAIN_PAGE_TITLE, Page
 
 
-class SpecificPageBasedViewMixin:
+class DocumentationPageRelatedViewMixin:
     """
     NOTE: When extending this mixin class, it's required to have a ``PageTitle`` path converter named ``title`` as part of the view's path,
     which will be used to query the database for the requested page by title.
@@ -28,7 +29,7 @@ class SpecificPageBasedViewMixin:
     pk_url_kwarg = None
 
 
-class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageDetailView(DocumentationPageRelatedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
@@ -41,12 +42,12 @@ class DocumentationPageDetailView(SpecificPageBasedViewMixin, DetailView):
         return super().get_object(*args, **kwargs)
 
 
-class DocumentationPageHistoryDetailView(SpecificPageBasedViewMixin, DetailView):
-    template_name = 'docs/documentation_page_history.html'
+class DocumentationPageHistoryDetailView(DocumentationPageRelatedViewMixin, DetailView):
+    template_name = 'docs/documentation_page_history_detail.html'
     context_object_name = 'page'
 
 
-class DocumentationPageContentDetailView(SpecificPageBasedViewMixin, DetailView):
+class DocumentationPageContentDetailView(DocumentationPageRelatedViewMixin, DetailView):
     template_name = 'docs/documentation_page_detail.html'
     context_object_name = 'page'
     extra_context = {'MAIN_PAGE_TITLE': MAIN_PAGE_TITLE}
@@ -70,12 +71,9 @@ class DocumentationPageContentDetailView(SpecificPageBasedViewMixin, DetailView)
         return context_data
 
 
-class ChangeDocumentationPageVersionView(PermissionRequiredMixin, SpecificPageBasedViewMixin, UpdateView):
+class DocumentationPageVersionUpdateView(PermissionRequiredMixin, PreventGetRequestsMixin, DocumentationPageRelatedViewMixin, UpdateView):
     permission_required = ('docs.change_page',)
     form_class = ChangePageVersionForm
-
-    def get(self, request, *args, **kwargs):
-        return HttpResponseRedirect(reverse('page_history_detail', args=[self.get_object().pk]))
 
     def get_success_url(self):
         return self.get_object().get_absolute_url()
@@ -84,13 +82,12 @@ class ChangeDocumentationPageVersionView(PermissionRequiredMixin, SpecificPageBa
         return HttpResponseForbidden()
 
 
-class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView):
+class DocumentationPageCreateView(PermissionRequiredMixin, CustomFieldsetFormMixin, CreateView):
     permission_required = ('docs.add_page',)
     model = Page
-    form_class = CreatePageForm
+    form_class = AddPageForm
 
     base_template = 'docs/base.html'
-    form_title = _("Create a New Page")
     narrow = False
     centered_title = False
     back_button_link = reverse_lazy('home')
@@ -100,6 +97,9 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
     def get_form_kwargs(self):
         # Forcefully insert the user into the form
         return insert_form_field_values(super().get_form_kwargs(), {'created_by': self.request.user})
+
+    def get_form_title(self):
+        return title_en(_("Add page"))
 
     def form_invalid(self, form):
         try:
@@ -111,10 +111,10 @@ class CreateDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMix
         return super().form_invalid(form)
 
     def get_success_url(self):
-        return reverse('edit_page', args=[self.object.pk])
+        return reverse('documentation_page_update', args=[self.object.pk])
 
 
-class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin, SpecificPageBasedViewMixin, UpdateView):
+class DocumentationPageUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, DocumentationPageRelatedViewMixin, UpdateView):
     permission_required = ('docs.change_page',)
     form_class = PageContentForm
     template_name = 'docs/documentation_page_form.html'
@@ -139,7 +139,7 @@ class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin
         })
 
     def get_form_title(self):
-        return _("Edit “{title}”").format(title=self.object)
+        return _("Change “{title}”").format(title=self.object)
 
     def get_back_button_link(self):
         return self.get_success_url()
@@ -157,14 +157,16 @@ class EditDocumentationPageView(PermissionRequiredMixin, CustomFieldsetFormMixin
         return self.object.get_absolute_url()
 
 
-class DeleteDocumentationPageView(PermissionRequiredMixin, PreventGetRequestsMixin, SpecificPageBasedViewMixin, DeleteView):
+class DocumentationPageDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DocumentationPageRelatedViewMixin, DeleteView):
     permission_required = ('docs.delete_page',)
     queryset = Page.objects.exclude(title=MAIN_PAGE_TITLE)
     success_url = reverse_lazy('home')
 
 
-class SearchPagesView(TemplateView):
-    template_name = 'docs/search.html'
+class DocumentationPageSearchView(QueryParameterFormMixin, TemplateView):
+    form_class = DocumentationPageSearchQueryForm
+    template_name = 'docs/documentation_page_search.html'
+
     page_size = 10
 
     @staticmethod
@@ -177,9 +179,9 @@ class SearchPagesView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
+        query = self.query_params['query']
+        page = self.query_params['page'] or 1
 
-        query = self.request.GET.get('query', "")
-        page = int(self.request.GET.get('page', 1))
         pages = Page.objects.filter(Q(title__icontains=query) | Q(current_content__content__icontains=query))
         n_pages = ceil(pages.count() / self.page_size)
         context_data.update({

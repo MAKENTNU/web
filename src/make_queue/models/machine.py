@@ -19,10 +19,10 @@ from .course import Printer3DCourse
 
 class MachineTypeQuerySet(models.QuerySet):
 
-    def default_order_by(self):
+    def default_order_by(self) -> 'MachineTypeQuerySet[MachineType]':
         return self.order_by('priority')
 
-    def prefetch_machines(self, *, machine_queryset=None, machines_attr_name: str):
+    def prefetch_machines(self, *, machine_queryset=None, machines_attr_name: str) -> 'MachineTypeQuerySet[MachineType]':
         """
         Returns a ``QuerySet`` where all the machine types' machines have been prefetched
         and can be accessed through the attribute with the same name as ``machines_attr_name``.
@@ -87,7 +87,7 @@ class MachineType(models.Model):
             course_registration.user = user
             course_registration.save()
             return True
-        return user.has_perm('make_queue.add_reservation')  # this will typically only be the case for superusers
+        return user.has_perm('make_queue.add_reservation')  # This will typically only be the case for superusers
 
     @staticmethod
     def can_use_raise3d_printer(user: User | AnonymousUser):
@@ -121,7 +121,7 @@ class MachineType(models.Model):
 
 class MachineQuerySet(models.QuerySet):
 
-    def visible_to(self, user: User):
+    def visible_to(self, user: User) -> 'MachineQuerySet[Machine]':
         if user.has_perm('internal.is_internal'):
             return self.all()
 
@@ -132,7 +132,7 @@ class MachineQuerySet(models.QuerySet):
 
         return self.exclude(exclude_query)
 
-    def default_order_by(self):
+    def default_order_by(self) -> 'MachineQuerySet[Machine]':
         return self.order_by(
             'machine_type__priority',
             F('priority').asc(nulls_last=True),
@@ -245,4 +245,4 @@ class MachineUsageRule(models.Model):
         return _("Usage rules for {machine_type}").format(machine_type=self.machine_type)
 
     def get_absolute_url(self):
-        return reverse('machine_usage_rules_detail', args=[self.machine_type.pk])
+        return reverse('machine_usage_rule_detail', args=[self.machine_type.pk])

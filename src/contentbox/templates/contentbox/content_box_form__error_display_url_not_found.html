@@ -1,0 +1,21 @@
+{% extends 'contentbox/content_box_form.html' %}
+{% load i18n %}
+
+
+{# Overwrite the super block's contents with nothing #}
+{% block extra_head %}{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+        <h3>
+            {{ form_title }}
+        </h3>
+
+        <a class="ui red button" href="{{ index_page_url }}">
+            {% translate "Cancel and go to the front page" %}
+        </a>
+        <a class="ui make-bg-yellow button" href="{{ django_admin_change_url }}">
+            {% translate "Continue changing in Django admin" %}
+        </a>
+    </div>
+{% endblock body %}

@@ -45,7 +45,7 @@ class MultiLingualTextField(models.TextField):
             # Save the content as a JSON object with languages as keys
             return json.dumps(
                 value.languages,
-                ensure_ascii=False,  # prevents replacing unicode characters with \u encoding, which would have messed with searching
+                ensure_ascii=False,  # Prevents replacing unicode characters with \u encoding, which would have messed with searching
             )
         return value
 

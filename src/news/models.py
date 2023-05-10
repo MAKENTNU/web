@@ -88,7 +88,7 @@ class EventQuerySet(NewsBaseQuerySet):
     def future(self) -> 'EventQuerySet[Event]':
         return self.filter(
             timeplaces__end_time__gt=timezone.localtime()
-        ).distinct()  # remove duplicates that can appear when filtering on values across tables
+        ).distinct()  # Remove duplicates that can appear when filtering on values across tables
 
     def past(self) -> 'EventQuerySet[Event]':
         now = timezone.localtime()
@@ -100,7 +100,7 @@ class EventQuerySet(NewsBaseQuerySet):
         ).exclude(
             # ...but exclude standalone events with at least one timeplace that has not ended
             Q(event_type=Event.Type.STANDALONE, timeplaces__end_time__gt=now)
-        ).distinct()  # remove duplicates that can appear when filtering on values across tables
+        ).distinct()  # Remove duplicates that can appear when filtering on values across tables
 
 
 class Event(NewsBase):
@@ -160,7 +160,7 @@ class Event(NewsBase):
         if (
                 # When hidden, registration is always disabled
                 self.hidden
-                # Registration for private events is never allowed for non members
+                # Registration for private events is never allowed for non-members
                 or self.private and not user.has_perm('news.can_view_private')
                 # If there are no future occurrences, there is never anything to register for
                 or not self.get_future_occurrences().exists()
@@ -301,7 +301,7 @@ class EventTicket(models.Model):
             super().save(update_fields=['active_last_modified'])
 
     def get_absolute_url(self):
-        return reverse('ticket_detail', args=[self.pk])
+        return reverse('event_ticket_detail', args=[self.pk])
 
     @property
     def registered_event(self) -> Event:

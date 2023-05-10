@@ -125,6 +125,10 @@ span.no-wrap {
     background-color: var(--make-blue) !important;
 }
 
+.make-bg-blue.ui.label {
+    color: white;
+}
+
 .make-bg-turquoise {
     background-color: var(--make-turquoise) !important;
 }

@@ -1,0 +1,27 @@
+{% extends 'make_queue/course/printer_3d_course_form.html' %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Add Course Registration" %}{% endblock title %}
+
+{% block form_title %}
+    {% translate "Add Course Registration" %}
+{% endblock form_title %}
+
+{% block submit_button %}
+    {% translate "Add" %}
+{% endblock submit_button %}
+
+{% block messages %}
+    {{ block.super }}
+    {% for message in messages %}
+        <div class="ui {{ message.tags }} message">
+            <i class="close icon"></i>
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endblock messages %}
+
+{% block form_action %}
+    {% url 'printer_3d_course_create' %}
+{% endblock form_action %}

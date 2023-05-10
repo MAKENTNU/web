@@ -1,0 +1,87 @@
+{% load i18n %}
+{% load datetime_tags %}
+
+
+{# Linking `event_ticket_card.css` is required when including this template #}
+
+<div class="ui ticket card">
+    {% if not ticket.active %}
+        <div class="ui red cancel label">
+            {% translate "canceled"|capfirst %}
+        </div>
+    {% endif %}
+
+    <div class="content">
+        <div class="word-breaking hyphenated header">
+            <a href="{{ ticket.registered_event.get_absolute_url }}">
+                {{ ticket.registered_event.title }}
+            </a>
+        </div>
+        <div class="description">
+            {% if ticket.event %}
+                <div class="ui relaxed list">
+                    {% for time_place in ticket.event.timeplaces.all %}
+                        {% if not time_place.hidden %}
+                            <div class="ui item">
+                                {% include 'news/event/ticket/event_ticket_card_time_place.html' %}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                {% include 'news/event/ticket/event_ticket_card_time_place.html' with time_place=ticket.timeplace %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="extra content">
+        <p>
+            <b>{% translate "original registration date"|capfirst %}:</b> {{ ticket.creation_date|short_datetime }}
+        </p>
+        {# These should be set to the same value by the model's `save()` method, when the ticket object is first created #}
+        {% if ticket.active_last_modified != ticket.creation_date %}
+            <p>
+                <b>{% spaceless %}
+                    {% if ticket.active %}
+                        {% translate "Last reactivated" %}
+                    {% else %}
+                        {% translate "Last canceled" %}
+                    {% endif %}
+                {% endspaceless %}:</b>
+                {{ ticket.active_last_modified|short_datetime }}
+            </p>
+        {% endif %}
+    </div>
+    <div class="extra content">
+        <p>
+            <b>{% translate "preferred language"|capfirst %}:</b> {{ ticket.get_language_display }}
+        </p>
+        {% if ticket.comment %}
+            <p>
+                <b>{% translate "comment"|capfirst %}:</b> {{ ticket.comment }}
+            </p>
+        {% endif %}
+    </div>
+    <div class="extra content">
+        <b>{% translate "Ref #" %}:</b>
+        <a href="{{ ticket.get_absolute_url }}">
+            {{ ticket.uuid }}
+        </a>
+    </div>
+    {% if ticket.active %}
+        {% if ticket.user == request.user or perms.news.cancel_ticket %}
+            <a class="ui red bottom attached button"
+               href="{% url 'event_ticket_cancel' ticket.pk %}?next={{ request.path }}">
+                {% translate "Cancel ticket" %}
+            </a>
+        {% endif %}
+    {% elif perms.news.cancel_ticket %}
+        <button class="ui green bottom attached button" type="submit"
+                onclick="$('#reactivate-form-{{ ticket.pk }}').submit();">
+            {% translate "Reactivate ticket" %}
+        </button>
+        <form id="reactivate-form-{{ ticket.pk }}"
+              method="POST" action="{% url 'event_ticket_cancel' ticket.pk %}?next={{ request.path }}">
+            {% csrf_token %}
+        </form>
+    {% endif %}
+</div>

@@ -18,16 +18,16 @@
         <div class="ui huge header">
             {% translate "machines"|capfirst %}
             {% if perms.make_queue.add_machine %}
-                <a href="{% url 'create_machine' %}" data-tooltip="{% translate "Add" %}">
+                <a href="{% url 'machine_create' %}" data-tooltip="{% translate "Add" %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </div>
         <div class="reservation-management-buttons">
-            <a class="ui primary button" href="{% url 'my_reservations_list' %}">
+            <a class="ui primary button" href="{% url 'reservation_list' %}?owner={{ ReservationOwner.ME }}">
                 {% translate "My reservations" %}
             </a>
-            <a class="ui primary button" href="{% url 'find_free_slot' %}">
+            <a class="ui primary button" href="{% url 'reservation_find_free_slots' %}">
                 {% translate "Find free reservation slots" %}
             </a>
         </div>

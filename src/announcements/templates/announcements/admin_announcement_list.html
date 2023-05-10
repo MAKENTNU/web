@@ -10,7 +10,7 @@
         <h1>
             {% translate "Announcements" %}
             {% if perms.announcements.add_announcement %}
-                <a href="{% url 'create_announcement' %}">
+                <a href="{% url 'announcement_create' %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
@@ -22,13 +22,13 @@
                         <div class="ui header">
                             {{ announcement.get_classification_display }}
                             {% if perms.announcements.change_announcement %}
-                                <a href="{% url 'edit_announcement' announcement.pk %}">
+                                <a href="{% url 'announcement_update' announcement.pk %}">
                                     <i class="make-col-yellow pencil icon"></i>
                                 </a>
                             {% endif %}
                             {% if perms.announcements.delete_announcement %}
                                 <a class="delete-modal-button"
-                                   data-url="{% url 'delete_announcement' announcement.pk %}"
+                                   data-url="{% url 'announcement_delete' announcement.pk %}"
                                    data-obj-name="{{ announcement }}">
                                     <i class="red trash icon"></i>
                                 </a>

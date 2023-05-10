@@ -1,56 +1,90 @@
-{% extends 'web/generic_form.html' %}
+{% extends 'web/base.html' %}
 {% load i18n %}
 {% load static %}
 
 
-{% block extra_head %}
+{% block title %}
+    {% if search_string %}
+        {% translate "Search results" %}: "{{ search_string }}" |
+    {% endif %}
+    {{ form_title }}
     {{ block.super }}
+{% endblock title %}
+
+{% block extra_head %}
     <link rel="stylesheet" href="{% static 'news/css/event/admin_event_participants_search.css' %}"/>
 {% endblock extra_head %}
 
-{% block extra_post_content %}
-    {% if form.is_bound %}
-        <div class="users-list">
-            {% if found_users_with_tickets or found_users_without_tickets %}
-                {% if found_users_with_tickets %}
-                    {% for user in found_users_with_tickets %}
-                        <h3>{{ user.get_full_name }}</h3>
-                        <ul class="participant-tickets-list">
-                            {% for ticket in user.tickets %}
-                                <li class="{% if not ticket.active %}canceled{% endif %}">
-                                    {% if ticket.timeplace %}
-                                        <a href="{% url 'timeplace_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}" target="_blank">
-                                            {{ ticket.timeplace.event.title }}:
-                                            {{ ticket.timeplace.start_time.date }}
-                                        </a>
-                                    {% else %}
-                                        <a href="{% url 'event_ticket_list' ticket.event.pk %}" target="_blank">
-                                            {{ ticket.event }}:
-                                            {{ ticket.first_standalone_event_occurrence.date }}
-                                            {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence %}
-                                                &ndash; {{ ticket.last_standalone_event_occurrence.date }}
-                                            {% endif %}
-                                        </a>
-                                    {% endif %}
-                                </li>
+{% block body %}
+    <div class="ui container">
+
+        <a href="{% url 'admin_event_list' %}" style="font-size: 1.15rem;">
+            <i class="angle double left icon"></i>{% translate "Admin page for events" %}
+        </a>
+        <h1 class="word-breaking hyphenated ui centered header">
+            {{ form_title }}
+        </h1>
+
+        <form class="ui form" method="GET">
+            <div class="ui two fields">
+                <div class="ui field">
+                    <label for="{{ form.search_string.id_for_label }}">
+                        {{ form.search_string.label }}
+                        <span class="popup-trigger" data-content="{{ form.search_string.help_text }}">
+                            <i class="make-col-yellow question circle icon"></i>
+                        </span>
+                    </label>
+                    {{ form.search_string }}
+                </div>
+            </div>
+            <input class="ui make-bg-yellow submit button" type="submit" value="{% translate "Search" %}"/>
+        </form>
+
+        {% if search_string %}
+            <div class="users-list">
+                {% if found_users_with_tickets or found_users_without_tickets %}
+                    {% if found_users_with_tickets %}
+                        {% for user in found_users_with_tickets %}
+                            <h3>{{ user.get_full_name }}</h3>
+                            <ul class="participant-tickets-list">
+                                {% for ticket in user.tickets %}
+                                    <li class="{% if not ticket.active %}canceled{% endif %}">
+                                        {% if ticket.timeplace %}
+                                            <a href="{% url 'admin_time_place_ticket_list' ticket.timeplace.event.pk ticket.timeplace.pk %}"
+                                               target="_blank">
+                                                {{ ticket.timeplace.event.title }}:
+                                                {{ ticket.timeplace.start_time.date }}
+                                            </a>
+                                        {% else %}
+                                            <a href="{% url 'admin_event_ticket_list' ticket.event.pk %}" target="_blank">
+                                                {{ ticket.event }}:
+                                                {{ ticket.first_standalone_event_occurrence.date }}
+                                                {% if ticket.first_standalone_event_occurrence != ticket.last_standalone_event_occurrence %}
+                                                    &ndash; {{ ticket.last_standalone_event_occurrence.date }}
+                                                {% endif %}
+                                            </a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <hr/>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% if found_users_without_tickets %}
+                        <br/>
+                        <h2>{% translate "Found the following users without any tickets" %}:</h2>
+                        <ul>
+                            {% for user in found_users_without_tickets %}
+                                <li>{{ user.get_full_name }}</li>
                             {% endfor %}
                         </ul>
-                        <hr/>
-                    {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <h3>{% translate "No users found" %}.</h3>
                 {% endif %}
+            </div>
+        {% endif %}
 
-                {% if found_users_without_tickets %}
-                    <br/>
-                    <h2>{% translate "Found the following users without any tickets" %}:</h2>
-                    <ul>
-                        {% for user in found_users_without_tickets %}
-                            <li>{{ user.get_full_name }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% else %}
-                <h3>{% translate "No users found" %}.</h3>
-            {% endif %}
-        </div>
-    {% endif %}
-{% endblock extra_post_content %}
+    </div>
+{% endblock body %}

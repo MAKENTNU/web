@@ -82,13 +82,20 @@ def iso_datetime_format(value):
     return value.isoformat()
 
 
-def get_year_and_week(time_obj: datetime | date):
+def get_year_and_week(time_obj: datetime | date) -> tuple[int, int]:
     year, week, _weekday = time_obj.isocalendar()
     return year, week
 
 
 def get_current_year_and_week():
     return get_year_and_week(timezone.localtime())
+
+
+# Based on https://stackoverflow.com/a/29263010
+def last_week_of_year(year: int):
+    # The last week of every year will contain the 28th of December
+    last_week = date(year, 12, 28)
+    return last_week.isocalendar().week
 
 
 def exact_weekday_to_day_name(exact_weekday: float) -> str:
@@ -102,9 +109,10 @@ def year_and_week_to_monday(year: int, week: int) -> datetime:
     """
     Returns a ``datetime`` object for the Monday of the provided ``week`` and ``year``.
 
-    :param year: The year to get the date for
-    :param week: The week to get the date for
-    :return: The monday in the given week of the given year
+    :param year: The year to get the date for.
+    :param week: The week to get the date for.
+    :return: The Monday of the given week of the given year.
+    :raises ValueError: if the ``year`` and ``week`` combination is invalid.
     """
     return datetime.strptime(f"{year:04d} {week:02d} 1", "%G %V %w")
 

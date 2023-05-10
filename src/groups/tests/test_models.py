@@ -8,7 +8,6 @@ from util.auth_utils import perm_to_str
 from ..models import Committee, InheritanceGroup
 
 
-# See the `0008_add_default_inheritancegroups_and_committees.py` migration for which InheritanceGroups are created by default
 class PermGroupTestCase(TestCase):
 
     def setUp(self):
@@ -199,7 +198,6 @@ class PermGroupTestCase(TestCase):
                 self.assertIn(perm, inherited_permissions)
 
 
-# See the `0008_add_default_inheritancegroups_and_committees.py` migration for which Committees are created by default
 class CommitteeTestCase(TestCase):
 
     def setUp(self):

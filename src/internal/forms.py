@@ -25,7 +25,7 @@ class AddMemberForm(forms.ModelForm):
         self.fields['user'].label_from_instance = lambda user: user.get_full_name()
 
 
-class EditMemberForm(forms.ModelForm):
+class ChangeMemberForm(forms.ModelForm):
     card_number = CardNumberField(required=False)
 
     class Meta:
@@ -51,7 +51,7 @@ class EditMemberForm(forms.ModelForm):
         return member
 
 
-class RestrictedEditMemberForm(EditMemberForm):
+class RestrictedChangeMemberForm(ChangeMemberForm):
     class Meta:
         model = Member
         fields = [
@@ -166,7 +166,7 @@ class SystemAccessValueForm(forms.ModelForm):
 class SecretsForm(forms.ModelForm):
     class Meta:
         model = Secret
-        fields = '__all__'
+        exclude = ('extra_view_permissions',)
 
 
 class QuoteForm(forms.ModelForm):

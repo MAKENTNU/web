@@ -1,0 +1,51 @@
+{% extends 'docs/base.html' %}
+{% load i18n %}
+{% load datetime_tags %}
+
+
+{% block title %}
+    {% blocktranslate with title=page.title %}History of “{{ title }}”{% endblocktranslate %}
+{% endblock title %}
+
+{% block body %}
+    <div class="ui container">
+        <h1 class="word-breaking hyphenated">
+            {% blocktranslate with title=page.title %}History of “{{ title }}”{% endblocktranslate %}
+        </h1>
+        <div class="ui relaxed divided list">
+            {% for content in page.content_history.all reversed %}
+                <div class="item">
+                    {% if forloop.last %}
+                        <i class="large middle aligned file outline icon"></i>
+                    {% else %}
+                        <i class="large middle aligned file alternate outline icon"></i>
+                    {% endif %}
+                    <div class="content">
+                        <div class="word-breaking hyphenated header">
+                            <a href="{{ content.get_absolute_url }}">
+                                {% if forloop.last %}
+                                    {% translate "Added by" %}
+                                {% else %}
+                                    {% translate "Changed by" %}
+                                {% endif %}
+                                {% if content.made_by %}
+                                    {{ content.made_by.get_full_name }}
+                                {% else %}
+                                    {% translate "Anonymous" %}
+                                {% endif %}
+                            </a>
+                            <i>
+                                {% if content == page.current_content %}
+                                    ({% translate "Current Version" %})
+                                {% endif %}
+                            </i>
+                        </div>
+                        <div class="description">
+                            {{ content.last_modified|long_datetime }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

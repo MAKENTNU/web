@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse
 from simple_history.models import HistoricalRecords
 
-from util.auth_utils import perm_to_str
+from util.auth_utils import perms_to_str
 from util.validators import lowercase_slug_validator
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
 
@@ -24,7 +24,7 @@ class ContentBox(models.Model):
         blank=True,
         related_name='content_boxes_with_extra_change_perm',
         verbose_name=_("extra change permissions"),
-        help_text=_("Extra permissions that are required for editing the content box."),
+        help_text=_("Extra permissions that are required for changing the content box."),
     )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
@@ -45,11 +45,11 @@ class ContentBox(models.Model):
 
     def get_absolute_url(self):
         # Should update this code if any content box URLs are placed under other subdomains
-        all_host_kwargs = [
+        all_host_kwargs = (
             {'host': 'main'},
             {'host': 'internal', 'host_args': ['i']},
             {'host': 'docs'},
-        ]
+        )
         for host_kwargs in all_host_kwargs:
             try:
                 return reverse(self.url_name, **host_kwargs)
@@ -59,6 +59,4 @@ class ContentBox(models.Model):
 
     @property
     def extra_change_perms_str_tuple(self):
-        return tuple(
-            perm_to_str(perm) for perm in self.extra_change_permissions.all()
-        )
+        return perms_to_str(self.extra_change_permissions.all())

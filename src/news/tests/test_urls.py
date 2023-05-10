@@ -49,7 +49,7 @@ class NewsTestBase(CleanUpTempFilesTestMixin, ABC):
         self.time_places = (self.time_place1, self.time_place2, self.time_place3)
 
         self.user1 = User.objects.create_user(username="user1")
-        self.user2 = User.objects.create_user(username="user2")
+        self.user2 = User.objects.create_user(username="user2", first_name="Hey", last_name="It's Me")
 
         self.ticket1 = EventTicket.objects.create(
             user=self.user1, timeplace=self.time_place1, comment="Looking forward to this!!", language=EventTicket.Language.ENGLISH,
@@ -67,6 +67,7 @@ class NewsTestBase(CleanUpTempFilesTestMixin, ABC):
             user=self.user1, timeplace=self.time_place3, language=EventTicket.Language.NORWEGIAN,
         )
         self.tickets = (self.ticket1, self.ticket2, self.ticket3, self.ticket4, self.ticket5)
+        self.active_tickets = (self.ticket1, self.ticket2, self.ticket4, self.ticket5)
 
 
 class UrlTests(NewsTestBase, TestCase):
@@ -76,49 +77,72 @@ class UrlTests(NewsTestBase, TestCase):
 
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
-            Get(reverse('admin_article_list'), public=False),
-            Get(reverse('admin_event_list'), public=False),
-            Get(reverse('admin_event_participants_search'), public=False),
-            Get(reverse('admin_event_detail', args=[self.event1.pk]), public=False),
-            Get(reverse('admin_event_detail', args=[self.event2.pk]), public=False),
+            # article_urlpatterns
             Get(reverse('article_list'), public=True),
-            Get(reverse('article_create'), public=False),
-            Get(reverse('article_edit', args=[self.article1.pk]), public=False),
-            Get(reverse('article_edit', args=[self.article2.pk]), public=False),
             Get(reverse('article_detail', args=[self.article1.pk]), public=True),
-            Get(reverse('article_detail', args=[self.article2.pk]), public=False),  # this article is private
-            Get(reverse('event_list'), public=True),
-            Get(reverse('event_create'), public=False),
-            Get(reverse('event_edit', args=[self.event1.pk]), public=False),
-            Get(reverse('event_edit', args=[self.event2.pk]), public=False),
-            Get(reverse('event_ticket_list', args=[self.event2.pk]), public=False),  # can't test `event1`, as it has no tickets
+            Get(reverse('article_detail', args=[self.article2.pk]), public=False),  # This article is private
+
+            # specific_time_place_urlpatterns
+            Get(reverse('event_ticket_create', args=[self.event1.pk]), public=False),
+            Get(reverse('event_ticket_create', args=[self.event2.pk]), public=False),
+            *[
+                Get(reverse('time_place_ical', args=[time_place.event.pk, time_place.pk]), public=True)
+                for time_place in self.time_places
+            ],
+            # specific_event_urlpatterns
             Get(reverse('event_detail', args=[self.event1.pk]), public=True),
-            Get(reverse('event_detail', args=[self.event2.pk]), public=False),  # this event is private
-            Get(reverse('register_event', args=[self.event1.pk]), public=False),
-            Get(reverse('register_event', args=[self.event2.pk]), public=False),
+            Get(reverse('event_detail', args=[self.event2.pk]), public=False),  # This event is private
             *[
-                Get(reverse('timeplace_edit', args=[time_place.event.pk, time_place.pk]), public=False)
-                for time_place in self.time_places
+                Get(reverse('event_ticket_create', args=[time_place.event.pk, time_place.pk]), public=False)
+                for time_place in self.time_places if time_place != self.time_place3  # Can't test `time_place3`, as it has no tickets
             ],
-            Get(reverse('timeplace_create', args=[self.event1.pk]), public=False),
-            Get(reverse('timeplace_create', args=[self.event2.pk]), public=False),
+            # event_urlpatterns
+            Get(reverse('event_list'), public=True),
+
+            # specific_ticket_urlpatterns
             *[
-                Get(reverse('timeplace_ticket_list', args=[time_place.event.pk, time_place.pk]), public=False)
-                for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
-            ],
-            *[
-                Get(reverse('timeplace_ical', args=[time_place.event.pk, time_place.pk]), public=True)
-                for time_place in self.time_places
-            ],
-            *[
-                Get(reverse('register_timeplace', args=[time_place.event.pk, time_place.pk]), public=False)
-                for time_place in self.time_places if time_place != self.time_place3  # can't test `time_place3`, as it has no tickets
-            ],
-            *[
-                Get(reverse('ticket_detail', args=[ticket.pk]), public=False)
+                Get(reverse('event_ticket_detail', args=[ticket.pk]), public=False)
                 for ticket in self.tickets
             ],
-            Get(reverse('my_tickets_list'), public=False),
+            *[
+                Get(reverse('event_ticket_cancel', args=[ticket.pk]), public=False)
+                for ticket in self.active_tickets
+            ],
+            # ticket_urlpatterns
+            Get(reverse('event_ticket_my_list'), public=False),
+
+            # specific_article_adminpatterns
+            Get(reverse('article_update', args=[self.article1.pk]), public=False),
+            Get(reverse('article_update', args=[self.article2.pk]), public=False),
+            # article_adminpatterns
+            Get(reverse('admin_article_list'), public=False),
+            Get(reverse('article_create'), public=False),
+
+            # specific_time_place_adminpatterns
+            *[
+                Get(reverse('time_place_update', args=[time_place.event.pk, time_place.pk]), public=False)
+                for time_place in self.time_places
+            ],
+            *[
+                Get(reverse('admin_time_place_ticket_list', args=[time_place.event.pk, time_place.pk]), public=False)
+                for time_place in self.time_places if time_place != self.time_place3  # Can't test `time_place3`, as it has no tickets
+            ],
+            # time_place_adminpatterns
+            Get(reverse('time_place_create', args=[self.event1.pk]), public=False),
+            Get(reverse('time_place_create', args=[self.event2.pk]), public=False),
+            # specific_event_adminpatterns
+            Get(reverse('admin_event_detail', args=[self.event1.pk]), public=False),
+            Get(reverse('admin_event_detail', args=[self.event2.pk]), public=False),
+            Get(reverse('event_update', args=[self.event1.pk]), public=False),
+            Get(reverse('event_update', args=[self.event2.pk]), public=False),
+            Get(reverse('admin_event_ticket_list', args=[self.event2.pk]), public=False),  # Can't test `event1`, as it has no tickets
+            # event_adminpatterns
+            Get(reverse('admin_event_list'), public=False),
+            Get(reverse('event_create'), public=False),
+            Get(reverse('admin_event_participants_search'), public=False),
+            Get(f"{reverse('admin_event_participants_search')}?search_string={self.user1.username}", public=False),
+            Get(f"{reverse('admin_event_participants_search')}?search_string={self.user2.get_full_name()}", public=False),
+            Get(f"{reverse('admin_event_participants_search')}?search_string=stringthatdoesntmatchanything", public=False),
         ]
         assert_requesting_paths_succeeds(self, path_predicates)
 

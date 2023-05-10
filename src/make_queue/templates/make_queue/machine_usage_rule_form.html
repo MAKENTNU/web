@@ -1,0 +1,6 @@
+{% extends 'contentbox/content_box_form.html' %}
+
+
+{# Overwrite the super block's contents with nothing, as it's currently the only block that's not generic enough #}
+{# for usage with `MachineUsageRule` objects #}
+{% block fields_post_content %}{% endblock fields_post_content %}

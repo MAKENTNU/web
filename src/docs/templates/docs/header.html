@@ -6,7 +6,7 @@
 
 <header id="header">
     <div id="page-search">
-        <form id="search-form" class="dont-prevent-leaving" method="GET" action="{% url 'search_pages' %}">
+        <form id="search-form" class="dont-prevent-leaving" method="GET" action="{% url 'documentation_page_search' %}">
             <div class="ui icon input">
                 <input id="query" type="text" name="query" placeholder="{% translate "Search" %}"/>
                 <i id="search" class="search link icon"></i>
@@ -14,9 +14,9 @@
         </form>
     </div>
     {% if perms.docs.add_page %}
-        <a id="new-page" class="ui right floated make-bg-yellow button" href="{% url 'create_page' %}">
+        <a id="new-page" class="ui right floated make-bg-yellow button" href="{% url 'documentation_page_create' %}">
             <i class="plus icon"></i>
-            {% translate "New page" %}
+            {% translate "Add page" %}
         </a>
     {% endif %}
     <div id="home-button">

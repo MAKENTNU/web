@@ -1,6 +1,7 @@
 # web
 [![build](https://github.com/MAKENTNU/web/workflows/build/badge.svg)](https://github.com/MAKENTNU/web/actions)
 [![codecov](https://codecov.io/gh/MAKENTNU/web/branch/main/graph/badge.svg)](https://codecov.io/gh/MAKENTNU/web)
+[![Maintainability](https://api.codeclimate.com/v1/badges/662892bb2969fcf961eb/maintainability)](https://codeclimate.com/github/MAKENTNU/web/maintainability)
 
 
 ## Setup
@@ -10,7 +11,7 @@
 
 ### Prerequisites
 
-* Python 3.10+ (latest stable version preferred)
+* Python **3.10**+ (latest, stable version preferred)
 * Having cloned this repository to your machine
   * For most purposes, check out [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev), as it's the base branch for all development:
     ```shell

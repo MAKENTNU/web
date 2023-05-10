@@ -56,7 +56,7 @@ def get_folder_name(request):
         model: Type[Model] = view_func.view_class.model
 
     model_name_plural = get_model_name_plural(model)
-    return slugify(model_name_plural).replace("-", "_")  # the naming convention for folders is snake_case
+    return slugify(model_name_plural).replace("-", "_")  # The naming convention for folders is snake_case
 
 
 def get_model_name_plural(model: Type[Model]):

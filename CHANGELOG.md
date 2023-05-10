@@ -2,8 +2,80 @@
 
 A summary of changes made to the codebase, grouped per deployment.
 
-
 ## Unreleased
+
+### New features
+
+- 
+
+### Improvements
+
+- 
+
+### Fixes
+
+- 
+
+### Other changes
+
+-
+
+
+## 2023-05-10 ([#654](https://github.com/MAKENTNU/web/pull/654))
+
+### New features
+
+- Added a button for delaying hiding secrets for 30 seconds, in [the secret list](https://i.makentnu.no/secrets/)
+- Added an `extra_view_permissions` field to secrets
+  - This makes it possible to create secrets that not all MAKE members need to know
+    - _Examples can be passwords of Google Workspace users that only exist for technical purposes,
+      or credentials for the admin page of a physical router_
+- Added an "internal" ribbon label on internal articles and events
+
+### Improvements
+
+- Added a link to the Django admin change form at the bottom of the form of "content boxes" that have extra change permissions
+  (like [the front page of the internal site](https://i.makentnu.no/))
+  - This is only visible to users who have permission to modify those content boxes through Django admin
+- Changed cropping of images in article and event lists so that they always have equal proportions
+- Added a title to the quota admin panel, and switched out the "Add new quota" button for a green plus button, like other admin panel pages
+- Added an additional permission check for all admin pages (incl. API endpoints), that requires the user to have the `internal.is_internal` permission
+- When requesting to change a `ContentBox` on a subdomain its path is not registered on (like trying to change the "About us" `ContentBox` on
+  [i.makentnu.no](https://i.makentnu.no/), or the "MAKE NTNU internsider" `ContentBox` on [makentnu.no](https://makentnu.no/)),
+  you're redirected to the proper subdomain, instead of being shown a "404 Not Found" page
+
+### Fixes
+
+- Fixed board members not being allowed to add, change and delete reservation rules
+  (e.g. [the reservation rules for 3D printers](https://makentnu.no/reservation/machinetypes/1/reservationrules/))
+
+### Other changes
+
+- Enabled automated code quality checks from [Code Climate](https://codeclimate.com/quality)
+- Restructured lots of URLs to comply with
+  [the style guide](https://github.com/MAKENTNU/web/blob/2103a95a279e7624159b62450e18345b82717385/CONTRIBUTING.md#urlpatterns-organization)
+  - The path segments (i.e. `/the-text-between-the-forward-slashes/`) now all have a more consistent structure,
+    including prefixing all admin pages' paths with `admin/` and all API endpoints with `api/`
+  - Permanent redirects have been added for the URLs deemed most relevant, to redirect from the old to the new URL; see [a list of the added URLs in
+    the code](https://github.com/MAKENTNU/web/commit/2103a95a279e7624159b62450e18345b82717385#diff-37d0e0a00e828360d35d68a7ada510a98e03252045f3d51d36a81fedfaea7907R143-R154)
+- Moved lots of views and forms around between files, to have them more practically organized
+- Renamed lots of views, forms and templates to comply with
+  [the style guides](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#code-style-guides)
+- Changed multiple pages' URLs to use [query parameters](https://en.wikipedia.org/wiki/Query_string),
+  instead of having multiple distinct paths for practically the same page
+  (see [#650](https://github.com/MAKENTNU/web/pull/650) for a list of all the URLs affected)
+  - Permanent redirects have been added for the URLs deemed most relevant, to redirect from the old to the new URL; see [a list of the added URLs in
+    the code](https://github.com/MAKENTNU/web/pull/650/files#diff-37d0e0a00e828360d35d68a7ada510a98e03252045f3d51d36a81fedfaea7907R111-R115)
+- Changed some URLs so that they all consistently use `add` (instead of `create`) and `change` (instead of `edit` or `update`),
+  to comply with [the style guide](https://github.com/MAKENTNU/web/blob/2826b57a6c6fe27446c88edb19ca167a728b5eb4/CONTRIBUTING.md#endpoint-pathroute)
+- Temporarily disabled most of the "`checkin`" URLs (those related to user skills, registering cards and checking in),
+  to reduce the risk of exposing potentially insecure or buggy code
+- Made the use of add/change verbs consistent among page titles and buttons, and some other parts of the website's UI
+- Made some "Add" buttons green, to follow the convention that green means to add
+- Code cleanup? Ye.
+
+
+## 2023-03-30 ([#615](https://github.com/MAKENTNU/web/pull/615))
 
 ### New features
 
@@ -21,11 +93,6 @@ A summary of changes made to the codebase, grouped per deployment.
       see [this issue](https://github.com/jazzband/django-simple-history/issues/1063)
 - Added links to the guides on what should be done when a member enrolls/retires/quits, in [the member list](https://i.makentnu.no/members/)
   - These can be changed through [the dynamic settings in Django admin](https://admin.makentnu.no/constance/config/)
-- Set the default value of event occurrences' `hidden` field to `False`
-- Fixed displaying unpublished and hidden occurrences on multipart/standalone events
-- Fixed showing the registration button on standalone events when they only had future occurrences that were either unpublished or hidden
-- Fixed not loading a machine's page when using the keyboard to select a different machine in the dropdown on a machine detail page
-- Fixed JavaScript errors when changing the machine or machine type in the reservation creation form
 - Added GitHub Actions workflow for automatically labeling deployment PRs
 - Made the `makemessages` management command automatically convert the path format of the file location comments in `.po` files generated on Windows,
   to the format generated on Linux - i.e. forward slashes (`/`) instead of backslashes (`\`) and no leading `.\` - so that developers using Windows
@@ -37,12 +104,13 @@ A summary of changes made to the codebase, grouped per deployment.
 - Made it possible to search for _all_ member fields in the member list - not just the ones visible in the list
 - Started using new label names for each event type, which should be clearer with regard to their intended usage.
   Also made their description - shown when clicking / hovering over the yellow question marks in an event form - (hopefully) easier to understand
+- Set the default value of event occurrences' `hidden` field to `False`
 - Prevent registering for an event without any (past or future) occurrences
 - Made the red "Canceled" ribbon on tickets transparent when clicking / hovering over it, to be able to read the text behind it
 - Added a "help text" yellow question mark icon next to the "Discord username" field in member info forms
   (displayed when clicked / hovered over)
-- Made the user dropdowns on both [the quota admin page](https://makentnu.no/reservation/quota/) and
-  [the quota form page](https://makentnu.no/reservation/quota/create/), function equally
+- Made the user dropdowns on both [the quota admin page](https://makentnu.no/admin/reservation/quotas/) and
+  [the quota form page](https://makentnu.no/admin/reservation/quotas/add/), function equally
 - When changing machine type in the reservation creation form, made the first machine of that type be automatically selected
 - Place files uploaded through CKEditor in a separate folder for each model
 - Made all pages have a consistent (browser tab) title format
@@ -68,6 +136,10 @@ A summary of changes made to the codebase, grouped per deployment.
 - Fixed always auto-scrolling to the first toggle button when opening a member's info modal in [the member list](https://i.makentnu.no/members/)
   - The modal should now instead open with the previous scroll position when hiding and re-showing it (even when showing a different member)
 - Fixed missing card numbers being displayed as "None" instead of simply showing a blank field, in [the member list](https://i.makentnu.no/members/)
+- Fixed displaying unpublished and hidden occurrences on multipart/standalone events
+- Fixed showing the registration button on standalone events when they only had future occurrences that were either unpublished or hidden
+- Fixed not loading a machine's page when using the keyboard to select a different machine in the dropdown on a machine detail page
+- Fixed JavaScript errors when changing the machine or machine type in the reservation creation form
 - Prevented [CSRF attacks](https://owasp.org/www-community/attacks/csrf) against the logout URL,
   by requiring logout requests being sent using `POST` instead of `GET`
 - Fixed the "View site" button in the English Django admin not leading to the English front page
@@ -113,12 +185,12 @@ A summary of changes made to the codebase, grouped per deployment.
 ### New features
 
 - Added a URL which always links to the current week for a machine reservation calendar
-  - This URL can be copied by right-clicking the "View in calendar" button for a machine on [the machine list page](https://makentnu.no/reservation/),
-    and selecting "Copy link address"
+  - This URL can be copied by right-clicking the "View in calendar" button for a machine on
+    [the machine list page](https://makentnu.no/reservation/machines/), and selecting "Copy link address"
 - Made machine streams work with the new Raspberry Pi setup
   - Also, only the visible streams are connected to;
     once the page is scrolled so that a stream image is no longer rendered, the stream for that machine is disconnected,
-    which makes [the machine list page](https://makentnu.no/reservation/) use considerably less data (depending on how the page is scrolled)
+    which makes [the machine list page](https://makentnu.no/reservation/machines/) use considerably less data (depending on how the page is scrolled)
     - This does not apply to the machine detail (calendar) page, as there is always only one stream on the page
 
 ### Improvements
@@ -127,7 +199,7 @@ A summary of changes made to the codebase, grouped per deployment.
 - Renamed a lot of templates (and CSS and JavaScript files) to comply with the style guide
 - Improved word breaking (splitting a word between two lines, often using a hyphen) multiple places, like in titles and descriptions
 - Added translations to the spreadsheet containing course registrations, that can be downloaded from
-  [the course registrations page](https://makentnu.no/reservation/course/)
+  [the course registrations page](https://makentnu.no/admin/reservation/courses/)
 - Improved the permission check for [the admin panel](https://makentnu.no/admin/)
 - Added edit and delete buttons on the machine detail (calendar) page
 - On the history page for a documentation page (on [docs.makentnu.no](https://docs.makentnu.no/)),
@@ -205,7 +277,7 @@ A summary of changes made to the codebase, grouped per deployment.
 ### Improvements
 
 - Significantly improved page performance when watching streams that fail to connect
-  (most notably on [the machine list](https://makentnu.no/reservation/))
+  (most notably on [the machine list](https://makentnu.no/reservation/machines/))
 - Added warning message when there are gaps between the reservation rules of a machine type
 - Reordered [admin panel](https://makentnu.no/admin/) buttons
 - The code that reduces the size of uploaded images, now does not use the "reduced" image if it's not actually smaller -
@@ -298,7 +370,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
-- Added an [admin page for FAQ categories](https://makentnu.no/faq/admin/categories/)
+- Added an [admin page for FAQ categories](https://makentnu.no/admin/faq/categories/)
 - For machines with streams: Added a new "no stream" image, in addition to images that are shown when the stream is down *and* the machine has either
   status "Maintenance" or "Out of order"
 
@@ -358,13 +430,14 @@ A summary of changes made to the codebase, grouped per deployment.
 ### New features
 
 - Added a "Special 3D printers" machine type
-  - This is listed on [the machine list (reservations) page](https://makentnu.no/reservation/) when one or more machines of this type have been added
+  - This is listed on [the machine list (reservations) page](https://makentnu.no/reservation/machines/) when one or more machines of this type
+    have been added
 - Added an "Advanced course" checkbox to course registrations
   - Checking this checkbox will grant users permission to create reservations for the special 3D printers
 - The course registration form now checks whether the submitted card number is actually (by accident) the phone number of NTNU's Building security
 - Changed the URL for the email lists from [/email](https://makentnu.no/email/) to [/about/contact](https://makentnu.no/about/contact/)
 - Added a counter at the bottom of [the member list](https://i.makentnu.no/members/)
-  and [course registration list](https://makentnu.no/reservation/course/), that shows how many members and course registrations are displayed,
+  and [course registration list](https://makentnu.no/admin/reservation/courses/), that shows how many members and course registrations are displayed,
   respectively
 - Articles, events, profile pictures and other things you can upload images for, now support GIFs
 
@@ -410,7 +483,7 @@ A summary of changes made to the codebase, grouped per deployment.
 ### New features
 
 - Added an [internal home page](https://i.makentnu.no/) (currently blank)
-- Added an [FAQ page](https://makentnu.no/faq/), including the ability to [add questions through the admin page](https://makentnu.no/faq/admin/)
+- Added an [FAQ page](https://makentnu.no/faq/), including the ability to [add questions through the admin page](https://makentnu.no/admin/faq/)
 
 ### Fixes
 

@@ -1,11 +1,20 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
 
 urlpatterns = [
-    path("admin/", views.AnnouncementAdminView.as_view(), name='announcement_admin'),
-    path("create/", views.CreateAnnouncementView.as_view(), name='create_announcement'),
-    path("<int:pk>/edit/", views.EditAnnouncementView.as_view(), name='edit_announcement'),
-    path("<int:pk>/delete/", views.DeleteAnnouncementView.as_view(), name='delete_announcement'),
+]
+
+# --- Admin URL patterns (imported in `web/urls.py`) ---
+
+specific_announcement_adminpatterns = [
+    path("change/", views.AnnouncementUpdateView.as_view(), name='announcement_update'),
+    path("delete/", views.AnnouncementDeleteView.as_view(), name='announcement_delete'),
+]
+
+adminpatterns = [
+    path("", views.AdminAnnouncementListView.as_view(), name='admin_announcement_list'),
+    path("add/", views.AnnouncementCreateView.as_view(), name='announcement_create'),
+    path("<int:pk>/", include(specific_announcement_adminpatterns)),
 ]

@@ -1,0 +1,66 @@
+version: "2"         # Required to adjust maintainability checks
+
+checks: # https://docs.codeclimate.com/docs/maintainability#section-checks
+  argument-count:
+    config:
+      threshold: 7
+  complex-logic:
+    config:
+      threshold: 4
+  file-lines:
+    config:
+      threshold: 500
+  method-complexity: # https://docs.codeclimate.com/docs/cognitive-complexity
+    config:
+      threshold: 5
+  method-count:
+    config:
+      threshold: 20
+  method-lines:
+    config:
+      threshold: 25
+  nested-control-flow:
+    config:
+      threshold: 4
+  return-statements:
+    config:
+      threshold: 4
+  similar-code: # https://docs.codeclimate.com/docs/duplication-concept
+    config:
+      threshold:  # Language-specific defaults; an override will affect all languages
+  identical-code:
+    config:
+      threshold:  # Language-specific defaults; an override will affect all languages
+
+plugins:
+  # https://docs.codeclimate.com/docs/bandit
+  bandit:
+    enabled: true
+  # https://docs.codeclimate.com/docs/fixme
+  fixme:
+    enabled: true
+  # https://docs.codeclimate.com/docs/pep8
+  pep8:
+    enabled: true
+    checks:
+      E501: # Line too long (> 79 characters)
+        enabled: false
+  # https://docs.codeclimate.com/docs/radon
+  radon:
+    enabled: true
+    channel: beta
+    threshold: "B"
+  # https://docs.codeclimate.com/docs/sonar-python
+  sonar-python:
+    enabled: true
+    config:
+      tests_patterns:
+        - src/**/tests/**
+
+exclude_patterns:
+  - "manage.py"
+  - "src/web/wsgi.py"
+  - "src/web/asgi.py"
+  - "src/web/settings.py"
+  - "src/**/tests/**"
+  - "src/**/migrations/**"

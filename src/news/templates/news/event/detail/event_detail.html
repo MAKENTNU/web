@@ -12,6 +12,10 @@
 
 {% block extra_classes %}left-align{% endblock extra_classes %}
 
+{% block image_internal_label_text %}
+    {% translate "internal"|capfirst context "event" %}
+{% endblock image_internal_label_text %}
+
 {% block admin_page %}
     {% if perms.news.change_event %}
         <div>
@@ -19,7 +23,7 @@
                 <i class="sticky note icon"></i>{% translate "Admin page" %}
             </a>
             {% if news_obj.number_of_tickets > 0 and perms.news.change_event %}
-                <a class="grey link text" href="{% url 'event_ticket_list' news_obj.pk %}">
+                <a class="grey link text" href="{% url 'admin_event_ticket_list' news_obj.pk %}">
                     <i class="ticket icon"></i>
                     {{ news_obj.number_of_active_tickets }} / {{ news_obj.number_of_tickets }}
                 </a>

@@ -18,6 +18,7 @@ from django.utils import translation
 from django.utils.dateparse import parse_time
 
 from users.models import User
+from .url_utils import reverse_admin
 
 
 T = TypeVar('T')
@@ -55,7 +56,7 @@ class CleanUpTempFilesTestMixin(ABC):
         """
         for child in self._temp_media_root.iterdir():
             if child.is_file() or child.is_symlink():
-                child.unlink()  # deletes the file/symlink
+                child.unlink()  # Deletes the file/symlink
             elif child.is_dir():
                 shutil.rmtree(child)
 
@@ -146,7 +147,7 @@ class PathPredicate(ABC):
     def __init__(self, path: str, *, public: bool, translated=True):
         """
         :param path: the path to be tested (e.g. from ``reverse()``)
-        :param public: whether a user does not have to be authenticated or not to successfully request the path
+        :param public: whether a user has to be authenticated or not to successfully request the path
         :param translated: whether the path has a translated version (typically prefixed with e.g. ``/en``)
         """
         self.path = path
@@ -219,8 +220,6 @@ def assert_requesting_paths_succeeds(self: SimpleTestCase, path_predicates: list
 
 
 def generate_all_admin_urls_for_model_and_objs(model: Type[ModelT], model_objs: Iterable[ModelT]) -> list[str]:
-    from web.tests.test_urls import reverse_admin  # Avoids circular importing
-
     url_name_prefix = f'{model._meta.app_label}_{model._meta.model_name}'
     return [
         reverse_admin(f'{url_name_prefix}_changelist'),

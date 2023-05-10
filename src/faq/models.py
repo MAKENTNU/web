@@ -8,7 +8,7 @@ from web.multilingual.modelfields import MultiLingualRichTextUploadingField, Mul
 
 class CategoryQuerySet(models.QuerySet):
 
-    def prefetch_questions_and_default_order_by(self, *, questions_attr_name: str):
+    def prefetch_questions_and_default_order_by(self, *, questions_attr_name: str) -> 'CategoryQuerySet[Category]':
         """
         Returns a ``QuerySet`` where all the categories' questions have been prefetched
         and can be accessed through the attribute with the same name as ``questions_attr_name``.

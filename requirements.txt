@@ -7,17 +7,17 @@ django-constance[database]==2.9.1
 django-decorator-include==3.0
 # (See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html)
 django-extensions==3.2.1
-django-ical==1.8.3
+django-ical==1.9.1
 django-multiselectfield==0.1.12
-django-phonenumber-field[phonenumbers]==7.0.2
+django-phonenumber-field[phonenumbers]==7.1.0
 django-simple-history==3.3.0
 sorl-thumbnail==12.9.0
 
 # Packages related to authentication and other "social" stuff
-social-auth-app-django==5.1.0
+social-auth-app-django==5.2.0
 # This is already a requirement of `social-auth-app-django`, but it's listed here to provide the `openidconnect` extra
 # (see https://python-social-auth.readthedocs.io/en/stable/installing.html#using-the-extras-options)
-social-auth-core[openidconnect]==4.4.0
+social-auth-core[openidconnect]==4.4.2
 # TODO: updated, pre-built Windows wheels might be available after this is resolved: https://github.com/python-ldap/python-ldap/issues/511
 python-ldap==3.4.3
 
@@ -27,6 +27,6 @@ channels-redis==4.1.0
 
 # Misc. packages
 bleach[css]==6.0.0
-Pillow==9.4.0
+Pillow==9.5.0
 uuid==1.30
-XlsxWriter==3.0.9
+XlsxWriter==3.1.0

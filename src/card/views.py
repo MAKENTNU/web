@@ -46,7 +46,8 @@ class RFIDView(View):
         """
         return HttpResponse(f"Valid card number {escape(card_number)}", status=HTTPStatus.OK)
 
-    def card_number_invalid(self, card_number):
+    @staticmethod
+    def card_number_invalid(card_number):
         """
         Handles the case where the card number is invalid.
         Should be overridden in a subclass.

@@ -1,16 +1,22 @@
+from functools import lru_cache
+from urllib.parse import urlparse
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import Http404
-from django.urls import NoReverseMatch, path, reverse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
+from django.urls import NoReverseMatch, path, reverse as django_reverse
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _, pgettext
 from django.views.generic import DetailView, UpdateView
+from django_hosts import reverse
 
+from util.url_utils import get_reverse_host_kwargs_from_url, reverse_admin
 from util.view_utils import CustomFieldsetFormMixin
 from .forms import ContentBoxForm, EditSourceContentBoxForm
 from .models import ContentBox
 
 
-class DisplayContentBoxView(DetailView):
+class ContentBoxDetailView(DetailView):
     model = ContentBox
     template_name = 'contentbox/content_box_detail.html'
     context_object_name = 'contentbox'
@@ -49,7 +55,7 @@ class DisplayContentBoxView(DetailView):
         )
 
 
-class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
+class ContentBoxUpdateView(PermissionRequiredMixin, CustomFieldsetFormMixin, UpdateView):
     permission_required = ('contentbox.change_contentbox',)
     model = ContentBox
     form_class = ContentBoxForm
@@ -57,16 +63,51 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
 
     narrow = False
 
-    def get_object(self, *args, **kwargs):
-        obj: ContentBox = super().get_object(*args, **kwargs)
+    # Caches `get_absolute_url()`, as it will be called multiple times
+    # (`maxsize` need only be 1, since the cached value is not supposed to last longer than each request)
+    @lru_cache(maxsize=1)
+    def _absolute_url(self, content_box: ContentBox):
         try:
-            reverse(obj.url_name)
+            return content_box.get_absolute_url()
         except NoReverseMatch:
-            raise Http404(f"Unable to find the URL for the ContentBox with url_name '{obj.url_name}'")
-        return obj
+            return None
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.has_permission():
+            return super().dispatch(request, *args, **kwargs)
+
+        content_box: ContentBox = super().get_object()
+        # Check if the requested host/subdomain has a registered URL for this content box
+        try:
+            django_reverse(content_box.url_name)
+        except NoReverseMatch:
+            # ...if not, check if another subdomain has a registered URL for it
+            url_on_other_subdomain = self._absolute_url(content_box)
+            if url_on_other_subdomain:
+                host_kwargs = get_reverse_host_kwargs_from_url(url_on_other_subdomain)
+                change_url = reverse('content_box_update', args=[content_box.pk], **host_kwargs)
+                return HttpResponseRedirect(change_url)
+            else:
+                # We don't know which permissions should be needed to view this page
+                # (since e.g. the content boxes on the internal subdomain has different change permissions than those on the main subdomain),
+                # so redirect to the Django admin site to be safe
+                return render(request, 'contentbox/content_box_form__error_display_url_not_found.html', {
+                    'form_title': _("Cannot change this ContentBox on this subdomain"),
+                    'django_admin_change_url': reverse_admin('contentbox_contentbox_change', args=[content_box.pk]),
+                    'index_page_url': self.request.build_absolute_uri("/"),
+                    'base_template': self.base_template,
+                })
+
+        return super().dispatch(request, *args, **kwargs)
 
     def get_permission_required(self):
         return self.permission_required + self.get_object().extra_change_perms_str_tuple
+
+    # Cache this method, as it will be called multiple times
+    # (`maxsize` need only be 1, since the cached value is not supposed to last longer than each request)
+    @lru_cache(maxsize=1)
+    def get_object(self, queryset=None):
+        return super().get_object()
 
     def get_form_class(self):
         # Allow editing HTML source code if this permission is required by the view
@@ -76,11 +117,12 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
         return super().get_form_class()
 
     def get_form_title(self):
-        return self._get_page_title(_("Edit"))
+        return self._get_page_title(_("Change"))
 
     def _get_page_title(self, prefixed_verb: str = None):
         prefix = f"{prefixed_verb} " if prefixed_verb else ""
-        html_text = f"{prefix}<code>{self.object.url_name}</code> (<code>{self.get_success_url()}</code>)"
+        url_path = urlparse(self.get_success_url()).path
+        html_text = f"{prefix}<code>{self.object.url_name}</code> (<code>{url_path}</code>)"
         return mark_safe(html_text)
 
     def get_back_button_link(self):
@@ -90,4 +132,4 @@ class EditContentBoxView(PermissionRequiredMixin, CustomFieldsetFormMixin, Updat
         return self._get_page_title(pgettext("view page", "View"))
 
     def get_success_url(self):
-        return reverse(self.object.url_name)
+        return self._absolute_url(self.object)

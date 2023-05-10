@@ -1,0 +1,38 @@
+{% extends 'web/base.html' %}
+{% load i18n %}
+{% load static %}
+{% load html_tags %}
+
+
+{% block title %}
+    {% blocktranslate with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktranslate %}
+{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'news/css/event/ticket/event_ticket_card.css' %}"/>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+        {% if ticket.user == request.user or perms.news.view_eventticket %}
+            <h1 class="word-breaking hyphenated">
+                {% blocktranslate with title=ticket.registered_event.title %}Ticket for “{{ title }}”{% endblocktranslate %}
+            </h1>
+            <div class="word-breaking hyphenated">
+                <b>{% translate "Registered to" %}:</b> {{ ticket.name }},
+                {{ ticket.email|urlize_target_blank }}
+            </div>
+            <br/>
+
+            <div class="ui cards">
+                {% include 'news/event/ticket/event_ticket_card.html' with ticket=ticket %}
+            </div>
+        {% else %}
+            <div class="ui error message">
+                {% translate "This ticket is registered to another account. Please" %}
+                <a href="{% url 'login' %}?next={{ ticket.get_absolute_url }}">{% translate "log in" %}</a>
+                {% translate "to the correct account to see your ticket." %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock body %}

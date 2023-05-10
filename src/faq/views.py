@@ -15,14 +15,14 @@ class FAQListView(ListView):
     queryset = (
         Category.objects.prefetch_questions_and_default_order_by(
             questions_attr_name='existing_questions',
-        ).filter(questions__isnull=False).distinct()  # remove duplicates that can appear when filtering on values across tables
+        ).filter(questions__isnull=False).distinct()  # Remove duplicates that can appear when filtering on values across tables
     )
     template_name = 'faq/faq_list.html'
     context_object_name = 'categories'
 
 
-class FAQAdminPanelView(PermissionRequiredMixin, TemplateView):
-    template_name = 'faq/faq_admin_panel.html'
+class AdminFAQPanelView(PermissionRequiredMixin, TemplateView):
+    template_name = 'faq/admin_faq_panel.html'
 
     def has_permission(self):
         user: User = self.request.user
@@ -61,13 +61,14 @@ class QuestionFormMixin(CustomFieldsetFormMixin, ABC):
 class QuestionCreateView(PermissionRequiredMixin, QuestionFormMixin, CreateView):
     permission_required = ('faq.add_question',)
 
-    form_title = _("New Question")
+    form_title = _("Add Question")
+    save_button_text = _("Add")
 
 
 class QuestionUpdateView(PermissionRequiredMixin, QuestionFormMixin, UpdateView):
     permission_required = ('faq.change_question',)
 
-    form_title = _("Edit Question")
+    form_title = _("Change Question")
 
 
 class QuestionDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
@@ -88,13 +89,14 @@ class CategoryFormMixin(CustomFieldsetFormMixin, ABC):
 class CategoryCreateView(PermissionRequiredMixin, CategoryFormMixin, CreateView):
     permission_required = ('faq.add_category',)
 
-    form_title = _("New Category")
+    form_title = _("Add Category")
+    save_button_text = _("Add")
 
 
 class CategoryUpdateView(PermissionRequiredMixin, CategoryFormMixin, UpdateView):
     permission_required = ('faq.change_category',)
 
-    form_title = _("Edit Category")
+    form_title = _("Change Category")
 
 
 class CategoryDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

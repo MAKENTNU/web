@@ -41,16 +41,16 @@
                             {% endif %}
 
                             {% if article.private %}
-                                <div class="ui make-bg-yellow mini label">
-                                    {% translate "internal"|capfirst %}
+                                <div class="ui make-bg-blue mini label">
+                                    {% translate "internal"|capfirst context "article" %}
                                 </div>
                             {% endif %}
                         </div>
                         <div class="word-breaking hyphenated description">{{ article.clickbait }}</div>
                     </div>
                     <div class="ui two bottom attached buttons">
-                        <a class="ui make-bg-yellow button" href="{% url 'article_edit' article.pk %}">
-                            <i class="edit icon"></i>{% translate "Edit" %}
+                        <a class="ui make-bg-yellow button" href="{% url 'article_update' article.pk %}">
+                            <i class="edit icon"></i>{% translate "Change" %}
                         </a>
                         {% if perms.news.delete_article %}
                             <a class="delete-modal-button ui red button"

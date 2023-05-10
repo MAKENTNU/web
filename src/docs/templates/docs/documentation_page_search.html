@@ -1,0 +1,69 @@
+{% extends 'docs/base.html' %}
+{% load i18n %}
+
+
+{% block title %}{% translate "Search results" %}: "{{ query }}" | {% translate "Docs" %}{% endblock title %}
+
+{% block extra_head %}
+    <script>
+        $(document).ready(function () {
+            $(".page-selector").click((event) => {
+                $("#page-form-page-input").val($(event.target).data("page"));
+                $("#page-form").submit();
+            });
+        });
+    </script>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui container">
+        <h1>{% translate "Search" %}</h1>
+
+        <form class="dont-prevent-leaving ui form" method="GET">
+            <div class="ui field">
+                <div class="ui icon input">
+                    <input type="text" name="query" placeholder="{% translate "Search" %}" value="{{ query }}"/>
+                    <i class="link search icon"></i>
+                </div>
+            </div>
+        </form>
+
+        {% if pages %}
+            <div class="ui relaxed divided list">
+                {% for page in pages %}
+                    <div class="ui item">
+                        <div class="content">
+                            <div class="header">
+                                <a href="{{ page.get_absolute_url }}">{{ page.title }}</a>
+                            </div>
+                            <div class="description">
+                                {% if page.current_content %}
+                                    {{ page.current_content.content|striptags|truncatechars:300 }}
+                                {% else %}
+                                    {% translate "No content" %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% translate "There are no documents for that search. Try searching for something else." %}
+        {% endif %}
+
+        <form id="page-form" class="dont-prevent-leaving" method="GET">
+            <input type="hidden" name="query" value="{{ query }}"/>
+            <input id="page-form-page-input" type="hidden" name="page" value="{{ page }}"/>
+        </form>
+
+        {# Create buttons to allow changing page to one that is close to the current selected page #}
+        <div class="ui buttons">
+            {% for page_i in pages_to_show %}
+                <div class="ui make-bg-yellow {% if page_i == page %}disabled{% endif %} button page-selector"
+                     data-page="{{ page_i }}">
+                    {{ page_i }}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock body %}

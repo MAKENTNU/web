@@ -16,7 +16,7 @@
 {% block body %}
 
     <div class="ui container">
-        <a href="{% url 'admin_event_detail' event.pk %}">
+        <a href="{% url 'admin_event_detail' event.pk %}" style="font-size: 1.15rem;">
             <i class="angle double left icon"></i>{% translate "Event admin page" %}
         </a>
         <h1 class="word-breaking hyphenated">{{ event.title }}</h1>

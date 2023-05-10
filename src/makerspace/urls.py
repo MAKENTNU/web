@@ -1,17 +1,32 @@
-from django.contrib.auth.decorators import login_required
-from django.urls import path
+from django.urls import include, path
 
-from contentbox.views import DisplayContentBoxView
+from contentbox.views import ContentBoxDetailView
 from . import views
 
 
+equipment_urlpatterns = [
+    path("", views.EquipmentListView.as_view(), name='equipment_list'),
+    path("<int:pk>/", views.EquipmentDetailView.as_view(), name='equipment_detail'),
+]
+
 urlpatterns = [
     path("", views.MakerspaceView.as_view(url_name='makerspace'), name='makerspace'),
-    path("equipment/", views.EquipmentListView.as_view(), name='makerspace_equipment_list'),
-    path("equipment/admin/", login_required(views.AdminEquipmentListView.as_view()), name='makerspace_admin_equipment_list'),
-    path("equipment/admin/create/", login_required(views.CreateEquipmentView.as_view()), name='makerspace_equipment_create'),
-    path("equipment/admin/<int:pk>/edit/", login_required(views.EditEquipmentView.as_view()), name='makerspace_equipment_edit'),
-    path("equipment/admin/<int:pk>/delete/", login_required(views.DeleteEquipmentView.as_view()), name='makerspace_equipment_delete'),
-    path("equipment/<int:pk>/", views.EquipmentDetailView.as_view(), name='makerspace_equipment_detail'),
-    DisplayContentBoxView.get_path('rules'),
+    path("equipment/", include(equipment_urlpatterns)),
+    ContentBoxDetailView.get_path('rules'),
+]
+
+# --- Admin URL patterns (imported in `web/urls.py`) ---
+
+specific_equipment_adminpatterns = [
+    path("change/", views.EquipmentUpdateView.as_view(), name='equipment_update'),
+    path("delete/", views.EquipmentDeleteView.as_view(), name='equipment_delete'),
+]
+equipment_adminpatterns = [
+    path("", views.AdminEquipmentListView.as_view(), name='admin_equipment_list'),
+    path("add/", views.EquipmentCreateView.as_view(), name='equipment_create'),
+    path("<int:pk>/", include(specific_equipment_adminpatterns)),
+]
+
+adminpatterns = [
+    path("equipment/", include(equipment_adminpatterns)),
 ]

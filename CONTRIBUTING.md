@@ -267,7 +267,10 @@ Leave two empty lines between class and function (i.e. not method) definitions, 
 
 #### Folder/directory location
 
-* Tests should be placed within a `tests` directory per app.
+* Tests should always be placed within a `tests` directory per app.
+  * _In addition to helping keep the file structure clean, this also makes writing various configuration files easier,
+    like the `ignore` patterns in [`codecov.yml`](codecov.yml), and the `exclude_patterns` and `tests_patterns` in
+    [`.codeclimate.yml`](.codeclimate.yml)._
 * Templates should be placed within an `<app name>` directory, within a `templates` directory per app.
   * For example:
     * `app_name/templates/app_name/template_name.html`
@@ -353,13 +356,15 @@ Sort the contents of a class in the following order:
 In general, names of views related to model objects should comply with one of the following patterns:
 * `<Model name><Noun or verb>View` - in most cases;
 * `Admin<Model name><Noun or verb>View` - for views that only admins should have access to;
-* `API<Model name><Noun or verb>View` - for views responding with JSON;
-* `AdminAPI<Model name><Noun or verb>View` - for views responding with JSON that only admins should have access to;
+* `API<Model name><Noun or verb>View` - for views responding exclusively with JSON;
+* `AdminAPI<Model name><Noun or verb>View` - for views responding exclusively with JSON that only admins should have access to;
 * where:
   * `<Model name>` is the name of the model class that the view is related to.
   * `<Noun or verb>` is a word concisely outlining the contents of the view.
     * If the view inherits from one of Django's top-level generic views (`ListView`, `DetailView`, `CreateView`, `UpdateView` or `DeleteView`),
       the word should be the name of the generic view - without the `View` suffix.
+
+(Note that the `Admin`/`API`/`AdminAPI` prefixes correspond with the path prefixes mentioned in [Path prefixes](#path-prefixes).)
 
 #### View class order
 
@@ -397,6 +402,17 @@ or `test_get_related_events_returns_expected_events()` (for a model method named
 
 In general, try to make paths as [RESTful](https://hackernoon.com/restful-api-designing-guidelines-the-best-practices-60e1d954e7c9) as possible.
 
+Let all paths end with a `/`
+(except if the first argument to `path()` would have been just `"/"`, in which case the argument should be an empty string).
+
+###### Path naming conventions:
+
+Use `kebab-case`, and concatenate compound nouns - as long as it's still fairly legible.
+Examples:
+* `machinetypes/` is preferable over `machine-types/`;
+* `softwareengineers/` is preferable over `software-engineers/` - even if there's a double E, which makes it slightly less legible;
+* `find-free-slots/` is preferable over `findfreeslots/`.
+
 For paths that refer to views inheriting from one of the following
 [generic views](https://docs.djangoproject.com/en/stable/ref/class-based-views/flattened-index/),
 the path specified is encouraged:
@@ -413,16 +429,26 @@ This makes the paths consistent with the ones used by the
 [Django admin site](https://docs.djangoproject.com/en/stable/ref/contrib/admin/#reversing-admin-urls),
 and the names of the corresponding [default model permissions](https://docs.djangoproject.com/en/stable/topics/auth/default/#default-permissions).
 
+###### Path prefixes:
+
+Prefix all endpoints' paths with the following patterns:
+* `admin/` - if the endpoint/webpage should only be accessed by admins;
+* `api/` - if the endpoint responds exclusively with JSON;
+* `api/admin/` - if the endpoint responds exclusively with JSON **and** should only be accessed by admins.
+
+See [`urlpatterns` for admin/API view paths](#urlpatterns-for-adminapi-view-paths) for how to manage this with `urlpatterns`.
+
+_The language path prefix is not affected by the above rules,
+so e.g. the English version of `/api/admin/some-path/` being `/en/api/admin/some-path/` is perfectly fine._
+
+###### Other path grouping:
+
 If a model is conceptually subordinated another model (e.g. an event occurrence model that is connected to an event model),
 the paths for the views related to that "sub-model" should be relative to the paths of the "super-model" -
 while still complying with the guidelines above.
-For example: `event/<Event:event>/occurrences/<int:pk>/change/`
-([see the docs on custom path converters](https://docs.djangoproject.com/en/stable/topics/http/urls/#registering-custom-path-converters)).
+For example: `event/<int:pk>/occurrences/<int:occurrence_pk>/change/`.
 
-Lastly, let all paths end with a `/`
-(except if the first argument to `path()` would have been `"/"`, in which case it should be an empty string).
-
-#### Path name
+#### Path `name` (the argument of `path()`)
 
 Use `snake_case`.
 
@@ -454,10 +480,10 @@ from django.urls import path
 urlpatterns = [
     path("events/", ..., name='event_list'),
     path("events/add/", ..., name='event_create'),
-    path("events/<Event:event>/", ..., name='event_detail'),
-    path("events/<Event:event>/change/", ..., name='event_update'),
-    path("events/<Event:event>/occurrences/", ..., name='event_occurrence_list'),
-    path("events/<Event:event>/occurrences/<int:pk>/", ..., name='event_occurrence_detail'),
+    path("events/<int:pk>/", ..., name='event_detail'),
+    path("events/<int:pk>/change/", ..., name='event_update'),
+    path("events/<int:pk>/occurrences/", ..., name='event_occurrence_list'),
+    path("events/<int:pk>/occurrences/<int:occurrence_pk>/", ..., name='event_occurrence_detail'),
 ]
 ```
 would be:
@@ -469,17 +495,15 @@ event_occurrence_urlpatterns = [
     path("", ..., name='event_occurrence_list'),
     path("<int:pk>/", ..., name='event_occurrence_detail'),
 ]
-
 specific_event_urlpatterns = [
     path("", ..., name='event_detail'),
     path("change/", ..., name='event_update'),
     path("occurrences/", include(event_occurrence_urlpatterns)),
 ]
-
 event_urlpatterns = [
     path("", ..., name='event_list'),
     path("add/", ..., name='event_create'),
-    path("<Event:event>/", include(specific_event_urlpatterns)),
+    path("<int:pk>/", include(specific_event_urlpatterns)),
 ]
 
 urlpatterns = [
@@ -491,15 +515,17 @@ urlpatterns = [
 
 For each app's `urls.py` file, place paths inside lists with the following names:
 * `adminpatterns` - if they refer to a view that only admins should have access to;
-* `apipatterns` - if they refer to a view responding with JSON;
-* `adminapipatterns` - if they refer to a view responding with JSON that only admins should have access to.
+* `apipatterns` - if they refer to a view responding exclusively with JSON;
+* `adminapipatterns` - if they refer to a view responding exclusively with JSON that only admins should have access to.
 
-Each of these lists should now only contain paths referring to views with the corresponding prefixes listed in [View class name](#view-class-name).
+_Each of these lists should now only contain paths referring to views with the corresponding class name prefixes listed in
+[View class name](#view-class-name)._
 
-These lists should then be imported in [`web/urls.py`](web/urls.py), and `include()`d in
+These lists should then be imported in [`web/urls.py`](src/web/urls.py), and `include()`d in
 `admin_urlpatterns`, `api_urlpatterns` and `admin_api_urlpatterns`, respectively -
 with the same path route argument as the app's other paths.
-(This ensures that all paths start with the relevant `admin/`, `api/` or `api/admin/` prefix.)
+(This ensures that all paths start with the relevant `admin/`, `api/` or `api/admin/` prefix;
+see [Path prefixes](#path-prefixes).)
 For example:
 ```python
 from django.urls import include, path
@@ -862,7 +888,7 @@ Unused imports should be removed.
 #### Unnecessary `print` statements
 
 These should be removed,
-or replaced by fitting `logging` calls - preferably through the utility functions in [`logging_utils.py`](util/logging_utils.py).
+or replaced by fitting `logging` calls - preferably through the utility functions in [`logging_utils.py`](src/util/logging_utils.py).
 
 #### Variable, function or class names shadowing built-in or imported names
 
@@ -1077,7 +1103,7 @@ It's generally best to use our custom `permission_required_else_denied()` decora
 #### Missing page title
 
 Views responding with a complete webpage should always set the page title (i.e. the `<title>` tag),
-e.g. by setting the `page_title` context variable - which is used in [`web/base.html`](/web/templates/web/base.html).
+e.g. by setting the `page_title` context variable - which is used in [`web/base.html`](src/web/templates/web/base.html).
 
 *See [the equivalent code smell for templates](#missing-page-title-1).*
 
@@ -1178,9 +1204,9 @@ and/or `clean_<field name>()` methods (see the steps for [form and field validat
 
 #### Test cases not cleaning up media files
 
-When using temporary files (like [`test_utils.MOCK_JPG_FILE`](/util/test_utils.py), which is a `SimpleUploadedFile`) in tests,
+When using temporary files (like [`test_utils.MOCK_JPG_FILE`](src/util/test_utils.py), which is a `SimpleUploadedFile`) in tests,
 these files should always be removed after the tests have run.
-This can be done by simply letting the test case class extend [`test_utils.CleanUpTempFilesTestMixin`](/util/test_utils.py).
+This can be done by simply letting the test case class extend [`test_utils.CleanUpTempFilesTestMixin`](src/util/test_utils.py).
 
 
 
@@ -1278,6 +1304,9 @@ The latter can be used to e.g. ensure the value of a field is unique per value o
 [Mozilla's accessibility testing
 checklist](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Cross_browser_testing/Accessibility#accessibility_testing_checklist)
 includes a useful overview over things that can be checked that are relevant to this code smell.
+A more complete and detailed "checklist" is [the Web Content Accessibility Guidelines (WCAG) standard](
+https://www.w3.org/WAI/WCAG21/quickref/?currentsidebar=%23col_customize&levels=aa%2Caaa),
+which provides a customizable quick reference - including choosing between three levels of conformance to the standard.
 
 To implement proper accessibility practices, Mozilla has a must-read [introductory guide on
 HTML and accessibility](https://developer.mozilla.org/en-US/docs/Learn/Accessibility/HTML), and [a guide on
@@ -1300,7 +1329,7 @@ Lastly, to quote Mozilla's HTML and accessibility guide mentioned above:
 
 Templates rendering a complete webpage should always set the page title (i.e. the `<title>` tag).
 
-If the template is extending [`web/base.html`](/web/templates/web/base.html) (directly or through another template),
+If the template is extending [`web/base.html`](src/web/templates/web/base.html) (directly or through another template),
 this can be done e.g. by setting the `page_title` context variable or by overriding the `title` block.
 
 *See [the equivalent code smell for views](#missing-page-title).*

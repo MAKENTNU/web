@@ -1,25 +1,23 @@
 from dataclasses import dataclass
-from datetime import timedelta
 from http import HTTPStatus
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.html import escape
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic import DeleteView, TemplateView
+from django.views.generic import TemplateView
 
-from card import utils as card_utils
 from card.views import RFIDView
 from util.view_utils import PreventGetRequestsMixin
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
 
 
-class CheckInView(RFIDView):
+class AdminCheckInView(RFIDView):
 
     def card_number_valid(self, card_number):
         profiles = Profile.objects.filter(user__card_number=card_number)
@@ -34,7 +32,7 @@ class CheckInView(RFIDView):
             return HttpResponse('check in'.encode(), status=HTTPStatus.OK)
 
 
-class ShowSkillsView(TemplateView):
+class UserSkillListView(TemplateView):
     template_name = 'checkin/user_skill_list.html'
     expiry_time = (60 * 60) * 3
 
@@ -80,7 +78,7 @@ class CompletedCourseMessageStruct:
     usage_hint: str = None
 
 
-class ProfilePageView(TemplateView):
+class ProfileDetailView(TemplateView):
     template_name = 'checkin/profile_detail.html'
 
     def post(self, request):
@@ -88,7 +86,7 @@ class ProfilePageView(TemplateView):
             rating = int(request.POST.get('rating'))
             skill_id = int(request.POST.get('skill'))
         except ValueError:
-            return HttpResponseRedirect(reverse('profile'))
+            return HttpResponseRedirect(reverse('profile_detail'))
 
         profile = request.user.profile
         skill = get_object_or_404(Skill, id=skill_id)
@@ -102,7 +100,7 @@ class ProfilePageView(TemplateView):
             elif rating != 0:
                 UserSkill.objects.create(skill=skill, profile=profile, skill_level=rating)
 
-        return HttpResponseRedirect(reverse('profile'))
+        return HttpResponseRedirect(reverse('profile_detail'))
 
     def get_context_data(self, **kwargs):
         user = self.request.user
@@ -139,7 +137,7 @@ class ProfilePageView(TemplateView):
             ),
         ]
 
-        """ Commented out because it's currently not in use; see the template code in `profile_internal.html`
+        """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
         user_skills = profile.user_skills.all()
         skill_dict = {}
         for user_skill in user_skills:
@@ -160,9 +158,9 @@ class ProfilePageView(TemplateView):
         return context
 
 
-class SuggestSkillView(PermissionRequiredMixin, TemplateView):
+class AdminSuggestSkillView(PermissionRequiredMixin, TemplateView):
     permission_required = ('checkin.add_suggestskill',)
-    template_name = 'checkin/suggest_skill.html'
+    template_name = 'checkin/admin_suggest_skill.html'
     extra_context = {
         'suggestions': SuggestSkill.objects.all(),
     }
@@ -175,17 +173,17 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
 
         if suggestion.strip() and not suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         elif not suggestion.strip() and suggestion_english.strip():
             messages.error(request, _("Enter both norwegian and english skill name"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         elif not suggestion.strip() and not suggestion_english.strip():
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
 
         if Skill.objects.filter(title=suggestion).exists() or Skill.objects.filter(
                 title_en=suggestion_english).exists():
             messages.error(request, _("Skill already exists!"))
-            return HttpResponseRedirect(reverse('suggest_skill'))
+            return HttpResponseRedirect(reverse('admin_suggest_skill'))
         else:
             if SuggestSkill.objects.filter(title=suggestion).exists():
                 s = SuggestSkill.objects.get(title=suggestion)
@@ -204,44 +202,10 @@ class SuggestSkillView(PermissionRequiredMixin, TemplateView):
                 SuggestSkill.objects.get(title=suggestion).delete()
                 messages.success(request, _("Skill added!"))
 
-        return HttpResponseRedirect(reverse('suggest_skill'))
+        return HttpResponseRedirect(reverse('admin_suggest_skill'))
 
 
-class VoteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, TemplateView):
-    permission_required = ('checkin.add_suggestskill',)
-
-    def post(self, request):
-        suggestion = SuggestSkill.objects.get(pk=int(request.POST.get('pk')))
-        forced = request.POST.get('forced') == "true"
-        response_dict = {
-            'skill_passed': False,
-            'user_exists': suggestion.voters.filter(user=request.user).exists(),
-            'is_forced': forced,
-        }
-        if forced:
-            Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
-            suggestion.delete()
-            return JsonResponse(response_dict)
-
-        suggestion.voters.add(request.user.profile)
-        response_dict['skill_passed'] = suggestion.voters.count() >= 5
-        if response_dict['skill_passed']:
-            Skill.objects.create(title=suggestion.title, title_en=suggestion.title_en, image=suggestion.image)
-            suggestion.delete()
-
-        return JsonResponse(response_dict)
-
-
-class DeleteSuggestionView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
-    permission_required = ('checkin.delete_suggestskill',)
-    model = SuggestSkill
-
-    def delete(self, request, *args, **kwargs):
-        self.get_object().delete()
-        return JsonResponse({'suggestion_deleted': True})
-
-
-class RegisterCardView(RFIDView):
+class AdminRegisterCardView(RFIDView):
 
     def card_number_valid(self, card_number):
         if Profile.objects.filter(user__card__number=card_number).exists():
@@ -252,33 +216,11 @@ class RegisterCardView(RFIDView):
             return HttpResponse("Card scanned", status=HTTPStatus.OK)
 
 
-class RegisterProfileView(PreventGetRequestsMixin, TemplateView):
-
-    def post(self, request):
-        scan_exists = RegisterProfile.objects.exists()
-        response_dict = {
-            'scan_exists': scan_exists,
-            'scan_is_recent': False,
-        }
-        if scan_exists:
-            scan_is_recent = (timezone.now() - RegisterProfile.objects.first().last_scan) < timedelta(seconds=60)
-            response_dict['scan_is_recent'] = scan_is_recent
-            if scan_is_recent:
-                card_number = RegisterProfile.objects.first().card_id
-                is_duplicate = card_utils.is_duplicate(card_number, request.user.username)
-                if is_duplicate:
-                    return HttpResponse(status=HTTPStatus.CONFLICT)
-                request.user.card_number = card_number
-                request.user.save()
-        RegisterProfile.objects.all().delete()
-        return JsonResponse(response_dict)
-
-
-class EditProfilePictureView(PreventGetRequestsMixin, View):
+class AdminProfilePictureUpdateView(PreventGetRequestsMixin, View):
 
     def post(self, request, *args, **kwargs):
         image = request.FILES.get('image')
         profile = request.user.profile
         profile.image = image
         profile.save()
-        return HttpResponseRedirect(reverse('profile'))
+        return HttpResponseRedirect(reverse('profile_detail'))
