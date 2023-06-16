@@ -2,7 +2,7 @@
 Django==4.1.7
 django-hosts==5.2
 django-ckeditor==6.5.1
-django-cleanup==7.0.0
+django-cleanup==8.0.0
 django-constance[database]==2.9.1
 django-decorator-include==3.0
 # (See this page for a list of all management commands: https://django-extensions.readthedocs.io/en/latest/command_extensions.html)
