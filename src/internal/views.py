@@ -7,8 +7,9 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView, DetailView
 from django.views.generic.detail import SingleObjectMixin
 
 from contentbox.views import ContentBoxDetailView, ContentBoxUpdateView
@@ -16,9 +17,9 @@ from make_queue.models.course import Printer3DCourse
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
 from .forms import (
     AddMemberForm, ChangeMemberForm, MemberQuitForm, MemberRetireForm, MemberStatusForm, QuoteForm, RestrictedChangeMemberForm, SecretsForm,
-    SystemAccessValueForm,
+    SystemAccessValueForm, LoreForm
 )
-from .models import Member, Quote, Secret, SystemAccess
+from .models import Member, Quote, Secret, SystemAccess, Lore
 
 
 class InternalContentBoxDetailView(ContentBoxDetailView):
@@ -330,5 +331,97 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
     def has_permission(self):
         return (
                 self.request.user.has_perm('internal.delete_quote')
+                or self.request.user == self.get_object().author
+        )
+
+
+class LoreListView(ListView):
+    template_name = 'internal/lore_list.html'
+    model = Lore
+    context_object_name = 'lore_topics'
+    ordering = 'title'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_article'] = False
+        return context
+
+
+class LoreDetailView(DetailView):
+    template_name = 'internal/lore_list.html'
+    model = Lore
+    context_object_name = 'lore_article'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['show_article'] = True
+        lore_topics = Lore.objects.all().order_by('title')
+        context['lore_topics'] = lore_topics
+        return context
+
+
+class LoreFormMixin(CustomFieldsetFormMixin, ABC):
+    model = Lore
+    form_class = LoreForm
+    base_template = 'internal/base.html'
+    back_button_link = reverse_lazy('lore_list')
+    back_button_text = _("Lore wiki")
+
+
+class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
+    permission_required = ('internal.add_lore',)
+    form_title = _("New lore article")
+
+    def form_valid(self, form):
+        title = form.cleaned_data['title']
+        slug = slugify(title)
+        if Lore.objects.filter(slug=slug).exists():
+            form.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
+            return self.form_invalid(form)
+        else:
+            return super().form_valid(form)
+
+    def get_success_url(self):
+        slug = slugify(self.object)
+        return reverse_lazy('lore_article', args=[slug])
+
+
+class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
+    form_title = _("Edit lore article")
+    back_button_text = _("Lore article")
+
+    def has_permission(self):
+        return (
+                self.request.user.has_perm('internal.change_lore')
+                or self.request.user == self.get_object().author
+        )
+
+    def get_back_button_link(self):
+        title = self.get_form_kwargs()['instance']
+        slug = slugify(title)
+        return reverse_lazy('lore_article', args=[slug])
+
+    def form_valid(self, form):
+        title = form.cleaned_data['title']
+        slug = slugify(title)
+        article = super().get_object()
+        if (article.slug != slug) and (Lore.objects.filter(slug=slug).exists()):
+            form.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
+            return self.form_invalid(form)
+        else:
+            return super().form_valid(form)
+
+    def get_success_url(self):
+        slug = slugify(self.object)
+        return reverse_lazy('lore_article', args=[slug])
+
+
+class LoreDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    model = Lore
+    success_url = reverse_lazy('lore_list')
+
+    def has_permission(self):
+        return (
+                self.request.user.has_perm('internal.delete_lore')
                 or self.request.user == self.get_object().author
         )

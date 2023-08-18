@@ -72,6 +72,17 @@ quote_urlpatterns = [
     path("<int:pk>/", include(specific_quote_urlpatterns)),
 ]
 
+specific_lore_urlpatterns = [
+    path("", views.LoreDetailView.as_view(), name='lore_article'),
+    path("change/", views.LoreUpdateView.as_view(), name='update_lore'),
+    path("delete/", views.LoreDeleteView.as_view(), name='delete_lore'),
+]
+lore_urlpatterns = [
+    path("", views.LoreListView.as_view(), name='lore_list'),
+    path("add/", views.LoreCreateView.as_view(), name='add_lore'),
+    path("<slug:slug>/", include(specific_lore_urlpatterns)),
+]
+
 internal_urlpatterns = [
     path("", views.HomeView.as_view(url_name='home'), name='home'),
     path("bulletins/", include(committee_bulletin_urlpatterns)),
@@ -82,6 +93,7 @@ internal_urlpatterns = [
     path("members/", decorator_include(permission_required_else_denied('internal.view_member'), member_urlpatterns)),
     path("secrets/", decorator_include(permission_required_else_denied('internal.view_secret'), secret_urlpatterns)),
     path("quotes/", decorator_include(permission_required_else_denied('internal.view_quote'), quote_urlpatterns)),
+    path("lore/", decorator_include(permission_required_else_denied('internal.view_lore'), lore_urlpatterns)),
 ]
 
 urlpatterns += i18n_patterns(

@@ -1,0 +1,63 @@
+{% extends 'internal/base.html' %}
+{% load i18n %}
+{% load static %}
+
+
+{% block title %}
+    {% translate "The wiki of MAKE lore" %}
+{% endblock title %}
+
+{% block header_links %}
+    <link rel="stylesheet" href="{% static 'web/css/header.css' %}"/>
+    <script defer src="{% static 'web/js/header.js' %}"></script>
+{% endblock header_links %}
+
+{% block body %}
+    <div id="lore-wiki-list">
+        <h2>{% translate "Topics" %}
+        {% if perms.internal.add_lore %}
+            <a href="{% url 'add_lore' %}">
+                <i class="green plus icon"></i>
+            </a>
+        {% endif %}</h2>
+        <ul>
+            {% for lore_topic in lore_topics %}
+                <li><a
+                    {% if show_article %}
+                        {% if lore_topic.slug == lore_article.slug %}
+                            class="selected-lore-article"
+                        {% endif %}
+                    {% endif %}
+                href="{% url 'lore_article' lore_topic.slug %}">{{ lore_topic.title|capfirst }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="lore-article">
+        {% if show_article %}
+            <h1>{{ lore_article.title|capfirst }}
+            {% if perms.internal.delete_lore %}
+                <a class="delete-modal-button"
+                    data-url="{% url 'delete_lore' lore_article.slug %}"
+                    data-obj-name="{{ lore_article }}">
+                    <i class="right floated red trash icon"></i>
+                </a>
+            {% endif %}
+            {% if perms.internal.change_lore %}
+                <a href="{% url 'update_lore' lore_article.slug %}">
+                    <i class="right floated make-col-yellow pencil icon"></i>
+                </a>
+            {% endif %}</h1>
+            <div class="lore-container">
+                {% if lore_article.image %}
+                    <img class="lore-img" src="{{ lore_article.image.url }}" alt="{{ lore_article.title }}">
+                {% endif %}
+                <p>{{ lore_article.text|linebreaks }}</p>
+            </div>
+        {% else %}
+            <h1>{% translate "Welcome to the wiki of MAKE lore" %}</h1>
+            <p>{% translate "Click a topic in the menu to access a wiki article" %}</p>
+        {% endif %}
+    </div>
+{% endblock body %}
+
+{% block footer %}{% endblock footer %}
