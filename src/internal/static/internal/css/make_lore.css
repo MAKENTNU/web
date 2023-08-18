@@ -1,0 +1,72 @@
+#lore-wiki-list {
+    float: left;
+    width: 20%;
+    padding: 3rem 0 0 40px;
+}
+
+#lore-wiki-list a {
+    color: black;
+}
+
+#lore-wiki-list ul {
+    list-style-type: none;
+    list-style-position: inside;
+    padding: 0;
+}
+
+#lore-wiki-list .selected-lore-article {
+    font-weight: bold;
+}
+
+#lore-article {
+    float: left;
+    width: 80%;
+    padding: 3rem 25% 0 5%;
+}
+
+#lore-article p {
+    text-align: justify;
+}
+
+#lore-article .lore-img {
+    width: 35%;
+    float: right;
+    margin: 7px 0 15px 35px;
+}
+
+#lore-article .lore-container {
+    margin-bottom: 50px;
+}
+
+#lore-article .right.floated {
+    float: right;
+}
+
+#lore-wiki-list .plus.icon {
+    font-size: 90%;
+}
+
+#lore-article .trash.icon,
+#lore-article .pencil.icon {
+    font-size: 70%;
+}
+
+@media screen and (max-width: 991.98px) {
+    #lore-wiki-list {
+        float: none;
+        width: 100%;
+        padding: 2rem 15% 0 15%;
+    }
+
+    #lore-article {
+        float: none;
+        width: 100%;
+        padding: 3rem 15% 2rem 15%;
+    }
+
+    #lore-article .lore-img {
+        float: none;
+        width: 100%;
+        margin: 10px 0 10px 0;
+    }
+}
