@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
 from django.utils import timezone
-from django.utils.text import capfirst
+from django.utils.text import capfirst, slugify
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumber_field.phonenumber import PhoneNumber
@@ -15,6 +15,8 @@ from simple_history.models import HistoricalRecords
 from groups.models import Committee
 from users.models import User
 from util.auth_utils import perm_to_str, perms_to_str
+from util.modelfields import CompressedImageField
+from util.storage import OverwriteStorage, UploadToUtils
 from util.url_utils import reverse_internal
 from web.modelfields import UnlimitedCharField
 from .modelfields import SemesterField
@@ -314,3 +316,32 @@ class Quote(models.Model):
 
     def __str__(self):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)
+
+
+def internal_subclass_directory_path(instance: 'Lore', filename: str):
+    model_name = instance._meta.model_name
+    return f"internal/{model_name}s/{filename}"
+
+
+class Lore(models.Model):
+    title = models.CharField(max_length=50, verbose_name=_("title"), null=False)
+    slug = models.SlugField()
+    text = models.TextField(verbose_name=_("text"))
+    image = CompressedImageField(
+        upload_to=UploadToUtils.get_pk_prefixed_filename_func(internal_subclass_directory_path),
+        max_length=200,
+        storage=OverwriteStorage(),
+        blank=True,
+        verbose_name=_("image")
+    )
+
+    def __str__(self):
+        return _("{title}").format(title=self.title)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'Lore articles'
+

@@ -5,7 +5,7 @@ from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
 from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped
-from .models import Member, Quote, Secret, SystemAccess
+from .models import Member, Quote, Secret, SystemAccess, Lore
 
 
 class MemberAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
@@ -93,7 +93,13 @@ class QuoteAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdm
     autocomplete_fields = ('author',)
 
 
+class LoreAdmin(admin.ModelAdmin):
+    ordering = ('title',)
+    exclude = ('slug',)
+
+
 admin.site.register(Member, MemberAdmin)
 admin.site.register(SystemAccess, SystemAccessAdmin)
 admin.site.register(Secret, SecretAdmin)
 admin.site.register(Quote, QuoteAdmin)
+admin.site.register(Lore, LoreAdmin)
