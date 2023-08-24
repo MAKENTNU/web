@@ -36,14 +36,14 @@
     <div id="lore-article">
         {% if show_article %}
             <h1>{{ lore_article.title|capfirst }}
-            {% if perms.internal.delete_lore %}
+            {% if perms.internal.delete_lore and lore_article.title != "Dev" %}
                 <a class="delete-modal-button"
                     data-url="{% url 'delete_lore' lore_article.slug %}"
                     data-obj-name="{{ lore_article }}">
                     <i class="right floated red trash icon"></i>
                 </a>
             {% endif %}
-            {% if perms.internal.change_lore %}
+            {% if perms.internal.change_lore and lore_article.title != "Dev" %}
                 <a href="{% url 'update_lore' lore_article.slug %}">
                     <i class="right floated make-col-yellow pencil icon"></i>
                 </a>
