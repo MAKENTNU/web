@@ -102,7 +102,6 @@ USE_DEBUG_TOOLBAR = DEBUG and find_spec('debug_toolbar') is not None  # (custom 
 INSTALLED_APPS = [
     # `django-constance` should be listed before project apps (see https://django-constance.readthedocs.io/en/stable/#configuration)
     'constance',
-    'constance.backends.database',
     # App used for things regarding the whole project or across other apps
     # (Should be listed first, to be able to override things like management commands)
     'web.apps.WebConfig',
