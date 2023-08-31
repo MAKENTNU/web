@@ -1,9 +1,11 @@
+
+Chart.defaults.font.family = "Ubuntu";
+Chart.defaults.font.weight = 500;
+Chart.defaults.font.size = 12.5;
+
 function span_printer_reservations() {
     const ct1 = $('#span_printer_reservations').get(0).getContext("2d");
     const data = JSON.parse($('#span_of_printer_reservations').get(0).textContent);
-    Chart.defaults.font.family = "Ubuntu";
-    Chart.defaults.font.weight = 500;
-    Chart.defaults.font.size = 12.5;
 
     new Chart(ct1, {
             type: 'bar',
@@ -77,8 +79,7 @@ function printer_reservations() {
                     'rgb(250, 163, 7)',
                     'rgb(255, 186, 8)',
                 ],
-                    fill:
-                        true,
+                    fill: true,
                 }]
             },
         options: {
@@ -99,7 +100,7 @@ function printer_reservations() {
                                 }
                             }
                         },
-            plugins:{
+            plugins: {
                 legend: {
                     display: false
                 }
@@ -131,8 +132,7 @@ function span_of_sewingmachine_reservations() {
                     'rgb(72, 149, 239)',
                     'rgb(76, 201, 240)',
                 ],
-                    fill:
-                        true,
+                    fill: true,
                 }]
             },
         options: {
@@ -144,10 +144,10 @@ function span_of_sewingmachine_reservations() {
                             title: {
                                     display: true,
                                     text: gettext("Hours reserved"),
-                                    }
-                            },
+                                }
+                        },
                     },
-            plugins:{
+            plugins: {
                 legend: {
                     display: false
                 }
@@ -177,8 +177,7 @@ function sewingmachine_reservations() {
                 'rgb(174, 32, 18)',
                 'rgb(155, 34, 38)',
                 ],
-                fill:
-                    true,
+                fill: true,
             }]
             },
         options: {
@@ -194,7 +193,7 @@ function sewingmachine_reservations() {
                                 }
                                 },
                     },
-            plugins:{
+            plugins: {
                 legend: {
                     display: false
                 }
@@ -221,14 +220,12 @@ function longest_printer_reservations() {
                 'rgb(192,192,192)',
                 'rgb(205,127,50)',
                 ],
-                fill:
-                    true,
+                fill: true,
             }]
             },
         options: {
             events: [],
-                scales:
-                    {
+                scales: {
                         y: {
                             beginAtZero: true,
                             display: true,
@@ -245,7 +242,7 @@ function longest_printer_reservations() {
                             }
                         }
                     },
-            plugins:{
+            plugins: {
                 legend: {
                     display: false
                 }

@@ -75,13 +75,21 @@ class EquipmentDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, Dele
 class StatisticsView(TemplateView):
     template_name = 'makerspace/statistics.html'
     get_time_in_hours = 3600000000  # number the reservation length needs to be divided by to get the length in hours
+    filter_reservations = Q(reservations__special=False) & Q(reservations__event__isnull=True)
 
     reservations = Reservation.objects.prefetch_related(Prefetch('machine', queryset=Machine.objects.
-                                                                 prefetch_related('machine_type'))).annotate(q_overnight=Sum(F('start_time__hour') - F('end_time__hour')))
-    sewingmachines = Machine.objects.prefetch_related('machine_type', 'reservation').filter(machine_type__name__icontains="Symaskiner").annotate(len=(Sum((F('reservations__end_time')-F('reservations__start_time'))/get_time_in_hours, output_field=IntegerField()))).\
-        annotate(number_of_reservations=Count('reservations'))
-    printers = Machine.objects.prefetch_related('machine_type', 'reservation').filter(machine_type__name__icontains="3D-printere").annotate(len=(Sum((F('reservations__end_time')-F('reservations__start_time'))/get_time_in_hours, output_field=IntegerField()))).\
-        annotate(number_of_reservations=Count('reservations'))
+                                                                 prefetch_related('machine_type'))).filter(special=False).annotate(
+        q_overnight=Sum(F('start_time__hour') - F('end_time__hour')))
+
+    sewingmachines = Machine.objects.prefetch_related('machine_type', 'reservation').filter(
+        Q(machine_type__name__icontains="Symaskiner") & filter_reservations).annotate(
+        len=(Sum((F('reservations__end_time') - F('reservations__start_time')) / get_time_in_hours, output_field=IntegerField()))).annotate(
+        number_of_reservations=Count('reservations'))
+
+    printers = Machine.objects.prefetch_related('machine_type', 'reservation').filter(
+        Q(machine_type__name__icontains="3D-printere") & filter_reservations).annotate(
+        len=(Sum((F('reservations__end_time') - F('reservations__start_time')) / get_time_in_hours, output_field=IntegerField()))).annotate(
+        number_of_reservations=Count('reservations'))
 
     def get_time_distribution(self):
         overnight = self.reservations.filter(q_overnight__gte=0)  # reservations overnight has to be counted differently
@@ -89,7 +97,7 @@ class StatisticsView(TemplateView):
         time = {}
         for r in range(0, 24):
             time[r] = not_overnight.filter(Q(start_time__hour__lte=r) & Q(end_time__hour__gte=(r - 1))).count()
-            time[r] += overnight.filter(Q(start_time__hour__lte=r) | Q(end_time__hour__gte=(r-1))).count()
+            time[r] += overnight.filter(Q(start_time__hour__lte=r) | Q(end_time__hour__gte=(r - 1))).count()
         return dict(time.items())
 
     def get_context_data(self, **kwargs):
