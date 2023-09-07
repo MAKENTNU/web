@@ -6,6 +6,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
+- Added a MAKE lore wiki where MAKE members can write and edit articles about anything lore in the MAKE universe
 - The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE")
 
 ### Improvements
