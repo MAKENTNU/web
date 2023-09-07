@@ -1079,19 +1079,20 @@ msgstr "Django-admin"
 msgid "Log out"
 msgstr "Logg ut"
 
-#: src/internal/templates/internal/lore_list.html:7
+#: src/internal/templates/internal/lore_wiki.html:7
 msgid "The wiki of MAKE lore"
 msgstr "MAKE-lore-wiki"
 
-#: src/internal/templates/internal/lore_list.html:18
+#: src/internal/templates/internal/lore_wiki.html:19
+#: src/internal/templates/internal/lore_wiki.html:31
 msgid "Topics"
 msgstr "Tema"
 
-#: src/internal/templates/internal/lore_list.html:58
+#: src/internal/templates/internal/lore_wiki.html:64
 msgid "Welcome to the wiki of MAKE lore"
 msgstr "Velkommen til wiki-siden for MAKE-lore"
 
-#: src/internal/templates/internal/lore_list.html:59
+#: src/internal/templates/internal/lore_wiki.html:65
 msgid "Click a topic in the menu to access a wiki article"
 msgstr "Velg et tema i menyen til venstre for å lese om det"
 
