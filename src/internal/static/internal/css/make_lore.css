@@ -1,27 +1,34 @@
+
+#lore-page {
+    position: relative;
+}
+
 #lore-wiki-list {
     float: left;
     width: 20%;
     padding: 3rem 0 0 40px;
+    position: relative;
 }
 
-#lore-wiki-list a {
+.lore-article-links a {
     color: black;
 }
 
-#lore-wiki-list ul {
+ul.lore-article-links {
     list-style-type: none;
     list-style-position: inside;
     padding: 0;
 }
 
-#lore-wiki-list .selected-lore-article {
+.lore-article-links .selected-lore-article {
     font-weight: bold;
 }
 
 #lore-article {
     float: left;
     width: 80%;
-    padding: 3rem 25% 0 5%;
+    padding: 1.5rem 25% 0 5%;
+    position: relative;
 }
 
 #lore-article p {
@@ -46,13 +53,75 @@
     font-size: 90%;
 }
 
+#lore-burger-icon + h2 .plus.icon {
+    font-size: 80%;
+}
+
 #lore-article .trash.icon,
 #lore-article .pencil.icon {
     font-size: 70%;
 }
 
+#burger-input {
+    visibility: hidden;
+}
+
+#lore-burger-icon {
+    visibility: hidden;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+    border: none;
+    margin-top:6px;
+    background: linear-gradient(
+        to bottom,
+        black, black 20%,
+        white 20%, white 40%,
+        black 40%, black 60%,
+        white 60%, white 80%,
+        black 80%, black 100%
+    );
+    position: absolute;
+    top: 3rem;
+    left: 15%;
+}
+
+#lore-burger-icon + h2 {
+    position: absolute;
+    top: 3rem;
+    left: 15%;
+    margin: 0 0 0 30px;
+    visibility: hidden;
+}
+
+#lore-burger-menu {
+    visibility: hidden;
+    position: absolute;
+    left: 15%;
+}
+
 @media screen and (max-width: 991.98px) {
+
+    #lore-burger-icon {
+        visibility: visible;
+    }
+
+    #lore-burger-icon + h2 {
+        visibility: visible;
+    }
+
+    #burger-input:not(:checked) ~ #lore-article {
+        position: absolute;
+        top: 6rem;
+    }
+
+    #burger-input:checked + #lore-burger-icon ~ #lore-burger-menu {
+        visibility: visible;
+        top: 6rem;
+    }
+
     #lore-wiki-list {
+        visibility: hidden;
         float: none;
         width: 100%;
         padding: 2rem 15% 0 15%;

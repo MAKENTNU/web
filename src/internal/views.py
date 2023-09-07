@@ -336,7 +336,7 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
 
 
 class LoreListView(ListView):
-    template_name = 'internal/lore_list.html'
+    template_name = 'internal/lore_wiki.html'
     model = Lore
     context_object_name = 'lore_topics'
     ordering = 'title'
@@ -348,7 +348,7 @@ class LoreListView(ListView):
 
 
 class LoreDetailView(DetailView):
-    template_name = 'internal/lore_list.html'
+    template_name = 'internal/lore_wiki.html'
     model = Lore
     context_object_name = 'lore_article'
 
