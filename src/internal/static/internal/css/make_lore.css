@@ -115,6 +115,10 @@ ul.lore-article-links {
         top: 6rem;
     }
 
+    #burger-input:checked + #lore-burger-icon {
+        clip-path: polygon(15% 0%, 0% 15%, 35% 50%, 0% 85%, 15% 100%, 50% 65%, 85% 100%, 100% 85%, 65% 50%, 100% 15%, 85% 0%, 50% 35%);
+        background: black;
+    }
     #burger-input:checked + #lore-burger-icon ~ #lore-burger-menu {
         visibility: visible;
         top: 6rem;
