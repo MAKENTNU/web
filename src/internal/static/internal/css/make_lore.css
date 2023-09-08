@@ -100,7 +100,7 @@ ul.lore-article-links {
     left: 15%;
 }
 
-@media screen and (max-width: 991.98px) {
+@media screen and (max-width: 992px) {
 
     #lore-burger-icon {
         visibility: visible;
@@ -119,6 +119,7 @@ ul.lore-article-links {
         clip-path: polygon(15% 0%, 0% 15%, 35% 50%, 0% 85%, 15% 100%, 50% 65%, 85% 100%, 100% 85%, 65% 50%, 100% 15%, 85% 0%, 50% 35%);
         background: black;
     }
+
     #burger-input:checked + #lore-burger-icon ~ #lore-burger-menu {
         visibility: visible;
         top: 6rem;
@@ -135,6 +136,23 @@ ul.lore-article-links {
         float: none;
         width: 100%;
         padding: 3rem 15% 2rem 15%;
+        position: relative;
+    }
+
+    #lore-article .lore-img {
+        width: 50%;
+        float: right;
+        margin: 7px 0 15px 35px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+
+    #lore-article {
+        float: none;
+        width: 100%;
+        padding: 3rem 15% 2rem 15%;
+        position: relative;
     }
 
     #lore-article .lore-img {
