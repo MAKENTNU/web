@@ -389,12 +389,7 @@ class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
 class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
     form_title = _("Edit lore article")
     back_button_text = _("Lore article")
-
-    def has_permission(self):
-        return (
-                self.request.user.has_perm('internal.change_lore')
-                or self.request.user == self.get_object().author
-        )
+    permission_required = ('internal.change_lore',)
 
     def get_back_button_link(self):
         title = self.get_form_kwargs()['instance']
@@ -419,9 +414,5 @@ class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
 class LoreDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
     model = Lore
     success_url = reverse_lazy('lore_list')
-
-    def has_permission(self):
-        return (
-                self.request.user.has_perm('internal.delete_lore')
-                or self.request.user == self.get_object().author
-        )
+    permission_required = ('internal.delete_lore',)
+    
