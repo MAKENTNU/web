@@ -105,7 +105,7 @@ class StatisticsView(TemplateView):
         span_of_printer_reservations = list(self.printers.values('id', 'name', 'len'))
         number_of_printer_reservations = list(self.printers.values('id', 'name', 'number_of_reservations'))
         longest_printer_reservations = list(self.printers.order_by('-len').values('id', 'name', 'reservations', 'len'))[:3]
-        span_of_sewingmachine_reservations = list(self.sewingmachines.values('id', 'name', 'reservations', 'len'))
+        span_of_sewingmachine_reservations = list(self.sewingmachines.values('id', 'name', 'len'))
         number_of_sewingmachine_reservations = list(self.sewingmachines.values('id', 'name', 'number_of_reservations'))
         get_time_distribution = self.get_time_distribution()
         context.update({'span_of_printer_reservations': span_of_printer_reservations,
