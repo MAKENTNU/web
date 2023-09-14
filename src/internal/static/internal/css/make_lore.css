@@ -45,10 +45,6 @@ ul.lore-article-links {
     margin-bottom: 50px;
 }
 
-#lore-article .right.floated {
-    float: right;
-}
-
 #lore-wiki-list .plus.icon {
     font-size: 90%;
 }
@@ -59,7 +55,12 @@ ul.lore-article-links {
 
 #lore-article .trash.icon,
 #lore-article .pencil.icon {
-    font-size: 70%;
+    font-size: 120%;
+    float: right;
+}
+
+#lore-article .lore-heading {
+    display: inline;
 }
 
 #burger-input {
@@ -143,6 +144,15 @@ ul.lore-article-links {
         width: 50%;
         float: right;
         margin: 7px 0 15px 35px;
+    }
+
+    #lore-article .lore-heading {
+        display: block;
+    }
+
+    #lore-article .trash.icon,
+    #lore-article .pencil.icon {
+        float: none;
     }
 }
 
