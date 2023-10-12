@@ -2,6 +2,7 @@ from django import forms
 from django.db.models import TextChoices
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import FileExtensionValidator
 
 from news.models import TimePlace
 from web.widgets import SemanticChoiceInput
@@ -76,3 +77,9 @@ class ReservationListQueryForm(forms.Form):
         MAKE = "MAKE", "MAKE"
 
     owner = forms.TypedChoiceField(choices=Owner.choices, coerce=Owner)
+
+
+class SLARequestForm(forms.Form):
+    description = forms.CharField(widget=forms.Textarea, required=True, label=_("Description"), help_text=_("Provide a description of the object you want us to print and why it should be printed using one of the SLA printers."))
+    file = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["stl"])], required=True, label=_("Upload STL"))
+    final_date = forms.DateField(label=_("Final date"), widget=forms.SelectDateWidget, help_text="This field is not required, but if you have a date you need the object within you may provide it here. We do not guarantee to print it within the chosen date, but if we are unable to print within the selected date we will refrain from printing the object at all to save materials.")

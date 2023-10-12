@@ -30,6 +30,7 @@ reservation_urlpatterns = [
     path("", reservation_views.ReservationListView.as_view(), name='reservation_list'),
     path("<int:pk>/", include(specific_reservation_urlpatterns)),
     path("find-free-slots/", reservation_views.ReservationFindFreeSlotsView.as_view(), name='reservation_find_free_slots'),
+    path("sla-request/", reservation_views.SLARequest.as_view(), name='sla-request'),
 ]
 
 urlpatterns = [

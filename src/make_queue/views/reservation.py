@@ -16,7 +16,7 @@ from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
 from util.view_utils import QueryParameterFormMixin
 from .machine import MachineRelatedViewMixin
-from ..forms.reservation import ReservationFindFreeSlotsForm, ReservationForm, ReservationListQueryForm
+from ..forms.reservation import ReservationFindFreeSlotsForm, ReservationForm, ReservationListQueryForm, SLARequestForm
 from ..models.machine import Machine, MachineType
 from ..models.reservation import Reservation, ReservationRule
 from ..templatetags.reservation_extra import calendar_url_reservation, can_change_reservation
@@ -390,3 +390,11 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
             'free_slots': periods,
         })
         return self.render_to_response(context)
+
+
+class SLARequest(FormView):
+    template_name = 'make_queue/sla_request_form.html'
+    context_object_name = 'sla-request'
+    form_class = SLARequestForm
+
+

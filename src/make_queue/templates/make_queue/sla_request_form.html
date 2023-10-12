@@ -1,0 +1,17 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block body %}
+    <form class="ui form text container" action="" method="post" onsubmit="{console.log('test')}">
+    {% csrf_token %}
+        <h1 class="ui header">{% trans "Request an SLA print" %}</h1>
+
+
+        {{form}}
+        <div>
+            <input class="ui blue submit button" type="submit" name="button" value="{% trans "Send" %}" >
+        </div>
+    </form>
+
+{% endblock body %}
