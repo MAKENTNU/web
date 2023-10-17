@@ -6,6 +6,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
+- The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE")
 - Created page showing statistics about the use of the workshop and reservations of the equipment
 
 
