@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-05 18:43+0200\n"
+"POT-Creation-Date: 2023-10-26 19:17+0200\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -2312,34 +2312,40 @@ msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
 #: src/makerspace/templates/makerspace/statistics.html:6
-#: src/makerspace/templates/makerspace/statistics.html:14
+#: src/makerspace/templates/makerspace/statistics.html:15
 #: src/web/templates/web/header.html:67
 msgid "Statistics"
 msgstr "Statistikk"
 
-#: src/makerspace/templates/makerspace/statistics.html:18
-msgid "How long each 3D-printer* has been reserved in total:"
-msgstr "Totalt hvor lenge hver 3D-printer* har blitt reservert:"
+#: src/makerspace/templates/makerspace/statistics.html:19
+msgid "Total reservation time for each 3D printer"
+msgstr "Total reservasjonstid for hver 3D-printer"
 
-#: src/makerspace/templates/makerspace/statistics.html:27
-msgid "Number of times each 3D-printer* has been reserved:"
-msgstr "Antall ganger hver 3D-printer* har blitt reservert:"
+#: src/makerspace/templates/makerspace/statistics.html:20
+#: src/makerspace/templates/makerspace/statistics.html:33
+#: src/makerspace/templates/makerspace/statistics.html:61
+msgid "This includes 3D printers, Raise3D printers and SLA 3D printers"
+msgstr "Inkluderer 3D-printere, Raise3D-printere og SLA 3D-printere"
 
-#: src/makerspace/templates/makerspace/statistics.html:35
-msgid "How long each sewingmachine has been reserved in total:"
-msgstr "Totalt hvor lenge hver symaskin har blitt reservert:"
+#: src/makerspace/templates/makerspace/statistics.html:32
+msgid "Number of reservations pr. 3D-printer"
+msgstr "Antall reservasjoner per 3D-printer"
 
-#: src/makerspace/templates/makerspace/statistics.html:43
-msgid "Number of times each sewing machine has been reserved:"
-msgstr "Antall ganger hver symaskin har blitt reservert:"
+#: src/makerspace/templates/makerspace/statistics.html:44
+msgid "Total reservation time for each sewing machine"
+msgstr "Total reservasjonstid for hver symaskin"
 
-#: src/makerspace/templates/makerspace/statistics.html:51
-msgid "Top 3 longest 3D-printer* reservations:"
-msgstr "Top 3 lengste 3D-printer reservasjoner:"
+#: src/makerspace/templates/makerspace/statistics.html:52
+msgid "Number of reservations pr. sewing machine"
+msgstr "Antall reservasjoner per symaskin"
 
-#: src/makerspace/templates/makerspace/statistics.html:59
-msgid "Traffic:"
-msgstr "Trafikk:"
+#: src/makerspace/templates/makerspace/statistics.html:60
+msgid "Longest printer reservations"
+msgstr "Lengste 3D-printer reservasjoner"
+
+#: src/makerspace/templates/makerspace/statistics.html:72
+msgid "Traffic"
+msgstr "Trafikk"
 
 #: src/makerspace/views.py:51
 msgid "Admin page for equipment"
@@ -3296,11 +3302,11 @@ msgstr "Om"
 msgid "About us"
 msgstr "Om oss"
 
-#: src/web/templates/web/header.html:76
+#: src/web/templates/web/header.html:79
 msgid "Apply to MAKE"
 msgstr "Søk verv"
 
-#: src/web/templates/web/header.html:99
+#: src/web/templates/web/header.html:102
 msgid "Administration"
 msgstr "Administrasjon"
 

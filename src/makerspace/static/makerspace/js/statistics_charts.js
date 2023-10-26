@@ -15,16 +15,15 @@ function span_printer_reservations() {
                     label: "How long each printer has been reserved in total",
                     data: data.map((element)=> (element.len)),
                     backgroundColor: [
-                        'rgba(249, 65, 68)',
-                        'rgb(243, 114, 44)',
-                        'rgb(248, 150, 30)',
-                        'rgb(249, 132, 74)',
-                        'rgb(249, 199, 79)',
-                        'rgb(144, 190, 109)',
-                        'rgb(67, 170, 139)',
-                        'rgb(77, 144, 142)',
-                        'rgb(87, 117, 144)',
-                        'rgb(39, 125, 161)',
+                        'rgb(223, 146, 57)',
+                        'rgb(246, 171, 52)',
+                        'rgb(247, 181, 40)',
+                        'rgb(248, 200, 17)',
+                        'rgba(250, 210, 59)',
+                        'rgb(248, 200, 17)',
+                        'rgb(247, 181, 40)',
+                        'rgb(246, 171, 52)',
+                        'rgb(223, 146, 57)',
                     ],
                     fill: true,
                 }]
@@ -38,14 +37,11 @@ function span_printer_reservations() {
                         title: {
                             display: true,
                             text: gettext("Hours reserved"),
-                        }
+                        },
+                        ticks: {
+                            stepSize: 1
+                        },
                     },
-                    x: {
-                        title: {
-                            display: true,
-                            text: gettext("*includes 3D printers, Raise3D printers and SLA 3D printers"),
-                            }
-                        }
                     },
                 plugins: {
                     legend: {
@@ -68,16 +64,17 @@ function printer_reservations() {
                 label: "Total number of printer reservations",
                 data: data.map((element)=>element.number_of_reservations),
                 backgroundColor: [
-                    'rgba(3,7,30,0.89)',
-                    'rgb(55, 6, 23)',
                     'rgb(106, 4, 15)',
                     'rgb(157, 2, 8)',
                     'rgb(208, 0, 0)',
                     'rgb(220, 47, 2)',
                     'rgb(232, 93, 4)',
                     'rgb(244, 140, 6)',
-                    'rgb(250, 163, 7)',
-                    'rgb(255, 186, 8)',
+                    'rgb(232, 93, 4)',
+                    'rgb(220, 47, 2)',
+                    'rgb(208, 0, 0)',
+                    'rgb(157, 2, 8)',
+                    'rgb(106, 4, 15)',
                 ],
                     fill: true,
                 }]
@@ -91,14 +88,11 @@ function printer_reservations() {
                             title: {
                                 display: true,
                                 text: gettext("Times reserved"),
-                                }
+                                },
+                            ticks: {
+                                stepSize: 1
                             },
-                        x: {
-                            title: {
-                                display: true,
-                                text: gettext("*includes 3D printers, Raise3D printers and SLA 3D printers"),
-                                }
-                            }
+                        },
                         },
             plugins: {
                 legend: {
@@ -110,9 +104,9 @@ function printer_reservations() {
 }
 
 
-function span_of_sewingmachine_reservations() {
-    const ct3 = $('#span_sewingmachine_reservations').get(0).getContext("2d");
-    const data = JSON.parse($('#span_of_sewingmachine_reservations').get(0).textContent);
+function span_of_sewing_machine_reservations() {
+    const ct3 = $('#span_sewing_machine_reservations').get(0).getContext("2d");
+    const data = JSON.parse($('#span_of_sewing_machine_reservations').get(0).textContent);
     new Chart(ct3, {
         type: 'bar',
         data: {
@@ -129,7 +123,6 @@ function span_of_sewingmachine_reservations() {
                     'rgb(58, 12, 163)',
                     'rgb(63, 55, 201)',
                     'rgb(67, 97, 238)',
-                    'rgb(72, 149, 239)',
                     'rgb(76, 201, 240)',
                 ],
                     fill: true,
@@ -144,7 +137,10 @@ function span_of_sewingmachine_reservations() {
                             title: {
                                     display: true,
                                     text: gettext("Hours reserved"),
-                                }
+                                },
+                            ticks: {
+                                stepSize: 1
+                            },
                         },
                     },
             plugins: {
@@ -156,9 +152,9 @@ function span_of_sewingmachine_reservations() {
     });
 }
 
-function sewingmachine_reservations() {
-    const ct4 = $('#sewingmachine_reservations').get(0).getContext("2d");
-    const data = JSON.parse($('#number_of_sewingmachine_reservations').get(0).textContent);
+function sewing_machine_reservations() {
+    const ct4 = $('#sewing_machine_reservations').get(0).getContext("2d");
+    const data = JSON.parse($('#number_of_sewing_machine_reservations').get(0).textContent);
     new Chart(ct4, {
         type: 'bar',
         data: {
@@ -167,15 +163,16 @@ function sewingmachine_reservations() {
                 label: "Total number of printer reservations",
                 data: data.map((element)=>element.number_of_reservations),
                 backgroundColor: [
-                'rgb(0, 95, 115)',
-                'rgb(10, 147, 150)',
-                'rgb(148, 210, 189)',
-                'rgb(233, 216, 166)',
-                'rgb(238, 155, 0)',
-                'rgb(202, 103, 2)',
-                'rgb(187, 62, 3)',
-                'rgb(174, 32, 18)',
-                'rgb(155, 34, 38)',
+                    'rgb(0,235,179)',
+
+                    '#00EBB3',
+                    '#03C1A1',
+                    '#06978F',
+                    '#096C7C',
+                    '#0C426A',
+                    '#096C7C',
+                    '#06978F',
+                    '#03C1A1',
                 ],
                 fill: true,
             }]
@@ -186,12 +183,14 @@ function sewingmachine_reservations() {
                         y: {
                             beginAtZero: true,
                             display: true,
-                            title:
-                                {
+                            title: {
                                     display: true,
                                     text: gettext("Times reserved"),
-                                }
-                                },
+                            },
+                            ticks: {
+                                stepSize: 1
+                            },
+                        },
                     },
             plugins: {
                 legend: {
@@ -229,18 +228,14 @@ function longest_printer_reservations() {
                         y: {
                             beginAtZero: true,
                             display: true,
-                            title:
-                                {
+                            title: {
                                     display: true,
                                     text: gettext("Hours reserved"),
-                                }
+                            },
+                            ticks: {
+                                stepSize: 1
                                 },
-                        x: {
-                            title: {
-                                display: true,
-                                text: gettext("*includes 3D printers, Raise3D printers and SLA 3D printers"),
-                            }
-                        }
+                            },
                     },
             plugins: {
                 legend: {
@@ -274,15 +269,21 @@ function timespan(){
           scales: {
               y: {
                   beginAtZero: true,
-                  display: false
+                  title: {
+                        display: true,
+                        text: gettext("Activity at workshop"),
+                    },
 
               },
               x:{
                   title: {
                         display: true,
                         text: gettext("Time of day"),
-                    }
-
+                    },
+                  ticks: {
+                      maxRotation: 0,
+                      minRotation: 0
+                  }
               }
           }
       }
@@ -291,7 +292,7 @@ function timespan(){
 
 printer_reservations();
 span_printer_reservations();
-span_of_sewingmachine_reservations();
-sewingmachine_reservations();
+span_of_sewing_machine_reservations();
+sewing_machine_reservations();
 longest_printer_reservations();
 timespan();

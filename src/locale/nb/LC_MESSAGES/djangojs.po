@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-17 19:07+0200\n"
+"POT-Creation-Date: 2023-10-03 15:31+0200\n"
 "PO-Revision-Date: 2018-04-18 21:29+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -91,28 +91,26 @@ msgstr ""
 msgid "Please refresh the page or contact the developers."
 msgstr "Last inn siden på nytt eller kontakt utviklerne."
 
-#: src/makerspace/static/makerspace/js/statistics_charts.js:38
-#: src/makerspace/static/makerspace/js/statistics_charts.js:146
-#: src/makerspace/static/makerspace/js/statistics_charts.js:238
+#: src/makerspace/static/makerspace/js/statistics_charts.js:40
+#: src/makerspace/static/makerspace/js/statistics_charts.js:140
+#: src/makerspace/static/makerspace/js/statistics_charts.js:233
 msgid "Hours reserved"
 msgstr "Antall timer reservert"
 
-#: src/makerspace/static/makerspace/js/statistics_charts.js:44
-#: src/makerspace/static/makerspace/js/statistics_charts.js:98
-#: src/makerspace/static/makerspace/js/statistics_charts.js:244
-msgid "*includes 3D printers, Raise3D printers and SLA 3D printers"
-msgstr "*inkluderer 3D-printere, Raise3D-printere og SLA 3D-printere"
-
-#: src/makerspace/static/makerspace/js/statistics_charts.js:92
-#: src/makerspace/static/makerspace/js/statistics_charts.js:193
+#: src/makerspace/static/makerspace/js/statistics_charts.js:90
+#: src/makerspace/static/makerspace/js/statistics_charts.js:188
 msgid "Times reserved"
 msgstr "Antall ganger reservert"
 
-#: src/makerspace/static/makerspace/js/statistics_charts.js:266
+#: src/makerspace/static/makerspace/js/statistics_charts.js:258
 msgid "Traffic"
 msgstr "Trafikk"
 
-#: src/makerspace/static/makerspace/js/statistics_charts.js:286
+#: src/makerspace/static/makerspace/js/statistics_charts.js:275
+msgid "Activity at workshop"
+msgstr "Aktivitet på verkstedet"
+
+#: src/makerspace/static/makerspace/js/statistics_charts.js:282
 msgid "Time of day"
 msgstr "Tid på dagen"
 
