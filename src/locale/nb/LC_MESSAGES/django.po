@@ -1084,15 +1084,15 @@ msgid "The wiki of MAKE lore"
 msgstr "MAKE-lore-wiki"
 
 #: src/internal/templates/internal/lore_wiki.html:19
-#: src/internal/templates/internal/lore_wiki.html:31
+#: src/internal/templates/internal/lore_wiki.html:32
 msgid "Topics"
 msgstr "Tema"
 
-#: src/internal/templates/internal/lore_wiki.html:64
+#: src/internal/templates/internal/lore_wiki.html:65
 msgid "Welcome to the wiki of MAKE lore"
 msgstr "Velkommen til wiki-siden for MAKE-lore"
 
-#: src/internal/templates/internal/lore_wiki.html:65
+#: src/internal/templates/internal/lore_wiki.html:66
 msgid "Click a topic in the menu to access a wiki article"
 msgstr "Velg et tema i menyen til venstre for å lese om det"
 
@@ -1358,7 +1358,7 @@ msgstr "Lore-wiki"
 msgid "New lore article"
 msgstr "Ny lore-artikkel"
 
-#: src/internal/views.py:379 src/internal/views.py:409
+#: src/internal/views.py:379 src/internal/views.py:407
 msgid ""
 "An article with this title already exists. Please merge your text with the "
 "existing one!"
@@ -1366,11 +1366,15 @@ msgstr ""
 "En artikkel med dette navnet eksisterer allerede. Rediger heller den "
 "eksisterende artikkelen!"
 
-#: src/internal/views.py:390
+#: src/internal/views.py:382
+msgid "Make a title consisting of actual letters, idiot! Thank you :-)"
+msgstr "Lag en tittel som faktisk består av bokstaver, din dust! På forhånd takk :-)"
+
+#: src/internal/views.py:393
 msgid "Edit lore article"
 msgstr "Rediger lore-artikkel"
 
-#: src/internal/views.py:391
+#: src/internal/views.py:394
 msgid "Lore article"
 msgstr "Lore-artikkel"
 
