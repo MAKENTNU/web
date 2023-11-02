@@ -1,13 +1,16 @@
 
 #lore-page {
     position: relative;
+    max-width: 100vw;
 }
 
 #lore-wiki-list {
     float: left;
     width: 20%;
-    padding: 3rem 0 0 40px;
+    padding: 3rem 0 40px 40px;
     position: relative;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 .lore-article-links a {
@@ -27,12 +30,14 @@ ul.lore-article-links {
 #lore-article {
     float: left;
     width: 80%;
-    padding: 1.5rem 25% 0 5%;
+    padding: 3rem 25% 0 5%;
     position: relative;
 }
 
 #lore-article p {
     text-align: justify;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 #lore-article .lore-img {
@@ -42,7 +47,7 @@ ul.lore-article-links {
 }
 
 #lore-article .lore-container {
-    margin-bottom: 50px;
+    margin-bottom: 70px;
 }
 
 #lore-wiki-list .plus.icon {
@@ -56,19 +61,21 @@ ul.lore-article-links {
 #lore-article .trash.icon,
 #lore-article .pencil.icon {
     font-size: 120%;
-    float: right;
 }
 
 #lore-article .lore-heading {
-    display: inline;
+    display: block;
+    max-width: 100vw;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 #burger-input {
-    visibility: hidden;
+    display: none;
 }
 
 #lore-burger-icon {
-    visibility: hidden;
+    display: none;
     width: 15px;
     height: 15px;
     cursor: pointer;
@@ -92,23 +99,25 @@ ul.lore-article-links {
     top: 3rem;
     left: 15%;
     margin: 0 0 0 30px;
-    visibility: hidden;
+    display: none;
 }
 
 #lore-burger-menu {
-    visibility: hidden;
-    position: absolute;
-    left: 15%;
+    display: none;
+    max-width: 100vw;
+    padding: 6rem 15% 0 15%;
+    overflow-wrap: break-word;
+    hyphens: auto;
 }
 
 @media screen and (max-width: 992px) {
 
     #lore-burger-icon {
-        visibility: visible;
+        display: inline;
     }
 
     #lore-burger-icon + h2 {
-        visibility: visible;
+        display: block;
     }
 
     #burger-input:not(:checked) ~ #lore-article {
@@ -122,20 +131,20 @@ ul.lore-article-links {
     }
 
     #burger-input:checked + #lore-burger-icon ~ #lore-burger-menu {
-        visibility: visible;
+        display: block;
         top: 6rem;
     }
 
     #lore-wiki-list {
-        visibility: hidden;
+        display: none;
         float: none;
-        width: 100%;
+        max-width: 100vw;
         padding: 2rem 15% 0 15%;
     }
 
     #lore-article {
         float: none;
-        width: 100%;
+        width: 100vw;
         padding: 3rem 15% 2rem 15%;
         position: relative;
     }
@@ -144,15 +153,6 @@ ul.lore-article-links {
         width: 50%;
         float: right;
         margin: 7px 0 15px 35px;
-    }
-
-    #lore-article .lore-heading {
-        display: block;
-    }
-
-    #lore-article .trash.icon,
-    #lore-article .pencil.icon {
-        float: none;
     }
 }
 
