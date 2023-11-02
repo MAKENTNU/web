@@ -1,13 +1,13 @@
+from datetime import datetime
+
 from django import forms
 from django.db.models import TextChoices
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
-from django.core.validators import FileExtensionValidator
-
 from news.models import TimePlace
 from web.widgets import SemanticChoiceInput
 from ..models.machine import Machine, MachineType
-
+from ..models.reservation import SLARequest
 
 class ReservationForm(forms.Form):
     """Form for creating or changing a reservation."""
@@ -79,7 +79,17 @@ class ReservationListQueryForm(forms.Form):
     owner = forms.TypedChoiceField(choices=Owner.choices, coerce=Owner)
 
 
-class SLARequestForm(forms.Form):
-    description = forms.CharField(widget=forms.Textarea, required=True, label=_("Description"), help_text=_("Provide a description of the object you want us to print and why it should be printed using one of the SLA printers."))
-    file = forms.FileField(validators=[FileExtensionValidator(allowed_extensions=["stl"])], required=True, label=_("Upload STL"))
-    final_date = forms.DateField(label=_("Final date"), widget=forms.SelectDateWidget, help_text="This field is not required, but if you have a date you need the object within you may provide it here. We do not guarantee to print it within the chosen date, but if we are unable to print within the selected date we will refrain from printing the object at all to save materials.")
+class SLARequestForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea, required=True, label=_("Description"), help_text=_(
+        "Provide a description of the object you want us to print and why it should be printed using one of the SLA printers."
+    ))
+    file = forms.FileField(required=True, label=_("Upload STL files"))
+    final_date = forms.DateField(required=False, widget=forms.DateInput(attrs=dict(type='date', min=datetime.today().strftime('%Y-%m-%d'))),
+                                 help_text=_(
+                                     "Only provide a date if you will not use the print if it's printed after your selected date. We do not "
+                                     "guarantee that your print will be printed within the selected date, but we won't waste material "
+                                     "printing it after."), label=_("Final date (optional)"))
+
+    class Meta:
+        model = SLARequest
+        fields = ['title', 'purpose', 'description', 'file', 'final_date']

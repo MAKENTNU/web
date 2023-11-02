@@ -2,16 +2,21 @@
 {% load static %}
 {% load i18n %}
 
+{% load datetime_tags %}
+{% load string_tags %}
+
+
+
+
 {% block body %}
-    <form class="ui form text container" action="" method="post" onsubmit="{console.log('test')}">
+    <form class="ui form text container" action="https://script.google.com/macros/s/AKfycbzl88rTfc80k4T9XX9Vu2Jxl4xcn33DX-KxX7QlStrWFyj-XS_t3Xlq6HqlkC8TgUzh/exec" method="post" onsubmit="{console.log('file uploaded')}">
     {% csrf_token %}
         <h1 class="ui header">{% trans "Request an SLA print" %}</h1>
-
-
         {{form}}
+
         <div>
             <input class="ui blue submit button" type="submit" name="button" value="{% trans "Send" %}" >
         </div>
-    </form>
 
+    </form>
 {% endblock body %}

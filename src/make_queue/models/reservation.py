@@ -5,7 +5,7 @@ from typing import Optional
 
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import Q
+from django.db.models import Q, TextChoices
 from django.utils import timezone
 from django.utils.formats import time_format
 from django.utils.text import capfirst
@@ -18,6 +18,7 @@ from util.locale_utils import exact_weekday_to_day_name, short_datetime_format, 
 from util.model_utils import ComparisonType, comparison_boilerplate
 from web.modelfields import UnlimitedCharField
 from .machine import Machine, MachineType
+from util.storage import UploadToUtils
 
 
 class Quota(models.Model):
@@ -482,3 +483,31 @@ class ReservationRule(models.Model):
                 (other.exact_start_weekday, other.exact_end_weekday)
             )
             return hours_overlap > 0
+
+
+class Purpose(TextChoices):
+    BACHELOR = "Bachelor", "Bachelor's thesis"
+    MASTER = "Master", "Master's thesis"
+    PHD = "PhD", "PhD thesis"
+    ORGANIZATION = "Org", "Student organization"
+    HOBBY = "Hobby", "Hobby project"
+    STUDY = "Study", "Other study related project"
+    OTHER = "Other", "Other project (specify in description)"
+
+
+class SLARequest(models.Model):
+    # title = models.CharField(required=True, label=_("Title"))
+    # purpose = models.CharField(choices=Purpose.choices, initial="Hobby", required=True)
+    # description = models.CharField(widget=forms.Textarea, required=True, label=_("Description"), help_text=_(
+    #     "Provide a description of the object you want us to print and why it should be printed using one of the SLA printers."))
+    # file = models.FileField(required=True, label=_("Upload STL files"), upload_to=UploadToUtils.get_pk_prefixed_filename_func('sla-request'))
+    # final_date = models.DateField(widget=forms.DateInput(attrs=dict(type='date', min=datetime.today().strftime('%Y-%m-%d'))),
+    #                               help_text=_(
+    #                                   "Only provide a date if you will not use the print if it's printed after your selected date. We do not "
+    #                                   "guarantee that your print will be printed within the selected date, but we won't waste material "
+    #                                   "printing it after."), label=_("Final date (optional)"))
+    title = models.CharField(max_length=128)
+    purpose = models.CharField(choices=Purpose.choices, max_length=256, default="Hobby")
+    description = models.CharField(max_length=256)
+    file = models.FileField(upload_to='sla-request')
+    final_date = models.DateField()
