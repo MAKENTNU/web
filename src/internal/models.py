@@ -326,7 +326,7 @@ def internal_subclass_directory_path(instance: 'Lore', filename: str):
 class Lore(models.Model):
     title = models.CharField(max_length=50, verbose_name=_("title"), null=False)
     slug = models.SlugField()
-    text = models.TextField(verbose_name=_("text"))
+    text = models.TextField(max_length=150000, verbose_name=_("text"))
     image = CompressedImageField(
         upload_to=UploadToUtils.get_pk_prefixed_filename_func(internal_subclass_directory_path),
         max_length=200,
