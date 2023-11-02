@@ -374,18 +374,23 @@ class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
 
     def form_valid(self, form):
         title = form.cleaned_data['title']
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
         slug = slugify(title)
         if Lore.objects.filter(slug=slug).exists():
             form.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
             return self.form_invalid(form)
-        elif slugify(title) == '':
+        elif slug == '':
             form.add_error('title', _("Make a title consisting of actual letters, idiot! Thank you :-)"))
             return self.form_invalid(form)
         else:
             return super().form_valid(form)
 
     def get_success_url(self):
-        slug = slugify(self.object)
+        title = str(self.object)
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
+        slug = slugify(title)
         return reverse_lazy('lore_article', args=[slug])
 
 
@@ -395,12 +400,16 @@ class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
     permission_required = ('internal.change_lore',)
 
     def get_back_button_link(self):
-        title = self.get_form_kwargs()['instance']
+        title = str(self.get_form_kwargs()['instance'])
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
         slug = slugify(title)
         return reverse_lazy('lore_article', args=[slug])
 
     def form_valid(self, form):
         title = form.cleaned_data['title']
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
         slug = slugify(title)
         article = super().get_object()
         if (article.slug != slug) and (Lore.objects.filter(slug=slug).exists()):
@@ -410,7 +419,10 @@ class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
             return super().form_valid(form)
 
     def get_success_url(self):
-        slug = slugify(self.object)
+        title = str(self.object)
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
+        slug = slugify(title)
         return reverse_lazy('lore_article', args=[slug])
 
 
@@ -418,4 +430,3 @@ class LoreDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVie
     model = Lore
     success_url = reverse_lazy('lore_list')
     permission_required = ('internal.delete_lore',)
-    

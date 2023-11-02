@@ -339,9 +339,11 @@ class Lore(models.Model):
         return _("{title}").format(title=self.title)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.title)
+        title = self.title
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
+        self.slug = slugify(title)
         super().save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = 'Lore articles'
-
