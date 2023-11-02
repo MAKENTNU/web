@@ -378,6 +378,9 @@ class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
         if Lore.objects.filter(slug=slug).exists():
             form.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
             return self.form_invalid(form)
+        elif slugify(title) == '':
+            form.add_error('title', _("Make a title consisting of actual letters, idiot! Thank you :-)"))
+            return self.form_invalid(form)
         else:
             return super().form_valid(form)
 
