@@ -91,7 +91,8 @@ class StatisticsView(TemplateView):
         for r in range(0, 24):
             time[r] = not_overnight.filter(Q(start_time__hour__lte=r) & Q(end_time__hour__gte=(r - 1))).count()
             time[r] += overnight.filter(Q(start_time__hour__lte=r) | Q(end_time__hour__gte=(r - 1))).count()
-            time[r] = time[r]/self.reservations.count()
+            if self.reservations.count() != 0:
+                time[r] = time[r]/self.reservations.count()
         return dict(time.items())
 
     def get_context_data(self, **kwargs):
