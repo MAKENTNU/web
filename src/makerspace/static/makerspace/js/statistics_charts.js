@@ -270,9 +270,12 @@ function timespan(){
               y: {
                   beginAtZero: true,
                   title: {
-                        display: true,
-                        text: gettext("Activity at workshop"),
-                    },
+                      display: true,
+                      text: gettext("Activity at the workshop"),
+                  },
+                  ticks: {
+                      display: false,
+                  }
 
               },
               x:{

@@ -76,16 +76,13 @@ class StatisticsView(TemplateView):
     template_name = 'makerspace/statistics.html'
 
     q_overnight = Sum(F('start_time__hour') - F('end_time__hour'))
+    get_time_in_hours = 3600000000  # number the reservation length needs to be divided by to get the length in hours
     reservations = Reservation.objects.prefetch_related(Prefetch('machine', queryset=Machine.objects.prefetch_related(
         'machine_type'))).filter(special=False).annotate(q_overnight=q_overnight)
 
     def get_machines_with_reservations(self, machine_type):
-        get_time_in_hours = 3600000000  # number the reservation length needs to be divided by to get the length in hours
         filter_reservations = Q(reservations__special=False) & Q(reservations__event__isnull=True)
-        length_of_reservation = Sum((F('reservations__end_time') - F('reservations__start_time')) / get_time_in_hours, output_field=IntegerField())
-
-        return Machine.objects.prefetch_related('machine_type', 'reservations').filter(Q(machine_type__name__icontains=machine_type) & filter_reservations).\
-            annotate(len=length_of_reservation).annotate(number_of_reservations=Count('reservations')).order_by('machine_type')
+        return Machine.objects.prefetch_related('machine_type', 'reservations').filter(Q(machine_type__name__icontains=machine_type) & filter_reservations).order_by('machine_type')
 
     def get_time_distribution(self):
         overnight = self.reservations.filter(q_overnight__gte=0)  # reservations overnight has to be counted differently
@@ -94,16 +91,21 @@ class StatisticsView(TemplateView):
         for r in range(0, 24):
             time[r] = not_overnight.filter(Q(start_time__hour__lte=r) & Q(end_time__hour__gte=(r - 1))).count()
             time[r] += overnight.filter(Q(start_time__hour__lte=r) | Q(end_time__hour__gte=(r - 1))).count()
-
+            time[r] = time[r]/self.reservations.count()
         return dict(time.items())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        span_of_printer_reservations = list(self.get_machines_with_reservations("3D-printere").values('id', 'name', 'len'))
-        number_of_printer_reservations = list(self.get_machines_with_reservations("3D-printere").values('id', 'name', 'number_of_reservations'))
-        longest_printer_reservations = list(self.get_machines_with_reservations("3D-printere").order_by('-len').values('id', 'name', 'reservations', 'len'))[:3]
-        span_of_sewing_machine_reservations = list(self.get_machines_with_reservations("Symaskiner").values('id', 'name', 'len'))
-        number_of_sewing_machine_reservations = list(self.get_machines_with_reservations("Symaskiner").values('id', 'name', 'number_of_reservations'))
+        span_of_printer_reservations = list(self.get_machines_with_reservations("3D-printere").
+                                            annotate(len=Sum((F('reservations__end_time') - F('reservations__start_time')) / self.get_time_in_hours, output_field=IntegerField())).values('id', 'name', 'len'))
+        number_of_printer_reservations = list(self.get_machines_with_reservations("3D-printere").annotate(number_of_reservations=Count('reservations')).values('id', 'name', 'number_of_reservations'))
+        longest_printer_reservations = list(self.get_machines_with_reservations("3D-printere").
+                                            annotate(len=Sum((F('reservations__end_time') - F('reservations__start_time')) / self.get_time_in_hours, output_field=IntegerField())).
+                                            order_by('-len').values('id', 'name', 'reservations', 'len'))[:3]
+        span_of_sewing_machine_reservations = list(self.get_machines_with_reservations("Symaskiner").
+                                                   annotate(len=Sum((F('reservations__end_time') - F('reservations__start_time')) / self.get_time_in_hours, output_field=IntegerField())).values('id', 'name', 'len'))
+        number_of_sewing_machine_reservations = list(self.get_machines_with_reservations("Symaskiner").
+                                                     annotate(number_of_reservations=Count('reservations')).values('id', 'name', 'number_of_reservations'))
         get_time_distribution = self.get_time_distribution()
         context.update({'span_of_printer_reservations': span_of_printer_reservations,
                         'span_of_sewing_machine_reservations': span_of_sewing_machine_reservations,
