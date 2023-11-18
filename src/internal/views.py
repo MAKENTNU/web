@@ -378,7 +378,7 @@ class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
         title = title.replace('ø', 'o')
         title = title.replace('æ', 'ae')
         slug = slugify(title)
-        return reverse_lazy('lore_article', args=[slug])
+        return reverse_lazy('lore_detail', args=[slug])
 
 
 class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
@@ -391,14 +391,14 @@ class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
         title = title.replace('ø', 'o')
         title = title.replace('æ', 'ae')
         slug = slugify(title)
-        return reverse_lazy('lore_article', args=[slug])
+        return reverse_lazy('lore_detail', args=[slug])
 
     def get_success_url(self):
         title = str(self.object)
         title = title.replace('ø', 'o')
         title = title.replace('æ', 'ae')
         slug = slugify(title)
-        return reverse_lazy('lore_article', args=[slug])
+        return reverse_lazy('lore_detail', args=[slug])
 
 
 class LoreDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):

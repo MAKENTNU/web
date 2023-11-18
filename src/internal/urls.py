@@ -73,13 +73,13 @@ quote_urlpatterns = [
 ]
 
 specific_lore_urlpatterns = [
-    path("", views.LoreDetailView.as_view(), name='lore_article'),
-    path("change/", views.LoreUpdateView.as_view(), name='update_lore'),
-    path("delete/", views.LoreDeleteView.as_view(), name='delete_lore'),
+    path("", views.LoreDetailView.as_view(), name='lore_detail'),
+    path("change/", views.LoreUpdateView.as_view(), name='lore_update'),
+    path("delete/", views.LoreDeleteView.as_view(), name='lore_delete'),
 ]
 lore_urlpatterns = [
     path("", views.LoreListView.as_view(), name='lore_list'),
-    path("add/", views.LoreCreateView.as_view(), name='add_lore'),
+    path("add/", views.LoreCreateView.as_view(), name='lore_create'),
     path("<slug:slug>/", include(specific_lore_urlpatterns)),
 ]
 
