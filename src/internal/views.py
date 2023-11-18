@@ -340,11 +340,10 @@ class LoreListView(ListView):
     context_object_name = 'lore_topics'
     ordering = 'title'
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['show_article'] = False
-        return context
     template_name = 'internal/lore/lore_list.html'
+    extra_context = {
+        'show_article': False,
+    }
 
 
 class LoreDetailView(DetailView):
