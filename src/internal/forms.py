@@ -1,5 +1,6 @@
 from django import forms
 from django.db import models
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 from card import utils as card_utils
@@ -186,3 +187,26 @@ class LoreForm(forms.ModelForm):
         widgets = {
             'text': CKEditorWidget()
         }
+
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        title = cleaned_data.get('title')
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
+        slug = slugify(title)
+        try:
+            article = self.instance
+        except NameError:
+            article = None
+        if article:
+            if (article.slug != slug) and (Lore.objects.filter(slug=slug).exists()):
+                self.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
+            elif slug == '':
+                self.add_error('title', _("Please make a title consisting of actual letters!"))
+        elif not article:
+            if Lore.objects.filter(slug=slug).exists():
+                self.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
+            elif slug == '':
+                self.add_error('title', _("Please make a title consisting of actual letters!"))
+        else:
+            return cleaned_data

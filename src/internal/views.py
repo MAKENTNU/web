@@ -372,19 +372,6 @@ class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
     permission_required = ('internal.add_lore',)
     form_title = _("New lore article")
 
-    def form_valid(self, form):
-        title = form.cleaned_data['title']
-        title = title.replace('ø', 'o')
-        title = title.replace('æ', 'ae')
-        slug = slugify(title)
-        if Lore.objects.filter(slug=slug).exists():
-            form.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
-            return self.form_invalid(form)
-        elif slug == '':
-            form.add_error('title', _("Make a title consisting of actual letters, idiot! Thank you :-)"))
-            return self.form_invalid(form)
-        else:
-            return super().form_valid(form)
 
     def get_success_url(self):
         title = str(self.object)
@@ -405,18 +392,6 @@ class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
         title = title.replace('æ', 'ae')
         slug = slugify(title)
         return reverse_lazy('lore_article', args=[slug])
-
-    def form_valid(self, form):
-        title = form.cleaned_data['title']
-        title = title.replace('ø', 'o')
-        title = title.replace('æ', 'ae')
-        slug = slugify(title)
-        article = super().get_object()
-        if (article.slug != slug) and (Lore.objects.filter(slug=slug).exists()):
-            form.add_error('title', _("An article with this title already exists. Please merge your text with the existing one!"))
-            return self.form_invalid(form)
-        else:
-            return super().form_valid(form)
 
     def get_success_url(self):
         title = str(self.object)
