@@ -7,59 +7,55 @@
     {% translate "The wiki of MAKE lore" %}
 {% endblock title %}
 
-{% block header_links %}
-    <link rel="stylesheet" href="{% static 'internal/css/make_lore.css' %}">
-    <link rel="stylesheet" href="{% static 'web/css/header.css' %}"/>
-    <script defer src="{% static 'web/js/header.js' %}"></script>
-{% endblock header_links %}
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'internal/css/lore_list.css' %}"/>
+    <script src="{% static 'internal/js/lore_list.js' %}"></script>
+{% endblock extra_head %}
 
 {% block body %}
     <div id="lore-page">
-        <div id="lore-wiki-list">
+        <div id="lore-wiki-list" class="word-breaking hyphenated">
             <h2>{% translate "Topics" %}
                 {% if perms.internal.add_lore %}
-                    <a href="{% url 'add_lore' %}">
+                    <a href="{% url 'lore_create' %}">
                         <i class="green plus icon"></i>
                     </a>
                 {% endif %}
             </h2>
-            {% include 'internal/includes/lore_articles_list.html' %}
+            {% include 'internal/lore/lore_list__article_links.html' %}
         </div>
 
         {# Checkbox belongs to hamburger menu. Checkbox status decides if hamburger menu will be shown or not #}
-        <input type="checkbox" id="burger-input">
+        <input type="checkbox" id="burger-input"/>
         <label id="lore-burger-icon" for="burger-input"></label>
         <h2>{% translate "Topics" %}
             {% if perms.internal.add_lore %}
-                <a href="{% url 'add_lore' %}">
+                <a href="{% url 'lore_create' %}">
                     <i class="green plus icon"></i>
                 </a>
             {% endif %}
         </h2>
-        <div id="lore-burger-menu">
-            {% include 'internal/includes/lore_articles_list.html' %}
+        <div id="lore-burger-menu" class="word-breaking hyphenated">
+            {% include 'internal/lore/lore_list__article_links.html' %}
         </div>
 
         <div id="lore-article">
             {% if show_article %}
-                <h1 class="lore-heading">{{ lore_article.title|capfirst }}</h1>
-                {% if perms.internal.delete_lore and lore_article.title != "Dev" %}
+                <h1 class="lore-heading word-breaking hyphenated">{{ shown_lore_article.title|capfirst }}</h1>
+                {% if perms.internal.delete_lore and shown_lore_article.title != "Dev" %}
                     <a class="delete-modal-button"
-                        data-url="{% url 'delete_lore' lore_article.slug %}"
-                        data-obj-name="{{ lore_article }}">
+                        data-url="{% url 'lore_delete' shown_lore_article.slug %}"
+                        data-obj-name="{{ shown_lore_article }}">
                         <i class="red trash icon"></i>
                     </a>
                 {% endif %}
-                {% if perms.internal.change_lore and lore_article.title != "Dev" %}
-                    <a href="{% url 'update_lore' lore_article.slug %}">
+                {% if perms.internal.change_lore and shown_lore_article.title != "Dev" %}
+                    <a href="{% url 'lore_update' shown_lore_article.slug %}">
                         <i class="make-col-yellow pencil icon"></i>
                     </a>
                 {% endif %}
-                <div class="lore-container">
-                    {% if lore_article.image %}
-                        <img class="lore-img" src="{{ lore_article.image.url }}" alt="{{ lore_article.title }}">
-                    {% endif %}
-                    <p>{{ lore_article.text|linebreaks }}</p>
+                <div class="lore-container word-breaking hyphenated">
+                    <p>{{ shown_lore_article.content|safe }}</p>
                 </div>
             {% else %}
                 <h1>{% translate "Welcome to the wiki of MAKE lore" %}</h1>
@@ -68,5 +64,3 @@
         </div>
     </div>
 {% endblock body %}
-
-{% block footer %}{% endblock footer %}

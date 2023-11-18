@@ -336,7 +336,6 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
 
 
 class LoreListView(ListView):
-    template_name = 'internal/lore_wiki.html'
     model = Lore
     context_object_name = 'lore_topics'
     ordering = 'title'
@@ -345,12 +344,13 @@ class LoreListView(ListView):
         context = super().get_context_data(**kwargs)
         context['show_article'] = False
         return context
+    template_name = 'internal/lore/lore_list.html'
 
 
 class LoreDetailView(DetailView):
-    template_name = 'internal/lore_wiki.html'
     model = Lore
     context_object_name = 'lore_article'
+    template_name = 'internal/lore/lore_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
