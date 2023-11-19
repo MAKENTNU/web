@@ -337,8 +337,7 @@ class QuoteDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteVi
 
 class LoreListView(ListView):
     model = Lore
-    ordering = 'title'
-
+    ordering = ['title']
     template_name = 'internal/lore/lore_list.html'
     context_object_name = 'all_lore_articles'
     extra_context = {
@@ -361,15 +360,16 @@ class LoreDetailView(DetailView):
 class LoreFormMixin(CustomFieldsetFormMixin, ABC):
     model = Lore
     form_class = LoreForm
+
     base_template = 'internal/base.html'
     back_button_link = reverse_lazy('lore_list')
-    back_button_text = _("Lore wiki")
+    back_button_text = _("Lore Wiki")
 
 
 class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
     permission_required = ('internal.add_lore',)
-    form_title = _("New lore article")
 
+    form_title = _("Add Lore Article")
 
     def get_success_url(self):
         title = str(self.object)
@@ -380,9 +380,10 @@ class LoreCreateView(PermissionRequiredMixin, LoreFormMixin, CreateView):
 
 
 class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
-    form_title = _("Edit lore article")
-    back_button_text = _("Lore article")
     permission_required = ('internal.change_lore',)
+
+    form_title = _("Change Lore Article")
+    back_button_text = _("Lore Article")
 
     def get_back_button_link(self):
         title = str(self.get_form_kwargs()['instance'])
@@ -400,6 +401,6 @@ class LoreUpdateView(PermissionRequiredMixin, LoreFormMixin, UpdateView):
 
 
 class LoreDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, DeleteView):
+    permission_required = ('internal.delete_lore',)
     model = Lore
     success_url = reverse_lazy('lore_list')
-    permission_required = ('internal.delete_lore',)

@@ -317,19 +317,21 @@ class Quote(models.Model):
 
 
 class Lore(models.Model):
-    title = models.CharField(max_length=50, verbose_name=_("title"), null=False)
-    slug = models.SlugField()
+    title = models.CharField(max_length=200, unique=True, verbose_name=_("title"))
+    slug = models.SlugField(unique=True)
     content = RichTextUploadingField(max_length=150000, verbose_name=_("text"))
 
     def __str__(self):
-        return _("{title}").format(title=self.title)
+        return self.title
 
     def save(self, *args, **kwargs):
         title = self.title
+        self.title = capfirst(title)
         title = title.replace('ø', 'o')
         title = title.replace('æ', 'ae')
         self.slug = slugify(title)
         super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name_plural = 'Lore articles'
+        verbose_name = _("lore article")
+        verbose_name_plural = _("lore articles")
