@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-05 18:43+0200\n"
+"POT-Creation-Date: 2023-11-18 22:09+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -323,7 +323,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: src/checkin/templates/checkin/profile_detail_internal.html:97
-#: src/internal/forms.py:43 src/make_queue/forms/course.py:57
+#: src/internal/forms.py:45 src/make_queue/forms/course.py:57
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -406,7 +406,7 @@ msgid "URL name"
 msgstr "URL-navn"
 
 #: src/contentbox/models.py:20 src/docs/models.py:15
-#: src/internal/models.py:264 src/internal/models.py:327
+#: src/internal/models.py:262 src/internal/models.py:320
 #: src/makerspace/models.py:23 src/news/models.py:39
 msgid "title"
 msgstr "tittel"
@@ -417,8 +417,8 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 
 #: src/contentbox/models.py:29 src/docs/models.py:60 src/faq/models.py:42
 #: src/groups/models.py:39 src/groups/models.py:111
-#: src/internal/models.py:65 src/internal/models.py:211
-#: src/internal/models.py:283
+#: src/internal/models.py:63 src/internal/models.py:209
+#: src/internal/models.py:281
 #: src/internal/templates/internal/secret_list.html:67
 #: src/make_queue/models/course.py:37 src/make_queue/models/machine.py:186
 #: src/make_queue/models/machine.py:240
@@ -711,21 +711,20 @@ msgstr "gruppe"
 msgid "clickbait"
 msgstr "lokketekst"
 
-#: src/groups/models.py:107 src/internal/models.py:266
+#: src/groups/models.py:107 src/internal/models.py:264
 #: src/makerspace/models.py:24
 msgid "description"
 msgstr "beskrivelse"
 
-#: src/groups/models.py:108 src/internal/models.py:199
+#: src/groups/models.py:108 src/internal/models.py:197
 #: src/news/admin.py:313
 #: src/news/templates/admin/news/event/change_form_ticket_table.html:17
 #: src/users/admin.py:36
 msgid "email"
 msgstr "e-post"
 
-#: src/groups/models.py:110 src/internal/models.py:335
-#: src/makerspace/admin.py:17 src/makerspace/models.py:26
-#: src/news/admin.py:39 src/news/models.py:43
+#: src/groups/models.py:110 src/makerspace/admin.py:17
+#: src/makerspace/models.py:26 src/news/admin.py:39 src/news/models.py:43
 msgid "image"
 msgstr "bilde"
 
@@ -734,7 +733,7 @@ msgstr "bilde"
 #: src/groups/templates/groups/committee_detail.html:6
 #: src/groups/templates/groups/committee_list.html:7
 #: src/groups/templates/groups/committee_list.html:12
-#: src/internal/models.py:39 src/web/templates/web/admin_panel.html:113
+#: src/internal/models.py:37 src/web/templates/web/admin_panel.html:113
 msgid "committees"
 msgstr "komiteer"
 
@@ -758,19 +757,19 @@ msgstr "Endre {committee}"
 msgid "full name"
 msgstr "fullt navn"
 
-#: src/internal/admin.py:50 src/internal/models.py:277
+#: src/internal/admin.py:50 src/internal/models.py:275
 msgid "extra view permissions"
 msgstr "ekstra visningsrettigheter"
 
-#: src/internal/forms.py:17
+#: src/internal/forms.py:19
 msgid "Choose user"
 msgstr "Velg bruker"
 
-#: src/internal/forms.py:19 src/internal/forms.py:36
+#: src/internal/forms.py:21 src/internal/forms.py:38
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: src/internal/forms.py:67
+#: src/internal/forms.py:69
 msgid ""
 "Member was not set as retired, as the member already has the status “quit” "
 "or “retired”."
@@ -778,7 +777,7 @@ msgstr ""
 "Medlemmet ble ikke markert som pang, fordi medlemmet allerede har status "
 "«sluttet» eller «pang»."
 
-#: src/internal/forms.py:98
+#: src/internal/forms.py:100
 msgid ""
 "Member was not set as quit, as the member already has the status “quit” or "
 "“retired”."
@@ -786,7 +785,7 @@ msgstr ""
 "Medlemmet ble ikke markert som sluttet, fordi medlemmet allerede har status "
 "«sluttet» eller «pang»."
 
-#: src/internal/forms.py:137
+#: src/internal/forms.py:139
 msgid ""
 "Member's “quit” status was not undone, as the member did not have the status "
 "“quit”."
@@ -794,7 +793,7 @@ msgstr ""
 "Medlemmets «sluttet»-status ble ikke omgjort, fordi medlemmet ikke hadde "
 "status «sluttet»."
 
-#: src/internal/forms.py:142
+#: src/internal/forms.py:144
 msgid ""
 "Member's retirement was not undone, as the member did not have the status "
 "“retired”."
@@ -802,7 +801,19 @@ msgstr ""
 "Medlemmets «pang»-status ble ikke omgjort, fordi medlemmet ikke hadde status "
 "«pang»."
 
-#: src/internal/models.py:33 src/make_queue/forms/quota.py:19
+#: src/internal/forms.py:203 src/internal/forms.py:208
+msgid ""
+"An article with this title already exists. Please merge your text with the "
+"existing one!"
+msgstr ""
+"En artikkel med dette navnet eksisterer allerede. Rediger heller den "
+"eksisterende artikkelen!"
+
+#: src/internal/forms.py:205 src/internal/forms.py:210
+msgid "Please make a title consisting of actual letters!"
+msgstr "Lag en tittel som består av bokstaver, ikke bare tegn"
+
+#: src/internal/models.py:31 src/make_queue/forms/quota.py:19
 #: src/make_queue/models/course.py:26
 #: src/make_queue/models/reservation.py:31 src/news/admin.py:306
 #: src/news/models.py:250
@@ -811,62 +822,62 @@ msgstr ""
 msgid "user"
 msgstr "bruker"
 
-#: src/internal/models.py:41
+#: src/internal/models.py:39
 #: src/internal/templates/internal/member_list.html:138
 #: src/internal/templates/internal/member_list.html:362
 msgid "role"
 msgstr "rolle"
 
-#: src/internal/models.py:42
+#: src/internal/models.py:40
 #: src/internal/templates/internal/member_list.html:147
 #: src/internal/templates/internal/member_list.html:282
 msgid "contact email"
 msgstr "kontakt-e-post"
 
-#: src/internal/models.py:44
+#: src/internal/models.py:42
 #: src/internal/templates/internal/member_list.html:290
 msgid "Google email"
 msgstr "Google-e-post"
 
-#: src/internal/models.py:46
+#: src/internal/models.py:44
 #: src/internal/templates/internal/member_list.html:298
 msgid "MAKE email"
 msgstr "MAKE-e-post"
 
-#: src/internal/models.py:47
+#: src/internal/models.py:45
 #: src/internal/templates/internal/member_list.html:150
 #: src/internal/templates/internal/member_list.html:274
 msgid "phone number"
 msgstr "telefonnummer"
 
-#: src/internal/models.py:48
+#: src/internal/models.py:46
 #: src/internal/templates/internal/member_list.html:312
 msgid "study program"
 msgstr "studieprogram"
 
-#: src/internal/models.py:49
+#: src/internal/models.py:47
 #: src/internal/templates/internal/member_list.html:318
 msgid "starting semester at NTNU"
 msgstr "startsemester på NTNU"
 
-#: src/internal/models.py:50
+#: src/internal/models.py:48
 msgid "Must be in the format [V/H][year], e.g. “V17” or “H2017”."
 msgstr "Må være på formatet [V/H][år], f.eks. «V17» eller «H2017»."
 
-#: src/internal/models.py:51
+#: src/internal/models.py:49
 msgid "date joined"
 msgstr "startdato"
 
-#: src/internal/models.py:52
+#: src/internal/models.py:50
 msgid "date quit or retired"
 msgstr "dato sluttet eller panget"
 
-#: src/internal/models.py:53
+#: src/internal/models.py:51
 #: src/internal/templates/internal/member_list.html:344
 msgid "reason quit"
 msgstr "sluttårsak"
 
-#: src/internal/models.py:54
+#: src/internal/models.py:52
 #: src/internal/templates/internal/member_list.html:374
 #: src/make_queue/templates/make_queue/reservation_form.html:130
 #: src/make_queue/templates/make_queue/reservation_form.html:132
@@ -879,101 +890,101 @@ msgstr "sluttårsak"
 msgid "comment"
 msgstr "kommentar"
 
-#: src/internal/models.py:55
+#: src/internal/models.py:53
 msgid "is active"
 msgstr "er aktiv"
 
-#: src/internal/models.py:56
+#: src/internal/models.py:54
 #: src/internal/templates/internal/member_list.html:368
 msgid "guidance exemption"
 msgstr "veiledningsfritak"
 
-#: src/internal/models.py:57
+#: src/internal/models.py:55
 msgid "has quit"
 msgstr "har sluttet"
 
-#: src/internal/models.py:58
+#: src/internal/models.py:56
 #: src/internal/templates/internal/member_list.html:87
 #: src/internal/templates/internal/member_list.html:88
 #: src/internal/templatetags/member.py:24
 msgid "retired"
 msgstr "pang"
 
-#: src/internal/models.py:59
+#: src/internal/models.py:57
 #: src/internal/templates/internal/member_list.html:90
 #: src/internal/templates/internal/member_list.html:91
 #: src/internal/templatetags/member.py:31
 msgid "honorary"
 msgstr "æresmedlem"
 
-#: src/internal/models.py:61
+#: src/internal/models.py:59
 #: src/internal/templates/internal/member_list.html:388
 msgid "GitHub username"
 msgstr "GitHub-brukernavn"
 
-#: src/internal/models.py:62
+#: src/internal/models.py:60
 #: src/internal/templates/internal/member_list.html:396
 msgid "Discord username"
 msgstr "Discord-brukernavn"
 
-#: src/internal/models.py:63
+#: src/internal/models.py:61
 msgid "The username must include the hashtag and the four digits at the end."
 msgstr "Brukernavnet må inkludere hashtaggen og de fire sifrene på slutten."
 
-#: src/internal/models.py:64
+#: src/internal/models.py:62
 #: src/internal/templates/internal/member_list.html:402
 msgid "Minecraft username"
 msgstr "Minecraft-brukernavn"
 
-#: src/internal/models.py:194
+#: src/internal/models.py:192
 msgid "Drive"
 msgstr "Drive"
 
-#: src/internal/models.py:195
+#: src/internal/models.py:193
 msgid "Slack"
 msgstr "Slack"
 
-#: src/internal/models.py:196
+#: src/internal/models.py:194
 #: src/make_queue/templates/make_queue/reservation_list.html:117
 #: src/make_queue/templates/make_queue/reservation_list.html:197
 msgid "Calendar"
 msgstr "Kalender"
 
-#: src/internal/models.py:197
+#: src/internal/models.py:195
 msgid "Trello"
 msgstr "Trello"
 
-#: src/internal/models.py:200
+#: src/internal/models.py:198
 msgid "Website"
 msgstr "Nettside"
 
-#: src/internal/models.py:207
+#: src/internal/models.py:205
 msgid "member"
 msgstr "medlem"
 
-#: src/internal/models.py:209
+#: src/internal/models.py:207
 msgid "system"
 msgstr "system"
 
-#: src/internal/models.py:210
+#: src/internal/models.py:208
 msgid "access"
 msgstr "tilgang"
 
-#: src/internal/models.py:221
+#: src/internal/models.py:219
 #, python-brace-format
 msgid "Access for {member} to {name}: {has_access}"
 msgstr "Tilgang for {member} til {name}: {has_access}"
 
-#: src/internal/models.py:270 src/make_queue/models/machine.py:54
+#: src/internal/models.py:268 src/make_queue/models/machine.py:54
 #: src/make_queue/models/machine.py:182 src/makerspace/models.py:30
 msgid "priority"
 msgstr "prioritet"
 
-#: src/internal/models.py:271
+#: src/internal/models.py:269
 msgid "If specified, the secrets are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
 
-#: src/internal/models.py:279
+#: src/internal/models.py:277
 msgid ""
 "Extra permissions that are required for viewing the secret. If a user does "
 "not have all the chosen permissions, it will be hidden to them."
@@ -981,23 +992,23 @@ msgstr ""
 "Ekstra rettigheter som kreves for å se hemmeligheten. Hvis en bruker ikke "
 "har alle de valgte rettighetene vil den være skjult for vedkommende."
 
-#: src/internal/models.py:303
+#: src/internal/models.py:301
 msgid "quote"
 msgstr "sitat"
 
-#: src/internal/models.py:304
+#: src/internal/models.py:302
 msgid "quoted"
 msgstr "sitert"
 
-#: src/internal/models.py:304
+#: src/internal/models.py:302
 msgid "The person who is quoted."
 msgstr "Personen som blir sitert."
 
-#: src/internal/models.py:305
+#: src/internal/models.py:303
 msgid "context"
 msgstr "kontekst"
 
-#: src/internal/models.py:306
+#: src/internal/models.py:304
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:100
 #: src/make_queue/views/course.py:125
 #: src/news/templates/news/event/event_list_contents.html:26
@@ -1006,23 +1017,26 @@ msgstr "kontekst"
 msgid "date"
 msgstr "dato"
 
-#: src/internal/models.py:311
+#: src/internal/models.py:309
 msgid "author"
 msgstr "forfatter"
 
-#: src/internal/models.py:318
+#: src/internal/models.py:316
 #, python-brace-format
 msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
 
-#: src/internal/models.py:329
+#: src/internal/models.py:322
 msgid "text"
 msgstr "tekst"
 
-#: src/internal/models.py:339
-#, python-brace-format
-msgid "{title}"
-msgstr "{title}"
+#: src/internal/models.py:336
+msgid "lore article"
+msgstr "Lore-artikkel"
+
+#: src/internal/models.py:337
+msgid "lore articles"
+msgstr "Lore-artikler"
 
 #: src/internal/templates/internal/base.html:6
 #: src/web/templates/web/header.html:94
@@ -1079,20 +1093,20 @@ msgstr "Django-admin"
 msgid "Log out"
 msgstr "Logg ut"
 
-#: src/internal/templates/internal/lore_wiki.html:7
+#: src/internal/templates/internal/lore/lore_list.html:7
 msgid "The wiki of MAKE lore"
 msgstr "MAKE-lore-wiki"
 
-#: src/internal/templates/internal/lore_wiki.html:19
-#: src/internal/templates/internal/lore_wiki.html:32
+#: src/internal/templates/internal/lore/lore_list.html:18
+#: src/internal/templates/internal/lore/lore_list.html:31
 msgid "Topics"
 msgstr "Tema"
 
-#: src/internal/templates/internal/lore_wiki.html:65
+#: src/internal/templates/internal/lore/lore_list.html:61
 msgid "Welcome to the wiki of MAKE lore"
 msgstr "Velkommen til wiki-siden for MAKE-lore"
 
-#: src/internal/templates/internal/lore_wiki.html:66
+#: src/internal/templates/internal/lore/lore_list.html:62
 msgid "Click a topic in the menu to access a wiki article"
 msgstr "Velg et tema i menyen til venstre for å lese om det"
 
@@ -1350,32 +1364,20 @@ msgstr "Legg til sitat"
 msgid "Change Quote"
 msgstr "Endre sitat"
 
-#: src/internal/views.py:368
-msgid "Lore wiki"
+#: src/internal/views.py:366
+msgid "Lore Wiki"
 msgstr "Lore-wiki"
 
-#: src/internal/views.py:373
-msgid "New lore article"
-msgstr "Ny lore-artikkel"
+#: src/internal/views.py:372
+msgid "Add Lore Article"
+msgstr "Legg til lore-artikkel"
 
-#: src/internal/views.py:379 src/internal/views.py:407
-msgid ""
-"An article with this title already exists. Please merge your text with the "
-"existing one!"
-msgstr ""
-"En artikkel med dette navnet eksisterer allerede. Rediger heller den "
-"eksisterende artikkelen!"
+#: src/internal/views.py:385
+msgid "Change Lore Article"
+msgstr "Endre lore-artikkel"
 
-#: src/internal/views.py:382
-msgid "Make a title consisting of actual letters, idiot! Thank you :-)"
-msgstr "Lag en tittel som faktisk består av bokstaver, din dust! På forhånd takk :-)"
-
-#: src/internal/views.py:393
-msgid "Edit lore article"
-msgstr "Rediger lore-artikkel"
-
-#: src/internal/views.py:394
-msgid "Lore article"
+#: src/internal/views.py:386
+msgid "Lore Article"
 msgstr "Lore-artikkel"
 
 #: src/make_queue/admin.py:22
