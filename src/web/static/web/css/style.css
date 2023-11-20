@@ -209,17 +209,6 @@ span.no-wrap {
     z-index: -1;
 }
 
-input[type=checkbox]#image-clear_id {
-    display: inline;
-    position: relative;
-    top: 7px;
-    margin-left: 10px;
-}
-
-label[for=image-clear_id] {
-    display: inline !important;
-}
-
 /*
  * Extension of Fomantic-UI mobile only, table only, etc. classes.
  * The `max-width` and `min-width` values are copied from Fomantic-UI.
