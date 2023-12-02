@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-05 18:43+0200\n"
+"POT-Creation-Date: 2023-12-02 15:41+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -133,7 +133,7 @@ msgstr "Legg til kunngjøring"
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:18
 #: src/make_queue/templates/make_queue/machine_list.html:21
 #: src/make_queue/views/machine.py:178 src/make_queue/views/quota.py:88
-#: src/make_queue/views/reservation_rule.py:74 src/makerspace/views.py:54
+#: src/make_queue/views/reservation_rule.py:74 src/makerspace/views.py:58
 #: src/news/views/article.py:88 src/news/views/event.py:237
 #: src/news/views/event.py:324
 msgid "Add"
@@ -806,7 +806,7 @@ msgstr ""
 #: src/make_queue/models/reservation.py:31 src/news/admin.py:306
 #: src/news/models.py:250
 #: src/news/templates/admin/news/event/change_form_ticket_table.html:16
-#: src/web/templates/web/header.html:90
+#: src/web/templates/web/header.html:95
 msgid "user"
 msgstr "bruker"
 
@@ -1015,7 +1015,7 @@ msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
 
 #: src/internal/templates/internal/base.html:6
-#: src/web/templates/web/header.html:94
+#: src/web/templates/web/header.html:99
 msgid "Internal pages"
 msgstr "Internsider"
 
@@ -1056,12 +1056,12 @@ msgid "Public pages"
 msgstr "Offentlige sider"
 
 #: src/internal/templates/internal/header.html:43
-#: src/web/templates/web/header.html:104
+#: src/web/templates/web/header.html:109
 msgid "Django admin"
 msgstr "Django-admin"
 
 #: src/internal/templates/internal/header.html:48
-#: src/web/templates/web/header.html:116
+#: src/web/templates/web/header.html:121
 msgid "Log out"
 msgstr "Logg ut"
 
@@ -2268,12 +2268,57 @@ msgstr "Endre regel for {machine_type}"
 msgid "Image of {equipment}."
 msgstr "Bilde av {equipment}."
 
+#: src/makerspace/forms.py:20
+msgid "I want to register my card after having attended the 3D-printing course"
+msgstr "Jeg har deltatt på 3D-printerkurs, og vil registrere kortet mitt"
+
+#: src/makerspace/forms.py:21
+msgid "I want to register a new access card"
+msgstr "Jeg vil registrere et nytt adgangskort"
+
+#: src/makerspace/forms.py:22
+msgid "I lost my access to the 3D-printing room, and I want to get it back"
+msgstr ""
+"Jeg har mistet tilgangen til 3D-printerrommet, og vil gjerne ha den tilbake"
+
+#: src/makerspace/forms.py:27
+msgid "Choose the situation that applies to you"
+msgstr "Velg situasjonen som gjelder deg"
+
+#: src/makerspace/forms.py:34
+msgid "EM number"
+msgstr "EM-nummer"
+
 #: src/makerspace/models.py:31
 msgid "If specified, the equipment is sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres utstyret stigende på denne verdien."
 
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:7
+msgid "Register student or employee card"
+msgstr "Registrer student- eller ansattkort"
+
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:16
+msgid "Request access to the 3D-printing room"
+msgstr "Få adgang til 3D-printerrommet"
+
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:26
+msgid "Update card information"
+msgstr "Oppdater kortinformasjon"
+
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:32
+msgid ""
+"Thank you for updating your card information. You should get access to the "
+"3D-printing room in about two weeks."
+msgstr ""
+"Takk for at du oppdaterte kortinformasjonen din. Du vil få tilgang til 3D-"
+"printerrommet om rundt to uker."
+
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:35
+msgid "Accept all cookies"
+msgstr "Godta alle cookies"
+
 #: src/makerspace/templates/makerspace/equipment/admin_equipment_list.html:15
-#: src/makerspace/views.py:57
+#: src/makerspace/views.py:61
 msgid "Add equipment"
 msgstr "Legg til utstyr"
 
@@ -2311,11 +2356,11 @@ msgstr "Regler"
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
-#: src/makerspace/views.py:48
+#: src/makerspace/views.py:52
 msgid "Admin page for equipment"
 msgstr "Administrasjonsside for utstyr"
 
-#: src/makerspace/views.py:63
+#: src/makerspace/views.py:67
 msgid "Change Equipment"
 msgstr "Endre utstyr"
 
@@ -2892,7 +2937,7 @@ msgid "This ticket is registered to another account. Please"
 msgstr "Denne billetten er knyttet til en annen bruker. Vennligst"
 
 #: src/news/templates/news/event/ticket/event_ticket_detail.html:33
-#: src/web/templates/web/header.html:124
+#: src/web/templates/web/header.html:129
 #: src/web/templates/web/login.html:12 src/web/templates/web/login.html:32
 msgid "log in"
 msgstr "logg inn"
@@ -2903,7 +2948,7 @@ msgstr "til den riktige brukeren for å se billetten din."
 
 #: src/news/templates/news/event/ticket/event_ticket_my_list.html:6
 #: src/news/templates/news/event/ticket/event_ticket_my_list.html:14
-#: src/web/templates/web/header.html:112
+#: src/web/templates/web/header.html:117
 msgid "My tickets"
 msgstr "Mine billetter"
 
@@ -3262,19 +3307,23 @@ msgstr "Makerverkstedet"
 msgid "About"
 msgstr "Om"
 
-#: src/web/templates/web/header.html:70
+#: src/web/templates/web/header.html:68
+msgid "Printing room access"
+msgstr "Tilgang til printerrommet"
+
+#: src/web/templates/web/header.html:75
 msgid "About us"
 msgstr "Om oss"
 
-#: src/web/templates/web/header.html:76
+#: src/web/templates/web/header.html:81
 msgid "Apply to MAKE"
 msgstr "Søk verv"
 
-#: src/web/templates/web/header.html:99
+#: src/web/templates/web/header.html:104
 msgid "Administration"
 msgstr "Administrasjon"
 
-#: src/web/templates/web/header.html:109
+#: src/web/templates/web/header.html:114
 msgid "Profile"
 msgstr "Profil"
 
