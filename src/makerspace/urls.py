@@ -8,9 +8,9 @@ equipment_urlpatterns = [
     path("", views.EquipmentListView.as_view(), name='equipment_list'),
     path("<int:pk>/", views.EquipmentDetailView.as_view(), name='equipment_detail'),
 ]
-
 urlpatterns = [
     path("", views.MakerspaceView.as_view(url_name='makerspace'), name='makerspace'),
+    path("card-registration/", views.CardRegistrationView.as_view(), name='card_registration'),
     path("equipment/", include(equipment_urlpatterns)),
     ContentBoxDetailView.get_path('rules'),
 ]

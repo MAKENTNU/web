@@ -1,0 +1,40 @@
+{% extends 'web/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load thumbnail %}
+{% load css_tags %}
+
+{% block title %}{% translate "Register student or employee card" %}{% endblock title %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'makerspace/css/card_registration.css' %}"/>
+    <script src="{% static 'makerspace/js/card_registration.js' %}"></script>
+{% endblock extra_head %}
+
+{% block body %}
+    <div class="ui text container">
+        <h1>{% translate "Request access to the 3D-printing room" %}</h1>
+        <form method="POST" id="card-registration-form">
+            {% csrf_token %}
+            {{ form.action.label_tag }}
+            <div class="radio">
+                {{ form.action }}
+            </div>
+            {{ form.card_number.label_tag }}
+            {{ form.card_number }}
+            <button type="submit" class="ui make-bg-yellow submit button">
+                {% translate "Update card information" %}
+            </button>
+        </form>
+    </div>
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <p>{% translate "Thank you for updating your card information. You should get access to the 3D-printing room in about two weeks." %}</p>
+            <form action="/">
+                <button type="submit" class="card-registration-modal-button ui right floated green submit button">
+                    {% translate "Accept all cookies" %}{#Hilsen Maya#}
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock body %}
