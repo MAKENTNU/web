@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-02 15:41+0100\n"
+"POT-Creation-Date: 2023-12-05 19:22+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -133,7 +133,7 @@ msgstr "Legg til kunngjøring"
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:18
 #: src/make_queue/templates/make_queue/machine_list.html:21
 #: src/make_queue/views/machine.py:178 src/make_queue/views/quota.py:88
-#: src/make_queue/views/reservation_rule.py:74 src/makerspace/views.py:58
+#: src/make_queue/views/reservation_rule.py:74 src/makerspace/views.py:59
 #: src/news/views/article.py:88 src/news/views/event.py:237
 #: src/news/views/event.py:324
 msgid "Add"
@@ -435,6 +435,7 @@ msgstr "sist endret"
 #: src/make_queue/templates/make_queue/reservation_list.html:66
 #: src/make_queue/templates/make_queue/reservation_list.html:126
 #: src/make_queue/templates/make_queue/reservation_list.html:202
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:21
 #: src/makerspace/templates/makerspace/equipment/equipment_detail.html:34
 #: src/news/templates/news/article/admin_article_list.html:53
 #: src/news/templates/news/article/article_detail.html:41
@@ -2297,15 +2298,11 @@ msgstr "Hvis spesifisert, sorteres utstyret stigende på denne verdien."
 msgid "Register student or employee card"
 msgstr "Registrer student- eller ansattkort"
 
-#: src/makerspace/templates/makerspace/card_registration/card_registration.html:16
-msgid "Request access to the 3D-printing room"
-msgstr "Få adgang til 3D-printerrommet"
-
-#: src/makerspace/templates/makerspace/card_registration/card_registration.html:26
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:43
 msgid "Update card information"
 msgstr "Oppdater kortinformasjon"
 
-#: src/makerspace/templates/makerspace/card_registration/card_registration.html:32
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:49
 msgid ""
 "Thank you for updating your card information. You should get access to the "
 "3D-printing room in about two weeks."
@@ -2313,12 +2310,12 @@ msgstr ""
 "Takk for at du oppdaterte kortinformasjonen din. Du vil få tilgang til 3D-"
 "printerrommet om rundt to uker."
 
-#: src/makerspace/templates/makerspace/card_registration/card_registration.html:35
+#: src/makerspace/templates/makerspace/card_registration/card_registration.html:52
 msgid "Accept all cookies"
 msgstr "Godta alle cookies"
 
 #: src/makerspace/templates/makerspace/equipment/admin_equipment_list.html:15
-#: src/makerspace/views.py:61
+#: src/makerspace/views.py:62
 msgid "Add equipment"
 msgstr "Legg til utstyr"
 
@@ -2356,11 +2353,11 @@ msgstr "Regler"
 msgid "you must follow these to be allowed to use the workshop"
 msgstr "du må følge disse for å få tillatelse til å bruke verkstedet"
 
-#: src/makerspace/views.py:52
+#: src/makerspace/views.py:53
 msgid "Admin page for equipment"
 msgstr "Administrasjonsside for utstyr"
 
-#: src/makerspace/views.py:67
+#: src/makerspace/views.py:68
 msgid "Change Equipment"
 msgstr "Endre utstyr"
 
