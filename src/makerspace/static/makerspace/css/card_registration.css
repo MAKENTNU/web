@@ -1,3 +1,7 @@
+.card-registration-infotext {
+    text-align: justify;
+}
+
 #card-registration-form label {
     font-weight: bold;
     display: block;
@@ -36,6 +40,11 @@
 }
 
 @media screen and (max-width: 450px) {
+    .contentbox {
+        margin-left: unset !important;
+        margin-right: unset !important;
+    }
+
     .modal-content {
         width: 90%;
     }

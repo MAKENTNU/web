@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from contentbox.models import ContentBox
 from contentbox.views import ContentBoxDetailView
 from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
@@ -78,9 +79,16 @@ class CardRegistrationView(UpdateView):
     model = User
     form_class = CardNumberUpdateForm
     template_name = 'makerspace/card_registration/card_registration.html'
+    url_name = 'card_registration'
 
     def get_object(self, queryset=None):
         return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        contentbox, _created = ContentBox.objects.get_or_create(url_name=self.url_name)
+        context['contentbox'] = contentbox
+        return context
 
     def form_valid(self, form):
         action_choice = self.request.POST['action']
