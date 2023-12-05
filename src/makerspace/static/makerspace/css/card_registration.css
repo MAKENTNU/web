@@ -34,3 +34,9 @@
     padding: 30px;
     border-radius: 10px;
 }
+
+@media screen and (max-width: 450px) {
+    .modal-content {
+        width: 90%;
+    }
+}
