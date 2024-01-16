@@ -10,7 +10,7 @@ django-extensions==3.2.3
 django-ical==1.9.2
 django-multiselectfield==0.1.12
 django-phonenumber-field[phonenumbers]==7.1.0
-django-simple-history==3.3.0
+django-simple-history==3.4.0
 sorl-thumbnail==12.9.0
 
 # Packages related to authentication and other "social" stuff
