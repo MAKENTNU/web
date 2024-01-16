@@ -303,7 +303,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 CONSTANCE_CONFIG = {
     'SHOW_APPLY_BUTTON_IN_HEADER_NAV': (
         True,
-        _("Determines whether the “Søk verv” button in the navigation menu in the header is visible."),
+        _("Determines whether the “Apply to MAKE” button in the navigation menu in the header is visible."),
     ),
     'ENROLL_MEMBERS_GUIDE_LINK': (
         "",

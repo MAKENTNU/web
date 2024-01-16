@@ -10,7 +10,7 @@ django-extensions==3.2.3
 django-ical==1.9.2
 django-multiselectfield==0.1.12
 django-phonenumber-field[phonenumbers]==7.2.0
-django-simple-history==3.3.0
+django-simple-history==3.4.0
 sorl-thumbnail==12.9.0
 
 # Packages related to authentication and other "social" stuff
@@ -27,6 +27,6 @@ channels-redis==4.1.0
 
 # Misc. packages
 bleach[css]==6.0.0
-Pillow==10.0.0
+Pillow==10.1.0
 uuid==1.30
 XlsxWriter==3.1.2
