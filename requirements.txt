@@ -11,7 +11,7 @@ django-ical==1.9.2
 django-multiselectfield==0.1.12
 django-phonenumber-field[phonenumbers]==7.3.0
 django-simple-history==3.4.0
-sorl-thumbnail==12.9.0
+sorl-thumbnail==12.10.0
 
 # Packages related to authentication and other "social" stuff
 social-auth-app-django==5.3.0
