@@ -3,12 +3,10 @@
 from datetime import datetime
 from django.db import migrations, models
 import django.utils.timezone
-from django.utils.timezone import utc
-
 
 def set_info_message_date_for_existing_machines(apps, schema_editor):
     Machine = apps.get_model('make_queue', 'Machine')
-    Machine.objects.update(info_message_date=datetime.utcfromtimestamp(0).replace(tzinfo=utc))
+    Machine.objects.update(info_message_date=datetime.utcfromtimestamp(0))
 
 
 class Migration(migrations.Migration):
