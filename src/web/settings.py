@@ -403,7 +403,14 @@ STATIC_URL = '/static/'
 
 # This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
 # which avoids waiting for browsers' cache to update if a file's contents change
-STATICFILES_STORAGE = 'web.static.ManifestStaticFilesStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    'staticfiles': {
+        'BACKEND': 'web.static.ManifestStaticFilesStorage',
+    },
+}
 # Ignores adding a hash to the files whose paths match these glob patterns:
 # NOTE: Ignored files should be named so that it's obvious that they should be renamed when their contents update,
 #       to avoid being "stuck" in browsers' cache - which is what `ManifestStaticFilesStorage` would have prevented
