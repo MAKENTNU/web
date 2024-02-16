@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import F
 from django.db.models.functions import Lower
 from django.utils import timezone
-from django.utils.text import capfirst
+from django.utils.text import capfirst, slugify
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from phonenumber_field.phonenumber import PhoneNumber
@@ -314,3 +314,24 @@ class Quote(models.Model):
 
     def __str__(self):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)
+
+
+class Lore(models.Model):
+    title = models.CharField(max_length=200, unique=True, verbose_name=_("title"))
+    slug = models.SlugField(unique=True)
+    content = RichTextUploadingField(max_length=150000, verbose_name=_("text"))
+
+    def __str__(self):
+        return self.title
+
+    def save(self, *args, **kwargs):
+        title = self.title
+        self.title = capfirst(title)
+        title = title.replace('ø', 'o')
+        title = title.replace('æ', 'ae')
+        self.slug = slugify(title)
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = _("lore article")
+        verbose_name_plural = _("lore articles")

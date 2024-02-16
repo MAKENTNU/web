@@ -1,0 +1,16 @@
+{% load i18n %}
+
+
+<ul class="lore-article-links">
+    {% for lore_article in all_lore_articles %}
+        <li>
+            <a {% if show_article and lore_article.slug == shown_lore_article.slug %}
+                class="selected-lore-article"
+            {% endif %}
+                href="{% url 'lore_detail' lore_article.slug %}"
+            >
+                {{ lore_article.title|capfirst }}
+            </a>
+        </li>
+    {% endfor %}
+</ul>

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-05 18:43+0200\n"
+"POT-Creation-Date: 2023-11-18 22:09+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -127,8 +127,8 @@ msgstr "Legg til kunngjøring"
 #: src/checkin/templates/checkin/admin_suggest_skill.html:37
 #: src/checkin/templates/checkin/profile_detail_internal.html:79
 #: src/docs/views.py:95 src/faq/views.py:65 src/faq/views.py:93
-#: src/internal/views.py:87 src/internal/views.py:264
-#: src/internal/views.py:309
+#: src/internal/views.py:88 src/internal/views.py:265
+#: src/internal/views.py:310
 #: src/make_queue/templates/make_queue/course/printer_3d_course_create.html:12
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:18
 #: src/make_queue/templates/make_queue/machine_list.html:21
@@ -323,7 +323,7 @@ msgid "Register"
 msgstr "Registrer"
 
 #: src/checkin/templates/checkin/profile_detail_internal.html:97
-#: src/internal/forms.py:43 src/make_queue/forms/course.py:57
+#: src/internal/forms.py:45 src/make_queue/forms/course.py:57
 msgid "Card number is already in use"
 msgstr "Kortnummeret er allerede i bruk"
 
@@ -406,8 +406,8 @@ msgid "URL name"
 msgstr "URL-navn"
 
 #: src/contentbox/models.py:20 src/docs/models.py:15
-#: src/internal/models.py:262 src/makerspace/models.py:23
-#: src/news/models.py:39
+#: src/internal/models.py:262 src/internal/models.py:320
+#: src/makerspace/models.py:23 src/news/models.py:39
 msgid "title"
 msgstr "tittel"
 
@@ -761,15 +761,15 @@ msgstr "fullt navn"
 msgid "extra view permissions"
 msgstr "ekstra visningsrettigheter"
 
-#: src/internal/forms.py:17
+#: src/internal/forms.py:19
 msgid "Choose user"
 msgstr "Velg bruker"
 
-#: src/internal/forms.py:19 src/internal/forms.py:36
+#: src/internal/forms.py:21 src/internal/forms.py:38
 msgid "Choose committees"
 msgstr "Velg komiteer"
 
-#: src/internal/forms.py:67
+#: src/internal/forms.py:69
 msgid ""
 "Member was not set as retired, as the member already has the status “quit” "
 "or “retired”."
@@ -777,7 +777,7 @@ msgstr ""
 "Medlemmet ble ikke markert som pang, fordi medlemmet allerede har status "
 "«sluttet» eller «pang»."
 
-#: src/internal/forms.py:98
+#: src/internal/forms.py:100
 msgid ""
 "Member was not set as quit, as the member already has the status “quit” or "
 "“retired”."
@@ -785,7 +785,7 @@ msgstr ""
 "Medlemmet ble ikke markert som sluttet, fordi medlemmet allerede har status "
 "«sluttet» eller «pang»."
 
-#: src/internal/forms.py:137
+#: src/internal/forms.py:139
 msgid ""
 "Member's “quit” status was not undone, as the member did not have the status "
 "“quit”."
@@ -793,13 +793,25 @@ msgstr ""
 "Medlemmets «sluttet»-status ble ikke omgjort, fordi medlemmet ikke hadde "
 "status «sluttet»."
 
-#: src/internal/forms.py:142
+#: src/internal/forms.py:144
 msgid ""
 "Member's retirement was not undone, as the member did not have the status "
 "“retired”."
 msgstr ""
 "Medlemmets «pang»-status ble ikke omgjort, fordi medlemmet ikke hadde status "
 "«pang»."
+
+#: src/internal/forms.py:203 src/internal/forms.py:208
+msgid ""
+"An article with this title already exists. Please merge your text with the "
+"existing one!"
+msgstr ""
+"En artikkel med dette navnet eksisterer allerede. Rediger heller den "
+"eksisterende artikkelen!"
+
+#: src/internal/forms.py:205 src/internal/forms.py:210
+msgid "Please make a title consisting of actual letters!"
+msgstr "Lag en tittel som består av bokstaver, ikke bare tegn"
 
 #: src/internal/models.py:31 src/make_queue/forms/quota.py:19
 #: src/make_queue/models/course.py:26
@@ -1014,6 +1026,18 @@ msgstr "forfatter"
 msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
 
+#: src/internal/models.py:322
+msgid "text"
+msgstr "tekst"
+
+#: src/internal/models.py:336
+msgid "lore article"
+msgstr "Lore-artikkel"
+
+#: src/internal/models.py:337
+msgid "lore articles"
+msgstr "Lore-artikler"
+
 #: src/internal/templates/internal/base.html:6
 #: src/web/templates/web/header.html:94
 msgid "Internal pages"
@@ -1042,28 +1066,49 @@ msgstr "Hemmeligheter"
 msgid "Quotes"
 msgstr "Sitater"
 
-#: src/internal/templates/internal/header.html:25
+#: src/internal/templates/internal/header.html:24
+msgid "MAKE Lore"
+msgstr "MAKE-lore"
+
 #: src/internal/templates/internal/header.html:29
+#: src/internal/templates/internal/header.html:33
 msgid "Misc."
 msgstr "Diverse"
 
-#: src/internal/templates/internal/header.html:31
+#: src/internal/templates/internal/header.html:35
 msgid "The History of MAKE NTNU"
 msgstr "Historien til MAKE NTNU"
 
-#: src/internal/templates/internal/header.html:39
+#: src/internal/templates/internal/header.html:43
 msgid "Public pages"
 msgstr "Offentlige sider"
 
-#: src/internal/templates/internal/header.html:43
+#: src/internal/templates/internal/header.html:47
 #: src/web/templates/web/header.html:104
 msgid "Django admin"
 msgstr "Django-admin"
 
-#: src/internal/templates/internal/header.html:48
+#: src/internal/templates/internal/header.html:52
 #: src/web/templates/web/header.html:116
 msgid "Log out"
 msgstr "Logg ut"
+
+#: src/internal/templates/internal/lore/lore_list.html:7
+msgid "The wiki of MAKE lore"
+msgstr "MAKE-lore-wiki"
+
+#: src/internal/templates/internal/lore/lore_list.html:18
+#: src/internal/templates/internal/lore/lore_list.html:31
+msgid "Topics"
+msgstr "Tema"
+
+#: src/internal/templates/internal/lore/lore_list.html:61
+msgid "Welcome to the wiki of MAKE lore"
+msgstr "Velkommen til wiki-siden for MAKE-lore"
+
+#: src/internal/templates/internal/lore/lore_list.html:62
+msgid "Click a topic in the menu to access a wiki article"
+msgstr "Velg et tema i menyen til venstre for å lese om det"
 
 #: src/internal/templates/internal/member_create.html:8
 #: src/internal/templates/internal/member_list.html:55
@@ -1072,7 +1117,7 @@ msgstr "Ting som skal gjøres når et nytt medlem tas opp"
 
 #: src/internal/templates/internal/member_list.html:10
 #: src/internal/templates/internal/member_list.html:44
-#: src/internal/views.py:77 src/internal/views.py:171
+#: src/internal/views.py:78 src/internal/views.py:172
 msgid "Member list"
 msgstr "Medlemsliste"
 
@@ -1187,12 +1232,12 @@ msgid "Basic information"
 msgstr "Grunnleggende informasjon"
 
 #: src/internal/templates/internal/member_list.html:326
-#: src/internal/views.py:143
+#: src/internal/views.py:144
 msgid "Membership information"
 msgstr "Medlemskapsinformasjon"
 
 #: src/internal/templates/internal/member_list.html:382
-#: src/internal/views.py:137
+#: src/internal/views.py:138
 msgid "Extra information"
 msgstr "Ekstrainformasjon"
 
@@ -1268,56 +1313,72 @@ msgstr ""
 "Oppgi et gyldig Discord-brukernavn – inkludert hashtaggen og de fire sifrene "
 "på slutten."
 
-#: src/internal/views.py:85
+#: src/internal/views.py:86
 msgid "Add New Member"
 msgstr "Legg til nytt medlem"
 
-#: src/internal/views.py:124
+#: src/internal/views.py:125
 #, python-brace-format
 msgid "Change Information for {full_name}"
 msgstr "Endre informasjonen til {full_name}"
 
-#: src/internal/views.py:172
+#: src/internal/views.py:173
 msgid "Set retired"
 msgstr "Sett panget"
 
-#: src/internal/views.py:178
+#: src/internal/views.py:179
 #, python-brace-format
 msgid "Set member {name} as retired"
 msgstr "Sett medlem {name} som pang"
 
-#: src/internal/views.py:191
+#: src/internal/views.py:192
 msgid "Set quit"
 msgstr "Sett sluttet"
 
-#: src/internal/views.py:197
+#: src/internal/views.py:198
 #, python-brace-format
 msgid "Set member {name} as quit"
 msgstr "Sett medlem {name} som sluttet"
 
-#: src/internal/views.py:257
+#: src/internal/views.py:258
 msgid "Secrets list"
 msgstr "Liste med hemmeligheter"
 
-#: src/internal/views.py:263
+#: src/internal/views.py:264
 msgid "Add Secret"
 msgstr "Legg til hemmelighet"
 
-#: src/internal/views.py:276
+#: src/internal/views.py:277
 msgid "Change Secret"
 msgstr "Endre hemmelighet"
 
-#: src/internal/views.py:299
+#: src/internal/views.py:300
 msgid "Quotes page"
 msgstr "Sitatside"
 
-#: src/internal/views.py:308
+#: src/internal/views.py:309
 msgid "Add Quote"
 msgstr "Legg til sitat"
 
-#: src/internal/views.py:317
+#: src/internal/views.py:318
 msgid "Change Quote"
 msgstr "Endre sitat"
+
+#: src/internal/views.py:366
+msgid "Lore Wiki"
+msgstr "Lore-wiki"
+
+#: src/internal/views.py:372
+msgid "Add Lore Article"
+msgstr "Legg til lore-artikkel"
+
+#: src/internal/views.py:385
+msgid "Change Lore Article"
+msgstr "Endre lore-artikkel"
+
+#: src/internal/views.py:386
+msgid "Lore Article"
+msgstr "Lore-artikkel"
 
 #: src/make_queue/admin.py:22
 #: src/make_queue/templates/make_queue/machine_list.html:7
