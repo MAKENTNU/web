@@ -7,6 +7,8 @@ A summary of changes made to the codebase, grouped per deployment.
 ### New features
 
 - The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE")
+- Created page showing statistics about the use of the workshop and reservations of the equipment
+
 
 ### Improvements
 
@@ -31,6 +33,7 @@ A summary of changes made to the codebase, grouped per deployment.
     - _Examples can be passwords of Google Workspace users that only exist for technical purposes,
       or credentials for the admin page of a physical router_
 - Added an "internal" ribbon label on internal articles and events
+>>>>>>> 66675ec2 (Added page to show statistics from use of the workshop)
 
 ### Improvements
 
