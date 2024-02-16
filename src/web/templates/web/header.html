@@ -63,6 +63,11 @@
                     <a class="item" href="{% url 'rules' %}">
                         <div class="text">{% translate "Rules" %}</div>
                     </a>
+                    {% if user.is_authenticated %}
+                        <a class="item" href="{% url 'card_registration' %}">
+                            <div class="text">{% translate "Printing room access" %}</div>
+                        </a>
+                    {% endif %}
                 </nav>
             </div>
 

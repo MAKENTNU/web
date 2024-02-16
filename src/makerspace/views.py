@@ -1,15 +1,20 @@
 from abc import ABC
 
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, DetailView, ListView, UpdateView
 
+from contentbox.models import ContentBox
 from contentbox.views import ContentBoxDetailView
 from util.templatetags.string_tags import title_en
 from util.view_utils import CustomFieldsetFormMixin, PreventGetRequestsMixin
-from .forms import EquipmentForm
+from .forms import CardNumberUpdateForm, EquipmentForm
 from .models import Equipment
+from make_queue.models.course import Printer3DCourse
+from users.models import User
 
 
 class MakerspaceView(ContentBoxDetailView):
@@ -67,3 +72,36 @@ class EquipmentDeleteView(PermissionRequiredMixin, PreventGetRequestsMixin, Dele
     permission_required = ('makerspace.delete_equipment',)
     model = Equipment
     success_url = reverse_lazy('admin_equipment_list')
+
+
+@method_decorator(login_required, name="dispatch")
+class CardRegistrationView(UpdateView):
+    model = User
+    form_class = CardNumberUpdateForm
+    template_name = 'makerspace/card_registration/card_registration.html'
+    url_name = 'card_registration'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        contentbox, _created = ContentBox.objects.get_or_create(url_name=self.url_name)
+        context['contentbox'] = contentbox
+        return context
+
+    def form_valid(self, form):
+        action_choice = self.request.POST['action']
+        if action_choice == '2' or action_choice == '3':
+            try:
+                user_course_registration = Printer3DCourse.objects.get(user=self.request.user)
+                user_course_registration.status = Printer3DCourse.Status.REGISTERED
+                user_course_registration.save()
+            except Printer3DCourse.DoesNotExist:
+                pass
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        success_url = reverse_lazy('card_registration')
+        success_url += '?success=true'
+        return success_url

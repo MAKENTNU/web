@@ -7,6 +7,7 @@ A summary of changes made to the codebase, grouped per deployment.
 ### New features
 
 - The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE")
+- Added a page where users can request access to the 3D-printing room after having attended a 3D-printing course. The page also lets users update their EM number if they got a new card, or lost access to the 3D-printing room.
 
 ### Improvements
 
