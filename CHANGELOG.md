@@ -14,7 +14,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Fixes
 
-- 
+- The code validating Discord usernames on the internal pages has been updated according to match Discord's new username syntax.
 
 ### Other changes
 
