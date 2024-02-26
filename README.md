@@ -66,8 +66,7 @@ and set the following settings (File → Settings...):
        ```
 1. Install requirements:
    * If using Windows, first download the correct wheel for the [`python-ldap`](https://pypi.org/project/python-ldap/) package
-     from [Christoph Gohlke's page](https://www.lfd.uci.edu/~gohlke/pythonlibs/#_python-ldap)
-     (linked to by [`python-ldap`'s documentation](https://www.python-ldap.org/en/python-ldap-3.4.0/installing.html#windows))
+     from [Christoph Gohlke](https://github.com/cgohlke)'s [python-ldap-build repository](https://github.com/cgohlke/python-ldap-build).
      and install it:
      ```shell
      pip install [path to .whl file]
