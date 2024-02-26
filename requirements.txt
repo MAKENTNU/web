@@ -19,7 +19,7 @@ social-auth-app-django==5.3.0
 # (see https://python-social-auth.readthedocs.io/en/stable/installing.html#using-the-extras-options)
 social-auth-core[openidconnect]==4.4.2
 # TODO: updated, pre-built Windows wheels might be available after this is resolved: https://github.com/python-ldap/python-ldap/issues/511
-python-ldap==3.4.3
+python-ldap==3.4.4
 
 # Async-related packages (mainly for sending of emails)
 channels[daphne]==4.0.0
