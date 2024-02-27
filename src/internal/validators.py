@@ -32,10 +32,3 @@ def validate_semester_float(value):
             "%(value)s is not a valid semester float",
             params={'value': value},
         )
-
-
-discord_username_regex = re.compile(r'^(?!.*\.\.)[a-z0-9_.]{2,32}$')
-discord_username_validator = RegexValidator(
-    discord_username_regex,
-    _("Enter a valid Discord username."),
-)
