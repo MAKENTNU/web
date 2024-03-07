@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='member',
             name='discord_username',
-            field=web.modelfields.UnlimitedCharField(blank=True, help_text='The username must include the hashtag and the four digits at the end.', validators=[django.core.validators.RegexValidator(re.compile('^(.+)#([0-9]{4})$'), 'Enter a valid Discord username – including the hashtag and the four digits at the end.')], verbose_name='Discord username'),
+            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='Discord username'),
         ),
         migrations.AddField(
             model_name='member',

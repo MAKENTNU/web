@@ -123,15 +123,7 @@ class Migration(migrations.Migration):
                 (
                     "discord_username",
                     web.modelfields.UnlimitedCharField(
-                        blank=True,
-                        help_text="The username must include the hashtag and the four digits at the end.",
-                        validators=[
-                            django.core.validators.RegexValidator(
-                                re.compile("^(.+)#([0-9]{4})$"),
-                                "Enter a valid Discord username – including the hashtag and the four digits at the end.",
-                            )
-                        ],
-                        verbose_name="Discord username",
+                        blank=True, verbose_name="Discord username"
                     ),
                 ),
                 (
