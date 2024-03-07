@@ -14,7 +14,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Fixes
 
-- 
+- The Discord username field in the internal site's member form no longer enforces Discord's old username format
 
 ### Other changes
 

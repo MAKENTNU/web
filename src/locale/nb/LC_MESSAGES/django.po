@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MAKE NTNU website\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-05 18:43+0200\n"
+"POT-Creation-Date: 2024-02-27 17:42+0100\n"
 "PO-Revision-Date: 2018-10-09 14:05+0200\n"
 "Last-Translator: Sindre Stephansen <sindre@sindrestephansen.com>\n"
 "Language-Team: Norwegian Bokmål <dev@makentnu.no>\n"
@@ -406,7 +406,7 @@ msgid "URL name"
 msgstr "URL-navn"
 
 #: src/contentbox/models.py:20 src/docs/models.py:15
-#: src/internal/models.py:262 src/makerspace/models.py:23
+#: src/internal/models.py:261 src/makerspace/models.py:23
 #: src/news/models.py:39
 msgid "title"
 msgstr "tittel"
@@ -417,8 +417,8 @@ msgstr "Ekstra rettigheter som kreves for å kunne endre på innholdsboksen."
 
 #: src/contentbox/models.py:29 src/docs/models.py:60 src/faq/models.py:42
 #: src/groups/models.py:39 src/groups/models.py:111
-#: src/internal/models.py:63 src/internal/models.py:209
-#: src/internal/models.py:281
+#: src/internal/models.py:62 src/internal/models.py:208
+#: src/internal/models.py:280
 #: src/internal/templates/internal/secret_list.html:67
 #: src/make_queue/models/course.py:37 src/make_queue/models/machine.py:186
 #: src/make_queue/models/machine.py:240
@@ -711,12 +711,12 @@ msgstr "gruppe"
 msgid "clickbait"
 msgstr "lokketekst"
 
-#: src/groups/models.py:107 src/internal/models.py:264
+#: src/groups/models.py:107 src/internal/models.py:263
 #: src/makerspace/models.py:24
 msgid "description"
 msgstr "beskrivelse"
 
-#: src/groups/models.py:108 src/internal/models.py:197
+#: src/groups/models.py:108 src/internal/models.py:196
 #: src/news/admin.py:313
 #: src/news/templates/admin/news/event/change_form_ticket_table.html:17
 #: src/users/admin.py:36
@@ -757,7 +757,7 @@ msgstr "Endre {committee}"
 msgid "full name"
 msgstr "fullt navn"
 
-#: src/internal/admin.py:50 src/internal/models.py:275
+#: src/internal/admin.py:50 src/internal/models.py:274
 msgid "extra view permissions"
 msgstr "ekstra visningsrettigheter"
 
@@ -916,63 +916,59 @@ msgid "Discord username"
 msgstr "Discord-brukernavn"
 
 #: src/internal/models.py:61
-msgid "The username must include the hashtag and the four digits at the end."
-msgstr "Brukernavnet må inkludere hashtaggen og de fire sifrene på slutten."
-
-#: src/internal/models.py:62
 #: src/internal/templates/internal/member_list.html:402
 msgid "Minecraft username"
 msgstr "Minecraft-brukernavn"
 
-#: src/internal/models.py:192
+#: src/internal/models.py:191
 msgid "Drive"
 msgstr "Drive"
 
-#: src/internal/models.py:193
+#: src/internal/models.py:192
 msgid "Slack"
 msgstr "Slack"
 
-#: src/internal/models.py:194
+#: src/internal/models.py:193
 #: src/make_queue/templates/make_queue/reservation_list.html:117
 #: src/make_queue/templates/make_queue/reservation_list.html:197
 msgid "Calendar"
 msgstr "Kalender"
 
-#: src/internal/models.py:195
+#: src/internal/models.py:194
 msgid "Trello"
 msgstr "Trello"
 
-#: src/internal/models.py:198
+#: src/internal/models.py:197
 msgid "Website"
 msgstr "Nettside"
 
-#: src/internal/models.py:205
+#: src/internal/models.py:204
 msgid "member"
 msgstr "medlem"
 
-#: src/internal/models.py:207
+#: src/internal/models.py:206
 msgid "system"
 msgstr "system"
 
-#: src/internal/models.py:208
+#: src/internal/models.py:207
 msgid "access"
 msgstr "tilgang"
 
-#: src/internal/models.py:219
+#: src/internal/models.py:218
 #, python-brace-format
 msgid "Access for {member} to {name}: {has_access}"
 msgstr "Tilgang for {member} til {name}: {has_access}"
 
-#: src/internal/models.py:268 src/make_queue/models/machine.py:54
+#: src/internal/models.py:267 src/make_queue/models/machine.py:54
 #: src/make_queue/models/machine.py:182 src/makerspace/models.py:30
 msgid "priority"
 msgstr "prioritet"
 
-#: src/internal/models.py:269
+#: src/internal/models.py:268
 msgid "If specified, the secrets are sorted ascending by this value."
 msgstr "Hvis spesifisert, sorteres hemmelighetene stigende på denne verdien."
 
-#: src/internal/models.py:277
+#: src/internal/models.py:276
 msgid ""
 "Extra permissions that are required for viewing the secret. If a user does "
 "not have all the chosen permissions, it will be hidden to them."
@@ -980,23 +976,23 @@ msgstr ""
 "Ekstra rettigheter som kreves for å se hemmeligheten. Hvis en bruker ikke "
 "har alle de valgte rettighetene vil den være skjult for vedkommende."
 
-#: src/internal/models.py:301
+#: src/internal/models.py:300
 msgid "quote"
 msgstr "sitat"
 
-#: src/internal/models.py:302
+#: src/internal/models.py:301
 msgid "quoted"
 msgstr "sitert"
 
-#: src/internal/models.py:302
+#: src/internal/models.py:301
 msgid "The person who is quoted."
 msgstr "Personen som blir sitert."
 
-#: src/internal/models.py:303
+#: src/internal/models.py:302
 msgid "context"
 msgstr "kontekst"
 
-#: src/internal/models.py:304
+#: src/internal/models.py:303
 #: src/make_queue/templates/make_queue/course/printer_3d_course_list.html:100
 #: src/make_queue/views/course.py:125
 #: src/news/templates/news/event/event_list_contents.html:26
@@ -1005,11 +1001,11 @@ msgstr "kontekst"
 msgid "date"
 msgstr "dato"
 
-#: src/internal/models.py:309
+#: src/internal/models.py:308
 msgid "author"
 msgstr "forfatter"
 
-#: src/internal/models.py:316
+#: src/internal/models.py:315
 #, python-brace-format
 msgid "“{quote}” —{quoted}"
 msgstr "«{quote}» —{quoted}"
@@ -1259,14 +1255,6 @@ msgstr "Oppgi en gyldig e-postadresse som slutter med «@makentnu.no»."
 #: src/internal/validators.py:24
 msgid "Enter a valid format for a semester."
 msgstr "Oppgi et gyldig format for et semester."
-
-#: src/internal/validators.py:40
-msgid ""
-"Enter a valid Discord username – including the hashtag and the four digits "
-"at the end."
-msgstr ""
-"Oppgi et gyldig Discord-brukernavn – inkludert hashtaggen og de fire sifrene "
-"på slutten."
 
 #: src/internal/views.py:85
 msgid "Add New Member"
