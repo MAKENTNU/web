@@ -23,8 +23,12 @@ class Printer3DCourseForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(**kwargs)
+        if self.instance.user:
+            queryset = User.objects.filter(Q(printer_3d_course=self.instance))
+        else:
+            queryset = User.objects.filter(Q(printer_3d_course=None))
         self.fields['user'] = forms.ModelChoiceField(
-            queryset=User.objects.filter(Q(printer_3d_course=None) | Q(printer_3d_course=self.instance)),
+            queryset=queryset,
             required=False,
             widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
             label=Printer3DCourse._meta.get_field('user').verbose_name,

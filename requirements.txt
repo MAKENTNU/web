@@ -1,5 +1,5 @@
 # Django-related packages
-Django==4.2.9
+Django==5.0.2
 django-hosts==6.0
 django-ckeditor==6.7.0
 django-cleanup==8.0.0
