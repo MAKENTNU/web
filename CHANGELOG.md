@@ -18,7 +18,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Other changes
 
--
+- Updated Django to 5.0.2
 
 
 ## 2023-05-10 ([#654](https://github.com/MAKENTNU/web/pull/654))
