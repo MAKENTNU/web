@@ -22,7 +22,7 @@ social-auth-core[openidconnect]==4.4.2
 python-ldap==3.4.4
 
 # Async-related packages (mainly for sending of emails)
-channels[daphne]==4.0.0
+channels[daphne]==4.1.0
 channels-redis==4.1.0
 
 # Misc. packages
