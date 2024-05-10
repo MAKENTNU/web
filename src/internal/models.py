@@ -19,7 +19,7 @@ from util.url_utils import reverse_internal
 from web.modelfields import UnlimitedCharField
 from .modelfields import SemesterField
 from .util import date_to_semester, year_to_semester
-from .validators import WhitelistedEmailValidator, discord_username_validator
+from .validators import WhitelistedEmailValidator
 
 
 class Member(models.Model):
@@ -57,8 +57,7 @@ class Member(models.Model):
     honorary = models.BooleanField(default=False, verbose_name=_("honorary"))
     # Our code shouldn't have to keep track of these services' username length constraints, so we should not limit the length
     github_username = UnlimitedCharField(blank=True, verbose_name=_("GitHub username"))
-    discord_username = UnlimitedCharField(blank=True, validators=[discord_username_validator], verbose_name=_("Discord username"),
-                                          help_text=_("The username must include the hashtag and the four digits at the end."))
+    discord_username = UnlimitedCharField(blank=True, verbose_name=_("Discord username"))
     minecraft_username = UnlimitedCharField(blank=True, verbose_name=_("Minecraft username"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 

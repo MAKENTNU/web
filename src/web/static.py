@@ -66,13 +66,14 @@ class ManifestStaticFilesStorage(DjangoManifestStaticFilesStorage):
         return f"{settings.STATIC_URL}{url}"
 
     def file_hash(self, name, content=None):
-        normalized_file_path = Path(name).as_posix()
-        # Don't hash the filename if the path matches any of the patterns in the `MANIFEST_STATICFILES_IGNORE_PATTERNS` setting
-        if any(
-                fnmatchcase(normalized_file_path, pattern)
-                for pattern in settings.MANIFEST_STATICFILES_IGNORE_PATTERNS
-        ):
-            return None
+        if name:
+            normalized_file_path = Path(name).as_posix()
+            # Don't hash the filename if the path matches any of the patterns in the `MANIFEST_STATICFILES_IGNORE_PATTERNS` setting
+            if any(
+                    fnmatchcase(normalized_file_path, pattern)
+                    for pattern in settings.MANIFEST_STATICFILES_IGNORE_PATTERNS
+            ):
+                return None
 
         return super().file_hash(name, content)
 

@@ -10,13 +10,13 @@ from django.utils import timezone
 from django.utils.formats import time_format
 from django.utils.text import capfirst
 from django.utils.translation import gettext_lazy as _
-from multiselectfield import MultiSelectField
+
 
 from news.models import TimePlace
 from users.models import User
 from util.locale_utils import exact_weekday_to_day_name, short_datetime_format, timedelta_to_hours
 from util.model_utils import ComparisonType, comparison_boilerplate
-from web.modelfields import UnlimitedCharField
+from web.modelfields import UnlimitedCharField, MultiSelectField
 from .machine import Machine, MachineType
 
 

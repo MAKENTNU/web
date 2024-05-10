@@ -102,7 +102,6 @@ USE_DEBUG_TOOLBAR = DEBUG and find_spec('debug_toolbar') is not None  # (custom 
 INSTALLED_APPS = [
     # `django-constance` should be listed before project apps (see https://django-constance.readthedocs.io/en/stable/#configuration)
     'constance',
-    'constance.backends.database',
     # App used for things regarding the whole project or across other apps
     # (Should be listed first, to be able to override things like management commands)
     'web.apps.WebConfig',
@@ -304,7 +303,7 @@ CONSTANCE_ADDITIONAL_FIELDS = {
 CONSTANCE_CONFIG = {
     'SHOW_APPLY_BUTTON_IN_HEADER_NAV': (
         True,
-        _("Determines whether the “Søk verv” button in the navigation menu in the header is visible."),
+        _("Determines whether the “Apply to MAKE” button in the navigation menu in the header is visible."),
     ),
     'ENROLL_MEMBERS_GUIDE_LINK': (
         "",
@@ -404,7 +403,14 @@ STATIC_URL = '/static/'
 
 # This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
 # which avoids waiting for browsers' cache to update if a file's contents change
-STATICFILES_STORAGE = 'web.static.ManifestStaticFilesStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    'staticfiles': {
+        'BACKEND': 'web.static.ManifestStaticFilesStorage',
+    },
+}
 # Ignores adding a hash to the files whose paths match these glob patterns:
 # NOTE: Ignored files should be named so that it's obvious that they should be renamed when their contents update,
 #       to avoid being "stuck" in browsers' cache - which is what `ManifestStaticFilesStorage` would have prevented
