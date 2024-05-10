@@ -6,11 +6,26 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
-- The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE")
+- 
 
 ### Improvements
 
 - 
+
+### Fixes
+
+- 
+
+### Other changes
+
+- 
+
+
+## 2024-05-10 ([#730](https://github.com/MAKENTNU/web/pull/730))
+
+### New features
+
+- The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE")
 
 ### Fixes
 
@@ -19,6 +34,7 @@ A summary of changes made to the codebase, grouped per deployment.
 ### Other changes
 
 - Updated Django to 5.0.2
+- Updated a ridiculous amount of packages
 
 
 ## 2023-05-10 ([#654](https://github.com/MAKENTNU/web/pull/654))
