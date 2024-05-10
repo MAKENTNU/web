@@ -17,7 +17,7 @@ sorl-thumbnail==12.10.0
 social-auth-app-django==5.4.1
 # This is already a requirement of `social-auth-app-django`, but it's listed here to provide the `openidconnect` extra
 # (see https://python-social-auth.readthedocs.io/en/stable/installing.html#using-the-extras-options)
-social-auth-core[openidconnect]==4.4.2
+social-auth-core[openidconnect]==4.5.4
 # python-ldap wheels are now available via https://github.com/cgohlke/python-ldap-build/releases
 python-ldap==3.4.4
 
