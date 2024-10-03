@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
-from web.widgets import SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput
+from web.widgets import SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticMultipleSelectInput
 from ..models.course import Printer3DCourse
 
 
@@ -19,6 +19,7 @@ class Printer3DCourseForm(forms.ModelForm):
             'status': SemanticChoiceInput(),
             'date': SemanticDateInput(),
             'username': forms.TextInput(attrs={'autofocus': 'autofocus'}),
+            'course_permissions': SemanticMultipleSelectInput(),
         }
 
     def __init__(self, *args, **kwargs):

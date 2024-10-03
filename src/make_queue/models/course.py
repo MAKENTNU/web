@@ -8,6 +8,13 @@ from users.models import User
 from .fields import UsernameField
 
 
+class CoursePermission(models.Model):
+    name = models.CharField(max_length=256, blank=True, verbose_name=_("name"))
+    short_name = models.CharField(max_length=4, blank=True, verbose_name=_("short name"))
+    description = models.TextField(blank=True, verbose_name=_("description"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+
 # `3DPrinterCourse` would be a syntactically invalid name :(
 class Printer3DCourse(models.Model):
     class Status(models.TextChoices):
@@ -34,6 +41,7 @@ class Printer3DCourse(models.Model):
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
     raise3d_course = models.BooleanField(default=False, verbose_name=_("Raise3D course"))
     sla_course = models.BooleanField(default=False, verbose_name=_("SLA course"))
+    course_permissions = models.ManyToManyField(CoursePermission, blank=True, verbose_name=_("course permissions"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
@@ -90,17 +98,4 @@ class Printer3DCourse(models.Model):
     def get_user_display_name(self):
         full_name = self.user.get_full_name() if self.user else self.name
         return str(full_name or self.user or self.username)
-
-
-class CoursePermission(models.Model):
-    name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
-    description = models.TextField(blank=True, verbose_name=_("description"))
-    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
-
-class CourseType(models.Model):
-    name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
-    description = models.TextField(blank=True, verbose_name=_("description"))
-    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
-    permissions = models.ManyToManyField(CoursePermission, related_name='course_types', verbose_name=_("permissions"))
-
-
+    
