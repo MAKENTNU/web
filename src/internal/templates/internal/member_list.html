@@ -138,6 +138,9 @@
                     {% translate "role"|capfirst %}<i id="member-sort-role" class="sort icon"></i>
                 </th>
                 <th class="mobile hidden">
+                    Previous roles<i id="member-sort-previous_roles" class="sort icon"></i>
+                </th>
+                <th class="mobile hidden">
                     {% translate "status"|capfirst %}<i id="member-sort-status" class="sort icon"></i>
                 </th>
                 <th class="computer only">
@@ -216,6 +219,7 @@
                         {% endfor %}
                     </td>
                     <td>{{ member.role }}</td>
+                    <td class="mobile hidden">{{ member.previous_roles }}</td>
                     <td class="label-cell mobile hidden">
                         {% for status_name, color in membership_status %}
                             <div class="ui {{ color }} label">{{ status_name }}</div>

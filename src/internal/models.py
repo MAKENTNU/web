@@ -37,6 +37,7 @@ class Member(models.Model):
         verbose_name=_("committees"),
     )
     role = UnlimitedCharField(blank=True, verbose_name=_("role"))
+    previous_roles = UnlimitedCharField(blank=True, verbose_name=_("previous roles"))
     contact_email = models.EmailField(blank=True, verbose_name=_("contact email"))
     # The email address of a Google user can potentially belong to any host, not just "gmail.com"
     google_email = models.EmailField(blank=True, verbose_name=_("Google email"))

@@ -89,6 +89,7 @@ function showDetailedMemberInformation(member) {
         dateQuitOrRetired: `${member.data.semesterQuitOrRetired} (${member.data.dateQuitOrRetired})`,
         reasonQuit: member.data.reasonQuit,
         role: member.data.role,
+        previous_roles: member.data.previous_roles,
         guidanceExemption: member.data.guidanceExemption,
         comment: member.data.comment,
     };
@@ -311,7 +312,7 @@ function setup() {
     state.searchValue = $searchInput.val();
 
     // Package member information
-    $("#member-table tbody tr").each((index, row) => {
+    $("#member-table tbody tr").each((_index, row) => {
         const $row = $(row);
 
         const searchableData = {
@@ -332,6 +333,7 @@ function setup() {
             semesterJoined: $row.data("semester-joined"),
             reasonQuit: $.trim($row.data("reason-quit")),
             role: $.trim($row.data("role")),
+            previous_roles: $.trim($row.data("previous_roles")),
             comment: $.trim($row.data("comment")),
         };
 
@@ -391,7 +393,7 @@ function setup() {
         state.allMembers.push(member);
     });
 
-    for (const sortAttribute of ["name", "committees", "status", "dateJoinedSortable", "contactEmail", "role", "phone"]) {
+    for (const sortAttribute of ["name", "committees", "status", "dateJoinedSortable", "contactEmail", "role", "previous_roles", "phone"]) {
         $(`#member-sort-${sortAttribute}`).closest("th").click((e) => setSort(
             sortAttribute, $(e.target).find(".icon"),
         ));
