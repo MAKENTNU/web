@@ -14,6 +14,9 @@ class CoursePermission(models.Model):
     description = models.TextField(blank=True, verbose_name=_("description"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
+    def __str__(self):
+        return self.name
+
 
 # `3DPrinterCourse` would be a syntactically invalid name :(
 class Printer3DCourse(models.Model):
@@ -39,8 +42,6 @@ class Printer3DCourse(models.Model):
 
     date = models.DateField(verbose_name=_("course date"))
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
-    raise3d_course = models.BooleanField(default=False, verbose_name=_("Raise3D course"))
-    sla_course = models.BooleanField(default=False, verbose_name=_("SLA course"))
     course_permissions = models.ManyToManyField(CoursePermission, blank=True, verbose_name=_("course permissions"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 

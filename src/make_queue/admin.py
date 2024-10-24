@@ -77,19 +77,24 @@ class ReservationRuleAdmin(admin.ModelAdmin):
 
 
 class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin):
-    list_display = ('username', 'user', 'name', 'date', 'status', 'raise3d_course', 'sla_course', 'last_modified')
-    list_filter = ('status', 'raise3d_course', 'sla_course')
+    list_display = ('username', 'user', 'name', 'date', 'status', 'get_course_permissions', 'last_modified')
+    list_filter = ('status', 'course_permissions')
     search_fields = (
         'username', 'name',
         'user__card_number', '_card_number',
         # The user search fields are appended in `UserSearchFieldsMixin`
     )
     user_lookup, name_for_full_name_lookup = 'user__', 'user_full_name'
-    list_editable = ('status', 'raise3d_course', 'sla_course')
+    list_editable = ('status',)
     ordering = ('date', 'username')
     list_select_related = ('user',)
 
     readonly_fields = ('last_modified',)
+
+    def get_course_permissions(self, obj):
+        return ", ".join([p.short_name for p in obj.course_permissions.all()])
+    get_course_permissions.short_description = 'Course Permissions'
+
 
 
 admin.site.register(MachineType, MachineTypeAdmin)
