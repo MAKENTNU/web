@@ -45,7 +45,7 @@ class MachineType(models.Model):
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
-    usage_requirement = models.ForeignKey(CoursePermission, blank=False, verbose_name=_("usage requirement"), on_delete=models.PROTECT)
+    usage_requirement = models.ForeignKey(CoursePermission, blank=True, null=True, verbose_name=_("usage requirement"), on_delete=models.PROTECT)
     has_stream = models.BooleanField(default=False)
     priority = models.IntegerField(
         verbose_name=_("priority"),
@@ -61,8 +61,8 @@ class MachineType(models.Model):
         return str(self.name)
 
     def can_user_use(self, user: User):
-        if self.usage_requirement.name == "Authenticated":
-            return self.can_use_raise3d_printer(user)
+        if self.usage_requirement.short_name == "AUTH":
+            return user.is_authenticated
         return self.can_use_special_printer(user, self.usage_requirement)
         # match self.usage_requirement:
         #     case self.UsageRequirement.IS_AUTHENTICATED:
@@ -129,8 +129,8 @@ class MachineQuerySet(models.QuerySet):
 
         exclude_query = Q(internal=True)
         # Machines that require the SLA course should not be visible to non-internal users who have not taken the SLA course
-        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.course_permissions.filter(name="SLA").exists():
-            exclude_query |= Q(machine_type__usage_requirement=MachineType.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE)
+        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.course_permissions.filter(shortname="SLAP").exists():
+            exclude_query |= Q(machine_type__usage_requirement=MachineType.usage_requirement == CoursePermission.objects.get(short_name='SLAP'))
 
         return self.exclude(exclude_query)
 
