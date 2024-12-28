@@ -81,6 +81,10 @@ class Printer3DCourse(models.Model):
         except User.DoesNotExist:
             pass
 
+    def get_permission_names(self):
+        permissions = self.course_permissions.values_list('short_name', flat=True)
+        return permissions
+
     @property
     def card_number(self):
         if self.user:

@@ -99,8 +99,9 @@
                 <th data-column-name="cardNumber">{% translate "card number"|capfirst %}</th>
                 <th data-column-name="date">{% translate "date"|capfirst %}</th>
                 <th data-column-name="status">{% translate "status"|capfirst %}</th>
-                <th data-column-name="raise3DCourse">Raise3D</th>
-                <th data-column-name="slaCourse">SLA</th>
+
+                <th data-column-name="permissions">Permissions</th>
+
             </tr>
             </thead>
             <tbody>
@@ -150,18 +151,9 @@
                         {{ registration.get_status_display }}
                     </td>
                     <td>
-                        {% if registration.raise3d_course %}
-                            {% translate "Yes" %}
-                        {% else %}
-                            {% translate "No" %}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if registration.sla_course %}
-                            {% translate "Yes" %}
-                        {% else %}
-                            {% translate "No" %}
-                        {% endif %}
+                        {% for name in registration.get_permission_names %}
+                            {{ name }}; 
+                        {% endfor %}
                     </td>
                 </tr>
 
