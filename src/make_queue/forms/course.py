@@ -6,7 +6,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticMultipleSelectInput
-from ..models.course import Printer3DCourse
+from ..models.course import Printer3DCourse, CoursePermission
 
 
 class Printer3DCourseForm(forms.ModelForm):
@@ -19,7 +19,7 @@ class Printer3DCourseForm(forms.ModelForm):
             'status': SemanticChoiceInput(),
             'date': SemanticDateInput(),
             'username': forms.TextInput(attrs={'autofocus': 'autofocus'}),
-            'course_permissions': SemanticMultipleSelectInput(),
+            'course_permissions': forms.CheckboxSelectMultiple(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -36,6 +36,12 @@ class Printer3DCourseForm(forms.ModelForm):
         )
         if self.instance.card_number is not None:
             self.initial['card_number'] = self.instance.card_number
+
+        self.fields['course_permissions'].queryset = self.fields['course_permissions'].queryset.exclude(short_name='AUTH').order_by('name')
+        self.fields['course_permissions'].widget.attrs['class'] = 'ui fluid checkbox'
+        
+        if self.instance.pk:
+            self.fields['course_permissions'].initial = self.instance.course_permissions.all()
 
     def clean_card_number(self):
         card_number: str = self.cleaned_data['card_number']
@@ -66,5 +72,6 @@ class Printer3DCourseForm(forms.ModelForm):
     def save(self, commit=True):
         course = super().save(commit=False)
         course.card_number = self.cleaned_data['card_number']
+        course.course_permissions.set(self.cleaned_data['course_permissions'])
         course.save()
         return course
