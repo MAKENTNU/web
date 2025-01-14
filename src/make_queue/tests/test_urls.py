@@ -13,7 +13,7 @@ from util.test_utils import (
     CleanUpTempFilesTestMixin, Get, MOCK_JPG_FILE, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs,
 )
 from ..forms.reservation import ReservationListQueryForm
-from ..models.course import Printer3DCourse
+from ..models.course import Printer3DCourse, CoursePermission
 from ..models.machine import Machine, MachineType, MachineUsageRule
 from ..models.reservation import Quota, Reservation, ReservationRule
 
@@ -57,6 +57,7 @@ class MakeQueueTestBase(CleanUpTempFilesTestMixin, ABC):
         self.course1 = Printer3DCourse.objects.create(
             user=self.user1, username=self.user1.username, date=timezone.localdate(), status=Printer3DCourse.Status.ACCESS,
         )
+        print(CoursePermission.objects.all())
         self.course2 = Printer3DCourse.objects.create(
             user=self.user2, username=self.user2.username, date=timezone.localdate(), status=Printer3DCourse.Status.REGISTERED,
         )
