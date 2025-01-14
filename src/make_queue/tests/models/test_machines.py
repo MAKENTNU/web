@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from users.models import User
-from ...models.course import Printer3DCourse, CoursePermission
+from ...models.course import CoursePermission, Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
 

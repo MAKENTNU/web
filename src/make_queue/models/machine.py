@@ -14,7 +14,7 @@ from users.models import User
 from util.validators import lowercase_slug_validator
 from web.modelfields import URLTextField, UnlimitedCharField
 from web.multilingual.modelfields import MultiLingualRichTextUploadingField, MultiLingualTextField
-from .course import Printer3DCourse, CoursePermission
+from .course import CoursePermission, Printer3DCourse
 
 
 class MachineTypeQuerySet(models.QuerySet):
@@ -35,13 +35,6 @@ class MachineTypeQuerySet(models.QuerySet):
 
 
 class MachineType(models.Model):
-
-    # class UsageRequirement(models.TextChoices):
-    #     IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
-    #     TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
-    #     TAKEN_RAISE3D_PRINTERS_COURSE = "R3DP", _("Taken the course on Raise3D printers")
-    #     TAKEN_SLA_3D_PRINTER_COURSE = "SLAP", _("Taken the SLA 3D printer course")
-    
 
     name = MultiLingualTextField(unique=True)
     cannot_use_text = MultiLingualTextField(blank=True)
@@ -66,18 +59,7 @@ class MachineType(models.Model):
         if self.usage_requirement.short_name == "3DPR":
             return self.can_use_3d_printer(user)
         return self.can_use_special_printer(user, self.usage_requirement)
-        # match self.usage_requirement:
-        #     case self.UsageRequirement.IS_AUTHENTICATED:
-        #         return user.is_authenticated
-        #     case self.UsageRequirement.TAKEN_3D_PRINTER_COURSE:
-        #         return self.can_use_3d_printer(user)
-        #     case self.UsageRequirement.TAKEN_RAISE3D_PRINTERS_COURSE:
-        #         return self.can_use_raise3d_printer(user)
-        #     case self.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE:
-        #         return self.can_use_sla_printer(user)
-        #     case _:
-        #         return False
-
+    
     @staticmethod
     def can_use_3d_printer(user: User | AnonymousUser):
         if not user.is_authenticated:
@@ -105,24 +87,6 @@ class MachineType(models.Model):
             return permission in course_registration.course_permissions.all()
         return  False
     
-    # @staticmethod
-    # def can_use_raise3d_printer(user: User | AnonymousUser):
-    #     if CoursePermission.objects.filter(name="Raise3D").exists():
-    #         permission = CoursePermission.objects.get(name="Raise3D")
-    #         return MachineType.can_use_special_printer(user, permission)
-    #     return False
-
-    # # TODO: reduce code duplication between this and the two methods above
-    # @staticmethod
-    # def can_use_sla_printer(user: User | AnonymousUser):
-    #     if CoursePermission.objects.filter(name="SLA").exists():
-    #         permission = CoursePermission.objects.get(name="Raise3D")
-    #         return MachineType.can_use_special_printer(user, permission)
-    #     return False
-    
-
-
-
 class MachineQuerySet(models.QuerySet):
 
     def visible_to(self, user: User) -> 'MachineQuerySet[Machine]':

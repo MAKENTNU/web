@@ -107,9 +107,9 @@ class ProfileDetailView(TemplateView):
         profile, _created = Profile.objects.get_or_create(user=user)
         
 
-        completed_3d_printer = user.printer_3d_course.all_permissions.filter(short_name='3DPR').exists()
-        completed_raise3d = completed_3d_printer and user.printer_3d_course.all_permissions.filter(short_name='R3DP').exists()
-        completed_sla = completed_3d_printer and user.printer_3d_course.all_permissions.filter(short_name='SLAP').exists()
+        completed_3d_printer = hasattr(user, 'printer_3d_course')
+        completed_raise3d = completed_3d_printer and user.printer_3d_course.objects.filter(short_name='R3DP').exists()
+        completed_sla = completed_3d_printer and user.printer_3d_course.objects.filter(short_name='SLAP').exists()
 
         completed_course_message_structs = [
             CompletedCourseMessageStruct(

@@ -16,7 +16,7 @@ from util.locale_utils import iso_datetime_format, parse_datetime_localized
 from util.test_utils import set_without_duplicates
 from ..utility import post_request_with_user, request_with_user
 from ...forms.reservation import ReservationForm, ReservationListQueryForm
-from ...models.course import Printer3DCourse, CoursePermission
+from ...models.course import CoursePermission, Printer3DCourse
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
 from ...views.reservation import ReservationCreateView, ReservationUpdateView

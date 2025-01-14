@@ -6,7 +6,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticMultipleSelectInput
-from ..models.course import Printer3DCourse, CoursePermission
+from ..models.course import CoursePermission, Printer3DCourse
 
 
 class Printer3DCourseForm(forms.ModelForm):
@@ -75,9 +75,7 @@ class Printer3DCourseForm(forms.ModelForm):
         course.save()
 
         course.course_permissions.set(self.cleaned_data['course_permissions'])
-        print("Before add:", course.course_permissions.all())
 
         course.course_permissions.add(CoursePermission.objects.get(short_name='3DPR'))
-        print("After add:", course.course_permissions.all())
 
         return course

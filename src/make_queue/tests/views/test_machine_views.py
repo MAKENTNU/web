@@ -9,7 +9,7 @@ from django_hosts import reverse
 
 from users.models import User
 from ...forms.machine import AddMachineForm, ChangeMachineForm
-from ...models.course import Printer3DCourse, CoursePermission
+from ...models.course import CoursePermission, Printer3DCourse
 from ...models.machine import Machine, MachineType
 
 
