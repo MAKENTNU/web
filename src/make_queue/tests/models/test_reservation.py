@@ -11,7 +11,7 @@ from django.utils.dateparse import parse_time
 from news.models import Event, TimePlace
 from users.models import User
 from util.locale_utils import parse_datetime_localized
-from ...models.course import Printer3DCourse
+from ...models.course import Printer3DCourse, CoursePermission
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation, ReservationRule
 from ...templatetags.reservation_extra import can_change_reservation
@@ -444,7 +444,7 @@ class TestReservationOfAdvancedPrinters(ReservationTestBase):
 
     def test_raise3d_printer_can_only_be_reserved_by_users_with_raise3d_course(self):
         def set_raise3d_course(course: Printer3DCourse):
-            course.raise3d_course = True
+            course.course_permissions.add(CoursePermission.objects.get(short_name='R3DP'))
             course.save()
 
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
@@ -452,7 +452,7 @@ class TestReservationOfAdvancedPrinters(ReservationTestBase):
 
     def test_sla_printer_can_only_be_reserved_by_users_with_sla_course(self):
         def set_sla_course(course: Printer3DCourse):
-            course.sla_course = True
+            course.course_permissions.add(CoursePermission.objects.get(short_name='SLAP'))
             course.save()
 
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
