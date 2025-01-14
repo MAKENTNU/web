@@ -37,7 +37,7 @@ class Printer3DCourseForm(forms.ModelForm):
         if self.instance.card_number is not None:
             self.initial['card_number'] = self.instance.card_number
 
-        self.fields['course_permissions'].queryset = self.fields['course_permissions'].queryset.exclude(short_name='AUTH').order_by('name')
+        self.fields['course_permissions'].queryset = self.fields['course_permissions'].queryset.exclude(short_name='AUTH').exclude(short_name='3DPR').order_by('name')
         self.fields['course_permissions'].widget.attrs['class'] = 'ui fluid checkbox'
         
         if self.instance.pk:
@@ -72,6 +72,12 @@ class Printer3DCourseForm(forms.ModelForm):
     def save(self, commit=True):
         course = super().save(commit=False)
         course.card_number = self.cleaned_data['card_number']
-        course.course_permissions.set(self.cleaned_data['course_permissions'])
         course.save()
+
+        course.course_permissions.set(self.cleaned_data['course_permissions'])
+        print("Before add:", course.course_permissions.all())
+
+        course.course_permissions.add(CoursePermission.objects.get(short_name='3DPR'))
+        print("After add:", course.course_permissions.all())
+
         return course

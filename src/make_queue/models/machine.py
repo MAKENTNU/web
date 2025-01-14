@@ -63,6 +63,8 @@ class MachineType(models.Model):
     def can_user_use(self, user: User):
         if self.usage_requirement.short_name == "AUTH":
             return user.is_authenticated
+        if self.usage_requirement.short_name == "3DPR":
+            return self.can_use_3d_printer(user)
         return self.can_use_special_printer(user, self.usage_requirement)
         # match self.usage_requirement:
         #     case self.UsageRequirement.IS_AUTHENTICATED:
