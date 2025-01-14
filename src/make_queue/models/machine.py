@@ -131,9 +131,8 @@ class MachineQuerySet(models.QuerySet):
 
         exclude_query = Q(internal=True)
         # Machines that require the SLA course should not be visible to non-internal users who have not taken the SLA course
-        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.course_permissions.filter(shortname="SLAP").exists():
-            exclude_query |= Q(machine_type__usage_requirement=MachineType.usage_requirement == CoursePermission.objects.get(short_name='SLAP'))
-
+        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.course_permissions.filter(short_name='SLAP').exists():
+            exclude_query |= Q(machine_type__usage_requirement=CoursePermission.objects.get(short_name='SLAP'))
         return self.exclude(exclude_query)
 
     def default_order_by(self) -> 'MachineQuerySet[Machine]':
