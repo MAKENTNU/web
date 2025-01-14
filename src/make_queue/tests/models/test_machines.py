@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 from users.models import User
-from ...models.course import Printer3DCourse
+from ...models.course import Printer3DCourse, CoursePermission
 from ...models.machine import Machine, MachineType
 from ...models.reservation import Quota, Reservation
 
@@ -14,7 +14,17 @@ class TestGenericMachine(TestCase):
 
     def test_status(self):
         user = User.objects.create_user("test")
-        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.localdate(), raise3d_course=True, sla_course=True)
+
+        CoursePermission.objects.bulk_create([
+            CoursePermission(name='User is authenticated', short_name='AUTH', description='Permission to reserve machines and workstations at MAKE NTNU'),
+            CoursePermission(name='3D printer course', short_name='3DPR', description='Permission to use 3D printers at MAKE NTNU'),
+            CoursePermission(name='Raise3D course', short_name='R3DP', description='Permission to use the Raise3D printer at MAKE NTNU'),
+            CoursePermission(name='SLA course', short_name='SLAP', description='Permission to use the SLA printer at MAKE NTNU'),
+        ])
+        permissions = CoursePermission.objects.all()
+
+        Printer3DCourse.objects.create(name="Test", username="test", user=user, date=timezone.localdate())
+        Printer3DCourse.objects.get(name="Test").course_permissions.set(permissions)
 
         self.assertGreaterEqual(MachineType.objects.count(), 1)
         for machine_type in MachineType.objects.all():
