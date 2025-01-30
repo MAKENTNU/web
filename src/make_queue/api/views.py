@@ -50,22 +50,10 @@ class APIMachineDataView(LoginRequiredMixin, MachineRelatedViewMixin, QueryParam
 
 class APIReservationRuleListView(MachineRelatedViewMixin, ListView):
     model = ReservationRule
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        print('helo')
-
-
-
     def get_queryset(self):
-        print(f"Machine: {self.machine}")
-        print(f"Machine Type: {getattr(self.machine, 'machine_type', None)}")
-        print(f"Rules: {getattr(self.machine.machine_type, 'reservation_rules', None)}")
-
-        print(self.machine.machine_type.reservation_rules.all())
         return self.machine.machine_type.reservation_rules.all()
 
     def get_context_data(self, **kwargs):
-        print({'rules': [{'periods': rule.get_exact_start_and_end_times_list(iso=False, wrap_using_modulo=True), 'max_inside': rule.max_hours,'max_crossed': rule.max_inside_border_crossed,} for rule in self.object_list],})
         return {
             'rules': [
                 {
@@ -77,7 +65,6 @@ class APIReservationRuleListView(MachineRelatedViewMixin, ListView):
         }
 
     def render_to_response(self, context, **response_kwargs):
-        print(context)
         return UTF8JsonResponse(context)
 
 
