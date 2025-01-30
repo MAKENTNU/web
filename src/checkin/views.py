@@ -108,9 +108,12 @@ class ProfileDetailView(TemplateView):
         
 
         completed_3d_printer = hasattr(user, 'printer_3d_course')
-        completed_raise3d = completed_3d_printer and user.printer_3d_course.objects.filter(short_name='R3DP').exists()
-        completed_sla = completed_3d_printer and user.printer_3d_course.objects.filter(short_name='SLAP').exists()
-
+        if completed_3d_printer:
+            CoursePermission = user.printer_3d_course.course_permissions.model
+            courses = CoursePermission.objects.exclude(short_name__in=["3DPR", "AUTH"])
+            course_data = [( user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists(), c.name ) for c in courses]
+        else:
+            course_data = []
         completed_course_message_structs = [
             CompletedCourseMessageStruct(
                 completed=completed_3d_printer,
@@ -120,23 +123,19 @@ class ProfileDetailView(TemplateView):
                     "To use a 3D printer, make a reservation in the calendar of one of the 3D printers on the “Reservations” page."
                 ) if completed_3d_printer else None,
             ),
-            CompletedCourseMessageStruct(
-                completed=completed_raise3d,
-                message=(_("You have completed the Raise3D printer course") if completed_raise3d
-                         else _("You have not taken the Raise3D printer course")),
-                usage_hint=_(
-                    "To use a Raise3D printer, make a reservation in the calendar of one of the Raise3D printers on the “Reservations” page."
-                ) if completed_raise3d else None,
-            ),
-            CompletedCourseMessageStruct(
-                completed=completed_sla,
-                message=(_("You have completed the SLA 3D printer course") if completed_sla
-                         else _("You have not taken the SLA 3D printer course")),
-                usage_hint=_(
-                    "To use an SLA 3D printer, make a reservation in the calendar of one of the SLA 3D printers on the “Reservations” page."
-                ) if completed_sla else None,
-            ),
         ]
+
+        for completed, printer_type in course_data:
+            completed_course_message_structs.append(
+            CompletedCourseMessageStruct(
+                completed=completed,
+                message=_("You have completed the {} course").format(printer_type)
+                if completed else _("You have not taken the {} course").format(printer_type),
+                usage_hint=_(
+                    "To use a {}, make a reservation in the calendar of one of the {} printers on the “Reservations” page."
+                ).format(printer_type, printer_type) if completed else None,
+            )
+    )
 
         """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
         user_skills = profile.user_skills.all()
