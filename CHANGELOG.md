@@ -18,7 +18,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Other changes
 
-- 
+- Added checkbox in pull_request_template.md for switching base from `main` to `dev`
 
 
 ## 2024-05-10 ([#730](https://github.com/MAKENTNU/web/pull/730))
