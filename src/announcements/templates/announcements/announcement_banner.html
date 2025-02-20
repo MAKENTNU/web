@@ -3,12 +3,15 @@
 
 {# Linking `announcement_banner.css` is required when including this template #}
 
-<div class="word-breaking {% announcement_css_class announcement %} announcement">
-    {% if announcement.link %}
-        <a href="{{ announcement.link }}" target="_blank">
+
+{% if announcement.link %}
+    <a href="{{ announcement.link }}" target="_blank">
+        <div class="word-breaking {% announcement_css_class announcement %} announcement">
             {{ announcement.content }}
-        </a>
-    {% else %}
+        </div>
+    </a>
+{% else %}
+    <div class="word-breaking {% announcement_css_class announcement %} announcement">
         {{ announcement.content }}
-    {% endif %}
-</div>
+    </div>
+{% endif %}
