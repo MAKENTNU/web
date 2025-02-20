@@ -100,21 +100,22 @@
             </div>
 
             <div class="ui fields">
+                
+                {% for checkbox in form.course_permissions %}
                 <div class="ui field">
-                    <label>{{ form.raise3d_course.label }}</label>
+                    <label for="{{ checkbox.id_for_label }}">{{ checkbox.choice_label }}</label>
                     <div class="ui checkbox">
-                        {{ form.raise3d_course }}
-                        <label>{% translate "Yes" %}</label>
+                        {{ checkbox.tag }}
+                        <label for="{{ checkbox.id_for_label }}">{% translate "Yes" %}</label>
                     </div>
                 </div>
-                <div class="ui field">
-                    <label>{{ form.sla_course.label }}</label>
-                    <div class="ui checkbox">
-                        {{ form.sla_course }}
-                        <label>{% translate "Yes" %}</label>
-                    </div>
-                </div>
+                {% endfor %}
             </div>
+            
+            
+            
+            
+            
 
             <button class="ui right floated make-bg-yellow button">
                 {% block submit_button %}

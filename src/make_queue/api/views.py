@@ -50,7 +50,6 @@ class APIMachineDataView(LoginRequiredMixin, MachineRelatedViewMixin, QueryParam
 
 class APIReservationRuleListView(MachineRelatedViewMixin, ListView):
     model = ReservationRule
-
     def get_queryset(self):
         return self.machine.machine_type.reservation_rules.all()
 
