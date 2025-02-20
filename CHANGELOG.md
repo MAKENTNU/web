@@ -10,7 +10,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Improvements
 
-- Made banners interactable, not just the banner text.
+- 
 
 ### Fixes
 
