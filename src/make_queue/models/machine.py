@@ -59,7 +59,7 @@ class MachineType(models.Model):
         if self.usage_requirement.short_name == "3DPR":
             return self.can_use_3d_printer(user)
         return self.can_use_special_printer(user, self.usage_requirement)
-    
+
     @staticmethod
     def can_use_3d_printer(user: User | AnonymousUser):
         if not user.is_authenticated:
@@ -72,7 +72,7 @@ class MachineType(models.Model):
             course_registration.save()
             return True
         return user.has_perm('make_queue.add_reservation')  # This will typically only be the case for superusers
-    
+
     @staticmethod
     def can_use_special_printer(user: User | AnonymousUser, permission: CoursePermission):
         if not user.is_authenticated:

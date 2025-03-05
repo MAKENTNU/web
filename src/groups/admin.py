@@ -44,5 +44,6 @@ class CommitteeAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
 
     readonly_fields = ('last_modified',)
 
+
 admin.site.register(InheritanceGroup, InheritanceGroupAdmin)
 admin.site.register(Committee, CommitteeAdmin)
