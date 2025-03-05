@@ -105,13 +105,12 @@ class ProfileDetailView(TemplateView):
     def get_context_data(self, **kwargs):
         user = self.request.user
         profile, _created = Profile.objects.get_or_create(user=user)
-        
 
         completed_3d_printer = hasattr(user, 'printer_3d_course')
         if completed_3d_printer:
             CoursePermission = user.printer_3d_course.course_permissions.model
             courses = CoursePermission.objects.exclude(short_name__in=["3DPR", "AUTH"])
-            course_data = [( user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists(), c.name ) for c in courses]
+            course_data = [(user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists(), c.name) for c in courses]
         else:
             course_data = []
         completed_course_message_structs = [
@@ -127,15 +126,15 @@ class ProfileDetailView(TemplateView):
 
         for completed, printer_type in course_data:
             completed_course_message_structs.append(
-            CompletedCourseMessageStruct(
-                completed=completed,
-                message=_("You have completed the {} course").format(printer_type)
-                if completed else _("You have not taken the {} course").format(printer_type),
-                usage_hint=_(
-                    "To use a {}, make a reservation in the calendar of one of the {}s on the “Reservations” page."
-                ).format(printer_type, printer_type) if completed else None,
+                CompletedCourseMessageStruct(
+                    completed=completed,
+                    message=_("You have completed the {} course").format(printer_type)
+                    if completed else _("You have not taken the {} course").format(printer_type),
+                    usage_hint=_(
+                        "To use a {}, make a reservation in the calendar of one of the {}s on the “Reservations” page."
+                    ).format(printer_type, printer_type) if completed else None,
+                )
             )
-    )
 
         """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
         user_skills = profile.user_skills.all()

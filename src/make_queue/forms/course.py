@@ -39,7 +39,7 @@ class Printer3DCourseForm(forms.ModelForm):
 
         self.fields['course_permissions'].queryset = self.fields['course_permissions'].queryset.exclude(short_name='AUTH').exclude(short_name='3DPR').order_by('name')
         self.fields['course_permissions'].widget.attrs['class'] = 'ui fluid checkbox'
-        
+
         if self.instance.pk:
             self.fields['course_permissions'].initial = self.instance.course_permissions.all()
 

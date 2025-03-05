@@ -95,8 +95,6 @@ class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admi
         return ", ".join([p.short_name for p in obj.course_permissions.all()])
     get_course_permissions.short_description = 'Course Permissions'
 
-
-
 admin.site.register(MachineType, MachineTypeAdmin)
 admin.site.register(Machine, MachineAdmin)
 admin.site.register(MachineUsageRule, MachineUsageRuleAdmin)

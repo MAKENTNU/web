@@ -103,4 +103,3 @@ class Printer3DCourse(models.Model):
     def get_user_display_name(self):
         full_name = self.user.get_full_name() if self.user else self.name
         return str(full_name or self.user or self.username)
-    

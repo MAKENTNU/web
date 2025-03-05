@@ -85,8 +85,9 @@ class MachineType(models.Model):
             course_registration.user = user
             course_registration.save()
             return permission in course_registration.course_permissions.all()
-        return  False
-    
+        return False
+
+
 class MachineQuerySet(models.QuerySet):
 
     def visible_to(self, user: User) -> 'MachineQuerySet[Machine]':
