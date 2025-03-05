@@ -132,7 +132,7 @@ class ProfileDetailView(TemplateView):
                 message=_("You have completed the {} course").format(printer_type)
                 if completed else _("You have not taken the {} course").format(printer_type),
                 usage_hint=_(
-                    "To use a {}, make a reservation in the calendar of one of the {} printers on the “Reservations” page."
+                    "To use a {}, make a reservation in the calendar of one of the {}s on the “Reservations” page."
                 ).format(printer_type, printer_type) if completed else None,
             )
     )
