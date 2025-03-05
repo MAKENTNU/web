@@ -6,7 +6,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
-- 
+- You can now add more permission types that can be used by machine types and courses using the CoursePermission class.
 
 ### Improvements
 
@@ -14,7 +14,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Fixes
 
-- 
+- Fixed bug where the api call that gets rules for the calender sends wrong data and gets wrong rules as a result.
 
 ### Other changes
 
