@@ -38,6 +38,9 @@
     <a class="item" href="{% host_url 'index_page' host 'main' %}">
         <div class="text">{% translate "Public pages" %}</div>
     </a>
+    <a class="item" href="{% host_url 'admin_panel' host 'main' %}">
+        <div class="text">{% translate "Administration" %}</div>
+    </a>
     {% if user.is_staff %}
         <a class="item" href="{% host_url 'admin:index' host 'admin' %}">
             <div class="text">{% translate "Django admin" %}</div>
