@@ -11,7 +11,7 @@ from util.view_utils import PreventGetRequestsMixin, QueryParameterFormMixin, UT
 from .forms import APIMachineDataQueryForm, APIReservationListQueryForm
 from ..models.reservation import Quota, Reservation, ReservationRule
 from ..templatetags.reservation_extra import can_delete_reservation, can_mark_reservation_finished
-from ..views.machine import MachineRelatedViewMixin
+from ..views.machine import MachineRelatedViewMixin, MachineTypeRelatedViewMixin
 
 
 class APIMachineDataView(LoginRequiredMixin, MachineRelatedViewMixin, QueryParameterFormMixin, TemplateView):
@@ -48,11 +48,11 @@ class APIMachineDataView(LoginRequiredMixin, MachineRelatedViewMixin, QueryParam
         return UTF8JsonResponse(context)
 
 
-class APIReservationRuleListView(MachineRelatedViewMixin, ListView):
+class APIReservationRuleListView(MachineTypeRelatedViewMixin, ListView):
     model = ReservationRule
 
     def get_queryset(self):
-        return self.machine.machine_type.reservation_rules.all()
+        return self.machine_type.reservation_rules.all()
 
     def get_context_data(self, **kwargs):
         return {

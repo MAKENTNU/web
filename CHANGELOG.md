@@ -14,7 +14,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Fixes
 
-- 
+- Fixed the reservation rules used in the calendar being incorrect or failing to be fetched
 
 ### Other changes
 
