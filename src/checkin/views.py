@@ -108,8 +108,7 @@ class ProfileDetailView(TemplateView):
         profile, _created = Profile.objects.get_or_create(user=user)
 
         completed_3d_printer = hasattr(user, 'printer_3d_course')
-        if completed_3d_printer:
-            special_courses = CoursePermission.objects.exclude(short_name__in=["3DPR", "AUTH"])
+        special_courses = CoursePermission.objects.exclude(short_name__in=["3DPR", "AUTH"])
         completed_course_message_structs = [
             CompletedCourseMessageStruct(
                 completed=completed_3d_printer,
@@ -132,7 +131,6 @@ class ProfileDetailView(TemplateView):
                 for c in special_courses
             )
         ]
-
 
         """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
         user_skills = profile.user_skills.all()

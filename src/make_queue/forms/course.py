@@ -42,8 +42,6 @@ class Printer3DCourseForm(forms.ModelForm):
 
         self.base_permission = CoursePermission.objects.get(short_name='3DPR')
 
-
-
     def clean_card_number(self):
         card_number: str = self.cleaned_data['card_number']
         if card_number:
@@ -57,16 +55,16 @@ class Printer3DCourseForm(forms.ModelForm):
                     _("The card number was detected to be the phone number of Building security at NTNU. Please enter a valid card number.")
                 )
         return card_number
-    
+
     def clean_course_permissions(self):
-        course_permissions = set(self.cleaned_data['course_permissions'])    
+        course_permissions = set(self.cleaned_data['course_permissions'])
         course_permissions.add(self.base_permission)
         return list(course_permissions)
 
     def clean(self):
         cleaned_data = super().clean()
         card_number = cleaned_data.get('card_number')
-        username = cleaned_data.get('username')        
+        username = cleaned_data.get('username')
 
         if card_number and username:
             if card_utils.is_duplicate(card_number, username):
