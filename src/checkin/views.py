@@ -128,7 +128,7 @@ class ProfileDetailView(TemplateView):
                         "To use a {}, make a reservation in the calendar of one of the {}s on the “Reservations” page."
                     ).format(c.name, c.name) if user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists() else None,
                 )
-                for c in special_courses
+                for c in special_courses if hasattr(user, 'printer_3d_course')
             )
         ]
 
