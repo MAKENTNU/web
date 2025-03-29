@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
-from web.widgets import SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput, SemanticMultipleSelectInput
+from web.widgets import SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput
 from ..models.course import CoursePermission, Printer3DCourse
 
 
@@ -40,8 +40,9 @@ class Printer3DCourseForm(forms.ModelForm):
         self.fields['course_permissions'].queryset = self.fields['course_permissions'].queryset.exclude(short_name='AUTH').exclude(short_name='3DPR').order_by('name')
         self.fields['course_permissions'].widget.attrs['class'] = 'ui fluid checkbox'
 
-        if self.instance.pk:
-            self.fields['course_permissions'].initial = self.instance.course_permissions.all()
+        self.base_permission = CoursePermission.objects.get(short_name='3DPR')
+
+
 
     def clean_card_number(self):
         card_number: str = self.cleaned_data['card_number']
@@ -56,11 +57,16 @@ class Printer3DCourseForm(forms.ModelForm):
                     _("The card number was detected to be the phone number of Building security at NTNU. Please enter a valid card number.")
                 )
         return card_number
+    
+    def clean_course_permissions(self):
+        course_permissions = set(self.cleaned_data['course_permissions'])    
+        course_permissions.add(self.base_permission)
+        return list(course_permissions)
 
     def clean(self):
         cleaned_data = super().clean()
         card_number = cleaned_data.get('card_number')
-        username = cleaned_data.get('username')
+        username = cleaned_data.get('username')        
 
         if card_number and username:
             if card_utils.is_duplicate(card_number, username):
@@ -73,9 +79,6 @@ class Printer3DCourseForm(forms.ModelForm):
         course = super().save(commit=False)
         course.card_number = self.cleaned_data['card_number']
         course.save()
-
         course.course_permissions.set(self.cleaned_data['course_permissions'])
-
-        course.course_permissions.add(CoursePermission.objects.get(short_name='3DPR'))
 
         return course

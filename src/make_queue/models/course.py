@@ -9,8 +9,8 @@ from .fields import UsernameField
 
 
 class CoursePermission(models.Model):
+    short_name = models.CharField(max_length=4, blank=True, verbose_name=_("short name"), unique=True)
     name = models.CharField(max_length=256, blank=True, verbose_name=_("name"))
-    short_name = models.CharField(max_length=4, blank=True, verbose_name=_("short name"))
     description = models.TextField(blank=True, verbose_name=_("description"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 

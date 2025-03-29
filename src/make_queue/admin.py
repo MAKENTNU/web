@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.db.models import Count
+from django.utils.safestring import SafeString
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
-from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped
+from util import html_utils
+from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped, link_to_admin_change_form
 from util.templatetags.html_tags import anchor_tag
 from .models.course import CoursePermission, Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
@@ -91,9 +93,13 @@ class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admi
 
     readonly_fields = ('last_modified',)
 
-    def get_course_permissions(self, obj):
-        return ", ".join([p.short_name for p in obj.course_permissions.all()])
-    get_course_permissions.short_description = 'Course Permissions'
+    @admin.display(description=_("course permissions"))
+    def get_course_permissions(self, course: Printer3DCourse) -> SafeString | None:
+        perm_strings = [
+            link_to_admin_change_form(perm)
+            for perm in course.course_permissions.all()
+        ]
+        return html_utils.block_join(perm_strings, sep="<b>&bull;</b>") or None
 
 
 admin.site.register(MachineType, MachineTypeAdmin)

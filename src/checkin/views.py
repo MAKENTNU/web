@@ -15,6 +15,7 @@ from django.views.generic import TemplateView
 from card.views import RFIDView
 from util.view_utils import PreventGetRequestsMixin
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
+from make_queue.models.course import CoursePermission
 
 
 class AdminCheckInView(RFIDView):
@@ -108,11 +109,7 @@ class ProfileDetailView(TemplateView):
 
         completed_3d_printer = hasattr(user, 'printer_3d_course')
         if completed_3d_printer:
-            CoursePermission = user.printer_3d_course.course_permissions.model
-            courses = CoursePermission.objects.exclude(short_name__in=["3DPR", "AUTH"])
-            course_data = [(user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists(), c.name) for c in courses]
-        else:
-            course_data = []
+            special_courses = CoursePermission.objects.exclude(short_name__in=["3DPR", "AUTH"])
         completed_course_message_structs = [
             CompletedCourseMessageStruct(
                 completed=completed_3d_printer,
@@ -122,19 +119,20 @@ class ProfileDetailView(TemplateView):
                     "To use a 3D printer, make a reservation in the calendar of one of the 3D printers on the “Reservations” page."
                 ) if completed_3d_printer else None,
             ),
-        ]
-
-        for completed, printer_type in course_data:
-            completed_course_message_structs.append(
+            *(
                 CompletedCourseMessageStruct(
-                    completed=completed,
-                    message=_("You have completed the {} course").format(printer_type)
-                    if completed else _("You have not taken the {} course").format(printer_type),
+                    completed=user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists(),
+                    message=_("You have completed the {} course").format(c.name)
+                    if user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists()
+                    else _("You have not taken the {} course").format(c.name),
                     usage_hint=_(
                         "To use a {}, make a reservation in the calendar of one of the {}s on the “Reservations” page."
-                    ).format(printer_type, printer_type) if completed else None,
+                    ).format(c.name, c.name) if user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists() else None,
                 )
+                for c in special_courses
             )
+        ]
+
 
         """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`
         user_skills = profile.user_skills.all()
