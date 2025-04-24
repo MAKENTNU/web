@@ -9,6 +9,7 @@ from card.modelfields import CardNumberField
 from users.models import User
 from .fields import UsernameField
 
+
 class CoursePermission(models.Model):
     short_name = models.CharField(max_length=4, blank=True, verbose_name=_("short name"), unique=True)
     name = models.CharField(max_length=256, blank=True, verbose_name=_("name"))
