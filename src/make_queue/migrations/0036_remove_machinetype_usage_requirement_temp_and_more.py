@@ -3,7 +3,6 @@
 from django.db import migrations, models, transaction
 import django.db.models.deletion
 
-@transaction.atomic
 def update_requirement_values(apps, schema_editor):
     print("Updating usage requirement values for MachineType")
     CoursePermission = apps.get_model('make_queue', 'CoursePermission')
