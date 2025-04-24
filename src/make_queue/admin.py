@@ -93,6 +93,10 @@ class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admi
 
     readonly_fields = ('last_modified',)
 
+    def get_queryset(self, request):
+        query = super().get_queryset(request)
+        return query.prefetch_related('course_permissions')
+
     @admin.display(description=_("course permissions"))
     def get_course_permissions(self, course: Printer3DCourse) -> SafeString | None:
         perm_strings = [

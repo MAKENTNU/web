@@ -320,7 +320,7 @@ class TestMachineDetailViewWithInternalMachines(TestCase):
                 response = self.client.get(machine_detail_url)
                 expected_status_code = HTTPStatus.OK
                 # ...except if the machine requires the SLA course
-                if machine_type.usage_requirement.id == CoursePermission.objects.get(short_name='SLAP').id:
+                if machine_type.usage_requirement.pk == CoursePermission.objects.get(short_name='SLAP').pk:
                     expected_status_code = HTTPStatus.NOT_FOUND
                 self.assertEqual(response.status_code, expected_status_code)
 

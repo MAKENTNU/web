@@ -6,7 +6,7 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
-- You can now add more permission types that can be used by machine types and courses using the CoursePermission class.
+- Made it easier to add new permissions for any machine type, so that each permission can be granted when registering a completed course
 
 ### Improvements
 

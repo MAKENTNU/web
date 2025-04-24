@@ -10,6 +10,12 @@ def fill_temp_usage_requirement(apps, schema_editor):
         machine_type.usage_requirement_temp = machine_type.usage_requirement
         machine_type.save()
 
+def reverse_fill_temp_usage_requirement(apps, schema_editor):
+    MachineType = apps.get_model('make_queue', 'MachineType')
+    for machine_type in MachineType.objects.all():
+        machine_type.usage_requirement_temp = ''
+        machine_type.save()
+
 
 def create_default_permissions(apps, schema_editor):
     CoursePermission = apps.get_model('make_queue', 'CoursePermission')
@@ -20,6 +26,10 @@ def create_default_permissions(apps, schema_editor):
         CoursePermission(name='Raise3D printer', short_name='R3DP', description='Permission to use the Raise3D printer at MAKE NTNU'),
         CoursePermission(name='SLA printer', short_name='SLAP', description='Permission to use the SLA printer at MAKE NTNU'),
     ])
+
+def reverse_create_default_permissions(apps, schema_editor):
+    CoursePermission = apps.get_model('make_queue', 'CoursePermission')
+    CoursePermission.objects.filter(short_name__in=['AUTH', '3DPR', 'R3DP', 'SLAP']).delete()
 
 class Migration(migrations.Migration):
 
@@ -50,10 +60,12 @@ class Migration(migrations.Migration):
         ),
         migrations.RunPython(
             code=fill_temp_usage_requirement,
+            reverse_code=reverse_fill_temp_usage_requirement,
         ),
 
         migrations.RunPython(
             code=create_default_permissions,
+            reverse_code=reverse_create_default_permissions,
         ),
 
 

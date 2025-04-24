@@ -390,7 +390,7 @@ ReservationCalendar.prototype.update = function () {
         end_date: this.date.nextWeek().djangoFormat(),
     }, (data) => calendar.updateReservations.apply(calendar, [data]), "json");
 
-    $.get(`${window.location.origin}/api/reservation/machinetypes/${this.machine}/reservationrules/`, {}, (data) => {
+    $.get(`${window.location.origin}/api/reservation/machinetypes/${this.machineType}/reservationrules/`, {}, (data) => {
         calendar.reservationRules = data.rules;
     });
 };

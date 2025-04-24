@@ -150,9 +150,7 @@
                         {{ registration.get_status_display }}
                     </td>
                     <td>
-                        {% for name in registration.get_permission_names %}
-                            {{ name }}; 
-                        {% endfor %}
+                        {{ registration.get_permission_names|join:", " }}
                     </td>
                 </tr>
 

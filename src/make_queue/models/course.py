@@ -2,10 +2,13 @@ from django.db import models
 from django.db.models.constraints import CheckConstraint
 from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
+from functools import cached_property
+
 
 from card.modelfields import CardNumberField
 from users.models import User
 from .fields import UsernameField
+
 
 
 class CoursePermission(models.Model):
@@ -81,9 +84,9 @@ class Printer3DCourse(models.Model):
         except User.DoesNotExist:
             pass
 
-    def get_permission_names(self):
-        permissions = self.course_permissions.values_list('short_name', flat=True)
-        return permissions
+    @cached_property
+    def permission_names(self) -> list[str]:
+        return [perm.short_name for perm in self.course_permissions.all()]
 
     @property
     def card_number(self):
