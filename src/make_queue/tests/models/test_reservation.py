@@ -444,7 +444,7 @@ class TestReservationOfAdvancedPrinters(ReservationTestBase):
 
     def test_raise3d_printer_can_only_be_reserved_by_users_with_raise3d_course(self):
         def set_raise3d_course(course: Printer3DCourse):
-            course.course_permissions.add(CoursePermission.objects.get(short_name='R3DP'))
+            course.course_permissions.add(CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.TAKEN_RAISE3D_COURSE))
             course.save()
 
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
@@ -452,7 +452,7 @@ class TestReservationOfAdvancedPrinters(ReservationTestBase):
 
     def test_sla_printer_can_only_be_reserved_by_users_with_sla_course(self):
         def set_sla_course(course: Printer3DCourse):
-            course.course_permissions.add(CoursePermission.objects.get(short_name='SLAP'))
+            course.course_permissions.add(CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE))
             course.save()
 
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default

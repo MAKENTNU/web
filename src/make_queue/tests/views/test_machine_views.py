@@ -119,7 +119,7 @@ class TestMachineListView(TestCase):
         ])
 
         # The SLA printer should be shown to users with an SLA course
-        course.course_permissions.set([CoursePermission.objects.get(short_name='SLAP')])
+        course.course_permissions.set([CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE)])
         course.save()
         self.assert_machine_list_contains([
             [printer1], [raise3d_printer1], [sla_printer1],
@@ -320,7 +320,7 @@ class TestMachineDetailViewWithInternalMachines(TestCase):
                 response = self.client.get(machine_detail_url)
                 expected_status_code = HTTPStatus.OK
                 # ...except if the machine requires the SLA course
-                if machine_type.usage_requirement.pk == CoursePermission.objects.get(short_name='SLAP').pk:
+                if machine_type.usage_requirement.pk == CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE).pk:
                     expected_status_code = HTTPStatus.NOT_FOUND
                 self.assertEqual(response.status_code, expected_status_code)
 

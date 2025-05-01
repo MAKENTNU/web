@@ -11,6 +11,12 @@ from .fields import UsernameField
 
 
 class CoursePermission(models.Model):
+    class DefaultPerms(models.TextChoices):
+        IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
+        TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
+        TAKEN_RAISE3D_COURSE = "R3DP", _("Taken the course on Raise3D printers")
+        SLA_PRINTER_COURSE = "SLAP", _("Taken the SLA 3D printer course")
+
     short_name = models.CharField(max_length=4, blank=True, verbose_name=_("short name"), unique=True)
     name = models.CharField(max_length=256, blank=True, verbose_name=_("name"))
     description = models.TextField(blank=True, verbose_name=_("description"))

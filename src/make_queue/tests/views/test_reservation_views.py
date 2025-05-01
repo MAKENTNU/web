@@ -240,7 +240,7 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
 
     def test_only_users_with_raise3d_course_can_view_create_reservation_page_for_raise3d_printers(self):
         def set_raise3d_course(course: Printer3DCourse):
-            course.course_permissions.add(CoursePermission.objects.get(short_name='R3DP'))
+            course.course_permissions.add(CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.TAKEN_RAISE3D_COURSE))
             course.save()
 
         raise3d_machine_type = MachineType.objects.get(pk=6)
@@ -249,7 +249,7 @@ class TestReservationCreateView(ReservationCreateOrUpdateViewTestBase):
 
     def test_only_users_with_sla_course_can_view_create_reservation_page_for_sla_printers(self):
         def set_sla_course(course: Printer3DCourse):
-            course.course_permissions.add(CoursePermission.objects.get(short_name='SLAP'))
+            course.course_permissions.add(CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE))
             course.save()
 
         sla_machine_type = MachineType.objects.get(pk=7)

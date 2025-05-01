@@ -54,9 +54,9 @@ class MachineType(models.Model):
         return str(self.name)
 
     def can_user_use(self, user: User):
-        if self.usage_requirement.short_name == "AUTH":
+        if self.usage_requirement.short_name == CoursePermission.DefaultPerms.IS_AUTHENTICATED:
             return user.is_authenticated
-        if self.usage_requirement.short_name == "3DPR":
+        if self.usage_requirement.short_name == CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE:
             return self.can_use_3d_printer(user)
         return self.can_use_special_printer(user, self.usage_requirement)
 
@@ -96,8 +96,8 @@ class MachineQuerySet(models.QuerySet):
 
         exclude_query = Q(internal=True)
         # Machines that require the SLA course should not be visible to non-internal users who have not taken the SLA course
-        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.course_permissions.filter(short_name='SLAP').exists():
-            exclude_query |= Q(machine_type__usage_requirement=CoursePermission.objects.get(short_name='SLAP'))
+        if not hasattr(user, 'printer_3d_course') or not user.printer_3d_course.course_permissions.filter(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE).exists():
+            exclude_query |= Q(machine_type__usage_requirement=CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE))
         return self.exclude(exclude_query)
 
     def default_order_by(self) -> 'MachineQuerySet[Machine]':

@@ -108,7 +108,7 @@ class ProfileDetailView(TemplateView):
         profile, _created = Profile.objects.get_or_create(user=user)
 
         completed_3d_printer = hasattr(user, 'printer_3d_course')
-        special_courses = CoursePermission.objects.exclude(short_name__in=["3DPR", "AUTH"])
+        special_courses = CoursePermission.objects.exclude(short_name__in=[CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE, CoursePermission.DefaultPerms.IS_AUTHENTICATED])
         completed_course_message_structs = [
             CompletedCourseMessageStruct(
                 completed=completed_3d_printer,
