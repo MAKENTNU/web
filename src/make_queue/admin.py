@@ -1,11 +1,13 @@
 from django.contrib import admin
 from django.db.models import Count
+from django.utils.safestring import SafeString
 from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
-from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped
+from util import html_utils
+from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped, link_to_admin_change_form
 from util.templatetags.html_tags import anchor_tag
-from .models.course import Printer3DCourse
+from .models.course import CoursePermission, Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
 from .models.reservation import Quota, Reservation, ReservationRule
 
@@ -77,19 +79,31 @@ class ReservationRuleAdmin(admin.ModelAdmin):
 
 
 class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin):
-    list_display = ('username', 'user', 'name', 'date', 'status', 'raise3d_course', 'sla_course', 'last_modified')
-    list_filter = ('status', 'raise3d_course', 'sla_course')
+    list_display = ('username', 'user', 'name', 'date', 'status', 'get_course_permissions', 'last_modified')
+    list_filter = ('status', 'course_permissions')
     search_fields = (
         'username', 'name',
         'user__card_number', '_card_number',
         # The user search fields are appended in `UserSearchFieldsMixin`
     )
     user_lookup, name_for_full_name_lookup = 'user__', 'user_full_name'
-    list_editable = ('status', 'raise3d_course', 'sla_course')
+    list_editable = ('status',)
     ordering = ('date', 'username')
     list_select_related = ('user',)
 
     readonly_fields = ('last_modified',)
+
+    def get_queryset(self, request):
+        query = super().get_queryset(request)
+        return query.prefetch_related('course_permissions')
+
+    @admin.display(description=_("course permissions"))
+    def get_course_permissions(self, course: Printer3DCourse) -> SafeString | None:
+        perm_strings = [
+            link_to_admin_change_form(perm)
+            for perm in course.course_permissions.all()
+        ]
+        return html_utils.block_join(perm_strings, sep="<b>&bull;</b>") or None
 
 
 admin.site.register(MachineType, MachineTypeAdmin)
@@ -100,3 +114,4 @@ admin.site.register(Reservation, ReservationAdmin)
 admin.site.register(ReservationRule, ReservationRuleAdmin)
 
 admin.site.register(Printer3DCourse, Printer3DCourseAdmin)
+admin.site.register(CoursePermission)
