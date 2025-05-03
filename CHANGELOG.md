@@ -6,7 +6,18 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
-- 
+### Improvements
+
+### Fixes
+
+### Other changes
+
+
+## 2025-05-03 ([#757](https://github.com/MAKENTNU/web/pull/757))
+
+### New features
+
+- Made it easier to add new permissions for any machine type, so that each permission can be granted when registering a completed course
 
 ### Improvements
 
@@ -14,11 +25,11 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Fixes
 
-- 
+- Fixed the reservation rules used in the calendar being incorrect or failing to be fetched
 
 ### Other changes
 
-- 
+- Added checkbox in pull_request_template.md for switching base from `main` to `dev`
 
 
 ## 2024-05-10 ([#730](https://github.com/MAKENTNU/web/pull/730))
