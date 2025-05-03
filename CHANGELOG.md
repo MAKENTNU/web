@@ -6,6 +6,17 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### New features
 
+### Improvements
+
+### Fixes
+
+### Other changes
+
+
+## 2025-05-03 ([#757](https://github.com/MAKENTNU/web/pull/757))
+
+### New features
+
 - Made it easier to add new permissions for any machine type, so that each permission can be granted when registering a completed course
 
 ### Improvements
