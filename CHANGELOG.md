@@ -10,15 +10,15 @@ A summary of changes made to the codebase, grouped per deployment.
 
 ### Improvements
 
-- 
+- Made banners interactable, not just the banner text.
 
 ### Fixes
 
-- Fixed bug where the api call that gets rules for the calender sends wrong data and gets wrong rules as a result.
+- Fixed the reservation rules used in the calendar being incorrect or failing to be fetched
 
 ### Other changes
 
-- 
+- Added checkbox in pull_request_template.md for switching base from `main` to `dev`
 
 
 ## 2024-05-10 ([#730](https://github.com/MAKENTNU/web/pull/730))
