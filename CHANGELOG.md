@@ -1,16 +1,33 @@
 # Changelog
 
-A summary of changes made to the codebase, grouped per deployment.
+A summary of changes made to the codebase, grouped per release/deployment.
+
+This should be updated in every PR that makes noteworthy changes to the codebase
+(don't be afraid to call tiny changes noteworthy :)) - specifically under [the "Unreleased" section](#unreleased) below.
+
+Whenever a deployment is planned, this section should be renamed to the current date (`YYYY-MM-DD`) in
+[a deployment pull request](https://github.com/MAKENTNU/web/pulls?q=is%3Apr+label%3Adeployment),
+and a new, empty "Unreleased" section should be added.
+Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be created, whose title and tag name should also be the current date.
+
 
 ## Unreleased
 
 ### New features
 
+-
+
 ### Improvements
+
+-
 
 ### Fixes
 
+-
+
 ### Other changes
+
+- Deleted the `dev` branch; now, the `main` branch will be used as the (sole) default branch, and releases/tags will be used for deployments
 
 
 ## 2025-05-03 ([#757](https://github.com/MAKENTNU/web/pull/757))
@@ -18,10 +35,6 @@ A summary of changes made to the codebase, grouped per deployment.
 ### New features
 
 - Made it easier to add new permissions for any machine type, so that each permission can be granted when registering a completed course
-
-### Improvements
-
-- 
 
 ### Fixes
 

@@ -12,7 +12,6 @@
 
 _(If any of the points are not relevant, mark them as checked)_
 
-- [ ] Made sure the base for the PR is `dev` and not `main`
 - [ ] Remembered to run the `makemigrations`, `makemessages` and `compilemessages` management commands and committed any changes that should be included in this PR
 - [ ] Created tests that fail without the changes, if relevant/possible
 - [ ] Manually tested that the website UI works as intended with different device layouts
