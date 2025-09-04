@@ -26,7 +26,7 @@ _(If any of the points are not relevant, mark them as checked, so that it's easy
   - _E.g. comments, docstrings, or in the [README](https://github.com/MAKENTNU/web/blob/main/README.md)_
 - [ ] I've added my changes to the ["Unreleased" section of the changelog](https://github.com/MAKENTNU/web/blob/main/CHANGELOG.md#unreleased), together with a link to this PR
   - _Mainly the changes that are of particular interest to users and/or developers, if any_
-- [ ] I've added a "Deployment notes" section above
+- [ ] I've added a "Deployment notes" section above and labelled the PR with [has-deployment-notes](https://github.com/MAKENTNU/web/pulls?q=label%3Ahas-deployment-notes)
   - _...if anything out of the ordinary should be done when deploying these changes to the server (e.g. adding/removing an environment variable, manually creating/changing some objects, running a management command, etc.)_
 - [ ] I've structured my commits reasonably
   - _Some tips on this can be found in ["Write Better Commits, Build Better Projects"](https://github.blog/2022-06-30-write-better-commits-build-better-projects/) and in [the code style guides](https://github.com/MAKENTNU/web/blob/main/CONTRIBUTING.md#commit-message)_

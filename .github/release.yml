@@ -4,3 +4,10 @@ changelog:
     authors:
       - dependabot
       - pre-commit-ci
+  categories:
+    - title: PRs with deployment notes
+      labels:
+        - has-deployment-notes
+    - title: Other PRs
+      labels:
+        - "*"
