@@ -14,7 +14,7 @@ django-simple-history==3.5.0
 sorl-thumbnail==12.10.0
 
 # Packages related to authentication and other "social" stuff
-social-auth-app-django==5.4.1
+social-auth-app-django==5.4.3
 # This is already a requirement of `social-auth-app-django`, but it's listed here to provide the `openidconnect` extra
 # (see https://python-social-auth.readthedocs.io/en/stable/installing.html#using-the-extras-options)
 social-auth-core[openidconnect]==4.4.2
