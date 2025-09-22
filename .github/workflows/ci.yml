@@ -4,58 +4,46 @@ on: [ push, pull_request ]
 
 jobs:
   test:
-    name: Python ${{ matrix.python-version }}
+    name: Tests
     runs-on: ubuntu-latest
-    strategy:
-      max-parallel: 4
-      matrix:
-        python-version: [ "3.10", "3.11" ]
 
+    # Code based on https://docs.astral.sh/uv/guides/integration/github/
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out Git repository
+        uses: actions/checkout@v5
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v6
         with:
-          python-version: ${{ matrix.python-version }}
-          cache: "pip"
-          cache-dependency-path: "requirements*.txt"
+          python-version-file: "pyproject.toml"
 
       - name: Install System Dependencies
-        # Retries installing files 3 times, as the GitHub Actions CI is occasionally unreliable
+        # Retries installing files 3 times, as either the GitHub Actions runner or APT's API can be unreliable
         run: |
           sudo apt update
           sudo apt install python3-dev libldap2-dev libsasl2-dev libssl-dev -o Acquire::Retries=3
 
-      - name: Install Python Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install -r requirements_codecov.txt
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      - name: Set `UV_PROJECT_ENVIRONMENT` envvar
+        # Install packages into the system environment instead of a `.venv/`.
+        # (`pythonLocation` is from `actions/setup-python` - see
+        # https://github.com/actions/setup-python/blob/main/docs/advanced-usage.md#environment-variables)
+        run: echo "UV_PROJECT_ENVIRONMENT=$pythonLocation" >> $GITHUB_ENV
+      - name: Install Python dependencies
+        run: uv sync --locked --group ci
 
       - name: Run Django Tests
         run: |
-          python manage.py collectstatic --no-input
-          coverage run manage.py test
-          coverage xml
+          uv run manage.py collectstatic --no-input
+          uv run coverage run manage.py test
+          uv run coverage xml
 
       - name: Upload to Codecov
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
-
-  # Based on https://github.com/orgs/community/discussions/26822#discussioncomment-5122101
-  test-results:
-    name: Tests passed
-    runs-on: ubuntu-latest
-    needs: [test]
-    if: ${{ always() }}
-
-    steps:
-      - if: >- # Starts a multiline string (see https://stackoverflow.com/a/67532120)
-          ${{
-               contains(needs.*.result, 'failure')
-            || contains(needs.*.result, 'cancelled')
-          }}
-        run: exit 1

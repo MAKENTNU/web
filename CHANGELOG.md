@@ -30,6 +30,8 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Deleted the `dev` branch; now, the `main` branch will be used as the (sole) default branch, and releases/tags will be used for deployments
   (MAKENTNU/web#758)
 - Prevented `compilemessages` from processing files outside the `src` folder (MAKENTNU/web#766)
+- Migrated project to use the more modern `pyproject.toml` and [uv](https://docs.astral.sh/uv/) instead of `requirements.txt` and pip
+  (MAKENTNU/web#766)
 
 
 ## 2025-05-03 (MAKENTNU/web#757)
