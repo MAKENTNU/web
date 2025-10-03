@@ -117,7 +117,7 @@ def logout_urls():
     from dataporten import views as dataporten_views  # Avoids circular importing
 
     # Both of these views log the user out, then redirects to the value of the `LOGOUT_REDIRECT_URL` setting
-    if settings.USES_DATAPORTEN_AUTH:
+    if settings.USE_DATAPORTEN_AUTH:
         logout_view = dataporten_views.Logout.as_view()
     else:
         logout_view = auth_views.LogoutView.as_view()

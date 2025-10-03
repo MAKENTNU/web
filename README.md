@@ -25,6 +25,8 @@
    ```shell
    uv sync --group dev
    ```
+1. Create an empty `.env` file directly inside the repository folder, and fill it by
+   copying the contents of [`.env.example`](.env.example)
 
 #### PyCharm
 

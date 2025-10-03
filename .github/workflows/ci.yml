@@ -36,6 +36,10 @@ jobs:
       - name: Install Python dependencies
         run: uv sync --locked --group ci
 
+      - name: Create `.env`
+        shell: bash
+        run: cp .env.example .env
+
       - name: Run Django Tests
         run: |
           uv run manage.py collectstatic --no-input
