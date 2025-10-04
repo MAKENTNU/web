@@ -17,7 +17,7 @@ class Command(runserver.Command):
         if not settings.DEBUG:
             super().inner_run(*args, **options)
 
-        addr_regex = r"(?:127\.0\.0\.1|localhost)"
+        addr_regex = r"(?:localhost|127\.0\.0\.1|0\.0\.0\.0)"
         dev_server_addr_regex = re.compile(
             rf"(Starting .*development server at https?://)({addr_regex}):(\d+)",
             re.IGNORECASE

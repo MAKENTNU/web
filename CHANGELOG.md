@@ -35,6 +35,12 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Replaced `local_settings.py` with `.env` (MAKENTNU/web#767)
   - Developers must create a `.env` file locally - see the "Setup" section of the README
 - Renamed and added some more `make` commands (MAKENTNU/web#768)
+- Improved Docker setup (MAKENTNU/web#768)
+  - Environment variables specific to Docker can now be provided using a `.env.docker` file
+  - The image is now based on the latest stable Ubuntu release, like the prod server
+  - Static and media files are persisted between runs (through a volume)
+  - Added Docker-specific `make` commands, all prefixed with `d-`
+  - Stopped always running migrations when starting the container; it's more useful having manual control, using e.g. `make d-migrate`
 
 
 ## 2025-05-03 (MAKENTNU/web#757)

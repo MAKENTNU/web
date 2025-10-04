@@ -57,6 +57,9 @@ and set the following settings (File → Settings...):
 
 ### 🚀 Starting the webserver
 
+_We recommend developing using locally installed dependencies, as it's a lot faster and easier to debug, but if you'd like to use Docker (e.g. for
+testing stuff in a prod-like environment), follow the instructions under [the "Using Docker" section](#-using-docker) instead._
+
 1. Create an SQLite database file with the proper tables:
    ```shell
    uv run manage.py migrate
@@ -74,6 +77,42 @@ and set the following settings (File → Settings...):
      ```shell
      uv run manage.py runserver
      ```
+
+### 🐋 Using Docker
+
+1. [Install Docker desktop](https://www.docker.com/products/docker-desktop/)
+1. Create a `.env.docker` file:
+
+   This will contain environment variables that override the ones in `.env`, which will
+   be used by code running inside Docker.
+
+   The following file contents is a good basis:
+   ```dotenv
+   STATIC_AND_MEDIA_FILES__PARENT_DIR='/vol/web/'
+   ```
+1. Build the Docker image and create the database:
+   ```shell
+   make d-update
+   ```
+1. Create an admin user for local development:
+   ```shell
+   make d-createsuperuser
+   ```
+1. Run the server:
+   * If using PyCharm:
+     1. [Add a Docker-based Python interpreter](https://www.jetbrains.com/help/pycharm/using-docker-compose-as-a-remote-interpreter.html#docker-compose-remote)
+        with `make_ntnu` as project name (this should match the `-p` argument in [the `Makefile`](Makefile))
+     1. Create a "Django Server" [run configuration](https://www.jetbrains.com/help/pycharm/run-debug-configuration.html) using the newly created
+        Python interpreter, with `0.0.0.0` (instead of `localhost`) as host (this should match the IP address specified by the `command` key in
+        [`compose.dev.yaml`](docker/compose.dev.yaml))
+     1. Press the green "play" button in the top right corner
+   * Otherwise, run:
+     ```shell
+     make d-start
+     ```
+
+If you encounter any hard-to-fix Docker-related problems, an easy (but drastic) fix can sometimes be to delete the container (`make d-down`)
+and follow the steps above again.
 
 ### 🧳 Developing offline
 
