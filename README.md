@@ -27,6 +27,16 @@
    ```
 1. Create an empty `.env` file directly inside the repository folder, and fill it by
    copying the contents of [`.env.example`](.env.example)
+1. To be able to run commands in the `Makefile`:
+   * If using Windows:
+     * Ensure that you have a program installed that can run makefiles.
+       This can be done by e.g. installing
+       [GnuWin's Make](https://gnuwin32.sourceforge.net/packages/make.htm) using
+       [WinGet](https://learn.microsoft.com/en-us/windows/package-manager/winget/):
+       ```bash
+       winget install GnuWin32.Make
+       ```
+   * If using Linux/macOS: You don't need to do anything.
 
 #### PyCharm
 
@@ -71,6 +81,8 @@ When running uv commands, pass [the `--offline` flag](https://docs.astral.sh/uv/
 For example:
 ```shell
 uv run --offline manage.py runserver
+# Using the make command:
+make start uv_args="--offline"
 ```
 </details>
 
@@ -89,4 +101,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the following topics:
 ## 📝 Changelog
 
 [View the changelog](CHANGELOG.md) to see a list of changes made to the website over time,
-as well as a superficial description of the release process.
+as well as a high-level description of the release process.

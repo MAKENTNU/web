@@ -34,6 +34,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
   (MAKENTNU/web#766)
 - Replaced `local_settings.py` with `.env` (MAKENTNU/web#767)
   - Developers must create a `.env` file locally - see the "Setup" section of the README
+- Renamed and added some more `make` commands (MAKENTNU/web#768)
 
 
 ## 2025-05-03 (MAKENTNU/web#757)
