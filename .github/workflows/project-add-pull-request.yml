@@ -1,12 +1,14 @@
+---
 # This workflow requires that the following repository variables have been created:
-# - `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_ADDED_PULL_REQUESTS` - The value of the 'Status' field to set for pull requests when added to the project.
-# in addition to the ones required by `_reusable_add-content-to-project.yml`.
+# - `ORGANIZATION_PROJECT__STATUS_VALUE_FOR_ADDED_PULL_REQUESTS` - The value of
+#   the 'Status' field to set for pull requests when added to the project.
+# ...in addition to the ones required by `_reusable_add-content-to-project.yml`.
 
 name: Add pull requests to project
 
 on:
   pull_request:
-    types: [ opened, reopened, ready_for_review ]
+    types: [opened, reopened, ready_for_review]
 
 jobs:
   add_to_project:

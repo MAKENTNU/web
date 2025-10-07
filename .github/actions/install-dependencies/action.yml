@@ -19,7 +19,8 @@ runs:
 
     - name: Install System Dependencies
       shell: bash
-      # Retries installing files 3 times, as either the GitHub Actions runner or APT's API can be unreliable
+      # Retries installing files 3 times, as either the GitHub Actions runner or APT's
+      # API can be unreliable
       run: |
         sudo apt update
         sudo apt install python3-dev libldap2-dev libsasl2-dev libssl-dev -o Acquire::Retries=3

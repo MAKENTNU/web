@@ -1,3 +1,4 @@
+---
 coverage:
   range: "75..90"
   status:
@@ -17,8 +18,9 @@ comment:
   layout: "reach, diff, files"
   behavior: default
   require_changes: false
-  # Codecov occasionally does not post a comment on PRs for some reason; the two lines below force Codecov to always post a comment
-  # (see https://docs.codecov.com/docs/pull-request-comments#requiring-the-base-andor-head-commit)
+  # Codecov occasionally does not post a comment on PRs for some reason; the two lines
+  # below force Codecov to always post a comment (see
+  # https://docs.codecov.com/docs/pull-request-comments#requiring-the-base-andor-head-commit)
   # (They can be removed if the above stops happening)
   require_head: false
   require_base: false

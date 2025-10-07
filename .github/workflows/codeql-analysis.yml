@@ -1,11 +1,12 @@
+---
 name: "CodeQL"
 
 on:
   push:
-    branches: [ 'main' ]
+    branches: ['main']
   pull_request:
     # The branches below must be a subset of the branches above
-    branches: [ 'main' ]
+    branches: ['main']
   schedule:
     # Runs at 06:45 UTC every Monday
     - cron: '45 6 * * 1'
@@ -26,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: [ 'python', 'javascript' ]
+        language: ['python', 'javascript']
         # CodeQL supports [ 'cpp', 'csharp', 'go', 'java', 'javascript', 'python', 'ruby' ]
         # Use only 'java' to analyze code written in Java, Kotlin or both
         # Use only 'javascript' to analyze code written in JavaScript, TypeScript or both
@@ -37,7 +38,8 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Install System Dependencies
-        # Retries installing files 3 times, as the GitHub Actions CI is occasionally unreliable
+        # Retries installing files 3 times, as either the GitHub Actions runner or APT's
+        # API can be unreliable
         run: |
           sudo apt update
           sudo apt install python3-dev libldap2-dev libsasl2-dev libssl-dev -o Acquire::Retries=3

@@ -49,6 +49,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
   - ...with the following hooks:
     - Several of the standard `pre-commit-hooks` and `meta` hooks
     - `validate-pyproject`
+    - `yamllint`
 
 
 ## 2025-05-03 (MAKENTNU/web#757)
