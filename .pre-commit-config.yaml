@@ -19,6 +19,20 @@ repos:
     hooks:
       - id: validate-pyproject
 
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.37.1
+    hooks:
+      - id: yamllint
+        args:
+          - '--config-data={
+              extends: default,
+              rules: {
+                line-length: {max: 88, level: warning},
+                new-lines: {type: platform},
+                truthy: disable,
+              },
+            }'
+
   - repo: meta
     hooks:
       - id: check-hooks-apply
