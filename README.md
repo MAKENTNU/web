@@ -126,6 +126,36 @@ make start uv_args="--offline"
 </details>
 
 
+## 🧹 Linting
+
+<details>
+<summary>Click to expand</summary>
+
+Normally, run:
+```shell
+make lint
+```
+
+If you'd like to run a specific hook: (i.e. an `id` key under the `hooks` in
+[`.pre-commit-config.yaml`](.pre-commit-config.yaml))
+```shell
+make lint hook="<hook name>"
+```
+
+If you're linting while offline, see [the "Developing offline" section under "Setup"](#-developing-offline).
+
+Alternatively, you can run the command directly for more control - see
+[the docs on the `run` command](https://pre-commit.com/#pre-commit-run).
+Some examples:
+
+- `uv run pre-commit run` - Runs all hooks against the currently staged files
+- `uv run pre-commit run --files "<file path>"`: Runs all hooks against the provided
+  file(s)
+- `uv run pre-commit run <hook name>` - Runs the `<hook name>` hook against
+  the currently staged files
+</details>
+
+
 ## 🧑‍💻 Contribution guidelines
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for the following topics:
