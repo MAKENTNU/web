@@ -40,6 +40,9 @@ start: ## Starts the Django webserver.
 test: ## Runs the test suite. Pass extra arguments with `args`, e.g. `args="-k 'test_function'"`.
 	make manage args="test $(args)"
 
+lint: ## Runs pre-commit hooks against all files. Provide the `hook` arg to only run that specific hook.
+	uv run $(uv_args) pre-commit run $(hook) --all-files
+
 ### Docker ###
 
 COMPOSE_FILE := docker/compose.dev.yaml

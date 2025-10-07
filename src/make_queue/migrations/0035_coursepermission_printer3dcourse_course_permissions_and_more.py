@@ -31,7 +31,7 @@ def update_requirement_values(apps, schema_editor):
         raise3d_course_id = 3
         sla_course_id = 4
 
-        permissions_to_set = [printer_course_id] 
+        permissions_to_set = [printer_course_id]
 
         if getattr(course, 'raise3d_course', False):
             permissions_to_set.append(raise3d_course_id)
@@ -75,7 +75,7 @@ class Migration(migrations.Migration):
             code=create_default_permissions,
             reverse_code=reverse_create_default_permissions,
         ),
-        
+
         migrations.RenameField(
             model_name='machinetype',
             old_name='usage_requirement',
@@ -85,7 +85,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='machinetype',
             name='usage_requirement',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='make_queue.CoursePermission', verbose_name='usage requirement'),   
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='make_queue.CoursePermission', verbose_name='usage requirement'),
         ),
         migrations.RunPython(
             code=update_requirement_values,

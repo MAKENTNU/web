@@ -45,6 +45,10 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
   - Static and media files are persisted between runs (through a volume)
   - Added Docker-specific `make` commands, all prefixed with `d-`
   - Stopped always running migrations when starting the container; it's more useful having manual control, using e.g. `make d-migrate`
+- Added pre-commit (MAKENTNU/web#778)
+  - ...with the following hooks:
+    - Several of the standard `pre-commit-hooks` and `meta` hooks
+    - `validate-pyproject`
 
 
 ## 2025-05-03 (MAKENTNU/web#757)

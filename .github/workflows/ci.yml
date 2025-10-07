@@ -3,6 +3,31 @@ name: CI
 on: [ push, pull_request ]
 
 jobs:
+  lint:
+    name: Linting
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v5
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+        with:
+          uv-sync-extra-args: "--group linting"
+
+      # Code based on https://pre-commit.com/#github-actions-example
+      - name: Set `PY` envvar
+        run: echo "PY=$(python -VV | sha256sum | cut -d' ' -f1)" >> $GITHUB_ENV
+      - name: Cache installed pre-commit hooks
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
+
+      - name: Run pre-commit hooks
+        run: make lint
+
   test:
     name: Tests
     runs-on: ubuntu-latest

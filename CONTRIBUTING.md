@@ -15,7 +15,6 @@
 
 * [Global](#global)
   + [Max line length](#max-line-length)
-  + [Empty/blank lines](#emptyblank-lines)
   + [MAKE vs. the word "make"](#make-vs-the-word-make)
 * [Git](#git)
   + [Branch name](#branch-name)
@@ -30,7 +29,7 @@
     - [Operator wrapping](#operator-wrapping)
     - [Imports](#imports)
   + [For each module (file)](#for-each-module-file)
-    - [Empty/blank lines](#emptyblank-lines-1)
+    - [Empty/blank lines](#emptyblank-lines)
     - [Folder/directory location](#folderdirectory-location)
     - [Filename](#filename)
       + [Migration filename](#migration-filename)
@@ -59,7 +58,7 @@
     - [String quotation marks](#string-quotation-marks-1)
     - [Hex (color) code literals](#hex-color-code-literals)
   + [For each file](#for-each-file)
-    - [Empty/blank lines](#emptyblank-lines-2)
+    - [Empty/blank lines](#emptyblank-lines-1)
     - [Filename](#filename-1)
       + [Django template filenames](#django-template-filenames)
       + [CSS filenames](#css-filenames)
@@ -100,13 +99,6 @@ especially when using an IntelliJ-based IDE, like PyCharm.*
 #### Max line length
 
 150 (can be surpassed if it's impossible to wrap).
-
-#### Empty/blank lines
-
-All files (including committed third-party libraries, like jQuery) should end with exactly one empty line.
-
-There should be no more than two empty lines in a row in a file.
-Exceptions to this are documentation, and markup languages (like HTML and Markdown).
 
 #### MAKE vs. the word "make"
 
