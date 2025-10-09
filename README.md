@@ -1,7 +1,6 @@
 # web
 [![build](https://github.com/MAKENTNU/web/workflows/build/badge.svg)](https://github.com/MAKENTNU/web/actions)
-[![codecov](https://codecov.io/gh/MAKENTNU/web/branch/main/graph/badge.svg)](https://codecov.io/gh/MAKENTNU/web)
-[![Maintainability](https://api.codeclimate.com/v1/badges/662892bb2969fcf961eb/maintainability)](https://codeclimate.com/github/MAKENTNU/web/maintainability)
+[![codecov](https://codecov.io/gh/MAKENTNU/web/graph/badge.svg?token=EL6fslS1y2)](https://codecov.io/gh/MAKENTNU/web)
 
 
 ## Setup
@@ -11,12 +10,15 @@
 
 ### Prerequisites
 
+* [Git](https://git-scm.com/downloads)
+  * Using a [Git GUI](https://git-scm.com/downloads/guis) is highly recommended, as they allow for much easier and faster visualization of the commit
+    structure, and interaction with it, which will help you avoid many common mistakes
+    * [Git Extensions](https://gitextensions.github.io/) is a good choice - though it only runs on Windows, as of time of writing
 * Python **3.10**+ (latest, stable version preferred)
 * Having cloned this repository to your machine
-  * For most purposes, check out [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev), as it's the base branch for all development:
+  * Either press a "Clone repository" button in your Git GUI, or run:
     ```shell
     git clone https://github.com/MAKENTNU/web.git
-    git checkout -B dev origin/dev
     ```
 
 #### PyCharm
@@ -112,7 +114,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the following topics:
 
 ## Changelog
 
-[The changelog](CHANGELOG.md) is updated on [the `dev` branch](https://github.com/MAKENTNU/web/tree/dev) when changes are made to the codebase -
-specifically under [the "Unreleased" section](CHANGELOG.md#unreleased).
-This section is then renamed to the current date whenever a deployment pull request is merged into
-[the `main` branch](https://github.com/MAKENTNU/web/tree/main), and a new, empty "Unreleased" section is added.
+[View the changelog](CHANGELOG.md) to see a list of changes made to the website over time,
+as well as a superficial description of the release process.

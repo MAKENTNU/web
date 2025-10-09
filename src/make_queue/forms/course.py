@@ -6,7 +6,7 @@ from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
 from web.widgets import SemanticChoiceInput, SemanticDateInput, SemanticSearchableChoiceInput
-from ..models.course import Printer3DCourse
+from ..models.course import CoursePermission, Printer3DCourse
 
 
 class Printer3DCourseForm(forms.ModelForm):
@@ -19,6 +19,7 @@ class Printer3DCourseForm(forms.ModelForm):
             'status': SemanticChoiceInput(),
             'date': SemanticDateInput(),
             'username': forms.TextInput(attrs={'autofocus': 'autofocus'}),
+            'course_permissions': forms.CheckboxSelectMultiple(),
         }
 
     def __init__(self, *args, **kwargs):
@@ -36,6 +37,11 @@ class Printer3DCourseForm(forms.ModelForm):
         if self.instance.card_number is not None:
             self.initial['card_number'] = self.instance.card_number
 
+        self.fields['course_permissions'].queryset = self.fields['course_permissions'].queryset.exclude(short_name='AUTH').exclude(short_name=CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE).order_by('name')
+        self.fields['course_permissions'].widget.attrs['class'] = 'ui fluid checkbox'
+
+        self.base_permission = CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE)
+
     def clean_card_number(self):
         card_number: str = self.cleaned_data['card_number']
         if card_number:
@@ -49,6 +55,11 @@ class Printer3DCourseForm(forms.ModelForm):
                     _("The card number was detected to be the phone number of Building security at NTNU. Please enter a valid card number.")
                 )
         return card_number
+
+    def clean_course_permissions(self):
+        course_permissions = set(self.cleaned_data['course_permissions'])
+        course_permissions.add(self.base_permission)
+        return list(course_permissions)
 
     def clean(self):
         cleaned_data = super().clean()
@@ -66,4 +77,6 @@ class Printer3DCourseForm(forms.ModelForm):
         course = super().save(commit=False)
         course.card_number = self.cleaned_data['card_number']
         course.save()
+        course.course_permissions.set(self.cleaned_data['course_permissions'])
+
         return course

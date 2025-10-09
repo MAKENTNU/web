@@ -15,6 +15,7 @@ from django.views.generic import TemplateView
 from card.views import RFIDView
 from util.view_utils import PreventGetRequestsMixin
 from .models import Profile, RegisterProfile, Skill, SuggestSkill, UserSkill
+from make_queue.models.course import CoursePermission
 
 
 class AdminCheckInView(RFIDView):
@@ -107,9 +108,7 @@ class ProfileDetailView(TemplateView):
         profile, _created = Profile.objects.get_or_create(user=user)
 
         completed_3d_printer = hasattr(user, 'printer_3d_course')
-        completed_raise3d = completed_3d_printer and user.printer_3d_course.raise3d_course
-        completed_sla = completed_3d_printer and user.printer_3d_course.sla_course
-
+        special_courses = CoursePermission.objects.exclude(short_name__in=[CoursePermission.DefaultPerms.TAKEN_3D_PRINTER_COURSE, CoursePermission.DefaultPerms.IS_AUTHENTICATED])
         completed_course_message_structs = [
             CompletedCourseMessageStruct(
                 completed=completed_3d_printer,
@@ -119,22 +118,18 @@ class ProfileDetailView(TemplateView):
                     "To use a 3D printer, make a reservation in the calendar of one of the 3D printers on the “Reservations” page."
                 ) if completed_3d_printer else None,
             ),
-            CompletedCourseMessageStruct(
-                completed=completed_raise3d,
-                message=(_("You have completed the Raise3D printer course") if completed_raise3d
-                         else _("You have not taken the Raise3D printer course")),
-                usage_hint=_(
-                    "To use a Raise3D printer, make a reservation in the calendar of one of the Raise3D printers on the “Reservations” page."
-                ) if completed_raise3d else None,
-            ),
-            CompletedCourseMessageStruct(
-                completed=completed_sla,
-                message=(_("You have completed the SLA 3D printer course") if completed_sla
-                         else _("You have not taken the SLA 3D printer course")),
-                usage_hint=_(
-                    "To use an SLA 3D printer, make a reservation in the calendar of one of the SLA 3D printers on the “Reservations” page."
-                ) if completed_sla else None,
-            ),
+            *(
+                CompletedCourseMessageStruct(
+                    completed=user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists(),
+                    message=_("You have completed the {} course").format(c.name)
+                    if user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists()
+                    else _("You have not taken the {} course").format(c.name),
+                    usage_hint=_(
+                        "To use a {}, make a reservation in the calendar of one of the {}s on the “Reservations” page."
+                    ).format(c.name, c.name) if user.printer_3d_course.course_permissions.filter(short_name=c.short_name).exists() else None,
+                )
+                for c in special_courses if hasattr(user, 'printer_3d_course')
+            )
         ]
 
         """ Commented out because it's currently not in use; see the template code in `profile_detail_internal.html`

@@ -1,39 +1,65 @@
 # Changelog
 
-A summary of changes made to the codebase, grouped per deployment.
+A summary of changes made to the codebase, grouped per release/deployment.
+
+This should be updated in every PR that makes noteworthy changes to the codebase
+(don't be afraid to call tiny changes noteworthy :)) - specifically under [the "Unreleased" section](#unreleased) below.
+
+Whenever a deployment is planned, this section should be renamed to the current date (`YYYY-MM-DD`) in
+[a deployment pull request](https://github.com/MAKENTNU/web/pulls?q=is%3Apr+label%3Adeployment),
+and a new, empty "Unreleased" section should be added.
+Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be created, whose title and tag name should also be the current date.
+
 
 ## Unreleased
 
 ### New features
 
-- 
+-
 
 ### Improvements
 
-- Made banners interactable, not just the banner text.
+-
 
 ### Fixes
 
-- 
+-
 
 ### Other changes
 
-- Added checkbox in pull_request_template.md for switching base from `main` to `dev`
+- Deleted the `dev` branch; now, the `main` branch will be used as the (sole) default branch, and releases/tags will be used for deployments
+  (MAKENTNU/web#758)
+
+
+## 2025-05-03 ([#757](https://github.com/MAKENTNU/web/pull/757))
+
+### New features
+
+- Made it easier to add new permissions for any machine type, so that each permission can be granted when registering a completed course
+  (MAKENTNU/web#749)
+
+### Fixes
+
+- Fixed the reservation rules used in the calendar being incorrect or failing to be fetched (MAKENTNU/web#756)
+
+### Other changes
+
+- Added checkbox in pull_request_template.md for switching base from `main` to `dev` (MAKENTNU/web#753)
 
 
 ## 2024-05-10 ([#730](https://github.com/MAKENTNU/web/pull/730))
 
 ### New features
 
-- The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE")
+- The apply button in the English header, which previously read "søk verv", has now been translated to English ("apply to MAKE") (MAKENTNU/web#687)
 
 ### Fixes
 
-- The Discord username field in the internal site's member form no longer enforces Discord's old username format
+- The Discord username field in the internal site's member form no longer enforces Discord's old username format (MAKENTNU/web#717)
 
 ### Other changes
 
-- Updated Django to 5.0.2
+- Updated Django to 5.0.2 (MAKENTNU/web#712)
 - Updated a ridiculous amount of packages
 
 

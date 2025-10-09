@@ -27,6 +27,6 @@ channels-redis==4.2.0
 
 # Misc. packages
 bleach[css]==6.1.0
-Pillow==10.3.0
+Pillow==11.3.0
 uuid==1.30
 XlsxWriter==3.2.0

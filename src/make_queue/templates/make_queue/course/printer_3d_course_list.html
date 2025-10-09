@@ -99,8 +99,9 @@
                 <th data-column-name="cardNumber">{% translate "card number"|capfirst %}</th>
                 <th data-column-name="date">{% translate "date"|capfirst %}</th>
                 <th data-column-name="status">{% translate "status"|capfirst %}</th>
-                <th data-column-name="raise3DCourse">Raise3D</th>
-                <th data-column-name="slaCourse">SLA</th>
+
+                <th data-column-name="permissions">Permissions</th>
+
             </tr>
             </thead>
             <tbody>
@@ -112,8 +113,7 @@
                     data-card-number="{{ registration.card_number|default:"" }}"
                     data-date="{{ registration.date|iso_date }}"
                     data-status="{{ registration.status }}"
-                    data-raise3d-course="{{ registration.raise3d_course }}"
-                    data-sla-course="{{ registration.sla_course }}"
+ 
                 >
                     <td>
                         {{ registration.name }}
@@ -150,18 +150,7 @@
                         {{ registration.get_status_display }}
                     </td>
                     <td>
-                        {% if registration.raise3d_course %}
-                            {% translate "Yes" %}
-                        {% else %}
-                            {% translate "No" %}
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if registration.sla_course %}
-                            {% translate "Yes" %}
-                        {% else %}
-                            {% translate "No" %}
-                        {% endif %}
+                        {{ registration.permission_names|join:", " }}
                     </td>
                 </tr>
 

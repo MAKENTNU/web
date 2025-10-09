@@ -9,7 +9,7 @@ from django_hosts import reverse
 
 from users.models import User
 from ...forms.machine import AddMachineForm, ChangeMachineForm
-from ...models.course import Printer3DCourse
+from ...models.course import CoursePermission, Printer3DCourse
 from ...models.machine import Machine, MachineType
 
 
@@ -119,7 +119,7 @@ class TestMachineListView(TestCase):
         ])
 
         # The SLA printer should be shown to users with an SLA course
-        course.sla_course = True
+        course.course_permissions.set([CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE)])
         course.save()
         self.assert_machine_list_contains([
             [printer1], [raise3d_printer1], [sla_printer1],
@@ -320,7 +320,7 @@ class TestMachineDetailViewWithInternalMachines(TestCase):
                 response = self.client.get(machine_detail_url)
                 expected_status_code = HTTPStatus.OK
                 # ...except if the machine requires the SLA course
-                if machine_type.usage_requirement == MachineType.UsageRequirement.TAKEN_SLA_3D_PRINTER_COURSE:
+                if machine_type.usage_requirement.pk == CoursePermission.objects.get(short_name=CoursePermission.DefaultPerms.SLA_PRINTER_COURSE).pk:
                     expected_status_code = HTTPStatus.NOT_FOUND
                 self.assertEqual(response.status_code, expected_status_code)
 
