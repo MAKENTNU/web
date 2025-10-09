@@ -5,26 +5,45 @@ from make_queue.models.course import CoursePermission
 import django.db.models.deletion
 
 
-
 def create_default_permissions(apps, schema_editor):
-    CoursePermission = apps.get_model('make_queue', 'CoursePermission')
+    CoursePermission = apps.get_model("make_queue", "CoursePermission")
 
-    CoursePermission.objects.bulk_create([
-        CoursePermission(name='User is authenticated', short_name='AUTH', description='Permission to reserve machines and workstations at MAKE NTNU'),
-        CoursePermission(name='3D printer', short_name='3DPR', description='Permission to use 3D printers at MAKE NTNU'),
-        CoursePermission(name='Raise3D printer', short_name='R3DP', description='Permission to use the Raise3D printer at MAKE NTNU'),
-        CoursePermission(name='SLA printer', short_name='SLAP', description='Permission to use the SLA printer at MAKE NTNU'),
-    ])
+    default_perms = [
+        CoursePermission(
+            name="User is authenticated",
+            short_name="AUTH",
+            description="Permission to reserve machines and workstations at MAKE NTNU",
+        ),
+        CoursePermission(
+            name="3D printer",
+            short_name="3DPR",
+            description="Permission to use 3D printers at MAKE NTNU",
+        ),
+        CoursePermission(
+            name="Raise3D printer",
+            short_name="R3DP",
+            description="Permission to use the Raise3D printer at MAKE NTNU",
+        ),
+        CoursePermission(
+            name="SLA printer",
+            short_name="SLAP",
+            description="Permission to use the SLA printer at MAKE NTNU",
+        ),
+    ]
+    CoursePermission.objects.bulk_create(default_perms)
+
 
 def reverse_create_default_permissions(apps, schema_editor):
-    CoursePermission.objects.filter(short_name__in=['AUTH', '3DPR', 'R3DP', 'SLAP']).delete()
+    CoursePermission.objects.filter(
+        short_name__in=["AUTH", "3DPR", "R3DP", "SLAP"]
+    ).delete()
 
 
 def update_requirement_values(apps, schema_editor):
     print("Updating usage requirement values for MachineType")
-    CoursePermission = apps.get_model('make_queue', 'CoursePermission')
-    Printer3DCourse = apps.get_model('make_queue', 'Printer3DCourse')
-    MachineType = apps.get_model('make_queue', 'MachineType')
+    CoursePermission = apps.get_model("make_queue", "CoursePermission")
+    Printer3DCourse = apps.get_model("make_queue", "Printer3DCourse")
+    MachineType = apps.get_model("make_queue", "MachineType")
 
     for course in Printer3DCourse.objects.all():
         printer_course_id = 2
@@ -33,73 +52,109 @@ def update_requirement_values(apps, schema_editor):
 
         permissions_to_set = [printer_course_id]
 
-        if getattr(course, 'raise3d_course', False):
+        if getattr(course, "raise3d_course", False):
             permissions_to_set.append(raise3d_course_id)
-        if getattr(course, 'sla_course', False):
+        if getattr(course, "sla_course", False):
             permissions_to_set.append(sla_course_id)
 
         course.course_permissions.set(permissions_to_set)
         course.save()
-        print(f"Updated course permissions for {course.name} to {course.course_permissions.all()}")
+        print(
+            f"Updated course permissions for {course.name} to {course.course_permissions.all()}"
+        )
 
     for machine_type in MachineType.objects.all():
         if machine_type.usage_requirement_temp:
-            course_permission = CoursePermission.objects.get(short_name=machine_type.usage_requirement_temp)
+            course_permission = CoursePermission.objects.get(
+                short_name=machine_type.usage_requirement_temp
+            )
             machine_type.usage_requirement = course_permission
             machine_type.save()
-            print(f"Updated usage requirement for {machine_type.name} to {course_permission}")
+            print(
+                f"Updated usage requirement for {machine_type.name} to {course_permission}"
+            )
+
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0034_alter_reservationrule_start_days'),
+        ("make_queue", "0034_alter_reservationrule_start_days"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CoursePermission',
+            name="CoursePermission",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(blank=True, max_length=256, verbose_name='name')),
-                ('short_name', models.CharField(blank=True, max_length=4, verbose_name='short name')),
-                ('description', models.TextField(blank=True, verbose_name='description')),
-                ('last_modified', models.DateTimeField(auto_now=True, verbose_name='last modified')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(blank=True, max_length=256, verbose_name="name"),
+                ),
+                (
+                    "short_name",
+                    models.CharField(
+                        blank=True, max_length=4, verbose_name="short name"
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="description"),
+                ),
+                (
+                    "last_modified",
+                    models.DateTimeField(auto_now=True, verbose_name="last modified"),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='printer3dcourse',
-            name='course_permissions',
-            field=models.ManyToManyField(blank=True, to='make_queue.coursepermission', verbose_name='course permissions'),
+            model_name="printer3dcourse",
+            name="course_permissions",
+            field=models.ManyToManyField(
+                blank=True,
+                to="make_queue.coursepermission",
+                verbose_name="course permissions",
+            ),
         ),
         migrations.RunPython(
             code=create_default_permissions,
             reverse_code=reverse_create_default_permissions,
         ),
-
         migrations.RenameField(
-            model_name='machinetype',
-            old_name='usage_requirement',
-            new_name='usage_requirement_temp',
+            model_name="machinetype",
+            old_name="usage_requirement",
+            new_name="usage_requirement_temp",
         ),
-
         migrations.AddField(
-            model_name='machinetype',
-            name='usage_requirement',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='make_queue.CoursePermission', verbose_name='usage requirement'),
+            model_name="machinetype",
+            name="usage_requirement",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="make_queue.CoursePermission",
+                verbose_name="usage requirement",
+            ),
         ),
         migrations.RunPython(
             code=update_requirement_values,
         ),
         migrations.RemoveField(
-            model_name='machinetype',
-            name='usage_requirement_temp',
+            model_name="machinetype",
+            name="usage_requirement_temp",
         ),
         migrations.RemoveField(
-            model_name='printer3dcourse',
-            name='raise3d_course',
+            model_name="printer3dcourse",
+            name="raise3d_course",
         ),
         migrations.RemoveField(
-            model_name='printer3dcourse',
-            name='sla_course',
+            model_name="printer3dcourse",
+            name="sla_course",
         ),
     ]

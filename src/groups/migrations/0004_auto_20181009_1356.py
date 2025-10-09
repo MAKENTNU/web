@@ -4,30 +4,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('groups', '0003_auto_20180925_2204'),
+        ("groups", "0003_auto_20180925_2204"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='committee',
-            name='clickbait',
-            field=models.TextField(blank=True, max_length=300, verbose_name='clickbait'),
+            model_name="committee",
+            name="clickbait",
+            field=models.TextField(
+                blank=True, max_length=300, verbose_name="clickbait"
+            ),
         ),
         migrations.AlterField(
-            model_name='committee',
-            name='description',
-            field=models.TextField(verbose_name='description'),
+            model_name="committee",
+            name="description",
+            field=models.TextField(verbose_name="description"),
         ),
         migrations.AlterField(
-            model_name='committee',
-            name='email',
-            field=models.EmailField(max_length=254, verbose_name='email'),
+            model_name="committee",
+            name="email",
+            field=models.EmailField(max_length=254, verbose_name="email"),
         ),
         migrations.AlterField(
-            model_name='committee',
-            name='image',
-            field=models.ImageField(blank=True, upload_to='', verbose_name='image'),
+            model_name="committee",
+            name="image",
+            field=models.ImageField(blank=True, upload_to="", verbose_name="image"),
         ),
     ]

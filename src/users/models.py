@@ -11,7 +11,9 @@ from util.auth_utils import get_perms
 
 
 class User(AbstractUser):
-    ldap_full_name = models.CharField(max_length=150, blank=True, verbose_name=_("full name from LDAP"))
+    ldap_full_name = models.CharField(
+        max_length=150, blank=True, verbose_name=_("full name from LDAP")
+    )
 
     # Set `null=True` even when it's a string-based field, as `null` is the only value not checked by the unique constraint
     card_number = CardNumberField(null=True, blank=True, unique=True)
@@ -33,27 +35,37 @@ class User(AbstractUser):
     def has_any_permissions_for(self, model: Type[models.Model]):
         app_label = model._meta.app_label
         model_name = model._meta.model_name
-        return any(self.has_perm(f'{app_label}.{action}_{model_name}') for action in ('add', 'change', 'delete'))
+        return any(
+            self.has_perm(f"{app_label}.{action}_{model_name}")
+            for action in ("add", "change", "delete")
+        )
 
     def add_perms(self, *app_labels_and_codenames: str):
         perms = get_perms(*app_labels_and_codenames)
         self.user_permissions.add(*perms)
 
     @staticmethod
-    def get_user_search_fields(prefix='user__', *, annotated_full_name_lookup: str = None) -> tuple[str, ...]:
+    def get_user_search_fields(
+        prefix="user__", *, annotated_full_name_lookup: str = None
+    ) -> tuple[str, ...]:
         search_fields = []
-        search_fields_to_prefix = ['username', 'ldap_full_name', 'email']
+        search_fields_to_prefix = ["username", "ldap_full_name", "email"]
         if annotated_full_name_lookup:
             search_fields += [annotated_full_name_lookup]
         else:
-            search_fields_to_prefix += ['first_name', 'last_name']
+            search_fields_to_prefix += ["first_name", "last_name"]
         return tuple(
-            search_fields
-            + [f'{prefix}{field}' for field in search_fields_to_prefix]
+            search_fields + [f"{prefix}{field}" for field in search_fields_to_prefix]
         )
 
     @staticmethod
-    def annotate_full_name(queryset: models.QuerySet['User'], prefix='user__', *, lookup_name: str):
-        return queryset.annotate(**{
-            lookup_name: Concat(f'{prefix}first_name', Value(' '), f'{prefix}last_name'),
-        })
+    def annotate_full_name(
+        queryset: models.QuerySet["User"], prefix="user__", *, lookup_name: str
+    ):
+        return queryset.annotate(
+            **{
+                lookup_name: Concat(
+                    f"{prefix}first_name", Value(" "), f"{prefix}last_name"
+                ),
+            },
+        )

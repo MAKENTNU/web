@@ -8,67 +8,170 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='NewsBase',
+            name="NewsBase",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=100, verbose_name='tittel')),
-                ('content', ckeditor.fields.RichTextField()),
-                ('clickbait', models.TextField(blank=True, max_length=300, verbose_name='clickbait')),
-                ('image', models.ImageField(upload_to='', verbose_name='bilde')),
-                ('contain', models.BooleanField(default=False, verbose_name='ikke crop bildet')),
-                ('featured', models.BooleanField(default=False, verbose_name='fremhevet')),
-                ('hidden', models.BooleanField(default=False, verbose_name='skjult')),
-                ('private', models.BooleanField(default=False, verbose_name='MAKE intern')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=100, verbose_name="tittel")),
+                ("content", ckeditor.fields.RichTextField()),
+                (
+                    "clickbait",
+                    models.TextField(
+                        blank=True, max_length=300, verbose_name="clickbait"
+                    ),
+                ),
+                ("image", models.ImageField(upload_to="", verbose_name="bilde")),
+                (
+                    "contain",
+                    models.BooleanField(default=False, verbose_name="ikke crop bildet"),
+                ),
+                (
+                    "featured",
+                    models.BooleanField(default=False, verbose_name="fremhevet"),
+                ),
+                ("hidden", models.BooleanField(default=False, verbose_name="skjult")),
+                (
+                    "private",
+                    models.BooleanField(default=False, verbose_name="MAKE intern"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='TimePlace',
+            name="TimePlace",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('pub_date', models.DateField(default=django.utils.timezone.now, verbose_name='publiseringsdato')),
-                ('pub_time', models.TimeField(default=datetime.time(0, 0), verbose_name='publiseringstid')),
-                ('start_date', models.DateField(default=django.utils.timezone.now, verbose_name='start-dato')),
-                ('end_date', models.DateField(blank=True, null=True, verbose_name='slutt-dato')),
-                ('start_time', models.TimeField(default=datetime.time(0, 0), verbose_name='start-tidspunkt')),
-                ('end_time', models.TimeField(blank=True, null=True, verbose_name='slutt-tidspunkt')),
-                ('place', models.CharField(blank=True, max_length=100, verbose_name='sted')),
-                ('place_url', models.CharField(blank=True, max_length=200, verbose_name='sted URL')),
-                ('hoopla', models.CharField(blank=True, max_length=200, verbose_name='Hoopla url')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "pub_date",
+                    models.DateField(
+                        default=django.utils.timezone.now,
+                        verbose_name="publiseringsdato",
+                    ),
+                ),
+                (
+                    "pub_time",
+                    models.TimeField(
+                        default=datetime.time(0, 0), verbose_name="publiseringstid"
+                    ),
+                ),
+                (
+                    "start_date",
+                    models.DateField(
+                        default=django.utils.timezone.now, verbose_name="start-dato"
+                    ),
+                ),
+                (
+                    "end_date",
+                    models.DateField(blank=True, null=True, verbose_name="slutt-dato"),
+                ),
+                (
+                    "start_time",
+                    models.TimeField(
+                        default=datetime.time(0, 0), verbose_name="start-tidspunkt"
+                    ),
+                ),
+                (
+                    "end_time",
+                    models.TimeField(
+                        blank=True, null=True, verbose_name="slutt-tidspunkt"
+                    ),
+                ),
+                (
+                    "place",
+                    models.CharField(blank=True, max_length=100, verbose_name="sted"),
+                ),
+                (
+                    "place_url",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="sted URL"
+                    ),
+                ),
+                (
+                    "hoopla",
+                    models.CharField(
+                        blank=True, max_length=200, verbose_name="Hoopla url"
+                    ),
+                ),
             ],
             options={
-                'ordering': ('-pub_date',),
+                "ordering": ("-pub_date",),
             },
         ),
         migrations.CreateModel(
-            name='Article',
+            name="Article",
             fields=[
-                ('newsbase_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='news.NewsBase')),
-                ('pub_date', models.DateField(default=django.utils.timezone.now, verbose_name='publiseringsdato')),
-                ('pub_time', models.TimeField(default=datetime.time(0, 0), verbose_name='publiseringstid')),
+                (
+                    "newsbase_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="news.NewsBase",
+                    ),
+                ),
+                (
+                    "pub_date",
+                    models.DateField(
+                        default=django.utils.timezone.now,
+                        verbose_name="publiseringsdato",
+                    ),
+                ),
+                (
+                    "pub_time",
+                    models.TimeField(
+                        default=datetime.time(0, 0), verbose_name="publiseringstid"
+                    ),
+                ),
             ],
             options={
-                'ordering': ('-pub_date',),
+                "ordering": ("-pub_date",),
             },
-            bases=('news.newsbase',),
+            bases=("news.newsbase",),
         ),
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('newsbase_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='news.NewsBase')),
+                (
+                    "newsbase_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="news.NewsBase",
+                    ),
+                ),
             ],
-            bases=('news.newsbase',),
+            bases=("news.newsbase",),
         ),
         migrations.AddField(
-            model_name='timeplace',
-            name='event',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='news.Event'),
+            model_name="timeplace",
+            name="event",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="news.Event"
+            ),
         ),
     ]

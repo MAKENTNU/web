@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('makerspace', '0004_remove_equipment_title_max_length'),
+        ("makerspace", "0004_remove_equipment_title_max_length"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='equipment',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="equipment",
+            name="id",
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+            ),
         ),
     ]

@@ -4,15 +4,18 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0028_machine_notes'),
+        ("make_queue", "0028_machine_notes"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='machine',
-            name='internal',
-            field=models.BooleanField(default=False, help_text='If selected, the machine will only be visible to and reservable by MAKE members.', verbose_name='internal'),
+            model_name="machine",
+            name="internal",
+            field=models.BooleanField(
+                default=False,
+                help_text="If selected, the machine will only be visible to and reservable by MAKE members.",
+                verbose_name="internal",
+            ),
         ),
     ]

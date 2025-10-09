@@ -9,56 +9,153 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('news', '0024_article_and_event_image_description'),
+        ("news", "0024_article_and_event_image_description"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HistoricalEvent',
+            name="HistoricalEvent",
             fields=[
-                ('id', models.BigIntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('title', web.multilingual.modelfields.MultiLingualTextField(verbose_name='title')),
-                ('content', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='content')),
-                ('clickbait', web.multilingual.modelfields.MultiLingualTextField(verbose_name='clickbait')),
-                ('image', models.CharField(max_length=100, verbose_name='image')),
-                ('image_description', web.multilingual.modelfields.MultiLingualTextField(help_text='This should be a concise visual description of the image, which is mainly useful for people using a screen reader.', verbose_name='image description')),
-                ('event_type', models.CharField(choices=[('R', 'Standard (repeating)'), ('S', 'Multipart (standalone)')], default='R', max_length=1, verbose_name='type of event')),
-                ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField()),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigIntegerField(
+                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "title",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        verbose_name="title"
+                    ),
+                ),
+                (
+                    "content",
+                    web.multilingual.modelfields.MultiLingualRichTextUploadingField(
+                        verbose_name="content"
+                    ),
+                ),
+                (
+                    "clickbait",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        verbose_name="clickbait"
+                    ),
+                ),
+                ("image", models.CharField(max_length=100, verbose_name="image")),
+                (
+                    "image_description",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        help_text="This should be a concise visual description of the image, which is mainly useful for people using a screen reader.",
+                        verbose_name="image description",
+                    ),
+                ),
+                (
+                    "event_type",
+                    models.CharField(
+                        choices=[
+                            ("R", "Standard (repeating)"),
+                            ("S", "Multipart (standalone)"),
+                        ],
+                        default="R",
+                        max_length=1,
+                        verbose_name="type of event",
+                    ),
+                ),
+                ("history_id", models.AutoField(primary_key=True, serialize=False)),
+                ("history_date", models.DateTimeField()),
+                ("history_change_reason", models.CharField(max_length=100, null=True)),
+                (
+                    "history_type",
+                    models.CharField(
+                        choices=[("+", "Created"), ("~", "Changed"), ("-", "Deleted")],
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "history_user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'historical event',
-                'ordering': ('-history_date', '-history_id'),
-                'get_latest_by': 'history_date',
+                "verbose_name": "historical event",
+                "ordering": ("-history_date", "-history_id"),
+                "get_latest_by": "history_date",
             },
             bases=(simple_history.models.HistoricalChanges, models.Model),
         ),
         migrations.CreateModel(
-            name='HistoricalArticle',
+            name="HistoricalArticle",
             fields=[
-                ('id', models.BigIntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('title', web.multilingual.modelfields.MultiLingualTextField(verbose_name='title')),
-                ('content', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='content')),
-                ('clickbait', web.multilingual.modelfields.MultiLingualTextField(verbose_name='clickbait')),
-                ('image', models.CharField(max_length=100, verbose_name='image')),
-                ('image_description', web.multilingual.modelfields.MultiLingualTextField(help_text='This should be a concise visual description of the image, which is mainly useful for people using a screen reader.', verbose_name='image description')),
-                ('publication_time', models.DateTimeField(default=django.utils.timezone.localtime, help_text='The article will be hidden until this date.', verbose_name='publication time')),
-                ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField()),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigIntegerField(
+                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "title",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        verbose_name="title"
+                    ),
+                ),
+                (
+                    "content",
+                    web.multilingual.modelfields.MultiLingualRichTextUploadingField(
+                        verbose_name="content"
+                    ),
+                ),
+                (
+                    "clickbait",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        verbose_name="clickbait"
+                    ),
+                ),
+                ("image", models.CharField(max_length=100, verbose_name="image")),
+                (
+                    "image_description",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        help_text="This should be a concise visual description of the image, which is mainly useful for people using a screen reader.",
+                        verbose_name="image description",
+                    ),
+                ),
+                (
+                    "publication_time",
+                    models.DateTimeField(
+                        default=django.utils.timezone.localtime,
+                        help_text="The article will be hidden until this date.",
+                        verbose_name="publication time",
+                    ),
+                ),
+                ("history_id", models.AutoField(primary_key=True, serialize=False)),
+                ("history_date", models.DateTimeField()),
+                ("history_change_reason", models.CharField(max_length=100, null=True)),
+                (
+                    "history_type",
+                    models.CharField(
+                        choices=[("+", "Created"), ("~", "Changed"), ("-", "Deleted")],
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "history_user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'historical article',
-                'ordering': ('-history_date', '-history_id'),
-                'get_latest_by': 'history_date',
+                "verbose_name": "historical article",
+                "ordering": ("-history_date", "-history_id"),
+                "get_latest_by": "history_date",
             },
             bases=(simple_history.models.HistoricalChanges, models.Model),
         ),

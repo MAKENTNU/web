@@ -7,13 +7,21 @@ from . import views
 urlpatterns = [
     # This path is currently not in use
     # path("", views.UserSkillListView.as_view(), name='user_skill_list'),
-    path("profile/", login_required(views.ProfileDetailView.as_view()), name='profile_detail'),
+    path(
+        "profile/",
+        login_required(views.ProfileDetailView.as_view()),
+        name="profile_detail",
+    ),
 ]
 
 # --- Admin URL patterns (imported in `web/urls.py`) ---
 
 adminpatterns = [
-    path("profile/change/image/", views.AdminProfilePictureUpdateView.as_view(), name='admin_profile_picture_update'),
+    path(
+        "profile/change/image/",
+        views.AdminProfilePictureUpdateView.as_view(),
+        name="admin_profile_picture_update",
+    ),
     # These paths are currently not in use:
     # path("post/", views.AdminCheckInView.as_view(), name='admin_check_in'),
     # path("register/card/", views.AdminRegisterCardView.as_view(), name='admin_register_card'),

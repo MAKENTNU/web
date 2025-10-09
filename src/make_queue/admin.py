@@ -5,7 +5,12 @@ from django.utils.translation import gettext_lazy as _
 from simple_history.admin import SimpleHistoryAdmin
 
 from util import html_utils
-from util.admin_utils import DefaultAdminWidgetsMixin, UserSearchFieldsMixin, search_escaped_and_unescaped, link_to_admin_change_form
+from util.admin_utils import (
+    DefaultAdminWidgetsMixin,
+    UserSearchFieldsMixin,
+    search_escaped_and_unescaped,
+    link_to_admin_change_form,
+)
 from util.templatetags.html_tags import anchor_tag
 from .models.course import CoursePermission, Printer3DCourse
 from .models.machine import Machine, MachineType, MachineUsageRule
@@ -13,14 +18,20 @@ from .models.reservation import Quota, Reservation, ReservationRule
 
 
 class MachineTypeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
-    list_display = ('name', 'usage_requirement', 'has_stream', 'get_num_machines', 'priority')
-    list_filter = ('usage_requirement', 'has_stream')
-    search_fields = ('name', 'cannot_use_text')
-    list_editable = ('priority',)
-    ordering = ('priority',)
+    list_display = (
+        "name",
+        "usage_requirement",
+        "has_stream",
+        "get_num_machines",
+        "priority",
+    )
+    list_filter = ("usage_requirement", "has_stream")
+    search_fields = ("name", "cannot_use_text")
+    list_editable = ("priority",)
+    ordering = ("priority",)
 
     @admin.display(
-        ordering='machines__count',
+        ordering="machines__count",
         description=_("machines"),
     )
     def get_num_machines(self, machine_type: MachineType):
@@ -28,23 +39,39 @@ class MachineTypeAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.annotate(Count('machines'))  # Facilitates querying `machines__count`
+        return qs.annotate(Count("machines"))  # Facilitates querying `machines__count`
 
     def get_search_results(self, request, queryset, search_term):
         return search_escaped_and_unescaped(super(), request, queryset, search_term)
 
 
 class MachineAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
-    list_display = ('name', 'machine_model', 'machine_type', 'get_location', 'internal', 'status', 'priority', 'last_modified')
-    list_filter = ('machine_type', 'machine_model', 'location', 'status')
-    search_fields = ('name', 'stream_name', 'machine_model', 'machine_type__name', 'location', 'location_url')
-    list_editable = ('status', 'priority', 'internal')
-    list_select_related = ('machine_type',)
+    list_display = (
+        "name",
+        "machine_model",
+        "machine_type",
+        "get_location",
+        "internal",
+        "status",
+        "priority",
+        "last_modified",
+    )
+    list_filter = ("machine_type", "machine_model", "location", "status")
+    search_fields = (
+        "name",
+        "stream_name",
+        "machine_model",
+        "machine_type__name",
+        "location",
+        "location_url",
+    )
+    list_editable = ("status", "priority", "internal")
+    list_select_related = ("machine_type",)
 
-    readonly_fields = ('last_modified',)
+    readonly_fields = ("last_modified",)
 
     @admin.display(
-        ordering='location',
+        ordering="location",
         description=_("location"),
     )
     def get_location(self, machine: Machine):
@@ -55,10 +82,10 @@ class MachineAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
 
 
 class MachineUsageRuleAdmin(DefaultAdminWidgetsMixin, SimpleHistoryAdmin):
-    list_display = ('machine_type', 'last_modified')
-    list_select_related = ('machine_type',)
+    list_display = ("machine_type", "last_modified")
+    list_select_related = ("machine_type",)
 
-    readonly_fields = ('last_modified',)
+    readonly_fields = ("last_modified",)
 
 
 class ReservationAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
@@ -67,41 +94,56 @@ class ReservationAdmin(DefaultAdminWidgetsMixin, admin.ModelAdmin):
 
 class ReservationRuleAdmin(admin.ModelAdmin):
     list_display = (
-        'machine_type',
-        'start_time', 'days_changed', 'end_time',
-        'start_days', 'max_hours', 'max_inside_border_crossed',
-        'last_modified',
+        "machine_type",
+        "start_time",
+        "days_changed",
+        "end_time",
+        "start_days",
+        "max_hours",
+        "max_inside_border_crossed",
+        "last_modified",
     )
-    ordering = ('machine_type',)
-    list_select_related = ('machine_type',)
+    ordering = ("machine_type",)
+    list_select_related = ("machine_type",)
 
-    readonly_fields = ('last_modified',)
+    readonly_fields = ("last_modified",)
 
 
-class Printer3DCourseAdmin(DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin):
-    list_display = ('username', 'user', 'name', 'date', 'status', 'get_course_permissions', 'last_modified')
-    list_filter = ('status', 'course_permissions')
+class Printer3DCourseAdmin(
+    DefaultAdminWidgetsMixin, UserSearchFieldsMixin, admin.ModelAdmin
+):
+    list_display = (
+        "username",
+        "user",
+        "name",
+        "date",
+        "status",
+        "get_course_permissions",
+        "last_modified",
+    )
+    list_filter = ("status", "course_permissions")
     search_fields = (
-        'username', 'name',
-        'user__card_number', '_card_number',
+        "username",
+        "name",
+        "user__card_number",
+        "_card_number",
         # The user search fields are appended in `UserSearchFieldsMixin`
     )
-    user_lookup, name_for_full_name_lookup = 'user__', 'user_full_name'
-    list_editable = ('status',)
-    ordering = ('date', 'username')
-    list_select_related = ('user',)
+    user_lookup, name_for_full_name_lookup = "user__", "user_full_name"
+    list_editable = ("status",)
+    ordering = ("date", "username")
+    list_select_related = ("user",)
 
-    readonly_fields = ('last_modified',)
+    readonly_fields = ("last_modified",)
 
     def get_queryset(self, request):
         query = super().get_queryset(request)
-        return query.prefetch_related('course_permissions')
+        return query.prefetch_related("course_permissions")
 
     @admin.display(description=_("course permissions"))
     def get_course_permissions(self, course: Printer3DCourse) -> SafeString | None:
         perm_strings = [
-            link_to_admin_change_form(perm)
-            for perm in course.course_permissions.all()
+            link_to_admin_change_form(perm) for perm in course.course_permissions.all()
         ]
         return html_utils.block_join(perm_strings, sep="<b>&bull;</b>") or None
 

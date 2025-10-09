@@ -7,7 +7,7 @@ from .models import Committee
 class CommitteeForm(forms.ModelForm):
     class Meta:
         model = Committee
-        fields = ('clickbait', 'description', 'email', 'image')
+        fields = ("clickbait", "description", "email", "image")
         widgets = {
-            'image': SemanticFileInput(),
+            "image": SemanticFileInput(),
         }

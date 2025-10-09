@@ -32,15 +32,15 @@ def urljoin_query(base_url: str, query: dict | str):
 
 
 def reverse_internal(viewname: str, *args):
-    return reverse(viewname, args=args, host='internal', host_args=['i'])
+    return reverse(viewname, args=args, host="internal", host_args=["i"])
 
 
 def reverse_admin(viewname: str, args=None, **kwargs):
-    return reverse(f'admin:{viewname}', args=args, kwargs=kwargs, host='admin')
+    return reverse(f"admin:{viewname}", args=args, kwargs=kwargs, host="admin")
 
 
 def reverse_docs(viewname: str, *args):
-    return reverse(viewname, args=args, host='docs')
+    return reverse(viewname, args=args, host="docs")
 
 
 def get_host_object_from_url(url: str) -> host:
@@ -53,7 +53,9 @@ def get_host_object_from_url(url: str) -> host:
     """
     url_host = urlparse(url).netloc
     if settings.PARENT_HOST not in url_host:
-        raise ValueError(f"The passed URL ({url}) must be internal, i.e. {settings.PARENT_HOST} must be part of the URL's host.")
+        raise ValueError(
+            f"The passed URL ({url}) must be internal, i.e. {settings.PARENT_HOST} must be part of the URL's host."
+        )
 
     hosts_middleware = HostsBaseMiddleware(get_response=lambda request: None)
     host_obj, _kwargs = hosts_middleware.get_host(url_host)
@@ -76,8 +78,8 @@ def get_reverse_host_kwargs_from_url(url: str) -> dict:
     else:
         subdomain = None
     return {
-        'host': host_obj.name,
-        'host_args': subdomain,
+        "host": host_obj.name,
+        "host_args": subdomain,
     }
 
 
@@ -126,8 +128,7 @@ def logout_urls():
         # This path's `name` should be the same as the one for Django admin's logout URL
         # (https://github.com/django/django/blob/4.1.7/django/contrib/admin/sites.py#L270),
         # so that this path can override it, and consequently be used as intended in `admin_urls.py`
-        path("logout/", logout_view, name='logout'),
-
+        path("logout/", logout_view, name="logout"),
         prefix_default_language=False,
     )
 
@@ -142,10 +143,22 @@ def ckeditor_uploader_urls():
     """
     return [
         # Based on https://github.com/django-ckeditor/django-ckeditor/blob/9866ebe098794eca7a5132d6f2a4b1d1d837e735/ckeditor_uploader/urls.py#L8-L13
-        path("ckeditor/upload/", permission_required_else_denied('contentbox.can_upload_image')(ckeditor_views.upload),
-             name='ckeditor_upload'),
-        path("ckeditor/browse/", never_cache(permission_required_else_denied('contentbox.can_browse_image')(ckeditor_views.browse)),
-             name='ckeditor_browse'),
+        path(
+            "ckeditor/upload/",
+            permission_required_else_denied("contentbox.can_upload_image")(
+                ckeditor_views.upload
+            ),
+            name="ckeditor_upload",
+        ),
+        path(
+            "ckeditor/browse/",
+            never_cache(
+                permission_required_else_denied("contentbox.can_browse_image")(
+                    ckeditor_views.browse
+                )
+            ),
+            name="ckeditor_browse",
+        ),
     ]
 
 
@@ -153,5 +166,5 @@ def debug_toolbar_urls():
     if not settings.USE_DEBUG_TOOLBAR:
         return []
     return [
-        path("__debug__/", include('debug_toolbar.urls')),
+        path("__debug__/", include("debug_toolbar.urls")),
     ]

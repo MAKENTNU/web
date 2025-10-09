@@ -14,7 +14,6 @@ import web.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("groups", "0012_history_date_db_index"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),

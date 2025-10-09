@@ -6,27 +6,38 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0029_history_date_db_index'),
+        ("news", "0029_history_date_db_index"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='eventticket',
-            name='active_last_modified',
-            field=models.DateTimeField(blank=True, default=datetime.utcfromtimestamp(0), verbose_name='last changed to active/canceled'),
+            model_name="eventticket",
+            name="active_last_modified",
+            field=models.DateTimeField(
+                blank=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last changed to active/canceled",
+            ),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='eventticket',
-            name='active_last_modified',
-            field=models.DateTimeField(blank=True, default=django.utils.timezone.localtime, verbose_name='last reactivated/canceled'),
+            model_name="eventticket",
+            name="active_last_modified",
+            field=models.DateTimeField(
+                blank=True,
+                default=django.utils.timezone.localtime,
+                verbose_name="last reactivated/canceled",
+            ),
         ),
         migrations.AddField(
-            model_name='eventticket',
-            name='creation_date',
-            field=models.DateTimeField(auto_now_add=True, default=datetime.utcfromtimestamp(0), verbose_name='original registration date'),
+            model_name="eventticket",
+            name="creation_date",
+            field=models.DateTimeField(
+                auto_now_add=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="original registration date",
+            ),
             preserve_default=False,
         ),
     ]

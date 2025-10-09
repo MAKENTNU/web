@@ -6,20 +6,25 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('announcements', '0003_use_timezone_aware_default'),
+        ("announcements", "0003_use_timezone_aware_default"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='announcement',
-            name='content',
-            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='content'),
+            model_name="announcement",
+            name="content",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                verbose_name="content"
+            ),
         ),
         migrations.AlterField(
-            model_name='announcement',
-            name='link',
-            field=web.modelfields.URLTextField(blank=True, help_text='An optional link to an information page.', verbose_name='link'),
+            model_name="announcement",
+            name="link",
+            field=web.modelfields.URLTextField(
+                blank=True,
+                help_text="An optional link to an information page.",
+                verbose_name="link",
+            ),
         ),
     ]

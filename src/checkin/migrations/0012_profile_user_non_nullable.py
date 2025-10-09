@@ -6,22 +6,25 @@ import django.db.models.deletion
 
 
 def delete_profiles_without_user(apps, schema_editor):
-    Profile = apps.get_model('checkin', 'Profile')
+    Profile = apps.get_model("checkin", "Profile")
     Profile.objects.filter(user=None).delete()
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('checkin', '0011_alter_profile_and_skill_and_suggestskill_image_filename'),
+        ("checkin", "0011_alter_profile_and_skill_and_suggestskill_image_filename"),
     ]
 
     operations = [
         migrations.RunPython(delete_profiles_without_user, migrations.RunPython.noop),
         migrations.AlterField(
-            model_name='profile',
-            name='user',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, related_name='profile', to=settings.AUTH_USER_MODEL),
+            model_name="profile",
+            name="user",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="profile",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
     ]

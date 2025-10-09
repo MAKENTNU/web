@@ -10,7 +10,9 @@ class CompressedImageField(models.ImageField):
     """
 
     def formfield(self, **kwargs):
-        return super().formfield(**{
-            'form_class': formfields.CompressedImageField,
-            **kwargs,
-        })
+        return super().formfield(
+            **{
+                "form_class": formfields.CompressedImageField,
+                **kwargs,
+            }
+        )

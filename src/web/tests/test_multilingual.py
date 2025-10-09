@@ -12,10 +12,11 @@ from ..multilingual.modelfields import MultiLingualTextField
 # Ensure the settings are as expected by the tests below
 @override_settings(
     LANGUAGES=(
-            ('nb', "Norsk"),
-            ('en', "English"),
+        ("nb", "Norsk"),
+        ("en", "English"),
     ),
-    LANGUAGE_CODE='nb')
+    LANGUAGE_CODE="nb",
+)
 class TestMultiLingualTextStructure(TestCase):
     """
     Tests for the MultiLingualTextStructure class.
@@ -26,10 +27,12 @@ class TestMultiLingualTextStructure(TestCase):
         Tests if the constructor handles JSON correctly. That is, set the content of each language to the value
         given in the serialized JSON.
         """
-        content = json.dumps({
-            "nb": "test-nb",
-            "en": "test-en",
-        })
+        content = json.dumps(
+            {
+                "nb": "test-nb",
+                "en": "test-en",
+            }
+        )
         structure = MultiLingualTextStructure(content, use_default_for_empty=True)
         self.assertEqual(structure["nb"], "test-nb")
         self.assertEqual(structure["en"], "test-en")
@@ -56,10 +59,12 @@ class TestMultiLingualTextStructure(TestCase):
         Tests the ``__str__()`` method. It should return the value of the current language of the thread.
         """
         previous_language = translation.get_language()
-        content = json.dumps({
-            "nb": "test-nb",
-            "en": "test-en",
-        })
+        content = json.dumps(
+            {
+                "nb": "test-nb",
+                "en": "test-en",
+            }
+        )
         structure = MultiLingualTextStructure(content, use_default_for_empty=True)
 
         translation.activate("nb")
@@ -75,10 +80,12 @@ class TestMultiLingualTextStructure(TestCase):
         Tests if the builtin set item function is correctly overwritten, so that we can set the value of a language in
         the array syntax way.
         """
-        content = json.dumps({
-            "nb": "test-nb",
-            "en": "test-en",
-        })
+        content = json.dumps(
+            {
+                "nb": "test-nb",
+                "en": "test-en",
+            }
+        )
         structure = MultiLingualTextStructure(content, use_default_for_empty=True)
 
         self.assertEqual(structure["nb"], "test-nb")
@@ -100,21 +107,32 @@ class TestMultiLingualTextField(TestCase):
         or the object converted to ``MultiLingualTextStructure`` otherwise.
         """
         field = MultiLingualTextField()
-        self.assertEqual(None, field.to_python(None), "to_python of None should always return None.")
+        self.assertEqual(
+            None, field.to_python(None), "to_python of None should always return None."
+        )
 
-        content = json.dumps({
-            "nb": "test-nb",
-            "en": "test-en",
-        })
+        content = json.dumps(
+            {
+                "nb": "test-nb",
+                "en": "test-en",
+            }
+        )
 
         structure = MultiLingualTextStructure(content, use_default_for_empty=True)
-        self.assertEqual(structure, field.to_python(structure), "to_python of a MultiLingualTextStructure object should"
-                                                                " return the object. As this is already the correct "
-                                                                "representation.")
+        self.assertEqual(
+            structure,
+            field.to_python(structure),
+            "to_python of a MultiLingualTextStructure object should"
+            " return the object. As this is already the correct "
+            "representation.",
+        )
 
         result_from_string = field.to_python(content)
-        self.assertEqual(MultiLingualTextStructure, type(result_from_string),
-                         "to_python of a string should return the respective MultiLingualTextStructure object.")
+        self.assertEqual(
+            MultiLingualTextStructure,
+            type(result_from_string),
+            "to_python of a string should return the respective MultiLingualTextStructure object.",
+        )
         self.assertEqual("test-nb", result_from_string["nb"])
         self.assertEqual("test-en", result_from_string["en"])
 
@@ -124,18 +142,30 @@ class TestMultiLingualTextField(TestCase):
         ``MultiLingualTextStructure`` is given, or just the value otherwise.
         """
         field = MultiLingualTextField()
-        self.assertEqual(None, field.get_prep_value(None), "get_prep_value of None should always return None.")
+        self.assertEqual(
+            None,
+            field.get_prep_value(None),
+            "get_prep_value of None should always return None.",
+        )
 
         content = {
             "nb": "test-nb",
             "en": "test-en",
         }
-        structure = MultiLingualTextStructure(json.dumps(content), use_default_for_empty=True)
-        self.assertEqual(content, json.loads(field.get_prep_value(structure)),
-                         "get_prep_value of a MultiLingualTextStructure should return serialized json of its content.")
+        structure = MultiLingualTextStructure(
+            json.dumps(content), use_default_for_empty=True
+        )
+        self.assertEqual(
+            content,
+            json.loads(field.get_prep_value(structure)),
+            "get_prep_value of a MultiLingualTextStructure should return serialized json of its content.",
+        )
 
-        self.assertEqual("test", field.get_prep_value("test"),
-                         "get_prep_value should not do anything with other object types.")
+        self.assertEqual(
+            "test",
+            field.get_prep_value("test"),
+            "get_prep_value should not do anything with other object types.",
+        )
 
     def test_get_prep_value_does_not_escape_non_ascii_characters(self):
         # Demonstration of the earlier bug:
@@ -150,7 +180,9 @@ class TestMultiLingualTextField(TestCase):
             "nb": "Test æøå",
             "en": "Test ???",
         }
-        structure = MultiLingualTextStructure(json.dumps(content), use_default_for_empty=False)
+        structure = MultiLingualTextStructure(
+            json.dumps(content), use_default_for_empty=False
+        )
         self.assertIn('"nb": "Test æøå"', field.get_prep_value(structure))
 
     def test_from_db_value(self):
@@ -160,22 +192,33 @@ class TestMultiLingualTextField(TestCase):
         field = MultiLingualTextField()
 
         result_none = field.from_db_value(None, None, None)
-        self.assertEqual(MultiLingualTextStructure, type(result_none),
-                         "from_db_value should always be of type MultiLingualTextStructure")
+        self.assertEqual(
+            MultiLingualTextStructure,
+            type(result_none),
+            "from_db_value should always be of type MultiLingualTextStructure",
+        )
         self.assertEqual(str(result_none), "")
 
         result_string = field.from_db_value("test", None, None)
-        self.assertEqual(MultiLingualTextStructure, type(result_string),
-                         "from_db_value should always be of type MultiLingualTextStructure")
+        self.assertEqual(
+            MultiLingualTextStructure,
+            type(result_string),
+            "from_db_value should always be of type MultiLingualTextStructure",
+        )
         self.assertEqual(str(result_string), "test")
 
-        content = json.dumps({
-            "nb": "test-nb",
-            "en": "test-en",
-        })
+        content = json.dumps(
+            {
+                "nb": "test-nb",
+                "en": "test-en",
+            }
+        )
         result_json = field.from_db_value(content, None, None)
-        self.assertEqual(MultiLingualTextStructure, type(result_json),
-                         "from_db_value should always be of type MultiLingualTextStructure")
+        self.assertEqual(
+            MultiLingualTextStructure,
+            type(result_json),
+            "from_db_value should always be of type MultiLingualTextStructure",
+        )
         self.assertEqual(result_json["nb"], "test-nb")
         self.assertEqual(result_json["en"], "test-en")
 
@@ -204,5 +247,5 @@ class TestMultiLingualFormField(TestCase):
         form_field = MultiLingualFormField()
         compressed_data = form_field.compress(["test-nb", "test-en"])
         self.assertEqual(MultiLingualTextStructure, type(compressed_data))
-        self.assertEqual(compressed_data['nb'], "test-nb")
-        self.assertEqual(compressed_data['en'], "test-en")
+        self.assertEqual(compressed_data["nb"], "test-nb")
+        self.assertEqual(compressed_data["en"], "test-en")

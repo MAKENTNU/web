@@ -6,13 +6,20 @@ from django.db import migrations
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('users', '0002_rename_user_table'),
+        ("users", "0002_rename_user_table"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='user',
-            name='card_number',
-            field=card.modelfields.CardNumberField(blank=True, error_messages={'unique': 'Card number already in use'}, max_length=10, null=True, unique=True, verbose_name='card number'),
+            model_name="user",
+            name="card_number",
+            field=card.modelfields.CardNumberField(
+                blank=True,
+                error_messages={"unique": "Card number already in use"},
+                max_length=10,
+                null=True,
+                unique=True,
+                verbose_name="card number",
+            ),
         ),
     ]

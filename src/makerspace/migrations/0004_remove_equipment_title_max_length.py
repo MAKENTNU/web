@@ -5,15 +5,16 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('makerspace', '0003_equipment_priority'),
+        ("makerspace", "0003_equipment_priority"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='equipment',
-            name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='title'),
+            model_name="equipment",
+            name="title",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                unique=True, verbose_name="title"
+            ),
         ),
     ]

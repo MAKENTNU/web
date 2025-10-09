@@ -6,30 +6,35 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0017_use_datetime_instead_of_date_and_time'),
+        ("news", "0017_use_datetime_instead_of_date_and_time"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='newsbase',
-            name='clickbait',
-            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='clickbait'),
+            model_name="newsbase",
+            name="clickbait",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                verbose_name="clickbait"
+            ),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(verbose_name='title'),
+            model_name="newsbase",
+            name="title",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                verbose_name="title"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='place',
-            field=web.modelfields.UnlimitedCharField(blank=True, verbose_name='location'),
+            model_name="timeplace",
+            name="place",
+            field=web.modelfields.UnlimitedCharField(
+                blank=True, verbose_name="location"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='place_url',
-            field=web.modelfields.URLTextField(blank=True, verbose_name='location URL'),
+            model_name="timeplace",
+            name="place_url",
+            field=web.modelfields.URLTextField(blank=True, verbose_name="location URL"),
         ),
     ]
