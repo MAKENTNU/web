@@ -9,11 +9,12 @@ from ...models.machine import Machine, MachineType
 
 
 class TestReservationForm(TestCase):
-
     def setUp(self):
         # See the `0015_machinetype.py` migration for which MachineTypes are created by default
         printer_machine_type = MachineType.objects.get(pk=1)
-        self.machine = Machine.objects.create(name="Test", machine_model="Ultimaker 2+", machine_type=printer_machine_type)
+        self.machine = Machine.objects.create(
+            name="Test", machine_model="Ultimaker 2+", machine_type=printer_machine_type
+        )
         self.event = Event.objects.create(title="Test_Event")
         self.timeplace = TimePlace.objects.create(event=self.event)
 
@@ -35,8 +36,10 @@ class TestReservationForm(TestCase):
         }
 
         form = ReservationForm(data=form_data)
-        self.assertFalse(form.is_valid(),
-                         "Reservations should not be allowed for machines that do not exist")
+        self.assertFalse(
+            form.is_valid(),
+            "Reservations should not be allowed for machines that do not exist",
+        )
 
     def test_event_reservation(self):
         form_data = {

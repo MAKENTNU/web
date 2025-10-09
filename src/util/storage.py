@@ -44,19 +44,27 @@ class UploadToUtils:
     A collection of utility methods relating to the ``upload_to`` argument of ``FileField`` and subclasses.
     ``get_pk_prefixed_filename_func()`` is the main method intended for use by other apps.
     """
+
     REPLACEABLE_TOKEN_START = "--replacedByPK"
     REPLACEABLE_TOKEN_MIDDLE_NUM_BYTES = 4
-    REPLACEABLE_TOKEN_END = REPLACEABLE_TOKEN_START[::-1]  # Reverse the start part of the token
-    REPLACEABLE_TOKEN_REGEX = re.compile(rf"({REPLACEABLE_TOKEN_START}-[0-9a-f]+-{REPLACEABLE_TOKEN_END})")
+    # Reverse the start part of the token
+    REPLACEABLE_TOKEN_END = REPLACEABLE_TOKEN_START[::-1]
+    REPLACEABLE_TOKEN_REGEX = re.compile(
+        rf"({REPLACEABLE_TOKEN_START}-[0-9a-f]+-{REPLACEABLE_TOKEN_END})"
+    )
 
     @classmethod
     def generate_replaceable_token(cls):
         # Produces the same characters as matched by the middle part of the token regex
         token_middle = secrets.token_hex(cls.REPLACEABLE_TOKEN_MIDDLE_NUM_BYTES)
-        return f"{cls.REPLACEABLE_TOKEN_START}-{token_middle}-{cls.REPLACEABLE_TOKEN_END}"
+        return (
+            f"{cls.REPLACEABLE_TOKEN_START}-{token_middle}-{cls.REPLACEABLE_TOKEN_END}"
+        )
 
     @classmethod
-    def get_pk_prefixed_filename_func(cls, upload_to: str | Callable[[models.Model, str], str]):
+    def get_pk_prefixed_filename_func(
+        cls, upload_to: str | Callable[[models.Model, str], str]
+    ):
         """
         Prefixes filenames with the PK (primary key) of each instance.
         When saving a newly created instance (which has no PK), the filename is instead prefixed with a token,
@@ -74,7 +82,13 @@ class UploadToUtils:
         return partial(cls._actual_upload_to, upload_to=upload_to)
 
     @classmethod
-    def _actual_upload_to(cls, instance: models.Model, filename: str, *, upload_to: str | Callable[[models.Model, str], str]):
+    def _actual_upload_to(
+        cls,
+        instance: models.Model,
+        filename: str,
+        *,
+        upload_to: str | Callable[[models.Model, str], str],
+    ):
         """This method should only be used by ``get_pk_prefixed_filename_func()``; do not use this method directly."""
         if isinstance(upload_to, str):
             base_path = PurePosixPath(upload_to) / filename
@@ -83,7 +97,9 @@ class UploadToUtils:
         base_filename = base_path.name
         # Remove token if the filename already contains it (for whatever reason)
         if cls.REPLACEABLE_TOKEN_REGEX.search(base_filename):
-            first_part, _token, last_part = cls.REPLACEABLE_TOKEN_REGEX.split(base_filename)
+            first_part, _token, last_part = cls.REPLACEABLE_TOKEN_REGEX.split(
+                base_filename
+            )
             base_filename = f"{first_part}{last_part}"
         # Remove the PK prefix if the filename already has it
         if instance.pk:
@@ -94,7 +110,14 @@ class UploadToUtils:
         return str(prefixed_filename_path)
 
     @classmethod
-    def rename_files_of_created_instances(cls, instance: models.Model, created, raw, update_fields: Collection | None, **kwargs):
+    def rename_files_of_created_instances(
+        cls,
+        instance: models.Model,
+        created,
+        raw,
+        update_fields: Collection | None,
+        **kwargs,
+    ):
         """
         This signal receiver renames the files belonging to ``FileField``s (or subclasses) of model instances when they're created,
         if the filename matches the token regex used by ``get_pk_prefixed_filename_func()``.
@@ -104,8 +127,9 @@ class UploadToUtils:
 
         for field in instance._meta.fields:
             # `update_fields` having a value of `None` means that all the fields should be updated
-            if (update_fields is not None and field.name not in update_fields
-                    or not isinstance(field, models.FileField)):
+            if (
+                update_fields is not None and field.name not in update_fields
+            ) or not isinstance(field, models.FileField):
                 continue
 
             field_value: FieldFile = getattr(instance, field.name)

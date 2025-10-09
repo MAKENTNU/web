@@ -5,7 +5,6 @@ from ..templatetags.html_tags import anchor_tag, urlize_target_blank
 
 # noinspection HttpUrlsUsage
 class HtmlTagTests(SimpleTestCase):
-
     def test__urlize_target_blank__returns_expected_html(self):
         urls_to_expected_html = {
             "": "",
@@ -24,9 +23,21 @@ class HtmlTagTests(SimpleTestCase):
     def test__anchor_tag__returns_expected_html(self):
         self.assertHTMLEqual(anchor_tag("", ""), '<a target="_blank" href=""></a>')
         self.assertHTMLEqual(anchor_tag("", "", target_blank=False), '<a href=""></a>')
-        self.assertHTMLEqual(anchor_tag("asdf", "asdf"), '<a target="_blank" href="asdf">asdf</a>')
-        self.assertHTMLEqual(anchor_tag("asdf", "asdf", target_blank=False), '<a href="asdf">asdf</a>')
-        self.assertHTMLEqual(anchor_tag("example.com", "example.com"), '<a target="_blank" href="example.com">example.com</a>')
-        self.assertHTMLEqual(anchor_tag("https://example.com/", "example.com"), '<a target="_blank" href="https://example.com/">example.com</a>')
-        self.assertHTMLEqual(anchor_tag("mailto:dev@makentnu.no", "dev@makentnu.no"),
-                             '<a target="_blank" href="mailto:dev@makentnu.no">dev@makentnu.no</a>')
+        self.assertHTMLEqual(
+            anchor_tag("asdf", "asdf"), '<a target="_blank" href="asdf">asdf</a>'
+        )
+        self.assertHTMLEqual(
+            anchor_tag("asdf", "asdf", target_blank=False), '<a href="asdf">asdf</a>'
+        )
+        self.assertHTMLEqual(
+            anchor_tag("example.com", "example.com"),
+            '<a target="_blank" href="example.com">example.com</a>',
+        )
+        self.assertHTMLEqual(
+            anchor_tag("https://example.com/", "example.com"),
+            '<a target="_blank" href="https://example.com/">example.com</a>',
+        )
+        self.assertHTMLEqual(
+            anchor_tag("mailto:dev@makentnu.no", "dev@makentnu.no"),
+            '<a target="_blank" href="mailto:dev@makentnu.no">dev@makentnu.no</a>',
+        )

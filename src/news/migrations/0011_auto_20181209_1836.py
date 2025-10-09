@@ -5,25 +5,28 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0010_auto_20181013_1418'),
+        ("news", "0010_auto_20181013_1418"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='newsbase',
-            name='clickbait',
-            field=web.multilingual.modelfields.MultiLingualTextField(blank=True, max_length=300, verbose_name='clickbait'),
+            model_name="newsbase",
+            name="clickbait",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                blank=True, max_length=300, verbose_name="clickbait"
+            ),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='content',
+            model_name="newsbase",
+            name="content",
             field=web.multilingual.modelfields.MultiLingualRichTextUploadingField(),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='title',
-            field=web.multilingual.modelfields.MultiLingualTextField(max_length=100, verbose_name='title'),
+            model_name="newsbase",
+            name="title",
+            field=web.multilingual.modelfields.MultiLingualTextField(
+                max_length=100, verbose_name="title"
+            ),
         ),
     ]

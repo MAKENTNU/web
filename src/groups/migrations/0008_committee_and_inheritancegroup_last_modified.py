@@ -5,22 +5,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('groups', '0007_add_related_and_verbose_names'),
+        ("groups", "0007_add_related_and_verbose_names"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='committee',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="committee",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='inheritancegroup',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="inheritancegroup",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
     ]

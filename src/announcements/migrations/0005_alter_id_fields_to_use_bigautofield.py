@@ -4,15 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('announcements', '0004_remove_announcement_fields_max_length_and_null'),
+        ("announcements", "0004_remove_announcement_fields_max_length_and_null"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='announcement',
-            name='id',
-            field=models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID'),
+            model_name="announcement",
+            name="id",
+            field=models.BigAutoField(
+                auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+            ),
         ),
     ]

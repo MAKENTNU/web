@@ -5,22 +5,29 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0011_secret_priority'),
+        ("internal", "0011_secret_priority"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='member',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="member",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='systemaccess',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="systemaccess",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
     ]

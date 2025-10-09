@@ -5,35 +5,71 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Category',
+            name="Category",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='category')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        unique=True, verbose_name="category"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'category',
-                'verbose_name_plural': 'categories',
+                "verbose_name": "category",
+                "verbose_name_plural": "categories",
             },
         ),
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', web.multilingual.modelfields.MultiLingualTextField(unique=True, verbose_name='question')),
-                ('answer', web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='answer')),
-                ('categories', models.ManyToManyField(related_name='questions', to='faq.Category', verbose_name='categories')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    web.multilingual.modelfields.MultiLingualTextField(
+                        unique=True, verbose_name="question"
+                    ),
+                ),
+                (
+                    "answer",
+                    web.multilingual.modelfields.MultiLingualRichTextUploadingField(
+                        verbose_name="answer"
+                    ),
+                ),
+                (
+                    "categories",
+                    models.ManyToManyField(
+                        related_name="questions",
+                        to="faq.Category",
+                        verbose_name="categories",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'question',
-                'verbose_name_plural': 'questions',
+                "verbose_name": "question",
+                "verbose_name_plural": "questions",
             },
         ),
     ]

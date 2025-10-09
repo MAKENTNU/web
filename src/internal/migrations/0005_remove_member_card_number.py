@@ -7,7 +7,7 @@ def update_user_card_from_member(apps, schema_editor):
     """
     Set user card number from member card number
     """
-    Member = apps.get_model('internal', 'Member')
+    Member = apps.get_model("internal", "Member")
     db_alias = schema_editor.connection.alias
 
     for member in Member.objects.using(db_alias).all():
@@ -20,7 +20,7 @@ def reverse_update_user_card_from_member(apps, schema_editor):
     """
     Reverse setting of card number on user
     """
-    Member = apps.get_model('internal', 'Member')
+    Member = apps.get_model("internal", "Member")
     db_alias = schema_editor.connection.alias
 
     for member in Member.objects.using(db_alias).all():
@@ -31,14 +31,16 @@ def reverse_update_user_card_from_member(apps, schema_editor):
 
 class Migration(migrations.Migration):
     dependencies = [
-        ('internal', '0004_member_phone_number_field'),
-        ('users', '0003_user_card_number'),
+        ("internal", "0004_member_phone_number_field"),
+        ("users", "0003_user_card_number"),
     ]
 
     operations = [
-        migrations.RunPython(update_user_card_from_member, reverse_update_user_card_from_member),
+        migrations.RunPython(
+            update_user_card_from_member, reverse_update_user_card_from_member
+        ),
         migrations.RemoveField(
-            model_name='member',
-            name='card_number',
+            model_name="member",
+            name="card_number",
         ),
     ]

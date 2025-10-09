@@ -6,35 +6,40 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('groups', '0002_committee'),
+        ("groups", "0002_committee"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='committee',
-            name='clickbait',
-            field=models.TextField(blank=True, max_length=300, verbose_name='clickbait'),
+            model_name="committee",
+            name="clickbait",
+            field=models.TextField(
+                blank=True, max_length=300, verbose_name="clickbait"
+            ),
         ),
         migrations.AlterField(
-            model_name='committee',
-            name='description',
-            field=ckeditor.fields.RichTextField(verbose_name='description'),
+            model_name="committee",
+            name="description",
+            field=ckeditor.fields.RichTextField(verbose_name="description"),
         ),
         migrations.AlterField(
-            model_name='committee',
-            name='email',
-            field=models.EmailField(max_length=254, verbose_name='email'),
+            model_name="committee",
+            name="email",
+            field=models.EmailField(max_length=254, verbose_name="email"),
         ),
         migrations.AlterField(
-            model_name='committee',
-            name='group',
-            field=models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='groups.InheritanceGroup', verbose_name='group'),
+            model_name="committee",
+            name="group",
+            field=models.OneToOneField(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="groups.InheritanceGroup",
+                verbose_name="group",
+            ),
         ),
         migrations.AlterField(
-            model_name='committee',
-            name='image',
-            field=models.ImageField(blank=True, upload_to='', verbose_name='image'),
+            model_name="committee",
+            name="image",
+            field=models.ImageField(blank=True, upload_to="", verbose_name="image"),
         ),
     ]

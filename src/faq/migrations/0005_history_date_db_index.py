@@ -4,19 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('faq', '0004_historicalquestion'),
+        ("faq", "0004_historicalquestion"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='historicalquestion',
-            options={'get_latest_by': ('history_date', 'history_id'), 'ordering': ('-history_date', '-history_id'), 'verbose_name': 'historical question', 'verbose_name_plural': 'historical questions'},
+            name="historicalquestion",
+            options={
+                "get_latest_by": ("history_date", "history_id"),
+                "ordering": ("-history_date", "-history_id"),
+                "verbose_name": "historical question",
+                "verbose_name_plural": "historical questions",
+            },
         ),
         migrations.AlterField(
-            model_name='historicalquestion',
-            name='history_date',
+            model_name="historicalquestion",
+            name="history_date",
             field=models.DateTimeField(db_index=True),
         ),
     ]

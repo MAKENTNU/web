@@ -9,28 +9,27 @@ from ..models import Committee, InheritanceGroup
 
 
 class PermGroupTestCase(TestCase):
-
     def setUp(self):
-        org = InheritanceGroup.objects.create(name='Org')
-        mentor = InheritanceGroup.objects.create(name='Mentor')
+        org = InheritanceGroup.objects.create(name="Org")
+        mentor = InheritanceGroup.objects.create(name="Mentor")
         mentor.parents.add(org)
-        dev = InheritanceGroup.objects.create(name='Dev')
+        dev = InheritanceGroup.objects.create(name="Dev")
         dev.parents.add(org)
-        arr = InheritanceGroup.objects.create(name='Arrangement')
+        arr = InheritanceGroup.objects.create(name="Arrangement")
         arr.parents.add(org)
-        InheritanceGroup.objects.create(name='Leder').parents.add(mentor, dev, arr)
+        InheritanceGroup.objects.create(name="Leder").parents.add(mentor, dev, arr)
 
         for i in range(5):
             Permission.objects.create(
-                codename=f'perm{i}',
-                name=f'Perm {i}',
+                codename=f"perm{i}",
+                name=f"Perm {i}",
                 content_type=ContentType.objects.get_for_model(Article),
             )
 
     def test_update_single_parent(self):
-        org = InheritanceGroup.objects.get(name='Org')
-        dev = InheritanceGroup.objects.get(name='Dev')
-        perm1 = Permission.objects.get(codename='perm1')
+        org = InheritanceGroup.objects.get(name="Org")
+        dev = InheritanceGroup.objects.get(name="Dev")
+        perm1 = Permission.objects.get(codename="perm1")
 
         org.own_permissions.add(perm1)
 
@@ -53,15 +52,15 @@ class PermGroupTestCase(TestCase):
         self.assertNotIn(perm1, dev.permissions.all())
 
     def test_update_multiple_parents(self):
-        org = InheritanceGroup.objects.get(name='Org')
-        dev = InheritanceGroup.objects.get(name='Dev')
-        mentor = InheritanceGroup.objects.get(name='Mentor')
-        leder = InheritanceGroup.objects.get(name='Leder')
+        org = InheritanceGroup.objects.get(name="Org")
+        dev = InheritanceGroup.objects.get(name="Dev")
+        mentor = InheritanceGroup.objects.get(name="Mentor")
+        leder = InheritanceGroup.objects.get(name="Leder")
 
-        perm1 = Permission.objects.get(codename='perm1')
-        perm2 = Permission.objects.get(codename='perm2')
-        perm3 = Permission.objects.get(codename='perm3')
-        perm4 = Permission.objects.get(codename='perm4')
+        perm1 = Permission.objects.get(codename="perm1")
+        perm2 = Permission.objects.get(codename="perm2")
+        perm3 = Permission.objects.get(codename="perm3")
+        perm4 = Permission.objects.get(codename="perm4")
 
         org.own_permissions.add(perm1)
         dev.own_permissions.add(perm2)
@@ -103,15 +102,15 @@ class PermGroupTestCase(TestCase):
         self.assertNotIn(perm1, leder.permissions.all())
 
     def test_add_group(self):
-        org = InheritanceGroup.objects.get(name='Org')
-        dev = InheritanceGroup.objects.get(name='Dev')
-        perm1 = Permission.objects.get(codename='perm1')
-        perm2 = Permission.objects.get(codename='perm2')
+        org = InheritanceGroup.objects.get(name="Org")
+        dev = InheritanceGroup.objects.get(name="Dev")
+        perm1 = Permission.objects.get(codename="perm1")
+        perm2 = Permission.objects.get(codename="perm2")
 
         org.own_permissions.add(perm1)
         dev.own_permissions.add(perm2)
 
-        new_group = InheritanceGroup.objects.create(name='new-group')
+        new_group = InheritanceGroup.objects.create(name="new-group")
         new_group.parents.add(dev)
 
         self.assertIn(perm1, new_group.permissions.all())
@@ -120,16 +119,16 @@ class PermGroupTestCase(TestCase):
     def test_user(self):
         user_model = User
 
-        org = InheritanceGroup.objects.get(name='Org')
-        dev = InheritanceGroup.objects.get(name='Dev')
-        perm1 = Permission.objects.get(codename='perm1')
-        perm2 = Permission.objects.get(codename='perm2')
+        org = InheritanceGroup.objects.get(name="Org")
+        dev = InheritanceGroup.objects.get(name="Dev")
+        perm1 = Permission.objects.get(codename="perm1")
+        perm2 = Permission.objects.get(codename="perm2")
         perm1_str = perm_to_str(perm1)
         perm2_str = perm_to_str(perm2)
         org.own_permissions.add(perm1)
 
-        user1 = user_model.objects.create_user('Test1', 'test1@test.com', '1234')
-        user2 = user_model.objects.create_user('Test2', 'test2@test.com', '1234')
+        user1 = user_model.objects.create_user("Test1", "test1@test.com", "1234")
+        user2 = user_model.objects.create_user("Test2", "test2@test.com", "1234")
 
         user1.groups.add(org)
         user2.groups.add(dev)
@@ -140,10 +139,10 @@ class PermGroupTestCase(TestCase):
         self.assertTrue(user2.has_perm(perm2_str))
 
     def test_get_all_children(self):
-        org = InheritanceGroup.objects.get(name='Org')
-        arr = InheritanceGroup.objects.get(name='Arrangement')
-        dev = InheritanceGroup.objects.get(name='Dev')
-        web = InheritanceGroup.objects.create(name='Web')
+        org = InheritanceGroup.objects.get(name="Org")
+        arr = InheritanceGroup.objects.get(name="Arrangement")
+        dev = InheritanceGroup.objects.get(name="Dev")
+        web = InheritanceGroup.objects.create(name="Web")
         web.parents.add(dev)
 
         self.assertIn(dev, org.get_all_children())
@@ -154,10 +153,10 @@ class PermGroupTestCase(TestCase):
         self.assertNotIn(dev, arr.get_all_children())
 
     def test_get_all_parents(self):
-        org = InheritanceGroup.objects.get(name='Org')
-        arr = InheritanceGroup.objects.get(name='Arrangement')
-        dev = InheritanceGroup.objects.get(name='Dev')
-        web = InheritanceGroup.objects.create(name='Web')
+        org = InheritanceGroup.objects.get(name="Org")
+        arr = InheritanceGroup.objects.get(name="Arrangement")
+        dev = InheritanceGroup.objects.get(name="Dev")
+        web = InheritanceGroup.objects.create(name="Web")
         web.parents.add(dev)
 
         self.assertIn(dev, web.get_all_parents())
@@ -166,13 +165,13 @@ class PermGroupTestCase(TestCase):
         self.assertNotIn(web, arr.get_all_parents())
 
     def test_get_available_parents(self):
-        org = InheritanceGroup.objects.get(name='Org')
-        arr = InheritanceGroup.objects.get(name='Arrangement')
-        mentor = InheritanceGroup.objects.get(name='Mentor')
-        dev = InheritanceGroup.objects.get(name='Dev')
-        web = InheritanceGroup.objects.create(name='Web')
+        org = InheritanceGroup.objects.get(name="Org")
+        arr = InheritanceGroup.objects.get(name="Arrangement")
+        mentor = InheritanceGroup.objects.get(name="Mentor")
+        dev = InheritanceGroup.objects.get(name="Dev")
+        web = InheritanceGroup.objects.create(name="Web")
         web.parents.add(dev)
-        misc = InheritanceGroup.objects.create(name='Misc')
+        misc = InheritanceGroup.objects.create(name="Misc")
 
         self.assertEqual(org.get_available_parents().count(), 1)
         self.assertIn(misc, org.get_available_parents().all())
@@ -187,7 +186,7 @@ class PermGroupTestCase(TestCase):
         self.assertEqual(misc.get_available_parents().count(), 6)
 
     def test_inherited_permissions(self):
-        dev = InheritanceGroup.objects.get(name='Dev')
+        dev = InheritanceGroup.objects.get(name="Dev")
         permissions = dev.permissions.all()
         own_permissions = dev.own_permissions.all()
         inherited_permissions = dev.inherited_permissions
@@ -199,22 +198,21 @@ class PermGroupTestCase(TestCase):
 
 
 class CommitteeTestCase(TestCase):
-
     def setUp(self):
-        org = InheritanceGroup.objects.create(name='Org')
-        mentor = InheritanceGroup.objects.create(name='Mentor')
+        org = InheritanceGroup.objects.create(name="Org")
+        mentor = InheritanceGroup.objects.create(name="Mentor")
         mentor.parents.add(org)
-        dev = InheritanceGroup.objects.create(name='Dev')
+        dev = InheritanceGroup.objects.create(name="Dev")
         dev.parents.add(org)
-        arr = InheritanceGroup.objects.create(name='Arrangement')
+        arr = InheritanceGroup.objects.create(name="Arrangement")
         arr.parents.add(org)
-        InheritanceGroup.objects.create(name='Leder').parents.add(mentor, dev, arr)
+        InheritanceGroup.objects.create(name="Leder").parents.add(mentor, dev, arr)
 
     def test_name(self):
         dev = Committee.objects.create(
-            group=InheritanceGroup.objects.get(name='Dev'),
-            description='Website and stuff',
-            email='dev@makentnu.no',
+            group=InheritanceGroup.objects.get(name="Dev"),
+            description="Website and stuff",
+            email="dev@makentnu.no",
         )
-        self.assertEqual(dev.name, 'Dev')
-        self.assertEqual(str(dev), 'Dev')
+        self.assertEqual(dev.name, "Dev")
+        self.assertEqual(str(dev), "Dev")

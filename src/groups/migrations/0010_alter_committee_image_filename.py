@@ -9,8 +9,8 @@ import util.storage
 
 
 def move_committee_images(apps, schema_editor):
-    Committee = apps.get_model('groups', 'Committee')
-    image_field = Committee._meta.get_field('image')
+    Committee = apps.get_model("groups", "Committee")
+    image_field = Committee._meta.get_field("image")
     old_paths_renamed_to_new_paths = {}
     try:
         for committee in Committee.objects.all():
@@ -23,7 +23,9 @@ def move_committee_images(apps, schema_editor):
                 continue
             else:
                 # Ensure that the name is available
-                new_name = image_field.storage.get_available_name(new_name, max_length=image_field.max_length)
+                new_name = image_field.storage.get_available_name(
+                    new_name, max_length=image_field.max_length
+                )
             old_path = committee.image.path
             new_path = settings.MEDIA_ROOT / new_name
             new_upload_dir = new_path.parent
@@ -39,7 +41,7 @@ def move_committee_images(apps, schema_editor):
             else:
                 old_paths_renamed_to_new_paths[old_path] = new_path
             committee.image.name = new_name
-            committee.save(update_fields=['image'])
+            committee.save(update_fields=["image"])
     except Exception as e:
         for old_path, new_path in old_paths_renamed_to_new_paths.items():
             try:
@@ -50,21 +52,30 @@ def move_committee_images(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('groups', '0009_historicalcommittee'),
+        ("groups", "0009_historicalcommittee"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='committee',
-            name='image',
-            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'committees'}), verbose_name='image'),
+            model_name="committee",
+            name="image",
+            field=util.modelfields.CompressedImageField(
+                blank=True,
+                max_length=200,
+                storage=util.storage.OverwriteStorage(),
+                upload_to=functools.partial(
+                    util.storage.UploadToUtils._actual_upload_to,
+                    *(),
+                    **{"upload_to": "committees"},
+                ),
+                verbose_name="image",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcommittee',
-            name='image',
-            field=models.CharField(blank=True, max_length=200, verbose_name='image'),
+            model_name="historicalcommittee",
+            name="image",
+            field=models.CharField(blank=True, max_length=200, verbose_name="image"),
         ),
         migrations.RunPython(move_committee_images, migrations.RunPython.noop),
     ]

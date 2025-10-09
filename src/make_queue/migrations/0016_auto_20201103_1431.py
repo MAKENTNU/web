@@ -6,24 +6,28 @@ import web.multilingual.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0015_machinetype'),
+        ("make_queue", "0015_machinetype"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='machinetype',
-            options={'ordering': ('priority',)},
+            name="machinetype",
+            options={"ordering": ("priority",)},
         ),
         migrations.AlterField(
-            model_name='machinetype',
-            name='name',
+            model_name="machinetype",
+            name="name",
             field=web.multilingual.modelfields.MultiLingualTextField(unique=True),
         ),
         migrations.AlterField(
-            model_name='quota',
-            name='machine_type',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='quotas', to='make_queue.MachineType', verbose_name='machine type'),
+            model_name="quota",
+            name="machine_type",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="quotas",
+                to="make_queue.MachineType",
+                verbose_name="machine type",
+            ),
         ),
     ]

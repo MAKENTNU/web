@@ -6,100 +6,119 @@ import django.utils.timezone
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0006_auto_20180405_1153'),
+        ("news", "0006_auto_20180405_1153"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='article',
-            name='pub_date',
-            field=models.DateField(default=django.utils.timezone.now, verbose_name='publishing date'),
+            model_name="article",
+            name="pub_date",
+            field=models.DateField(
+                default=django.utils.timezone.now, verbose_name="publishing date"
+            ),
         ),
         migrations.AlterField(
-            model_name='article',
-            name='pub_time',
-            field=models.TimeField(default=datetime.time(0, 0), verbose_name='publication time'),
+            model_name="article",
+            name="pub_time",
+            field=models.TimeField(
+                default=datetime.time(0, 0), verbose_name="publication time"
+            ),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='multiday',
-            field=models.BooleanField(default=False, verbose_name='one registration'),
+            model_name="event",
+            name="multiday",
+            field=models.BooleanField(default=False, verbose_name="one registration"),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='contain',
-            field=models.BooleanField(default=False, verbose_name="don't crop the image"),
+            model_name="newsbase",
+            name="contain",
+            field=models.BooleanField(
+                default=False, verbose_name="don't crop the image"
+            ),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='featured',
-            field=models.BooleanField(default=True, verbose_name='featured'),
+            model_name="newsbase",
+            name="featured",
+            field=models.BooleanField(default=True, verbose_name="featured"),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='hidden',
-            field=models.BooleanField(default=False, verbose_name='hidden'),
+            model_name="newsbase",
+            name="hidden",
+            field=models.BooleanField(default=False, verbose_name="hidden"),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='image',
-            field=models.ImageField(upload_to='', verbose_name='image'),
+            model_name="newsbase",
+            name="image",
+            field=models.ImageField(upload_to="", verbose_name="image"),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='private',
-            field=models.BooleanField(default=False, verbose_name='internal'),
+            model_name="newsbase",
+            name="private",
+            field=models.BooleanField(default=False, verbose_name="internal"),
         ),
         migrations.AlterField(
-            model_name='newsbase',
-            name='title',
-            field=models.CharField(max_length=100, verbose_name='title'),
+            model_name="newsbase",
+            name="title",
+            field=models.CharField(max_length=100, verbose_name="title"),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='end_date',
-            field=models.DateField(blank=True, null=True, verbose_name='end date'),
+            model_name="timeplace",
+            name="end_date",
+            field=models.DateField(blank=True, null=True, verbose_name="end date"),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='end_time',
-            field=models.TimeField(blank=True, null=True, verbose_name='end time'),
+            model_name="timeplace",
+            name="end_time",
+            field=models.TimeField(blank=True, null=True, verbose_name="end time"),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='hidden',
-            field=models.BooleanField(default=False, help_text='If selected, the occurrence will be hidden, even after the publication date.', verbose_name='hidden'),
+            model_name="timeplace",
+            name="hidden",
+            field=models.BooleanField(
+                default=False,
+                help_text="If selected, the occurrence will be hidden, even after the publication date.",
+                verbose_name="hidden",
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='place',
-            field=models.CharField(blank=True, max_length=100, verbose_name='location'),
+            model_name="timeplace",
+            name="place",
+            field=models.CharField(blank=True, max_length=100, verbose_name="location"),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='place_url',
-            field=models.CharField(blank=True, max_length=200, verbose_name='location URL'),
+            model_name="timeplace",
+            name="place_url",
+            field=models.CharField(
+                blank=True, max_length=200, verbose_name="location URL"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='pub_date',
-            field=models.DateField(default=django.utils.timezone.now, verbose_name='publishing date'),
+            model_name="timeplace",
+            name="pub_date",
+            field=models.DateField(
+                default=django.utils.timezone.now, verbose_name="publishing date"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='pub_time',
-            field=models.TimeField(default=datetime.time(0, 0), verbose_name='publication time'),
+            model_name="timeplace",
+            name="pub_time",
+            field=models.TimeField(
+                default=datetime.time(0, 0), verbose_name="publication time"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='start_date',
-            field=models.DateField(default=django.utils.timezone.now, verbose_name='start date'),
+            model_name="timeplace",
+            name="start_date",
+            field=models.DateField(
+                default=django.utils.timezone.now, verbose_name="start date"
+            ),
         ),
         migrations.AlterField(
-            model_name='timeplace',
-            name='start_time',
-            field=models.TimeField(default=datetime.time(0, 0), verbose_name='start time'),
+            model_name="timeplace",
+            name="start_time",
+            field=models.TimeField(
+                default=datetime.time(0, 0), verbose_name="start time"
+            ),
         ),
     ]

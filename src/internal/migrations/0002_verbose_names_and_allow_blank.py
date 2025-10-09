@@ -7,94 +7,114 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0001_initial'),
+        ("internal", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='member',
-            name='honorary_member',
+            model_name="member",
+            name="honorary_member",
         ),
         migrations.AddField(
-            model_name='member',
-            name='honorary',
-            field=models.BooleanField(default=False, verbose_name='honorary'),
+            model_name="member",
+            name="honorary",
+            field=models.BooleanField(default=False, verbose_name="honorary"),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='active',
-            field=models.BooleanField(default=True, verbose_name='is active'),
+            model_name="member",
+            name="active",
+            field=models.BooleanField(default=True, verbose_name="is active"),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='card_number',
-            field=models.CharField(blank=True, default='', max_length=32, verbose_name='card number (EM)'),
+            model_name="member",
+            name="card_number",
+            field=models.CharField(
+                blank=True, default="", max_length=32, verbose_name="card number (EM)"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='comment',
-            field=models.TextField(blank=True, default='', max_length=256, verbose_name='comment'),
+            model_name="member",
+            name="comment",
+            field=models.TextField(
+                blank=True, default="", max_length=256, verbose_name="comment"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='committees',
-            field=models.ManyToManyField(blank=True, to='groups.Committee', verbose_name='committees'),
+            model_name="member",
+            name="committees",
+            field=models.ManyToManyField(
+                blank=True, to="groups.Committee", verbose_name="committees"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='date_joined',
-            field=models.DateField(default=datetime.datetime.now, verbose_name='date joined'),
+            model_name="member",
+            name="date_joined",
+            field=models.DateField(
+                default=datetime.datetime.now, verbose_name="date joined"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='date_quit',
-            field=models.DateField(blank=True, null=True, verbose_name='date quit'),
+            model_name="member",
+            name="date_quit",
+            field=models.DateField(blank=True, null=True, verbose_name="date quit"),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='email',
-            field=models.EmailField(blank=True, max_length=254, null=True, verbose_name='contact email'),
+            model_name="member",
+            name="email",
+            field=models.EmailField(
+                blank=True, max_length=254, null=True, verbose_name="contact email"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='guidance_exemption',
-            field=models.BooleanField(default=False, verbose_name='guidance exemption'),
+            model_name="member",
+            name="guidance_exemption",
+            field=models.BooleanField(default=False, verbose_name="guidance exemption"),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='phone_number',
-            field=models.CharField(blank=True, default='', max_length=32, verbose_name='phone number'),
+            model_name="member",
+            name="phone_number",
+            field=models.CharField(
+                blank=True, default="", max_length=32, verbose_name="phone number"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='quit',
-            field=models.BooleanField(default=False, verbose_name='has quit'),
+            model_name="member",
+            name="quit",
+            field=models.BooleanField(default=False, verbose_name="has quit"),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='reason_quit',
-            field=models.TextField(blank=True, default='', max_length=256, verbose_name='reason quit'),
+            model_name="member",
+            name="reason_quit",
+            field=models.TextField(
+                blank=True, default="", max_length=256, verbose_name="reason quit"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='retired',
-            field=models.BooleanField(default=False, verbose_name='retired'),
+            model_name="member",
+            name="retired",
+            field=models.BooleanField(default=False, verbose_name="retired"),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='role',
-            field=models.CharField(blank=True, max_length=64, verbose_name='role'),
+            model_name="member",
+            name="role",
+            field=models.CharField(blank=True, max_length=64, verbose_name="role"),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='study_program',
-            field=models.CharField(blank=True, default='', max_length=32, verbose_name='study program'),
+            model_name="member",
+            name="study_program",
+            field=models.CharField(
+                blank=True, default="", max_length=32, verbose_name="study program"
+            ),
         ),
         migrations.AlterField(
-            model_name='member',
-            name='user',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.DO_NOTHING, to=settings.AUTH_USER_MODEL, verbose_name='user'),
+            model_name="member",
+            name="user",
+            field=models.OneToOneField(
+                null=True,
+                on_delete=django.db.models.deletion.DO_NOTHING,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="user",
+            ),
         ),
     ]

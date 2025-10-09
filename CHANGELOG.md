@@ -50,6 +50,8 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
     - Several of the standard `pre-commit-hooks` and `meta` hooks
     - `validate-pyproject`
     - `yamllint`
+    - `ruff-format`
+- Formatted all Python code with Ruff (MAKENTNU/web#778)
 
 
 ## 2025-05-03 (MAKENTNU/web#757)

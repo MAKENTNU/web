@@ -7,10 +7,12 @@ import web.multilingual.modelfields
 def merge_content_box_fields(apps, schema_editor):
     ContentBox = apps.get_model("contentbox", "ContentBox")
     for content_box in ContentBox.objects.all():
-        content_box.content = json.dumps({
-            "nb": content_box.content,
-            "en": content_box.content_en,
-        })
+        content_box.content = json.dumps(
+            {
+                "nb": content_box.content,
+                "en": content_box.content_en,
+            }
+        )
         content_box.save()
 
 
@@ -24,20 +26,23 @@ def reverse_merge_content_box_fields(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0004_contentbox_content_en'),
+        ("contentbox", "0004_contentbox_content_en"),
     ]
 
     operations = [
-        migrations.RunPython(merge_content_box_fields, reverse_merge_content_box_fields),
+        migrations.RunPython(
+            merge_content_box_fields, reverse_merge_content_box_fields
+        ),
         migrations.RemoveField(
-            model_name='contentbox',
-            name='content_en',
+            model_name="contentbox",
+            name="content_en",
         ),
         migrations.AlterField(
-            model_name='contentbox',
-            name='content',
-            field=web.multilingual.modelfields.MultiLingualRichTextUploadingField(verbose_name='content'),
+            model_name="contentbox",
+            name="content",
+            field=web.multilingual.modelfields.MultiLingualRichTextUploadingField(
+                verbose_name="content"
+            ),
         ),
     ]

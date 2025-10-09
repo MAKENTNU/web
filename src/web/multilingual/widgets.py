@@ -11,31 +11,39 @@ class MultiLingualTextEdit(forms.MultiWidget):
     """
     A multi-widget for multilingual fields.
     """
-    template_name = 'web/forms/widgets/multi_lingual_text_field.html'
+
+    template_name = "web/forms/widgets/multi_lingual_text_field.html"
 
     subwidget_class = forms.TextInput
     languages = MultiLingualTextStructure.SUPPORTED_LANGUAGES
 
     class Media:
         js = (
-            JS('web/js/forms/widgets/multi_lingual_text_field.js', attrs={'defer': True}),
+            JS(
+                "web/js/forms/widgets/multi_lingual_text_field.js",
+                attrs={"defer": True},
+            ),
         )
 
-    def __init__(self, attrs=None, *, languages=None, subwidget_kwargs: dict[str, Any] = None):
+    def __init__(
+        self, attrs=None, *, languages=None, subwidget_kwargs: dict[str, Any] = None
+    ):
         self.languages = languages or self.languages
 
         widgets = {}
         for language in self.languages:
             # Create widgets from the subwidget class, so we can reuse logic
-            subwidget = self.subwidget_class(**{
-                'attrs': {
-                    **(attrs or {}),
-                    # Makes each subwidget distinguishable in the template
-                    'language': language,
-                },
-                # Pass the kwargs to each subwidget (only used by the CKEditor-based widgets)
-                **(subwidget_kwargs or {}),
-            })
+            subwidget = self.subwidget_class(
+                **{
+                    "attrs": {
+                        **(attrs or {}),
+                        # Makes each subwidget distinguishable in the template
+                        "language": language,
+                    },
+                    # Pass the kwargs to each subwidget (only used by the CKEditor-based widgets)
+                    **(subwidget_kwargs or {}),
+                }
+            )
             widgets[language] = subwidget
         super().__init__(widgets, attrs)
 
@@ -65,17 +73,19 @@ class MultiLingualTextEdit(forms.MultiWidget):
 
         for index, widget in enumerate(self.widgets):
             # Include the render function of the subwidget, as CKEditor does not use templates
-            context['widget']['subwidgets'][index]['render'] = widget.render
+            context["widget"]["subwidgets"][index]["render"] = widget.render
 
         return context
 
     @staticmethod
-    def get_subwidget_names(field_name: str, languages=MultiLingualTextStructure.SUPPORTED_LANGUAGES):
+    def get_subwidget_names(
+        field_name: str, languages=MultiLingualTextStructure.SUPPORTED_LANGUAGES
+    ):
         """
         :return: The expected names of the subwidgets (one for each language) of the provided ``field_name``
                  (which should be a ``MultiLingualFormField``).
         """
-        return [f'{field_name}_{language}' for language in languages]
+        return [f"{field_name}_{language}" for language in languages]
 
 
 class MultiLingualTextInput(MultiLingualTextEdit):

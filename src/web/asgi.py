@@ -2,10 +2,11 @@
 ASGI entrypoint. Configures Django and then runs the application
 defined in the ASGI_APPLICATION setting.
 """
+
 import os
 
 # Should come before any of the other imports, in case they use the settings in some way
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "web.settings")
 
 from channels.routing import ChannelNameRouter, ProtocolTypeRouter
 from django.core.asgi import get_asgi_application
@@ -19,10 +20,12 @@ from mail.email import EmailConsumer
 
 
 channel_routes = {
-    'email': EmailConsumer.as_asgi(),
+    "email": EmailConsumer.as_asgi(),
 }
 
-application = ProtocolTypeRouter({
-    'http': django_asgi_app,
-    'channel': ChannelNameRouter(channel_routes),
-})
+application = ProtocolTypeRouter(
+    {
+        "http": django_asgi_app,
+        "channel": ChannelNameRouter(channel_routes),
+    }
+)

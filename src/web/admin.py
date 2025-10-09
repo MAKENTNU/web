@@ -3,25 +3,25 @@ from django_hosts import reverse_lazy
 
 
 class WebAdminSite(admin.AdminSite):
-    site_url = reverse_lazy('index_page')
+    site_url = reverse_lazy("index_page")
 
     apps_listed_first = (
-        'constance',
-
-        'users',
-        'groups',
-        'contentbox',
-        'announcements',
-        'news',
-        'make_queue',
-        'makerspace',
-        'faq',
+        "constance",
+        # Apps belonging on the main site
+        "users",
+        "groups",
+        "contentbox",
+        "announcements",
+        "news",
+        "make_queue",
+        "makerspace",
+        "faq",
         # Apps belonging on other subdomains
-        'internal',
-        'docs',
+        "internal",
+        "docs",
         # Non-used (or rarely used) apps
-        'checkin',
-        'auth',
+        "checkin",
+        "auth",
     )
     _apps__to__index = {app: i for i, app in enumerate(apps_listed_first)}
 
@@ -33,7 +33,7 @@ class WebAdminSite(admin.AdminSite):
         def app_sorting_key(app_dict: dict):
             # Sorts the apps so that those whose labels are in `apps_listed_first` are listed first,
             # and the rest are sorted last (keeping their original order)
-            return self._apps__to__index.get(app_dict['app_label'], sort_last_key)
+            return self._apps__to__index.get(app_dict["app_label"], sort_last_key)
 
         app_list.sort(key=app_sorting_key)
         return app_list

@@ -5,17 +5,20 @@ from django.test import TestCase
 from django.utils import timezone
 
 from users.models import User
-from util.test_utils import Get, assert_requesting_paths_succeeds, generate_all_admin_urls_for_model_and_objs
+from util.test_utils import (
+    Get,
+    assert_requesting_paths_succeeds,
+    generate_all_admin_urls_for_model_and_objs,
+)
 from util.url_utils import reverse_docs
 from ..models import Content, Page
 
 
 # Makes sure that the subdomain of all requests is `docs`
-DOCS_CLIENT_DEFAULTS = {'SERVER_NAME': f'docs.{settings.PARENT_HOST}'}
+DOCS_CLIENT_DEFAULTS = {"SERVER_NAME": f"docs.{settings.PARENT_HOST}"}
 
 
 class UrlTests(TestCase):
-
     def setUp(self):
         self.user1 = User.objects.create_user("user1")
         now = timezone.localtime()
@@ -38,35 +41,55 @@ class UrlTests(TestCase):
     def test_all_get_request_paths_succeed(self):
         path_predicates = [
             # urlpatterns
-            Get('/robots.txt', public=True, translated=False),
-            Get('/.well-known/security.txt', public=True, translated=False),
-
+            Get("/robots.txt", public=True, translated=False),
+            Get("/.well-known/security.txt", public=True, translated=False),
             # specific_documentation_page_urlpatterns
-            Get(reverse_docs('documentation_page_detail', self.page1.pk), public=False),
-            Get(reverse_docs('documentation_page_history_detail', self.page1.pk), public=False),
-            Get(reverse_docs('documentation_page_content_detail', self.page1.pk, self.content1.pk), public=False),
-            Get(reverse_docs('documentation_page_content_detail', self.page1.pk, self.content2.pk), public=False),
-            Get(reverse_docs('documentation_page_update', self.page1.pk), public=False),
+            Get(reverse_docs("documentation_page_detail", self.page1.pk), public=False),
+            Get(
+                reverse_docs("documentation_page_history_detail", self.page1.pk),
+                public=False,
+            ),
+            Get(
+                reverse_docs(
+                    "documentation_page_content_detail", self.page1.pk, self.content1.pk
+                ),
+                public=False,
+            ),
+            Get(
+                reverse_docs(
+                    "documentation_page_content_detail", self.page1.pk, self.content2.pk
+                ),
+                public=False,
+            ),
+            Get(reverse_docs("documentation_page_update", self.page1.pk), public=False),
             # documentation_page_urlpatterns
-            Get(reverse_docs('documentation_page_create'), public=False),
-
+            Get(reverse_docs("documentation_page_create"), public=False),
             # unsafe_urlpatterns
-            Get(reverse_docs('home'), public=False),
-            Get(reverse_docs('documentation_page_search'), public=False),
-            Get(f"{reverse_docs('documentation_page_search')}?query=lorem", public=False),
-            Get(f"{reverse_docs('documentation_page_search')}?query=lorem&page=2", public=False),
+            Get(reverse_docs("home"), public=False),
+            Get(reverse_docs("documentation_page_search"), public=False),
+            Get(
+                f"{reverse_docs('documentation_page_search')}?query=lorem", public=False
+            ),
+            Get(
+                f"{reverse_docs('documentation_page_search')}?query=lorem&page=2",
+                public=False,
+            ),
         ]
-        assert_requesting_paths_succeeds(self, path_predicates, 'docs')
+        assert_requesting_paths_succeeds(self, path_predicates, "docs")
 
     def test_all_admin_get_request_paths_succeed(self):
         path_predicates = [
             *[
                 Get(admin_url, public=False)
-                for admin_url in generate_all_admin_urls_for_model_and_objs(Content, [self.content1, self.content2])
+                for admin_url in generate_all_admin_urls_for_model_and_objs(
+                    Content, [self.content1, self.content2]
+                )
             ],
             *[
                 Get(admin_url, public=False)
-                for admin_url in generate_all_admin_urls_for_model_and_objs(Page, [self.page1])
+                for admin_url in generate_all_admin_urls_for_model_and_objs(
+                    Page, [self.page1]
+                )
             ],
         ]
-        assert_requesting_paths_succeeds(self, path_predicates, 'admin')
+        assert_requesting_paths_succeeds(self, path_predicates, "admin")

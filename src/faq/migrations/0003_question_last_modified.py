@@ -5,16 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('faq', '0002_alter_id_fields_to_use_bigautofield'),
+        ("faq", "0002_alter_id_fields_to_use_bigautofield"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='question',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="question",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
     ]

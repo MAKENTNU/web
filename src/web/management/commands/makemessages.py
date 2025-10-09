@@ -25,7 +25,7 @@ class Command(makemessages.Command):
     help = f"{makemessages.Command.help}{IGNORED_DIRS_HELP_SUFFIX}"
 
     def execute(self, *args, **options):
-        ignore_patterns: list[str] = options['ignore_patterns']
+        ignore_patterns: list[str] = options["ignore_patterns"]
         if len(ignore_patterns) == 0:
             ignore_patterns.extend(self.get_default_ignore_patterns())
 
@@ -40,22 +40,21 @@ class Command(makemessages.Command):
         super().write_po_file(potfile=potfile, locale=locale)
 
         # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L683-L685
-        locale_dir = Path(potfile).parent / locale / 'LC_MESSAGES'
-        po_file = locale_dir / f'{self.domain}.po'
+        locale_dir = Path(potfile).parent / locale / "LC_MESSAGES"
+        po_file = locale_dir / f"{self.domain}.po"
 
-        original_po_file_contents = po_file.read_text(encoding='utf-8')
+        original_po_file_contents = po_file.read_text(encoding="utf-8")
         po_file_lines = original_po_file_contents.splitlines(keepends=True)
         for i, line in enumerate(po_file_lines):
             if line.startswith("#:"):
-                po_file_lines[i] = (
-                    self.PATH_PREFIX_REGEX.sub(self.PATH_PREFIX_REPLACEMENT, line)
-                    .replace("\\", "/")
-                )
+                po_file_lines[i] = self.PATH_PREFIX_REGEX.sub(
+                    self.PATH_PREFIX_REPLACEMENT, line
+                ).replace("\\", "/")
 
         new_po_file_contents = "".join(po_file_lines)
         if new_po_file_contents != original_po_file_contents:
             # Based on https://github.com/django/django/blob/4.1.7/django/core/management/commands/makemessages.py#L707-L708
-            with open(po_file, 'w', encoding='utf-8') as fp:
+            with open(po_file, "w", encoding="utf-8") as fp:
                 fp.write(new_po_file_contents)
 
     @classmethod

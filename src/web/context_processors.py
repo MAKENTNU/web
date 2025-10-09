@@ -8,10 +8,10 @@ from django_hosts import reverse, reverse_host
 def common_context_variables(request: HttpRequest) -> dict:
     return {
         # Language-related stuff
-        'DEFAULT_LANGUAGE_CODE': settings.LANGUAGE_CODE,
-        'CURRENT_LANGUAGE_CODE': get_language(),
+        "DEFAULT_LANGUAGE_CODE": settings.LANGUAGE_CODE,
+        "CURRENT_LANGUAGE_CODE": get_language(),
         # Misc. stuff
-        'IS_DEV_ENV': settings.IS_DEV_ENV,
+        "IS_DEV_ENV": settings.IS_DEV_ENV,
     }
 
 
@@ -19,7 +19,7 @@ def login(request: HttpRequest) -> dict:
     # The current `next` parameter
     current_redirect_url = LoginView(request=request).get_redirect_url()
 
-    login_path = reverse('login', host='main').partition(reverse_host('main'))[-1]
+    login_path = reverse("login", host="main").partition(reverse_host("main"))[-1]
     # If at the login page:
     if request.path.startswith(login_path.rstrip("/")):
         # Let the `next` parameter be the same as it currently is
@@ -33,5 +33,7 @@ def login(request: HttpRequest) -> dict:
         login_redirect_path = request.path
 
     return {
-        'login_next_param': f"?next={login_redirect_path}" if login_redirect_path else "",
+        "login_next_param": f"?next={login_redirect_path}"
+        if login_redirect_path
+        else "",
     }

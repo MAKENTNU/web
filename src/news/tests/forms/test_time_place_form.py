@@ -9,10 +9,9 @@ from ...models import Event
 
 
 class FormTestCase(CleanUpTempFilesTestMixin, TestCase):
-
     def setUp(self):
         event = Event.objects.create(
-            title='',
+            title="",
             image=MOCK_JPG_FILE,
             hidden=True,
             private=False,

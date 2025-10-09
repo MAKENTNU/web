@@ -6,26 +6,44 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('docs', '0005_alter_id_fields_to_use_bigautofield'),
+        ("docs", "0005_alter_id_fields_to_use_bigautofield"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='content',
-            name='made_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='doc_page_contents_created', to=settings.AUTH_USER_MODEL, verbose_name='made by'),
+            model_name="content",
+            name="made_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="doc_page_contents_created",
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="made by",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='created_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='doc_pages_created', to=settings.AUTH_USER_MODEL),
+            model_name="page",
+            name="created_by",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="doc_pages_created",
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='current_content',
-            field=models.OneToOneField(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='page_currently_on', to='docs.content'),
+            model_name="page",
+            name="current_content",
+            field=models.OneToOneField(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="page_currently_on",
+                to="docs.content",
+            ),
         ),
     ]

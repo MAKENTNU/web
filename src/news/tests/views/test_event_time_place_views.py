@@ -12,16 +12,16 @@ from ...models import Event, EventTicket, TimePlace
 
 
 class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
-
     def setUp(self):
-        username = 'TEST_USER'
-        password = 'TEST_PASS'
+        username = "TEST_USER"
+        password = "TEST_PASS"
         self.user = User.objects.create_user(username=username, password=password)
         self.client.login(username=username, password=password)
 
         self.event = Event.objects.create(
-            title='FUTURE',
-            image=MOCK_JPG_FILE, image_description="Mock image",
+            title="FUTURE",
+            image=MOCK_JPG_FILE,
+            image_description="Mock image",
             number_of_tickets=40,
         )
         self.event_url = self.event.get_absolute_url()
@@ -33,32 +33,46 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         )
 
     def test_event_create_view(self):
-        response = self.client.get(reverse('event_create'))
+        response = self.client.get(reverse("event_create"))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('internal.is_internal', 'news.add_event')
-        response = self.client.get(reverse('event_create'))
+        self.user.add_perms("internal.is_internal", "news.add_event")
+        response = self.client.get(reverse("event_create"))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_update_view(self):
-        response = self.client.get(reverse('event_update', args=[self.event.pk]))
+        response = self.client.get(reverse("event_update", args=[self.event.pk]))
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('internal.is_internal', 'news.change_event')
-        response = self.client.get(reverse('event_update', args=[self.event.pk]))
+        self.user.add_perms("internal.is_internal", "news.change_event")
+        response = self.client.get(reverse("event_update", args=[self.event.pk]))
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_time_place_duplicate_create_view(self):
-        time_place = TimePlace.objects.create(event=self.event, start_time=timezone.now() + timedelta(minutes=5),
-                                              end_time=timezone.now() + timedelta(minutes=10))
-        response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
+        time_place = TimePlace.objects.create(
+            event=self.event,
+            start_time=timezone.now() + timedelta(minutes=5),
+            end_time=timezone.now() + timedelta(minutes=10),
+        )
+        response = self.client.post(
+            reverse("time_place_duplicate_create", args=[self.event.pk, time_place.pk])
+        )
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('internal.is_internal', 'news.add_timeplace', 'news.change_timeplace')
-        response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
+        self.user.add_perms(
+            "internal.is_internal", "news.add_timeplace", "news.change_timeplace"
+        )
+        response = self.client.post(
+            reverse("time_place_duplicate_create", args=[self.event.pk, time_place.pk])
+        )
 
-        duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
-        self.assertRedirects(response, django_reverse('time_place_update', args=[self.event.pk, duplicated_time_place.pk]))
+        duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest("pk")
+        self.assertRedirects(
+            response,
+            django_reverse(
+                "time_place_update", args=[self.event.pk, duplicated_time_place.pk]
+            ),
+        )
 
         new_start_time = time_place.start_time + timedelta(weeks=1)
         new_end_time = time_place.end_time + timedelta(weeks=1)
@@ -67,18 +81,29 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         self.assertEqual(duplicated_time_place.end_time, new_end_time)
 
     def test_time_place_duplicate_old(self):
-        self.user.add_perms('internal.is_internal', 'news.add_timeplace', 'news.change_timeplace')
+        self.user.add_perms(
+            "internal.is_internal", "news.add_timeplace", "news.change_timeplace"
+        )
 
         start_time = timezone.now() - timedelta(weeks=2, days=3)
         end_time = start_time + timedelta(days=1)
         new_start_time = start_time + timedelta(weeks=3)
         new_end_time = end_time + timedelta(weeks=3)
 
-        time_place = TimePlace.objects.create(event=self.event, start_time=start_time, end_time=end_time, hidden=False)
-        response = self.client.post(reverse('time_place_duplicate_create', args=[self.event.pk, time_place.pk]))
-        duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest('pk')
+        time_place = TimePlace.objects.create(
+            event=self.event, start_time=start_time, end_time=end_time, hidden=False
+        )
+        response = self.client.post(
+            reverse("time_place_duplicate_create", args=[self.event.pk, time_place.pk])
+        )
+        duplicated_time_place = TimePlace.objects.exclude(pk=time_place.pk).latest("pk")
 
-        self.assertRedirects(response, django_reverse('time_place_update', args=[self.event.pk, duplicated_time_place.pk]))
+        self.assertRedirects(
+            response,
+            django_reverse(
+                "time_place_update", args=[self.event.pk, duplicated_time_place.pk]
+            ),
+        )
         self.assertEqual(duplicated_time_place.start_time, new_start_time)
         self.assertEqual(duplicated_time_place.end_time, new_end_time)
 
@@ -89,7 +114,7 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.change_event')
+        self.user.add_perms("news.change_event")
         response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
@@ -102,12 +127,12 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
-        self.user.add_perms('news.can_view_private')
+        self.user.add_perms("news.can_view_private")
         response = self.client.get(self.event_url)
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_event_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = 'admin_event_ticket_list'
+        url_name = "admin_event_ticket_list"
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -115,10 +140,15 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         ]
         expected_context_ticket_emails = "user2@example.com,user4@example.com"
 
-        self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
+        self.assert_context_ticket_emails(
+            url_name,
+            self.event,
+            username_and_ticket_state_tuples,
+            expected_context_ticket_emails,
+        )
 
     def test_time_place_context_ticket_emails_only_returns_active_tickets_emails(self):
-        url_name = 'admin_time_place_ticket_list'
+        url_name = "admin_time_place_ticket_list"
         username_and_ticket_state_tuples = [
             ("user2", True),
             ("user3", False),
@@ -126,30 +156,54 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         ]
         expected_context_ticket_emails = "user2@example.com,user4@example.com"
 
-        self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
+        self.assert_context_ticket_emails(
+            url_name,
+            self.timeplace,
+            username_and_ticket_state_tuples,
+            expected_context_ticket_emails,
+        )
 
-    def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = 'admin_event_ticket_list'
+    def test_event_context_ticket_emails_returns_tickets_email_after_reregistration(
+        self,
+    ):
+        url_name = "admin_event_ticket_list"
         username_and_ticket_state_tuples = [
             ("user2", False),
             ("user2", True),
         ]
         expected_context_ticket_emails = "user2@example.com"
 
-        self.assert_context_ticket_emails(url_name, self.event, username_and_ticket_state_tuples, expected_context_ticket_emails)
+        self.assert_context_ticket_emails(
+            url_name,
+            self.event,
+            username_and_ticket_state_tuples,
+            expected_context_ticket_emails,
+        )
 
-    def test_time_place_context_ticket_emails_returns_tickets_email_after_reregistration(self):
-        url_name = 'admin_time_place_ticket_list'
+    def test_time_place_context_ticket_emails_returns_tickets_email_after_reregistration(
+        self,
+    ):
+        url_name = "admin_time_place_ticket_list"
         username_and_ticket_state_tuples = [
             ("user2", False),
             ("user2", True),
         ]
         expected_context_ticket_emails = "user2@example.com"
 
-        self.assert_context_ticket_emails(url_name, self.timeplace, username_and_ticket_state_tuples, expected_context_ticket_emails)
+        self.assert_context_ticket_emails(
+            url_name,
+            self.timeplace,
+            username_and_ticket_state_tuples,
+            expected_context_ticket_emails,
+        )
 
-    def assert_context_ticket_emails(self, url_name: str, event: Event | TimePlace,
-                                     username_and_ticket_state_tuples: list[tuple[str, bool]], expected_context_ticket_emails: str):
+    def assert_context_ticket_emails(
+        self,
+        url_name: str,
+        event: Event | TimePlace,
+        username_and_ticket_state_tuples: list[tuple[str, bool]],
+        expected_context_ticket_emails: str,
+    ):
         """
         Asserts that the ``ticket_emails`` in context at ``url_name`` equals ``expected_context_ticket_emails``.
 
@@ -162,15 +216,22 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         """
 
         self.create_tickets_for(event, username_and_ticket_state_tuples)
-        self.user.add_perms('internal.is_internal', 'news.change_event')
+        self.user.add_perms("internal.is_internal", "news.change_event")
 
-        url_args = [event.event.pk, event.pk] if isinstance(event, TimePlace) else [event.pk]
+        url_args = (
+            [event.event.pk, event.pk] if isinstance(event, TimePlace) else [event.pk]
+        )
         response = self.client.get(reverse(url_name, args=url_args))
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertEqual(expected_context_ticket_emails, response.context["ticket_emails"])
+        self.assertEqual(
+            expected_context_ticket_emails, response.context["ticket_emails"]
+        )
 
     @staticmethod
-    def create_tickets_for(event: Event | TimePlace, username_and_ticket_state_tuples: list[tuple[str, bool]]):
+    def create_tickets_for(
+        event: Event | TimePlace,
+        username_and_ticket_state_tuples: list[tuple[str, bool]],
+    ):
         """
         Creates a list of active and inactive tickets for the provided ``event`` from ``username_and_ticket_state_tuples``.
 
@@ -180,10 +241,12 @@ class ViewTestCase(CleanUpTempFilesTestMixin, TestCase):
         :return: List of tickets to ``event`` with the details from ``username_and_ticket_state_tuples``
         """
 
-        event_arg_name = 'timeplace' if isinstance(event, TimePlace) else 'event'
+        event_arg_name = "timeplace" if isinstance(event, TimePlace) else "event"
         tickets = []
         for username, ticket_state in username_and_ticket_state_tuples:
-            user = User.objects.get_or_create(username=username, email=f"{username}@example.com")[0]
+            user, _created = User.objects.get_or_create(
+                username=username, email=f"{username}@example.com"
+            )
             ticket, _created = EventTicket.objects.get_or_create(
                 user=user,
                 **{event_arg_name: event},

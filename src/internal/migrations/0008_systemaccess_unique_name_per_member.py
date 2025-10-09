@@ -4,18 +4,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0007_remove_member_fields_max_length_and_null'),
+        ("internal", "0007_remove_member_fields_max_length_and_null"),
     ]
 
     operations = [
         migrations.AddConstraint(
-            model_name='systemaccess',
-            constraint=models.UniqueConstraint(fields=('name', 'member'), name='systemaccess_unique_name_per_member'),
+            model_name="systemaccess",
+            constraint=models.UniqueConstraint(
+                fields=("name", "member"), name="systemaccess_unique_name_per_member"
+            ),
         ),
         migrations.AlterModelOptions(
-            name='systemaccess',
-            options={'verbose_name': 'system access', 'verbose_name_plural': 'system accesses'},
+            name="systemaccess",
+            options={
+                "verbose_name": "system access",
+                "verbose_name_plural": "system accesses",
+            },
         ),
     ]

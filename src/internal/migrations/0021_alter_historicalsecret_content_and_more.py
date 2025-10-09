@@ -14,7 +14,7 @@ def get_default_language_text(json: str):
 
 
 def convert_multi_lingual_text_structure_to_plain_text(apps, schema_editor):
-    Secret = apps.get_model('internal', 'Secret')
+    Secret = apps.get_model("internal", "Secret")
     for secret in Secret.objects.all():
         secret.title = get_default_language_text(secret.title)
         secret.content = get_default_language_text(secret.content)
@@ -22,13 +22,15 @@ def convert_multi_lingual_text_structure_to_plain_text(apps, schema_editor):
 
 
 def get_json_with_default_language(plain_text: str):
-    text_structure = MultiLingualTextStructure("", languages={settings.LANGUAGE_CODE}, use_default_for_empty=True)
+    text_structure = MultiLingualTextStructure(
+        "", languages={settings.LANGUAGE_CODE}, use_default_for_empty=True
+    )
     text_structure[settings.LANGUAGE_CODE] = plain_text
     return json.dumps(text_structure.languages, ensure_ascii=False)
 
 
 def convert_plain_text_to_multi_lingual_text_structure(apps, schema_editor):
-    Secret = apps.get_model('internal', 'Secret')
+    Secret = apps.get_model("internal", "Secret")
     for secret in Secret.objects.all():
         secret.title = get_json_with_default_language(secret.title)
         secret.content = get_json_with_default_language(secret.content)
@@ -36,31 +38,41 @@ def convert_plain_text_to_multi_lingual_text_structure(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('internal', '0020_history_date_db_index'),
+        ("internal", "0020_history_date_db_index"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='historicalsecret',
-            name='content',
-            field=ckeditor_uploader.fields.RichTextUploadingField(verbose_name='description'),
+            model_name="historicalsecret",
+            name="content",
+            field=ckeditor_uploader.fields.RichTextUploadingField(
+                verbose_name="description"
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalsecret',
-            name='title',
-            field=web.modelfields.UnlimitedCharField(db_index=True, max_length=100, verbose_name='title'),
+            model_name="historicalsecret",
+            name="title",
+            field=web.modelfields.UnlimitedCharField(
+                db_index=True, max_length=100, verbose_name="title"
+            ),
         ),
         migrations.AlterField(
-            model_name='secret',
-            name='content',
-            field=ckeditor_uploader.fields.RichTextUploadingField(verbose_name='description'),
+            model_name="secret",
+            name="content",
+            field=ckeditor_uploader.fields.RichTextUploadingField(
+                verbose_name="description"
+            ),
         ),
         migrations.AlterField(
-            model_name='secret',
-            name='title',
-            field=web.modelfields.UnlimitedCharField(max_length=100, unique=True, verbose_name='title'),
+            model_name="secret",
+            name="title",
+            field=web.modelfields.UnlimitedCharField(
+                max_length=100, unique=True, verbose_name="title"
+            ),
         ),
-        migrations.RunPython(convert_multi_lingual_text_structure_to_plain_text, convert_plain_text_to_multi_lingual_text_structure),
+        migrations.RunPython(
+            convert_multi_lingual_text_structure_to_plain_text,
+            convert_plain_text_to_multi_lingual_text_structure,
+        ),
     ]

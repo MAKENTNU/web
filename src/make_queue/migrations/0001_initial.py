@@ -6,119 +6,263 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('news', '0004_auto_20180307_1352'),
+        ("news", "0004_auto_20180307_1352"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Machine',
+            name="Machine",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('status', models.CharField(choices=[('R', 'Reservert'), ('F', 'Ledig'), ('I', 'I bruk'), ('O', 'I ustand'), ('M', 'Vedlikehold')], max_length=2)),
-                ('name', models.CharField(max_length=30)),
-                ('location', models.CharField(max_length=40)),
-                ('location_url', models.URLField()),
-                ('model', models.CharField(max_length=40)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "status",
+                    models.CharField(
+                        choices=[
+                            ("R", "Reservert"),
+                            ("F", "Ledig"),
+                            ("I", "I bruk"),
+                            ("O", "I ustand"),
+                            ("M", "Vedlikehold"),
+                        ],
+                        max_length=2,
+                    ),
+                ),
+                ("name", models.CharField(max_length=30)),
+                ("location", models.CharField(max_length=40)),
+                ("location_url", models.URLField()),
+                ("model", models.CharField(max_length=40)),
             ],
         ),
         migrations.CreateModel(
-            name='Penalty',
+            name="Penalty",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('from_date', models.DateTimeField(auto_now_add=True)),
-                ('removed_date', models.DateTimeField()),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("from_date", models.DateTimeField(auto_now_add=True)),
+                ("removed_date", models.DateTimeField()),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Quota',
+            name="Quota",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('max_time_reservation', models.FloatField(default=16)),
-                ('max_number_of_reservations', models.IntegerField(default=3)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("max_time_reservation", models.FloatField(default=16)),
+                ("max_number_of_reservations", models.IntegerField(default=3)),
             ],
             options={
-                'permissions': (('can_create_event_reservation', 'Can create event reservation'),),
-                'verbose_name': 'quota',
-                'verbose_name_plural': 'quotas',
+                "permissions": (
+                    ("can_create_event_reservation", "Can create event reservation"),
+                ),
+                "verbose_name": "quota",
+                "verbose_name_plural": "quotas",
             },
         ),
         migrations.CreateModel(
-            name='Reservation3D',
+            name="Reservation3D",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_time', models.DateTimeField()),
-                ('end_time', models.DateTimeField()),
-                ('showed', models.NullBooleanField(default=None)),
-                ('special', models.BooleanField(default=False)),
-                ('special_text', models.CharField(max_length=20)),
-                ('event', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='news.TimePlace')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
+                ("showed", models.NullBooleanField(default=None)),
+                ("special", models.BooleanField(default=False)),
+                ("special_text", models.CharField(max_length=20)),
+                (
+                    "event",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="news.TimePlace",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='ReservationSewing',
+            name="ReservationSewing",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_time', models.DateTimeField()),
-                ('end_time', models.DateTimeField()),
-                ('showed', models.NullBooleanField(default=None)),
-                ('special', models.BooleanField(default=False)),
-                ('special_text', models.CharField(max_length=20)),
-                ('event', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='news.TimePlace')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
+                ("showed", models.NullBooleanField(default=None)),
+                ("special", models.BooleanField(default=False)),
+                ("special_text", models.CharField(max_length=20)),
+                (
+                    "event",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="news.TimePlace",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'abstract': False,
+                "abstract": False,
             },
         ),
         migrations.CreateModel(
-            name='Printer3D',
+            name="Printer3D",
             fields=[
-                ('machine_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='make_queue.Machine')),
+                (
+                    "machine_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="make_queue.Machine",
+                    ),
+                ),
             ],
-            bases=('make_queue.machine',),
+            bases=("make_queue.machine",),
         ),
         migrations.CreateModel(
-            name='Quota3D',
+            name="Quota3D",
             fields=[
-                ('quota_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='make_queue.Quota')),
-                ('can_print', models.BooleanField(default=False)),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "quota_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="make_queue.Quota",
+                    ),
+                ),
+                ("can_print", models.BooleanField(default=False)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-            bases=('make_queue.quota',),
+            bases=("make_queue.quota",),
         ),
         migrations.CreateModel(
-            name='QuotaSewing',
+            name="QuotaSewing",
             fields=[
-                ('quota_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='make_queue.Quota')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "quota_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="make_queue.Quota",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
-            bases=('make_queue.quota',),
+            bases=("make_queue.quota",),
         ),
         migrations.CreateModel(
-            name='SewingMachine',
+            name="SewingMachine",
             fields=[
-                ('machine_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='make_queue.Machine')),
+                (
+                    "machine_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="make_queue.Machine",
+                    ),
+                ),
             ],
-            bases=('make_queue.machine',),
+            bases=("make_queue.machine",),
         ),
         migrations.AddField(
-            model_name='reservationsewing',
-            name='machine',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='make_queue.SewingMachine'),
+            model_name="reservationsewing",
+            name="machine",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="make_queue.SewingMachine",
+            ),
         ),
         migrations.AddField(
-            model_name='reservation3d',
-            name='machine',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='make_queue.Printer3D'),
+            model_name="reservation3d",
+            name="machine",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE, to="make_queue.Printer3D"
+            ),
         ),
     ]

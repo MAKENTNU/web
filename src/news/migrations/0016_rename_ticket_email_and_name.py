@@ -4,30 +4,33 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0015_clickbait_required'),
+        ("news", "0015_clickbait_required"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='eventticket',
-            old_name='email',
-            new_name='_email',
+            model_name="eventticket",
+            old_name="email",
+            new_name="_email",
         ),
         migrations.RenameField(
-            model_name='eventticket',
-            old_name='name',
-            new_name='_name',
+            model_name="eventticket",
+            old_name="name",
+            new_name="_name",
         ),
         migrations.AlterField(
-            model_name='eventticket',
-            name='_email',
-            field=models.EmailField(db_column='email', max_length=254, verbose_name='email'),
+            model_name="eventticket",
+            name="_email",
+            field=models.EmailField(
+                db_column="email", max_length=254, verbose_name="email"
+            ),
         ),
         migrations.AlterField(
-            model_name='eventticket',
-            name='_name',
-            field=models.CharField(db_column='name', max_length=128, verbose_name='name'),
+            model_name="eventticket",
+            name="_name",
+            field=models.CharField(
+                db_column="name", max_length=128, verbose_name="name"
+            ),
         ),
     ]

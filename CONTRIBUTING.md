@@ -21,15 +21,10 @@
   + [Commit message](#commit-message)
 * [Python](#python)
   + [For code in general](#for-code-in-general)
-    - [PEP8](#pep8)
-    - [String quotation marks](#string-quotation-marks)
     - [Quotation marks inside strings](#quotation-marks-inside-strings)
     - [String concatenation](#string-concatenation)
-    - [Trailing commas](#trailing-commas)
-    - [Operator wrapping](#operator-wrapping)
     - [Imports](#imports)
   + [For each module (file)](#for-each-module-file)
-    - [Empty/blank lines](#emptyblank-lines)
     - [Folder/directory location](#folderdirectory-location)
     - [Filename](#filename)
       + [Migration filename](#migration-filename)
@@ -55,10 +50,10 @@
       + [Model field argument value](#model-field-argument-value)
 * [Django templates / HTML / CSS](#django-templates--html--css)
   + [For code in general](#for-code-in-general-1)
-    - [String quotation marks](#string-quotation-marks-1)
+    - [String quotation marks](#string-quotation-marks)
     - [Hex (color) code literals](#hex-color-code-literals)
   + [For each file](#for-each-file)
-    - [Empty/blank lines](#emptyblank-lines-1)
+    - [Empty/blank lines](#emptyblank-lines)
     - [Filename](#filename-1)
       + [Django template filenames](#django-template-filenames)
       + [CSS filenames](#css-filenames)
@@ -78,7 +73,7 @@
     - [Stylesheet rule order](#stylesheet-rule-order)
 * [JavaScript](#javascript)
   + [For code in general](#for-code-in-general-2)
-    - [String quotation marks](#string-quotation-marks-2)
+    - [String quotation marks](#string-quotation-marks-1)
   + [For each file](#for-each-file-1)
     - [Filename](#filename-2)
   + [For each function](#for-each-function)
@@ -152,37 +147,6 @@ with reasoning, examples and tips:
 
 ### For code in general
 
-#### PEP8
-
-In general, we follow the [PEP 8](https://www.python.org/dev/peps/pep-0008/) style guide.
-<br/>*Tip: PyCharm marks (most) PEP 8 violations with a yellow squiggly line.
-Additionally, PyCharm can easily fix most of these inconsistencies - and enforce various other parts of this style guide -
-using the [Reformat Code feature](https://www.jetbrains.com/pycharm/guide/tips/reformat-code/) (<kbd>Ctrl+Alt+L</kbd>/<kbd>⌥⌘L</kbd> by default) -
-possibly requiring some tweaking of the settings.*
-
-#### String quotation marks
-
-Use `'` for "code values" that are meant to be compared exactly against some other values.
-**In short: if these strings are changed, things *might* break.**
-Examples include:
-* Existing paths, like file paths for templates, or dotted module paths.
-* Names of variables or attributes, like object attributes, keyword arguments, or template context variables.
-
-Use `"` for messages, names, etc. that are not supposed to be compared to existing values.
-**In short: if these strings are changed, nothing *should* break.**
-Examples include:
-* Text in a natural language, like messages that are shown to users or developers.
-* Path definitions - e.g. the first argument passed to the [`path()` function](https://docs.djangoproject.com/en/stable/ref/urls/#path) -
-  as these are not supposed to be directly referenced elsewhere
-  (they should instead be inserted using the `reverse()` function or the `url` template tag)
-  and can in principle be changed freely without altering the functionality in any way.
-* Docstrings.
-
-If unsure, or if the case in question is in a grey area, use `'`.
-
-*[This specific coding style is loosely based on
-this library's coding standards](https://docs.ckan.org/en/ckan-2.7.3/contributing/python.html#use-single-quotes).*
-
 #### Quotation marks inside strings
 
 Prefer using the proper Unicode characters for quotation marks in the language of the string in question
@@ -198,41 +162,6 @@ if an f-string is hard to read, extract inserted code to variables, and insert t
 
 For translation strings (using `gettext` or `gettext_lazy`), use the standard `format()` method for concatenation.
 For example:<br/>`_("{chant} Batman!").format(chant="NaN" * 15)` (where `gettext_lazy` is imported as `_`).
-
-#### Trailing commas
-
-Always leave a trailing comma after the last element in a wrapped list/tuple/set/dictionary initialization expression
-or wrapped function/constructor call.
-
-#### Operator wrapping
-
-When wrapping an expression containing operators (like `+`, `&` and `and`),
-place the operators first on each wrapped line (instead of last on the previous lines).
-This also applies to similar things, like list comprehension expressions and conditional expressions (aka ternary operator).
-
-To illustrate, a good example of wrapping the following code:
-```python
-def func(long_condition_expr, other_long_expr, list_of_lists):
-    if long_condition_expr and long_condition_expr:
-        return other_long_expr + other_long_expr
-    return [element for inner_list in list_of_lists for element in inner_list if element is not None]
-```
-can be:
-```python
-def func(long_condition_expr, other_long_expr, list_of_lists):
-    if (long_condition_expr
-            and long_condition_expr):
-        return (
-                other_long_expr
-                + other_long_expr
-        )
-    return [
-        element
-        for inner_list in list_of_lists
-        for element in inner_list
-        if element is not None
-    ]
-```
 
 #### Imports
 
@@ -252,10 +181,6 @@ All imports in a file that are from the same app as the mentioned file, should b
 
 
 ### For each module (file)
-
-#### Empty/blank lines
-
-Leave two empty lines between class and function (i.e. not method) definitions, and after all the imports in a module.
 
 #### Folder/directory location
 
@@ -470,12 +395,16 @@ from django.urls import path
 
 
 urlpatterns = [
-    path("events/", ..., name='event_list'),
-    path("events/add/", ..., name='event_create'),
-    path("events/<int:pk>/", ..., name='event_detail'),
-    path("events/<int:pk>/change/", ..., name='event_update'),
-    path("events/<int:pk>/occurrences/", ..., name='event_occurrence_list'),
-    path("events/<int:pk>/occurrences/<int:occurrence_pk>/", ..., name='event_occurrence_detail'),
+    path("events/", ..., name="event_list"),
+    path("events/add/", ..., name="event_create"),
+    path("events/<int:pk>/", ..., name="event_detail"),
+    path("events/<int:pk>/change/", ..., name="event_update"),
+    path("events/<int:pk>/occurrences/", ..., name="event_occurrence_list"),
+    path(
+      "events/<int:pk>/occurrences/<int:occurrence_pk>/",
+      ...,
+      name="event_occurrence_detail",
+    ),
 ]
 ```
 would be:
@@ -484,17 +413,17 @@ from django.urls import include, path
 
 
 event_occurrence_urlpatterns = [
-    path("", ..., name='event_occurrence_list'),
-    path("<int:pk>/", ..., name='event_occurrence_detail'),
+    path("", ..., name="event_occurrence_list"),
+    path("<int:pk>/", ..., name="event_occurrence_detail"),
 ]
 specific_event_urlpatterns = [
-    path("", ..., name='event_detail'),
-    path("change/", ..., name='event_update'),
+    path("", ..., name="event_detail"),
+    path("change/", ..., name="event_update"),
     path("occurrences/", include(event_occurrence_urlpatterns)),
 ]
 event_urlpatterns = [
-    path("", ..., name='event_list'),
-    path("add/", ..., name='event_create'),
+    path("", ..., name="event_list"),
+    path("add/", ..., name="event_create"),
     path("<int:pk>/", include(specific_event_urlpatterns)),
 ]
 
@@ -545,7 +474,7 @@ urlpatterns = [
     path("admin/", include(admin_urlpatterns)),
     path("api/", include(api_urlpatterns)),
     # The `news` app's base path route argument ("news/")
-    path("news/", include('news.urls')),
+    path("news/", include("news.urls")),
 ]
 ```
 
@@ -558,7 +487,7 @@ Use `snake_case`.
 
 An exception to this is when the variable value is a reference to a specific model class -
 in which case, the variable should have the same name as the model it references;
-for example: `InheritanceGroup = apps.get_model('groups', 'InheritanceGroup')`.
+for example: `InheritanceGroup = apps.get_model("groups", "InheritanceGroup")`.
 
 #### Model field definition arguments
 
@@ -601,7 +530,7 @@ Sort the keyword arguments in the following order:
 
 Use `"` for everything pure HTML and CSS.
 
-Inside template tags and filters, use [the same quotation marks as for Python](#string-quotation-marks).
+Inside template tags and filters, use the same quotation marks as for Python.
 Examples include:
 * `'` for:
   * `url` names
@@ -931,15 +860,15 @@ class EventOccurrence(models.Model):
     event = models.ForeignKey(
         to=Event,
         on_delete=models.CASCADE,
-        related_name='occurrences',
+        related_name="occurrences",
     )
 
 
 def get_context_data():
     # Prefetching related objects to avoid unnecessary additional database lookups
     return {
-        'occurrence_objects': EventOccurrence.objects.select_related('event'),
-        'event_objects': Event.objects.prefetch_related('occurrences'),
+        "occurrence_objects": EventOccurrence.objects.select_related("event"),
+        "event_objects": Event.objects.prefetch_related("occurrences"),
     }
 ```
 ```html
@@ -978,15 +907,15 @@ The number of database queries a request triggers, can be measured by adding the
 from web.settings import LOGGING
 
 
-LOGGING['loggers']['django.db.backends'] = {
-    'level': 'DEBUG',
-    'handlers': ['console'],
+LOGGING["loggers"]["django.db.backends"] = {
+    "level": "DEBUG",
+    "handlers": ["console"],
 }
-""" This would require a logging handler named `console`, which would look something like this:
-'console': {
-    'level': 'DEBUG',
-    'filters': [...],
-    'class': 'logging.StreamHandler',
+""" This would require a logging handler named `console`, which could look like this:
+"console": {
+    "level": "DEBUG",
+    "filters": [...],
+    "class": "logging.StreamHandler",
 }
 """
 ```
@@ -1153,18 +1082,20 @@ class EventOccurrenceForm(forms.Form):
     def clean(self):
         cleaned_data = super().clean()
         # The fields won't exist in the cleaned data if they were submitted empty (even if they're both (by default) required)
-        start_time = cleaned_data.get('start_time')
-        end_time = cleaned_data.get('end_time')
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
 
         # These might be `None`
         if start_time and end_time:
             if start_time > end_time:
                 error_message = _("The event cannot end before it starts.")
-                code = 'invalid_relative_to_other_field'
-                raise forms.ValidationError({
-                    'start_time': forms.ValidationError(error_message, code=code),
-                    'end_time': forms.ValidationError(error_message, code=code),
-                })
+                code = "invalid_relative_to_other_field"
+                raise forms.ValidationError(
+                    {
+                        "start_time": forms.ValidationError(error_message, code=code),
+                        "end_time": forms.ValidationError(error_message, code=code),
+                    }
+                )
 
         return cleaned_data
 ```

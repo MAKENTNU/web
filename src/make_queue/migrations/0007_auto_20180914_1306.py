@@ -6,111 +6,155 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('news', '0009_auto_20180503_0141'),
-        ('make_queue', '0006_reservationrule'),
+        ("news", "0009_auto_20180503_0141"),
+        ("make_queue", "0006_reservationrule"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Reservation',
+            name="Reservation",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('start_time', models.DateTimeField()),
-                ('end_time', models.DateTimeField()),
-                ('showed', models.NullBooleanField(default=None)),
-                ('special', models.BooleanField(default=False)),
-                ('special_text', models.CharField(max_length=20)),
-                ('comment', models.TextField(default='', max_length=2000)),
-                ('event', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='news.TimePlace')),
-                ('machine', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='make_queue.Machine')),
-                ('quota', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='make_queue.Quota')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("start_time", models.DateTimeField()),
+                ("end_time", models.DateTimeField()),
+                ("showed", models.NullBooleanField(default=None)),
+                ("special", models.BooleanField(default=False)),
+                ("special_text", models.CharField(max_length=20)),
+                ("comment", models.TextField(default="", max_length=2000)),
+                (
+                    "event",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="news.TimePlace",
+                    ),
+                ),
+                (
+                    "machine",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="make_queue.Machine",
+                    ),
+                ),
+                (
+                    "quota",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="make_queue.Quota",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'permissions': (('can_view_reservation_user', 'Can view reservation user'),),
+                "permissions": (
+                    ("can_view_reservation_user", "Can view reservation user"),
+                ),
             },
         ),
         migrations.DeleteModel(
-            name='Penalty',
+            name="Penalty",
         ),
         migrations.DeleteModel(
-            name='Printer3D',
+            name="Printer3D",
         ),
         migrations.DeleteModel(
-            name='Quota3D',
+            name="Quota3D",
         ),
         migrations.DeleteModel(
-            name='QuotaSewing',
+            name="QuotaSewing",
         ),
         migrations.DeleteModel(
-            name='Reservation3D',
+            name="Reservation3D",
         ),
         migrations.DeleteModel(
-            name='ReservationSewing',
+            name="ReservationSewing",
         ),
         migrations.DeleteModel(
-            name='SewingMachine',
+            name="SewingMachine",
         ),
         migrations.RenameField(
-            model_name='machine',
-            old_name='model',
-            new_name='machine_model',
+            model_name="machine",
+            old_name="model",
+            new_name="machine_model",
         ),
         migrations.RenameField(
-            model_name='quota',
-            old_name='max_number_of_reservations',
-            new_name='number_of_reservations',
+            model_name="quota",
+            old_name="max_number_of_reservations",
+            new_name="number_of_reservations",
         ),
         migrations.RemoveField(
-            model_name='quota',
-            name='max_time_reservation',
+            model_name="quota",
+            name="max_time_reservation",
         ),
         migrations.AddField(
-            model_name='machine',
-            name='machine_type',
-            field=models.IntegerField(choices=[(0, '3D-printer'), (1, 'Symaskin')], null=True),
+            model_name="machine",
+            name="machine_type",
+            field=models.IntegerField(
+                choices=[(0, "3D-printer"), (1, "Symaskin")], null=True
+            ),
         ),
         migrations.AddField(
-            model_name='quota',
-            name='all',
+            model_name="quota",
+            name="all",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='quota',
-            name='diminishing',
+            model_name="quota",
+            name="diminishing",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='quota',
-            name='ignore_rules',
+            model_name="quota",
+            name="ignore_rules",
             field=models.BooleanField(default=False),
         ),
         migrations.AddField(
-            model_name='quota',
-            name='machine_type',
-            field=models.IntegerField(choices=[(0, '3D-printer'), (1, 'Symaskin')], null=True),
+            model_name="quota",
+            name="machine_type",
+            field=models.IntegerField(
+                choices=[(0, "3D-printer"), (1, "Symaskin")], null=True
+            ),
         ),
         migrations.AddField(
-            model_name='quota',
-            name='user',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            model_name="quota",
+            name="user",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+            ),
         ),
         migrations.AlterField(
-            model_name='reservationrule',
-            name='machine_type',
-            field=models.CharField(max_length=30, verbose_name='machine type'),
+            model_name="reservationrule",
+            name="machine_type",
+            field=models.CharField(max_length=30, verbose_name="machine type"),
         ),
         migrations.AlterField(
-            model_name='reservationrule',
-            name='max_hours',
-            field=models.FloatField(verbose_name='hours single period'),
+            model_name="reservationrule",
+            name="max_hours",
+            field=models.FloatField(verbose_name="hours single period"),
         ),
         migrations.AlterField(
-            model_name='reservationrule',
-            name='max_inside_border_crossed',
-            field=models.FloatField(verbose_name='hours multi-period'),
+            model_name="reservationrule",
+            name="max_inside_border_crossed",
+            field=models.FloatField(verbose_name="hours multi-period"),
         ),
     ]

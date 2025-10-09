@@ -70,7 +70,9 @@ STATIC_AND_MEDIA_FILES__PARENT_DIR: Final = get_envvar(
     "STATIC_AND_MEDIA_FILES__PARENT_DIR"
 )
 # The max size in prod is 50 MiB (through Nginx)
-MEDIA_FILE_MAX_SIZE__MB: Final = int(get_envvar("MEDIA_FILE_MAX_SIZE__MB", default="25"))
+MEDIA_FILE_MAX_SIZE__MB: Final = int(
+    get_envvar("MEDIA_FILE_MAX_SIZE__MB", default="25")
+)
 
 # --- `channels` ---
 REDIS_HOST: Final = get_envvar("REDIS_HOST", default="localhost")

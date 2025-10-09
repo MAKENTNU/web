@@ -4,27 +4,37 @@ from datetime import datetime
 from django.db import migrations, models
 import django.utils.timezone
 
+
 def set_info_message_date_for_existing_machines(apps, schema_editor):
-    Machine = apps.get_model('make_queue', 'Machine')
+    Machine = apps.get_model("make_queue", "Machine")
     Machine.objects.update(info_message_date=datetime.utcfromtimestamp(0))
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0029_machine_internal'),
+        ("make_queue", "0029_machine_internal"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='machine',
-            name='info_message',
-            field=models.TextField(blank=True, help_text="Information that's useful to know before using the machine, e.g. the filament that the 3D printer uses, the needle that's currently inserted in the sewing machine, or just the machine's current state/“mood” (emojis are allowed 🤠).", verbose_name='info message'),
+            model_name="machine",
+            name="info_message",
+            field=models.TextField(
+                blank=True,
+                help_text="Information that's useful to know before using the machine, e.g. the filament that the 3D printer uses, the needle that's currently inserted in the sewing machine, or just the machine's current state/“mood” (emojis are allowed 🤠).",
+                verbose_name="info message",
+            ),
         ),
         migrations.AddField(
-            model_name='machine',
-            name='info_message_date',
-            field=models.DateTimeField(blank=True, default=django.utils.timezone.localtime, verbose_name='time the info message was changed'),
+            model_name="machine",
+            name="info_message_date",
+            field=models.DateTimeField(
+                blank=True,
+                default=django.utils.timezone.localtime,
+                verbose_name="time the info message was changed",
+            ),
         ),
-        migrations.RunPython(set_info_message_date_for_existing_machines, migrations.RunPython.noop),
+        migrations.RunPython(
+            set_info_message_date_for_existing_machines, migrations.RunPython.noop
+        ),
     ]

@@ -5,16 +5,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0007_alter_id_fields_to_use_bigautofield'),
+        ("contentbox", "0007_alter_id_fields_to_use_bigautofield"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='contentbox',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="contentbox",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
     ]

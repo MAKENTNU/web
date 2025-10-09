@@ -9,14 +9,14 @@ import util.storage
 
 
 def move_profile_and_skill_and_suggestskill_images(apps, schema_editor):
-    Profile = apps.get_model('checkin', 'Profile')
-    Skill = apps.get_model('checkin', 'Skill')
-    SuggestSkill = apps.get_model('checkin', 'SuggestSkill')
+    Profile = apps.get_model("checkin", "Profile")
+    Skill = apps.get_model("checkin", "Skill")
+    SuggestSkill = apps.get_model("checkin", "SuggestSkill")
     old_paths_renamed_to_new_paths = {}
     try:
         for model in (Profile, Skill, SuggestSkill):
             # This only works because the three models happen to have the same image field name
-            image_field = model._meta.get_field('image')
+            image_field = model._meta.get_field("image")
 
             for checkin_obj in model.objects.all():
                 if not checkin_obj.image:
@@ -28,7 +28,9 @@ def move_profile_and_skill_and_suggestskill_images(apps, schema_editor):
                     continue
                 else:
                     # Ensure that the name is available
-                    new_name = image_field.storage.get_available_name(new_name, max_length=image_field.max_length)
+                    new_name = image_field.storage.get_available_name(
+                        new_name, max_length=image_field.max_length
+                    )
                 old_path = checkin_obj.image.path
                 new_path = settings.MEDIA_ROOT / new_name
                 new_upload_dir = new_path.parent
@@ -44,7 +46,7 @@ def move_profile_and_skill_and_suggestskill_images(apps, schema_editor):
                 else:
                     old_paths_renamed_to_new_paths[old_path] = new_path
                 checkin_obj.image.name = new_name
-                checkin_obj.save(update_fields=['image'])
+                checkin_obj.save(update_fields=["image"])
     except Exception as e:
         for old_path, new_path in old_paths_renamed_to_new_paths.items():
             try:
@@ -55,26 +57,57 @@ def move_profile_and_skill_and_suggestskill_images(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0010_alter_id_fields_to_use_bigautofield'),
+        ("checkin", "0010_alter_id_fields_to_use_bigautofield"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profile',
-            name='image',
-            field=models.ImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'profiles'}), verbose_name='profile picture'),
+            model_name="profile",
+            name="image",
+            field=models.ImageField(
+                blank=True,
+                max_length=200,
+                storage=util.storage.OverwriteStorage(),
+                upload_to=functools.partial(
+                    util.storage.UploadToUtils._actual_upload_to,
+                    *(),
+                    **{"upload_to": "profiles"},
+                ),
+                verbose_name="profile picture",
+            ),
         ),
         migrations.AlterField(
-            model_name='skill',
-            name='image',
-            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills'}), verbose_name='illustration image'),
+            model_name="skill",
+            name="image",
+            field=util.modelfields.CompressedImageField(
+                blank=True,
+                max_length=200,
+                storage=util.storage.OverwriteStorage(),
+                upload_to=functools.partial(
+                    util.storage.UploadToUtils._actual_upload_to,
+                    *(),
+                    **{"upload_to": "skills"},
+                ),
+                verbose_name="illustration image",
+            ),
         ),
         migrations.AlterField(
-            model_name='suggestskill',
-            name='image',
-            field=util.modelfields.CompressedImageField(blank=True, max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'skills/suggestions'}), verbose_name='illustration image'),
+            model_name="suggestskill",
+            name="image",
+            field=util.modelfields.CompressedImageField(
+                blank=True,
+                max_length=200,
+                storage=util.storage.OverwriteStorage(),
+                upload_to=functools.partial(
+                    util.storage.UploadToUtils._actual_upload_to,
+                    *(),
+                    **{"upload_to": "skills/suggestions"},
+                ),
+                verbose_name="illustration image",
+            ),
         ),
-        migrations.RunPython(move_profile_and_skill_and_suggestskill_images, migrations.RunPython.noop),
+        migrations.RunPython(
+            move_profile_and_skill_and_suggestskill_images, migrations.RunPython.noop
+        ),
     ]
