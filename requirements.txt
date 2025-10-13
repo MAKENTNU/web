@@ -1,7 +1,7 @@
 # Django-related packages
 Django==5.0.2
 django-hosts==6.0
-django-ckeditor==6.7.0
+django-ckeditor==6.7.3
 django-cleanup==8.1.0
 django-constance==3.1.0
 django-decorator-include==3.0
