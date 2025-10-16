@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from card import utils as card_utils
 from card.formfields import CardNumberField
 from users.models import User
-from web.widgets import SemanticDateInput, SemanticMultipleSelectInput, SemanticSearchableChoiceInput
+from web.widgets import SemanticDateInput, SemanticDateTimeInput, SemanticMultipleSelectInput, SemanticSearchableChoiceInput
 from .models import Member, Quote, Secret, SystemAccess
 
 
@@ -172,7 +172,7 @@ class SecretsForm(forms.ModelForm):
 class QuoteForm(forms.ModelForm):
     class Meta:
         model = Quote
-        fields = ('quote', 'quoted', 'context', 'date')
+        fields = ('quote', 'quoted', 'context', 'dateTime')
         widgets = {
-            'date': SemanticDateInput(),
+            'dateTime': SemanticDateTimeInput(),
         }
