@@ -2,10 +2,28 @@ from django.db import models
 from django.db.models.constraints import CheckConstraint
 from django.db.models.query_utils import Q
 from django.utils.translation import gettext_lazy as _
+from functools import cached_property
+
 
 from card.modelfields import CardNumberField
 from users.models import User
 from .fields import UsernameField
+
+
+class CoursePermission(models.Model):
+    class DefaultPerms(models.TextChoices):
+        IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
+        TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
+        TAKEN_RAISE3D_COURSE = "R3DP", _("Taken the course on Raise3D printers")
+        SLA_PRINTER_COURSE = "SLAP", _("Taken the SLA 3D printer course")
+
+    short_name = models.CharField(max_length=4, blank=True, verbose_name=_("short name"), unique=True)
+    name = models.CharField(max_length=256, blank=True, verbose_name=_("name"))
+    description = models.TextField(blank=True, verbose_name=_("description"))
+    last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
+
+    def __str__(self):
+        return self.name
 
 
 # `3DPrinterCourse` would be a syntactically invalid name :(
@@ -32,8 +50,7 @@ class Printer3DCourse(models.Model):
 
     date = models.DateField(verbose_name=_("course date"))
     status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
-    raise3d_course = models.BooleanField(default=False, verbose_name=_("Raise3D course"))
-    sla_course = models.BooleanField(default=False, verbose_name=_("SLA course"))
+    course_permissions = models.ManyToManyField(CoursePermission, blank=True, verbose_name=_("course permissions"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
@@ -71,6 +88,10 @@ class Printer3DCourse(models.Model):
             self.user = User.objects.get(username=self.username)
         except User.DoesNotExist:
             pass
+
+    @cached_property
+    def permission_names(self) -> list[str]:
+        return [perm.short_name for perm in self.course_permissions.all()]
 
     @property
     def card_number(self):
