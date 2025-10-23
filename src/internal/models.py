@@ -300,7 +300,7 @@ class Quote(models.Model):
     quote = models.TextField(verbose_name=_("quote"))
     quoted = models.CharField(max_length=100, verbose_name=_("quoted"), help_text=_("The person who is quoted."))
     context = models.TextField(blank=True, max_length=500, verbose_name=_("context"))
-    date = models.DateField(verbose_name=_("date"))
+    dateTime = models.DateTimeField(verbose_name=_("dateTime"))
     author = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,
@@ -309,7 +309,7 @@ class Quote(models.Model):
     )
 
     class Meta:
-        ordering = ('-date',)
+        ordering = ('-dateTime',)
 
     def __str__(self):
         return _("“{quote}” —{quoted}").format(quote=self.quote, quoted=self.quoted)
