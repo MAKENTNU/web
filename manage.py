@@ -8,6 +8,9 @@ sys.path.append('src')
 
 def main():
     """Run administrative tasks."""
+    # IMPORTANT: Ensure this import is kept here, as it loads the envvars
+    import env  # noqa: F401
+
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'web.settings')
     try:
         from django.core.management import execute_from_command_line

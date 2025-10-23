@@ -32,6 +32,8 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 - Prevented `compilemessages` from processing files outside the `src` folder (MAKENTNU/web#766)
 - Migrated project to use the more modern `pyproject.toml` and [uv](https://docs.astral.sh/uv/) instead of `requirements.txt` and pip
   (MAKENTNU/web#766)
+- Replaced `local_settings.py` with `.env` (MAKENTNU/web#767)
+  - Developers must create a `.env` file locally - see the "Setup" section of the README
 
 
 ## 2025-05-03 (MAKENTNU/web#757)

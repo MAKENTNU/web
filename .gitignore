@@ -473,6 +473,4 @@ pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/django,pycharm+all,venv,visualstudiocode,macos,node
 
-
 !src/web/static/lib/
-local_settings_post.py

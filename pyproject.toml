@@ -37,6 +37,9 @@ dependencies = [
   "channels[daphne]==4.1.0",
   "channels-redis==4.2.0",
 
+  # Environment variables
+  "python-dotenv==1.1.1",
+
   # Misc. packages
   "bleach[css]==6.1.0",
   "Pillow==11.3.0",

@@ -10,6 +10,8 @@ from django.conf.locale.nb import formats as nb_formats
 from django.utils.translation import gettext_lazy as _
 from django_hosts import reverse_lazy
 
+import env
+from env import DatabaseSystem
 from .static import serve_interpolated
 
 
@@ -32,21 +34,24 @@ TESTS_DIR = BASE_DIR
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Default values
-DATABASE = 'sqlite'  # (custom setting; used below for selecting database configuration)
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# NOTE: These settings must be changed in production!
-SECRET_KEY = ' '
-DEBUG = True
-ALLOWED_HOSTS = ['*']
-INTERNAL_IPS = ['127.0.0.1']
+DEBUG = env.DEBUG
+SECRET_KEY = env.SECRET_KEY
+ALLOWED_HOSTS = env.ALLOWED_HOSTS
+INTERNAL_IPS = env.INTERNAL_IPS
 
-MEDIA_ROOT = REPO_DIR.parent / 'media'
+STATIC_AND_MEDIA_FILES__PARENT_DIR = (  # (custom setting)
+    REPO_DIR / env.STATIC_AND_MEDIA_FILES__PARENT_DIR
+).resolve()
+MEDIA_ROOT = STATIC_AND_MEDIA_FILES__PARENT_DIR / 'media'
 MEDIA_URL = '/media/'
 
 # Based on https://github.com/Uninett/python-dataporten-auth/blob/bad1b95483c5da7d279df4a8d542a3c24c928095/src/demosite/settings.py#L120-L121
-SOCIAL_AUTH_DATAPORTEN_KEY = ''  # "Client ID" in the OpenID Connect configuration in Feide's customer portal
-SOCIAL_AUTH_DATAPORTEN_SECRET = ''  # "Client Secret" in the same configuration
+# "Client ID" in the OpenID Connect configuration in Feide's customer portal
+SOCIAL_AUTH_DATAPORTEN_KEY = env.SOCIAL_AUTH_DATAPORTEN_KEY
+# "Client Secret" in the same configuration
+SOCIAL_AUTH_DATAPORTEN_SECRET = env.SOCIAL_AUTH_DATAPORTEN_SECRET
 
 # These will be internationalized since `reverse_lazy()` is used
 # (i.e. these will be English URLs when the user is on the English version of the website, and vice versa for Norwegian)
@@ -54,32 +59,20 @@ LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('index_page')
 LOGOUT_REDIRECT_URL = reverse_lazy('index_page')
 
-# NOTE: This must be changed in production!
-CHECKIN_KEY = ''  # (custom setting)
+CHECKIN_KEY = env.CHECKIN_KEY  # (custom setting)
 
-REDIS_IP = '127.0.0.1'  # (custom setting)
-REDIS_PORT = 6379  # (custom setting)
-
-FILE_MAX_SIZE = 25 * 2 ** 20  # 25 MiB (custom setting; the max on the server is 50 MiB)
+# Converting MiB to bytes
+FILE_MAX_SIZE = env.MEDIA_FILE_MAX_SIZE__MB * 2 ** 20  # (custom setting)
 
 # The `SESSION_COOKIE_DOMAIN`, `CSRF_COOKIE_DOMAIN` and `LANGUAGE_COOKIE_DOMAIN` will be set to this value
-# NOTE: This must be changed in production!
-COOKIE_DOMAIN = '.makentnu.localhost'  # (custom setting)
+COOKIE_DOMAIN = env.COOKIE_DOMAIN  # (custom setting)
 # The `SESSION_COOKIE_SECURE`, `CSRF_COOKIE_SECURE` and `LANGUAGE_COOKIE_SECURE` will be set to this value
-# NOTE: This should be set to `True` in production!
-COOKIE_SECURE = False  # (custom setting)
+COOKIE_SECURE = env.COOKIE_SECURE  # (custom setting)
 
 # For `django-hosts` to redirect correctly across subdomains, we have to specify the host we are running on.
-# NOTE: This must be changed in production!
-PARENT_HOST = 'makentnu.localhost:8000'
+PARENT_HOST = env.PARENT_HOST
 
 EVENT_TICKET_EMAIL = 'ticket@makentnu.no'  # (custom setting)
-
-# Set local settings
-try:
-    from .local_settings import *
-except ImportError:
-    pass
 
 
 # When using more than one subdomain, the session cookie domain has to be set so that the subdomains can use the same session
@@ -238,7 +231,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [(REDIS_IP, REDIS_PORT)],
+            'hosts': [(env.REDIS_HOST, env.REDIS_PORT)],
             # The maximum resend time of a message in seconds
             'expiry': 30,
             # The number of seconds before a connection expires
@@ -250,24 +243,26 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
-if DATABASE == 'postgres':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': DATABASE_NAME,
-            'USER': DATABASE_USER,
-            'PASSWORD': DATABASE_PASSWORD,
-            'HOST': 'localhost',
-            'PORT': '',
-        },
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': str(REPO_DIR / 'db.sqlite3'),
-        },
-    }
+match env.DATABASE_SYSTEM:
+    case DatabaseSystem.POSTGRESQL:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql_psycopg2',
+                'HOST': env.POSTGRES_HOST,
+                'NAME': env.POSTGRES_DB_NAME,
+                'USER': env.POSTGRES_DB_USER,
+                'PASSWORD': env.POSTGRES_DB_PASSWORD,
+            },
+        }
+    case DatabaseSystem.SQLITE:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': str((REPO_DIR / env.SQLITE_DB_PATH).resolve()),
+            },
+        }
+    case _:
+        raise NotImplementedError
 
 # Password validation
 # https://docs.djangoproject.com/en/stable/ref/settings/#auth-password-validators
@@ -336,7 +331,7 @@ CONSTANCE_CONFIG_FIELDSETS = (
 
 # Dataporten
 
-USES_DATAPORTEN_AUTH = SOCIAL_AUTH_DATAPORTEN_KEY and SOCIAL_AUTH_DATAPORTEN_SECRET  # (custom setting)
+USE_DATAPORTEN_AUTH = env.USE_DATAPORTEN_AUTH  # (custom setting)
 
 SOCIAL_AUTH_DATAPORTEN_FEIDE_SSL_PROTOCOL = True
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = reverse_lazy('index_page')
@@ -398,7 +393,7 @@ nb_formats.DECIMAL_SEPARATOR = '.'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/stable/howto/static-files/
 
-STATIC_ROOT = REPO_DIR.parent / 'static'
+STATIC_ROOT = STATIC_AND_MEDIA_FILES__PARENT_DIR / 'static'
 STATIC_URL = '/static/'
 
 # This is based on Django's ManifestStaticFilesStorage, which appends every static file's MD5 hash to its filename,
@@ -509,7 +504,16 @@ if USE_DEBUG_TOOLBAR:
     }
 
 
+# Emailing
 PRINT_EMAILS_TO_CONSOLE = DEBUG or is_testing  # (custom setting)
+EMAIL_HOST = env.EMAIL_HOST
+EMAIL_HOST_USER = env.EMAIL_HOST_USER
+EMAIL_PORT = env.EMAIL_PORT
+EMAIL_USE_TLS = env.EMAIL_USE_TLS
+DEFAULT_FROM_EMAIL = env.DEFAULT_FROM_EMAIL
+SERVER_EMAIL = env.SERVER_EMAIL
+EMAIL_SUBJECT_PREFIX = env.EMAIL_SUBJECT_PREFIX
+ADMINS = env.ADMINS
 
 # See https://docs.djangoproject.com/en/stable/topics/logging/ for
 # more details on how to customize your logging configuration.
@@ -561,6 +565,11 @@ LOGGING = {
             f'django.{disabled_logger_name}': {'propagate': False}
             for disabled_logger_name in ['db', 'template', 'utils']
         },
+        # Prevent deluge of "X of X channels over capacity in group stream_XXX" INFO messages from `channels_redis`
+        'channels_redis': {
+            'handlers': ['console'],
+            'level': 'WARNING',
+        },
     },
 }
 
@@ -572,10 +581,3 @@ useful for checking e.g. that a request doesn't query the database more times th
 #     'level': 'DEBUG',
 #     'propagate': True,
 # }
-
-
-# [SHOULD BE KEPT LAST IN THIS FILE] Override the settings above
-try:
-    from .local_settings_post import *
-except ImportError:
-    pass
