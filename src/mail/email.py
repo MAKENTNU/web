@@ -28,7 +28,7 @@ class EmailConsumer(SyncConsumer):
     To send an asynchronous email, use ``async_to_sync(get_channel_layer().send)('email', message)``, where ``message`` is a
     message dictionary as described above. ``async_to_sync`` can be imported from ``asgiref.sync`` and ``get_channel_layer``
     can be imported from ``channels.layers``. The email consumer requires a worker to be run which can be started by the
-    command ``python manage.py runworker -v 2 email``. To run the worker, ``redis`` must be installed and running. Requires a
+    command ``uv run manage.py runworker -v 2 email``. To run the worker, ``redis`` must be installed and running. Requires a
     standard Django setup of email credentials to send emails.
     """
 

@@ -1,20 +1,20 @@
 run:
-	python manage.py runserver 0.0.0.0:8000
+	uv run manage.py runserver 0.0.0.0:8000
 
 migrations:
-	python manage.py makemigrations ${A}
+	uv run manage.py makemigrations ${A}
 
 migrate:
-	python manage.py migrate
+	uv run manage.py migrate
 
 superuser:
-	python manage.py createsuperuser
+	uv run manage.py createsuperuser
 
 startapp:
-	python manage.py startapp
+	uv run manage.py startapp
 
 shell:
-	python manage.py shell
+	uv run manage.py shell
 
 test:
-	python manage.py test
+	uv run manage.py test
