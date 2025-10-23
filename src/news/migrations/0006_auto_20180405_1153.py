@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0005_auto_20180308_0728'),
+        ("news", "0005_auto_20180308_0728"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='newsbase',
-            name='featured',
-            field=models.BooleanField(default=True, verbose_name='fremhevet'),
+            model_name="newsbase",
+            name="featured",
+            field=models.BooleanField(default=True, verbose_name="fremhevet"),
         ),
     ]

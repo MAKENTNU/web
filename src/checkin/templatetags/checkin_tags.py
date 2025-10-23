@@ -15,9 +15,9 @@ def locale_title(skill, language_code):
 
 @register.filter
 def can_force_suggestion(user):
-    return user.has_perm('checkin.can_force_suggestion')
+    return user.has_perm("checkin.can_force_suggestion")
 
 
 @register.filter
 def can_delete_suggestion(user):
-    return user.has_perm('checkin.delete_suggestskill')
+    return user.has_perm("checkin.delete_suggestskill")

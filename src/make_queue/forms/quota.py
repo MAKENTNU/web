@@ -13,14 +13,14 @@ from ..models.reservation import Quota
 
 class QuotaForm(forms.ModelForm):
     user = UserModelChoiceField(
-        queryset=User.objects.order_by(Concat('first_name', 'last_name'), 'username'),
+        queryset=User.objects.order_by(Concat("first_name", "last_name"), "username"),
         widget=SemanticSearchableChoiceInput(prompt_text=_("Select user")),
         # `capfirst()` to avoid duplicate translation differing only in case
         label=capfirst(_("user")),
         required=False,
     )
     machine_type = forms.ModelChoiceField(
-        queryset=MachineType.objects.order_by('priority'),
+        queryset=MachineType.objects.order_by("priority"),
         label=capfirst(_("machine type")),
         empty_label=_("Select machine type"),
         widget=SemanticChoiceInput,
@@ -28,17 +28,17 @@ class QuotaForm(forms.ModelForm):
 
     class Meta:
         model = Quota
-        fields = '__all__'
+        fields = "__all__"
 
     class Media:
-        js = (
-            JS('make_queue/js/quota_form.js', attrs={'defer': True}),
-        )
+        js = [
+            JS("make_queue/js/quota_form.js", attrs={"defer": True}),
+        ]
 
     def clean(self):
         cleaned_data = super().clean()
-        user = cleaned_data.get('user')
-        all_users = cleaned_data.get('all')
+        user = cleaned_data.get("user")
+        all_users = cleaned_data.get("all")
 
         user_error_message = None
         if not user and not all_users:
@@ -48,7 +48,7 @@ class QuotaForm(forms.ModelForm):
 
         if user_error_message:
             # Can't raise ValidationError when adding errors for both a specific field and the whole form (field=None)
-            self.add_error('user', user_error_message)
+            self.add_error("user", user_error_message)
             self.add_error(None, _("Must select either specific user or all users."))
             return
 
@@ -58,7 +58,5 @@ class QuotaForm(forms.ModelForm):
 class AdminQuotaPanelQueryForm(forms.Form):
     user = forms.ModelChoiceField(
         User.objects.all(),
-        error_messages={
-            'invalid_choice': "User with pk=%(value)s was not found."
-        },
+        error_messages={"invalid_choice": "User with pk=%(value)s was not found."},
     )

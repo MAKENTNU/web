@@ -4,15 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0013_course_card_number_field'),
+        ("make_queue", "0013_course_card_number_field"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='machine',
-            name='priority',
-            field=models.IntegerField(blank=True, help_text='If specified, the machines are sorted ascending by this value.', null=True, verbose_name='priority'),
+            model_name="machine",
+            name="priority",
+            field=models.IntegerField(
+                blank=True,
+                help_text="If specified, the machines are sorted ascending by this value.",
+                null=True,
+                verbose_name="priority",
+            ),
         ),
     ]

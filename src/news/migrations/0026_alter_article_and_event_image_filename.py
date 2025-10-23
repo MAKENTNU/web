@@ -10,12 +10,12 @@ import util.storage
 
 
 def move_article_and_event_images(apps, schema_editor):
-    Article = apps.get_model('news', 'Article')
-    Event = apps.get_model('news', 'Event')
+    Article = apps.get_model("news", "Article")
+    Event = apps.get_model("news", "Event")
     old_paths_renamed_to_new_paths = {}
     try:
         for model in (Article, Event):
-            image_field = model._meta.get_field('image')
+            image_field = model._meta.get_field("image")
 
             for news_obj in model.objects.all():
                 if not news_obj.image:
@@ -27,7 +27,9 @@ def move_article_and_event_images(apps, schema_editor):
                     continue
                 else:
                     # Ensure that the name is available
-                    new_name = image_field.storage.get_available_name(new_name, max_length=image_field.max_length)
+                    new_name = image_field.storage.get_available_name(
+                        new_name, max_length=image_field.max_length
+                    )
                 old_path = news_obj.image.path
                 new_path = settings.MEDIA_ROOT / new_name
                 new_upload_dir = new_path.parent
@@ -43,7 +45,7 @@ def move_article_and_event_images(apps, schema_editor):
                 else:
                     old_paths_renamed_to_new_paths[old_path] = new_path
                 news_obj.image.name = new_name
-                news_obj.save(update_fields=['image'])
+                news_obj.save(update_fields=["image"])
     except Exception as e:
         for old_path, new_path in old_paths_renamed_to_new_paths.items():
             try:
@@ -54,31 +56,48 @@ def move_article_and_event_images(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0025_historicalevent_historicalarticle'),
+        ("news", "0025_historicalevent_historicalarticle"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='article',
-            name='image',
-            field=util.modelfields.CompressedImageField(max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': news.models.news_subclass_directory_path}), verbose_name='image'),
+            model_name="article",
+            name="image",
+            field=util.modelfields.CompressedImageField(
+                max_length=200,
+                storage=util.storage.OverwriteStorage(),
+                upload_to=functools.partial(
+                    util.storage.UploadToUtils._actual_upload_to,
+                    *(),
+                    **{"upload_to": news.models.news_subclass_directory_path},
+                ),
+                verbose_name="image",
+            ),
         ),
         migrations.AlterField(
-            model_name='event',
-            name='image',
-            field=util.modelfields.CompressedImageField(max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': news.models.news_subclass_directory_path}), verbose_name='image'),
+            model_name="event",
+            name="image",
+            field=util.modelfields.CompressedImageField(
+                max_length=200,
+                storage=util.storage.OverwriteStorage(),
+                upload_to=functools.partial(
+                    util.storage.UploadToUtils._actual_upload_to,
+                    *(),
+                    **{"upload_to": news.models.news_subclass_directory_path},
+                ),
+                verbose_name="image",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalarticle',
-            name='image',
-            field=models.CharField(max_length=200, verbose_name='image'),
+            model_name="historicalarticle",
+            name="image",
+            field=models.CharField(max_length=200, verbose_name="image"),
         ),
         migrations.AlterField(
-            model_name='historicalevent',
-            name='image',
-            field=models.CharField(max_length=200, verbose_name='image'),
+            model_name="historicalevent",
+            name="image",
+            field=models.CharField(max_length=200, verbose_name="image"),
         ),
         migrations.RunPython(move_article_and_event_images, migrations.RunPython.noop),
     ]

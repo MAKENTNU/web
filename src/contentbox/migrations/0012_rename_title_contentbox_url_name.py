@@ -6,30 +6,51 @@ import re
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0011_historicalcontentbox'),
+        ("contentbox", "0011_historicalcontentbox"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='contentbox',
-            old_name='title',
-            new_name='url_name',
+            model_name="contentbox",
+            old_name="title",
+            new_name="url_name",
         ),
         migrations.RenameField(
-            model_name='historicalcontentbox',
-            old_name='title',
-            new_name='url_name',
+            model_name="historicalcontentbox",
+            old_name="title",
+            new_name="url_name",
         ),
         migrations.AlterField(
-            model_name='contentbox',
-            name='url_name',
-            field=models.CharField(max_length=100, unique=True, validators=[django.core.validators.RegexValidator(code='invalid_lowercase_slug', message='This can only consist of lowercase English letters, numbers, hyphens or underscores.', regex=re.compile('^[a-z0-9_-]+$'))], verbose_name='URL name'),
+            model_name="contentbox",
+            name="url_name",
+            field=models.CharField(
+                max_length=100,
+                unique=True,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        code="invalid_lowercase_slug",
+                        message="This can only consist of lowercase English letters, numbers, hyphens or underscores.",
+                        regex=re.compile("^[a-z0-9_-]+$"),
+                    )
+                ],
+                verbose_name="URL name",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalcontentbox',
-            name='url_name',
-            field=models.CharField(db_index=True, max_length=100, validators=[django.core.validators.RegexValidator(code='invalid_lowercase_slug', message='This can only consist of lowercase English letters, numbers, hyphens or underscores.', regex=re.compile('^[a-z0-9_-]+$'))], verbose_name='URL name'),
+            model_name="historicalcontentbox",
+            name="url_name",
+            field=models.CharField(
+                db_index=True,
+                max_length=100,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        code="invalid_lowercase_slug",
+                        message="This can only consist of lowercase English letters, numbers, hyphens or underscores.",
+                        regex=re.compile("^[a-z0-9_-]+$"),
+                    )
+                ],
+                verbose_name="URL name",
+            ),
         ),
     ]

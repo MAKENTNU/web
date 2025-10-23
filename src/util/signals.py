@@ -9,7 +9,9 @@ def connect():
     # Connect to all models whose fields might use `UploadToUtils`'s method as their `upload_to` argument
     for model in apps.get_models():
         if model_has_file_field(model):
-            post_save.connect(UploadToUtils.rename_files_of_created_instances, sender=model)
+            post_save.connect(
+                UploadToUtils.rename_files_of_created_instances, sender=model
+            )
             continue
 
 
