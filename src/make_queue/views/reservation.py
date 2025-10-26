@@ -16,17 +16,25 @@ from util.locale_utils import timedelta_to_hours
 from util.logging_utils import log_request_exception
 from util.view_utils import QueryParameterFormMixin
 from .machine import MachineRelatedViewMixin
-from ..forms.reservation import ReservationFindFreeSlotsForm, ReservationForm, ReservationListQueryForm
+from ..forms.reservation import (
+    ReservationFindFreeSlotsForm,
+    ReservationForm,
+    ReservationListQueryForm,
+)
 from ..models.machine import Machine, MachineType
 from ..models.reservation import Reservation, ReservationRule
-from ..templatetags.reservation_extra import calendar_url_reservation, can_change_reservation
+from ..templatetags.reservation_extra import (
+    calendar_url_reservation,
+    can_change_reservation,
+)
 
 
 # TODO: rewrite this whole view (and everything that uses it), so that it's more extendable,
 #       and makes more use of the functionality of forms and Django's `CreateView` and `UpdateView`
 class ReservationCreateOrUpdateView(TemplateView, ABC):
     """Base abstract class for the reservation create or change view."""
-    template_name = 'make_queue/reservation_form.html'
+
+    template_name = "make_queue/reservation_form.html"
 
     new_reservation: bool
     reservation: Reservation = None
@@ -39,14 +47,19 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
         :param form: The form to generate an error message for
         :return: The error message
         """
-        if not reservation.is_within_allowed_period() and not (reservation.special or reservation.event):
+        if not reservation.is_within_allowed_period() and not (
+            reservation.special or reservation.event
+        ):
             num_days = reservation.FUTURE_LIMIT.days
             return ngettext(
-                'Reservations can only be made {num_days} day ahead of time',
-                'Reservations can only be made {num_days} days ahead of time',
-                num_days
+                "Reservations can only be made {num_days} day ahead of time",
+                "Reservations can only be made {num_days} days ahead of time",
+                num_days,
             ).format(num_days=num_days)
-        if self.request.user.has_perm('make_queue.can_create_event_reservation') and form.cleaned_data["event"]:
+        if (
+            self.request.user.has_perm("make_queue.can_create_event_reservation")
+            and form.cleaned_data["event"]
+        ):
             return _("The time slot or event is no longer available")
         if reservation.check_machine_out_of_order():
             return _("The machine is out of order")
@@ -54,9 +67,14 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
             return _("The machine is under maintenance")
         if reservation.start_time == reservation.end_time:
             return _("The reservation cannot start and end at the same time")
-        if not ReservationRule.covered_rules(reservation.start_time, reservation.end_time,
-                                             reservation.machine.machine_type):
-            return _("It is not possible to reserve the machine during these hours. Check the rules for when the machine is reservable")
+        if not ReservationRule.covered_rules(
+            reservation.start_time,
+            reservation.end_time,
+            reservation.machine.machine_type,
+        ):
+            return _(
+                "It is not possible to reserve the machine during these hours. Check the rules for when the machine is reservable"
+            )
         if not reservation.quota_can_create_reservation():
             return _("The reservation exceeds your quota")
         if reservation.check_start_time_after_end_time():
@@ -93,16 +111,20 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
         :return: The context data needed for the template
         """
 
-        machine_queryset = Machine.objects.visible_to(self.request.user).default_order_by()
+        machine_queryset = Machine.objects.visible_to(
+            self.request.user
+        ).default_order_by()
         # Always include a list of events and machines to populate the dropdown lists
         context_data = {
             "new_reservation": self.new_reservation,
-            "event_timeplaces": list(TimePlace.objects.filter(end_time__gte=timezone.localtime())),
+            "event_timeplaces": list(
+                TimePlace.objects.filter(end_time__gte=timezone.localtime())
+            ),
             "machine_types": [
                 machine_type
-                for machine_type in
-                MachineType.objects.default_order_by().prefetch_machines(
-                    machine_queryset=machine_queryset, machines_attr_name='instances',
+                for machine_type in MachineType.objects.default_order_by().prefetch_machines(
+                    machine_queryset=machine_queryset,
+                    machines_attr_name="instances",
                 )
                 if machine_type.can_user_use(self.request.user)
             ],
@@ -125,12 +147,12 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
             context_data["can_change_end_time"] = reservation.can_change_end_time()
         # Otherwise populate with default information given to the view
         else:
-            if hasattr(self, 'machine'):
+            if hasattr(self, "machine"):
                 # Set in `ReservationCreateView`
                 selected_machine = self.machine
             else:
                 # `machine_pk` is only set in `test_get_context_data_non_reservation()` 🙃🔥
-                selected_machine = get_object_or_404(Machine, pk=kwargs['machine_pk'])
+                selected_machine = get_object_or_404(Machine, pk=kwargs["machine_pk"])
             context_data["selected_machine"] = selected_machine
             if "start_time" in kwargs:
                 context_data["start_time"] = kwargs["start_time"]
@@ -147,7 +169,7 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
         :param request: The HTTP request
         :return: HTTP response
         """
-        if request.method == 'POST':
+        if request.method == "POST":
             return self.handle_post(request, **kwargs)
         return super().dispatch(request, *args, **kwargs)
 
@@ -166,8 +188,11 @@ class ReservationCreateOrUpdateView(TemplateView, ABC):
         return self.get(request, **kwargs)
 
 
-class ReservationCreateView(PermissionRequiredMixin, MachineRelatedViewMixin, ReservationCreateOrUpdateView):
+class ReservationCreateView(
+    PermissionRequiredMixin, MachineRelatedViewMixin, ReservationCreateOrUpdateView
+):
     """View for creating a new reservation."""
+
     new_reservation = True
 
     def has_permission(self):
@@ -200,17 +225,18 @@ class ReservationCreateView(PermissionRequiredMixin, MachineRelatedViewMixin, Re
 
 class ReservationUpdateView(ReservationCreateOrUpdateView):
     """View for changing a reservation (Cannot be UpdateView due to the abstract inheritance of reservations)."""
+
     new_reservation = False
     reservation: Reservation
 
     @property
     def success_url(self):
-        owner_param = urlencode({'owner': ReservationListQueryForm.Owner.ME})
+        owner_param = urlencode({"owner": ReservationListQueryForm.Owner.ME})
         return f"{reverse('reservation_list')}?{owner_param}"
 
     def setup(self, request, *args, **kwargs):
         super().setup(request, *args, **kwargs)
-        reservation_pk = self.kwargs['pk']
+        reservation_pk = self.kwargs["pk"]
         self.reservation = get_object_or_404(Reservation, pk=reservation_pk)
 
     def dispatch(self, request, *args, **kwargs):
@@ -239,7 +265,10 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
             return HttpResponseRedirect(self.success_url)
 
         # If the reservation has begun, the user is not allowed to change the start time
-        if reservation.start_time < timezone.now() and reservation.start_time != form.cleaned_data["start_time"]:
+        if (
+            reservation.start_time < timezone.now()
+            and reservation.start_time != form.cleaned_data["start_time"]
+        ):
             return HttpResponseRedirect(self.success_url)
 
         reservation.comment = form.cleaned_data["comment"]
@@ -257,12 +286,13 @@ class ReservationUpdateView(ReservationCreateOrUpdateView):
 
 class ReservationListView(PermissionRequiredMixin, QueryParameterFormMixin, ListView):
     """View for listing either the user's reservations or MAKE's."""
+
     model = Reservation
     form_class = ReservationListQueryForm
-    template_name = 'make_queue/reservation_list.html'
-    context_object_name = 'reservations'
+    template_name = "make_queue/reservation_list.html"
+    context_object_name = "reservations"
     extra_context = {
-        'ReservationOwner': ReservationListQueryForm.Owner,
+        "ReservationOwner": ReservationListQueryForm.Owner,
     }
 
     def has_permission(self):
@@ -270,19 +300,19 @@ class ReservationListView(PermissionRequiredMixin, QueryParameterFormMixin, List
         if self._query_param_errors:
             return self.form_invalid()
 
-        match self.query_params['owner']:
+        match self.query_params["owner"]:
             case ReservationListQueryForm.Owner.ME:
                 return self.request.user.is_authenticated
             case ReservationListQueryForm.Owner.MAKE:
                 return self.user_has_admin_perms()
 
     def user_has_admin_perms(self):
-        return self.request.user.has_perm('make_queue.can_create_event_reservation')
+        return self.request.user.has_perm("make_queue.can_create_event_reservation")
 
     def get_queryset(self):
         non_admin_reservations_query = Q(event=None, special=False)
 
-        match self.query_params['owner']:
+        match self.query_params["owner"]:
             case ReservationListQueryForm.Owner.ME:
                 filter_query = Q(user=self.request.user)
                 if not self.user_has_admin_perms():
@@ -293,25 +323,29 @@ class ReservationListView(PermissionRequiredMixin, QueryParameterFormMixin, List
                 queryset = Reservation.objects.exclude(non_admin_reservations_query)
 
         # noinspection PyUnboundLocalVariable
-        return queryset.order_by('-end_time', '-start_time')
+        return queryset.order_by("-end_time", "-start_time")
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(**{
-            'reservations_owned_by_MAKE': self.query_params['owner'] == ReservationListQueryForm.Owner.MAKE,
-            'has_admin_perms': self.user_has_admin_perms(),
-            **kwargs,
-        })
+        MAKE_owned = self.query_params["owner"] == ReservationListQueryForm.Owner.MAKE
+        return super().get_context_data(
+            **{
+                "reservations_owned_by_MAKE": MAKE_owned,
+                "has_admin_perms": self.user_has_admin_perms(),
+                **kwargs,
+            }
+        )
 
 
 class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
     """
     View to find free time slots for reservations.
     """
+
     form_class = ReservationFindFreeSlotsForm
-    template_name = 'make_queue/reservation_find_free_slots.html'
+    template_name = "make_queue/reservation_find_free_slots.html"
 
     def get_initial(self):
-        return {'machine_type': MachineType.objects.first()}
+        return {"machine_type": MachineType.objects.first()}
 
     @staticmethod
     def format_period(machine, start_time, end_time):
@@ -319,10 +353,10 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
         Formats a time period for the context.
         """
         return {
-            'machine': machine,
-            'start_time': start_time,
-            'end_time': end_time,
-            'duration': ceil(timedelta_to_hours(end_time - start_time)),
+            "machine": machine,
+            "start_time": start_time,
+            "end_time": end_time,
+            "duration": ceil(timedelta_to_hours(end_time - start_time)),
         }
 
     def get_periods(self, machine: Machine, required_time):
@@ -335,34 +369,38 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
         """
         periods = []
         reservations = list(
-            machine.reservations.filter(end_time__gte=timezone.now()).order_by('start_time')
+            machine.reservations.filter(end_time__gte=timezone.now()).order_by(
+                "start_time"
+            )
         )
 
         # Find all periods between reservations
         for period_start, period_end in zip(reservations, reservations[1:]):
-            duration = timedelta_to_hours(
-                period_end.start_time - period_start.end_time)
+            duration = timedelta_to_hours(period_end.start_time - period_start.end_time)
             if duration >= required_time:
-                periods.append(self.format_period(
-                    machine,
-                    period_start.end_time,
-                    period_end.start_time
-                ))
+                periods.append(
+                    self.format_period(
+                        machine, period_start.end_time, period_end.start_time
+                    )
+                )
 
         # Add remaining time after last reservation
         if reservations:
-            periods.append(self.format_period(
-                machine, reservations[-1].end_time,
-                timezone.now() + Reservation.FUTURE_LIMIT
-            ))
+            periods.append(
+                self.format_period(
+                    machine,
+                    reservations[-1].end_time,
+                    timezone.now() + Reservation.FUTURE_LIMIT,
+                )
+            )
         # If the machine is not reserved anytime in the future, we include the
         # whole allowed period
         else:
-            periods.append(self.format_period(
-                machine,
-                timezone.now(),
-                timezone.now() + Reservation.FUTURE_LIMIT
-            ))
+            periods.append(
+                self.format_period(
+                    machine, timezone.now(), timezone.now() + Reservation.FUTURE_LIMIT
+                )
+            )
         return periods
 
     def form_valid(self, form):
@@ -372,21 +410,20 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
         :param form: A valid ``ReservationFindFreeSlotsForm`` form
         :return: A HTTP response rendering the page with the found free slots
         """
-        context = self.get_context_data()
-
         # Time should be expressed in hours
-        required_time = form.cleaned_data['hours'] + form.cleaned_data['minutes'] / 60
+        required_time = form.cleaned_data["hours"] + form.cleaned_data["minutes"] / 60
 
         periods = []
-        for machine in form.cleaned_data['machine_type'].machines.all():
+        for machine in form.cleaned_data["machine_type"].machines.all():
             if not machine.get_status() == Machine.Status.OUT_OF_ORDER:
                 periods.extend(self.get_periods(machine, required_time))
 
         # Periods in the near future is more interesting than in the distant
         # future
-        periods.sort(key=lambda period: period['start_time'])
+        periods.sort(key=lambda period: period["start_time"])
 
-        context.update({
-            'free_slots': periods,
-        })
+        context = {
+            **self.get_context_data(),
+            "free_slots": periods,
+        }
         return self.render_to_response(context)

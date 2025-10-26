@@ -18,7 +18,9 @@ class SemesterField(models.FloatField):
         return super().get_db_prep_value(value, connection, prepared=prepared)
 
     def formfield(self, **kwargs):
-        return super().formfield(**{
-            'form_class': formfields.SemesterField,
-            **kwargs,
-        })
+        return super().formfield(
+            **{
+                "form_class": formfields.SemesterField,
+                **kwargs,
+            }
+        )

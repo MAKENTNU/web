@@ -5,35 +5,57 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('announcements', '0001_initial'),
+        ("announcements", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='announcement',
-            name='classification',
-            field=models.CharField(choices=[('I', 'Information'), ('W', 'Warning'), ('C', 'Critical')], default='I', max_length=1, verbose_name='type'),
+            model_name="announcement",
+            name="classification",
+            field=models.CharField(
+                choices=[("I", "Information"), ("W", "Warning"), ("C", "Critical")],
+                default="I",
+                max_length=1,
+                verbose_name="type",
+            ),
         ),
         migrations.AlterField(
-            model_name='announcement',
-            name='display_from',
-            field=models.DateTimeField(default=datetime.datetime.now, help_text='The date from which the announcement will be shown.', verbose_name='display from'),
+            model_name="announcement",
+            name="display_from",
+            field=models.DateTimeField(
+                default=datetime.datetime.now,
+                help_text="The date from which the announcement will be shown.",
+                verbose_name="display from",
+            ),
         ),
         migrations.AlterField(
-            model_name='announcement',
-            name='display_to',
-            field=models.DateTimeField(blank=True, help_text='The announcement will be shown until this date. If none is given, it is shown indefinitely.', null=True, verbose_name='display to'),
+            model_name="announcement",
+            name="display_to",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="The announcement will be shown until this date. If none is given, it is shown indefinitely.",
+                null=True,
+                verbose_name="display to",
+            ),
         ),
         migrations.AlterField(
-            model_name='announcement',
-            name='link',
-            field=models.CharField(blank=True, help_text='An optional link to an information page.', max_length=2048, null=True, verbose_name='link'),
+            model_name="announcement",
+            name="link",
+            field=models.CharField(
+                blank=True,
+                help_text="An optional link to an information page.",
+                max_length=2048,
+                null=True,
+                verbose_name="link",
+            ),
         ),
         migrations.AlterField(
-            model_name='announcement',
-            name='site_wide',
-            field=models.BooleanField(help_text='If selected, the announcement will be shown on all pages, otherwise it is only shown on the front page.', verbose_name='site-wide'),
+            model_name="announcement",
+            name="site_wide",
+            field=models.BooleanField(
+                help_text="If selected, the announcement will be shown on all pages, otherwise it is only shown on the front page.",
+                verbose_name="site-wide",
+            ),
         ),
     ]

@@ -4,14 +4,13 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0004_auto_20180906_1855'),
+        ("checkin", "0004_auto_20180906_1855"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='suggestskill',
-            name='approved',
+            model_name="suggestskill",
+            name="approved",
         ),
     ]

@@ -4,14 +4,16 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0003_auto_20180830_1904'),
+        ("checkin", "0003_auto_20180830_1904"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='suggestskill',
-            options={'ordering': ('title',), 'permissions': (('can_force_suggestion', 'Can force suggestion'),)},
+            name="suggestskill",
+            options={
+                "ordering": ("title",),
+                "permissions": (("can_force_suggestion", "Can force suggestion"),),
+            },
         ),
     ]

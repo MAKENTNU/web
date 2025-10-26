@@ -4,14 +4,20 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0005_auto_20181209_1836'),
+        ("contentbox", "0005_auto_20181209_1836"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='contentbox',
-            options={'permissions': (('can_upload_image', 'Can upload images in CKEditor'), ('can_browse_image', 'Can browse images in CKEditor')), 'verbose_name': 'content box', 'verbose_name_plural': 'content boxes'},
+            name="contentbox",
+            options={
+                "permissions": (
+                    ("can_upload_image", "Can upload images in CKEditor"),
+                    ("can_browse_image", "Can browse images in CKEditor"),
+                ),
+                "verbose_name": "content box",
+                "verbose_name_plural": "content boxes",
+            },
         ),
     ]

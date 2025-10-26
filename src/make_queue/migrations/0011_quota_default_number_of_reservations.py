@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('make_queue', '0010_unique_username_in_course_registration'),
+        ("make_queue", "0010_unique_username_in_course_registration"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='quota',
-            name='number_of_reservations',
-            field=models.IntegerField(default=1, verbose_name='number of reservations'),
+            model_name="quota",
+            name="number_of_reservations",
+            field=models.IntegerField(default=1, verbose_name="number of reservations"),
         ),
     ]

@@ -10,37 +10,117 @@ import web.modelfields
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('make_queue', '0032_printer3dcourse_sla_course'),
+        ("make_queue", "0032_printer3dcourse_sla_course"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='HistoricalMachine',
+            name="HistoricalMachine",
             fields=[
-                ('id', models.BigIntegerField(auto_created=True, blank=True, db_index=True, verbose_name='ID')),
-                ('name', web.modelfields.UnlimitedCharField(db_index=True, verbose_name='name')),
-                ('stream_name', models.CharField(blank=True, default='', help_text="Used for connecting to the machine's stream.", max_length=50, validators=[django.core.validators.RegexValidator(code='invalid_lowercase_slug', message='This can only consist of lowercase English letters, numbers, hyphens or underscores.', regex=re.compile('^[a-z0-9_-]+$'))], verbose_name='stream name')),
-                ('machine_model', web.modelfields.UnlimitedCharField(verbose_name='machine model')),
-                ('location', web.modelfields.UnlimitedCharField(verbose_name='location')),
-                ('location_url', web.modelfields.URLTextField(verbose_name='location URL')),
-                ('internal', models.BooleanField(default=False, help_text='If selected, the machine will only be visible to and reservable by MAKE members.', verbose_name='internal')),
-                ('info_message', models.TextField(blank=True, help_text="Information that's useful to know before using the machine, e.g. the filament that the 3D printer uses, the needle that's currently inserted in the sewing machine, or just the machine's current state/“mood” (emojis are allowed 🤠).", verbose_name='info message')),
-                ('notes', models.TextField(blank=True, help_text='This is only for internal use and is not displayed anywhere.', verbose_name='notes')),
-                ('history_id', models.AutoField(primary_key=True, serialize=False)),
-                ('history_date', models.DateTimeField(db_index=True)),
-                ('history_change_reason', models.CharField(max_length=100, null=True)),
-                ('history_type', models.CharField(choices=[('+', 'Created'), ('~', 'Changed'), ('-', 'Deleted')], max_length=1)),
-                ('history_user', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to=settings.AUTH_USER_MODEL)),
-                ('machine_type', models.ForeignKey(blank=True, db_constraint=False, null=True, on_delete=django.db.models.deletion.DO_NOTHING, related_name='+', to='make_queue.machinetype', verbose_name='machine type')),
+                (
+                    "id",
+                    models.BigIntegerField(
+                        auto_created=True, blank=True, db_index=True, verbose_name="ID"
+                    ),
+                ),
+                (
+                    "name",
+                    web.modelfields.UnlimitedCharField(
+                        db_index=True, verbose_name="name"
+                    ),
+                ),
+                (
+                    "stream_name",
+                    models.CharField(
+                        blank=True,
+                        default="",
+                        help_text="Used for connecting to the machine's stream.",
+                        max_length=50,
+                        validators=[
+                            django.core.validators.RegexValidator(
+                                code="invalid_lowercase_slug",
+                                message="This can only consist of lowercase English letters, numbers, hyphens or underscores.",
+                                regex=re.compile("^[a-z0-9_-]+$"),
+                            )
+                        ],
+                        verbose_name="stream name",
+                    ),
+                ),
+                (
+                    "machine_model",
+                    web.modelfields.UnlimitedCharField(verbose_name="machine model"),
+                ),
+                (
+                    "location",
+                    web.modelfields.UnlimitedCharField(verbose_name="location"),
+                ),
+                (
+                    "location_url",
+                    web.modelfields.URLTextField(verbose_name="location URL"),
+                ),
+                (
+                    "internal",
+                    models.BooleanField(
+                        default=False,
+                        help_text="If selected, the machine will only be visible to and reservable by MAKE members.",
+                        verbose_name="internal",
+                    ),
+                ),
+                (
+                    "info_message",
+                    models.TextField(
+                        blank=True,
+                        help_text="Information that's useful to know before using the machine, e.g. the filament that the 3D printer uses, the needle that's currently inserted in the sewing machine, or just the machine's current state/“mood” (emojis are allowed 🤠).",
+                        verbose_name="info message",
+                    ),
+                ),
+                (
+                    "notes",
+                    models.TextField(
+                        blank=True,
+                        help_text="This is only for internal use and is not displayed anywhere.",
+                        verbose_name="notes",
+                    ),
+                ),
+                ("history_id", models.AutoField(primary_key=True, serialize=False)),
+                ("history_date", models.DateTimeField(db_index=True)),
+                ("history_change_reason", models.CharField(max_length=100, null=True)),
+                (
+                    "history_type",
+                    models.CharField(
+                        choices=[("+", "Created"), ("~", "Changed"), ("-", "Deleted")],
+                        max_length=1,
+                    ),
+                ),
+                (
+                    "history_user",
+                    models.ForeignKey(
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="+",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
+                (
+                    "machine_type",
+                    models.ForeignKey(
+                        blank=True,
+                        db_constraint=False,
+                        null=True,
+                        on_delete=django.db.models.deletion.DO_NOTHING,
+                        related_name="+",
+                        to="make_queue.machinetype",
+                        verbose_name="machine type",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'historical machine',
-                'verbose_name_plural': 'historical machines',
-                'ordering': ('-history_date', '-history_id'),
-                'get_latest_by': ('history_date', 'history_id'),
+                "verbose_name": "historical machine",
+                "verbose_name_plural": "historical machines",
+                "ordering": ("-history_date", "-history_id"),
+                "get_latest_by": ("history_date", "history_id"),
             },
             bases=(simple_history.models.HistoricalChanges, models.Model),
         ),

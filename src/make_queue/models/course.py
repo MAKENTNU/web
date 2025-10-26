@@ -12,12 +12,14 @@ from .fields import UsernameField
 
 class CoursePermission(models.Model):
     class DefaultPerms(models.TextChoices):
-        IS_AUTHENTICATED = 'AUTH', _("Only has to be logged in")
-        TAKEN_3D_PRINTER_COURSE = '3DPR', _("Taken the 3D printer course")
+        IS_AUTHENTICATED = "AUTH", _("Only has to be logged in")
+        TAKEN_3D_PRINTER_COURSE = "3DPR", _("Taken the 3D printer course")
         TAKEN_RAISE3D_COURSE = "R3DP", _("Taken the course on Raise3D printers")
         SLA_PRINTER_COURSE = "SLAP", _("Taken the SLA 3D printer course")
 
-    short_name = models.CharField(max_length=4, blank=True, verbose_name=_("short name"), unique=True)
+    short_name = models.CharField(
+        max_length=4, blank=True, verbose_name=_("short name"), unique=True
+    )
     name = models.CharField(max_length=256, blank=True, verbose_name=_("name"))
     description = models.TextField(blank=True, verbose_name=_("description"))
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
@@ -29,38 +31,53 @@ class CoursePermission(models.Model):
 # `3DPrinterCourse` would be a syntactically invalid name :(
 class Printer3DCourse(models.Model):
     class Status(models.TextChoices):
-        REGISTERED = 'registered', _("Registered")
+        REGISTERED = "registered", _("Registered")
         # Translators: See the Norwegian and English versions of this page for
         # a translation of "Building security":
         # https://i.ntnu.no/wiki/-/wiki/Norsk/Vakt+og+service+p%C3%A5+campus
-        SENT = 'sent', _("Sent to Building security")
-        ACCESS = 'access', _("Access granted")
+        SENT = "sent", _("Sent to Building security")
+        ACCESS = "access", _("Access granted")
 
     user = models.OneToOneField(
         to=User,
         on_delete=models.CASCADE,
         null=True,
-        related_name='printer_3d_course',
+        related_name="printer_3d_course",
         verbose_name=_("user"),
     )
-    username = UsernameField(max_length=32, blank=True, unique=True, verbose_name=_("username"))
+    username = UsernameField(
+        max_length=32, blank=True, unique=True, verbose_name=_("username")
+    )
     name = models.CharField(max_length=256, blank=True, verbose_name=_("full name"))
     # Set `null=True` even when it's a string-based field, as `null` is the only value not checked by the unique constraint
-    _card_number = CardNumberField(null=True, blank=True, unique=True)  # Card number backing field. Use card_number property instead
+    # (Card number backing field. Use card_number property instead)
+    _card_number = CardNumberField(null=True, blank=True, unique=True)
 
     date = models.DateField(verbose_name=_("course date"))
-    status = models.CharField(choices=Status.choices, max_length=20, default=Status.REGISTERED, verbose_name=_("status"))
-    course_permissions = models.ManyToManyField(CoursePermission, blank=True, verbose_name=_("course permissions"))
+    status = models.CharField(
+        choices=Status.choices,
+        max_length=20,
+        default=Status.REGISTERED,
+        verbose_name=_("status"),
+    )
+    course_permissions = models.ManyToManyField(
+        CoursePermission, blank=True, verbose_name=_("course permissions")
+    )
     last_modified = models.DateTimeField(auto_now=True, verbose_name=_("last modified"))
 
     class Meta:
         constraints = (
-            CheckConstraint(check=Q(user__isnull=True) | Q(_card_number__isnull=True), name="user_or_cardnumber_null"),
+            CheckConstraint(
+                check=Q(user__isnull=True) | Q(_card_number__isnull=True),
+                name="user_or_cardnumber_null",
+            ),
         )
         verbose_name = _("3D printer course")
         verbose_name_plural = _("3D printer courses")
 
-    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
         if self.pk is None:  # Creation of new object
             self._connect_to_user()
         else:

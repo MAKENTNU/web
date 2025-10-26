@@ -9,8 +9,8 @@ import util.storage
 
 
 def move_equipment_images(apps, schema_editor):
-    Equipment = apps.get_model('makerspace', 'Equipment')
-    image_field = Equipment._meta.get_field('image')
+    Equipment = apps.get_model("makerspace", "Equipment")
+    image_field = Equipment._meta.get_field("image")
     old_paths_renamed_to_new_paths = {}
     try:
         for equipment in Equipment.objects.all():
@@ -23,7 +23,9 @@ def move_equipment_images(apps, schema_editor):
                 continue
             else:
                 # Ensure that the name is available
-                new_name = image_field.storage.get_available_name(new_name, max_length=image_field.max_length)
+                new_name = image_field.storage.get_available_name(
+                    new_name, max_length=image_field.max_length
+                )
             old_path = equipment.image.path
             new_path = settings.MEDIA_ROOT / new_name
             new_upload_dir = new_path.parent
@@ -39,7 +41,7 @@ def move_equipment_images(apps, schema_editor):
             else:
                 old_paths_renamed_to_new_paths[old_path] = new_path
             equipment.image.name = new_name
-            equipment.save(update_fields=['image'])
+            equipment.save(update_fields=["image"])
     except Exception as e:
         for old_path, new_path in old_paths_renamed_to_new_paths.items():
             try:
@@ -50,21 +52,29 @@ def move_equipment_images(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('makerspace', '0007_historicalequipment'),
+        ("makerspace", "0007_historicalequipment"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='equipment',
-            name='image',
-            field=util.modelfields.CompressedImageField(max_length=200, storage=util.storage.OverwriteStorage(), upload_to=functools.partial(util.storage.UploadToUtils._actual_upload_to, *(), **{'upload_to': 'equipment'}), verbose_name='image'),
+            model_name="equipment",
+            name="image",
+            field=util.modelfields.CompressedImageField(
+                max_length=200,
+                storage=util.storage.OverwriteStorage(),
+                upload_to=functools.partial(
+                    util.storage.UploadToUtils._actual_upload_to,
+                    *(),
+                    **{"upload_to": "equipment"},
+                ),
+                verbose_name="image",
+            ),
         ),
         migrations.AlterField(
-            model_name='historicalequipment',
-            name='image',
-            field=models.CharField(max_length=200, verbose_name='image'),
+            model_name="historicalequipment",
+            name="image",
+            field=models.CharField(max_length=200, verbose_name="image"),
         ),
         migrations.RunPython(move_equipment_images, migrations.RunPython.noop),
     ]

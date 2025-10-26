@@ -4,19 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contentbox', '0013_contentbox_title'),
+        ("contentbox", "0013_contentbox_title"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='historicalcontentbox',
-            options={'get_latest_by': ('history_date', 'history_id'), 'ordering': ('-history_date', '-history_id'), 'verbose_name': 'historical content box', 'verbose_name_plural': 'historical content boxes'},
+            name="historicalcontentbox",
+            options={
+                "get_latest_by": ("history_date", "history_id"),
+                "ordering": ("-history_date", "-history_id"),
+                "verbose_name": "historical content box",
+                "verbose_name_plural": "historical content boxes",
+            },
         ),
         migrations.AlterField(
-            model_name='historicalcontentbox',
-            name='history_date',
+            model_name="historicalcontentbox",
+            name="history_date",
             field=models.DateTimeField(db_index=True),
         ),
     ]

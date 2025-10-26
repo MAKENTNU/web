@@ -5,28 +5,39 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('news', '0022_abstract_newsbase'),
+        ("news", "0022_abstract_newsbase"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='article',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="article",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='event',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="event",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='timeplace',
-            name='last_modified',
-            field=models.DateTimeField(auto_now=True, default=datetime.utcfromtimestamp(0), verbose_name='last modified'),
+            model_name="timeplace",
+            name="last_modified",
+            field=models.DateTimeField(
+                auto_now=True,
+                default=datetime.utcfromtimestamp(0),
+                verbose_name="last modified",
+            ),
             preserve_default=False,
         ),
     ]

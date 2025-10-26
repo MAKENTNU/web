@@ -4,20 +4,31 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('checkin', '0005_remove_suggestskill_approved'),
+        ("checkin", "0005_remove_suggestskill_approved"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='skill',
-            name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='skill (english)'),
+            model_name="skill",
+            name="title_en",
+            field=models.CharField(
+                blank=True,
+                max_length=100,
+                null=True,
+                unique=True,
+                verbose_name="skill (english)",
+            ),
         ),
         migrations.AlterField(
-            model_name='suggestskill',
-            name='title_en',
-            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='suggested skill'),
+            model_name="suggestskill",
+            name="title_en",
+            field=models.CharField(
+                blank=True,
+                max_length=100,
+                null=True,
+                unique=True,
+                verbose_name="suggested skill",
+            ),
         ),
     ]

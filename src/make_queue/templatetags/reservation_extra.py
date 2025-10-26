@@ -18,7 +18,7 @@ register = template.Library()
 
 def _machine_detail_query(year_and_week: tuple[int, int]):
     year, week = year_and_week
-    return urlencode({'calendar_year': year, 'calendar_week': week})
+    return urlencode({"calendar_year": year, "calendar_week": week})
 
 
 @register.simple_tag
@@ -67,9 +67,11 @@ def card_text_from_machine_status(machine: Machine):
     next_reservation = machine.get_next_reservation()
 
     # If the machine is free for less than a day, provide the number of hours/minutes until the next reservation.
-    if (machine.get_status() == Machine.Status.AVAILABLE
-            and next_reservation is not None
-            and (next_reservation.start_time - timezone.localtime()).days < 1):
+    if (
+        machine.get_status() == Machine.Status.AVAILABLE
+        and next_reservation is not None
+        and (next_reservation.start_time - timezone.localtime()).days < 1
+    ):
         status = _("{machine_status} for {duration}").format(
             machine_status=status,
             duration=timeuntil(next_reservation.start_time, time_strings=TIME_STRINGS),
@@ -94,7 +96,9 @@ def reservation_denied_message(user: User, machine: Machine):
 
 @register.simple_tag
 def can_change_reservation(reservation: Reservation, user: User):
-    return reservation.can_be_changed_by(user) and (reservation.can_change_start_time() or reservation.can_change_end_time())
+    return reservation.can_be_changed_by(user) and (
+        reservation.can_change_start_time() or reservation.can_change_end_time()
+    )
 
 
 @register.simple_tag
@@ -115,7 +119,7 @@ def is_future_reservation(reservation: Reservation):
 @register.simple_tag
 def get_stream_image_path(status: Machine.Status) -> str:
     status_image_dict = {
-        Machine.Status.MAINTENANCE: static('make_queue/img/maintenance.svg'),
-        Machine.Status.OUT_OF_ORDER: static('make_queue/img/out_of_order.svg'),
+        Machine.Status.MAINTENANCE: static("make_queue/img/maintenance.svg"),
+        Machine.Status.OUT_OF_ORDER: static("make_queue/img/out_of_order.svg"),
     }
-    return status_image_dict.get(status, static('make_queue/img/no_stream.svg'))
+    return status_image_dict.get(status, static("make_queue/img/no_stream.svg"))

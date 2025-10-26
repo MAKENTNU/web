@@ -6,27 +6,57 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Page',
+            name="Page",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=64, unique=True, verbose_name='title')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=64, unique=True, verbose_name="title"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Content',
+            name="Content",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('changed', models.DateTimeField(verbose_name='time changed')),
-                ('content', ckeditor_uploader.fields.RichTextUploadingField(verbose_name='content')),
-                ('page', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='content_history', to='docs.Page', verbose_name='page')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("changed", models.DateTimeField(verbose_name="time changed")),
+                (
+                    "content",
+                    ckeditor_uploader.fields.RichTextUploadingField(
+                        verbose_name="content"
+                    ),
+                ),
+                (
+                    "page",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="content_history",
+                        to="docs.Page",
+                        verbose_name="page",
+                    ),
+                ),
             ],
         ),
     ]
