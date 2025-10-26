@@ -26,7 +26,7 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 
 
-## 2025-10-26
+## 2025-10-26 (MAKENTNU/web#779)
 
 ### Other changes
 
