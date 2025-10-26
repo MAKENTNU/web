@@ -15,15 +15,18 @@ Lastly, a new [release](https://github.com/MAKENTNU/web/releases) must be create
 
 ### New features
 
--
 
 ### Improvements
 
--
 
 ### Fixes
 
--
+
+### Other changes
+
+
+
+## 2025-10-26 (MAKENTNU/web#779)
 
 ### Other changes
 
