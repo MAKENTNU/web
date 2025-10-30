@@ -300,7 +300,7 @@ class Quote(models.Model):
     quote = models.TextField(verbose_name=_("quote"))
     quoted = models.CharField(max_length=100, verbose_name=_("quoted"), help_text=_("The person who is quoted."))
     context = models.TextField(blank=True, max_length=500, verbose_name=_("context"))
-    time = models.DateTimeField(verbose_name=_("Time it was said"))
+    time = models.DateTimeField(verbose_name=_("time it was said"))
     author = models.ForeignKey(
         to=User,
         on_delete=models.CASCADE,

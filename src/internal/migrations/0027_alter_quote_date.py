@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='quote',
             name='time',
-            field=models.DateTimeField(verbose_name='Time it was said'),
+            field=models.DateTimeField(verbose_name='-time it was said'),
         ),
         migrations.AlterModelOptions(
             name='quote',
