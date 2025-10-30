@@ -13,15 +13,15 @@ class Migration(migrations.Migration):
         migrations.RenameField(
             model_name='quote',
             old_name='date',
-            new_name='dateTime',
+            new_name='time',
         ),
         migrations.AlterField(
             model_name='quote',
-            name='dateTime',
-            field=models.DateTimeField(verbose_name='dateTime'),
+            name='time',
+            field=models.DateTimeField(verbose_name='Time it was said'),
         ),
         migrations.AlterModelOptions(
             name='quote',
-            options={'ordering': ('-dateTime',)},
+            options={'ordering': ('-time',)},
         ),
     ]
