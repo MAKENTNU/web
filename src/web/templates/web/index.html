@@ -36,7 +36,13 @@
     <div class="banner-container">
         <div class="banner-img large parallax-window" data-parallax="scroll" data-image-src="{% static 'web/img/topimg_2.jpg' %}"></div>
         <img class="banner-img small" src="{% static 'web/img/topimg_small.jpg' %}" alt=""/>
-        <img class="banner-logo" src="{% static 'web/img/logo_allblack.svg' %}" alt="{% translate "MAKE NTNU's logo" %}"/>
+        <img class="banner-logo"
+             {% if IS_DEV_ENV %}
+                 src="{% static 'web/img/logo_allblack_dev.svg' %}"
+             {% else %}
+                 src="{% static 'web/img/logo_allblack.svg' %}"
+             {% endif %}
+             alt="{% translate "MAKE NTNU's logo" %}"/>
     </div>
 
     <div class="make-content-padding">{# Empty div for spacing #}</div>
