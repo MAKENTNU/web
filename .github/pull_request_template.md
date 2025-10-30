@@ -3,9 +3,11 @@
 <!-- Describe the changes you've made -->
 
 
-## Areas to review closely
+## Review guidance
 
-<!-- Refer to areas of the changed code where you would like reviewers to take a closer look -->
+<!-- Anything in particular that would be useful for the reviewer(s) to be aware of? -->
+<!-- Anything out of the ordinary that they should do while reviewing? -->
+<!-- Any particular part that they should take a closer look at? -->
 
 
 ## Checklist
