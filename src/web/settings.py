@@ -72,6 +72,8 @@ COOKIE_SECURE = env.COOKIE_SECURE  # (custom setting)
 # For `django-hosts` to redirect correctly across subdomains, we have to specify the host we are running on.
 PARENT_HOST = env.PARENT_HOST
 
+IS_DEV_ENV = PARENT_HOST == 'makentnu.dev'  # (custom setting)
+
 EVENT_TICKET_EMAIL = 'ticket@makentnu.no'  # (custom setting)
 
 
