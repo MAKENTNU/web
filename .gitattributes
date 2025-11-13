@@ -1,0 +1,2 @@
+# Ensure all committed text files have `\n` line endings
+* text=auto eol=lf

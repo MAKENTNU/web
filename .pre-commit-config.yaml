@@ -29,11 +29,12 @@ repos:
     hooks:
       - id: yamllint
         args:
+          # Disabling `new-lines`, as our `.gitattributes` file enforces `\n` newlines
           - '--config-data={
               extends: default,
               rules: {
                 line-length: {max: 88, level: warning},
-                new-lines: {type: platform},
+                new-lines: disable,
                 truthy: disable,
               },
             }'
