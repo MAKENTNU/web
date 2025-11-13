@@ -17,6 +17,7 @@ repos:
       - id: end-of-file-fixer
       - id: fix-byte-order-marker
       - id: mixed-line-ending
+        args: [--fix=lf]
       - id: trailing-whitespace
 
   - repo: https://github.com/abravalheri/validate-pyproject
@@ -33,7 +34,7 @@ repos:
               extends: default,
               rules: {
                 line-length: {max: 88, level: warning},
-                new-lines: {type: platform},
+                new-lines: {type: unix},
                 truthy: disable,
               },
             }'
