@@ -34,7 +34,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install System Dependencies
         # Retries installing files 3 times, as the GitHub Actions CI is occasionally unreliable
