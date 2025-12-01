@@ -379,8 +379,9 @@ class ReservationFindFreeSlotsView(LoginRequiredMixin, FormView):
 
         periods = []
         for machine in form.cleaned_data['machine_type'].machines.all():
-            if not machine.get_status() == Machine.Status.OUT_OF_ORDER:
-                periods.extend(self.get_periods(machine, required_time))
+            if machine.get_status() in (Machine.Status.OUT_OF_ORDER,  Machine.Status.MAINTENANCE):
+                continue
+            periods.extend(self.get_periods(machine, required_time))
 
         # Periods in the near future is more interesting than in the distant
         # future
